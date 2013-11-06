@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- * Copyright (c) 2006 Encore Research Group, University of Toronto * 
+	* This library is free software; you can redistribute it and/or * modify 
+	it under the terms of the GNU Lesser General Public * License as published 
+	by the Free Software Foundation; either * version 2.1 of the License, or 
+	(at your option) any later version. * * This library is distributed in the 
+	hope that it will be useful, * but WITHOUT ANY WARRANTY; without even the 
+	implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+	See the GNU * Lesser General Public License for more details. * * You should 
+	have received a copy of the GNU Lesser General Public * License along with 
+	this library; if not, write to the Free Software * Foundation, Inc., 51 Franklin 
+	Street, Fifth Floor, Boston, MA 02110-1301 USA -->
+
+<!-- $Id$ -->
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	version="2.4">
+
+
+	<display-name>wise</display-name>
+
+
+	<!-- Context Params -->
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>/WEB-INF/classes/log4j.properties</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>defaultHtmlEscape</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>contextConfigClass</param-name>
+		<param-value>org.telscenter.sail.webapp.spring.impl.SpringConfigurationImpl
+		</param-value>
+	</context-param>
+
+
+	<!-- Filters -->
+
+	<filter>
+		<filter-name>Acegi Filter Chain Proxy</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>filterChainProxy</param-value>
+		</init-param>
+	</filter>
+
+
+	<!-- Filter Mappings -->
+	<filter-mapping>
+		<filter-name>Acegi Filter Chain Proxy</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>charsetFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>charsetFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Listeners -->
+	<listener>
+		<listener-class>
+			org.springframework.web.util.Log4jConfigListener
+		</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>
+			net.sf.sail.webapp.spring.impl.CustomContextLoaderListener
+		</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>
+			net.sf.sail.webapp.presentation.web.listeners.PasSessionListener
+		</listener-class>
+	</listener>
+
+
+	<!-- The HttpSessionEventPublisher will publish HttpSessionCreatedEvent 
+		and HttpSessionDestroyedEvent to the WebApplicationContext -->
+	<listener>
+		<listener-class>
+			org.springframework.security.web.session.HttpSessionEventPublisher
+		</listener-class>
+	</listener>
+
+	<!-- project specific startup listeners go here -->
+	<!-- you can add your own listeners by adding the property startup.listeners 
+		in your settings.xml -->
+	${startup.listeners}
+
+
+	<!-- Servlets -->
+	<!-- Using Spring's web MVC -->
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>
+			net.sf.sail.webapp.spring.impl.CustomDispatcherServlet
+		</servlet-class>
+		<init-param>
+			<param-name>contextConfigClass</param-name>
+			<param-value>org.telscenter.sail.webapp.spring.impl.SpringConfigurationImpl
+			</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>dwr-invoker</servlet-name>
+		<servlet-class>org.directwebremoting.servlet.DwrServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+
+
+
+	<servlet-mapping>
+		<servlet-name>dwr-invoker</servlet-name>
+		<url-pattern>/dwr/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Servlet Mappings -->
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>*.html</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>wiseWebSocket</servlet-name>
+		<servlet-class>org.telscenter.sail.webapp.service.websocket.WISEWebSocketServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>wiseWebSocket</servlet-name>
+		<url-pattern>/websocket/wise</url-pattern>
+	</servlet-mapping>
+
+	<!-- Make it distributable for load balancing purposes. That means HttpSessions 
+		are serialized. Objects going into the session better be serializable! -->
+	<distributable />
+
+	<session-config>
+		<session-timeout>20</session-timeout>
+	</session-config>
+
+	<!-- List of filenames that are automatically resolved for directory requests -->
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/errors/outsideerror.html?msg=500</location>
+	</error-page>
+
+</web-app>

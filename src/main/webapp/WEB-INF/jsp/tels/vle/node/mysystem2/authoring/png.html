@@ -1,0 +1,57 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>MySystem PNG preview</title>
+  <!-- <link rel="stylesheet" href="css/style.css?v=2"> -->
+  <link rel="stylesheet" href="css/custom.css">
+  <link rel="stylesheet" href="css/jquery.gritter.css">
+  <script type="text/javascript" src="js/libs/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="js/libs/jquery.couch.js"></script>
+  <script type="text/javascript" src="js/libs/jquery.gritter.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $.couch.urlPrefix = "/mysystem_designs";
+      this.db = $.couch.db('');
+
+      var dataIds = window.location.hash;
+      var authorData;
+      var learnerData;
+      var data;
+
+      if (dataIds) {
+        dataIds = dataIds.substring(1);    // rm hash
+        data = dataIds.split("/");
+        if (!!data[0]){
+          // skip author data ...
+        }
+        if (data.length > 1 && !!data[1]){
+          window.learner_id = data[1];
+          $('#learner_id').html(data[1]);
+          this.db.openDoc(data[1], {
+            success: function (response) {
+              var feedback = "could not load feedback data";
+              try {
+                feedback = response.learner_data['MySystem.GraphicPreview'].LAST_GRAPHIC_PREVIEW || "no feedback";
+                var img = $("<img>").attr('src',feedback.png);
+                $('#png_preview').append(img);
+              } catch(err) {
+                alert("missing image previews from data, see console for more info");
+                console.log(feedback);
+              }
+            },
+            error: function (response) {
+              alert("Could not find a document with the id '"+self.authoredDocId+"'");
+              window.location.hash = '';
+            }
+          });
+        }
+      }
+    });
+  </script>
+</head>
+<body>
+  <div id="png_preview"></div>
+</body>
+</html>

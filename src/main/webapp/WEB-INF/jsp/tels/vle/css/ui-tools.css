@@ -1,0 +1,68 @@
+/*
+ * CSS styling for ui tool icons
+ */
+
+.tool-icon {
+	margin:0 -1px 0 4px;
+	float:right;
+}
+
+.tool-icon-left {
+	margin:0 4px 0 -1px;
+	float:left;
+}
+
+.tool-label {
+	line-height:16px;
+}
+
+.action-icon {
+	background-image:url("../images/action-icons.gif");
+	height:16px;
+	width:16px;
+}
+
+.action-icon-inactive {
+	background-image:url("../images/action-icons-inactive.gif") !important;
+	width:16px;
+}
+
+.action-icon-new {
+	background-position:-34px -2px;
+}
+
+.action-icon-new2 {
+	background-position:-2px -2px;
+}
+
+.action-icon-move {
+	background-position:-98px -2px;
+}
+
+.action-icon-copy {
+	background-position:-50px -2px;
+}
+
+.action-icon-delete {
+	background-position:-18px -2px;
+}
+
+.action-icon-hide {
+	background-position:-50px -38px;
+}
+
+.action-icon-show {
+	background-position:-34px -38px;
+}
+
+.action-icon-clone {
+	background-position:-66px -2px;
+}
+
+.action-icon-select {
+	background-position:-162px -20px;
+}
+
+.action-icon-deselect {
+	background-position:-178px -20px;
+}

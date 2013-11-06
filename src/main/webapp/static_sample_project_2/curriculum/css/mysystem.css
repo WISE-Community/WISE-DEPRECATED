@@ -1,0 +1,151 @@
+div.WireIt-ImageContainer {
+	width: auto; /* Prevent the modules from scratching on the right */
+	height: auto;
+}
+// huh?
+div.WireIt-Container div.inputEx-Group div.inputEx-label {
+	width: auto;
+}
+
+div.inputEx-TypeField-PropertiesPanel {
+	z-index: 7;
+}
+
+div.WireIt-Container.WiringEditor-module-comment div.body {
+	background-color: #EEEE66;
+}
+
+div.WireIt-Container.WiringEditor-module-comment div.body textarea {
+	background-color: transparent;
+	font-weight: bold;
+	border: 0;
+}
+#WiringEditor-saveButton button {
+display:none;
+}
+
+#WiringEditor-loadButton button {
+display:none;
+}
+
+div.ComposedModule {
+	background-color: #DDDDAA;
+}
+
+label {
+  text-align: right;
+  height: auto;
+  width: 25%;
+  float: left;
+  clear: left;
+  margin: 5px;
+  color: #3366CC;
+}
+
+input {
+  margin: 5px;
+  text-align: left:
+}
+
+div.inputBox {
+  display: block;
+  clear: both;
+  margin: 2px;
+  float: left;
+  width: 100%;
+  clear: both;
+}
+
+div.title {
+  display: block;  
+  position: relative;
+  font-size: 18px;
+  float: left;
+  z-order: 10;
+}
+
+#prop_form {
+ display: block;
+ clear: both;
+ width: 90%;
+ padding: 10px;
+ margin: 10px;
+ border: 1px solid #3366CC;
+ float: left;
+}
+
+
+#palette {
+  display: block;
+  width: auto;
+  height: auto;
+  float: left;
+  clear: both;
+  text-align: center;
+  background-color: white;
+  border: 1px solid black;
+  margin: 2px;
+  padding: 2px;
+}
+
+#color1 {
+  display: block;
+  width: 20px;
+  height: 20px;
+  float: left;
+  clear: none;
+  background-color: #490A3D;
+  border: 1px solid gray;
+  margin: 2px;
+  padding: 0px;
+}
+
+#color2 {
+  display: block;
+  width: 20px;
+  height: 20px;
+  float: left;
+  clear: none;
+  background-color: #BD1550;
+  border: 1px solid gray;
+  margin: 2px;
+  padding: 0px;
+}
+#color3 {
+  display: block;
+  width: 20px;
+  height: 20px;
+  float: left;
+  clear: none;
+  background-color: #E97F02;
+  border: 1px solid gray;
+  margin: 2px;
+  padding: 0px;
+}
+#color4 {
+  display: block;
+  width: 20px;
+  height: 20px;
+  float: left;
+  clear: none;
+  background-color: #F8CA00;
+  border: 1px solid gray;
+  margin: 2px;
+  padding: 0px;
+}
+#color5 {
+  display: block;
+  width: 20px;
+  height: 20px;
+  float: left;
+  clear: none;
+  background-color: #8A9B0F;
+  border: 1px solid gray;
+  margin: 2px;
+  padding: 0px;
+}
+.selected {
+  border: 2px solid black !important;
+}
+
+

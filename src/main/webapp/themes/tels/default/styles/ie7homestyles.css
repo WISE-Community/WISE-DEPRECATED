@@ -1,0 +1,41 @@
+#contentTop {
+	height:314px;
+}
+#boxWelcome {
+	width:638px;
+}
+
+li a {display:inline-block;}
+li a {display:block;}
+
+#contentFooter li {
+	display:inline;
+}
+
+#contentFooter li a {
+	display: inline !important;
+    zoom: 1;
+    overflow: hidden;
+}
+
+.bottomPanel {
+	width:322px;
+	float:left;
+	padding:0 5px;
+	vertical-align: text-top;
+}
+
+#contentBottom div.first {
+	width:321px;
+	padding-left:0;
+	padding-right:6px;
+}
+
+#contentBottom div.last {
+	width:315px;
+	padding-right:0;
+}
+
+#newsContent {
+	height:228px;
+}

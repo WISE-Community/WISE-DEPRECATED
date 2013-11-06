@@ -1,0 +1,744 @@
+/**
+ * Copyright (c) 2006 Encore Research Group, University of Toronto
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+  
+/* CSS FOR THE MAIN HOME PAGE*/
+#pageContent {
+	width:1000px;
+}
+
+.showcase {
+	position:relative;
+	color:#FFFFFF;
+	font-family: "Trebuchet MS", "Lucida Grande", "Lucida San Unicode", "Gill Sans", Helvetica, Arial;
+	margin-bottom:1.5em;
+}
+
+#projectHeader {
+	position:absolute;
+	top:-42px;
+	right:218px;
+}
+
+span.featureContent {
+	background-color: #fdf9eb;
+	background-color: rgba(255, 255, 255, .7);
+	padding: 0.5em;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	color: #F97F6E !important;
+	font-size:1.25em;
+}
+
+a.projectsLink {
+	padding: 0.5em;
+	font-size:1em;
+	margin-left:.5em;
+}
+
+#about, #news {
+	height:312px;
+}
+
+#about {
+	width: 606px;
+	background: url('/webapp/themes/tels/default/images/home/intro_slider_bg.png') no-repeat center center;
+}
+
+.panelHead {
+	line-height: 34px;
+	height:34px;
+	padding: 18px 24px 4px;
+	font-family: "Trebuchet MS", "Lucida Grande", "Lucida San Unicode", "Gill Sans", Helvetica, Arial;
+	font-size: 1.3em;
+	font-weight:bold;
+}
+
+.panelHead span {
+	font-weight:bold;
+}
+
+.panelLink {
+	float: right;
+	line-height: 30px;
+	font-size: .8em;
+	color: #FFF;
+	font-weight:normal;
+}
+
+.homePanelContent {
+	margin: 14px 26px;
+}
+
+/* Info Showcase Slider Styles */
+
+#showcaseSlider {
+    position:relative;
+    width:577px; /* Change this to your images width */
+    height:240px; /* Change this to your images height */
+    background:url(images/loading.gif) no-repeat 50% 50%;
+    margin: 1px 13px 0;
+}
+#showcaseSlider img {
+    position:absolute;
+    top:0px;
+    left:0px;
+    display:none;
+}
+
+/* News box styles */
+
+#news {
+	width:375px;
+	position:absolute;
+	top:0;
+	right:0;
+	background: url('/webapp/themes/tels/default/images/home/news_bg.png') no-repeat center center;
+}
+
+#newsContent {
+	position:relative;
+	margin: 10px 26px;
+	overflow:auto;
+	height:155px;
+}
+
+#newsContent p {
+	margin-bottom:3px;
+	margin-right:18px;
+	font-family: "Trebuchet MS", "Lucida Grande", "Lucida San Unicode", "Gill Sans", Helvetica, Arial;
+}
+
+#newsContent a {
+	color:#FFFFFF;
+}
+
+p.newsTitle {
+	font-size:.95em;
+}
+
+span.newsDate {
+	float:right;
+	color:#DCF2EA;
+	margin-right:4px
+}
+
+p.newsSnippet {
+	color:#DCF2EA;
+	margin-bottom:10px !important;
+	font-size:.8em;
+	line-height:1.4em;
+}
+
+#news #socialLinks {
+	padding: 7px 26px;
+    text-align: right;
+}
+
+#news #socialLinks img {
+	margin:3px;
+}
+
+#news #socialLinks > a:hover img {
+	box-shadow:0 0 5px #FFFFFF;
+	-moz-box-shadow:0 0 5px #FFFFFF;
+	-webkit-box-shadow:0 0 5px #FFFFFF;
+	border-radius:6px;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+}
+
+/* Project Showcase Accordion Styles */
+#projectShowcase {
+	background: url('/webapp/themes/tels/default/images/home/project_showcase_bg.png') no-repeat center center;
+	width:670px;
+	float:right;
+}
+
+#features {
+	padding: 0 20px;
+	/*background: url('/webapp/themes/tels/default/images/home/features_bg.png') no-repeat center center;*/
+	width:270px;
+	float:left;
+}
+
+#featureHeader {
+	text-align: center;
+}
+
+#featuresContent {
+	padding: 1em;
+	margin: 1.5em .5em 0;
+	background-color:#fdf9eb;
+	background-color: rgba(255, 255, 255, .7);
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}
+
+#featuresContent p {
+	font-size: 1em;
+	margin-bottom:1em;
+}
+
+#checkCompatibility {
+	margin-bottom: 0 !important;
+}
+
+#checkCompatibility a {
+	color:#007391;
+}
+
+#features, #projectShowcase {
+	height:250px;
+}
+
+.libraryProject {
+	height:100%;
+	position:relative;
+}
+
+div.projectDetails {
+	font-size: 1.25em;
+	font-family:Arial;
+	margin:0 20px 0 85px;
+}
+
+.projectDetails p {
+	margin-bottom:5px;
+	font-size:.7em;
+}
+
+p.name {
+	color: #007391;
+	font-weight: bold;
+	font-family: "Trebuchet MS", "Lucida Grande", "Lucida San Unicode", "Gill Sans", Helvetica, Arial;
+	font-size:.9em;
+}
+
+p.metadata {
+	color: #FF563F;
+}
+
+p.summary {
+	
+}
+
+div.projectLink {
+	background-color: #F7F2EA;
+    bottom: 0;
+    padding-left: 85px;
+    padding-top: 2px;
+    position: absolute;
+    width: 100%;
+    -moz-box-shadow: -5px -6px 5px #F7F2EA;
+    -webkit-box-shadow: -5px -6px 5px #F7F2EA;
+    -o-box-shadow: -5px -6px 5px #F7F2EA;
+    box-shadow: -5px -6px 5px #F7F2EA;
+}
+
+div.projectLink a {
+	color: #585F0C !important;
+	margin-right: 1em;
+	font-family: Arial;
+	font-size: .9em;
+}
+
+/* Tiny Carousel Styles (Project Showcase - In-subject Scrolling) */
+
+.tinycarousel { height: 200px; overflow:hidden; }
+.tinycarousel .viewport { float: left; width: 329px; height: 200px; overflow: hidden; position: relative; border-right:1px solid #d6c6af;}
+.tinycarousel .buttons { display: block; margin: 0; position:absolute; right:10px; text-decoration:none !important; font-size:1.25em; }
+.tinycarousel .next {bottom:8px;}
+.tinycarousel .prev {top:8px;}
+.tinycarousel .disable { color:#ddd !important; }
+.tinycarousel .overview { list-style: none; padding: 0; margin: 0;  position: absolute; left: 0; top: 0; }
+.tinycarousel .overview li{ margin: 0; padding: 0; height: 200px; width: 329px; overflow:hidden; position:relative; }
+
+.tinycarousel .pager { overflow: hidden; list-style: none; margin: 2px 0; width: 20px; position: absolute; top: 30px; right: 9px; }
+.tinycarousel .pager li {  }
+.tinycarousel .pagenum { text-decoration: none; text-align: center; padding: 2px 0 2px 1px; font-weight: normal; display: block; border-radius: 10px; -webkit-border-radius: 10px; -moz-border-radius: 10px; margin-bottom: 1px; font-size: .8em; font-family:Arial;}
+.tinycarousel .active { color: #fff !important; background-color: #A8906B; }
+
+/* More Info Panel Section */
+.panelSection {
+	width:310px;
+	height:250px;
+	float:left;
+	margin-right:36px;
+}
+
+.panelSection:hover, .panelSection span:hover {
+	color:#FFFFFF !important;
+}
+
+.panelSection .panelHead {
+	line-height: 32px;
+	height:32px;
+	color:#FFFFFF;
+}
+
+.panelSection .panelLink {
+	margin-right:.5em;
+	color:#FFFFFF;
+}
+
+.panelSection .panelContent {
+	text-align:center;
+	padding: 10px 18px 6px 14px;
+}
+
+.panelSection .panelContent img {
+	width: 216px;
+	height: 160px;
+}
+
+#wiseAdvantage {
+	background: url('/webapp/themes/tels/default/images/home/wise-in-action_bg.png') no-repeat center center;
+}
+
+#wiseInAction {
+	background: url('/webapp/themes/tels/default/images/home/wise-tech_bg.png') no-repeat center center;
+}
+
+#researchTech {
+	background: url('/webapp/themes/tels/default/images/home/wise-research_bg.png') no-repeat center center;
+	margin:0 -3px 0 0;
+	float:right;
+	display:block;
+}
+
+#bottomLinks {
+	height:75px;
+}
+
+#telsLink {
+	height: 70px;
+	width: 200px;
+	position: absolute;
+	left: 5px;
+	top: 5px;
+}
+
+#telsLinkLabel {
+	color: #007391;
+	position: absolute;
+	left: 225px;
+	top: 17px;
+	font-size: 1.25em;
+	width: 210px;
+}
+
+#telsLink img {
+	vertical-align:top;
+}
+
+#openSourceHeader{
+	position:absolute;
+	top:5px;
+	right:5px;
+}
+
+#openSourceContent {
+	position: absolute;
+	right: 5px;
+	top: 45px;
+	width: 490px;
+	text-align: right;
+	color: #745A33;
+}
+/*#contentWrapper {
+		background-color:#FFFFFF;
+		width: 958px;
+		text-align:left;
+		padding: 0;
+		margin: 0 auto;
+}
+			
+#contentTop, #contentBottom, #contentFooter {
+	display:block;
+	border: 0 none;
+    padding: 0;
+    width: 100%;
+    margin-bottom: 10px;
+}
+	
+#contentTop {
+    height: 305px;
+	position:relative;
+}
+
+#contentBottom {
+	margin-bottom:5px;
+}
+
+#boxWelcome {
+	bottom: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    width: 634px;
+}
+
+#parastyleTable {
+	color: #000000;
+    float: left;
+    font-size: 0.8em;
+    margin: 0 10px;
+    padding: 0;
+    text-align: left;
+}
+
+#welcomeTextLinks {
+	font-family: "Trebuchet MS", "Lucida Grande", "Lucida San Unicode", "Gill Sans", Helvetica, Arial;	
+	list-style-type:none;
+	font-size:.9em;
+	line-height: 100%;
+	margin: 0;
+    padding: 5px 0;
+	width:160px;
+}
+
+#welcomeTextLinks li {
+	margin: 0 0 9px 0;
+	padding:0px;
+}
+
+a.welcomeLink {
+	display:block; 
+	color:#FFFFFF; 
+	text-decoration:none;
+	font-weight:bold;
+	letter-spacing:.4px; 
+	margin:0;
+	background-color:#6666FF;
+	border: 1px solid #333333;
+	padding:4px 3px 3px 5px;
+	cursor:pointer;
+}
+
+a.welcomeLink:hover {
+	background-color:#4748BF;
+}
+
+a.welcomeLink.active {
+	background-color: #BD1F3F;
+}
+
+#welcomeBullet1 a {
+	color:blue;
+	border: 1px solid transparent;
+		}
+		
+#welcomeBullet1 a:hover {
+	text-decoration:none;
+	background-color:#ffff33;
+	border: 1px solid #6666CC;
+		}
+	
+.smallText {
+	font-size:.9em;
+	margin: 0 0 5px 5px;
+	width:151px;
+	}
+	
+#welcomeBulletContainer {
+	
+}
+
+.welcomeBulletHeader {
+	font-weight:bold;
+	margin-bottom: 2px;
+	}
+		
+.welcomeBullet {
+	float:left;
+	font-size:1em;
+	width:285px; 
+	line-height: 130%;
+	border-left: 1px solid #6666FF;
+	margin-top: 5px;
+    padding-left: 7px;
+	vertical-align:text-top;
+	color:#000066;
+	}
+	
+.welcomeBullet p {
+	padding:0px;
+	margin:0px;
+	}
+	
+#welcomeButtons {
+	display: block;
+    float: left;
+    list-style-type: none;
+    margin-left: 5px;
+    margin-top: 5px;
+    padding: 2px;
+}
+	
+#welcomeButtons li{
+	margin-bottom:20px;
+	text-align: center;
+}	
+	
+#contactWiseLink {
+	font-variant:small-caps;
+	font-size:1.2em;
+	margin-left:2px;
+}
+	
+#contactWiseLink a:link, #contactWiseLink a:visited {
+	color:#000066;
+	text-decoration:none;
+	padding:2px;
+	border:1px solid transparent;
+	
+	}
+
+#contactWiseLink a:hover {
+	background-color: #FFFF00;
+	color:#000033;
+	text-decoration:none;
+	padding:2px;
+	border:1px solid #666666;
+		}
+
+#signInHome{
+	height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 310px;
+}
+
+#signInSub1 {
+	position: absolute;
+    top: 0;
+	right: 0;
+    width: 100%;
+}
+
+#signInSub2 {
+	bottom: 0;
+	right: 0;
+    position: absolute;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+#boxTableSignInFailedLogin {
+	width:324px;
+	margin:0px;
+	vertical-align: text-top;
+}
+
+#signInHome li, #boxTableSignInFailedLogin li {
+	font-size:.70em;
+		}
+
+.dataBoxStyle {
+	padding: 1px;
+	border-top-width: 1px;
+	border-top-color: #999999;
+	border-right-color: #666666;
+	border-bottom-color: #666666;
+	border-left-color: #999999;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	}
+	
+#researcherText {
+	color:#000066; 
+	Font-size:.95em;   
+}
+
+#researcherText p {
+	line-height:1.4em;
+	margin: 15px;
+}
+
+.bottomPanel {
+	width:313px;
+	height:310px;
+	float:left;
+	padding:0 5px;
+	vertical-align: text-top;
+}
+
+.bottomPanel .panel {
+	height:306px;
+}
+
+.bottomPanel.first {
+	padding-left:0;
+}
+
+.bottomPanel.last {
+	padding-right:0;
+	width:312px;
+}
+
+#actionNavTable {
+	font-size:12px;
+	margin:10px 0 10px 0px;
+		}
+		
+#actionImgLinkTable {
+	margin: 0px 10px 0 10px;
+	bottom:30px;
+	}
+
+#boxTestimonials img{
+	border:0px;
+}
+
+#testimonialsNavTable {
+	font-size:12px;
+	margin:10px 0 10px 0px;
+		}
+		
+#testimonialsImgLinkTable {
+	margin: 0px 10px 0 10px;
+	}
+		
+#newsHeading {
+	padding-bottom:55px;
+}
+
+#newsContent {
+	position:relative; 
+	background-image: url("../images/Pixel_Pale_Green.png");
+    background-repeat: repeat;
+    border: 1px solid #99CC99;
+    color: #000000;
+    font-size: 0.75em;
+    height: 214px;
+    margin: 0 10px;
+    overflow: auto;
+    padding: 6px;
+}
+
+#newsContentHeader {
+	font-weight:bold;
+	padding-bottom:4px;
+}
+
+#newsContentData {
+	font-size:.8em; 
+	font-weight:normal;
+	padding-bottom:7px;
+}
+
+#newsArchive {
+	margin:8px auto;
+}*/
+
+/* TAGS FOR ANCILLARY LAYOUTS   */
+
+/*#errorMsg {
+	color: FF0000;
+	text-align: center;
+	font-size: 1.2em;
+	margin-top: 10px;
+	margin-bottom: 0px;
+	font-weight: bold;
+	padding-top: 20px;
+	border-top: 1px solid #CCC;
+	color:#FF0000;
+}*/
+
+
+/* STYLES FOR SIGN OUT BOX IN TOP BANNER 
+
+#usernameSignOutBoxHome {
+	text-align:right;  
+	position:absolute;
+	top:3px;
+	right:8px;
+	margin:0;
+	padding:0px;
+	line-height:100%;
+}
+
+#usernameBannerHome {
+	color:#FFFFCC;
+	text-align:right;
+	font-style:italic; 
+	font-weight:bold;
+	font-size:1.0em;
+	padding: 0 0 2px 0;
+	margin:0px;
+		}
+
+.signOutBannerHome a, #signoutBannerHome a:visited {
+	color:#FFFF66;
+	font-size:.7em;
+	text-decoration:underline;
+				}
+				
+.signOutBannerHome a:hover {
+}
+					
+.popUpMenuDefault {
+	font-size:1.0em;
+	font-style:italic;
+}
+
+#overviewMessage {
+	font-size:1.0em; 
+	margin:0px;
+	padding: 0 0 12px 0;
+}*/
+
+/* TAGS FOR NEWS ARCHIVE AREA   */	
+
+/*#archiveHeader {
+	font-size:1.2em;
+	font-weight:bold;
+	letter-spacing:1px;
+	margin:30px 0 20px 5px;
+}
+
+#newsArchivePage { 
+	border-collapse: collapse;
+	margin: 0px 0 30px 5px;	
+	width:100%;
+}
+
+#newsArchivePage th, #newsArchivePage td {
+	padding:4px;
+	border:1px solid #000000;
+	text-align:left;
+	font-size:.8em; 
+}
+
+#newsArchivePage th {
+	background-color:#666666;
+	color:#FFFFFF;
+}
+
+#newsArchivePage .col1 {width:30%;}
+#newsArchivePage .col2 {width:20%;}	
+#newsArchivePage .col3 {width:50%;}*/

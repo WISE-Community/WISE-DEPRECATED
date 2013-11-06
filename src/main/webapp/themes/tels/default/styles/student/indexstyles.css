@@ -1,0 +1,365 @@
+/**
+ * Copyright (c) 2006 Encore Research Group, University of Toronto
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id:styles.css 266 2007-04-04 15:40:42Z cynick $
+ */
+
+.center {text-align:center;}
+
+table  {
+	border-collapse:collapse;
+	border:0px;
+}
+
+table tr, table td {
+	border:0px;
+	padding:0px;
+}
+
+#columnProjects {
+	margin:0 0 20px 256px;
+}
+
+#columnButtons {
+	float: left;
+	width: 245px;
+	margin: 0px 0 0 0;
+	background-color: white;
+	border-radius: 6px;
+	border: 1px solid #DDD;
+}
+
+#list1 {
+		padding:12px 10px;
+		margin:0 0 5px 5px;
+}
+
+#list1 dt {
+	margin:0 0 5px 0;
+	padding:0px;
+	width:220px;
+}
+
+#studentUsername {
+	font-weight:bold;
+	font-size: 1.1em;
+	letter-spacing:1px;
+	text-transform:capitalize;	
+	}
+
+#studentWelcome {
+	font-weight:bold;
+	font-size: .8em;
+}
+
+#list2 {
+	margin:0;
+	line-height:160%;
+	width:100%;
+}
+
+#list2 dt {
+	float:left;
+	font-size:.70em;
+	margin:0 0 0 10px;
+	padding:0px;
+	width:80px;
+}
+
+#list2 dd{
+	font-size: .8em;
+	font-weight:bold;
+	margin:0;
+	padding:0px;
+}
+
+.separator {
+	width:100%;
+	border-top: 1px solid #666666;
+}
+	
+#accountOptions{
+	text-align:center;
+	font-size: .85em;
+	font-weight:bold;
+	margin:0px 0 15px 6px;
+	padding: 15px 0 000px ;
+}
+
+#optionButtons ul{ 
+	margin:0;
+	padding:0;
+}
+
+#optionButtons li{
+	text-align:center;
+	list-style-type:none;
+	padding:0;
+	margin:0 0 5px 0;
+}
+
+#optionButtons li a {
+	margin: 0 auto;
+	font-size:1em;	
+}
+
+#optionButtons li a.altbutton-small {
+	font-size:.75em;
+}
+
+.displayAsEnglish {
+	text-align:center;
+	font-size:.8em;
+	margin:2px 5px 5px 5px;
+	}
+
+#projectMenuLogo {
+	text-align:center;
+}
+	
+#studentcopyright {
+	text-align:center;
+	font-size:.75em;
+	margin:-10px 0px 5px 0px;
+	}
+
+#columnLabel {
+	color: #4E94A2;
+font-size: 1.1em;
+letter-spacing: 3px;
+text-align: left;
+padding: 5px 5px 5px 8px;
+margin: 2px 0 15px 0;
+font-family: Trebuchet MS;
+font-weight: bold;	
+}
+
+#tabSystem {
+	margin-top:-1em;
+}
+
+.runTable{
+	width:100%;
+	margin-top:.5em;
+	margin-bottom:.5em;
+	border:1px solid #BBB;
+	padding:0px;
+}
+	
+.runTable td {
+	border:1px solid #BBB;
+	font-size:.8em;
+	vertical-align:middle;
+	padding:.25em .5em;
+} 
+		
+#secondaryRowTightFormat {
+	padding:2px 5px;
+} 
+	
+.projectMainRow{
+	border: 1px solid black;
+	margin:0px;
+	padding:0px;
+}
+
+.blankRow {
+	padding:4px;
+	border-left:0px;
+	border-right:0px;
+}
+
+.runTable td.rowLabel {
+	width:15%;
+	font-weight:bold;
+}
+
+#archivedAdvisory {
+	background-color:#993333;
+	color:#fff;
+	font-size:.85em;
+	padding:10px;
+	margin:4px 0 10px 0;
+}
+
+#tightBorderCell{
+	padding:0px;
+	margin:0px;
+}
+
+#tableStudentProjectData {
+	border-collapse:collapse;
+	width:100%;
+	margin:0px;
+	padding:0px;
+}
+
+/* #tableStudentProjectData tr, #tableStudentProjectData td  {
+	margin:0px;
+	padding:3px 5px;
+	}    */
+	
+.studentTitleText {
+	font-weight:bold;
+	font-size:1.3em;
+	color:#007391;
+}
+
+#archivedRuns .studentTitleText {
+	color: #FF563F;
+	font-size: 1.2em;
+}
+
+.studentActionList  {
+	list-style-type:none;
+	text-align:center;
+	vertical-align:top;
+	margin:0px;
+	padding:0px;
+	}
+	
+.studentActionList li {
+	list-style-type:none;
+	padding:3px 4px;
+	text-align:center;
+}
+
+.studentActionList li.startProject {
+	font-size:1.6em;
+}
+
+.studentActionList li.announcements {
+	font-size:1.25em;
+}
+
+.studentActionList li a {
+	margin:0 auto;
+}
+	
+/* #studentActionList a:link, #studentActionList a:visited {
+	display:block;
+	text-decoration:none;
+	font-size:1.1em;
+	background-color:#3333FF;
+	color:#FFFFCC;
+	margin:0px;
+	padding:1px 0px;
+	border:1px solid #666;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	border-radius:8px;
+	}
+
+#studentActionList a:hover, #studentActionList.classAnimHover {
+	display:block;
+	color:#000066;
+	background-color:#ffff33;
+	border:1px solid #666666;
+}*/
+
+.periodMessage {
+	margin-left:5px;
+	font-size:80%;
+	color:#000;
+	
+}
+
+.teamNotRegisteredMessage {
+	font-weight:bold;
+	color:#ff563f;
+}
+
+#firstUseBox{
+	margin-top:50px;
+	background-color:#543f23;
+	color:#fff;
+	padding:10px 15px;
+	border:1px solid #666;
+	} 
+	
+#firstUseHeader{
+	color:#FFCCFF;
+	font-weight:bold;
+	font-size:1.6em;
+	margin-bottom:5px;
+	} 
+	
+#instructionsArea {
+	line-height:110%;
+	} 
+		
+#instructionsArea ol {
+	margin-top:8px;
+	font-size:.8em;
+	
+	} 
+
+#instructionsArea li {
+	padding-left:5px;
+	margin-left:0;
+	} 
+	
+/* STYLES FOR STUDENT PROJECT MENU */
+#studentBannerLabel {
+	position: absolute;
+	left: 430px;
+	top: 5px;
+}
+
+#usernameSignOutBoxStudent {
+	text-align: right;
+	position: absolute;
+	right: 8px;
+	top: 3px;
+}
+
+#usernameBannerStudent {
+	position: relative;
+	color: #FFFF99;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 1.1em;
+	padding: 0;
+	margin: 0;
+}
+
+#signOutBannerStudent  a:link,#signOutBannerStudent  a:visited {
+	color: #FFFF66;
+	font-size: .8em;
+	text-decoration: none;
+	border-bottom: 1px solid #FFFF66;
+}
+
+#signOutBannerStudent  a:hover {
+	color: #330066;
+	font-size: .8em;
+	text-decoration: none;
+	border-bottom: 1px solid #330066;
+}
+
+/* STYLES FOR STUDENT ADD A PROJECT  */
+
+#addProjectDialog h3 {
+	margin-left:20px;
+	}
+
+#addProjectDialog ol li  {
+	margin-top:4px;
+	margin-left:30px;
+	color:#543f23;
+	}
+		

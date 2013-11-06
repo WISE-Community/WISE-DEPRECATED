@@ -1,0 +1,980 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    * Copyright (c) 2006 Encore Research Group, University of Toronto
+    * 
+    * This library is free software; you can redistribute it and/or
+    * modify it under the terms of the GNU Lesser General Public
+    * License as published by the Free Software Foundation; either
+    * version 2.1 of the License, or (at your option) any later version.
+    *
+    * This library is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    * Lesser General Public License for more details.
+    *
+    * You should have received a copy of the GNU Lesser General Public
+    * License along with this library; if not, write to the Free Software
+    * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+<!-- $Id$ -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:sec="http://www.springframework.org/schema/security"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+      http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+
+    <bean id="filterInvocationInterceptor"
+        class="org.springframework.security.intercept.web.FilterSecurityInterceptor">
+        <property name="validateConfigAttributes" value="true" />
+        <property name="authenticationManager" ref="authenticationManager" />
+        <property name="accessDecisionManager" ref="urlAccessDecisionManager" />
+        <property name="securityMetadataSource">
+            <value>
+                CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+                PATTERN_TYPE_APACHE_ANT
+                /index.html=ROLE_ANONYMOUS,ROLE_USER
+                /index.jsp=ROLE_ANONYMOUS,ROLE_USER
+                /login.html=ROLE_ANONYMOUS,ROLE_USER
+                /signup.html=ROLE_ANONYMOUS,ROLE_USER
+                /adminoffering.html=ROLE_ADMINISTRATOR
+                /j_acegi_switch_user*=ROLE_ADMINISTRATOR
+                /*.html=ROLE_USER
+                /**/*.html=ROLE_USER
+           </value>
+        </property>
+    </bean>
+
+    <!-- ======================== FILTER CHAIN ======================= -->
+
+    <!--  if you wish to use channel security, add "channelProcessingFilter," in front
+        of "httpSessionContextIntegrationFilter" in the list below -->
+    <bean id="filterChainProxy"
+        class="org.springframework.security.web.FilterChainProxy">
+        <sec:filter-chain-map path-type="ant">        
+     		<sec:filter-chain pattern="/**" filters="
+     			charsetFilter,
+     			httpSessionContextIntegrationFilter,
+     			logoutFilter,
+     			authenticationProcessingFilter,
+     			anonymousProcessingFilter,
+     			exceptionTranslationFilter,
+     			filterInvocationInterceptor,
+     			switchUserProcessingFilter,
+     			openSessionInViewFilter" />
+  			</sec:filter-chain-map>
+  			
+  			<!--        
+        <property name="filterInvocationDefinitionSource">
+            <value>
+                CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+                PATTERN_TYPE_APACHE_ANT
+                /**=charsetFilter,httpSessionContextIntegrationFilter,logoutFilter,authenticationProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor,switchUserProcessingFilter,openSessionInViewFilter
+            </value>
+        </property>
+        -->
+    </bean>
+
+    <bean id="openSessionInViewInterceptor"
+        class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+
+    <!-- ======================== AUTHENTICATION ======================= -->
+
+    <bean id="authenticationManager"
+        class="org.springframework.security.authentication.ProviderManager">
+        <property name="providers">
+            <list>
+                <ref local="daoAuthenticationProvider" />
+                <ref local="anonymousAuthenticationProvider" />
+                <ref local="runAsAuthenticationProvider" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="daoAuthenticationProvider"
+        class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService" ref="userDetailsService" />
+        <property name="passwordEncoder" ref="passwordEncoder" />
+        <property name="saltSource" ref="systemSaltSource" />
+    </bean>
+
+    <bean id="passwordEncoder"
+        class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+
+
+    <bean id="systemSaltSource"
+        class="org.springframework.security.authentication.dao.SystemWideSaltSource">
+        <property name="systemWideSalt" value="secret" />
+    </bean>
+
+    <!-- Automatically receives AuthenticationEvent messages -->
+    <bean id="loggerListener"
+        class="org.springframework.security.access.event.LoggerListener" />
+
+    <bean id="authenticationProcessingFilter"
+        class="net.sf.sail.webapp.presentation.web.filters.PasAuthenticationProcessingFilter">
+        <property name="authenticationManager" ref="authenticationManager" />
+        <property name="authenticationFailureUrl"
+            value="/login.html?failed=true" />
+        <property name="alwaysUseDefaultTargetUrl" value="true" />
+        <property name="defaultTargetUrl" value="/offeringlist.html" />
+        <property name="filterProcessesUrl" value="/j_acegi_security_check" />
+    </bean>
+
+    <bean id="authenticationEntryPoint"
+        class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+        <property name="loginFormUrl" value="/login.html" />
+    </bean>
+
+    <bean id="anonymousProcessingFilter"
+        class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
+        <property name="key" value="fubar" />
+        <property name="userAttribute" value="Anonymous User,ROLE_ANONYMOUS" />
+    </bean>
+
+    <bean id="anonymousAuthenticationProvider"
+        class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
+        <property name="key" value="fubar" />
+    </bean>
+
+    <!--
+        For HTTP Basic Authentication, we don't have access to HttpSession
+        for use under the event notification system.
+        <bean id="basicProcessingFilter"
+        class="org.springframework.security.ui.basicauth.BasicAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager" />
+        <property name="authenticationEntryPoint" ref="basicAuthenticationEntryPoint" />
+        </bean>
+        
+        <bean id="basicAuthenticationEntryPoint"
+        class="org.springframework.security.ui.basicauth.BasicProcessingFilterEntryPoint">
+        <property name="realmName" value="Name Of Your Realm"/>
+        </bean>
+    -->
+
+    <bean id="httpSessionContextIntegrationFilter"
+        class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
+        <!--
+        <property name="contextClass"
+            value="org.springframework.security.context.SecurityContextImpl" />
+            -->
+    </bean>
+
+    <bean id="openSessionInViewFilter" 
+        class="org.springframework.orm.hibernate3.support.OpenSessionInViewFilter"/>
+
+    <bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <constructor-arg value="/index.html" />
+        <constructor-arg>
+            <list>
+                <bean
+                    class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="switchUserProcessingFilter" class="org.springframework.security.web.authentication.switchuser.SwitchUserFilter">
+    	<property name="userDetailsService" ref="userDetailsService" />
+    	<property name="switchUserUrl">
+    		<value>/j_acegi_switch_user</value>
+    	</property>
+    	<property name="exitUserUrl">
+    		<value>/j_acegi_exit_user</value>
+    	</property>
+    	<property name="targetUrl">
+    		<value>/index.html</value>
+    	</property>
+    </bean>
+    
+    <!-- =================== Encoding ==================== -->
+    
+    <bean id="charsetFilter"
+        class="org.springframework.web.filter.CharacterEncodingFilter">
+        <property name="encoding"><value>UTF-8</value></property>
+        <property name="forceEncoding"><value>true</value></property>
+    </bean>
+    
+    <!--
+    <bean id="charsetFilter"
+        class="net.sf.sail.webapp.presentation.web.filters.CharsetFilter">
+        <property name="encoding"><value>UTF-8</value></property>
+    </bean>
+    -->
+    
+
+
+    <!-- =================== SECURITY SYSTEM DEFINITIONS ================== -->
+	
+	<!-- RunAsManager -->
+	<bean id="runAsManager" class="org.springframework.security.access.intercept.RunAsManagerImpl">
+     	<property name="key"><value>my_run_as_password</value></property>
+ 	</bean>
+ 	
+ 	<bean id="runAsAuthenticationProvider" class="org.springframework.security.access.intercept.RunAsImplAuthenticationProvider">
+  		<property name="key"><value>my_run_as_password</value></property>
+	</bean>
+
+    <!-- ===================== HTTP REQUEST SECURITY ==================== -->
+
+    <bean id="exceptionTranslationFilter"
+        class="org.springframework.security.web.access.ExceptionTranslationFilter">
+        <property name="authenticationEntryPoint"
+            ref="authenticationEntryPoint" />
+    </bean>
+
+    <bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter" />
+
+    <bean id="urlAccessDecisionManager"
+        class="org.springframework.security.access.vote.ConsensusBased">
+        <property name="allowIfAllAbstainDecisions" value="false" />
+        <property name="decisionVoters">
+            <list>
+                <ref local="roleVoter" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- ~~~~~~~~~~~~~~~~~~ "BEFORE INVOCATION" AUTHORIZATION DEFINITIONS ~~~~~~~~~~~~~~~~ -->
+
+    <!-- An access decision manager used by the business objects -->
+    <bean id="groupAccessDecisionManager"
+        class="org.springframework.security.access.vote.ConsensusBased">
+        <property name="allowIfAllAbstainDecisions">
+            <value>false</value>
+        </property>
+        <property name="decisionVoters">
+            <list>
+                <ref local="roleVoter" />
+                <ref local="aclGroupAdminVoter" />
+                <ref local="aclGroupReadVoter" />
+                <ref local="aclGroupWriteVoter" />
+                <ref local="aclGroupCreateVoter" />
+                <ref local="aclGroupDeleteVoter" />
+            </list>
+        </property>
+    </bean>
+    
+    <!-- An access decision manager used by the business objects -->
+    <bean id="offeringAccessDecisionManager"
+        class="org.springframework.security.access.vote.ConsensusBased">
+        <property name="allowIfAllAbstainDecisions">
+            <value>false</value>
+        </property>
+        <property name="decisionVoters">
+            <list>
+                <ref local="roleVoter" />
+                <ref local="aclOfferingAdminVoter" />
+                <ref local="aclOfferingReadVoter" />
+                <ref local="aclOfferingWriteVoter" />
+                <ref local="aclOfferingCreateVoter" />
+                <ref local="aclOfferingDeleteVoter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="projectAccessDecisionManager"
+        class="org.springframework.security.access.vote.ConsensusBased">
+        <property name="allowIfAllAbstainDecisions">
+            <value>false</value>
+        </property>
+        <property name="decisionVoters">
+            <list>
+                <ref local="roleVoter" />
+                <ref local="aclProjectAdminVoter" />
+                <ref local="aclProjectReadVoter" />
+                <ref local="aclProjectWriteVoter" />
+                <ref local="aclProjectCreateVoter" />
+                <ref local="aclProjectDeleteVoter" />
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="workgroupAccessDecisionManager"
+        class="org.springframework.security.access.vote.ConsensusBased">
+        <property name="allowIfAllAbstainDecisions">
+            <value>false</value>
+        </property>
+        <property name="decisionVoters">
+            <list>
+                <ref local="roleVoter" />
+                <ref local="aclWorkgroupAdminVoter" />
+                <ref local="aclWorkgroupReadVoter" />
+                <ref local="aclWorkgroupWriteVoter" />
+                <ref local="aclWorkgroupCreateVoter" />
+                <ref local="aclWorkgroupDeleteVoter" />
+            </list>
+        </property>
+    </bean>
+    
+    <!-- ACL permission masks used by this application -->
+    <bean id="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField"
+            value="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+    </bean>
+    <bean id="org.springframework.security.acls.domain.BasePermission.READ"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField"
+            value="org.springframework.security.acls.domain.BasePermission.READ" />
+    </bean>
+    <bean id="org.springframework.security.acls.domain.BasePermission.WRITE"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField"
+            value="org.springframework.security.acls.domain.BasePermission.WRITE" />
+    </bean>
+    <bean id="org.springframework.security.acls.domain.BasePermission.CREATE"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField"
+            value="org.springframework.security.acls.domain.BasePermission.CREATE" />
+    </bean>
+    <bean id="org.springframework.security.acls.domain.BasePermission.DELETE"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField"
+            value="org.springframework.security.acls.domain.BasePermission.DELETE" />
+    </bean>
+
+    <!-- An access decision voter that reads VOTE_ACL_GROUP_ADMIN configuration settings -->
+    <bean id="aclGroupAdminVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_GROUP_ADMIN</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.group.Group</value>
+        </property>
+    </bean>
+    
+    <bean id="aclOfferingAdminVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_OFFERING_ADMIN</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.Offering</value>
+        </property>
+    </bean>
+    
+    <bean id="aclProjectAdminVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_PROJECT_ADMIN</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>org.telscenter.sail.webapp.domain.project.Project</value>
+        </property>
+    </bean>
+    
+    <bean id="aclWorkgroupAdminVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_WORKGROUP_ADMIN</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.Workgroup</value>
+        </property>
+    </bean>
+
+    <!-- An access decision voter that reads VOTE_ACL_GROUP_READ configuration settings -->
+    <bean id="aclGroupReadVoter" class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_GROUP_READ</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref local="org.springframework.security.acls.domain.BasePermission.READ" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.group.Group</value>
+        </property>
+    </bean>
+    
+    <bean id="aclOfferingReadVoter" class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_OFFERING_READ</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref local="org.springframework.security.acls.domain.BasePermission.READ" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.Offering</value>
+        </property>
+    </bean>   
+
+    <bean id="aclProjectReadVoter" class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_PROJECT_READ</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref local="org.springframework.security.acls.domain.BasePermission.READ" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>org.telscenter.sail.webapp.domain.project.Project</value>
+        </property>
+    </bean>   
+    
+	<bean id="aclWorkgroupReadVoter" class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_WORKGROUP_READ</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref local="org.springframework.security.acls.domain.BasePermission.READ" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.Workgroup</value>
+        </property>
+    </bean>
+
+    <!-- An access decision voter that reads VOTE_ACL_GROUP_WRITE configuration settings -->
+    <bean id="aclGroupWriteVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_GROUP_WRITE</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref local="org.springframework.security.acls.domain.BasePermission.WRITE" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.group.Group</value>
+        </property>
+    </bean>
+    
+    <bean id="aclProjectWriteVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_PROJECT_WRITE</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref local="org.springframework.security.acls.domain.BasePermission.WRITE" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>org.telscenter.sail.webapp.domain.project.Project</value>
+        </property>
+    </bean> 
+    
+    <bean id="aclOfferingWriteVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_OFFERING_WRITE</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref local="org.springframework.security.acls.domain.BasePermission.WRITE" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.Offering</value>
+        </property>
+    </bean>
+
+    <bean id="aclWorkgroupWriteVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_WORKGROUP_WRITE</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref local="org.springframework.security.acls.domain.BasePermission.WRITE" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.Workgroup</value>
+        </property>
+    </bean>
+
+    <!-- An access decision voter that reads VOTE_ACL_GROUP_CREATE configuration settings -->
+    <bean id="aclGroupCreateVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_GROUP_CREATE</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.CREATE" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.group.Group</value>
+        </property>
+    </bean>
+    
+    <bean id="aclOfferingCreateVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_OFFERING_CREATE</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.CREATE" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.Offering</value>
+        </property>
+    </bean>
+
+   <bean id="aclProjectCreateVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_PROJECT_CREATE</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.CREATE" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>org.telscenter.sail.webapp.domain.project.Project</value>
+        </property>
+    </bean>
+    
+   <bean id="aclWorkgroupCreateVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_WORKGROUP_CREATE</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.CREATE" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.Workgroup</value>
+        </property>
+    </bean>
+
+    <!-- An access decision voter that reads ACL_GROUP_DELETE configuration settings -->
+    <bean id="aclGroupDeleteVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_GROUP_DELETE</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.DELETE" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.group.Group</value>
+        </property>
+    </bean>
+    
+   <bean id="aclOfferingDeleteVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_OFFERING_DELETE</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.DELETE" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.Offering</value>
+        </property>
+    </bean> 
+    
+    <bean id="aclProjectDeleteVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_PROJECT_DELETE</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.DELETE" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>org.telscenter.sail.webapp.domain.project.Project</value>
+        </property>
+    </bean> 
+    
+    <bean id="aclWorkgroupDeleteVoter"
+        class="org.springframework.security.acls.AclEntryVoter">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <value>VOTE_ACL_WORKGROUP_DELETE</value>
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.DELETE" />
+            </list>
+        </constructor-arg>
+        <property name="processDomainObjectClass">
+            <value>net.sf.sail.webapp.domain.Workgroup</value>
+        </property>
+    </bean>
+
+    <!-- ========= ACCESS CONTROL LIST LOOKUP MANAGER DEFINITIONS ========= -->
+
+    <bean id="aclCache"
+        class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
+        <constructor-arg>
+            <bean
+                class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+                <property name="cacheManager">
+                    <bean
+                        class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" />
+                </property>
+                <property name="cacheName">
+                    <value>aclCache</value>
+                </property>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="lookupStrategy"
+        class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+        <constructor-arg ref="dataSource" />
+        <constructor-arg ref="aclCache" />
+        <constructor-arg ref="aclAuthorizationStrategy" />
+        <constructor-arg>
+            <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger" />
+        </constructor-arg>
+    </bean>
+
+    <bean id="aclAuthorizationStrategy"
+        class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
+        <constructor-arg>
+            <list>
+                <bean class="net.sf.sail.webapp.domain.authentication.impl.PersistentGrantedAuthority">
+                    <constructor-arg value="ROLE_ADMINISTRATOR" />
+                </bean>
+                <bean class="net.sf.sail.webapp.domain.authentication.impl.PersistentGrantedAuthority">
+                    <constructor-arg value="ROLE_ADMINISTRATOR" />
+                </bean>
+                <bean class="net.sf.sail.webapp.domain.authentication.impl.PersistentGrantedAuthority">
+                    <constructor-arg value="ROLE_ADMINISTRATOR" />
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="objectIdentityDao"
+        class="net.sf.sail.webapp.dao.authentication.impl.HibernateAclTargetObjectIdentityDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="aclService"
+        class="org.springframework.security.acls.jdbc.JdbcMutableAclService">
+        <constructor-arg ref="dataSource" />
+        <constructor-arg ref="lookupStrategy" />
+        <constructor-arg ref="aclCache" />
+        <property name="classIdentityQuery" value="SELECT @@IDENTITY"></property>
+        <property name="sidIdentityQuery" value="SELECT @@IDENTITY"></property>
+    </bean>
+
+    <!-- ============== "AFTER INTERCEPTION" AUTHORIZATION DEFINITIONS =========== -->
+
+    <bean id="afterInvocationManager"
+        class="org.springframework.security.access.intercept.AfterInvocationProviderManager">
+        <property name="providers">
+            <list>
+                <ref local="afterAclRead" />
+                <ref local="afterAclCollectionRead" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- Processes AFTER_ACL_COLLECTION_READ configuration settings -->
+    <bean id="afterAclCollectionRead"
+        class="org.springframework.security.acls.afterinvocation.AclEntryAfterInvocationCollectionFilteringProvider">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref local="org.springframework.security.acls.domain.BasePermission.READ" />
+                <ref local="org.springframework.security.acls.domain.BasePermission.WRITE" />
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!-- Processes AFTER_ACL_READ configuration settings -->
+    <bean id="afterAclRead"
+        class="org.springframework.security.acls.afterinvocation.AclEntryAfterInvocationProvider">
+        <constructor-arg>
+            <ref bean="aclService" />
+        </constructor-arg>
+        <constructor-arg>
+            <list>
+                <ref
+                    local="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
+                <ref local="org.springframework.security.acls.domain.BasePermission.READ" />
+                <ref local="org.springframework.security.acls.domain.BasePermission.WRITE" />
+            </list>
+        </constructor-arg>
+    </bean>
+
+<!--  
+    <bean id="attributes"
+        class="org.springframework.security.annotation.SecurityAnnotationAttributes" />
+-->        
+
+<!--  
+    <bean id="objectDefinitionSource"
+        class="org.springframework.security.intercept.method.MethodDefinitionAttributes">
+        <property name="attributes" ref="attributes" />
+    </bean>
+-->
+<!--
+    <bean id="objectDefinitionSource"
+        class="org.springframework.security.annotation.SecuredMethodDefinitionSource">
+    </bean>
+-->
+    <bean id="securityMetadataSource"
+        class="org.springframework.security.access.annotation.SecuredAnnotationSecurityMetadataSource">
+    </bean>
+
+    <bean id="groupServiceSecurity"
+        class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
+        <property name="validateConfigAttributes" value="true" />
+        <property name="authenticationManager" ref="authenticationManager" />
+        <property name="accessDecisionManager" ref="groupAccessDecisionManager" />
+        <property name="afterInvocationManager" ref="afterInvocationManager" />
+        <property name="securityMetadataSource" ref="securityMetadataSource" />
+    </bean>
+
+    <bean id="groupService"
+        class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.sf.sail.webapp.service.group.GroupService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="groupServiceSecurity" />
+                <idref local="groupServiceTarget" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="groupServiceTarget"
+        class="net.sf.sail.webapp.service.group.impl.GroupServiceImpl">
+        <property name="groupDao" ref="groupDao" />
+        <property name="userDao" ref="userDao" />
+        <property name="aclService" ref="aclServiceImpl" />
+    </bean>
+    
+    <bean id="offeringService"
+        class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.sf.sail.webapp.service.offering.OfferingService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="offeringServiceSecurity" />
+                <idref bean="offeringServiceTarget" />
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="offeringServiceSecurity"
+        class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
+        <property name="validateConfigAttributes" value="true" />
+        <property name="authenticationManager" ref="authenticationManager" />
+        <property name="accessDecisionManager" ref="offeringAccessDecisionManager" />
+        <property name="afterInvocationManager" ref="afterInvocationManager" />
+        <property name="securityMetadataSource" ref="securityMetadataSource" />
+    </bean>    
+    
+       <bean id="workgroupService"
+        class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.sf.sail.webapp.service.workgroup.WorkgroupService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref local="workgroupServiceSecurity" />
+                <idref bean="workgroupServiceTarget" />
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="workgroupServiceSecurity"
+        class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
+        <property name="validateConfigAttributes" value="true" />
+        <property name="authenticationManager" ref="authenticationManager" />
+        <property name="accessDecisionManager" ref="workgroupAccessDecisionManager" />
+        <property name="afterInvocationManager" ref="afterInvocationManager" />
+        <property name="securityMetadataSource" ref="securityMetadataSource" />
+    </bean>    
+    
+   <bean id="aclServiceImpl"
+        class="net.sf.sail.webapp.service.impl.AclServiceImpl">
+        <property name="mutableAclService" ref="aclService" />
+    </bean>
+ 
+    <bean id="aclEntryDao"
+        class="net.sf.sail.webapp.dao.authentication.impl.HibernateAclEntryDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="aclSidDao"
+        class="net.sf.sail.webapp.dao.authentication.impl.HibernateAclSidDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="aclTargetObjectDao"
+        class="net.sf.sail.webapp.dao.authentication.impl.HibernateAclTargetObjectDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="aclTargetObjectIdentityDao"
+        class="net.sf.sail.webapp.dao.authentication.impl.HibernateAclTargetObjectIdentityDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="mutableAclSid"
+        class="net.sf.sail.webapp.domain.authentication.impl.PersistentAclSid"
+        scope="prototype" />
+
+    <bean id="mutableAclTargetObject"
+        class="net.sf.sail.webapp.domain.authentication.impl.PersistentAclTargetObject"
+        scope="prototype" />
+
+    <bean id="mutableAclTargetObjectIdentity"
+        class="net.sf.sail.webapp.domain.authentication.impl.PersistentAclTargetObjectIdentity"
+        scope="prototype" />
+
+</beans>

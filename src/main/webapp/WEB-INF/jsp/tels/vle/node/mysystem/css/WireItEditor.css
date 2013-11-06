@@ -1,0 +1,200 @@
+body {
+	margin:0;
+	padding:0;
+	/*font-size: 10px;*/
+}
+
+
+/**
+ * TOP
+ */
+#top {
+	position: relative;
+}
+
+#top .topright {
+	position: absolute;
+	right: 5px;
+}
+
+#top .logo {
+   font-size: 30px;
+   font-weight: bold;
+   color:  #3366CC;
+   padding-left: 10px;
+   padding-top: 4px;
+}
+
+/* Toolbar */
+#toolbar {
+   position: absolute;
+   top: 7px;
+   left: 280px;
+}
+
+#toolbar .yui-button {
+   margin: 5px;
+}
+#toolbar .yui-button button {
+   padding-left: 2em;
+   font-size: 92%;
+}
+
+#goal_panel {
+  font-size: 12px;
+  text-align: left;
+  background-color: #ccccff;
+  overflow: hidden;
+  padding: 3px 5px 0px 5px;
+}
+
+#goal_panel ul {
+  padding: 0px;
+  margin-top: 4px;
+  margin-left: 18px;
+  margin-bottom: 3px;
+}
+
+#goal_panel_icon {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+}
+
+#WiringEditor-saveButton button {
+ background:transparent url(../images/icons/database_save.png) no-repeat scroll 10% 50%;
+
+}
+#WiringEditor-deleteButton button {
+ background:transparent url(../images/icons/delete.png) no-repeat scroll 10% 50%;
+}
+
+#WiringEditor-newButton button {
+ background:transparent url(../images/icons/add.png) no-repeat scroll 10% 50%;
+}
+
+#WiringEditor-loadButton button {
+ background:transparent url(../images/icons/application_go.png) no-repeat scroll 10% 50%;
+}
+
+#WiringEditor-helpButton button {
+ background:transparent url(../images/icons/help.png) no-repeat scroll 10% 50%;
+}
+
+
+/**
+ * LEFT
+ */
+ 
+#left {
+   
+}
+ 
+ 
+/**
+ * Module list 
+ */
+ 
+.WiringEditor-module {
+   cursor: pointer;
+   background-color: #AADDDD;
+   margin: 5px;
+   padding: 2px;
+   font-size: 9pt;
+   -moz-border-radius: 2px;
+   height: 16px;
+   text-align: left;
+}
+
+#left .WiringEditor-module:hover {
+   color: red;
+}
+
+.WiringEditor-module img {
+   margin-left: 5px;
+}
+
+.WiringEditor-module span {
+   margin-left: 5px;
+}
+
+.WiringEditor-icon-module {
+   cursor: pointer;
+   margin: 6px;
+   padding: 2px;
+   font-size: 9pt;
+   -moz-border-radius: 2px;
+   height: auto;
+	width: auto;
+   text-align: left;
+	float:left;
+}
+
+#left .WiringEditor-icon-module:hover {
+   color: red;
+}
+
+.WiringEditor-icon-module img {
+   margin-left: 5px;
+}
+
+.WiringEditor-icon-module span {
+   margin-left: 25px;
+	float: left;
+}
+
+#moduleProxy {
+   opacity: 0.8;
+   filter: alpha(opacity = 80);
+}
+
+/**
+ * CENTER
+ */
+
+#center {
+  height: 100%;
+}
+
+
+/**
+ * RIGHT
+ */
+ 
+#right {
+	font-size: 10px;
+}
+ 
+#right h2 {
+	font-size: 130%;
+	font-weight: bold;
+}
+
+#layerMap {
+   width: 80%;
+}
+
+#layerMap canvas.WireIt-LayerMap {
+	position: relative;
+	/*width: 250px; Don't put any width or it breaks the layerMap */
+}
+
+#propertiesForm div.inputEx-Group div.inputEx-label {
+	width: 50px;
+}
+
+
+/**
+ * Dialogs
+ */
+#loadPanelBody {
+   text-align: left;
+}
+
+#loadPanelBody ul {
+   margin-left: 20px;
+}
+
+#loadPanelBody ul li {
+   list-style-type: disc;
+}

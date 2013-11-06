@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Investigation 2: What Is the Shape of Earth's Orbit?</title>
+    <link href="../stylesheets/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../stylesheets/video-js.css" rel="stylesheet" type="text/css"/>
+
+    <script type="text/javascript" src="../lib/modernizr-1.6.js"></script>
+
+</head>
+<div id="container">
+  <div id="header-inner">
+    <h1 id="title">Investigation 2: What Is the Shape of Earth's Orbit?</h1>
+    <div id="simulation-controls"> </div>
+  </div>
+  <div id="content">
+    <div id="webglCanvasContainer">
+      <div class="glCanvasFullFrame">
+        <canvas id="theCanvas">
+      </canvas>
+      <ul class="hlist">
+        <li>
+          <form id="choose-view">
+            <fieldset>
+              <legend>Choose view: </legend>
+              <label><input type="radio" name="view" value="top" checked> Top</input></label>
+              <label><input type="radio" name="view" value="side"> Side</input></label>
+            </fieldset>
+          </form>
+        </li>
+        <li>
+          <form id="show-me">
+            <fieldset>
+              <legend>Show me: </legend>
+              <label><input id="circle-orbit" type="checkbox" value="selected" /> Circular orbit</label>
+              <label><input id="orbital-grid" type="checkbox"/> Orbital grid: </label>
+            </fieldset>
+          </form>  
+        </li>
+        <li>
+          <form>
+            <fieldset>
+              <legend>Choose month</legend>
+              <select id="choose-month" name="chosen-month">
+                <option value="jun" selected>June</option>
+                <option value="sep">September</option>
+                <option value="dec">December</option>
+                <option value="mar">March</option>
+              </select>
+            </fieldset>
+          </form>
+        </li>
+      </ul>
+      <ul class="hlist">
+      </ul>
+    </div>
+    <div id="info">
+      <h2>Getting a WebGL-enabled browser</h2>
+      <div id="getting-webgl">
+        <p>
+          You need a <a href='http://learningwebgl.com/blog/?p=11'>WebGL-enabled</a> browser to explore this visualization.
+          Beta releases of <a href="http://www.google.com/landing/chrome/beta/">Chrome</a> for Mac OS X and Windows 
+          and the <a href="http://nightly.webkit.org/">WebKit nightly</a> beta release for Mac OS X appear to work best.
+        </p>
+      </div>
+      <h2><a href="credits.html">Credits</a></h2>
+      <div id="log">
+        <h3>SceneJS Log</h3>
+        <div id="theLoggingDiv"></div>
+      </div>    
+    </div>
+  </div>
+</div>
+<div id="earth-info-label"></div>
+<script type="text/javascript">
+
+  function myRequire(src, callback){
+    if (src.constructor == Array) {
+      var libraries = src;
+    } else {
+      var libraries = [src];
+    }
+    var script = document.createElement("script") 
+    script.type = "text/javascript";
+    // IE
+    script.onreadystatechange = function () {
+      if (script.readyState === 'loaded' || script.readyState == 'complete') {
+        script.onreadystatechange = null;
+        libraries.shift();
+        if (libraries.length > 0) {
+          myRequire(libraries)
+        }
+        if (callback) {
+          callback();            
+        }
+      }
+    }
+    // Not IE
+    script.onload = function () {
+      libraries.shift();
+      if (libraries.length > 0) {
+        myRequire(libraries)
+      }
+      if (callback) {
+        callback();            
+      }
+    }
+    script.src = libraries[0];
+    document.getElementsByTagName("head")[0].appendChild(script);
+  };
+  
+  window.onload=function() {
+    var webGLEnabled = Modernizr.webgl;
+    // webGLEnabled = false;
+    if (webGLEnabled){
+      myRequire([
+        "../lib/sprintf.js",
+        "../lib/scenejs-0.8.0/scenejs.js",
+        "solar-system-data.js",
+        "sky-sphere.js",
+        "earth-axis.js",
+        "earth-sphere.js",
+        "sun.js",
+        "earth.js",
+        "earth-orbit.js",
+        "earth-sun-line.js",
+        "jpl-earth-ephemerides.js",
+        "orbit-grid.js",
+        "seasons.js",
+        "seasons1-1.js"
+      ]);
+    } else {
+      var content = document.getElementById('content');
+      var canvasContainer = document.getElementById('webglCanvasContainer');
+      var controls = document.getElementById('simulation-controls');
+
+      controls.style['display']='none';
+
+      var header = document.getElementById('header-inner');
+      var getting_webgl = document.getElementById('getting-webgl').cloneNode(true);
+      header.appendChild(getting_webgl);
+
+
+      var notice = document.createElement('p');
+      notice.innerHTML = "<em>Play a video of the Earth visualization with an <a href=\"http://videojs.com\">HTML5 Video Player</a> because this browser doesn't support WebGL.</em>";
+      notice.className = "videoplayernotice";
+      content.insertBefore(notice, canvasContainer);
+
+      myRequire("../lib/videojs/video.js", function () {
+        var currentPath = location.href.replace(/index\.html$/, '');
+        var earthVideoStr="";
+        earthVideoStr += "<div class=\"video-js-box\">";
+        earthVideoStr += "<video id=\"earth-video\" class=\"video-js\" width=\"1030\" height=\"700\" controls=\"controls\" ";
+        earthVideoStr += "preload=\"auto\" poster=\"images\/earth-frame1-mixed.jpg\">";
+        earthVideoStr += "<source src=\"videos\/earth3.mp4\" type='video\/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"' \/>";
+        earthVideoStr += "<source src=\"videos\/earth3.webm\" type='video\/webm; codecs=\"vp8, vorbis\"' \/>";
+        earthVideoStr += "<source src=\"videos\/earth3.ogv\" type='video\/ogg; codecs=\"theora, vorbis\"' \/>";
+        earthVideoStr += "<object id=\"flash_fallback_1\" class=\"vjs-flash-fallback\" width=\"1030\" height=\"700\" type=\"application\/x-shockwave-flash\"";
+        earthVideoStr += "data=\"http:\/\/releases.flowplayer.org\/swf\/flowplayer-3.2.1.swf\">";
+        earthVideoStr += "<param name=\"movie\" value=\"http:\/\/releases.flowplayer.org\/swf\/flowplayer-3.2.1.swf\" \/>";
+        earthVideoStr += "<param name=\"allowfullscreen\" value=\"true\" \/>";
+        earthVideoStr += "<param name=\"flashvars\" value='config={\"playlist\":[\"" + currentPath + "/images/earth-frame1-mixed.jpg\", "
+        earthVideoStr += "{\"url\": \"" + currentPath + "videos\/earth3.flv\",\"autoPlay\":false,\"loop\":false,\"autoBuffering\":true}]}' \/>";
+        earthVideoStr += "<img src=\"" + currentPath + "images/earth-frame1-mixed.jpg\" width=\"1030\" height=\"700\" alt=\"Poster Image\"";
+        earthVideoStr += "title=\"No video playback capabilities.\" \/>";
+        earthVideoStr += "<\/object>";
+        earthVideoStr += "<\/video>";
+        earthVideoStr += "<p class=\"vjs-no-video\"><\/p>";
+        earthVideoStr += "<\/div>";
+        earthVideoStr += "";
+        canvasContainer.innerHTML = earthVideoStr;
+        VideoJS.setupAllWhenReady();
+      });
+    };
+  }
+</script>
+</body>
+</html>

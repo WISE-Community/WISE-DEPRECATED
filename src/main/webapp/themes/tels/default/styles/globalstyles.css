@@ -1,0 +1,1200 @@
+/**
+ * Copyright (c) 2006 Encore Research Group, University of Toronto
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+  
+/* THESE STYLES ARE USED GLOBALLY IN THE SITE  */	
+
+/* CSS Reset */
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+  margin:0;
+  padding:0;
+  border:0;
+  outline:0;
+  font-size:100%;
+  font-weight:normal;
+  font-style:normal;
+  vertical-align:baseline;
+  background:transparent;
+}
+ul,ol {list-style:none;}
+fieldset,img,hr {border:none;}
+caption,th {text-align:left;}
+table {border-collapse:collapse; border-spacing:0;}
+td {vertical-align:top;}
+
+body {
+	/*font-family: "Lucida Grande", "Lucida San Unicode", "Gill Sans", Helvetica, Arial;*/
+	font-family:Arial, Helvetica, Tahoma, sans-serif;
+	font-size: 100%;
+	text-align: left;
+	overflow:auto;
+	color: #444;
+	background:url("/webapp/themes/tels/default/images/body-bg.png") repeat-y scroll center top #555555;
+	/*background:url("/webapp/themes/tels/default/images/body-bg-circles.png") repeat-y scroll center top #555555;*/
+}
+	
+img {border: 0px;}
+
+h1 {font-size:2.0em;} 
+h2 {font-size:1.5em; }
+h3 {font-size:1.4em;}
+h4 {font-size:1.2em;}
+h5 {font-size:.9em; }
+h6 {font-size:.8em; }
+p  {font-size:.8em; line-height:150%;padding:0px; margin:0px;}
+
+a {
+	color: #007391;
+    margin: 0;
+    text-decoration:none;
+    cursor:pointer;
+    outline:none;
+}
+
+a:hover {
+	text-decoration:underline;
+}
+	
+abbr, acronym {
+	cursor:help;
+	border-bottom: 1px dotted #666666;	
+}
+
+.center {
+	text-align:center;
+}
+
+.announce {
+	background-color: rgb(242, 245, 219);
+	/*background-color: rgba(242, 245, 219, 0.9);*/
+    border: 1px solid #C4D151;
+    -moz-box-shadow: 1px 1px 2px #777777;
+    -webkit-box-shadow: 1px 1px 2px #777777;
+    -o-box-shadow: 1px 1px 2px #777777;
+    box-shadow: 1px 1px 2px #777777;
+    color: #785F2F;
+    font-size: 0.85em;
+    font-weight: bold;
+    height: 24px;
+    right: 14px;
+    line-height: 24px;
+    padding: 0.1em 0.75em;
+    position: absolute;
+    text-align: center;
+    top: -13px;
+}
+
+img.announceIcon {
+	height: 52px;
+    right: -20px;
+    position: absolute;
+    top: -19px;
+    width: 42px;
+}
+
+input[type="button"], input[type="submit"], input[type="text"], input[type="password"], textarea  {
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+    background-color: #F9F9F9;
+    border: 1px solid #CCCCCC;
+    color: #444;
+    font-size: 0.9em;
+    margin: .25em;
+    padding: 0.25em;
+    font-family:Arial,Helvetica,Tahoma,sans-serif;
+}
+
+input[type="text"]:focus {
+	border-color:#DADF8B;
+	background-color:#FFFFFF;
+}
+
+input[type="submit"], input[type="button"] {
+	cursor:pointer;
+	padding:.25em .5em;
+	/*color:#555;
+	border-color: #aaa;
+	background-color: #F4F4F4;*/
+	color: #585f0c;
+	background-color:#F2F5DB;
+	border-color: #C5CD61;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	box-shadow:0 0 1px #ccc;
+	-moz-box-shadow:0 0 1px #ccc;
+	-webkit-box-shadow:0 0 1px #ccc;
+	font-size:.8em;
+}
+
+input[type="submit"]:hover, input[type="button"]:hover {
+	box-shadow:0 0 2px #aaa;
+	-moz-box-shadow:0 0 2px #aaa;
+	-webkit-box-shadow:0 0 2px #aaa;
+	/*color: #007391;
+	background-color:#F2F5DB;*/
+	border-color: #91c6b7;
+	color: #007391;
+}
+
+input[type="submit"].disabled, input[type="button"].disabled {
+	color:#999999;
+	background-color: #F4F4F4;
+	border-color:#CCCCCC;
+}
+
+table.wisetable {
+	border-collapse: collapse;
+	margin: .5em auto;
+	border: 0 none;
+	text-align: center;
+}
+
+table.wisetable th {
+	border-bottom: 2px solid #777;
+	color: #444;
+	font-weight: bold;
+	padding: .25em .5em;
+	text-align: center;
+}
+
+table.wisetable td {
+	border: 1px solid #DDD;
+	text-align: center;
+	vertical-align: middle;
+	padding: .5em;
+	font-size: 0.9em;
+}
+
+table.wisetable td.emph {
+	color: #745A33;
+}
+
+.pValue {
+	width: 40px;
+	float: right;
+}
+
+.ui-progressbar.progress {
+	margin: 0 40px 0 5px;
+	border-radius: 0 0 0 0;
+	-moz-border-radius: 0 0 0 0;
+	-webkit-border-radius: 0 0 0 0;
+	height:18px;
+	line-height:20px;
+}
+
+.progress .ui-progressbar-value {
+	border-radius: 0 0 0 0;
+	-moz-border-radius: 0 0 0 0;
+	-webkit-border-radius: 0 0 0 0;
+}
+
+#notifications {
+	text-align:center;
+}
+
+#notifications span {
+	font-weight:bold;
+	font-size:.9em;
+	color:#745a33;
+	border:1px solid #745a33;
+	background-color:#f4efe8;
+	padding:.25em .5em;
+	box-shadow:0 0 2px #aaa;
+	-moz-box-shadow:0 0 2px #aaa;
+	-webkit-box-shadow:0 0 2px #aaa;
+}
+
+p.info {
+	font-size: 0.9em;
+    margin: 0 0.5em 0.5em;
+    color: #745A33;
+}
+
+.panelTabs p.info {
+	margin:.5em .5em;
+	text-align:center;
+}
+
+img.icon {
+	height: 1.4em;
+	margin: -.4em 0.1em -.4em 0;
+}
+
+.valigner {
+	height:100%;
+	width: 0px;
+	vertical-align: middle;
+	visibility: hidden;
+}
+
+#pageWrapper {
+	background:url("/webapp/themes/tels/default/images/wrapper-bg.png") no-repeat scroll center top transparent;
+	margin:0 auto;
+	padding:1em 0 0;
+	min-width:1025px;
+}
+
+#header, #footer {
+	/*background-color: #37467F;*/
+}
+
+#header {
+	background:url("/webapp/themes/tels/default/images/header-bg.png") no-repeat scroll center top transparent;
+}
+
+#headerSmall {
+	background:url("/webapp/themes/tels/default/images/wise4-logo-new.png") no-repeat scroll center top transparent;
+	width:500px;
+	height:145px;
+	margin: 0 auto;
+}
+
+#footer {
+	background-color: #4D93A1;
+    border-top: 6px solid #C6CE52;
+    margin: 0 auto;
+    max-width: 1160px;
+    color:#DCF2EA;
+}
+
+#header .banner, #footer .banner {
+	height: 110px;
+    margin: 0 auto;
+    padding: 25px;
+    position: relative;
+    width: 980px;
+}
+
+#footer .banner {
+	padding: 10px 25px;
+	height:auto;
+}
+
+a#name {
+	display: block;
+    float: left;
+    height: 80px;
+    left: 8px;
+    position: relative;
+    text-indent: -9999px;
+    top: 6px;
+    width: 345px;
+}
+
+#headerSmall a#name {
+	width: 500px;
+	height: 145px;
+	left: 0;
+	top: 0;
+}
+
+.loginPanel a#name {
+	height: 80px;
+	left: 50px;
+	position: absolute;
+	top: 25px;
+	width: 400px;
+}
+
+.errorMsg p {
+	width: 600px;
+	text-align: center;
+	margin: .5em auto;
+	font-size:1em;
+	color: #ff563f;
+	padding: .5em;
+	background-color: #fdf9eb;
+	background-color: rgba(255, 255, 255, .7);
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}
+
+.errorMsgNoBg p {
+	text-align: center;
+	margin: .5em auto;
+	font-size:1em;
+	color: #ff563f;
+	padding: .5em;
+}
+
+.loginContent .errorMsgNoBg p {
+	font-size:.9em;
+	margin:0 auto;
+}
+
+#page {
+	/*background-color: #FFF9EF;*/
+	padding:.5em 0;
+}
+
+#pageContent {
+	width:980px;
+	margin:0 auto;
+	padding:1em;
+}
+
+.infoContent {
+	padding: 1em;
+	margin: 1em auto;
+	text-align: center;
+	width: 600px;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-box-shadow:1px 1px 3px #444;
+	-webkit-box-shadow:1px 1px 3px #444;
+	box-shadow:1px 1px 3px #444;
+	background-color: #FFFFFF;
+}
+
+.loginContent {
+	width:500px;
+}
+
+.infoContentBox {
+	margin-bottom:.5em;
+	padding:.25em;
+}
+
+.infoContentBox div, .infoContentBox h4 {
+	margin-bottom:.5em;
+}
+
+.infoContentBox div {
+	line-height: 1.4em;
+}
+
+.infoContent .instructions, .panelContent .instructions {
+	font-size:.8em;
+	color:#745a33;
+}
+
+.infoContent td {
+	vertical-align:middle;
+}
+
+.contentPanel {
+	background-color:#FFFFFF;
+	border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	-moz-box-shadow:1px 1px 3px #444;
+	-webkit-box-shadow:1px 1px 3px #444;
+	box-shadow:1px 1px 3px #444;
+}
+
+.sidePanel {
+	border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+    background-color: #FFFFFF;
+    border: 6px solid #FFFFFF;
+    -moz-box-shadow:1px 1px 3px #444;
+	-webkit-box-shadow:1px 1px 3px #444;
+	box-shadow:1px 1px 3px #444;
+    margin-bottom: 1em;
+}
+
+.sidePanel .panelHeader {
+	border-radius: 4px 4px 0 0;
+	-webkit-border-radius: 4px 4px 0 0;
+	-moz-border-radius: 4px 4px 0 0;
+    background-color: #C5CD61;
+    border-bottom: 1px solid #999999;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 0.3em 0.5em;
+    text-shadow:-1px 0 #A3AA3F, 0 1px #A3AA3F, 1px 0 #A3AA3F, 0 -1px #A3AA3F;
+}
+
+.sidePanel .panelContent {
+    background-color: #745A34;
+    color: #F2F4D2;
+}
+
+.sidePanel .panelContent:last-child {
+	-webkit-border-radius:0 0 4px 4px;
+	-moz-border-radius:0 0 4px 4px;
+	border-radius:0 0 4px 4px;
+}
+
+.sidePanel .panelContent a {
+	color: #C5CD61;
+}
+
+.sidePanel .panelContent .sideContent {
+	font-size:.8em;
+	border-bottom: 1px solid #9B7F5E;
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+.sidePanel .panelContent .sideContent:last-child {
+	border-bottom:0 none;
+	margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.contentRight .panelHeader, .contentLeft .panelHeader {
+	/*background-color: #33487C;
+    border: 2px solid #33487C;*/
+}
+
+.contentRight .panelContent, .contentLeft .panelContent {
+	/*border: 2px solid #33487C;*/
+}
+
+.sidebarLeft {
+	float:left;
+	width:245px;
+}
+
+.sidebarRight {
+	float:right;
+	width:245px;
+}
+
+.contentRight {
+	margin-left: 260px;
+}
+
+.contentLeft {
+	margin-right: 260px;
+}
+
+.panelHeader {
+	border-bottom: 1px solid #D8C6B3;
+    color: #745A33;
+    font-family: Trebuchet MS;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin: 0 0.75em;
+    padding: 0.5em 0 0.25em;
+}
+
+.infoContent .panelHeader {
+	margin: 0 0 .5em;
+	padding: 0 0 .25em 0;
+	color: #F97F6E;
+}
+
+.panelContent {
+	padding:1em;
+}
+
+.contentPanel .panelContent {
+	min-height: 350px;
+}
+
+.sectionHead {
+	font-weight:bold;
+	font-size:1em;
+	padding:0.5em 0.5em 0.25em;
+	border-bottom:1px solid #999999;
+}
+
+.sectionContent {
+	margin:1em;
+}
+
+.sectionContent ol {
+	font-size:.9em;
+	list-style-type:decimal;
+}
+
+.sectionContent li {
+	margin-left:1.5em;
+	margin-bottom:.5em;
+}
+
+.sectionContent h5, .sectionContent div {
+	margin:.5em 0;
+	font-size:.9em;
+	line-height:1.2em;
+}
+
+.sectionContent p {
+	margin:.5em 0;
+}
+
+.inactive {
+	color:#555; 
+}
+
+.sectionContent td, .sectionContent th {
+	border:1px solid #ddd;
+	padding:.5em;
+}
+
+.sectionContent th {
+	font-weight:bold;
+}
+
+/** Dialog Styles **/
+.dialogContent {
+	background:#FFFFFF;
+	padding:.5em;
+	font-size:.9em;
+	font-family: Arial,Helvetica,Tahoma,sans-serif;
+}
+
+.dialogSection {
+	padding:.5em;
+	line-height:1.25em;
+}
+
+.dialogTextInput {
+	margin-top:.5em;
+	color:#444444;
+}
+
+#msgDiv {
+	color:#FF563F;
+	margin:.5em;
+}
+
+
+/* Loading divs */
+#loading div {
+	text-align:center;
+	/*color:#745a33;*/
+	margin: .5em 0;
+}
+
+
+.ui-dialog.no-title {
+	border: 8px solid rgb(0, 115, 145);
+    border: 8px solid rgba(0, 115, 145, 0.9);
+}
+
+.no-title .ui-dialog-titlebar {
+	display:none;
+}
+
+/* STYLES HEADER ACCOUNT MENU, LOG IN/USER INFO SECTIONS, SIGN UP PAGES */
+
+.loginPanel {
+	width:500px;
+	height:300px;
+	background:url('/webapp/themes/tels/default/images/home/login-header.png') no-repeat center center;
+	margin:0 auto;
+	position:relative;
+}
+
+#userInfoBlock {
+	height: 58px;
+    position: absolute;
+    left: 552px;
+    top: 25px;
+    min-width: 344px;
+}
+
+.userInfo div {
+	color:#FFFFFF;
+	font-size:.8em;
+	line-height:20px;
+}
+
+.userInfo a {
+	margin-right:.5em;
+}
+
+#userName {
+	font-size:.9em;
+	margin-bottom:.25em;
+}
+
+#userName span {
+	font-weight:bold
+}
+
+#signOut {
+	position:absolute;
+	top:0;
+	right:0;
+	margin-right: 0;
+}
+
+#adminTools, #researchTools {
+	position:absolute;
+	bottom:0;
+	right:0;
+	margin-right: 0;
+}
+
+#signinForm {
+	color: #FFFFFF;
+    font-size: 0.9em;
+    text-align: right;
+    float:left;
+}
+
+.loginContent #signinForm {
+	font-size: 1em;
+	color:#444;
+	text-align:center;
+	float:none;
+}
+
+#signinForm label {
+	font-size:.9em;
+}
+		
+.loginContent #signinForm label {
+	font-size:1em;
+	width:100px;
+	display:inline-block;
+}
+
+#signinForm input[type="text"], #signinForm input[type="password"] {
+    width: 160px;
+}
+
+#submitSignIn {
+	float: right;
+}
+
+#signInButton {
+    border-style: none;
+    padding: 0 0 4px;
+    margin: 0 0 3px 0;
+    background-color: transparent;
+}
+
+.loginContent #signInButton {
+	margin: .5em auto 1em;
+}
+
+#forgotLogin {
+    font-size: 0.7em;
+    width: 96px;
+    margin-left:4px;
+}
+
+.loginPanel #forgotLogin, .loginContent #forgotLogin {
+	width: 100%;
+	text-align: center;
+	font-size: .9em;
+}
+
+#accountMenu {
+	bottom: 12px;
+    color: #047492;
+    display: block;
+    font-family: Tahoma;
+    font-size: 1em;
+    height: 44px;
+    left: 457px;
+    line-height: 100%;
+    position: absolute;
+    width: 516px;
+}
+
+#accountMenu.guest {
+	background:url("/webapp/themes/tels/default/images/accountBg-guest.png");
+}
+
+ul.welcome-menu {
+	line-height: 44px;
+    padding: 0 1em;
+    font-family: Trebuchet MS;
+}
+
+ul.welcome-menu li {
+	padding: 9px 10px;
+}
+
+a.signup {
+	font-weight: bold;
+    padding: 0 !important;
+    position: absolute;
+    right: 28px;
+    top: 9px;
+}
+
+#pageTitle {
+	color: #F97F6E;
+    margin: -0.5em auto 0.25em;
+    width: 980px;
+}
+
+#pageTitle span {
+	font-family: Lucida Grande;
+    font-size: 1.4em;
+    padding-left: 0.5em;
+}
+
+.pageTitle {
+	font-family: Arial,Helvetica,Tahoma,sans-serif;
+	color: #F97F6E;
+	float: right;
+	font-size:.9em;
+	line-height:1.4em;
+}
+
+li.welcome:hover {
+	background:none !important;
+	padding-right: 0 !important;
+}
+
+li.welcome > a {
+	border-right: medium none !important;
+	display:inline-block !important;
+}
+
+/* This little trick solves a problem with Safari getting confused by a call for "c:url value="/j_spring_security_logout"/>" 
+.styleOverRideSafari1 {
+	color:#FFFF66;
+	font-size:.7em;
+	text-decoration:none; 
+	border-bottom: 1px solid #FFFF66;
+}*/
+					
+.popUpMenuDefault {
+	font-size:1.0em;
+	font-style:italic;
+}
+
+#overviewMessage {
+	font-size:1.0em; 
+	margin:0px;
+	padding: 0 0 12px 0;
+}
+
+#centeredDiv {
+		background-color:#FFFFFF;
+		min-width: 960px;
+		max-width:1280px;
+		height:100%;
+		padding: 0;
+		margin: 0 auto;
+		position:relative;
+		/*overflow:hidden;*/
+}
+
+#centeredDiv .content {
+	position:absolute;
+	left:0;
+	right:0;
+	top:70px;
+	bottom:30px;
+}
+
+#centeredDivDynamicFrame {
+		background-color:#FFFFFF;
+		text-align:left;
+		padding: 0;
+		margin: 0 auto;
+		}
+		
+	
+#hotInputFields  {
+	margin:15px;
+}
+
+#hotInputFields input {
+	text-align:center;
+	border-top:1px solid #666666;
+	border-right:2px ridge #000000;
+	border-bottom:2px ridge #000000;
+	border-left:1px solid #666666;
+	background-color:#CCCCFF;
+	padding:5px;
+		}
+
+#hotInputFields input:hover {
+	background-color:#FFFF33;
+}
+
+.center {text-align:center;}
+
+form {margin:0px; padding:0px;}
+
+
+/* STYLES FOR THE PANEL LAYOUT METHOD   */	
+
+.panel {
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	-moz-box-shadow:1px 1px 2px #000;
+	-webkit-box-shadow:1px 1px 2px #000;
+	box-shadow:1px 1px 2px #000;
+    background-color: #FFFFFF;
+    background-position: center top;
+    background-repeat: repeat-x;
+    border: 1px solid #AAAAAA;
+    margin-bottom:1em;
+}
+
+.panelColor1 {
+	background-image:url(../images/Gradient_blue_320.png);
+}
+
+.panelColor2 {
+	background-image:url(../images/Gradient_blue_200.png);
+}
+	 		
+.panelColor3 {
+	background-image:url(../images/Gradient_blue_120.png);
+}
+	 		
+.panelColorNifty {
+	background-color:#0033FF;
+	color:#000;
+}
+
+.panel .header {
+	-moz-border-radius:5px 5px 0 0;
+	-webkit-border-radius:5px 5px 0 0;
+	border-radius:5px 5px 0 0;
+	background:#000066 url(../images/panelBg.png) repeat-x center bottom;
+	color:#FFFFFF;
+	border: 1px solid #00033;
+    border-bottom: 1px solid #AAAAAA;
+    font-size: 0.9em;
+    font-weight: bold;
+    line-height: 20px;
+    margin: -1px -1px 10px -1px;
+    padding: 4px 10px;
+    text-align: left;
+}
+
+/* Styles for buttons */
+
+.wisebutton {
+	background-image: url("/webapp/themes/tels/default/images/wise4-buttons-new.png");
+    background-color:transparent;
+   	background-position: -3px -3px;
+    color: #FFFFFF !important;
+    cursor: pointer;
+    display: block;
+    font-family: Arial;
+    font-size: 0.75em;
+    font-weight: bold;
+    height: 33px;
+    line-height: 33px;
+    text-align: center;
+    text-decoration: none !important;
+    width: 145px;
+    border:0 none;
+    box-shadow:none !important;
+    -moz-box-shadow:none !important;
+    -webkit-box-shadow:none !important;
+}
+
+.wisebutton:hover {
+	background-position: -3px -43px;
+	border:0 none;
+}
+
+.infoContent .wisebutton {
+	margin: 0 auto;
+}
+
+.smallbutton {
+	background-position: -3px -83px;
+	width:100px;
+	height:27px;
+	line-height:27px;
+}
+
+.smallbutton:hover {
+	background-position: -3px -116px;
+}
+
+.smallbutton-wide {
+	background-position: -4px -269px;
+	width:119px;
+	height:27px;
+	line-height:27px;
+}
+
+.smallbutton-wide:hover {
+	background-position: -4px -302px;
+}
+
+.minibutton {
+	background-position: -3px -149px;
+	width:74px;
+	height:24px;
+	line-height:24px;
+	font-size:.7em;
+}
+
+.minibutton:hover {
+	background-position: -3px -179px;
+}
+
+.minibutton-wide {
+	background-position: -3px -209px;
+	width:114px;
+	height:24px;
+	line-height:24px;
+	font-size:.7em;
+}
+
+.minibutton-wide:hover {
+	background-position: -3px -239px;
+}
+
+.altbutton {
+	background-position: -3px -335px;
+}
+
+.altbutton:hover {
+	background-position: -3px -375px;
+}
+
+.altbutton-small {
+	background-position: -3px -414px;
+	width:114px;
+	height:24px;
+	line-height:24px;
+	font-size:.7em;
+}
+
+.altbutton-small:hover {
+	background-position: -3px -444px;
+}
+
+.ui-dialog {
+	background:white;
+}
+
+.generalButton {
+ 	color:#000;
+ 	font-size:1.2em;
+	font-weight:bold;
+	border-top:1px solid #666666;
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+	border-left:1px solid #666666;
+	padding:4px 15px;
+	margin:0 10px;
+	background-image: url(../images/WISE-Secondary-Banner-Gradient.png);
+	background-position: top;
+	text-decoration:none;
+  	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	border-radius:8px;
+	cursor:pointer;
+}
+
+.generalButton:hover {
+ 	background-image:none;
+ 	background-color:#FFFF00;
+ 	cursor:pointer;
+}
+
+/* Featured Content Styling */
+.featuresShowcase {
+	margin-bottom:1em;
+	padding:.5em;
+}
+
+.featureContentHeader {
+	color:#4e94a2;
+	font-weight:bold;
+	font-size:1.2em;
+	margin:1em .5em .5em;
+	font-family: Trebuchet MS;
+}
+
+.featuresShowcase .featureContent p {
+	font-size:.9em;
+	margin:1em;
+}
+
+.featuresShowcase .featureHeader {
+	font-size:1em !important;
+	font-weight:bold;
+	color: #745A33;
+}
+
+.featuresShowcase .featureContent ul, .featuresShowcase .featureContent ol {
+	margin:.5em 1.5em;
+	font-size:.9em;
+}
+
+.featuresShowcase .featureContent ul {
+	list-style-type:disc;
+}
+
+.featuresShowcase .featureContent ol {
+	list-style-type:decimal;
+}
+
+.featuresShowcase .featureContent ul li, .featuresShowcase .featureContent ol li {
+	margin: 0 1em .5em;
+	line-height:1.3em;
+}
+
+.featuresShowcase.left img {
+	margin-right:2em;
+	float:left;
+}
+
+.featuresShowcase.right img {
+	margin-left:2em;
+	float:right;
+}
+
+/* FOOTER Styling   */
+
+#contentFooter {
+	display:block;
+	border: 0 none;
+    padding: 0;
+    width: 100%;
+    font-size:.7em;
+}
+
+#contentFooter div {
+	margin:.5em 0;
+}
+
+#footerLinks {
+	margin-bottom:0;
+}
+
+#footerLinks #wiseLinks {
+	float:left;
+}
+
+#footerLogos {
+	float:right;
+}
+
+#footerLogos a {
+	text-decoration:none !important;
+}
+
+#footerLogos img {
+	display:inline;
+	border:0;
+	margin: .5em;
+}
+
+#footerText {
+	float: left;
+    width:400px;
+}
+
+#wiseOpenSource {
+	float:right;
+	margin:0;
+}
+
+#contentFooter ul {
+	list-style:none;
+	padding:0;
+}
+
+#contentFooter li {
+	display:inline-block;
+	padding:0 .5em 0 .2em;
+	border-right: 1px solid #ccc;
+}
+
+#contentFooter li.first {
+	padding-left:0;
+}
+	
+#contentFooter li.last {
+	border-right:none;
+	padding-right:0;
+}
+
+#footerNav2 {
+	padding-left:5px;
+	border-right-width: 1px;
+}
+
+#footerText p {
+	margin:.75em 0;
+	line-height:130%;
+	font-size:1em;
+}
+
+#contentFooter a {
+	font-size:1.1em;
+	color:#FFFFFF;
+	text-decoration:none;
+	font-weight:bold;
+	margin:0;
+}
+	
+#contentFooter a:hover {
+	text-decoration:underline;
+}
+
+a.printLesson {
+	background: url("/webapp/themes/tels/default/images/print.png") no-repeat scroll left center transparent;
+    color: #00748F;
+    font-family: Arial,Helvetica,Tahoma,sans-serif;
+    font-size: 0.9em;
+    margin-right: 0.25em;
+    padding-left: 28px;
+}
+
+/* Compatibility Check Page */
+
+table.compatibility {
+	width:100%;
+}
+
+#browserAdditionalInfo a {
+	display:none;
+}
+
+#compatibilityCheckMessages p {
+	display:none;
+}
+
+.checkCompatibilityWarning {
+	font-size:1.0em;
+	text-align:left;
+	color:red
+}
+
+.checkCompatibilityCaution {
+	font-size:1.0em;
+	text-align:left;
+	color:blue
+}
+	
+.alignLeft 	{text-align:left;}
+.alignCenter {text-align:center;}
+.alignRight {text-align:right;}
+.width15 {width:15px;}
+.imgNoBorder {border:0px;}

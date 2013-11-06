@@ -1,0 +1,44 @@
+
+<html>
+
+<head>
+<script type="text/javascript" src="../../util/scriptloader.js"></script>
+
+<script type="text/javascript">
+function afterScriptsLoad(){
+	Nifty("div#assessmentTypeCenteredDiv","large, all");
+	Nifty("div#InfoBoxClose a","transparent, large, all");
+}
+
+window.onload = function(){
+	scriptloader.initialize(document, afterScriptsLoad, 'info_box');
+};
+</script>
+
+</head>
+
+<body id="stepBody">
+
+<div id="assessmentTypeCenteredDiv">
+
+<div id="stepTitle">Instant Quiz</div>
+
+<div id="stepDescription">
+	<ul>
+	<li>An Instant Quiz contains one or more questions that allow you to self-monitor your understanding. You'll receive <b>immediate feedback</b> as you answer each question.</li>
+    <li>After successfully completing each question you can click <i>Next Q</i> to move on to the next question. Or click <i>Previous Q</i> to review your solution to an earlier question.</li>
+    <li>Grading can be ON or OFF. If grading is on, you'll receive points as you complete each question.  If grading is OFF there are no points, just instant feedback indicating if you are correct or incorrect.</li>
+	<li>An Instant Quiz can contain a variety of question types including Multi-Choice, Multi-Answer, Matching, Match & Sequence, and Fill the Blank. </li>
+	</ul>
+
+</div>
+
+
+<div id="InfoBoxClose">
+    <a href="JavaScript:window.close()">Close</a>
+</div>
+
+</div>   <!-- end centered Div -->
+
+</body>
+</html>

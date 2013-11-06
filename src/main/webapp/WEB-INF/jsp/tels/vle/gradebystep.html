@@ -1,0 +1,84 @@
+<html>
+<head>
+<title>Grade By Step</title>
+<script type='text/javascript' src='events/eventmanager.js'></script>
+<script type="text/javascript" src="util/scriptloader.js"></script>
+<script type="text/javascript" src="node/mysystem/mysystem_print.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/portal/teachergrading.css" />
+
+<script type="text/javascript">
+
+function load(gradingConfigUrl, runId) {
+	eventManager.fire('gradingConfigUrlReceived', [gradingConfigUrl, runId]);
+}
+
+/*
+ * Loads scripts when body is loaded 
+ */
+function loaded(){
+	scriptloader.bootstrap(this, bootstrapListener);
+};
+
+/*
+ * Listener that is run when the bootstrap loading is complete.
+ * Loads and starts the authoring view.
+ */
+function bootstrapListener(type,args,obj){
+	if(args[0]=='bootstrap'){
+		var gradingListener = function(type,args,obj){
+			//env.startGrading(gradingConfigUrl, runId);
+			window.parent.topiframeOnLoad();
+		};
+
+		eventManager.subscribe('loadingViewComplete', gradingListener);
+		createEnvironment('env', eventManager);
+		env.startView('grading');
+	};
+};
+
+</script>
+
+<style type="text/css">
+/*margin and padding on body element
+  can introduce errors in determining
+  element position and are not recommended;
+  we turn them off as a foundation for
+  CSS treatments. */
+body {
+	margin:0;
+	padding:0;
+}
+</style>
+
+<style type="text/css">
+.commentHidden {display:none;}
+.commentShown {display:block;}
+</style>
+
+</head>
+
+<body onload='loaded()'>
+<div id="wait"></div> 
+<div id="centeredDiv" style="display:none"></div>
+
+<div id="gradeByStepDiv">Loading student data.  Please wait...</div>
+
+<form name="saveLocal" id='saveLocal' action="/vlewrapper/vle/echo.html" method="POST">
+	<input type="hidden" name="name" id="form_filename" value="myData"/>
+	<input type="hidden" name="data" id="localData" value=""/>
+</form>
+
+<form name="getStudentXLSExport" id='getStudentXLSExport' action="/vlewrapper/getxls.html" method="GET">
+	<input type="hidden" name="nodeIdToNodeTitles" id="nodeIdToNodeTitles" value=""/>
+	<input type="hidden" name="workgroupIds" id="workgroupIds" value=""/>
+	<input type="hidden" name="runId" id="runId" value=""/>
+	<input type="hidden" name="projectName" id="projectName" value=""/>
+	<input type="hidden" name="exportType" id="exportType" value=""/>
+</form>
+
+
+<div id="soundmanager-debug"></div>
+
+</body>
+</html>

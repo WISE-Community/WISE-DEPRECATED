@@ -1,0 +1,1631 @@
+/* Styles for TEACHER HOME PAGE:  Top Navigation Bar */
+
+#wiseLogo {
+	position: absolute;
+	left: 2px;
+	top: 1px;
+}
+
+#teacherBannerLabel {
+	position: absolute;
+	left: 390px;
+	top: 5px;
+}
+
+#teacherBannerLabel2 {
+	position: absolute;
+	left: 390px;
+	top: 2px;
+}
+
+#usernameSignOutBoxTeacher {
+	text-align: right;
+	position: absolute;
+	right: 8px;
+	top: 3px;
+}
+
+#usernameBannerTeacher {
+	position: relative;
+	color: #FFFFCC;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 1em;
+	padding: 0;
+	margin: 0 0 3px 0;
+}
+
+#signOutBannerTeacher a:link,#signOutBannerTeacher a:visited {
+	color: #FFFF66;
+	font-size: .7em;
+	text-decoration: none;
+	border-bottom: 1px solid #FFFF66;
+}
+
+#signOutBannerTeacher  a:hover {
+	color: #330066;
+	font-size: .7em;
+	text-decoration: none;
+	border-bottom: 1px solid #330066;
+}
+
+#navigationMainProjects {
+	position: absolute;
+	width: 850px;
+	padding: 0px;
+	margin: 0px;
+	left: 108px;
+	top: 31px;
+}
+
+#navigationMainProjects ul {
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+#navigationMainProjects li {
+	display: inline;
+	padding: 0 14px 0 0;
+}
+
+#titleBar {
+	width: 958px;
+	text-align: center;
+	border: 1px solid #666;
+	background-color:#FFCE8E;
+	background-image: url(../images/Gradient_7a.png);
+    background-position: bottom;
+	margin-top: 12px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	padding: 4px 0;
+}
+
+/* STYLES FOR STUDENT PROJECT MENU */
+#studentBannerLabel {
+	position: absolute;
+	left: 430px;
+	top: 5px;
+}
+
+#usernameSignOutBoxStudent {
+	text-align: right;
+	position: absolute;
+	right: 8px;
+	top: 3px;
+}
+
+#usernameBannerStudent {
+	position: relative;
+	color: #FFFF99;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 1.1em;
+	padding: 0;
+	margin: 0;
+}
+
+#signOutBannerStudent  a:link,#signOutBannerStudent  a:visited {
+	color: #FFFF66;
+	font-size: .8em;
+	text-decoration: none;
+	border-bottom: 1px solid #FFFF66;
+}
+
+#signOutBannerStudent  a:hover {
+	color: #330066;
+	font-size: .8em;
+	text-decoration: none;
+	border-bottom: 1px solid #330066;
+}
+
+/* NORMAL CSS FOR THE NAVIGATION L2 BAR */
+
+.navigationSubHeader1 {
+	color: #555555;
+    float: right;
+    font-size: 0.9em;
+    font-variant: small-caps;
+    font-weight: bold;
+    letter-spacing: 0;
+}
+
+/* SETTING UP A RUN */
+
+#setUpRunBox {
+	/*height: 360px;
+	border: 1px solid #666666;
+	margin: 15px auto 15px auto;
+	padding: 15px;*/
+}
+
+#setUpRunBox .summaryInfo {
+	margin-left:0;
+}
+
+#setUpRunBox .projectSummary {
+	margin:1em;
+	padding:.5em;
+	font-size:.9em;
+}
+
+#setUpRunBox div.projectTitle {
+	color:#007391;
+}
+
+#setUpRunBox .projectSummary div {
+	margin: 0 0 .5em;
+}
+
+#setUpRunBox .projectSummary p {
+	margin:0;
+}
+
+#reviewRunBox {
+}
+
+.cleaner {
+	height: 240px;
+	border: 1px solid #666666;
+	margin: 15px auto 15px auto;
+	padding: 15px;
+	width: 928px;
+}
+
+#setUpRunBox li {
+	padding-bottom: 8px;
+}
+
+#stepNumber {
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+.blueText {
+	color: #0000FF;
+}
+
+#setupProjectTableContainer {
+	margin: 1em;
+}
+
+#titleBarSetUpRun {
+	clear: both;
+	width: 958px;
+	text-align: center;
+	font-size: 1.4em;
+	border: 1px solid #666666;
+	background-color: #CCCCCC;
+	background-image: url(../images/Gradient_Blue-to-Gray.png);
+	margin: 20px auto 0 auto;
+	padding: 10 0px;
+}
+
+.setupProjectTitle {
+	font-size: 1.4em;
+	letter-spacing: 1px;
+	font-weight: bold;
+}
+
+.followup1 {
+	margin:8px 0 0 0 ;
+}
+
+.indent15px {
+	padding: 0 0 0 25px;
+	margin: 0px;
+}
+
+#periodLabel {
+	font-size: .8em;
+	font-weight: bold;
+	padding: 0 0 0 25px;
+}
+
+#periodBoxes {
+	margin-left:1em;
+}
+
+#periodBoxes input {
+	
+} 
+
+#periodBoxes label{
+	margin-left:.5em;
+}
+
+#periodBoxes label:hover {
+	cursor:pointer;
+}
+	
+
+#manualperiodsinput {
+	font-size: 1.1em;
+	margin: 0 0 -.5em 0;
+}
+
+#manualperiodsinstructions {
+	font-size: .7em;
+	position: absolute;
+	width: 570px;
+	margin: -24px 0 0px 275px;
+}
+
+/* Set Up Run Confirmation Page  */
+#setUpRunBoxConfirm {
+	border: 1px solid #666666;
+	margin: 15px auto 15px auto;
+	padding: 15px;
+}
+
+#projectRunConfirmTable {
+	border-collapse: collapse;
+	font-size: .9em;
+	margin: .5em auto;
+	width:auto;
+}
+
+#projectRunConfirmTable td {
+	vertical-align: text-top;
+	padding:.3em;
+}
+
+.reducedBottomMargin {
+	margin-bottom: 5px;
+}
+
+#gotoMyRunsButton {
+	margin: 0 0 30px 0;
+}
+
+/* STYLES FOR POP-UP WINDOWS  */
+
+.dialogSection.formSection {
+	text-align:center;
+	margin-top:1em;
+}
+
+.dialogSection.formSection div {
+	margin:.5em 0;
+}
+
+/* STUDENT ADD A PROJECT  */
+
+ol#addProjectInstructions li {
+	margin:.5em 2em;
+	list-style-type:decimal;
+}
+
+#popUpWindow1 {
+	background-image: url(../images/student/Gradient-ProjectMenu-Green-450.png);
+	background-position: center bottom;
+	background-repeat: repeat-x;
+	border-top: 1px solid #666666;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	border-left: 1px solid #666666;
+	margin: 15px 20px 20px 15px;
+	padding: 15px;
+}
+
+#studentchangepasswordbox {
+	text-align: left;
+}
+
+#studentchangepasswordbox dt {
+	float: left;
+	vertical-align: middle;
+	width: 255px;
+	font-size: 1.1em;
+	font-weight: bold;
+	padding: 5px 0px;
+	margin: 6px 0 0 20px;;
+}
+
+#studentchangepasswordbox dd {
+	margin: 0px;
+	padding: 5px 0px;
+}
+
+#changePasswordField {
+	font-size: 1.1em;
+	border-top: 1px solid #666666;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	border-left: 1px solid #666666;
+	margin: 0 0 0 10px;
+	padding: 3px;
+}
+
+.passwordData {
+	margin-bottom: 5px;
+}
+
+#projectCodeLabel {
+	font-size: 1.2em;
+	margin: 0px;
+	padding: 0px;
+	text-align: left;
+}
+
+#projectcode {
+	vertical-align: center;
+	font-size: 1.2em;
+	border-top: 1px solid #666666;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	border-left: 1px solid #666666;
+	margin: 30px 10px 0 6px;
+	padding: 3px;
+}
+
+#addProjectButton {
+	position: absolute;
+	margin: 50px 0 0 0px;
+}
+
+#errorMessageFormat {
+	margin: 20px;
+	color: #FF0000;
+	font-size: 1.0em;
+	font-weight: bold;
+}
+
+#teamSelect {
+	width: 550px;
+	background-color: #99CC99;
+	border-top: 1px solid #666666;
+	border-right: 2px outset #CCCCCC;
+	border-bottom: 2px outset #CCCCCC;
+	border-left: 1px solid #666666;
+	text-align: center;
+	padding: 25px;
+}
+
+.teamMargin1 {
+	margin: 80px auto 15px auto;
+}
+
+.teamMargin2 {
+	margin: 30px auto;
+}
+
+#teamSelectHeader {
+	font-size: 1.2em;
+	font-weight: bold;
+	width: 400px;
+	padding: 0px;
+	margin: 0 auto;
+}
+
+#teamSelectChoices ul {
+	margin: 35px auto 0 auto;
+	text-align: center;
+	padding-left: 0;
+}
+
+#teamSelectChoices li {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0 0 20px 0;
+}
+
+#teamSelectChoices a:link,#teamSelectChoices a:visited {
+	display: block;
+	text-decoration: none;
+	font-size: 1.2em;
+	font-weight: bold;
+	background-color: #3333FF;
+	color: #FFFFFF;
+	margin: 0 140px;
+	padding: 3px 10px;
+	border-top: 1px solid #666666;
+	border-left: 1px solid #666666;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+#teamSelectChoices a:hover {
+	display: block;
+	text-decoration: none;
+	color: #000066;
+	background-color: #ffff33;
+}
+
+#multiUserSignIn {
+	text-align: left;
+	margin: 25px auto 25px auto;
+	border-collapse: collapse;
+	border: 1px solid #000000;
+}
+
+#multiUserSignIn td {
+	border: 0px solid #000000;
+}
+
+#multiUserSignIn input {
+	padding: 3px;
+}
+
+#multiUserSeparatorRow {
+	border: 1px solid #000000;
+	background-color: #999999;
+	height: 7px;
+}
+
+.multiUserAbsentRow {
+	padding-top: 0px;
+}
+
+.multiUserAbsentRow td {
+	padding-top: 0px;
+}
+
+#teamSignMessages {
+	width: 120px;
+	text-align: center;
+	font-style: italic;
+}
+
+.errorMsgStyle {
+	text-align: center;
+	font-size: .9em;
+	font-weight: bold;
+	font-style: italic;
+	color: #990000;
+}
+
+#finalRunProjectButton {
+	margin:1em;
+	text-align:center;
+}
+
+#finalRunProjectButton input {
+	margin: 0 auto;
+	font-size: 1em;
+	background-color: transparent;
+	border:0 none;
+	padding:0;
+}
+
+/* CONTACT WISE PAGES 
+#pageTitle {
+	clear: both;
+	text-align: center;
+	width: 810px;
+	margin: 15px auto;
+	border: 1px solid #333333;
+	background-image: url(../images/GradientFooter.png);
+	background-position: bottom;
+	padding: 10px 0;
+	color: #0000FF;
+	font-size: 1.7em;
+	font-weight: bold;
+}
+
+#pageSubtitle {
+	width: 810px;
+	text-align: center;
+	margin: 15px auto;
+	padding: 0px;
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+#pageSubtitleConfirm {
+	width: 810px;
+	text-align: center;
+	margin: 15px auto;
+	font-size: 1.5em;
+	font-weight: bold;
+	border: 1px solid #000000;
+	padding: 40px 10px;
+	line-height: 170%;
+}
+
+#pageSubtitleLevel2 {
+	text-align: left;
+	margin-left: 65px;
+	width: 760px;
+	margin: 0 auto;
+	padding: 0px 0 15px 0;
+	font-size: .85em;
+}
+
+#pageSubtitleLevel2 li {
+	list-style: circle;
+	padding-top: 2px;
+}
+
+#contactWiseForm {
+	position: relative;
+	width: 810px;
+	font-size: .9em;
+	border: 1px solid #333333;
+	background-color: #CCFFCC;
+	margin: 0px auto 30px auto;
+	padding: 10px 0;
+}
+
+#contactWiseForm dl {
+	margin: 0;
+	padding: 0px;
+}
+
+#contactWiseForm dt {
+	float: left;
+	width: 195px;
+	text-align: right;
+	margin: 0px 5px 0px 0;
+	padding: 3px;
+	font-size: .9em;
+	font-weight: bold;
+	clear: left;
+}
+
+#contactWiseForm dd {
+	text-align: left;
+	padding: 3px;
+	font-size: .9em;
+}
+
+#asterixWarning {
+	position: absolute;
+	color: #0000CC;
+	font-size: .8em;
+	top: 20px;
+	left: 580px;
+	width: 200px;
+}
+
+.asterix {
+	color: #0000CC;
+	font-weight: bold;
+	font-size: 1.1em;
+}
+
+#sendMessageButton {
+	text-align: center;
+	font-size: 1.0em;
+	font-weight: bold;
+	border-top: 1px solid #666666;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	border-left: 1px solid #666666;
+	padding: 2px;
+	margin: 15px auto 0 auto;
+	background-color: #CCCCFF;
+}*/
+
+/* LOST USERNAME & PASSWORD PAGES  */
+#lostTitleBar {
+	clear: both;
+	width: 85%;
+	text-align: center;
+	border: 1px solid #333333;
+	background-image: url(../images/GradientFooter.png);
+	background-position: bottom;
+	margin: 30px auto 0 auto;
+	padding: 10px 0;
+}
+
+#lostSubHeader {
+	padding: 30px 0 20px 0;
+	letter-spacing: 1px;
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+#forgotparagraph {
+	text-align: center;
+	width: 70%;
+	font-size: .9em;
+	padding: 35px 0 50px 0;
+	line-height: 170%;
+	margin: 0px auto;
+}
+
+#boxSecondary {
+	background-color: #e0f8df;
+	color: #003300;
+	border: 1px solid #006600;
+	width: 85%;
+	margin: 15px auto 10px auto;
+	padding: 10px 0 10px 0;
+}
+
+#returnHomePageButton {
+	padding: 50px;
+	text-align: center;
+}
+
+/* This variant is used on viewmystudents.html as the Yahoo CSS seems to be mysteriously overriding some margin&padding values */
+#usernameSignOutBoxViewStudents {
+	float: right;
+	text-align: right;
+	position: relative;
+	margin: -17px 8px 0 10px;
+}
+
+#usernameSignOutBoxViewStudents,#usernameBanner {
+	color: #FFFFCC;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 1.3em;
+	margin-bottom: 0px;
+}
+
+#usernameSignOutBoxViewStudents a:link,#usernameSignOutBoxViewStudents a:visited {
+	color: #FFFF66;
+	font-size: .9em;
+	font-weight: bold;
+	text-decoration: none;
+	border-bottom: 1px solid #FFFF66;
+	padding: 0px;
+	margin: 0px;
+}
+
+#usernameSignOutBoxViewStudents a:hover {
+	color: #330066;
+	font-size: .9em;
+	text-decoration: none;
+	border-bottom: 1px dotted #330066;
+	padding: 0px;
+	margin: 0px;
+}
+
+#navigationMainProjectsViewStudents {
+	position: absolute;
+	padding: 0px;
+	width: 880px;
+	margin: -4px 0 0 88px;
+	padding: 0px;
+}
+
+#navigationMainProjectsViewStudents ul {
+	list-style: none;
+	padding: 0px;
+}
+
+#navigationMainProjectsViewStudents li {
+	display: inline;
+	padding: 0 15px 0 0;
+}
+
+#navigationL2ViewStudents {
+	padding: 0px;
+	margin: 3px 0 0 0;
+	width: 958px;
+	border: 1px solid #999999;
+}
+
+#navigationL2ViewStudents ul {
+	padding: 4px 0 4px 120px;
+	margin: 0px;
+	list-style: none;
+}
+
+.navigationL2ViewStudents li {
+	font-size: .9em;
+	letter-spacing: .9px;
+	display: inline;
+	padding: 0px;
+	margin: 0px;
+}
+
+#navigationL2ViewStudents a:link,#navigationL2ViewStudents a:visited {
+	padding: 6px 20px 6px 20px;
+	margin: 0px;
+	text-decoration: none;
+	color: #000000;
+}
+
+#navigationL2ViewStudents a:hover {
+	padding: 6px 20px 6px 20px;
+	margin: 0px;
+	background-color: #CCCCFF;
+	background-image: none;
+	text-decoration: none;
+}
+
+/* Q&A Discussion Step: Author View */
+#authorQuote {
+	font-size: .8em;
+	font-weight: normal;
+	font-style: italic;
+	letter-spacing: -.2px;
+	margin: 10px 0 15px 0;
+}
+
+.bigTitle {
+	color: #003300;
+	font-weight: bold;
+	font-size: 1.7em;
+}
+
+#authorInfoTable {
+	background-color: #CCFF99;
+	text-align: left;
+	border-collapse: collapse;
+	width: 100%;
+	margin: 15px 0 20px 0;
+}
+
+#authorInfoTable th {
+	border: 1px solid #666666;
+	font-weight: normal;
+	font-size: .8em;
+	padding: 0 15px;
+	width: 15%;
+}
+
+#authorInfoTable td {
+	border: 1px solid #666666;
+	font-weight: normal;
+	font-size: .8em;
+	font-weight: bold;
+	padding: 2px 7px;
+}
+
+.authorSectionHeader {
+	background-color: #6699FF;
+	font-size: 1.1em;
+	font-weight: bold;
+	letter-spacing: .8px;
+	padding: 3px;
+	margin: 25px 0px 10px 0;
+}
+
+.authorSectionHeader2 {
+	color: #003300;
+	font-weight: bold;
+	font-size: .9em;
+	margin: 0px 0 5px 5px;
+}
+
+.authorOptionsBlock {
+	font-size: .8em;
+	margin: 0 0 15px 25px;
+}
+
+.authorOptionsBlock2 {
+	font-size: .7em;
+	margin: 0 0 5px 25px;
+}
+
+#subgroupSelectionBox {
+	border: 1px solid #999999;
+	margin: 0px 0 0 60px;
+	padding: 10px;
+	width: 80%;
+}
+
+#subgroupNotice1 {
+	font-size: .7em;
+	letter-spacing: -.2px;
+}
+
+#subgroupBox2 {
+	margin: 10px 0 10px 60px;
+	font-size: .7em;
+	letter-spacing: -.2px;
+}
+
+#subgroupBox2bullets {
+	margin-left: 15px;
+}
+
+#responseButtons {
+	text-align: center;
+	margin: 10px 0 0 0;
+}
+
+#responseButtons input {
+	font-size: 1.2em;
+	margin: 0 10px;
+}
+
+#updatePromptPreviewButton {
+	margin: 0 0 20px 25px;
+}
+
+#promptPreview {
+	text-align: center;
+	margin: 0 auto;
+}
+
+#prewrittenResponsesTable {
+	border-collapse: collapse;
+	margin: 0px;
+}
+
+#prewrittenResponsesTable td {
+	vertical-align: top;
+	text-align: left;
+	padding: 0px;
+}
+
+#prewrittenResponsesTable ul {
+	list-style-type: none;
+	font-size: .7em;
+	margin: 2px 0 0 10px;
+	padding: 0px;
+	line-height: 150%;
+}
+
+/* Q&A Discussion Step: Student View */
+#discussionSectionStudent {
+	border: 1px solid #999999;
+	padding: 10px;
+}
+
+#stepTypeTitleBar {
+	text-align: center;
+	font-size: .8em;
+	padding: 2px;
+	margin: 20px 0 0 0;
+	border: 1px solid #333333;
+	border-bottom: 2px solid #333333;
+	background-color: #666666;
+	color: #FFFFFF;
+	letter-spacing: 3px;
+}
+
+#sectionBox {
+	margin: 20px 0;
+	padding: 0px;
+	border: 2px ridge #333333;
+}
+
+#sectionBoxHeader {
+	font-size: 1.2em;
+	font-weight: bold;
+	padding: 4px 10px;
+	background-color: #CCCCFF;
+	background-image: url(../images/Gradient-BlueWhite-5x65.png);
+	text-align: left;
+	border-bottom: 1px solid #333333;
+}
+
+#hideLink {
+	font-size: .7em;
+	font-variant: small-caps;
+	padding: 2px 2px 2px 17px;
+	margin-top: 1px;
+	float: right;
+	background-image: url(../images/Arrow_Down.png);
+	background-position: 0px 6px;
+	background-repeat: no-repeat;
+}
+
+#hideLink :hover {
+	background-color: #FFFF33;
+}
+
+#sectionBoxMain1 {
+	padding: 1px;
+	background-color: #CCCCCC;
+}
+
+#sectionBox #column1 {
+	float: left;
+	width: 120px;
+	margin: 15px 0 0 20px;
+}
+
+#sectionBox #column2 {
+	text-align: left;
+	margin: 15px 0 0 130px;
+}
+
+#questionContent {
+	padding: 10px;
+	text-align: center;
+	background-color: #FFFFFF;
+	border: 1px solid #333333;
+	width: 80%;
+}
+
+#instructions1 {
+	font-size: .8em;
+	margin: 10px 0;
+}
+
+#createResponse input,#showLatest input {
+	color: #FFFFFF;
+	font-size: 1em;
+	background-color: #0000FF;
+	border: 1px solid black;
+}
+
+#createResponse
+
+ 
+
+input
+
+
+:hover
+
+
+,
+#showLatest
+
+ 
+
+input
+
+
+:hover
+
+
+,
+{
+color
+
+
+:
+#0000FF
+
+
+;
+background-color
+
+
+:
+#FFFF00
+
+
+;
+}
+#responseLinks {
+	margin: 10px 10px 5px 20px;
+	padding: 0px;
+	text-align: left;
+}
+
+#responseLinks ul {
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+#responseLinks ul {
+	list-style-type: none;
+}
+
+#responseLinks li {
+	list-style-type: none;
+	display: inline;
+	padding-right: 20px;
+	font-size: .8em;
+}
+
+#responseLinks li:hover {
+	background-color: #FFFF00;
+}
+
+#responseTableBody {
+	margin: 25px 0 50px 0;
+}
+
+#responseTableBody table {
+	border-collapse: collapse;
+}
+
+.studentResponse {
+	border: 0px solid black;
+	margin: 15px 20px;
+	text-align: left;
+}
+
+.currentResponseBoxTR {
+	background-color: #FFFFFF;
+}
+
+.currentResponseBoxInsetTable {
+	width: 100%;
+	padding-left: 100px;
+}
+
+#revisionBoxTable {
+	width: 100%;
+}
+
+.currentResponseBoxInsetTable thead {
+	background-color: #CCCCCC;
+	background-image: url(../images/Gradient-GrayWhite-5x30.png);
+	border: 1px solid black;
+}
+
+.currentResponseBoxInsetTable .theadowner {
+	background-color: #336633;
+	background-image: url(../images/Gradient-GreenWhite-5x30.png);
+	color: #FFFFFF;
+	border: 1px solid black;
+}
+
+.currentResponseBoxInsetTable thead .headerStudentName {
+	padding: 2px 5px;
+	font-size: .8em;
+	width: 45%;
+}
+
+.currentResponseBoxInsetTable thead .headerResponseInfo {
+	padding: 2px 5px;
+	font-size: .8em;
+	font-weight: normal;
+}
+
+.currentResponseBoxInsetTable tbody {
+	background-color: #FFFFFF;
+	border: 1px solid black;
+	border-bottom: 3px inset black;
+}
+
+.currentResponseBoxInsetTable .currentRevisionNumber {
+	padding: 3px 5px 0px 5px;
+	font-size: .8em;
+	font-variant: small-caps;
+}
+
+.currentResponseBoxInsetTable tbody .currentResponseText {
+	padding: 5px 5px 0 5px;
+	font-size: .8em;
+}
+
+.currentResponseBoxInsetTable .addCommentTD {
+	padding: 6px 10px 10px 0px;
+	font-size: .8em;
+	text-align: right;
+}
+
+.currentResponseBoxInsetTable .reviseResponseTD {
+	padding: 6px 10px 10px 0px;
+	font-size: .8em;
+	text-align: left;
+}
+
+.currentResponseBoxInsetTable a:hover {
+	background-color: #FFFF00;
+	color: #000099;
+}
+
+#revisionTable {
+	width: 750px;
+	margin: 10px 0 0px 50px;
+	background-color: white;
+	border: 1px dotted #990000;
+}
+
+#revisionTable td {
+	padding: 1px 5px 3px 5px;
+	font-size: .8em;
+}
+
+.revisionTableHeader {
+	color: #333333;
+	font-size: .9em;
+	font-weight: bold;
+	font-variant: small-caps;
+}
+
+#revisionTable .revisionTextTD {
+	color: #990000;
+}
+
+#revisionTable .revisionTextTD .revisionTextTag {
+	color: #999999;
+	font-style: italic;
+}
+
+#commentsTable {
+	width: 750px;
+	margin: 10px 0 0px 50px;
+	padding: 2px;
+	background-color: white;
+	border: 1px dotted #333333;
+}
+
+#commentsTable td {
+	padding: 2px 5px 6px 5px;
+	font-size: .8em;
+}
+
+.commentsTableTD1 {
+	color: #333333;
+	font-size: .9em;
+	font-weight: bold;
+	font-variant: small-caps;
+	width: 110px;
+}
+
+#commentsTable a:hover {
+	background-color: #FFFF00;
+	color: #000099;
+}
+
+#commentsTable .commentsTextTD {
+	color: #0000CC;
+}
+
+#commentsTable .commentsTextTag {
+	color: #999999;
+	font-style: italic;
+}
+
+#cannotSeeMessage {
+	margin: 30px 0 30px 0;
+	color: #FF0000;
+}
+
+#blankBottomBar {
+	position: fixed;
+	bottom: 0px;
+	width: 1000px;
+	margin-left: -5px;
+	border: 1px solid white;
+	background-color: #FFFFFF;
+	height: 5px;
+}
+
+#studentBottomBar {
+	position: fixed;
+	bottom: 7px;
+	width: 957px;
+	margin-left: -1px;
+	background-image: url(../images/GradientFooter.png);
+	border: 1px solid black;
+	border-top: 4px ridge black;
+}
+
+#studentBottomBar table {
+	margin: 6px 0 6px 20px;
+	font-size: .7em;
+	text-align: left;
+	vertical-align: top;
+}
+
+#studentBottomBar table .col1 {
+	width: 30%;
+}
+
+#studentBottomBar table .col2 {
+	padding-right: 5px;
+}
+
+#studentBottomBar table .col3 {
+	width: 23%;
+}
+
+#studentBottomBar table input {
+	color: #FFFFFF;
+	background-color: #0000FF;
+	border: 1px solid black;
+}
+
+#studentBottomBar table input:hover {
+	color: #0000FF;
+	background-color: #FFFF00;
+}
+
+#teacherBottomBar {
+	position: fixed;
+	bottom: 7px;
+	width: 935px;
+	margin-left: -1px;
+	background-image: url(../images/GradientFooter.png);
+	border: 1px solid black;
+	border-top: 4px ridge black;
+}
+
+#teacherBottomBar table {
+	margin: 6px 0 6px 20px;
+	font-size: .7em;
+	text-align: left;
+	vertical-align: top;
+}
+
+#teacherBottomBar table .col1 {
+	padding-right: 80px;
+}
+
+#teacherBottomBar table .col2 {
+	padding-right: 5px;
+}
+
+#teacherBottomBar table .col3 {
+	padding-right: 40px;
+}
+
+#teacherBottomBar table input {
+	color: #FFFFFF;
+	background-color: #0000FF;
+	border: 1px solid black;
+}
+
+#teacherBottomBar table input:hover {
+	color: #0000FF;
+	background-color: #FFFF00;
+}
+
+#teacherBottomBar dl {
+	width: 250px;
+	margin: 0px;
+}
+
+#teacherBottomBar dt {
+	float: left;
+	width: 120px;
+}
+
+/* Q&A Discussion Step: Create Response page */
+#createResponseWindow {
+	text-align: center;
+	border: 1px solid #333333;
+	margin: 10px;
+	padding: 0px;
+	background-color: #cccccc;
+	background-image: url(../images/Pixel_Gray.png);
+}
+
+#createResponseWindow #head {
+	font-size: 1.0em;
+	font-weight: bold;
+	letter-spacing: 3px;
+	text-align: center;
+	padding: 3px 10px;
+	background-color: #CCCCFF;
+	background-image: url(../images/Gradient-BlueWhite-5x65.png);
+	border-bottom: 1px solid #333333;
+}
+
+#createResponseWindow #owner {
+	font-style: italic;
+	font-weight: bold;
+	color: #000033;
+}
+
+#createResponseWindow #interior {
+	margin: 10px 25px;
+	text-align: left;
+}
+
+#createResponseWindow #interior #question,#createResponseWindow #interior #response {
+	margin-top: 10px;
+}
+
+#createResponseWindow #interior #responseText {
+	width: 100%;
+	margin-top: 5px;
+	padding: 5px;
+}
+
+#createResponseWindow #interior #selectPostType {
+	margin: 10px 0 5px 30px;
+	font-size: .8em;
+}
+
+#createResponseWindow #interior #inputButtons {
+	text-align: center;
+	margin-top: 25px;
+}
+
+#createResponseWindow #interior #inputButtons input {
+	font-size: .8em;
+	font-weight: bold;
+	background-color: #CCCCff;
+	padding: 3px;
+	margin-right: 10px;
+}
+
+#createResponseWindow #interior #inputButtons input:hover {
+	background-color: #FFFF00;
+}
+
+#createResponseWindow #postedDate {
+	margin-left: 25px;
+	font-size: .8em;
+	color: #666666;
+}
+
+#createResponseWindow #currentResponseBox {
+	margin-top: 5px;
+	padding: 5px;
+	border: 1px solid #999999;
+	background-color: #FFFFFF;
+	color: #000000;
+}
+
+#createResponseWindow #selectedResponseText {
+	border: 1px solid #999999;
+	padding: 5px;
+	margin-top: 4px;
+}
+
+#createResponseWindow #selectedResponseLabels {
+	font-size: .8em;
+}
+
+/* Q&A Discussion Step: TEACHER MANAGEMENT PAGE */
+
+#discussionSectionTeacher {
+	border: 1px solid #999999;
+	padding: 10px;
+}
+
+#teacherControlPanel {
+	padding: 10px;
+	border: 1px solid #000000;
+	background-color: #66FF66;
+	color: #000000;
+}
+
+#teacherControlSubPanel1 {
+	border: 0px solid gray;
+	padding: 5px;
+	width: 55%;
+}
+
+#teacherControlSubPanel1 .header {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+#teacherControlSubPanel1 ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 15px 0 0 0;
+}
+
+#teacherControlSubPanel1 li {
+	margin-left: 5px;
+}
+
+#teacherControlSubPanel2 {
+	
+}
+
+/* Student Annoucements */
+
+#studentAnnouncementHeader {
+	font-weight: bold;
+	font-size: 1.6em;
+	margin: 20px 0 20px 0;
+}
+
+#existingAnnouncements .newAnnouncement {
+	font-size: 1.4em;
+	color: #FF0000;
+	font-weight: bold;
+}
+
+#existingAnnouncements .existingAnnouncements {
+	margin-top: 20px;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+#announcementTable {
+	border-collapse: collapse;
+	width: 90%;
+	margin: 5px 10px;
+}
+
+#announcementTable td {
+	border: 1px solid black;
+	background-color: #339933;
+	color: #FFFFFF;
+	padding: 3px 5px;
+	vertical-align: top;
+	font-size: 1.1em;
+}
+
+#announcementTable .col1 {
+	width: 20%;
+	font-style: italic;
+}
+
+#announcementTable .col2 {
+	width: 25%;
+}
+
+#announcementTable .col3 {
+	width: 55%;
+}
+
+ul#announcementList .aDate {
+	color:#777;
+}
+
+ul#announcementList {
+	margin:.5em;
+}
+
+ul#announcementList li {
+	margin-left:1em;
+	list-style-type:disc;
+}
+
+ul#announcementList li a {
+	font-size:.85em;
+}
+
+ul.announcements {
+	margin:.5em;
+}
+
+ul.announcements.new {
+	color:#F47F6E;
+}
+
+ul.announcements li {
+	border: 1px solid #CCCCCC;
+    margin: 0.5em 0;
+    padding: 0.5em;
+}
+
+ul.announcements li.new {
+	border-color:#F47F6E;
+	background-color:#FFF7F7;
+}
+
+ul.announcements .aTitle {
+	text-decoration:underline;
+}
+
+ul.announcements .aDate {
+	color: #777777;
+    font-size: 0.85em;
+}
+
+ul.announcements .aMessage {
+    font-size: 0.9em;
+    margin: 0.5em 0.5em 0;
+}
+
+ul.announcements li.new .newTag {
+	color:#FF563F;
+	font-style:italic;
+}
+
+div.noMessages {
+	margin:.5em;
+}
+
+
+/* STYLES FOR MESSAGE CENTER   (presented as part of the Management area)*/
+
+.panelStyleMessage  {
+	margin-top:0px;
+	min-height:72px; 
+	background-position: top;
+	background-repeat:repeat-x;
+	border: 1px solid #999;  
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+}
+
+.panelStyleMessage.secondPlus  {
+	margin-top:15px;
+}
+
+.panelStyleMessage #messageHeader {
+    position:relative;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	text-align:left;
+	margin: 0px 0px 12px 0px;
+	padding: 3px 10px;
+	font-size: 1.0em;
+	font-weight:bold;
+	background-image:url(../images/teacher/teacherSubHeader.png);
+	-moz-border-radius-topleft:4px;
+	-moz-border-radius-topright:4px;
+	-webkit-border-radius-topleft:4px;
+	-webkit-border-radius-topright:4px;
+	border-radius-topleft:4px;
+	border-radius-topright:4px;
+	border-bottom:1px solid #999;              
+                            }
+                            
+.panelStyleMessage #messageContent, .panelStyleMessage #messageContentArchived, .panelStyleMessage #messageContentSent  {
+	padding:0 10px 10px 10px;
+	font-size:.8em;
+	}
+
+.panelStyleMessage a {
+	padding:2px 0px;
+	color:blue;
+	text-decoration:none;
+	}
+	
+.panelStyleMessage a:hover {
+	background:#FFFF00;
+	}
+	
+.panelStyleMessage #hideShowLink {
+	position:absolute;
+	right:10px;
+	font-size:.7em;
+	}
+	
+#newMessageCountDiv, #archivedMessageCountDiv, #sentMessageCountDiv {
+	font-weight:bold;
+}
+
+div.messageDiv {
+	margin:.5em 0;
+}
+
+div.replyDiv {
+	display:none;
+}
+
+div#composeMessageFeedbackDiv {
+	color:#ff9900;
+	font-weight:bold;
+}
+
+div.replyFeedbackDiv {
+	color:#ff9900;
+	font-weight:bold;
+}
+
+.messageDisplayTable2 {
+	border-collapse:collapse;
+	margin:0;
+}
+
+.messageDisplayTable2 th, .messageDisplayTable2 td {
+	font-size:.8em;
+	padding:0px;
+	text-align:left;
+	vertical-align:top;
+}
+
+.messageDisplayTable2 th {
+	color:#666;
+	font-weight:normal;
+	width:60px;
+	letter-spacing:-.5px;
+}
+
+.messageActionLinks {
+	margin:2px 0 0 0px;
+	}
+
+#runStatsTable {
+	border:2px solid black;
+	width:100%;	
+}
+
+#runStatsTable tbody td {
+	border:1px solid black;
+}
+
+#runStatsTable tbody td ul {
+	list-style: none;
+	padding-left: 0;
+}
+
+.existingTagsDiv, .createTagsDiv {
+	padding-top:5px;
+	padding-bottom:5px;
+}
+
+.existingTagsDiv table {
+	border-collapse:collapse;
+}
+
+.tagMessage {
+	color:#800000;
+}
+
+.tag {
+	color:red;
+	padding-top:5px;
+	padding-bottom:5px;
+}

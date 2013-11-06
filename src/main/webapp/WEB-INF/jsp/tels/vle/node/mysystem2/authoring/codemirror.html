@@ -1,0 +1,261 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>MySystem advanced JS Authoring</title>
+  <!-- <link rel="stylesheet" href="css/style.css?v=2"> -->
+  <link rel="stylesheet" href="css/custom.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/codemirror.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscriptsrc="js/libs/jquery-1.9.1.min.js"%3E%3C/script%3E'))</script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+        var mode = 'rubric';  // 'rubric || 'feedback'
+
+        var setHelp = function() {
+          var selector = "#"+ mode +"Help";
+          $('#rubricHelp').hide();
+          $('#feedbackHelp').hide();
+          $('#JSRuleHelp').hide();
+          $(selector).show();
+        };
+
+        var setMode = function(modeName) {
+          if (modeName !== 'rubric' && modeName !== 'feedback' && modeName !== 'JSRule') {
+            alert("uknown mode name");
+          }
+          mode = modeName;
+          setHelp();
+        };
+
+        var myCodeMirror = CodeMirror.fromTextArea($('#code_editor')[0], {
+          value: "function myScript(){return 100;}\n",
+          mode:  "javascript",
+          lineNumbers: true,
+          gutter: true,
+          fixedGutter: true,
+          matchBrackets: true,
+          autofocus: true
+        });
+
+        if (window.srcText) {
+          myCodeMirror.setValue(window.srcText);
+        }
+
+
+        var last_marker = null;
+
+
+        var checkSyntax = function() {
+          var src = myCodeMirror.getValue();
+          var keywords = {
+            'rubric': [ "all", "any",     "none",   "not_any",  "not_all",
+                "rule", "category", "nodes", "links",
+                "extraLinks", "iconsUsedOnce", "allIconsUsed", "hasTransformation",
+                "all_s", "any_s", "none_s", "not_any_s", "not_all_s",
+                "result", "score"
+              ],
+
+            'feedback': [ "all", "any",     "none",   "not_any",  "not_all",
+                "rule", "category", "nodes", "links",
+                "extraLinks", "iconsUsedOnce", "allIconsUsed", "hasTransformation",
+                "all_f", "any_f", "none_f", "not_any_F","not_all_f",
+                "suggestions", "feedback", "count", "dontCount"
+              ],
+            'JSRule': [ "all", "any",     "none",   "not_any",  "not_all",
+                "rule", "result"
+              ]
+          };
+          var opts =  {
+            evil: true, nomen: false, onevar: false, regexp: false,
+            strict: true, boss: true, undef: true, maxlen: 0, indent:4, expr: true,
+            predef: keywords[mode]
+          };
+          var result = JSHINT(src,opts);
+          if (!result) {
+            var error = JSHINT.errors[0];
+            var line  = error.line - 1;
+            var character = error.character;
+            var reason = error.reason;
+            $('#js_errors').html("<span>line: " + line + ":" + character + ": " + reason + "</span>");
+            $('#js_errors').addClass("error");
+            $('#js_error_labels').show();
+            myCodeMirror.setCursor(line,character);
+            myCodeMirror.setSelection(
+              {line: line, character: character},
+              {line: line, character: character+1} );
+            if (last_marker) { myCodeMirror.clearMarker(last_marker); };
+            last_marker = myCodeMirror.setMarker(line, "<span class='error'>✖</span>");
+            myCodeMirror.focus();
+          }
+          else {
+            // clear errors
+            if (last_marker) { myCodeMirror.clearMarker(last_marker); };
+            $('#js_errors').removeClass('error');
+            $('#js_error_labels').hide();
+            $('#js_errors').html('');
+            if (window.originParent) {
+              var message = {'windowClosed': false, 'javascript': myCodeMirror.getValue() };
+              window.originParent.postMessage(JSON.stringify(message),"*");
+            }
+          }
+        };
+        $("#save_authoring").bind('click',checkSyntax);
+
+
+        $('.help').click(function() {
+          $(this).next().toggle();
+        });
+
+        $(window).unload(function() {
+          if(window.originParent) {
+            var message = {'windowClosed': true, 'javascript': myCodeMirror.getValue() };
+            window.originParent.postMessage(JSON.stringify(message),"*");
+          }
+        });
+        if(window.originParent) {
+          var message = {'ready': true };
+          window.originParent.postMessage(JSON.stringify(message),"*");
+        }
+
+        window.addEventListener("message", function(evt) {
+          var data     = JSON.parse(evt.data);
+          var newCode  = data.code;
+          var mode     = data.mode;
+          myCodeMirror.setValue(newCode);
+          setMode(mode);
+        }, false);
+    });
+  </script>
+  <style type="text/css">
+    div {
+      marin: 1em;
+    }
+    body {
+      background-color: #eee;
+    }
+    #container {
+      margin: 5px;
+      padding: 1.2em;
+      overflow: auto;
+      background-color: #fff;
+    }
+    #help {
+      display: block;
+      width: 100%;
+    }
+    #editor_wrap {
+      display: block;
+      width: 100%;
+      border: 2px solid gray;
+      maring: 1em;
+    }
+    button {
+      margin-top: 1em;
+    }
+    #js_errors {
+      font-family: Lucidatypewriter, monospace;
+    }
+    .error {
+      color: #cc5555;
+    }
+    .label {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-top: 5px;
+      padding-top: 0px;
+    }
+
+    .js_help {
+      font-family: Lucidatypewriter, monospace;
+      white-space: pre;
+      overflow: auto;
+      margin-bottom: 1em;
+      margin-top: 0em;
+      padding-top: 0px;
+      font-size: 10px;
+      display: none;
+    }
+    a {text-decoration: underline;}
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="help">
+      <div id="feedbackHelp">
+        <span class="label help"><a>Feedback help</a></span>
+        <div  class="js_help">
+      // sample use:
+          any_f(none('has nodes','has links'),extraLinks(), "Your diagram has problems.")
+
+          any('category name', 'rulename')  // you can use rule names, or category names
+          any_f('category name',"good");    // provide feedback "good" if 'category name' matches
+          all('a','b',true,rule('c'))       // true if category a, category b, and rule 'c' are matched.
+          none_f('a','b','c', 'message')    // provide "message" feedback if none of a b c are true.
+          rule("has a sun");                // check the rule "has a sun" passes.
+          category("thing");                // true if any rules in "thing" are true.
+          hasTransformation();              // true if the diagram has transformations
+          iconsUsedOnce();                  // true if the icons used at most one time.
+          allIconsUsed();                   // true if *all* icons were used at least once
+          extraLinks();                     // true if there are links present not defined in rules.
+          feedback("message");              // Tell the student  "message"
+          dontCount();                      // Feedback after this won't count against max submissions.
+          count();                          // Feedback after this will count against max submissions.
+      // by default the "Feedback if all rules pass: " feedback will be given
+      </div>
+    </div>
+
+    <div id="rubricHelp" >
+      <span class="label help"><a>Rubric help</a></span>
+      <div class="js_help">
+     // An example rubric:
+          all_s('transform','storage','source','release', 6);
+          all_s('transform','storage', 5);
+          all_s('transform','source', 5);
+          all_s('transform','release', 5);
+          all_s('transform',4);
+          any('source','storage','release',3);
+          any('link',2);
+          score(1);
+     // Other ideas:
+          any_s('category one', 'rule a', 5); // you can score with rules or categories.
+          any_s(false,all('a','b'), 4);       // score five if a and b. nestable all any.
+          score(3);                           // explicitly set a score.
+          if (rule('rulename')) {...}         // explicitly check a rule.
+          hasTransformation();                // true if the diagram has transformations
+          iconsUsedOnce();                    // true if the icons used at most one time.
+          allIconsUsed();                     // true if *all* icons were used at least once
+          extraLinks();                       // true if there are links present not defined in rules.
+      </div>
+    </div>
+
+    <div id="JSRuleHelp">
+      <span class="label help"><a>Rule help</a></span>
+      <div  class="js_help">
+      // example: ( <em>result</em> is how this rule 'evaluates' in other contexts. )
+          result = all('rule a', 'rule b', any('rule d','rule e'));
+
+      // Other ideas:
+          all(true,true);                       // evaluates to true
+          any(false,true);                      // evaluates to true
+          not_any(true,true,false);             // evaluates to false
+          none(true,true,false);                // evaluates to false
+          not_all(flase,true,true);             // evaluates to true
+          if (any('rulename')) {...}            // can use JS constructs.
+       </div>
+    </div>
+
+    <div id="editor_wrap">
+      <textarea id="code_editor"></textarea>
+    </div>
+    <div id="js_error_labels" class="label" style="display: none;"> Javascript Errors:</div>
+    <div id="js_errors"></div>
+    <button id="save_authoring">Save Javascript</button>
+  </div>
+  <script src="js/libs/codemirror.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/libs/javascript.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/libs/jshint.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

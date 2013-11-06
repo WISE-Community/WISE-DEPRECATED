@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- * Copyright (c) 2006 Encore Research Group, University of Toronto * 
+	* This library is free software; you can redistribute it and/or * modify 
+	it under the terms of the GNU Lesser General Public * License as published 
+	by the Free Software Foundation; either * version 2.1 of the License, or 
+	(at your option) any later version. * * This library is distributed in the 
+	hope that it will be useful, * but WITHOUT ANY WARRANTY; without even the 
+	implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+	See the GNU * Lesser General Public License for more details. * * You should 
+	have received a copy of the GNU Lesser General Public * License along with 
+	this library; if not, write to the Free Software * Foundation, Inc., 51 Franklin 
+	Street, Fifth Floor, Boston, MA 02110-1301 USA -->
+
+<!-- $Id$ -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<util:properties id="uihtmlproperties"
+		location="classpath:messages/tels/ui-html_en_US.properties" />
+
+	<util:properties id="emaillisteners" location="classpath:portal.properties" />
+
+	<util:properties id="portalproperties" location="classpath:portal.properties" />
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:portal.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="adminjob" class="org.telscenter.sail.webapp.domain.admin.AdminJob">
+		<property name="javaMail" ref="javaMail" />
+		<property name="emaillisteners" ref="emaillisteners" />
+		<property name="portalProperties" ref="portalproperties" />
+	</bean>
+
+	<bean name="adminJobDetail" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass"
+			value="org.telscenter.sail.webapp.domain.admin.AdminJob" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="javaMail" value-ref="javaMail" />
+				<entry key="emaillisteners" value-ref="emaillisteners" />
+				<entry key="portalProperties" value-ref="portalproperties" />
+				<entry key="runDao" value-ref="runDao" />
+				<entry key="userDao" value-ref="userDao" />
+			</map>
+		</property>
+	</bean>
+
+	<bean name="daiyAdminJobDetail" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass"
+			value="org.telscenter.sail.webapp.domain.admin.DailyAdminJob" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="runDao" value-ref="runDao" />
+				<entry key="userDao" value-ref="userDao" />
+				<entry key="projectDao" value-ref="projectDao" />
+				<entry key="portalStatisticsDao" value-ref="portalStatisticsDao" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="adminJobDetail" />
+		<!-- run every night at 11 PM -->
+		<property name="cronExpression" value="0 0 23 * * ?" />
+	</bean>
+
+	<bean id="dailyCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="daiyAdminJobDetail" />
+		<!-- run every night at 11 PM -->
+		<property name="cronExpression" value="0 0 23 * * ?" />
+	</bean>
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="cronTrigger" />
+				<ref bean="dailyCronTrigger" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="studentUserDetails" scope="prototype"
+		class="org.telscenter.sail.webapp.domain.authentication.impl.StudentUserDetails">
+	</bean>
+
+	<bean id="teacherUserDetails" scope="prototype"
+		class="org.telscenter.sail.webapp.domain.authentication.impl.TeacherUserDetails">
+	</bean>
+
+	<bean id="userDetailsService" scope="prototype"
+		class="org.telscenter.sail.webapp.service.authentication.impl.UserDetailsServiceImpl">
+		<property name="userDetailsDao" ref="userDetailsDao" />
+		<property name="grantedAuthorityDao" ref="grantedAuthorityDao" />
+	</bean>
+
+	<bean id="run" scope="prototype"
+		class="org.telscenter.sail.webapp.domain.impl.RunImpl">
+	</bean>
+
+	<bean id="runDao"
+		class="org.telscenter.sail.webapp.dao.offering.impl.HibernateRunDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="project"
+		class="org.telscenter.sail.webapp.domain.project.impl.ProjectImpl">
+	</bean>
+
+	<bean id="projectDao"
+		class="org.telscenter.sail.webapp.dao.project.impl.HibernateProjectDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="externalProjectDao"
+		class="org.telscenter.sail.webapp.dao.project.impl.HibernateExternalProjectDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="projectMetadata"
+		class="org.telscenter.sail.webapp.domain.project.impl.ProjectMetadataImpl">
+	</bean>
+
+	<bean id="module" class="org.telscenter.sail.webapp.domain.impl.ModuleImpl">
+	</bean>
+	<bean id="moduleDao"
+		class="org.telscenter.sail.webapp.dao.module.impl.HibernateModuleDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="wiseWorkgroupDao"
+		class="org.telscenter.sail.webapp.dao.workgroup.impl.HibernateWISEWorkgroupDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="projectParameters"
+		class="org.telscenter.sail.webapp.domain.impl.ProjectParameters"
+		scope="prototype" />
+
+	<bean id="runParameters" class="org.telscenter.sail.webapp.domain.impl.RunParameters"
+		scope="prototype" />
+
+	<bean id="runService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>org.telscenter.sail.webapp.service.offering.RunService</value>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<idref local="runServiceSecurity" />
+				<idref bean="runServiceTarget" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="runServiceSecurity"
+		class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
+		<property name="validateConfigAttributes" value="true" />
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="accessDecisionManager" ref="offeringAccessDecisionManager" />
+		<property name="afterInvocationManager" ref="afterInvocationManager" />
+		<property name="securityMetadataSource" ref="securityMetadataSource" />
+	</bean>
+
+	<bean id="runServiceTarget"
+		class="org.telscenter.sail.webapp.service.offering.impl.RunServiceImpl">
+		<property name="sdsOfferingDao" ref="sdsOfferingDao" />
+		<property name="offeringDao" ref="offeringDao" />
+		<property name="runDao" ref="runDao" />
+		<property name="userDao" ref="userDao" />
+		<property name="curnitDao" ref="curnitDao" />
+		<property name="jnlpDao" ref="jnlpDao" />
+		<property name="groupDao" ref="groupDao" />
+		<property name="aclService" ref="aclServiceImpl" />
+		<property name="projectService" ref="projectService" />
+		<property name="portalProperties" ref="portalproperties" />
+	</bean>
+
+	<bean id="projectService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>org.telscenter.sail.webapp.service.project.ProjectService
+			</value>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<idref local="projectServiceSecurity" />
+				<idref bean="projectServiceTarget" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="projectServiceSecurity"
+		class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
+		<property name="validateConfigAttributes" value="true" />
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="accessDecisionManager" ref="offeringAccessDecisionManager" />
+		<property name="afterInvocationManager" ref="afterInvocationManager" />
+		<property name="securityMetadataSource" ref="securityMetadataSource" />
+	</bean>
+
+
+	<bean id="projectServiceTarget"
+		class="org.telscenter.sail.webapp.service.project.impl.ProjectServiceImpl">
+		<property name="projectServiceFactory" ref="projectServiceFactory" />
+	</bean>
+
+
+	<bean id="projectServiceFactory"
+		class="org.telscenter.sail.webapp.service.project.ProjectServiceFactory">
+		<property name="externalProjectService" ref="externalProjectService" />
+		<property name="ldProjectService" ref="ldProjectService" />
+		<property name="moduleService" ref="curnitService" />
+	</bean>
+
+	<bean id="ldProjectService"
+		class="org.telscenter.sail.webapp.service.project.impl.LdProjectServiceImpl">
+		<property name="curnitService" ref="curnitService" />
+		<property name="projectDao" ref="projectDao" />
+		<property name="aclService" ref="aclServiceImpl" />
+		<property name="runService" ref="runService" />
+		<property name="userService" ref="userService" />
+		<property name="portalProperties" ref="portalproperties" />
+		<property name="tagService" ref="tagService" />
+		<property name="premadeCommentService" ref="premadeCommentService" />
+	</bean>
+
+	<bean id="diyProjectCommunicatorDao"
+		class="org.telscenter.sail.webapp.dao.project.impl.HibernateDIYProjectCommunicatorDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="projectCommunicatorService"
+		class="org.telscenter.sail.webapp.service.project.impl.ProjectCommunicatorServiceImpl">
+		<property name="projectCommunicatorDao" ref="diyProjectCommunicatorDao" />
+	</bean>
+
+	<bean id="externalProjectService"
+		class="org.telscenter.sail.webapp.service.project.impl.ExternalProjectServiceImpl">
+		<property name="projectCommunicator" ref="projectCommunicator" />
+		<property name="projectDao" ref="externalProjectDao" />
+		<property name="projectCommunicatorDao" ref="diyProjectCommunicatorDao" />
+		<property name="workgroupDao" ref="wiseWorkgroupDao" />
+		<property name="runService" ref="runService" />
+	</bean>
+
+	<bean id="wiseUpService"
+		class="org.telscenter.sail.webapp.service.wiseup.impl.WiseUpServiceImpl">
+		<property name="projectService" ref="projectService" />
+		<property name="curnitService" ref="curnitService" />
+		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseUpHubUrl" value="http://166.78.236.95/wiseup" />
+	</bean>
+
+	<bean id="projectCommunicator"
+		class="org.telscenter.sail.webapp.domain.project.impl.ProjectCommunicatorImpl">
+	</bean>
+
+	<bean id="diyProjectCommunicator"
+		class="org.telscenter.sail.webapp.domain.project.impl.DIYProjectCommunicatorImpl">
+		<property name="previewProjectSuffix" value="/sail_jnlp/6/1/authoring" />
+		<property name="runService" ref="runService" />
+		<property name="projectService" ref="projectService" />
+	</bean>
+
+	<bean id="portalDao"
+		class="org.telscenter.sail.webapp.dao.portal.impl.HibernatePortalDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="portalStatisticsDao"
+		class="org.telscenter.sail.webapp.dao.portal.impl.HibernatePortalStatisticsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="portalStatisticsService"
+		class="org.telscenter.sail.webapp.service.portal.impl.PortalStatisticsServiceImpl">
+		<property name="portalStatisticsDao" ref="portalStatisticsDao" />
+	</bean>
+
+	<bean id="portalService"
+		class="org.telscenter.sail.webapp.service.portal.impl.PortalServiceImpl">
+		<property name="portalDao" ref="portalDao" />
+	</bean>
+
+	<bean id="curnitService"
+		class="org.telscenter.sail.webapp.service.module.impl.ModuleServiceImpl">
+		<property name="sdsCurnitDao" ref="sdsCurnitDao" />
+		<property name="curnitDao" ref="curnitDao" />
+		<property name="moduleDao" ref="moduleDao" />
+	</bean>
+
+	<bean id="studentService"
+		class="org.telscenter.sail.webapp.service.student.impl.StudentServiceImpl">
+		<property name="aclService" ref="aclServiceImpl" />
+		<property name="groupService" ref="groupService" />
+		<property name="runService" ref="runService" />
+		<property name="workgroupService" ref="wiseWorkgroupService" />
+		<property name="userService" ref="userService" />
+	</bean>
+
+	<bean id="sessionBundleService"
+		class="org.telscenter.sail.webapp.service.grading.impl.SessionBundleServiceImpl">
+		<property name="sdsWorkgroupDao" ref="sdsWorkgroupDao" />
+	</bean>
+
+	<bean id="gradingService"
+		class="org.telscenter.sail.webapp.service.grading.impl.GradingServiceImpl">
+		<property name="sessionBundleService" ref="sessionBundleService" />
+		<property name="annotationBundleService" ref="annotationBundleService" />
+		<property name="runService" ref="runService" />
+	</bean>
+
+	<bean id="wiseWorkgroupService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>org.telscenter.sail.webapp.service.workgroup.WISEWorkgroupService
+			</value>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<idref local="wiseWorkgroupServiceSecurity" />
+				<idref bean="wiseWorkgroupServiceTarget" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="wiseWorkgroupServiceSecurity"
+		class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
+		<property name="validateConfigAttributes" value="true" />
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="accessDecisionManager" ref="workgroupAccessDecisionManager" />
+		<property name="afterInvocationManager" ref="afterInvocationManager" />
+		<property name="securityMetadataSource" ref="securityMetadataSource" />
+	</bean>
+
+	<bean id="wiseWorkgroupServiceTarget"
+		class="org.telscenter.sail.webapp.service.workgroup.impl.WISEWorkgroupServiceImpl">
+		<property name="sdsWorkgroupDao" ref="sdsWorkgroupDao" />
+		<property name="workgroupDao" ref="wiseWorkgroupDao" />
+		<property name="annotationBundleService" ref="annotationBundleService" />
+		<property name="aclService" ref="aclServiceImpl" />
+		<property name="gradingService" ref="gradingService" />
+		<property name="offeringService" ref="runService" />
+		<property name="groupService" ref="groupService" />
+		<property name="groupDao" ref="groupDao" />
+		<property name="userService" ref="userService" />
+	</bean>
+
+	<bean id="premadeCommentService"
+		class="org.telscenter.sail.webapp.service.premadecomment.impl.PremadeCommentServiceImpl">
+		<property name="premadeCommentDao" ref="premadeCommentDao" />
+		<property name="premadeCommentListDao" ref="premadeCommentListDao" />
+		<property name="projectService" ref="projectService" />
+		<property name="runService" ref="runService" />
+	</bean>
+
+	<bean id="premadeCommentDao"
+		class="org.telscenter.sail.webapp.dao.premadecomment.impl.HibernatePremadeCommentDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="premadeComment" scope="prototype"
+		class="org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentImpl">
+	</bean>
+
+	<bean id="premadeCommentListDao"
+		class="org.telscenter.sail.webapp.dao.premadecomment.impl.HibernatePremadeCommentListDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="premadeCommentList" scope="prototype"
+		class="org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentListImpl">
+	</bean>
+
+	<bean id="newsItemDao"
+		class="org.telscenter.sail.webapp.dao.newsitem.impl.HibernateNewsItemDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="newsItem" scope="prototype"
+		class="org.telscenter.sail.webapp.domain.newsitem.impl.NewsItemImpl">
+	</bean>
+
+	<bean id="newsItemService"
+		class="org.telscenter.sail.webapp.service.newsitem.impl.NewsItemServiceImpl">
+		<property name="newsItemDao" ref="newsItemDao" />
+	</bean>
+
+
+	<bean id="announcementDao"
+		class="org.telscenter.sail.webapp.dao.announcement.impl.HibernateAnnouncementDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="announcement" scope="prototype"
+		class="org.telscenter.sail.webapp.domain.announcement.impl.AnnouncementImpl">
+	</bean>
+
+	<bean id="announcementService"
+		class="org.telscenter.sail.webapp.service.announcement.impl.AnnouncementServiceImpl">
+		<property name="announcementDao" ref="announcementDao" />
+	</bean>
+
+	<bean id="messageDao"
+		class="org.telscenter.sail.webapp.dao.message.impl.HibernateMessageDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="message" scope="prototype"
+		class="org.telscenter.sail.webapp.domain.message.impl.MessageImpl">
+	</bean>
+
+	<bean id="recipients" scope="prototype"
+		class="org.telscenter.sail.webapp.domain.message.impl.MessageRecipientImpl">
+	</bean>
+
+	<bean id="messageService"
+		class="org.telscenter.sail.webapp.service.message.impl.MessageServiceImpl">
+		<property name="messageDao" ref="messageDao" />
+		<property name="javaMail" ref="javaMail" />
+		<property name="emaillisteners" ref="emaillisteners" />
+	</bean>
+
+	<bean id="tag" scope="prototype"
+		class="org.telscenter.sail.webapp.domain.project.impl.TagImpl">
+	</bean>
+
+	<bean id="tagDao" scope="prototype"
+		class="org.telscenter.sail.webapp.dao.project.impl.HibernateTagDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="tagService"
+		class="org.telscenter.sail.webapp.service.tag.impl.TagServiceImpl">
+		<property name="tagDao" ref="tagDao" />
+	</bean>
+
+	<bean id="studentAttendanceDao" scope="prototype"
+		class="org.telscenter.sail.webapp.dao.attendance.impl.HibernateStudentAttendanceDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="studentAttendanceService"
+		class="org.telscenter.sail.webapp.service.attendance.impl.StudentAttendanceServiceImpl">
+		<property name="studentAttendanceDao" ref="studentAttendanceDao" />
+	</bean>
+</beans>

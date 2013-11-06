@@ -1,0 +1,167 @@
+.instructionsReminder {
+	float: right;
+	text-align: right;
+	margin: 2px 15px 0px 0;
+	color: #333;
+	vertical-align: middle;
+}
+
+.itemLabel {
+	font-size: .7em;
+	text-transform: uppercase;
+	margin: 5px 0 0 15px;
+}
+
+#promptdiv {
+	font-size: .8em;
+	color: #000;
+	margin: 8px 15px 8px 15px;
+	line-height: 150%;
+}
+
+#promptdiv p {
+	font-size: inherit;
+	font-weight: normal;
+}
+
+#promptdiv a:link,#promptdiv a:visited {
+	color: #000;
+}
+
+#promptdiv a:hover {
+	background-color: #FFFF00;
+}
+
+#promptdiv tt {
+	font-size: 150%;
+	font-weight: 700;
+}
+
+#promptdiv ol {
+	font-size: .8em;
+	text-transform: uppercase;
+	margin-left: 25px;
+}
+
+#promptdiv pre {
+	font-size: .8em;
+	font:.9em "Courier New", Courier, monospace;
+	font-weight:bold;
+	color:#333;
+	white-space:pre;
+	padding:10px;
+	margin:15px;
+	border-top:2px solid #999;
+	border-right:2px solid #999;
+	border-bottom:2px solid #999;
+	border-left:12px solid #999;
+}
+
+#displayTitleDiv {
+	color:#19253D;
+	margin:5px 0 5px 15px;
+	font-size:1.4em;
+	}
+
+#dataTable, #dataTable th, #dataTable td	{	border:none;  border-collapse:collapse;
+				font-family:corbel,'helvetica neue','trebuchet ms',arial,helvetica,sans-serif; 
+				font-size:1em; line-height:1.2em}
+#dataTable		{	background:black; -webkit-border-radius:6px;
+				-moz-border-radius:6px; border-radius:6px; 
+				-webkit-box-shadow:1px 1px 10px rgba(0,0,0,0.3); 
+				-moz-box-shadow:1px 1px 10px rgba(0,0,0,0.3);
+				margin:5px 5px 10px 15px;
+				}
+
+#dataTable thead, #dataTable tfoot			{	color:white; }
+
+#dataTable input	{
+	padding:2px 0;
+	border-top:1px solid #999;
+	border-left:1px solid #999;
+	border-right:1px solid #334B7B;
+	border-bottom:1px solid #334B7B;
+	width:100px;
+	color:#003300;
+	text-align:center;}
+
+#dataTable input:hover			{background-color:#FFFF00;}
+
+#dataTable thead th, #dataTable thead td	{padding:.7em .2em; font-weight:bold; text-align:center; }
+
+#dataTable thead input[disabled]	{
+	color:#000;
+	background-color:#CCC;
+	background-image:url(../../images/Gradient_Datagraph1.png);
+	background-position:top;
+	background-repeat:repeat-x; 
+	border:1px solid #666;
+	}
+#dataTable thead input[disabled]:hover	{
+	background-color:#CCC;}
+	
+#dataTable tbody td, #dataTable tbody th		{font-size:100%; padding:0.3em .2em; background-color:#6883BA; vertical-align:top;}
+#dataTable tbody th				{color:#222;text-align:right; border-right:1px solid #CCC;}
+
+#dataTable tbody th input[disabled], #dataTable tbody td input[disabled]	{
+	color:#000;
+	background-image:url(../../images/Gradient_Datagraph1.png);
+	background-repeat:repeat-x; 
+	background-position:top;
+	background-color:#CCC;
+	border:1px solid #919EBA;
+		}
+	
+#dataTable tbody th input[disabled]:hover	{
+	background-color:#CCC;}
+	
+#dataTable tbody td input[disabled]:hover	{
+	background-color:#fff;}
+	
+#dataTable a:link	{	line-height:1em; color:black; display:inline-block; padding:3px 7px; margin:-3px -7px}
+#dataTable a:visited	{	color:#555}
+#dataTable a:hover	{	text-decoration:none; background:black; color:white;
+						-webkit-border-radius:4px; -moz-border-radius:4px; border-radius:4px}
+						
+::-moz-selection{	background:#202020; color:white}
+::selection		{	background:#202020; color:white}
+
+#dataTable thead ::-moz-selection	{	background:white; color:#202020}
+#dataTable thead ::selection,   	{	background:white; color:#202020}
+
+#buttonsDiv #saveButt {
+	margin:5px 15px 5px 25px;
+}
+
+#buttonsDiv input {
+	background-color:#CC99FF;
+	border:1px solid #9966CC;
+	font-size:.9m;
+	padding:4px 10px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+
+#buttonsDiv input:hover {
+	background-color:#FFFF00;
+}
+
+#graphContainer {
+	margin-left:25px;
+}
+
+#graphTitleDiv {
+	text-align:center;
+}
+
+#graphYLabel {
+	text-align:left;	
+}
+
+#graphXLabel {
+	text-align:right;
+}
+.hidden {
+	display:none;
+}

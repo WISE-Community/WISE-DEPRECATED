@@ -1,0 +1,22 @@
+{
+   "createPrediction": false,
+   "dataCollectionTimeLimit": 30,
+   "enableSensor": true,
+   "expectedLines": 5,
+   "graphParams": {
+       "allowUpdateAxisRange":true
+   },
+   "graphTitle": "",
+   "lockPredictionOnCollectionStart": false,
+   "prompt": "",
+   "requirePredictionBeforeEnter":false,
+   "sensorType": "motion",
+   "showGraphOptions": false,
+   "showVelocity": false,
+   "showAcceleration":false,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "type": "Sensor"
+}

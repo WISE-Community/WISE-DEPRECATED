@@ -1,0 +1,108 @@
+<!doctype html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8" http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<title>WISE Virtual Learning Environment</title>
+<link rel="shortcut icon" href="images/robots/favicon_robot.ico">
+
+<!-- Mobile viewport optimized: h5bp.com/viewport -->
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<!-- <script src="js/libs/modernizr-2.0.6.min.js"></script>  TODO: Implement modernizr-->
+
+<script type='text/javascript' src='events/eventmanager.js'></script>
+<script type='text/javascript' src='util/scriptloader.js'></script>
+<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.0','packages':['corechart']}]}"></script>
+<!--  
+<script type='text/javascript' src='sound/soundmanager/script/soundmanager2.js'></script>
+-->
+<!--  TODO: hide message DIV programatically -->
+<style type="text/css">
+#mainMessageDiv {
+	display:none;
+}
+</style>
+
+<script type="text/javascript">
+
+/*
+ * Loads scripts when window is loaded 
+ */
+window.onload = function(){
+	scriptloader.bootstrap(this, bootstrapListener);
+};
+
+/* saves data on window unload */
+window.onunload = function(logout){
+	env.onWindowUnload(logout);
+};
+
+/* resizes navbar menu on page resize 
+* TODO: add this with navmode (is specific to navigation style)
+*/
+window.onresize = function(){
+	eventManager.fire('resizeMenu');
+};
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+/*
+ * Listener that is run when the bootstrap loading is complete.
+ */
+function bootstrapListener(type,args,obj){
+	if(args[0]=='bootstrap'){
+		/* listens for when the components for this view have finished loading */
+		var loadListener = function(type,args,obj){
+			if(window.parent && window.parent.startWithConfig){
+				window.parent.startWithConfig();
+			} else if(window.opener && window.opener.startWithParams){
+				window.opener.startWithParams(eventManager);
+			} else {
+				var runId = getParameterByName("runId");
+				var vleConfigUrl = "";
+				if (runId != "") {
+					vleConfigUrl = "getConfig.html?runId="+runId;
+				} else {
+					var projectId = getParameterByName("projectId");					
+					vleConfigUrl = "getConfig.html?projectId="+projectId;
+				}
+				vleConfigUrl = getParameterByName("getConfigURL");
+				//"http://localhost/WISE/static_sample_project_2/vleConfig.json";
+				view.startVLEFromConfig(vleConfigUrl);
+				console.warn('No window.parent or window.opener, cannot start VLE');
+			};
+		};
+
+		eventManager.subscribe('loadingViewComplete', loadListener);
+		createEnvironment('env', eventManager);
+		env.startView('student');
+	};
+};
+</script>
+
+</head>
+test
+	<body id="w4_vle">
+		<div id="vle_body"></div>
+		
+		<div id="loading">
+			<div class='hd'></div>
+			<div class='bd'></div>
+		</div>
+		
+		<form name="saveLocal" id='saveLocal' action="echo.html" method="POST">
+		    <input type="hidden" name="name" id="form_filename" value="myData"/><input type="hidden" name="data" id="localData" value=""/>
+		</form>
+		
+		<div id="soundmanager-debug"></div>
+		
+		<div id="sessionMessageDiv"></div>
+    </body>
+</html>

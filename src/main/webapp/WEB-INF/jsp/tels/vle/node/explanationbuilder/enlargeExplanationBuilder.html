@@ -1,0 +1,46 @@
+<html>
+<head>
+<script type="text/javascript" src="/vlewrapper/vle/jquery/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="/vlewrapper/vle/node/nodefactory.js"></script>
+<script type="text/javascript" src="/vlewrapper/vle/node/Node.js"></script>
+<script type="text/javascript" src="/vlewrapper/vle/node/explanationbuilder/ExplanationBuilderNode.js"></script>
+<link rel="stylesheet" type="text/css" href="/vlewrapper/vle/node/explanationbuilder/explanation.css">
+
+<script>
+//write the html to this page
+document.write(html);
+
+//remove the 'Enlarge' button
+$('#' + enlargeButtonId).remove();
+
+//get the width and height of the ideas div e.g. '600px'
+var width = $('#' + explanationBuilderIdeasDivId).css('width');
+var height = $('#' + explanationBuilderIdeasDivId).css('height');
+
+//remove the 'px'
+var widthNum = width.replace('px', '');
+var heightNum = height.replace('px', '');
+
+/*
+ * add two to the numbers to get the dimension values for the container div that
+ * will prevent the scrollbars from showing up. we need to add 2 to each dimension 
+ * because there is a border of 1px all around.
+ */
+var newWidth = parseInt(widthNum) + 2;
+var newHeight = parseInt(heightNum) + 2;
+
+/*
+ * if we are in Chrome we need to add 16 more px to the height to prevent
+ * the scrollbar from showing up.
+ */
+if(navigator.userAgent.indexOf('Chrome') != -1) {
+	newHeight += 16;
+}
+
+//set the new width and height of the container div
+$('#' + explanationBuilderContainerDivId).css('width', newWidth);
+$('#' + explanationBuilderContainerDivId).css('height', newHeight);
+</script>
+</head>
+<body></body>
+</html>

@@ -1,0 +1,166 @@
+.instructionsReminder {
+	float: right;
+	text-align: right;
+	margin: 2px 15px 0px 0;
+	color: #333;
+	vertical-align: middle;
+}
+
+#currentQuestionBox {
+	margin: 0 auto;
+	padding: 10px 0;
+	text-align: left;
+}
+
+#currentQuestionBox #leftColumn {
+	float: left;
+	width: 85%;
+	padding: 10px 0;
+	min-height:400px;
+}
+
+#currentQuestionBox #rightColumn {
+	margin-left: 86%;
+	padding: 10px 0;
+	text-align: center;
+	color: #FFF;
+	min-height:400px;
+}
+
+#currentQuestionBox #rightColumn img {
+	margin: 40px 0 0 0;
+
+}
+
+.itemLabel {
+	font-size: .7em;
+	text-transform: uppercase;
+	margin: 5px 0 0 15px;
+}
+
+#promptdiv {
+	font-size: .9em;
+	color: #000;
+	margin: 3px 10px 15px 15px;
+	font-weight: bold;
+	line-height: 150%;
+}
+
+#promptdiv p {
+	font-size: inherit;
+	font-weight: normal;
+}
+
+#promptdiv a:link,#promptdiv a:visited {
+	color: #000;
+}
+
+#promptdiv a:hover {
+	background-color: #FFFF00;
+}
+
+#promptdiv tt {
+	font-size: 150%;
+	font-weight: 700;
+}
+
+#promptdiv ol {
+	font-size: .8em;
+	text-transform: uppercase;
+	margin-left: 25px;
+}
+
+#promptdiv pre {
+	font-size: .8em;
+	font:.9em "Courier New", Courier, monospace;
+	font-weight:bold;
+	color:#333;
+	white-space:pre;
+	padding:10px;
+	margin:15px;
+	border-top:2px solid #999;
+	border-right:2px solid #999;
+	border-bottom:2px solid #999;
+	border-left:12px solid #999;
+}
+
+#radiobuttondiv {
+	margin: 10px;
+}
+
+#radiobuttondiv table td {
+	font-size: .85em;
+	vertical-align: top;
+	padding: 3px 3px 8px 3px;
+}
+
+#radiobuttondiv input {
+	margin-top:2px;
+}
+
+#radiobuttondiv table p {
+	font-size: inherit;
+}
+
+#radiobuttondiv table tt {
+	font-size: 110%;
+	font-weight:bold;
+}
+
+#radiobuttondiv .correct {
+	color: green;
+	font-weight: bold;
+}
+
+#radiobuttondiv .incorrect {
+	color: red;
+	font-weight: bold;
+}
+
+#radiobuttondiv table td:first-child {
+	width:25px;
+}
+
+#radiobuttondiv table td + td + td {
+
+}
+
+#radiobuttondiv table td + td + td div[name="feedbacks"]{
+	font-style:italic;
+	font-size:.9em;
+	border-left:4px solid #999;
+	padding-left:6px;
+	margin-left:30px;
+	
+}
+
+input * {
+	color: red
+}
+
+#submitbuttonDiv {
+	text-align: center;
+	margin: 5px;
+}
+
+#submitbuttonDiv input * {
+	font-size: .8em;
+	font-weight: bold;
+}
+
+#statusMessages {
+	text-align: center;
+	margin: 5px auto;
+	padding: 5px;
+}
+
+#numberAttemptsDiv,#lastAttemptDiv {
+	display: inline;
+	font-size: .8em;
+	margin: 0;
+	padding: 0;
+}
+
+#buttonTable {
+	margin-top:10px;
+}

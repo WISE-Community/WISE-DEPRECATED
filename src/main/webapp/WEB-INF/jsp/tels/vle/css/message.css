@@ -1,0 +1,44 @@
+/* STYLES FOR SUPER SECRET MESSAGE DIV.  KUDOS TO PATRICK FOR BEST ID NAME IN THE ENTIRE PROJECT  */	
+							
+.messages  {
+	padding: 1.1em;
+	font-size:1em;
+	background-color: #ccc;
+	border-top: solid black 1px;
+	border-bottom: solid black 2px;
+	border-left: solid black 2px;
+	border-right: solid black 2px;
+	-webkit-border-bottom-right-radius: 1em;
+	-webkit-border-bottom-left-radius: 1em;
+	-moz-border-radius-bottomright: 1em;
+	-moz-border-radius-bottomleft: 1em;
+	text-align: center;
+	position: absolute; 
+	top:0;
+	width: 320px;
+	z-index: 1002;
+}
+
+.minimessage {
+	padding: .1em;
+	font-size: .7em;
+	opacity: 0.68;
+	background-color: #ccc;
+	border-top: solid black 1px;
+	border-bottom: solid black 2px;
+	border-left: solid black 2px;
+	border-right: solid black 2px;
+	-webkit-border-bottom-right-radius: 1em;
+	-webkit-border-bottom-left-radius: 1em;
+	-moz-border-radius-bottomright: 1em;
+	-moz-border-radius-bottomleft: 1em;
+	text-align: center;
+	position: absolute; 
+	top:0;
+	width: 320px;
+	z-index: 1001;
+}
+
+#mainMessageDiv {
+	display:none;
+}

@@ -1,0 +1,221 @@
+#svg_editor #snapshotpanel {
+	background-color:#A0A0A0;
+	margin:0 2px;
+	padding:3px;
+	width:190px;
+	border:1px solid #777777;
+	position:absolute;
+	top:0;
+	bottom:0;
+}
+
+#svg_editor #tool_snapshot a, #svg_editor #snapshot_tools a {
+	text-decoration:underline;
+	font-size:1.1em;
+}
+
+#svg_editor #snapshot_header {
+	border:1px solid #777777;
+	color:#000000;
+	height:17px;
+	padding:2px 5px;
+	background-color:#E8E8E8;
+	position:absolute;
+	right:3px;
+	top:3px;
+	left:3px;
+}
+
+#svg_editor #snapshot_header a {
+	font-size:.9em;
+}
+
+#svg_editor #snapshot_tools div {
+	display:inline;
+}
+
+#svg_editor #snapshot_header a#close_snapshots {
+	color:#777777;
+	cursor:pointer;
+	float:right;
+	font-size:1.2em;
+	font-weight:bold;
+}
+
+#svg_editor #snapshots {
+	background-color:#FFFFFF;
+	border:1px solid #777777;
+	bottom:0;
+	left:3px;
+	margin:3px 0;
+	padding:5px;
+	position:absolute;
+	right:3px;
+	top:26px;
+}
+
+#svg_editor #snapshots #snap_images {
+	overflow-y:auto;
+	overflow-x:hidden;
+	bottom:0;
+	left:2px;
+	position:absolute;
+	right:2px;
+	top:36px;
+}
+
+#svg_editor #snapshots div.snap_delete {
+	-moz-border-radius-bottomleft:4px;
+	-webkit-border-radius-bottomleft:4px;
+	-o-border-radius-bottomleft:4px;
+	border-radius-bottomleft:4px;
+	background:#999999;
+	width:7px;
+	float:right;
+	margin-right:-2px;
+	margin-top:-118px;
+	padding:2px 5px 2px 6px;
+	color:#FFFFFF;
+}
+
+#svg_editor #snapshots div.snap_num {
+	-moz-border-radius-topright:4px;
+	-webkit-border-radius-top-right:4px;
+	-o-border-radius-bottomleft:4px;
+	border-radius-bottomleft:4px;
+	background:#999999;
+	color:#FFFFFF;
+	float:left;
+	font-size:1.2em;
+	margin-left:-2px;
+	margin-top:-20px;
+	padding:2px 6px 2px 4px;
+}
+
+#svg_editor #snapshots div.hover div.snap_delete, #svg_editor #snapshots div.hover div.snap_num {
+	background-color:#555555;
+}
+
+#svg_editor #snapshots div.snap_wrapper {
+	float:left;
+	height:115px;
+}
+
+#svg_editor #snapshots div.snap {
+	background-color:#cccccc;
+	width:150px;
+	height:112.5px;
+	padding:2px;
+	margin:auto auto 5px;
+	border:2px solid #999999;
+	cursor:pointer;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+	overflow:hidden;
+}
+
+#svg_editor #snapshots div.hover {
+	border-color:#555555;
+	background-color:#DDDDDD;
+}
+
+#svg_editor #snapshots div.snap.active {
+	background-color:#ffffff !important;
+	border-color:#333333 !important;	
+}
+
+#svg_editor #play_controls {
+	border:1px solid #777777;
+	color:#000000;
+	height:17px;
+	padding:2px 5px;
+	background-color:#E8E8E8;
+	left:3px;
+	position:absolute;
+	right:3px;
+	top:29px;
+}
+
+#svg_editor .snap_controls {
+	float:left;
+	margin:4px 4px 0 0;
+	cursor:pointer;
+}
+
+#svg_editor #play_controls #pause {
+	display:none;
+}
+
+#svg_editor #play_controls #play_speed {
+	width:58px;
+	float:right;
+	margin:5px 3px 0 5px;
+	cursor:pointer;
+}
+
+#svg_editor #play_controls #current_speed {
+	float:right;
+	margin:2px 0 0 5px;
+	text-align:right;
+	width:72px;
+}
+
+#svg_editor #play_controls #previous {
+	margin: 4px 0 0;
+}
+
+#svg_editor #snapshotpanel .label {
+	margin:0 2px;
+}
+
+#svg_editor #snapshotpanel h3 {
+	font-weight:bold;
+	margin:0;
+	float:left;
+}
+
+#svg_editor #snapshotpanel .placeholder {
+	width:150px;
+	height:112.5px;
+	border:1px dashed #555555;
+	background-color:#DDDDDD;
+	padding:2px;
+	margin:auto auto 5px;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+}
+
+#svg_editor #tool_snapshot {
+	position:relative;
+	top:-1px;
+	clear:left;
+	float:right;
+	margin-right:8px;
+	cursor:pointer;
+}
+
+#svg_editor #tool_snapshot div {
+	padding:2px;	
+}
+
+#svg_editor img.tool_snapshot, #svg_editor #snapshot_tools img, #svg_editor #snapshot_tools a {
+	vertical-align:middle;
+	height:24px;
+	margin-left:2px;
+	cursor:pointer;
+}
+
+#svg_editor #snapshot_tools img {
+	height:18px;
+	margin:0 5px 0 0;
+}
+
+#new_snap_dialog, #prompt_dialog, #snapwarning_dialog, #deletesnap_dialog {
+	text-align:center;
+}
+
+#new_snap_dialog div, #prompt_dialog div, #snapwarning_dialog div, #deletesnap_dialog div {
+	margin:.5em 0;
+}

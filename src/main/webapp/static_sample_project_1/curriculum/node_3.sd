@@ -1,0 +1,10 @@
+{
+   "description_active":false,
+   "description_default":"Enter description here.",
+   "prompt":"Draw a model which shows the <a style=\"color:red\" onclick=\"node.linkTo('j8I5KO2Izy')\">geologic process you explained in 7.1</a>. Be sure to include what is happening in the <b>mantle</b>, what is happening with the <b>plates</b>, and what is happening on the <b>surface</b> of Earth. Don't forget labels! Include your scientific vocabulary!<br /> ",
+   "snapshots_active":false,
+   "stamps":[],
+   "svg_background":"",
+   "type":"SVGDraw",
+   "snapshots_max":10
+}

@@ -1,0 +1,46 @@
+<uml>
+   <greenVersion="20500"/>
+   <type>
+      <name="=webapp/src\/main\/java<net.sf.sail.webapp.domain.authentication{MutableUserDetails.java[MutableUserDetails"/>
+      <height="-1"/>
+      <width="-1"/>
+      <x="12"/>
+      <y="3"/>
+   </type>
+   <type>
+      <name="=webapp/src\/main\/java<net.sf.sail.webapp.domain.authentication.impl{PersistentUserDetails.java[PersistentUserDetails"/>
+      <height="-1"/>
+      <width="-1"/>
+      <x="0"/>
+      <y="263"/>
+   </type>
+   <relationship>
+      <class="edu.buffalo.cse.green.relationship.realization.RealizationPart"/>
+      <sourceType="=webapp/src\/main\/java<net.sf.sail.webapp.domain.authentication.impl{PersistentUserDetails.java[PersistentUserDetails"/>
+      <targetType="=webapp/src\/main\/java<net.sf.sail.webapp.domain.authentication{MutableUserDetails.java[MutableUserDetails"/>
+      <bendpoints>
+      </bendpoints>
+   </relationship>
+   <type>
+      <name="=webapp/src\/main\/java<net.sf.sail.webapp.domain.authentication{MutableGrantedAuthority.java[MutableGrantedAuthority"/>
+      <height="-1"/>
+      <width="-1"/>
+      <x="467"/>
+      <y="6"/>
+   </type>
+   <type>
+      <name="=webapp/src\/main\/java<net.sf.sail.webapp.domain.authentication.impl{PersistentGrantedAuthority.java[PersistentGrantedAuthority"/>
+      <height="-1"/>
+      <width="-1"/>
+      <x="446"/>
+      <y="262"/>
+   </type>
+   <relationship>
+      <class="edu.buffalo.cse.green.relationship.realization.RealizationPart"/>
+      <sourceType="=webapp/src\/main\/java<net.sf.sail.webapp.domain.authentication.impl{PersistentGrantedAuthority.java[PersistentGrantedAuthority"/>
+      <targetType="=webapp/src\/main\/java<net.sf.sail.webapp.domain.authentication{MutableGrantedAuthority.java[MutableGrantedAuthority"/>
+      <bendpoints>
+      </bendpoints>
+   </relationship>
+</uml>
+

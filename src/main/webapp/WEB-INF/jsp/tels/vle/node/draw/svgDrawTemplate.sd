@@ -1,0 +1,27 @@
+{
+   "description_active": true,
+   "description_default": "Enter description here.",
+   "prompt": "",
+   "snapshots_active": true,
+   "stamps": [],
+   "svg_background": "",
+   "img_background": "",
+   "bg_position": "",
+   "toolbar_options":{
+		"pencil":true,
+		"line":true,
+		"connector":true,
+		"rectangle":true,
+		"ellipse":true,
+		"polygon":true,
+		"text":true,
+		"importStudentAsset":true
+	},
+   "type": "SVGDraw",
+   "exportColumns": [
+      {
+         "columnName": "Data",
+         "field": "data"
+      }
+   ]
+}

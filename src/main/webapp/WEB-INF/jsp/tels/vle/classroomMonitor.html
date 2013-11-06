@@ -1,0 +1,60 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="chrome=1" /> 
+<title>Classroom Monitor</title>
+<script type='text/javascript' src='events/eventmanager.js'></script>
+<script type="text/javascript" src="util/scriptloader.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript">
+
+//load the package to graph google charts
+google.load("visualization", "1", {packages:["corechart"]});
+
+function load(getClassroomMonitorConfigUrl) {
+	eventManager.fire('classroomMonitorConfigUrlReceived', [getClassroomMonitorConfigUrl]);
+}
+
+/**
+ * Called when the user closes page
+ */
+window.onunload=function(){
+	env.onWindowUnload();
+};
+
+/*
+ * Loads scripts when body is loaded 
+ */
+function loaded(){
+	scriptloader.bootstrap(this, bootstrapListener);
+};
+
+/*
+ * Listener that is run when the bootstrap loading is complete.
+ * Loads and starts the authoring view.
+ */
+function bootstrapListener(type,args,obj){
+	if(args[0]=='bootstrap' || args[0]=='bootstrap_min'){
+		var classroomMonitorListener = function(type,args,obj){
+			//env.startGrading(gradingConfigUrl, runId);
+			window.parent.topiframeOnLoad();
+		};
+
+		eventManager.subscribe('loadingViewComplete', classroomMonitorListener);
+		createEnvironment('env', eventManager);
+		env.startView('classroomMonitor');
+	};
+};
+
+</script>
+
+</head>
+<body onload='loaded()' style='overflow-y:auto;'>
+<h3 id='classroomMonitorHeader'></h3>
+<div id='classroomMonitorButtonDiv'></div>
+<br>
+<div id='classroomMonitorPeriodsDiv'></div>
+<br>
+<div id='classroomMonitorMainDiv'></div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    * Copyright (c) 2007 Encore Research Group, University of Toronto
+    * 
+    * This library is free software; you can redistribute it and/or
+    * modify it under the terms of the GNU Lesser General Public
+    * License as published by the Free Software Foundation; either
+    * version 2.1 of the License, or (at your option) any later version.
+    *
+    * This library is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    * Lesser General Public License for more details.
+    *
+    * You should have received a copy of the GNU Lesser General Public
+    * License along with this library; if not, write to the Free Software
+    * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+<!-- $Id$ -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <bean id="registerstudentController"
+    	class="org.telscenter.sail.webapp.presentation.web.controllers.student.RegisterStudentController">
+    	<property name="userService" ref="userService" />
+    	<property name="studentService" ref="studentService" />
+    	<property name="commandName" value="studentAccountForm" />
+    	<property name="validator" ref="studentAccountFormValidator" />
+    	<property name="formView" value="student/registerstudent" />
+    	<property name="successView" value="student/registerstudentsuccess" />
+    </bean>
+    
+        <bean id="registerteacherController"
+    	class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.RegisterTeacherController">
+    	<property name="userService" ref="userService" />
+    	<property name="commandName" value="teacherAccountForm" />
+    	<property name="validator" ref="teacherAccountFormValidator" />
+    	<property name="formView" value="teacher/registerteacher" />
+    	<property name="successView" value="teacher/registerTeacherConfirm" />
+        <property name="javaMail" ref="javaMail"/>
+		<property name="emaillisteners" ref="emaillisteners" />			
+		<property name="portalProperties" ref="portalproperties" />        
+		<property name="messageSource" ref="messageSource" />      	
+    </bean>
+
+</beans>

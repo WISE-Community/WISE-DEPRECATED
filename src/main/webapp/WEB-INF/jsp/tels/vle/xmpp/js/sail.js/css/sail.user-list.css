@@ -1,0 +1,31 @@
+#user-list {
+  position: absolute;
+  top: 12px;
+  right: 6px;
+  font-size: 90%;
+}
+
+#user-list h1 {
+  background-color: #444;
+  border-bottom: 1px solid #666;
+  font-size: 90%;
+  margin: 0;
+  padding: 2px 4px;
+}
+
+#user-list ul {
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+
+#user-list ul li {
+  border-bottom: 1px dotted #888;
+  padding: 4px;
+  padding-bottom: 2px;
+  padding-top: 1px;
+}
+
+#user-list li:last-child {
+  border-bottom: none;
+}

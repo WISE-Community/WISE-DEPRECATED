@@ -1,0 +1,31 @@
+{
+   "options": {
+      "display": {
+         "start": "0",
+         "which": "2"
+      },
+      "graph": {
+         "bar": true,
+         "line": true,
+         "linePoint": true,
+         "point": true,
+         "range": true
+      }
+   },
+   "prompt": "",
+   "table": {
+      "graphHeight": 573,
+      "graphWidth": 800,
+      "independentIndex": -1,
+      "isQualitative": false,
+      "rows": [],
+      "title": "",
+      "titleEditable": true,
+      "titleIndex": -1,
+      "xLabel": "",
+      "xLabelEditable": true,
+      "yLabel": "",
+      "yLabelEditable": true
+   },
+   "type": "DataGraph"
+}

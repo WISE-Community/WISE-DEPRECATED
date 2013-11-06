@@ -1,0 +1,64 @@
+/**
+ * Copyright (c) 2006 Encore Research Group, University of Toronto
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+  
+/* THESE STYLES ARE USED GLOBALLY WITHIN ALL UCCP PROJECTS  */
+
+
+/* THIS TURKEY SHOULDN'T BE USED ANYMORE */
+
+#toolsArea {
+
+}
+
+#hostBrandingBoxLower {
+	position: absolute;
+	bottom: 0px;
+	text-align: center;
+}
+
+#hostBrandingBoxLower a img:hover {
+	outline: 2px dotted #FFFF00;
+}
+
+#hostBrandingBoxLower p {
+	position: absolute;
+	bottom: 10px;
+	left: 104px;
+	text-align: left;
+	font-size: .6em;
+	letter-spacing: 1px;
+	line-height: 120%;
+}
+
+#hostBrandingBoxLower p a:link,#hostBrandingBoxUCCP a:visited {
+	color: #999;
+	text-decoration: none;
+	outline: none;
+}
+
+#hostBrandingBoxLower p a:hover {
+	color: #FFFF00;
+}
+
+#hostBrandingBoxUpper {
+	display:none;
+	}
+	
+#navigationMenuBox {
+	height: 77%;
+}

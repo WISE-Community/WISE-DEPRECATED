@@ -1,0 +1,41 @@
+<html>
+    <head>
+       
+       <link href="../common/css/htmlAssessment.css" media="screen" rel="stylesheet" type="text/css" />
+       
+        <script type="text/javascript" src="../../util/scriptloader.js">
+        </script>
+        <script type="text/javascript">
+            function afterScriptsLoad(){
+            
+            }
+            
+            window.onload = function(){
+                scriptloader.initialize(document, afterScriptsLoad, 'info_box');
+            };
+        </script>
+    </head>
+    <body id="assessmentBody">
+        <div id="assessmentTypeCenteredDiv">
+            <div id="assessmentTitle">
+                Instructions <span class="subtitle">(Fill the Blank)</span>
+            </div>
+            <div id="assessmentDescription">
+                <p>
+                    Self-Guided Mode
+                </p>
+                <ul>
+                    <li>Read the text passage, making note of any numbered blanks.</li>
+                    <li>The current blank is highlighted in blue.  Type a potential answer for this blank in the Answer box. 
+                        Then click <i>Check Answer</i>. Be careful with your spelling! </li>
+                    <li>If your answer was not correct, click <i>Try Again</i> to make another attempt.</li>
+                    <li>If you get it wrong several times, a list of possible answers will appear. 
+                        Type one of the possibilities into the Answer box and check your answer.</li>
+                </ul>
+            </div>
+            <div id="InfoBoxClose">
+                <a href="JavaScript:window.close()">Close</a>
+            </div>
+        </div>
+    </body>
+</html>

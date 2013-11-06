@@ -1,0 +1,20 @@
+{
+    "getContentBaseUrl": "http://localhost/WISE/static_sample_project_2/curriculum/",
+    "runInfoRequestInterval": "-1",
+    "runName": "",
+    "getStudentUploadsBaseUrl": "http://localhost:8080/studentuploads",
+    "theme": "WISE",
+    "locale": "en_US",
+    "runId": "",
+    "projectId": "19",
+    "parentProjectId": "",
+    "getUserInfoUrl": "http://localhost/WISE/static_sample_project_2/info.html?action=getUserInfo&preview=true",
+    "enableAudio": false,
+    "userType": "none",
+    "mode": "portalpreview",
+    "sessionTimeoutInterval": 1200000,
+    "projectMetaDataUrl": "http://localhost/WISE/static_sample_project_2/metadata.html",
+    "sessionTimeoutCheckInterval": 60000,
+    "getContentUrl": "http://localhost/WISE/static_sample_project_2/curriculum/wise4.project.json",
+    "wiseBaseURL":"http://localhost/WISE/"
+}

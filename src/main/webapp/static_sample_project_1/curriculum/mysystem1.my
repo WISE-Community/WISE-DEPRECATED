@@ -1,0 +1,103 @@
+{
+   "modules": [
+      {
+         "xtype": "AssignmentInformation",
+         "fields": {
+            "goal": "Make a MySystem to show how ENERGY is involved in plate tectonics.<br><br>Make sure your diagram shows:<br><ul><li>where the energy comes from<li>HOW the energy moves<li>where the energy goes</li></ul><br><b>Make sure you label the arrows and describe how the energy is flowing between objects.</b>"
+         }
+      },
+      {
+         "xtype": "PropEditorArrows",
+         "arrows": {
+            "#8E0202": "heat energy",
+            "#fdb900": "kinetic energy"
+         },
+         "image": "assets/Core80.gif",
+         "icon": "assets/Core80.gif",
+         "name": ""
+      },
+      {
+         "name": "",
+         "icon": "assets/Core80.gif",
+         "image": "assets/Core80.gif",
+         "xtype": "MySystemContainer",
+         "etype": "source",
+         "fields": {
+            "efficiency": "1"
+         }
+      },
+      {
+         "name": "",
+         "icon": "assets/umantle80.gif",
+         "image": "assets/umantle80.gif",
+         "xtype": "MySystemContainer",
+         "etype": "source",
+         "fields": {
+            "efficiency": "1"
+         }
+      },
+      {
+         "name": "",
+         "icon": "assets/lmantle80.gif",
+         "image": "assets/lmantle80.gif",
+         "xtype": "MySystemContainer",
+         "etype": "source",
+         "fields": {
+            "efficiency": "1"
+         }
+      },
+      {
+         "name": "",
+         "icon": "assets/CCrust.gif",
+         "image": "assets/CCrust.gif",
+         "xtype": "MySystemContainer",
+         "etype": "source",
+         "fields": {
+            "efficiency": "1"
+         }
+      },
+      {
+         "name": "",
+         "icon": "assets/OCrust.gif",
+         "image": "assets/OCrust.gif",
+         "xtype": "MySystemContainer",
+         "etype": "source",
+         "fields": {
+            "efficiency": "1"
+         }
+      },
+      {
+         "name": "",
+         "icon": "assets/_Air.gif",
+         "image": "assets/_Air.gif",
+         "xtype": "MySystemContainer",
+         "etype": "source",
+         "fields": {
+            "efficiency": "1"
+         }
+      },
+      {
+         "name": "",
+         "icon": "assets/_Cup.gif",
+         "image": "assets/_Cup.gif",
+         "xtype": "MySystemContainer",
+         "etype": "source",
+         "fields": {
+            "efficiency": "1"
+         }
+      },
+      {
+         "name": "",
+         "icon": "assets/_Tank.gif",
+         "image": "assets/_Tank.gif",
+         "xtype": "MySystemContainer",
+         "etype": "source",
+         "fields": {
+            "efficiency": "1"
+         }
+      }
+   ],
+   "prompt": "question",
+   "type": "MySystem",
+   "excelExportStringTemplate": "MySystem Diagram"
+}

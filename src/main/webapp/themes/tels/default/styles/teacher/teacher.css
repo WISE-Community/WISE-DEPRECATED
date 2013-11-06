@@ -1,0 +1,337 @@
+/**
+ * Copyright (c) 2006 Encore Research Group, University of Toronto
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * $Id:styles.css 266 2007-04-04 15:40:42Z cynick $
+ */
+ 
+ table {
+ 	/*font-size:.8em;*/
+ }
+
+.panelStyleStatus {
+	margin-top:0px;
+	min-height:72px; 
+	/* background-image:url(../../images/teacher/Gradient-Gray-to-White-120px.png);  */
+	background-position: top;
+	background-repeat:repeat-x;
+	border: 1px solid #999;  
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+}
+
+.panelStyleMessages {
+	position:relative;
+	padding-bottom:25px;
+	margin-top:15px;
+	/* background-image:url(../../images/teacher/Gradient-Gray-to-White-350px.png);  */
+	background-position: top;
+	background-repeat:repeat-x;
+	border: 1px solid #999;  
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	min-height:172px; 
+	}
+
+.panelStyleCommunity{
+	margin-top:15px;
+	/* background-image:url(../../images/teacher/Gradient-Gray-to-White-200px.png);  */
+	background-position: top;
+	background-repeat:repeat-x;
+	border: 1px solid #999;  
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	min-height:100px; 
+	
+}
+
+.panelStyleMyProjectRuns {
+	min-height:550px; 
+	border: 1px solid #999;
+	border-bottom: 2px solid #999;  
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+}
+	
+#headerTeacherHome {
+	/*-moz-border-radius-topleft:5px;
+	-moz-border-radius-topright:5px;
+	-webkit-border-radius-topleft:5px;
+	-webkit-border-radius-topright:5px;
+	border-radius-topleft:5px;
+	border-radius-topright:5px;
+	background-color:#FFce8e;
+	background-image:url(../../images/teacher/teacherSubHeader.png);
+	background-position: top;  
+	border-bottom:1px solid #999;
+	line-height:1.2em;
+	font-size:.9em;
+	font-weight:bold;
+	margin-bottom:10px;
+	padding:4px 10px;
+	text-align:left;*/
+}
+
+#teacherQuickLinks, #teacherMessageTable	{  
+	border-collapse:collapse;
+	font-size:.8em;
+	width:100%;
+	table-layout: fixed;
+	color:#F2F4D2;
+}
+
+#teacherQuickLinks td, #teacherMessageTable td	{  
+	vertical-align:text-top;
+	text-align:left;
+	padding:0.25em 0;
+}
+
+#teacherQuickLinks tr:first-child td, #teacherMessageTable tr:first-child td {
+	padding-top:0;
+}
+
+#teacherQuickLinks tr:last-child td, #teacherMessageTable tr:last-child td {
+	padding-bottom:0;
+}
+
+.highlight  {
+	color:#F2F4D2;
+}
+
+.right  {
+	text-align:right !important;
+}
+	
+#teacherMessageTable td	{  
+	vertical-align:text-top;
+	text-align:left;
+}
+		
+#teacherMessageTable li	{
+	list-style-type:none;
+	margin: 0.5em 0;
+}
+
+#teacherMessageTable li:last-child {
+	margin-bottom:0;
+}
+
+.welcomeMsg {
+	margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+    font-weight:bold;
+}
+
+.messageContainer  {
+	margin:.5em 0;
+	padding:.5em 0;
+	border-top:1px solid #9B7F5E;
+}
+
+#newMessageCount {
+	font-weight:bold;
+	margin: .5em 0;
+}
+
+.messageDiv {
+}
+
+.messageDisplayTable {
+	border-collapse:collapse;
+	table-layout: fixed;
+    width: 100%;
+    font-size:1.1em;
+    color:#F2F4D2;
+}
+
+.messageDisplayTable th, .messageDisplayTable td {
+	font-size:.8em;
+	line-height:120%;
+	padding:0px;
+	border:0;
+	text-align:left;
+	vertical-align:top;
+	max-width:225px;
+}
+
+.messageDisplayTable th {
+	font-weight:normal;
+	width:55px;
+	letter-spacing:-1px; 
+}
+
+.messageDisplayTable td.messageBody {
+	padding:2px 1px
+}
+
+.msgLink {
+	margin-top: 1em;
+}
+
+ul.reminders {
+	margin-top:.5em;
+	padding-top: .5em;
+	border-top: 1px solid #9B7F5E;
+}
+
+/* TOOL TIP STYLES */
+
+#dashboardSections a.tooltip:hover  {background:#ffffff; text-decoration:none;} 
+
+#dashboardSections a.tooltip span {display:none; padding:8px; margin:20px 0 0 -255px; width:280px;}
+
+#dashboardSections a.tooltip:hover span {
+	display:inline; 
+	position:absolute; 
+	background:#FFE6C6; 
+	background:#46575b;
+	border:3px solid #232c3d;
+	color:#334B7B;
+	color:#FFF;
+	font-style:normal;
+	font-weight:normal;
+	text-align:left;
+	line-height:150%;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	}
+
+.panelStyleCommunity ul {
+	font-size:.7em;
+	margin:15px 8px 8px -5px;
+	}
+
+.panelStyleCommunity ul li {
+	list-style-type:circle;
+	margin-bottom:3px;
+	}
+
+.panelStyleCommunity ul a {
+	color:#0033CC;
+	padding: 1px;
+	margin-left:-1px;
+	text-decoration:none;
+	border:1px solid transparent;
+	}
+
+.panelStyleCommunity ul a.lineThrough {
+	text-decoration:line-through;
+	}
+	
+.panelStyleCommunity ul a:hover {
+	background-color:#FFFF00;
+	border:1px solid #999;
+	}
+	
+#myprojectrunsPanel {
+	width:958px;
+	padding:0;
+	margin:0;  
+}
+
+/* jQuey UI tab overrides for panel (run and project) tabs */
+.panelTabs {
+	margin-top:-1em;
+}
+
+/* .panelTabs {
+	background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    margin-top: -3.3em;
+    padding: 0;
+}
+
+.panelTabs ul.ui-tabs-nav {
+	background: none repeat scroll 0 0 transparent;
+	border: medium none;
+	font-weight: bold;
+	height: 2em;
+	line-height: 2em;
+	padding: 0;
+	margin-left: 13em;
+}
+
+.panelTabs ul.ui-tabs-nav li {
+	float:left;
+}
+
+.panelTabs ul.ui-tabs-nav li.ui-state-default {
+	background: none repeat scroll 0 0 transparent;
+	border: medium none;
+}
+
+.panelTabs ul.ui-tabs-nav li.ui-state-default a {
+	color: #585F0C;
+	font-weight: normal;
+	line-height: 1.4em;
+	margin: 0.25em 0 0;
+	padding: .2em .4em;
+	font-size: .9em;
+}
+
+.contentRight .panelTabs ul.ui-tabs-nav li.ui-state-default a,
+.contentLeft .panelTabs ul.ui-tabs-nav li.ui-state-default a {
+	
+}
+
+.panelTabs ul.ui-tabs-nav li.ui-state-default a:hover {
+	text-decoration:underline;
+}
+
+.contentRight .panelTabs ul.ui-tabs-nav li.ui-state-default a:hover,
+.contentLeft .panelTabs ul.ui-tabs-nav li.ui-state-default a:hover {
+	text-decoration:none !important;
+}
+
+.panelTabs ul.ui-tabs-nav li.ui-tabs-selected {
+}
+
+.panelTabs ul.ui-tabs-nav li.ui-tabs-selected a {
+	background-color: #DADF8B;
+	color: #333;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	box-shadow: 0 0 2px #DADF8B;
+	-moz-box-shadow: 0 0 2px #DADF8B;
+	-webkit-box-shadow: 0 0 2px #DADF8B;
+	text-decoration: none !important;
+}
+
+.contentRight .panelTabs ul.ui-tabs-nav li.ui-tabs-selected a,
+.contentLeft .panelTabs ul.ui-tabs-nav li.ui-tabs-selected a {
+}
+
+.panelTabs ul.ui-tabs-nav li.ui-tabs-selected a:hover {
+	border-bottom-width:2px;
+}
+
+.panelTabs ul.ui-tabs-nav li a em {
+	font-weight: bold;
+    letter-spacing: 0;
+}
+
+.panelTabs div.ui-tabs-panel {
+	background-color: #FFFFFF;
+    margin-top: 1em;
+    padding: 0;
+    text-align:center;
+} */

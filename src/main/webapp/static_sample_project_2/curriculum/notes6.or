@@ -1,0 +1,25 @@
+{
+   "assessmentItem":{
+      "adaptive":false,
+      "identifier":"Note",
+      "interaction":{
+         "expectedLines":"6",
+         "hasInlineFeedback":false,
+         "placeholderText":"",
+         "prompt":"Based on what you have learned about the differences between the two coasts and about plate tectonics in this entire unit, explain the following intriguing point: <br><br> Why do you think there are mountains on the East Coast when there is no plate boundary located there? ",
+         "responseIdentifier":"Note"
+      },
+      "responseDeclaration":{
+         "baseType":"string",
+         "cardinality":"single",
+         "identifier":"Note"
+      },
+      "timeDependent":false
+   },
+   "isRichTextEditorAllowed":false,
+   "starterSentence":{
+      "display":"0",
+      "sentence":""
+   },
+   "type":"Note"
+}
