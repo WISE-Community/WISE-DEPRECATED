@@ -421,6 +421,7 @@ public class InformationController extends AbstractController{
 		String curriculumBaseWWW = portalProperties.getProperty("curriculum_base_www");
 		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
 		String studentUploadsBaseWWW = portalProperties.getProperty("studentuploads_base_www");
+		String wiseBaseURL = portalProperties.getProperty("wiseBaseURL");
 		
 		String excelExportRestriction = portalProperties.getProperty("excelExportRestriction");
 		
@@ -705,6 +706,7 @@ public class InformationController extends AbstractController{
 			config.put("locale", request.getLocale());
 			config.put("enableAudio", false);
 			config.put("runInfoRequestInterval", GET_RUNINFO_REQUEST_INTERVAL);
+			config.put("wiseBaseURL",wiseBaseURL);
 			
 			if(step != null) {
 				//this is set if the request is to preview the project and load a specific step such as 1.2

@@ -92,7 +92,7 @@ public class PreviewLDProjectController extends AbstractController {
 				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 				String contentUrl = curriculumBaseWWW + rawProjectUrl;
 				
-				String vleurl = portalurl + "/vlewrapper/vle/vle.html";
+				String vleurl = portalurl + "/webapp/vle/vle.html";
 		
 				ModelAndView modelAndView = new ModelAndView("preview/preview");
 		    	modelAndView.addObject("vleurl",vleurl);
