@@ -25,7 +25,7 @@ function startWithConfig() {
 </head>
 <body style="height:100%; overflow-y:hidden; margin:0px;">
 <div id="wait"></div> 
-<iframe  style="overflow-x:auto; overflow-y:hidden;" id="topifrm" src="/vle/vle.html" name="topifrm" width="100%" height="100%" frameborder="0">
+<iframe  style="overflow-x:auto; overflow-y:hidden;" id="topifrm" src="${vleurl}" name="topifrm" width="100%" height="100%" frameborder="0">
 <spring:message code="student.vle.noIFrameSupport" />
 </iframe>
 

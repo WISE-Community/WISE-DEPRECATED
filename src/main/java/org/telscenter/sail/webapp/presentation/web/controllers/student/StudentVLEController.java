@@ -179,7 +179,7 @@ public class StudentVLEController extends AbstractController {
 			Run run) throws ObjectNotFoundException {
 		String portalurl = ControllerUtil.getBaseUrlString(request);
 		
-		String vleurl = portalurl + "/vlewrapper/vle/vle.html";
+		String vleurl = portalurl + "/webapp/vle/vle.html";
 		String vleConfigUrl = portalurl + "/webapp/request/info.html?runId=" + run.getId() + "&action=getVLEConfig";
 
 		String previewRequest = request.getParameter("preview");
