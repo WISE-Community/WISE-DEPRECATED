@@ -1,0 +1,71 @@
+#tickerMainContainer {
+	background:#CCC;
+	padding:15px;
+}
+   
+   
+#header {
+	background:#FF9933;
+	-moz-border-radius-topleft:4px;
+	-moz-border-radius-topright:4px;
+	-moz-border-radius-bottomleft:4px;
+	-moz-border-radius-bottomright:4px;
+	padding:10px;
+}
+
+
+#controlbar {
+	background:#CC9966;
+	-moz-border-radius-topleft:4px;
+	-moz-border-radius-topright:4px;
+	-moz-border-radius-bottomleft:4px;
+	-moz-border-radius-bottomright:4px;
+	padding:10px;
+	margin:10px 0 ;
+	}
+	
+#controlbar table {
+	font-size:.9em;
+	}
+	
+#studentwork {
+	background:#9999FF;
+	-moz-border-radius-topleft:4px;
+	-moz-border-radius-topright:4px;
+	-moz-border-radius-bottomleft:4px;
+	-moz-border-radius-bottomright:4px;
+	padding:10px;
+	margin:10px 0 ;
+}
+	
+.noteSubmission {
+	background:#FFCCFF;
+	padding:10px;
+	margin:10px 0 ;
+	width:100%;
+	text-align:left;
+	border:1px solid #333;
+	}
+	
+.autoAssessSubmission {
+	background:#CC99CC;
+	padding:10px;
+	margin:10px 0 ;
+	width:100%;
+	text-align:left;
+	border:1px solid #333;
+	}
+	
+.tickerBoxHeader {
+	font-size:.8em;
+	font-weight:700;
+	font-variant:small-caps;
+}
+
+#closeButton {
+	text-align:center;
+	border:1px solid #666;
+	margin:10px auto;
+	padding:10px;
+	width:200px;
+}

@@ -1,0 +1,126 @@
+#svg_editor .description_buttons {
+	padding:0;
+	margin-left:1em;
+	float:right;
+}
+
+#svg_editor .description_buttons button {
+	cursor: pointer;
+	line-height: 1.4em;
+	width:auto;
+	background:url("../jquery-ui/images/ui-bg_highlight-hard_30_1E69FF_1x100.png") repeat-x scroll 50% 50% #1E69FF; /*corrected path for wise4*/
+	border:1px solid #1747C0;
+	color:#FFFFFF;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	margin:0;
+	overflow:visible;
+	padding:0.1em 0.2em 0.1em;
+}
+
+#svg_editor .description_buttons button:hover {
+	color:#FFFA3D;
+}
+
+#svg_editor .description_buttons button[disabled] {
+	background:#CCCCCC;
+	color:#888888;
+	border-color:#AAAAAA;
+}
+
+#svg_editor #description {
+	position:absolute;
+	bottom:0px;
+	right:0;
+	left:0;
+	height:68px;
+	padding:0 5px;
+	line-height:100%;
+}
+
+#svg_editor #description a {
+	color:#FFFFFF;
+	cursor:pointer;
+	text-decoration:underline;
+}
+
+#svg_editor #description span {
+	display:inline-block;
+}
+
+#svg_editor #description span.panel_title {
+	font-weight:bold;
+	margin-right:.5em;
+}
+
+#svg_editor #description span.maximized {
+
+}
+
+#svg_editor #description span.minimized {
+	width: 500px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	-icab-text-overflow: ellipsis;
+	-khtml-text-overflow: ellipsis;
+	-moz-text-overflow: ellipsis;
+	-webkit-text-overflow: ellipsis;
+}
+
+#svg_editor #description #description_wrapper {
+	box-shadow:0 0 3px #000000;
+	-moz-box-shadow:0 0 3px #000000;
+	-webkit-box-shadow:0 0 3px #000000;
+	background: rgb(20, 20, 20);
+	background: rgba(20, 20, 20, 0.85);
+	padding:2px 5px;
+	border-radius:5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	margin:0 auto;
+	text-align:center;
+}
+
+#svg_editor #description .description_header {
+	font-weight:bold;
+	margin:0 2px;
+	padding:0;
+	font-size:1em;
+	height:22px;
+	line-height:22px;
+	color:#FFFFFF;
+	text-align:left;
+}
+
+#svg_editor .description_header_text {
+	float:left;
+}
+
+#svg_editor .description_header_text span {
+	font-weight:normal;
+	font-size:1em;
+	vertical-align: top;
+}
+
+/* wise4 */
+#svg_editor #description_content {
+	background-color:#FFFFFF;
+	font-size:1.2em;
+	height:75px;
+	line-height:1.3em;
+	margin: 5px 0;
+	padding:5px;
+	width:98%;
+}
+
+#svg_editor .description_input {
+	background-color:#eee;
+	border:1px solid #aaa;
+}
+
+#svg_editor .description_input:focus {
+	background-color:#FFFFFF;
+	border-color:#3CB371;
+}

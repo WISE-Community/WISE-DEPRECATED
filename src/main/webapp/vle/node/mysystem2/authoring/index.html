@@ -1,0 +1,414 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]--> <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]--> <!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]--> <!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title></title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/style.css?v=2">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <!-- #### JSON DataHash #### -->
+  <div class="options_block">
+    <div style="padding-left: 20px;">
+      <a target="_blank" href="http://concord-consortium.github.io/mysystem_sc/help.html">Rubric and Feedback Documentation</a>
+    </div>
+  </div>
+
+  <!-- #### Display Options #### -->
+  <script type="text/x-handlebars">
+
+
+    {{ view MSA.PromptView }}
+
+    <div class="options_block">
+      <h2>Options</h2>
+      <h3>Links</h3>
+
+      <div style="padding-left: 20px;">
+        Enable link Editing?
+        {{view Ember.Checkbox checkedBinding="MSA.dataController.activity.enableLinkLabelEditing" }}
+        <br/>
+
+        Enable link disription editing?
+        {{view Ember.Checkbox checkedBinding="MSA.dataController.activity.enableLinkDescriptionEditing" }}
+        <br/>
+      </div>
+
+      <h3>Nodes</h3>
+      <div style="padding-left: 20px;">
+        Enable label display:
+        {{view Ember.Checkbox checkedBinding="MSA.dataController.activity.enableNodeLabelDisplay" }}
+        <br/>
+
+        Enable label editing:
+        {{view Ember.Checkbox checkedBinding="MSA.dataController.activity.enableNodeLabelEditing" }}
+        <br/>
+
+        Enable description Editing:
+        {{view Ember.Checkbox checkedBinding="MSA.dataController.activity.enableNodeDescriptionEditing"}}
+        <br/>
+      </div>
+    </div>
+
+    <!-- #### Node Types  (Modules) #### -->
+    <div class="options_block">
+      <h2>Node Types</h2>
+      {{#each MSA.modulesController.content}}
+        {{view MSA.NodeView nodeBinding="this"}}
+      {{/each}}
+      <button {{action "createItem" target="MSA.modulesController"}}>
+        Add New Node Type
+      </button>
+    </div>
+
+    <!-- #### Node Sizes #### -->
+    <div class="options_block">
+      <h2> Node Size</h2>
+        <p>
+            Node width:
+            {{
+              view MSA.TextField
+              valueBinding = "MSA.dataController.activity.nodeWidth"
+              placeholder  = "100"
+              id           = "nodeWidth"
+              size         = "3"
+            }}
+            height:
+            {{
+              view MSA.TextField
+              valueBinding = "MSA.dataController.activity.nodeHeight"
+              placeholder  = "110"
+              id           = "nodeHeight"
+              size         = "3"
+            }}
+            Terminal radius:
+            {{
+              view MSA.TextField
+              valueBinding = "MSA.dataController.activity.terminalRadius"
+              placeholder  = "14"
+              id           = "terminalRadius"
+              size         = "3"
+            }}
+        </p>
+    </div>
+
+    <!-- #### background images #### -->
+    <div class="options_block">
+      <h2> Background Image</h2>
+      <p>
+          Background Image:
+          {{
+            view MSA.TextField
+            valueBinding = "MSA.dataController.activity.backgroundImage"
+            placeholder  = ""
+            id           = "backgroundImage"
+            size         = "40"
+          }}
+      <p>
+      <div style="padding-left: 20px;">
+        Scale background images to fit:
+        {{view Ember.Checkbox checkedBinding="MSA.dataController.activity.backgroundImageScaling"  }}
+      </div>
+    </div>
+
+    <!-- #### Energy Types #### -->
+    <div class="options_block">
+      <h2>Energy Types</h2>
+      {{#each MSA.energyTypesController.content tagName="ul"}}
+        {{view MSA.LinkView linkBinding="this"}}
+      {{/each}}
+
+      <button {{action "createItem" target="MSA.energyTypesController"}}>
+        Add New Energy Type
+      </button>
+
+    </div>
+
+    <!-- #### Max submissions  #### -->
+    <div class="options_block">
+      <h2>Maximum submissions</h2>
+      <div style="padding-left: 10px;">
+        <p>
+          Limit the number of student submissions to:
+            {{
+              view MSA.TextField
+              valueBinding = "MSA.dataController.activity.maxSubmissionClicks"
+              placeholder  = "#"
+              id           = "maxSubmissionClicks"
+              size         = "2"
+            }}
+        </p>
+        <p>
+          If the student has submitted too many time, display:
+          <br/>
+          {{
+            view MSA.TextArea
+            valueBinding = "MSA.dataController.activity.maxSubmissionFeedback"
+            placeholder  = "You have clicked 'submit' too many times. Please continue working without hints."
+            id           = "maxSubmissionFeedback"
+          }}
+          <br/><br/>
+        </p>
+      </div>
+    </div>
+
+    <!-- #### Feedback  #### -->
+    <div class="options_block">
+      <h2>Feedback</h2>
+      <div style="padding-left: 10px;">
+        <p>
+          Feedback panel size:
+          width:
+          {{
+            view MSA.TextField
+            valueBinding = "MSA.dataController.activity.feedbackPanelWidth"
+            placeholder  = "500"
+            id           = "feedbackPanelWidth"
+            size         = "3"
+          }}
+          height:
+          {{
+            view MSA.TextField
+            valueBinding = "MSA.dataController.activity.feedbackPanelHeight"
+            placeholder  = "250"
+            id           = "feedbackPanelHeight"
+            size         = "3"
+          }}
+        </p>
+        <p>
+          Feedback if all rules pass:
+          <br/>
+          {{
+            view MSA.TextArea
+            valueBinding ="MSA.dataController.activity.correctFeedback"
+            placeholder  = "Your diagram has no obvious problems."
+            id           = "correctFeedback"
+          }}
+          <br/><br/>
+        </p>
+      </div>
+      {{view MSA.FeedbackRulesView}}
+    </div>
+
+
+
+
+    <!-- #### Rubric Evaluator #### -->
+    {{view MSA.RubricExpressionView}}
+
+
+
+    <!-- #### Rules  #### -->
+    <div class="options_block">
+      <h2>Diagram Rules</h2>
+      <ol start=0>
+      {{#each MSA.diagramRulesController.content}}
+        {{view MSA.RuleView ruleBinding="this"}}
+      {{/each}}
+      </ol>
+      <button {{action "createItem" target="MSA.diagramRulesController"}}>
+        Add New Diagram Rule
+      </button>
+    </div>
+
+    <div class="options_block">
+      <h2>Rubric Categories</h2>
+      {{#each MSA.rubricCategoriesController.content}}
+        {{view MSA.CategoryView categoryBinding="this"}}
+      {{/each}}
+      <button {{action "createItem" target="MSA.rubricCategoriesController"}}>
+        Add New Category
+      </button>
+    </div>
+
+  <!-- #### JSON DataHash #### -->
+  <div id="datahash_json_view">
+    <div class="codeblock">MSA.dataController.dataJson (removed)</div>
+  </div>
+
+  </script>
+
+  <script type="text/x-handlebars"  data-template-name='prompt-template'>
+    <div class="options_block">
+      <h3>Instructions:</h3>
+      <div class="instructions">
+        {{view MSA.TextArea
+          valueBinding  = "MSA.dataController.activity.prompt"
+          id            = "prompt"
+          wrap          = "off"
+          rows          = "10"
+          cols          = "50"
+        }}
+      </div>
+    </div>
+  </script>
+
+  <!-- #### Rubric Evaluator Template #### -->
+  <script type="text/x-handlebars"  data-template-name='rubricExpression-template'>
+    <div class="options_block">
+      <h2>Rubric Evaluator</h2>
+      <div class="rubricExpression codeblock">{{MSA.dataController.activity.rubricExpression}}</div>
+      <span class="showScore flow">
+        <button {{action "showScore" this target="view"}}>Score the digram</button>
+      </span>
+      <span class="edit flow">
+        <button {{action "edit" this target="view"}}>Edit</button>
+      </span>
+    </div>
+  </script>
+
+  <!-- #### Feedback Rules Template #### -->
+  <script type="text/x-handlebars"  data-template-name='feedbackRules-template'>
+    <h3>Feedback Rules</h3>
+    <div class="feedbackRules codeblock">{{MSA.dataController.activity.feedbackRules}}</div>
+    <span class="edit flow">
+      <button {{action "edit" this target="view"}}>Edit</button>
+    </span>
+  </script>
+
+  <!-- #### Node Template #### -->
+  <script type="text/x-handlebars"  data-template-name='node-template'>
+    <div class = "moduleItem">
+      {{view MSA.TextField size=15 valueBinding="name"  placeholder="name"}}
+      {{view MSA.TextField valueBinding="image" placeholder="image"}}
+      <div class='upDownFlipper'>
+        <button {{action "moveItemUp"   this target="MSA.modulesController"}}>⬆</button>
+        <button {{action "moveItemDown" this target="MSA.modulesController"}}>⬇</button>
+      </div>
+      <button {{action "remove" this target="view"}}>remove</button>
+    </div>
+  </script>
+
+  <!-- #### Link Template #### -->
+  <script type="text/x-handlebars"  data-template-name='link-template'>
+    <div class = "moduleItem">
+      {{view MSA.TextField size=15 valueBinding="label" placeholder="label"}}
+      {{view MSA.TextField valueBinding="color" placeholder="color"}}
+      <div class='upDownFlipper'>
+        <button {{action "moveItemUp"   this target="MSA.energyTypesController"}}>⬆</button>
+        <button {{action "moveItemDown" this target="MSA.energyTypesController"}}>⬇</button>
+      </div>
+      <button {{action "remove" this target="view"}}>remove</button>
+    </div>
+  </script>
+
+  <!-- #### Category Template #### -->
+  <script type="text/x-handlebars"  data-template-name='category-template'>
+    <div class="rubric_category">
+      <div class="rubric_category_name">
+        <span class="label">Category Name:</span>
+        <span class="value">
+          {{view MSA.TextField valueBinding="name" placeholder="name"}}
+        </span>
+        <button {{action "remove" this target="view"}}>remove</button>
+      </div>
+    </div>
+  </script>
+
+
+
+  <!-- #### Rule Template #### -->
+  <script type="text/x-handlebars" data-template-name="rule-template">
+    <li>
+    <div class="diagram_rule">
+      {{#if view.showName}}
+        <div class="diagram_rule_name">
+          <span class="label">Rule Name:</span>
+          <span class="value">
+            {{view MSA.TextField valueBinding="name"}}
+          </span>
+          <span class="rule_category">
+            <span class="label"#>Category:</span>
+            <span class="value">
+              {{view Ember.Select
+                contentBinding="MSA.diagramRulesController.categories"
+                selectionBinding="category" }}
+            </span>
+          </span><br/>
+          use javascript rules: {{view Ember.Checkbox checkedBinding="isJavascript"}}
+        </div>
+      {{/if}}
+       {{#if "isJavascript"}}
+          <h3>Javascript:</h3>
+          <div class="feedbackRules codeblock">{{view.javascriptExpression}}</div>
+          <span class="edit flow">
+            <button {{action "editJSRule" target="view"}}>edit</button>
+          </span>
+      {{else}}
+        The diagram
+        {{view Ember.Select
+            contentBinding="MSA.diagramRulesController.shouldOptions"
+            selectionBinding="shouldOption"}}
+
+        contain
+        {{view Ember.Select
+          contentBinding="MSA.diagramRulesController.comparisons"
+          selectionBinding="comparison"}}
+        {{view MSA.TextField
+          valueBinding="number"
+          placeholder="number" size="1"}}
+        {{view Ember.Select
+          contentBinding="MSA.diagramRulesController.nodeTypes"
+          selectionBinding="type"
+        }}
+        </br>
+
+        with links:
+        {{view Ember.Checkbox checkedBinding="hasLink" }}
+        {{#if "hasLink"}}
+          <hr/>
+          {{view Ember.Select
+            contentBinding="MSA.diagramRulesController.linkDirections"
+            selectionBinding="linkDirection"
+          }}
+          {{view Ember.Select
+            contentBinding="MSA.diagramRulesController.nodeTypes"
+            selectionBinding="otherNodeType"
+          }}
+          with energy type:
+          {{view Ember.Select
+            contentBinding="MSA.diagramRulesController.energyTypes"
+            selectionBinding="energyType"
+          }}
+        {{/if}}
+      {{/if}}
+      <hr/>
+      <button <button {{action "remove" this target="view"}}>
+        Remove {{view.ruleType}}
+      </button>
+      <button {{action "moveItemUp" this target="view"}}>⬆</button>
+      <button {{action "moveItemDown" this target="view"}}>⬇</button>
+
+    </div>
+    </li>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="link_conditions-template">
+
+  </script>
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.9.1.min.js"><\/script>')</script>
+  <script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
+  <script src="js/libs/ember-1.0.0-rc.1.min.js"></script>
+  <script src="js/sc_util.js"></script>
+  <script src="js/initial_data.js"></script>
+  <script src="js/app.js"></script>
+
+
+</body>
+</html>

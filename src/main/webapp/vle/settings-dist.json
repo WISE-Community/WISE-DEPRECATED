@@ -1,0 +1,15 @@
+/*
+ * Copy this file into settings.json, and modify settings.json to suit your filesystem
+ * 1) DO NOT make changes to this file unless it's a change everybody else should get.
+ * 2) DO NOT COMMIT SETTINGS.JSON
+ *
+ * Note: Remove this comment before using file or JSON parsing will fail
+ */
+{
+	"projectPaths":["/Users/geoffreykwan/dev/workspaces/portalworkspace/vlewrapper/WebContent/curriculum"],
+	"primaryPath":"/Users/geoffreykwan/dev/workspaces/portalworkspace/vlewrapper/WebContent/curriculum",
+	"mode":{
+		"portal":true,
+		"portalUrl":"/webapp/login.html"
+	}
+}

@@ -1,0 +1,10 @@
+{
+   "background": "",
+   "bgPosition": "left-top",
+   "prompt": "Enter prompt/question here",
+   "instructions": "Enter explanation instructions here",
+   "enableStudentTextArea": false,
+   "isMustComplete": false,
+   "selectedAttribute": "",
+   "type": "ExplanationBuilder"
+}

@@ -1,0 +1,280 @@
+/* TipTip CSS - Version 1.2 */
+
+#tiptip_holder {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 999999;
+}
+
+#tiptip_holder.tip_top {
+	padding-bottom: 5px;
+}
+
+#tiptip_holder.tip_bottom {
+	padding-top: 5px;
+}
+
+#tiptip_holder.tip_right {
+	padding-left: 5px;
+}
+
+#tiptip_holder.tip_left {
+	padding-right: 5px;
+}
+
+#tiptip_content {
+	font-size: 11px;
+	font-weight:bold;
+	color: #fff;
+	text-shadow: 0 0 2px #444;
+	padding: 4px 8px;
+	border: 1px solid #000000;
+	background-color: rgb(25,25,25);
+	background-color: rgba(25, 25, 25, 0.9);
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(#000));
+	-o-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	-o-box-shadow: 0 0 2px #aaa;
+	-webkit-box-shadow: 0 0 2px #aaa;
+	-moz-box-shadow: 0 0 2px #aaa;
+	box-shadow: 0 0 2px #aaa;
+	text-align:center;
+}
+
+#tiptip_content h3 {
+	text-decoration:underline;
+	margin:0 0 .5em;
+	padding:0;
+	font-size:11px;
+}
+
+#tiptip_arrow, #tiptip_arrow_inner {
+	position: absolute;
+	height: 0;
+	width: 0;
+}
+
+#tiptip_arrow_inner {
+	border-color: transparent;
+	border-style: solid;
+	border-width: 6px;
+}
+
+#tiptip_holder.tip_top #tiptip_arrow {
+	border-top-color: #fff;
+	border-top-color: rgba(255,255,255,0.35);
+}
+
+#tiptip_holder.tip_bottom #tiptip_arrow {
+	border-bottom-color: #fff;
+	border-bottom-color: rgba(255,255,255,0.35);
+}
+
+#tiptip_holder.tip_right #tiptip_arrow {
+	border-right-color: #fff;
+	border-right-color: rgba(255,255,255,0.35);
+}
+
+#tiptip_holder.tip_left #tiptip_arrow {
+	border-left-color: #fff;
+	border-left-color: rgba(255,255,255,0.35);
+}
+
+#tiptip_holder.tip_top #tiptip_arrow_inner {
+	border-bottom-width: 0px;
+	/*margin-top: -7px;
+	margin-left: -6px;*/
+	border-top-color: rgb(25,25,25);
+	border-top-color: rgba(25,25,25,0.92);
+}
+
+#tiptip_holder.tip_bottom #tiptip_arrow_inner {
+	border-top-width: 0px;
+	/*margin-top: -5px;
+	margin-left: -6px;*/
+	border-bottom-color: rgb(25,25,25);
+	border-bottom-color: rgba(25,25,25,0.92);
+}
+
+#tiptip_holder.tip_right #tiptip_arrow_inner {
+	border-left-width: 0px;
+	/*margin-top: -6px;
+	margin-left: -5px;*/
+	border-right-color: rgb(25,25,25);
+	border-right-color: rgba(25,25,25,0.92);
+}
+
+#tiptip_holder.tip_left #tiptip_arrow_inner {
+	border-right-width: 0px;
+	/*margin-top: -6px;
+	margin-left: -7px;*/
+	border-left-color: rgb(25,25,25);
+	border-left-color: rgba(25,25,25,0.92);
+}
+
+/* Webkit Hacks  */
+@media screen and (-webkit-min-device-pixel-ratio:0) {	
+	#tiptip_content {
+		padding: 4px 8px 5px 8px;
+		/*background-color: rgba(45,45,45,0.88);*/
+	}
+	#tiptip_holder.tip_bottom #tiptip_arrow_inner { 
+		/*border-bottom-color: rgba(45,45,45,0.88);*/
+	}
+	#tiptip_holder.tip_top #tiptip_arrow_inner { 
+		/*border-top-color: rgba(20,20,20,0.92);*/
+	}
+}
+
+#tiptip_holder.tip_top #tiptip_arrow,
+#tiptip_holder.tip_right #tiptip_arrow,
+#tiptip_holder.tip_bottom #tiptip_arrow,
+#tiptip_holder.tip_left #tiptip_arrow 
+{border-color:transparent;}
+
+/*corner tips*/
+#tiptip_holder.tip_left_top #tiptip_arrow,
+#tiptip_holder.tip_right_top #tiptip_arrow,
+#tiptip_holder.tip_left_bottom #tiptip_arrow,
+#tiptip_holder.tip_right_bottom #tiptip_arrow
+{display:none;}
+
+
+/* Custom style elements */
+
+#tiptip_holder #tiptip_content ul, #tiptip_holder #tiptip_content ol {
+	margin: .5em 0 0 0;
+    padding-left: 1.25em;
+}
+
+#tiptip_holder #tiptip_content ul:first-child, #tiptip_holder #tiptip_content ol:first-child {
+	margin-top:0;
+}
+
+#tiptip_holder #tiptip_content ul lh, #tiptip_holder #tiptip_content ol lh {
+	margin-left:-1.25em;
+}
+
+#tiptip_holder #tiptip_content p {
+	margin: .5em 0 0 0;
+	padding:0;
+}
+
+#tiptip_holder #tiptip_content p:first-child {
+	margin-top:0;
+}
+
+#tiptip_content p span {
+	font-weight:normal;
+}
+
+#tiptip_content p img {
+	height:1.2em;
+	margin-right:.5em;
+	vertical-align:top;
+}
+
+#tiptip_holder #tiptip_content p.warning {
+	color:#FF563F;
+	text-align:left;
+	font-size:11px;
+}
+
+/* Additional Styles */
+
+#tiptip_holder.align_left #tiptip_content {
+	text-align:left;
+}
+
+#tiptip_holder.align_right #tiptip_content {
+	text-align:right;
+}
+
+#tiptip_holder.nobold #tiptip_content {
+	font-weight:normal;
+}
+
+#tiptip_holder.info #tiptip_content {
+	background-color:rgb(255, 255, 255);
+	background-color:rgba(255, 255, 255, 0.98);
+	background-image:none;
+	border:1px solid #777;
+	text-align:left;
+	text-shadow: none;
+	font-weight:normal;
+	font-size:12px;
+	padding:8px 10px;
+	color:#444444;
+	-o-box-shadow: 0 0 4px #444;
+	-webkit-box-shadow: 0 0 4px #444;
+	-moz-box-shadow: 0 0 4px #444;
+	box-shadow: 0 0 4px #444;
+	-o-border-radius: 0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+
+#tiptip_holder.info #tiptip_content h3 {
+	color: #745A33;
+	border-bottom:1px solid #CCCCCC;
+    margin: 0 0 5px;
+    padding: 0 0 5px;
+    text-decoration: none;
+    font-weight:bold;
+	font-size:13px;
+}
+
+#tiptip_holder #tiptip_content .featureSettings {
+	font-size:12px;
+	margin:0;
+}
+
+#tiptip_holder.info #tiptip_arrow_inner {
+	/*border-width: 8px;*/
+}
+
+#tiptip_holder.tip_top.info #tiptip_arrow_inner {
+	border-top-color: #444;
+}
+
+#tiptip_holder.tip_bottom.info #tiptip_arrow_inner {
+	border-bottom-color: #444;
+}
+
+#tiptip_holder.tip_right.info #tiptip_arrow_inner {
+	border-right-color: #444;
+}
+
+#tiptip_holder.tip_left.info #tiptip_arrow_inner {
+	border-left-color: #444;
+}
+
+#tiptip_holder.light #tiptip_content {
+	background-color:rgb(236, 236, 180);
+	background-color: rgba(236, 236, 180, 0.95);
+	background-image:none;
+    border-color: #C6CF51;
+    color: #333333;
+    text-shadow:none;
+}
+
+#tiptip_holder.tip_top.light #tiptip_arrow_inner {
+	border-top-color: #C6CF51;
+}
+
+#tiptip_holder.tip_bottom.light #tiptip_arrow_inner {
+	border-bottom-color: #C6CF51;
+}
+
+#tiptip_holder.tip_right.light #tiptip_arrow_inner {
+	border-right-color: #C6CF51;
+}
+
+#tiptip_holder.tip_left.light #tiptip_arrow_inner {
+	border-left-color: #C6CF51;
+}

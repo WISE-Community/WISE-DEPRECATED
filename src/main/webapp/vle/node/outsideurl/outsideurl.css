@@ -1,0 +1,75 @@
+#promptdiv {
+	font-size:1.2em;
+	color:#000;
+	margin:3px 10px 8px 15px;
+	font-weight:bold;
+}
+
+.instructionsReminder {
+	float:right;
+	text-align:right;
+	margin: 12px 15px 0 0 ;
+	font-size:.8em;
+	color:#333333;
+}
+
+#currentQuestionBox {
+	margin: 0 auto;
+	padding:10px 0;
+	text-align:left;
+	}
+	
+#currentQuestionBox #leftColumn { 
+	float:left;
+	width:82%;
+	padding:10px 0;
+	background-color:#FFD9ac;
+	}
+	
+#currentQuestionBox #rightColumn {
+	padding:10px 0;
+	text-align:center;
+	margin-left:83%;
+	background-color:#6883BA;
+	color:#FFF;
+	}
+
+#questionTypeVerticalLabel {
+	font-size:.9em;
+	line-height:130%;
+	font-weight:bold;
+	text-transform:uppercase;
+	margin:15px 0 0 0 ;
+}
+
+.itemLabel {
+	font-size:.7em;
+	text-transform:uppercase;
+	margin:5px 0 0 15px;
+}
+	
+#responsebox {
+	width:90%; 
+	height:190px;
+	border:1px solid green;
+	padding:10px;
+	font-size:1.1em;
+	margin:4px 10px 10px 15px;
+	line-height:1.3em;
+	border-right:2px ridge green;
+	border-bottom:2px ridge green;	
+}
+
+textarea:disabled {
+	background-color:#999999;
+}
+
+
+
+
+
+
+
+
+
+	

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    * Copyright (c) 2006 Encore Research Group, University of Toronto
+    * 
+    * This library is free software; you can redistribute it and/or
+    * modify it under the terms of the GNU Lesser General Public
+    * License as published by the Free Software Foundation; either
+    * version 2.1 of the License, or (at your option) any later version.
+    *
+    * This library is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    * Lesser General Public License for more details.
+    *
+    * You should have received a copy of the GNU Lesser General Public
+    * License along with this library; if not, write to the Free Software
+    * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+<!-- $Id$ -->
+
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <!--  specify when hibernate should release JDBC connections -->
+        <property name="hibernate.connection.release_mode">after_statement</property>
+        <property name="hibernate.auto_close_session">true</property>
+        <property name="hibernate.flush_before_completion">true</property>        
+        <property name="hibernate.c3p0_acquire_increment">1</property>
+        <property name="hibernate.c3p0_idle_test_period">100</property>          <!-- seconds -->        
+        <property name="hibernate.c3p0_max_size">100</property>
+        <property name="hibernate.c3p0_max_statements">0</property>
+        <property name="hibernate.c3p0_min_size">10</property>
+        <property name="hibernate.c3p0_timeout">100</property><!-- seconds -->
+        
+        <property name="dialect">org.telscenter.sail.webapp.util.MySQL5MyISAMDialect</property>
+        
+        <mapping
+            class="org.telscenter.sail.webapp.domain.authentication.impl.StudentUserDetails" />
+        <mapping
+            class="org.telscenter.sail.webapp.domain.authentication.impl.TeacherUserDetails" />
+        <mapping
+            class="org.telscenter.sail.webapp.domain.impl.RunImpl" />
+        <mapping
+            class="org.telscenter.sail.webapp.domain.workgroup.impl.WISEWorkgroupImpl" />
+        <mapping
+            class="org.telscenter.sail.webapp.domain.impl.ModuleImpl" />
+        <mapping
+            class="org.telscenter.sail.webapp.domain.impl.UrlModuleImpl" />
+        <mapping
+            class="org.telscenter.sail.webapp.domain.project.impl.ProjectImpl" />
+        <mapping
+            class="org.telscenter.sail.webapp.domain.project.impl.ExternalProjectImpl" />
+        <mapping
+            class="org.telscenter.sail.webapp.domain.project.impl.ProjectCommunicatorImpl" />      
+        <mapping
+            class="org.telscenter.sail.webapp.domain.project.impl.DIYProjectCommunicatorImpl" />      
+        <mapping
+            class="org.telscenter.sail.webapp.domain.portal.impl.PortalImpl" />      
+        <mapping
+        	class="org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentImpl" />
+        <mapping
+        	class="org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentListImpl" />  
+        <mapping
+            class="org.telscenter.sail.webapp.domain.newsitem.impl.NewsItemImpl" />      
+        <mapping
+        	class="org.telscenter.sail.webapp.domain.announcement.impl.AnnouncementImpl"/>
+        <mapping
+        	class="org.telscenter.sail.webapp.domain.project.impl.ProjectMetadataImpl"/>
+        <mapping
+        	class="org.telscenter.sail.webapp.domain.message.impl.MessageImpl"/>
+        <mapping
+        	class="org.telscenter.sail.webapp.domain.message.impl.MessageRecipientImpl"/>
+        <mapping
+        	class="org.telscenter.sail.webapp.domain.project.impl.TagImpl"/>
+        <mapping
+        	class="org.telscenter.sail.webapp.domain.portal.impl.PortalStatisticsImpl"/>
+		<mapping
+        	class="org.telscenter.sail.webapp.domain.attendance.impl.StudentAttendanceImpl"/>
+    </session-factory>
+</hibernate-configuration>

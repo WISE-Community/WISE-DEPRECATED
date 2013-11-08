@@ -1,0 +1,22 @@
+{
+   "type": "mysystem2",
+   "prompt": "",
+   "modules": [],
+   "energy_types": [],
+   "diagram_rules": [],
+   "rubric_categories": [],
+   "minimum_requirements": [],
+   "correctFeedback": "",
+   "maxFeedbackItems": 0,
+   "minimumRequirementsFeedback": "",
+   "enableNodeDescriptionEditing": false,
+   "enableLinkDescriptionEditing": false,
+   "enableLinkLabelEditing": false,
+   "enableCustomRuleEvaluator": false,
+   "customRuleEvaluator": "",
+   "feedbackPanelWidth": 500,
+   "feedbackPanelHeight": 250,
+   "rubricExpression": "score(1);"
+}
+
+

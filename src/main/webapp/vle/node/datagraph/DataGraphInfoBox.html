@@ -1,0 +1,38 @@
+<html>
+    <head>
+       
+       <link href="../common/css/htmlAssessment.css" media="screen" rel="stylesheet" type="text/css" />
+       
+        <script type="text/javascript" src="../../util/scriptloader.js">
+        </script>
+        <script type="text/javascript">
+            function afterScriptsLoad(){
+            
+            }
+            
+            window.onload = function(){
+                scriptloader.initialize(document, afterScriptsLoad, 'info_box');
+            };
+        </script>
+    </head>
+    <body id="assessmentBody">
+        <div id="assessmentTypeCenteredDiv">
+            <div id="assessmentTitle">
+                Instructions <span class="subtitle">(Data Graph)</span>
+            </div>
+            <div id="assessmentDescription">
+                <p>
+                    Using the Data Table
+                </p>
+                <ul>
+                    <li>Click on cells in the data table to enter data.</li>
+                    <li>Make sure to click SAVE button to save your data.</li>
+                </ul>
+              
+            </div>
+            <div id="InfoBoxClose">
+                <a href="JavaScript:window.close()">Close</a>
+            </div>
+        </div>
+    </body>
+</html>

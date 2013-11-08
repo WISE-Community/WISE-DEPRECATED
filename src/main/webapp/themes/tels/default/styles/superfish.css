@@ -1,0 +1,245 @@
+/*** ESSENTIAL STYLES ***/
+
+.sf-menu, .sf-menu * {
+	margin:			0;
+	padding:		0;
+	list-style:		none;
+}
+.sf-menu {
+	line-height:	1.0;
+}
+.sf-menu ul {
+	position:		absolute;
+	top:			-999em;
+	width:		    210px; /* left offset of submenus need to match (see below) - 11em default*/
+}
+.sf-menu ul li {
+	width:			100%;
+}
+.sf-menu li:hover {
+	visibility:		inherit; /* fixes IE7 'sticky bug' */
+}
+.sf-menu li {
+	float:			left;
+	position:		relative;
+}
+.sf-menu a {
+	display:		block;
+	position:		relative;
+}
+.sf-menu li:hover ul,
+.sf-menu li.sfHover ul {
+	left: -35px;
+    top: 51px; /* match top ul list item height */
+    z-index: 99;
+}
+ul.sf-menu li:hover li ul,
+ul.sf-menu li.sfHover li ul {
+	top:			-999em;
+}
+ul.sf-menu li li:hover ul,
+ul.sf-menu li li.sfHover ul {
+	left:			210px; /* match ul width */
+	top:			0;
+}
+ul.sf-menu li li:hover li ul,
+ul.sf-menu li li.sfHover li ul {
+	top:			-999em;
+}
+
+/*** WISE4 SKIN ***/
+.sf-menu {
+	float: left;
+	margin-bottom: 1em;
+}
+.sf-menu a {
+	padding: .5em .75em;
+	text-decoration:none;
+	font-style:normal;
+	font-weight: bold;
+	text-decoration:none !important;
+	font-size:.75em;
+}
+ul.sf-menu li.align-right li:hover ul,
+ul.sf-menu li.align-right li.sfHover ul {
+	right:210px; /* match ul width */
+}
+.sf-menu li.align-right ul,
+.sf-menu li.align-right ul {
+	right:0;
+	left:auto;
+}
+.sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+	color: #765937;
+    font-family: Arial,Helvetica,Tahoma,sans-serif;
+    font-weight: normal;
+}
+.sf-menu li {
+	/* background:		#BDD2FF;   */
+	/*	background:		#FFCC99;  */
+		/*background: url('../../images/teacher/teacherNavButton.png') repeat-x top;*/
+}
+
+.sf-menu {
+	float: none;
+	margin-bottom: 0;
+}
+
+.sf-menu .level1 {	
+	height: 44px;
+    margin: 0 4px;
+    width: 154px;
+}
+
+.sf-menu .level1 > a, .sf-menu .level1 > span {
+	font-size: 0.85em;
+    line-height: 44px;
+    text-align: center;
+    padding:.5em;
+}
+	
+.sf-menu ul a {
+	
+}
+
+.sf-menu li:hover, .sf-menu li.sfHover {
+	/*background: #8A1530;
+	background: rgba(0, 0, 0, .2);*/
+}
+
+/*.sf-menu li.level1:hover, */.sf-menu li.level1.sfHover {
+	/*background: #8A1530;
+	background: rgba(0, 0, 0, .2);*/
+	/*background:rgba(255,255,255,.25);*/
+}
+
+.sf-menu ul a {
+	line-height:150%;
+}
+
+.sf-menu li ul {
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+    box-shadow: 2px 2px 4px #444444;
+    -moz-box-shadow: 2px 2px 4px #444444;
+    -webkit-box-shadow: 2px 2px 4px #444444;
+    background-color: #F1F2D9;
+    border: 6px solid #C5CA6D;
+}
+
+.sfmenu li li:hover, .sf-menu li.sfHover li:hover {
+}
+
+.sfmenu li li:hover a, .sf-menu li.sfHover li:hover a {
+	color: #F97F6E;
+    background-color: #FEFFEF;
+}
+
+/*** arrows **/
+.sf-menu a.sf-with-ul {
+	/*padding-right: 	2.25em;*/
+	min-width:		1px; /* trigger IE7 hasLayout so spans position accurately */
+}
+.sf-sub-indicator {
+	position:		absolute;
+	display:		block;
+	right:			.75em;
+	top:			1.05em; /* IE6 only */
+	width:			10px;
+	height:			10px;
+	text-indent: 	-999em;
+	overflow:		hidden;
+	background:		url('/webapp/themes/tels/default/images/arrows-745A34.png') no-repeat -10px -100px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+}
+a > .sf-sub-indicator {  /* give all except IE6 the correct values */
+	top: 1.7em;
+	background-position: 0 -100px; /* use translucent arrow for modern browsers*/
+}
+/* apply hovers to modern browsers */
+a:focus > .sf-sub-indicator,
+a:hover > .sf-sub-indicator,
+a:active > .sf-sub-indicator,
+li:hover > a > .sf-sub-indicator,
+li.sfHover > a > .sf-sub-indicator {
+	/* background-position: -10px -100px;  arrow hovers for modern browsers*/
+}
+
+/* point right for anchors in subs */
+.sf-menu ul .sf-sub-indicator { background-position:  -10px 0; }
+.sf-menu ul a > .sf-sub-indicator { background-position:  0 0; }
+/* apply hovers to modern browsers */
+.sf-menu ul a:focus > .sf-sub-indicator,
+.sf-menu ul a:hover > .sf-sub-indicator,
+.sf-menu ul a:active > .sf-sub-indicator,
+.sf-menu ul li:hover > a > .sf-sub-indicator,
+.sf-menu ul li.sfHover > a > .sf-sub-indicator {
+	background-position: -10px 0; /* arrow hovers for modern browsers*/
+}
+
+/*** shadows for all but IE6 ***/
+.sf-shadow ul {
+	/*background:	url('../../images/teacher/shadow.png') no-repeat bottom right;
+	padding: 0 8px 9px 0;
+	-moz-border-radius-bottomleft: 17px;
+	-moz-border-radius-topright: 17px;
+	-webkit-border-top-right-radius: 17px;
+	-webkit-border-bottom-left-radius: 17px;*/
+}
+.sf-shadow ul.sf-shadow-off {
+	background: transparent;
+}
+
+/*** WISE4 3-Tab Menu Styles ***/
+.sf-menu .level1 {
+	background-image:url("/webapp/themes/tels/default/images/accountBg.png");
+	background-color:transparent;
+	display:block;
+}
+
+.sf-menu li.level1 > a {
+	font-family:Trebuchet MS;
+	color:#745A34;
+	font-weight:bold;
+}
+
+.sf-menu li.menu1 {
+	background-position: -5px -5px;
+    width: 164px;
+}
+
+.sf-menu li.menu2 {
+	background-position: -180px -5px;
+}
+
+.sf-menu li.menu3 {
+	background-position: -341px -5px;
+    width: 173px;
+}
+
+.sf-menu li.menu1.sfHover, .sf-menu li.menu1:hover {
+	background-position: -5px -55px;
+}
+
+.sf-menu li.menu2.sfHover, .sf-menu li.menu2:hover {
+	background-position: -180px -55px;
+}
+
+.sf-menu li.menu3.sfHover, .sf-menu li.menu3:hover {
+	background-position: -341px -55px;
+}
+
+.sf-menu li.menu1:hover ul,
+.sf-menu li.menu1.sfHover ul {
+	left:-24px;
+}
+
+.level1.menu1 > a {
+	margin-top: 3px;
+    text-indent: 6px;
+}
+
+.level1.menu3 > a {
+	margin-top: -3px;
+    text-indent: -8px;
+}

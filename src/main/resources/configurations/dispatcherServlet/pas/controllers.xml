@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	* Copyright (c) 2007 Encore Research Group, University of Toronto
+	* 
+	* This library is free software; you can redistribute it and/or
+	* modify it under the terms of the GNU Lesser General Public
+	* License as published by the Free Software Foundation; either
+	* version 2.1 of the License, or (at your option) any later version.
+	*
+	* This library is distributed in the hope that it will be useful,
+	* but WITHOUT ANY WARRANTY; without even the implied warranty of
+	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	* Lesser General Public License for more details.
+	*
+	* You should have received a copy of the GNU Lesser General Public
+	* License along with this library; if not, write to the Free Software
+	* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+<!-- $Id$ -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"	
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util-3.0.xsd
+	http://www.directwebremoting.org/schema/spring-dwr
+	http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd">
+
+	<!-- Custom controllers -->
+	<bean
+		class="net.sf.sail.webapp.presentation.web.controllers.offerings.OfferingListController">
+		<property name="offeringService" ref="offeringService" />
+		<property name="workgroupService" ref="workgroupService" />
+		<property name="httpRestTransport" ref="httpRestTransport" />
+	</bean>
+	
+	<bean
+		class="net.sf.sail.webapp.presentation.web.controllers.admin.AdminOfferingController">
+		<property name="offeringService" ref="offeringService" />
+  		<property name="validator" ref="adminOfferingValidator" />
+		<property name="commandName" value="adminOfferingParameters" />
+		<property name="commandClass"
+			value="net.sf.sail.webapp.domain.impl.AdminOfferingParameters" />
+	</bean>
+
+	<bean id="adminOfferingParameters"
+		class="net.sf.sail.webapp.domain.impl.AdminOfferingParameters"
+		scope="prototype" />
+	
+	<bean id="adminOfferingValidator"
+		class="net.sf.sail.webapp.presentation.validators.AdminOfferingValidator" />
+
+	<bean
+		class="net.sf.sail.webapp.presentation.web.controllers.LoginController">
+		<property name="portalProperties" ref="portalproperties" />
+	</bean>
+
+	<bean
+		class="net.sf.sail.webapp.presentation.web.controllers.groups.AddgroupController">
+		<property name="groupService" ref="groupService" />
+		<property name="userService" ref="userService" />
+		<property name="commandName" value="groupParameters" />
+		<property name="commandClass"
+			value="net.sf.sail.webapp.domain.group.impl.GroupParameters" />
+		<property name="validator" ref="groupParametersValidator" />
+		<property name="formView" value="groups/addgroup" />
+		<property name="successView" value="groupmanagement.html" />
+	</bean>
+
+	<bean id="groupParametersValidator"
+		class="net.sf.sail.webapp.presentation.validators.GroupParametersValidator" />
+
+	<bean
+		class="net.sf.sail.webapp.presentation.web.controllers.groups.GroupmanagementController">
+		<property name="groupService" ref="groupService" />
+	</bean>
+
+	<bean
+		class="net.sf.sail.webapp.presentation.web.controllers.offerings.AuthoringJnlpLauncherController">
+		<property name="jnlpFileName"
+			value="authoring-everything-snapshot.jnlp" />
+		<property name="modifier" ref="authoringjnlpmodifier" />
+	</bean>
+
+	<bean id="userDetailsValidator"
+		class="net.sf.sail.webapp.presentation.validators.UserDetailsValidator" />
+
+	<bean id="signupController"
+		class="net.sf.sail.webapp.presentation.web.controllers.SignupController">
+		<property name="userService" ref="userService" />
+		<property name="commandName" value="userDetails" />
+		<property name="commandClass"
+			value="net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails" />
+		<property name="validator" ref="userDetailsValidator" />
+		<property name="formView" value="signup" />
+		<property name="successView" value="login.html" />
+	</bean>
+	
+	<bean id="offeringParametersValidator" 
+         class="net.sf.sail.webapp.presentation.validators.OfferingParametersValidator" />
+
+    <bean id="createOfferingController"
+    	class="net.sf.sail.webapp.presentation.web.controllers.offerings.CreateOfferingController">
+    	<property name="offeringService" ref="offeringService" />
+    	<property name="commandName" value="offeringParameters" />
+    	<property name="commandClass"
+    	    value="net.sf.sail.webapp.domain.impl.OfferingParameters" />
+    	<property name="validator" ref="offeringParametersValidator" />
+    	<property name="formView" value="offerings/createoffering" />
+    	<property name="successView" value="offeringlist.html" />
+    </bean>
+    
+    <bean id="curnitParametersValidator"
+        class="net.sf.sail.webapp.presentation.validators.CurnitParametersValidator" />
+            
+    <bean id="registerCurnitController"
+    	class="net.sf.sail.webapp.presentation.web.controllers.curnit.RegisterCurnitController">
+    	<property name="curnitService" ref="curnitService" />
+    	<property name="commandName" value="curnitParameters" />
+    	<property name="commandClass" value="net.sf.sail.webapp.domain.impl.CurnitParameters" />
+    	<property name="validator" ref="curnitParametersValidator" />
+    </bean>
+
+    <bean id="jnlpParametersValidator"
+        class="net.sf.sail.webapp.presentation.validators.JnlpParametersValidator" />
+    
+    <bean id="registerJnlpController"
+    	class="net.sf.sail.webapp.presentation.web.controllers.jnlp.RegisterJnlpController">
+    	<property name="jnlpService" ref="jnlpService" />
+    	<property name="commandName" value="jnlpParameters" />
+    	<property name="commandClass"
+    	    value="net.sf.sail.webapp.domain.impl.JnlpParameters" />
+    	<property name="validator" ref="jnlpParametersValidator" />
+    </bean>
+    
+    <bean id="changePasswordParametersValidator"
+		class="net.sf.sail.webapp.presentation.validators.ChangePasswordParametersValidator" >
+		<dwr:remote javascript="ChangePasswordParametersValidator" />
+		<property name="systemSaltSource" ref="systemSaltSource" />
+	</bean>
+	
+	<dwr:controller id="dwrController" debug="true"/>
+    
+    <bean id="controllerUtil"
+    	class="net.sf.sail.webapp.presentation.web.controllers.ControllerUtil">
+    	<property name="userService" ref="userService"/>
+    </bean>
+</beans>

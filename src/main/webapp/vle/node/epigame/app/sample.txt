@@ -1,0 +1,5 @@
+console.print('hello from as3');
+
+console.print('-------------------');
+
+console.print(scriptText);

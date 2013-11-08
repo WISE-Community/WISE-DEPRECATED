@@ -1,0 +1,103 @@
+<html>
+	<head>
+		<script type="text/javascript">
+			/*
+			 * TODO: Copy this file and rename it to
+			 * 
+			 * <new step type>.html
+			 * e.g. quiz.html
+			 *
+			 * and then put the new file into the new folder
+			 * you created for your new step type
+			 *
+			 * your new folder will look something like
+			 * vlewrapper/WebContent/vle/node/<new step type>/
+			 *
+			 * e.g. if you are creating a quiz step it would look
+			 * something like this
+			 * vlewrapper/WebContent/vle/node/quiz/
+			 */
+		
+			var seasons;
+		
+			function loadContentAfterScriptsLoad(node) {
+				/*
+				 * TODO: rename SEASONS
+				 * 
+				 * make sure you rename SEASONS to the object you created in
+				 * the file when you copied and modified
+				 * 
+				 * vlewrapper/WebContent/vle/node/seasons/seasons.js
+				 * 
+				 * for example if you are creating a quiz step and you
+				 * created the file
+				 *
+				 * vlewrapper/WebContent/vle/node/quiz/quiz.js
+				 *
+				 * and in that file you defined the QUIZ object, you would
+				 * change SEASONS to QUIZ
+				 *
+				 * TODO: rename seasons variable
+				 * 
+				 * you should also rename the local var seasons variable to something
+				 * appropriate. following my previous example I would rename it
+				 * to quiz.
+				 */
+	        	seasons = new SEASONS(node, node.view);
+	        	seasons.render();
+	        };
+			
+	        function loadContent(node) {
+		        /*
+		         * this loadScripts() function call will load the javascript imports
+		         * into this html file 
+		         * 
+		         * TODO: rename SEASONS
+		         *
+		         * you will need to rename seasons to the variable name that you
+		         * used in 
+		         * 
+		         * vlewrapper/WebContent/vle/util/scriptloader.js
+		         *
+		         * when you defined your script paths in the 'scripts' array
+		         * 
+		         * for example if you are creating a quiz step and you added
+		         * the variable named quiz to the scripts array, you would change
+		         * 'seasons' to 'quiz'
+		         */
+	        	scriptloader.loadScripts('seasons', document, node.id, eventManager);
+	        };
+
+	        /*
+	         * This is called when the student clicks on the save button below in the body
+	         */
+	        function save() {
+		        /*
+		         * calls the save function in seasons.js
+				 *
+		         * TODO: rename seasons variable
+		         */
+				seasons.save();
+	        }
+		</script>
+		<style type="text/css"> 
+		iframe { 
+		overflow-x: hidden; 
+		overflow-y: scroll; 
+		} 
+		</style> 		
+	</head>
+
+	<body>
+		<!-- TODO create the html UI that the student will see when they visit the step -->
+		
+		<!-- the promptDiv, responseDiv, saveButtonDiv are not required, they are only provided as an example,
+			 you may delete all of these divs and create the body however you like -->
+		<!--<div id='promptDiv'></div>-->
+		<div id='modelDiv'><iframe id='modelIFrame' width="100%" scrolling="auto" frameborder="0" height="100%"></iframe></div>
+		<!--  
+		<div id='responseDiv'><textarea id='studentResponseTextArea' rows='8' cols='80'></textarea></div>
+		<div id='saveButtonDiv'><input type='button' value='Save' onclick='save()'></input></div>
+		-->
+	</body>
+</html>

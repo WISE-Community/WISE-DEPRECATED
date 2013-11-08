@@ -1,0 +1,33 @@
+#promptdiv {
+	font-size:.8em;
+	color:#000;
+	margin:3px 10px 15px 15px;
+	font-weight:bold;
+}
+
+#promptdiv tt {
+	font-size:75%;
+	font-weight:700;
+}
+
+#promptdiv ol {
+	font-size:.6em;
+	text-transform:uppercase;
+	margin-left:25px;
+}
+
+#radiobuttondiv {
+	margin: 10px 20px 20px 20px;
+	font-size:.6em;
+}
+
+input *{color:red}
+
+#feedbackDiv {
+	width:70%;
+	font-size:.6em;
+	margin:5px auto;
+	padding:2px;
+	text-align:center;
+	color:#19253D;
+}

@@ -1,0 +1,26 @@
+{
+    "file_button_text": {
+        "value": "파일",
+        "description": "Text on the File Manager button"
+    },
+    "ideas_button_text": {
+        "value": "생각",
+        "description": "Text on the Idea Manager button"
+    },
+    "addidea_button_text": {
+        "value": "1",
+        "description": "Text on the Add Idea button"
+    },
+    "journal_button_text": {
+        "value": "일지",
+        "description": "Text on the Journal button"
+    },
+    "mywork_button_text": {
+        "value": "2",
+        "description": "Text on the My Work button"
+    },
+    "mywork_button_title": {
+        "value": "3",
+        "description": "Text for mouse hover title on the My Work button"
+    }
+}

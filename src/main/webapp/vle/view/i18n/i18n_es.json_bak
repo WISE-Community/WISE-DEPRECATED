@@ -1,0 +1,390 @@
+{
+    "file_button_text": {
+        "value": "Archivos",
+        "description": "Text on the File Manager button for Student VLE"
+    },
+    "ideas_button_text": {
+        "value": "Ideas",
+        "description": "Text on the Idea Manager button for Student VLE"
+    },
+    "addidea_button_text": {
+        "value": "Agregar idea",
+        "description": "Text on Add Idea buttons for Student VLE"
+    },
+    "mywork_button_text": {
+        "value": "Mi trabajo",
+        "description": "Text on the My Work button for Student VLE"
+    },
+    "display_chat_room": {
+        "value": "Abrir sala de chat",
+        "description": "Text on the Chat Room button for Student VLE"
+    },
+    "mywork_button_title": {
+        "value": "Revisar mi trabajo",
+        "description": "Text for mouse hover title on the My Work button"
+    },
+    "flagged_button_text": {
+        "value": "Marcado",
+        "description": "Text on the Flagged button"
+    },
+    "journal_button_text": {
+        "value": "Diario",
+        "description": "Text on the Journal button"
+    },
+    "toggle_nav_button_text": {
+        "value": "Pantalla completa",
+        "description": "Text on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "toggle_nav_button_title": {
+        "value": "Pantalla completa (Ocultar menú de navegación)",
+        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "toggle_nav_button_text_off": {
+        "value": "Mostrar menú",
+        "description": "Text on the Toggle Navigation button when navigation UI is off (hidden)"
+    },
+    "toggle_nav_button_title_off": {
+        "value": "Mostrar menú de navegación",
+        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "flagged_button_title": {
+        "value": "Revisar trabajo marcado por el docente",
+        "description": "Text for mouse hover title on the Flagged button"
+    },
+    "signout_button_text": {
+        "value": "Salir",
+        "description": "Text on the Log out button"
+    },
+    "signout_button_title": {
+        "value": "Guardar y salir de SABIO",
+        "description": "Text for mouse hover title on the Log out button"
+    },
+    "previous_step_text": {
+        "value": "< Anterior",
+        "description": "Text on button in the project vle that will show the previous step in the project"
+    },
+    "previous_step_title": {
+        "value": "Paso anterior",
+        "description": "Text for mouse hover title on button in the project vle that will show the previous step in the project"
+    },
+    "next_step_text": {
+        "value": "Siguiente >",
+        "description": "Text on button in the project vle that will show the next step in the project"
+    },
+    "next_step_title": {
+        "value": "Paso siguiente",
+        "description": "Text for mouse hover title on button in the project vle that will show the next step in the project"
+    },
+    "gohome_button_text": {
+        "value": "Principal",
+        "description": "Text on the Home button"
+    },
+    "gohome_button_title": {
+        "value": "Guardar y salir de la página principal",
+        "description": "Text for mouse hover title on the Home button"
+    },
+    "hint_title": {
+        "value": "Pistas",
+        "description": "Title of the hint dialog window and the text that shows up next to the Hint button"
+    },
+    "hint_button_text": {
+        "value": "Pistas",
+        "description": "Text that shows up next to the Hint button"
+    },
+    "hint_button_title": {
+        "value": "Ver pistas para este paso",
+        "description": "Text for mouse hover title on the Hint button (will be followed by the hint_title, e.g. 'View Hints')"
+    },
+    "hint_num_separator": {
+        "value": "de",
+        "description": "Text to be shown between current Hint number and total (e.g. 1 'of' 2)"
+    },
+    "hint_hint": {
+        "value": "pista",
+        "description": "Default Text label for 'hint'"
+    },
+    "hint_plural": {
+        "value": "pistas",
+        "description": "Default Text label for 'hints' (plural)"
+    },
+    "hint_next": {
+        "value": "Siguiente",
+        "description": "next hint"
+    },
+    "hint_prev": {
+        "value": "Ant",
+        "description": "previous hint"
+    },
+    "node_annotations_title": {
+        "value": "Ayuda de este paso",
+        "description": "Title of the step feedback dialog window"
+    },
+    "node_annotations_button_text": {
+        "value": "Ayuda",
+        "description": "Text that shows up next to the Hint button"
+    },
+    "node_annotations_button_title": {
+        "value": "Ver ayuda para este paso",
+        "description": "Text for mouse hover title on the Hint button (will be followed by the hint_title, e.g. 'View Hints')"
+    },
+    "navigation_expand_all": {
+        "value": "Mostrar todos",
+        "description": "Text on a button to show all navigation items"
+    },
+    "navigation_collapse_all": {
+        "value": "Colapsar todos",
+        "description": "Text on a button to hide all navigation items"
+    },
+    "student_assets_upload_new_file": {
+        "value": "Subir nuevo archivo",
+        "description": "Text 'Upload New File' in Student Asset Manager"
+    },
+    "student_assets_my_files": {
+        "value": "Mis archivos",
+        "description": "Text 'My Files' in Student Asset Manager"
+    },
+    "student_assets_remove_file_warning": {
+        "value": "Mis archivos",
+        "description": "Text in Student Asset Manager when student is not allowed to remove a file"
+    },
+    "student_assets_import_success_message": {
+        "value": "Archivo importado exitosamente",
+        "description": "Text 'Successfully imported file' in Student Asset Manager"
+    },
+    "student_assets_import_failure_message": {
+        "value": "Falló la importación. Este paso no acepta el tipo de archivo elegido. Por favor elegir un archivo diferente.",
+        "description": "Text in Student Asset Manager when importing file failed"
+    },
+    "student_assets_add_selected_file": {
+        "value": "Agregar el archivo seleccionado a este Paso",
+        "description": "Text on a button in Student Asset Manager to add the selected file to the current step"
+    },
+    "student_assets_delete_selected_file": {
+        "value": "Eliminar el archivo seleccionado",
+        "description": "Text on a button in Student Asset Manager to delete a selected file"
+    },
+    "cancel": {
+        "value": "Cancelar",
+        "description": "Text 'cancel'"
+    },
+    "ok": {
+        "value": "Ok",
+        "description": "Text 'OK'"
+    },
+    "done": {
+        "value": "Listo",
+        "description": "Text 'done', to mean completed"
+    },
+    "stepTerm": {
+        "value": "Paso",
+        "description": "Default term for a 'step' in a WISE project"
+    },
+    "insertImage": {
+        "value": "Insertar imagen",
+        "description": "Text 'Insert Image', to use for file upload"
+    },
+    "idea": {
+        "value": "idea",
+        "description": "The default text for an 'idea' in the Idea Manager tool."
+    },
+    "idea_plural": {
+        "value": "ideas",
+        "description": "The default text for 'ideas' in the Idea Manager tool."
+    },
+    "idea_basket": {
+        "value": "Canasta de Ideas",
+        "description": "The text 'Idea Basket' in the Idea Manager"
+    },
+    "idea_basket_add_an_idea": {
+        "value": "Agregar idea",
+        "description": "The text 'Add Idea' in the Idea Manager"
+    },
+    "explanation_builder": {
+        "value": "Constructor de Explicaciones",
+        "description": "The default text for the 'Explanation Builder' tool."
+    },
+    "chat_room": {
+        "value": "Sala de Chat",
+        "description": "The text 'Chat Room' in the Chat Room popup"
+    },
+    "grading_button_grade_by_step": {
+        "value": "Calificar por Paso",
+        "description": "GradingTool: Text in the grade-by-step button"
+    },
+    "grading_button_grade_by_team": {
+        "value": "Calificar por Equipo",
+        "description": "GradingTool: Text in the grade-by-team button"
+    },
+    "grading_button_view_student_uploaded_files": {
+        "value": "Ver los archivos subidos por estudiantes",
+        "description": "GradingTool: Text in the View Student Uploaded Files button"
+    },
+    "grading_button_export_latest_student_work": {
+        "value": "Exportar último trabajo estudiantes",
+        "description": "GradingTool: Text in the Export Latest Student Work button"
+    },
+    "grading_button_export_all_student_work": {
+        "value": "Exportar todo el trabajo de estudiantes",
+        "description": "GradingTool: Text in the Export All Student Work button"
+    },
+    "grading_button_export_idea_baskets": {
+        "value": "Exportar Canastas de Ideas",
+        "description": "GradingTool: Text in the Export Idea Baskets button"
+    },
+    "grading_button_export_explanation_builder_work": {
+        "value": "Exportar Trabajo Constructor de Explicaciones",
+        "description": "GradingTool: Text in the Export Explanation Builder Work button"
+    },
+    "grading_button_export_custom_work": {
+        "value": "Exportar Trabajo especial de estudiantes",
+        "description": "GradingTool: Text in the Export Custom Student Work button"
+    },
+    "grading_button_export_student_names": {
+        "value": "Expotar nombres de estudiantes",
+        "description": "GradingTool: Text in the Export Student Names button"
+    },
+    "grading_button_special_export": {
+        "value": "Exportación especial",
+        "description": "GradingTool: Text in the Special Export button"
+    },
+    "grading_button_explanation": {
+        "value": "Explicación",
+        "description": "GradingTool: Text in the Explanation button"
+    },
+    "grading_button_check_for_new_student_work": {
+        "value": "Chequear nuevo trabajo",
+        "description": "GradingTool: Text in the Check for New Student Work button"
+    },
+    "grading_button_save_changes": {
+        "value": "GUARDAR CAMBIOS",
+        "description": "GradingTool: Text in the Save Changes button"
+    },
+    "grading_grade_by_step_items_to_review": {
+        "value": "Items a revisar",
+        "description": "GradingTool: grade by step Items to Review table column"
+    },
+    "grading_grade_by_step_average_class_score": {
+        "value": "Promedio",
+        "description": "GradingTool: grade by step Avg Class Score table column"
+    },
+    "grading_grade_by_step_percent_completed_step": {
+        "value": "% Pasos visitados",
+        "description": "GradingTool: grade by step % of Students Who Have Completed This Step table column"
+    },
+    "grading_grade_by_step_all_periods": {
+        "value": "Todos los períodos",
+        "description": "GradingTool: grade by step All Periods select option when choosing whose work to filter by"
+    },
+    "grading_grade_by_team_header": {
+        "value": "Seleccionar un equipo de estudiantes para calificarlo",
+        "description": "GradingTool: grade by team page header"
+    },
+    "grading_question": {
+        "value": "Pregunta",
+        "description": "the text 'question', to be shown next to the question that was presented to the student"
+    },
+    "grading_hide_show_question": {
+        "value": "Ocultar/Mostrar pregunta",
+        "description": "'hide/show question' link that toggles the question's visibility in the grading tool"
+    },
+    "grading_previous_step": {
+        "value": "< Anterior",
+        "description": "'Previous Step' button in the grading tool that will show the previous step in the project"
+    },
+    "grading_change_step": {
+        "value": "Cambiar el Paso",
+        "description": "'Change Step' button in the grading tool that will show the select step page"
+    },
+    "grading_next_step": {
+        "value": "Siguiente >",
+        "description": "'Next Step' button in the grading tool that will show the next step in the project"
+    },
+    "period": {
+        "value": "Período",
+        "description": "Period"
+    },
+    "workgroupId": {
+        "value": "ID de Equipo",
+        "description": "Workgroup Id"
+    },
+    "team": {
+        "value": "Equipo de estudiantes",
+        "description": "Student Team"
+    },
+    "team_caps": {
+        "value": "EQUIPO",
+        "description": "TEAM"
+    },
+    "student_work": {
+        "value": "TRABAJO ESTUDIANTE",
+        "description": "student work column in the grading tool"
+    },
+    "tools": {
+        "value": "HERRAMIENTAS",
+        "description": "Tools"
+    },
+    "score": {
+        "value": "Puntaje",
+        "description": "Score"
+    },
+    "comment": {
+        "value": "Comentario",
+        "description": "Comment"
+    },
+    "flag": {
+        "value": "Marca",
+        "description": "Flag, for flagging student's work using the flagging tool"
+    },
+    "flag_as_inappropriate": {
+        "value": "Marcar como inapropiado",
+        "description": "'Flag as inappropriate' text, for flagging inappropriate student's work using the flagging tool"
+    },
+    "last_annotation": {
+        "value": "Último comentario",
+        "description": "the text 'last annotation'"
+    },
+    "grading_open_premade_comments": {
+        "value": "Abrir comentarios pre-definidos",
+        "description": "the text 'open premade comments' that will open the premade comments window when clicked"
+    },
+    "not_available": {
+        "value": "no disponible",
+        "description": "the text 'not available'"
+    },
+    "welcome": {
+        "value": "Bienvenido",
+        "description": "Text for 'Welcome'"
+    },
+    "authoring_hint_new": {
+        "value": "Nueva pista",
+        "description": "Default text for a new step hint."
+    },
+    "authoring_hint_option_never": {
+        "value": "Nunca",
+        "description": "The text 'Never' to display in 'force show:' drop down in the step hint authoring panel"
+    },
+    "authoring_hint_option_always": {
+        "value": "Siempre",
+        "description": "The text 'Always' to display in 'force show:' drop down in the step hint authoring panel"
+    },
+    "authoring_hint_options_label": {
+        "value": "Opciones",
+        "description": "The label for the 'Options' settings in the step hint authoring panel"
+    },
+    "authoring_hint_terminology_label": {
+        "value": "Etiquetas/Terminología",
+        "description": "The label for the 'Labels/Terminology' settings in the step hint authoring panel"
+    },
+    "authoring_hint_add": {
+        "value": "Agregar nueva pista",
+        "description": "The label for the 'add new hint' button in the step hint authoring panel"
+    },
+    "common_click_here": {
+        "value": "clic acá",
+        "description": "the common text 'click here'"
+    },
+    "project_error_has_no_steps": {
+        "value": "Error: este proyecto no contiene ningún paso",
+        "description": "The error text to be displayed when the project has no steps in it"
+    }
+}

@@ -1,0 +1,51 @@
+<otrunk id="3BE522E4-D4AC-45C2-819C-5DD74E54BA8F">
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewService"/>
+
+    <import class="org.concord.sensor.state.OTDeviceConfig"/>
+    <import class="org.concord.sensor.state.OTExperimentRequest"/>
+    <import class="org.concord.sensor.state.OTInterfaceManager"/>
+    <import class="org.concord.sensor.state.OTSensorDataProxy"/>
+    <import class="org.concord.sensor.state.OTSensorRequest"/>
+
+  </imports>
+  <objects>
+    <OTSystem>
+      <services>
+        <OTViewService/>
+        <OTInterfaceManager local_id="interface_manager">
+          <deviceConfigs>
+            <OTDeviceConfig name="Vernier go link">
+              <deviceId>10</deviceId>
+              <configString>none</configString>
+            </OTDeviceConfig>
+          </deviceConfigs>
+        </OTInterfaceManager>
+      </services>
+      <root>
+        <OTSensorDataProxy local_id="dataproducer">
+          <name>Motion</name>
+          <request>
+            <OTExperimentRequest>
+              <period>0.1</period>
+              <sensorRequests>
+                <OTSensorRequest>
+                  <type>0</type>
+                  <!-- type of sensor -->
+                  <stepSize>0.1</stepSize>
+                  <!-- requested resolution -->
+                  <displayPrecision>-1</displayPrecision>
+                  <port>0</port>
+                  <unit>degC</unit>
+                  <requiredMax>40</requiredMax>
+                  <requiredMin>0</requiredMin>
+                </OTSensorRequest>
+              </sensorRequests>
+            </OTExperimentRequest>
+          </request>
+        </OTSensorDataProxy>
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>

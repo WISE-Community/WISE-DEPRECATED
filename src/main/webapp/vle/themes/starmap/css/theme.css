@@ -1,0 +1,842 @@
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('../fonts/ubuntu-light.eot');
+    src: url('../fonts/ubuntu-light.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ubuntu-light.woff') format('woff'),
+         url('../fonts/ubuntu-light.ttf') format('truetype'),
+         url('../fonts/ubuntu-light.svg#Ubuntu') format('svg');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('../fonts/ubuntu-regular.eot');
+    src: url('../fonts/ubuntu-regular.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ubuntu-regular.woff') format('woff'),
+         url('../fonts/ubuntu-regular.ttf') format('truetype'),
+         url('../fonts/ubuntu-regular.svg#Ubuntu') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yanone Kaffeesatz';
+    src: url('../fonts/yanonekaffeesatz-extralight.eot');
+    src: url('../fonts/yanonekaffeesatz-extralight.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/yanonekaffeesatz-extralight.woff') format('woff'),
+         url('../fonts/yanonekaffeesatz-extralight.ttf') format('truetype'),
+         url('../fonts/yanonekaffeesatz-extralight.svg#Yanone_Kaffeesatz') format('svg');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yanone Kaffeesatz';
+    src: url('../fonts/yanonekaffeesatz-regular.eot');
+    src: url('../fonts/yanonekaffeesatz-regular.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/yanonekaffeesatz-regular.woff') format('woff'),
+         url('../fonts/yanonekaffeesatz-regular.ttf') format('truetype'),
+         url('../fonts/yanonekaffeesatz-regular.svg#Yanone_Kaffeesatz') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
+
+/*
+ * HTML5 ✰ Boilerplate
+ *
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ *
+ * Detailed information about this CSS: h5bp.com/css
+ *
+ * ==|== normalize ==========================================================
+ */
+
+
+/* =============================================================================
+   HTML5 display definitions
+   ========================================================================== */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
+audio, canvas, video { display: inline-block; *display: inline; *zoom: 1; }
+audio:not([controls]) { display: none; }
+[hidden] { display: none; }
+
+
+/* =============================================================================
+   Base
+   ========================================================================== */
+
+/*
+ * 1. Correct text resizing oddly in IE6/7 when body font-size is set using em units
+ * 2. Force vertical scrollbar in non-IE
+ * 3. Prevent iOS text size adjust on device orientation change, without disabling user zoom: h5bp.com/g
+ */
+
+html { font-size: 100%; /*overflow-y: scroll;*/ -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+
+body { margin: 0; font-size: 1em; /*line-height: 1.4;*/ line-height:1em; }
+
+body, button, input, select, textarea { font-family: sans-serif; /*color: #222;*/ color:#444; }
+
+/*
+ * Remove text-shadow in selection highlight: h5bp.com/i
+ * These selection declarations have to be separate
+ * Also: hot pink! (or customize the background color to match your design)
+ */
+
+/*::-moz-selection { background: #fe57a1; color: #fff; text-shadow: none; }
+::selection { background: #fe57a1; color: #fff; text-shadow: none; }*/
+::-moz-selection { background: #FFFCAD; color: #444; text-shadow: none; }
+::selection { background: #FFFCAD; color: #444; text-shadow: none; }
+
+
+/* =============================================================================
+   Links
+   ========================================================================== */
+
+/*a { color: #00e; }
+a:visited { color: #551a8b; }
+a:hover { color: #06e; }
+a:focus { outline: thin dotted; }*/
+
+/* Improve readability when focused and hovered in all browsers: h5bp.com/h */
+a:hover, a:active { outline: 0; }
+
+
+/* =============================================================================
+   Typography
+   ========================================================================== */
+
+abbr[title] { border-bottom: 1px dotted; }
+
+b, strong { font-weight: bold; }
+
+blockquote { margin: 1em 40px; }
+
+dfn { font-style: italic; }
+
+hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0; }
+
+ins { background: #ff9; color: #000; text-decoration: none; }
+
+mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
+
+/* Redeclare monospace font family: h5bp.com/j */
+pre, code, kbd, samp { font-family: monospace, serif; _font-family: 'courier new', monospace; font-size: 1em; }
+
+/* Improve readability of pre-formatted text in all browsers */
+pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; }
+
+q { quotes: none; }
+q:before, q:after { content: ""; content: none; }
+
+small { font-size: 85%; }
+
+/* Position subscript and superscript content without affecting line-height: h5bp.com/k */
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+
+/* =============================================================================
+   Lists
+   ========================================================================== */
+
+ul, ol { margin: 1em 0; padding: 0 0 0 40px; }
+dd { margin: 0 0 0 40px; }
+nav ul, nav ol { list-style: none; list-style-image: none; margin: 0; padding: 0; }
+
+
+/* =============================================================================
+   Embedded content
+   ========================================================================== */
+
+/*
+ * 1. Improve image quality when scaled in IE7: h5bp.com/d
+ * 2. Remove the gap between images and borders on image containers: h5bp.com/e
+ */
+
+img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+
+/*
+ * Correct overflow not hidden in IE9
+ */
+
+svg:not(:root) { overflow: hidden; }
+
+
+/* =============================================================================
+   Figures
+   ========================================================================== */
+
+figure { margin: 0; }
+
+
+/* =============================================================================
+   Forms
+   ========================================================================== */
+
+form { margin: 0; }
+fieldset { border: 0; margin: 0; padding: 0; }
+
+/* Indicate that 'label' will shift focus to the associated form element */
+label { cursor: pointer; }
+
+/*
+ * 1. Correct color not inheriting in IE6/7/8/9
+ * 2. Correct alignment displayed oddly in IE6/7
+ */
+
+legend { border: 0; *margin-left: -7px; padding: 0; }
+
+/*
+ * 1. Correct font-size not inheriting in all browsers
+ * 2. Remove margins in FF3/4 S5 Chrome
+ * 3. Define consistent vertical alignment display in all browsers
+ */
+
+button, input, select, textarea { font-size: 100%; margin: 0; vertical-align: baseline; *vertical-align: middle; }
+
+/*
+ * 1. Define line-height as normal to match FF3/4 (set using !important in the UA stylesheet)
+ */
+
+button, input { line-height: normal; }
+
+/*
+ * 1. Display hand cursor for clickable form elements
+ * 2. Allow styling of clickable form elements in iOS
+ * 3. Correct inner spacing displayed oddly in IE7 (doesn't effect IE6)
+ */
+
+button, input[type="button"], input[type="reset"], input[type="submit"] { cursor: pointer; -webkit-appearance: button; *overflow: visible; }
+
+/*
+ * Consistent box sizing and appearance
+ */
+
+input[type="checkbox"], input[type="radio"] { box-sizing: border-box; padding: 0; }
+input[type="search"] { -webkit-appearance: textfield; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
+
+/*
+ * Remove inner padding and border in FF3/4: h5bp.com/l
+ */
+
+button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+
+/*
+ * 1. Remove default vertical scrollbar in IE6/7/8/9
+ * 2. Allow only vertical resizing
+ */
+
+textarea { overflow: auto; vertical-align: top; resize: vertical; }
+
+/* Colors for form validity */
+input:valid, textarea:valid {  }
+input:invalid, textarea:invalid { background-color: #f0dddd; }
+
+
+/* =============================================================================
+   Tables
+   ========================================================================== */
+
+table { border-collapse: collapse; border-spacing: 0; }
+td { vertical-align: top; }
+
+
+
+/* ==|== primary theme styles =====================================================
+   Author: Jonathan Lim-Breitbart
+   ========================================================================== */
+
+/* Links */
+
+a { /*color: #007391;*/
+	margin: 0;
+	text-decoration:none;
+	cursor:pointer;
+	outline:none;
+}
+
+a:hover { text-decoration:underline; }
+
+
+/* Layout elements */
+
+html, body {
+	background: #090810;
+}
+
+body#w4_vle {
+	background: #090810;
+	font-size:.9em;
+	font-family: 'Ubuntu', sans-serif;
+}
+
+#vle_body {
+	margin:0 auto;
+	min-width:940px;
+	text-align:left;
+	overflow:hidden;
+	
+	/* Note: for WISE system notifications to display correctly, #vle_body must be absolutely
+	* positioned with top, bottom, left, and right values of 0 */
+	position:absolute;
+	bottom:0;
+	left:0;
+	right:0;
+	top:0;
+}
+
+#vle_body header {
+	position:absolute;
+	height:36px;
+	right:0;
+	top:0;
+}
+
+#vle_body footer {
+	position:absolute;
+	bottom:0;
+	/*height:40px;*/
+}
+
+#vle_body header, #vle_body footer {
+	margin:0;
+}
+
+#vle_body header #userNames {
+	/*color: #DDEFE1;
+	font-size: 0.9em;
+	padding: 0 0.5em;
+	position: absolute;
+	right: 0.1em;
+	top: 0.55em;*/
+	display: none;
+}
+
+
+/* Content Elements */
+
+#vle_body #logo {
+	/*display:inline-block;
+	line-height:28px;*/
+	display: none;
+}
+
+#vle_body #projectTools {
+	background-color: #090810;
+	background-color: rgba(9,8,16,0.9);
+    padding: 2px 10px 2px 8px;
+}
+
+#vle_body #projectTools a:hover {
+	color:#89a3cc;
+}
+
+#vle_body #projectTools a, #vle_body #projectTools a:active {
+	color:#425572;
+}
+
+#vle_body #projectContent {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+}
+
+#vle_body .contentPanel {
+	background-color: #090810;
+}
+
+#vle_body #stepInfo, #vle_body #hints, #vle_body #audioControls, #vle_body #stepNav, #vle_body #nodeAnnotations {
+	display:inline-block;
+	line-height:34px;
+	white-space: nowrap;
+}
+
+#vle_body #stepInfo img {
+	height: 28px;
+	max-width: 28px;
+	width: auto;
+}
+
+#vle_body #stepNav {
+	margin-left:-0.5em;
+}
+
+#vle_body #stepHeader {
+	background-color: rgb(55, 55, 55);
+	background-color: rgba(55, 55, 55, 0.8);
+	border-color: #FFFFFF;
+	-moz-border-radius: 0 4px 0 6px;
+	-wenkit-border-radius: 0 4px 0 6px;
+	border-radius: 0 4px 0 6px;
+	border-style: solid;
+	border-width: 0 0 2px 2px;
+	-moz-box-shadow: -1px 1px 1px #777777;
+	-webkit-box-shadow: -1px 1px 1px #777777;
+	box-shadow: -1px 1px 1px #777777;
+	color: #FFFFFF;
+	cursor: default;
+	font-family: Trebuchet MS;
+	font-size:.9em;
+	margin: 0;
+	padding: 0 0.25em;
+	position: absolute;
+	right: 0;
+	text-align: right;
+	top: 0;
+}
+
+#vle_body .panelContent {
+	padding:.5em
+}
+
+#vle_body .contentRight {
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+#vle_body .contentLeft {
+	bottom: 0;
+	right: 223px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: none;
+}
+
+#vle_body #contentDiv {
+	padding: 0;
+	width: 100%;
+	height: 100%;
+}
+
+#vle_body #ifrm {
+	padding:0;	
+	margin:0;
+	width:100%;
+	height:100%;
+	background-color:#090810;
+	/*overflow-x:hidden;*/
+}
+
+.centerContent {
+	text-align: center;
+}
+
+/* Sidebar Elements */
+
+#vle_body .sidePanel {
+	background-color: #FFFFFF;
+	border: 4px solid #FFFFFF;
+	border-radius: 6px;
+	box-shadow: 1px 1px 3px #444444;
+}
+
+#vle_body .sidebarLeft {
+	/*float:left;
+	width:215px;*/
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 210px;
+}
+
+#vle_body .sidebarRight {
+	/*float:left;
+	width:215px;*/
+	bottom: 0;
+	right: 0;
+	position: absolute;
+	top: 0;
+	width: 210px;
+}
+
+#vle_body #navigation, #vle_body #stepContent {
+	bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 36px;
+}
+
+#vle_body #navigation {
+	top: 0;
+}
+
+#vle_body #vleSidebar .panelHeader {
+	border-radius: 3px 3px 0 0;
+	-webkit-border-radius: 3px 3px 0 0;
+	-moz-border-radius: 3px 3px 0 0;
+	background-color: #C5CD61;
+	border-bottom: 1px solid #777777;
+	color: #FFFFFF;
+	font-weight:bold;
+	text-shadow:-1px 0 #A3AA3F, 0 1px #A3AA3F, 1px 0 #A3AA3F, 0 -1px #A3AA3F;
+	font-family:Trebuchet MS;
+	font-size: 1.1em;
+	font-weight: bold;
+	line-height: 1.2em;
+	margin: 0;
+	padding: 0.25em;
+}
+
+#vle_body #vleSidebar .panelContent {
+	background-color: #745A34;
+	color: #F2F4D2;
+	padding:0.25em;
+}
+
+#vle_body #vleSidebar .panelContent:last-child {
+	border-radius: 0 0 3px 3px;
+	-webkit-border-radius: 0 0 3px 3px;
+	-moz-border-radius: 0 0 3px 3px;
+	padding-bottom:.25em;
+}
+
+#vle_body #userNames {
+	font-size:.85em;
+	padding-top:.5em !important;
+	display: none;
+}
+
+#vle_body #runTitle {
+	color:#ffffff;
+	display: none;
+}
+
+
+/* Toolbars */
+
+#vle_body .toolbar {
+	padding:0 .5em;
+	font-size:.95em;
+}
+
+#vle_body .toolbar ul {
+	margin:0;
+	padding:0;
+}
+
+#vle_body .toolbar ul li {
+	display:inline;
+	margin:0;
+}
+
+#vle_body .toolbar ul li a {
+	display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    margin: 6px 10px;
+    -webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#vle_body .toolbar ul li a:hover {
+	text-decoration:none;
+}
+
+#vle_body .toolbar #signOutLinks a {
+	font-weight:normal;
+}
+
+#vle_body .toolbar #signOutLinks a:hover {
+	text-decoration:none;
+}
+
+#vle_body .toolbar .menuGroup {
+	border-left:1px solid #92C4D1;
+	margin-left: 0.1em;
+	padding-left: 0.2em;
+}
+
+
+/* Links/Icons */
+
+#vle_body #projectTools .icon {
+	vertical-align: top;
+}
+
+#vle_body #toggleNavLink .icon, #vle_body #exitLink .icon, #vle_body #signOutLink .icon {
+	display:inline-block;
+	width:20px;
+	height:20px;
+	margin: 0 7px 0 2px;
+}
+
+#vle_body #toggleNavLink:hover .icon {
+	background-position: -30px -55px;
+}
+
+#vle_body #toggleNavLink .icon, #vle_body #toggleNavLink:active .icon {
+	background:transparent url('../images/tools/menu-tools.png') no-repeat -5px -55px;
+}
+
+#vle_body #exitLink:hover .icon {
+	background-position: -30px -5px;
+}
+
+#vle_body #exitLink .icon, #vle_body #signOutLink:active .icon {
+	background:transparent url('../images/tools/menu-tools.png') no-repeat -5px -5px;
+}
+
+#vle_body #signOutLink:hover .icon {
+	background-position: -30px -30px;
+}
+
+#vle_body #signOutLink .icon, #vle_body #signOutLink:active .icon {
+	background:transparent url('../images/tools/menu-tools.png') no-repeat -5px -30px;
+}
+
+#vle_body #viewFlaggedLink {
+	padding-left:28px;
+	background:transparent url('../images/tools/flag.png') no-repeat left center;
+}
+
+#vle_body #viewIdeaBasketLink {
+	padding-left:28px;
+	background:transparent url('../images/tools/basket.png') no-repeat left center;
+}
+
+#vle_body #addIdeaLink {
+	padding-left:28px;
+	background:transparent url('../images/tools/lightbulbplus.png') no-repeat left center;
+}
+
+#vle_body #viewMyFilesLink {
+	padding-left:28px;
+	background:transparent url('../images/tools/files.png') no-repeat left center;
+}
+
+#vle_body #previousStepLink {
+	padding-left:28px;
+	background:transparent url('../images/tools/go-previous.png') no-repeat left center;
+}
+
+#vle_body #nextStepLink {
+	padding-left:28px;
+	background:transparent url('../images/tools/go-next.png') no-repeat left center;
+}
+
+#vle_body a#previousStepLink:hover {
+	padding-left:28px;
+	background:transparent url('../images/tools/go-previous-hover.png') no-repeat left center;
+}
+
+#vle_body a#nextStepLink:hover {
+	padding-left:28px;
+	background:transparent url('../images/tools/go-next-hover.png') no-repeat left center;
+}
+
+#vle_body a#hintsLink {
+	margin-right:0.5em;
+	padding-left:28px;
+	background:transparent url('../images/hint/star.png') no-repeat left center;
+	color:#FFFFFF;
+}
+
+#vle_body a#hintsLink:hover {
+	text-decoration:none;
+	color:#FFE347;
+}
+
+#vle_body a#nodeAnnotationsLink {
+	margin-right:0.5em;
+	padding-left:28px;
+	background:transparent url('../images/annotation/annotation.png') no-repeat left center;
+	color:#FFFFFF;
+}
+
+#vle_body a#nodeAnnotationsLink:hover {
+	text-decoration:none;
+	color:#FFE347;
+}
+
+/* Dialogs and overlays */
+
+#vleOverlay, #ideaBasketOverlay {
+	position:absolute;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+}
+
+#ideaBasketDiv {
+	padding:0;
+	overflow-y:hidden;
+}
+
+#hintsTabs {
+	border: 0;
+	text-align:left;
+}
+
+#hintsTabs .ui-tabs-nav {
+	display:none;
+}
+
+#hintsTabs .ui-tabs-panel {
+	padding:0;
+}
+
+#hintsTabs .hintHeader {
+	background-image: url("../images/hint/panda.png");
+	background-position: left 50%;
+	background-repeat: no-repeat;
+	color: #F47F6E;
+	font-size: 1em;
+	font-weight: bold;
+	padding: .25em .25em .25em 32px;
+	line-height: 26px;
+}
+
+#hintsPanel {
+	
+}
+
+#hintsTabs .hintText {
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	background-color:#EEEEEE;
+	margin: 0.5em 0;
+	min-height: 70px;
+	padding: 0.5em;
+}
+
+#hintsTabs .hintControls {
+	color:#444444;
+	font-weight: bold;
+}
+
+#hintsTabs .hintControls span {
+	cursor: pointer;
+	margin: 0.5em;
+	padding-top: 2px;
+}
+
+#hintsTabs .hintControls span:hover {
+	text-decoration:underline;
+}
+
+#hintsTabs .hintControls span.ui-state-disabled {
+	text-decoration:none !important;
+}
+
+#hintsTabs .tabPrev {
+	float:left;
+	background: url("../images/hint/previous.png") no-repeat scroll left 50% transparent;
+	padding-left:15px;
+}
+
+#hintsTabs .tabNext {
+	float:right;
+	background: url("../images/hint/next.png") no-repeat scroll right 50% transparent;
+	padding-right:15px;
+}
+
+
+/* Loading dialog content */
+#loading div {
+	text-align:center;
+	padding:0.5em;
+	display:none;
+}
+
+.no-title .ui-dialog-titlebar {
+	display: none;
+}
+
+/**
+ * "Required" elements not used in starmap theme
+ */
+/*
+#vle_body header,
+#vle_body footer,
+#vle_body #stepInfo,
+#vle_body #stepNav,
+#vle_body #vleSidebar {
+	display: none;
+}*/
+
+
+/* ==|== media queries ======================================================
+   PLACEHOLDER Media Queries for Responsive Design.
+   These override the primary ('mobile first') styles
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 480px) {
+  /* Style adjustments for viewports 480px and over go here */
+
+}
+
+@media only screen and (min-width: 768px) {
+  /* Style adjustments for viewports 768px and over go here */
+
+}
+
+
+
+/* ==|== non-semantic helper classes ========================================
+   Please define your styles before this section.
+   ========================================================================== */
+
+/* For image replacement */
+.ir { display: block; border: 0; text-indent: -999em; overflow: hidden; background-color: transparent; background-repeat: no-repeat; text-align: left; direction: ltr; *line-height: 0; }
+.ir br { display: none; }
+
+/* Hide from both screenreaders and browsers: h5bp.com/u */
+.hidden { display: none !important; visibility: hidden; }
+
+/* Hide only visually, but have it available for screenreaders: h5bp.com/v */
+.visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+
+/* Extends the .visuallyhidden class to allow the element to be focusable when navigated to via the keyboard: h5bp.com/p */
+.visuallyhidden.focusable:active, .visuallyhidden.focusable:focus { clip: auto; height: auto; margin: 0; overflow: visible; position: static; width: auto; }
+
+/* Hide visually and from screenreaders, but maintain layout */
+.invisible { visibility: hidden; }
+
+/* Contain floats: h5bp.com/q */
+.clearfix:before, .clearfix:after { content: ""; display: table; }
+.clearfix:after { clear: both; }
+.clearfix { *zoom: 1; }
+
+
+
+/* ==|== print styles =======================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+
+@media print {
+  * { background: transparent !important; color: black !important; box-shadow:none !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; } /* Black prints faster: h5bp.com/s */
+  a, a:visited { text-decoration: underline; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }  /* Don't show links for images, or javascript/internal links */
+  pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
+  thead { display: table-header-group; } /* h5bp.com/t */
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page { margin: 0.5cm; }
+  p, h2, h3 { orphans: 3; widows: 3; }
+  h2, h3 { page-break-after: avoid; }
+}

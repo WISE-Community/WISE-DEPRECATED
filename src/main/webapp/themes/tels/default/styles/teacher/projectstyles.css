@@ -1,0 +1,813 @@
+#runBox{
+	position:relative;
+	top:15px;
+}
+
+#navigation {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+}
+
+#navigation ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    padding-top: 5px;
+}
+
+#navigation li {
+    display: inline;
+    margin: 30px;
+    padding: 0px;
+}
+
+#navigation li.vertical{
+	display: block;	
+}
+
+#navigation a:link, #navigation a:visited{
+    color: #1122BB;
+    background-color: transparent;
+	text-decoration:none;
+}
+
+#navigation li a:hover{
+	color: green;
+}
+
+ul#tabnav{
+	list-style-type:none;
+	margin:0em;
+	padding:0em;
+	font-style: bold;
+	font-size: 1em;
+	font-family: verdana, arial, sans-serif;
+	width:980px;
+	background-color:#FFCCCC;
+}
+
+ul#tabnav li{
+	float:left;
+	height:1.1em;
+	color: green;
+	margin: 0em;
+	border: 0.02em;
+	border-style: solid;
+	border-color: black;
+}
+
+ul#tabnav a:link, ul#tabnav a:visited{
+	display: block;
+	text-decoration: none;
+	}
+
+ul#tabnav a:hover{
+	background-color: #AA11FF;
+	color: #AAEECC;
+}
+
+ul#tabnav2{
+	width:320px;
+	list-style-type:none;
+	font-style: bold;
+	font-size: 1.3em;
+	font-family: verdana, arial, sans-serif;	
+}
+
+ul#tabnav2 li{
+	float:left;
+	height:1em;
+	color: black;
+	padding:5px;
+	border: 0.02em;
+	border-style: solid;
+	border-color: black;
+}
+
+ul#tabnav2 a:link, ul#tabnav2 a:visited{
+	display: block;
+	background-color: transparent;
+	text-decoration: none;
+	}
+
+ul#tabnav2 a:hover{
+	background-color: #AA11FF;
+	color: #000000;
+}
+
+#runContent{
+	border:1px solid black;
+	position:relative;
+	top:17px;
+	padding-bottom:40px;
+	width:980px;
+}
+
+
+img#none{
+	border:0px;
+}
+
+#overviewContent{
+	border:1px solid #999;
+	margin:10px 0 20px 0;
+	padding:10px 20px 10px 30px;
+	}
+
+#periods{
+	width:600px;
+}
+
+#translations h2{
+	font-weight-bold;
+}
+
+#translations p {
+	font-size:.9em;
+	margin-bottom:10px;
+}
+
+#overviewHeader {
+	font-size:1.0em; 
+	letter-spacing:3px;
+	font-variant:small-caps;
+	margin: 10px 0 0 28px;
+	padding:0px;
+}
+	
+/* OVERVIEW CHOICES FOR ALL SECTIONS  */ 
+
+#overview_choices   {
+	padding:10px 0 28px 5px;
+}
+	
+#overview_choices tr  {
+	height:20%;
+}
+#overview_choices .link  {
+	font-size:1.1em;
+	letter-spacing:-.2px;
+	font-weight:bold; 
+	width:390px;
+	}
+
+#overview_choices a:link, #overview_choices a:visited   {
+	text-decoration:none;
+	color:#000066;
+	display:block;
+	padding:6px 0px 6px 15px;
+	margin:0px;
+	border-top: 1px solid #999999;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #999999;
+	background-image:url(../../images/Gradient_7a.png);
+	background-position:bottom;
+	background-repeat:repeat-x;
+   	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+	}
+
+#overview_choices a:hover  {
+	text-decoration:none;
+	color:#000099;
+	display:block;
+	padding:6px 0px 6px 15px;
+	margin:0px;
+	background-color:#FFFF00;
+	background-image:none;
+	border-top: 1px solid #999999;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #999999;
+		}
+		
+#overview_choices .description  {
+	font-size:.8em;
+	letter-spacing:-.4px; 
+	margin:0px;
+	padding:2px;
+	vertical-align:center;
+}
+
+.clearFloat {clear:both;}
+
+
+/* STYLES FOR TEACHER CHANGE PASSWORD  */
+
+#popUpWindowTeacherPassword {
+	width:600px;
+	background-image: url(../../images/student/Gradient-ProjectMenu-Green-450.png);
+	background-position: center bottom;
+	background-repeat: repeat-x;
+	border-top:1px solid #666666;
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+	border-left:1px solid #666666;
+	margin: 30px auto;
+	padding:0px;
+}
+
+#teacherPasswordButtons {
+	margin: 30px auto 20px auto;
+	text-align:center;
+}
+
+#teachersave, #teachercancel {
+	padding-right:5px;
+}
+
+
+
+/* STYLES FOR PROJECT LIBRARY PAGES */
+	
+#libraryHeader a {
+	color:blue;
+	padding:1px 3px;
+	font-size:.75em;
+	border:1px solid transparent;
+	text-decoration:none;
+			}	
+
+#libraryHeader a:hover {
+	background-color:#FFFF00;
+	border:1px solid #999;
+	outline:none;
+			}	
+
+/* This style keeps the link from having an browser outline after losing focus.  */
+#libraryHeader a:focus {
+	outline:none;
+			}	
+			
+#libraryResults{
+	font-weight:bold;
+	font-size:.8em;
+	letter-spacing:.5px;
+}
+
+#libraryButtons a{
+	float:right;
+}
+		
+#libraryInstructions {
+	font-weight:bold;
+	font-size:.8em;
+	color:#666;
+	margin:5px 0 15px 5px;
+}
+
+.searchContainer {
+	text-align:center;
+	margin:15px 0 10px 0;  
+	border: 1px solid #999;  
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	min-height:130px; 
+	border-bottom:1px solid #333;
+	 		
+}
+
+.searchContainer .header {	
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; 
+	text-align:left;
+	margin: 0px 0px 12px 0px;
+	padding: 3px 10px;
+	font-size: .9em;
+	font-weight:bold;
+	background-image:url(../../images/teacher/teacherSubHeader.png);
+	-moz-border-radius-topleft:4px;
+	-moz-border-radius-topright:4px;
+	-webkit-border-radius-topleft:4px;
+	-webkit-border-radius-topright:4px;
+	border-radius-topleft:4px;
+	border-radius-topright:4px;
+	border-bottom:1px solid #999;
+	}
+
+.topicLinks {
+	margin:0 auto 0px auto;
+}
+
+.topicLinks li {
+	display:inline;
+	list-style-type:none;
+	margin-right:15px;
+	font-size:.8em;
+}
+
+.topicLinks a {
+	text-decoration:none;
+	color:blue;
+	padding:3px 8px;
+	border:1px solid transparent;
+	font-weight:bold;
+}
+
+.topicLinks a:hover {
+	background:#fffF00;
+	border:1px solid #666;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+}
+
+#topicDisplayContainer {
+	background:#CCC;
+	margin:15px auto 10px auto;
+	text-align:left;
+	padding:10px;
+	width:700px;
+	min-height:50px;
+	border:1px solid #999;
+}
+
+#topicDisplayContainer .topicHeader{
+	font-weight:bold;
+	margin: 0 0 10px 0;
+	}
+	
+#topicDisplayContainer img{
+	margin: 0 15px 0 0 ;
+	}
+	
+#topicDisplayContainer p{
+	font-weight:bold;
+	margin: 10px 0;
+	}
+
+#topicDisplayContainer a{
+	text-decoration:none;
+	color:black;
+	margin:0;
+	font-size:.7em;
+	font-weight:bold;
+	border:1px solid #666;
+	padding:3px 5px;
+	background-image: url(../../images/WISE-Secondary-Banner-Gradient.png);
+	background-position: top;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+	}
+	
+#topicDisplayContainer a:hover{
+	background-image:none;
+	background-color:#FFFF00; 
+	}
+	
+#searchInstructions {
+	text-align:left;
+	font-size:.75em;
+	color:#000;
+	margin:5px 0 10px 10px;
+}
+
+#projectOverviewSearchContainer { 
+	margin:0 5px 0 8px;
+}
+
+#projectOverviewSearchContainer #projectOverviewTable {
+	border-bottom:1px solid #333;
+	vertical-align:top;
+}
+
+#searchCategoryButton, #searchKeywordButton {
+	text-align:right;
+	padding: 0 10px 15px 0;
+}
+
+#projectOverviewSearchContainer input, #searchKeywordButton input[type=submit]  {
+	margin:0;
+	font-size:.7em;
+	font-weight:bold;
+	border:1px solid #666;
+	padding:3px 5px;
+	background-image: url(../../images/WISE-Secondary-Banner-Gradient.png);
+	background-position: top;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+	    }	
+
+#projectOverviewSearchContainer input:hover, #searchKeywordButton input[type=submit]:hover {
+	background-image:none;
+	background-color:#FFFF00; 
+	    }	
+
+#searchKeywordButton {
+	margin-top:15px;
+	margin-right:5px;
+}
+
+#searchKeywordButton input[type=text] {
+	margin-right:15px;
+	padding:4px;
+	font-weight:bold;
+	font-size:.8em;
+	color:#003300;
+	border:1px solid #666;
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+}
+
+#searchKeywordButton input[type=text]:hover {
+	background-color:#FFFF00;
+}
+
+#searchTypeDiv {
+	float:left;
+	margin:4px 0 0 75px;
+	font-size:.75em;
+	text-align:left;
+	vertical-align:top;
+}
+
+#searchTypeDiv input {
+	vertical-align:middle;
+}
+
+	
+
+/* STYLES FOR PROJECT OVERVIEW section */
+
+#projectInfoTabs {
+	margin: 18px 0;
+}
+
+#projectInfoInstructions {
+	font-weight:bold;
+	font-size:.8em;
+	color:#333333;
+	margin:10px 0 20px 0;
+}
+
+#projectInfoProjectTitle {
+	color:#0000CC;
+	font-weight:bold;
+	padding:10px 5px 14px 10px;
+	margin:0px;
+	font-style:italic;
+	font-size:1.3em;
+}
+
+#projectInfoActionButtons  {
+	margin:0 auto 0 auto;
+	border:0px;
+	text-align:center;
+	vertical-align:middle;
+}
+
+#projectInfoActionButtons td a:link, #projectInfoActionButtons td a:visited {
+	display:block;
+	color:#000000;
+	text-decoration:none;
+	font-size:.70em;
+	font-weight:bold;
+	border-top:1px solid #666666;
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+	border-left:1px solid #666666;
+	padding:4px 5px;
+	background-color:#CCCCFF;
+	background-image: url(../../images/textureLightBlue.png);
+	background-position: left;
+	width:170px;
+	margin:0 10px;
+}
+
+#projectInfoActionButtons td a:hover{
+	display:block;
+	background-image: none;
+	background-color:#FFFF00;	
+	    }	  
+	  
+#editInfoLink {
+	margin: 20px 0 0 12px;
+	font-variant:small-caps;
+	font-size:1em;
+}
+
+#editInfoLink a:link, #editInfoLink a:visited {
+	color:#0000FF;		
+	}
+	
+#editInfoLink a:hover {
+	background-color:#FFFF00;	
+	color:#000099;	
+	}
+		 
+#teacherGuideIntro {
+	margin: 5px 0 0 12px;
+	font-size:.8em;
+}
+		 
+#teacherGuideTable {
+	border-collapse:collapse;
+	margin: 20px 0 25px 12px;
+}
+
+#teacherGuideTable td {
+	 border:1px solid #000000;
+	 padding:4px 8px;
+	 vertical-align:top;
+	font-size:.9em;
+}
+
+#teacherGuideTable .rowTwo {
+	background-color:#CCCCCC;
+	font-weight:bold;
+	font-variant:small-caps;
+	}
+	
+#teacherGuideTable .column1 {
+	width:20%;
+	}
+	
+#projectInfo {
+	text-align:left;
+	font-size: .9em;
+	padding:0px;
+	margin:7px 0 0 10px;
+}
+
+#projectInfo dt {
+	float:left;
+	font-weight:bold;
+	width: 150px;
+	padding:2px;
+}
+
+#projectInfo dd {
+	padding:2px;
+	width:900px;
+	color:#333333;
+}
+
+.projectInfoHeader {
+	font-size:.9em;
+	margin:20px 0 0 10px;
+	font-weight:bold;
+	}
+	 
+.projectInfoDataBox {
+	font-size:.8em;
+	margin:5px 0 0 30px; 
+	font-weight:normal;
+	}
+	
+.projectInfoDataBox ul {
+	list-style-type:circle;
+	padding:0px;
+	margin:0px;
+	}
+	
+	
+.projectInfoDataBox li {
+	margin-left:15px;
+	}
+   
+#projectCreditsTable {
+	border-collapse:collapse;
+	width:90%;
+	margin: 20px auto 25px 12px;
+	font-size:.85em;
+	}
+
+#projectCreditsTable td  {
+	padding:5px;
+	border:1px solid #000000;
+	text-align:center;
+		}
+	
+#projectCreditsTable .col1 {
+	width:25%;
+	background-color:#339966;
+	color:#FFFFFF;
+}
+
+#projectCreditsTable ul {
+	margin:0;
+	padding:5px;
+	text-align:center;
+}
+
+#projectCreditsTable li {
+	list-style-type:none;
+}
+    
+#editCreditsLink {
+	margin-left:10px;
+	font-size:1.0em;
+	}
+	
+	
+ /* STYLES FOR MY CUSTOMIZED/SHARED PROJECTS section */
+      
+#customProjectsButtons  {
+	margin:8px 0 0px 2px;
+	padding:0px;
+	border:0px;
+	text-align:center;
+	vertical-align:middle;
+}
+
+#customProjectsButtons td a:link, #customProjectsButtons td a:visited {
+	display:block;
+	color:#000000;
+	text-decoration:none;
+	font-size:.6em;
+	font-weight:bold;
+	border-top:1px solid #666666;
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+	border-left:1px solid #666666;
+	padding:3px 4px;
+	background-color:#CCCCFF;
+	background-image: url(../../images/textureLightBlue.png);
+	background-position: right;
+	width:170px;
+	margin:0 10px 0 0;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+}
+
+#customProjectsButtons td a:hover{
+	display:block;
+	background-image: none;
+	background-color:#FFFF00;	
+	    }
+	    
+#customProjectInstructions {
+	margin:12px 10px;
+	font-size:.8em;
+	font-weight:bold;
+	color:#666;
+}
+	
+#customProjectTable {
+	clear:both;
+	border-collapse:collapse;
+	margin:5px;
+	text-align:center;
+}
+
+#customProjectTable th{
+	background-color:#669933;
+	color:#FFFFFF;
+	font-variant:small-caps;
+	font-size:.8em; 
+	padding: 2px 5px;
+}
+
+#customProjectR2 td {
+	padding:8px 8px;
+}
+
+.customProjectTitle {
+	font-size:1.2em;
+	font-weight:bold;
+	margin:0;
+	width:425px;
+}
+
+#customProjectR2 .dataText{
+	font-size:.8em;
+}
+
+#customProjectR2 .dataTime{
+	font-size:.8em;
+	width:50px;
+}
+#customProjectR2 .smallText1{
+	font-size:.6em;
+}
+
+#customProjectR2 .smallText2{
+	font-size:.6em;
+}
+
+#customProjectR2 .actionMenuButton{
+	vertical-alignment:center;
+	padding:0;
+	margin:0;
+	width:15%;
+}
+
+#actionList  {
+	list-style-type:none;
+	text-align:center;
+	margin:0px;
+	padding:0px;
+	}
+	
+#actionList li, #actionList ul {
+	list-style-type:none;
+	}
+	
+#customProjectTable a:link, #customProjectTable a:visited, #actionList a:link, #actionList a:visited {
+	text-decoration:none;
+	font-size:0.8em; 
+	color:#0033CC;
+	padding:2px;
+	letter-spacing:-.2px;
+	border:1px solid white;
+}
+
+#customProjectTable a:hover, #actionList a:hover {
+	font-size:0.8em;
+	color:#000066;
+	padding:2px;
+	background-color:#ffff00;
+	letter-spacing:-.2px;
+	border:1px solid gray;
+	}
+
+.customProjectsMenuCSS {	
+	font-variant:small-caps;
+	font-weight:bold;
+	}
+	
+#customProjectSummaryHeader {
+	font-size:.8em;
+	font-weight:bold;
+	padding:6px 5px 5px 25px;
+	margin-bottom:20px;
+	color:#003300;
+	text-align:left;
+	background-image: url(../../images/Arrow_Down.png);
+	background-position: 8px 8px;
+	background-repeat:no-repeat;
+		}	 
+		
+#customProjectSummaryData {
+	font-size:1.0em;
+	padding: 5px 5px 5px 0;
+	font-weight:normal;
+	margin-top:5px;
+		}
+	
+.customProjectArchived {
+	background-color:#CC0000;
+}
+
+#customProjectMakeCurrentLink {
+	width:100px;
+}
+
+ /* STYLES FOR EDIT RUN SETTINGS SCREEN */
+
+#existingPeriodsList li {
+	margin-left:1em;
+	color:#745A33;
+}
+
+ /* STYLES FOR SHARED PERMISSIONS SCREEN */
+
+.sharedprojectHeadline1 {
+	font-variant:small-caps;
+	font-weight:bold;
+	font-size:1.1em;
+	padding:0px;
+	margin:20px 0 5px 0; 
+	text-align:left;  
+}
+
+table#sharedProjectPermissions {
+	width:600px;
+}
+
+#sharingSearchBox {
+	color:#FFFFFF;
+}
+
+#sharingSearchSelect {
+	text-align:center;
+	color:#585F0C;
+}
+
+#sharedOwnerUsernameInput {
+	margin-top:.5em;
+	color:#444444;
+}
+
+#matchedUsernames {
+}
+
+#matchedUsernames li {
+	list-style-type:none;
+	margin:.25em 0;
+}
+
+#matchedUsernames a {
+}
+
+#matchedUsernames a:hover {
+	text-decoration:underline;
+}
+
+
+	

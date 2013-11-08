@@ -1,0 +1,43 @@
+
+<html>
+
+<head>
+<script type="text/javascript" src="../../util/scriptloader.js"></script>
+
+<script type="text/javascript">
+function afterScriptsLoad(){
+	Nifty("div#assessmentTypeCenteredDiv","large, all");
+	Nifty("div#InfoBoxClose a","transparent, large, all");
+}
+
+window.onload = function(){
+	scriptloader.initialize(document, afterScriptsLoad, 'info_box');
+};
+</script>
+</head>
+
+<body id="stepbody">
+
+<div id="assessmentTypeCenteredDiv">
+
+<div id="stepTitle">Teacher Assessment</div>
+
+<div id="stepDescription">
+	<ul>
+	<li>A Teacher Assessment contains one or more questions that will be sent to your teacher for review. You'll get a chance to answer each question but won't get immediate feedback about correctness/incorrectness.  
+	Your teacher will send you this feedback later.</li>
+    <li>After selecting an answer click <i>Next Q</i> to move on to the next question. Or click <i>Previous Q</i> to review the choice made on an earlier question.</li>
+    <li>Grading can be ON or OFF. If grading is on, your teacher will award you points along with feedback about your answers. If grading is OFF your teacher will just give you feedback.</li>
+	<li>A Teacher Assessment can contain a variety of question types including Open-Response, Drawing, Graphing, Multi-Choice, Multi-Answer, Matching, Match & Sequence, and Fill the Blank. </li>
+	</ul>
+</div>
+
+
+<div id="InfoBoxClose">
+    <a href="JavaScript:window.close()">Close</a>
+</div>
+
+</div>   <!-- end centered Div -->
+
+</body>
+</html>

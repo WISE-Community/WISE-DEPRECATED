@@ -1,0 +1,70 @@
+<html>
+<head>
+<title>Teacher Tickertape Pop-Up Window</title>
+
+<script type="text/javascript" src="../common/js/loadxmldoc.js"></script>
+
+<script type="text/javascript" src="../../common/helperfunctions.js"></script>
+<script type="text/javascript" src="../../VLE.js"></script>
+
+
+<script type="text/javascript" src="../../ui/contentpanel/ContentPanel.js"></script>
+<script type="text/javascript" src="../../navigation/NavigationLogic.js"></script>
+<script type="text/javascript" src="../../visibility/VisibilityLogic.js"></script>
+<script type="text/javascript" src="../../visibility/OnlyShowSelectedNodes.js"></script>
+<script type="text/javascript" src="../../visibility/CorrectnessBranchingVisibility.js"></script>
+<script type="text/javascript" src="../../navigation/DFS.js"></script>
+<script type="text/javascript" src="../../ui/navigationpanel/NavigationPanel.js"></script>
+<script type="text/javascript" src="../../common/loadxmldoc.js"></script>
+<script type="text/javascript" src="../Node.js"></script>
+<script type="text/javascript" src="../HtmlNode.js"></script>
+<script type="text/javascript" src="../CustomNode.js"></script>
+<script type="text/javascript" src="../MatchSequenceNode.js"></script>
+<script type="text/javascript" src="../FillinNode.js"></script>
+<script type="text/javascript" src="../NoteNode.js"></script>
+<script type="text/javascript" src="../JournalNode.js"></script>
+<script type="text/javascript" src="../OutsideUrlNode.js"></script>
+<script type="text/javascript" src="../BlueJNode.js"></script>
+<script type="text/javascript" src="../MultipleChoiceNode.js"></script>
+<script type="text/javascript" src="../multiplechoice/mc.js"></script>
+<script type="text/javascript" src="../multiplechoice/multiplechoicestate.js"></script>
+<script type="text/javascript" src="../MultipleChoiceCheckBoxNode.js"></script>
+<script type="text/javascript" src="../multiplechoicecheckbox/mc_checkbox.js"></script>
+<script type="text/javascript" src="../multiplechoicecheckbox/multiplechoicecheckboxstate.js"></script>
+<script type="text/javascript" src="../TickerNode.js"></script>
+<script type="text/javascript" src="../../project/Project.js"></script>
+<script type="text/javascript" src="../../project/pas/PasOtmlProject.js"></script>
+<script type="text/javascript" src="../../io/ConnectionManager.js"></script>
+
+<!-- Ticker Query Files -->
+<script type="text/javascript" src="ticker.js"></script>
+<script type="text/javascript" src="StudentQueryContainer.js"></script>
+<script type="text/javascript" src="../QueryEntry.js"></script>
+<script type="text/javascript" src="../StudentWorkQueryObject.js"></script>
+<script type="text/javascript" src="../multiplechoice/MultipleChoiceQueryEntry.js"></script>
+<script type="text/javascript" src="../multiplechoice/MultipleChoiceQueryContainer.js"></script>
+<script type="text/javascript" src="../multiplechoicecheckbox/MultipleChoiceCheckBoxQueryEntry.js"></script>
+<script type="text/javascript" src="../multiplechoicecheckbox/MultipleChoiceCheckBoxQueryContainer.js"></script>
+
+<script type="text/javascript">
+var studentWorkQueryObject;
+
+var vleRef = null;
+function tickerLoaded(vle) {
+	vleRef = vle
+	createStudentWorkQueryObject(vle);
+}
+</script>
+</head>
+<body>
+<div id="refreshButtonDiv">
+<input type="button" onclick="createStudentWorkQueryObject(vleRef);" value="View Work By Question" />
+<input type="button" onclick="createStudentWorkQueryObjectForStudentsWork(vleRef)" value="View Work By Student" />
+</div>
+	
+<div id="tickerMainContainer">	
+
+</div>	  <!-- End of tickerMainContainer -->	
+
+</body>
+</html>

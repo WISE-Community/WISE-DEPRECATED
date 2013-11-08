@@ -1,0 +1,26 @@
+{
+   "prompt": "",
+   "excelExportStringTemplate":"",
+   "createPrediction": true,
+   "enableEasyPrediction":true,
+   "graphParams": {
+   	   "xlabel":"",
+ 	   "xUnits":"",
+   	   "ylabel":"",
+   	   "yUnits":"",
+       "allowUpdateAxisRange":true
+   },
+   "graphTitle": "",
+   "seriesLabels":[],
+   "seriesColors":[],
+   "expectedResults":[],
+   "requirePredictionBeforeEnter":false,
+   "showGraphOptions": false,
+   "showVelocity": false,
+   "showAcceleration":false,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "type": "Grapher"
+}

@@ -1,0 +1,25 @@
+body { font:13px/1.231 sans-serif; *font-size:small; } 
+h1, h2, h3, h4, h5, h6 { font-weight: bold; }
+h1 {
+  font-size: 130%;
+  padding: 4px;
+}
+h2 {
+  font-size: 120%;
+  padding: 3px;
+  padding-left: 6px;
+  background-color: #DDDDDD;
+}
+
+h3 {
+  padding: 2px;
+  padding-left: 10px;
+}
+.options_disabled {
+  color: #999999;
+}
+
+input[disabled] {
+  color: #999999;
+}
+

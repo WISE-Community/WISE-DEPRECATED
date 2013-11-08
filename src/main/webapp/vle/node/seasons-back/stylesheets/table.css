@@ -1,0 +1,108 @@
+
+#city-data-table {
+    width: 460px;
+    margin-left: 5px;
+    padding: 2px;
+    border: 1px solid #CCC;
+    font-size: 80%;
+}
+
+#city-data-table select {
+    margin: 0px;
+    padding-top: 1px;
+    font-size: 90%;
+}
+
+.scroll-table-head {
+  width: 460;
+}
+.scroll-table-body {
+  width: 460px;
+  height: 400px;
+}
+
+table {
+	border-collapse: collapse;
+	margin: 0.5em;
+}
+
+td, th {
+	padding: 0.5em;
+	border: 1px solid #CCC;
+	height: 1.5em;
+}
+
+thead, tfoot {
+	background-color: #DDD;
+}
+
+tr.rowodd {
+}
+
+tr {
+    height: 1em;
+}
+
+tr.roweven {
+	background-color: #F2F2F2;
+}
+
+td.timestyle {
+	font-size: 0.8em;
+	font-family:  Lucida Grande, Microsoft Sans Serif, Arial, Helvetica, sans-serif;
+}
+
+.sortcol {
+	cursor: pointer;
+	padding-right: 20px;
+	background-repeat: no-repeat;
+	background-position: right center;
+}
+.sortasc {
+	background-color: #DDFFAC;
+	background-image: url(../images/tablesort/up.gif);
+}
+.sortdesc {
+	background-color: #B9DDFF;
+	background-image: url(../images/tablesort/down.gif);
+}
+.nosort {
+	cursor: default;
+}
+
+.urg1, .urg2, .urg3, .urg4, .urg5 {
+	padding: 3px;
+	text-align: center;
+	border: 1px solid #333;
+	width: 3em;
+}
+
+.urg1 {
+	background-color: #FFFACD;
+}
+.urg2 {
+	background-color: #FFD700;
+}
+.urg3 {
+	background-color: Orange;
+}
+.urg4 {
+	background-color: #FF6347;
+}
+.urg5 {
+	background-color: Red;
+}
+
+.scroll-table-head {
+    width: 800px;
+}
+
+.scroll-table-body {
+    width: 800px;
+    height: 400px;				
+}
+.scroll-table-body td {
+	padding-right: 20px;
+	overflow: hidden;
+}
+

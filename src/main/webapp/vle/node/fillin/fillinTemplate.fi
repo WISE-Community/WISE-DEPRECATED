@@ -1,0 +1,15 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "Fillin",
+      "interaction": [],
+      "outcomeDeclaration": {
+         "baseType": "float",
+         "cardinality": "single",
+         "identifier": "SCORE"
+      },
+      "responseDeclarations": [],
+      "timeDependent": false
+   },
+   "type": "Fillin"
+}

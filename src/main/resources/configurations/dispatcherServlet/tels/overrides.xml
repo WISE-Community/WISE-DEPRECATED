@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    * Copyright (c) 2007 Encore Research Group, University of Toronto
+    * 
+    * This library is free software; you can redistribute it and/or
+    * modify it under the terms of the GNU Lesser General Public
+    * License as published by the Free Software Foundation; either
+    * version 2.1 of the License, or (at your option) any later version.
+    *
+    * This library is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    * Lesser General Public License for more details.
+    *
+    * You should have received a copy of the GNU Lesser General Public
+    * License along with this library; if not, write to the Free Software
+    * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+<!-- $Id$ -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+    http://www.springframework.org/schema/util 
+    http://www.springframework.org/schema/util/spring-util-3.0.xsd
+    http://www.springframework.org/schema/mvc
+ 	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+    
+    <!-- Specifies where theme properties are located -->
+    <bean id="themeSource"
+        class="org.springframework.ui.context.support.ResourceBundleThemeSource">
+        <property name="basenamePrefix" value="themes/tels/" />
+    </bean>           
+
+    <!-- JSP with optional JSTL views -->
+    <bean id="viewResolver"
+        class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass"
+            value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/WEB-INF/jsp/tels/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <bean id="messageSource"
+        class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:messages/tels/ui-html" />
+		<property name="defaultEncoding" value="UTF-8"/>
+		<!--  
+        <property name="basenames">
+            <list>
+                <value>classpath:messages/tels/ui-html</value>
+                <value>classpath:messages/tels/ui-html_ja</value>
+                <value>classpath:messages/tels/ui-html_zh_TW</value>
+            </list>
+        </property>
+        -->
+    </bean>
+    <!--  The real exceptions are logged to the tomcat/logs/catalina.out file. Look there if you've got a problem. -->
+    <bean id="exceptionResolver"
+        class="org.telscenter.sail.webapp.spring.impl.TelsSimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">errors/friendlyError</prop>
+                <prop key="org.acegisecurity.AccessDeniedException">
+                    errors/securityFriendlyError
+                </prop>
+                <prop
+                    key="net.sf.sail.webapp.domain.webservice.NetworkTransportException">
+                    errors/networkFriendlyError
+                </prop>
+                <prop key="net.sf.sail.webapp.service.NotAuthorizedException">accessdenied</prop>
+            </props>
+        </property>
+        <property name="portalProperties" ref="portalproperties" />
+        <property name="emaillisteners" ref="emaillisteners" />
+        <property name="javaMail" ref="javaMail" />
+    </bean>
+    
+    <bean id="openSessionInViewInterceptor"
+        class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean
+    	class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    	<property name="order" value="2"></property>
+    	<property name="mappings">
+    		<value>
+    			/request/info.html=informationController
+    			/metadata.html=projectMetadataController
+    		    /index.html=urlFilenameViewController
+    		    /errors/friendlyError.html=urlFilenameViewController
+    		    /accessdenied.html=accessDeniedController
+    		    /router.html=routerController
+    		    /preview.html=previewLDProjectController
+    		    /contact/contactwisegeneral.html=contactWiseController
+    		    /contact/contactwiseproject.html=contactWiseProjectController
+    		    /contact/checkforexistingaccount.html=checkForExistingAccountController
+    		    /pages/statistics.html=statisticsController
+    		    /getportalstatistics.html=portalStatisticsController
+    		    /student/index.html=studentIndexController
+    		    /student/vle/vle.html=studentVLEController
+    		    /student/selectteam.html=selectteamController
+    		    /student/teamsignin.html=teamSignInController
+    		    /student/addproject.html=addProjectController
+    		    /student/startproject.html=startProjectController
+    		    /student/registerstudent.html=registerstudentController
+    		    /student/getannotationbundle.html=getAnnotationBundleController
+				/student/changestudentpassword.html=changeUserPasswordController
+				/student/service/workgroup.html=studentWorkgroupServiceController
+				/teacher/index.html=teacherIndexController
+    		    /teacher/termsofuse.html=termsOfUseController
+    		    /teacher/registerteacher.html=registerteacherController
+    		    /teacher/curriculumsubjects.html=curriculumSubjectsController
+    		    /teacher/projects/languagetranslations.html=languageTranslationsController
+    		    /teacher/projects/projectinfo.html=projectInfoController
+    		    /teacher/projects/customized/shareproject.html=shareProjectController
+    		    /teacher/projects/customized/unshareproject.html=unShareProjectController
+    		    /teacher/run/shareprojectrun.html=shareProjectRunController
+    		    /teacher/run/unshareprojectrun.html=unShareProjectRunController
+    		    /teacher/run/manage/archiveRun.html=endRunController
+    		    /teacher/run/manage/startRun.html=startRunController
+    		    /teacher/run/createRun.html=createRunController
+    		    /teacher/run/updaterun.html=updateRunController
+    		    /teacher/run/editrun.html=editRunController
+				/teacher/run/report.html=projectRunReportController
+    		    /teacher/grading/gradework.html=gradeWorkController
+				/teacher/grading/premadeComments.html=premadeCommentsController
+				/teacher/classroomMonitor/classroomMonitor.html=gradeWorkController
+    		    /teacher/management/overview.html=managementOverviewController
+    		    /teacher/management/managemystudents.html=manageStudentsController
+    		    /teacher/management/updatemyaccount.html=updateMyAccountController
+    		    /teacher/management/library.html=libraryController
+    		    /teacher/management/changeteacherpasswordsuccess.html=changeTeacherPasswordSuccessController
+    		    /teacher/management/classroomruns.html=myClassroomRunsMainController
+    		    /teacher/management/projectruntabs.html=myClassroomRunsController
+    		    /teacher/management/submitworkgroupchanges.html=submitWorkgroupChangesController
+    		    /studentinfo.html=infoController
+    		    /teacher/management/studentlist.html=studentListController
+    		    /teacher/management/studentlistexcel.html=listStudentNamesController
+    		    /teacher/management/addsharedteacher.html=addSharedTeacherController
+    		    /teacher/vle/vle.html=studentVLEController
+    		    /**/index.html=indexController
+    		    /previewproject.html=previewprojectController
+    		    /previewprojectlist.html=previewprojectlistController
+    		    /credits.html=creditsController
+    		    /forgotaccount/selectaccounttype.html=selectAccountTypeController
+    		    /forgotaccount/teacher/index.html=forgotAccountTeacherIndexController
+    		    /forgotaccount/teacher/success.html=forgotAccountTeacherSuccessController
+    		    /forgotaccount/teacher/error.html=forgotAccountTeacherErrorController
+	  			/forgotaccount/student/passwordreminder*.html=forgotAccountStudentPasswordReminderWizardController
+				/forgotaccount/student/enterprojectcode.html=forgotAccountStudentCheckProjectCodeController
+				/forgotaccount/student/searchforstudentusername.html=searchForStudentUserNameController
+				/forgotaccount/resetpassword.html=resetPasswordController
+				/**/changepassword.html=changeUserPasswordController
+				/teacher/management/viewmystudents.html=viewMyStudentsController
+				/teacher/management/batchstudentchangepassword.html=batchStudentChangePasswordController
+				/teacher/management/changepassword.html=changeTeacherPasswordController
+				/teacher/management/changestudentpassword.html=changeUserPasswordController
+				/teacher/management/changeworkgroup.html=changeWorkgroupController
+				/teacher/management/removestudentfromrun.html=removeStudentFromRunController
+				/teacher/management/updatemyaccountinfo.html=updateMyAccountInfoController
+				/teacherinfo.html=infoController
+				/dwr/*=dwrController
+				/author/authorproject.html=authorProjectController
+				/project/exportproject.html=exportProjectController
+				/project/importexternalproject.html=importExternalProjectController
+				/admin/project/uploadproject.html=uploadProjectController
+				/admin/account/manageusers.html=viewAllUsersController
+				/admin/account/enabledisableuser.html=enableDisableUserController
+				/admin/account/lookupteacher.html=lookupTeacherController
+				/admin/account/lookupstudent.html=lookupStudentController
+				/admin/project/manageallprojects.html=manageAllProjectsController
+				/admin/run/manageallprojectruns.html=manageAllProjectRunsController
+				/admin/run/findprojectrunsbyprojectid.html=findProjectRunsController
+				/admin/run/findprojectrunsbyteacher.html=findProjectRunsController
+				/admin/run/findprojectrunsbyrunid.html=findProjectRunsController
+				/admin/run/runstats.html=runStatisticsController				
+				/admin/news/managenewsitems.html=listNewsItemsController
+				/admin/news/addnewsitems.html=addNewsItemController
+				/admin/news/editnewsitem.html=editNewsItemController
+				/admin/news/removenewssuccess.html=removeNewsItemController
+				/admin/news/removenewsconfirm.html=removeNewsConfirmController
+				/admin/project/getallexternalprojects.html=getAllExternalProjectsController
+				/admin/project/viewprojectcommunicators.html=projectCommunicatorController
+				/admin/project/manageprojectcommunicator.html=projectCommunicatorController
+				/admin/project/currentlyAuthoredProjects.html=currentlyAuthoredProjectsController
+				/admin/project/tagger.html=taggerController
+				/admin/portal/manageportal.html=managePortalController
+				/newsarchive.html=listNewsItemsController
+				/teacher/management/changestudentperiod.html=changeStudentPeriodController
+				/teacher/run/announcement/manageannouncement.html=manageAnnouncementController
+				/teacher/run/announcement/viewannouncement.html=viewAnnouncementController
+				/teacher/run/announcement/createannouncement.html=createAnnouncementController
+				/teacher/run/announcement/editannouncement.html=editAnnouncementController
+				/teacher/run/announcement/removeannouncement.html=removeAnnouncementController
+				/teacher/projects/bookmark.html=bookmarkController
+				/teacher/projects/deleteproject.html=deleteProjectController
+				/teacher/projects/analyzeproject.html=analyzeProjectController
+				/teacher/projects/minifyproject.html=minifyProjectController
+				/teacher/run/manage/extendremindertime.html=extendReminderTimeController
+				/student/viewannouncements.html=viewAnnouncementsController
+				/createhierarchytype.html=createHierarchyTypeController
+				/createnode.html=createNodeController
+				/runInfo.html=runInfoController
+				/managehierarchytypes.html=manageHierarchyTypesController
+				/managehierarchy.html=manageHierarchyController
+				/message/message.html=messageController
+				/bridge/**/*.html=bridgeController
+				/errors/outsideerror.html=outsideErrorController
+				/authorize.html=credentialManager
+				/pages/check.html=compatibilityCheckController
+				/pages/memorymonitor.html=memoryMonitorController
+				/**/*.html=urlFilenameViewController
+    		</value>
+    	</property>
+    </bean>
+    
+                <mvc:resources mapping="/vle/**" location="/vle/" order="1" />
+    
+
+</beans>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    * Copyright (c) 2007 Encore Research Group, University of Toronto
+    * 
+    * This library is free software; you can redistribute it and/or
+    * modify it under the terms of the GNU Lesser General Public
+    * License as published by the Free Software Foundation; either
+    * version 2.1 of the License, or (at your option) any later version.
+    *
+    * This library is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    * Lesser General Public License for more details.
+    *
+    * You should have received a copy of the GNU Lesser General Public
+    * License along with this library; if not, write to the Free Software
+    * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+<!-- $Id$ -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <!-- Switch locales according to the user's browser -->
+    <bean id="localeResolver"
+        class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver" />
+
+    <!-- Use a default fixed theme -->
+    <bean id="themeResolver"
+        class="org.springframework.web.servlet.theme.FixedThemeResolver">
+        <property name="defaultThemeName" value="default" />
+    </bean>
+
+    <!-- this bean with the well known name generates view names for us -->
+    <bean id="viewNameTranslator"
+        class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator" />
+
+    <!-- Specifies where theme properties are located -->
+    <bean id="themeSource"
+        class="org.springframework.ui.context.support.ResourceBundleThemeSource">
+        <property name="basenamePrefix" value="themes/pas/" />
+    </bean>
+
+    <!-- JSP with optional JSTL views -->
+    <bean id="viewResolver"
+        class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass"
+            value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/WEB-INF/jsp/pas/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- maps request URLs to Controller names -->
+    <bean
+        class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
+        <property name="order" value="1" />
+    </bean>
+
+    <!-- maps request URLs to view file names -->
+    <bean id="urlFilenameViewController"
+        class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
+
+    <!-- no 'id' required, HandlerMapping beans are automatically detected by the DispatcherServlet -->
+    <bean
+        class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="order" value="2"></property>
+        <property name="mappings">
+            <value>/index.html=urlFilenameViewController</value>
+        </property>
+    </bean>
+
+    <!-- Localizable messages -->
+    <bean id="messageSource"
+        class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>messages/pas/ui-html</value>
+                <value>classpath:/org/acegisecurity/messages</value>
+            </list>
+        </property>
+    </bean>
+<!--  The real exceptions are logged to the tomcat/logs/catalina.out file. Look there if you've got a problem. -->
+    <bean id="exceptionResolver"
+        class="net.sf.sail.webapp.spring.impl.PasSimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">errors/friendlyError</prop>
+                <prop key="org.acegisecurity.AccessDeniedException">
+                    errors/securityFriendlyError
+                </prop>
+                <prop
+                    key="net.sf.sail.webapp.domain.webservice.NetworkTransportException">
+                    errors/networkFriendlyError
+                </prop>
+            </props>
+        </property>
+    </bean>
+</beans>

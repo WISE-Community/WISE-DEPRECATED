@@ -1,0 +1,804 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/* OVERVIEW CHOICES FOR GRADING SECTION  */ 
+
+#overviewContentGrading {
+	border-top: 1px solid #666666;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #666666;
+	margin:10px 0 20px 0;
+	padding:10px 30px 10px 30px;
+	}
+	
+#overviewHeaderGrading {
+	font-size:1.0em;
+	letter-spacing:3px;
+	font-variant:small-caps;
+	margin: 15px 0 0 30px;
+	padding:0px;
+}
+
+#overviewHeaderGradingv2 {
+	font-size:1.1em;
+	letter-spacing:3px;
+	font-variant:small-caps;
+	margin: 15px 0 5px 0px;
+	padding:0px;
+}
+
+#overview_choices_grading   {
+	padding:15px 0 25px 5px;
+}
+	
+#overview_choices_grading .link_grading  {
+	font-size:1.1em; 
+	font-weight:bold;
+	width:420px;
+	}
+
+#overview_choices_grading .description_grading  {
+	font-size:.9em;
+	margin:0px;
+	padding:2px;
+	vertical-align:middle;
+}
+
+#overview_choices_grading a:link, #overview_choices_grading a:visited   {
+	text-decoration:none;
+	display:block;
+	color:#0000CC;
+	padding:6px 12px 6px 12px;
+	background-image:url(../../images/Pixel_Grading_Highlight.png);
+	background-position:left top;
+	background-repeat:repeat;
+	border-top: 1px solid #999999;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #999999;
+}
+
+#overview_choices_grading a:hover  {
+	display:block;
+	background-color:#FFFF33;
+	color:#0000CC;
+	padding:6px 12px 6px 12px;
+	background-image:none;
+	border-top: 1px solid #999999;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #999999;
+		}
+		
+		
+/* CSS FOR GRADE BY STEP AND GRADE BY TEAM SELECTION LIST */ 
+
+#scoreBatchButton {
+	float:right;
+	margin-right:35px;
+}
+
+#gradeStepSelectionArea {
+	margin: 8px 0 0 0px;
+	padding:0px;
+	}
+	
+#gradeStepSelectionArea h3  {
+	display:none;
+	}
+	
+#selectedProjectTable {
+	border-collapse:collapse;
+	width:100%; 
+	margin:0 0 2px 0px;
+	border:1px solid #333;
+	}	
+
+#selectedProjectTable td {
+	background-color:#CCC;
+	padding:3px;
+	vertical-align:middle;
+	text-align:left;
+}
+
+#selectedProjectTable .header1 {
+	color:#333;
+	font-size:75%;
+	padding:0px 5px 0 10px;
+	width:80px;
+}
+
+#selectedProjectTable .header2 {
+	width: 140px;
+}
+
+#selectAnotherLink a:link, #selectAnotherLink a:visited {
+	padding: 0px 10px;
+	font: bold Verdana, Arial, sans-serif;
+	font-size:.7em;
+	background-color:#1e69ff;
+	color: #FFF;
+	border:1px solid #333;
+	text-decoration: none;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;  
+	border: 1px solid #19253D; 
+}
+
+#selectAnotherLink a:hover  {
+	background-color:#FFFF00;
+	color:#333;
+	}
+
+#gradeStepSelectedProject {
+	color:#CC0000;
+	font-size:1.1em;
+	font-variant:small-caps;
+	padding-left:5px;
+	}	
+	
+#gradeStepSelectedProject .runIdTag{
+	margin-left:30px;
+	font-variant:normal;
+	font-size:80%;
+	color:#666;
+}
+	
+#gradeStepInstructions {
+	padding-left:20px;
+	font-size:.8em;
+	font-style:italic;
+		}		
+	
+#stepTitle, #workgroupTitle {
+   font-size:1.0em;
+   font-weight:bold;
+   margin:0px 0 5px 0;
+}
+	
+#stepSelectionList, #workgroupSelectionList {
+   padding-top:0;
+   margin: 0 0 20px 0;
+}
+
+#stepSelectionList li, #workgroupSelectionList li  {
+	list-style:circle;
+	font-weight:bold;
+	font-size:.8em;
+	margin:0px 0 3px 0;
+	padding:0px;
+	}
+
+#stepSelectionList a:link, #stepSelectionList a:visited {
+	background-color:#FFFFFF;
+	padding:2px;
+	}
+	
+#workgroupSelectionList a:link, #workgroupSelectionList a:visited {
+	background-color:#FFFFFF;
+	padding:2px;
+	}
+
+#stepSelectionList a:hover,  #workgroupSelectionList a:hover {
+	background-color:#FFFF33;
+	color:#000033;
+	padding:2px;	
+	}
+	
+#projectIdLabel {
+	font-size: .6em;
+	margin-left:12px;
+	padding:2px;
+	font-weight:normal;
+	font-variant:normal;
+}
+	
+#stepTypeStyle {
+   font-size:.8em;
+   color:#009900;
+   }
+   
+#stepGradingNotification {
+   margin-left:10px;
+   color:#CC0000;
+   font-variant:small-caps;
+   }
+	
+/* CSS FOR GRADE BY STEP LAYOUT  OLD JSP STYLES */ 
+
+#currentStepTable {
+	margin:6px 0 20px 0;
+	border-collapse:collapse;
+}
+
+#currentStepLabel {
+	width:640px;
+	font-size:1.3em;
+	font-weight:bold;
+	border:1px solid #333333;
+	background-image:url(../../images/Pixel_Grading_Highlight.png);
+	background-position:left top;
+	background-repeat:repeat;
+	padding:3px 5px;
+}
+
+.currentStepNavLink {
+	text-align:center;
+	font-size:.8em;
+	padding:3px 8px;
+	color:#666666;
+}
+
+.currentStepNavLink a:link, .currentStepNavLink a:visited { 
+	background-color:#FFFFFF;
+	color:#0000CC;	
+	}
+
+.currentStepNavLink a:hover { 
+	background-color:#FFFF33;
+	color:#0000CC;
+	}
+	
+#gradingTeamTable {
+	background-color:#FFFFFF;
+	border-collapse:collapse;
+	margin: 5px 0;
+	border-top: 1px solid #000099;
+	border-right: 1px solid #000099;
+	border-bottom: 1px solid #000099;
+	border-left: 1px solid #000099;
+}
+	
+#groupHeaderRow td {
+	background-color:#0000CC;
+	color:#FFFFFF;
+	text-align:left;
+	padding:5px;
+	font-size:.8em;
+	border:1px solid #0000CC;
+	border-bottom: 1px solid #000000;
+	}
+
+.boldText {font-weight:bold; }
+
+#noTeamsInPeriod {
+	padding-left:5px;
+	font-weight:bold;
+	font-size:1.8em;
+}
+
+#stepQuestionField {
+	font-size:.8em;
+	color:#0000FF;
+	padding:5px 5px;
+	font-style:italic;
+	}
+	
+#stepStudentAnswerField {
+	font-size:.9em;
+	padding:5px 5px;
+		}
+		
+#noStudentReponseYet {
+	font-style:italic;
+	color:#666666;
+	padding:20px 0;
+		}
+		
+#gradingSaveButton {
+	font-size:.9em;
+	margin-top:40px;
+}
+
+#preMadeCommentsLink {
+	margin-left:15px;
+	font-size:.9em;
+	letter-spacing:.8px;
+	}
+	
+#preMadeCommentsLink a:visited, #preMadeCommentsLink a:link {
+	border-top: 1px solid #ffffff;
+	border-right: 1px solid #999999;
+	border-bottom: 1px solid #999999;
+	border-left: 1px solid #ffffff;
+	background-color:#CCCCCC;
+	padding:1px 4px;
+	color:#000000;
+	text-decoration:none;
+	}          
+	
+#preMadeCommentsLink a:hover {
+	padding:1px 4px;
+	background-color:#FFFF99;
+	color:#000000;
+}
+
+#teacherFeedbackTd textarea {
+	margin:3px;
+	padding:5px;
+	border:1px solid #999999;
+}
+
+#gradingScoreArea {
+	margin: 25px auto 0 auto;
+}	
+	
+#scoreBoxStyling1 {  
+	padding:3px 4px;
+	font-weight:bold;
+	text-align:center;
+	color:#000066;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #666666;
+}
+
+#scoreBoxStyling2 {
+	padding:3px 3px;
+	width:15%;
+	text-align:center;
+	color:#000000;
+	background-color:#CCCCCC;
+	border: 1px solid #666666;
+}
+
+#scoreBoxStyling3 { 
+	font-variant:small-caps;
+	font-size:.8em;
+}
+
+#gradingSaveButton button {
+	font-size:.9em; 
+	padding:3px;
+	border-top: 1px solid #999999;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #999999;
+}
+
+#gradingSaveButton button:hover {
+	background-color:#FFFF66;
+}
+
+#revisionRequiredArea {
+	color:#CCCCCC;
+	test-align:center;
+	margin:10px 0 0px 5px;
+	font-size:.8em;
+}
+
+#scoringHelpLink {
+	test-align:center;
+	margin:20px 0 10px 5px;
+	font-size:.8em;
+	font-variant:small-caps;
+	letter-spacing:1px;
+	}
+	
+#scoringHelpLink:hover {
+	background-color:#FFFF66;
+}
+
+
+/* CSS FOR GRADE BY TEAM LAYOUT  OLD JPS STYLES*/ 
+
+#currentTeamHeader {
+	margin:6px 0 10px 0;
+}
+
+#gradeTeamSelectedProject {
+	color:#FF0000;
+	font-size:1.3em;
+	font-weight:bold;
+	font-variant:small-caps;
+	}
+	
+#currentTeamLabel {
+	font-size:1.2em;
+	font-weight:bold;
+	color:#FFFFFF;
+	border:1px solid #000000;
+	background-color:#FF0000;
+	background-position:left top;
+	background-repeat:repeat;
+	padding:5px;
+}
+
+#teamPeriodAndNumber {
+	font-size:.7em;
+	font-weight:normal;
+	font-variant:small-caps;
+	margin-left:15px;
+}
+
+#currentTeamNavList {
+	lsit-style-type:none;
+	padding:0;
+	margin: 0 0 20px 0;	
+}
+
+#currentTeamNavList li {
+	display:inline;
+	padding:0 10px;
+	margin:0px;	
+}
+
+.currentTeamNavLink {
+	text-align:center;
+	font-size:.8em;
+	padding:3px 8px;
+	color:#666666;
+	}
+
+.currentTeamNavLink a:link, .currentTeamNavLink a:visited { 
+	text-decoration:none;
+	border-top:1px solid #666666;
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+	border-left:1px solid #666666;
+	padding:2px;
+	background-image: url(../../images/WISE-Secondary-Banner-Gradient.png);
+	background-position:top;
+	}
+
+.currentTeamNavLink a:hover { 
+	background-image:none;
+	background-color:#FFFF66;
+	}
+
+.saveButton:hover {
+	background-image:none;
+	background-color:#FFFF66;
+}	
+	
+#TeamSelectionList {
+	padding-left:0px;
+}
+
+#gradingTeamTable {
+	background-color:#FFFFFF;
+	border-collapse:collapse;
+	margin: 0px 0 10px 0; 
+	border-top: 2px solid #000099;
+	border-right: 2px solid #000099;
+	border-bottom: 2px solid #000099;
+	border-left: 2px solid #000099;
+}
+
+#teacherFeedbackTdTeam {
+	border-top:1px solid #000099;	
+	border-right:2px solid #000099;	
+	border-bottom:1px solid #000099;	
+	border-left:2px solid #000099;	
+}
+	
+#teacherFeedbackTdTeam textarea {
+	margin:8px;
+	padding:5px;
+	border:1px solid #999999;
+}
+
+#workgroupSelectionList {
+	margin: 20px 0;
+}
+
+#workgroupSelectionList li {
+	margin-bottom:10px;
+}
+
+#workgroupSelectionList a:link, #workgroupSelectionList a:visited {
+	color:#0000CC;
+	padding:3px;
+}
+	
+#workgroupSelectionList a:hover {
+	color:#000099;
+	padding:3px;
+	}
+	
+#selectWorkgroupStudentNames {
+	font-size:1.1em;
+	font-weight:bold;
+	text-transform:capitalize;
+}
+
+#selectWorkgroupTeamNumber {
+	color:#6666CC;
+	margin-left:5px;
+}
+	
+	
+
+/* CSS FOR PRE-MADE COMMENTS EDITOR  */ 
+
+#premadeCommentsWindowBorder {
+	background-color:#FFFFFF;
+	width: 700px;
+	text-align:left;
+	padding: 0;
+	margin: 15px auto;
+	border: 1px solid #333333
+}
+	
+#premadeComments {
+	font-weight:bold;
+	background-image:url(../../images/Texture_Green3.png);
+	background-position:left top;
+	background-repeat:repeat;
+	border-bottom: 1px solid #333333;
+	padding:2px 0 4px 20px;
+	font-size:1.5em;
+	letter-spacing:1px;
+	font-variant:small-caps;
+}
+
+#headerMyLists{
+	margin:20px 10px 4px 20px;
+	padding:0px;
+	font-size:.7em;
+	letter-spacing:1px;
+	}
+	
+#commentLists {
+	width:400px;
+	margin:0px 20px 20px 20px;
+	padding:2px;
+	border-top: 1px solid #000099;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #000099;
+	background-color:#CCFFcc;
+	color:#000000;
+	font-weight:bold;
+}
+
+#newList {
+	margin:0px 20px;
+	padding:2px 5px;
+	text-decoration:none;
+	font-size:.9em;
+	font-weight:bold;
+	font-variant:small-caps;
+	color:#333333;
+	border-top: 1px solid #000099;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #000099;
+	background-color:#9999FF;
+}
+
+#newList:hover {
+	background-color:#FFFF66;
+}
+
+#createNewListDisplay{
+	margin:10px 20px;
+	}
+	
+#commentButtonsAndCheckboxes	{
+	margin: 10px 20px; 0 20px;
+	border:1px solid #666666;
+}
+	
+#commentButtonsAndCheckboxes a:link, #commentButtonsAndCheckboxes a:visited {
+	margin:0px 10px 0px 0px;
+	padding:2px 5px;
+	text-decoration:none;
+	font-size:.9em;
+	font-weight:bold;
+	font-variant:small-caps;
+	color:#333333;
+	border-top: 1px solid #000099;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #000099;
+	background-color:#9999FF;
+}
+
+#commentButtonsAndCheckboxes a:hover {
+	background-color:#FFFF66;
+}
+
+.addCommentDisplayClass {
+	margin: 10px 0 0 5px;
+	color:#FF0000;
+}
+
+.addCommentFieldClass {
+	width:420px;
+	border:1px solid #666666;
+	padding:3px;
+}
+
+.createCommentButton {
+	margin:5px 0 0 425px;
+}
+
+
+#checkBoxArea {
+	border:1px solid #333333;
+	padding:5px;
+	margin: 10px 10px 0 0 ;
+}
+
+.clickToEditMessageClass{
+	color:#FF0000;
+	margin:10px 0 0 5px;
+	padding:0px;
+}
+
+#headerPreview{
+	margin:20px 10px 4px 55px;
+	padding:0px;
+	font-size:.7em;
+	letter-spacing:1px;
+	}
+	
+#previewComments {
+	margin:0 10px 0 55px;
+	padding:5px;
+	border: 1px solid #336600;
+	width:525px; 
+	} 
+	
+#pastePreviewButton {
+	font-size:1.1em;
+	margin:30px 20px;
+	padding:4px;
+	border-top: 1px solid #000099;
+	border-right: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #000099;
+	background-color:#9999FF;
+	font-weight:bold;
+	font-variant:small-caps;
+	}
+	
+#pastePreviewButton:hover {
+	background-color:#FFFF66;
+	}
+	
+
+/* CSS FOR BATCH SCORE POP-UP WINDOW  */ 
+
+#batchWindowBorder {
+	background-color:#FFFFFF;
+	width: 700px;
+	text-align:center;
+	margin: 30px auto;
+	border: 1px solid #333333
+}
+	
+#batchHeader {
+	font-weight:bold;
+	background-image:url(../../images/Texture_Green3.png);
+	background-position:left top;
+	background-repeat:repeat;
+	border-bottom: 1px solid #333333;
+	padding:2px 0 4px 20px;
+	font-size:1.5em;
+	letter-spacing:1px;
+	font-variant:small-caps;
+}
+
+#currentDisplayCounter {
+  	text-align:left;
+  	font-size:1.0em;
+  	margin:30px 20px 30px 50px;
+}
+ 
+#scoreValueArea {
+	text-align:left;
+  	margin:10px 10px 10px 120px;
+}
+
+#percentage {
+	margin-left:10px;
+}
+
+#batchWindowBorder #batchButtonArea {
+	margin: 30px 0 35px 0;
+}
+
+#batchWindowBorder #batchButtonArea input {
+	background-color:#CCCCFF;
+	margin:5px;
+	font-size:1.1em;
+	letter-spacing:-.5px;
+}
+
+#batchWindowBorder #batchButtonArea input:hover {
+	background-color:#FFFF00;
+}
+#batchWindowBorder #error {
+	margin:20px;
+}
+
+/* EDIT MAXIMUM STEP VALUES page  */ 
+	
+#editValuesInstructions {
+	font-size:.8em;'
+}
+ 
+#editValuesInstructions ul {
+	margin: 20px 60px 0 20px;
+}
+
+#editValuesInstructions li {
+	margin-bottom:10px;
+}
+
+#editValuesTable {
+	font-family: "Tahoma", Verdana, Arial, Helvetica, sans-serif;
+	font-size:  75%;
+	border-collapse: collapse;
+	border:1px solid #000000; 
+	width:850px;
+	margin:10px auto 20px auto;
+	}
+
+#editValuesTable tr{
+	background-color: #EAFDFF;
+}
+
+#editValuesTable tr:hover{
+	background-color: #FFCCCC;
+}
+
+#editValuesTable th{
+	border: 1px dotted #CCCCCC;
+	padding:3px 10px;
+	border-bottom:1px dotted #000000;
+	background-color:#333399;
+	color:#D9FFD9;
+	letter-spacing:1px;
+	font-variant:small-caps;
+	font-size:1.1em;
+	}
+
+#editValuesTable td{
+	border: 1px dotted #CCCCCC;
+	padding:5px;
+}
+
+#editValuesTable .scoreStyle {
+	text-align:center;
+}
+
+#newScoreBox {
+	width:50px;
+	text-align:center;
+	font-weight:bold;
+	border-top:1px solid #666666;
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+	border-left:1px solid #666666;
+	}
+	
+#editValueSaveButton {
+	text-align:center;
+	margin:0 0 0 20px;
+}
+
+#editValueSaveButton input {
+	text-decoration:none;
+	font-size:.8em; 
+	border-top:1px solid #666666;
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+	border-left:1px solid #666666;
+	padding:3px 5px;
+	background-image: url(../../images/WISE-Secondary-Banner-Gradient.png);
+	background-position: top;
+	color:#000000; 
+	    }	
+    
+#editValueSaveButton input:hover {
+	color:#000000;
+	background-image: none;
+	background-color:#FFFF66;	
+    }	
+          

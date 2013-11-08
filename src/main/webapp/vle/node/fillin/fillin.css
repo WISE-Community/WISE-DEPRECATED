@@ -1,0 +1,185 @@
+#questionType {
+	padding:1px 15px;
+}
+
+#promptdiv {
+	font-size:.92em;
+	color:#000;
+	width:600px;
+	margin:15px 10px 5px 10px;
+	font-weight:bold;
+}
+
+#promptdiv p {
+	font-size:inherit;
+	font-size:120%;
+	font-weight:bold;
+}
+
+.instructionsReminder {
+	float: right;
+	text-align: right;
+	margin: 2px 15px 0px 0;
+	color: #333;
+	vertical-align: middle;
+}
+
+.introPhrase {
+	font-size:80%;
+	margin:5px 0 0 5px;
+}
+
+#currentFillBlankParagraph {
+	margin: 0 auto;
+	padding:10px 0 0 0;
+	text-align:left;
+	}
+	
+#currentFillBlankParagraph #leftColumn { 
+	float:left;
+	width:83%;
+	min-height:450px;
+	}
+	 
+#currentFillBlankParagraph #rightColumn {
+	text-align:center;
+	margin-left:84%;
+	color:#FFF;
+	}
+	
+.itemLabel {
+	font-size:.7em;
+	text-transform:uppercase;
+	color:#543F23;
+	margin:2px 0 0 15px;
+	font-weight:bold;
+}
+
+#nonInteractiveDiv {
+	margin:5px 0;
+	font-size:.9em;
+	line-height:120%;
+	padding:5px 10px;
+}
+
+#nonInteractiveDiv p {
+	margin: 5px 15px 20px 15px;
+	font-size:inherit;
+	line-height:inherit;
+}
+
+#nonInteractiveDiv tt {
+	font-size:110%;
+	font-weight:bold;
+}
+
+#nonInteractiveDiv blockquote {
+	margin: 10px;
+	font-size:.9em;
+	line-height:150%;
+}
+
+#nonInteractiveDiv #codeBlock {
+	width:90%;
+	border:1px solid #334B7B;
+	border-left:10px solid #334B7B;
+	color:#000033;
+	margin:5px 5px 40px 20px;
+	padding:5px 5px 5px 15px;
+	white-space:pre;
+	font-family: monospace;
+	line-height:120%;
+		}
+
+#nonInteractiveDiv input{
+	position:relative;
+	bottom:4px;
+	font-family:"Courier New",Courier,monospace;
+	font-size:1.0em;
+	color:#333;
+	background-color:#FFCE8E;
+	border:none;
+	border-bottom:1px solid black;
+	text-align:center;
+	width:120px;
+	margin: 0 6px;
+	
+}
+
+#nonInteractiveDiv .activeBlank {
+	font-family:"Courier New",Courier,monospace;
+	color:#FFF;
+	background-color:#164CBA;
+	border:none;
+	border:1px solid #000;
+	text-align:center;
+	font-size:1.0em;
+	font-weight:bold;
+	width:120px;
+	margin: 2px 6px;
+}
+
+#nonInteractiveDiv .completedBlank {
+	font-family:"Courier New",Courier,monospace;
+	color:#000;
+	border:none;
+	border-bottom:1px solid #333;
+}
+
+#interactiveDiv {
+	width:85%;
+	margin:15px 5px 15px 30px;
+	text-transform:uppercase;
+	padding:2px;
+	font-size:.80em;
+	color:#164CBA;
+	vertical-align:text-top;
+}
+
+#responsebox {
+	width:60%; 
+	font-style:normal;
+	font-weight:bold;
+	color:#164CBA;
+	border:1px solid #333;
+	padding:5px;
+	margin-left:10px;
+	font-size:1.1em;
+}
+
+#clearBoth {
+	clear:both;
+	margin:0px;
+	padding:0px;
+}
+
+#triesDiv {
+	text-align:center;
+}
+
+#triesContainer{
+	margin:5px auto 5px auto;
+	border-collapse:collapse;
+	background-color:#CCCCCC;
+}
+
+#triesContainer th {
+	text-align:left;
+	font-size:.75em;
+	color:#333;
+	margin:0px;
+	padding:2px 0 2px 20px;
+}
+
+#triesContainer td {
+	text-align:left;
+	font-size:.75em;
+	color:#333;
+	margin:0px;
+	padding:2px 20px;
+	font-weight:bold;
+}
+
+#buttonDiv {
+	margin-top:10px;
+}

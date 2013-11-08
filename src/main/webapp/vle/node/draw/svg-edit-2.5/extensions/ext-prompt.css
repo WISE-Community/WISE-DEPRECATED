@@ -1,0 +1,24 @@
+#svg_editor #tool_prompt a {
+	text-decoration:underline;
+	font-size:1.1em;
+}
+
+#svg_editor #tool_prompt {
+	position:relative;
+	top:-1px;
+	clear:left;
+	float:right;
+	margin-right:8px;
+	cursor:pointer;
+}
+
+#svg_editor #tool_prompt div {
+	padding:2px;	
+}
+
+#svg_editor img.tool_prompt {
+	vertical-align:middle;
+	height:24px;
+	margin-left:2px;
+	cursor:pointer;
+}

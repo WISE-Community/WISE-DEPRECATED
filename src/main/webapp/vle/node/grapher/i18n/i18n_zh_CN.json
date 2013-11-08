@@ -1,0 +1,14 @@
+{
+    "start": {
+        "value": "开始",
+        "description": "The text for the button to start collecting data from the probe"
+    },
+    "stop": {
+        "value": "停止",
+        "description": "The text for the button to stop collecting data from the probe"
+    },
+    "clear_probe_data": {
+        "value": "清空调查数据",
+        "description": "The text for the button to clear the probe data"
+    }
+}

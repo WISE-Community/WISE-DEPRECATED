@@ -1,0 +1,137 @@
+
+#my_menu {
+	margin: 0 auto;
+}
+
+div.sdmenu {
+	width: 210px;
+	font-family: Arial, Verdana, "Lucida Grande", "Lucida Sans Unicode",
+		Arial, sans-serif;
+	font-size: .6em;
+	background: url(../images/bottomBlue190.png) no-repeat right bottom;
+	background: url(../images/titleBlue19.png) repeat-x;
+	color: #fff;
+	font-size-adjust: 0.6;
+	}
+
+div.sdmenu div {
+	background: url(../images/titleBlue34.png) repeat-x;
+	overflow: hidden;
+}
+
+div.sdmenu div:first-child {
+	background: url(../images/titleBlue34.png) repeat-x;
+}
+
+div.sdmenu div.collapsed {
+	height: 21px;
+	margin-bottom: 1px;
+}
+
+div.sdmenu div span.menuspan {
+	display: block;
+	padding: 3px 8px 3px 27px;
+	font-weight: 400;
+	color: white;
+	background: url(../images/expanded.gif) no-repeat 8px center;
+	cursor: pointer;
+	border-bottom: 1px solid #666;
+}
+
+div.sdmenu div.collapsed span.menuspan {
+	background-image: url(../images/collapsed.gif);
+}
+
+div.sdmenu div img {
+	float: left;
+	margin: -1px 6px 0px 4px;
+}
+
+div.sdmenu div.constraintDisable {
+	background: url(../images/titleDisable.png) repeat-x;
+}
+
+div.sdmenu div.constraintHidden {
+	display:none;
+}
+
+div.sdmenu div a {
+	padding: 3px 8px 3px 0px;
+	background: #eee;
+	display: block;
+	border-bottom: 1px solid #ddd;
+	color: #000;
+	text-decoration: none;
+}
+
+div.sdmenu div a.currentNode {
+	background-color: #FF9D1E;
+	color: #000;
+	border:1px solid #FF9D1E;
+	border-left:1px solid #6699CC;
+}
+
+div.sdmenu div a.constraintDisable {
+	background-color: 888888;
+}
+
+div.sdmenu div a.constraintHidden {
+	display:none;	
+}
+
+div.sdmenu div a.menuStepHighlight {
+	background-color: #FFFF00;
+}
+
+div.sdmenu div a span.menusteptitle {
+	display: table;
+}
+
+div.sdmenu div a:hover {
+	color: #5F3E00;
+	cursor: pointer;
+}
+
+div.sdmenu div .depth3 {
+	margin-left: -1px;
+}
+
+div.sdmenu div .depth4 {
+	margin-left: 8px;
+}
+
+div.sdmenu div .depth5 {
+	margin-left: 12px;
+}
+
+div.sdmenu div a {
+	border-left: 1px solid #6699CC;
+}
+
+div.sdmenu div a .goldStar {
+	background-image:url('../images/goldStar.png');
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+	height:100%;
+}
+
+div.sdmenu div a .silverStar {
+	background-image:url('../images/silverStar.png');
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+	height:100%;
+}
+
+div.sdmenu div a .bronzeStar {
+	background-image:url('../images/bronzeStar.gif');
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+	height:100%;
+}
+
+div.sdmenu div a .empty {
+	background-image:none;
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+	height:100%;
+}
