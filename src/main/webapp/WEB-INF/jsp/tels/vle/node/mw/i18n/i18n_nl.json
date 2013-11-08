@@ -1,6 +1,0 @@
-{
-    "applet_failed_to_load": {
-        "value": "Applet werd niet geladen ",
-        "description": "Alert message that gets displayed when the applet fails to load"
-    }
-}
