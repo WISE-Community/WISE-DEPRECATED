@@ -98,11 +98,11 @@ public class GradeWorkController extends AbstractController {
 						this.runService.hasRunPermission(run, user, BasePermission.READ)){
 					String portalurl = ControllerUtil.getBaseUrlString(request);
 	
-			    	String getGradeWorkUrl = portalurl + "/vlewrapper/vle/gradework.html";
+			    	String getGradeWorkUrl = portalurl + "/webapp/vle/gradework.html";
 					String getGradingConfigUrl = portalurl + "/webapp/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
 					
 					//get the classroom monitor urls
-					String getClassroomMonitorUrl = portalurl + "/vlewrapper/vle/classroomMonitor.html";
+					String getClassroomMonitorUrl = portalurl + "/webapp/vle/classroomMonitor.html";
 					String getClassroomMonitorConfigUrl = portalurl + "/webapp/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
 					
 					String curriculumBaseWWW = portalProperties.getProperty("curriculum_base_www");
