@@ -20,15 +20,15 @@
 	<util:properties id="uihtmlproperties"
 		location="classpath:messages/tels/ui-html_en_US.properties" />
 
-	<util:properties id="emaillisteners" location="classpath:portal.properties" />
+	<util:properties id="emaillisteners" location="classpath:wise.properties" />
 
-	<util:properties id="portalproperties" location="classpath:portal.properties" />
+	<util:properties id="portalproperties" location="classpath:wise.properties" />
 
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-				<value>classpath:portal.properties</value>
+				<value>classpath:wise.properties</value>
 			</list>
 		</property>
 	</bean>

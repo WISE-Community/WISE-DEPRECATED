@@ -501,10 +501,10 @@ public class InformationController extends AbstractController{
 			String postInappropriateFlagsUrl = portalurl + "/webapp/bridge/getdata.html?type=inappropriateFlag&runId=" + run.getId().toString();
 
 			//get the url to get annotations
-	    	String getAnnotationsUrl = portalurl + "/webapp/bridge/request.html?type=annotation&runId=" + run.getId().toString();
+	    	String getAnnotationsUrl = portalurl + "/webapp/annotation.html?type=annotation&runId=" + run.getId().toString();
 	    	
 	    	//get the url to post annotations
-	    	String postAnnotationsUrl = portalurl + "/webapp/bridge/request.html?type=annotation&runId=" + run.getId().toString();
+	    	String postAnnotationsUrl = portalurl + "/webapp/annotation.html?type=annotation&runId=" + run.getId().toString();
 	    	
 	    	//get the url to post journal data
 	    	String postJournalDataUrl = portalurl + "/webapp/bridge/postdata.html?type=journal";

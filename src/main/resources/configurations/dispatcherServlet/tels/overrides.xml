@@ -211,6 +211,9 @@
 				/managehierarchytypes.html=manageHierarchyTypesController
 				/managehierarchy.html=manageHierarchyController
 				/message/message.html=messageController
+				/bridge/getdata.html=getDataController
+				/bridge/postdata.html=postDataController
+				/annotation.html=annotationController
 				/bridge/**/*.html=bridgeController
 				/errors/outsideerror.html=outsideErrorController
 				/authorize.html=credentialManager

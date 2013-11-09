@@ -44,7 +44,7 @@ public class TelsAnnotationSessionFactoryBean extends
 			// pretend like nothing happened.
 			e.printStackTrace();
 		}
-    	config.addProperties(portalProperties);  // add extra property overrides (like url,username,password) in vle.properties
+    	config.addProperties(portalProperties);  // add extra property overrides (like url,username,password) in wise.properties
 	}
 
 }

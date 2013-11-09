@@ -322,6 +322,11 @@
 			<version>3.4.0.GA</version>
 		</dependency>
 		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-c3p0</artifactId>
+			<version>3.3.1.GA</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework.version}</version>
@@ -550,6 +555,23 @@
 			<version>7.0.32</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>net.sf.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.speech.freetts</groupId>
+			<artifactId>freetts</artifactId>
+			<version>0.9.2</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/freetts.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.yahoo.platform.yui</groupId>
+			<artifactId>yuicompressor</artifactId>
+			<version>2.4.6</version>
+		</dependency>		
 	</dependencies>
 	<reporting>
 		<plugins>

@@ -38,7 +38,7 @@
 		<property name="logAbandoned" value="true" />
 	</bean>
 
-	<util:properties id="javaMailProperties" location="classpath:portal.properties" />
+	<util:properties id="javaMailProperties" location="classpath:wise.properties" />
 
 	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" />
 

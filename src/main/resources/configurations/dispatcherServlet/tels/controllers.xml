@@ -953,6 +953,18 @@
     	<property name="userService" ref="userService" />	
     </bean>
     
+    <bean id="getDataController"
+    	class="vle.web.VLEGetData">
+    </bean>
+    
+        <bean id="postDataController"
+    	class="vle.web.VLEPostData">
+    </bean>
+    
+    <bean id="annotationController"
+    	class="vle.web.VLEAnnotationController">
+    </bean>
+    
     <bean id="bridgeController"
     	class="org.telscenter.sail.webapp.presentation.web.controllers.BridgeController">
     	<property name="workgroupService" ref="wiseWorkgroupService"/>
