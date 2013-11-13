@@ -452,7 +452,8 @@ public class InformationController extends AbstractController{
 
 			Long periodId = null;
 			Workgroup workgroup = getWorkgroup(request, run);
-			
+			Long workgroupId = null;
+
 			if(workgroup == null) {
 				/*
 				 * the user is not in a workgroup for the run so they should not be
@@ -465,10 +466,13 @@ public class InformationController extends AbstractController{
 				}
 			} else if(((WISEWorkgroup) workgroup).isTeacherWorkgroup()) {
 				//workgroup is a teacher
+				workgroupId = workgroup.getId();
+
 			} else {
 				//workgroup is a student so we will get the period
 				Group periodGroup = ((WISEWorkgroup) workgroup).getPeriod(); //geoff
 				periodId = periodGroup.getId();
+				workgroupId = workgroup.getId();
 			}
 			
 			portalVLEControllerUrl = portalurl + "/webapp/student/vle/vle.html?runId=" + run.getId();
@@ -483,10 +487,10 @@ public class InformationController extends AbstractController{
 			String getRunInfoUrl = portalVLEControllerUrl + "&action=getRunInfo";
 			
 			//get the url to get student data
-			String getStudentDataUrl = portalurl + "/webapp/bridge/getdata.html";
+			String getStudentDataUrl = portalurl + "/webapp/getStudentData.html";
 			
 			//get the url to post student data
-			String postStudentDataUrl = portalurl + "/webapp/bridge/postdata.html";
+			String postStudentDataUrl = portalurl + "/webapp/postStudentData.html";
 			
 			//get the url to get flags
 			String getFlagsUrl = portalurl + "/webapp/bridge/getdata.html?type=flag&runId=" + run.getId().toString();
@@ -528,17 +532,22 @@ public class InformationController extends AbstractController{
 	    	String postPremadeCommentsUrl = portalurl + "/webapp/teacher/grading/premadeComments.html?action=postData";
 			
 	    	//get the url to get idea basket data
-	    	String getIdeaBasketUrl = portalurl + "/webapp/bridge/request.html?type=ideaBasket&runId=" + run.getId().toString();
+	    	String getIdeaBasketUrl = portalurl + "/webapp/ideaBasket.html?runId=" + run.getId().toString();
 	    	
 	    	//get the url to post idea basket data
-	    	String postIdeaBasketUrl = portalurl + "/webapp/bridge/request.html?type=ideaBasket&runId=" + run.getId().toString();
+	    	String postIdeaBasketUrl = portalurl + "/webapp/ideaBasket.html?runId=" + run.getId().toString() + "&projectId=" + run.getProject().getId().toString();
 
 	    	if(periodId != null) {
 	    		//add the period id if it is available
 	    		getIdeaBasketUrl += "&periodId=" + periodId;
 	    		postIdeaBasketUrl += "&periodId=" + periodId;
 	    	}
-	    	
+
+	    	if (workgroupId != null) {
+	    		getIdeaBasketUrl += "&workgroupId=" + workgroupId;
+	    		postIdeaBasketUrl += "&workgroupId=" + workgroupId;
+	    	}
+
 	    	//get the url to get idea basket data
 	    	String studentAssetManagerUrl = portalurl + "/webapp/bridge/request.html?type=studentAssetManager&runId=" + run.getId().toString();
 
@@ -573,10 +582,10 @@ public class InformationController extends AbstractController{
 			String webSocketUrl = webSocketBaseUrl + "/webapp/websocket/wise";
 			
 			//get the url for sending and receiving student statuses
-			String studentStatusUrl = portalurl + "/webapp/bridge/request.html?type=studentStatus";
+			String studentStatusUrl = portalurl + "/webapp/studentStatus.html";
 			
 			//get the url for sending and receiving run statuses
-			String runStatusUrl = portalurl + "/webapp/bridge/request.html?type=runStatus";
+			String runStatusUrl = portalurl + "/webapp/runStatus.html";
 	    	
 	    	//put all the config params into the json object
 			try {

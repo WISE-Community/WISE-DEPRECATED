@@ -12,13 +12,26 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
 
 import utils.SecurityUtils;
 import vle.VLEServlet;
 import vle.domain.status.StudentStatus;
 
-public class StudentStatusController extends VLEServlet {
+public class StudentStatusController extends AbstractController {
 	private static final long serialVersionUID = 1L;
+
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		if (request.getMethod() == AbstractController.METHOD_GET) {
+			return doGet(request, response);
+		} else if (request.getMethod() == AbstractController.METHOD_POST) {
+			return doPost(request, response);
+		}
+		return null;
+	}
 
 	/**
 	 * Handles GET requests from the teacher when a teacher requests for all the student
@@ -27,12 +40,12 @@ public class StudentStatusController extends VLEServlet {
 	 * @param response
 	 * @throws IOException 
 	 */
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		/* make sure that this request is authenticated through the portal before proceeding */
 		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
 			/* not authenticated send not authorized status */
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
+			return null;
 		}
 
 		//get the run id
@@ -82,6 +95,7 @@ public class StudentStatusController extends VLEServlet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	/**
@@ -91,12 +105,12 @@ public class StudentStatusController extends VLEServlet {
 	 * @param response
 	 * @throws IOException 
 	 */
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		/* make sure that this request is authenticated through the portal before proceeding */
 		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
 			/* not authenticated send not authorized status */
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
+			return null;
 		}
 
 		//get the post parameters
@@ -142,5 +156,8 @@ public class StudentStatusController extends VLEServlet {
 		
 		//save the student status to the database
 		studentStatus.saveOrUpdate();
+		
+		return null;
 	}
+
 }

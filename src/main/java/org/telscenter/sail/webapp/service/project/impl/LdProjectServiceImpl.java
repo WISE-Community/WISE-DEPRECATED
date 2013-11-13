@@ -168,7 +168,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	public ModelAndView authorProject(AuthorProjectParameters params)
 			throws Exception {
 		String portalUrl = ControllerUtil.getBaseUrlString(params.getHttpServletRequest());
-		String vleAuthorUrl = portalUrl + "/vlewrapper/vle/author.html";
+		String vleAuthorUrl = portalUrl + "/webapp/vle/author.html";
 		String portalAuthorUrl = portalUrl + "/webapp/author/authorproject.html";
 		String command = params.getHttpServletRequest().getParameter("param1");
 		

@@ -126,7 +126,7 @@ public class AuthorProjectController extends AbstractController {
 
 		/* catch forwarding requests, authenticate and forward request upon successful authentication */
 		if(forward != null && !forward.equals("")){
-			ServletContext servletContext = this.getServletContext().getContext("/vlewrapper");
+			//ServletContext servletContext = this.getServletContext().getContext("/vlewrapper");
 
 			//get the command
 			String command = request.getParameter("command");
@@ -205,7 +205,9 @@ public class AuthorProjectController extends AbstractController {
 					addRequestAttributeForCommand(request, project, command, forward);
 
 					CredentialManager.setRequestCredentials(request, user);
-					servletContext.getRequestDispatcher("/vle/" + forward + ".html").forward(request, response);
+					AbstractController fileManager = (AbstractController) this.getApplicationContext().getBean("fileManagerController");
+					fileManager.handleRequest(request, response);
+					 //this.getServletContext().getRequestDispatcher("/vle/" + forward + ".html").forward(request, response);
 
 					if("updateFile".equals(command)) {
 						//we have updated a file in a project so we will update the project edited timestamp
@@ -227,7 +229,7 @@ public class AuthorProjectController extends AbstractController {
 			} else if(forward.equals("minifier")){
 				if(this.isProjectlessRequest(request, forward) || this.projectService.canAuthorProject(project, user)){
 					CredentialManager.setRequestCredentials(request, user);
-					servletContext.getRequestDispatcher("/util/" + forward + ".html").forward(request, response);
+					 this.getServletContext().getRequestDispatcher("/util/" + forward + ".html").forward(request, response);
 					return null;
 				}
 			}

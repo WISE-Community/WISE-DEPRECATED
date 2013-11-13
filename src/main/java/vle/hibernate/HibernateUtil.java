@@ -17,12 +17,17 @@ import org.hibernate.cfg.AnnotationConfiguration;
  */
 public class HibernateUtil {
 
-    private static final SessionFactory sessionFactory = buildSessionFactory();
+    private static SessionFactory sessionFactory = buildSessionFactory();
+    //private static SessionFactory sessionFactory;
+    
+    public static SessionFactory getSessionfactory() {
+		return sessionFactory;
+	}
 
-    private static SessionFactory buildSessionFactory() {
+	private static SessionFactory buildSessionFactory() {
         try {
             // Create the SessionFactory from hibernate.cfg.xml and from wise.properties
-            AnnotationConfiguration cfg = new AnnotationConfiguration().configure();  // reads from hibernate.cfg.xml
+            AnnotationConfiguration cfg = new AnnotationConfiguration().configure("configurations/hibernate/tels/hibernate-wise.cfg.xml");  // reads from hibernate.cfg.xml
             
         	Properties extraProperties = new Properties();
         	extraProperties.load(HibernateUtil.class.getClassLoader().getResourceAsStream("wise.properties"));
@@ -35,6 +40,10 @@ public class HibernateUtil {
             throw new ExceptionInInitializerError(ex);
         }
     }
+	
+	public static void setSessionfactory(SessionFactory sessionfactory) {
+		sessionFactory = sessionfactory;
+	}
 
     public static SessionFactory getSessionFactory() {
         return sessionFactory;

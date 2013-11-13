@@ -37,13 +37,15 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
 
 /**
  * Servlet implementation class for Servlet: FileManager
  * 
  * @author patrick lawler
  */
-public class FileManager extends HttpServlet implements Servlet{
+public class FileManager extends AbstractController {
 	static final long serialVersionUID = 1L;
 
 	private final static String COMMAND = "command";
@@ -78,31 +80,44 @@ public class FileManager extends HttpServlet implements Servlet{
 		}
 	}
    
+
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		if (request.getMethod() == AbstractController.METHOD_GET) {
+			return doGet(request, response);
+		} else if (request.getMethod() == AbstractController.METHOD_POST) {
+			return doPost(request, response);
+		}
+		return null;
+	}
+	
 	/* (non-Java-doc)
 	 * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.doPost(request, response);
+	protected ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return this.doPost(request, response);
 	}  	
 	
 	/* (non-Java-doc)
 	 * @see javax.servlet.http.HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(!this.modeRetrieved){
 			this.standAlone = !SecurityUtils.isPortalMode(request);
 			this.modeRetrieved = true;
 		}
 		
 		if(this.standAlone || SecurityUtils.isAuthenticated(request)){
-			this.doRequest(request, response);
+			return this.doRequest(request, response);
 		} else {
 			/* if not authenticated send not authorized status */
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 		}
+		return null;
 	}
 	
-	private void doRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+	private ModelAndView doRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
 		String command = request.getParameter(COMMAND);
 		if(command!=null){
 			if(command.equals("createProject")){
@@ -153,6 +168,7 @@ public class FileManager extends HttpServlet implements Servlet{
 			/* no command was provided */
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}
+		return null;
 	}
 	
 	/**
@@ -2692,4 +2708,5 @@ public class FileManager extends HttpServlet implements Servlet{
 			}
 		}
 	}
+
 }

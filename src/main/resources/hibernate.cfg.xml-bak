@@ -38,6 +38,7 @@
 <!--  not using hibernate-annotations
         <mapping resource="org/hibernate/tutorial/domain/Event.hbm.xml"/>
  -->
+ <!--  
   		<mapping class="vle.domain.user.UserInfo" />
   		<mapping class="vle.domain.node.Node" />
  		<mapping class="vle.domain.work.StepWork" />
@@ -52,7 +53,7 @@
   		<mapping class="vle.domain.xmpp.ChatLog" />
   		<mapping class="vle.domain.status.StudentStatus" />
   		<mapping class="vle.domain.status.RunStatus" />
- 		
+--> 		
     </session-factory>
 
 </hibernate-configuration>

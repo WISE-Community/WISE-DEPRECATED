@@ -9,25 +9,38 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
 
 import utils.SecurityUtils;
 import vle.VLEServlet;
 import vle.domain.status.RunStatus;
 
-public class RunStatusController extends VLEServlet {
+public class RunStatusController extends AbstractController {
 	private static final long serialVersionUID = 1L;
+	
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		if (request.getMethod() == AbstractController.METHOD_GET) {
+			return doGet(request, response);
+		} else if (request.getMethod() == AbstractController.METHOD_POST) {
+			return doPost(request, response);
+		}
+		return null;
+	}
 	
 	/**
 	 * Handle the GET requests
 	 * @param request
 	 * @param response
 	 */
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		/* make sure that this request is authenticated through the portal before proceeding */
 		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
 			/* not authenticated send not authorized status */
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
+			return null;
 		}
 
 		//get the run id
@@ -80,6 +93,7 @@ public class RunStatusController extends VLEServlet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	/**
@@ -87,7 +101,7 @@ public class RunStatusController extends VLEServlet {
 	 * @param request
 	 * @param response
 	 */
-	public void doPost(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) {
 		//get the run id
 		String runIdString = request.getParameter("runId");
 		
@@ -120,5 +134,8 @@ public class RunStatusController extends VLEServlet {
 			//save the run status to the db
 			runStatus.saveOrUpdate();
 		}
+		
+		return null;
 	}
+
 }
