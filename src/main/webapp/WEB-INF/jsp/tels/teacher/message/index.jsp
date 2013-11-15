@@ -68,7 +68,7 @@ function archiveMessage(messageId, sender, isRead) {
 	if (isRead == "false") {
 		action="unarchive";
 	}
-	YAHOO.util.Connect.asyncRequest('POST', '/webapp/message.html?action='+action+'&messageId='+messageId, callback, null);
+	YAHOO.util.Connect.asyncRequest('POST', '/wise/message.html?action='+action+'&messageId='+messageId, callback, null);
 }
 
 // sends a new (if originalMessageId is -1) or reply (if originalMessageId is set) message
@@ -126,7 +126,7 @@ function sendMessage(originalMessageId) {
 			scope:this
 		};	
 	
-	YAHOO.util.Connect.asyncRequest('POST', '/webapp/message.html?action=compose', callback, postData);
+	YAHOO.util.Connect.asyncRequest('POST', '/wise/message.html?action=compose', callback, postData);
 }
 
 function clearComposeMessageForm() {

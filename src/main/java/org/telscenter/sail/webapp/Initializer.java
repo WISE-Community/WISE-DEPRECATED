@@ -106,8 +106,8 @@ public class Initializer {
 			// END: CREATES OFFERINGS USING PRE-LD-BASED PROJECTS
             
             
-//    		System.setProperty("org.apache.jackrabbit.repository.conf", "/Users/hirokiterashima/eclipseworkspaces/telsportalworkspace3.3/webapp/repository.xml");
-//    		System.setProperty("org.apache.jackrabbit.repository.home", "/Users/hirokiterashima/eclipseworkspaces/telsportalworkspace3.3/webapp/repository");
+//    		System.setProperty("org.apache.jackrabbit.repository.conf", "/Users/hirokiterashima/eclipseworkspaces/telsportalworkspace3.3/wise/repository.xml");
+//    		System.setProperty("org.apache.jackrabbit.repository.home", "/Users/hirokiterashima/eclipseworkspaces/telsportalworkspace3.3/wise/repository");
 //			CreateDefaultCurnits cdc = new CreateDefaultCurnits(applicationContext);
 //			cdc.createDefaultCurnits(applicationContext);
 

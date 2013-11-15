@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-modules id="moduleCoreId" project-version="1.5.0">
-  <wb-module deploy-name="webapp">
-    <property name="context-root" value="webapp"/>
+  <wb-module deploy-name="wise">
+    <property name="context-root" value="wise"/>
     <property name="java-output-path" value="/target/classes"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/resources"/>

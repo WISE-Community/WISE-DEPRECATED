@@ -19,9 +19,9 @@
 <project>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sf.sail</groupId>
-	<artifactId>webapp</artifactId>
+	<artifactId>wise</artifactId>
 	<packaging>war</packaging>
-	<name>WISE Portal Application</name>
+	<name>Web-based Inquiry Science Environment</name>
 	<version>4.8</version>
 	<url>http://sail.sourceforge.net/</url>
 	<developers>
@@ -89,7 +89,7 @@
 				<directory>src/test/resources</directory>
 			</testResource>
 		</testResources>
-		<finalName>webapp</finalName>
+		<finalName>wise</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>

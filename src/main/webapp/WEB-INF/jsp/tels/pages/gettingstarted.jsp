@@ -33,7 +33,7 @@
 							<li><spring:message code="pages.gettingstarted.technical_browser" /></li>
 							<li><spring:message code="pages.gettingstarted.technical_flash" /> <a href="http://get.adobe.com/flashplayer/" target="_blank">http://get.adobe.com/flashplayer/</a></li>
 							<li><spring:message code="pages.gettingstarted.technical_java" /> <a href="http://java.sun.com/getjava/download.html" target="_blank">http://java.sun.com/getjava/download.html</a></li>
-							<li><spring:message code="pages.gettingstarted.technical_compatibility" /> <a href="/webapp/pages/check.html" target="_blank"><spring:message code="pages.gettingstarted.technical_compatibility_link" /> </a></li>
+							<li><spring:message code="pages.gettingstarted.technical_compatibility" /> <a href="/wise/pages/check.html" target="_blank"><spring:message code="pages.gettingstarted.technical_compatibility_link" /> </a></li>
 						</ol>
 					</div>
 					
@@ -41,7 +41,7 @@
 					<div class="sectionContent">
 						<ol>
 							
-							<li><spring:message code="pages.gettingstarted.registration_createAccount" /> <a href="/webapp/signup.html"><spring:message code="signUp" /></a></li>
+							<li><spring:message code="pages.gettingstarted.registration_createAccount" /> <a href="/wise/signup.html"><spring:message code="signUp" /></a></li>
 							
 							<li><spring:message code="pages.gettingstarted.registration_selectTeacher" /></li>
 							

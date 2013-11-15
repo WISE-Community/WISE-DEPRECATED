@@ -14,8 +14,8 @@
     
 <title><spring:message code="wiseAdmin" /></title>
 
-<script type='text/javascript' src='/webapp/dwr/interface/ChangePasswordParametersValidatorJS.js'></script>
-<script type='text/javascript' src='/webapp/dwr/engine.js'></script>
+<script type='text/javascript' src='/wise/dwr/interface/ChangePasswordParametersValidatorJS.js'></script>
+<script type='text/javascript' src='/wise/dwr/engine.js'></script>
 
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 

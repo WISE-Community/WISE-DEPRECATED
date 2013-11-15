@@ -202,7 +202,7 @@ public class ViewMyStudentsController extends AbstractController{
 			modelAndView.addObject("workgroupsWithoutPeriod", workgroupsWithoutPeriod);
 			return modelAndView;
 		} else {
-			return new ModelAndView(new RedirectView("/webapp/accessdenied.html"));
+			return new ModelAndView(new RedirectView("/wise/accessdenied.html"));
 		}
 	}
 

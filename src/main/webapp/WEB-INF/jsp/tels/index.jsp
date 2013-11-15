@@ -52,13 +52,13 @@
 					<div class="slider-wrapper theme-wise">
    				 		<div class="ribbon"></div>
 						<div id="showcaseSlider">
-						    <img src="/webapp/themes/tels/default/images/home/whatiswise.png" alt="<spring:message code="index.whatIsWise" />" />
-						    <img src="/webapp/themes/tels/default/images/home/curriculumbased.png" alt="<spring:message code="index.curriculumBased" />" />
-						    <img src="/webapp/themes/tels/default/images/home/inquiry.png" alt="<spring:message code="index.inquiryProjects" />" />
-						    <img src="/webapp/themes/tels/default/images/home/engagement.png" alt="<spring:message code="index.studentEngagement" />" />
-						    <img src="/webapp/themes/tels/default/images/home/interactive.png" alt="<spring:message code="index.interactiveModels" />" />
-						    <img src="/webapp/themes/tels/default/images/home/teachertools.png" alt="<spring:message code="index.teacherTools" />" />
-						    <img src="/webapp/themes/tels/default/images/home/opensource.png" alt="<spring:message code="index.openSource" />" />
+						    <img src="/wise/themes/tels/default/images/home/whatiswise.png" alt="<spring:message code="index.whatIsWise" />" />
+						    <img src="/wise/themes/tels/default/images/home/curriculumbased.png" alt="<spring:message code="index.curriculumBased" />" />
+						    <img src="/wise/themes/tels/default/images/home/inquiry.png" alt="<spring:message code="index.inquiryProjects" />" />
+						    <img src="/wise/themes/tels/default/images/home/engagement.png" alt="<spring:message code="index.studentEngagement" />" />
+						    <img src="/wise/themes/tels/default/images/home/interactive.png" alt="<spring:message code="index.interactiveModels" />" />
+						    <img src="/wise/themes/tels/default/images/home/teachertools.png" alt="<spring:message code="index.teacherTools" />" />
+						    <img src="/wise/themes/tels/default/images/home/opensource.png" alt="<spring:message code="index.openSource" />" />
 						</div>
 					</div>
 				</div>
@@ -71,21 +71,21 @@
 						</c:forEach>
 					</div>
 					<div id="socialLinks">
-						<a href="http://www.facebook.com/pages/WISE-4/150541171679054" title="<spring:message code="index.facebookTitle" />"><img src="/webapp/themes/tels/default/images/home/facebook.png" alt="facebook" /></a>
-						<a href="https://twitter.com/#!/WISETELS" title="<spring:message code="index.twitterTitle" />" ><img src="/webapp/themes/tels/default/images/home/twitter.png" alt="twitter" /></a>
+						<a href="http://www.facebook.com/pages/WISE-4/150541171679054" title="<spring:message code="index.facebookTitle" />"><img src="/wise/themes/tels/default/images/home/facebook.png" alt="facebook" /></a>
+						<a href="https://twitter.com/#!/WISETELS" title="<spring:message code="index.twitterTitle" />" ><img src="/wise/themes/tels/default/images/home/twitter.png" alt="twitter" /></a>
 					</div>
 				</div>
 			</div>
 			
 			<div class="showcase">
-				<div id="projectHeader" class="feature"><span class="featureContent"><spring:message code="index.projects" /></span><a class="projectsLink" href="/webapp/previewprojectlist.html" title="<spring:message code="index.projects" />"><spring:message code="index.browseCurricula" /></a></div>
+				<div id="projectHeader" class="feature"><span class="featureContent"><spring:message code="index.projects" /></span><a class="projectsLink" href="/wise/previewprojectlist.html" title="<spring:message code="index.projects" />"><spring:message code="index.browseCurricula" /></a></div>
 				<div id="features">
 					<div id="featureHeader" class="feature"><span class="featureContent"><spring:message code="index.features" /></span></div>
 					<div id="featuresContent">
-						<p><a href="/webapp/pages/features.html"><spring:message code="index.features_learningEnvironment" /></a></p>
-						<p><a href="/webapp/pages/teacher-tools.html"><spring:message code="index.features_teacherTools" /></a></p>
-						<p><a href="/webapp/pages/gettingstarted.html"><spring:message code="index.features_gettingStarted" /></a></p>
-						<p id="checkCompatibility"><a href="/webapp/pages/check.html"><spring:message code="index.features_checkCompatibility" /></a></p>
+						<p><a href="/wise/pages/features.html"><spring:message code="index.features_learningEnvironment" /></a></p>
+						<p><a href="/wise/pages/teacher-tools.html"><spring:message code="index.features_teacherTools" /></a></p>
+						<p><a href="/wise/pages/gettingstarted.html"><spring:message code="index.features_gettingStarted" /></a></p>
+						<p id="checkCompatibility"><a href="/wise/pages/check.html"><spring:message code="index.features_checkCompatibility" /></a></p>
 					</div>
 				</div>
 				<div id="projectShowcase">
@@ -99,13 +99,13 @@
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${esProjects}">
 									    		<li class="libraryProject">
-									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/webapp/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
 								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
 								      					<p class="summary">${project.metadata.summary}</p>
 								      				</div>
-								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="/webapp/previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
+								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="/wise/previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
 									    		</li>
 									    	</c:forEach>
 									    </ul>
@@ -126,13 +126,13 @@
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${lsProjects}">
 									    		<li class="libraryProject">
-									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/webapp/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
 								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
 								      					<p class="summary">${project.metadata.summary}</p>
 								      				</div>
-								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="/webapp/previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
+								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="/wise/previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
 									    		</li>
 									    	</c:forEach>
 									    </ul>
@@ -153,13 +153,13 @@
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${psProjects}">
 									    		<li class="libraryProject">
-									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/webapp/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
 								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
 								      					<p class="summary">${project.metadata.summary}</p>
 								      				</div>
-								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="/webapp/previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
+								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="/wise/previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
 									    		</li>
 									    	</c:forEach>
 									    </ul>
@@ -180,13 +180,13 @@
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${bioProjects}">
 									    		<li class="libraryProject">
-									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/webapp/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
 								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
 								      					<p class="summary">${project.metadata.summary}</p>
 								      				</div>
-								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="/webapp/previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
+								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="/wise/previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
 									    		</li>
 									    	</c:forEach>
 									    </ul>
@@ -207,13 +207,13 @@
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${chemProjects}">
 									    		<li class="libraryProject">
-									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/webapp/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
 								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
 								      					<p class="summary">${project.metadata.summary}</p>
 								      				</div>
-								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="/webapp/previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
+								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="/wise/previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
 									    		</li>
 									    	</c:forEach>
 									    </ul>
@@ -234,13 +234,13 @@
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${physProjects}">
 									    		<li class="libraryProject">
-									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/webapp/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
 								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
 								      					<p class="summary">${project.metadata.summary}</p>
 								      				</div>
-								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="/webapp/previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
+								      				<div class="projectLink"><a id="projectDetail_${project.id}" class="projectDetail" title="Project Details"><spring:message code="index.projects_moreDetails" /></a><a href="/wise/previewproject.html?projectId=${project.id}" target="_blank"><spring:message code="preview" /></a></div>
 									    		</li>
 									    	</c:forEach>
 									    </ul>
@@ -260,23 +260,23 @@
 			</div>
 			
 			<div class="showcase">
-				<a id="wiseAdvantage" href="/webapp/pages/wise-advantage.html" class="panelSection">
+				<a id="wiseAdvantage" href="/wise/pages/wise-advantage.html" class="panelSection">
 					<div class="panelHead"><span><spring:message code="index.wiseAdvantage" /></span><span class="panelLink">+</span></div>
-					<div class="panelContent"><img src="/webapp/themes/tels/default/images/home/wise-in-classroom.png" alt="<spring:message code="index.wiseAdvantageTitle" />" /></div>
+					<div class="panelContent"><img src="/wise/themes/tels/default/images/home/wise-in-classroom.png" alt="<spring:message code="index.wiseAdvantageTitle" />" /></div>
 				</a>
-				<a id="wiseInAction" href="/webapp/pages/wise-in-action.html" class="panelSection">
+				<a id="wiseInAction" href="/wise/pages/wise-in-action.html" class="panelSection">
 					<div class="panelHead"><span><spring:message code="index.wiseInAction" /></span><span class="panelLink">+</span></div>
-					<div class="panelContent"><img src="/webapp/themes/tels/default/images/home/wise-teaching.png" alt="<spring:message code="index.wiseInActionTitle" />" /></div>
+					<div class="panelContent"><img src="/wise/themes/tels/default/images/home/wise-teaching.png" alt="<spring:message code="index.wiseInActionTitle" />" /></div>
 				</a>
-				<a id="researchTech" href="/webapp/pages/research-tech.html" class="panelSection">
+				<a id="researchTech" href="/wise/pages/research-tech.html" class="panelSection">
 					<div class="panelHead"><span><spring:message code="index.wiseResearchAndTech" /></span><span class="panelLink">+</span></div>
-					<div class="panelContent"><img src="/webapp/themes/tels/default/images/home/wise-research.png" alt="<spring:message code="index.wiseResearchAndTechTitle" />" /></div>
+					<div class="panelContent"><img src="/wise/themes/tels/default/images/home/wise-research.png" alt="<spring:message code="index.wiseResearchAndTechTitle" />" /></div>
 				</a>
 				<div style="clear:both;"></div>
 			</div>
 			
 			<div id="bottomLinks" class="showcase">
-				<div id="telsLink"><a href="http://telscenter.org" target="_blank"><img src="/webapp/themes/tels/default/images/home/tels.png"/></a></div>
+				<div id="telsLink"><a href="http://telscenter.org" target="_blank"><img src="/wise/themes/tels/default/images/home/tels.png"/></a></div>
 				<div id="telsLinkLabel"><spring:message code="index.telsCommunity" /></div>
 				<div id="openSourceHeader" class="feature">
 					<span class="featureContent"><spring:message code="index.openSourcePartnerships" /></span>
@@ -316,7 +316,7 @@
 		$('#projectShowcase').on('click','a.projectDetail',function(){
 			var title = $(this).attr('title');
 			var projectId = $(this).attr('id').replace('projectDetail_','');
-			var path = "/webapp/teacher/projects/projectinfo.html?projectId=" + projectId;
+			var path = "/wise/teacher/projects/projectinfo.html?projectId=" + projectId;
 			var div = $('#projectDetailDialog').html('<iframe id="projectIfrm" width="100%" height="100%"></iframe>');
 			div.dialog({
 				width: '800',
@@ -386,7 +386,7 @@
 						},
 						404:function() {
 						    // not found, leave alone
-							//$(this).html("<img src='/webapp/themes/tels/default/images/projectThumb.png' alt='thumb'></img>");
+							//$(this).html("<img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></img>");
 						}
 					}
 				});

@@ -8,7 +8,7 @@ View.prototype.getGradingConfig = function(gradingConfigUrl) {
 	/* set the servlet request urls - assumes that the grading tool is always run in portal mode */
 	var loc = window.location.toString();
 	var base = loc.substring(0, loc.lastIndexOf('/vlewrapper/vle/'));
-	this.minifierUrl = base + '/webapp/router.html';
+	this.minifierUrl = base + '/wise/router.html';
 };
 
 /**
@@ -147,7 +147,7 @@ View.prototype.onWindowUnload = function(){
 };
 
 function projectSummary(){
-	window.open("/webapp/student/vle/vle.html?runId=" + runId + "&summary=true", "Project Summary", "height=600, width=800");
+	window.open("/wise/student/vle/vle.html?runId=" + runId + "&summary=true", "Project Summary", "height=600, width=800");
 };
 
 

@@ -104,8 +104,8 @@ public class RegisterTeacherController extends SignupController {
 		String domain =  "http://" + request.getServerName();
 		String domainWithPort = domain + ":" + request.getLocalPort();
 		String referrer = request.getHeader("referer");
-		String registerUrl = "/webapp/teacher/registerteacher.html";
-		String updateAccountInfoUrl = "/webapp/teacher/management/updatemyaccountinfo.html";
+		String registerUrl = "/wise/teacher/registerteacher.html";
+		String updateAccountInfoUrl = "/wise/teacher/management/updatemyaccountinfo.html";
 		
 		if(referrer.contains(domain + registerUrl) || 
 				referrer.contains(domainWithPort + registerUrl) ||

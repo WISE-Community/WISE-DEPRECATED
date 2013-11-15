@@ -215,7 +215,7 @@ $(document).ready(function(){
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/webapp/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise" /></a>
+				<a id="name" href="/wise/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise" /></a>
 			</div>
 			
 			<div class="infoContent">
@@ -358,7 +358,7 @@ $(document).ready(function(){
                
 				 	 <div id="regButtons">
 				 	  	<a style="margin-bottom:1em;" id="createAccountLink" class="wisebutton" onclick="checkForExistingAccountsAndCreateAccount()"><spring:message code="teacher.registerteacher.createAccount"/></a>
-				 	  	<a href="/webapp/index.html"><spring:message code="teacher.registerteacher.cancel"/></a>
+				 	  	<a href="/wise/index.html"><spring:message code="teacher.registerteacher.cancel"/></a>
 					 </div>
 					</form:form>
 					<div id="existingAccounts" style="display:none"></div>

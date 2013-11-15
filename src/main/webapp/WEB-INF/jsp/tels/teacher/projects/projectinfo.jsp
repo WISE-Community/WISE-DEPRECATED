@@ -43,7 +43,7 @@
 						},
 						404:function() {
 						    // not found, leave alone
-							//$(this).html("<img src='/webapp/themes/tels/default/images/projectThumb.png' alt='thumb'></img>");
+							//$(this).html("<img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></img>");
 						}
 					}
 				});
@@ -59,9 +59,9 @@
 <div class="projectSummary">
 	<div class="projectInfoDisplay">
 		<div class="panelHeader">${project.name} (ID: ${project.id})
-			<span style="float:right;"><a href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" target="_blank"><img class="icon" alt="preview" src="/webapp/themes/tels/default/images/icons/teal/screen.png" /><span><spring:message code="preview"/></span></a></span>
+			<span style="float:right;"><a href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" target="_blank"><img class="icon" alt="preview" src="/wise/themes/tels/default/images/icons/teal/screen.png" /><span><spring:message code="preview"/></span></a></span>
 		</div>
-		<div class="projectThumb" thumbUrl="${projectThumbPath}"><img src='/webapp/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+		<div class="projectThumb" thumbUrl="${projectThumbPath}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
 		<div class="summaryInfo">
 			<div class="basicInfo">
 				<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
@@ -75,9 +75,9 @@
 			</div>
 			<div class="details" id="details_${project.id}">
 				<c:if test="${project.metadata.keywords != null && project.metadata.keywords != ''}"><p><span style="font-weight:bold;">Tags:</span> ${project.metadata.keywords}</p></c:if>
-				<c:if test="${project.metadata.techDetailsString != null && project.metadata.techDetailsString != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="/webapp/pages/check.html" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p></c:if>
+				<c:if test="${project.metadata.techDetailsString != null && project.metadata.techDetailsString != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="/wise/pages/check.html" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p></c:if>
 				<c:if test="${project.metadata.compTime != null && project.metadata.compTime != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_compTime" /></span> ${project.metadata.compTime}</p></c:if>
-				<p><span style="font-weight:bold;">Questions/Comments:</span> <a href="/webapp/contact/contactwiseproject.html?projectId=${project.id}" target="_blank"><spring:message code="contact_wise" /></a></p>
+				<p><span style="font-weight:bold;">Questions/Comments:</span> <a href="/wise/contact/contactwiseproject.html?projectId=${project.id}" target="_blank"><spring:message code="contact_wise" /></a></p>
 				<!-- <c:if test="${project.metadata.author != null && project.metadata.author != ''}"><p><span style="font-weight:bold;">Original Owner:</span> ${project.metadata.author}</p></c:if> -->
 				<c:set var="lastEdited" value="${project.metadata.lastEdited}" />
 				<c:if test="${lastEdited == null || lastEdited == ''}">

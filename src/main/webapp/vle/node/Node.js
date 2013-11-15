@@ -917,7 +917,7 @@ Node.prototype.getAuthoringModeContentBaseUrl = function() {
 	/*
 	 * get the contentBaseUrl from the config param. it will look like this below
 	 * e.g.
-	 * http://localhost:8080/webapp/author/authorproject.html?forward=filemanager&projectId=96&command=retrieveFile&fileName=
+	 * http://localhost:8080/wise/author/authorproject.html?forward=filemanager&projectId=96&command=retrieveFile&fileName=
 	 */
 	var contentBaseUrlString = this.view.getConfig().getConfigParam('getContentBaseUrl');
 

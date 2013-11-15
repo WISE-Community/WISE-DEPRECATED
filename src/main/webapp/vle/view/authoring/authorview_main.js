@@ -789,7 +789,7 @@ View.prototype.submitUpload = function() {
  */
 View.prototype.exportProject = function(params){
 	if(this.getProject() && this.portalProjectId){
-		window.open("/webapp/project/exportproject.html?projectId=" + this.portalProjectId);
+		window.open("/wise/project/exportproject.html?projectId=" + this.portalProjectId);
 	} else {
 		this.notificationManager.notify("Please open or create a project that you wish to export.", 3);
 	}
@@ -1757,7 +1757,7 @@ View.prototype.retrieveProjectRunStatus = function(){
 			"projectId":this.portalProjectId,
 			"command":"getNumberOfRuns"
 		};
-		this.connectionManager.request('GET', 1, '/webapp/teacher/projects/projectinfo.html', requestParams, this.retrieveProjectRunStatusSuccess, this, this.retrieveProjectRunStatusFailure);
+		this.connectionManager.request('GET', 1, '/wise/teacher/projects/projectinfo.html', requestParams, this.retrieveProjectRunStatusSuccess, this, this.retrieveProjectRunStatusFailure);
 	} else {
 		this.projectHasRun = false;
 	}
@@ -2112,7 +2112,7 @@ View.prototype.onWindowUnload = function(logout){
 
 	if(logout === true) {
 		//log out the user
-		window.top.location = "/webapp/j_spring_security_logout";		
+		window.top.location = "/wise/j_spring_security_logout";		
 	}
 };
 

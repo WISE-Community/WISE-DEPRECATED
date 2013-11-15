@@ -168,8 +168,8 @@ public class LdProjectServiceImpl implements ProjectService {
 	public ModelAndView authorProject(AuthorProjectParameters params)
 			throws Exception {
 		String portalUrl = ControllerUtil.getBaseUrlString(params.getHttpServletRequest());
-		String vleAuthorUrl = portalUrl + "/webapp/vle/author.html";
-		String portalAuthorUrl = portalUrl + "/webapp/author/authorproject.html";
+		String vleAuthorUrl = portalUrl + "/wise/vle/author.html";
+		String portalAuthorUrl = portalUrl + "/wise/author/authorproject.html";
 		String command = params.getHttpServletRequest().getParameter("param1");
 		
 		ModelAndView mav = new ModelAndView();
@@ -245,7 +245,7 @@ public class LdProjectServiceImpl implements ProjectService {
 				mav.addObject("projectId", projectId);
 				mav.addObject("projectTitle", projectTitle);
 			} else {
-				return new ModelAndView(new RedirectView("/webapp/accessdenied.html"));
+				return new ModelAndView(new RedirectView("/wise/accessdenied.html"));
 			}
 		}
 		return mav;

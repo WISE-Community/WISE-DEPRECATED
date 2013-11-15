@@ -137,7 +137,7 @@ View.prototype.saveAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, typ
 					alert("Your latest grade has not been saved.\n\nYou have been inactive for too long and have been logged out. Please sign in to continue.");
 					
 					//redirect the user to the login page
-					window.top.location = "/webapp/j_spring_security_logout";					
+					window.top.location = "/wise/j_spring_security_logout";					
 				} else {
 					//there was a server error so we will revert the annotation back to its previous value
 					var fromWorkgroupIds = thisView.getUserAndClassInfo().getAllTeacherWorkgroupIds();

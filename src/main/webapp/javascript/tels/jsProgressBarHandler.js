@@ -34,8 +34,8 @@
 			animate		: true,										// Animate the progress? - default: true
 			showText	: false,										// show text with percentage in next to the progressbar? - default : true
 			width		: 180,										// Width of the progressbar - don't forget to adjust your image too!!!
-			boxImage	: '/webapp/themes/tels/default/images/percentImage.png',			// boxImage : image around the progress bar
-			barImage	: '/webapp/themes/tels/default/images/percentImage_back_180.png',	// Image to use in the progressbar. Can be an array of images too.
+			boxImage	: '/wise/themes/tels/default/images/percentImage.png',			// boxImage : image around the progress bar
+			barImage	: '/wise/themes/tels/default/images/percentImage_back_180.png',	// Image to use in the progressbar. Can be an array of images too.
 			height		: 12										// Height of the progressbar - don't forget to adjust your image too!!!
 		}
 		

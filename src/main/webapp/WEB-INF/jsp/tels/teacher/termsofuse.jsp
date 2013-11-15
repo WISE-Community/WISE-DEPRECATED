@@ -25,7 +25,7 @@
 		<p><spring:message code="teacher.termsofuse.byChecking"/></p>
 		<p><spring:message code="teacher.termsofuse.weDoNotAnticipate"/></p>
 		<p><spring:message code="teacher.termsofuse.weWillNotReleaseYourIdentity"/></p>
-		<p><spring:message code="teacher.termsofuse.inTheInterest"/>&nbsp;(<a href="/webapp/contact/contactwisegeneral.html" target="_blank"><spring:message code="teacher.termsofuse.contactWise"/></a>)&nbsp;<spring:message code="teacher.termsofuse.andWeWillInvestigate"/></p>
+		<p><spring:message code="teacher.termsofuse.inTheInterest"/>&nbsp;(<a href="/wise/contact/contactwisegeneral.html" target="_blank"><spring:message code="teacher.termsofuse.contactWise"/></a>)&nbsp;<spring:message code="teacher.termsofuse.andWeWillInvestigate"/></p>
 		<p><spring:message code="teacher.termsofuse.finallyYourParticipation"/></p>      
 		<p><spring:message code="teacher.termsofuse.weValueYourEnthusiastic"/></p>
 		<p><spring:message code="teacher.termsofuse.sincerely"/></p>

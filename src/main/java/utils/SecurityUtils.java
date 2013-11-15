@@ -22,7 +22,7 @@ public final class SecurityUtils {
 
 	private static Properties vleProperties;
 
-	private final static String AUTHENTICATION_URL = "/webapp/authorize.html";
+	private final static String AUTHENTICATION_URL = "/wise/authorize.html";
 
 	private final static String MODEMASTER_URL = "/vlewrapper/modemaster.html";
 
@@ -37,10 +37,10 @@ public final class SecurityUtils {
 		ALLOWED_REFERRERS.add("/vlewrapper/vle/vle.html");
 		ALLOWED_REFERRERS.add("/vlewrapper/vle/gradework.html");
 		ALLOWED_REFERRERS.add("/vlewrapper/vle/classroomMonitor.html");
-		ALLOWED_REFERRERS.add("/webapp/teacher/projects/telsprojectlibrary.html");
-		ALLOWED_REFERRERS.add("/webapp/teacher/projects/customized/index.html");
-		ALLOWED_REFERRERS.add("/webapp/teacher/run/createRun.html");
-		ALLOWED_REFERRERS.add("/webapp/teacher/management/library.html");
+		ALLOWED_REFERRERS.add("/wise/teacher/projects/telsprojectlibrary.html");
+		ALLOWED_REFERRERS.add("/wise/teacher/projects/customized/index.html");
+		ALLOWED_REFERRERS.add("/wise/teacher/run/createRun.html");
+		ALLOWED_REFERRERS.add("/wise/teacher/management/library.html");
 
 		try {
 			// Read properties file.

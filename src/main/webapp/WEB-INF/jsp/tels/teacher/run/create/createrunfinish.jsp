@@ -13,10 +13,10 @@
 
 <title><spring:message code="teacher.run.create.createrunfinish.classroomRunCreated" /></title>
 
-<script type="text/javascript" src="/webapp/javascript/pas/utils.js"></script>
-<script type="text/javascript" src="/webapp/javascript/tels/rotator.js"></script>
-<script type="text/javascript" src="/webapp/javascript/tels/general.js"></script>
-<script type="text/javascript" src="/webapp/javascript/tels/effects.js"></script>
+<script type="text/javascript" src="/wise/javascript/pas/utils.js"></script>
+<script type="text/javascript" src="/wise/javascript/tels/rotator.js"></script>
+<script type="text/javascript" src="/wise/javascript/tels/general.js"></script>
+<script type="text/javascript" src="/wise/javascript/tels/effects.js"></script>
 
 </head>
 
@@ -44,7 +44,7 @@
 						<div class="sectionHead"><spring:message code="teacher.run.create.createrunfinish.classroomRunCreated"/></div>
 						<div class="sectionContent">
 		
-							<h5><spring:message code="teacher.run.create.createrunfinish.newRunHasBeenPlaced"/>&nbsp;<a href="/webapp/teacher/management/classroomruns.html"><spring:message code="teacher.run.create.createrunfinish.gradeAndManageClassroomRuns"/></a>&nbsp;<spring:message code="teacher.run.create.createrunfinish.section"/></h5>
+							<h5><spring:message code="teacher.run.create.createrunfinish.newRunHasBeenPlaced"/>&nbsp;<a href="/wise/teacher/management/classroomruns.html"><spring:message code="teacher.run.create.createrunfinish.gradeAndManageClassroomRuns"/></a>&nbsp;<spring:message code="teacher.run.create.createrunfinish.section"/></h5>
 			
 							<table id="projectRunConfirmTable">
 								<tr>
@@ -74,7 +74,7 @@
 						</div>
 					</div>
 					<div style="margin-top:1em;">
-						<a class="wisebutton" style="margin:0 auto;" href="/webapp/teacher/management/classroomruns.html"><spring:message code="teacher.run.create.createrunfinish.myClassroomRuns"/></a>
+						<a class="wisebutton" style="margin:0 auto;" href="/wise/teacher/management/classroomruns.html"><spring:message code="teacher.run.create.createrunfinish.myClassroomRuns"/></a>
 					</div>
 				</div>
 			</div>

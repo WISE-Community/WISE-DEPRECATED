@@ -27,11 +27,11 @@ public class AuthorController extends HttpServlet {
 		
 		String type = request.getParameter("type");
 		ServletContext servletContext2 = this.getServletContext();
-		ServletContext vlewrappercontext = servletContext2.getContext("/webapp");
+		ServletContext vlewrappercontext = servletContext2.getContext("/wise");
 		
 		if (type == null) {
 			// get student data
-			response.sendRedirect("/webapp/author/authorproject.html");
+			response.sendRedirect("/wise/author/authorproject.html");
 			//RequestDispatcher requestDispatcher = vlewrappercontext.getRequestDispatcher("/author/authorproject.html");
 			//requestDispatcher.forward(request, response);
 		} else if (type.equals("flag") || type.equals("annotation")){			// get flags

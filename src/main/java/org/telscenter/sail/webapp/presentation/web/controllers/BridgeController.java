@@ -99,20 +99,20 @@ public class BridgeController extends AbstractController {
 			HttpServletResponse response) throws Exception {
 		// check if user is logged in
 		if (ControllerUtil.getSignedInUser() == null) {
-			response.sendRedirect("/webapp/login.html");
+			response.sendRedirect("/wise/login.html");
 			return null;
 		}
 		boolean authorized = authorize(request);
 		if (!authorized) {
 			// if request is for posting unsaved data and the user is not the same user as the one that should be posting it,
 			// forward them to the homepage
-			if (request.getRequestURI().equals("/webapp/bridge/postdata.html")) {
+			if (request.getRequestURI().equals("/wise/bridge/postdata.html")) {
 				User signedInUser = ControllerUtil.getSignedInUser();
 				if (signedInUser.getUserDetails() instanceof TeacherUserDetails) {
-					response.sendRedirect("/webapp" + TelsAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+					response.sendRedirect("/wise" + TelsAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 					return null;
 				} else if (signedInUser.getUserDetails() instanceof StudentUserDetails) {
-					response.sendRedirect("/webapp" + TelsAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
+					response.sendRedirect("/wise" + TelsAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
 					return null;
 				} else {
 					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this page");

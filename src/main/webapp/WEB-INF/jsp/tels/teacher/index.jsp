@@ -53,13 +53,13 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 				
 						<table id="teacherQuickLinks">
 							<tr>
-								<td><a href="/webapp/pages/gettingstarted.html" target="_blank"><spring:message code="teacher.index.quickstartGuide"/></a></td>
+								<td><a href="/wise/pages/gettingstarted.html" target="_blank"><spring:message code="teacher.index.quickstartGuide"/></a></td>
 							</tr>
 							<tr>
-								<td><a href="/webapp/teacher/management/library.html"><spring:message code="teacher.index.browseWISEProjects"/></a></td>
+								<td><a href="/wise/teacher/management/library.html"><spring:message code="teacher.index.browseWISEProjects"/></a></td>
 							</tr>
 							<tr>
-								<td><a href="/webapp/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>
+								<td><a href="/wise/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>
 							</tr>
 						</table>
 					</div>
@@ -176,7 +176,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
     	link.parent().append(updatingText);
     	$.ajax({
 			type: 'post',
-			url: '/webapp/teacher/run/manage/extendremindertime.html?runId=' + id,
+			url: '/wise/teacher/run/manage/extendremindertime.html?runId=' + id,
 			success: function(request){
 				updatingText.remove();
 				link.css('text-decoration','strike-through');
@@ -200,7 +200,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
         	link.parent().append(updatingText);
         	$.ajax({
 				type: 'post',
-				url: '/webapp/teacher/run/manage/extendremindertime.html?runId=' + id,
+				url: '/wise/teacher/run/manage/extendremindertime.html?runId=' + id,
 				success: function(request){
 					updatingText.remove();
 					link.css('text-decoration','strike-through');
@@ -223,7 +223,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 
 		$.ajax({
 			type: 'post',
-			url: '/webapp/message.html?action=archive&messageId='+messageId,
+			url: '/wise/message.html?action=archive&messageId='+messageId,
 			success: function(request){
 				/* update message on teacher index page announcements section */
 				messageDiv.remove();

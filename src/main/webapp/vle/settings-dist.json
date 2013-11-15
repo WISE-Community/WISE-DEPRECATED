@@ -10,6 +10,6 @@
 	"primaryPath":"/Users/geoffreykwan/dev/workspaces/portalworkspace/vlewrapper/WebContent/curriculum",
 	"mode":{
 		"portal":true,
-		"portalUrl":"/webapp/login.html"
+		"portalUrl":"/wise/login.html"
 	}
 }

@@ -126,7 +126,7 @@ public class InformationController extends AbstractController{
 		// otherwise, make sure that the user is logged in
 		// check if user is logged in
 		if (ControllerUtil.getSignedInUser() == null) {
-			response.sendRedirect("/webapp/login.html");
+			response.sendRedirect("/wise/login.html");
 			return;
 		}
 		String runId = request.getParameter("runId");
@@ -416,7 +416,7 @@ public class InformationController extends AbstractController{
 		
 		String portalurl = ControllerUtil.getBaseUrlString(request);
 		String hostName = ControllerUtil.getHostNameFromUrl(portalurl);
-		String infourl = portalurl + "/webapp/request/info.html";
+		String infourl = portalurl + "/wise/request/info.html";
 		
 		String curriculumBaseWWW = portalProperties.getProperty("curriculum_base_www");
 		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
@@ -441,7 +441,7 @@ public class InformationController extends AbstractController{
 			
 			rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 			
-			portalVLEControllerUrl = portalurl + "/webapp/vle/preview.html";
+			portalVLEControllerUrl = portalurl + "/wise/vle/preview.html";
 		}
 		
 		/* if no projectId String provided, try getting project url from run also add gradework
@@ -475,7 +475,7 @@ public class InformationController extends AbstractController{
 				workgroupId = workgroup.getId();
 			}
 			
-			portalVLEControllerUrl = portalurl + "/webapp/student/vle/vle.html?runId=" + run.getId();
+			portalVLEControllerUrl = portalurl + "/wise/student/vle/vle.html?runId=" + run.getId();
 			
 			//get the grading type (step or team)
 			String gradingType = request.getParameter("gradingType");
@@ -487,55 +487,55 @@ public class InformationController extends AbstractController{
 			String getRunInfoUrl = portalVLEControllerUrl + "&action=getRunInfo";
 			
 			//get the url to get student data
-			String getStudentDataUrl = portalurl + "/webapp/getStudentData.html";
+			String getStudentDataUrl = portalurl + "/wise/getStudentData.html";
 			
 			//get the url to post student data
-			String postStudentDataUrl = portalurl + "/webapp/postStudentData.html";
+			String postStudentDataUrl = portalurl + "/wise/postStudentData.html";
 			
 			//get the url to get flags
-			String getFlagsUrl = portalurl + "/webapp/bridge/getdata.html?type=flag&runId=" + run.getId().toString();
+			String getFlagsUrl = portalurl + "/wise/bridge/getdata.html?type=flag&runId=" + run.getId().toString();
 			
 			//get the url to post flags
-			String postFlagsUrl = portalurl + "/webapp/bridge/getdata.html?type=flag&runId=" + run.getId().toString();
+			String postFlagsUrl = portalurl + "/wise/bridge/getdata.html?type=flag&runId=" + run.getId().toString();
 			
 			//get the url to get inappropriate flags
-			String getInappropriateFlagsUrl = portalurl + "/webapp/bridge/getdata.html?type=inappropriateFlag&runId=" + run.getId().toString();
+			String getInappropriateFlagsUrl = portalurl + "/wise/bridge/getdata.html?type=inappropriateFlag&runId=" + run.getId().toString();
 			
 			//get the url to post inappropriate flags
-			String postInappropriateFlagsUrl = portalurl + "/webapp/bridge/getdata.html?type=inappropriateFlag&runId=" + run.getId().toString();
+			String postInappropriateFlagsUrl = portalurl + "/wise/bridge/getdata.html?type=inappropriateFlag&runId=" + run.getId().toString();
 
 			//get the url to get annotations
-	    	String getAnnotationsUrl = portalurl + "/webapp/annotation.html?type=annotation&runId=" + run.getId().toString();
+	    	String getAnnotationsUrl = portalurl + "/wise/annotation.html?type=annotation&runId=" + run.getId().toString();
 	    	
 	    	//get the url to post annotations
-	    	String postAnnotationsUrl = portalurl + "/webapp/annotation.html?type=annotation&runId=" + run.getId().toString();
+	    	String postAnnotationsUrl = portalurl + "/wise/annotation.html?type=annotation&runId=" + run.getId().toString();
 	    	
 	    	//get the url to post journal data
-	    	String postJournalDataUrl = portalurl + "/webapp/bridge/postdata.html?type=journal";
+	    	String postJournalDataUrl = portalurl + "/wise/bridge/postdata.html?type=journal";
 	    	
 	    	//get the url to get journal data
-			String getJournalDataUrl = portalurl + "/webapp/bridge/getdata.html?type=journal";
+			String getJournalDataUrl = portalurl + "/wise/bridge/getdata.html?type=journal";
 			
 			//get the url to get peer review work
-			String getPeerReviewUrl = portalurl + "/webapp/bridge/getdata.html?type=peerreview";
+			String getPeerReviewUrl = portalurl + "/wise/bridge/getdata.html?type=peerreview";
 			
 			//get the url for xls export
-	    	String getXLSExportUrl = portalurl + "/webapp/bridge/request.html?type=xlsexport&runId=" + run.getId().toString();
+	    	String getXLSExportUrl = portalurl + "/wise/bridge/request.html?type=xlsexport&runId=" + run.getId().toString();
 	    	
 	    	//get the url for special export
-	    	String getSpecialExportUrl = portalurl + "/webapp/bridge/request.html?type=specialExport&runId=" + run.getId().toString();
+	    	String getSpecialExportUrl = portalurl + "/wise/bridge/request.html?type=specialExport&runId=" + run.getId().toString();
 	    	
 	    	//get the url for premade comments
-	    	String getPremadeCommentsUrl = portalurl + "/webapp/teacher/grading/premadeComments.html?action=getData";
+	    	String getPremadeCommentsUrl = portalurl + "/wise/teacher/grading/premadeComments.html?action=getData";
 	    	
 	    	//get the url for premade comments
-	    	String postPremadeCommentsUrl = portalurl + "/webapp/teacher/grading/premadeComments.html?action=postData";
+	    	String postPremadeCommentsUrl = portalurl + "/wise/teacher/grading/premadeComments.html?action=postData";
 			
 	    	//get the url to get idea basket data
-	    	String getIdeaBasketUrl = portalurl + "/webapp/ideaBasket.html?runId=" + run.getId().toString();
+	    	String getIdeaBasketUrl = portalurl + "/wise/ideaBasket.html?runId=" + run.getId().toString();
 	    	
 	    	//get the url to post idea basket data
-	    	String postIdeaBasketUrl = portalurl + "/webapp/ideaBasket.html?runId=" + run.getId().toString() + "&projectId=" + run.getProject().getId().toString();
+	    	String postIdeaBasketUrl = portalurl + "/wise/ideaBasket.html?runId=" + run.getId().toString() + "&projectId=" + run.getProject().getId().toString();
 
 	    	if(periodId != null) {
 	    		//add the period id if it is available
@@ -549,20 +549,20 @@ public class InformationController extends AbstractController{
 	    	}
 
 	    	//get the url to get idea basket data
-	    	String studentAssetManagerUrl = portalurl + "/webapp/bridge/request.html?type=studentAssetManager&runId=" + run.getId().toString();
+	    	String studentAssetManagerUrl = portalurl + "/wise/bridge/request.html?type=studentAssetManager&runId=" + run.getId().toString();
 
-	    	String viewStudentAssetsUrl = portalurl + "/webapp/bridge/request.html?type=viewStudentAssets&runId=" + run.getId().toString();
+	    	String viewStudentAssetsUrl = portalurl + "/wise/bridge/request.html?type=viewStudentAssets&runId=" + run.getId().toString();
 	    	
 	    	// url to authenticate with WISE XMPP
-	    	String wiseXMPPAuthenticateUrl = portalurl + "/webapp/bridge/request.html?type=xmppAuthenticate&runId=" + run.getId().toString();
+	    	String wiseXMPPAuthenticateUrl = portalurl + "/wise/bridge/request.html?type=xmppAuthenticate&runId=" + run.getId().toString();
 	    	
-	    	String getStudentListUrl = portalurl + "/webapp/teacher/management/studentlistexcel.html?runId=" + run.getId().toString();
+	    	String getStudentListUrl = portalurl + "/wise/teacher/management/studentlistexcel.html?runId=" + run.getId().toString();
 	    	
 	    	//get the url to make CRater requests
-	    	String cRaterRequestUrl = portalurl + "/webapp/bridge/request.html?type=cRater";
+	    	String cRaterRequestUrl = portalurl + "/wise/bridge/request.html?type=cRater";
 	    	
 	    	//get the url to make chat log requests
-	    	String chatLogUrl = portalurl + "/webapp/bridge/request.html?type=chatLog";
+	    	String chatLogUrl = portalurl + "/wise/bridge/request.html?type=chatLog";
 	    	
 			/* Set the post level if specified in the run */
 			Integer postLevel = run.getPostLevel();
@@ -579,13 +579,13 @@ public class InformationController extends AbstractController{
 			}
 			
 			//get the url for websocket connections
-			String webSocketUrl = webSocketBaseUrl + "/webapp/websocket/wise";
+			String webSocketUrl = webSocketBaseUrl + "/wise/websocket/wise";
 			
 			//get the url for sending and receiving student statuses
-			String studentStatusUrl = portalurl + "/webapp/studentStatus.html";
+			String studentStatusUrl = portalurl + "/wise/studentStatus.html";
 			
 			//get the url for sending and receiving run statuses
-			String runStatusUrl = portalurl + "/webapp/runStatus.html";
+			String runStatusUrl = portalurl + "/wise/runStatus.html";
 	    	
 	    	//put all the config params into the json object
 			try {
@@ -656,7 +656,7 @@ public class InformationController extends AbstractController{
 		}
 		
 		/* get the url for the *.project.meta.json file */
-		String projectMetaDataUrl = portalurl + "/webapp/metadata.html";
+		String projectMetaDataUrl = portalurl + "/wise/metadata.html";
 		
 		/* set the contentbase based on the contenturl */
 		String getContentBaseUrl = getContentUrl.substring(0, lastIndexOfSlash) + "/";

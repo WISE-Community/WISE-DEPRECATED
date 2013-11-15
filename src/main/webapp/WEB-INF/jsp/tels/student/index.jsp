@@ -254,7 +254,7 @@ $(document).ready(function() {
 					
 						<div class="sideContent">
 						
-							<div style="text-align:center; margin-top:5px"><img src="/webapp/themes/tels/default/images/wise4-logo-new-sm.png" alt="WISE" /></div>
+							<div style="text-align:center; margin-top:5px"><img src="/wise/themes/tels/default/images/wise4-logo-new-sm.png" alt="WISE" /></div>
 							
 							<spring:htmlEscape defaultHtmlEscape="false">
             				<spring:escapeBody htmlEscape="false">
@@ -309,7 +309,7 @@ $(document).ready(function() {
 												</c:otherwise>
 											</c:choose>
 											<li class="announcements"><a id="viewAnnouncements_${studentRunInfo.run.id}" class="viewAnnouncements"><spring:message code="student.index.viewAnnouncements"/></a></li>
-											<li><a href="/webapp/contact/contactwiseproject.html?projectId=${studentRunInfo.run.project.id}&runId=${studentRunInfo.run.id}"><spring:message code="student.index.reportProblem"/></a></li>
+											<li><a href="/wise/contact/contactwiseproject.html?projectId=${studentRunInfo.run.project.id}&runId=${studentRunInfo.run.id}"><spring:message code="student.index.reportProblem"/></a></li>
 										</ul>
 								 	</td>
 								</tr>

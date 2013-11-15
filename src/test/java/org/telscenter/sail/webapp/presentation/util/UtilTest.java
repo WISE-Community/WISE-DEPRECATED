@@ -44,7 +44,7 @@ public class UtilTest {
 
 	private static final int SERVERPORT = 8080;
 	
-	private static final String CONTEXTPATH = "/webapp";
+	private static final String CONTEXTPATH = "/wise";
 	
 	MockHttpServletRequest request;
 

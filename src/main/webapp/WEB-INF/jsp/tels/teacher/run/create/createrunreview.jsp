@@ -25,7 +25,7 @@
     	//preload image if browser is not IE because animated gif will just freeze if user is using IE
     	if(navigator.appName != "Microsoft Internet Explorer") {
     		loadingImage = new Image();
-    		loadingImage.src = "/webapp/themes/tels/default/images/rel_interstitial_loading.gif";
+    		loadingImage.src = "/wise/themes/tels/default/images/rel_interstitial_loading.gif";
     	}
         
     	/**
@@ -62,7 +62,7 @@
    			if(type=='LD'){
    	   			//calls filemanager to copy project folder contents
    	   			$.ajax({
-   	   	   				url: '/webapp/author/authorproject.html',
+   	   	   				url: '/wise/author/authorproject.html',
    	   	   	   			async: false,
    	   	   	   			type:"POST",
    	   	   	   			data:'forward=filemanager&projectId=' + pID + '&command=copyProject',
@@ -83,7 +83,7 @@
    							
    							//call to make the project on the portal with the new folder
    							$.ajax({
-   	   							url:"/webapp/author/authorproject.html",
+   	   							url:"/wise/author/authorproject.html",
    	   							async:false,
    	   							type:"POST",
    	   							data:{"command":"createProject","parentProjectId":pID,"projectPath":projectPath,"projectName":projectName},
@@ -109,7 +109,7 @@
 	$('a.projectDetail').on('click',function(){
 		var title = $(this).attr('title');
 		var projectId = $(this).attr('id').replace('projectDetail_','');
-		var path = "/webapp/teacher/projects/projectinfo.html?projectId=" + projectId;
+		var path = "/wise/teacher/projects/projectinfo.html?projectId=" + projectId;
 		var div = $('#projectDetailDialog').html('<iframe id="projectIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
 			width: '800',

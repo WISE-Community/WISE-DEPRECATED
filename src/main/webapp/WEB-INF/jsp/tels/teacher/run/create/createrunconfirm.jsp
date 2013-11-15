@@ -139,7 +139,7 @@
 				scope:this
 		};
 
-		YAHOO.util.Connect.asyncRequest('POST', '/webapp/message.html?action=compose', callback, postData);
+		YAHOO.util.Connect.asyncRequest('POST', '/wise/message.html?action=compose', callback, postData);
 	};
 
 </script>

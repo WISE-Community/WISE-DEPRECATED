@@ -75,9 +75,9 @@
 												</div>
 												<div style="clear:both;"></div>
 												<div class="projectSummary">
-													<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/webapp/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+													<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
 													<div class="summaryInfo">
-														<div class="libraryIcon"><img src="/webapp/themes/tels/default/images/open_book.png" alt="library project" /> <spring:message code="pages.wise-advantage.wiseLibraryProjects" /></div>
+														<div class="libraryIcon"><img src="/wise/themes/tels/default/images/open_book.png" alt="library project" /> <spring:message code="pages.wise-advantage.wiseLibraryProjects" /></div>
 														<div class="basicInfo">
 															<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
 															<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
@@ -102,9 +102,9 @@
 														</div>
 														<div class="details" id="details_${project.id}">
 															<c:if test="${project.metadata.keywords != null && project.metadata.keywords != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tags" /></span> ${project.metadata.keywords}</p></c:if>
-															<c:if test="${project.metadata.techDetailsString != null && project.metadata.techDetailsString != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="/webapp/pages/check.html" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p></c:if>
+															<c:if test="${project.metadata.techDetailsString != null && project.metadata.techDetailsString != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="/wise/pages/check.html" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p></c:if>
 															<c:if test="${project.metadata.compTime != null && project.metadata.compTime != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_compTime" /></span> ${project.metadata.compTime}</p></c:if>
-															<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="/webapp/contact/contactwiseproject.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
+															<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="/wise/contact/contactwiseproject.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
 															<c:if test="${project.metadata.author != null && project.metadata.author != ''}"><p><span style="font-weight:bold;"><spring:message code="author_plural" /></span> ${project.metadata.author}</p></c:if>
 															<c:set var="lastEdited" value="${project.metadata.lastEdited}" />
 															<c:if test="${lastEdited == null || lastEdited == ''}">
@@ -196,7 +196,7 @@
 							},
 							404:function() {
 							    // not found, leave alone
-								//$(this).html("<img src='/webapp/themes/tels/default/images/projectThumb.png' alt='thumb'></img>");
+								//$(this).html("<img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></img>");
 							}
 						}
 					});
@@ -227,7 +227,7 @@
 			$('a.projectDetail').on('click',function(){
 				var title = $(this).attr('title');
 				var projectId = $(this).attr('id').replace('projectDetail_','');
-				var path = "/webapp/teacher/projects/projectinfo.html?projectId=" + projectId;
+				var path = "/wise/teacher/projects/projectinfo.html?projectId=" + projectId;
 				var div = $('#projectDetailDialog').html('<iframe id="projectIfrm" width="100%" height="100%"></iframe>');
 				$('body').css('overflow-y','hidden');
 				div.dialog({

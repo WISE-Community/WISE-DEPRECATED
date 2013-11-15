@@ -238,7 +238,7 @@ public class ShareProjectController extends SimpleFormController {
 
     		String[] shareeEmailAddress = {shareeDetails.getEmailAddress()};
 
-    		String previewProjectUrl = this.portalBaseUrlString + "/webapp/previewproject.html?projectId="+project.getId();
+    		String previewProjectUrl = this.portalBaseUrlString + "/wise/previewproject.html?projectId="+project.getId();
 
     		String[] recipients = (String[]) ArrayUtils.addAll(shareeEmailAddress, emaillisteners.getProperty("uber_admin").split(","));
     		

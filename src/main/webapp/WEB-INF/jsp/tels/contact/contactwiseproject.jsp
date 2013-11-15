@@ -38,7 +38,7 @@
 					<div class="instructions"><spring:message code="contact.contactwiseproject.reportActivityAndStepWhereProblemOccurs"/></div>
 					<div class="instructions"><spring:message code="contact.contactwiseproject.ifEncounteringErrorPleaseIncludeText"/><em><spring:message code="contact.contactwiseproject.detailedDescription"/></em>&nbsp;<spring:message code="contact.contactwiseproject.boxBelow"/></div>
 					<div class="instructions"><spring:message code="contact.contactwiseproject.pleaseIndicateURLAddressForProblem"/></div>
-					<div class="instructions"><spring:message code="contact.contactwiseproject.toReportAMoreGeneralProblem"/>&nbsp;<a href="/webapp/contact/contactwisegeneral.html"><spring:message code="contact.contactwiseproject.contactWISEGeneralIssues"/></a>.</div>
+					<div class="instructions"><spring:message code="contact.contactwiseproject.toReportAMoreGeneralProblem"/>&nbsp;<a href="/wise/contact/contactwisegeneral.html"><spring:message code="contact.contactwiseproject.contactWISEGeneralIssues"/></a>.</div>
 
 					<!-- Support for Spring errors object -->
 					<div id="errorMsgNoBg">
@@ -108,7 +108,7 @@
 					
 					</form:form>
 				</div>
-				<a href="/webapp/index.html" title="<spring:message code="wiseHome"/>"><spring:message code="returnHome"/></a>
+				<a href="/wise/index.html" title="<spring:message code="wiseHome"/>"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 		<div style="clear: both;"></div>

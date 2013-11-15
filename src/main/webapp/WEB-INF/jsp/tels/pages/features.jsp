@@ -37,7 +37,7 @@
 				
 				<div class="panelContent">
 					<div class="featuresShowcase right">
-						<img src="/webapp/themes/tels/default/images/features/wise-vle.png" alt="<spring:message code="pages.features.vle" />" />
+						<img src="/wise/themes/tels/default/images/features/wise-vle.png" alt="<spring:message code="pages.features.vle" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.features.vle" /></div>
 							<p><spring:message code="pages.features.vle_content_p1" /></p>
@@ -47,7 +47,7 @@
 					</div>
 					<div class="featureContentHeader"><spring:message code="pages.features.projectsAndTools" /></div>
 					<div class="featuresShowcase right">
-						<img src="/webapp/themes/tels/default/images/features/vle-prompts.png" alt="<spring:message code="pages.features.readWrite" />" />
+						<img src="/wise/themes/tels/default/images/features/vle-prompts.png" alt="<spring:message code="pages.features.readWrite" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.features.readWrite" /></p>
 							<ul>
@@ -60,7 +60,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/webapp/themes/tels/default/images/features/vle-argumentation.png" alt="<spring:message code="pages.features.argumentation" />" />
+						<img src="/wise/themes/tels/default/images/features/vle-argumentation.png" alt="<spring:message code="pages.features.argumentation" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.features.argumentation" /></p>
 							<ul>
@@ -72,7 +72,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase right">
-						<img src="/webapp/themes/tels/default/images/features/vle-activities.png" alt="<spring:message code="pages.features.activityTemplates" />" />
+						<img src="/wise/themes/tels/default/images/features/vle-activities.png" alt="<spring:message code="pages.features.activityTemplates" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.features.activityTemplates" /></p>
 							<ul>
@@ -84,7 +84,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/webapp/themes/tels/default/images/features/vle-simulations.png" alt="<spring:message code="pages.features.simulations" />" />
+						<img src="/wise/themes/tels/default/images/features/vle-simulations.png" alt="<spring:message code="pages.features.simulations" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.features.simulations" /></p>
 							<ul>

@@ -104,7 +104,7 @@ public class PreviewProjectController extends AbstractController {
 			params.setVersionId(request.getParameter(VERSION_ID));
 			return (ModelAndView) projectService.previewProject(params);
 		} else {
-			return new ModelAndView(new RedirectView("/webapp/accessdenied.html"));
+			return new ModelAndView(new RedirectView("/wise/accessdenied.html"));
 		}
     }
 	

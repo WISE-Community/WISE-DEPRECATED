@@ -150,7 +150,7 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 			 * generate the link that we will send in the email that will allow
 			 * the user to reset their password.
 			 * e.g.
-			 * http://wise4.berkeley.edu/webapp/forgotaccount/resetpassword.html?k=1234567890abc
+			 * http://wise4.berkeley.edu/wise/forgotaccount/resetpassword.html?k=1234567890abc
 			 */
 			String passwordResetLink = portalProperties.getProperty("portal_baseurl") + "/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
 			

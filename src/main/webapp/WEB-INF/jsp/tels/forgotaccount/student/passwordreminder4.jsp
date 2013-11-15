@@ -20,7 +20,7 @@
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/webapp/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise"/></a>
+				<a id="name" href="/wise/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise"/></a>
 			</div>
 			
 			<div class="infoContent">
@@ -30,7 +30,7 @@
 					<div class="errorMsgNoBg"><p><spring:message code="forgotaccount.student.passwordreminder4.yourPasswordHasBeenChanged"/></p></div>
 					<div><spring:message code="forgotaccount.student.passwordreminder4.clickOnButtonToSignIn"/></div>
 				</div>
-				<a href="/webapp/login.html" class="wisebutton" style="margin-top:.25em;"><spring:message code="forgotaccount.student.passwordreminder4.signIn"/></a>
+				<a href="/wise/login.html" class="wisebutton" style="margin-top:.25em;"><spring:message code="forgotaccount.student.passwordreminder4.signIn"/></a>
 			</div>
 		</div>
 	</div>

@@ -88,7 +88,7 @@ public class RegisterStudentController extends SignupController {
 		String domain =  "http://" + request.getServerName();
 		String domainWithPort = domain + ":" + request.getLocalPort();
 		String referrer = request.getHeader("referer");
-		String registerUrl = "/webapp/student/registerstudent.html";
+		String registerUrl = "/wise/student/registerstudent.html";
 		
 		if(referrer != null && (referrer.contains(domain + registerUrl) || referrer.contains(domainWithPort + registerUrl))){
 			StudentAccountForm accountForm = (StudentAccountForm) command;

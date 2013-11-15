@@ -167,10 +167,10 @@ View.prototype.displayGlobalTools = function() {
 	$('#nextNode').html(nextNodeLink);
 	
 	// Insert sign out and exit to home links
-	var goHomeHref = "/webapp/student/index.html";
+	var goHomeHref = "/wise/student/index.html";
 	var userType = this.config.getConfigParam('userType');
 	if (userType && userType == "teacher") {
-		goHomeHref = "/webapp/teacher/index.html";
+		goHomeHref = "/wise/teacher/index.html";
 	}
 	var signOutLink = '<a id="signOutLink" title="'+this.getI18NString("signout_button_title")+'" onclick="view.logout()">'+this.getI18NString("signout_button_text")+'</a>';
 	var exitLink = '<a id="exitLink" target="_parent" title="'+this.getI18NString("gohome_button_title")+'" onclick="window.parent.location=\'' + goHomeHref + '\'">'+this.getI18NString("gohome_button_text")+'</a>';
@@ -629,7 +629,7 @@ View.prototype.onThemeLoad = function(){
 		
 		/* if (TODO: check for any constraints in project) {*/
 			// we are in preview mode (and the project contains constraints)
-			var path = '/webapp/preview.html?projectId=' + this.getProjectMetadata().projectId;
+			var path = '/wise/preview.html?projectId=' + this.getProjectMetadata().projectId;
 			if(this.getConfig().getConfigParam("isConstraintsDisabled")){
 				// constraints are disabled, so show enable constraints link
 				//this.notificationManager.notify('Student navigation constraints are currently disabled. To preview project with all constraints, <a href="' + path + '">click here</a>.', 3, 'keepMsg');

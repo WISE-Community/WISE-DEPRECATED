@@ -116,7 +116,7 @@
 <h4><spring:message code="pages.teacherfaq.whatShouldILookForInStudentAnswersQuestion" /></h4>
 
 <spring:message code="pages.teacherfaq.whatShouldILookForInStudentAnswersAnswer" /> 
-<a href="/webapp/themes/tels/default/images/SampleRubric.png"><spring:message code="pages.teacherfaq.sampleRubric" /></a>
+<a href="/wise/themes/tels/default/images/SampleRubric.png"><spring:message code="pages.teacherfaq.sampleRubric" /></a>
 
 <h4><spring:message code="pages.teacherfaq.howEncourageStudentsReviewNotesAndCommentsQuestion" /></h4>
 
@@ -130,7 +130,7 @@
 <h4><spring:message code="pages.teacherfaq.websiteWontLoadQuestion" /></h4>
 
 <spring:message code="pages.teacherfaq.websiteWontLoadAnswerPart1" />
-<a href="/webapp/pages/check.html"><spring:message code="pages.teacherfaq.wiseCompatibilityTest" /></a><br/><br/>
+<a href="/wise/pages/check.html"><spring:message code="pages.teacherfaq.wiseCompatibilityTest" /></a><br/><br/>
 
 <spring:message code="pages.teacherfaq.websiteWontLoadAnswerPart2" />
 <a target=_blank href="http://www.wikihow.com/Clear-Your-Browser's-Cache"><spring:message code="pages.teacherfaq.howToClearCache" /></a>

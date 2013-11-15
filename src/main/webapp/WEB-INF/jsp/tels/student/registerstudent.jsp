@@ -72,7 +72,7 @@ function findPeriods() {
 	var runcode = document.getElementById("runCode_part1").value;
 	if (runcode != null && runcode != "") {
 		$.ajax({
-			url:"/webapp/runinfo.html?runcode=" + runcode,
+			url:"/wise/runinfo.html?runcode=" + runcode,
 			dataType:"text",		
 			success:successCallback,
 			error:failureCallback
@@ -365,7 +365,7 @@ function checkRunCode() {
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/webapp/index.html" title="WISE Homepage"><spring:message code="wise" /></a>
+				<a id="name" href="/wise/index.html" title="WISE Homepage"><spring:message code="wise" /></a>
 			</div>
 			
 			<div class="infoContent">
@@ -501,7 +501,7 @@ function checkRunCode() {
 					      
 				  	<div style="margin-top:1em;">
 				 	  	<a style="margin-bottom:1em;" class="wisebutton" onclick="checkForExistingAccountsAndCreateAccount()"><spring:message code="student.registerstudent.createAccount"/></a>
-				 	  	<a href="/webapp/index.html"><spring:message code="cancel"/></a>
+				 	  	<a href="/wise/index.html"><spring:message code="cancel"/></a>
 					 </div> 
 					 
 					 </form:form>

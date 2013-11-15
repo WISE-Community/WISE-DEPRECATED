@@ -25,7 +25,7 @@
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/webapp/index.html" title="WISE Homepage"><spring:message code="wise" /></a>
+				<a id="name" href="/wise/index.html" title="WISE Homepage"><spring:message code="wise" /></a>
 			</div>
 			
 			<div class="infoContent">
@@ -41,7 +41,7 @@
 					<div><spring:message code="student.registerstudentsuccess.registerMoreTeammates"/></div>
 					<div><a href="registerstudent.html" class="wisebutton"><spring:message code="student.registerstudentsuccess.createNewAccount"/></a></div>
 					<div><spring:message code="student.registerstudentsuccess.startUsingWISE"/></div>
-					<div><a href="/webapp/login.html" class="wisebutton"><spring:message code="student.registerstudentsuccess.signIn"/></a></div>
+					<div><a href="/wise/login.html" class="wisebutton"><spring:message code="student.registerstudentsuccess.signIn"/></a></div>
 				</div>
 			</div>
 		</div>

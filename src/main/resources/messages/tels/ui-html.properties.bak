@@ -611,7 +611,7 @@ teacher.index.50B=new message.
 teacher.index.51=Archive
 teacher.index.51A=Reply
 teacher.index.52=View & Send Messages
-teacher.index.53=Your most recent classroom runs are shown below. To see all your project runs, go to the <a href="/webapp/teacher/management/classroomruns.html">Grade & Manage Classroom Runs</a> page.
+teacher.index.53=Your most recent classroom runs are shown below. To see all your project runs, go to the <a href="/wise/teacher/management/classroomruns.html">Grade & Manage Classroom Runs</a> page.
 
 teacher.registerteacher.1=Teacher Registration
 teacher.registerteacher.2=To create a teacher account
@@ -1291,7 +1291,7 @@ teacher.run.myprojectruns.48=Edit Run Settings
 teacher.run.myprojectruns.49=Scores Summary
 teacher.run.myprojectruns.50=Manage Announcements
 teacher.run.myprojectruns.51=Archive (End Run)
-teacher.run.myprojectruns.52=You currently have no active project runs. To use a project in your classroom, choose one from the <a href="/webapp/teacher/management/library.html">WISE Project Library</a> and click "Start New Run." You can also customize existing WISE projects by clicking "Copy (Customize)" or "Edit" in the project details. Create new curriculum units using the <a href="/webapp/author/authorproject.html">WISE Authoring Tool</a>.
+teacher.run.myprojectruns.52=You currently have no active project runs. To use a project in your classroom, choose one from the <a href="/wise/teacher/management/library.html">WISE Project Library</a> and click "Start New Run." You can also customize existing WISE projects by clicking "Copy (Customize)" or "Edit" in the project details. Create new curriculum units using the <a href="/webapp/author/authorproject.html">WISE Authoring Tool</a>.
 teacher.run.myprojectruns.53=The classroom runs below have been completed.
 teacher.run.myprojectruns.54=Want more information about a completed run? If you own a run, you can re-activate it by clicking "Restore" in the run's Student Work & Tools section.
 teacher.run.myprojectruns.55=Archived:

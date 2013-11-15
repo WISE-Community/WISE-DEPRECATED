@@ -101,7 +101,7 @@ public class RemoveStudentFromRunController extends SimpleFormController {
 	
 	    		modelAndView = new ModelAndView(getSuccessView());
     		} else {
-    			modelAndView = new ModelAndView(new RedirectView("/webapp/accessdenied.html"));
+    			modelAndView = new ModelAndView(new RedirectView("/wise/accessdenied.html"));
     		}
     	} catch (ObjectNotFoundException e) {
 			errors.rejectValue("runId", "error.illegal-runId");

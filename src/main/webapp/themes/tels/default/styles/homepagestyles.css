@@ -57,7 +57,7 @@ a.projectsLink {
 
 #about {
 	width: 606px;
-	background: url('/webapp/themes/tels/default/images/home/intro_slider_bg.png') no-repeat center center;
+	background: url('/wise/themes/tels/default/images/home/intro_slider_bg.png') no-repeat center center;
 }
 
 .panelHead {
@@ -108,7 +108,7 @@ a.projectsLink {
 	position:absolute;
 	top:0;
 	right:0;
-	background: url('/webapp/themes/tels/default/images/home/news_bg.png') no-repeat center center;
+	background: url('/wise/themes/tels/default/images/home/news_bg.png') no-repeat center center;
 }
 
 #newsContent {
@@ -165,14 +165,14 @@ p.newsSnippet {
 
 /* Project Showcase Accordion Styles */
 #projectShowcase {
-	background: url('/webapp/themes/tels/default/images/home/project_showcase_bg.png') no-repeat center center;
+	background: url('/wise/themes/tels/default/images/home/project_showcase_bg.png') no-repeat center center;
 	width:670px;
 	float:right;
 }
 
 #features {
 	padding: 0 20px;
-	/*background: url('/webapp/themes/tels/default/images/home/features_bg.png') no-repeat center center;*/
+	/*background: url('/wise/themes/tels/default/images/home/features_bg.png') no-repeat center center;*/
 	width:270px;
 	float:left;
 }
@@ -309,15 +309,15 @@ div.projectLink a {
 }
 
 #wiseAdvantage {
-	background: url('/webapp/themes/tels/default/images/home/wise-in-action_bg.png') no-repeat center center;
+	background: url('/wise/themes/tels/default/images/home/wise-in-action_bg.png') no-repeat center center;
 }
 
 #wiseInAction {
-	background: url('/webapp/themes/tels/default/images/home/wise-tech_bg.png') no-repeat center center;
+	background: url('/wise/themes/tels/default/images/home/wise-tech_bg.png') no-repeat center center;
 }
 
 #researchTech {
-	background: url('/webapp/themes/tels/default/images/home/wise-research_bg.png') no-repeat center center;
+	background: url('/wise/themes/tels/default/images/home/wise-research_bg.png') no-repeat center center;
 	margin:0 -3px 0 0;
 	float:right;
 	display:block;

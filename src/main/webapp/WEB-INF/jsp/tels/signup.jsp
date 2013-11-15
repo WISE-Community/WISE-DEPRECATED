@@ -24,20 +24,20 @@
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/webapp/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise"/></a>
+				<a id="name" href="/wise/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise"/></a>
 			</div>
 			
 			<div class="infoContent">
 				<div class="panelHeader"><spring:message code="signup.header"/></div>
 				<div class="infoContentBox">
 					<h4><spring:message code="signup.accountType"/></h4>
-					<div><a href="/webapp/student/registerstudent.html" class="wisebutton" title="<spring:message code="signup.student"/>"><spring:message code="signup.student"/></a></div>
-					<div><a href="/webapp/teacher/registerteacher.html" class="wisebutton" title="<spring:message code="signup.teacher"/>"><spring:message code="signup.teacher"/></a></div>
+					<div><a href="/wise/student/registerstudent.html" class="wisebutton" title="<spring:message code="signup.student"/>"><spring:message code="signup.student"/></a></div>
+					<div><a href="/wise/teacher/registerteacher.html" class="wisebutton" title="<spring:message code="signup.teacher"/>"><spring:message code="signup.teacher"/></a></div>
 					<div style="margin-top:1em;"><spring:message code="signup.whichAccount" /></div>
 					<div class="instructions"><spring:message code="signup.studentDescription" /></div>
 					<div class="instructions"><spring:message code="signup.teacherDescription" /></div>
 				</div>
-				<a href="/webapp/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="returnHome"/></a>
+				<a href="/wise/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

@@ -98,12 +98,12 @@ public class GradeWorkController extends AbstractController {
 						this.runService.hasRunPermission(run, user, BasePermission.READ)){
 					String portalurl = ControllerUtil.getBaseUrlString(request);
 	
-			    	String getGradeWorkUrl = portalurl + "/webapp/vle/gradework.html";
-					String getGradingConfigUrl = portalurl + "/webapp/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
+			    	String getGradeWorkUrl = portalurl + "/wise/vle/gradework.html";
+					String getGradingConfigUrl = portalurl + "/wise/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
 					
 					//get the classroom monitor urls
-					String getClassroomMonitorUrl = portalurl + "/webapp/vle/classroomMonitor.html";
-					String getClassroomMonitorConfigUrl = portalurl + "/webapp/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
+					String getClassroomMonitorUrl = portalurl + "/wise/vle/classroomMonitor.html";
+					String getClassroomMonitorConfigUrl = portalurl + "/wise/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
 					
 					String curriculumBaseWWW = portalProperties.getProperty("curriculum_base_www");
 					String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());

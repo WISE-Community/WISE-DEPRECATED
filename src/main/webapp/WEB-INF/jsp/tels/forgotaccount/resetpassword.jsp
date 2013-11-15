@@ -19,7 +19,7 @@
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/webapp/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
+				<a id="name" href="/wise/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 			</div>
 			
 			<div class="infoContent">
@@ -71,13 +71,13 @@
 					<c:if test="${displayLoginLink == true}">
 						<div><spring:message code="forgotaccount.resetpassword.clickButtonToSignIn" /></div>
 						<br>
-						<a href="/webapp/login.html" class="wisebutton" style="margin-top:.25em;"><spring:message code="forgotaccount.resetpassword.signIn"/></a>
+						<a href="/wise/login.html" class="wisebutton" style="margin-top:.25em;"><spring:message code="forgotaccount.resetpassword.signIn"/></a>
 						<br>
 						<br>
 						<br>
 						<br>
 					</c:if>
-				<a href="/webapp/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
+				<a href="/wise/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

@@ -63,7 +63,7 @@
 		var runcode = document.getElementById("runCode_part1").value;
 		if (runcode != null && runcode != "") {
 			$.ajax({
-				url : "/webapp/runinfo.html?runcode=" + runcode,
+				url : "/wise/runinfo.html?runcode=" + runcode,
 				dataType : "text",
 				success : successCallback,
 				error : failureCallback

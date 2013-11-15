@@ -20,8 +20,8 @@
     
 <title><spring:message code="wiseAdmin" /></title>
 
-<script type='text/javascript' src='/webapp/dwr/interface/ChangePasswordParametersValidatorJS.js'></script>
-<script type='text/javascript' src='/webapp/dwr/engine.js'></script>
+<script type='text/javascript' src='/wise/dwr/interface/ChangePasswordParametersValidatorJS.js'></script>
+<script type='text/javascript' src='/wise/dwr/engine.js'></script>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script type="text/javascript">

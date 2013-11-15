@@ -53,7 +53,7 @@ SessionManager.prototype.renewSession = function() {
 	// make a request to renew the session
 	var renewSessionUrl = this.view.config.getConfigParam('indexUrl');
 	if (renewSessionUrl == null || renewSessionUrl == 'undefined') {
-		renewSessionUrl = "/webapp/index.html";
+		renewSessionUrl = "/wise/index.html";
 	}
 	this.view.connectionManager.request('GET', 2, renewSessionUrl, {}, null, this.view);
 };

@@ -40,7 +40,7 @@
 				
 				<div class="panelContent">
 					<div class="featuresShowcase right">
-						<img src="/webapp/themes/tels/default/images/features/wise-teacher.png" alt="<spring:message code="pages.teacher-tools.teachingWithWISE" />" />
+						<img src="/wise/themes/tels/default/images/features/wise-teacher.png" alt="<spring:message code="pages.teacher-tools.teachingWithWISE" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.teacher-tools.wiseTeacherTools" /></div>
 							<p><spring:message code="pages.teacher-tools.wiseTeacherToolsParagraph1" /></p>
@@ -51,7 +51,7 @@
 					</div>
 					<div class="featureContentHeader"><spring:message code="pages.teacher-tools.highlightedFeatures" /></div>
 					<div class="featuresShowcase right">
-						<img src="/webapp/themes/tels/default/images/features/teacher-manage.png" alt="<spring:message code="pages.teacher-tools.managementAlt" />" />
+						<img src="/wise/themes/tels/default/images/features/teacher-manage.png" alt="<spring:message code="pages.teacher-tools.managementAlt" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.teacher-tools.managingPacingEngagingStudents" /></p>
 							<ul>
@@ -64,7 +64,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/webapp/themes/tels/default/images/features/teacher-grading.png" alt="<spring:message code="pages.teacher-tools.gradingAndFeedbackAlt" />" />
+						<img src="/wise/themes/tels/default/images/features/teacher-grading.png" alt="<spring:message code="pages.teacher-tools.gradingAndFeedbackAlt" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.teacher-tools.gradingAndFeedback" /></p>
 							<ul>
@@ -76,7 +76,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase right">
-						<img src="/webapp/themes/tels/default/images/features/teacher-customization.png" alt="<spring:message code="pages.teacher-tools.customizationAlt" />" />
+						<img src="/wise/themes/tels/default/images/features/teacher-customization.png" alt="<spring:message code="pages.teacher-tools.customizationAlt" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.teacher-tools.customizingCurricula" /></p>
 							<ul>

@@ -92,7 +92,7 @@ public class CreateRunController extends AbstractWizardFormController {
 	
 	private static final String COMPLETE_VIEW_NAME = "teacher/run/create/createrunfinish";
 	
-	private static final String CANCEL_VIEW_NAME = "/webapp/teacher/management/library.html";
+	private static final String CANCEL_VIEW_NAME = "/wise/teacher/management/library.html";
 
 	private static final String RUN_KEY = "run";
 	
@@ -513,7 +513,7 @@ public class CreateRunController extends AbstractWizardFormController {
 			projectID = runParameters.getProject().getId();
 			Long runID = run.getId();
 			
-    		String previewProjectUrl = portalBaseUrlString + "/webapp/previewproject.html?projectId="+run.getProject().getId();
+    		String previewProjectUrl = portalBaseUrlString + "/wise/previewproject.html?projectId="+run.getProject().getId();
 
 			String[] recipients = emaillisteners.getProperty("project_setup").split(",");
 			

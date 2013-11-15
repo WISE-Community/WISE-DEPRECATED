@@ -952,25 +952,25 @@ public class AuthorProjectController extends AbstractController {
 		String portalUrl = ControllerUtil.getBaseUrlString(request);
 
 		//get the url to get and post metadata
-		String projectMetaDataUrl = portalUrl + "/webapp/metadata.html";
+		String projectMetaDataUrl = portalUrl + "/wise/metadata.html";
 
 		//get the url to make CRater requests
-		String cRaterRequestUrl = portalUrl + "/webapp/bridge/request.html?type=cRater";
+		String cRaterRequestUrl = portalUrl + "/wise/bridge/request.html?type=cRater";
 
 		//get the curriculum_base_www variable from the portal.properties file
 		String vlewrapperBaseUrl = portalProperties.getProperty("curriculum_base_www");
 
 		//get the url to make CRater requests
-		String deleteProjectUrl = portalUrl + "/webapp/deleteproject.html";
+		String deleteProjectUrl = portalUrl + "/wise/deleteproject.html";
 
 		//get the url to make analyze project requests
-		String analyzeProjectUrl = portalUrl + "/webapp/analyzeproject.html";
+		String analyzeProjectUrl = portalUrl + "/wise/analyzeproject.html";
 
 		//the get url for premade comments
-		String getPremadeCommentsUrl = portalUrl + "/webapp/teacher/grading/premadeComments.html?action=getData";
+		String getPremadeCommentsUrl = portalUrl + "/wise/teacher/grading/premadeComments.html?action=getData";
 
 		//the post url for premade comments
-		String postPremadeCommentsUrl = portalUrl + "/webapp/teacher/grading/premadeComments.html?action=postData";
+		String postPremadeCommentsUrl = portalUrl + "/wise/teacher/grading/premadeComments.html?action=postData";
 
 		//create a JSONObject to contain the config params
 		JSONObject config = new JSONObject();
