@@ -21,6 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.telscenter.sail.webapp.dao.userinfo.UserInfoDao;
+import org.telscenter.sail.webapp.service.vle.VLEService;
 
 import utils.SecurityUtils;
 import vle.VLEServlet;
@@ -43,6 +45,8 @@ public class VLEGetData extends AbstractController {
 	private static boolean DEBUG = false;
 
 	private boolean standAlone = true;
+
+	private VLEService vleService;
 
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -244,7 +248,8 @@ public class VLEGetData extends AbstractController {
 						String userId = userIdArray[x];
 
 						// obtain all the data for this student
-						UserInfo userInfo = UserInfo.getByWorkgroupId(new Long(userId));
+						//UserInfo userInfo = UserInfo.getByWorkgroupId(new Long(userId));
+						UserInfo userInfo = vleService.getUserInfoByWorkgroupId(new Long(userId));
 						JSONObject nodeVisitsJSON = new JSONObject();  // to store nodeVisits for this student.
 
 						// here we check if we have retrieved and cached this workgroup's data before.
@@ -464,6 +469,10 @@ public class VLEGetData extends AbstractController {
 		}
 
 		return nodeVisitsJSON;
+	}
+
+	public void setVleService(VLEService vleService) {
+		this.vleService = vleService;
 	}
 
 }

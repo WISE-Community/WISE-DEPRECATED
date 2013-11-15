@@ -105,6 +105,16 @@
 		class="org.telscenter.sail.webapp.domain.impl.RunImpl">
 	</bean>
 
+	<bean id="vleService"
+		class="org.telscenter.sail.webapp.service.vle.impl.VLEServiceImpl">
+		<property name="userInfoDao" ref="userInfoDao" />
+	</bean>
+	
+	<bean id="userInfoDao"
+		class="org.telscenter.sail.webapp.dao.userinfo.impl.HibernateUserInfoDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
 	<bean id="runDao"
 		class="org.telscenter.sail.webapp.dao.offering.impl.HibernateRunDao">
 		<property name="sessionFactory" ref="sessionFactory" />

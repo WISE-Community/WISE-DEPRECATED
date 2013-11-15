@@ -7,9 +7,19 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
+import net.sf.sail.webapp.service.UserService;
+import net.sf.sail.webapp.spring.SpringConfiguration;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.Configuration;
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * Hibernate Utilities
@@ -20,14 +30,10 @@ public class HibernateUtil {
     private static SessionFactory sessionFactory = buildSessionFactory();
     //private static SessionFactory sessionFactory;
     
-    public static SessionFactory getSessionfactory() {
-		return sessionFactory;
-	}
-
 	private static SessionFactory buildSessionFactory() {
         try {
             // Create the SessionFactory from hibernate.cfg.xml and from wise.properties
-            AnnotationConfiguration cfg = new AnnotationConfiguration().configure("configurations/hibernate/tels/hibernate-wise.cfg.xml");  // reads from hibernate.cfg.xml
+            AnnotationConfiguration cfg = new AnnotationConfiguration().configure("configurations/hibernate/hibernate-wise.cfg.xml");  // reads from hibernate.cfg.xml
             
         	Properties extraProperties = new Properties();
         	extraProperties.load(HibernateUtil.class.getClassLoader().getResourceAsStream("wise.properties"));
@@ -41,10 +47,6 @@ public class HibernateUtil {
         }
     }
 	
-	public static void setSessionfactory(SessionFactory sessionfactory) {
-		sessionFactory = sessionfactory;
-	}
-
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }

@@ -943,6 +943,7 @@
 	</bean>
 
 	<bean id="getStudentDataController" class="vle.web.VLEGetData">
+	    <property name="vleService" ref="vleService" />
 	</bean>
 
 	<bean id="postStudentDataController" class="vle.web.VLEPostData">

@@ -71,10 +71,7 @@
 		<property name="configLocations">
 			<list>
 				<value>
-					classpath:configurations/hibernate/pas/hibernate.cfg.xml
-				</value>
-				<value>
-					classpath:configurations/hibernate/tels/hibernate-extensions.cfg.xml
+					classpath:configurations/hibernate/hibernate-wise.cfg.xml
 				</value>
 			</list>
 		</property>

@@ -19,6 +19,12 @@
 
 <hibernate-configuration>
 	<session-factory>
+
+	    <!-- Force Hibernate to order SQL updates by the primary key value of the items being updated. This will result in fewer transaction deadlocks in highly concurrent systems. -->
+        <property name="hibernate.order_updates">true</property>
+        <!-- Enables autocommit for JDBC pooled connections (not recommended). -->
+        <property name="hibernate.connection.autocommit">false</property>
+        	    
 		<!-- specify when hibernate should release JDBC connections -->
 		<property name="hibernate.connection.release_mode">after_statement</property>
 		<property name="hibernate.auto_close_session">true</property>
