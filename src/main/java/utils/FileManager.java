@@ -140,8 +140,6 @@ public class FileManager extends AbstractController {
 				response.getWriter().write(this.createSequence(request, response));
 			} else if(command.equals("removeFile")){
 				response.getWriter().write(this.removeFile(request));
-			} else if(command.equals("updateAudioFiles")) {
-				response.getWriter().write(this.updateAudioFiles(request, response));
 			} else if(command.equals("copyNode")){
 				this.copyNode(request, response);
 			} else if(command.equals("createSequenceFromJSON")){
@@ -1087,59 +1085,6 @@ public class FileManager extends AbstractController {
 		}
 			
 		writer.println("scriptloader.scriptAvailable(scriptloader.baseUrl + \"vle/filemanager.html?command=getScripts&param1=" + data + "\");");
-	}
-	
-	/**
-	 * Updates audio file.  If the specified AudioFile already exists,
-	 * do not create it. If it doesn't exist, convert the specified
-	 * content to audio and save it at the specified audiofilename.
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws IOException 
-	 */
-	private synchronized String updateAudioFiles(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		/*
-		 * get the project folder path
-		 * e.g.
-		 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
-		 */
-		String projectFolderPath = (String) request.getAttribute("projectFolderPath");
-		String audioFilePath = request.getParameter("audioFilePath");
-		String content = request.getParameter("content");
-		
-		File dir = new File(projectFolderPath);
-		if(dir.exists()){
-			if(this.standAlone || SecurityUtils.isAllowedAccess(request, dir)){
-				File file = new File(audioFilePath);
-				//File wavfile = new File(audioFilePath.replaceAll(".mp3", ".wav"));
-	
-				if(file.exists()){   // see if mp3 file or wav file exists
-					return "audioAlreadyExists";
-				} else {
-					/* ensure that parent (probably 'audio') directory exists */
-					if(!file.getParentFile().exists()){
-						file.getParentFile().mkdirs();
-					}
-	
-					String audioFile = file.getCanonicalPath();
-					//audioFile = audioFile.replaceAll(".mp3", ".wav");
-					TTS tts = new TTS(audioFile);
-					boolean success = tts.saveToFile(content);
-					if (success) {
-						return "success";
-					} else {
-						return "failure";
-					}
-				}
-			} else {
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-				return "not authorized";
-			}
-		} else {
-			throw new IOException("Unable to find the project");
-		}
 	}
 	
 	/**

@@ -128,67 +128,6 @@ iframe {padding:0;margin:0;}
 	font-size:.75em;
 	text-align:center; 
  }
-	
-#audioControls  {
-	width:80%;
-	margin:0 auto;
-	background-color:#CCC;
-	border:1px solid #999;
-	-moz-border-radius-topleft:8px;
-	-moz-border-radius-topright:8px;
-	-moz-border-radius-bottomleft:8px;
-	-moz-border-radius-bottomright:8px;
-	}	
-	
-#audioControls table {
-	border-collapse:collapse;
-	margin:0px auto;
-	font-size:.6em;	
-		}
-	
-#audioControls a.rewind {  
-     display: block;  
-     width: 40px;  
-     height: 16px; 
-     background-image: url(../assets/images/audio_rewind.png);  
-     background-position:center -3px;	
-	 background-repeat: no-repeat;
-     }
-	 
-#audioControls a.rewind:hover { 
-     background-image: url(../assets/images/audio_rewind_roll.png);  
-	 cursor:pointer;
-     } 
-	 
-#audioControls a.play {  
-     display: block;  
-     width: 34px;  
-     height: 16px; 
-     background-image: url(../assets/images/audio_play.png);  
-     background-repeat: no-repeat;
-	 background-position:center -3px;
-     }
-	 
-#audioControls a.play:hover { 
-     background-image: url(../assets/images/audio_play_roll.png);  
-	 cursor:pointer;
-     } 
-
-#audioControls a.pause {  
-     display: block;  
-     width: 40px;  
-     height: 16px; 
-     background-image: url(../assets/images/audio_pause.png);  
-     background-repeat: no-repeat;
-	 background-position:center -3px;
-     }
-	 
-#audioControls a.pause:hover { 
-     background-image: url(../assets/images/audio_pause_roll.png);  
-     cursor:pointer;
-     } 
-	 
-#audioControls .rightPadding {padding:0 5px 0 10px;}
 
 #navigationArea {
 	margin: 0px 0 0 0 ;

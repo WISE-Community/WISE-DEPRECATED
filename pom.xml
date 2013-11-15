@@ -561,13 +561,6 @@
 			<version>2.3</version>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.speech.freetts</groupId>
-			<artifactId>freetts</artifactId>
-			<version>0.9.2</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/freetts.jar</systemPath>
-		</dependency>
-		<dependency>
 			<groupId>com.yahoo.platform.yui</groupId>
 			<artifactId>yuicompressor</artifactId>
 			<version>2.4.6</version>

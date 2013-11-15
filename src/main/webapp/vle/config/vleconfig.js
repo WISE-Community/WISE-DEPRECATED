@@ -30,7 +30,6 @@ function VLEConfig(contentObject) {
 		var postCurrentStepUrl;
 		var getCurrentStepUrl;
 		var theme;
-		var playAudioOnStart = false;
 		var postLevel;
 		var userType = "none";
 		var contentObject = contentObj;
@@ -67,20 +66,6 @@ function VLEConfig(contentObject) {
 				mainNav = vleConfigXML.getElementsByTagName('mainNav')[0].firstChild.nodeValue;
 			}
 			
-			
-			// use audio 
-			if (vleConfigXML.getElementsByTagName('enableAudio') &&
-					vleConfigXML.getElementsByTagName('enableAudio')[0] != null) {
-				useAudio = vleConfigXML.getElementsByTagName('enableAudio')[0].firstChild.nodeValue;
-			}
-			
-			// if use audio, check if audio should start playing on startup
-			if (vleConfigXML.getElementsByTagName('playAudioOnStart') &&
-					vleConfigXML.getElementsByTagName('playAudioOnStart')[0] != null) {
-				playAudioOnStart = vleConfigXML.getElementsByTagName('playAudioOnStart')[0].firstChild.nodeValue;
-			}
-			
-
 			//check to make sure theme was defined in xml, if so, check to see if value is valid and set it,
 			//otherwise default to WISE as a theme.
 			if(theme != null && theme.firstChild && isValidTheme(theme.firstChild.nodeValue)){
@@ -182,9 +167,6 @@ function VLEConfig(contentObject) {
 			},
 			getTheme:function() {
 				return theme;
-			},
-			getPlayAudioOnStart:function() {
-				return playAudioOnStart;
 			},
 			getPostLevel:function() {
 				return postLevel;

@@ -1408,13 +1408,6 @@ Node.prototype.getNode = function(){
 };
 
 /**
- * Does this node support audio playback?
- */
-Node.prototype.isAudioSupported = function(){
-	return true;
-};
-
-/**
  * Set the step boolean value open to true
  */
 Node.prototype.setStepOpen = function() {

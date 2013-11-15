@@ -31,9 +31,7 @@ function SVGDrawNode(nodeType, view) {
 	this.type = nodeType;
 	this.content = null;
 	this.filename = null;
-	this.audios = [];
 	this.contentBase;
-	this.audioSupported = true;	
 	this.importableFromNodes = new Array("SVGDrawNode","OpenResponseNode","NoteNode");	
 	this.importableFileExtensions = new Array(
 			"jpg", "jpeg", "png", "gif", "svg");

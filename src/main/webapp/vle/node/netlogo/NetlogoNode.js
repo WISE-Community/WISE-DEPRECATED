@@ -23,9 +23,7 @@ function NetlogoNode(nodeType, view) {
 	this.view = view;
 	this.type = nodeType;
 	this.content = null;
-	this.audios = [];
 	this.contentBase;
-	this.audioSupported = true;
 }
 
 NetlogoNode.prototype.parseDataJSONObj = function(stateJSONObj) {

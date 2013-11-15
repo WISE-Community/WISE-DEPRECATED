@@ -9,7 +9,6 @@
  * runId - the id of the run
  * runInfoRequestInterval - how often to poll for special events
  * theme - currently only UCCP and WISE are allowed
- * playAudioOnStart - whether to have tts on at the start
  * runInfoUrl - where to get run info
  * getUserInfoUrl - where to get user information
  * getContentUrl - where the .project file is
@@ -48,11 +47,6 @@ View.prototype.createConfig = function(contentObject) {
 		 */
 		var configParams = contentObject.getContentJSON();
 
-		//set any default values if they were not provided
-		if(configParams['playAudioOnStart'] == null) {
-			configParams['playAudioOnStart'] = false;			
-		}
-		
 		return {
 			isValidTheme:function(theme) {
 				var allowableThemes = ['UCCP', 'WISE'];

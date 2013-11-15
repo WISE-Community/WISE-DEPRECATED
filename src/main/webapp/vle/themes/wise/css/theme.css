@@ -331,7 +331,7 @@ body#w4_vle {
 	border: 4px solid #FFFFFF;
 }
 
-#vle_body #stepInfo, #vle_body #hints, #vle_body #audioControls, #vle_body #stepNav, #vle_body #nodeAnnotations {
+#vle_body #stepInfo, #vle_body #hints, #vle_body #stepNav, #vle_body #nodeAnnotations {
 	display:inline-block;
 	line-height:34px;
 	white-space: nowrap;

@@ -18,9 +18,7 @@ HtmlNode.authoringToolDescription = "Students review information (text, multimed
 function HtmlNode(nodeType, view) {
 	this.view = view;
 	this.type = nodeType;
-	this.audios = [];
 	this.contentBase;
-	this.audioSupported = true;
 	
 	this.selfRendering = true;
 }

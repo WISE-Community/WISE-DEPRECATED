@@ -281,7 +281,6 @@ var componentloader = function(em, sl){
 				timeoutVars:{}, 
 				placeNode:false, 
 				placeNodeId:undefined, 
-				updateAudioInVLE:false,
 				authoringBaseUrl:'filemanager.html?command=retrieveFile&fileName=',
 				easyMode:true, 
 				updateNow:true, 
@@ -687,20 +686,6 @@ var componentloader = function(em, sl){
 				onWindowUnload:function(view){return function(logout){view.onWindowUnload(logout);};}
 			},
 			initialize:{}
-		},
-		audio:{
-			variables:{audioManager:undefined,updateAudioOnRender:false,audioReady:[],audioLocation:"audio",nodeAudioMap:{}},
-			events:{
-			},
-			methods:{},
-			initialize:{
-				init:function(view){
-					view.eventManager.subscribe('loadingProjectCompleted', view.audioDispatcher, view);
-					view.eventManager.subscribe('renderNodeCompleted', view.audioDispatcher,view);
-					view.eventManager.subscribe('contentRenderCompleted', view.audioDispatcher, view);
-					view.eventManager.subscribe('pageRenderCompleted', view.audioDispatcher, view);
-				}
-			}
 		},
 		keystroke:{
 			variables:{keystrokeManager:undefined}

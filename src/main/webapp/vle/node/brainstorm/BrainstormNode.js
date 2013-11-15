@@ -36,7 +36,6 @@ BrainstormNode.tagMapFunctions = [
 function BrainstormNode(nodeType, view) {
 	this.view = view;
 	this.type = nodeType;
-	this.audioSupported = true;
 	this.serverless = true;
 	this.prevWorkNodeIds = [];
 	this.importableFileExtensions = new Array(

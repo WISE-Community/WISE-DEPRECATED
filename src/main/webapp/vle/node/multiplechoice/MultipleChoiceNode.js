@@ -37,7 +37,6 @@ function MultipleChoiceNode(nodeType, view) {
 	this.mc = null;
 	this.contentBase;
 	this.contentPanel;
-	this.audioSupported = true;
 	this.prevWorkNodeIds = [];
 	
 	this.tagMapFunctions = this.tagMapFunctions.concat(MultipleChoiceNode.tagMapFunctions);

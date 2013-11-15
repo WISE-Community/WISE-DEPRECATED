@@ -364,7 +364,6 @@ View.prototype.loadTheme = function(themeName){
 	// inject theme's body.html into vle.html body
 	$('#vle_body').load(themeHtml,function(){
 		view.displayGlobalTools();
-		//view.createAudioManagerOnProjectLoad();
 		
 		var currentTheme = [themeName.toLowerCase()]; // TODO: remove toLowerCase()
 		
@@ -387,7 +386,6 @@ View.prototype.loadTheme = function(themeName){
 			$("#journalTD").hide();
 			$("#flaggedWorkTD").hide();
 		} else {
-			$("#audioControls").hide(); // TODO: Move, audio functionality should be independent of theme
 		}
 		
 		// create and initialize system dialogs

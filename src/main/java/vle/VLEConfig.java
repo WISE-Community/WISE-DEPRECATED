@@ -51,7 +51,6 @@ public class VLEConfig extends HttpServlet {
 			config.put("postDataUrl", postDataUrl);
 			config.put("getRunInfoUrl", "dummy");
 			config.put("theme", "WISE");
-			config.put("enableAudio", false);
 			config.put("runInfoRequestInterval", -1);
 			config.put("getProjectMetadataUrl", userInfoUrl + "x");
 			response.setHeader("Cache-Control", "no-cache");

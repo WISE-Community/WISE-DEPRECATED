@@ -1020,9 +1020,8 @@ View.prototype.previewProject = function(){
  * of name:value pairs that match that of the config object in the vle @see config.js
  */
 View.prototype.startPreview = function(em){
-	var obj = {'mode':'standaloneauthorpreview','getContentUrl':this.getProject().getUrl(),'getContentBaseUrl':this.getProject().getContentBase(),'updateAudio':this.updateAudioInVLE};
+	var obj = {'mode':'standaloneauthorpreview','getContentUrl':this.getProject().getUrl(),'getContentBaseUrl':this.getProject().getContentBase()};
 	this.startVLEFromParams(obj);
-	this.updateAudioInVLE = false;
 };
 
 /**

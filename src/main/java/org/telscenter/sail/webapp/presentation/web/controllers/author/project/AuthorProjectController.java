@@ -338,7 +338,6 @@ public class AuthorProjectController extends AbstractController {
 				"copyNode".equals(command) ||
 				"createSequence".equals(command) ||
 				"createSequenceFromJSON".equals(command) ||
-				"updateAudioFiles".equals(command) ||
 				"createFile".equals(command) ||
 				"removeFile".equals(command)||
 				"assetList".equals(command) || 

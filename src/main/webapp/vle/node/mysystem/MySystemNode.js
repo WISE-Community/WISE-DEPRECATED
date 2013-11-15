@@ -17,9 +17,7 @@ function MySystemNode(nodeType, view) {
 	this.type = nodeType;
 	this.content = null;
 	this.filename = null;
-	this.audios = [];
 	this.contentBase;
-	this.audioSupported = true;	
 };
 
 
