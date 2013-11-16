@@ -20,6 +20,10 @@
 
 	<display-name>Web-based Inquiry Science Environment</display-name>
 
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>wise</param-value>
+	</context-param>
 
 	<!-- Context Params -->
 	<context-param>

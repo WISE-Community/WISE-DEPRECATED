@@ -66,13 +66,13 @@
 		</developer>
 	</developers>
 	<scm>
-		<url>https://github.com/WISE-Community/WISE-Portal/</url>
-		<connection>scm:git:git://github.com/WISE-Community/WISE-Portal.git</connection>
-		<developerConnection>scm:git:git://github.com/WISE-Community/WISE-Portal.git</developerConnection>
+		<url>https://github.com/WISE-Community/WISE/</url>
+		<connection>scm:git:git://github.com/WISE-Community/WISE.git</connection>
+		<developerConnection>scm:git:git://github.com/WISE-Community/WISE.git</developerConnection>
 	</scm>
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/WISE-Community/WISE-Portal/issues</url>
+		<url>https://github.com/WISE-Community/WISE/issues</url>
 	</issueManagement>
 
 	<licenses>
