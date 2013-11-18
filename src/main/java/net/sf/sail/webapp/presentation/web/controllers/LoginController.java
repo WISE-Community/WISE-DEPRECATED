@@ -50,7 +50,7 @@ public class LoginController extends AbstractController {
 		//get the user name that we will use to pre-populate the Username field
 		String userName = request.getParameter("userName");
 		
-		//get the public and private keys from the portal.properties
+		//get the public and private keys from the wise.properties
 		String reCaptchaPublicKey = portalProperties.getProperty("recaptcha_public_key");
 		String reCaptchaPrivateKey = portalProperties.getProperty("recaptcha_private_key");
 

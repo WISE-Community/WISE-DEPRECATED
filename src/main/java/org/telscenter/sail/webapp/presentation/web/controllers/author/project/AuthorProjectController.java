@@ -924,7 +924,7 @@ public class AuthorProjectController extends AbstractController {
 	 * @throws IOException
 	 */
 	private ModelAndView handleGetCurriculumBaseUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		//get the curriculum_base_www variable from the portal.properties file
+		//get the curriculum_base_www variable from the wise.properties file
 		String vlewrapperBaseUrl = portalProperties.getProperty("curriculum_base_www");
 
 		//write the curriculum base url to the response
@@ -956,7 +956,7 @@ public class AuthorProjectController extends AbstractController {
 		//get the url to make CRater requests
 		String cRaterRequestUrl = portalUrl + "/wise/bridge/request.html?type=cRater";
 
-		//get the curriculum_base_www variable from the portal.properties file
+		//get the curriculum_base_www variable from the wise.properties file
 		String vlewrapperBaseUrl = portalProperties.getProperty("curriculum_base_www");
 
 		//get the url to make CRater requests
