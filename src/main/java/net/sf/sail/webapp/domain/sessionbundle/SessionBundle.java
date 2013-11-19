@@ -24,7 +24,6 @@ package net.sf.sail.webapp.domain.sessionbundle;
 
 import java.util.List;
 
-import net.sf.sail.emf.sailuserdata.ESessionBundle;
 import net.sf.sail.webapp.domain.Workgroup;
 
 /**
@@ -59,19 +58,4 @@ public interface SessionBundle {
 	 */
 	public void setWorkgroup(Workgroup workgroup);
 	
-	/**
-	 * Returns this <code>SessionBundle<code> represented as an
-	 * <code>ESessionBundle</code> object.
-	 * 
-	 * @return <code>ESessionBundle</code>
-	 */
-	public ESessionBundle getESessionBundle();
-	
-	/**
-	 * Sets this <code>SessionBundle<code> represented as an
-	 * <code>ESessionBundle</code> object.
-	 * 
-	 * @param <code>ESessionBundle</code>
-	 */
-	public void setESessionBundle(ESessionBundle eSessionBundle);
 }

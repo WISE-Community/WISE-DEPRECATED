@@ -42,14 +42,6 @@
         unique (sid, principal)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table annotationbundles (
-        id bigint not null auto_increment,
-        bundle longtext not null,
-        OPTLOCK integer,
-        workgroup_fk bigint not null,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
     create table announcements (
         id bigint not null auto_increment,
         announcement text not null,
@@ -529,12 +521,6 @@
         add constraint FK2A2BB0099B5E7811 
         foreign key (owner_sid) 
         references acl_sid (id);
-
-    alter table annotationbundles 
-        add index FKAA5FD222F54443B2 (workgroup_fk), 
-        add constraint FKAA5FD222F54443B2 
-        foreign key (workgroup_fk) 
-        references workgroups (id);
 
     alter table curnits 
         add index FK4329FBBA1B78E061 (sds_curnit_fk), 

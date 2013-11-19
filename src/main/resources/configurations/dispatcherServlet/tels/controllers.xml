@@ -498,12 +498,6 @@
 	<bean id="termsOfUseController"
 		class="org.telscenter.sail.webapp.presentation.web.controllers.TermsOfUseController" />
 
-	<bean id="getAnnotationBundleController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.student.GetAnnotationBundleController">
-		<property name="annotationBundleService" ref="annotationBundleService" />
-		<property name="workgroupService" ref="workgroupService" />
-	</bean>
-
 	<bean id="viewMyStudentsController"
 		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ViewMyStudentsController">
 		<property name="runService" ref="runService" />

@@ -33,9 +33,4 @@
 		class="net.sf.sail.webapp.domain.annotation.impl.AnnotationBundleImpl"
 		scope="prototype" />
 
-	<bean id="annotationBundleService"
-		class="net.sf.sail.webapp.service.annotation.impl.AnnotationBundleServiceImpl" >
-		<property name="annotationBundleDao" ref="annotationBundleDao" />
-    </bean>		
-
 </beans>

@@ -41,7 +41,6 @@ import net.sf.sail.webapp.service.offering.OfferingService;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.transaction.annotation.Transactional;
-import org.telscenter.pas.emf.pas.ECurnitmap;
 
 /**
  * @author Laurel Williams
@@ -167,30 +166,6 @@ public class OfferingServiceImpl implements OfferingService {
 	public Set<Workgroup> getWorkgroupsForOffering(Long offeringId)
 			throws ObjectNotFoundException {
 		return this.offeringDao.getWorkgroupsForOffering(offeringId);
-	}
-
-	/**
-	 * @see net.sf.sail.webapp.service.offering.OfferingService#updateCurnitmapForOffering(java.lang.Long, org.telscenter.pas.emf.pas.ECurnitmap)
-	 */
-	@Transactional(rollbackFor = { HttpStatusCodeException.class, ObjectNotFoundException.class })
-	public void updateCurnitmapForOffering(Long offeringId, ECurnitmap eCurnitmap)
-			throws ObjectNotFoundException {
-		Offering offering = this.offeringDao.getById(offeringId);
-	
-		ByteArrayOutputStream eCurnitmapOutStream = 
-			new ByteArrayOutputStream();
-		byte [] curnitmapBytes = null;				
-		try {
-			eCurnitmap.eResource().save(eCurnitmapOutStream, null);
-			curnitmapBytes = eCurnitmapOutStream.toByteArray();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		String sdsCurnitMapString = new String(curnitmapBytes);
-		
-		SdsOffering sdsOffering = offering.getSdsOffering();
-		sdsOffering.setSdsCurnitMap(sdsCurnitMapString);
-		this.sdsOfferingDao.save(sdsOffering);
 	}
 
 }

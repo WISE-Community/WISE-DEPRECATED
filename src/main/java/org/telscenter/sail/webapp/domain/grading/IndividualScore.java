@@ -26,8 +26,6 @@ package org.telscenter.sail.webapp.domain.grading;
 import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.group.Group;
 
-import org.telscenter.pas.emf.pas.EStep;
-
 
 /**
  * Represents a particular individuals score for a particular <code>Run</code>

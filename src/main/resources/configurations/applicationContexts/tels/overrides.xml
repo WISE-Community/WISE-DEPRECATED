@@ -150,8 +150,6 @@
 					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/student/registerstudent.html"
 					access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/student/getannotationbundle.html"
-					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/student/**/*.html"
 					access="ROLE_STUDENT,ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/teacher/registerteacher.html"

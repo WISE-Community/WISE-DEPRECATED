@@ -29,7 +29,6 @@ import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.annotation.AnnotationBundle;
 import net.sf.sail.webapp.domain.sessionbundle.SessionBundle;
 
-import org.telscenter.pas.emf.pas.EStep;
 import org.telscenter.sail.webapp.domain.grading.GradeWorkByStepAggregate;
 
 /**
@@ -39,26 +38,10 @@ import org.telscenter.sail.webapp.domain.grading.GradeWorkByStepAggregate;
 public class GradeWorkByStepAggregateImpl extends GradeWorkAggregateImpl
 		implements GradeWorkByStepAggregate {
 	
-	protected EStep step;
-	
 	protected Map<Workgroup, SessionBundle> sessionBundles;
 
 	protected Map<Workgroup, AnnotationBundle> annotationBundles;
 
-	/**
-	 * @see org.telscenter.sail.webapp.domain.grading.GradeWorkByStepAggregate#getStep()
-	 */
-	public EStep getStep() {
-		return step;
-	}
-
-	/**
-	 * @see org.telscenter.sail.webapp.domain.grading.GradeWorkByStepAggregate#setStep(EStep)
-	 */
-	public void setStep(EStep step) {
-		this.step = step;
-	}
-	
 	/**
 	 * @see org.telscenter.sail.webapp.domain.grading.GradeWorkByStepAggregate#getAnnotationBundles()
 	 */

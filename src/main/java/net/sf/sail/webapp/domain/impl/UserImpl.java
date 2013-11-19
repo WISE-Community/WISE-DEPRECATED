@@ -31,7 +31,6 @@ import javax.persistence.Version;
 
 import org.telscenter.sail.webapp.service.authentication.UserDetailsService;
 
-import net.sf.sail.core.service.impl.UserServiceImpl;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;

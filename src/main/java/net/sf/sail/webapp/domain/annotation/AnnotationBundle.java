@@ -22,7 +22,6 @@
  */
 package net.sf.sail.webapp.domain.annotation;
 
-import net.sf.sail.emf.sailuserdata.EAnnotationBundle;
 import net.sf.sail.webapp.domain.Persistable;
 import net.sf.sail.webapp.domain.Workgroup;
 
@@ -62,15 +61,4 @@ public interface AnnotationBundle extends Persistable {
 	 */
 	public void setWorkgroup(Workgroup workgroup);
 
-	/**
-	 * Returns this <code>AnnotationBundle</code> represented as an
-	 * <code>EAnnotationBundle</code> object.
-	 * 
-	 * <code>bundle</code> must be set before calling this method.
-	 * If it is no set, the behavior of this method is undefined.
-	 * 
-	 * @return <code>EAnnotationBundle</code>
-	 */
-	public EAnnotationBundle getEAnnotationBundle();
-	
 }

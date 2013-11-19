@@ -36,7 +36,6 @@ import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
-import org.telscenter.pas.emf.pas.ECurnitmap;
 import org.telscenter.sail.webapp.domain.Run;
 import org.telscenter.sail.webapp.domain.project.impl.ProjectTypeVisitor;
 import org.telscenter.sail.webapp.presentation.util.json.JSONArray;
@@ -137,10 +136,8 @@ public class GradeWorkController extends AbstractController {
 					return new ModelAndView(new RedirectView("../../accessdenied.html"));
 				}
 			} else if( runId != null ) {
-				ECurnitmap curnitMap = gradingService.getCurnitmap(new Long(runId));
 				ModelAndView modelAndView = new ModelAndView();
 				modelAndView.addObject(RUN_ID, runId);
-				modelAndView.addObject(CURNIT_MAP, curnitMap);
 				
 				return modelAndView;
 			} else {

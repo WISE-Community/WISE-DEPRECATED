@@ -22,8 +22,6 @@
  */
 package org.telscenter.sail.webapp.domain.grading;
 
-import org.telscenter.pas.emf.pas.ECurnitmap;
-
 /**
  * An abstract transfer object for aggregating necessary objects to allow
  * WISE teachers to grade student work.
@@ -50,15 +48,4 @@ public interface GradeWorkAggregate {
 	 */
 	public void setRunId(Long runId);
 
-	/**
-	 * TODO HT comment me
-	 * @return
-	 */
-	public ECurnitmap getCurnitmap();
-
-	/**
-	 * TODO HT comment me
-	 */
-	public void setCurnitmap(ECurnitmap curnitmap);
-	
 }

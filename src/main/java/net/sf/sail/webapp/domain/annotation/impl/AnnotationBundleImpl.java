@@ -36,8 +36,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import net.sf.sail.emf.sailuserdata.EAnnotationBundle;
-import net.sf.sail.emf.sailuserdata.util.AnnotationBundleLoader;
 import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.annotation.AnnotationBundle;
 import net.sf.sail.webapp.domain.impl.WorkgroupImpl;
@@ -82,9 +80,6 @@ public class AnnotationBundleImpl implements AnnotationBundle {
     @JoinColumn(name = COLUMN_NAME_WORKGROUP_FK, nullable = false)
     private Workgroup workgroup;
     
-    @Transient
-    private EAnnotationBundle eAnnotationBundle;
-
 	/**
 	 * @see net.sf.sail.webapp.domain.annotation.AnnotationBundle#getBundle()
 	 */
@@ -111,16 +106,6 @@ public class AnnotationBundleImpl implements AnnotationBundle {
 	 */
 	public void setWorkgroup(Workgroup workgroup) {
 		this.workgroup = workgroup;
-	}
-	
-	/**
-	 * @see net.sf.sail.webapp.domain.annotation.AnnotationBundle#getEAnnotationBundle()
-	 */
-	public EAnnotationBundle getEAnnotationBundle() {
-		if (eAnnotationBundle == null) {
-			this.eAnnotationBundle = AnnotationBundleLoader.loadAnnotationBundle(bundle);
-		}
-		return eAnnotationBundle;
 	}
 	
 	/**

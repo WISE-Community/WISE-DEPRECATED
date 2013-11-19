@@ -22,7 +22,6 @@
  */
 package org.telscenter.sail.webapp.domain.grading.impl;
 
-import org.telscenter.pas.emf.pas.ECurnitmap;
 import org.telscenter.sail.webapp.domain.grading.GradeWorkAggregate;
 
 /**
@@ -33,8 +32,6 @@ public abstract class GradeWorkAggregateImpl implements GradeWorkAggregate {
 	
 	protected Long runId;
 	
-	protected ECurnitmap curnitmap;
-
 	/**
 	 * @see org.telscenter.sail.webapp.domain.grading.GradeWorkAggregate#getRunId()
 	 */
@@ -47,19 +44,5 @@ public abstract class GradeWorkAggregateImpl implements GradeWorkAggregate {
 	 */
 	public void setRunId(Long runId) {
 		this.runId = runId;
-	}
-	
-	/**
-	 * @see org.telscenter.sail.webapp.domain.grading.GradeWorkAggregate#getCurnitmap()
-	 */
-	public ECurnitmap getCurnitmap() {
-		return curnitmap;
-	}
-	
-	/**
-	 * @see org.telscenter.sail.webapp.domain.grading.GradeWorkAggregate#setCurnitmap(ECurnitmap)
-	 */
-	public void setCurnitmap(ECurnitmap curnitmap) {
-		this.curnitmap = curnitmap;
 	}
 }

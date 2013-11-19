@@ -30,7 +30,6 @@ import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.group.Group;
 
 import org.apache.commons.lang.StringUtils;
-import org.telscenter.pas.emf.pas.EStep;
 import org.telscenter.sail.webapp.domain.grading.IndividualScore;
 
 public class IndividualScoreNumericImpl implements IndividualScore {

@@ -321,7 +321,6 @@
 	<bean id="gradingService"
 		class="org.telscenter.sail.webapp.service.grading.impl.GradingServiceImpl">
 		<property name="sessionBundleService" ref="sessionBundleService" />
-		<property name="annotationBundleService" ref="annotationBundleService" />
 		<property name="runService" ref="runService" />
 	</bean>
 
@@ -351,7 +350,6 @@
 		class="org.telscenter.sail.webapp.service.workgroup.impl.WISEWorkgroupServiceImpl">
 		<property name="sdsWorkgroupDao" ref="sdsWorkgroupDao" />
 		<property name="workgroupDao" ref="wiseWorkgroupDao" />
-		<property name="annotationBundleService" ref="annotationBundleService" />
 		<property name="aclService" ref="aclServiceImpl" />
 		<property name="gradingService" ref="gradingService" />
 		<property name="offeringService" ref="runService" />

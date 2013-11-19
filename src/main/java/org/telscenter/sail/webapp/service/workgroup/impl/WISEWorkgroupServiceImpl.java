@@ -37,13 +37,11 @@ import net.sf.sail.webapp.domain.group.Group;
 import net.sf.sail.webapp.domain.impl.WorkgroupImpl;
 import net.sf.sail.webapp.domain.sds.SdsWorkgroup;
 import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
-import net.sf.sail.webapp.service.annotation.AnnotationBundleService;
 import net.sf.sail.webapp.service.group.GroupService;
 import net.sf.sail.webapp.service.workgroup.impl.WorkgroupServiceImpl;
 
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.transaction.annotation.Transactional;
-import org.telscenter.pas.emf.pas.ECurnitmap;
 import org.telscenter.sail.webapp.domain.Run;
 import org.telscenter.sail.webapp.domain.impl.ChangeWorkgroupParameters;
 import org.telscenter.sail.webapp.domain.project.ExternalProject;
@@ -62,8 +60,6 @@ import org.telscenter.sail.webapp.service.workgroup.WISEWorkgroupService;
 public class WISEWorkgroupServiceImpl extends WorkgroupServiceImpl implements
 		WISEWorkgroupService {
 
-	private AnnotationBundleService annotationBundleService;
-	
 	private GradingService gradingService;
 	
 	private GroupService groupService;
@@ -99,11 +95,6 @@ public class WISEWorkgroupServiceImpl extends WorkgroupServiceImpl implements
 	        
 	        this.aclService.addPermission(workgroup, BasePermission.ADMINISTRATION);
 	        
-	        ECurnitmap curnitmap = gradingService.getCurnitmap(run.getId());
-	        if (curnitmap != null) {
-	        	this.annotationBundleService.createAnnotationBundle(workgroup, curnitmap);
-	        }
-
 	        return workgroup;
 		}
 		
@@ -173,13 +164,6 @@ public class WISEWorkgroupServiceImpl extends WorkgroupServiceImpl implements
     	return workgroupCreated;
     }
 	
-	/**
-	 * @param annotationService the annotationService to set
-	 */
-	public void setAnnotationBundleService(AnnotationBundleService annotationBundleService) {
-		this.annotationBundleService = annotationBundleService;
-	}
-
 	/**
 	 * @param gradingService the gradingService to set
 	 */

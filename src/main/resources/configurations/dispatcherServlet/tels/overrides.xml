@@ -110,7 +110,6 @@
     		    /student/addproject.html=addProjectController
     		    /student/startproject.html=startProjectController
     		    /student/registerstudent.html=registerstudentController
-    		    /student/getannotationbundle.html=getAnnotationBundleController
 				/student/changestudentpassword.html=changeUserPasswordController
 				/student/service/workgroup.html=studentWorkgroupServiceController
 				/teacher/index.html=teacherIndexController
