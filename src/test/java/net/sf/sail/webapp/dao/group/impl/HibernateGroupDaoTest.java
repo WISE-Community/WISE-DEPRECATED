@@ -33,7 +33,6 @@ import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
 import net.sf.sail.webapp.domain.group.Group;
 import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
 import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.domain.sds.SdsUser;
 import net.sf.sail.webapp.junit.AbstractTransactionalDbTests;
 
 import org.hibernate.Session;
@@ -50,15 +49,9 @@ public class HibernateGroupDaoTest extends AbstractTransactionalDbTests {
 
     private static final String USERNAME_1 = "Hiroki";
 
-    private static final Long SDS_ID_1 = new Long(42);
-
     private static final String USERNAME_2 = "Cynick";
 
-    private static final Long SDS_ID_2 = new Long(15);
-
     private static final String USERNAME_3 = "Laurel";
-
-    private static final Long SDS_ID_3 = new Long(24);
 
     private static final String DEFAULT_NAME = "the heros";
 
@@ -125,11 +118,11 @@ public class HibernateGroupDaoTest extends AbstractTransactionalDbTests {
     @Override
     protected void onSetUpInTransaction() throws Exception {
         super.onSetUpInTransaction();
-        user1 = createNewUser(USERNAME_1, SDS_ID_1, this.sessionFactory
+        user1 = createNewUser(USERNAME_1, this.sessionFactory
                 .getCurrentSession());
-        user2 = createNewUser(USERNAME_2, SDS_ID_2, this.sessionFactory
+        user2 = createNewUser(USERNAME_2, this.sessionFactory
                 .getCurrentSession());
-        user3 = createNewUser(USERNAME_3, SDS_ID_3, this.sessionFactory
+        user3 = createNewUser(USERNAME_3, this.sessionFactory
                 .getCurrentSession());
     }
 
@@ -372,17 +365,12 @@ public class HibernateGroupDaoTest extends AbstractTransactionalDbTests {
         return (Long) actualRootGroupMap.get("ID");
     }
 
-    private User createNewUser(String username, Long sdsId, Session session) {
+    private User createNewUser(String username, Session session) {
         User user = (User) this.applicationContext.getBean("user");
-        SdsUser sdsUser = (SdsUser) this.applicationContext.getBean("sdsUser");
-        sdsUser.setFirstName(DEFAULT_NAME);
-        sdsUser.setLastName(DEFAULT_NAME);
-        sdsUser.setSdsObjectId(sdsId);
         MutableUserDetails userDetails = (MutableUserDetails) this.applicationContext
                 .getBean("mutableUserDetails");
         userDetails.setUsername(username);
         userDetails.setPassword(PASSWORD);
-        user.setSdsUser(sdsUser);
         user.setUserDetails(userDetails);
         session.save(user);
         return user;

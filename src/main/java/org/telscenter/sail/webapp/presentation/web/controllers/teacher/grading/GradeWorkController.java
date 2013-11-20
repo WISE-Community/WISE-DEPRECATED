@@ -41,13 +41,15 @@ import org.telscenter.sail.webapp.domain.project.impl.ProjectTypeVisitor;
 import org.telscenter.sail.webapp.presentation.util.json.JSONArray;
 import org.telscenter.sail.webapp.presentation.util.json.JSONException;
 import org.telscenter.sail.webapp.presentation.util.json.JSONObject;
-import org.telscenter.sail.webapp.service.grading.GradingService;
 import org.telscenter.sail.webapp.service.offering.RunService;
 
 /**
  * A Controller for TELS's grade by step
  *
  * @author Anthony Perritano
+ * @author Geoffrey Kwan
+ * @author Patrick Lawler
+ * 
  * @version $Id: $
  */
 public class GradeWorkController extends AbstractController {
@@ -56,8 +58,6 @@ public class GradeWorkController extends AbstractController {
 	
 	public static final String CURNIT_MAP = "curnitMap";
 
-	private GradingService gradingService;
-	
 	private RunService runService;
 	
 	Properties portalProperties;
@@ -268,14 +268,6 @@ public class GradeWorkController extends AbstractController {
 		return null;
 	}
 	
-		
-	/**
-	 * @param gradingService the gradingService to set
-	 */
-	public void setGradingService(GradingService gradingService) {
-		this.gradingService = gradingService;
-	}
-
 	/**
 	 * @param runService the runService to set
 	 */

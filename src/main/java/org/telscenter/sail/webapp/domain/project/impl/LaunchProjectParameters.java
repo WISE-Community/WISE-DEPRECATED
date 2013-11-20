@@ -41,8 +41,6 @@ public class LaunchProjectParameters {
 	
 	private WISEWorkgroup workgroup;
 	
-	private HttpRestTransport httpRestTransport;
-	
 	private HttpServletRequest httpServletRequest;
 
 	/**
@@ -71,20 +69,6 @@ public class LaunchProjectParameters {
 	 */
 	public void setWorkgroup(WISEWorkgroup workgroup) {
 		this.workgroup = workgroup;
-	}
-
-	/**
-	 * @return the httpRestTransport
-	 */
-	public HttpRestTransport getHttpRestTransport() {
-		return httpRestTransport;
-	}
-
-	/**
-	 * @param httpRestTransport the httpRestTransport to set
-	 */
-	public void setHttpRestTransport(HttpRestTransport httpRestTransport) {
-		this.httpRestTransport = httpRestTransport;
 	}
 
 	/**

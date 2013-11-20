@@ -87,16 +87,6 @@ public class StudentServiceImpl implements StudentService {
 				members.add(studentUser);
 				WISEWorkgroup workgroup = ((WISEWorkgroupService)workgroupService).createWISEWorkgroup(name, members, run, period);
 			}
-			
-			//if project being added is not ROlOO or External,
-			//an sdsUser needs to be created if it does not already existe	
-//			if(run.getProject().getProjectType()!=ProjectType.ROLOO){
-//				if(!(run.getProject() instanceof ExternalProject)){
-//					if(studentUser.getSdsUser()==null){
-//						this.userService.addSdsUserToUser(studentUser.getId());
-//					}
-//				}
-//			}
 		} else {
 			throw new StudentUserAlreadyAssociatedWithRunException(studentUser, run);
 		}

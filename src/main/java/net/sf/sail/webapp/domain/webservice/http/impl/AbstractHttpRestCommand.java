@@ -15,7 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.sail.webapp.dao.sds.impl;
+package net.sf.sail.webapp.domain.webservice.http.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +33,7 @@ import org.jdom.input.SAXBuilder;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
- * Abstract implementation of an SDS command using HTTP REST.
+ * Abstract implementation of a command using HTTP REST.
  * 
  * @author Cynick Young
  * 

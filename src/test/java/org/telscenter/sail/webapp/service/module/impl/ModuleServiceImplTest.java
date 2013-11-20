@@ -26,7 +26,6 @@ import org.easymock.EasyMock;
 import org.telscenter.sail.webapp.service.module.impl.ModuleServiceImpl;
 
 import net.sf.sail.webapp.dao.curnit.CurnitDao;
-import net.sf.sail.webapp.dao.sds.SdsCurnitDao;
 import net.sf.sail.webapp.domain.Curnit;
 import junit.framework.TestCase;
 
@@ -38,7 +37,6 @@ import junit.framework.TestCase;
  */
 public class ModuleServiceImplTest extends TestCase {
 
-    private SdsCurnitDao mockSdsCurnitDao;
     private CurnitDao<Curnit> mockCurnitDao;
  
 	private ModuleServiceImpl moduleServiceImpl;
@@ -51,9 +49,6 @@ public class ModuleServiceImplTest extends TestCase {
 		super.setUp();
 		this.moduleServiceImpl = new ModuleServiceImpl();
 		
-        this.mockSdsCurnitDao = EasyMock.createMock(SdsCurnitDao.class);
-        this.moduleServiceImpl.setSdsCurnitDao(this.mockSdsCurnitDao);
-
         this.mockCurnitDao = EasyMock.createMock(CurnitDao.class);
         this.moduleServiceImpl.setCurnitDao(this.mockCurnitDao);
 	}
@@ -64,7 +59,6 @@ public class ModuleServiceImplTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         this.moduleServiceImpl = null;
-        this.mockSdsCurnitDao = null;
         this.mockCurnitDao = null;
     }
     

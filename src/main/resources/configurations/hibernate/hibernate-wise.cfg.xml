@@ -53,18 +53,11 @@
             class="net.sf.sail.webapp.domain.authentication.impl.PersistentGrantedAuthority" />
         <mapping
             class="net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails" />
-        <mapping class="net.sf.sail.webapp.domain.sds.SdsCurnit" />
-        <mapping class="net.sf.sail.webapp.domain.sds.SdsJnlp" />
-        <mapping class="net.sf.sail.webapp.domain.sds.SdsOffering" />
-        <mapping class="net.sf.sail.webapp.domain.sds.SdsWorkgroup" />
-        <mapping class="net.sf.sail.webapp.domain.sds.SdsUser" />
         <mapping class="net.sf.sail.webapp.domain.impl.CurnitImpl" />
-        <mapping class="net.sf.sail.webapp.domain.impl.JnlpImpl" />
         <mapping class="net.sf.sail.webapp.domain.impl.OfferingImpl" />
         <mapping class="net.sf.sail.webapp.domain.impl.WorkgroupImpl" />
         <mapping class="net.sf.sail.webapp.domain.impl.UserImpl" />
         <mapping class="net.sf.sail.webapp.domain.group.impl.PersistentGroup" />
-        <mapping class="net.sf.sail.webapp.domain.annotation.impl.AnnotationBundleImpl" />
 		
 
 		<mapping class="org.telscenter.sail.webapp.domain.authentication.impl.StudentUserDetails" />

@@ -36,11 +36,6 @@ import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
 import net.sf.sail.webapp.domain.impl.OfferingImpl;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 import net.sf.sail.webapp.domain.impl.WorkgroupImpl;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
-import net.sf.sail.webapp.domain.sds.SdsJnlp;
-import net.sf.sail.webapp.domain.sds.SdsOffering;
-import net.sf.sail.webapp.domain.sds.SdsUser;
-import net.sf.sail.webapp.domain.sds.SdsWorkgroup;
 
 import org.hibernate.Session;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -57,33 +52,15 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
 
     private static final String PASSWORD = "password";
 
-    private static final Long SDS_ID = new Long(42);
-
-    private static final SdsCurnit DEFAULT_SDS_CURNIT = new SdsCurnit();
-
-    private static final SdsJnlp DEFAULT_SDS_JNLP = new SdsJnlp();
-
     private static final String DEFAULT_NAME = "the heros workgroup";
 
     private static final String GROUP_NAME = "the heros group";
 
     private static final String DEFAULT_URL = "http://woohoo";
 
-    private SdsWorkgroup sdsWorkgroup;
-    
     private Group group;
 
-    private SdsOffering defaultSdsOffering;
-
     private Offering defaultOffering;
-
-    /**
-     * @param defaultSdsOffering
-     *                the defaultSdsOffering to set
-     */
-    public void setDefaultSdsOffering(SdsOffering defaultSdsOffering) {
-        this.defaultSdsOffering = defaultSdsOffering;
-    }
 
     /**
      * @param defaultOffering
@@ -91,14 +68,6 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
      */
     public void setDefaultOffering(Offering defaultOffering) {
         this.defaultOffering = defaultOffering;
-    }
-
-    /**
-     * @param sdsWorkgroup
-     *                the sdsWorkgroup to set
-     */
-    public void setSdsWorkgroup(SdsWorkgroup sdsWorkgroup) {
-        this.sdsWorkgroup = sdsWorkgroup;
     }
 
     /**
@@ -119,21 +88,6 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
         this.dataObject = ((WorkgroupImpl) this.applicationContext
                 .getBean("workgroup"));
         
-        DEFAULT_SDS_CURNIT.setName(DEFAULT_NAME);
-        DEFAULT_SDS_CURNIT.setUrl(DEFAULT_URL);
-        DEFAULT_SDS_CURNIT.setSdsObjectId(SDS_ID);
-
-        DEFAULT_SDS_JNLP.setName(DEFAULT_NAME);
-        DEFAULT_SDS_JNLP.setUrl(DEFAULT_URL);
-        DEFAULT_SDS_JNLP.setSdsObjectId(SDS_ID);
-
-        this.defaultSdsOffering.setName(DEFAULT_NAME);
-        this.defaultSdsOffering.setSdsObjectId(SDS_ID);
-
-        this.sdsWorkgroup.setSdsObjectId(SDS_ID);
-        this.sdsWorkgroup.setName(DEFAULT_NAME);
-        this.dataObject.setSdsWorkgroup(this.sdsWorkgroup);
-        
         this.group.setName(GROUP_NAME);
         this.dataObject.setGroup(this.group);
 
@@ -147,13 +101,7 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
         super.onSetUpInTransaction();
         // an offering needs to exist already before a workgroup can be created
         Session session = this.sessionFactory.getCurrentSession();
-        session.save(DEFAULT_SDS_CURNIT); // save sds curnit
-        session.save(DEFAULT_SDS_JNLP); // save sds jnlp
-        this.defaultSdsOffering.setSdsCurnit(DEFAULT_SDS_CURNIT);
-        this.defaultSdsOffering.setSdsJnlp(DEFAULT_SDS_JNLP);
-        this.defaultOffering.setSdsOffering(this.defaultSdsOffering);
         session.save(this.defaultOffering); // save offering
-        this.sdsWorkgroup.setSdsOffering(this.defaultSdsOffering);
         this.dataObject.setOffering(this.defaultOffering);
         session.save(this.group);
         this.dataObject.setGroup(group);
@@ -166,23 +114,13 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
     protected void onTearDownAfterTransaction() throws Exception {
         super.onTearDownAfterTransaction();
         this.defaultOffering = null;
-        this.defaultSdsOffering = null;
         this.dataObject = null;
-        this.sdsWorkgroup = null;
         this.dao = null;
     }
 
     public void testSave_NonExistentOffering() {
-        SdsOffering nonExistentSdsOffering = (SdsOffering) this.applicationContext
-                .getBean("sdsOffering");
-        nonExistentSdsOffering.setSdsCurnit(DEFAULT_SDS_CURNIT);
-        nonExistentSdsOffering.setSdsJnlp(DEFAULT_SDS_JNLP);
-        nonExistentSdsOffering.setName(DEFAULT_NAME);
-        nonExistentSdsOffering.setSdsObjectId(SDS_ID);
-
         Offering nonExistentOffering = (Offering) this.applicationContext
                 .getBean("offering");
-        nonExistentOffering.setSdsOffering(nonExistentSdsOffering);
         this.dataObject.setOffering(nonExistentOffering);
         try {
             this.dao.save(this.dataObject);
@@ -194,16 +132,12 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
 	@Override
     public void testSave() {
         verifyDataStoreWorkgroupListIsEmpty();
-        // saving the workgroup should cascade to the sds workgroup object
         this.dao.save(this.dataObject);
         List<?> actualList = retrieveWorkgroupListFromDb();
         assertEquals(1, actualList.size());
         for (int i = 0; i < actualList.size(); i++) {
             Map<?, ?> actualWorkgroupMap = (Map<?, ?>) actualList.get(i);
             // * NOTE* the keys in the map are all in UPPERCASE!
-            String actualValue = (String) actualWorkgroupMap
-                    .get(SdsWorkgroup.COLUMN_NAME_WORKGROUP_NAME.toUpperCase());
-            assertEquals(DEFAULT_NAME, actualValue);
         }
         verifyDataStoreWorkgroupMembersListIsEmpty();
     }
@@ -213,9 +147,8 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
         verifyDataStoreWorkgroupMembersListIsEmpty();
 
         Session currentSession = this.sessionFactory.getCurrentSession();
-        User user = createNewUser(USERNAME, SDS_ID, currentSession);
+        User user = createNewUser(USERNAME, currentSession);
         this.dataObject.addMember(user);
-        // saving the workgroup should cascade to the sds workgroup object
         this.dao.save(this.dataObject);
         this.toilet.flush();
 
@@ -224,9 +157,6 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
         for (int i = 0; i < actualList.size(); i++) {
             Map<?, ?> actualMap = (Map<?, ?>) actualList.get(i);
             // * NOTE* the keys in the map are all in UPPERCASE!
-            String actualValue = (String) actualMap
-                    .get(SdsWorkgroup.COLUMN_NAME_WORKGROUP_NAME.toUpperCase());
-            assertEquals(DEFAULT_NAME, actualValue);
         }
 
         actualList = retrieveWorkgroupMembersListFromDb();
@@ -246,7 +176,7 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
         verifyDataStoreWorkgroupMembersListIsEmpty();
 
         Session currentSession = this.sessionFactory.getCurrentSession();
-        User user = createNewUser(USERNAME, SDS_ID, currentSession);
+        User user = createNewUser(USERNAME, currentSession);
         this.dataObject.addMember(user);
         this.dao.save(this.dataObject);
         this.toilet.flush();
@@ -261,17 +191,12 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
         verifyDataStoreWorkgroupMembersListIsEmpty();
     }
 
-    private User createNewUser(String username, Long sdsId, Session session) {
+    private User createNewUser(String username, Session session) {
         User user = (User) this.applicationContext.getBean("user");
-        SdsUser sdsUser = (SdsUser) this.applicationContext.getBean("sdsUser");
-        sdsUser.setFirstName(DEFAULT_NAME);
-        sdsUser.setLastName(DEFAULT_NAME);
-        sdsUser.setSdsObjectId(sdsId);
         MutableUserDetails userDetails = (MutableUserDetails) this.applicationContext
                 .getBean("mutableUserDetails");
         userDetails.setUsername(username);
         userDetails.setPassword(PASSWORD);
-        user.setSdsUser(sdsUser);
         user.setUserDetails(userDetails);
         session.save(user);
         return user;
@@ -327,17 +252,12 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
     }
 
     /*
-     * SELECT * FROM workgroups, sds_workgroups, offerings WHERE
-     * workgroups.sds_workgroup_fk = sds_workgroups.id AND
+     * SELECT * FROM workgroups, offerings WHERE
      * workgroups.offering_fk = offerings.id
      */
     private static final String RETRIEVE_WORKGROUP_LIST_SQL = "SELECT * FROM "
             + WorkgroupImpl.DATA_STORE_NAME + ", "
-            + SdsWorkgroup.DATA_STORE_NAME + ", "
             + OfferingImpl.DATA_STORE_NAME + " WHERE "
-            + WorkgroupImpl.DATA_STORE_NAME + "."
-            + WorkgroupImpl.COLUMN_NAME_SDS_WORKGROUP_FK + " = "
-            + SdsWorkgroup.DATA_STORE_NAME + ".id" + " AND "
             + WorkgroupImpl.DATA_STORE_NAME + "."
             + WorkgroupImpl.COLUMN_NAME_OFFERING_FK + " = "
             + OfferingImpl.DATA_STORE_NAME + ".id";

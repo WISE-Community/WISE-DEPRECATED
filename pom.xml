@@ -23,7 +23,7 @@
 	<packaging>war</packaging>
 	<name>Web-based Inquiry Science Environment</name>
 	<version>4.8</version>
-	<url>http://sail.sourceforge.net/</url>
+	<url>http://wise4.org</url>
 	<developers>
 		<developer>
 			<id>hiroki</id>

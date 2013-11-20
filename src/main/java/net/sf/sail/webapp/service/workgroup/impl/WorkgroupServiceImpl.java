@@ -24,15 +24,13 @@ import java.lang.Exception;
 
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.group.GroupDao;
-import net.sf.sail.webapp.dao.sds.HttpStatusCodeException;
-import net.sf.sail.webapp.dao.sds.SdsWorkgroupDao;
 import net.sf.sail.webapp.dao.workgroup.WorkgroupDao;
 import net.sf.sail.webapp.domain.Offering;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.group.Group;
 import net.sf.sail.webapp.domain.impl.WorkgroupImpl;
-import net.sf.sail.webapp.domain.sds.SdsWorkgroup;
+import net.sf.sail.webapp.domain.webservice.http.HttpStatusCodeException;
 import net.sf.sail.webapp.service.AclService;
 import net.sf.sail.webapp.service.UserService;
 import net.sf.sail.webapp.service.offering.OfferingService;
@@ -50,10 +48,6 @@ import org.telscenter.sail.webapp.domain.impl.ChangeWorkgroupParameters;
  * 
  */
 public class WorkgroupServiceImpl implements WorkgroupService {
-
-    private static final String PREVIEWWORKGROUPNAME = "preview workgroup";
-
-	protected SdsWorkgroupDao sdsWorkgroupDao;
 
     protected WorkgroupDao<Workgroup> workgroupDao;
     
@@ -73,15 +67,6 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 		this.aclService = aclService;
 	}
 
-	/**
-     * @param sdsWorkgroupDao
-     *            the sdsWorkgroupDao to set
-     */
-    @Required
-    public void setSdsWorkgroupDao(SdsWorkgroupDao sdsWorkgroupDao) {
-        this.sdsWorkgroupDao = sdsWorkgroupDao;
-    }
-
     /**
      * @param workgroupDao
      *            the workgroupDao to set
@@ -96,16 +81,9 @@ public class WorkgroupServiceImpl implements WorkgroupService {
      */
     @Transactional(rollbackFor = { HttpStatusCodeException.class })
 	public Workgroup createWorkgroup(String name, Set<User> members, Offering offering) {
-    	Workgroup workgroup;
-    	if(offering.getSdsOffering()!=null){
-            SdsWorkgroup sdsWorkgroup = createSdsWorkgroup(name, members, offering);
-            workgroup = createWorkgroup(members, offering, sdsWorkgroup);
-            this.sdsWorkgroupDao.save(workgroup.getSdsWorkgroup());
-    	} else {
-    		workgroup = createWorkgroup(members, offering, null);
-    	}
+    	Workgroup workgroup = createWorkgroup(members, offering);
 
-        this.groupDao.save(workgroup.getGroup());
+    	this.groupDao.save(workgroup.getGroup());
         this.workgroupDao.save(workgroup);
         
         this.aclService.addPermission(workgroup, BasePermission.ADMINISTRATION);
@@ -116,45 +94,19 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	/**
 	 * Creates and returns a <code>Workgroup</code> given parameters
 	 * 
-	 * @param members Set of users in this SdsWorkgroup
+	 * @param members Set of users in this Workgroup
 	 * @param offering which <code>Offering</code> this workgroup belongs in
-	 * @param sdsWorkgroup <code>SdsWorkgroup</code that this Workgroup contains
 	 * @return created <code>Workgroup</code>
 	 */
-	protected Workgroup createWorkgroup(Set<User> members, Offering offering,
-			SdsWorkgroup sdsWorkgroup) {
+	protected Workgroup createWorkgroup(Set<User> members, Offering offering) {
 		Workgroup workgroup = new WorkgroupImpl();
         for (User member : members) {
         	workgroup.addMember(member);
         }
         workgroup.setOffering(offering);
-        workgroup.setSdsWorkgroup(sdsWorkgroup);
 		return workgroup;
 	}
 
-	/**
-	 * Creates and returns a <code>SdsWorkgroup</code> given parameters
-	 * 
-	 * @param name what this SdsWorkgroup is called
-	 * @param members Set of users in this SdsWorkgroup
-	 * @param offering which <code>Offering</code> this workgroup belongs in
-	 * @return created <code>SdsWorkgroup</code>
-	 */
-	protected SdsWorkgroup createSdsWorkgroup(String name, Set<User> members,
-			Offering offering) {
-		SdsWorkgroup sdsWorkgroup = new SdsWorkgroup();
-        sdsWorkgroup.setName(name);
-        for (User member : members) {
-        	User user = null;
-        	if(member.getSdsUser()==null){
-        		user = this.userService.addSdsUserToUser(member.getId());
-        	}
-        	sdsWorkgroup.addMember(user.getSdsUser());
-        }
-    	sdsWorkgroup.setSdsOffering(offering.getSdsOffering());
-		return sdsWorkgroup;
-	}
-    
     /**
      * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#getWorkgroupIterator()
      */
@@ -191,16 +143,10 @@ public class WorkgroupServiceImpl implements WorkgroupService {
             Offering offering, List<Workgroup> workgroupList, User user,
             String previewWorkgroupName) {
         if (workgroupList.isEmpty()) {
-            SdsWorkgroup sdsWorkgroup = new SdsWorkgroup();
-            sdsWorkgroup.addMember(user.getSdsUser());
-            sdsWorkgroup.setName(previewWorkgroupName);
-            sdsWorkgroup.setSdsOffering(offering.getSdsOffering());
-            this.sdsWorkgroupDao.save(sdsWorkgroup);
 
             Workgroup workgroup = new WorkgroupImpl();
             workgroup.addMember(user);
             workgroup.setOffering(offering);
-            workgroup.setSdsWorkgroup(sdsWorkgroup);
             this.groupDao.save(workgroup.getGroup());
             this.workgroupDao.save(workgroup);
             
@@ -221,17 +167,6 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 			Workgroup workgroup = new WorkgroupImpl();
 			workgroup.addMember(previewUser);
 			workgroup.setOffering(previewOffering);
-			
-			if(previewOffering.getSdsOffering()!=null){
-				SdsWorkgroup sdsWorkgroup = new SdsWorkgroup();
-				sdsWorkgroup.addMember(previewUser.getSdsUser());
-				sdsWorkgroup.setName(PREVIEWWORKGROUPNAME);
-				sdsWorkgroup.setSdsOffering(previewOffering.getSdsOffering());
-				this.sdsWorkgroupDao.save(sdsWorkgroup);
-	
-
-				workgroup.setSdsWorkgroup(sdsWorkgroup);
-			}
 			
 			this.groupDao.save(workgroup.getGroup());
 			this.workgroupDao.save(workgroup);
@@ -268,21 +203,9 @@ public class WorkgroupServiceImpl implements WorkgroupService {
      */
     @Transactional()
 	public void addMembers(Workgroup workgroup, Set<User> membersToAdd) {
-    	SdsWorkgroup sdsWorkgroup = workgroup.getSdsWorkgroup();
-    	String workgroupName = workgroup.generateWorkgroupName();
-    	
-    	if(sdsWorkgroup!=null){
-    		for(User member : membersToAdd){
-    			sdsWorkgroup.addMember(member.getSdsUser());
-    		}
-    		sdsWorkgroup.setName(workgroupName);
-            this.sdsWorkgroupDao.save(sdsWorkgroup);
-    	}
-    	
     	for (User member : membersToAdd) {
     		workgroup.addMember(member);
     	}
-        workgroup.setSdsWorkgroup(sdsWorkgroup);
         this.groupDao.save(workgroup.getGroup());
     	this.workgroupDao.save(workgroup);
 	}
@@ -292,20 +215,10 @@ public class WorkgroupServiceImpl implements WorkgroupService {
      */
     @Transactional()
 	public void removeMembers(Workgroup workgroup, Set<User> membersToRemove) {
-    	SdsWorkgroup sdsWorkgroup = workgroup.getSdsWorkgroup();
-    	
-    	if(sdsWorkgroup!=null){
-    		for(User member : membersToRemove){
-    			sdsWorkgroup.removeMember(member.getSdsUser());
-    		}
-    		sdsWorkgroup.setName(workgroup.generateWorkgroupName());
-            this.sdsWorkgroupDao.save(sdsWorkgroup);
-    	}
     	
     	for (User member : membersToRemove) {
     		workgroup.removeMember(member);
     	}
-        workgroup.setSdsWorkgroup(sdsWorkgroup);
         this.groupDao.save(workgroup.getGroup());
     	this.workgroupDao.save(workgroup);
 	}

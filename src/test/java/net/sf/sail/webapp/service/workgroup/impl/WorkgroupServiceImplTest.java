@@ -25,8 +25,6 @@ import java.util.Set;
 import junit.framework.TestCase;
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.group.GroupDao;
-import net.sf.sail.webapp.dao.sds.HttpStatusCodeException;
-import net.sf.sail.webapp.dao.sds.SdsWorkgroupDao;
 import net.sf.sail.webapp.dao.workgroup.WorkgroupDao;
 import net.sf.sail.webapp.domain.Offering;
 import net.sf.sail.webapp.domain.User;
@@ -37,7 +35,7 @@ import net.sf.sail.webapp.domain.group.Group;
 import net.sf.sail.webapp.domain.impl.OfferingImpl;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 import net.sf.sail.webapp.domain.impl.WorkgroupImpl;
-import net.sf.sail.webapp.domain.sds.SdsWorkgroup;
+import net.sf.sail.webapp.domain.webservice.http.HttpStatusCodeException;
 import net.sf.sail.webapp.service.AclService;
 
 import org.easymock.EasyMock;
@@ -49,10 +47,6 @@ import org.easymock.EasyMock;
  * 
  */
 public class WorkgroupServiceImplTest extends TestCase {
-
-    private SdsWorkgroupDao mockSdsWorkgroupDao;
-
-    private SdsWorkgroup sdsWorkgroup;
 
     private WorkgroupDao<Workgroup> mockWorkgroupDao;
     
@@ -81,9 +75,6 @@ public class WorkgroupServiceImplTest extends TestCase {
         super.setUp();
         this.workgroupServiceImpl = new WorkgroupServiceImpl();
 
-        this.mockSdsWorkgroupDao = EasyMock.createMock(SdsWorkgroupDao.class);
-        this.workgroupServiceImpl.setSdsWorkgroupDao(this.mockSdsWorkgroupDao);
-
         this.mockWorkgroupDao = EasyMock.createMock(WorkgroupDao.class);
         this.workgroupServiceImpl.setWorkgroupDao(this.mockWorkgroupDao);
         
@@ -93,10 +84,7 @@ public class WorkgroupServiceImplTest extends TestCase {
 		this.mockAclService = EasyMock.createMock(AclService.class);
 		this.workgroupServiceImpl.setAclService(mockAclService);
 
-        this.sdsWorkgroup = new SdsWorkgroup();
-
         this.workgroup = new WorkgroupImpl();
-        this.workgroup.setSdsWorkgroup(this.sdsWorkgroup);
     }
 
     /**
@@ -106,8 +94,6 @@ public class WorkgroupServiceImplTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         this.workgroupServiceImpl = null;
-        this.mockSdsWorkgroupDao = null;
-        this.sdsWorkgroup = null;
         this.mockWorkgroupDao = null;
         this.mockGroupDao = null;
         this.workgroup = null;
@@ -125,8 +111,6 @@ public class WorkgroupServiceImplTest extends TestCase {
         List<Workgroup> inputList = new LinkedList<Workgroup>();
 
         this.mockGroupDao.save(null);
-        EasyMock.expectLastCall();
-        this.mockSdsWorkgroupDao.save(null);
         EasyMock.expectLastCall();
         this.mockWorkgroupDao.save(null);
         EasyMock.expectLastCall();
@@ -146,13 +130,11 @@ public class WorkgroupServiceImplTest extends TestCase {
         expectedList.add(this.workgroup);
         Offering expectedOffering = new OfferingImpl();
 
-        EasyMock.replay(this.mockSdsWorkgroupDao);
         EasyMock.replay(this.mockWorkgroupDao);
 
         assertEquals(expectedList, this.workgroupServiceImpl
                 .createPreviewWorkgroupForOfferingIfNecessary(expectedOffering,
                         expectedList, null, null));
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockWorkgroupDao);
     }
 
@@ -189,10 +171,6 @@ public class WorkgroupServiceImplTest extends TestCase {
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockGroupDao);
 
-        this.mockSdsWorkgroupDao.save(EasyMock.isA(SdsWorkgroup.class));
-        EasyMock.expectLastCall();
-        EasyMock.replay(this.mockSdsWorkgroupDao);
-
         this.mockWorkgroupDao.save(EasyMock.isA(Workgroup.class));
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockWorkgroupDao);
@@ -200,28 +178,21 @@ public class WorkgroupServiceImplTest extends TestCase {
         // test when we want to create a workgroup with no members
         Set<User> members = new HashSet<User>();
         Offering offering = new OfferingImpl();
-        offering.setSdsOffering(this.sdsWorkgroup.getSdsOffering());
         Workgroup createdWorkgroup = 
         	this.workgroupServiceImpl.createWorkgroup(DEFAULT_WORKGROUP_NAME, members, offering);
 
         assertEquals(0, createdWorkgroup.getMembers().size());
         EasyMock.verify(this.mockGroupDao);
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockWorkgroupDao);
 
         // now test when we want to create a workgroup with at least one member
         EasyMock.reset(this.mockGroupDao);
-        EasyMock.reset(this.mockSdsWorkgroupDao);
         EasyMock.reset(this.mockWorkgroupDao);
         
     	this.mockGroupDao.save(EasyMock.isA(Group.class));
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockGroupDao);
         
-        this.mockSdsWorkgroupDao.save(EasyMock.isA(SdsWorkgroup.class));
-        EasyMock.expectLastCall();
-        EasyMock.replay(this.mockSdsWorkgroupDao);
-
         this.mockWorkgroupDao.save(EasyMock.isA(Workgroup.class));
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockWorkgroupDao);
@@ -237,16 +208,10 @@ public class WorkgroupServiceImplTest extends TestCase {
 
         assertEquals(1, createdWorkgroup.getMembers().size());
         EasyMock.verify(this.mockGroupDao);
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockWorkgroupDao);
     }
     
     public void testCreateWorkgroup_BadRequestException() throws Exception {
-    	// test for createWorkgroup(String, Set<User>, Offering) method.
-        this.mockSdsWorkgroupDao.save(EasyMock.isA(SdsWorkgroup.class));
-        EasyMock.expectLastCall().andThrow(
-                new HttpStatusCodeException("bad request"));
-        EasyMock.replay(this.mockSdsWorkgroupDao);
 
         // expecting no calls to groupDao.save() and workgroupDao.save()
         EasyMock.replay(this.mockGroupDao);
@@ -255,26 +220,17 @@ public class WorkgroupServiceImplTest extends TestCase {
         try {
         	 Set<User> members = new HashSet<User>();
              Offering offering = new OfferingImpl();
-             offering.setSdsOffering(this.sdsWorkgroup.getSdsOffering());
             this.workgroupServiceImpl.createWorkgroup(DEFAULT_WORKGROUP_NAME, members, offering);
             fail("HttpStatusCodeException expected");
         } catch (HttpStatusCodeException expected) {
         }
         
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockGroupDao);   
         EasyMock.verify(this.mockWorkgroupDao);
     }
 
     public void testCreateWorkgroup_NetworkTransportException()
             throws Exception {
-    	// test for createWorkgroup(String, Set<User>, Offering) method.
-
-        this.mockSdsWorkgroupDao.save(EasyMock.isA(SdsWorkgroup.class));
-        EasyMock.expectLastCall().andThrow(
-                new HttpStatusCodeException("http status code exception"));
-        EasyMock.replay(this.mockSdsWorkgroupDao);
-
         // expecting no calls to groupDao.save() and workgroupDao.save()
         EasyMock.replay(this.mockGroupDao);
         EasyMock.replay(this.mockWorkgroupDao);
@@ -282,12 +238,10 @@ public class WorkgroupServiceImplTest extends TestCase {
         try {
         	Set<User> members = new HashSet<User>();
         	Offering offering = new OfferingImpl();
-        	offering.setSdsOffering(this.sdsWorkgroup.getSdsOffering());
         	this.workgroupServiceImpl.createWorkgroup(DEFAULT_WORKGROUP_NAME, members, offering);
         	fail("HttpStatusCodeException expected");
         } catch (HttpStatusCodeException expected) {
         }
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockGroupDao);   
         EasyMock.verify(this.mockWorkgroupDao);
     }
@@ -297,10 +251,6 @@ public class WorkgroupServiceImplTest extends TestCase {
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockGroupDao);
 
-        this.mockSdsWorkgroupDao.save(EasyMock.isA(SdsWorkgroup.class));
-        EasyMock.expectLastCall();
-        EasyMock.replay(this.mockSdsWorkgroupDao);
-
         this.mockWorkgroupDao.save(EasyMock.isA(Workgroup.class));
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockWorkgroupDao);
@@ -308,16 +258,13 @@ public class WorkgroupServiceImplTest extends TestCase {
         // test when we want to create a workgroup with no members
         Set<User> members = new HashSet<User>();
         Offering offering = new OfferingImpl();
-        offering.setSdsOffering(this.sdsWorkgroup.getSdsOffering());
 
         this.workgroupServiceImpl.createWorkgroup(DEFAULT_WORKGROUP_NAME, members, offering);
 
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockGroupDao);
         EasyMock.verify(this.mockWorkgroupDao);
         EasyMock.reset(this.mockGroupDao);
         EasyMock.reset(this.mockWorkgroupDao);
-        EasyMock.reset(this.mockSdsWorkgroupDao);
 
         // now add one member to that workgroup
         User newuser = new UserImpl();
@@ -333,24 +280,17 @@ public class WorkgroupServiceImplTest extends TestCase {
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockWorkgroupDao);
         
-        this.sdsWorkgroup.addMember(newuser.getSdsUser());
-        this.mockSdsWorkgroupDao.save(this.sdsWorkgroup);
-        EasyMock.expectLastCall();
-        EasyMock.replay(this.mockSdsWorkgroupDao);
-                
         Set<User> membersToAdd = new HashSet<User>();
         membersToAdd.add(newuser);
         this.workgroupServiceImpl.addMembers(this.workgroup, membersToAdd);
 
         assertEquals(1, this.workgroup.getMembers().size());
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockGroupDao);
         EasyMock.verify(this.mockWorkgroupDao);
         
         // try to add a new user to that workgroup. should increase membership by 1
         EasyMock.reset(this.mockGroupDao);
         EasyMock.reset(this.mockWorkgroupDao);
-        EasyMock.reset(this.mockSdsWorkgroupDao);
 
         User newuser2 = new UserImpl();
         MutableUserDetails userDetails2 = new PersistentUserDetails();
@@ -365,23 +305,16 @@ public class WorkgroupServiceImplTest extends TestCase {
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockWorkgroupDao);
         
-        this.sdsWorkgroup.addMember(newuser2.getSdsUser());
-        this.mockSdsWorkgroupDao.save(this.sdsWorkgroup);
-        EasyMock.expectLastCall();
-        EasyMock.replay(this.mockSdsWorkgroupDao);
-                
         membersToAdd.add(newuser2);
         this.workgroupServiceImpl.addMembers(this.workgroup, membersToAdd);
 
         assertEquals(2, this.workgroup.getMembers().size());
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockGroupDao);
         EasyMock.verify(this.mockWorkgroupDao);
 
         // try to add the already-existing user again...should not add
         EasyMock.reset(this.mockWorkgroupDao);
         EasyMock.reset(this.mockGroupDao);
-        EasyMock.reset(this.mockSdsWorkgroupDao);
 
         this.workgroup.addMember(newuser);
     	this.mockGroupDao.save(EasyMock.isA(Group.class));
@@ -392,26 +325,16 @@ public class WorkgroupServiceImplTest extends TestCase {
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockWorkgroupDao);
         
-        this.sdsWorkgroup.addMember(newuser.getSdsUser());
-        this.mockSdsWorkgroupDao.save(this.sdsWorkgroup);
-        EasyMock.expectLastCall();
-        EasyMock.replay(this.mockSdsWorkgroupDao);
-        
         membersToAdd = new HashSet<User>();
         membersToAdd.add(newuser);
         this.workgroupServiceImpl.addMembers(this.workgroup, membersToAdd);
 
         assertEquals(2, this.workgroup.getMembers().size());
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockGroupDao);
         EasyMock.verify(this.mockWorkgroupDao);
     }
     
     public void testRemoveMembers() {
-        this.mockSdsWorkgroupDao.save(EasyMock.isA(SdsWorkgroup.class));
-        EasyMock.expectLastCall();
-        EasyMock.replay(this.mockSdsWorkgroupDao);
-
         this.mockWorkgroupDao.save(EasyMock.isA(Workgroup.class));
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockWorkgroupDao);
@@ -419,14 +342,11 @@ public class WorkgroupServiceImplTest extends TestCase {
         // test when we want to create a workgroup with no members
         Set<User> members = new HashSet<User>();
         Offering offering = new OfferingImpl();
-        offering.setSdsOffering(this.sdsWorkgroup.getSdsOffering());
 
         this.workgroupServiceImpl.createWorkgroup(DEFAULT_WORKGROUP_NAME, members, offering);
 
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockWorkgroupDao);
         EasyMock.reset(this.mockWorkgroupDao);
-        EasyMock.reset(this.mockSdsWorkgroupDao);
 
         // now add one member to that workgroup
         User newuser = new UserImpl();
@@ -438,22 +358,15 @@ public class WorkgroupServiceImplTest extends TestCase {
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockWorkgroupDao);
         
-        this.sdsWorkgroup.addMember(newuser.getSdsUser());
-        this.mockSdsWorkgroupDao.save(this.sdsWorkgroup);
-        EasyMock.expectLastCall();
-        EasyMock.replay(this.mockSdsWorkgroupDao);
-                
         Set<User> membersToAdd = new HashSet<User>();
         membersToAdd.add(newuser);
         this.workgroupServiceImpl.addMembers(this.workgroup, membersToAdd);
 
         assertEquals(1, this.workgroup.getMembers().size());
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockWorkgroupDao);
         
         // try to remove that user from that workgroup. should decrease membership by 1
         EasyMock.reset(this.mockWorkgroupDao);
-        EasyMock.reset(this.mockSdsWorkgroupDao);
 
         // make sure workgroup was not deleted
         assertEquals(1, this.workgroup.getMembers().size());
@@ -463,22 +376,15 @@ public class WorkgroupServiceImplTest extends TestCase {
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockWorkgroupDao);
         
-        this.sdsWorkgroup.removeMember(newuser.getSdsUser());
-        this.mockSdsWorkgroupDao.save(this.sdsWorkgroup);
-        EasyMock.expectLastCall();
-        EasyMock.replay(this.mockSdsWorkgroupDao);
-
         Set<User> membersToRemove = new HashSet<User>();
         membersToRemove.add(newuser);
         this.workgroupServiceImpl.removeMembers(this.workgroup, membersToRemove);
         
         assertEquals(0, this.workgroup.getMembers().size());
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockWorkgroupDao);
         
      // try to remove two users from the workgroup. should decrease membership by 2
         EasyMock.reset(this.mockWorkgroupDao);
-        EasyMock.reset(this.mockSdsWorkgroupDao);
 
         assertEquals(0, this.workgroup.getMembers().size());
 
@@ -497,22 +403,14 @@ public class WorkgroupServiceImplTest extends TestCase {
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockWorkgroupDao);
         
-        this.sdsWorkgroup.removeMember(newuser.getSdsUser());
-        this.sdsWorkgroup.removeMember(newuser2.getSdsUser());
-        this.mockSdsWorkgroupDao.save(this.sdsWorkgroup);
-        EasyMock.expectLastCall();
-        EasyMock.replay(this.mockSdsWorkgroupDao);
-        
         membersToRemove.add(newuser2);
         this.workgroupServiceImpl.removeMembers(this.workgroup, membersToRemove);      
         
         assertEquals(0, this.workgroup.getMembers().size());
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockWorkgroupDao);
         
      // try to remove two users from a workgroup of 3. should decrease membership by 2. 1 member remains
         EasyMock.reset(this.mockWorkgroupDao);
-        EasyMock.reset(this.mockSdsWorkgroupDao);
         
         User newuser3 = new UserImpl();
         MutableUserDetails userDetails3 = new PersistentUserDetails();
@@ -531,17 +429,10 @@ public class WorkgroupServiceImplTest extends TestCase {
         EasyMock.expectLastCall();
         EasyMock.replay(this.mockWorkgroupDao);
         
-        this.sdsWorkgroup.removeMember(newuser.getSdsUser());
-        this.sdsWorkgroup.removeMember(newuser3.getSdsUser());
-        this.mockSdsWorkgroupDao.save(this.sdsWorkgroup);
-        EasyMock.expectLastCall();
-        EasyMock.replay(this.mockSdsWorkgroupDao);
-        
         membersToRemove.remove(newuser2);
         this.workgroupServiceImpl.removeMembers(this.workgroup, membersToRemove);      
         
         assertEquals(1, this.workgroup.getMembers().size());
-        EasyMock.verify(this.mockSdsWorkgroupDao);
         EasyMock.verify(this.mockWorkgroupDao);
 
     }

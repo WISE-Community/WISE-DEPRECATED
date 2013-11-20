@@ -25,15 +25,12 @@ package org.telscenter.sail.webapp.presentation.web.controllers.student;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
 import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
-import net.sf.sail.webapp.service.UserService;
 import net.sf.sail.webapp.service.workgroup.WorkgroupService;
 
 import org.springframework.beans.factory.annotation.Required;
@@ -45,7 +42,6 @@ import org.telscenter.sail.webapp.domain.authentication.impl.StudentUserDetails;
 import org.telscenter.sail.webapp.domain.run.StudentRunInfo;
 import org.telscenter.sail.webapp.service.offering.RunService;
 import org.telscenter.sail.webapp.service.student.StudentService;
-import org.telscenter.sail.webapp.service.workgroup.WISEWorkgroupService;
 
 import com.ibm.icu.util.Calendar;
 
@@ -61,20 +57,10 @@ public class StudentIndexController extends AbstractController {
 	
 	private StudentService studentService;
 	
-	private UserService userService;
-
-	private WorkgroupService workgroupService;
-	
-	private HttpRestTransport httpRestTransport;
-	
 	protected final static String CURRENT_STUDENTRUNINFO_LIST_KEY = "current_run_list";
 
 	protected final static String ENDED_STUDENTRUNINFO_LIST_KEY = "ended_run_list";
 
-	protected final static String HTTP_TRANSPORT_KEY = "http_transport";
-
-	protected final static String WORKGROUP_MAP_KEY = "workgroup_map";
-	
 	private static final String VIEW_NAME = "student/index";
 	
 	private final static String CURRENT_DATE = "current_date";
@@ -118,7 +104,6 @@ public class StudentIndexController extends AbstractController {
 		
 		for (Run run : runlist) {
 			StudentRunInfo studentRunInfo = studentService.getStudentRunInfo(user, run);
-			studentRunInfo.setWorkPDFUrl((WISEWorkgroupService) workgroupService, httpRestTransport, request);
 
 			if (run.isEnded()) {
 				ended_run_list.add(studentRunInfo);
@@ -199,7 +184,6 @@ public class StudentIndexController extends AbstractController {
 		modelAndView.addObject(VIEW_ANNOUNCEMENTS_RUNID, announcementRunIds);
 		modelAndView.addObject(CURRENT_STUDENTRUNINFO_LIST_KEY, current_run_list);
 		modelAndView.addObject(ENDED_STUDENTRUNINFO_LIST_KEY, ended_run_list);
-		modelAndView.addObject(HTTP_TRANSPORT_KEY, this.httpRestTransport);
 		modelAndView.addObject(CURRENT_DATE, null);
 
         return modelAndView;
@@ -219,29 +203,5 @@ public class StudentIndexController extends AbstractController {
 	@Required
 	public void setStudentService(StudentService studentService) {
 		this.studentService = studentService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * @param httpRestTransport
-	 *            the httpRestTransport to set
-	 */
-	@Required
-	public void setHttpRestTransport(HttpRestTransport httpRestTransport) {
-		this.httpRestTransport = httpRestTransport;
-	}
-
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	@Required
-	public void setWorkgroupService(WorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
 	}
 }

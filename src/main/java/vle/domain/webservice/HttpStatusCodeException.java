@@ -18,8 +18,7 @@
 package vle.domain.webservice;
 
 /**
- * This exception is thrown when a transaction with the sds returns an unexpected
- * http status code.
+ * This exception is thrown when a transaction returns an unexpected http status code.
  * 
  * @author Laurel Williams
  * 

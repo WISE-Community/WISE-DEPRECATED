@@ -22,18 +22,22 @@
  */
 package org.telscenter.sail.webapp.service.project.impl;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.verify;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.Jnlp;
 import net.sf.sail.webapp.domain.impl.CurnitImpl;
-import net.sf.sail.webapp.domain.impl.JnlpImpl;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
 import net.sf.sail.webapp.service.AclService;
 import net.sf.sail.webapp.service.curnit.CurnitService;
-import net.sf.sail.webapp.service.jnlp.JnlpService;
 
 import org.telscenter.sail.webapp.dao.project.ProjectDao;
 import org.telscenter.sail.webapp.domain.Run;
@@ -44,10 +48,6 @@ import org.telscenter.sail.webapp.domain.project.FamilyTag;
 import org.telscenter.sail.webapp.domain.project.Project;
 import org.telscenter.sail.webapp.domain.project.impl.ProjectImpl;
 import org.telscenter.sail.webapp.service.offering.RunService;
-
-import junit.framework.TestCase;
-
-import static org.easymock.EasyMock.*;
 
 
 /**
@@ -61,8 +61,6 @@ public class ProjectServiceImplTest extends TestCase {
 	private ProjectDao<Project> mockProjectDao;
 	
 	private CurnitService mockCurnitService;
-	
-	private JnlpService mockJnlpService;
 	
 	private RunService mockRunService;
 	
@@ -138,18 +136,11 @@ public class ProjectServiceImplTest extends TestCase {
 	
 	public void testCreateProject_success() throws Exception {
 		Curnit expectedCurnit = new CurnitImpl();
-		SdsCurnit sdsCurnit = new SdsCurnit();
-		sdsCurnit.setName("airbags");
-		expectedCurnit.setSdsCurnit(sdsCurnit);
 		expect(mockCurnitService.getById(EXISTING_CURNIT_ID)).andReturn(expectedCurnit);
 		replay(mockCurnitService);
-		Jnlp expectedJnlp = new JnlpImpl();
-		expect(mockJnlpService.getById(EXISTING_JNLP_ID)).andReturn(expectedJnlp);
-		replay(mockJnlpService);
 		Project projectToCreate = new ProjectImpl();
 		expect(mockProjectDao.createEmptyProject()).andReturn(projectToCreate);
 		projectToCreate.setCurnit(expectedCurnit);
-		projectToCreate.setJnlp(expectedJnlp);
 		
 		mockProjectDao.save(projectToCreate);
 		expectLastCall();
@@ -178,10 +169,8 @@ public class ProjectServiceImplTest extends TestCase {
 
 		assertEquals(createdProject.getPreviewRun(), expectedPreviewRun);
 		assertEquals(createdProject.getCurnit(), expectedCurnit);
-		assertEquals(createdProject.getJnlp(), expectedJnlp);
 		verify(mockProjectDao);
 		verify(mockCurnitService);
-		verify(mockJnlpService);
 		verify(mockRunService);
 	}
 	

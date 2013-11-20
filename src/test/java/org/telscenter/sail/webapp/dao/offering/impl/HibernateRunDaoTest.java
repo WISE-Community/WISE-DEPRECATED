@@ -34,19 +34,13 @@ import java.util.TreeSet;
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.group.impl.HibernateGroupDao;
 import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.Jnlp;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
 import net.sf.sail.webapp.domain.group.Group;
 import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
 import net.sf.sail.webapp.domain.impl.CurnitImpl;
-import net.sf.sail.webapp.domain.impl.JnlpImpl;
 import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
-import net.sf.sail.webapp.domain.sds.SdsJnlp;
-import net.sf.sail.webapp.domain.sds.SdsOffering;
-import net.sf.sail.webapp.domain.sds.SdsUser;
 
 import org.hibernate.Session;
 import org.telscenter.sail.webapp.domain.Run;
@@ -63,15 +57,10 @@ import org.telscenter.sail.webapp.junit.AbstractTransactionalDbTests;
  */
 public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
 
-    private static final Long SDS_ID = new Long(7);
-
     private static final String DEFAULT_NAME = "Airbags";
 
     private static final String DEFAULT_URL = "http://mrpotatoiscoolerthanwoody.com";
 
-    private static final SdsCurnit DEFAULT_SDS_CURNIT = new SdsCurnit();
-
-    private static final SdsJnlp DEFAULT_SDS_JNLP = new SdsJnlp();
 
 	private static final MutableUserDetails DEFAULT_USER_DETAILS = new PersistentUserDetails();
 
@@ -81,12 +70,8 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
 
 	private static Project DEFAULT_PROJECT = new ProjectImpl();
 
-	private static final SdsUser DEFAULT_SDS_USER = new SdsUser();
-
 	private static final Curnit DEFAULT_CURNIT = new CurnitImpl();
 
-	private static final Jnlp DEFAULT_JNLP = new JnlpImpl();
-	
     private Group DEFAULT_GROUP_1, DEFAULT_GROUP_2, DEFAULT_GROUP_3;
 
     private final Date DEFAULT_STARTTIME = Calendar.getInstance().getTime();
@@ -97,22 +82,12 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
 
     private final String RUNCODE_NOT_IN_DB = "diamonds54321";
 
-    private SdsOffering sdsOffering;
-
     private RunImpl defaultRun;
 
     private HibernateRunDao runDao;
 
     private HibernateGroupDao groupDao;
     
-    /**
-     * @param sdsOffering
-     *                the sdsOffering to set
-     */
-    public void setSdsOffering(SdsOffering sdsOffering) {
-        this.sdsOffering = sdsOffering;
-    }
-
     /**
      * @param defaultRun
      *                the defaultRun to set
@@ -152,38 +127,17 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
         DEFAULT_GROUP_3 = new PersistentGroup();
         DEFAULT_GROUP_3.setName("Period 3");
 
-        DEFAULT_SDS_CURNIT.setSdsObjectId(SDS_ID);
-        DEFAULT_SDS_CURNIT.setName(DEFAULT_NAME);
-        DEFAULT_SDS_CURNIT.setUrl(DEFAULT_URL);
-
-        DEFAULT_SDS_JNLP.setSdsObjectId(SDS_ID);
-        DEFAULT_SDS_JNLP.setName(DEFAULT_NAME);
-        DEFAULT_SDS_JNLP.setUrl(DEFAULT_URL);
-
-        this.sdsOffering.setSdsObjectId(SDS_ID);
-        this.sdsOffering.setName(DEFAULT_NAME);
-
-        this.defaultRun.setSdsOffering(this.sdsOffering);
-
         this.defaultRun.setStarttime(DEFAULT_STARTTIME);
         this.defaultRun.setRuncode(DEFAULT_RUNCODE);
-        
-        DEFAULT_SDS_USER.setSdsObjectId(SDS_ID);
-        DEFAULT_SDS_USER.setFirstName(DEFAULT_NAME);
-        DEFAULT_SDS_USER.setLastName(DEFAULT_NAME);
         
         DEFAULT_USER_DETAILS.setPassword(DEFAULT_NAME);
         DEFAULT_USER_DETAILS.setUsername(DEFAULT_NAME);
         DEFAULT_OWNER.setUserDetails(DEFAULT_USER_DETAILS);
-        DEFAULT_OWNER.setSdsUser(DEFAULT_SDS_USER);
 
         DEFAULT_OWNERS = new HashSet<User>();
         DEFAULT_OWNERS.add(DEFAULT_OWNER);
         
-        DEFAULT_CURNIT.setSdsCurnit(DEFAULT_SDS_CURNIT);
         DEFAULT_PROJECT.setCurnit(DEFAULT_CURNIT);
-        DEFAULT_JNLP.setSdsJnlp(DEFAULT_SDS_JNLP);
-        DEFAULT_PROJECT.setJnlp(DEFAULT_JNLP);
     }
 
     /**
@@ -193,17 +147,11 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
     protected void onSetUpInTransaction() throws Exception {
         super.onSetUpInTransaction();
         Session session = this.sessionFactory.getCurrentSession();
-        session.save(DEFAULT_SDS_CURNIT); // save sds curnit
-        session.save(DEFAULT_SDS_JNLP); // save sds jnlp
-        session.save(DEFAULT_SDS_USER);
         session.save(DEFAULT_USER_DETAILS);
         session.save(DEFAULT_OWNER);  // save owner
         session.save(DEFAULT_CURNIT);  // save curnit
-        session.save(DEFAULT_JNLP);  // save jnlp
         session.save(DEFAULT_PROJECT);  // save project
 
-        this.sdsOffering.setSdsCurnit(DEFAULT_SDS_CURNIT);
-        this.sdsOffering.setSdsJnlp(DEFAULT_SDS_JNLP);
         this.defaultRun.setOwners(DEFAULT_OWNERS);
         this.defaultRun.setProject(DEFAULT_PROJECT);
     }
@@ -314,7 +262,6 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
 
         assertEquals(DEFAULT_RUNCODE, run.getRuncode());
         assertEquals(DEFAULT_STARTTIME, run.getStarttime());
-        assertEquals(this.sdsOffering, run.getSdsOffering());
 
         // user the same runcode but with all uppercase and make sure
         // it can be retrieved
@@ -324,7 +271,6 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
 
         assertEquals(DEFAULT_RUNCODE, run.getRuncode());
         assertEquals(DEFAULT_STARTTIME, run.getStarttime());
-        assertEquals(this.sdsOffering, run.getSdsOffering());
         
         // choose random non-existent runcode and try to retrieve
         try{

@@ -22,7 +22,6 @@
  */
 package org.telscenter.sail.webapp.service.offering.impl;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -34,19 +33,13 @@ import junit.framework.TestCase;
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.curnit.CurnitDao;
 import net.sf.sail.webapp.dao.group.GroupDao;
-import net.sf.sail.webapp.dao.jnlp.JnlpDao;
-import net.sf.sail.webapp.dao.sds.SdsOfferingDao;
 import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.Jnlp;
 import net.sf.sail.webapp.domain.Offering;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.group.Group;
 import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
 import net.sf.sail.webapp.domain.impl.CurnitImpl;
-import net.sf.sail.webapp.domain.impl.JnlpImpl;
 import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
-import net.sf.sail.webapp.domain.sds.SdsJnlp;
 import net.sf.sail.webapp.service.AclService;
 
 import org.easymock.EasyMock;
@@ -86,11 +79,7 @@ public class RunServiceImplTest extends TestCase {
     	periodNames.add("Period 2");
     }
 
-    private SdsOfferingDao mockSdsOfferingDao;
-
     private CurnitDao<Curnit> mockCurnitDao;
-
-    private JnlpDao<Jnlp> mockJnlpDao;
 
     private RunDao<Run> mockRunDao;
 
@@ -114,14 +103,8 @@ public class RunServiceImplTest extends TestCase {
 
         this.runServiceImpl = new RunServiceImpl();
 
-        this.mockSdsOfferingDao = EasyMock.createMock(SdsOfferingDao.class);
-        this.runServiceImpl.setSdsOfferingDao(this.mockSdsOfferingDao);
-
         this.mockCurnitDao = EasyMock.createMock(CurnitDao.class);
         this.runServiceImpl.setCurnitDao(this.mockCurnitDao);
-
-        this.mockJnlpDao = EasyMock.createMock(JnlpDao.class);
-        this.runServiceImpl.setJnlpDao(this.mockJnlpDao);
 
         this.mockGroupDao = EasyMock.createMock(GroupDao.class);
         this.runServiceImpl.setGroupDao(mockGroupDao);
@@ -150,7 +133,6 @@ public class RunServiceImplTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         this.runServiceImpl = null;
-        this.mockSdsOfferingDao = null;
         this.mockRunDao = null;
 		this.mockAclService = null;
 		this.run = null;
@@ -186,27 +168,12 @@ public class RunServiceImplTest extends TestCase {
     }
 
     public void testCreateRunWithoutPeriods() throws Exception {
-        SdsJnlp sdsJnlp = new SdsJnlp();
-        sdsJnlp.setName(JNLP_NAME);
-        sdsJnlp.setUrl(JNLP_URL);
-        Jnlp jnlp = new JnlpImpl();
-        jnlp.setSdsJnlp(sdsJnlp);
-        List<Jnlp> jnlpList = new ArrayList<Jnlp>();
-        jnlpList.add(jnlp);
-        EasyMock.expect(this.mockJnlpDao.getList()).andReturn(jnlpList);
-        EasyMock.replay(this.mockJnlpDao);
-
-        SdsCurnit sdsCurnit = new SdsCurnit();
-        sdsCurnit.setName(CURNIT_NAME);
-        sdsCurnit.setUrl(CURNIT_URL);
         Curnit curnit = new CurnitImpl();
-        curnit.setSdsCurnit(sdsCurnit);
         EasyMock.expect(this.mockCurnitDao.getById(CURNIT_ID))
                 .andReturn(curnit);
         EasyMock.replay(this.mockCurnitDao);
 
         this.project.setCurnit(curnit);
-        this.project.setJnlp(jnlp);
 
         RunParameters runParameters = new RunParameters();
         runParameters.setName(CURNIT_NAME);
@@ -222,31 +189,12 @@ public class RunServiceImplTest extends TestCase {
         assertNotNull(run.getRuncode());
         assertTrue(run.getRuncode() instanceof String);
 
-        assertEquals(CURNIT_NAME, run.getSdsOffering().getSdsCurnit().getName());
-        assertEquals(CURNIT_URL, run.getSdsOffering().getSdsCurnit().getUrl());
-        assertEquals(JNLP_NAME, run.getSdsOffering().getSdsJnlp().getName());
-        assertEquals(JNLP_URL, run.getSdsOffering().getSdsJnlp().getUrl());
-        assertEquals(CURNIT_NAME, run.getSdsOffering().getName());
         assertEquals(0, run.getPeriods().size());
         EasyMock.verify(this.mockRunDao);
     }
 
     public void testCreateRunWithPeriods() throws Exception {
-        SdsJnlp sdsJnlp = new SdsJnlp();
-        sdsJnlp.setName(JNLP_NAME);
-        sdsJnlp.setUrl(JNLP_URL);
-        Jnlp jnlp = new JnlpImpl();
-        jnlp.setSdsJnlp(sdsJnlp);
-        List<Jnlp> jnlpList = new ArrayList<Jnlp>();
-        jnlpList.add(jnlp);
-        EasyMock.expect(this.mockJnlpDao.getList()).andReturn(jnlpList);
-        EasyMock.replay(this.mockJnlpDao);
-
-        SdsCurnit sdsCurnit = new SdsCurnit();
-        sdsCurnit.setName(CURNIT_NAME);
-        sdsCurnit.setUrl(CURNIT_URL);
         Curnit curnit = new CurnitImpl();
-        curnit.setSdsCurnit(sdsCurnit);
         EasyMock.expect(this.mockCurnitDao.getById(CURNIT_ID))
                 .andReturn(curnit);
         EasyMock.replay(this.mockCurnitDao);
@@ -277,11 +225,6 @@ public class RunServiceImplTest extends TestCase {
         assertNotNull(run.getRuncode());
         assertTrue(run.getRuncode() instanceof String);
 
-        assertEquals(CURNIT_NAME, run.getSdsOffering().getSdsCurnit().getName());
-        assertEquals(CURNIT_URL, run.getSdsOffering().getSdsCurnit().getUrl());
-        assertEquals(JNLP_NAME, run.getSdsOffering().getSdsJnlp().getName());
-        assertEquals(JNLP_URL, run.getSdsOffering().getSdsJnlp().getUrl());
-        assertEquals(CURNIT_NAME, run.getSdsOffering().getName());
         assertEquals(2, run.getPeriods().size());
         for (Group period : run.getPeriods()) {
         	assertTrue(periodNames.contains(period.getName()));

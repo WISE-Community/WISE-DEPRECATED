@@ -24,8 +24,8 @@ package net.sf.sail.webapp.domain.webservice.http;
  * 
  */
 import junit.framework.TestCase;
-import net.sf.sail.webapp.dao.sds.HttpStatusCodeException;
-import net.sf.sail.webapp.dao.sds.impl.AbstractHttpRestCommand;
+
+import net.sf.sail.webapp.domain.webservice.http.impl.AbstractHttpRestCommand;
 
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;

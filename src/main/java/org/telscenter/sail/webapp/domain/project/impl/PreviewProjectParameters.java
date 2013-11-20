@@ -26,8 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.telscenter.sail.webapp.domain.project.Project;
 
-import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
-
 /**
  * Parameters required to preview a project
  * @author Hiroki Terashima
@@ -35,8 +33,6 @@ import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
  */
 public class PreviewProjectParameters {
 
-	private HttpRestTransport httpRestTransport;
-	
 	private HttpServletRequest httpServletRequest;
 	
 	private Project project;
@@ -44,20 +40,6 @@ public class PreviewProjectParameters {
 	private String portalUrl;
 	
 	private String versionId;
-
-	/**
-	 * @return the httpRestTransport
-	 */
-	public HttpRestTransport getHttpRestTransport() {
-		return httpRestTransport;
-	}
-
-	/**
-	 * @param httpRestTransport the httpRestTransport to set
-	 */
-	public void setHttpRestTransport(HttpRestTransport httpRestTransport) {
-		this.httpRestTransport = httpRestTransport;
-	}
 
 	/**
 	 * @return the httpServletRequest

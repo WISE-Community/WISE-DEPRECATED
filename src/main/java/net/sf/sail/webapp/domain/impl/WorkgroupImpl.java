@@ -24,7 +24,6 @@ package net.sf.sail.webapp.domain.impl;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -44,7 +43,6 @@ import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.group.Group;
 import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
-import net.sf.sail.webapp.domain.sds.SdsWorkgroup;
 
 /**
  * @author Hiroki Terashima
@@ -57,9 +55,6 @@ public class WorkgroupImpl implements Workgroup {
 
     @Transient
     public static final String DATA_STORE_NAME = "workgroups";
-
-    @Transient
-    public static final String COLUMN_NAME_SDS_WORKGROUP_FK = "sds_workgroup_fk";
 
     @Transient
     public static final String COLUMN_NAME_OFFERING_FK = "offering_fk";
@@ -84,10 +79,6 @@ public class WorkgroupImpl implements Workgroup {
     @Column(name = "OPTLOCK")
     private Integer version = null;
 
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = SdsWorkgroup.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = COLUMN_NAME_SDS_WORKGROUP_FK, unique = true)
-    private SdsWorkgroup sdsWorkgroup;
-
     @OneToOne(targetEntity = OfferingImpl.class, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_OFFERING_FK, nullable = false)
     private Offering offering;
@@ -95,20 +86,6 @@ public class WorkgroupImpl implements Workgroup {
     @OneToOne(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_GROUP_FK, nullable = false)
     private Group group = new PersistentGroup();
-
-    /**
-     * @see net.sf.sail.webapp.domain.Workgroup#setSdsWorkgroup(net.sf.sail.webapp.domain.sds.SdsWorkgroup)
-     */
-    public void setSdsWorkgroup(SdsWorkgroup sdsWorkgroup) {
-        this.sdsWorkgroup = sdsWorkgroup;
-    }
-
-    /**
-     * @see net.sf.sail.webapp.domain.Workgroup#getSdsWorkgroup()
-     */
-    public SdsWorkgroup getSdsWorkgroup() {
-        return sdsWorkgroup;
-    }
 
     /**
      * @see net.sf.sail.webapp.domain.Workgroup#getMembers()
@@ -222,8 +199,6 @@ public class WorkgroupImpl implements Workgroup {
 		result = prime * result + ((group == null) ? 0 : group.hashCode());
 		result = prime * result
 				+ ((offering == null) ? 0 : offering.hashCode());
-		result = prime * result
-				+ ((sdsWorkgroup == null) ? 0 : sdsWorkgroup.hashCode());
 		return result;
 	}
 
@@ -248,11 +223,6 @@ public class WorkgroupImpl implements Workgroup {
 			if (other.offering != null)
 				return false;
 		} else if (!offering.equals(other.offering))
-			return false;
-		if (sdsWorkgroup == null) {
-			if (other.sdsWorkgroup != null)
-				return false;
-		} else if (!sdsWorkgroup.equals(other.sdsWorkgroup))
 			return false;
 		return true;
 	}

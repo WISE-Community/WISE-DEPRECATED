@@ -54,7 +54,6 @@
         id bigint not null auto_increment,
         name varchar(255),
         OPTLOCK integer,
-        sds_curnit_fk bigint unique,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -91,13 +90,6 @@
         group_fk bigint not null,
         user_fk bigint not null,
         primary key (group_fk, user_fk)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table jnlps (
-        id bigint not null auto_increment,
-        OPTLOCK integer,
-        sds_jnlp_fk bigint unique,
-        primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table message_recipient (
@@ -154,7 +146,6 @@
     create table offerings (
         id bigint not null auto_increment,
         OPTLOCK integer,
-        sds_offering_fk bigint unique,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -260,7 +251,6 @@
         projecttype integer,
         OPTLOCK integer,
         curnit_fk bigint,
-        jnlp_fk bigint,
         metadata_fk bigint unique,
         run_fk bigint unique,
         primary key (id)
@@ -333,60 +323,6 @@
         runs_fk bigint not null,
         shared_owners_fk bigint not null,
         primary key (runs_fk, shared_owners_fk)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table sds_curnits (
-        id bigint not null auto_increment,
-        name varchar(255) not null,
-        curnit_id bigint not null unique,
-        url varchar(255) not null,
-        OPTLOCK integer,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table sds_jnlps (
-        id bigint not null auto_increment,
-        name varchar(255) not null,
-        jnlp_id bigint not null unique,
-        url varchar(255) not null,
-        OPTLOCK integer,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table sds_offerings (
-        id bigint not null auto_increment,
-        name varchar(255) not null,
-        sds_curnitmap longtext,
-        offering_id bigint not null unique,
-        OPTLOCK integer,
-        sds_curnit_fk bigint not null,
-        sds_jnlp_fk bigint not null,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table sds_users (
-        id bigint not null auto_increment,
-        first_name varchar(255) not null,
-        last_name varchar(255) not null,
-        user_id bigint not null unique,
-        OPTLOCK integer,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table sds_workgroups (
-        id bigint not null auto_increment,
-        name varchar(255) not null,
-        workgroup_id bigint not null unique,
-        sds_sessionbundle longtext,
-        OPTLOCK integer,
-        sds_offering_fk bigint not null,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table sds_workgroups_related_to_sds_users (
-        sds_workgroup_fk bigint not null,
-        sds_user_fk bigint not null,
-        primary key (sds_workgroup_fk, sds_user_fk)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table student_attendance (
@@ -470,7 +406,6 @@
     create table users (
         id bigint not null auto_increment,
         OPTLOCK integer,
-        sds_user_fk bigint unique,
         user_details_fk bigint not null unique,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -488,7 +423,6 @@
         OPTLOCK integer,
         group_fk bigint not null,
         offering_fk bigint not null,
-        sds_workgroup_fk bigint unique,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -521,12 +455,6 @@
         add constraint FK2A2BB0099B5E7811 
         foreign key (owner_sid) 
         references acl_sid (id);
-
-    alter table curnits 
-        add index FK4329FBBA1B78E061 (sds_curnit_fk), 
-        add constraint FK4329FBBA1B78E061 
-        foreign key (sds_curnit_fk) 
-        references sds_curnits (id);
 
     alter table diyprojectcommunicators 
         add index FK83FA9ED96FC1637F (id), 
@@ -563,12 +491,6 @@
         add constraint FK3311F7E356CA53B6 
         foreign key (user_fk) 
         references users (id);
-
-    alter table jnlps 
-        add index FK6095FABA532A941 (sds_jnlp_fk), 
-        add constraint FK6095FABA532A941 
-        foreign key (sds_jnlp_fk) 
-        references sds_jnlps (id);
 
     alter table message_recipient 
         add index FK398E4FE1AAED82A8 (recipient_fk), 
@@ -624,12 +546,6 @@
         foreign key (owner) 
         references users (id);
 
-    alter table offerings 
-        add index FK73F0F12DAB4F6201 (sds_offering_fk), 
-        add constraint FK73F0F12DAB4F6201 
-        foreign key (sds_offering_fk) 
-        references sds_offerings (id);
-
     alter table premadecommentlists 
         add index FKF237B2CE65E358B0 (owner), 
         add constraint FKF237B2CE65E358B0 
@@ -665,12 +581,6 @@
         add constraint FKC479187A6E872393 
         foreign key (metadata_fk) 
         references project_metadata (id);
-
-    alter table projects 
-        add index FKC479187A9568F016 (jnlp_fk), 
-        add constraint FKC479187A9568F016 
-        foreign key (jnlp_fk) 
-        references jnlps (id);
 
     alter table projects 
         add index FKC479187A7F08E576 (curnit_fk), 
@@ -786,36 +696,6 @@
         foreign key (runs_fk) 
         references runs (id);
 
-    alter table sds_offerings 
-        add index FK242EBD70A532A941 (sds_jnlp_fk), 
-        add constraint FK242EBD70A532A941 
-        foreign key (sds_jnlp_fk) 
-        references sds_jnlps (id);
-
-    alter table sds_offerings 
-        add index FK242EBD701B78E061 (sds_curnit_fk), 
-        add constraint FK242EBD701B78E061 
-        foreign key (sds_curnit_fk) 
-        references sds_curnits (id);
-
-    alter table sds_workgroups 
-        add index FK440A0C42AB4F6201 (sds_offering_fk), 
-        add constraint FK440A0C42AB4F6201 
-        foreign key (sds_offering_fk) 
-        references sds_offerings (id);
-
-    alter table sds_workgroups_related_to_sds_users 
-        add index FKA31D36785AAC23E7 (sds_workgroup_fk), 
-        add constraint FKA31D36785AAC23E7 
-        foreign key (sds_workgroup_fk) 
-        references sds_workgroups (id);
-
-    alter table sds_workgroups_related_to_sds_users 
-        add index FKA31D3678F342C661 (sds_user_fk), 
-        add constraint FKA31D3678F342C661 
-        foreign key (sds_user_fk) 
-        references sds_users (id);
-
     alter table student_user_details 
         add index FKC5AA2952D1D25907 (id), 
         add constraint FKC5AA2952D1D25907 
@@ -852,12 +732,6 @@
         foreign key (user_details_fk) 
         references user_details (id);
 
-    alter table users 
-        add index FK6A68E08F342C661 (sds_user_fk), 
-        add constraint FK6A68E08F342C661 
-        foreign key (sds_user_fk) 
-        references sds_users (id);
-
     alter table wiseworkgroups 
         add index FKF16C83C9F309B437 (id), 
         add constraint FKF16C83C9F309B437 
@@ -875,12 +749,6 @@
         add constraint FKEC8E5025895EAE0A 
         foreign key (group_fk) 
         references groups (id);
-
-    alter table workgroups 
-        add index FKEC8E50255AAC23E7 (sds_workgroup_fk), 
-        add constraint FKEC8E50255AAC23E7 
-        foreign key (sds_workgroup_fk) 
-        references sds_workgroups (id);
 
     alter table workgroups 
         add index FKEC8E502553AE0756 (offering_fk), 

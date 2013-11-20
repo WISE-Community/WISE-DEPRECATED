@@ -26,10 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.sds.HttpStatusCodeException;
 import net.sf.sail.webapp.domain.Curnit;
 import net.sf.sail.webapp.domain.impl.CurnitParameters;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
+import net.sf.sail.webapp.domain.webservice.http.HttpStatusCodeException;
 import net.sf.sail.webapp.service.curnit.impl.CurnitServiceImpl;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -100,8 +99,6 @@ public class ModuleServiceImpl extends CurnitServiceImpl implements
 	@Override
 	@Transactional()
 	public void updateCurnit(Curnit curnit) {
-		SdsCurnit sdsCurnit = curnit.getSdsCurnit();
-		this.sdsCurnitDao.save(sdsCurnit);
 		this.moduleDao.save((Module) curnit);
 	}
 

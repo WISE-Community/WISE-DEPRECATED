@@ -28,7 +28,6 @@ import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
 import net.sf.sail.webapp.service.AclService;
 import net.sf.sail.webapp.service.workgroup.*;
 
@@ -43,7 +42,6 @@ import org.telscenter.sail.webapp.service.offering.RunService;
 import org.telscenter.sail.webapp.service.workgroup.WISEWorkgroupService;
 import org.telscenter.sail.webapp.domain.Run;
 import org.telscenter.sail.webapp.domain.project.impl.ProjectType;
-import org.telscenter.sail.webapp.domain.project.impl.ProjectTypeVisitor;
 import org.telscenter.sail.webapp.domain.teacher.management.ViewMyStudentsPeriod;
 import org.telscenter.sail.webapp.domain.workgroup.WISEWorkgroup;
 
@@ -66,8 +64,6 @@ public class ViewMyStudentsController extends AbstractController{
 	private WorkgroupService workgroupService;
 	
 	private AclService<Run> aclService;
-
-	private HttpRestTransport httpRestTransport;
 
 	protected final static String HTTP_TRANSPORT_KEY = "http_transport";
 
@@ -160,14 +156,6 @@ public class ViewMyStudentsController extends AbstractController{
 								&& !((WISEWorkgroup) workgroup).isTeacherWorkgroup() 
 								&& ((WISEWorkgroup) workgroup).getPeriod().getId().equals(period.getId())) {
 							// set url where this workgroup's work can be retrieved as PDF
-							ProjectTypeVisitor typeVisitor = new ProjectTypeVisitor();
-							if (!(run.getProject().accept(typeVisitor).equals("ExternalProject")) 
-									&& run.getProject().getProjectType() != ProjectType.ROLOO
-									&& run.getProject().getProjectType() != ProjectType.LD) {
-								String workPdfUrl = ((WISEWorkgroupService) workgroupService)
-								.generateWorkgroupWorkPdfUrlString(httpRestTransport, servletRequest, (WISEWorkgroup) workgroup);
-								((WISEWorkgroup) workgroup).setWorkPDFUrl(workPdfUrl);
-							}
 							periodworkgroups.add(workgroup);				
 						}
 					} catch (NullPointerException npe) {
@@ -195,7 +183,6 @@ public class ViewMyStudentsController extends AbstractController{
 			modelAndView.addObject(VIEWMYSTUDENTS_KEY, viewmystudentsallperiods);
 			modelAndView.addObject(RUN_KEY, run);
 			modelAndView.addObject(RUN_NAME_KEY, run.getName());
-			modelAndView.addObject(HTTP_TRANSPORT_KEY, this.httpRestTransport);
 			modelAndView.addObject(TAB_INDEX, tabIndex);
 			modelAndView.addObject(PROJECT_NAME, projectName);
 			modelAndView.addObject(PROJECT_ID, projectId);
@@ -204,15 +191,6 @@ public class ViewMyStudentsController extends AbstractController{
 		} else {
 			return new ModelAndView(new RedirectView("/wise/accessdenied.html"));
 		}
-	}
-
-	/**
-	 * @param httpRestTransport
-	 *            the httpRestTransport to set
-	 */
-	@Required
-	public void setHttpRestTransport(HttpRestTransport httpRestTransport) {
-		this.httpRestTransport = httpRestTransport;
 	}
 
 	/**

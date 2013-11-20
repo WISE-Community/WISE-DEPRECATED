@@ -22,7 +22,6 @@
  */
 package net.sf.sail.webapp.domain;
 
-import net.sf.sail.webapp.domain.sds.SdsOffering;
 
 /**
  * Offering domain object interface
@@ -33,21 +32,7 @@ import net.sf.sail.webapp.domain.sds.SdsOffering;
 public interface Offering extends Persistable {
 
     public Long getId();
-    /**
-     * Sets the SdsOffering object.
-     * 
-     * @param sdsOffering
-     *            the sdsOffering to set
-     */
-    public void setSdsOffering(SdsOffering sdsOffering);
 
-    /**
-     * Gets the SdsOffering object.
-     * 
-     * @return SdsOffering
-     */
-    public SdsOffering getSdsOffering();
-    
     /**
      * Visitor pattern, accepts OfferingVisitors
      * @param visitor

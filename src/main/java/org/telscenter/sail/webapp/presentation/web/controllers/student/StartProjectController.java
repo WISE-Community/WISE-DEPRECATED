@@ -36,7 +36,6 @@ import javax.servlet.http.HttpSession;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
 import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 
 import org.hibernate.StaleObjectStateException;
@@ -73,8 +72,6 @@ public class StartProjectController extends AbstractController {
 	private WISEWorkgroupService workgroupService;
 
 	private ProjectService projectService;
-	
-	private HttpRestTransport httpRestTransport;
 	
 	private StudentAttendanceService studentAttendanceService;
 	
@@ -159,7 +156,6 @@ public class StartProjectController extends AbstractController {
 				LaunchProjectParameters launchProjectParameters = new LaunchProjectParameters();
 				launchProjectParameters.setRun(run);
 				launchProjectParameters.setWorkgroup(workgroup);
-				launchProjectParameters.setHttpRestTransport(this.httpRestTransport);
 				launchProjectParameters.setHttpServletRequest(request);
 
 				// update servlet session
@@ -215,7 +211,6 @@ public class StartProjectController extends AbstractController {
 				LaunchProjectParameters launchProjectParameters = new LaunchProjectParameters();
 				launchProjectParameters.setRun(run);
 				launchProjectParameters.setWorkgroup(workgroup);
-				launchProjectParameters.setHttpRestTransport(this.httpRestTransport);
 				launchProjectParameters.setHttpServletRequest(request);
 				
 				//get the value for the student attendance
@@ -266,7 +261,6 @@ public class StartProjectController extends AbstractController {
 				LaunchProjectParameters launchProjectParameters = new LaunchProjectParameters();
 				launchProjectParameters.setRun(run);
 				launchProjectParameters.setWorkgroup(workgroup);
-				launchProjectParameters.setHttpRestTransport(this.httpRestTransport);
 				launchProjectParameters.setHttpServletRequest(request);
 				
 				//get the value for the student attendance
@@ -286,11 +280,6 @@ public class StartProjectController extends AbstractController {
 				modelAndView.addObject("runId", runId);
 				return modelAndView;
 			}
-
-//			
-//			throw new IllegalStateException("The user " + 
-//					user.getUserDetails().getUsername() + " is in more than one " +
-//							"groups for the run " + run.getSdsOffering().getName());
 		}
 
 	}
@@ -336,13 +325,6 @@ public class StartProjectController extends AbstractController {
 		this.runService = runService;
 	}
 	
-	/**
-	 * @param httpRestTransport the httpRestTransport to set
-	 */
-	public void setHttpRestTransport(HttpRestTransport httpRestTransport) {
-		this.httpRestTransport = httpRestTransport;
-	}
-
 	/**
 	 * @param workgroupService the workgroupService to set
 	 */

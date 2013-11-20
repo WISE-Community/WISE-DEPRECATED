@@ -36,7 +36,6 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
 import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 import net.sf.sail.webapp.service.UserService;
 
@@ -82,8 +81,6 @@ public class TeamSignInController extends SimpleFormController {
 
 	private ProjectService projectService;
 
-	private HttpRestTransport httpRestTransport;
-	
 	private StudentAttendanceService studentAttendanceService;
 	
 	private Properties portalProperties;
@@ -287,7 +284,6 @@ public class TeamSignInController extends SimpleFormController {
 		LaunchProjectParameters launchProjectParameters = new LaunchProjectParameters();
 		launchProjectParameters.setRun(run);
 		launchProjectParameters.setWorkgroup((WISEWorkgroup) workgroup);
-		launchProjectParameters.setHttpRestTransport(this.httpRestTransport);
 		launchProjectParameters.setHttpServletRequest(request);
 		StartProjectController.notifyServletSession(request, run);
 		modelAndView = (ModelAndView) projectService.launchProject(launchProjectParameters);
@@ -444,13 +440,6 @@ public class TeamSignInController extends SimpleFormController {
 	 */
 	public void setStudentService(StudentService studentService) {
 		this.studentService = studentService;
-	}
-
-	/**
-	 * @param httpRestTransport the httpRestTransport to set
-	 */
-	public void setHttpRestTransport(HttpRestTransport httpRestTransport) {
-		this.httpRestTransport = httpRestTransport;
 	}
 
 	/**

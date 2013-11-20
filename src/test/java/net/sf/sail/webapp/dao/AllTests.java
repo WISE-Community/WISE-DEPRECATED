@@ -9,9 +9,7 @@ import org.junit.runners.Suite;
 	net.sf.sail.webapp.dao.authentication.impl.AllTests.class,
 	net.sf.sail.webapp.dao.curnit.impl.AllTests.class,
 	net.sf.sail.webapp.dao.group.impl.AllTests.class,
-	net.sf.sail.webapp.dao.jnlp.impl.AllTests.class,
 	net.sf.sail.webapp.dao.offering.impl.AllTests.class,
-	net.sf.sail.webapp.dao.sds.impl.AllTests.class,
 	net.sf.sail.webapp.dao.user.impl.AllTests.class,
 	net.sf.sail.webapp.dao.workgroup.impl.AllTests.class
 })

@@ -45,10 +45,8 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.Jnlp;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.CurnitImpl;
-import net.sf.sail.webapp.domain.impl.JnlpImpl;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 
 import org.hibernate.annotations.Cascade;
@@ -172,12 +170,7 @@ public class ProjectImpl implements Project {
     @Cascade( { org.hibernate.annotations.CascadeType.SAVE_UPDATE })
 	@JoinColumn(name = COLUMN_NAME_CURNIT_FK, nullable = true, unique = false)
 	protected Curnit curnit;
-	
-	@ManyToOne(cascade = CascadeType.ALL, targetEntity = JnlpImpl.class, fetch = FetchType.EAGER)
-    @Cascade( { org.hibernate.annotations.CascadeType.SAVE_UPDATE })
-	@JoinColumn(name = COLUMN_NAME_JNLP_FK, nullable = true, unique = false)
-	protected Jnlp jnlp;
-	
+		
 	@OneToOne(targetEntity = RunImpl.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = COLUMN_NAME_PREVIEWOFFERING_FK, unique = true)
 	protected Run previewRun;
@@ -247,24 +240,10 @@ public class ProjectImpl implements Project {
 	}
 
 	/**
-	 * @see org.telscenter.sail.webapp.domain.project.Project#getJnlp()
-	 */
-	public Jnlp getJnlp() {
-		return jnlp;
-	}
-
-	/**
 	 * @see org.telscenter.sail.webapp.domain.project.Project#setCurnit(net.sf.sail.webapp.domain.Curnit)
 	 */
 	public void setCurnit(Curnit curnit) {
 		this.curnit = curnit;
-	}
-
-	/**
-	 * @see org.telscenter.sail.webapp.domain.project.Project#setJnlp(net.sf.sail.webapp.domain.Jnlp)
-	 */
-	public void setJnlp(Jnlp jnlp) {
-		this.jnlp = jnlp;
 	}
 
     /**
@@ -311,7 +290,6 @@ public class ProjectImpl implements Project {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((curnit == null) ? 0 : curnit.hashCode());
-		result = prime * result + ((jnlp == null) ? 0 : jnlp.hashCode());
 		return result;
 	}
 
@@ -331,11 +309,6 @@ public class ProjectImpl implements Project {
 			if (other.curnit != null)
 				return false;
 		} else if (!curnit.equals(other.curnit))
-			return false;
-		if (jnlp == null) {
-			if (other.jnlp != null)
-				return false;
-		} else if (!jnlp.equals(other.jnlp))
 			return false;
 		return true;
 	}

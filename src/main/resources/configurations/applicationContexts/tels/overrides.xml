@@ -51,7 +51,6 @@
 		<property name="userDetailsDao" ref="userDetailsDao" />
 		<property name="grantedAuthorityDao" ref="grantedAuthorityDao" />
 		<property name="userDao" ref="userDao" />
-		<property name="sdsUserDao" ref="sdsUserDao" />
 		<property name="passwordEncoder" ref="passwordEncoder" />
 		<property name="saltSource" ref="systemSaltSource" />
 	</bean>

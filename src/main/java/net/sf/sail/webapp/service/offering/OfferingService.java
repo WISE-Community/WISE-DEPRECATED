@@ -53,10 +53,7 @@ public interface OfferingService {
 	public Offering getOffering(Long id) throws ObjectNotFoundException;
 
 	/**
-	 * Creates a new <code>SdsOffering</code> on the SDS as well as an
-	 * <code>Offering</code> object in the local data store. A side effect is
-	 * that the offering id is set to the value that the SDS assigns to the new
-	 * offering.
+	 * Creates a new <code>Offering</code> object in the local data store.
 	 * 
 	 * @param offeringParameters
 	 *            The <code>OfferingParameters</code> that encapsulate

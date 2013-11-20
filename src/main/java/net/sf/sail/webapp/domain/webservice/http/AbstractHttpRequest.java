@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import net.sf.sail.webapp.dao.sds.HttpStatusCodeException;
 import net.sf.sail.webapp.domain.webservice.BadHeaderException;
 
 import org.apache.commons.httpclient.HttpMethod;

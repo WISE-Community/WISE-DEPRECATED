@@ -27,7 +27,6 @@ import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableGrantedAuthority;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.domain.sds.SdsUser;
 import net.sf.sail.webapp.junit.AbstractTransactionalDbTests;
 import net.sf.sail.webapp.service.UserService;
 import net.sf.sail.webapp.service.authentication.DuplicateUsernameException;
@@ -190,10 +189,8 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 	}
 
 	/*
-	 * This test checks creation of a user within the portal, but ignores the
-	 * creation of a user on the remote SDS. Tests for system integration are
-	 * beyond the scope of this testing mechanism. We are assuming the SdsUserId
-	 * cannot be null, enforced by the data store constraint.
+	 * This test checks creation of a user within the portal. Tests for system integration are
+	 * beyond the scope of this testing mechanism.
 	 */
 	public void testCreateUserWithNoEmail() throws Exception {
 		User expectedUser = this.userService.createUser(userDetails);
@@ -208,10 +205,8 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 	}
 
 	/*
-	 * This test checks creation of a user within the portal, but ignores the
-	 * creation of a user on the remote SDS. Tests for system integration are
-	 * beyond the scope of this testing mechanism. We are assuming the SdsUserId
-	 * cannot be null, enforced by the data store constraint.
+	 * This test checks creation of a user within the portal. Tests for system integration are
+	 * beyond the scope of this testing mechanism.
 	 */
 	public void testCreateUserWithEmail() throws Exception {
 		userDetails.setEmailAddress(EMAIL);
@@ -267,7 +262,6 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 		MutableUserDetails updatedUserDetails = updatedUser.getUserDetails();
 
 		assertEquals(createdUser.getId(), updatedUser.getId());
-		assertEquals(createdUser.getSdsUser(), updatedUser.getSdsUser());
 
 		assertEquals(USERNAME, updatedUserDetails.getUsername());
 		assertNull(updatedUserDetails.getEmailAddress());
@@ -277,17 +271,6 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 		assertEquals(UserDetailsService.USER_ROLE, grantedAuthority.iterator().next()
 				.getAuthority());
 		this.checkPasswordEncoding(updatedUserDetails, NEWW);
-	}
-	
-	/* This test simply confirms that UserService.createSdsUser(MutableUserDetails)
-	 * method returns a SdsUser object with its firstname and lastname attributes
-	 * correctly set for PAS's requirements (firstname = lastname = username)
-	 */
-	public void testCreateSdsUser() {
-		SdsUser createdSdsUser = this.userService.createSdsUser(userDetails);
-		assertEquals(createdSdsUser.getFirstName(), userDetails.getUsername());
-		assertEquals(createdSdsUser.getLastName(), userDetails.getUsername());
-		assertNull(createdSdsUser.getSdsObjectId());
 	}
 	
 	@SuppressWarnings("unchecked")

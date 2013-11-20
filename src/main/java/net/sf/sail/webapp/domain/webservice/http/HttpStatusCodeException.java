@@ -15,20 +15,19 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.sail.webapp.dao.sds;
-
-import java.util.List;
-
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
-import net.sf.sail.webapp.domain.webservice.http.HttpGetRequest;
+package net.sf.sail.webapp.domain.webservice.http;
 
 /**
+ * This exception is thrown when a transaction returns an unexpected http status code.
+ * 
  * @author Laurel Williams
- * 
  * @version $Id$
- * 
  */
-public interface SdsCurnitListCommand extends
-        SdsCommand<List<SdsCurnit>, HttpGetRequest> {
+public class HttpStatusCodeException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
+	public HttpStatusCodeException(String message) {
+		super(message);
+	}	
 }

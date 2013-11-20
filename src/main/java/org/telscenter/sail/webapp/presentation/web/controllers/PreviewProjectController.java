@@ -54,8 +54,6 @@ public class PreviewProjectController extends AbstractController {
 
 	private ProjectCommunicatorDao<ProjectCommunicator> diyProjectCommunicator;
 	
-	private HttpRestTransport httpRestTransport;
-
 	/**
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -99,7 +97,6 @@ public class PreviewProjectController extends AbstractController {
 			PreviewProjectParameters params = new PreviewProjectParameters();
 			params.setProject(project);
 			params.setHttpServletRequest(request);
-			params.setHttpRestTransport(httpRestTransport);
 			params.setPortalUrl(Util.getPortalUrl(request));
 			params.setVersionId(request.getParameter(VERSION_ID));
 			return (ModelAndView) projectService.previewProject(params);
@@ -117,13 +114,6 @@ public class PreviewProjectController extends AbstractController {
 	
 	public void setRunService(RunService runService) {
 		this.runService = runService;
-	}
-
-	/**
-	 * @param httpRestTransport the httpRestTransport to set
-	 */
-	public void setHttpRestTransport(HttpRestTransport httpRestTransport) {
-		this.httpRestTransport = httpRestTransport;
 	}
 
 	/**

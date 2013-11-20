@@ -17,8 +17,6 @@
  */
 package net.sf.sail.webapp;
 
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.Jnlp;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.service.authentication.UserDetailsService;
 import net.sf.sail.webapp.spring.SpringConfiguration;
@@ -76,15 +74,6 @@ public class Initializer {
 			SecurityContext securityContext = new SecurityContextImpl();
 			securityContext.setAuthentication(authority);
 			SecurityContextHolder.setContext(securityContext);
-
-			CreateDefaultOfferings createDefaultOfferings = new CreateDefaultOfferings(
-					applicationContext);
-			Curnit[] curnits = createDefaultOfferings
-					.createDefaultCurnits(applicationContext);
-			Jnlp[] jnlps = createDefaultOfferings
-					.createDefaultJnlps(applicationContext);
-			createDefaultOfferings.createDefaultOfferings(applicationContext,
-					curnits, jnlps);
 
 		} catch (Exception all) {
 			System.err.println(all.getLocalizedMessage());

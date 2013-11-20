@@ -34,7 +34,6 @@ import org.telscenter.sail.webapp.service.authentication.UserDetailsService;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
-import net.sf.sail.webapp.domain.sds.SdsUser;
 
 /**
  * @author Laurel Williams
@@ -49,9 +48,6 @@ public class UserImpl implements User {
     public static final String DATA_STORE_NAME = "users";
 
     @Transient
-    public static final String COLUMN_NAME_SDS_USER_FK = "sds_user_fk";
-
-    @Transient
     public static final String COLUMN_NAME_USER_DETAILS_FK = "user_details_fk";
 
     @Transient
@@ -64,10 +60,6 @@ public class UserImpl implements User {
     @Version
     @Column(name = "OPTLOCK")
     private Integer version = null;
-
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = SdsUser.class)
-    @JoinColumn(name = COLUMN_NAME_SDS_USER_FK, nullable = true, unique = true)
-    private SdsUser sdsUser;
 
     @OneToOne(cascade = CascadeType.ALL, targetEntity = PersistentUserDetails.class)
     @JoinColumn(name = COLUMN_NAME_USER_DETAILS_FK, nullable = false, unique = true)
@@ -85,20 +77,6 @@ public class UserImpl implements User {
      */
     public void setUserDetails(MutableUserDetails userDetails) {
         this.userDetails = userDetails;
-    }
-
-    /**
-     * @see net.sf.sail.webapp.domain.User#getSdsUser()
-     */
-    public SdsUser getSdsUser() {
-        return sdsUser;
-    }
-
-    /**
-     * @see net.sf.sail.webapp.domain.User#setSdsUser(net.sf.sail.webapp.domain.sds.SdsUser)
-     */
-    public void setSdsUser(SdsUser sdsUser) {
-        this.sdsUser = sdsUser;
     }
 
     /**
@@ -149,8 +127,6 @@ public class UserImpl implements User {
     public int hashCode() {
         final int PRIME = 31;
         int result = 1;
-        result = PRIME * result
-                + ((this.sdsUser == null) ? 0 : this.sdsUser.hashCode());
         result = PRIME
                 * result
                 + ((this.userDetails == null) ? 0 : this.userDetails.hashCode());
@@ -169,11 +145,6 @@ public class UserImpl implements User {
         if (getClass() != obj.getClass())
             return false;
         final UserImpl other = (UserImpl) obj;
-        if (this.sdsUser == null) {
-            if (other.sdsUser != null)
-                return false;
-        } else if (!this.sdsUser.equals(other.sdsUser))
-            return false;
         if (this.userDetails == null) {
             if (other.userDetails != null)
                 return false;

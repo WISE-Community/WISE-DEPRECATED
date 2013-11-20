@@ -31,9 +31,6 @@ import javax.servlet.http.HttpSession;
 
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
-import net.sf.sail.webapp.domain.sds.SdsJnlp;
-import net.sf.sail.webapp.domain.sds.SdsOffering;
 import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
 import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 
@@ -57,8 +54,6 @@ import org.telscenter.sail.webapp.service.student.StudentService;
 public class StudentIndexControllerTest extends AbstractModelAndViewTests {
 	
 	private StudentIndexController studentIndexController;
-
-    private HttpRestTransport mockHttpTransport;
 
     private MockHttpServletRequest request;
 
@@ -91,21 +86,7 @@ public class StudentIndexControllerTest extends AbstractModelAndViewTests {
         this.mockRunService = EasyMock.createMock(RunService.class);
         this.mockStudentService = EasyMock.createMock(StudentService.class);
     	
-        SdsOffering sdsOffering = new SdsOffering();
-
-        SdsCurnit curnit = new SdsCurnit();
-        curnit.setSdsObjectId(new Long(1));
-        sdsOffering.setSdsCurnit(curnit);
-
-        SdsJnlp jnlp = new SdsJnlp();
-        jnlp.setSdsObjectId(new Long(2));
-        sdsOffering.setSdsJnlp(jnlp);
-
-        sdsOffering.setName("test");
-        sdsOffering.setSdsObjectId(new Long(3));
-        
         mockRun = new RunImpl();
-        mockRun.setSdsOffering(sdsOffering);
         
         this.expectedRunList = new LinkedList<Run>();
         this.expectedRunList.add(mockRun);
@@ -119,11 +100,9 @@ public class StudentIndexControllerTest extends AbstractModelAndViewTests {
 
         this.expected_ended_studentruninfo_list = new ArrayList<StudentRunInfo>();
 
-        this.mockHttpTransport = EasyMock.createMock(HttpRestTransport.class);
         this.studentIndexController = new StudentIndexController();
         this.studentIndexController.setRunService(this.mockRunService);
         this.studentIndexController.setStudentService(this.mockStudentService);
-        this.studentIndexController.setHttpRestTransport(this.mockHttpTransport);
     }
     
     protected void tearDown() throws Exception {
@@ -131,7 +110,6 @@ public class StudentIndexControllerTest extends AbstractModelAndViewTests {
     	this.request = null;
     	this.response = null;
     	this.mockRunService = null;
-    	this.mockHttpTransport = null;
     }
     
     @Test public void testHandleRequestInternal_WithRun() throws Exception {
@@ -155,8 +133,6 @@ public class StudentIndexControllerTest extends AbstractModelAndViewTests {
 
     	assertModelAttributeValue(modelAndView, 
     			ControllerUtil.USER_KEY, user);
-    	assertModelAttributeValue(modelAndView, 
-    			StudentIndexController.HTTP_TRANSPORT_KEY, mockHttpTransport);
     	EasyMock.verify(mockRunService);
     }
     
@@ -172,8 +148,6 @@ public class StudentIndexControllerTest extends AbstractModelAndViewTests {
     			StudentIndexController.CURRENT_STUDENTRUNINFO_LIST_KEY, emptyRunList);
     	assertModelAttributeValue(modelAndView, 
     			ControllerUtil.USER_KEY, user);
-    	assertModelAttributeValue(modelAndView, 
-    			StudentIndexController.HTTP_TRANSPORT_KEY, mockHttpTransport);
     	EasyMock.verify(mockRunService);
     }
 

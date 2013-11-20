@@ -35,7 +35,6 @@
 		class="net.sf.sail.webapp.presentation.web.controllers.offerings.OfferingListController">
 		<property name="offeringService" ref="offeringService" />
 		<property name="workgroupService" ref="workgroupService" />
-		<property name="httpRestTransport" ref="httpRestTransport" />
 	</bean>
 	
 	<bean
@@ -79,13 +78,6 @@
 		<property name="groupService" ref="groupService" />
 	</bean>
 
-	<bean
-		class="net.sf.sail.webapp.presentation.web.controllers.offerings.AuthoringJnlpLauncherController">
-		<property name="jnlpFileName"
-			value="authoring-everything-snapshot.jnlp" />
-		<property name="modifier" ref="authoringjnlpmodifier" />
-	</bean>
-
 	<bean id="userDetailsValidator"
 		class="net.sf.sail.webapp.presentation.validators.UserDetailsValidator" />
 
@@ -125,18 +117,6 @@
     	<property name="validator" ref="curnitParametersValidator" />
     </bean>
 
-    <bean id="jnlpParametersValidator"
-        class="net.sf.sail.webapp.presentation.validators.JnlpParametersValidator" />
-    
-    <bean id="registerJnlpController"
-    	class="net.sf.sail.webapp.presentation.web.controllers.jnlp.RegisterJnlpController">
-    	<property name="jnlpService" ref="jnlpService" />
-    	<property name="commandName" value="jnlpParameters" />
-    	<property name="commandClass"
-    	    value="net.sf.sail.webapp.domain.impl.JnlpParameters" />
-    	<property name="validator" ref="jnlpParametersValidator" />
-    </bean>
-    
     <bean id="changePasswordParametersValidator"
 		class="net.sf.sail.webapp.presentation.validators.ChangePasswordParametersValidator" >
 		<dwr:remote javascript="ChangePasswordParametersValidator" />

@@ -94,10 +94,8 @@
 		class="org.telscenter.sail.webapp.presentation.web.controllers.TeacherIndexController">
 		<property name="runService" ref="runService" />
 		<property name="messageService" ref="messageService" />
-		<property name="userService" ref="userService" />
 		<property name="projectService" ref="projectService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="httpRestTransport" ref="httpRestTransport" />
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
@@ -123,7 +121,6 @@
 		class="org.telscenter.sail.webapp.presentation.web.controllers.student.StartProjectController">
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="httpRestTransport" ref="httpRestTransport" />
 		<property name="projectService" ref="projectService" />
 		<property name="studentAttendanceService" ref="studentAttendanceService" />
 		<property name="portalProperties" ref="portalproperties" />
@@ -133,7 +130,6 @@
 		class="org.telscenter.sail.webapp.presentation.web.controllers.PreviewProjectController">
 		<property name="runService" ref="runService" />
 		<property name="projectService" ref="projectService" />
-		<property name="httpRestTransport" ref="httpRestTransport" />
 		<property name="diyProjectCommunicator" ref="diyProjectCommunicatorDao" />
 	</bean>
 
@@ -146,7 +142,6 @@
 	<bean id="authorProjectController"
 		class="org.telscenter.sail.webapp.presentation.web.controllers.author.project.AuthorProjectController">
 		<property name="projectService" ref="projectService" />
-		<property name="httpRestTransport" ref="httpRestTransport" />
 		<property name="curnitService" ref="curnitService" />
 		<property name="portalProperties" ref="portalproperties" />
 		<property name="tagger" ref="taggerController" />
@@ -162,7 +157,6 @@
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="userService" ref="userService" />
 		<property name="studentService" ref="studentService" />
-		<property name="httpRestTransport" ref="httpRestTransport" />
 		<property name="projectService" ref="projectService" />
 		<property name="validator" ref="teamSignInFormValidator" />
 		<property name="formView" value="student/teamsignin" />
@@ -178,7 +172,6 @@
 	<bean id="gradeWorkController"
 		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.grading.GradeWorkController">
 		<property name="runService" ref="runService" />
-		<property name="gradingService" ref="gradingService" />
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
@@ -252,9 +245,6 @@
 		class="org.telscenter.sail.webapp.presentation.web.controllers.student.StudentIndexController">
 		<property name="runService" ref="runService" />
 		<property name="studentService" ref="studentService" />
-		<property name="userService" ref="userService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="httpRestTransport" ref="httpRestTransport" />
 	</bean>
 
 	<bean id="studentVLEController"
@@ -305,10 +295,8 @@
 	<bean id="myClassroomRunsMainController"
 		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.MyClassroomRunsMainController">
 		<property name="runService" ref="runService" />
-		<property name="userService" ref="userService" />
 		<property name="projectService" ref="projectService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="httpRestTransport" ref="httpRestTransport" />
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
@@ -316,10 +304,8 @@
 		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ClassroomRunListController">
 		<property name="portalProperties" ref="portalproperties" />
 		<property name="runService" ref="runService" />
-		<property name="userService" ref="userService" />
 		<property name="projectService" ref="projectService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="httpRestTransport" ref="httpRestTransport" />
 	</bean>
 
 	<bean id="minifyProjectController"
@@ -502,7 +488,6 @@
 		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ViewMyStudentsController">
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="httpRestTransport" ref="httpRestTransport" />
 		<property name="aclService" ref="aclServiceImpl" />
 	</bean>
 

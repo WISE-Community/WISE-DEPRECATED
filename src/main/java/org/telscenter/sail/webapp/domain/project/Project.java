@@ -30,7 +30,6 @@ import org.telscenter.sail.webapp.domain.Run;
 import org.telscenter.sail.webapp.domain.project.impl.ProjectType;
 
 import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.Jnlp;
 import net.sf.sail.webapp.domain.Persistable;
 import net.sf.sail.webapp.domain.User;
 
@@ -53,18 +52,6 @@ import net.sf.sail.webapp.domain.User;
  * @version $Id$
  */
 public interface Project extends Persistable {
-	
-	/**
-	 * Set the <code>Jnlp</code> of this project
-	 * @param Jnlp
-	 */
-	public void setJnlp(Jnlp jnlp);
-
-	/**
-	 * Get the <code>Jnlp</code> of this project
-	 * @return Jnlp
-	 */
-	public Jnlp getJnlp();
 	
 	/**
 	 * Set the <code>Curnit</code> of this project

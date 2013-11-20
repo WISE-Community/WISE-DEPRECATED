@@ -108,11 +108,8 @@ public interface WorkgroupService {
     public List<Workgroup> getWorkgroupList();
    
     /**
-     * Creates a new <code>SdsWorkgroup</code> on the SDS as well as a
-     * <code>Workgroup</code> object in the local data store, and then associates
-     * that workgroup to an offering.  A side effect is
-     * that the workgroup id is set to the value that the SDS assigns to the new
-     * workgroup.
+     * Creates a new <code>Workgroup</code> object in the local data store, and then associates
+     * that workgroup to an offering. 
      * 
      * @param name
      *            <code>String</code> name of the workgroup you want to create
