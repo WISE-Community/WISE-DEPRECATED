@@ -3,10 +3,9 @@
  */
 package org.telscenter.sail.webapp.service.impl;
 
-import net.sf.sail.webapp.dao.sds.HttpStatusCodeException;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.domain.sds.SdsUser;
+import net.sf.sail.webapp.domain.webservice.http.HttpStatusCodeException;
 import net.sf.sail.webapp.service.authentication.DuplicateUsernameException;
 import net.sf.sail.webapp.service.authentication.UserNotFoundException;
 
@@ -76,19 +75,6 @@ net.sf.sail.webapp.service.impl.UserServiceImpl {
 		}
 		
 		return createdUser;
-	}
-
-	/**
-	 * @see net.sf.sail.webapp.service.impl.UserServiceImpl#createSdsUser(net.sf.sail.webapp.domain.authentication.MutableUserDetails)
-	 */
-	@Override
-	public SdsUser createSdsUser(final MutableUserDetails userDetails) {
-		org.telscenter.sail.webapp.domain.authentication.MutableUserDetails telsUserDetails 
-		= (org.telscenter.sail.webapp.domain.authentication.MutableUserDetails) userDetails;
-		SdsUser sdsUser = new SdsUser();
-		sdsUser.setFirstName(telsUserDetails.getFirstname());
-		sdsUser.setLastName(telsUserDetails.getLastname());
-		return sdsUser;	
 	}
 
 	/**

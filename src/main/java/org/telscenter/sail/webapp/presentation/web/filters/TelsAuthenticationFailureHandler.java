@@ -162,7 +162,7 @@ public class TelsAuthenticationFailureHandler extends
 	 */	
 	protected String determineFailureUrl(javax.servlet.http.HttpServletRequest request, AuthenticationException failed) {
 
-		//check if the public and private keys are set in the portal.properties
+		//check if the public and private keys are set in the wise.properties
 		String reCaptchaPublicKey = portalProperties.getProperty("recaptcha_public_key");
 		String reCaptchaPrivateKey = portalProperties.getProperty("recaptcha_private_key");
 

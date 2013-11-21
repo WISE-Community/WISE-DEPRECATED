@@ -100,11 +100,11 @@ public class OfferingInitializer {
     	// Read properties file to get baseurl of vlewrapper
     	Properties properties = new Properties();
     	try {
-    		FileInputStream in = new FileInputStream("src/main/resources/portal.properties");
+    		FileInputStream in = new FileInputStream("src/main/resources/wise.properties");
     		properties.load(in);
     		in.close();
     	} catch(Exception e) {
-    		System.err.println("Exception opening portal.properties file");
+    		System.err.println("Exception opening wise.properties file");
     		e.printStackTrace();
     	}
 		Set<User> owners = new HashSet<User>();

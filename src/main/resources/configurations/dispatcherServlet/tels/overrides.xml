@@ -110,7 +110,6 @@
     		    /student/addproject.html=addProjectController
     		    /student/startproject.html=startProjectController
     		    /student/registerstudent.html=registerstudentController
-    		    /student/getannotationbundle.html=getAnnotationBundleController
 				/student/changestudentpassword.html=changeUserPasswordController
 				/student/service/workgroup.html=studentWorkgroupServiceController
 				/teacher/index.html=teacherIndexController
@@ -166,7 +165,6 @@
 				/teacher/management/removestudentfromrun.html=removeStudentFromRunController
 				/teacher/management/updatemyaccountinfo.html=updateMyAccountInfoController
 				/teacherinfo.html=infoController
-				/dwr/*=dwrController
 				/author/authorproject.html=authorProjectController
 				/project/exportproject.html=exportProjectController
 				/project/importexternalproject.html=importExternalProjectController

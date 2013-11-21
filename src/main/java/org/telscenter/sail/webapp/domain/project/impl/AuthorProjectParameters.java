@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
 
 import org.telscenter.sail.webapp.domain.project.Project;
 
@@ -37,8 +36,6 @@ import org.telscenter.sail.webapp.domain.project.Project;
  */
 public class AuthorProjectParameters {
 
-	private HttpRestTransport httpRestTransport;
-	
 	private HttpServletRequest httpServletRequest;
 
 	private HttpServletResponse httpServletResponse;
@@ -50,20 +47,6 @@ public class AuthorProjectParameters {
 	private User author;
 	
 	private String versionId;
-
-	/**
-	 * @return the httpRestTransport
-	 */
-	public HttpRestTransport getHttpRestTransport() {
-		return httpRestTransport;
-	}
-
-	/**
-	 * @param httpRestTransport the httpRestTransport to set
-	 */
-	public void setHttpRestTransport(HttpRestTransport httpRestTransport) {
-		this.httpRestTransport = httpRestTransport;
-	}
 
 	/**
 	 * @return the httpServletRequest

@@ -51,7 +51,6 @@
 		<property name="userDetailsDao" ref="userDetailsDao" />
 		<property name="grantedAuthorityDao" ref="grantedAuthorityDao" />
 		<property name="userDao" ref="userDao" />
-		<property name="sdsUserDao" ref="sdsUserDao" />
 		<property name="passwordEncoder" ref="passwordEncoder" />
 		<property name="saltSource" ref="systemSaltSource" />
 	</bean>
@@ -149,8 +148,6 @@
 				<sec:intercept-url pattern="/enter*.html"
 					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/student/registerstudent.html"
-					access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/student/getannotationbundle.html"
 					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/student/**/*.html"
 					access="ROLE_STUDENT,ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />

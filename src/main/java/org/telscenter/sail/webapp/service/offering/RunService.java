@@ -47,16 +47,12 @@ import org.telscenter.sail.webapp.domain.impl.RunParameters;
 public interface RunService extends OfferingService {
 
     /**
-     * Creates a new <code>SdsOffering</code> on the SDS as well as an
-     * <code>Run</code> object in the local data store. A side effect is
-     * that the Run id is set to the value that the SDS assigns to the new
-     * Run.
+     * Creates a new <code>Run</code> object in the local data store. 
      * 
      * @param offeringParameters
      *            The object that encapsulate parameters for creating a run
      * @return the run created.
      */
-//  @Secured( { "ROLE_TEACHER", "ROLE_ADMINISTRATOR", "ROLE_RESEARCHER", "ROLE_TA" })
 	public Run createRun(RunParameters runParameters) throws ObjectNotFoundException;
 	
 	/**

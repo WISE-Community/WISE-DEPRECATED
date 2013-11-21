@@ -22,10 +22,9 @@ import java.util.List;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.sds.HttpStatusCodeException;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.domain.sds.SdsUser;
+import net.sf.sail.webapp.domain.webservice.http.HttpStatusCodeException;
 import net.sf.sail.webapp.service.authentication.DuplicateUsernameException;
 
 /**
@@ -39,8 +38,7 @@ import net.sf.sail.webapp.service.authentication.DuplicateUsernameException;
 public interface UserService {
 
 	/**
-	 * Given a MutableUserDetails object with a unique name, creates a remote
-	 * SDS user and also inserts the object into the local db. If username is
+	 * Given a MutableUserDetails object with a unique name, creates a new user. If username is
 	 * not unique throws a DuplicateUsernameException.
 	 * 
 	 * @param userDetails
@@ -48,12 +46,9 @@ public interface UserService {
 	 * @return A reference to a <code>User</code> object
 	 * @throws DuplicateUsernameException
 	 *             If username is not unique.
-	 * @throws HttpStatusCodeException
-	 *             If any unexpected status code is returned from the SDS while
-	 *             creating the user.
 	 */
 	public User createUser(MutableUserDetails userDetails)
-			throws DuplicateUsernameException, HttpStatusCodeException;
+			throws DuplicateUsernameException;
 	
 	/**
 	 * Retrieve user with the given user details.
@@ -139,27 +134,10 @@ public interface UserService {
 	public User retrieveById(Long userId) throws ObjectNotFoundException;
 	
 	/**
-	 * Instantiates a SdsUser object and populates its firstname
-	 * and lastname using the provided <code>MutableUserDetails</code>
-	 * and returns it
-	 * 
-	 * @param userDetails used to retrieve firstnamd and lastname
-	 * @return new <code>SdsUser</code> object with firstname and lastname set
-	 */
-	public SdsUser createSdsUser(final MutableUserDetails userDetails);
-
-	/**
 	 * Updates the existing <code>MutableUserDetails</code> object
 	 * @param userDetails
 	 */
 	public void updateUser(User user);
-	
-	/**
-	 * Creates and adds a <code>SdsUser</code> to existing <code>User</code>
-	 * 
-	 * @param <code>User</code> user
-	 */
-	public User addSdsUserToUser(Long id);
 	
 	/**
 	 * Retrieves Users by a given field (eg username, gender), search type (eg =, like)

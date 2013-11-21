@@ -20,7 +20,6 @@ package net.sf.sail.webapp.domain.webservice.http;
 import java.io.InputStream;
 import java.util.Map;
 
-import net.sf.sail.webapp.dao.sds.HttpStatusCodeException;
 
 /**
  * An HTTP REST facade.

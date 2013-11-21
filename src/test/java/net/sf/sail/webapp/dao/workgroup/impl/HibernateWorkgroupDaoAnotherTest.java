@@ -24,7 +24,6 @@ package net.sf.sail.webapp.dao.workgroup.impl;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -33,11 +32,6 @@ import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
-import net.sf.sail.webapp.domain.sds.SdsJnlp;
-import net.sf.sail.webapp.domain.sds.SdsOffering;
-import net.sf.sail.webapp.domain.sds.SdsUser;
-import net.sf.sail.webapp.domain.sds.SdsWorkgroup;
 import net.sf.sail.webapp.junit.AbstractTransactionalDbTests;
 
 import org.hibernate.Session;
@@ -60,19 +54,7 @@ public class HibernateWorkgroupDaoAnotherTest extends
 
     private static final String PASSWORD = "password";
 
-    private static final Long SDS_ID = new Long(42);
-
-    private static final Long SDS_ID_A = new Long(12);
-
-    private static final Long SDS_ID_B = new Long(32);
-
-    private static final SdsCurnit DEFAULT_SDS_CURNIT = new SdsCurnit();
-
-    private static final SdsJnlp DEFAULT_SDS_JNLP = new SdsJnlp();
-
     private static final String DEFAULT_NAME = "the heros";
-
-    private static final String DEFAULT_URL = "http://woohoo";
 
     private static final String GROUP_NAME = "the heros group";
 
@@ -92,13 +74,6 @@ public class HibernateWorkgroupDaoAnotherTest extends
     @Override
     protected void onSetUpBeforeTransaction() throws Exception {
         super.onSetUpBeforeTransaction();
-        DEFAULT_SDS_CURNIT.setName(DEFAULT_NAME);
-        DEFAULT_SDS_CURNIT.setUrl(DEFAULT_URL);
-        DEFAULT_SDS_CURNIT.setSdsObjectId(SDS_ID);
-
-        DEFAULT_SDS_JNLP.setName(DEFAULT_NAME);
-        DEFAULT_SDS_JNLP.setUrl(DEFAULT_URL);
-        DEFAULT_SDS_JNLP.setSdsObjectId(SDS_ID);
     }
 
     /**
@@ -109,8 +84,6 @@ public class HibernateWorkgroupDaoAnotherTest extends
         super.onSetUpInTransaction();
         // an offering needs to exist already before a workgroup can be created
         Session session = this.sessionFactory.getCurrentSession();
-        session.save(DEFAULT_SDS_CURNIT); // save sds curnit
-        session.save(DEFAULT_SDS_JNLP); // save sds jnlp
     }
 
     /**
@@ -124,24 +97,24 @@ public class HibernateWorkgroupDaoAnotherTest extends
 
     public void testGetListByOfferingAndUser_NoMembersInWorkgroup() {
         Session session = this.sessionFactory.getCurrentSession();
-        Offering offering = createNewOffering(session, SDS_ID);
+        Offering offering = createNewOffering(session);
         Set<User> members = Collections.emptySet();
         @SuppressWarnings("unused")
-        Workgroup workgroup = createNewWorkgroup(session, SDS_ID, offering,
+        Workgroup workgroup = createNewWorkgroup(session, offering,
                 members);
 
-        User user = createNewUser(USERNAME, SDS_ID, session);
+        User user = createNewUser(USERNAME, session);
         List<?> actual = workgroupDao.getListByOfferingAndUser(offering, user);
         assertTrue(actual.isEmpty());
     }
 
     public void testGetListByOfferingAndUser_SingleMemberInWorkgroup() {
         Session session = this.sessionFactory.getCurrentSession();
-        Offering offering = createNewOffering(session, SDS_ID);
-        User user = createNewUser(USERNAME, SDS_ID, session);
+        Offering offering = createNewOffering(session);
+        User user = createNewUser(USERNAME, session);
         Set<User> members = new HashSet<User>(1);
         members.add(user);
-        Workgroup workgroup = createNewWorkgroup(session, SDS_ID, offering,
+        Workgroup workgroup = createNewWorkgroup(session, offering,
                 members);
         this.toilet.flush();
 
@@ -160,24 +133,24 @@ public class HibernateWorkgroupDaoAnotherTest extends
     public void testGetListByOfferingAndUser() {
         Session session = this.sessionFactory.getCurrentSession();
 
-        Offering offeringA = createNewOffering(session, SDS_ID_A);
-        Offering offeringB = createNewOffering(session, SDS_ID_B);
+        Offering offeringA = createNewOffering(session);
+        Offering offeringB = createNewOffering(session);
 
-        User userA = createNewUser(USERNAME_A, SDS_ID_A, session);
+        User userA = createNewUser(USERNAME_A, session);
         Set<User> membersA = new HashSet<User>(1);
         membersA.add(userA);
 
-        User userB = createNewUser(USERNAME_B, SDS_ID_B, session);
+        User userB = createNewUser(USERNAME_B, session);
         Set<User> membersB = new HashSet<User>(1);
         membersB.add(userB);
 
-        Workgroup workgroup1 = createNewWorkgroup(session, new Long(1), offeringA,
+        Workgroup workgroup1 = createNewWorkgroup(session, offeringA,
                 membersA);
-        Workgroup workgroup2 = createNewWorkgroup(session, new Long(2), offeringA,
+        Workgroup workgroup2 = createNewWorkgroup(session, offeringA,
                 membersB);
-        Workgroup workgroup3 = createNewWorkgroup(session, new Long(3), offeringB,
+        Workgroup workgroup3 = createNewWorkgroup(session, offeringB,
                 membersA);
-        Workgroup workgroup4 = createNewWorkgroup(session, new Long(4), offeringB,
+        Workgroup workgroup4 = createNewWorkgroup(session, offeringB,
                 membersB);
 
         this.toilet.flush();
@@ -203,18 +176,8 @@ public class HibernateWorkgroupDaoAnotherTest extends
         assertEquals(workgroup4, actualWorkgroupList.get(0));
     }
 
-    private Workgroup createNewWorkgroup(Session session, Long sdsId,
+    private Workgroup createNewWorkgroup(Session session,
             Offering offering, Set<User> members) {
-        SdsWorkgroup sdsWorkgroup = (SdsWorkgroup) this.applicationContext
-                .getBean("sdsWorkgroup");
-        Set<SdsUser> sdsUsers = new HashSet<SdsUser>(members.size());
-        for (Iterator<User> i = members.iterator(); i.hasNext();) {
-            sdsUsers.add(i.next().getSdsUser());
-        }
-        sdsWorkgroup.setMembers(sdsUsers);
-        sdsWorkgroup.setName(DEFAULT_NAME);
-        sdsWorkgroup.setSdsObjectId(sdsId);
-        sdsWorkgroup.setSdsOffering(offering.getSdsOffering());
 
         Workgroup workgroup = (Workgroup) this.applicationContext
                 .getBean("workgroup");
@@ -225,38 +188,24 @@ public class HibernateWorkgroupDaoAnotherTest extends
         workgroup.setGroup(group);
         workgroup.setMembers(members);
         workgroup.setOffering(offering);
-        workgroup.setSdsWorkgroup(sdsWorkgroup);
 
         session.save(workgroup);
         return workgroup;
     }
 
-    private Offering createNewOffering(Session session, Long sdsId) {
-        SdsOffering sdsOffering = (SdsOffering) this.applicationContext
-                .getBean("sdsOffering");
-        sdsOffering.setName(DEFAULT_NAME);
-        sdsOffering.setSdsObjectId(sdsId);
-        sdsOffering.setSdsCurnit(DEFAULT_SDS_CURNIT);
-        sdsOffering.setSdsJnlp(DEFAULT_SDS_JNLP);
-
+    private Offering createNewOffering(Session session) {
         Offering offering = (Offering) this.applicationContext
                 .getBean("offering");
-        offering.setSdsOffering(sdsOffering);
         session.save(offering);
         return offering;
     }
 
-    private User createNewUser(String username, Long sdsId, Session session) {
+    private User createNewUser(String username, Session session) {
         User user = (User) this.applicationContext.getBean("user");
-        SdsUser sdsUser = (SdsUser) this.applicationContext.getBean("sdsUser");
-        sdsUser.setFirstName(DEFAULT_NAME);
-        sdsUser.setLastName(DEFAULT_NAME);
-        sdsUser.setSdsObjectId(sdsId);
         MutableUserDetails userDetails = (MutableUserDetails) this.applicationContext
                 .getBean("mutableUserDetails");
         userDetails.setUsername(username);
         userDetails.setPassword(PASSWORD);
-        user.setSdsUser(sdsUser);
         user.setUserDetails(userDetails);
         session.save(user);
         return user;

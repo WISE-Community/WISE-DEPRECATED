@@ -187,7 +187,7 @@ PasAuthenticationProcessingFilter {
 		 * get the user so we can check if they have been failing to login
 		 * multiple times recently and if so, we will display a captcha to
 		 * make sure they are not a bot. the public and private keys must be set in
-		 * the portal.properties otherwise we will not use captcha at all. we
+		 * the wise.properties otherwise we will not use captcha at all. we
 		 * will also check to make sure the captcha keys are valid otherwise
 		 * we won't use the captcha at all either.
 		 */
@@ -214,7 +214,7 @@ PasAuthenticationProcessingFilter {
 					if(numberOfRecentFailedLoginAttempts != null &&
 							numberOfRecentFailedLoginAttempts >= TelsAuthenticationProcessingFilter.recentFailedLoginAttemptsLimit) {
 
-						//get the public and private keys from the portal.properties
+						//get the public and private keys from the wise.properties
 						String reCaptchaPublicKey = portalProperties.getProperty("recaptcha_public_key");
 						String reCaptchaPrivateKey = portalProperties.getProperty("recaptcha_private_key");
 

@@ -49,7 +49,6 @@ import org.junit.runners.Suite;
        org.telscenter.sail.webapp.presentation.validators.AllTests.class,
 	   org.telscenter.sail.webapp.presentation.web.controllers.AllTests.class,
 	   org.telscenter.sail.webapp.service.impl.AllTests.class,
-	   org.telscenter.sail.webapp.service.grading.impl.AllTests.class,
 	   org.telscenter.sail.webapp.service.offering.impl.AllTests.class,
 	   org.telscenter.sail.webapp.service.module.impl.AllTests.class,
 	   org.telscenter.sail.webapp.service.student.impl.AllTests.class,

@@ -32,7 +32,7 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 /**
- * Abstract implementation of an SDS command using HTTP REST.
+ * Abstract implementation of a command using HTTP REST.
  * 
  * @author Cynick Young
  * 

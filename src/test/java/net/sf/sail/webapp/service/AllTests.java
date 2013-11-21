@@ -28,14 +28,11 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
-	net.sf.sail.webapp.service.annotation.impl.AnnotationBundleServiceImplTest.class,
 	net.sf.sail.webapp.service.authentication.impl.UserDetailsServiceImplTest.class,
 	net.sf.sail.webapp.service.curnit.impl.CurnitServiceImplTest.class,
-	net.sf.sail.webapp.service.file.impl.AuthoringJNLPModifierTest.class,
 	net.sf.sail.webapp.service.group.impl.GroupServiceImplTest.class,
 	net.sf.sail.webapp.service.impl.AclServiceImplTest.class,
 	net.sf.sail.webapp.service.impl.UserServiceImplTest.class,
-	net.sf.sail.webapp.service.jnlp.impl.JnlpServiceImplTest.class,
 	net.sf.sail.webapp.service.offering.impl.OfferingServiceImplTest.class,
 	net.sf.sail.webapp.service.workgroup.impl.WorkgroupServiceImplTest.class
 })

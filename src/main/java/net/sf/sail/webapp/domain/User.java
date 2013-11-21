@@ -18,7 +18,6 @@
 package net.sf.sail.webapp.domain;
 
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.domain.sds.SdsUser;
 
 /**
  * @author Cynick Young
@@ -46,21 +45,6 @@ public interface User extends Persistable {
      */
     public abstract void setUserDetails(MutableUserDetails userDetails);
 
-    /**
-     * Sets the sdsUser object.
-     * 
-     * @param sdsUser
-     *            the sdsUser to set
-     */
-    public abstract void setSdsUser(SdsUser sdsUser);
-
-    /**
-     * Gets the sdsUser object.
-     * 
-     * @return the sdsUser
-     */
-    public SdsUser getSdsUser();
-    
     /**
      * Returns true if this use is an admin, false otherwise.
      * 

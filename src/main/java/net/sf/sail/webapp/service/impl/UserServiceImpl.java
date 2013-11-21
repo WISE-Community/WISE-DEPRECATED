@@ -22,14 +22,12 @@ import java.util.List;
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.authentication.GrantedAuthorityDao;
 import net.sf.sail.webapp.dao.authentication.UserDetailsDao;
-import net.sf.sail.webapp.dao.sds.HttpStatusCodeException;
-import net.sf.sail.webapp.dao.sds.SdsUserDao;
 import net.sf.sail.webapp.dao.user.UserDao;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableGrantedAuthority;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.domain.sds.SdsUser;
+import net.sf.sail.webapp.domain.webservice.http.HttpStatusCodeException;
 import net.sf.sail.webapp.service.UserService;
 import net.sf.sail.webapp.service.authentication.DuplicateUsernameException;
 import net.sf.sail.webapp.service.authentication.UserDetailsService;
@@ -54,22 +52,11 @@ public class UserServiceImpl implements UserService {
 
 	private GrantedAuthorityDao<MutableGrantedAuthority> grantedAuthorityDao;
 
-	protected SdsUserDao sdsUserDao;
-
 	private UserDao<User> userDao;
 
 	protected PasswordEncoder passwordEncoder;
 
 	private SaltSource saltSource;
-
-	/**
-	 * @param sdsUserDao
-	 *            the sdsUserDao to set
-	 */
-	@Required
-	public void setSdsUserDao(SdsUserDao sdsUserDao) {
-		this.sdsUserDao = sdsUserDao;
-	}
 
 	/**
 	 * @param userDao
@@ -162,28 +149,17 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Transactional(rollbackFor = { DuplicateUsernameException.class, HttpStatusCodeException.class })
 	public User createUser(final MutableUserDetails userDetails)
-			throws DuplicateUsernameException, HttpStatusCodeException {
+			throws DuplicateUsernameException {
 
 		this.checkUserErrors(userDetails.getUsername());
 		this.assignRole(userDetails, UserDetailsService.USER_ROLE);
 		this.encodePassword(userDetails);
 
 		User user = new UserImpl();
-		//user.setSdsUser(null);
 		user.setUserDetails(userDetails);
 		this.userDao.save(user);
 
 		return user;
-	}
-
-	/**
-	 * @see net.sf.sail.webapp.service.UserService#createSdsUser(net.sf.sail.webapp.domain.authentication.MutableUserDetails)
-	 */
-	public SdsUser createSdsUser(final MutableUserDetails userDetails) {
-		SdsUser sdsUser = new SdsUser();
-		sdsUser.setFirstName(userDetails.getUsername());
-		sdsUser.setLastName(userDetails.getUsername());
-		return sdsUser;
 	}
 
 	void encodePassword(MutableUserDetails userDetails) {
@@ -249,25 +225,6 @@ public class UserServiceImpl implements UserService {
 	@Transactional()
 	public void updateUser(User user) {
 		this.userDao.save(user);
-	}
-	
-	/**
-	 * @see net.sf.sail.webapp.service.UserService#addSdsUserToUser(net.sf.sail.webapp.domain.User)
-	 */
-	@Transactional()
-	public User addSdsUserToUser(Long id){
-		User user = null;
-		try{
-			user = this.userDao.getById(id);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		SdsUser sdsUser = this.createSdsUser(user.getUserDetails());
-		this.sdsUserDao.save(sdsUser);
-		
-		user.setSdsUser(sdsUser);
-		this.userDao.save(user);
-		return user;
 	}
 	
 	/**

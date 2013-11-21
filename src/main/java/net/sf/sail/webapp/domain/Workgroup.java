@@ -25,7 +25,6 @@ package net.sf.sail.webapp.domain;
 import java.util.Set;
 
 import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.sds.SdsWorkgroup;
 
 /**
  * Workgroup is an aggregation of users that work on the same offering. It is
@@ -35,21 +34,6 @@ import net.sf.sail.webapp.domain.sds.SdsWorkgroup;
  * @version $Id: User.java 231 2007-03-26 07:03:00Z hiroki $
  */
 public interface Workgroup extends Persistable {
-
-    /**
-     * Sets the SdsWorkgroup object.
-     * 
-     * @param sdsWorkgroup
-     *            the sdsWorkgroup to set
-     */
-    public void setSdsWorkgroup(SdsWorkgroup sdsWorkgroup);
-
-    /**
-     * Gets the SdsWorkgroup object.
-     * 
-     * @return SdsWorkgroup
-     */
-    public SdsWorkgroup getSdsWorkgroup();
 
     /**
      * @return the members
@@ -102,8 +86,7 @@ public interface Workgroup extends Persistable {
 	public Long getId();
 
 	/**
-	 * Generates a name for this workgroup. This name may or may not be the same as
-	 * the value in this.sdsWorkgroup.name.
+	 * Generates a name for this workgroup.
 	 * 
 	 * @return <code>String</code> a name for this workgroup
 	 */

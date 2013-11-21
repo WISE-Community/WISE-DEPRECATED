@@ -17,8 +17,6 @@
  */
 package org.telscenter.sail.webapp;
 
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.Jnlp;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.service.authentication.UserDetailsService;
 import net.sf.sail.webapp.spring.SpringConfiguration;
@@ -26,14 +24,13 @@ import net.sf.sail.webapp.spring.SpringConfiguration;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.telscenter.sail.webapp.domain.project.Project;
 
 /**
  * A disposable class that is used to initialize the system.

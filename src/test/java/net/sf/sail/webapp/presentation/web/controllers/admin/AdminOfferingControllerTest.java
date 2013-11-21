@@ -22,9 +22,6 @@ import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.Offering;
 import net.sf.sail.webapp.domain.impl.AdminOfferingParameters;
 import net.sf.sail.webapp.domain.impl.OfferingImpl;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
-import net.sf.sail.webapp.domain.sds.SdsJnlp;
-import net.sf.sail.webapp.domain.sds.SdsOffering;
 import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 import net.sf.sail.webapp.presentation.web.controllers.ModelAndViewTests;
 import net.sf.sail.webapp.service.offering.OfferingService;
@@ -65,20 +62,7 @@ public class AdminOfferingControllerTest extends ModelAndViewTests {
 		
 		adminParameters = new AdminOfferingParameters();
 		
-		SdsOffering sdsOffering = new SdsOffering();
-
-		SdsCurnit curnit = new SdsCurnit();
-		curnit.setSdsObjectId(new Long(1));
-		sdsOffering.setSdsCurnit(curnit);
-
-		SdsJnlp jnlp = new SdsJnlp();
-		jnlp.setSdsObjectId(new Long(2));
-		sdsOffering.setSdsJnlp(jnlp);
-
-		sdsOffering.setName("test");
-		sdsOffering.setSdsObjectId(OFFERING_ID_LONG);
 		this.expectedOffering = new OfferingImpl();
-		expectedOffering.setSdsOffering(sdsOffering);
 	}
 
 	/**

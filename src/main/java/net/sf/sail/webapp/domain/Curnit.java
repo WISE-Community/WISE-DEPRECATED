@@ -17,8 +17,6 @@
  */
 package net.sf.sail.webapp.domain;
 
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
-
 /**
  * Curnit domain object interface
  * 
@@ -28,17 +26,6 @@ import net.sf.sail.webapp.domain.sds.SdsCurnit;
  * 
  */
 public interface Curnit extends Persistable {
-
-    /**
-     * @return the sdsCurnit
-     */
-    public SdsCurnit getSdsCurnit();
-
-    /**
-     * @param sdsCurnit
-     *            the sdsCurnit to set
-     */
-    public void setSdsCurnit(SdsCurnit sdsCurnit);
 
 	/**
 	 * @return The id of the curnit in the persistent data store

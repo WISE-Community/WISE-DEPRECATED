@@ -29,7 +29,7 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
 
 /**
- * Overrides default behavior to account for loading in properties via portal.properties file
+ * Overrides default behavior to account for loading in properties via wise.properties file
  * @author Hiroki Terashima
  * @version $Id:$
  */
@@ -39,7 +39,7 @@ public class TelsAnnotationSessionFactoryBean extends
 	protected void postProcessAnnotationConfiguration(AnnotationConfiguration config) {
 		Properties portalProperties = new Properties();
     	try {
-    		portalProperties.load(TelsAnnotationSessionFactoryBean.class.getClassLoader().getResourceAsStream("portal.properties"));
+    		portalProperties.load(TelsAnnotationSessionFactoryBean.class.getClassLoader().getResourceAsStream("wise.properties"));
 		} catch (IOException e) {
 			// pretend like nothing happened.
 			e.printStackTrace();

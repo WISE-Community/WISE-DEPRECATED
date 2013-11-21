@@ -25,13 +25,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.sail.webapp.dao.sds.CurnitMapNotFoundException;
-import net.sf.sail.webapp.dao.sds.HttpStatusCodeException;
 import net.sf.sail.webapp.domain.webservice.http.AbstractHttpRequest;
 import net.sf.sail.webapp.domain.webservice.http.HttpGetRequest;
 import net.sf.sail.webapp.domain.webservice.http.HttpPostRequest;
 import net.sf.sail.webapp.domain.webservice.http.HttpPutRequest;
 import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
+import net.sf.sail.webapp.domain.webservice.http.HttpStatusCodeException;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -121,11 +120,6 @@ public class HttpRestTransportImpl implements HttpRestTransport {
 			int statusCode = this.client.executeMethod(method);
 			httpGetRequestData.isValidResponseStatus(method, statusCode);
 			return new ByteArrayInputStream(method.getResponseBody());
-		} catch (CurnitMapNotFoundException cmnfe) {
-			if (logger.isErrorEnabled()) {
-				logger.error(cmnfe.getMessage(), cmnfe);
-			}
-			throw cmnfe;
 		} catch (HttpStatusCodeException hsce) {
 			logAndThrowRuntimeException(hsce);
 		} catch (HttpException he) {

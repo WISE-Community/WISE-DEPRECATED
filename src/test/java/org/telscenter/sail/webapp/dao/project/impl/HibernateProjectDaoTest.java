@@ -29,19 +29,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.telscenter.sail.webapp.domain.Module;
+import net.sf.sail.webapp.domain.User;
+import net.sf.sail.webapp.domain.impl.CurnitImpl;
+import net.sf.sail.webapp.domain.impl.UserImpl;
+
 import org.telscenter.sail.webapp.domain.Run;
 import org.telscenter.sail.webapp.domain.impl.ModuleImpl;
 import org.telscenter.sail.webapp.domain.project.Project;
 import org.telscenter.sail.webapp.domain.project.impl.ProjectImpl;
-
-import net.sf.sail.webapp.domain.Jnlp;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.impl.CurnitImpl;
-import net.sf.sail.webapp.domain.impl.JnlpImpl;
-import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
-import net.sf.sail.webapp.domain.sds.SdsJnlp;
 
 /**
  * @author Hiroki Terashima
@@ -49,18 +44,6 @@ import net.sf.sail.webapp.domain.sds.SdsJnlp;
  * @version $Id$
  */
 public class HibernateProjectDaoTest extends org.telscenter.sail.webapp.dao.AbstractTransactionalDaoTests<HibernateProjectDao, Project> {
-
-    private static final Long SDS_CURNIT_ID = new Long(7);
-
-    private static final Long SDS_JNLP_ID = new Long(5);
-
-    private static final String CURNIT_NAME = "Airbags Curnit";
-
-    private static final String CURNIT_URL = "http://curnitmrpotatoiscoolerthanwoody.com";
-
-    private static final String JNLP_NAME = "Airbags JNLP";
-
-    private static final String JNLP_URL = "http://jnlpmrpotatoiscoolerthanwoody.com";
 
     private static final String MODULE_DESCRIPTION = "this module is for smart kids";
 
@@ -80,29 +63,11 @@ public class HibernateProjectDaoTest extends org.telscenter.sail.webapp.dao.Abst
 	
 	private ModuleImpl moduleImpl;
 	
-	private Jnlp jnlp;
-	
-    private SdsCurnit sdsCurnit;
-
-    private SdsJnlp sdsJnlp;
-    
     private Run run;
 		
-	public void setJnlp(Jnlp jnlp) {
-		this.jnlp = jnlp;
-	}
-	
 	public void setModuleImpl(ModuleImpl moduleImpl) {
 		this.moduleImpl = moduleImpl;
 	}
-
-	public void setSdsCurnit(SdsCurnit sdsCurnit) {
-        this.sdsCurnit = sdsCurnit;
-    }
-
-    public void setSdsJnlp(SdsJnlp sdsJnlp) {
-        this.sdsJnlp = sdsJnlp;
-    }
 
 	public void setRun(Run run) {
 		this.run = run;
@@ -119,17 +84,6 @@ public class HibernateProjectDaoTest extends org.telscenter.sail.webapp.dao.Abst
     	this.dataObject = (ProjectImpl) this.applicationContext
     			.getBean("project");
     	
-        this.sdsCurnit.setSdsObjectId(SDS_CURNIT_ID);
-        this.sdsCurnit.setName(CURNIT_NAME);
-        this.sdsCurnit.setUrl(CURNIT_URL);
-
-        this.sdsJnlp.setSdsObjectId(SDS_JNLP_ID);
-        this.sdsJnlp.setName(JNLP_NAME);
-        this.sdsJnlp.setUrl(JNLP_URL);
-
-    	this.moduleImpl.setSdsCurnit(this.sdsCurnit);
-    	this.jnlp.setSdsJnlp(this.sdsJnlp);
-
     	MODULE_OWNERS.add(new UserImpl());
     	this.moduleImpl.setDescription(MODULE_DESCRIPTION);
     	this.moduleImpl.setComputerTime(MODULE_COMPUTER_TIME);
@@ -137,11 +91,9 @@ public class HibernateProjectDaoTest extends org.telscenter.sail.webapp.dao.Abst
     	this.moduleImpl.setTechReqs(MODULE_TECH_REQS);
     	this.moduleImpl.setTotalTime(MODULE_TOTAL_TIME);
     	this.dataObject.setCurnit(this.moduleImpl);
-    	this.dataObject.setJnlp(this.jnlp);
     	this.run.setOwners(null);
 		this.run.setPeriods(null);
 		this.run.setRuncode(RUNCODE);
-		this.run.setSdsOffering(null);
     	this.run.setStarttime(START_TIME);
     	this.run.setEndtime(END_TIME);
     	this.run.setProject(this.dataObject);
@@ -155,7 +107,6 @@ public class HibernateProjectDaoTest extends org.telscenter.sail.webapp.dao.Abst
     protected void onTearDownAfterTransaction() throws Exception {
     	super.onTearDownAfterTransaction();
     	this.moduleImpl = null;
-    	this.jnlp = null;
     }
     
 	/**
@@ -173,11 +124,6 @@ public class HibernateProjectDaoTest extends org.telscenter.sail.webapp.dao.Abst
         assertEquals(1, actualList.size());
         
         Map<?, ?> actualProjectMap = (Map<?, ?>) actualList.get(0);
-        assertEquals(SDS_CURNIT_ID, actualProjectMap
-        		.get(SdsCurnit.COLUMN_NAME_CURNIT_ID.toUpperCase()));
-        assertEquals(SDS_JNLP_ID, actualProjectMap
-        		.get(SdsJnlp.COLUMN_NAME_JNLP_ID.toUpperCase()));
-        
 	}
     
     /**
@@ -217,32 +163,16 @@ public class HibernateProjectDaoTest extends org.telscenter.sail.webapp.dao.Abst
 	}
 	
 	/*
-	 * SELECT * FROM projects, curnits, jnlps, sds_curnits, sds_jnlps 
+	 * SELECT * FROM projects, curnits
 	 * WHERE projects.curnit_fk = curnits.id 
-	 * AND projects.jnlp_fk = jnlps.id
-	 * AND curnits.sds_curnit_fk = sds_curnits.id
-	 * AND jnlps.sds_jnlp_fk = sds_jnlps.id
 	 */
 	private static final String RETRIEVE_PROJECT_LIST_SQL = 
 		"SELECT * FROM "
-		+ ProjectImpl.DATA_STORE_NAME + ", " + CurnitImpl.DATA_STORE_NAME + ", "
-		+ JnlpImpl.DATA_STORE_NAME + ", " + SdsCurnit.DATA_STORE_NAME + ", " + SdsJnlp.DATA_STORE_NAME
+		+ ProjectImpl.DATA_STORE_NAME + ", " + CurnitImpl.DATA_STORE_NAME
 		+ " WHERE " 
 		+ ProjectImpl.DATA_STORE_NAME + "." + ProjectImpl.COLUMN_NAME_CURNIT_FK
 		+ " = "
-		+ CurnitImpl.DATA_STORE_NAME + ".id"
-		+ " AND "
-		+ ProjectImpl.DATA_STORE_NAME + "." + ProjectImpl.COLUMN_NAME_JNLP_FK
-		+ " = "
-		+ JnlpImpl.DATA_STORE_NAME + ".id"
-		+ " AND "
-		+ CurnitImpl.DATA_STORE_NAME + "."
-        + CurnitImpl.COLUMN_NAME_SDS_CURNIT_FK + " = "
-        + SdsCurnit.DATA_STORE_NAME + ".id"
-        + " AND "
-		+ JnlpImpl.DATA_STORE_NAME + "."
-        + JnlpImpl.COLUMN_NAME_SDS_JNLP_FK + " = "
-        + SdsJnlp.DATA_STORE_NAME + ".id";
+		+ CurnitImpl.DATA_STORE_NAME + ".id";
 
 		
     private List<?> retrieveProjectListFromDb() {

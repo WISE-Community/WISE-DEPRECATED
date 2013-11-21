@@ -28,7 +28,6 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
-	HibernateAnnotationBundleDaoTest.class
 })
 
 public class AllTests {

@@ -36,9 +36,6 @@ import net.sf.sail.webapp.domain.Offering;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
-import net.sf.sail.webapp.domain.sds.SdsJnlp;
-import net.sf.sail.webapp.domain.sds.SdsOffering;
 import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
 import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 import net.sf.sail.webapp.service.workgroup.WorkgroupService;
@@ -108,20 +105,8 @@ public class ViewMyStudentsControllerTest extends AbstractModelAndViewTests {
 
 		this.mockRunService = EasyMock.createMock(RunService.class);
 		this.mockWorkgroupService = EasyMock.createMock(WorkgroupService.class);
-		SdsOffering sdsOffering = new SdsOffering();
 
-		SdsCurnit curnit = new SdsCurnit();
-		curnit.setSdsObjectId(new Long(1));
-		sdsOffering.setSdsCurnit(curnit);
-
-		SdsJnlp jnlp = new SdsJnlp();
-		jnlp.setSdsObjectId(new Long(2));
-		sdsOffering.setSdsJnlp(jnlp);
-
-		sdsOffering.setName("test");
-		sdsOffering.setSdsObjectId(new Long(3));
 		run = new RunImpl();
-		run.setSdsOffering(sdsOffering);
 		Set<User> owners = new HashSet<User>();
 		owners.add(user);
 		run.setOwners(owners);
@@ -138,8 +123,6 @@ public class ViewMyStudentsControllerTest extends AbstractModelAndViewTests {
 		.setRunService(this.mockRunService);
 		this.viewMyStudentsController
 		.setWorkgroupService(this.mockWorkgroupService);
-		this.viewMyStudentsController
-		.setHttpRestTransport(this.mockHttpTransport);
 	}
 
 	/**

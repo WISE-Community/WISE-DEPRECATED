@@ -150,22 +150,4 @@ public class StudentRunInfo implements Comparable<StudentRunInfo>{
 			}
 		}
 	}
-
-	/* 
-	 * if student is in a workgroup for this run, get the url
-	 * that will be used to start the project and set the url where
-	 * the workgroup's work can be retrieved as PDF
-	 */
-	public void setWorkPDFUrl(WISEWorkgroupService workgroupService, 
-			HttpRestTransport httpRestTransport, HttpServletRequest request) {
-		ProjectTypeVisitor typeVisitor = new ProjectTypeVisitor();
-		String result = (String) run.getProject().accept(typeVisitor);
-		if (this.getWorkgroup() != null && !(result.equals("ExternalProject")) && run.getProject().getProjectType()!=ProjectType.ROLOO && run.getProject().getProjectType()!=ProjectType.LD) {
-			String workPdfUrl = workgroupService
-		        .generateWorkgroupWorkPdfUrlString(httpRestTransport, request, (WISEWorkgroup) workgroup);
-			
-		    ((WISEWorkgroup) workgroup).setWorkPDFUrl(workPdfUrl);
-		}
-	}
-
 }

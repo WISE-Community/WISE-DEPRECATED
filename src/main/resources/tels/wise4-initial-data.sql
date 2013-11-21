@@ -52,15 +52,6 @@ LOCK TABLES `acl_sid` WRITE;
 UNLOCK TABLES;
 
 --
--- Dumping data for table `annotationbundles`
---
-
-LOCK TABLES `annotationbundles` WRITE;
-/*!40000 ALTER TABLE `annotationbundles` DISABLE KEYS */;
-/*!40000 ALTER TABLE `annotationbundles` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping data for table `announcements`
 --
 
@@ -122,15 +113,6 @@ UNLOCK TABLES;
 LOCK TABLES `groups_related_to_users` WRITE;
 /*!40000 ALTER TABLE `groups_related_to_users` DISABLE KEYS */;
 /*!40000 ALTER TABLE `groups_related_to_users` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `jnlps`
---
-
-LOCK TABLES `jnlps` WRITE;
-/*!40000 ALTER TABLE `jnlps` DISABLE KEYS */;
-/*!40000 ALTER TABLE `jnlps` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -339,60 +321,6 @@ UNLOCK TABLES;
 LOCK TABLES `runs_related_to_shared_owners` WRITE;
 /*!40000 ALTER TABLE `runs_related_to_shared_owners` DISABLE KEYS */;
 /*!40000 ALTER TABLE `runs_related_to_shared_owners` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `sds_curnits`
---
-
-LOCK TABLES `sds_curnits` WRITE;
-/*!40000 ALTER TABLE `sds_curnits` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sds_curnits` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `sds_jnlps`
---
-
-LOCK TABLES `sds_jnlps` WRITE;
-/*!40000 ALTER TABLE `sds_jnlps` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sds_jnlps` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `sds_offerings`
---
-
-LOCK TABLES `sds_offerings` WRITE;
-/*!40000 ALTER TABLE `sds_offerings` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sds_offerings` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `sds_users`
---
-
-LOCK TABLES `sds_users` WRITE;
-/*!40000 ALTER TABLE `sds_users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sds_users` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `sds_workgroups`
---
-
-LOCK TABLES `sds_workgroups` WRITE;
-/*!40000 ALTER TABLE `sds_workgroups` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sds_workgroups` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `sds_workgroups_related_to_sds_users`
---
-
-LOCK TABLES `sds_workgroups_related_to_sds_users` WRITE;
-/*!40000 ALTER TABLE `sds_workgroups_related_to_sds_users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sds_workgroups_related_to_sds_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

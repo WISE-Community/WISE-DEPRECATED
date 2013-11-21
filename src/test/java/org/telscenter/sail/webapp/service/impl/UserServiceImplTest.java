@@ -132,10 +132,8 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 
 	
 	/*
-	 * This test checks creation of a user within the portal, but ignores the
-	 * creation of a user on the remote SDS. Tests for system integration are
-	 * beyond the scope of this testing mechanism. We are assuming the SdsUserId
-	 * cannot be null, enforced by the data store constraint.
+	 * This test checks creation of a user within the portal. Tests for system integration are
+	 * beyond the scope of this testing mechanism.
 	 */
 	public void testCreateUserWithFirstNameLastName() throws Exception {
 			setupCreateTest();
@@ -157,10 +155,8 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 	}
 	
 	/*
-	 * This test checks creation of a user within the portal, but ignores the
-	 * creation of a user on the remote SDS. Tests for system integration are
-	 * beyond the scope of this testing mechanism. We are assuming the SdsUserId
-	 * cannot be null, enforced by the data store constraint.
+	 * This test checks creation of a user within the portal. Tests for system integration are
+	 * beyond the scope of this testing mechanism.
 	 * 
 	 * Verifies that the leading and trailing whitespaces on firstname and lastname
 	 * get trimmed correctly
@@ -187,10 +183,8 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 	}
 	
 	/*
-	 * This test checks creation of a user within the portal, but ignores the
-	 * creation of a user on the remote SDS. Tests for system integration are
-	 * beyond the scope of this testing mechanism. We are assuming the SdsUserId
-	 * cannot be null, enforced by the data store constraint.
+	 * This test checks creation of a user within the portal. Tests for system integration are
+	 * beyond the scope of this testing mechanism.
 	 */
 	public void testCreateUserWithEmail() throws Exception {
 		setupCreateTest();
@@ -218,10 +212,8 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 	}
 
 	/*
-	 * This test checks creation of a user within the portal, but ignores the
-	 * creation of a user on the remote SDS. Tests for system integration are
-	 * beyond the scope of this testing mechanism. We are assuming the SdsUserId
-	 * cannot be null, enforced by the data store constraint. Email is null
+	 * This test checks creation of a user within the portal. Tests for system integration are
+	 * beyond the scope of this testing mechanism.
 	 */
 	public void testCreateUserBlankEmail() throws Exception {
 		setupCreateTest();

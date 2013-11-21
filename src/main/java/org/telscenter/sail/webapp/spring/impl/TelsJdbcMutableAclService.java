@@ -43,7 +43,7 @@ public class TelsJdbcMutableAclService extends JdbcMutableAclService {
 		super(dataSource, lookupStrategy, aclCache);
 		Properties portalProperties = new Properties();
     	try {
-    		portalProperties.load(TelsAnnotationSessionFactoryBean.class.getClassLoader().getResourceAsStream("portal.properties"));
+    		portalProperties.load(TelsAnnotationSessionFactoryBean.class.getClassLoader().getResourceAsStream("wise.properties"));
     		if (portalProperties.containsKey("hibernate.connection.driver_class")) {
     			String driverClass = (String) portalProperties.get("hibernate.connection.driver_class");
     			if ("com.mysql.jdbc.Driver".equals(driverClass)) {

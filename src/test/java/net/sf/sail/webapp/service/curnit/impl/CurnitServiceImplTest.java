@@ -23,11 +23,9 @@ import java.util.List;
 import junit.framework.TestCase;
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.curnit.CurnitDao;
-import net.sf.sail.webapp.dao.sds.SdsCurnitDao;
 import net.sf.sail.webapp.domain.Curnit;
 import net.sf.sail.webapp.domain.impl.CurnitImpl;
 import net.sf.sail.webapp.domain.impl.CurnitParameters;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
 
 import static org.easymock.EasyMock.*;
 
@@ -43,12 +41,10 @@ public class CurnitServiceImplTest extends TestCase {
 	private static final Long EXISTING_CURNIT_ID = new Long(10);
 	private static final Long NONEXISTING_CURNIT_ID = new Long(103);
 	
-    private SdsCurnitDao mockSdsCurnitDao;
     private CurnitDao<Curnit> mockCurnitDao;
  
     private CurnitServiceImpl curnitServiceImpl;
     
-    private SdsCurnit sdsCurnit;
     private Curnit curnit;
      
     /**
@@ -59,18 +55,10 @@ public class CurnitServiceImplTest extends TestCase {
         super.setUp();
         this.curnitServiceImpl = new CurnitServiceImpl();
 
-        this.mockSdsCurnitDao = createMock(SdsCurnitDao.class);
-        this.curnitServiceImpl.setSdsCurnitDao(this.mockSdsCurnitDao);
-
         this.mockCurnitDao = createMock(CurnitDao.class);
         this.curnitServiceImpl.setCurnitDao(this.mockCurnitDao);
         
-        this.sdsCurnit = new SdsCurnit();
-        this.sdsCurnit.setName(CURNIT_NAME);
-        this.sdsCurnit.setUrl(CURNIT_URL);
-        
         this.curnit = new CurnitImpl();
-        this.curnit.setSdsCurnit(this.sdsCurnit);
     }
 
     /**
@@ -79,7 +67,6 @@ public class CurnitServiceImplTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         this.curnitServiceImpl = null;
-        this.mockSdsCurnitDao = null;
         this.mockCurnitDao = null;
     }
 
@@ -98,18 +85,12 @@ public class CurnitServiceImplTest extends TestCase {
         curnitParameters.setName(CURNIT_NAME);
         curnitParameters.setUrl(CURNIT_URL);
 
-        mockSdsCurnitDao.save(this.sdsCurnit);
         expectLastCall();
-        replay(mockSdsCurnitDao);
         mockCurnitDao.save(this.curnit);
         expectLastCall();
         replay(mockCurnitDao);
         Curnit curnit = this.curnitServiceImpl.createCurnit(curnitParameters);
 
-        SdsCurnit actualSdsCurnit = curnit.getSdsCurnit();
-        assertEquals(CURNIT_NAME, actualSdsCurnit.getName());
-        assertEquals(CURNIT_URL, actualSdsCurnit.getUrl());
-        verify(mockSdsCurnitDao);
         verify(mockCurnitDao);
     }
 

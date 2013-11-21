@@ -22,7 +22,6 @@
  */
 package net.sf.sail.webapp.domain.impl;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,15 +29,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import net.sf.sail.webapp.domain.Offering;
 import net.sf.sail.webapp.domain.OfferingVisitor;
-import net.sf.sail.webapp.domain.sds.SdsOffering;
 
 /**
  * @author Hiroki Terashima
@@ -53,9 +49,6 @@ public class OfferingImpl implements Offering {
     public static final String DATA_STORE_NAME = "offerings";
 
     @Transient
-    public static final String COLUMN_NAME_SDS_OFFERING_FK = "sds_offering_fk";
-
-    @Transient
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -65,24 +58,6 @@ public class OfferingImpl implements Offering {
     @Version
     @Column(name = "OPTLOCK")
     private Integer version = null;
-
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = SdsOffering.class)
-    @JoinColumn(name = COLUMN_NAME_SDS_OFFERING_FK, unique = true)
-    private SdsOffering sdsOffering;
-
-    /**
-     * @return the sdsOffering
-     */
-    public SdsOffering getSdsOffering() {
-        return sdsOffering;
-    }
-
-    /**
-     * @see net.sf.sail.webapp.domain.Offering#setSdsOffering(net.sf.sail.webapp.domain.sds.SdsOffering)
-     */
-    public void setSdsOffering(SdsOffering sdsOffering) {
-        this.sdsOffering = sdsOffering;
-    }
 
     /**
      * @return the id
@@ -124,9 +99,6 @@ public class OfferingImpl implements Offering {
     public int hashCode() {
         final int PRIME = 31;
         int result = 1;
-        result = PRIME
-                * result
-                + ((this.sdsOffering == null) ? 0 : this.sdsOffering.hashCode());
         return result;
     }
 
@@ -140,12 +112,6 @@ public class OfferingImpl implements Offering {
         if (obj == null)
             return false;
         if (getClass() != obj.getClass())
-            return false;
-        final OfferingImpl other = (OfferingImpl) obj;
-        if (this.sdsOffering == null) {
-            if (other.sdsOffering != null)
-                return false;
-        } else if (!this.sdsOffering.equals(other.sdsOffering))
             return false;
         return true;
     }

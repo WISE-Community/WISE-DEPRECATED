@@ -30,7 +30,6 @@ import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
 import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.domain.sds.SdsUser;
 
 import org.hibernate.Session;
 import org.telscenter.sail.webapp.domain.newsitem.NewsItem;
@@ -53,10 +52,6 @@ public class HibernateNewsItemTest extends AbstractTransactionalDbTests {
 	
     private static final String DEFAULT_NAME = "Airbags";
 
-    private static final Long SDS_ID = new Long(7);
-    
-	private static final SdsUser DEFAULT_SDS_USER = new SdsUser();
-
 	private static final MutableUserDetails DEFAULT_USER_DETAILS = new PersistentUserDetails();
 	
 	private final static String TITLE = "today's headlines";
@@ -75,14 +70,10 @@ public class HibernateNewsItemTest extends AbstractTransactionalDbTests {
 		defaultNewsItem = new NewsItemImpl();
 		defaultNewsItem.setDate(DATE);
 		defaultNewsItem.setNews(STRING_BLOB);
-		DEFAULT_SDS_USER.setSdsObjectId(SDS_ID);
-        DEFAULT_SDS_USER.setFirstName(DEFAULT_NAME);
-        DEFAULT_SDS_USER.setLastName(DEFAULT_NAME);
         
         DEFAULT_USER_DETAILS.setPassword(DEFAULT_NAME);
         DEFAULT_USER_DETAILS.setUsername(DEFAULT_NAME);
         OWNER.setUserDetails(DEFAULT_USER_DETAILS);
-        OWNER.setSdsUser(DEFAULT_SDS_USER);
     }
     /**
      * @see net.sf.sail.webapp.junit.AbstractTransactionalDbTests#onSetUpInTransaction()
@@ -91,7 +82,6 @@ public class HibernateNewsItemTest extends AbstractTransactionalDbTests {
     protected void onSetUpInTransaction() throws Exception {
         super.onSetUpInTransaction();
         Session session = this.sessionFactory.getCurrentSession();
-        session.save(DEFAULT_SDS_USER);
         session.save(DEFAULT_USER_DETAILS);
         session.save(OWNER);  // save owner
 		defaultNewsItem.setOwner(OWNER);

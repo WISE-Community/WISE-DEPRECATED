@@ -33,7 +33,6 @@ import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 import net.sf.sail.webapp.domain.impl.WorkgroupImpl;
-import net.sf.sail.webapp.domain.sds.SdsWorkgroup;
 import net.sf.sail.webapp.service.UserService;
 
 import org.easymock.EasyMock;
@@ -115,8 +114,6 @@ public class ChangeWorkgroupControllerTest extends AbstractModelAndViewTests {
 		workgroupTo = new WorkgroupImpl();
 		workgroupFrom = new WorkgroupImpl();
 		workgroupFrom.addMember(student);
-		workgroupFrom.setSdsWorkgroup(new SdsWorkgroup());
-		workgroupFrom.getSdsWorkgroup().setSdsObjectId(WORKGROUP_FROM_ID);
 
 		changeWorkgroupController = new ChangeWorkgroupController();
 		changeWorkgroupController.setSuccessView(SUCCESS);
@@ -182,7 +179,6 @@ public class ChangeWorkgroupControllerTest extends AbstractModelAndViewTests {
 		verify(mockUserService);
 		verify(mockWorkgroupService);
 		ChangeWorkgroupParameters params = (ChangeWorkgroupParameters) returnedParams;
-		assertEquals(params.getWorkgroupFrom().getSdsWorkgroup().getSdsObjectId(), WORKGROUP_FROM_ID);
 		assertEquals(params.getStudent().getUserDetails().getUsername(), STUDENT_NAME);
 		assertTrue(true);
 	}

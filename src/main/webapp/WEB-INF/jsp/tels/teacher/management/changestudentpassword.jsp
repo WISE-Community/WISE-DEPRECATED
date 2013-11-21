@@ -10,13 +10,6 @@
     
 <title><spring:message code="changePassword" /></title>
 
-<script type='text/javascript' src='/wise/dwr/interface/ChangePasswordParametersValidatorJS.js'></script>
-<script type='text/javascript' src='/wise/dwr/engine.js'></script>
-<script>
-//alert('hi');
-//alert(ChangePasswordParametersValidatorJS.test('hi'))
-</script>
-
 </head>
 <body style="background:#FFFFFF;">
 

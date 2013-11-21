@@ -42,7 +42,6 @@ import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.Curnit;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
-import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
 import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 import net.sf.sail.webapp.presentation.web.listeners.PasSessionListener;
 import net.sf.sail.webapp.service.NotAuthorizedException;
@@ -87,8 +86,6 @@ public class AuthorProjectController extends AbstractController {
 	private ProjectService projectService;
 
 	private Properties portalProperties = null;
-
-	private HttpRestTransport httpRestTransport;
 
 	private CurnitService curnitService;
 
@@ -240,7 +237,6 @@ public class AuthorProjectController extends AbstractController {
 		params.setProject(project);
 		params.setHttpServletRequest(request);
 		params.setHttpServletResponse(response);
-		params.setHttpRestTransport(httpRestTransport);
 		params.setPortalUrl(Util.getPortalUrl(request));
 		params.setVersionId(request.getParameter("versionId"));
 
@@ -275,7 +271,6 @@ public class AuthorProjectController extends AbstractController {
 				previewParams.setProject(project);
 				previewParams.setPortalUrl(Util.getPortalUrl(request));
 				previewParams.setHttpServletRequest(request);
-				previewParams.setHttpRestTransport(this.httpRestTransport);
 
 				return (ModelAndView) this.projectService.previewProject(previewParams);
 			} else if(command.equals("createTag") || command.equals("updateTag") || 
@@ -924,7 +919,7 @@ public class AuthorProjectController extends AbstractController {
 	 * @throws IOException
 	 */
 	private ModelAndView handleGetCurriculumBaseUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		//get the curriculum_base_www variable from the portal.properties file
+		//get the curriculum_base_www variable from the wise.properties file
 		String vlewrapperBaseUrl = portalProperties.getProperty("curriculum_base_www");
 
 		//write the curriculum base url to the response
@@ -956,7 +951,7 @@ public class AuthorProjectController extends AbstractController {
 		//get the url to make CRater requests
 		String cRaterRequestUrl = portalUrl + "/wise/bridge/request.html?type=cRater";
 
-		//get the curriculum_base_www variable from the portal.properties file
+		//get the curriculum_base_www variable from the wise.properties file
 		String vlewrapperBaseUrl = portalProperties.getProperty("curriculum_base_www");
 
 		//get the url to make CRater requests
@@ -1196,13 +1191,6 @@ public class AuthorProjectController extends AbstractController {
 	 */
 	public void setProjectService(ProjectService projectService) {
 		this.projectService = projectService;
-	}
-
-	/**
-	 * @param httpRestTransport the httpRestTransport to set
-	 */
-	public void setHttpRestTransport(HttpRestTransport httpRestTransport) {
-		this.httpRestTransport = httpRestTransport;
 	}
 
 	/**

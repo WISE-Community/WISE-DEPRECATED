@@ -23,7 +23,6 @@ import java.util.Map;
 import net.sf.sail.webapp.dao.AbstractTransactionalDaoTests;
 import net.sf.sail.webapp.domain.Curnit;
 import net.sf.sail.webapp.domain.impl.CurnitImpl;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
 
 /**
  * @author Cynick Young
@@ -32,18 +31,6 @@ import net.sf.sail.webapp.domain.sds.SdsCurnit;
  * 
  */
 public class HibernateCurnitDaoTest extends AbstractTransactionalDaoTests<HibernateCurnitDao, Curnit> {
-
-    private static final Long SDS_ID = new Long(7);
-
-    private static final String DEFAULT_NAME = "Airbags";
-
-    private static final String DEFAULT_URL = "http://mrpotatoiscoolerthanwoody.com";
-
-    private SdsCurnit sdsCurnit;
-
-    public void setSdsCurnit(SdsCurnit sdsCurnit) {
-        this.sdsCurnit = sdsCurnit;
-    }
 
     /**
      * @see net.sf.sail.webapp.junit.AbstractTransactionalDbTests#onSetUpBeforeTransaction()
@@ -55,12 +42,6 @@ public class HibernateCurnitDaoTest extends AbstractTransactionalDaoTests<Hibern
                 .getBean("curnitDao"));
         this.dataObject = ((CurnitImpl) this.applicationContext
                 .getBean("curnit"));
-
-        this.sdsCurnit.setSdsObjectId(SDS_ID);
-        this.sdsCurnit.setName(DEFAULT_NAME);
-        this.sdsCurnit.setUrl(DEFAULT_URL);
-
-        this.dataObject.setSdsCurnit(this.sdsCurnit);
     }
 
     /**
@@ -69,7 +50,6 @@ public class HibernateCurnitDaoTest extends AbstractTransactionalDaoTests<Hibern
     @Override
     protected void onTearDownAfterTransaction() throws Exception {
         super.onTearDownAfterTransaction();
-        this.sdsCurnit = null;
     }
 
 
@@ -88,12 +68,6 @@ public class HibernateCurnitDaoTest extends AbstractTransactionalDaoTests<Hibern
         assertEquals(1, actualList.size());
 
         Map<?, ?> actualCurnitMap = (Map<?, ?>) actualList.get(0);
-        assertEquals(SDS_ID, actualCurnitMap
-                .get(SdsCurnit.COLUMN_NAME_CURNIT_ID.toUpperCase()));
-        assertEquals(DEFAULT_NAME, actualCurnitMap
-                .get(SdsCurnit.COLUMN_NAME_CURNIT_NAME.toUpperCase()));
-        assertEquals(DEFAULT_URL, actualCurnitMap
-                .get(SdsCurnit.COLUMN_NAME_CURNIT_URL.toUpperCase()));
     }
 
 	@Override
@@ -103,14 +77,10 @@ public class HibernateCurnitDaoTest extends AbstractTransactionalDaoTests<Hibern
 	}
 	
 	    /*
-     * SELECT * FROM curnits, sds_curnits WHERE curnits.sds_curnit_fk =
-     * sds_curnits.id
+     * SELECT * FROM curnits
      */
     private static final String RETRIEVE_CURNIT_LIST_SQL = "SELECT * FROM "
-            + CurnitImpl.DATA_STORE_NAME + ", " + SdsCurnit.DATA_STORE_NAME
-            + " WHERE " + CurnitImpl.DATA_STORE_NAME + "."
-            + CurnitImpl.COLUMN_NAME_SDS_CURNIT_FK + " = "
-            + SdsCurnit.DATA_STORE_NAME + ".id";
+            + CurnitImpl.DATA_STORE_NAME;
 
     private List<?> retrieveCurnitListFromDb() {
         return this.jdbcTemplate.queryForList(RETRIEVE_CURNIT_LIST_SQL,

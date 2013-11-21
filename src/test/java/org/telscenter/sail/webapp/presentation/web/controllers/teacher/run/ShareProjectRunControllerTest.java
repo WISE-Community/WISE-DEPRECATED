@@ -30,9 +30,6 @@ import java.util.Set;
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.domain.sds.SdsCurnit;
-import net.sf.sail.webapp.domain.sds.SdsJnlp;
-import net.sf.sail.webapp.domain.sds.SdsOffering;
 import net.sf.sail.webapp.service.UserService;
 
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -91,20 +88,7 @@ public class ShareProjectRunControllerTest extends AbstractModelAndViewTests {
 		
 		this.mockRunService = createMock(RunService.class);
 		this.mockUserService = createMock(UserService.class);
-		SdsOffering sdsOffering = new SdsOffering();
-
-		SdsCurnit curnit = new SdsCurnit();
-		curnit.setSdsObjectId(new Long(1));
-		sdsOffering.setSdsCurnit(curnit);
-
-		SdsJnlp jnlp = new SdsJnlp();
-		jnlp.setSdsObjectId(new Long(2));
-		sdsOffering.setSdsJnlp(jnlp);
-
-		sdsOffering.setName("test");
-		sdsOffering.setSdsObjectId(new Long(3));
 		run = new RunImpl();
-		run.setSdsOffering(sdsOffering);
 		Set<User> sharedowners = new HashSet<User>();
 		sharedowners.add(user);
 		run.setOwners(sharedowners);

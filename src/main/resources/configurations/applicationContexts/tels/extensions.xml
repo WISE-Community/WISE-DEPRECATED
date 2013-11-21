@@ -244,12 +244,10 @@
 
 	<bean id="runServiceTarget"
 		class="org.telscenter.sail.webapp.service.offering.impl.RunServiceImpl">
-		<property name="sdsOfferingDao" ref="sdsOfferingDao" />
 		<property name="offeringDao" ref="offeringDao" />
 		<property name="runDao" ref="runDao" />
 		<property name="userDao" ref="userDao" />
 		<property name="curnitDao" ref="curnitDao" />
-		<property name="jnlpDao" ref="jnlpDao" />
 		<property name="groupDao" ref="groupDao" />
 		<property name="aclService" ref="aclServiceImpl" />
 		<property name="projectService" ref="projectService" />
@@ -364,7 +362,6 @@
 
 	<bean id="curnitService"
 		class="org.telscenter.sail.webapp.service.module.impl.ModuleServiceImpl">
-		<property name="sdsCurnitDao" ref="sdsCurnitDao" />
 		<property name="curnitDao" ref="curnitDao" />
 		<property name="moduleDao" ref="moduleDao" />
 	</bean>
@@ -376,18 +373,6 @@
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="userService" ref="userService" />
-	</bean>
-
-	<bean id="sessionBundleService"
-		class="org.telscenter.sail.webapp.service.grading.impl.SessionBundleServiceImpl">
-		<property name="sdsWorkgroupDao" ref="sdsWorkgroupDao" />
-	</bean>
-
-	<bean id="gradingService"
-		class="org.telscenter.sail.webapp.service.grading.impl.GradingServiceImpl">
-		<property name="sessionBundleService" ref="sessionBundleService" />
-		<property name="annotationBundleService" ref="annotationBundleService" />
-		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="wiseWorkgroupService" class="org.springframework.aop.framework.ProxyFactoryBean">
@@ -414,11 +399,8 @@
 
 	<bean id="wiseWorkgroupServiceTarget"
 		class="org.telscenter.sail.webapp.service.workgroup.impl.WISEWorkgroupServiceImpl">
-		<property name="sdsWorkgroupDao" ref="sdsWorkgroupDao" />
 		<property name="workgroupDao" ref="wiseWorkgroupDao" />
-		<property name="annotationBundleService" ref="annotationBundleService" />
 		<property name="aclService" ref="aclServiceImpl" />
-		<property name="gradingService" ref="gradingService" />
 		<property name="offeringService" ref="runService" />
 		<property name="groupService" ref="groupService" />
 		<property name="groupDao" ref="groupDao" />

@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -36,7 +35,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
 import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 import net.sf.sail.webapp.service.UserService;
 import net.sf.sail.webapp.service.workgroup.WorkgroupService;
@@ -76,19 +74,13 @@ public class TeacherIndexController extends AbstractController {
 
 	private MessageService messageService;
 
-	private UserService userService;
-
 	private Properties portalProperties;
 
 	private ProjectService projectService;
 
 	private WorkgroupService workgroupService;
 
-	private HttpRestTransport httpRestTransport;
-	
 	protected final static String IS_XMPP_ENABLED = "isXMPPEnabled";
-
-	protected final static String HTTP_TRANSPORT_KEY = "http_transport";
 
 	protected final static String CURRENT_RUN_LIST_KEY = "current_run_list";
 	
@@ -201,7 +193,6 @@ public class TeacherIndexController extends AbstractController {
 		//modelAndView.addObject(ENDED_RUN_LIST_KEY, ended_run_list);
 		modelAndView.addObject("externalprojectruns", external_project_runs);
 		modelAndView.addObject(WORKGROUP_MAP_KEY, workgroupMap);
-		modelAndView.addObject(HTTP_TRANSPORT_KEY, this.httpRestTransport);
     	
     	// retrieve all unread messages
     	List<Message> unreadMessages = messageService.retrieveUnreadMessages(user);
@@ -215,12 +206,7 @@ public class TeacherIndexController extends AbstractController {
 	public void setRunService(RunService runService) {
 		this.runService = runService;
 	}
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
+	
 	/**
 	 * @param portalProperties the portalProperties to set
 	 */
@@ -239,15 +225,6 @@ public class TeacherIndexController extends AbstractController {
 	 */
 	public void setProjectService(ProjectService projectService) {
 		this.projectService = projectService;
-	}
-	
-	/**
-	 * @param httpRestTransport
-	 *            the httpRestTransport to set
-	 */
-	@Required
-	public void setHttpRestTransport(HttpRestTransport httpRestTransport) {
-		this.httpRestTransport = httpRestTransport;
 	}
 	
 	/**

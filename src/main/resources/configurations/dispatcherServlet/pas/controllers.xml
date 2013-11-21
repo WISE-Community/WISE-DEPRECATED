@@ -22,20 +22,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"	
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/util
-	http://www.springframework.org/schema/util/spring-util-3.0.xsd
-	http://www.directwebremoting.org/schema/spring-dwr
-	http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd">
+	http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
 	<!-- Custom controllers -->
 	<bean
 		class="net.sf.sail.webapp.presentation.web.controllers.offerings.OfferingListController">
 		<property name="offeringService" ref="offeringService" />
 		<property name="workgroupService" ref="workgroupService" />
-		<property name="httpRestTransport" ref="httpRestTransport" />
 	</bean>
 	
 	<bean
@@ -79,13 +75,6 @@
 		<property name="groupService" ref="groupService" />
 	</bean>
 
-	<bean
-		class="net.sf.sail.webapp.presentation.web.controllers.offerings.AuthoringJnlpLauncherController">
-		<property name="jnlpFileName"
-			value="authoring-everything-snapshot.jnlp" />
-		<property name="modifier" ref="authoringjnlpmodifier" />
-	</bean>
-
 	<bean id="userDetailsValidator"
 		class="net.sf.sail.webapp.presentation.validators.UserDetailsValidator" />
 
@@ -125,26 +114,11 @@
     	<property name="validator" ref="curnitParametersValidator" />
     </bean>
 
-    <bean id="jnlpParametersValidator"
-        class="net.sf.sail.webapp.presentation.validators.JnlpParametersValidator" />
-    
-    <bean id="registerJnlpController"
-    	class="net.sf.sail.webapp.presentation.web.controllers.jnlp.RegisterJnlpController">
-    	<property name="jnlpService" ref="jnlpService" />
-    	<property name="commandName" value="jnlpParameters" />
-    	<property name="commandClass"
-    	    value="net.sf.sail.webapp.domain.impl.JnlpParameters" />
-    	<property name="validator" ref="jnlpParametersValidator" />
-    </bean>
-    
     <bean id="changePasswordParametersValidator"
 		class="net.sf.sail.webapp.presentation.validators.ChangePasswordParametersValidator" >
-		<dwr:remote javascript="ChangePasswordParametersValidator" />
 		<property name="systemSaltSource" ref="systemSaltSource" />
 	</bean>
 	
-	<dwr:controller id="dwrController" debug="true"/>
-    
     <bean id="controllerUtil"
     	class="net.sf.sail.webapp.presentation.web.controllers.ControllerUtil">
     	<property name="userService" ref="userService"/>
