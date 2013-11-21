@@ -15,9 +15,6 @@
     
 <title><spring:message code="wiseAdmin" /></title>
 
-<script type='text/javascript' src='/wise/dwr/interface/ChangePasswordParametersValidatorJS.js'></script>
-<script type='text/javascript' src='/wise/dwr/engine.js'></script>
-
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title>Google Maps JavaScript API Example</title>
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=${googleMapKey}"

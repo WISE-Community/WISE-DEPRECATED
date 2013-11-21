@@ -22,13 +22,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"	
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/util
-	http://www.springframework.org/schema/util/spring-util-3.0.xsd
-	http://www.directwebremoting.org/schema/spring-dwr
-	http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd">
+	http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
 	<!-- Custom controllers -->
 	<bean
@@ -119,12 +116,9 @@
 
     <bean id="changePasswordParametersValidator"
 		class="net.sf.sail.webapp.presentation.validators.ChangePasswordParametersValidator" >
-		<dwr:remote javascript="ChangePasswordParametersValidator" />
 		<property name="systemSaltSource" ref="systemSaltSource" />
 	</bean>
 	
-	<dwr:controller id="dwrController" debug="true"/>
-    
     <bean id="controllerUtil"
     	class="net.sf.sail.webapp.presentation.web.controllers.ControllerUtil">
     	<property name="userService" ref="userService"/>
