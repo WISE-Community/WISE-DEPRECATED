@@ -83,19 +83,19 @@
 		<mapping class="org.telscenter.sail.webapp.domain.attendance.impl.StudentAttendanceImpl" />
 
 		<!--  vle mappings -->
-		<mapping class="vle.domain.user.UserInfo" />
-		<mapping class="vle.domain.node.Node" />
-		<mapping class="vle.domain.work.StepWork" />
-		<mapping class="vle.domain.work.StepWorkCache" />
-		<mapping class="vle.domain.journal.Journal" />
-		<mapping class="vle.domain.annotation.Annotation" />
-		<mapping class="vle.domain.cRater.CRaterRequest" />
-		<mapping class="vle.domain.peerreview.PeerReviewWork" />
-		<mapping class="vle.domain.peerreview.PeerReviewGate" />
-		<mapping class="vle.domain.ideabasket.IdeaBasket" />
-		<mapping class="vle.domain.statistics.VLEStatistics" />
-		<mapping class="vle.domain.xmpp.ChatLog" />
-		<mapping class="vle.domain.status.StudentStatus" />
-		<mapping class="vle.domain.status.RunStatus" />
+		<mapping class="org.wise.vle.domain.user.UserInfo" />
+		<mapping class="org.wise.vle.domain.node.Node" />
+		<mapping class="org.wise.vle.domain.work.StepWork" />
+		<mapping class="org.wise.vle.domain.work.StepWorkCache" />
+		<mapping class="org.wise.vle.domain.journal.Journal" />
+		<mapping class="org.wise.vle.domain.annotation.Annotation" />
+		<mapping class="org.wise.vle.domain.cRater.CRaterRequest" />
+		<mapping class="org.wise.vle.domain.peerreview.PeerReviewWork" />
+		<mapping class="org.wise.vle.domain.peerreview.PeerReviewGate" />
+		<mapping class="org.wise.vle.domain.ideabasket.IdeaBasket" />
+		<mapping class="org.wise.vle.domain.statistics.VLEStatistics" />
+		<mapping class="org.wise.vle.domain.xmpp.ChatLog" />
+		<mapping class="org.wise.vle.domain.status.StudentStatus" />
+		<mapping class="org.wise.vle.domain.status.RunStatus" />
 	</session-factory>
 </hibernate-configuration>

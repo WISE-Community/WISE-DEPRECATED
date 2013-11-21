@@ -2,9 +2,10 @@ package org.telscenter.sail.webapp.dao.work;
 
 import java.util.List;
 
-import vle.domain.node.Node;
-import vle.domain.user.UserInfo;
-import vle.domain.work.StepWork;
+import org.wise.vle.domain.node.Node;
+import org.wise.vle.domain.user.UserInfo;
+import org.wise.vle.domain.work.StepWork;
+
 import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface StepWorkDao<T extends StepWork> extends SimpleDao<T> {

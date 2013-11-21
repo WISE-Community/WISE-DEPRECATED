@@ -17,8 +17,8 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.LoggerFactory;
+import org.wise.vle.domain.statistics.VLEStatistics;
 
-import vle.domain.statistics.VLEStatistics;
 
 public class DailyJob implements Job {
 	

@@ -8,10 +8,10 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.telscenter.sail.webapp.dao.node.NodeDao;
+import org.wise.vle.domain.PersistableDomain;
+import org.wise.vle.domain.node.Node;
+import org.wise.vle.hibernate.HibernateUtil;
 
-import vle.domain.PersistableDomain;
-import vle.domain.node.Node;
-import vle.hibernate.HibernateUtil;
 
 public class HibernateNodeDao extends AbstractHibernateDao<Node> implements NodeDao<Node> {
 

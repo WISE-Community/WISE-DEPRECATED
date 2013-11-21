@@ -2,7 +2,8 @@ package org.telscenter.sail.webapp.dao.node;
 
 import java.util.List;
 
-import vle.domain.node.Node;
+import org.wise.vle.domain.node.Node;
+
 import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface NodeDao<T extends Node> extends SimpleDao<T> {

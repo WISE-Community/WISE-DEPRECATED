@@ -7,10 +7,10 @@ import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.telscenter.sail.webapp.dao.crater.CRaterRequestDao;
+import org.wise.vle.domain.cRater.CRaterRequest;
+import org.wise.vle.domain.work.StepWork;
+import org.wise.vle.hibernate.HibernateUtil;
 
-import vle.domain.cRater.CRaterRequest;
-import vle.domain.work.StepWork;
-import vle.hibernate.HibernateUtil;
 
 public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterRequest> implements CRaterRequestDao<CRaterRequest> {
 

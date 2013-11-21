@@ -8,11 +8,11 @@ import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.telscenter.sail.webapp.dao.peerreview.PeerReviewGateDao;
+import org.wise.vle.domain.node.Node;
+import org.wise.vle.domain.peerreview.PeerReviewGate;
+import org.wise.vle.domain.peerreview.PeerReviewWork;
+import org.wise.vle.hibernate.HibernateUtil;
 
-import vle.domain.node.Node;
-import vle.domain.peerreview.PeerReviewGate;
-import vle.domain.peerreview.PeerReviewWork;
-import vle.hibernate.HibernateUtil;
 
 public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewGate> implements PeerReviewGateDao<PeerReviewGate> {
 

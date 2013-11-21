@@ -1,8 +1,9 @@
 package org.telscenter.sail.webapp.dao.peerreview;
 
 
-import vle.domain.node.Node;
-import vle.domain.peerreview.PeerReviewGate;
+import org.wise.vle.domain.node.Node;
+import org.wise.vle.domain.peerreview.PeerReviewGate;
+
 import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface PeerReviewGateDao<T extends PeerReviewGate> extends SimpleDao<T> {

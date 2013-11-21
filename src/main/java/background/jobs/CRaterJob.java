@@ -7,9 +7,9 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.telscenter.sail.webapp.dao.crater.impl.HibernateCRaterRequestDao;
+import org.wise.vle.domain.cRater.CRaterRequest;
+import org.wise.vle.domain.work.StepWork;
 
-import vle.domain.cRater.CRaterRequest;
-import vle.domain.work.StepWork;
 
 public class CRaterJob implements Job {
 

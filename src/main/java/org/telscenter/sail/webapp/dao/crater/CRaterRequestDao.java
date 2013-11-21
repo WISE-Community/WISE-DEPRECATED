@@ -2,8 +2,9 @@ package org.telscenter.sail.webapp.dao.crater;
 
 import java.util.List;
 
-import vle.domain.cRater.CRaterRequest;
-import vle.domain.work.StepWork;
+import org.wise.vle.domain.cRater.CRaterRequest;
+import org.wise.vle.domain.work.StepWork;
+
 import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface CRaterRequestDao<T extends CRaterRequest> extends SimpleDao<CRaterRequest> {

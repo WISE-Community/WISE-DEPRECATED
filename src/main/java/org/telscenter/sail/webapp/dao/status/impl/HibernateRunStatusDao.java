@@ -6,9 +6,9 @@ import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.telscenter.sail.webapp.dao.status.RunStatusDao;
+import org.wise.vle.domain.status.RunStatus;
+import org.wise.vle.hibernate.HibernateUtil;
 
-import vle.domain.status.RunStatus;
-import vle.hibernate.HibernateUtil;
 
 public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus> implements RunStatusDao<RunStatus> {
 

@@ -3,9 +3,10 @@ package org.telscenter.sail.webapp.dao.annotation;
 import java.util.List;
 import java.util.Map;
 
-import vle.domain.annotation.Annotation;
-import vle.domain.user.UserInfo;
-import vle.domain.work.StepWork;
+import org.wise.vle.domain.annotation.Annotation;
+import org.wise.vle.domain.user.UserInfo;
+import org.wise.vle.domain.work.StepWork;
+
 import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface AnnotationDao<T extends Annotation> extends SimpleDao<T> {

@@ -12,9 +12,9 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.telscenter.sail.webapp.dao.ideabasket.IdeaBasketDao;
+import org.wise.vle.domain.ideabasket.IdeaBasket;
+import org.wise.vle.hibernate.HibernateUtil;
 
-import vle.domain.ideabasket.IdeaBasket;
-import vle.hibernate.HibernateUtil;
 
 public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> implements IdeaBasketDao<IdeaBasket> {
 

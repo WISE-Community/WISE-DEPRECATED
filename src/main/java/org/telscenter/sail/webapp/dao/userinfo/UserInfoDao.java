@@ -24,9 +24,10 @@ package org.telscenter.sail.webapp.dao.userinfo;
 
 import java.util.List;
 
+import org.wise.vle.domain.user.UserInfo;
+
 import net.sf.sail.webapp.dao.SimpleDao;
 
-import vle.domain.user.UserInfo;
 
 /**
  * @author h

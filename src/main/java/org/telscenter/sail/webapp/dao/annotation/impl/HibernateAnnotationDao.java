@@ -16,12 +16,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.telscenter.sail.webapp.dao.annotation.AnnotationDao;
 import org.telscenter.sail.webapp.service.vle.VLEService;
+import org.wise.vle.domain.annotation.Annotation;
+import org.wise.vle.domain.node.Node;
+import org.wise.vle.domain.user.UserInfo;
+import org.wise.vle.domain.work.StepWork;
+import org.wise.vle.hibernate.HibernateUtil;
 
-import vle.domain.annotation.Annotation;
-import vle.domain.node.Node;
-import vle.domain.user.UserInfo;
-import vle.domain.work.StepWork;
-import vle.hibernate.HibernateUtil;
 
 public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> implements AnnotationDao<Annotation> {
 

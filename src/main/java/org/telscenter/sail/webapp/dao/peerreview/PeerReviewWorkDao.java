@@ -2,11 +2,12 @@ package org.telscenter.sail.webapp.dao.peerreview;
 
 import java.util.List;
 
-import vle.domain.annotation.Annotation;
-import vle.domain.node.Node;
-import vle.domain.peerreview.PeerReviewWork;
-import vle.domain.user.UserInfo;
-import vle.domain.work.StepWork;
+import org.wise.vle.domain.annotation.Annotation;
+import org.wise.vle.domain.node.Node;
+import org.wise.vle.domain.peerreview.PeerReviewWork;
+import org.wise.vle.domain.user.UserInfo;
+import org.wise.vle.domain.work.StepWork;
+
 import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface PeerReviewWorkDao<T extends PeerReviewWork> extends SimpleDao<T> {

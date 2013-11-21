@@ -7,13 +7,13 @@ import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.telscenter.sail.webapp.dao.peerreview.PeerReviewWorkDao;
+import org.wise.vle.domain.annotation.Annotation;
+import org.wise.vle.domain.node.Node;
+import org.wise.vle.domain.peerreview.PeerReviewWork;
+import org.wise.vle.domain.user.UserInfo;
+import org.wise.vle.domain.work.StepWork;
+import org.wise.vle.hibernate.HibernateUtil;
 
-import vle.domain.annotation.Annotation;
-import vle.domain.node.Node;
-import vle.domain.peerreview.PeerReviewWork;
-import vle.domain.user.UserInfo;
-import vle.domain.work.StepWork;
-import vle.hibernate.HibernateUtil;
 
 public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewWork> implements PeerReviewWorkDao<PeerReviewWork> {
 

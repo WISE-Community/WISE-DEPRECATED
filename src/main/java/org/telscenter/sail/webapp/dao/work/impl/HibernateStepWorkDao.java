@@ -9,11 +9,11 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.telscenter.sail.webapp.dao.work.StepWorkDao;
+import org.wise.vle.domain.node.Node;
+import org.wise.vle.domain.user.UserInfo;
+import org.wise.vle.domain.work.StepWork;
+import org.wise.vle.hibernate.HibernateUtil;
 
-import vle.domain.node.Node;
-import vle.domain.user.UserInfo;
-import vle.domain.work.StepWork;
-import vle.hibernate.HibernateUtil;
 
 public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> implements StepWorkDao<StepWork> {
 

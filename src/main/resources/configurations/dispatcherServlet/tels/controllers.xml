@@ -918,43 +918,43 @@
 		<property name="userService" ref="userService" />
 	</bean>
 
-	<bean id="getStudentDataController" class="vle.web.VLEGetData">
+	<bean id="getStudentDataController" class="org.wise.vle.web.VLEGetData">
 	    <property name="vleService" ref="vleService" />
 	</bean>
 
-	<bean id="postStudentDataController" class="vle.web.VLEPostData">
+	<bean id="postStudentDataController" class="org.wise.vle.web.VLEPostData">
 		<property name="vleService" ref="vleService" />
 	</bean>
 
-	<bean id="annotationController" class="vle.web.VLEAnnotationController">
+	<bean id="annotationController" class="org.wise.vle.web.VLEAnnotationController">
 		<property name="vleService" ref="vleService" />
 	</bean>
 
-	<bean id="studentStatusController" class="vle.web.StudentStatusController">
+	<bean id="studentStatusController" class="org.wise.vle.web.StudentStatusController">
 		<property name="vleService" ref="vleService" />
 	</bean>
 
-	<bean id="runStatusController" class="vle.web.RunStatusController">
+	<bean id="runStatusController" class="org.wise.vle.web.RunStatusController">
 		<property name="vleService" ref="vleService" />
 	</bean>
 
-	<bean id="ideaBasketController" class="vle.web.VLEIdeaBasketController">
+	<bean id="ideaBasketController" class="org.wise.vle.web.VLEIdeaBasketController">
 		<property name="vleService" ref="vleService" />
 	</bean>
 	
-	<bean id="getExportController" class="vle.web.VLEGetXLS">
+	<bean id="getExportController" class="org.wise.vle.web.VLEGetXLS">
 	    <property name="vleService" ref="vleService" />
 	</bean>
 	
-	<bean id="getSpecialExportController" class="vle.web.VLEGetSpecialExport">
+	<bean id="getSpecialExportController" class="org.wise.vle.web.VLEGetSpecialExport">
 	    <property name="vleService" ref="vleService" />
 	</bean>
 	
-	<bean id="peerReviewController" class="vle.web.VLEPeerReviewController">
+	<bean id="peerReviewController" class="org.wise.vle.web.VLEPeerReviewController">
 	    <property name="vleService" ref="vleService" />
 	</bean>
 	
-	<bean id="vleGetStatisticsController" class="vle.web.VLEGetStatisticsController">
+	<bean id="vleGetStatisticsController" class="org.wise.vle.web.VLEGetStatisticsController">
 	    <property name="vleService" ref="vleService" />
 	</bean>
 	

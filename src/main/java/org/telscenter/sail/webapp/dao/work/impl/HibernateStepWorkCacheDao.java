@@ -5,10 +5,10 @@ import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.telscenter.sail.webapp.dao.work.StepWorkCacheDao;
+import org.wise.vle.domain.user.UserInfo;
+import org.wise.vle.domain.work.StepWorkCache;
+import org.wise.vle.hibernate.HibernateUtil;
 
-import vle.domain.user.UserInfo;
-import vle.domain.work.StepWorkCache;
-import vle.hibernate.HibernateUtil;
 
 public class HibernateStepWorkCacheDao extends AbstractHibernateDao<StepWorkCache> implements StepWorkCacheDao<StepWorkCache> {
 

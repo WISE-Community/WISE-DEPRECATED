@@ -7,9 +7,9 @@ import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.telscenter.sail.webapp.dao.statistics.VLEStatisticsDao;
+import org.wise.vle.domain.statistics.VLEStatistics;
+import org.wise.vle.hibernate.HibernateUtil;
 
-import vle.domain.statistics.VLEStatistics;
-import vle.hibernate.HibernateUtil;
 
 public class HibernateVLEStatisticsDao extends AbstractHibernateDao<VLEStatistics> implements VLEStatisticsDao<VLEStatistics> {
 

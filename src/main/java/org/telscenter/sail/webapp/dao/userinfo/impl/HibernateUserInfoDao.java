@@ -35,10 +35,10 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.telscenter.sail.webapp.dao.userinfo.UserInfoDao;
+import org.wise.vle.domain.user.UserInfo;
+import org.wise.vle.domain.work.StepWork;
+import org.wise.vle.hibernate.HibernateUtil;
 
-import vle.domain.user.UserInfo;
-import vle.domain.work.StepWork;
-import vle.hibernate.HibernateUtil;
 
 /**
  * @author h

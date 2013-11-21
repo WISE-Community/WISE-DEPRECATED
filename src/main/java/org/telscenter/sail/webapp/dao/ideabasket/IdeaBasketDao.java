@@ -2,7 +2,8 @@ package org.telscenter.sail.webapp.dao.ideabasket;
 
 import java.util.List;
 
-import vle.domain.ideabasket.IdeaBasket;
+import org.wise.vle.domain.ideabasket.IdeaBasket;
+
 import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface IdeaBasketDao<T extends IdeaBasket> extends SimpleDao<IdeaBasket> {
