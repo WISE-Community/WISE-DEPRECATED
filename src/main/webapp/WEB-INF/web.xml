@@ -38,6 +38,10 @@
 		</param-value>
 	</context-param>
 
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>wise</param-value>
+	</context-param>
 
 	<!-- Filters -->
 

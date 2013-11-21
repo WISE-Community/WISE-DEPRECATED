@@ -10,12 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.NonUniqueResultException;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
-
 import vle.domain.PersistableDomain;
-import vle.hibernate.HibernateUtil;
 
 @Entity
 @Table(name="runStatus")
@@ -55,28 +50,7 @@ public class RunStatus extends PersistableDomain {
 		Calendar now = Calendar.getInstance();
 		setTimestamp(new Timestamp(now.getTimeInMillis()));
 	}
-	
-	/**
-	 * Get a RunStatus object given the run id
-	 * @param runId the run id
-	 * @return the RunStatus with the given run id or null if none is found
-	 */
-	public static RunStatus getByRunId(Long runId) {
-		RunStatus result = null;
-		
-		try {
-			Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-			session.beginTransaction();
-			
-			result = (RunStatus) session.createCriteria(RunStatus.class).add(Restrictions.eq("runId", runId)).uniqueResult();
-			
-			session.getTransaction().commit();
-		} catch (NonUniqueResultException e) {
-			throw e;
-		}
-		
-		return result;
-	}
+
 	
 	@Override
 	protected Class<?> getObjectClass() {

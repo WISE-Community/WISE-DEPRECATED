@@ -22,6 +22,8 @@
  */
 package org.telscenter.sail.webapp.dao.userinfo;
 
+import java.util.List;
+
 import net.sf.sail.webapp.dao.SimpleDao;
 
 import vle.domain.user.UserInfo;
@@ -32,5 +34,13 @@ import vle.domain.user.UserInfo;
  */
 public interface UserInfoDao<T extends UserInfo> extends SimpleDao<T> {
 
-	UserInfo getByWorkgroupId(Long workgroupId);
+	public UserInfo getUserInfoByWorkgroupId(Long workgroupId);
+	
+	public UserInfo getUserInfoOrCreateByWorkgroupId(Long workgroupId);
+	
+	public List<UserInfo> getUserInfoByWorkgroupIds(List<String> workgroupIds);
+	
+	public List<UserInfo> getUserInfosThatHaveWorkedToday(List<UserInfo> userInfos);
+	
+	
 }

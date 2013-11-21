@@ -11,13 +11,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.telscenter.sail.webapp.service.vle.VLEService;
 
 import utils.SecurityUtils;
-import vle.VLEServlet;
 import vle.domain.status.RunStatus;
 
 public class RunStatusController extends AbstractController {
 	private static final long serialVersionUID = 1L;
+	
+	private VLEService vleService;
 	
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -58,7 +60,7 @@ public class RunStatusController extends AbstractController {
 		
 		if(runId != null) {
 			//try to retrieve the run status for the run id
-			RunStatus runStatus = RunStatus.getByRunId(runId);
+			RunStatus runStatus = vleService.getRunStatusByRunId(runId);
 			
 			if(runStatus == null) {
 				//the run status for the run id has not been created yet so we will create it
@@ -119,7 +121,7 @@ public class RunStatusController extends AbstractController {
 		
 		if(runId != null && status != null) {
 			//try to get the run status for the run id
-			RunStatus runStatus = RunStatus.getByRunId(runId);
+			RunStatus runStatus = vleService.getRunStatusByRunId(runId);
 			
 			if(runStatus == null) {
 				//the run status does not exist for the run id so we will create it
@@ -136,6 +138,14 @@ public class RunStatusController extends AbstractController {
 		}
 		
 		return null;
+	}
+
+	public VLEService getVleService() {
+		return vleService;
+	}
+
+	public void setVleService(VLEService vleService) {
+		this.vleService = vleService;
 	}
 
 }

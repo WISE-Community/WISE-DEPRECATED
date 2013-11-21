@@ -82,9 +82,11 @@ public class StepWorkController extends DomainController {
 	 * @param userInfo
 	 */
 	private static void deleteAllWorkForUser(UserInfo userInfo) {
+		/*
 		List<StepWork> allWorkByUser = StepWork.getByUserInfo(userInfo);
 		for (StepWork workByUser : allWorkByUser) {
 			workByUser.delete();
 		}
+		*/
 	}
 }

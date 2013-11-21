@@ -108,6 +108,16 @@
 	<bean id="vleService"
 		class="org.telscenter.sail.webapp.service.vle.impl.VLEServiceImpl">
 		<property name="userInfoDao" ref="userInfoDao" />
+		<property name="annotationDao" ref="annotationDao" />
+		<property name="peerReviewWorkDao" ref="peerReviewWorkDao" />
+		<property name="peerReviewGateDao" ref="peerReviewGateDao" />
+		<property name="nodeDao" ref="nodeDao" />
+		<property name="stepWorkDao" ref="stepWorkDao" />
+		<property name="stepWorkCacheDao" ref="stepWorkCacheDao" />
+		<property name="studentStatusDao" ref="studentStatusDao" />
+		<property name="runStatusDao" ref="runStatusDao" />
+		<property name="ideaBasketDao" ref="ideaBasketDao" />
+		<property name="cRaterRequestDao" ref="cRaterRequestDao" />
 	</bean>
 	
 	<bean id="userInfoDao"
@@ -115,6 +125,61 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
+	<bean id="annotationDao"
+		class="org.telscenter.sail.webapp.dao.annotation.impl.HibernateAnnotationDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="peerReviewWorkDao"
+		class="org.telscenter.sail.webapp.dao.peerreview.impl.HibernatePeerReviewWorkDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+		
+	<bean id="peerReviewGateDao"
+		class="org.telscenter.sail.webapp.dao.peerreview.impl.HibernatePeerReviewGateDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="nodeDao"
+		class="org.telscenter.sail.webapp.dao.node.impl.HibernateNodeDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="stepWorkDao"
+		class="org.telscenter.sail.webapp.dao.work.impl.HibernateStepWorkDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="stepWorkCacheDao"
+		class="org.telscenter.sail.webapp.dao.work.impl.HibernateStepWorkCacheDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="vleStatisticsDao"
+		class="org.telscenter.sail.webapp.dao.statistics.impl.HibernateVLEStatisticsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="studentStatusDao"
+		class="org.telscenter.sail.webapp.dao.status.impl.HibernateStudentStatusDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="runStatusDao"
+		class="org.telscenter.sail.webapp.dao.status.impl.HibernateRunStatusDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="ideaBasketDao"
+		class="org.telscenter.sail.webapp.dao.ideabasket.impl.HibernateIdeaBasketDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="cRaterRequestDao"
+		class="org.telscenter.sail.webapp.dao.crater.impl.HibernateCRaterRequestDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+		
 	<bean id="runDao"
 		class="org.telscenter.sail.webapp.dao.offering.impl.HibernateRunDao">
 		<property name="sessionFactory" ref="sessionFactory" />

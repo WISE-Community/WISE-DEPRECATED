@@ -6,10 +6,10 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.telscenter.sail.webapp.dao.crater.impl.HibernateCRaterRequestDao;
 
 import vle.domain.cRater.CRaterRequest;
 import vle.domain.work.StepWork;
-import vle.web.VLEAnnotationController;
 
 public class CRaterJob implements Job {
 
@@ -24,7 +24,8 @@ public class CRaterJob implements Job {
 		String cRaterClientId = mergedJobDataMap.getString("cRater_client_id");
 		
 		if(cRaterScoringUrl != null) {
-			List<CRaterRequest> incompleteCRaterRequests = CRaterRequest.getIncompleteCRaterRequests();
+			HibernateCRaterRequestDao cRaterRequestDao = (HibernateCRaterRequestDao) context.getMergedJobDataMap().get("cRaterRequestDao");
+			List<CRaterRequest> incompleteCRaterRequests = cRaterRequestDao.getIncompleteCRaterRequests();
 			
 			for(int x=0; x<incompleteCRaterRequests.size(); x++) {
 				CRaterRequest cRaterRequest = incompleteCRaterRequests.get(x);
@@ -35,7 +36,7 @@ public class CRaterJob implements Job {
 				String runId = cRaterRequest.getRunId().toString();
 				String annotationType = "cRater";
 				
-				VLEAnnotationController.getCRaterAnnotation(nodeStateId, runId, stepWorkId, annotationType, cRaterScoringUrl, cRaterClientId);
+				//VLEAnnotationController.getCRaterAnnotation(nodeStateId, runId, stepWorkId, annotationType, cRaterScoringUrl, cRaterClientId);
 				
 				//sleep for 10 seconds between each request
 				try {

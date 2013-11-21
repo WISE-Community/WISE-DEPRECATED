@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.telscenter.sail.webapp.service.vle.VLEService;
 
 import utils.SecurityUtils;
 import vle.domain.ideabasket.IdeaBasket;
@@ -21,6 +21,8 @@ import vle.domain.ideabasket.IdeaBasket;
 public class VLEIdeaBasketController extends AbstractController {
 
 	private static final long serialVersionUID = 1L;
+	
+	private VLEService vleService;
 	
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -60,7 +62,7 @@ public class VLEIdeaBasketController extends AbstractController {
 		boolean isPrivileged = true;  // TODO: implement me
 		
 		//get the latest revision of the IdeaBasket for this runId, workgroupId
-		IdeaBasket ideaBasket = IdeaBasket.getIdeaBasketByRunIdWorkgroupId(new Long(runId), new Long(workgroupId));
+		IdeaBasket ideaBasket = vleService.getIdeaBasketByRunIdWorkgroupId(new Long(runId), new Long(workgroupId));
 
 		if(action == null) {
 			
@@ -127,7 +129,7 @@ public class VLEIdeaBasketController extends AbstractController {
 				 * previous revision and send it back to the vle so they
 				 * can reload the previous revision.
 				 */
-				ideaBasket = IdeaBasket.getIdeaBasketByRunIdWorkgroupId(new Long(runId), new Long(workgroupId));
+				ideaBasket = vleService.getIdeaBasketByRunIdWorkgroupId(new Long(runId), new Long(workgroupId));
 				response.getWriter().print(ideaBasket.toJSONString());
 			} else {
 				/*
@@ -549,7 +551,7 @@ public class VLEIdeaBasketController extends AbstractController {
 		if(action.equals("getIdeaBasket")) {
 			if(runId != null && workgroupId != null) {
 				//get the IdeaBasket
-				IdeaBasket ideaBasket = IdeaBasket.getIdeaBasketByRunIdWorkgroupId(new Long(runId), new Long(workgroupId));
+				IdeaBasket ideaBasket = vleService.getIdeaBasketByRunIdWorkgroupId(new Long(runId), new Long(workgroupId));
 				
 				if(ideaBasket == null) {
 					//make the IdeaBasket if it does not exist
@@ -564,7 +566,7 @@ public class VLEIdeaBasketController extends AbstractController {
 		} else if(action.equals("getAllIdeaBaskets")) {
 			if(isPrivileged) {
 				//get all the idea baskets for a run
-				List<IdeaBasket> latestIdeaBasketsForRunId = IdeaBasket.getLatestIdeaBasketsForRunId(new Long(runId));
+				List<IdeaBasket> latestIdeaBasketsForRunId = vleService.getLatestIdeaBasketsForRunId(new Long(runId));
 				
 				//convert the list to a JSONArray
 				JSONArray ideaBaskets = ideaBasketListToJSONArray(latestIdeaBasketsForRunId);
@@ -595,7 +597,7 @@ public class VLEIdeaBasketController extends AbstractController {
 				
 				if(workgroupIds.size() > 0) {
 					//query for the baskets with the given run and workgroup ids
-					latestIdeaBasketsForRunIdWorkgroupIds = IdeaBasket.getLatestIdeaBasketsForRunIdWorkgroupIds(new Long(runId), workgroupIds);					
+					latestIdeaBasketsForRunIdWorkgroupIds = vleService.getLatestIdeaBasketsForRunIdWorkgroupIds(new Long(runId), workgroupIds);					
 				}
 				
 				//convert the list to a JSONArray
@@ -647,7 +649,7 @@ public class VLEIdeaBasketController extends AbstractController {
 	 */
 	private IdeaBasket getPublicIdeaBasket(Long runId, Long periodId, Long projectId, String action, Long actionPerformer, Long ideaId, Long ideaWorkgroupId) {
 		//try to retrieve the latest public idea basket revision from the database
-		IdeaBasket publicIdeaBasket = IdeaBasket.getPublicIdeaBasketForRunIdPeriodId(runId, periodId);
+		IdeaBasket publicIdeaBasket = vleService.getPublicIdeaBasketForRunIdPeriodId(runId, periodId);
 		
 		if(publicIdeaBasket == null) {
 			//the public idea basket does not exist so we will make it
@@ -717,5 +719,13 @@ public class VLEIdeaBasketController extends AbstractController {
 		}
 		
 		return ideaBaskets;
+	}
+
+	public VLEService getVleService() {
+		return vleService;
+	}
+
+	public void setVleService(VLEService vleService) {
+		this.vleService = vleService;
 	}
 }

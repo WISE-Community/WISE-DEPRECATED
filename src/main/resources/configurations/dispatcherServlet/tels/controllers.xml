@@ -947,21 +947,42 @@
 	</bean>
 
 	<bean id="postStudentDataController" class="vle.web.VLEPostData">
+		<property name="vleService" ref="vleService" />
 	</bean>
 
 	<bean id="annotationController" class="vle.web.VLEAnnotationController">
+		<property name="vleService" ref="vleService" />
 	</bean>
 
 	<bean id="studentStatusController" class="vle.web.StudentStatusController">
+		<property name="vleService" ref="vleService" />
 	</bean>
 
 	<bean id="runStatusController" class="vle.web.RunStatusController">
+		<property name="vleService" ref="vleService" />
 	</bean>
 
 	<bean id="ideaBasketController" class="vle.web.VLEIdeaBasketController">
+		<property name="vleService" ref="vleService" />
 	</bean>
-
-		<bean id="fileManagerController" class="utils.FileManager">
+	
+	<bean id="getExportController" class="vle.web.VLEGetXLS">
+	    <property name="vleService" ref="vleService" />
+	</bean>
+	
+	<bean id="getSpecialExportController" class="vle.web.VLEGetSpecialExport">
+	    <property name="vleService" ref="vleService" />
+	</bean>
+	
+	<bean id="peerReviewController" class="vle.web.VLEPeerReviewController">
+	    <property name="vleService" ref="vleService" />
+	</bean>
+	
+	<bean id="vleGetStatisticsController" class="vle.web.VLEGetStatisticsController">
+	    <property name="vleService" ref="vleService" />
+	</bean>
+	
+	<bean id="fileManagerController" class="utils.FileManager">
 	</bean>
 		
 	<bean id="bridgeController"

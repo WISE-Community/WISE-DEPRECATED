@@ -223,6 +223,9 @@
 				/authorize.html=credentialManager
 				/pages/check.html=compatibilityCheckController
 				/pages/memorymonitor.html=memoryMonitorController
+				/getExport.html=getExportController
+				/getSpecialExport.html=getSpecialExportController
+				/peerReview.html=peerReviewController
 				/**/*.html=urlFilenameViewController
     		</value>
     	</property>

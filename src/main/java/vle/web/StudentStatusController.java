@@ -14,14 +14,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.telscenter.sail.webapp.service.vle.VLEService;
 
 import utils.SecurityUtils;
-import vle.VLEServlet;
 import vle.domain.status.StudentStatus;
 
 public class StudentStatusController extends AbstractController {
 	private static final long serialVersionUID = 1L;
 
+	private VLEService vleService;
+	
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -60,7 +62,7 @@ public class StudentStatusController extends AbstractController {
 		}
 		
 		//get all the student statuses for the run id
-		List<StudentStatus> studentStatuses = StudentStatus.getStudentStatusesByRunId(runId);
+		List<StudentStatus> studentStatuses = vleService.getStudentStatusesByRunId(runId);
 		
 		//the JSONArray that we will put all the student statuses into
 		JSONArray studentStatusesJSONArray = new JSONArray();
@@ -142,7 +144,7 @@ public class StudentStatusController extends AbstractController {
 		}
 		
 		//get the student status object for the workgroup id if it already exists
-		StudentStatus studentStatus = StudentStatus.getByWorkgroupId(workgroupId);
+		StudentStatus studentStatus = vleService.getStudentStatusByWorkgroupId(workgroupId);
 		
 		if(studentStatus == null) {
 			//the student status object does not already exist so we will create it
@@ -158,6 +160,14 @@ public class StudentStatusController extends AbstractController {
 		studentStatus.saveOrUpdate();
 		
 		return null;
+	}
+
+	public VLEService getVleService() {
+		return vleService;
+	}
+
+	public void setVleService(VLEService vleService) {
+		this.vleService = vleService;
 	}
 
 }

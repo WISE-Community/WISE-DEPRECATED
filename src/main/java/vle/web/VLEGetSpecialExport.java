@@ -26,17 +26,20 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+import org.telscenter.sail.webapp.service.vle.VLEService;
 
 import utils.FileManager;
 import utils.SecurityUtils;
-import vle.VLEServlet;
-import vle.domain.node.Node;
 import vle.domain.user.UserInfo;
 import vle.domain.work.StepWork;
 
-public class VLEGetSpecialExport extends VLEServlet {
+public class VLEGetSpecialExport extends AbstractController {
 
 	private static final long serialVersionUID = 1L;
+	
+	private VLEService vleService;
 	
 	//the max number of step work columns we need, only used for "allStudentWork"
 	private int maxNumberOfStepWorkParts = 1;
@@ -181,15 +184,21 @@ public class VLEGetSpecialExport extends VLEServlet {
 		System.out.println(label + ": " + getDifferenceInSeconds(debugStartTime, currentTime));
 	}
 	
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		return doGet(request, response);
+	}
+	
 	/**
 	 * Generates and returns an excel xls of exported student data.
 	 */
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/* make sure that this request is authenticated through the portal before proceeding */
 		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
 			/* not authenticated send not authorized status */
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
+			return null;
 		}
 
 		/*
@@ -577,13 +586,13 @@ public class VLEGetSpecialExport extends VLEServlet {
 				Long userIdLong = Long.parseLong(userId);
 				
 				//get the UserInfo object for the workgroup id
-				UserInfo userInfo = UserInfo.getByWorkgroupId(userIdLong);
+				UserInfo userInfo = vleService.getUserInfoByWorkgroupId(userIdLong);
 				
 				//get the wise ids
 				JSONArray wiseIds = workgroupIdToWiseIds.get(Integer.parseInt(userId));
 
 				//get all the work for a workgroup id
-				List<StepWork> stepWorksForWorkgroupId = StepWork.getByUserInfo(userInfo);
+				List<StepWork> stepWorksForWorkgroupId = vleService.getStepWorksByUserInfo(userInfo);
 				
 				//get all the step works for this node id
 				List<StepWork> stepWorksForNodeId = getStepWorksForNodeId(stepWorksForWorkgroupId, nodeId);
@@ -665,6 +674,8 @@ public class VLEGetSpecialExport extends VLEServlet {
 		
 	    //perform cleanup
 		clearVariables();
+		
+		return null;
 	}
 	
 	/**
@@ -1051,5 +1062,13 @@ public class VLEGetSpecialExport extends VLEServlet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public VLEService getVleService() {
+		return vleService;
+	}
+
+	public void setVleService(VLEService vleService) {
+		this.vleService = vleService;
 	}
 }

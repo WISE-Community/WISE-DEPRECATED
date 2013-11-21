@@ -21,11 +21,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.telscenter.sail.webapp.dao.userinfo.UserInfoDao;
 import org.telscenter.sail.webapp.service.vle.VLEService;
 
 import utils.SecurityUtils;
-import vle.VLEServlet;
 import vle.domain.node.Node;
 import vle.domain.project.Project;
 import vle.domain.user.UserInfo;
@@ -146,7 +144,7 @@ public class VLEGetData extends AbstractController {
 			//loop through the node ids
 			for(int x=0; x<nodeIdsArray.length; x++) {
 				//obtain a handle on the Node with the node id
-				Node tempNode = Node.getByNodeIdAndRunId(nodeIdsArray[x], runId);
+				Node tempNode = vleService.getNodeByNodeIdAndRunId(nodeIdsArray[x], runId);
 
 				if(tempNode != null) {
 					//add the Node to our list
@@ -195,19 +193,19 @@ public class VLEGetData extends AbstractController {
 				 * this case uses userIdStr and nodeId.
 				 */
 
-				Node node = Node.getByNodeIdAndRunId(nodeId, runId);
+				Node node = vleService.getNodeByNodeIdAndRunId(nodeId, runId);
 
 				List<UserInfo> userInfos = new ArrayList<UserInfo>();
 
 				for(int x=0; x<userIdArray.length; x++) {
-					UserInfo userInfo = UserInfo.getByWorkgroupId(new Long(userIdArray[x]));
+					UserInfo userInfo = vleService.getUserInfoByWorkgroupId(new Long(userIdArray[x]));
 
 					if(userInfo != null) {
 						userInfos.add(userInfo);
 					}
 				}
 
-				List<StepWork> stepWorkList = StepWork.getByUserInfosAndNode(userInfos, node);
+				List<StepWork> stepWorkList = vleService.getStepWorksByUserInfosAndNode(userInfos, node);
 
 				JSONArray stepWorks = new JSONArray();
 
@@ -255,10 +253,10 @@ public class VLEGetData extends AbstractController {
 						// here we check if we have retrieved and cached this workgroup's data before.
 
 						//Get student's last stepwork.
-						StepWork latestWork = StepWork.getLatestByUserInfo(userInfo);
+						StepWork latestWork = vleService.getLatestStepWorkByUserInfo(userInfo);
 						if (latestWork != null && latestWork.getPostTime() != null) {
 							// Get student's cachedWork, if exists.
-							StepWorkCache cachedWork = StepWorkCache.getByUserInfoGetRevisions(userInfo, getRevisions);
+							StepWorkCache cachedWork = vleService.getStepWorkCacheByUserInfoGetRevisions(userInfo, getRevisions);
 
 							if (useCachedWork && cachedWork != null 
 									&& cachedWork.getCacheTime() != null
@@ -268,7 +266,7 @@ public class VLEGetData extends AbstractController {
 							} else {
 								// lastPostTime happened before lastCachedTime or we never cached, so we need to retrieve student data
 								if (nodeList.size() == 0) {
-									nodeList = Node.getByRunId(runId);
+									nodeList = vleService.getNodesByRunId(runId);
 								}
 								nodeVisitsJSON = getNodeVisitsForStudent(nodeList,nodeTypesList,userInfo, getAllWork, getRevisions);
 
@@ -347,10 +345,10 @@ public class VLEGetData extends AbstractController {
 		//check if a list of nodes were passed in
 		if(nodeList != null && nodeList.size() > 0) {
 			//get all the work for the user and that are for the nodes in the node list
-			stepWorkList = StepWork.getByUserInfoAndNodeList(userInfo, nodeList);
+			stepWorkList = vleService.getStepWorksByUserInfoAndNodeList(userInfo, nodeList);
 		} else {
 			//get all the work for the user
-			stepWorkList = StepWork.getByUserInfo(userInfo);	
+			stepWorkList = vleService.getStepWorksByUserInfo(userInfo);	
 		}
 
 		if(getRevisions) {

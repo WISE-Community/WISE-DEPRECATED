@@ -5,7 +5,6 @@ package vle.domain.cRater;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,12 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
-
 import vle.domain.PersistableDomain;
 import vle.domain.work.StepWork;
-import vle.hibernate.HibernateUtil;
 
 /**
  * Domain representing CRaterRequests, pending and completed.
@@ -238,40 +233,4 @@ protected static String fromQuery = "from CRaterRequest";
 	public void setcRaterResponse(String cRaterResponse) {
 		this.cRaterResponse = cRaterResponse;
 	}
-	
-	/**
-	 * Returns a CRaterRequest for the specified StepWork and NodeStateId.
-	 * @param stepWork
-	 * @param nodeStateId
-	 * @return
-	 */
-	public static CRaterRequest getByStepWorkIdNodeStateId(StepWork stepWork,
-			Long nodeStateId) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-
-        CRaterRequest result = 
-        	(CRaterRequest) session.createCriteria(CRaterRequest.class)
-        		.add( Restrictions.eq("stepWork", stepWork))
-        		.add( Restrictions.eq("nodeStateId", nodeStateId))
-        		.uniqueResult();
-        session.getTransaction().commit();
-        return result;		
-	}
-	
-	/**
-	 * Returns a list of CRaterRequests that have not been completed.
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public static List<CRaterRequest> getIncompleteCRaterRequests() {
-		
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        List<CRaterRequest> result = (List<CRaterRequest>) session.createCriteria(CRaterRequest.class)
-        	.add(Restrictions.isNull("timeCompleted")).list();
-        session.getTransaction().commit();
-        return result;
-	}
-
 }

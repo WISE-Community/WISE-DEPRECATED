@@ -1,7 +1,6 @@
 package vle.domain.statistics;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,13 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import vle.domain.PersistableDomain;
-import vle.hibernate.HibernateUtil;
 
 /**
  * Stores the vle statistics snapshot at a particular point in time
@@ -83,21 +79,6 @@ public class VLEStatistics extends PersistableDomain {
 		return jsonObject;
 	}
 	
-	/**
-	 * Get all the vle statistics rows ordered from oldest to newest
-	 * @return a list of all the vle statistics
-	 */
-	public static List<VLEStatistics> getVLEStatistics() {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        
-        //get the vle statistics from oldest to newest
-        List<VLEStatistics> result =  session.createCriteria(VLEStatistics.class).addOrder(Order.asc("timestamp")).list();
-        
-        session.getTransaction().commit();
-        return result;
-	}
-
 	@Override
 	protected Class<?> getObjectClass() {
 		return null;

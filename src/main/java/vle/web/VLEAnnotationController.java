@@ -5,15 +5,16 @@ package vle.web;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,12 +23,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.telscenter.sail.webapp.service.vle.VLEService;
 
 import utils.SecurityUtils;
 import vle.domain.annotation.Annotation;
 import vle.domain.cRater.CRaterRequest;
 import vle.domain.node.Node;
-import vle.domain.peerreview.PeerReviewWork;
 import vle.domain.user.UserInfo;
 import vle.domain.webservice.crater.CRaterHttpClient;
 import vle.domain.work.StepWork;
@@ -41,13 +42,14 @@ public class VLEAnnotationController extends AbstractController {
 
 	private static final long serialVersionUID = 1L;
 	
+	private VLEService vleService;
+	
 	private boolean standAlone = true;
 	
 	private boolean modeRetrieved = false;
 	
 	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (request.getMethod() == AbstractController.METHOD_GET) {
 			return doGet(request, response);
 		} else if (request.getMethod() == AbstractController.METHOD_POST) {
@@ -178,15 +180,15 @@ public class VLEAnnotationController extends AbstractController {
 				(requestedType.equals("annotation") && !"cRater".equals(annotationType) && !"run".equals(annotationType)) ) {
 			if(fromWorkgroupIdStr != null && stepWorkId != null) {
 				//user is requesting an annotation they wrote themselves for a specific stepWork
-				UserInfo fromWorkgroup = UserInfo.getByWorkgroupId(new Long(fromWorkgroupIdStr));
+				UserInfo fromWorkgroup = vleService.getUserInfoByWorkgroupId(new Long(fromWorkgroupIdStr));
 				StepWork stepWork = (StepWork) StepWork.getById(stepWorkId, StepWork.class);
-				annotation = Annotation.getByUserInfoAndStepWork(fromWorkgroup, stepWork, null);
+				annotation = vleService.getAnnotationByUserInfoAndStepWork(fromWorkgroup, stepWork, null);
 			} else if(fromWorkgroupIdsStr != null && toWorkgroupIdStr != null) {
 				/*
 				 * user is requesting all annotations to toWorkgroup and from any fromWorkgroup
 				 * in the list of fromWorkgroups
 				 */
-				UserInfo toWorkgroup = UserInfo.getOrCreateByWorkgroupId(new Long(toWorkgroupIdStr));
+				UserInfo toWorkgroup = vleService.getUserInfoOrCreateByWorkgroupId(new Long(toWorkgroupIdStr));
 				
 				//split the fromWorkgroups
 				String[] split = fromWorkgroupIdsStr.split(",");
@@ -195,36 +197,67 @@ public class VLEAnnotationController extends AbstractController {
 				List<String> fromWorkgroupIds = Arrays.asList(split);
 				
 				//get the UserInfo objects for the fromWorkgroups
-				List<UserInfo> fromWorkgroups = UserInfo.getByWorkgroupIds(fromWorkgroupIds);
+				List<UserInfo> fromWorkgroups = vleService.getUserInfoByWorkgroupIds(fromWorkgroupIds);
+				
+				List<StepWork> workByToWorkgroup = vleService.getStepWorksByUserInfo(toWorkgroup);
 				
 				//get all the annotations that match
-				annotationList = Annotation.getByFromWorkgroupsAndToWorkgroup(fromWorkgroups, toWorkgroup, Annotation.class);
+				annotationList = vleService.getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(fromWorkgroups, workByToWorkgroup, Annotation.class);
 				
 				// also get CRater annotations
-				annotationList.addAll(Annotation.getByToUserType(toWorkgroup, "cRater"));
+				annotationList.addAll(vleService.getAnnotationByToUserType(toWorkgroup, "cRater"));
 			} else if (fromWorkgroupIdStr != null || toWorkgroupIdStr != null) {
 				UserInfo fromWorkgroup = null;
 				UserInfo toWorkgroup = null;
 				if (fromWorkgroupIdStr != null) {
-					fromWorkgroup = UserInfo.getByWorkgroupId(new Long(fromWorkgroupIdStr));
+					fromWorkgroup = vleService.getUserInfoByWorkgroupId(new Long(fromWorkgroupIdStr));
 				}
 				if (toWorkgroupIdStr != null) {
-					toWorkgroup = UserInfo.getByWorkgroupId(new Long(toWorkgroupIdStr));
+					toWorkgroup = vleService.getUserInfoByWorkgroupId(new Long(toWorkgroupIdStr));
 				}
-				annotationList = Annotation.getByFromWorkgroupAndToWorkgroup(fromWorkgroup, toWorkgroup, Annotation.class);
+				
+				List<StepWork> workByToWorkgroup = vleService.getStepWorksByUserInfo(toWorkgroup);
+				annotationList = vleService.getAnnotationByFromWorkgroupAndWorkByToWorkgroup(fromWorkgroup, workByToWorkgroup, Annotation.class);
 			} else if(runId != null) {
 				//get all the annotations for the run id
-				annotationList = (List<Annotation>) Annotation.getByRunId(longRunId, Annotation.class);
+				annotationList = (List<Annotation>) vleService.getAnnotationByRunId(longRunId, Annotation.class);
 			} else {
 				annotationList = (List<Annotation>) Annotation.getList(Annotation.class);
 			}
 			
 		} else if (requestedType.equals("flag") || requestedType.equals("inappropriateFlag")) {
-			/*
+			//obtain the parameters
+			Map<String, String[]> map = request.getParameterMap();
+			
+	    	String nodeId = null;
+	    	String type = null;
+	    	
+	    	if(map.containsKey("nodeId")) {
+	    		//get the node id
+	    		nodeId = map.get("nodeId")[0];
+	    	}
+	    	
+	    	if(map.containsKey("type")) {
+	    		//get the annotaiton type
+	    		type = map.get("type")[0];
+	    	}
+	    	
+	    	/*
 			 * get the flags based on the parameters that were passed in the request.
 			 * this will return the flag annotations ordered from oldest to newest
 			 */
-	    	annotationList = Annotation.getByParamMap(request.getParameterMap());
+	    	if(runId != null && nodeId != null) {
+	    		//get all the annotations for a run id and node id
+	        	Node node = vleService.getNodeByNodeIdAndRunId(nodeId, runId, true);
+	        	List<StepWork> stepWorkList = vleService.getStepWorksByNodeId(node.getId());
+	        	annotationList = vleService.getAnnotationByStepWorkList(stepWorkList);
+	    	} else if(runId != null && type != null) {
+	    		//get all the annotations for a run id and annotation type
+	    		annotationList = (List<Annotation>) vleService.getAnnotationByRunIdAndType(Long.parseLong(runId), type, Annotation.class);
+	    	} else if(runId != null) {
+	    		//get all the annotations for a run id
+	    		annotationList = (List<Annotation>) vleService.getAnnotationByRunId(Long.parseLong(runId), Annotation.class);
+	    	}
 		} else if ("run".equals(annotationType)) {
 			//split the fromWorkgroups
 			String[] split = fromWorkgroupIdsStr.split(",");
@@ -233,13 +266,13 @@ public class VLEAnnotationController extends AbstractController {
 			List<String> fromWorkgroupIds = Arrays.asList(split);
 			
 			//get the UserInfo objects for the fromWorkgroups
-			List<UserInfo> fromWorkgroups = UserInfo.getByWorkgroupIds(fromWorkgroupIds);
+			List<UserInfo> fromWorkgroups = vleService.getUserInfoByWorkgroupIds(fromWorkgroupIds);
 
 			UserInfo toWorkgroup = null;			
 			if (toWorkgroupIdStr != null) {
-				toWorkgroup = UserInfo.getByWorkgroupId(new Long(toWorkgroupIdStr));
+				toWorkgroup = vleService.getUserInfoByWorkgroupId(new Long(toWorkgroupIdStr));
 			}
-			annotationList = Annotation.getByFromUserToUserType(fromWorkgroups, toWorkgroup, annotationType);
+			annotationList = vleService.getAnnotationByFromUserToUserType(fromWorkgroups, toWorkgroup, annotationType);
 		}
 		
 		// handle request for cRater annotation
@@ -286,7 +319,7 @@ public class VLEAnnotationController extends AbstractController {
 							String flagStepWorkId = dataJSONObj.getString("stepWorkId");
 							
 							//get the StepWork object
-							StepWork flagStepWork = StepWork.getByStepWorkId(new Long(flagStepWorkId));
+							StepWork flagStepWork = vleService.getStepWorkByStepWorkId(new Long(flagStepWorkId));
 							
 							//get the user info of the work that was flagged
 							UserInfo flaggedWorkUserInfo = flagStepWork.getUserInfo();
@@ -362,14 +395,14 @@ public class VLEAnnotationController extends AbstractController {
 						String flaggedToWorkgroup = flagAnnotationDataJSONObj.getString("toWorkgroup");
 						
 						//get the Node and UserInfo objects
-						Node node = Node.getByNodeIdAndRunId(flaggedNodeId, flaggedRunId);
-						UserInfo studentWorkgroup = UserInfo.getByWorkgroupId(new Long(flaggedToWorkgroup));
+						Node node = vleService.getNodeByNodeIdAndRunId(flaggedNodeId, flaggedRunId);
+						UserInfo studentWorkgroup = vleService.getUserInfoByWorkgroupId(new Long(flaggedToWorkgroup));
 						
 						/*
 						 * get the step works the student did for the node. the list will be
 						 * ordered from newest to oldest
 						 */
-						List<StepWork> stepWorks = StepWork.getByUserInfoAndNode(studentWorkgroup, node);
+						List<StepWork> stepWorks = vleService.getStepWorksByUserInfoAndNode(studentWorkgroup, node);
 						
 						JSONObject latestStepWorkDataJSONObj = null;
 						
@@ -445,7 +478,7 @@ public class VLEAnnotationController extends AbstractController {
 	 * @param stepWorkId
 	 * @return CRater annotation for the specified stepwork, or null if there was an error getting the CRater response
 	 */
-	public static Annotation getCRaterAnnotation(Long nodeStateId,
+	public Annotation getCRaterAnnotation(Long nodeStateId,
 			String runId, Long stepWorkId, String annotationType,
 			String cRaterScoringUrl, String cRaterClientId) {
 
@@ -454,8 +487,11 @@ public class VLEAnnotationController extends AbstractController {
 		
 		Annotation annotation = null;
 		
+		//get the step work
+		StepWork stepWork = vleService.getStepWorkByStepWorkId(stepWorkId);
+		
 		//try to obtain the crater annotation if it exists
-		annotation = Annotation.getCRaterAnnotationByStepWorkId(stepWorkId);
+		annotation = vleService.getCRaterAnnotationByStepWork(stepWork);
 		
 		if (annotation != null) {
 			// cRater annotation already exists, we are either getting it if it also exists for the
@@ -468,7 +504,6 @@ public class VLEAnnotationController extends AbstractController {
 				//this node state does not have a crater annotation yet so we will make it and add it to the array of annotations
 				try {
 					// make a request to CRater
-					StepWork stepWork = StepWork.getByStepWorkId(stepWorkId);
 					JSONObject nodeStateByTimestamp = stepWork.getNodeStateByTimestamp(nodeStateId);
 					
 					String studentResponse = "";
@@ -506,7 +541,7 @@ public class VLEAnnotationController extends AbstractController {
 						annotation.saveOrUpdate();
 						
 						// update CRaterRequest table and mark this request as completed.
-						CRaterRequest cRaterRequest = CRaterRequest.getByStepWorkIdNodeStateId(stepWork,nodeStateId);
+						CRaterRequest cRaterRequest = vleService.getCRaterRequestByStepWorkIdNodeStateId(stepWork,nodeStateId);
 						
 						if(cRaterRequest != null) {
 							Calendar cRaterRequestCompletedTime = Calendar.getInstance();
@@ -524,7 +559,6 @@ public class VLEAnnotationController extends AbstractController {
 			// CRater annotation for this stepWork is null, so make a request to CRater to score the item.
 			try {
 				// make a request to CRater and insert new row in annotation.
-				StepWork stepWork = StepWork.getByStepWorkId(stepWorkId);
 				JSONObject nodeStateByTimestamp = stepWork.getNodeStateByTimestamp(nodeStateId);
 
 				String studentResponse = "";
@@ -557,7 +591,7 @@ public class VLEAnnotationController extends AbstractController {
 
 						Long workgroupId = stepWork.getUserInfo().getWorkgroupId();
 						String toWorkgroup = workgroupId.toString();
-						UserInfo toUser = UserInfo.getByWorkgroupId(workgroupId);
+						UserInfo toUser = vleService.getUserInfoByWorkgroupId(workgroupId);
 						UserInfo fromUser = null;
 						String fromWorkgroup = "-1";  // default for auto-scored items.
 
@@ -589,7 +623,7 @@ public class VLEAnnotationController extends AbstractController {
 						annotation.saveOrUpdate();
 						
 						// update CRaterRequest table and mark this request as completed.
-						CRaterRequest cRaterRequest = CRaterRequest.getByStepWorkIdNodeStateId(stepWork,nodeStateId);
+						CRaterRequest cRaterRequest = vleService.getCRaterRequestByStepWorkIdNodeStateId(stepWork,nodeStateId);
 						
 						if(cRaterRequest != null) {
 							Calendar cRaterRequestCompletedTime = Calendar.getInstance();
@@ -602,7 +636,7 @@ public class VLEAnnotationController extends AbstractController {
 					// there was an error connecting to the CRater servlet
 					// do nothing so this method will return null
 					// increment fail count
-					CRaterRequest cRaterRequest = CRaterRequest.getByStepWorkIdNodeStateId(stepWork, nodeStateId);
+					CRaterRequest cRaterRequest = vleService.getCRaterRequestByStepWorkIdNodeStateId(stepWork, nodeStateId);
 					
 					if(cRaterRequest != null) {
 						cRaterRequest.setFailCount(cRaterRequest.getFailCount()+1);
@@ -644,8 +678,8 @@ public class VLEAnnotationController extends AbstractController {
 			stepWork = (StepWork) StepWork.getById(new Long(stepWorkId), StepWork.class);
 		}
 		
-		UserInfo fromUserInfo = UserInfo.getOrCreateByWorkgroupId(new Long(fromWorkgroup));
-		UserInfo toUserInfo = UserInfo.getOrCreateByWorkgroupId(new Long(toWorkgroup));
+		UserInfo fromUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(new Long(fromWorkgroup));
+		UserInfo toUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(new Long(toWorkgroup));
 
 		JSONObject annotationEntryJSONObj = new JSONObject();
 		try {
@@ -667,7 +701,7 @@ public class VLEAnnotationController extends AbstractController {
 			e.printStackTrace();
 		}
 		
-		Annotation annotation = Annotation.getByFromUserInfoToUserInfoStepWorkType(fromUserInfo, toUserInfo, stepWork, type);
+		Annotation annotation = vleService.getAnnotationByFromUserInfoToUserInfoStepWorkType(fromUserInfo, toUserInfo, stepWork, type);
 
 		if(annotation == null) {
 			//the annotation was not found so we will create it
@@ -698,10 +732,18 @@ public class VLEAnnotationController extends AbstractController {
 		//check if this is a peer review annotation
 		if(action != null && action.equals("peerReviewAnnotate")) {
 			//set the annotation into the peerreviewwork table
-			PeerReviewWork.setPeerReviewAnnotation(new Long(runId), new Long(periodId), stepWork.getNode(), stepWork, fromUserInfo, annotation);
+			vleService.setPeerReviewAnnotation(new Long(runId), new Long(periodId), stepWork.getNode(), stepWork, fromUserInfo, annotation);
 		}
 		
 		response.getWriter().print(postTime.getTime());
+	}
+
+	public VLEService getVleService() {
+		return vleService;
+	}
+
+	public void setVleService(VLEService vleService) {
+		this.vleService = vleService;
 	}
 
 }

@@ -23,18 +23,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFComment;
 import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFComment;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+import org.telscenter.sail.webapp.service.vle.VLEService;
 
 import utils.FileManager;
 import utils.SecurityUtils;
-import vle.VLEServlet;
 import vle.domain.annotation.Annotation;
 import vle.domain.ideabasket.IdeaBasket;
 import vle.domain.node.Node;
@@ -47,9 +48,11 @@ import au.com.bytecode.opencsv.CSVWriter;
  * Handles student work export in XLS format
  * @author Geoffrey Kwan
  */
-public class VLEGetXLS extends VLEServlet {
+public class VLEGetXLS extends AbstractController {
 
 	private static final long serialVersionUID = 1L;
+	
+	private VLEService vleService;
 	
 	//the max number of step work columns we need, only used for "allStudentWork"
 	private int maxNumberOfStepWorkParts = 1;
@@ -206,15 +209,21 @@ public class VLEGetXLS extends VLEServlet {
 		System.out.println(label + ": " + getDifferenceInSeconds(debugStartTime, currentTime));
 	}
 	
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		return doGet(request, response);
+	}
+	
 	/**
 	 * Generates and returns an excel xls of exported student data.
 	 */
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/* make sure that this request is authenticated through the portal before proceeding */
 		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
 			/* not authenticated send not authorized status */
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
+			return null;
 		}
 
 		/*
@@ -550,6 +559,8 @@ public class VLEGetXLS extends VLEServlet {
 		}
 	    
 		clearVariables();
+		
+		return null;
 	}
 
 	/**
@@ -894,7 +905,7 @@ public class VLEGetXLS extends VLEServlet {
 			//the teacher has provided a list of custom steps to export
 			
 			//get all the Node objects for the custom steps
-			customNodes = Node.getByNodeIdsAndRunId(customSteps, runId);
+			customNodes = vleService.getNodesByNodeIdsAndRunId(customSteps, runId);
 		}
 		
 		//loop through all the workgroup ids
@@ -903,7 +914,8 @@ public class VLEGetXLS extends VLEServlet {
 			String workgroupIdString = workgroupIds.get(x);
 			
 			//get the UserInfo object for the workgroup id
-			UserInfo userInfo = UserInfo.getByWorkgroupId(Long.parseLong(workgroupIdString));
+			//UserInfo userInfo = UserInfo.getByWorkgroupId(Long.parseLong(workgroupIdString));
+			UserInfo userInfo = vleService.getUserInfoByWorkgroupId(Long.parseLong(workgroupIdString));
 
 			if(userInfo != null) {
 				//get the workgroup id
@@ -918,11 +930,11 @@ public class VLEGetXLS extends VLEServlet {
 				if(customNodes == null) {
 					//the teacher has not provided a list of custom steps so we will gather work for all the steps
 					//get all the work for that workgroup id
-					stepWorks = StepWork.getByUserInfo(userInfo);
+					stepWorks = vleService.getStepWorksByUserInfo(userInfo);
 				} else {
 					if(customNodes.size() > 0) {
 						//the teacher has provided a list of custom steps so we will gather the work for those specific steps
-						stepWorks = StepWork.getByUserInfoAndNodeList(userInfo, customNodes);						
+						stepWorks = vleService.getStepWorksByUserInfoAndNodeList(userInfo, customNodes);						
 					}
 				}
 				
@@ -1013,7 +1025,7 @@ public class VLEGetXLS extends VLEServlet {
 		    	writeCSV(headerRowVector);
 		    	
 				//get all the work for a workgroup id
-				List<StepWork> stepWorksForWorkgroupId = StepWork.getByUserInfo(userInfo);
+				List<StepWork> stepWorksForWorkgroupId = vleService.getStepWorksByUserInfo(userInfo);
 				
 		    	/*
 		    	 * loop through all the work for the current student, this will
@@ -2715,10 +2727,10 @@ public class VLEGetXLS extends VLEServlet {
 			addEmptyElementsToVector(rowForWorkgroupIdVector, 1);
 			
 			//get the UserInfo object for the workgroup id
-			UserInfo userInfo = UserInfo.getByWorkgroupId(Long.parseLong(userId));
+			UserInfo userInfo = vleService.getUserInfoByWorkgroupId(Long.parseLong(userId));
 
 			//get all the work for a workgroup id
-			List<StepWork> stepWorksForWorkgroupId = StepWork.getByUserInfo(userInfo);
+			List<StepWork> stepWorksForWorkgroupId = vleService.getStepWorksByUserInfo(userInfo);
 			
 			//loop through all the node ids which are ordered
 			for(int y=0; y<nodeIdList.size(); y++) {
@@ -2826,10 +2838,10 @@ public class VLEGetXLS extends VLEServlet {
 					
 					//get the start/original node
 					String associatedStartNodeId = nodeJSONObject.getString("associatedStartNode");
-					Node node = Node.getByNodeIdAndRunId(associatedStartNodeId, runId);
+					Node node = vleService.getNodeByNodeIdAndRunId(associatedStartNodeId, runId);
 					
 					//get the PeerReviewWork row that contains the classmate matching
-					PeerReviewWork peerReviewWork = PeerReviewWork.getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(new Long(runId), new Long(periodId), node, userInfo);
+					PeerReviewWork peerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(new Long(runId), new Long(periodId), node, userInfo);
 					
 					if(peerReviewWork != null) {
 						//get the owner of the work
@@ -2900,10 +2912,10 @@ public class VLEGetXLS extends VLEServlet {
 				if(nodeJSONObject.has("peerReview")) {
 					//get the start/original node
 					String associatedStartNodeId = nodeJSONObject.getString("associatedStartNode");
-					Node node = Node.getByNodeIdAndRunId(associatedStartNodeId, runId);
+					Node node = vleService.getNodeByNodeIdAndRunId(associatedStartNodeId, runId);
 					
 					//get the PeerReviewWork entry that contains the classmate matching
-					PeerReviewWork peerReviewWork = PeerReviewWork.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(new Long(runId), new Long(periodId), node, userInfo);
+					PeerReviewWork peerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(new Long(runId), new Long(periodId), node, userInfo);
 					
 					if(peerReviewWork != null) {
 						//get the person who reviewed me
@@ -2956,10 +2968,10 @@ public class VLEGetXLS extends VLEServlet {
 					StepWork latestStepWorkForNodeId = getLatestStepWorkWithResponse(stepWorksForNodeId);
 					
 					//get the teacher user infos
-					List<UserInfo> fromWorkgroups = UserInfo.getByWorkgroupIds(teacherWorkgroupIds);
+					List<UserInfo> fromWorkgroups = vleService.getUserInfoByWorkgroupIds(teacherWorkgroupIds);
 					
 					//get all annotation comments from all the teachers for this step work
-					List<Annotation> annotations = Annotation.getByFromWorkgroupsAndStepWork(fromWorkgroups, latestStepWorkForNodeId, "comment");
+					List<Annotation> annotations = vleService.getAnnotationByFromWorkgroupsAndStepWork(fromWorkgroups, latestStepWorkForNodeId, "comment");
 					
 					Annotation latestAnnotation = null;
 					
@@ -5492,7 +5504,7 @@ public class VLEGetXLS extends VLEServlet {
 		//loop through all the workgroups
 		for(int x=0; x<workgroupIds.size(); x++) {
 			String workgroupId = workgroupIds.get(x);
-			UserInfo userInfo = UserInfo.getByWorkgroupId(Long.parseLong(workgroupId));
+			UserInfo userInfo = vleService.getUserInfoByWorkgroupId(Long.parseLong(workgroupId));
 
 			//create a sheet for the workgroup
 			XSSFSheet userIdSheet = null;
@@ -5545,7 +5557,7 @@ public class VLEGetXLS extends VLEServlet {
 	    	writeCSV(headerRowVector);
 	    	
 	    	//get all the work from the workgroup
-	    	List<StepWork> stepWorks = StepWork.getByUserInfo(userInfo);
+	    	List<StepWork> stepWorks = vleService.getStepWorksByUserInfo(userInfo);
 	    	
 	    	//loop through all the work
 	    	for(int z=0; z<stepWorks.size(); z++) {
@@ -5802,7 +5814,7 @@ public class VLEGetXLS extends VLEServlet {
     		//get the workgroup id
 			String workgroupId = workgroupIds.get(x);
 
-			UserInfo userInfo = UserInfo.getByWorkgroupId(Long.parseLong(workgroupId));
+			UserInfo userInfo = vleService.getUserInfoByWorkgroupId(Long.parseLong(workgroupId));
 			
 			//get the period
 			String periodName = workgroupIdToPeriodName.get(Integer.parseInt(workgroupId));
@@ -5846,7 +5858,7 @@ public class VLEGetXLS extends VLEServlet {
 			Vector<Timestamp> previousTimestamps = new Vector<Timestamp>();
 	    	
 	    	//get all the work from the workgroup
-	    	List<StepWork> stepWorks = StepWork.getByUserInfo(userInfo);
+	    	List<StepWork> stepWorks = vleService.getStepWorksByUserInfo(userInfo);
 	    	
 	    	//remember the previous response so we can determine what has changed
 	    	JSONObject previousResponse = null;
@@ -6705,7 +6717,7 @@ public class VLEGetXLS extends VLEServlet {
 		 * list[4] = workgroup2, basket revision 2
 		 * etc.
 		 */
-		List<IdeaBasket> ideaBasketRevisions = IdeaBasket.getIdeaBasketsForRunId(new Long(runId));
+		List<IdeaBasket> ideaBasketRevisions = vleService.getIdeaBasketsForRunId(new Long(runId));
 		
 		/*
 		 * used for comparing basket revisions. we need to make sure we are
@@ -8179,7 +8191,7 @@ public class VLEGetXLS extends VLEServlet {
 	@SuppressWarnings("unused")
 	private String getLatestAnnotationScoreByStepWork(List<StepWork> stepWorksForNodeId, List<String> teacherWorkgroupIds) {
 		//get the latest annotation score with the given parameters
-		Annotation latestAnnotationScoreByStepWork = Annotation.getLatestAnnotationScoreByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
+		Annotation latestAnnotationScoreByStepWork = vleService.getLatestAnnotationScoreByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
 		String score = "";
 		
 		if(latestAnnotationScoreByStepWork != null) {
@@ -8211,7 +8223,7 @@ public class VLEGetXLS extends VLEServlet {
 	@SuppressWarnings("unused")
 	private String getLatestAnnotationCommentByStepWork(List<StepWork> stepWorksForNodeId, List<String> teacherWorkgroupIds) {
 		//get the latest annotation comment with the given parameters
-		Annotation latestAnnotationCommentByStepWork = Annotation.getLatestAnnotationCommentByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
+		Annotation latestAnnotationCommentByStepWork = vleService.getLatestAnnotationCommentByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
 		String comment = ""; 
 		
 		if(latestAnnotationCommentByStepWork != null) {
@@ -8245,7 +8257,7 @@ public class VLEGetXLS extends VLEServlet {
 		 * get the latest annotation associated with any of the StepWork objects
 		 * and have fromWorkgroup as any of the workgroup ids in teacherWorkgroupIds
 		 */
-		Annotation latestAnnotationScoreByStepWork = Annotation.getLatestCRaterScoreByStepWork(stepWorksForNodeId);
+		Annotation latestAnnotationScoreByStepWork = vleService.getLatestCRaterScoreByStepWork(stepWorksForNodeId);
 		
 		if(latestAnnotationScoreByStepWork != null) {
 			try {
@@ -8319,7 +8331,7 @@ public class VLEGetXLS extends VLEServlet {
 		 * get the latest annotation associated with any of the StepWork objects
 		 * and have fromWorkgroup as any of the workgroup ids in teacherWorkgroupIds
 		 */
-		Annotation latestAnnotationScoreByStepWork = Annotation.getLatestAnnotationScoreByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
+		Annotation latestAnnotationScoreByStepWork = vleService.getLatestAnnotationScoreByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
 		
 		if(latestAnnotationScoreByStepWork != null) {
 			try {
@@ -8368,7 +8380,7 @@ public class VLEGetXLS extends VLEServlet {
 		 * get the latest annotation associated with any of the StepWork objects
 		 * and have fromWorkgroup as any of the workgroup ids in teacherWorkgroupIds
 		 */
-		Annotation latestAnnotationCommentByStepWork = Annotation.getLatestAnnotationCommentByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
+		Annotation latestAnnotationCommentByStepWork = vleService.getLatestAnnotationCommentByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
 		
 		if(latestAnnotationCommentByStepWork != null) {
 			try {
@@ -8812,14 +8824,17 @@ public class VLEGetXLS extends VLEServlet {
 			}
 		}
 		
-		//get the CRater score for the step work id
-		Annotation cRaterAnnotationByStepWorkId = Annotation.getCRaterAnnotationByStepWorkId(stepWorkId);
+		//get the step work
+		StepWork stepWork = vleService.getStepWorkByStepWorkId(stepWorkId);
 		
-		if(cRaterAnnotationByStepWorkId != null) {
+		//get the CRater score for the step work id
+		Annotation cRaterAnnotationByStepWork = vleService.getCRaterAnnotationByStepWork(stepWork);
+		
+		if(cRaterAnnotationByStepWork != null) {
 			//CRater score exists
 			
 			//get the annotation data
-			String data = cRaterAnnotationByStepWorkId.getData();
+			String data = cRaterAnnotationByStepWork.getData();
 			
 			if(data != null) {
 				try {
@@ -8995,5 +9010,13 @@ public class VLEGetXLS extends VLEServlet {
 		}
 		
 		return result;
+	}
+
+	public VLEService getVleService() {
+		return vleService;
+	}
+
+	public void setVleService(VLEService vleService) {
+		this.vleService = vleService;
 	}
 }

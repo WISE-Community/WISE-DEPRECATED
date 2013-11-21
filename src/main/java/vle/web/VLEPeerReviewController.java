@@ -8,17 +8,19 @@ import java.util.Random;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+import org.telscenter.sail.webapp.service.vle.VLEService;
 
 import vle.domain.annotation.Annotation;
 import vle.domain.node.Node;
-import vle.domain.peerreview.PeerReviewGate;
 import vle.domain.peerreview.PeerReviewWork;
 import vle.domain.user.UserInfo;
 import vle.domain.work.StepWork;
@@ -27,20 +29,36 @@ import vle.domain.work.StepWork;
  * Controller for handling the peer review step
  * @author Geoffrey Kwan
  */
-public class VLEPeerReviewController extends HttpServlet {
+public class VLEPeerReviewController extends AbstractController {
 
 	private static final long serialVersionUID = 1L;
+	
+	private VLEService vleService;
 
-	public void doPost(HttpServletRequest request,
-			HttpServletResponse response)
-	throws ServletException, IOException {
-		doPostJSON(request, response);
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		ModelAndView modelAndView = null;
+		String requestMethod = request.getMethod();
+		
+		if(requestMethod == null) {
+			
+		} else if(requestMethod.equals(RequestMethod.GET)) {
+			modelAndView = doGet(request, response);
+		} else if(requestMethod.equals(RequestMethod.POST)) {
+			modelAndView = doPost(request, response);
+		}
+		
+		return modelAndView;
+	}
+	
+	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return doPostJSON(request, response);
 	}
 
-	public void doGet(HttpServletRequest request,
-			HttpServletResponse response)
-	throws ServletException, IOException {
-		doGetJSON(request, response);
+	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return doGetJSON(request, response);
 	}
 
 	/**
@@ -56,7 +74,7 @@ public class VLEPeerReviewController extends HttpServlet {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	public void doGetJSON(HttpServletRequest request,
+	public ModelAndView doGetJSON(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
 		
@@ -65,6 +83,8 @@ public class VLEPeerReviewController extends HttpServlet {
 		} else if(action.equals("teacherRequest")) {
 			handleTeacherRequest(request, response);
 		}
+		
+		return null;
 	}
 
 	/**
@@ -88,7 +108,7 @@ public class VLEPeerReviewController extends HttpServlet {
 		}
 		
 		//get all the peer review work for the run
-		List<PeerReviewWork> peerReviewWorkList = PeerReviewWork.getPeerReviewWorkByRun(runIdLong);
+		List<PeerReviewWork> peerReviewWorkList = vleService.getPeerReviewWorkByRun(runIdLong);
 		
 		//the JSON array that holds all the peer review work entries
 		JSONArray peerReviewWorkJSONArray = new JSONArray();
@@ -235,7 +255,7 @@ public class VLEPeerReviewController extends HttpServlet {
 		}
 
 		//get the node that is being used for peer review
-		Node node = Node.getByNodeIdAndRunId(nodeId, runId);
+		Node node = vleService.getNodeByNodeIdAndRunId(nodeId, runId);
 
 		//we will store the response that we will return in this variable
 		String responseString = "";
@@ -244,20 +264,20 @@ public class VLEPeerReviewController extends HttpServlet {
 			//the student is on the step where they view a classmate's work and annotate/review it
 
 			//get the user making the request to review
-			UserInfo reviewerUserInfo = UserInfo.getByWorkgroupId(workgroupIdLong);
+			UserInfo reviewerUserInfo = vleService.getUserInfoByWorkgroupId(workgroupIdLong);
 
 			/*
 			 * make sure the student has submitted their own for work peer review
 			 * before allowing them to peer review a classmate's work
 			 */
-			PeerReviewWork reviewerWork = PeerReviewWork.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runIdLong, periodIdLong, node, reviewerUserInfo);
+			PeerReviewWork reviewerWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runIdLong, periodIdLong, node, reviewerUserInfo);
 
 			if(reviewerWork == null) {
 				//the user has not submitted their own work for peer review
 				responseString = "{\"error\":\"peerReviewUserHasNotSubmittedOwnWork\"}";
 			} else {
 				//see if the peer review is open
-				boolean peerReviewGateOpen = PeerReviewGate.calculatePeerReviewOpen(runIdLong, periodIdLong, node, numWorkgroups, openPercentageTriggerInt, openNumberTriggerInt);
+				boolean peerReviewGateOpen = vleService.calculatePeerReviewOpen(runIdLong, periodIdLong, node, numWorkgroups, openPercentageTriggerInt, openNumberTriggerInt);
 
 				if(!peerReviewGateOpen) {
 					/*
@@ -273,7 +293,7 @@ public class VLEPeerReviewController extends HttpServlet {
 
 					if(workToReview == null) {
 						//check if the author has been assigned to review the user's work
-						if(PeerReviewWork.isUserReviewingAuthor(runIdLong, periodIdLong, node, reviewerUserInfo)) {
+						if(vleService.isUserReviewingAuthor(runIdLong, periodIdLong, node, reviewerUserInfo)) {
 							/*
 							 * the author is set to review the user's work which means the user
 							 * will see the author's review in return. this basically means the
@@ -297,7 +317,7 @@ public class VLEPeerReviewController extends HttpServlet {
 								 * so that when this student gets to the step where they revise
 								 * their work, they will see the authored review
 								 */
-								PeerReviewWork.matchUserToAuthor(runIdLong, periodIdLong, node, reviewerUserInfo, reviewerWork);
+								vleService.matchUserToAuthor(runIdLong, periodIdLong, node, reviewerUserInfo, reviewerWork);
 
 								//we will just show the authored work for the student to review
 								responseString = "{\"error\":\"peerReviewShowAuthoredWork\"}";
@@ -324,17 +344,17 @@ public class VLEPeerReviewController extends HttpServlet {
 			 */
 
 			//get the user
-			UserInfo workerUserInfo = UserInfo.getByWorkgroupId(workgroupIdLong);
+			UserInfo workerUserInfo = vleService.getUserInfoByWorkgroupId(workgroupIdLong);
 
 			//check if the user has submitted work to be peer reviewed
-			PeerReviewWork myWork = PeerReviewWork.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runIdLong, periodIdLong, node, workerUserInfo);
+			PeerReviewWork myWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runIdLong, periodIdLong, node, workerUserInfo);
 
 			if(myWork == null) {
 				//the user has not submitted their own work for peer review
 				responseString = "{\"error\":\"peerReviewUserHasNotSubmittedOwnWork\"}";
 			} else {
 				//check if the user has been assigned to work to perform a review
-				PeerReviewWork workAssignedTo = PeerReviewWork.getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(runIdLong, periodIdLong, node, workerUserInfo);
+				PeerReviewWork workAssignedTo = vleService.getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(runIdLong, periodIdLong, node, workerUserInfo);
 
 				if(workAssignedTo == null) {
 					/*
@@ -348,7 +368,7 @@ public class VLEPeerReviewController extends HttpServlet {
 
 					if(annotationForWorkAssignedTo == null) {
 						//check if the user has been assigned to the author
-						if(PeerReviewWork.isUserReviewingAuthor(runIdLong, periodIdLong, node, workerUserInfo)) {
+						if(vleService.isUserReviewingAuthor(runIdLong, periodIdLong, node, workerUserInfo)) {
 							/*
 							 * user was assigned to review the author which means they will
 							 * also receive the author review for their own work. the local
@@ -380,7 +400,7 @@ public class VLEPeerReviewController extends HttpServlet {
 						} else {
 							//there is a reviewer
 
-							if(PeerReviewWork.isAuthorSetAsReviewer(myWork)) {
+							if(vleService.isAuthorSetAsReviewer(myWork)) {
 								//reviewer is set to author
 
 								//we will show the author's review to the student
@@ -463,9 +483,10 @@ public class VLEPeerReviewController extends HttpServlet {
 	 * @param response
 	 * @throws IOException
 	 */
-	private void doPostJSON(HttpServletRequest request,
+	private ModelAndView doPostJSON(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		//not used, VLEPostData handles the submit of the original work
+		return null;
 	}
 
 	/**
@@ -486,7 +507,7 @@ public class VLEPeerReviewController extends HttpServlet {
 		 * check if the users in the list (in this case just one user), has
 		 * done any work today
 		 */
-		List<UserInfo> userInfosThatHaveWorkedToday = UserInfo.getUserInfosThatHaveWorkedToday(userInfos);
+		List<UserInfo> userInfosThatHaveWorkedToday = vleService.getUserInfosThatHaveWorkedToday(userInfos);
 
 		if(userInfosThatHaveWorkedToday.size() == 1) {
 			//the user has done work today
@@ -558,7 +579,7 @@ public class VLEPeerReviewController extends HttpServlet {
 			List<String> workgroupList = new Vector<String>(Arrays.asList(workgroupsToSearch));
 
 			//get all the peer review work for this run, period, node
-			List<PeerReviewWork> peerReviewWorkList = PeerReviewWork.getPeerReviewWorkByRunPeriodNode(runId, periodId, node);
+			List<PeerReviewWork> peerReviewWorkList = vleService.getPeerReviewWorkByRunPeriodNode(runId, periodId, node);
 
 			/*
 			 * the List that will store which workgroups have satisfied the condition
@@ -617,10 +638,10 @@ public class VLEPeerReviewController extends HttpServlet {
 	 */
 	private List<UserInfo> getWorkgroupsThatHaveDoneWorkToday(List<String> workgroupList) {
 		//get a List of UserInfos
-		List<UserInfo> userInfos = UserInfo.getByWorkgroupIds(workgroupList);
+		List<UserInfo> userInfos = vleService.getUserInfoByWorkgroupIds(workgroupList);
 
 		//get all the users who have submitted any today
-		List<UserInfo> userInfosThatHaveWorkedToday = UserInfo.getUserInfosThatHaveWorkedToday(userInfos);
+		List<UserInfo> userInfosThatHaveWorkedToday = vleService.getUserInfosThatHaveWorkedToday(userInfos);
 
 		//return the List of users who have done any work today
 		return userInfosThatHaveWorkedToday;
@@ -642,7 +663,7 @@ public class VLEPeerReviewController extends HttpServlet {
 		String workToReviewString = null;
 
 		//obtain the work assigned to the reviewer
-		PeerReviewWork peerReviewWork = PeerReviewWork.getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(runId, periodId, node, reviewerUserInfo);
+		PeerReviewWork peerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(runId, periodId, node, reviewerUserInfo);
 
 		//check if there was any work assigned
 		if(peerReviewWork != null && peerReviewWork.getStepWork() != null) {
@@ -680,7 +701,7 @@ public class VLEPeerReviewController extends HttpServlet {
 		String workAssignedTo = null;
 
 		//get all the unassigned work
-		List<PeerReviewWork> unassignedPeerReviewWorkList = PeerReviewWork.getUnassignedPeerReviewWorkList(runId, periodId, node);
+		List<PeerReviewWork> unassignedPeerReviewWorkList = vleService.getUnassignedPeerReviewWorkList(runId, periodId, node);
 
 		//check that there was unassigned work
 		if(unassignedPeerReviewWorkList != null && unassignedPeerReviewWorkList.size() != 0) {
@@ -689,7 +710,7 @@ public class VLEPeerReviewController extends HttpServlet {
 			removePeerReviewWorkByWorkgroupId(unassignedPeerReviewWorkList, reviewerUserInfo.getWorkgroupId());
 
 			//get my peer review work
-			PeerReviewWork myPeerReviewWork = PeerReviewWork.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runId, periodId, node, reviewerUserInfo);
+			PeerReviewWork myPeerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runId, periodId, node, reviewerUserInfo);
 
 			//check that I submitted work
 			if(myPeerReviewWork != null) {
@@ -756,7 +777,7 @@ public class VLEPeerReviewController extends HttpServlet {
 			removePeerReviewWorkByWorkgroupId(peerReviewWorkList, reviewerUserInfo.getWorkgroupId());
 
 			//get the PeerReviewWork of my reviewer
-			PeerReviewWork reviewerPeerReviewWork = PeerReviewWork.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runId, periodId, node, reviewerUserInfo);
+			PeerReviewWork reviewerPeerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runId, periodId, node, reviewerUserInfo);
 
 			//check if my reviewer has submitted any work
 			if(reviewerPeerReviewWork != null) {
@@ -806,5 +827,13 @@ public class VLEPeerReviewController extends HttpServlet {
 			//return the PeerReviewWork at the randomly chosen index
 			return peerReviewWorkList.get(nextInt);
 		}
+	}
+
+	public VLEService getVleService() {
+		return vleService;
+	}
+
+	public void setVleService(VLEService vleService) {
+		this.vleService = vleService;
 	}
 }

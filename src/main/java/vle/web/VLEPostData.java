@@ -15,13 +15,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.telscenter.sail.webapp.service.vle.VLEService;
 
 import utils.SecurityUtils;
 import utils.VLEDataUtils;
-import vle.VLEServlet;
 import vle.domain.cRater.CRaterRequest;
 import vle.domain.node.Node;
-import vle.domain.peerreview.PeerReviewGate;
 import vle.domain.peerreview.PeerReviewWork;
 import vle.domain.user.UserInfo;
 import vle.domain.work.StepWork;
@@ -35,6 +34,8 @@ import vle.domain.work.StepWork;
 public class VLEPostData extends AbstractController {
 
 	private static final long serialVersionUID = 1L;
+	
+	private VLEService vleService;
 	
 	private static Properties vleProperties = null;
 	
@@ -67,9 +68,7 @@ public class VLEPostData extends AbstractController {
 	}
 	
 	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		// TODO Auto-generated method stub
+	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return doPost(request, response);
 	}
 	
@@ -107,7 +106,7 @@ public class VLEPostData extends AbstractController {
 			periodIdLong = new Long(periodId);
 		}
 		
-		UserInfo userInfo = (UserInfo) UserInfo.getOrCreateByWorkgroupId(new Long(userId));
+		UserInfo userInfo = (UserInfo) vleService.getUserInfoOrCreateByWorkgroupId(new Long(userId));
 
 		JSONObject nodeVisitJSON = null;
 		try {
@@ -168,7 +167,7 @@ public class VLEPostData extends AbstractController {
 			StepWork stepWork = null;
 			
 			// check to see if student has already saved this nodevisit.
-			stepWork = StepWork.getByUserIdAndData(userInfo,nodeVisitJSON.toString());
+			stepWork = vleService.getStepWorkByUserIdAndData(userInfo,nodeVisitJSON.toString());
 			if (stepWork != null) {
 				// this node visit has already been saved. return id and postTime and exit.
 				//create a JSONObject to contain the step work id and post time
@@ -268,7 +267,7 @@ public class VLEPostData extends AbstractController {
 					// Only send back cRaterItemId and isCRaterSubmit back if we haven't invoked CRater before for this nodeState
 					long lastNodeStateTimestamp = stepWork.getLastNodeStateTimestamp();
 
-					CRaterRequest cRaterRequestForLastNodeState = CRaterRequest.getByStepWorkIdNodeStateId(stepWork, lastNodeStateTimestamp);
+					CRaterRequest cRaterRequestForLastNodeState = vleService.getCRaterRequestByStepWorkIdNodeStateId(stepWork, lastNodeStateTimestamp);
 					if (cRaterRequestForLastNodeState == null) {
 						jsonResponse.put("cRaterItemId", cRaterItemId);
 						jsonResponse.put("cRaterItemType", cRaterItemType);
@@ -292,7 +291,7 @@ public class VLEPostData extends AbstractController {
 						PeerReviewWork peerReviewWork = null;
 
 						//see if the user has already submitted peer review work for this step
-						peerReviewWork = PeerReviewWork.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runIdLong, periodIdLong, node, userInfo);
+						peerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runIdLong, periodIdLong, node, userInfo);
 						
 						if(peerReviewWork == null) {
 							/*
@@ -309,7 +308,7 @@ public class VLEPostData extends AbstractController {
 						}
 						
 						//create an entry for the peerreviewgate table if one does not exist already
-						PeerReviewGate.getOrCreateByRunIdPeriodIdNodeId(runIdLong, periodIdLong, node);
+						vleService.getOrCreatePeerReviewGateByRunIdPeriodIdNodeId(runIdLong, periodIdLong, node);
 					}
 				} catch(JSONException e) {
 					e.printStackTrace();
@@ -335,7 +334,7 @@ public class VLEPostData extends AbstractController {
 	 * @return created/retrieved Node, or null
 	 */
 	private synchronized Node getOrCreateNode(String runId, String nodeId, String nodeType) {
-		Node node = Node.getByNodeIdAndRunId(nodeId, runId);
+		Node node = vleService.getNodeByNodeIdAndRunId(nodeId, runId);
 		if (node == null && nodeId != null && runId != null && nodeType != null) {
 			node = new Node();
 			node.setNodeId(nodeId);
@@ -344,6 +343,14 @@ public class VLEPostData extends AbstractController {
 			node.saveOrUpdate();
 		}
 		return node;
+	}
+
+	public VLEService getVleService() {
+		return vleService;
+	}
+
+	public void setVleService(VLEService vleService) {
+		this.vleService = vleService;
 	}
 
 

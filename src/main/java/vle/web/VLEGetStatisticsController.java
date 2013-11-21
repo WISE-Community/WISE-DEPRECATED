@@ -9,17 +9,29 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+import org.telscenter.sail.webapp.service.vle.VLEService;
 
-import vle.VLEServlet;
 import vle.domain.statistics.VLEStatistics;
 
-public class VLEGetStatistics extends VLEServlet {
+public class VLEGetStatisticsController extends AbstractController {
 
 	private static final long serialVersionUID = 1L;
+	
+	private VLEService vleService;
+	
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if (request.getMethod() == AbstractController.METHOD_GET) {
+			return doGet(request, response);
+		}
+		return null;
+	}
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//get all the vle statistics
-		List<VLEStatistics> vleStatisticsList = VLEStatistics.getVLEStatistics();
+		List<VLEStatistics> vleStatisticsList = vleService.getVLEStatistics();
 		
 		//create a JSONArray to store all the vle statistics
 		JSONArray vleStatisticsJSONArray = new JSONArray();
@@ -39,5 +51,15 @@ public class VLEGetStatistics extends VLEServlet {
 
 		//return the JSONArray in string form
 		response.getWriter().write(vleStatisticsJSONArray.toString());
+		
+		return null;
+	}
+	
+	public VLEService getVleService() {
+		return vleService;
+	}
+
+	public void setVleService(VLEService vleService) {
+		this.vleService = vleService;
 	}
 }
