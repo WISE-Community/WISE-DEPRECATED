@@ -33,7 +33,7 @@
 		</property>
 	</bean>
 
-	<bean id="adminjob" class="org.telscenter.sail.webapp.domain.admin.AdminJob">
+	<bean id="adminjob" class="org.wise.portal.domain.admin.AdminJob">
 		<property name="javaMail" ref="javaMail" />
 		<property name="emaillisteners" ref="emaillisteners" />
 		<property name="portalProperties" ref="portalproperties" />
@@ -41,7 +41,7 @@
 
 	<bean name="adminJobDetail" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass"
-			value="org.telscenter.sail.webapp.domain.admin.AdminJob" />
+			value="org.wise.portal.domain.admin.AdminJob" />
 		<property name="jobDataAsMap">
 			<map>
 				<entry key="javaMail" value-ref="javaMail" />
@@ -55,7 +55,7 @@
 
 	<bean name="daiyAdminJobDetail" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass"
-			value="org.telscenter.sail.webapp.domain.admin.DailyAdminJob" />
+			value="org.wise.portal.domain.admin.DailyAdminJob" />
 		<property name="jobDataAsMap">
 			<map>
 				<entry key="runDao" value-ref="runDao" />
@@ -88,25 +88,25 @@
 	</bean>
 
 	<bean id="studentUserDetails" scope="prototype"
-		class="org.telscenter.sail.webapp.domain.authentication.impl.StudentUserDetails">
+		class="org.wise.portal.domain.authentication.impl.StudentUserDetails">
 	</bean>
 
 	<bean id="teacherUserDetails" scope="prototype"
-		class="org.telscenter.sail.webapp.domain.authentication.impl.TeacherUserDetails">
+		class="org.wise.portal.domain.authentication.impl.TeacherUserDetails">
 	</bean>
 
 	<bean id="userDetailsService" scope="prototype"
-		class="org.telscenter.sail.webapp.service.authentication.impl.UserDetailsServiceImpl">
+		class="org.wise.portal.service.authentication.impl.UserDetailsServiceImpl">
 		<property name="userDetailsDao" ref="userDetailsDao" />
 		<property name="grantedAuthorityDao" ref="grantedAuthorityDao" />
 	</bean>
 
 	<bean id="run" scope="prototype"
-		class="org.telscenter.sail.webapp.domain.impl.RunImpl">
+		class="org.wise.portal.domain.impl.RunImpl">
 	</bean>
 
 	<bean id="vleService"
-		class="org.telscenter.sail.webapp.service.vle.impl.VLEServiceImpl">
+		class="org.wise.portal.service.vle.impl.VLEServiceImpl">
 		<property name="userInfoDao" ref="userInfoDao" />
 		<property name="annotationDao" ref="annotationDao" />
 		<property name="peerReviewWorkDao" ref="peerReviewWorkDao" />
@@ -121,109 +121,109 @@
 	</bean>
 	
 	<bean id="userInfoDao"
-		class="org.telscenter.sail.webapp.dao.userinfo.impl.HibernateUserInfoDao">
+		class="org.wise.portal.dao.userinfo.impl.HibernateUserInfoDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="annotationDao"
-		class="org.telscenter.sail.webapp.dao.annotation.impl.HibernateAnnotationDao">
+		class="org.wise.portal.dao.annotation.impl.HibernateAnnotationDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="peerReviewWorkDao"
-		class="org.telscenter.sail.webapp.dao.peerreview.impl.HibernatePeerReviewWorkDao">
+		class="org.wise.portal.dao.peerreview.impl.HibernatePeerReviewWorkDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 		
 	<bean id="peerReviewGateDao"
-		class="org.telscenter.sail.webapp.dao.peerreview.impl.HibernatePeerReviewGateDao">
+		class="org.wise.portal.dao.peerreview.impl.HibernatePeerReviewGateDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="nodeDao"
-		class="org.telscenter.sail.webapp.dao.node.impl.HibernateNodeDao">
+		class="org.wise.portal.dao.node.impl.HibernateNodeDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="stepWorkDao"
-		class="org.telscenter.sail.webapp.dao.work.impl.HibernateStepWorkDao">
+		class="org.wise.portal.dao.work.impl.HibernateStepWorkDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="stepWorkCacheDao"
-		class="org.telscenter.sail.webapp.dao.work.impl.HibernateStepWorkCacheDao">
+		class="org.wise.portal.dao.work.impl.HibernateStepWorkCacheDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="vleStatisticsDao"
-		class="org.telscenter.sail.webapp.dao.statistics.impl.HibernateVLEStatisticsDao">
+		class="org.wise.portal.dao.statistics.impl.HibernateVLEStatisticsDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="studentStatusDao"
-		class="org.telscenter.sail.webapp.dao.status.impl.HibernateStudentStatusDao">
+		class="org.wise.portal.dao.status.impl.HibernateStudentStatusDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="runStatusDao"
-		class="org.telscenter.sail.webapp.dao.status.impl.HibernateRunStatusDao">
+		class="org.wise.portal.dao.status.impl.HibernateRunStatusDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="ideaBasketDao"
-		class="org.telscenter.sail.webapp.dao.ideabasket.impl.HibernateIdeaBasketDao">
+		class="org.wise.portal.dao.ideabasket.impl.HibernateIdeaBasketDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="cRaterRequestDao"
-		class="org.telscenter.sail.webapp.dao.crater.impl.HibernateCRaterRequestDao">
+		class="org.wise.portal.dao.crater.impl.HibernateCRaterRequestDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 		
 	<bean id="runDao"
-		class="org.telscenter.sail.webapp.dao.offering.impl.HibernateRunDao">
+		class="org.wise.portal.dao.offering.impl.HibernateRunDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="project"
-		class="org.telscenter.sail.webapp.domain.project.impl.ProjectImpl">
+		class="org.wise.portal.domain.project.impl.ProjectImpl">
 	</bean>
 
 	<bean id="projectDao"
-		class="org.telscenter.sail.webapp.dao.project.impl.HibernateProjectDao">
+		class="org.wise.portal.dao.project.impl.HibernateProjectDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="externalProjectDao"
-		class="org.telscenter.sail.webapp.dao.project.impl.HibernateExternalProjectDao">
+		class="org.wise.portal.dao.project.impl.HibernateExternalProjectDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="projectMetadata"
-		class="org.telscenter.sail.webapp.domain.project.impl.ProjectMetadataImpl">
+		class="org.wise.portal.domain.project.impl.ProjectMetadataImpl">
 	</bean>
 
-	<bean id="module" class="org.telscenter.sail.webapp.domain.impl.ModuleImpl">
+	<bean id="module" class="org.wise.portal.domain.impl.ModuleImpl">
 	</bean>
 	<bean id="moduleDao"
-		class="org.telscenter.sail.webapp.dao.module.impl.HibernateModuleDao">
+		class="org.wise.portal.dao.module.impl.HibernateModuleDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	<bean id="wiseWorkgroupDao"
-		class="org.telscenter.sail.webapp.dao.workgroup.impl.HibernateWISEWorkgroupDao">
+		class="org.wise.portal.dao.workgroup.impl.HibernateWISEWorkgroupDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="projectParameters"
-		class="org.telscenter.sail.webapp.domain.impl.ProjectParameters"
+		class="org.wise.portal.domain.impl.ProjectParameters"
 		scope="prototype" />
 
-	<bean id="runParameters" class="org.telscenter.sail.webapp.domain.impl.RunParameters"
+	<bean id="runParameters" class="org.wise.portal.domain.impl.RunParameters"
 		scope="prototype" />
 
 	<bean id="runService" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="proxyInterfaces">
-			<value>org.telscenter.sail.webapp.service.offering.RunService</value>
+			<value>org.wise.portal.service.offering.RunService</value>
 		</property>
 		<property name="interceptorNames">
 			<list>
@@ -243,7 +243,7 @@
 	</bean>
 
 	<bean id="runServiceTarget"
-		class="org.telscenter.sail.webapp.service.offering.impl.RunServiceImpl">
+		class="org.wise.portal.service.offering.impl.RunServiceImpl">
 		<property name="offeringDao" ref="offeringDao" />
 		<property name="runDao" ref="runDao" />
 		<property name="userDao" ref="userDao" />
@@ -256,7 +256,7 @@
 
 	<bean id="projectService" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="proxyInterfaces">
-			<value>org.telscenter.sail.webapp.service.project.ProjectService
+			<value>org.wise.portal.service.project.ProjectService
 			</value>
 		</property>
 		<property name="interceptorNames">
@@ -278,20 +278,20 @@
 
 
 	<bean id="projectServiceTarget"
-		class="org.telscenter.sail.webapp.service.project.impl.ProjectServiceImpl">
+		class="org.wise.portal.service.project.impl.ProjectServiceImpl">
 		<property name="projectServiceFactory" ref="projectServiceFactory" />
 	</bean>
 
 
 	<bean id="projectServiceFactory"
-		class="org.telscenter.sail.webapp.service.project.ProjectServiceFactory">
+		class="org.wise.portal.service.project.ProjectServiceFactory">
 		<property name="externalProjectService" ref="externalProjectService" />
 		<property name="ldProjectService" ref="ldProjectService" />
 		<property name="moduleService" ref="curnitService" />
 	</bean>
 
 	<bean id="ldProjectService"
-		class="org.telscenter.sail.webapp.service.project.impl.LdProjectServiceImpl">
+		class="org.wise.portal.service.project.impl.LdProjectServiceImpl">
 		<property name="curnitService" ref="curnitService" />
 		<property name="projectDao" ref="projectDao" />
 		<property name="aclService" ref="aclServiceImpl" />
@@ -303,17 +303,17 @@
 	</bean>
 
 	<bean id="diyProjectCommunicatorDao"
-		class="org.telscenter.sail.webapp.dao.project.impl.HibernateDIYProjectCommunicatorDao">
+		class="org.wise.portal.dao.project.impl.HibernateDIYProjectCommunicatorDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="projectCommunicatorService"
-		class="org.telscenter.sail.webapp.service.project.impl.ProjectCommunicatorServiceImpl">
+		class="org.wise.portal.service.project.impl.ProjectCommunicatorServiceImpl">
 		<property name="projectCommunicatorDao" ref="diyProjectCommunicatorDao" />
 	</bean>
 
 	<bean id="externalProjectService"
-		class="org.telscenter.sail.webapp.service.project.impl.ExternalProjectServiceImpl">
+		class="org.wise.portal.service.project.impl.ExternalProjectServiceImpl">
 		<property name="projectCommunicator" ref="projectCommunicator" />
 		<property name="projectDao" ref="externalProjectDao" />
 		<property name="projectCommunicatorDao" ref="diyProjectCommunicatorDao" />
@@ -322,7 +322,7 @@
 	</bean>
 
 	<bean id="wiseUpService"
-		class="org.telscenter.sail.webapp.service.wiseup.impl.WiseUpServiceImpl">
+		class="org.wise.portal.service.wiseup.impl.WiseUpServiceImpl">
 		<property name="projectService" ref="projectService" />
 		<property name="curnitService" ref="curnitService" />
 		<property name="portalProperties" ref="portalproperties" />
@@ -330,44 +330,44 @@
 	</bean>
 
 	<bean id="projectCommunicator"
-		class="org.telscenter.sail.webapp.domain.project.impl.ProjectCommunicatorImpl">
+		class="org.wise.portal.domain.project.impl.ProjectCommunicatorImpl">
 	</bean>
 
 	<bean id="diyProjectCommunicator"
-		class="org.telscenter.sail.webapp.domain.project.impl.DIYProjectCommunicatorImpl">
+		class="org.wise.portal.domain.project.impl.DIYProjectCommunicatorImpl">
 		<property name="previewProjectSuffix" value="/sail_jnlp/6/1/authoring" />
 		<property name="runService" ref="runService" />
 		<property name="projectService" ref="projectService" />
 	</bean>
 
 	<bean id="portalDao"
-		class="org.telscenter.sail.webapp.dao.portal.impl.HibernatePortalDao">
+		class="org.wise.portal.dao.portal.impl.HibernatePortalDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="portalStatisticsDao"
-		class="org.telscenter.sail.webapp.dao.portal.impl.HibernatePortalStatisticsDao">
+		class="org.wise.portal.dao.portal.impl.HibernatePortalStatisticsDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="portalStatisticsService"
-		class="org.telscenter.sail.webapp.service.portal.impl.PortalStatisticsServiceImpl">
+		class="org.wise.portal.service.portal.impl.PortalStatisticsServiceImpl">
 		<property name="portalStatisticsDao" ref="portalStatisticsDao" />
 	</bean>
 
 	<bean id="portalService"
-		class="org.telscenter.sail.webapp.service.portal.impl.PortalServiceImpl">
+		class="org.wise.portal.service.portal.impl.PortalServiceImpl">
 		<property name="portalDao" ref="portalDao" />
 	</bean>
 
 	<bean id="curnitService"
-		class="org.telscenter.sail.webapp.service.module.impl.ModuleServiceImpl">
+		class="org.wise.portal.service.module.impl.ModuleServiceImpl">
 		<property name="curnitDao" ref="curnitDao" />
 		<property name="moduleDao" ref="moduleDao" />
 	</bean>
 
 	<bean id="studentService"
-		class="org.telscenter.sail.webapp.service.student.impl.StudentServiceImpl">
+		class="org.wise.portal.service.student.impl.StudentServiceImpl">
 		<property name="aclService" ref="aclServiceImpl" />
 		<property name="groupService" ref="groupService" />
 		<property name="runService" ref="runService" />
@@ -377,7 +377,7 @@
 
 	<bean id="wiseWorkgroupService" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="proxyInterfaces">
-			<value>org.telscenter.sail.webapp.service.workgroup.WISEWorkgroupService
+			<value>org.wise.portal.service.workgroup.WISEWorkgroupService
 			</value>
 		</property>
 		<property name="interceptorNames">
@@ -398,7 +398,7 @@
 	</bean>
 
 	<bean id="wiseWorkgroupServiceTarget"
-		class="org.telscenter.sail.webapp.service.workgroup.impl.WISEWorkgroupServiceImpl">
+		class="org.wise.portal.service.workgroup.impl.WISEWorkgroupServiceImpl">
 		<property name="workgroupDao" ref="wiseWorkgroupDao" />
 		<property name="aclService" ref="aclServiceImpl" />
 		<property name="offeringService" ref="runService" />
@@ -408,7 +408,7 @@
 	</bean>
 
 	<bean id="premadeCommentService"
-		class="org.telscenter.sail.webapp.service.premadecomment.impl.PremadeCommentServiceImpl">
+		class="org.wise.portal.service.premadecomment.impl.PremadeCommentServiceImpl">
 		<property name="premadeCommentDao" ref="premadeCommentDao" />
 		<property name="premadeCommentListDao" ref="premadeCommentListDao" />
 		<property name="projectService" ref="projectService" />
@@ -416,93 +416,93 @@
 	</bean>
 
 	<bean id="premadeCommentDao"
-		class="org.telscenter.sail.webapp.dao.premadecomment.impl.HibernatePremadeCommentDao">
+		class="org.wise.portal.dao.premadecomment.impl.HibernatePremadeCommentDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="premadeComment" scope="prototype"
-		class="org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentImpl">
+		class="org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl">
 	</bean>
 
 	<bean id="premadeCommentListDao"
-		class="org.telscenter.sail.webapp.dao.premadecomment.impl.HibernatePremadeCommentListDao">
+		class="org.wise.portal.dao.premadecomment.impl.HibernatePremadeCommentListDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="premadeCommentList" scope="prototype"
-		class="org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentListImpl">
+		class="org.wise.portal.domain.premadecomment.impl.PremadeCommentListImpl">
 	</bean>
 
 	<bean id="newsItemDao"
-		class="org.telscenter.sail.webapp.dao.newsitem.impl.HibernateNewsItemDao">
+		class="org.wise.portal.dao.newsitem.impl.HibernateNewsItemDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="newsItem" scope="prototype"
-		class="org.telscenter.sail.webapp.domain.newsitem.impl.NewsItemImpl">
+		class="org.wise.portal.domain.newsitem.impl.NewsItemImpl">
 	</bean>
 
 	<bean id="newsItemService"
-		class="org.telscenter.sail.webapp.service.newsitem.impl.NewsItemServiceImpl">
+		class="org.wise.portal.service.newsitem.impl.NewsItemServiceImpl">
 		<property name="newsItemDao" ref="newsItemDao" />
 	</bean>
 
 
 	<bean id="announcementDao"
-		class="org.telscenter.sail.webapp.dao.announcement.impl.HibernateAnnouncementDao">
+		class="org.wise.portal.dao.announcement.impl.HibernateAnnouncementDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="announcement" scope="prototype"
-		class="org.telscenter.sail.webapp.domain.announcement.impl.AnnouncementImpl">
+		class="org.wise.portal.domain.announcement.impl.AnnouncementImpl">
 	</bean>
 
 	<bean id="announcementService"
-		class="org.telscenter.sail.webapp.service.announcement.impl.AnnouncementServiceImpl">
+		class="org.wise.portal.service.announcement.impl.AnnouncementServiceImpl">
 		<property name="announcementDao" ref="announcementDao" />
 	</bean>
 
 	<bean id="messageDao"
-		class="org.telscenter.sail.webapp.dao.message.impl.HibernateMessageDao">
+		class="org.wise.portal.dao.message.impl.HibernateMessageDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="message" scope="prototype"
-		class="org.telscenter.sail.webapp.domain.message.impl.MessageImpl">
+		class="org.wise.portal.domain.message.impl.MessageImpl">
 	</bean>
 
 	<bean id="recipients" scope="prototype"
-		class="org.telscenter.sail.webapp.domain.message.impl.MessageRecipientImpl">
+		class="org.wise.portal.domain.message.impl.MessageRecipientImpl">
 	</bean>
 
 	<bean id="messageService"
-		class="org.telscenter.sail.webapp.service.message.impl.MessageServiceImpl">
+		class="org.wise.portal.service.message.impl.MessageServiceImpl">
 		<property name="messageDao" ref="messageDao" />
 		<property name="javaMail" ref="javaMail" />
 		<property name="emaillisteners" ref="emaillisteners" />
 	</bean>
 
 	<bean id="tag" scope="prototype"
-		class="org.telscenter.sail.webapp.domain.project.impl.TagImpl">
+		class="org.wise.portal.domain.project.impl.TagImpl">
 	</bean>
 
 	<bean id="tagDao" scope="prototype"
-		class="org.telscenter.sail.webapp.dao.project.impl.HibernateTagDao">
+		class="org.wise.portal.dao.project.impl.HibernateTagDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="tagService"
-		class="org.telscenter.sail.webapp.service.tag.impl.TagServiceImpl">
+		class="org.wise.portal.service.tag.impl.TagServiceImpl">
 		<property name="tagDao" ref="tagDao" />
 	</bean>
 
 	<bean id="studentAttendanceDao" scope="prototype"
-		class="org.telscenter.sail.webapp.dao.attendance.impl.HibernateStudentAttendanceDao">
+		class="org.wise.portal.dao.attendance.impl.HibernateStudentAttendanceDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="studentAttendanceService"
-		class="org.telscenter.sail.webapp.service.attendance.impl.StudentAttendanceServiceImpl">
+		class="org.wise.portal.service.attendance.impl.StudentAttendanceServiceImpl">
 		<property name="studentAttendanceDao" ref="studentAttendanceDao" />
 	</bean>
 </beans>

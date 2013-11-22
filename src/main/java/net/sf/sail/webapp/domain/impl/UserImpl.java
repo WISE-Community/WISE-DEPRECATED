@@ -29,7 +29,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import org.telscenter.sail.webapp.service.authentication.UserDetailsService;
+import org.wise.portal.service.authentication.UserDetailsService;
 
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;

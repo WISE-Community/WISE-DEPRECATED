@@ -19,7 +19,7 @@ package net.sf.sail.webapp.dao.authentication;
 
 import java.util.List;
 
-import org.telscenter.sail.webapp.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 
 import net.sf.sail.webapp.dao.SimpleDao;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;

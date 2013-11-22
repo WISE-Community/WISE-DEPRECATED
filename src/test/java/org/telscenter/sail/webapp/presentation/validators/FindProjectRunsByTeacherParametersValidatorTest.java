@@ -27,7 +27,8 @@ import net.sf.sail.webapp.service.UserService;
 import org.easymock.EasyMock;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.telscenter.sail.webapp.domain.impl.FindProjectParameters;
+import org.wise.portal.domain.impl.FindProjectParameters;
+import org.wise.portal.presentation.validators.FindProjectParametersValidator;
 
 import junit.framework.TestCase;
 

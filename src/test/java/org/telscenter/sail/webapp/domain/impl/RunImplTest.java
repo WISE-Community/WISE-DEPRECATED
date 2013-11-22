@@ -30,7 +30,8 @@ import net.sf.sail.webapp.domain.group.Group;
 import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 
-import org.telscenter.sail.webapp.domain.Run;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.impl.RunImpl;
 
 import junit.framework.TestCase;
 

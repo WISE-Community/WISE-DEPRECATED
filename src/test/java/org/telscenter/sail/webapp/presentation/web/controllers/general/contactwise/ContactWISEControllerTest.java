@@ -43,16 +43,16 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.authentication.impl.StudentUserDetails;
-import org.telscenter.sail.webapp.domain.general.contactwise.ContactWISE;
-import org.telscenter.sail.webapp.domain.general.contactwise.IssueType;
-import org.telscenter.sail.webapp.domain.general.contactwise.OperatingSystem;
-import org.telscenter.sail.webapp.domain.general.contactwise.WebBrowser;
-import org.telscenter.sail.webapp.domain.general.contactwise.impl.ContactWISEGeneral;
-import org.telscenter.sail.webapp.presentation.web.controllers.ContactWiseController;
-import org.telscenter.sail.webapp.service.offering.RunService;
-import org.telscenter.sail.webapp.service.student.StudentService;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.domain.general.contactwise.ContactWISE;
+import org.wise.portal.domain.general.contactwise.IssueType;
+import org.wise.portal.domain.general.contactwise.OperatingSystem;
+import org.wise.portal.domain.general.contactwise.WebBrowser;
+import org.wise.portal.domain.general.contactwise.impl.ContactWISEGeneral;
+import org.wise.portal.presentation.web.controllers.ContactWiseController;
+import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.student.StudentService;
 
 /**
  * @author Hiroki Terashima

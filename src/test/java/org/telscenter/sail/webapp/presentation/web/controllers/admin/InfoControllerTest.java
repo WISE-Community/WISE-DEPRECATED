@@ -38,8 +38,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.web.servlet.ModelAndView;
-import org.telscenter.sail.webapp.domain.authentication.Schoollevel;
-import org.telscenter.sail.webapp.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.authentication.Schoollevel;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.presentation.web.controllers.admin.InfoController;
 
 /**
  * @author patrick lawler

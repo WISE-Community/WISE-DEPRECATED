@@ -23,72 +23,72 @@
 	<!-- Custom controllers -->
 
 	<bean id="studentUserDetailsValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.StudentUserDetailsValidator" />
+		class="org.wise.portal.presentation.validators.StudentUserDetailsValidator" />
 
 	<bean id="teacherUserDetailsValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.TeacherUserDetailsValidator" />
+		class="org.wise.portal.presentation.validators.TeacherUserDetailsValidator" />
 
 	<bean id="teacherAccountFormValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.TeacherAccountFormValidator" />
+		class="org.wise.portal.presentation.validators.TeacherAccountFormValidator" />
 
 	<bean id="studentAccountFormValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.StudentAccountFormValidator">
+		class="org.wise.portal.presentation.validators.StudentAccountFormValidator">
 		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="addprojectparametersValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.student.AddProjectParametersValidator" />
+		class="org.wise.portal.presentation.validators.student.AddProjectParametersValidator" />
 
 	<bean id="endRunParametersValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.teacher.EndRunParametersValidator" />
+		class="org.wise.portal.presentation.validators.teacher.EndRunParametersValidator" />
 
 	<bean id="startRunParametersValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.teacher.StartRunParametersValidator" />
+		class="org.wise.portal.presentation.validators.teacher.StartRunParametersValidator" />
 
 	<bean id="removeStudentFromRunParametersValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.teacher.management.RemoveStudentFromRunParametersValidator" />
+		class="org.wise.portal.presentation.validators.teacher.management.RemoveStudentFromRunParametersValidator" />
 
 	<bean id="teamSignInFormValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.student.TeamSignInFormValidator">
+		class="org.wise.portal.presentation.validators.student.TeamSignInFormValidator">
 		<property name="userService" ref="userService" />
 		<property name="systemSaltSource" ref="systemSaltSource" />
 	</bean>
 
 	<bean id="lostTeacherValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.LostTeacherValidator" />
+		class="org.wise.portal.presentation.validators.LostTeacherValidator" />
 
 	<bean id="lostPasswordStudentUsernameValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.LostPasswordStudentUsernameValidator" />
+		class="org.wise.portal.presentation.validators.LostPasswordStudentUsernameValidator" />
 
 	<bean id="lostPasswordStudentAccountQuestionValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.LostPasswordStudentAccountQuestionValidator" />
+		class="org.wise.portal.presentation.validators.LostPasswordStudentAccountQuestionValidator" />
 
 	<bean id="lostPasswordStudentProjectCodeValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.LostPasswordStudentProjectCodeValidator" />
+		class="org.wise.portal.presentation.validators.LostPasswordStudentProjectCodeValidator" />
 
 	<bean id="findProjectParametersValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.FindProjectParametersValidator">
+		class="org.wise.portal.presentation.validators.FindProjectParametersValidator">
 		<property name="projectService" ref="projectService" />
 		<property name="userService" ref="userService" />
 		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="newsItemParametersValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.NewsItemParametersValidator" />
+		class="org.wise.portal.presentation.validators.NewsItemParametersValidator" />
 
 	<bean id="lookupParametersValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.LookupParametersValidator" />
+		class="org.wise.portal.presentation.validators.LookupParametersValidator" />
 
 	<bean id="announcementParametersValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.AnnouncementParametersValidator" />
+		class="org.wise.portal.presentation.validators.AnnouncementParametersValidator" />
 
 
 
 	<bean
-		class="org.telscenter.sail.webapp.presentation.web.controllers.TestController" />
+		class="org.wise.portal.presentation.web.controllers.TestController" />
 
 	<bean id="teacherIndexController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.TeacherIndexController">
+		class="org.wise.portal.presentation.web.controllers.TeacherIndexController">
 		<property name="runService" ref="runService" />
 		<property name="messageService" ref="messageService" />
 		<property name="projectService" ref="projectService" />
@@ -97,25 +97,25 @@
 	</bean>
 
 	<bean id="registerController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.RegisterController" />
+		class="org.wise.portal.presentation.web.controllers.RegisterController" />
 
 	<bean id="indexController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.IndexController">
+		class="org.wise.portal.presentation.web.controllers.IndexController">
 		<property name="newsItemService" ref="newsItemService" />
 		<property name="projectService" ref="projectService" />
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
 	<bean id="creditsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.CreditsController" />
+		class="org.wise.portal.presentation.web.controllers.CreditsController" />
 
 	<bean id="selectteamController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.student.SelectTeamController">
+		class="org.wise.portal.presentation.web.controllers.student.SelectTeamController">
 		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="startProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.student.StartProjectController">
+		class="org.wise.portal.presentation.web.controllers.student.StartProjectController">
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="projectService" ref="projectService" />
@@ -124,20 +124,20 @@
 	</bean>
 
 	<bean id="previewprojectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.PreviewProjectController">
+		class="org.wise.portal.presentation.web.controllers.PreviewProjectController">
 		<property name="runService" ref="runService" />
 		<property name="projectService" ref="projectService" />
 		<property name="diyProjectCommunicator" ref="diyProjectCommunicatorDao" />
 	</bean>
 
 	<bean id="previewprojectlistController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.PreviewProjectListController">
+		class="org.wise.portal.presentation.web.controllers.PreviewProjectListController">
 		<property name="projectService" ref="projectService" />
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
 	<bean id="authorProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.author.project.AuthorProjectController">
+		class="org.wise.portal.presentation.web.controllers.author.project.AuthorProjectController">
 		<property name="projectService" ref="projectService" />
 		<property name="curnitService" ref="curnitService" />
 		<property name="portalProperties" ref="portalproperties" />
@@ -146,10 +146,10 @@
 
 
 	<bean id="teamSignInController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.student.TeamSignInController">
+		class="org.wise.portal.presentation.web.controllers.student.TeamSignInController">
 		<property name="commandName" value="teamSignInForm" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.presentation.web.TeamSignInForm" />
+			value="org.wise.portal.presentation.web.TeamSignInForm" />
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="userService" ref="userService" />
@@ -163,17 +163,17 @@
 	</bean>
 
 	<bean id="curriculumSubjectsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.CurriculumSubjectsController">
+		class="org.wise.portal.presentation.web.controllers.CurriculumSubjectsController">
 	</bean>
 
 	<bean id="gradeWorkController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.grading.GradeWorkController">
+		class="org.wise.portal.presentation.web.controllers.teacher.grading.GradeWorkController">
 		<property name="runService" ref="runService" />
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
 	<bean id="submitWorkgroupChangesController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.SubmitWorkgroupChangesController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.SubmitWorkgroupChangesController">
 		<property name="userService" ref="userService" />
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
@@ -181,29 +181,29 @@
 	</bean>
 
 	<bean id="addProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.student.AddProjectController">
+		class="org.wise.portal.presentation.web.controllers.student.AddProjectController">
 		<property name="studentService" ref="studentService" />
 		<property name="commandName" value="addProjectParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.AddProjectParameters" />
+			value="org.wise.portal.domain.impl.AddProjectParameters" />
 		<property name="validator" ref="addprojectparametersValidator" />
 		<property name="formView" value="student/addproject" />
 		<property name="successView" value="student/addprojectsuccess" />
 	</bean>
 
 	<bean id="projectRunReportController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.reports.ProjectRunReportController">
+		class="org.wise.portal.presentation.web.controllers.teacher.reports.ProjectRunReportController">
 		<property name="runService" ref="runService" />
 		<property name="projectService" ref="projectService" />
 	</bean>
 
 	<bean id="endRunController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.manage.EndRunController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.manage.EndRunController">
 		<property name="runService" ref="runService" />
 		<property name="aclService" ref="aclServiceImpl" />
 		<property name="commandName" value="endRunParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.EndRunParameters" />
+			value="org.wise.portal.domain.impl.EndRunParameters" />
 		<property name="sessionForm" value="true" />
 		<property name="validator" ref="endRunParametersValidator" />
 		<property name="formView" value="teacher/run/manage/archiveRun" />
@@ -211,11 +211,11 @@
 	</bean>
 
 	<bean id="startRunController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.manage.StartRunController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.manage.StartRunController">
 		<property name="runService" ref="runService" />
 		<property name="commandName" value="startRunParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.StartRunParameters" />
+			value="org.wise.portal.domain.impl.StartRunParameters" />
 		<property name="sessionForm" value="true" />
 		<property name="validator" ref="startRunParametersValidator" />
 		<property name="formView" value="teacher/run/manage/startRun" />
@@ -223,14 +223,14 @@
 	</bean>
 
 	<bean id="removeStudentFromRunController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.RemoveStudentFromRunController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.RemoveStudentFromRunController">
 		<property name="runService" ref="runService" />
 		<property name="userService" ref="userService" />
 		<property name="studentService" ref="studentService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="commandName" value="removeStudentFromRunParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.teacher.management.RemoveStudentFromRunParameters" />
+			value="org.wise.portal.domain.teacher.management.RemoveStudentFromRunParameters" />
 		<property name="sessionForm" value="true" />
 		<property name="validator" ref="removeStudentFromRunParametersValidator" />
 		<property name="formView" value="teacher/management/removestudentfromrun" />
@@ -239,25 +239,25 @@
 	</bean>
 
 	<bean id="studentIndexController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.student.StudentIndexController">
+		class="org.wise.portal.presentation.web.controllers.student.StudentIndexController">
 		<property name="runService" ref="runService" />
 		<property name="studentService" ref="studentService" />
 	</bean>
 
 	<bean id="studentVLEController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.student.StudentVLEController">
+		class="org.wise.portal.presentation.web.controllers.student.StudentVLEController">
 		<property name="runService" ref="runService" />
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
 	<bean id="previewLDProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.PreviewLDProjectController">
+		class="org.wise.portal.presentation.web.controllers.PreviewLDProjectController">
 		<property name="projectService" ref="projectService" />
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
 	<bean id="informationController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.InformationController">
+		class="org.wise.portal.presentation.web.controllers.InformationController">
 		<property name="userService" ref="userService" />
 		<property name="runService" ref="runService" />
 		<property name="projectService" ref="projectService" />
@@ -266,23 +266,23 @@
 	</bean>
 
 	<bean id="studentWorkgroupServiceController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.student.service.StudentWorkgroupServiceController">
+		class="org.wise.portal.presentation.web.controllers.student.service.StudentWorkgroupServiceController">
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
 
 	<bean id="runInfoController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.student.RunInfoController">
+		class="org.wise.portal.presentation.web.controllers.student.RunInfoController">
 		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="createRunController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.CreateRunController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.CreateRunController">
 		<property name="runService" ref="runService" />
 		<property name="projectService" ref="projectService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="commandName" value="runParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.RunParameters" />
+			value="org.wise.portal.domain.impl.RunParameters" />
 		<property name="javaMail" ref="javaMail" />
 		<property name="emaillisteners" ref="emaillisteners" />
 		<property name="messageSource" ref="messageSource" />
@@ -290,7 +290,7 @@
 	</bean>
 
 	<bean id="myClassroomRunsMainController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.MyClassroomRunsMainController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.MyClassroomRunsMainController">
 		<property name="runService" ref="runService" />
 		<property name="projectService" ref="projectService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
@@ -298,7 +298,7 @@
 	</bean>
 
 	<bean id="myClassroomRunsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ClassroomRunListController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.ClassroomRunListController">
 		<property name="portalProperties" ref="portalproperties" />
 		<property name="runService" ref="runService" />
 		<property name="projectService" ref="projectService" />
@@ -306,33 +306,33 @@
 	</bean>
 
 	<bean id="minifyProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.project.MinifyProjectController">
+		class="org.wise.portal.presentation.web.controllers.teacher.project.MinifyProjectController">
 		<property name="projectService" ref="projectService" />
 	</bean>
 
 	<bean id="languageTranslationsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.project.LanguageTranslationsController">
+		class="org.wise.portal.presentation.web.controllers.teacher.project.LanguageTranslationsController">
 	</bean>
 
 	<bean id="managementOverviewController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ManagementOverviewController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.ManagementOverviewController">
 	</bean>
 
 	<bean id="premadeCommentsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.grading.PremadeCommentsController">
+		class="org.wise.portal.presentation.web.controllers.teacher.grading.PremadeCommentsController">
 		<property name="premadeCommentService" ref="premadeCommentService" />
 	</bean>
 
 	<bean id="manageStudentsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ManageStudentsController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.ManageStudentsController">
 	</bean>
 
 	<bean id="updateMyAccountController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.UpdateMyAccountController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.UpdateMyAccountController">
 	</bean>
 
 	<bean id="updateMyAccountInfoController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.UpdateMyAccountInfoController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.UpdateMyAccountInfoController">
 		<property name="userService" ref="userService" />
 		<property name="commandName" value="teacherAccountForm" />
 		<property name="validator" ref="teacherAccountFormValidator" />
@@ -341,11 +341,11 @@
 	</bean>
 
 	<bean id="changeTeacherPasswordSuccessController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ChangeTeacherPasswordSuccessController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.ChangeTeacherPasswordSuccessController">
 	</bean>
 
 	<bean id="contactWiseController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.ContactWiseController">
+		class="org.wise.portal.presentation.web.controllers.ContactWiseController">
 		<property name="commandName" value="contactWISEGeneral" />
 		<property name="validator" ref="contactWISEValidator" />
 		<property name="formView" value="contact/contactwisegeneral" />
@@ -356,7 +356,7 @@
 	</bean>
 
 	<bean id="contactWiseProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.ContactWiseProjectController">
+		class="org.wise.portal.presentation.web.controllers.ContactWiseProjectController">
 		<property name="commandName" value="contactWISEProject" />
 		<property name="validator" ref="contactWISEValidator" />
 		<property name="formView" value="contact/contactwiseproject" />
@@ -368,67 +368,67 @@
 	</bean>
 
 	<bean id="contactWISEValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.general.contactwise.ContactWISEValidator" />
+		class="org.wise.portal.presentation.validators.general.contactwise.ContactWISEValidator" />
 
 	<bean id="contactwisegeneral"
-		class="org.telscenter.sail.webapp.domain.general.contactwise.impl.ContactWISEGeneral">
+		class="org.wise.portal.domain.general.contactwise.impl.ContactWISEGeneral">
 		<property name="emaillisteners" ref="emaillisteners" />
 		<property name="userService" ref="userService" />
 	</bean>
 
 	<bean id="contactWISEProject"
-		class="org.telscenter.sail.webapp.domain.general.contactwise.impl.ContactWISEProject">
+		class="org.wise.portal.domain.general.contactwise.impl.ContactWISEProject">
 		<property name="emaillisteners" ref="emaillisteners" />
 	</bean>
 
 	<bean id="accessDeniedController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.AccessDeniedController">
+		class="org.wise.portal.presentation.web.controllers.AccessDeniedController">
 	</bean>
 
 	<bean id="lostPasswordStudentReminderWizardController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.LostPasswordStudentReminderWizardController">
+		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentReminderWizardController">
 		<property name="userService" ref="userService" />
 		<property name="commandName" value="reminderParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.ReminderParameters" />
+			value="org.wise.portal.domain.impl.ReminderParameters" />
 	</bean>
 
 	<bean id="reminderParameters"
-		class="org.telscenter.sail.webapp.domain.impl.ReminderParameters"
+		class="org.wise.portal.domain.impl.ReminderParameters"
 		scope="prototype" />
 
-	<bean id="runParameters" class="org.telscenter.sail.webapp.domain.impl.RunParameters"
+	<bean id="runParameters" class="org.wise.portal.domain.impl.RunParameters"
 		scope="prototype" />
 
 	<bean id="selectAccountTypeController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.forgotaccount.SelectAccountTypeController" />
+		class="org.wise.portal.presentation.web.controllers.forgotaccount.SelectAccountTypeController" />
 
 	<bean id="lostPasswordStudentMainController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.LostPasswordStudentMainController" />
+		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentMainController" />
 
 	<bean id="lostPasswordStudentPasswordController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.LostPasswordStudentPasswordController" />
+		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentPasswordController" />
 
 	<bean id="lostPasswordStudentUsernameController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.LostPasswordStudentUsernameController" />
+		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentUsernameController" />
 
 	<bean id="lostPasswordStudentProjectCodeController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.LostPasswordStudentProjectCodeController">
+		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentProjectCodeController">
 		<property name="runService" ref="runService" />
 		<property name="commandName" value="reminderParameters" />
 		<property name="validator" ref="lostPasswordStudentProjectCodeValidator" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.ReminderParameters" />
+			value="org.wise.portal.domain.impl.ReminderParameters" />
 		<property name="formView" value="lostpasswordstudentprojectcode" />
 		<property name="successView" value="lostpasswordstudentprojectcoderesult" />
 	</bean>
 
 	<bean id="forgotAccountTeacherIndexController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.forgotaccount.teacher.ForgotAccountTeacherIndexController">
+		class="org.wise.portal.presentation.web.controllers.forgotaccount.teacher.ForgotAccountTeacherIndexController">
 		<property name="userService" ref="userService" />
 		<property name="commandName" value="userDetails" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.authentication.impl.TeacherUserDetails" />
+			value="org.wise.portal.domain.authentication.impl.TeacherUserDetails" />
 		<property name="validator" ref="lostTeacherValidator" />
 		<property name="formView" value="forgotaccount/teacher/index" />
 		<property name="successView" value="forgotaccount/teacher/success" />
@@ -439,63 +439,63 @@
 	</bean>
 
 	<bean id="forgotAccountTeacherSuccessController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.forgotaccount.teacher.SuccessController" />
+		class="org.wise.portal.presentation.web.controllers.forgotaccount.teacher.SuccessController" />
 
 	<bean id="forgotAccountTeacherErrorController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.forgotaccount.teacher.ErrorController" />
+		class="org.wise.portal.presentation.web.controllers.forgotaccount.teacher.ErrorController" />
 
 	<bean id="forgotAccountStudentUsernameController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.forgotaccount.student.UsernameController" />
+		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.UsernameController" />
 
 	<bean id="forgotAccountStudentPasswordController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.forgotaccount.student.PasswordController" />
+		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.PasswordController" />
 
 	<bean id="forgotAccountStudentPasswordReminderWizardController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController">
+		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController">
 		<property name="userService" ref="userService" />
 		<property name="commandName" value="reminderParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.ReminderParameters" />
+			value="org.wise.portal.domain.impl.ReminderParameters" />
 	</bean>
 
 	<bean id="forgotAccountStudentCheckProjectCodeController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.forgotaccount.student.CheckProjectCodeController">
+		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.CheckProjectCodeController">
 		<property name="runService" ref="runService" />
 		<property name="commandName" value="reminderParameters" />
 		<property name="validator" ref="lostPasswordStudentProjectCodeValidator" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.ReminderParameters" />
+			value="org.wise.portal.domain.impl.ReminderParameters" />
 		<property name="formView" value="forgotaccount/student/enterprojectcode" />
 		<property name="successView" value="forgotaccount/student/projectcoderesult" />
 	</bean>
 
 	<bean id="enterProjectCodeController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.EnterProjectCodeController" />
+		class="org.wise.portal.presentation.web.controllers.EnterProjectCodeController" />
 
 	<bean id="studentArchivedProjectsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.StudentArchivedProjectsController" />
+		class="org.wise.portal.presentation.web.controllers.StudentArchivedProjectsController" />
 
 	<bean id="wiseOverviewController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.WiseOverviewController" />
+		class="org.wise.portal.presentation.web.controllers.WiseOverviewController" />
 
 	<bean id="termsOfUseController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.TermsOfUseController" />
+		class="org.wise.portal.presentation.web.controllers.TermsOfUseController" />
 
 	<bean id="viewMyStudentsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ViewMyStudentsController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.ViewMyStudentsController">
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="aclService" ref="aclServiceImpl" />
 	</bean>
 
 	<bean id="listStudentNamesController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ListStudentNamesController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.ListStudentNamesController">
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
 
 	<bean id="batchStudentChangePasswordController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.BatchStudentChangePasswordController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.BatchStudentChangePasswordController">
 		<property name="formView"
 			value="/teacher/management/batchstudentchangepassword" />
 		<property name="successView"
@@ -507,42 +507,42 @@
 		<property name="sessionForm" value="true" />
 		<property name="commandName" value="batchStudentChangePasswordParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.BatchStudentChangePasswordParameters" />
+			value="org.wise.portal.domain.impl.BatchStudentChangePasswordParameters" />
 		<property name="validator" ref="changePasswordParametersValidator" />
 	</bean>
 
 	<bean id="changeUserPasswordController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ChangeUserPasswordController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.ChangeUserPasswordController">
 		<property name="successView" value="forgotaccount/changepasswordsuccess" />
 		<property name="userService" ref="userService" />
 		<property name="studentService" ref="studentService" />
 		<property name="sessionForm" value="true" />
 		<property name="commandName" value="changeStudentPasswordParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.ChangeStudentPasswordParameters" />
+			value="org.wise.portal.domain.impl.ChangeStudentPasswordParameters" />
 		<property name="validator" ref="changePasswordParametersValidator" />
 	</bean>
 
 	<bean id="changeTeacherPasswordController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ChangeTeacherPasswordController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.ChangeTeacherPasswordController">
 		<property name="successView" value="teacher/management/changepasswordsuccess" />
 		<property name="userService" ref="userService" />
 		<property name="studentService" ref="studentService" />
 		<property name="sessionForm" value="true" />
 		<property name="commandName" value="changeStudentPasswordParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.ChangeStudentPasswordParameters" />
+			value="org.wise.portal.domain.impl.ChangeStudentPasswordParameters" />
 		<property name="validator" ref="changePasswordParametersValidator" />
 	</bean>
 
 	<bean id="changeWorkgroupParametersValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.teacher.ChangeWorkgroupParametersValidator" />
+		class="org.wise.portal.presentation.validators.teacher.ChangeWorkgroupParametersValidator" />
 
 	<bean id="changeWorkgroupController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ChangeWorkgroupController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.ChangeWorkgroupController">
 		<property name="commandName" value="changeWorkgroupParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.ChangeWorkgroupParameters" />
+			value="org.wise.portal.domain.impl.ChangeWorkgroupParameters" />
 		<property name="validator" ref="changeWorkgroupParametersValidator" />
 		<property name="runService" ref="runService" />
 		<property name="sessionForm" value="true" />
@@ -553,7 +553,7 @@
 	</bean>
 
 	<bean id="libraryController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.LibraryController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.LibraryController">
 		<property name="projectService" ref="projectService" />
 		<property name="userService" ref="userService" />
 		<property name="runService" ref="runService" />
@@ -561,14 +561,14 @@
 	</bean>
 
 	<bean id="shareProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.project.customized.ShareProjectController">
+		class="org.wise.portal.presentation.web.controllers.teacher.project.customized.ShareProjectController">
 		<property name="commandName" value="addSharedTeacherParameters" />
 		<property name="userService" ref="userService" />
 		<property name="userDetailsService" ref="userDetailsService" />
 		<property name="projectService" ref="projectService" />
 		<property name="aclService" ref="aclServiceImpl" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.AddSharedTeacherParameters" />
+			value="org.wise.portal.domain.impl.AddSharedTeacherParameters" />
 		<property name="javaMail" ref="javaMail" />
 		<property name="emaillisteners" ref="emaillisteners" />
 		<property name="messageSource" ref="messageSource" />
@@ -578,12 +578,12 @@
 	</bean>
 
 	<bean id="unShareProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.project.customized.UnShareProjectController">
+		class="org.wise.portal.presentation.web.controllers.teacher.project.customized.UnShareProjectController">
 		<property name="projectService" ref="projectService" />
 	</bean>
 
 	<bean id="publishProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.author.project.PublishProjectController">
+		class="org.wise.portal.presentation.web.controllers.author.project.PublishProjectController">
 		<property name="commandName" value="projectParameters" />
 		<property name="formView" value="author/publishproject" />
 		<property name="successView" value="author/createprojectsuccess" />
@@ -592,75 +592,75 @@
 	</bean>
 
 	<bean id="projectParameters"
-		class="org.telscenter.sail.webapp.domain.impl.ProjectParameters">
+		class="org.wise.portal.domain.impl.ProjectParameters">
 	</bean>
 
 	<bean id="infoController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.InfoController">
+		class="org.wise.portal.presentation.web.controllers.admin.InfoController">
 		<property name="userService" ref="userService" />
 		<property name="studentService" ref="studentService" />
 		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="viewAllUsersController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.ViewAllUsersController">
+		class="org.wise.portal.presentation.web.controllers.admin.ViewAllUsersController">
 		<property name="userService" ref="userService" />
 		<property name="userDetailsService" ref="userDetailsService" />
 	</bean>
 
 	<bean id="enableDisableUserController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.EnableDisableUserController">
+		class="org.wise.portal.presentation.web.controllers.admin.EnableDisableUserController">
 		<property name="userService" ref="userService" />
 	</bean>
 
 	<bean id="projectInfoController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.project.ProjectInfoController">
+		class="org.wise.portal.presentation.web.controllers.teacher.project.ProjectInfoController">
 		<property name="projectService" ref="projectService" />
 		<property name="runService" ref="runService" />
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
 	<bean id="addNewsItemController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.AddNewsItemController">
+		class="org.wise.portal.presentation.web.controllers.admin.AddNewsItemController">
 		<property name="newsItemService" ref="newsItemService" />
 		<property name="formView" value="/admin/news/addnewsitems" />
 		<property name="successView" value="/admin/news/success" />
 		<property name="commandName" value="newsItemParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.NewsItemParameters" />
+			value="org.wise.portal.domain.impl.NewsItemParameters" />
 		<property name="validator" ref="newsItemParametersValidator" />
 	</bean>
 
 	<bean id="listNewsItemsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.ListNewsItemsController">
+		class="org.wise.portal.presentation.web.controllers.admin.ListNewsItemsController">
 		<property name="newsItemService" ref="newsItemService" />
 	</bean>
 
 	<bean id="editNewsItemController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.EditNewsItemController">
+		class="org.wise.portal.presentation.web.controllers.admin.EditNewsItemController">
 		<property name="newsItemService" ref="newsItemService" />
 		<property name="formView" value="/admin/news/editnewsitem" />
 		<property name="successView" value="/admin/news/success" />
 		<property name="sessionForm" value="true" />
 		<property name="commandName" value="newsItemParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.NewsItemParameters" />
+			value="org.wise.portal.domain.impl.NewsItemParameters" />
 		<property name="validator" ref="newsItemParametersValidator" />
 	</bean>
 
 	<bean id="removeNewsItemController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.RemoveNewsItemController">
+		class="org.wise.portal.presentation.web.controllers.admin.RemoveNewsItemController">
 		<property name="sessionForm" value="true" />
 		<property name="formView" value="/admin/news/removenewssuccess" />
 		<property name="newsItemService" ref="newsItemService" />
 	</bean>
 
 	<bean id="removeNewsConfirmController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.RemoveNewsConfirmController">
+		class="org.wise.portal.presentation.web.controllers.admin.RemoveNewsConfirmController">
 	</bean>
 
 	<bean id="shareProjectRunController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.ShareProjectRunController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.ShareProjectRunController">
 		<property name="runService" ref="runService" />
 		<property name="userService" ref="userService" />
 		<property name="aclService" ref="aclServiceImpl" />
@@ -668,7 +668,7 @@
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="commandName" value="addSharedTeacherParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.AddSharedTeacherParameters" />
+			value="org.wise.portal.domain.impl.AddSharedTeacherParameters" />
 		<property name="javaMail" ref="javaMail" />
 		<property name="emaillisteners" ref="emaillisteners" />
 		<property name="portalProperties" ref="portalproperties" />
@@ -678,65 +678,65 @@
 	</bean>
 
 	<bean id="unShareProjectRunController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.UnShareProjectRunController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.UnShareProjectRunController">
 		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="addSharedTeacherParameters"
-		class="org.telscenter.sail.webapp.domain.impl.AddSharedTeacherParameters">
+		class="org.wise.portal.domain.impl.AddSharedTeacherParameters">
 	</bean>
 
 	<bean id="addSharedTeacherController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.AddSharedTeacherController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.AddSharedTeacherController">
 		<property name="runService" ref="runService" />
 		<property name="userService" ref="userService" />
 		<property name="commandName" value="addSharedTeacherParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.AddSharedTeacherParameters" />
+			value="org.wise.portal.domain.impl.AddSharedTeacherParameters" />
 	</bean>
 
 	<bean id="manageAllProjectsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.ManageAllProjectsController">
+		class="org.wise.portal.presentation.web.controllers.admin.ManageAllProjectsController">
 		<property name="projectService" ref="projectService" />
 		<property name="externalProjectService" ref="externalProjectService" />
 	</bean>
 
 	<bean id="getAllExternalProjectsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.GetAllExternalProjectsController">
+		class="org.wise.portal.presentation.web.controllers.admin.GetAllExternalProjectsController">
 		<property name="projectService" ref="externalProjectService" />
 	</bean>
 
 	<bean id="currentlyAuthoredProjectsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.CurrentlyAuthoredProjectsController">
+		class="org.wise.portal.presentation.web.controllers.admin.CurrentlyAuthoredProjectsController">
 		<property name="projectService" ref="projectService" />
 	</bean>
 
 	<bean id="projectCommunicatorController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.ProjectCommunicatorController">
+		class="org.wise.portal.presentation.web.controllers.admin.ProjectCommunicatorController">
 		<property name="projectCommunicatorService" ref="projectCommunicatorService" />
 		<property name="portalService" ref="portalService" />
 	</bean>
 
 	<bean id="importExternalProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.project.ImportExternalProjectController">
+		class="org.wise.portal.presentation.web.controllers.project.ImportExternalProjectController">
 		<property name="wiseUpService" ref="wiseUpService" />
 	</bean>
 
 
 	<bean id="projectInfoParameters"
-		class="org.telscenter.sail.webapp.domain.impl.ProjectInfoParameters" />
+		class="org.wise.portal.domain.impl.ProjectInfoParameters" />
 
 	<!-- controllers for admin -->
 	<bean id="manageAllProjectRunsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.ManageAllProjectRunsController">
+		class="org.wise.portal.presentation.web.controllers.admin.ManageAllProjectRunsController">
 		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="changeStudentPeriodController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ChangeStudentPeriodController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.ChangeStudentPeriodController">
 		<property name="commandName" value="changePeriodParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.ChangePeriodParameters" />
+			value="org.wise.portal.domain.impl.ChangePeriodParameters" />
 		<property name="userService" ref="userService" />
 		<property name="studentService" ref="studentService" />
 		<property name="runService" ref="runService" />
@@ -747,37 +747,37 @@
 	</bean>
 
 	<bean id="changePeriodParametersValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.teacher.ChangePeriodParametersValidator" />
+		class="org.wise.portal.presentation.validators.teacher.ChangePeriodParametersValidator" />
 
 	<bean id="studentListController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.StudentListController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.StudentListController">
 		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="exportProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.project.ExportProjectController">
+		class="org.wise.portal.presentation.web.controllers.project.ExportProjectController">
 		<property name="projectService" ref="projectService" />
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
 	<bean id="uploadProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.UploadProjectController">
+		class="org.wise.portal.presentation.web.controllers.admin.UploadProjectController">
 		<property name="projectService" ref="projectService" />
 		<property name="curnitService" ref="curnitService" />
 		<property name="portalProperties" ref="portalproperties" />
 		<property name="sessionForm" value="true" />
 		<property name="commandName" value="projectZipFile" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.project.ProjectUpload" />
+			value="org.wise.portal.domain.project.ProjectUpload" />
 		<property name="successView" value="admin/project/uploadproject" />
 		<property name="formView" value="admin/project/uploadproject" />
 	</bean>
 
 	<bean id="findProjectRunsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.FindProjectRunsController">
+		class="org.wise.portal.presentation.web.controllers.admin.FindProjectRunsController">
 		<property name="commandName" value="findProjectParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.FindProjectParameters" />
+			value="org.wise.portal.domain.impl.FindProjectParameters" />
 		<property name="runService" ref="runService" />
 		<property name="userService" ref="userService" />
 		<property name="projectService" ref="projectService" />
@@ -785,38 +785,38 @@
 	</bean>
 
 	<bean id="lookupTeacherController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.LookupTeacherController">
+		class="org.wise.portal.presentation.web.controllers.admin.LookupTeacherController">
 		<property name="userService" ref="userService" />
 		<property name="commandName" value="lookupParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.LookupParameters" />
+			value="org.wise.portal.domain.impl.LookupParameters" />
 		<property name="validator" ref="lookupParametersValidator" />
 	</bean>
 
-	<bean id="lookupParameters" class="org.telscenter.sail.webapp.domain.impl.LookupParameters" />
+	<bean id="lookupParameters" class="org.wise.portal.domain.impl.LookupParameters" />
 
 	<bean id="lookupStudentController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.LookupStudentController">
+		class="org.wise.portal.presentation.web.controllers.admin.LookupStudentController">
 		<property name="userService" ref="userService" />
 		<property name="commandName" value="lookupParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.LookupParameters" />
+			value="org.wise.portal.domain.impl.LookupParameters" />
 		<property name="validator" ref="lookupParametersValidator" />
 	</bean>
 
 
 
 	<bean id="manageAnnouncementController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.announcement.ManageAnnouncementController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.ManageAnnouncementController">
 		<property name="runService" ref="runService" />
 		<property name="aclService" ref="aclServiceImpl" />
 	</bean>
 
 	<bean id="createAnnouncementController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.announcement.CreateAnnouncementController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.CreateAnnouncementController">
 		<property name="commandName" value="announcementParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.AnnouncementParameters" />
+			value="org.wise.portal.domain.impl.AnnouncementParameters" />
 		<property name="runService" ref="runService" />
 		<property name="announcementService" ref="announcementService" />
 		<property name="sessionForm" value="true" />
@@ -824,15 +824,15 @@
 	</bean>
 
 	<bean id="viewAnnouncementController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.announcement.ViewAnnouncementController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.ViewAnnouncementController">
 		<property name="announcementService" ref="announcementService" />
 	</bean>
 
 	<bean id="editAnnouncementController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.announcement.EditAnnouncementController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.EditAnnouncementController">
 		<property name="commandName" value="announcementParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.AnnouncementParameters" />
+			value="org.wise.portal.domain.impl.AnnouncementParameters" />
 		<property name="runService" ref="runService" />
 		<property name="announcementService" ref="announcementService" />
 		<property name="sessionForm" value="true" />
@@ -840,80 +840,80 @@
 	</bean>
 
 	<bean id="removeAnnouncementController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.announcement.RemoveAnnouncementController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.RemoveAnnouncementController">
 		<property name="runService" ref="runService" />
 		<property name="announcementService" ref="announcementService" />
 	</bean>
 
 	<bean id="viewAnnouncementsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.student.ViewAnnouncementsController">
+		class="org.wise.portal.presentation.web.controllers.student.ViewAnnouncementsController">
 		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="bookmarkController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.project.bookmarked.BookmarkController">
+		class="org.wise.portal.presentation.web.controllers.teacher.project.bookmarked.BookmarkController">
 		<property name="projectService" ref="projectService" />
 		<property name="userService" ref="userService" />
 	</bean>
 
 	<bean id="deleteProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.project.DeleteProjectController">
+		class="org.wise.portal.presentation.web.controllers.teacher.project.DeleteProjectController">
 		<property name="projectService" ref="projectService" />
 	</bean>
 
 	<bean id="analyzeProjectController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.project.AnalyzeProjectController">
+		class="org.wise.portal.presentation.web.controllers.teacher.project.AnalyzeProjectController">
 		<property name="projectService" ref="projectService" />
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
 
 	<bean id="createHierarchyTypeController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.CreateHierarchyTypeController">
+		class="org.wise.portal.presentation.web.controllers.CreateHierarchyTypeController">
 		<!-- <property name="nodeService" ref="nodeService"/> -->
 		<property name="userService" ref="userService" />
 	</bean>
 
 	<bean id="createNodeController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.CreateNodeController">
+		class="org.wise.portal.presentation.web.controllers.CreateNodeController">
 		<!-- <property name="nodeService" ref="nodeService"/> -->
 	</bean>
 
 	<bean id="manageHierarchyTypesController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.ManageHierarchyTypesController">
+		class="org.wise.portal.presentation.web.controllers.ManageHierarchyTypesController">
 		<!-- <property name="nodeService" ref="nodeService"/> -->
 	</bean>
 
 	<bean id="manageHierarchyController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.ManageHierarchyController">
+		class="org.wise.portal.presentation.web.controllers.ManageHierarchyController">
 		<!-- <property name="nodeService" ref="nodeService"/> -->
 		<property name="userService" ref="userService" />
 	</bean>
 
 	<bean id="extendReminderTimeController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.manage.ExtendReminderTimeController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.manage.ExtendReminderTimeController">
 		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="outsideErrorController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.OutsideErrorController">
+		class="org.wise.portal.presentation.web.controllers.OutsideErrorController">
 		<property name="exceptionResolver" ref="exceptionResolver" />
 	</bean>
-	<!-- <bean id="repositController" class="org.telscenter.sail.webapp.presentation.web.controllers.TestRepositController"> 
+	<!-- <bean id="repositController" class="org.wise.portal.presentation.web.controllers.TestRepositController"> 
 		<property name="repositoryService" ref="repositoryService"/> </bean> <bean 
-		id="retrieveController" class="org.telscenter.sail.webapp.presentation.web.controllers.TestRetrieveController"> 
+		id="retrieveController" class="org.wise.portal.presentation.web.controllers.TestRetrieveController"> 
 		<property name="repositoryService" ref="repositoryService"/> </bean> <bean 
-		id="junkController" class="org.telscenter.sail.webapp.presentation.web.controllers.JunkController"> 
+		id="junkController" class="org.wise.portal.presentation.web.controllers.JunkController"> 
 		</bean> -->
 
 
 	<bean id="managePortalController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.ManagePortalController">
+		class="org.wise.portal.presentation.web.controllers.admin.ManagePortalController">
 		<property name="portalService" ref="portalService" />
 	</bean>
 
 	<bean id="messageController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.MessageController">
+		class="org.wise.portal.presentation.web.controllers.MessageController">
 		<property name="messageService" ref="messageService" />
 		<property name="userService" ref="userService" />
 	</bean>
@@ -962,7 +962,7 @@
 	</bean>
 		
 	<bean id="bridgeController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.BridgeController">
+		class="org.wise.portal.presentation.web.controllers.BridgeController">
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="runService" ref="runService" />
 		<property name="portalProperties" ref="portalproperties" />
@@ -970,62 +970,62 @@
 	</bean>
 
 	<bean id="credentialManager"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.CredentialManager">
+		class="org.wise.portal.presentation.web.controllers.CredentialManager">
 		<property name="projectService" ref="projectService" />
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
 	<bean id="routerController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.RouterController">
+		class="org.wise.portal.presentation.web.controllers.RouterController">
 		<property name="projectService" ref="projectService" />
 	</bean>
 
 	<bean id="runStatisticsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.admin.RunStatisticsController">
+		class="org.wise.portal.presentation.web.controllers.admin.RunStatisticsController">
 		<property name="runService" ref="runService" />
 		<property name="studentAttendanceService" ref="studentAttendanceService" />
 	</bean>
 
 	<bean id="updateRunController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.UpdateRunController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.UpdateRunController">
 		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="editRunController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.EditRunController">
+		class="org.wise.portal.presentation.web.controllers.teacher.run.EditRunController">
 		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="taggerController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.TaggerController">
+		class="org.wise.portal.presentation.web.controllers.TaggerController">
 		<property name="projectService" ref="projectService" />
 	</bean>
 
 	<bean id="compatibilityCheckController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.CompatibilityCheckController">
+		class="org.wise.portal.presentation.web.controllers.CompatibilityCheckController">
 		<property name="projectService" ref="projectService" />
 	</bean>
 
 	<bean id="memoryMonitorController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.MemoryMonitorController">
+		class="org.wise.portal.presentation.web.controllers.MemoryMonitorController">
 	</bean>
 
 	<bean id="projectMetadataController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.ProjectMetadataController">
+		class="org.wise.portal.presentation.web.controllers.ProjectMetadataController">
 		<property name="projectService" ref="projectService" />
 	</bean>
 
 	<bean id="checkForExistingAccountController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.CheckForExistingAccountController">
+		class="org.wise.portal.presentation.web.controllers.CheckForExistingAccountController">
 		<property name="userService" ref="userService" />
 	</bean>
 
 	<bean id="searchForStudentUserNameController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.forgotaccount.student.SearchForStudentUserNameController">
+		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.SearchForStudentUserNameController">
 		<property name="commandName" value="reminderParameters" />
 		<property name="validator" ref="searchForStudentUserNameValidator" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.ReminderParameters" />
+			value="org.wise.portal.domain.impl.ReminderParameters" />
 		<property name="formView"
 			value="forgotaccount/student/searchforstudentusername" />
 		<property name="successView"
@@ -1034,24 +1034,24 @@
 	</bean>
 
 	<bean id="searchForStudentUserNameValidator"
-		class="org.telscenter.sail.webapp.presentation.validators.SearchForStudentUserNameValidator" />
+		class="org.wise.portal.presentation.validators.SearchForStudentUserNameValidator" />
 
 	<bean id="portalStatisticsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.PortalStatisticsController">
+		class="org.wise.portal.presentation.web.controllers.PortalStatisticsController">
 		<property name="portalStatisticsService" ref="portalStatisticsService" />
 	</bean>
 
 	<bean id="statisticsController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.StatisticsController">
+		class="org.wise.portal.presentation.web.controllers.StatisticsController">
 		<property name="portalProperties" ref="portalproperties" />
 	</bean>
 
 	<bean id="resetPasswordController"
-		class="org.telscenter.sail.webapp.presentation.web.controllers.forgotaccount.ResetPasswordController">
+		class="org.wise.portal.presentation.web.controllers.forgotaccount.ResetPasswordController">
 		<property name="userService" ref="userService" />
 		<property name="commandName" value="reminderParameters" />
 		<property name="commandClass"
-			value="org.telscenter.sail.webapp.domain.impl.ReminderParameters" />
+			value="org.wise.portal.domain.impl.ReminderParameters" />
 		<property name="javaMail" ref="javaMail" />
 		<property name="portalProperties" ref="portalproperties" />
 		<property name="messageSource" ref="messageSource" />

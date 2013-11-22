@@ -37,9 +37,10 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.impl.FindProjectParameters;
-import org.telscenter.sail.webapp.service.offering.RunService;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.impl.FindProjectParameters;
+import org.wise.portal.presentation.web.controllers.admin.FindProjectRunsController;
+import org.wise.portal.service.offering.RunService;
 
 /**
  * @author patrick lawler

@@ -43,12 +43,13 @@ import net.sf.sail.webapp.domain.impl.UserImpl;
 import net.sf.sail.webapp.service.AclService;
 
 import org.easymock.EasyMock;
-import org.telscenter.sail.webapp.dao.offering.RunDao;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.impl.RunImpl;
-import org.telscenter.sail.webapp.domain.impl.RunParameters;
-import org.telscenter.sail.webapp.domain.project.Project;
-import org.telscenter.sail.webapp.domain.project.impl.ProjectImpl;
+import org.wise.portal.dao.offering.RunDao;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.impl.RunImpl;
+import org.wise.portal.domain.impl.RunParameters;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.impl.ProjectImpl;
+import org.wise.portal.service.offering.impl.RunServiceImpl;
 
 /**
  * Test class for RunServiceImpl class

@@ -22,8 +22,8 @@
  */
 package net.sf.sail.webapp.domain.impl;
 
-import org.telscenter.sail.webapp.domain.Module;
-import org.telscenter.sail.webapp.domain.impl.UrlModuleImpl;
+import org.wise.portal.domain.Module;
+import org.wise.portal.domain.impl.UrlModuleImpl;
 
 import net.sf.sail.webapp.domain.Curnit;
 import net.sf.sail.webapp.domain.CurnitVisitor;
@@ -43,7 +43,7 @@ public class CurnitGetCurnitUrlVisitor implements CurnitVisitor {
 	}
 
 	/**
-	 * @see net.sf.sail.webapp.domain.CurnitVisitor#visit(org.telscenter.sail.webapp.domain.Module)
+	 * @see net.sf.sail.webapp.domain.CurnitVisitor#visit(org.wise.portal.domain.Module)
 	 */
 	public Object visit(Module module) {
 		// TODO Auto-generated method stub

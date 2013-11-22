@@ -45,13 +45,14 @@ import net.sf.sail.webapp.service.AclService;
 import net.sf.sail.webapp.service.group.GroupService;
 import net.sf.sail.webapp.service.workgroup.WorkgroupService;
 
-import org.telscenter.sail.webapp.domain.PeriodNotFoundException;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.StudentUserAlreadyAssociatedWithRunException;
-import org.telscenter.sail.webapp.domain.impl.Projectcode;
-import org.telscenter.sail.webapp.domain.impl.RunImpl;
-import org.telscenter.sail.webapp.service.offering.RunService;
-import org.telscenter.sail.webapp.service.student.StudentService;
+import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
+import org.wise.portal.domain.impl.Projectcode;
+import org.wise.portal.domain.impl.RunImpl;
+import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.student.StudentService;
+import org.wise.portal.service.student.impl.StudentServiceImpl;
 
 /**
  * @author Hiroki Terashima

@@ -27,9 +27,10 @@ import java.util.Date;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.telscenter.sail.webapp.presentation.web.UserAccountForm;
-import org.telscenter.sail.webapp.domain.authentication.MutableUserDetails;
-import org.telscenter.sail.webapp.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.presentation.validators.UserAccountFormValidator;
+import org.wise.portal.presentation.web.UserAccountForm;
 
 import junit.framework.TestCase;
 

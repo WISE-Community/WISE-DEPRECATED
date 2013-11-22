@@ -33,10 +33,11 @@ import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.CurnitImpl;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.impl.ModuleImpl;
-import org.telscenter.sail.webapp.domain.project.Project;
-import org.telscenter.sail.webapp.domain.project.impl.ProjectImpl;
+import org.wise.portal.dao.project.impl.HibernateProjectDao;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.impl.ModuleImpl;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.impl.ProjectImpl;
 
 /**
  * @author Hiroki Terashima

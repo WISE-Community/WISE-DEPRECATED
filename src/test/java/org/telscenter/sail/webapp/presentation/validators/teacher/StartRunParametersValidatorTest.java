@@ -24,7 +24,8 @@ package org.telscenter.sail.webapp.presentation.validators.teacher;
 
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.telscenter.sail.webapp.domain.impl.StartRunParameters;
+import org.wise.portal.domain.impl.StartRunParameters;
+import org.wise.portal.presentation.validators.teacher.StartRunParametersValidator;
 
 import junit.framework.TestCase;
 

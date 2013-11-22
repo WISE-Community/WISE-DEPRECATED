@@ -38,9 +38,9 @@ import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.telscenter.sail.webapp.domain.authentication.Schoollevel;
-import org.telscenter.sail.webapp.domain.authentication.impl.TeacherUserDetails;
 import org.telscenter.sail.webapp.junit.AbstractTransactionalDbTests;
+import org.wise.portal.domain.authentication.Schoollevel;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 
 /**
  * Test class for HibernateUserDetailsDao using StudentUserDetails Domain Object

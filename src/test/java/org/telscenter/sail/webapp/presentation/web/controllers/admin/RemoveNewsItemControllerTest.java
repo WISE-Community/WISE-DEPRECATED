@@ -30,9 +30,10 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.web.servlet.ModelAndView;
-import org.telscenter.sail.webapp.domain.newsitem.NewsItem;
-import org.telscenter.sail.webapp.domain.newsitem.impl.NewsItemImpl;
-import org.telscenter.sail.webapp.service.newsitem.NewsItemService;
+import org.wise.portal.domain.newsitem.NewsItem;
+import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
+import org.wise.portal.presentation.web.controllers.admin.RemoveNewsItemController;
+import org.wise.portal.service.newsitem.NewsItemService;
 
 /**
  * @author patrick lawler

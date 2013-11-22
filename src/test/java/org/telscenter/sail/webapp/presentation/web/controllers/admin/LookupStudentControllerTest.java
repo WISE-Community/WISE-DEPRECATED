@@ -42,7 +42,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
-import org.telscenter.sail.webapp.domain.impl.LookupParameters;
+import org.wise.portal.domain.impl.LookupParameters;
+import org.wise.portal.presentation.web.controllers.admin.LookupStudentController;
 
 /**
  * @author patrick lawler

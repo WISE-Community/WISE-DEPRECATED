@@ -15,7 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.telscenter.sail.webapp.service.vle.VLEService;
+import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;

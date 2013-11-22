@@ -28,10 +28,12 @@ import java.util.TreeSet;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 
-import org.telscenter.sail.webapp.domain.premadecomment.PremadeComment;
-import org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentImpl;
-import org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentListImpl;
 import org.telscenter.sail.webapp.junit.AbstractTransactionalDbTests;
+import org.wise.portal.dao.premadecomment.impl.HibernatePremadeCommentDao;
+import org.wise.portal.dao.premadecomment.impl.HibernatePremadeCommentListDao;
+import org.wise.portal.domain.premadecomment.PremadeComment;
+import org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl;
+import org.wise.portal.domain.premadecomment.impl.PremadeCommentListImpl;
 
 /**
  * @author patrick lawler

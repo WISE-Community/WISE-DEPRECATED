@@ -26,7 +26,7 @@ import net.sf.sail.webapp.dao.SimpleDao;
 import net.sf.sail.webapp.domain.Persistable;
 import net.sf.sail.webapp.spring.SpringConfiguration;
 
-import org.telscenter.sail.webapp.spring.impl.SpringConfigurationImpl;
+import org.wise.portal.spring.impl.SpringConfigurationImpl;
 
 /**
  * @author Hiroki Terashima

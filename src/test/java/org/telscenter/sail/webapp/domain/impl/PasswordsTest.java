@@ -1,6 +1,8 @@
 
 package org.telscenter.sail.webapp.domain.impl;
 
+import org.wise.portal.domain.impl.Passwords;
+
 import junit.framework.TestCase;
 /**
  * @author patricklawler

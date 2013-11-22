@@ -31,7 +31,8 @@ import net.sf.sail.webapp.service.UserService;
 import org.easymock.EasyMock;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.telscenter.sail.webapp.presentation.web.TeamSignInForm;
+import org.wise.portal.presentation.validators.student.TeamSignInFormValidator;
+import org.wise.portal.presentation.web.TeamSignInForm;
 
 import junit.framework.TestCase;
 

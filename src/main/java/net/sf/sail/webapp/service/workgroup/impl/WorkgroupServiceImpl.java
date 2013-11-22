@@ -39,7 +39,7 @@ import net.sf.sail.webapp.service.workgroup.WorkgroupService;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.transaction.annotation.Transactional;
-import org.telscenter.sail.webapp.domain.impl.ChangeWorkgroupParameters;
+import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 
 /**
  * @author Cynick Young

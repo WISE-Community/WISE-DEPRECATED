@@ -27,8 +27,8 @@ import net.sf.sail.webapp.domain.impl.UserImpl;
 
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.telscenter.sail.webapp.domain.impl.NewsItemParameters;
-import org.telscenter.sail.webapp.presentation.validators.NewsItemParametersValidator;
+import org.wise.portal.domain.impl.NewsItemParameters;
+import org.wise.portal.presentation.validators.NewsItemParametersValidator;
 
 import junit.framework.TestCase;
 import java.util.Calendar;

@@ -39,11 +39,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.telscenter.sail.webapp.domain.authentication.Gender;
-import org.telscenter.sail.webapp.domain.authentication.MutableUserDetails;
-import org.telscenter.sail.webapp.domain.authentication.impl.StudentUserDetails;
 import org.telscenter.sail.webapp.junit.AbstractTransactionalDbTests;
-import org.telscenter.sail.webapp.service.authentication.UserDetailsService;
+import org.wise.portal.domain.authentication.Gender;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.impl.UserServiceImpl;
 
 /**
  * Tests services available to TELS Portal User

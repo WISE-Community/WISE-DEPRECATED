@@ -35,9 +35,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.web.servlet.ModelAndView;
-import org.telscenter.sail.webapp.domain.project.Project;
-import org.telscenter.sail.webapp.domain.project.impl.ProjectImpl;
-import org.telscenter.sail.webapp.service.project.ProjectService;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.impl.ProjectImpl;
+import org.wise.portal.presentation.web.controllers.teacher.project.ProjectInfoController;
+import org.wise.portal.service.project.ProjectService;
 
 /**
  * @author Hiroki Terashima

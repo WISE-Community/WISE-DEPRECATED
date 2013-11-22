@@ -33,7 +33,7 @@ import net.sf.sail.webapp.domain.impl.CurnitParameters;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.telscenter.sail.webapp.domain.impl.CreateUrlModuleParameters;
+import org.wise.portal.domain.impl.CreateUrlModuleParameters;
 
 /**
  * Validator for add Curnit page

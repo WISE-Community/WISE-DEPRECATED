@@ -22,7 +22,7 @@
  */
 package net.sf.sail.webapp.domain.impl;
 
-import org.telscenter.sail.webapp.domain.Run;
+import org.wise.portal.domain.Run;
 
 import net.sf.sail.webapp.domain.Offering;
 import net.sf.sail.webapp.domain.OfferingVisitor;
@@ -42,7 +42,7 @@ public class OfferingNameVisitor implements OfferingVisitor {
 	}
 
 	/**
-	 * @see net.sf.sail.webapp.domain.OfferingVisitor#visit(org.telscenter.sail.webapp.domain.Run)
+	 * @see net.sf.sail.webapp.domain.OfferingVisitor#visit(org.wise.portal.domain.Run)
 	 */
 	public Object visit(Run run) {
 		return run.getName();

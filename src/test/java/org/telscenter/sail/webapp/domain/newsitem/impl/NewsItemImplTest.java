@@ -28,7 +28,8 @@ import java.util.Date;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 
-import org.telscenter.sail.webapp.domain.newsitem.NewsItem;
+import org.wise.portal.domain.newsitem.NewsItem;
+import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
 
 import junit.framework.TestCase;
 

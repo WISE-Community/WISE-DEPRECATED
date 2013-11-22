@@ -46,7 +46,8 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
-import org.telscenter.sail.webapp.domain.impl.BatchStudentChangePasswordParameters;
+import org.wise.portal.domain.impl.BatchStudentChangePasswordParameters;
+import org.wise.portal.presentation.web.controllers.teacher.management.BatchStudentChangePasswordController;
 
 
 /**

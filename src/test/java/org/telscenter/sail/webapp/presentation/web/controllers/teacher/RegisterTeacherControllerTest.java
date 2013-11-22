@@ -41,9 +41,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
-import org.telscenter.sail.webapp.domain.authentication.impl.TeacherUserDetails;
-import org.telscenter.sail.webapp.presentation.web.TeacherAccountForm;
-import org.telscenter.sail.webapp.presentation.web.controllers.teacher.RegisterTeacherController;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.presentation.web.TeacherAccountForm;
+import org.wise.portal.presentation.web.controllers.teacher.RegisterTeacherController;
 
 /**
  * Test class for controller for registering TELS teachers

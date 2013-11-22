@@ -38,7 +38,7 @@
 
 	<context-param>
 		<param-name>contextConfigClass</param-name>
-		<param-value>org.telscenter.sail.webapp.spring.impl.SpringConfigurationImpl
+		<param-value>org.wise.portal.spring.impl.SpringConfigurationImpl
 		</param-value>
 	</context-param>
 
@@ -128,7 +128,7 @@
 		</servlet-class>
 		<init-param>
 			<param-name>contextConfigClass</param-name>
-			<param-value>org.telscenter.sail.webapp.spring.impl.SpringConfigurationImpl
+			<param-value>org.wise.portal.spring.impl.SpringConfigurationImpl
 			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
@@ -142,7 +142,7 @@
 
 	<servlet>
 		<servlet-name>wiseWebSocket</servlet-name>
-		<servlet-class>org.telscenter.sail.webapp.service.websocket.WISEWebSocketServlet
+		<servlet-class>org.wise.portal.service.websocket.WISEWebSocketServlet
 		</servlet-class>
 	</servlet>
 	<servlet-mapping>

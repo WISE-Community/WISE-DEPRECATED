@@ -29,10 +29,12 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.telscenter.sail.webapp.domain.impl.FindProjectParameters;
-import org.telscenter.sail.webapp.domain.project.Project;
-import org.telscenter.sail.webapp.domain.project.impl.ProjectImpl;
-import org.telscenter.sail.webapp.service.project.ProjectService;
+import org.wise.portal.domain.impl.FindProjectParameters;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.impl.ProjectImpl;
+import org.wise.portal.presentation.validators.FindProjectParametersValidator;
+import org.wise.portal.service.project.ProjectService;
+
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 
 /**

@@ -23,7 +23,7 @@
 package org.telscenter.sail.webapp.service.module.impl;
 
 import org.easymock.EasyMock;
-import org.telscenter.sail.webapp.service.module.impl.ModuleServiceImpl;
+import org.wise.portal.service.module.impl.ModuleServiceImpl;
 
 import net.sf.sail.webapp.dao.curnit.CurnitDao;
 import net.sf.sail.webapp.domain.Curnit;

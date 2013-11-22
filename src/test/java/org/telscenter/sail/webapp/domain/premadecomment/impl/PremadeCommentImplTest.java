@@ -24,9 +24,11 @@ package org.telscenter.sail.webapp.domain.premadecomment.impl;
 
 import junit.framework.TestCase;
 import net.sf.sail.webapp.domain.User;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.impl.RunImpl;
-import org.telscenter.sail.webapp.domain.premadecomment.PremadeComment;
+
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.impl.RunImpl;
+import org.wise.portal.domain.premadecomment.PremadeComment;
+import org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl;
 
 
 /**

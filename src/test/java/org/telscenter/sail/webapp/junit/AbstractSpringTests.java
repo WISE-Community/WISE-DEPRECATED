@@ -19,7 +19,7 @@ package org.telscenter.sail.webapp.junit;
 
 import net.sf.sail.webapp.spring.SpringConfiguration;
 
-import org.telscenter.sail.webapp.spring.impl.SpringConfigurationImpl;
+import org.wise.portal.spring.impl.SpringConfigurationImpl;
 
 /**
  * @author Cynick Young

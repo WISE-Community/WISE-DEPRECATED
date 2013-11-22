@@ -62,7 +62,7 @@
     </bean>
     <!--  The real exceptions are logged to the tomcat/logs/catalina.out file. Look there if you've got a problem. -->
     <bean id="exceptionResolver"
-        class="org.telscenter.sail.webapp.spring.impl.TelsSimpleMappingExceptionResolver">
+        class="org.wise.portal.spring.impl.TelsSimpleMappingExceptionResolver">
         <property name="exceptionMappings">
             <props>
                 <prop key="java.lang.Exception">errors/friendlyError</prop>

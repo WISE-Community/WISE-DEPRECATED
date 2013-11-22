@@ -37,8 +37,9 @@ import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import net.sf.sail.webapp.service.UserService;
-import org.telscenter.sail.webapp.domain.impl.ChangeStudentPasswordParameters;
-import org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ChangeUserPasswordController;
+
+import org.wise.portal.domain.impl.ChangeStudentPasswordParameters;
+import org.wise.portal.presentation.web.controllers.teacher.management.ChangeUserPasswordController;
 
 /**
  * @author patricklawler

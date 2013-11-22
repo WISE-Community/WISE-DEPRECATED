@@ -23,8 +23,9 @@
 package org.telscenter.sail.webapp.presentation.validators;
 
 import org.springframework.validation.BeanPropertyBindingResult;
-import org.telscenter.sail.webapp.domain.authentication.Gender;
-import org.telscenter.sail.webapp.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.domain.authentication.Gender;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.presentation.validators.StudentUserDetailsValidator;
 
 /**
  * @author Hiroki Terashima

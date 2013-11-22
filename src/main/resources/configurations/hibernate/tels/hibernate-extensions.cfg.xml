@@ -36,49 +36,49 @@
         <property name="hibernate.c3p0_min_size">10</property>
         <property name="hibernate.c3p0_timeout">100</property><!-- seconds -->
         
-        <property name="dialect">org.telscenter.sail.webapp.util.MySQL5MyISAMDialect</property>
+        <property name="dialect">org.wise.portal.util.MySQL5MyISAMDialect</property>
         
         <mapping
-            class="org.telscenter.sail.webapp.domain.authentication.impl.StudentUserDetails" />
+            class="org.wise.portal.domain.authentication.impl.StudentUserDetails" />
         <mapping
-            class="org.telscenter.sail.webapp.domain.authentication.impl.TeacherUserDetails" />
+            class="org.wise.portal.domain.authentication.impl.TeacherUserDetails" />
         <mapping
-            class="org.telscenter.sail.webapp.domain.impl.RunImpl" />
+            class="org.wise.portal.domain.impl.RunImpl" />
         <mapping
-            class="org.telscenter.sail.webapp.domain.workgroup.impl.WISEWorkgroupImpl" />
+            class="org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl" />
         <mapping
-            class="org.telscenter.sail.webapp.domain.impl.ModuleImpl" />
+            class="org.wise.portal.domain.impl.ModuleImpl" />
         <mapping
-            class="org.telscenter.sail.webapp.domain.impl.UrlModuleImpl" />
+            class="org.wise.portal.domain.impl.UrlModuleImpl" />
         <mapping
-            class="org.telscenter.sail.webapp.domain.project.impl.ProjectImpl" />
+            class="org.wise.portal.domain.project.impl.ProjectImpl" />
         <mapping
-            class="org.telscenter.sail.webapp.domain.project.impl.ExternalProjectImpl" />
+            class="org.wise.portal.domain.project.impl.ExternalProjectImpl" />
         <mapping
-            class="org.telscenter.sail.webapp.domain.project.impl.ProjectCommunicatorImpl" />      
+            class="org.wise.portal.domain.project.impl.ProjectCommunicatorImpl" />      
         <mapping
-            class="org.telscenter.sail.webapp.domain.project.impl.DIYProjectCommunicatorImpl" />      
+            class="org.wise.portal.domain.project.impl.DIYProjectCommunicatorImpl" />      
         <mapping
-            class="org.telscenter.sail.webapp.domain.portal.impl.PortalImpl" />      
+            class="org.wise.portal.domain.portal.impl.PortalImpl" />      
         <mapping
-        	class="org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentImpl" />
+        	class="org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl" />
         <mapping
-        	class="org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentListImpl" />  
+        	class="org.wise.portal.domain.premadecomment.impl.PremadeCommentListImpl" />  
         <mapping
-            class="org.telscenter.sail.webapp.domain.newsitem.impl.NewsItemImpl" />      
+            class="org.wise.portal.domain.newsitem.impl.NewsItemImpl" />      
         <mapping
-        	class="org.telscenter.sail.webapp.domain.announcement.impl.AnnouncementImpl"/>
+        	class="org.wise.portal.domain.announcement.impl.AnnouncementImpl"/>
         <mapping
-        	class="org.telscenter.sail.webapp.domain.project.impl.ProjectMetadataImpl"/>
+        	class="org.wise.portal.domain.project.impl.ProjectMetadataImpl"/>
         <mapping
-        	class="org.telscenter.sail.webapp.domain.message.impl.MessageImpl"/>
+        	class="org.wise.portal.domain.message.impl.MessageImpl"/>
         <mapping
-        	class="org.telscenter.sail.webapp.domain.message.impl.MessageRecipientImpl"/>
+        	class="org.wise.portal.domain.message.impl.MessageRecipientImpl"/>
         <mapping
-        	class="org.telscenter.sail.webapp.domain.project.impl.TagImpl"/>
+        	class="org.wise.portal.domain.project.impl.TagImpl"/>
         <mapping
-        	class="org.telscenter.sail.webapp.domain.portal.impl.PortalStatisticsImpl"/>
+        	class="org.wise.portal.domain.portal.impl.PortalStatisticsImpl"/>
 		<mapping
-        	class="org.telscenter.sail.webapp.domain.attendance.impl.StudentAttendanceImpl"/>
+        	class="org.wise.portal.domain.attendance.impl.StudentAttendanceImpl"/>
     </session-factory>
 </hibernate-configuration>

@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.wise.portal.presentation.util.Util;
 
 
 /**

@@ -30,18 +30,19 @@ import org.easymock.EasyMock;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 
-import org.telscenter.sail.webapp.dao.premadecomment.PremadeCommentDao;
-import org.telscenter.sail.webapp.dao.premadecomment.impl.HibernatePremadeCommentDao;
-import org.telscenter.sail.webapp.dao.premadecomment.impl.HibernatePremadeCommentListDao;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.impl.PremadeCommentListParameters;
-import org.telscenter.sail.webapp.domain.impl.PremadeCommentParameters;
-import org.telscenter.sail.webapp.domain.impl.RunImpl;
-import org.telscenter.sail.webapp.domain.premadecomment.PremadeComment;
-import org.telscenter.sail.webapp.domain.premadecomment.PremadeCommentList;
-import org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentImpl;
-import org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentListImpl;
-import org.telscenter.sail.webapp.service.premadecomment.PremadeCommentService;
+import org.wise.portal.dao.premadecomment.PremadeCommentDao;
+import org.wise.portal.dao.premadecomment.impl.HibernatePremadeCommentDao;
+import org.wise.portal.dao.premadecomment.impl.HibernatePremadeCommentListDao;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.impl.PremadeCommentListParameters;
+import org.wise.portal.domain.impl.PremadeCommentParameters;
+import org.wise.portal.domain.impl.RunImpl;
+import org.wise.portal.domain.premadecomment.PremadeComment;
+import org.wise.portal.domain.premadecomment.PremadeCommentList;
+import org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl;
+import org.wise.portal.domain.premadecomment.impl.PremadeCommentListImpl;
+import org.wise.portal.service.premadecomment.PremadeCommentService;
+import org.wise.portal.service.premadecomment.impl.PremadeCommentServiceImpl;
 
 import junit.framework.TestCase;
 

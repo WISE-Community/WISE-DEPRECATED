@@ -27,7 +27,8 @@ import java.util.Date;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.telscenter.sail.webapp.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.presentation.validators.TeacherUserDetailsValidator;
 
 /**
  * Test class for TELS's UserDetailsValidator

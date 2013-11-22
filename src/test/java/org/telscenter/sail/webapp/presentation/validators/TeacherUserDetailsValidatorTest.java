@@ -23,8 +23,9 @@
 package org.telscenter.sail.webapp.presentation.validators;
 
 import org.springframework.validation.BeanPropertyBindingResult;
-import org.telscenter.sail.webapp.domain.authentication.Schoollevel;
-import org.telscenter.sail.webapp.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.authentication.Schoollevel;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.presentation.validators.TeacherUserDetailsValidator;
 
 /**
  * Test class for TeacherUserDetailsValidator

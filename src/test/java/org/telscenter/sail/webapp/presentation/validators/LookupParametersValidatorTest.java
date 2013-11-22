@@ -26,7 +26,8 @@ import junit.framework.TestCase;
 
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.telscenter.sail.webapp.domain.impl.LookupParameters;
+import org.wise.portal.domain.impl.LookupParameters;
+import org.wise.portal.presentation.validators.LookupParametersValidator;
 
 /**
  * @author patrick lawler

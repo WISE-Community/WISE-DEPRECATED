@@ -43,11 +43,12 @@ import net.sf.sail.webapp.domain.impl.CurnitImpl;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 
 import org.hibernate.Session;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.impl.RunImpl;
-import org.telscenter.sail.webapp.domain.project.Project;
-import org.telscenter.sail.webapp.domain.project.impl.ProjectImpl;
 import org.telscenter.sail.webapp.junit.AbstractTransactionalDbTests;
+import org.wise.portal.dao.offering.impl.HibernateRunDao;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.impl.RunImpl;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.impl.ProjectImpl;
 
 /**
  * Test class for HibernateRunDao

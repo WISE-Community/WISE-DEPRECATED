@@ -24,7 +24,8 @@ package org.telscenter.sail.webapp.presentation.validators.teacher.management;
 
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.telscenter.sail.webapp.domain.teacher.management.RemoveStudentFromRunParameters;
+import org.wise.portal.domain.teacher.management.RemoveStudentFromRunParameters;
+import org.wise.portal.presentation.validators.teacher.management.RemoveStudentFromRunParametersValidator;
 
 import junit.framework.TestCase;
 

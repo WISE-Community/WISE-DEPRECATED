@@ -40,6 +40,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.web.servlet.ModelAndView;
+import org.wise.portal.presentation.web.controllers.admin.ViewAllUsersController;
 
 
 /**

@@ -45,13 +45,14 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
-import org.telscenter.sail.webapp.domain.PeriodNotFoundException;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.StudentUserAlreadyAssociatedWithRunException;
-import org.telscenter.sail.webapp.domain.impl.AddProjectParameters;
-import org.telscenter.sail.webapp.domain.impl.Projectcode;
-import org.telscenter.sail.webapp.domain.impl.RunImpl;
-import org.telscenter.sail.webapp.service.student.StudentService;
+import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
+import org.wise.portal.domain.impl.AddProjectParameters;
+import org.wise.portal.domain.impl.Projectcode;
+import org.wise.portal.domain.impl.RunImpl;
+import org.wise.portal.presentation.web.controllers.student.AddProjectController;
+import org.wise.portal.service.student.StudentService;
 
 /**
  * @author Hiroki Terashima

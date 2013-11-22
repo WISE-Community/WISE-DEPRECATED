@@ -28,10 +28,11 @@ import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 
 import org.junit.Ignore;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.impl.RunImpl;
-import org.telscenter.sail.webapp.domain.premadecomment.impl.PremadeCommentImpl;
 import org.telscenter.sail.webapp.junit.AbstractTransactionalDbTests;
+import org.wise.portal.dao.premadecomment.impl.HibernatePremadeCommentDao;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.impl.RunImpl;
+import org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl;
 
 /**
  * @author patrick lawler

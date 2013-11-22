@@ -24,9 +24,10 @@ package org.telscenter.sail.webapp.presentation.validators;
 
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.telscenter.sail.webapp.domain.authentication.Gender;
-import org.telscenter.sail.webapp.domain.authentication.impl.StudentUserDetails;
-import org.telscenter.sail.webapp.presentation.web.StudentAccountForm;
+import org.wise.portal.domain.authentication.Gender;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.presentation.validators.StudentAccountFormValidator;
+import org.wise.portal.presentation.web.StudentAccountForm;
 
 import junit.framework.TestCase;
 

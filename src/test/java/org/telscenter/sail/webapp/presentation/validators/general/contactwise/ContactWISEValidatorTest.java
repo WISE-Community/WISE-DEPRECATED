@@ -24,11 +24,12 @@ package org.telscenter.sail.webapp.presentation.validators.general.contactwise;
 
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.telscenter.sail.webapp.domain.general.contactwise.ContactWISE;
-import org.telscenter.sail.webapp.domain.general.contactwise.IssueType;
-import org.telscenter.sail.webapp.domain.general.contactwise.OperatingSystem;
-import org.telscenter.sail.webapp.domain.general.contactwise.WebBrowser;
-import org.telscenter.sail.webapp.domain.general.contactwise.impl.ContactWISEGeneral;
+import org.wise.portal.domain.general.contactwise.ContactWISE;
+import org.wise.portal.domain.general.contactwise.IssueType;
+import org.wise.portal.domain.general.contactwise.OperatingSystem;
+import org.wise.portal.domain.general.contactwise.WebBrowser;
+import org.wise.portal.domain.general.contactwise.impl.ContactWISEGeneral;
+import org.wise.portal.presentation.validators.general.contactwise.ContactWISEValidator;
 
 import junit.framework.TestCase;
 

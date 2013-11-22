@@ -26,9 +26,10 @@ import junit.framework.TestCase;
 
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.telscenter.sail.webapp.domain.authentication.Schoollevel;
-import org.telscenter.sail.webapp.domain.authentication.impl.TeacherUserDetails;
-import org.telscenter.sail.webapp.presentation.web.TeacherAccountForm;
+import org.wise.portal.domain.authentication.Schoollevel;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.presentation.validators.TeacherAccountFormValidator;
+import org.wise.portal.presentation.web.TeacherAccountForm;
 
 /**
  * @author patrick lawler

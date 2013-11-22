@@ -47,7 +47,7 @@
 		<property name="sender" ref="javaMailSender" />
 	</bean>
 
-	<bean id="userService" class="org.telscenter.sail.webapp.service.impl.UserServiceImpl">
+	<bean id="userService" class="org.wise.portal.service.impl.UserServiceImpl">
 		<property name="userDetailsDao" ref="userDetailsDao" />
 		<property name="grantedAuthorityDao" ref="grantedAuthorityDao" />
 		<property name="userDao" ref="userDao" />
@@ -55,15 +55,15 @@
 		<property name="saltSource" ref="systemSaltSource" />
 	</bean>
 
-	<bean id="curnitParameters" class="org.telscenter.sail.webapp.domain.impl.ModuleParameters"
+	<bean id="curnitParameters" class="org.wise.portal.domain.impl.ModuleParameters"
 		scope="prototype" />
 
 	<bean id="createUrlModuleParameters"
-		class="org.telscenter.sail.webapp.domain.impl.CreateUrlModuleParameters"
+		class="org.wise.portal.domain.impl.CreateUrlModuleParameters"
 		scope="prototype" />
 
 	<bean id="sessionFactory"
-		class="org.telscenter.sail.webapp.spring.impl.TelsAnnotationSessionFactoryBean">
+		class="org.wise.portal.spring.impl.TelsAnnotationSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<!-- place any extra extension files after the pas/hibernate.cfg.xml base 
 			file -->
@@ -77,20 +77,20 @@
 	</bean>
 
 	<bean id="authSuccessHandler"
-		class="org.telscenter.sail.webapp.presentation.web.filters.TelsAuthenticationSuccessHandler">
+		class="org.wise.portal.presentation.web.filters.TelsAuthenticationSuccessHandler">
 		<property name="defaultTargetUrl" value="/student/index.html" /> <!-- which is the default value -->
 		<property name="userDetailsService" ref="userDetailsService" />
 		<property name="portalService" ref="portalService" />
 	</bean>
 
 	<bean id="authFailureHandler"
-		class="org.telscenter.sail.webapp.presentation.web.filters.TelsAuthenticationFailureHandler">
+		class="org.wise.portal.presentation.web.filters.TelsAuthenticationFailureHandler">
 		<property name="portalProperties" ref="portalproperties" />
 		<property name="authenticationFailureUrl" value="/login.html?failed=true" />
 	</bean>
 
 	<bean id="authenticationProcessingFilter"
-		class="org.telscenter.sail.webapp.presentation.web.filters.TelsAuthenticationProcessingFilter">
+		class="org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="authenticationSuccessHandler" ref="authSuccessHandler" />
 		<property name="authenticationFailureHandler" ref="authFailureHandler" />
@@ -99,7 +99,7 @@
 	</bean>
 
 	<bean id="aclService"
-		class="org.telscenter.sail.webapp.spring.impl.TelsJdbcMutableAclService">
+		class="org.wise.portal.spring.impl.TelsJdbcMutableAclService">
 		<constructor-arg ref="dataSource" />
 		<constructor-arg ref="lookupStrategy" />
 		<constructor-arg ref="aclCache" />

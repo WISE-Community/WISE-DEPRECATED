@@ -32,9 +32,10 @@ import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 
 import org.hibernate.Session;
-import org.telscenter.sail.webapp.domain.newsitem.NewsItem;
-import org.telscenter.sail.webapp.domain.newsitem.impl.NewsItemImpl;
 import org.telscenter.sail.webapp.junit.AbstractTransactionalDbTests;
+import org.wise.portal.dao.newsitem.impl.HibernateNewsItemDao;
+import org.wise.portal.domain.newsitem.NewsItem;
+import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
 
 /**
  * @author patrick lawler

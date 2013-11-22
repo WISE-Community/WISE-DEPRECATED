@@ -393,7 +393,7 @@
             </list>
         </constructor-arg>
         <property name="processDomainObjectClass">
-            <value>org.telscenter.sail.webapp.domain.project.Project</value>
+            <value>org.wise.portal.domain.project.Project</value>
         </property>
     </bean>
     
@@ -470,7 +470,7 @@
             </list>
         </constructor-arg>
         <property name="processDomainObjectClass">
-            <value>org.telscenter.sail.webapp.domain.project.Project</value>
+            <value>org.wise.portal.domain.project.Project</value>
         </property>
     </bean>   
     
@@ -530,7 +530,7 @@
             </list>
         </constructor-arg>
         <property name="processDomainObjectClass">
-            <value>org.telscenter.sail.webapp.domain.project.Project</value>
+            <value>org.wise.portal.domain.project.Project</value>
         </property>
     </bean> 
     
@@ -634,7 +634,7 @@
             </list>
         </constructor-arg>
         <property name="processDomainObjectClass">
-            <value>org.telscenter.sail.webapp.domain.project.Project</value>
+            <value>org.wise.portal.domain.project.Project</value>
         </property>
     </bean>
     
@@ -719,7 +719,7 @@
             </list>
         </constructor-arg>
         <property name="processDomainObjectClass">
-            <value>org.telscenter.sail.webapp.domain.project.Project</value>
+            <value>org.wise.portal.domain.project.Project</value>
         </property>
     </bean> 
     

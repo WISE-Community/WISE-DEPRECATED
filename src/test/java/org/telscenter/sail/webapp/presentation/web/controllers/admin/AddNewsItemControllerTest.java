@@ -32,10 +32,11 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
-import org.telscenter.sail.webapp.domain.impl.NewsItemParameters;
-import org.telscenter.sail.webapp.domain.newsitem.NewsItem;
-import org.telscenter.sail.webapp.domain.newsitem.impl.NewsItemImpl;
-import org.telscenter.sail.webapp.service.newsitem.NewsItemService;
+import org.wise.portal.domain.impl.NewsItemParameters;
+import org.wise.portal.domain.newsitem.NewsItem;
+import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
+import org.wise.portal.presentation.web.controllers.admin.AddNewsItemController;
+import org.wise.portal.service.newsitem.NewsItemService;
 import org.easymock.EasyMock;
 
 /**

@@ -22,8 +22,8 @@
  */
 package net.sf.sail.webapp.domain;
 
-import org.telscenter.sail.webapp.domain.Module;
-import org.telscenter.sail.webapp.domain.impl.UrlModuleImpl;
+import org.wise.portal.domain.Module;
+import org.wise.portal.domain.impl.UrlModuleImpl;
 
 /**
  * Visitor Pattern Interface for Curnit

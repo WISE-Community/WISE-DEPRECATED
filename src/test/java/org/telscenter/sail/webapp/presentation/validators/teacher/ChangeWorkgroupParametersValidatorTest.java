@@ -31,7 +31,8 @@ import net.sf.sail.webapp.domain.impl.WorkgroupImpl;
 
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.telscenter.sail.webapp.domain.impl.ChangeWorkgroupParameters;
+import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
+import org.wise.portal.presentation.validators.teacher.ChangeWorkgroupParametersValidator;
 
 /**
  * @author Sally Ahn

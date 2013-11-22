@@ -27,8 +27,11 @@ import java.util.TreeSet;
 
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.UserImpl;
-import org.telscenter.sail.webapp.domain.premadecomment.PremadeComment;
-import org.telscenter.sail.webapp.domain.premadecomment.PremadeCommentList;
+
+import org.wise.portal.domain.premadecomment.PremadeComment;
+import org.wise.portal.domain.premadecomment.PremadeCommentList;
+import org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl;
+import org.wise.portal.domain.premadecomment.impl.PremadeCommentListImpl;
 
 import junit.framework.TestCase;
 

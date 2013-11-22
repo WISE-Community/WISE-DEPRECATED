@@ -39,15 +39,16 @@ import net.sf.sail.webapp.domain.impl.CurnitImpl;
 import net.sf.sail.webapp.service.AclService;
 import net.sf.sail.webapp.service.curnit.CurnitService;
 
-import org.telscenter.sail.webapp.dao.project.ProjectDao;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.impl.ProjectParameters;
-import org.telscenter.sail.webapp.domain.impl.RunImpl;
-import org.telscenter.sail.webapp.domain.impl.RunParameters;
-import org.telscenter.sail.webapp.domain.project.FamilyTag;
-import org.telscenter.sail.webapp.domain.project.Project;
-import org.telscenter.sail.webapp.domain.project.impl.ProjectImpl;
-import org.telscenter.sail.webapp.service.offering.RunService;
+import org.wise.portal.dao.project.ProjectDao;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.impl.ProjectParameters;
+import org.wise.portal.domain.impl.RunImpl;
+import org.wise.portal.domain.impl.RunParameters;
+import org.wise.portal.domain.project.FamilyTag;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.impl.ProjectImpl;
+import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.project.impl.LdProjectServiceImpl;
 
 
 /**

@@ -26,7 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.telscenter.sail.webapp.domain.authentication.Schoollevel;
+import org.wise.portal.domain.authentication.Schoollevel;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 
 import junit.framework.TestCase;
 

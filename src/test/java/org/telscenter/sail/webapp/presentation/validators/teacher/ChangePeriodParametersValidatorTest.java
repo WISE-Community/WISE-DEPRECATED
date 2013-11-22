@@ -27,10 +27,11 @@ import net.sf.sail.webapp.domain.impl.UserImpl;
 
 import org.springframework.validation.Errors;
 import junit.framework.TestCase;
-import org.telscenter.sail.webapp.presentation.validators.teacher.ChangePeriodParametersValidator;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.impl.ChangePeriodParameters;
-import org.telscenter.sail.webapp.domain.impl.RunImpl;
+
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.impl.ChangePeriodParameters;
+import org.wise.portal.domain.impl.RunImpl;
+import org.wise.portal.presentation.validators.teacher.ChangePeriodParametersValidator;
 import org.springframework.validation.BeanPropertyBindingResult;
 
 /**

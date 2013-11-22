@@ -32,8 +32,8 @@ import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.telscenter.sail.webapp.domain.impl.BatchStudentChangePasswordParameters;
-import org.telscenter.sail.webapp.domain.impl.Passwords;
+import org.wise.portal.domain.impl.BatchStudentChangePasswordParameters;
+import org.wise.portal.domain.impl.Passwords;
 
 /**
  * Validator for student's ChangePasswordParameters

@@ -11,8 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.RunWith;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.impl.RunImpl;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.impl.RunImpl;
+import org.wise.portal.domain.run.StudentRunInfo;
 
 import junit.framework.TestCase;
 

@@ -33,10 +33,11 @@ import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 
 import org.easymock.EasyMock;
-import org.telscenter.sail.webapp.dao.newsitem.NewsItemDao;
-import org.telscenter.sail.webapp.domain.impl.NewsItemParameters;
-import org.telscenter.sail.webapp.domain.newsitem.NewsItem;
-import org.telscenter.sail.webapp.domain.newsitem.impl.NewsItemImpl;
+import org.wise.portal.dao.newsitem.NewsItemDao;
+import org.wise.portal.domain.impl.NewsItemParameters;
+import org.wise.portal.domain.newsitem.NewsItem;
+import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
+import org.wise.portal.service.newsitem.impl.NewsItemServiceImpl;
 
 import junit.framework.TestCase;
 

@@ -52,11 +52,11 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.web.servlet.ModelAndView;
-import org.telscenter.sail.webapp.domain.Run;
-import org.telscenter.sail.webapp.domain.impl.RunImpl;
-import org.telscenter.sail.webapp.domain.project.Project;
-import org.telscenter.sail.webapp.presentation.web.controllers.teacher.management.ViewMyStudentsController;
-import org.telscenter.sail.webapp.service.offering.RunService;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.impl.RunImpl;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.presentation.web.controllers.teacher.management.ViewMyStudentsController;
+import org.wise.portal.service.offering.RunService;
 
 
 /**

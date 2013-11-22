@@ -27,7 +27,8 @@ import junit.framework.TestCase;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import org.telscenter.sail.webapp.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.presentation.validators.LostPasswordStudentUsernameValidator;
 
 /**
  * @author Anthony Perritano

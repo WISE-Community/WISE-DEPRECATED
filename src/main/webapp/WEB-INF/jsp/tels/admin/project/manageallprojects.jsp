@@ -75,7 +75,7 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 <div id="pageContent" class="contentPanel">
 
 <%@ include file="../adminheader.jsp"%>
-<%@page import="org.telscenter.sail.webapp.domain.project.impl.ProjectType" %>
+<%@page import="org.wise.portal.domain.project.impl.ProjectType" %>
 
 
 <h5 style="color:#0000CC;"><a href="../index.html"><spring:message code="returnToMainAdminPage" /></a></h5>

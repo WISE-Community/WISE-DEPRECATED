@@ -22,7 +22,7 @@
  */
 package net.sf.sail.webapp.domain;
 
-import org.telscenter.sail.webapp.domain.Run;
+import org.wise.portal.domain.Run;
 
 /**
  * Visitor Pattern Interface for Offering
