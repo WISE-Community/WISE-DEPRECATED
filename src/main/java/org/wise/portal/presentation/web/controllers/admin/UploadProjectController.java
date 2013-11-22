@@ -41,7 +41,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.sail.webapp.domain.Curnit;
 import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 import net.sf.sail.webapp.service.curnit.CurnitService;
 
 import org.apache.commons.io.FileUtils;
@@ -58,6 +57,7 @@ import org.wise.portal.domain.project.ProjectUpload;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
 import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.presentation.util.json.JSONObject;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ProjectService;
 
 /**

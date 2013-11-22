@@ -15,31 +15,30 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.sail.webapp.domain.impl;
+package org.wise.portal.spring.impl;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+
 /**
- * A backing object for adminOfferings page.
- * 
  * @author Laurel Williams
- * 
+ *
  * @version $Id$
- * 
  */
-public class AdminOfferingParameters {
-
-	Long offeringId;
-
-	/**
-	 * @return the offeringId
-	 */
-	public Long getOfferingId() {
-		return offeringId;
-	}
+public class PasSimpleMappingExceptionResolver extends
+		SimpleMappingExceptionResolver {
 
 	/**
-	 * @param offeringId the offeringId to set
+	 * @see org.springframework.web.servlet.handler.SimpleMappingExceptionResolver#resolveException(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, java.lang.Exception)
 	 */
-	public void setOfferingId(Long offeringId) {
-		this.offeringId = offeringId;
+	@Override
+	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {
+		this.logException(exception, request);
+		exception.printStackTrace();
+		return super.resolveException(request, response, handler, exception);
 	}
-	
+
 }

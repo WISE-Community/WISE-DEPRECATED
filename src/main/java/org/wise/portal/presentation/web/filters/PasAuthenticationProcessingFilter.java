@@ -15,7 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.sail.webapp.presentation.web.filters;
+package org.wise.portal.presentation.web.filters;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,7 +24,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 
 import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.presentation.web.listeners.PasSessionListener;
 import net.sf.sail.webapp.service.UserService;
 
 import org.apache.commons.logging.Log;
@@ -34,6 +33,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.wise.portal.presentation.web.listeners.PasSessionListener;
 
 /**
  * Custom AuthenticationProcessingFilter that subclasses Acegi Security. This

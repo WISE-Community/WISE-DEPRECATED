@@ -32,7 +32,7 @@ import javax.servlet.http.HttpSession;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 
 import org.easymock.EasyMock;
 import org.junit.Test;

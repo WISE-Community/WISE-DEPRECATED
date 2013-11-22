@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.Curnit;
 import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 import net.sf.sail.webapp.service.curnit.CurnitService;
 
 import org.springframework.validation.BindException;
@@ -41,6 +40,7 @@ import org.wise.portal.domain.impl.CreateUrlModuleParameters;
 import org.wise.portal.domain.impl.ProjectParameters;
 import org.wise.portal.domain.impl.PublishProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ProjectService;
 
 /**

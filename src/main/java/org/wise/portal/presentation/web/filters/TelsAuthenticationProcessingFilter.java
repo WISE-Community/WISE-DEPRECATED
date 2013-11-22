@@ -42,7 +42,6 @@ import javax.servlet.http.HttpSession;
 
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.presentation.web.filters.PasAuthenticationProcessingFilter;
 import net.sf.sail.webapp.service.UserService;
 import net.sf.sail.webapp.service.authentication.AuthorityNotFoundException;
 import net.tanesha.recaptcha.ReCaptcha;

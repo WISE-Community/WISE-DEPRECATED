@@ -19,7 +19,6 @@ package org.wise.portal;
 
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.service.authentication.UserDetailsService;
-import net.sf.sail.webapp.spring.SpringConfiguration;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -31,6 +30,7 @@ import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.wise.portal.spring.SpringConfiguration;
 
 /**
  * A disposable class that is used to initialize the system.

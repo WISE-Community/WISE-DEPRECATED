@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 import net.sf.sail.webapp.service.UserService;
 import net.sf.sail.webapp.service.authentication.UserDetailsService;
 import net.sf.sail.webapp.service.workgroup.WorkgroupService;
@@ -39,6 +38,7 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.Run;
 import org.wise.portal.domain.teacher.management.RemoveStudentFromRunParameters;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.student.StudentService;
 

@@ -22,7 +22,7 @@ import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.Offering;
 import net.sf.sail.webapp.domain.impl.AdminOfferingParameters;
 import net.sf.sail.webapp.domain.impl.OfferingImpl;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import net.sf.sail.webapp.presentation.web.controllers.ModelAndViewTests;
 import net.sf.sail.webapp.service.offering.OfferingService;
 

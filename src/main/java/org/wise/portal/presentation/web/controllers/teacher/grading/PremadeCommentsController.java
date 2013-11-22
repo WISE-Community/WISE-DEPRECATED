@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.servlet.ModelAndView;
@@ -45,6 +44,7 @@ import org.wise.portal.domain.premadecomment.PremadeCommentList;
 import org.wise.portal.presentation.util.json.JSONArray;
 import org.wise.portal.presentation.util.json.JSONException;
 import org.wise.portal.presentation.util.json.JSONObject;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.premadecomment.PremadeCommentService;
 

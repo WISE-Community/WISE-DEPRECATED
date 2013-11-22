@@ -15,13 +15,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.sail.webapp.spring.impl;
+package org.wise.portal.spring.impl;
 
 import java.security.InvalidParameterException;
 
 import javax.servlet.ServletContext;
 
-import net.sf.sail.webapp.spring.SpringConfiguration;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +31,7 @@ import org.springframework.context.ApplicationContextException;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
+import org.wise.portal.spring.SpringConfiguration;
 
 /**
  * Customized implementation that ignores the web.xml context parameter for

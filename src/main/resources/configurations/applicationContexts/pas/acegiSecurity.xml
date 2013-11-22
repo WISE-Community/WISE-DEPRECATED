@@ -118,7 +118,7 @@
         class="org.springframework.security.access.event.LoggerListener" />
 
     <bean id="authenticationProcessingFilter"
-        class="net.sf.sail.webapp.presentation.web.filters.PasAuthenticationProcessingFilter">
+        class="org.wise.portal.presentation.web.filters.PasAuthenticationProcessingFilter">
         <property name="authenticationManager" ref="authenticationManager" />
         <property name="authenticationFailureUrl"
             value="/login.html?failed=true" />

@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.presentation.web.controllers.SignupController;
+import net.sf.sail.webapp.service.UserService;
 import net.sf.sail.webapp.service.authentication.DuplicateUsernameException;
 
 import org.hibernate.StaleObjectStateException;
@@ -45,6 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.domain.AccountQuestion;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.authentication.Gender;
@@ -59,9 +60,11 @@ import org.wise.portal.service.student.StudentService;
  * @author Hiroki Terashima
  * @version $Id: RegisterStudentController.java 955 2007-08-21 22:47:13Z hiroki $
  */
-public class RegisterStudentController extends SignupController {
+public class RegisterStudentController extends SimpleFormController {
 	
 	private StudentService studentService;
+
+	private UserService userService;
 	
 	protected static final String USERNAME_KEY = "username";
 	
@@ -196,7 +199,6 @@ public class RegisterStudentController extends SignupController {
 	@Override
 	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception
 	{
-	  //super.initBinder(request, binder);
 	  binder.registerCustomEditor(Date.class,
 	    new CustomDateEditor(new SimpleDateFormat("MM/dd"), false)
 	  );
@@ -207,6 +209,10 @@ public class RegisterStudentController extends SignupController {
 	 */
 	public void setStudentService(StudentService studentService) {
 		this.studentService = studentService;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
 
 

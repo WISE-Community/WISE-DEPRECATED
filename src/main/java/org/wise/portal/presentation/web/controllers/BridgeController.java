@@ -51,7 +51,6 @@ import net.sf.sail.webapp.domain.webservice.http.HttpPostRequest;
 import net.sf.sail.webapp.domain.webservice.http.HttpStatusCodeException;
 import net.sf.sail.webapp.domain.webservice.http.impl.AbstractHttpRestCommand;
 import net.sf.sail.webapp.domain.webservice.http.impl.HttpRestTransportImpl;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.springframework.security.acls.domain.BasePermission;

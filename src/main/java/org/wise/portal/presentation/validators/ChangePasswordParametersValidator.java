@@ -20,7 +20,7 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.sf.sail.webapp.presentation.validators;
+package org.wise.portal.presentation.validators;
 
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.ChangePasswordParameters;

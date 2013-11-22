@@ -24,7 +24,6 @@ package org.wise.portal.presentation.web.controllers.teacher.management;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;
@@ -41,6 +40,7 @@ import org.wise.portal.domain.Run;
 import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.teacher.management.ViewMyStudentsPeriod;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;

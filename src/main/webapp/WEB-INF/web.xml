@@ -94,13 +94,13 @@
 
 	<listener>
 		<listener-class>
-			net.sf.sail.webapp.spring.impl.CustomContextLoaderListener
+			org.wise.portal.spring.impl.CustomContextLoaderListener
 		</listener-class>
 	</listener>
 
 	<listener>
 		<listener-class>
-			net.sf.sail.webapp.presentation.web.listeners.PasSessionListener
+			org.wise.portal.presentation.web.listeners.PasSessionListener
 		</listener-class>
 	</listener>
 
@@ -124,7 +124,7 @@
 	<servlet>
 		<servlet-name>dispatcher</servlet-name>
 		<servlet-class>
-			net.sf.sail.webapp.spring.impl.CustomDispatcherServlet
+			org.wise.portal.spring.impl.CustomDispatcherServlet
 		</servlet-class>
 		<init-param>
 			<param-name>contextConfigClass</param-name>

@@ -31,12 +31,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.presentation.web.listeners.PasSessionListener;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.presentation.web.listeners.PasSessionListener;
 import org.wise.portal.service.project.ProjectService;
 
 /**

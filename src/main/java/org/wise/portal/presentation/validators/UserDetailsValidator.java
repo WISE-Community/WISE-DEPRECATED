@@ -25,6 +25,7 @@ package org.wise.portal.presentation.validators;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 
 /**
@@ -33,8 +34,7 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class UserDetailsValidator extends
-		net.sf.sail.webapp.presentation.validators.UserDetailsValidator {
+public class UserDetailsValidator implements Validator {
 
 	protected static final int MAX_PASSWORD_LENGTH = 20;
 
@@ -85,5 +85,10 @@ public class UserDetailsValidator extends
 
 		if (errors.hasErrors())
 			userDetails.setPassword("");
+	}
+
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return MutableUserDetails.class.isAssignableFrom(clazz);
 	}
 }

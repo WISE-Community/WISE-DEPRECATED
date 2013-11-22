@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import net.sf.sail.webapp.service.UserService;
-import net.sf.sail.webapp.spring.SpringConfiguration;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,6 +19,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.wise.portal.spring.SpringConfiguration;
 
 /**
  * Hibernate Utilities

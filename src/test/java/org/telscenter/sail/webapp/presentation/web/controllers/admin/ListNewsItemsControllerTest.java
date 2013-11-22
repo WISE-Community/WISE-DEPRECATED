@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
 
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 
 import org.junit.Before;
 import org.junit.After;

@@ -23,7 +23,7 @@
 package net.sf.sail.webapp.presentation.validators;
 
 import net.sf.sail.webapp.domain.impl.ChangePasswordParameters;
-import net.sf.sail.webapp.presentation.validators.ChangePasswordParametersValidator;
+import org.wise.portal.presentation.validators.ChangePasswordParametersValidator;
 
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;

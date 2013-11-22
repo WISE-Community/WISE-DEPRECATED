@@ -42,8 +42,6 @@ import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.Curnit;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
-import net.sf.sail.webapp.presentation.web.listeners.PasSessionListener;
 import net.sf.sail.webapp.service.NotAuthorizedException;
 import net.sf.sail.webapp.service.curnit.CurnitService;
 
@@ -63,9 +61,11 @@ import org.wise.portal.presentation.util.Util;
 import org.wise.portal.presentation.util.json.JSONArray;
 import org.wise.portal.presentation.util.json.JSONException;
 import org.wise.portal.presentation.util.json.JSONObject;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.CredentialManager;
 import org.wise.portal.presentation.web.controllers.TaggerController;
 import org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilter;
+import org.wise.portal.presentation.web.listeners.PasSessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.project.ProjectService;
 

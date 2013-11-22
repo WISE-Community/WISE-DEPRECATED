@@ -54,7 +54,6 @@ import net.sf.sail.webapp.domain.webservice.http.HttpPostRequest;
 import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
 import net.sf.sail.webapp.domain.webservice.http.impl.AbstractHttpRestCommand;
 import net.sf.sail.webapp.domain.webservice.http.impl.HttpRestTransportImpl;
-import net.sf.sail.webapp.spring.SpringConfiguration;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.jdom.Document;
@@ -70,6 +69,7 @@ import org.wise.portal.service.project.ExternalProjectService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.project.impl.ExternalProjectServiceImpl;
 import org.wise.portal.service.project.impl.ProjectServiceImpl;
+import org.wise.portal.spring.SpringConfiguration;
 import org.wise.portal.spring.impl.SpringConfigurationImpl;
 
 /**

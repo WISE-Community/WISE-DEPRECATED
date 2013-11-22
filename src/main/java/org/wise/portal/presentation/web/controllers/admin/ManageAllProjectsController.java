@@ -29,12 +29,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ExternalProjectService;
 import org.wise.portal.service.project.ProjectService;
 

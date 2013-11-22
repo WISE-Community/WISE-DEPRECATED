@@ -493,6 +493,11 @@
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
+	
+    <bean id="changePasswordParametersValidator"
+		class="org.wise.portal.presentation.validators.ChangePasswordParametersValidator" >
+		<property name="systemSaltSource" ref="systemSaltSource" />
+	</bean>
 
 	<bean id="batchStudentChangePasswordController"
 		class="org.wise.portal.presentation.web.controllers.teacher.management.BatchStudentChangePasswordController">

@@ -33,8 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.sail.webapp.dao.user.UserDao;
 import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
-import net.sf.sail.webapp.presentation.web.listeners.PasSessionListener;
 import net.sf.sail.webapp.service.UserService;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -43,6 +41,8 @@ import org.wise.portal.domain.Run;
 import org.wise.portal.domain.admin.AdminJob;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.listeners.PasSessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
 
 /**

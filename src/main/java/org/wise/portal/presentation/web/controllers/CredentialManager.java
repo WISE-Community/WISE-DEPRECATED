@@ -41,13 +41,13 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.presentation.util.KeyGenerator;
 import org.wise.portal.presentation.util.http.Base64;
+import org.wise.portal.presentation.web.listeners.PasSessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.project.ProjectService;
 
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
-import net.sf.sail.webapp.presentation.web.listeners.PasSessionListener;
 
 
 /**

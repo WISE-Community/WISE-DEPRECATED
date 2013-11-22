@@ -15,11 +15,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package net.sf.sail.webapp.spring.impl;
+package org.wise.portal.spring.impl;
 
 import java.security.InvalidParameterException;
 
-import net.sf.sail.webapp.spring.SpringConfiguration;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
@@ -27,6 +26,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
+import org.wise.portal.spring.SpringConfiguration;
 
 /**
  * @author Cynick Young

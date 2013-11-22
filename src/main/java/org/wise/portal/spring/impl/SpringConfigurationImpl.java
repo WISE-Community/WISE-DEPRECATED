@@ -21,7 +21,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import net.sf.sail.webapp.spring.SpringConfiguration;
+import org.wise.portal.spring.SpringConfiguration;
+
 
 /**
  * Implementation of <code>SpringConfiguration</code> specifically for the
@@ -34,7 +35,14 @@ import net.sf.sail.webapp.spring.SpringConfiguration;
  */
 public final class SpringConfigurationImpl implements SpringConfiguration {
 
-    private static final String[] ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS;
+    private static String[] ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS = new String[] {
+        "classpath:configurations/applicationContexts/pas/acegiSecurity.xml",
+        "classpath:configurations/applicationContexts/pas/datasource.xml",
+        "classpath:configurations/applicationContexts/pas/hibernate.xml",
+        "classpath:configurations/applicationContexts/pas/security.xml",
+        "classpath:configurations/applicationContexts/pas/spring.xml",
+        "classpath:configurations/applicationContexts/pas/user.xml",
+        "classpath:configurations/applicationContexts/pas/javamail.xml"};
 
     private static final String[] DISPATCHER_SERVLET_CONTEXT_CONFIG_LOCATIONS = new String[] {
             "classpath:configurations/dispatcherServlet/pas/config.xml",
@@ -44,29 +52,27 @@ public final class SpringConfigurationImpl implements SpringConfiguration {
             "classpath:configurations/dispatcherServlet/tels/overrides.xml" };
 
     static {
-        final SpringConfiguration baseConfig = new net.sf.sail.webapp.spring.impl.SpringConfigurationImpl();
         final List<String> configLocationsList = Collections.list(Collections
-                .enumeration(Arrays.asList(baseConfig
-                        .getRootApplicationContextConfigLocations())));
+                .enumeration(Arrays.asList(ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS)));
         configLocationsList
                 .add("classpath:configurations/applicationContexts/tels/extensions.xml");
         // Keep the overrides as the last item to be added to the list to ensure
         // that the overridden bean has indeed been defined.
         configLocationsList
                 .add("classpath:configurations/applicationContexts/tels/overrides.xml");
-        ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS = configLocationsList
-                .toArray(new String[0]);
+        
+        ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS = configLocationsList.toArray(new String[0]);
     }
 
     /**
-     * @see net.sf.sail.webapp.spring.SpringConfiguration#getDispatcherServletContextConfigLocations()
+     * @see org.wise.portal.spring.SpringConfiguration#getDispatcherServletContextConfigLocations()
      */
     public String[] getDispatcherServletContextConfigLocations() {
         return DISPATCHER_SERVLET_CONTEXT_CONFIG_LOCATIONS;
     }
 
     /**
-     * @see net.sf.sail.webapp.spring.SpringConfiguration#getRootApplicationContextConfigLocations()
+     * @see org.wise.portal.spring.SpringConfiguration#getRootApplicationContextConfigLocations()
      */
     public String[] getRootApplicationContextConfigLocations() {
         return ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS;

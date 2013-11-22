@@ -36,7 +36,6 @@ import javax.servlet.http.HttpSession;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 
 import org.hibernate.StaleObjectStateException;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
@@ -46,6 +45,7 @@ import org.wise.portal.domain.Run;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.presentation.util.json.JSONArray;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;

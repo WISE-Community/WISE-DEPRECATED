@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 
 import org.hibernate.StaleObjectStateException;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
@@ -38,6 +37,7 @@ import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.impl.AddProjectParameters;
 import org.wise.portal.domain.impl.Projectcode;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.student.StudentService;
 
 /**

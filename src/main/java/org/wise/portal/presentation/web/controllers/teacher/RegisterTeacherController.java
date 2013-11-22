@@ -34,13 +34,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.mail.IMailFacade;
-import net.sf.sail.webapp.presentation.web.controllers.SignupController;
+import net.sf.sail.webapp.service.UserService;
 import net.sf.sail.webapp.service.authentication.DuplicateUsernameException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.domain.authentication.Curriculumsubjects;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
@@ -52,7 +53,7 @@ import org.wise.portal.presentation.web.TeacherAccountForm;
  * @author Hiroki Terashima
  * @version $Id: RegisterTeacherController.java 1033 2007-09-08 00:05:01Z archana $
  */
-public class RegisterTeacherController extends SignupController {
+public class RegisterTeacherController extends SimpleFormController {
 
 	protected static final String USERNAME_KEY = "username";
 	
@@ -65,6 +66,8 @@ public class RegisterTeacherController extends SignupController {
 	private Properties portalProperties;
 
 	private MessageSource messageSource;
+
+	private UserService userService;
 
 	public RegisterTeacherController() {
 		setValidateOnBinding(false);
@@ -256,6 +259,10 @@ public class RegisterTeacherController extends SignupController {
 	 */
 	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
 
 }

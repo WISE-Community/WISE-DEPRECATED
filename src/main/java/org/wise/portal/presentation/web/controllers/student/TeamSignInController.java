@@ -36,7 +36,6 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.presentation.web.controllers.ControllerUtil;
 import net.sf.sail.webapp.service.UserService;
 
 import org.hibernate.StaleObjectStateException;
@@ -53,6 +52,7 @@ import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.presentation.util.json.JSONArray;
 import org.wise.portal.presentation.web.TeamSignInForm;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
