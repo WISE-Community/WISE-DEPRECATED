@@ -24,9 +24,7 @@ package org.wise.portal.domain.project.impl;
 
 import net.sf.sail.webapp.domain.Curnit;
 import net.sf.sail.webapp.service.curnit.CurnitService;
-import net.sf.sail.webapp.service.curnit.impl.CurnitServiceImpl;
 
-import org.wise.portal.domain.project.ExternalProject;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectVisitor;
 
@@ -51,12 +49,4 @@ public class ProjectCurnitVisitor implements ProjectVisitor{
 		return curnit;
 	}
 	
-	public Object visit(ExternalProject project){
-		Curnit curnit = null;
-		try{
-			curnit = curnitService.getById(project.getCurnit().getId());
-		} catch(Exception e){
-		}
-		return curnit;
-	}
 }

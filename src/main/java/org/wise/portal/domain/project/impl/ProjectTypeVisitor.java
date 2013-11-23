@@ -22,7 +22,6 @@
  */
 package org.wise.portal.domain.project.impl;
 
-import org.wise.portal.domain.project.ExternalProject;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectVisitor;
 
@@ -40,13 +39,6 @@ public class ProjectTypeVisitor implements ProjectVisitor {
 			return "LDProject";
 		}
 		return "Project";
-	}
-
-	/**
-	 * @see org.wise.portal.domain.project.ProjectVisitor#visit(org.wise.portal.domain.project.ExternalProject)
-	 */
-	public Object visit(ExternalProject externalProject) {
-		return "ExternalProject";
 	}
 
 }

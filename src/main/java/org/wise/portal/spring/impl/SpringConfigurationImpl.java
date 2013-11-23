@@ -38,7 +38,6 @@ public final class SpringConfigurationImpl implements SpringConfiguration {
     private static String[] ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS = new String[] {
         "classpath:configurations/applicationContexts/pas/acegiSecurity.xml",
         "classpath:configurations/applicationContexts/pas/datasource.xml",
-        "classpath:configurations/applicationContexts/pas/hibernate.xml",
         "classpath:configurations/applicationContexts/pas/security.xml",
         "classpath:configurations/applicationContexts/pas/spring.xml",
         "classpath:configurations/applicationContexts/pas/user.xml",

@@ -50,7 +50,6 @@ import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.impl.RunImpl;
 import org.wise.portal.domain.impl.RunParameters;
-import org.wise.portal.domain.project.ExternalProject;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.service.authentication.UserDetailsService;
@@ -200,10 +199,6 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		Calendar reminderCal = Calendar.getInstance();
 		reminderCal.add(Calendar.DATE, 30);
 		run.setArchiveReminderTime(reminderCal.getTime());
-		if (!(run.getProject() instanceof ExternalProject)) {
-			if(run.getProject().getProjectType()!=ProjectType.ROLOO && run.getProject().getProjectType()!=ProjectType.LD){
-			}
-		}
 		Set<String> periodNames = runParameters.getPeriodNames();
 		if (periodNames != null) {
 			Set<Group> periods = new TreeSet<Group>();

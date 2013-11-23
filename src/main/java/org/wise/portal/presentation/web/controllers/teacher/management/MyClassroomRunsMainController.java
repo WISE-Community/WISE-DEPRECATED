@@ -133,7 +133,6 @@ public class MyClassroomRunsMainController extends AbstractController {
 		// end temporary code
 		List<Run> current_run_list = new ArrayList<Run>();
 		List<Run> ended_run_list = new ArrayList<Run>();
-		List<Run> external_project_runs = new ArrayList<Run>();
 		Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
 		for (Run run : runList2) {
 			List<Workgroup> workgroupList = this.workgroupService.getWorkgroupListByOfferingAndUser(run, user);
@@ -148,9 +147,6 @@ public class MyClassroomRunsMainController extends AbstractController {
 			Project project = projectService.getById(run.getProject().getId());
 			ProjectTypeVisitor typeVisitor = new ProjectTypeVisitor();
 			String result = (String) project.accept(typeVisitor);
-			if (result.equals("ExternalProject")) {
-				external_project_runs.add(run);
-			}
 		}
 		
 		Collections.sort(current_run_list, CREATED_ORDER);
@@ -162,7 +158,6 @@ public class MyClassroomRunsMainController extends AbstractController {
 		modelAndView.addObject(IS_XMPP_ENABLED, isXMPPEnabled);
 		modelAndView.addObject(CURRENT_RUN_LIST_KEY, current_run_list);
 		modelAndView.addObject(ENDED_RUN_LIST_KEY, ended_run_list);
-		modelAndView.addObject("externalprojectruns", external_project_runs);
 		modelAndView.addObject(WORKGROUP_MAP_KEY, workgroupMap);
     	
         return modelAndView;

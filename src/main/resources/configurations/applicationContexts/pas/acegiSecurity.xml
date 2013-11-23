@@ -200,14 +200,6 @@
         <property name="forceEncoding"><value>true</value></property>
     </bean>
     
-    <!--
-    <bean id="charsetFilter"
-        class="net.sf.sail.webapp.presentation.web.filters.CharsetFilter">
-        <property name="encoding"><value>UTF-8</value></property>
-    </bean>
-    -->
-    
-
 
     <!-- =================== SECURITY SYSTEM DEFINITIONS ================== -->
 	

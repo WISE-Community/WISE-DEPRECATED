@@ -23,20 +23,12 @@
 package org.wise.portal.domain.run;
 
 
-import javax.servlet.http.HttpServletRequest;
-
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;
 import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
 
 import org.wise.portal.domain.Run;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
-import org.wise.portal.domain.project.ExternalProject;
-import org.wise.portal.domain.project.impl.ProjectType;
-import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
 
 /**
  * Stores information about a WISE student on a particular

@@ -194,11 +194,6 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="externalProjectDao"
-		class="org.wise.portal.dao.project.impl.HibernateExternalProjectDao">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
 	<bean id="projectMetadata"
 		class="org.wise.portal.domain.project.impl.ProjectMetadataImpl">
 	</bean>
@@ -285,7 +280,6 @@
 
 	<bean id="projectServiceFactory"
 		class="org.wise.portal.service.project.ProjectServiceFactory">
-		<property name="externalProjectService" ref="externalProjectService" />
 		<property name="ldProjectService" ref="ldProjectService" />
 		<property name="moduleService" ref="curnitService" />
 	</bean>
@@ -302,42 +296,12 @@
 		<property name="premadeCommentService" ref="premadeCommentService" />
 	</bean>
 
-	<bean id="diyProjectCommunicatorDao"
-		class="org.wise.portal.dao.project.impl.HibernateDIYProjectCommunicatorDao">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
-	<bean id="projectCommunicatorService"
-		class="org.wise.portal.service.project.impl.ProjectCommunicatorServiceImpl">
-		<property name="projectCommunicatorDao" ref="diyProjectCommunicatorDao" />
-	</bean>
-
-	<bean id="externalProjectService"
-		class="org.wise.portal.service.project.impl.ExternalProjectServiceImpl">
-		<property name="projectCommunicator" ref="projectCommunicator" />
-		<property name="projectDao" ref="externalProjectDao" />
-		<property name="projectCommunicatorDao" ref="diyProjectCommunicatorDao" />
-		<property name="workgroupDao" ref="wiseWorkgroupDao" />
-		<property name="runService" ref="runService" />
-	</bean>
-
 	<bean id="wiseUpService"
 		class="org.wise.portal.service.wiseup.impl.WiseUpServiceImpl">
 		<property name="projectService" ref="projectService" />
 		<property name="curnitService" ref="curnitService" />
 		<property name="portalProperties" ref="portalproperties" />
 		<property name="wiseUpHubUrl" value="http://166.78.236.95/wiseup" />
-	</bean>
-
-	<bean id="projectCommunicator"
-		class="org.wise.portal.domain.project.impl.ProjectCommunicatorImpl">
-	</bean>
-
-	<bean id="diyProjectCommunicator"
-		class="org.wise.portal.domain.project.impl.DIYProjectCommunicatorImpl">
-		<property name="previewProjectSuffix" value="/sail_jnlp/6/1/authoring" />
-		<property name="runService" ref="runService" />
-		<property name="projectService" ref="projectService" />
 	</bean>
 
 	<bean id="portalDao"

@@ -127,7 +127,6 @@
     		    /teacher/run/createRun.html=createRunController
     		    /teacher/run/updaterun.html=updateRunController
     		    /teacher/run/editrun.html=editRunController
-				/teacher/run/report.html=projectRunReportController
     		    /teacher/grading/gradework.html=gradeWorkController
 				/teacher/grading/premadeComments.html=premadeCommentsController
 				/teacher/classroomMonitor/classroomMonitor.html=gradeWorkController
@@ -184,9 +183,6 @@
 				/admin/news/editnewsitem.html=editNewsItemController
 				/admin/news/removenewssuccess.html=removeNewsItemController
 				/admin/news/removenewsconfirm.html=removeNewsConfirmController
-				/admin/project/getallexternalprojects.html=getAllExternalProjectsController
-				/admin/project/viewprojectcommunicators.html=projectCommunicatorController
-				/admin/project/manageprojectcommunicator.html=projectCommunicatorController
 				/admin/project/currentlyAuthoredProjects.html=currentlyAuthoredProjectsController
 				/admin/project/tagger.html=taggerController
 				/admin/portal/manageportal.html=managePortalController

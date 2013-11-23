@@ -107,13 +107,6 @@
 							<h5><a href="portal/manageportal.html"><spring:message code='admin.index.configurePortalSettings'/></a></h5>
 						</div>
 						
-						<!--  
-						<div class="sectionHead">External Project Service (Beta)</div>
-						<div class="sectionContent">
-							<h5><a href="project/viewprojectcommunicators.html">Manage All External ProjectCommunicators (connect to other portals)</a></h5>	   
-							<h5><a href="project/getallexternalprojects.html">Get all External Projects (connect to other portals)</a></h5>
-						</div>
-						-->
 					</sec:authorize>
 				
 				</div>
