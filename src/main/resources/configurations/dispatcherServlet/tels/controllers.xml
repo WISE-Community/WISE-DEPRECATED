@@ -127,7 +127,6 @@
 		class="org.wise.portal.presentation.web.controllers.PreviewProjectController">
 		<property name="runService" ref="runService" />
 		<property name="projectService" ref="projectService" />
-		<property name="diyProjectCommunicator" ref="diyProjectCommunicatorDao" />
 	</bean>
 
 	<bean id="previewprojectlistController"
@@ -189,12 +188,6 @@
 		<property name="validator" ref="addprojectparametersValidator" />
 		<property name="formView" value="student/addproject" />
 		<property name="successView" value="student/addprojectsuccess" />
-	</bean>
-
-	<bean id="projectRunReportController"
-		class="org.wise.portal.presentation.web.controllers.teacher.reports.ProjectRunReportController">
-		<property name="runService" ref="runService" />
-		<property name="projectService" ref="projectService" />
 	</bean>
 
 	<bean id="endRunController"
@@ -703,23 +696,11 @@
 	<bean id="manageAllProjectsController"
 		class="org.wise.portal.presentation.web.controllers.admin.ManageAllProjectsController">
 		<property name="projectService" ref="projectService" />
-		<property name="externalProjectService" ref="externalProjectService" />
-	</bean>
-
-	<bean id="getAllExternalProjectsController"
-		class="org.wise.portal.presentation.web.controllers.admin.GetAllExternalProjectsController">
-		<property name="projectService" ref="externalProjectService" />
 	</bean>
 
 	<bean id="currentlyAuthoredProjectsController"
 		class="org.wise.portal.presentation.web.controllers.admin.CurrentlyAuthoredProjectsController">
 		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="projectCommunicatorController"
-		class="org.wise.portal.presentation.web.controllers.admin.ProjectCommunicatorController">
-		<property name="projectCommunicatorService" ref="projectCommunicatorService" />
-		<property name="portalService" ref="portalService" />
 	</bean>
 
 	<bean id="importExternalProjectController"

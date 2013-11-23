@@ -17,7 +17,6 @@
 
 --
 -- Dumping data for table `acl_class`
---
 
 LOCK TABLES `acl_class` WRITE;
 /*!40000 ALTER TABLE `acl_class` DISABLE KEYS */;
@@ -69,23 +68,6 @@ LOCK TABLES `curnits` WRITE;
 /*!40000 ALTER TABLE `curnits` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Dumping data for table `diyprojectcommunicators`
---
-
-LOCK TABLES `diyprojectcommunicators` WRITE;
-/*!40000 ALTER TABLE `diyprojectcommunicators` DISABLE KEYS */;
-/*!40000 ALTER TABLE `diyprojectcommunicators` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `externalprojects`
---
-
-LOCK TABLES `externalprojects` WRITE;
-/*!40000 ALTER TABLE `externalprojects` DISABLE KEYS */;
-/*!40000 ALTER TABLE `externalprojects` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Dumping data for table `granted_authorities`
@@ -222,15 +204,6 @@ UNLOCK TABLES;
 LOCK TABLES `project_metadata` WRITE;
 /*!40000 ALTER TABLE `project_metadata` DISABLE KEYS */;
 /*!40000 ALTER TABLE `project_metadata` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping data for table `projectcommunicators`
---
-
-LOCK TABLES `projectcommunicators` WRITE;
-/*!40000 ALTER TABLE `projectcommunicators` DISABLE KEYS */;
-/*!40000 ALTER TABLE `projectcommunicators` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

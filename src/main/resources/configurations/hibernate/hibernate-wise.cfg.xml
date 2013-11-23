@@ -67,9 +67,6 @@
 		<mapping class="org.wise.portal.domain.impl.ModuleImpl" />
 		<mapping class="org.wise.portal.domain.impl.UrlModuleImpl" />
 		<mapping class="org.wise.portal.domain.project.impl.ProjectImpl" />
-		<mapping class="org.wise.portal.domain.project.impl.ExternalProjectImpl" />
-		<mapping class="org.wise.portal.domain.project.impl.ProjectCommunicatorImpl" />
-		<mapping class="org.wise.portal.domain.project.impl.DIYProjectCommunicatorImpl" />
 		<mapping class="org.wise.portal.domain.portal.impl.PortalImpl" />
 		<mapping class="org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl" />
 		<mapping class="org.wise.portal.domain.premadecomment.impl.PremadeCommentListImpl" />

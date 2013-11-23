@@ -39,8 +39,6 @@ import org.wise.portal.service.module.ModuleService;
  */
 public class ProjectServiceFactory {
 	
-	private ExternalProjectService externalProjectService;
-	
 	private ProjectService ldProjectService;
 	
 	private ModuleService moduleService;
@@ -61,10 +59,6 @@ public class ProjectServiceFactory {
 		}
 		
 		ProjectTypeVisitor typeVisitor = new ProjectTypeVisitor();
-		String result = (String) project.accept(typeVisitor);
-		if (result.equals("ExternalProject")) {
-			return externalProjectService;
-		}
 		
 		Curnit curnit = new CurnitImpl();
 		try{
@@ -95,22 +89,12 @@ public class ProjectServiceFactory {
 		return projectService;
 	}
 
-
-	/**
-	 * @param externalProjectService the externalProjectService to set
-	 */
-	public void setExternalProjectService(
-			ExternalProjectService externalProjectService) {
-		this.externalProjectService = externalProjectService;
-	}
-
 	/**
 	 * @param moduleService the moduleService to set
 	 */
 	public void setModuleService(ModuleService moduleService) {
 		this.moduleService = moduleService;
 	}
-
 
 	/**
 	 * @param ldProjectService the ldProjectService to set

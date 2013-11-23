@@ -57,20 +57,6 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table diyprojectcommunicators (
-        diyportalhostname varchar(255),
-        previewdiyprojectsuffix varchar(255),
-        id bigint not null,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table externalprojects (
-        external_id bigint,
-        id bigint not null,
-        projectcommunicator_fk bigint,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
     create table granted_authorities (
         id bigint not null auto_increment,
         authority varchar(255) not null unique,
@@ -224,16 +210,6 @@
         tools text,
         total_time varchar(255),
         version_id varchar(255),
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table projectcommunicators (
-        id bigint not null auto_increment,
-        address varchar(255),
-        baseurl varchar(255),
-        latitude varchar(255),
-        longitude varchar(255),
-        OPTLOCK integer,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -455,24 +431,6 @@
         add constraint FK2A2BB0099B5E7811 
         foreign key (owner_sid) 
         references acl_sid (id);
-
-    alter table diyprojectcommunicators 
-        add index FK83FA9ED96FC1637F (id), 
-        add constraint FK83FA9ED96FC1637F 
-        foreign key (id) 
-        references projectcommunicators (id);
-
-    alter table externalprojects 
-        add index FKD8238145E48A3C0A (id), 
-        add constraint FKD8238145E48A3C0A 
-        foreign key (id) 
-        references projects (id);
-
-    alter table externalprojects 
-        add index FKD8238145CE9C471A (projectcommunicator_fk), 
-        add constraint FKD8238145CE9C471A 
-        foreign key (projectcommunicator_fk) 
-        references projectcommunicators (id);
 
     alter table groups 
         add index FKB63DD9D4E696E7FF (parent_fk), 

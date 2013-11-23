@@ -68,8 +68,6 @@ WISEWorkgroupService {
 		ProjectTypeVisitor typeVisitor = new ProjectTypeVisitor();
 		String result = (String) run.getProject().accept(typeVisitor);
 		workgroup = createWISEWorkgroup(members, run, period);
-		// TODO hiroki set externalid here
-		//ExternalProjectService externalProjectService = 
 
 		this.groupDao.save(workgroup.getGroup());
 		this.workgroupDao.save(workgroup);

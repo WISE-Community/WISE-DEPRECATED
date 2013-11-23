@@ -62,7 +62,6 @@ import org.wise.portal.service.wiseup.WiseUpService;
 /**
  * Imports an external project to the portal.
  * @author hirokiterashima
- * @author scott cytacki
  * @version $Id$
  */
 public class ImportExternalProjectController extends AbstractController {

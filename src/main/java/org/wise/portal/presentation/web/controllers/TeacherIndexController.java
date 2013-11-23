@@ -148,7 +148,6 @@ public class TeacherIndexController extends AbstractController {
 		// end temporary code
 		List<Run> current_run_list1 = new ArrayList<Run>();
 		//List<Run> ended_run_list = new ArrayList<Run>();
-		List<Run> external_project_runs = new ArrayList<Run>();
 		Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
 		Integer count = 0;
 		for (Run run : runList2) {
@@ -167,9 +166,6 @@ public class TeacherIndexController extends AbstractController {
 				Project project = projectService.getById(run.getProject().getId());
 				ProjectTypeVisitor typeVisitor = new ProjectTypeVisitor();
 				String result = (String) project.accept(typeVisitor);
-				if (result.equals("ExternalProject")) {
-					external_project_runs.add(run);
-				}
 			}
 		}
 		
@@ -182,15 +178,11 @@ public class TeacherIndexController extends AbstractController {
 		}
 		//Collections.sort(ended_run_list, CREATED_ORDER);
     	
-    	//modelAndView.addObject(RUN_LIST, run_list);
 		modelAndView.addObject(CURRENT_RUN_LIST_KEY, current_run_list);
 		modelAndView.addObject(CURRENT_RUN_LIST_KEY2, current_run_list1);
     	modelAndView.addObject(CURRENT_DATE, null);
     	modelAndView.addObject(GRADING_PARAM, gradingParam);
 		modelAndView.addObject(IS_XMPP_ENABLED, isXMPPEnabled);
-		
-		//modelAndView.addObject(ENDED_RUN_LIST_KEY, ended_run_list);
-		modelAndView.addObject("externalprojectruns", external_project_runs);
 		modelAndView.addObject(WORKGROUP_MAP_KEY, workgroupMap);
     	
     	// retrieve all unread messages

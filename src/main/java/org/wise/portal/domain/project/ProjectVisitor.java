@@ -29,5 +29,4 @@ package org.wise.portal.domain.project;
  */
 public interface ProjectVisitor {
 	Object visit(Project project);
-	Object visit(ExternalProject externalProject);
 }

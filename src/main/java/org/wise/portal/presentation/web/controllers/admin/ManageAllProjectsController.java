@@ -35,7 +35,6 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.project.ExternalProjectService;
 import org.wise.portal.service.project.ProjectService;
 
 /**
@@ -52,8 +51,6 @@ public class ManageAllProjectsController extends AbstractController {
 
 	private ProjectService projectService;
 
-	private ExternalProjectService externalProjectService;
-		
 	/**
 	 * @override @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -62,7 +59,6 @@ public class ManageAllProjectsController extends AbstractController {
 			HttpServletResponse response) throws Exception {
 		if (request.getMethod().equals("GET")) {
 			// separate calls to project services to get internal and external projects
-			List<Project> externalProjectList = new ArrayList<Project>();
 			List<Project> internalProjectList = new ArrayList<Project>();
 			// check if projectId was passed in
 			String projectIdStr = request.getParameter("projectId");
@@ -70,12 +66,10 @@ public class ManageAllProjectsController extends AbstractController {
 				internalProjectList.add(projectService.getById(Long.valueOf(projectIdStr)));
 			} else {
 				internalProjectList.addAll(projectService.getAdminProjectList());
-				externalProjectList.addAll(externalProjectService.getProjectList());
 			}
 
 			ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
 			modelAndView.addObject(INTERNAL_PROJECT_LIST_PARAM_NAME, internalProjectList);
-			modelAndView.addObject(EXTERNAL_PROJECT_LIST_PARAM_NAME, externalProjectList);
 			return modelAndView;
 		} else {
 			// posting changes to project
@@ -115,11 +109,4 @@ public class ManageAllProjectsController extends AbstractController {
 	public void setProjectService(ProjectService projectService) {
 		this.projectService = projectService;
 	}
-
-	public void setExternalProjectService(
-			ExternalProjectService externalProjectService) {
-		this.externalProjectService = externalProjectService;
-	}
-
-    
 }
