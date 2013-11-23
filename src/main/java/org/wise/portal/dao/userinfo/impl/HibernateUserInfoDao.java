@@ -28,16 +28,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.userinfo.UserInfoDao;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
-import org.wise.vle.hibernate.HibernateUtil;
 
 
 /**
@@ -55,7 +56,24 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 	protected Class<? extends UserInfo> getDataObjectClass() {
 		return null;
 	}
+	
+	public UserInfo getUserInfoById(Long id) {
+		UserInfo userInfo = null;
+		
+		try {
+			userInfo = getById(id);
+		} catch (ObjectNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return userInfo;
+	}
 
+	@Transactional
+	public void saveUserInfo(UserInfo userInfo) {
+		save(userInfo);
+	}
+	
 	@Override
 	public UserInfo getUserInfoByWorkgroupId(Long workgroupId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
@@ -77,7 +95,7 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 		if (userInfo == null) {
 			userInfo = new UserInfo();
 			userInfo.setWorkgroupId(workgroupId);
-			userInfo.saveOrUpdate();
+			saveUserInfo(userInfo);
 		}
         return userInfo;
 	}
@@ -162,7 +180,7 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 		
 		//loop through all the UserInfos
         for(UserInfo userInfo : userInfos) {
-            Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        	Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
             session.beginTransaction();
             
             //get all the work for a user

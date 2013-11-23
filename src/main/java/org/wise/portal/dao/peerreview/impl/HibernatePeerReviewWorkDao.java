@@ -2,17 +2,18 @@ package org.wise.portal.dao.peerreview.impl;
 
 import java.util.List;
 
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.peerreview.PeerReviewWorkDao;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
-import org.wise.vle.hibernate.HibernateUtil;
 
 
 public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewWork> implements PeerReviewWorkDao<PeerReviewWork> {
@@ -26,9 +27,26 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 	protected Class<? extends PeerReviewWork> getDataObjectClass() {
 		return null;
 	}
+	
+	public PeerReviewWork getPeerReviewWorkById(Long id) {
+		PeerReviewWork peerReviewWork = null;
+		
+		try {
+			peerReviewWork = getById(id);
+		} catch (ObjectNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return peerReviewWork;
+	}
+	
+	@Transactional(readOnly = false)
+	public void savePeerReviewWork(PeerReviewWork peerReviewWork) {
+		save(peerReviewWork);
+	}
 
 	public List<PeerReviewWork> getPeerReviewWorkByRun(Long runId) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).list();
@@ -37,7 +55,7 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 	}
 	
 	public List<PeerReviewWork> getPeerReviewWorkByRunPeriodNode(Long runId, Long periodId, Node node) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).add(
@@ -49,7 +67,7 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 	}
 	
 	public List<PeerReviewWork> getUnassignedPeerReviewWorkList(Long runId, Long periodId, Node node) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).add(
@@ -63,7 +81,7 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 	
 	public PeerReviewWork getPeerReviewWorkByRunPeriodNodeStepWorkReviewer(
 			Long runId, Long periodId, Node node, StepWork stepWork, UserInfo reviewer) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).add(
@@ -84,13 +102,13 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 			Long runId, Long periodId, Node node, StepWork stepWork, UserInfo reviewer, Annotation annotation) {
 		PeerReviewWork peerReviewWork = getPeerReviewWorkByRunPeriodNodeStepWorkReviewer(runId, periodId, node, stepWork, reviewer);
 		peerReviewWork.setAnnotation(annotation);
-		peerReviewWork.saveOrUpdate();
+		savePeerReviewWork(peerReviewWork);
 		return peerReviewWork;
 	}
 
 
 	public PeerReviewWork getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(Long runId, Long periodId, Node node, UserInfo reviewerUserInfo) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
 				Restrictions.eq("runId", runId)).add(
@@ -106,7 +124,7 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 	}
 
 	public PeerReviewWork getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(Long runId, Long periodId, Node node, UserInfo worker) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).add(
@@ -123,7 +141,7 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 	
 	public PeerReviewWork getPeerReviewWorkByRunPeriodNodeWorkerUserInfoReviewerUserInfo(
 			Long runId, Long periodId, Node node, UserInfo workerUserInfo, UserInfo reviewerUserInfo) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 		session.beginTransaction();
 		List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
 				Restrictions.eq("runId", runId)).add(
@@ -149,7 +167,7 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 		
 		//set the author UserInfo as the reviewer
 		peerReviewWork.setReviewerUserInfo(authorUserInfo);
-		peerReviewWork.saveOrUpdate();
+		savePeerReviewWork(peerReviewWork);
 	}
 	
 	/**
@@ -196,7 +214,7 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 			authorReviewWork.setUserInfo(getAuthorUserInfo());
 			authorReviewWork.setReviewerUserInfo(reviewerUserInfo);
 			authorReviewWork.setPeriodId(periodId);
-			authorReviewWork.saveOrUpdate();
+			savePeerReviewWork(authorReviewWork);
 		}
 		
 		return authorReviewWork;

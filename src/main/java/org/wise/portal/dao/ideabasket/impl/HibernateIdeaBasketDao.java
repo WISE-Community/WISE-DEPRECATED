@@ -3,6 +3,7 @@ package org.wise.portal.dao.ideabasket.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 import org.hibernate.Session;
@@ -11,9 +12,9 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ideabasket.IdeaBasketDao;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
-import org.wise.vle.hibernate.HibernateUtil;
 
 
 public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> implements IdeaBasketDao<IdeaBasket> {
@@ -28,6 +29,22 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
 		return null;
 	}
 
+	public IdeaBasket getIdeaBasketById(Long id) {
+		IdeaBasket ideaBasket = null;
+		
+		try {
+			ideaBasket = getById(id);
+		} catch (ObjectNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return ideaBasket;
+	}
+	
+	@Transactional
+	public void saveIdeaBasket(IdeaBasket ideaBasket) {
+		save(ideaBasket);
+	}
 	
 	/**
 	 * Get the latest IdeaBasket with the given run id and workgroup id
@@ -36,7 +53,7 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
 	 * @return the IdeaBasket with the matching runId and workgroupId
 	 */
 	public IdeaBasket getIdeaBasketByRunIdWorkgroupId(long runId, long workgroupId) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         
         //find all the IdeaBasket objects that match
@@ -67,7 +84,7 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
 	 */
 	@SuppressWarnings("unchecked")
 	public List<IdeaBasket> getLatestIdeaBasketsForRunId(long runId) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         
         /*
@@ -119,7 +136,7 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
 	 */
 	@SuppressWarnings("unchecked")
 	public List<IdeaBasket> getLatestIdeaBasketsForRunIdWorkgroupIds(long runId, List<Long> workgroupIds) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         
         /*
@@ -168,7 +185,7 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
 	 * by post time
 	 */
 	public List<IdeaBasket> getIdeaBasketsForRunId(long runId) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         
         //find all the IdeaBasket objects that match
@@ -185,7 +202,7 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
 	 * @return the latest public idea basket for this run id, period id or null if there is none
 	 */
 	public IdeaBasket getPublicIdeaBasketForRunIdPeriodId(long runId, long periodId) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         
         //get the latest idea basket revision that matches

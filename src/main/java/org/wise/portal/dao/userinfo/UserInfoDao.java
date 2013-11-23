@@ -35,6 +35,10 @@ import net.sf.sail.webapp.dao.SimpleDao;
  */
 public interface UserInfoDao<T extends UserInfo> extends SimpleDao<T> {
 
+	public UserInfo getUserInfoById(Long id);
+	
+	public void saveUserInfo(UserInfo userInfo);
+	
 	public UserInfo getUserInfoByWorkgroupId(Long workgroupId);
 	
 	public UserInfo getUserInfoOrCreateByWorkgroupId(Long workgroupId);
@@ -42,6 +46,5 @@ public interface UserInfoDao<T extends UserInfo> extends SimpleDao<T> {
 	public List<UserInfo> getUserInfoByWorkgroupIds(List<String> workgroupIds);
 	
 	public List<UserInfo> getUserInfosThatHaveWorkedToday(List<UserInfo> userInfos);
-	
 	
 }

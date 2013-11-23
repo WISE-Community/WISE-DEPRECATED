@@ -7,6 +7,10 @@ import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface StepWorkCacheDao<T extends StepWorkCache> extends SimpleDao<T> {
 
+	public StepWorkCache getStepWorkCacheById(Long id);
+	
+	public void saveStepWorkCache(StepWorkCache stepWorkCache);
+	
 	public StepWorkCache getStepWorkCacheByUserInfo(UserInfo userInfo);
 	
 	public StepWorkCache getStepWorkCacheByUserInfoGetRevisions(UserInfo userInfo, boolean getRevisions);

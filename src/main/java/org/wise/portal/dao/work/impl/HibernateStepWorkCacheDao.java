@@ -1,13 +1,14 @@
 package org.wise.portal.dao.work.impl;
 
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.work.StepWorkCacheDao;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWorkCache;
-import org.wise.vle.hibernate.HibernateUtil;
 
 
 public class HibernateStepWorkCacheDao extends AbstractHibernateDao<StepWorkCache> implements StepWorkCacheDao<StepWorkCache> {
@@ -21,13 +22,30 @@ public class HibernateStepWorkCacheDao extends AbstractHibernateDao<StepWorkCach
 	protected Class<? extends StepWorkCache> getDataObjectClass() {
 		return null;
 	}
+	
+	public StepWorkCache getStepWorkCacheById(Long id) {
+		StepWorkCache stepWorkCache = null;
+		
+		try {
+			stepWorkCache = getById(id);
+		} catch (ObjectNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return stepWorkCache;
+	}
+	
+	@Transactional
+	public void saveStepWorkCache(StepWorkCache stepWorkCache) {
+		save(stepWorkCache);
+	}
 
 	/**
 	 * Returns the specified userInfo's StepWorkCache. If no cache is found,
 	 * returns null
 	 */
 	public StepWorkCache getStepWorkCacheByUserInfo(UserInfo userInfo) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         StepWorkCache result =  (StepWorkCache) session.createCriteria(StepWorkCache.class).add(Restrictions.eq("userInfo", userInfo)).uniqueResult();
         session.getTransaction().commit();
@@ -42,7 +60,7 @@ public class HibernateStepWorkCacheDao extends AbstractHibernateDao<StepWorkCach
 	 * or only the latest revision (false)
 	 */
 	public StepWorkCache getStepWorkCacheByUserInfoGetRevisions(UserInfo userInfo, boolean getRevisions) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         StepWorkCache result =  (StepWorkCache) session.createCriteria(StepWorkCache.class).add(Restrictions.eq("userInfo", userInfo)).add(Restrictions.eq("getRevisions", getRevisions)).uniqueResult();
         session.getTransaction().commit();

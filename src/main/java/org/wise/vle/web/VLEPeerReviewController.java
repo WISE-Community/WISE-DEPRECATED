@@ -746,7 +746,7 @@ public class VLEPeerReviewController extends AbstractController {
 			} else {
 				//assign me to review this work
 				randomPeerReviewWork.setReviewerUserInfo(reviewerUserInfo);
-				randomPeerReviewWork.saveOrUpdate();
+				vleService.savePeerReviewWork(randomPeerReviewWork);
 
 				//obtain a JSON object with the values of the work that we need to send back
 				workAssignedTo = getWorkToReviewByReviewer(runId, periodId, node, reviewerUserInfo);

@@ -34,6 +34,9 @@
 		<job>
 			<name>DailyJob</name>
 			<job-class>background.jobs.DailyJob</job-class>
+			<job-data-map>
+				<entry key="vleService" value-ref="vleService" />
+			</job-data-map>
 		</job>
 		<job>
 			<name>CRaterJob</name>

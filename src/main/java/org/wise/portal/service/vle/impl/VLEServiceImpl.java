@@ -23,7 +23,6 @@
 package org.wise.portal.service.vle.impl;
 
 import java.util.List;
-import java.util.Map;
 
 import org.wise.portal.dao.annotation.AnnotationDao;
 import org.wise.portal.dao.crater.CRaterRequestDao;
@@ -71,57 +70,76 @@ public class VLEServiceImpl implements VLEService {
 	private IdeaBasketDao<IdeaBasket> ideaBasketDao;
 	private CRaterRequestDao<CRaterRequest> cRaterRequestDao;
 
+	@Override
 	public void setUserInfoDao(UserInfoDao<UserInfo> userInfoDao) {
 		this.userInfoDao = userInfoDao;
 	}
 	
+	@Override
 	public void setAnnotationDao(AnnotationDao<Annotation> annotationDao) {
 		this.annotationDao = annotationDao;
 	}
 	
+	@Override
 	public void setPeerReviewWorkDao(PeerReviewWorkDao<PeerReviewWork> peerReviewWorkDao) {
 		this.peerReviewWorkDao = peerReviewWorkDao;
 	}
 	
+	@Override
 	public void setPeerReviewGateDao(PeerReviewGateDao<PeerReviewGate> peerReviewGateDao) {
 		this.peerReviewGateDao = peerReviewGateDao;
 	}
 
+	@Override
 	public void setNodeDao(NodeDao<Node> nodeDao) {
 		this.nodeDao = nodeDao;
 	}
 
+	@Override
 	public void setStepWorkDao(StepWorkDao<StepWork> stepWorkDao) {
 		this.stepWorkDao = stepWorkDao;
 	}
 
+	@Override
 	public void setStepWorkCacheDao(StepWorkCacheDao<StepWorkCache> stepWorkCacheDao) {
 		this.stepWorkCacheDao = stepWorkCacheDao;
 	}
 
+	@Override
 	public void setVleStatisticsDao(VLEStatisticsDao<VLEStatistics> vleStatisticsDao) {
 		this.vleStatisticsDao = vleStatisticsDao;
 	}
 
+	@Override
 	public void setStudentStatusDao(StudentStatusDao<StudentStatus> studentStatusDao) {
 		this.studentStatusDao = studentStatusDao;
 	}
 
+	@Override
 	public void setRunStatusDao(RunStatusDao<RunStatus> runStatusDao) {
 		this.runStatusDao = runStatusDao;
 	}
 
+	@Override
 	public void setIdeaBasketDao(IdeaBasketDao<IdeaBasket> ideaBasketDao) {
 		this.ideaBasketDao = ideaBasketDao;
 	}
-	
+
+	@Override
 	public void setCRaterRequestDao(CRaterRequestDao<CRaterRequest> cRaterRequestDao) {
 		this.cRaterRequestDao = cRaterRequestDao;
 	}
+	
+	@Override
+	public UserInfo getUserInfoById(Long id) {
+		return userInfoDao.getUserInfoById(id);
+	}
+	
+	@Override
+	public void saveUserInfo(UserInfo userInfo) {
+		userInfoDao.saveUserInfo(userInfo);
+	}
 
-	/**
-	 * @see org.wise.portal.service.vle.VLEService#getUserInfoByWorkgroupId(java.lang.Long)
-	 */
 	@Override
 	public UserInfo getUserInfoByWorkgroupId(Long workgroupId) {
 		return userInfoDao.getUserInfoByWorkgroupId(workgroupId);
@@ -140,6 +158,16 @@ public class VLEServiceImpl implements VLEService {
 	@Override
 	public List<UserInfo> getUserInfosThatHaveWorkedToday(List<UserInfo> userInfos) {
 		return userInfoDao.getUserInfosThatHaveWorkedToday(userInfos);
+	}
+	
+	@Override
+	public Annotation getAnnotationById(Long id) {
+		return annotationDao.getAnnotationById(id);
+	}
+	
+	@Override
+	public void saveAnnotation(Annotation annotation) {
+		annotationDao.saveAnnotation(annotation);
 	}
 	
 	@Override
@@ -231,6 +259,21 @@ public class VLEServiceImpl implements VLEService {
 	public List<Annotation> getAnnotationByStepWorkList(List<StepWork> stepWorkList) {
 		return annotationDao.getAnnotationByStepWorkList(stepWorkList);
 	}
+	
+	@Override
+	public List<Annotation> getAnnotationList() {
+		return annotationDao.getList();
+	}
+	
+	@Override
+	public PeerReviewWork getPeerReviewWorkById(Long id) {
+		return peerReviewWorkDao.getPeerReviewWorkById(id);
+	}
+	
+	@Override
+	public void savePeerReviewWork(PeerReviewWork peerReviewWork) {
+		peerReviewWorkDao.savePeerReviewWork(peerReviewWork);
+	}
 
 	@Override
 	public List<PeerReviewWork> getPeerReviewWorkByRun(Long runId) {
@@ -306,6 +349,16 @@ public class VLEServiceImpl implements VLEService {
 	public boolean isUserReviewingAuthor(Long runId, Long periodId, Node node, UserInfo userInfo) {
 		return peerReviewWorkDao.isUserReviewingAuthor(runId, periodId, node, userInfo);
 	}
+	
+	@Override
+	public PeerReviewGate getPeerReviewGateById(Long id) {
+		return peerReviewGateDao.getPeerReviewGateById(id);
+	}
+	
+	@Override
+	public void savePeerReviewGate(PeerReviewGate peerReviewGate) {
+		peerReviewGateDao.savePeerReviewGate(peerReviewGate);
+	}
 
 	@Override
 	public PeerReviewGate getPeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node) {
@@ -331,6 +384,16 @@ public class VLEServiceImpl implements VLEService {
 	public boolean peerReviewGateOpenNumberTriggerSatisfied(int numWorkgroupsSubmitted, int openNumberTrigger) {
 		return peerReviewGateDao.peerReviewGateOpenNumberTriggerSatisfied(numWorkgroupsSubmitted, openNumberTrigger);
 	}
+	
+	@Override
+	public Node getNodeById(Long id) {
+		return nodeDao.getNodeById(id);
+	}
+	
+	@Override
+	public void saveNode(Node node) {
+		nodeDao.saveNode(node);
+	}
 
 	@Override
 	public Node getNodeByNodeIdAndRunId(String nodeId, String runId) {
@@ -352,6 +415,16 @@ public class VLEServiceImpl implements VLEService {
 		return nodeDao.getNodesByRunId(runId);
 	}
 
+	@Override
+	public StepWork getStepWorkById(Long id) {
+		return stepWorkDao.getStepWorkById(id);
+	}
+	
+	@Override
+	public void saveStepWork(StepWork stepWork) {
+		stepWorkDao.saveStepWork(stepWork);
+	}
+	
 	@Override
 	public List<StepWork> getStepWorksByUserInfo(UserInfo userInfo) {
 		return stepWorkDao.getStepWorksByUserInfo(userInfo);
@@ -383,8 +456,8 @@ public class VLEServiceImpl implements VLEService {
 	}
 
 	@Override
-	public List<StepWork> getStepWorksByNodeId(Long id) {
-		return stepWorkDao.getStepWorksByNodeId(id);
+	public List<StepWork> getStepWorksByNode(Node node) {
+		return stepWorkDao.getStepWorksByNode(node);
 	}
 
 	@Override
@@ -395,6 +468,16 @@ public class VLEServiceImpl implements VLEService {
 	@Override
 	public StepWork getStepWorkByUserIdAndData(UserInfo userInfo, String data) {
 		return stepWorkDao.getStepWorkByUserIdAndData(userInfo, data);
+	}
+	
+	@Override
+	public StepWorkCache getStepWorkCacheById(Long id) {
+		return stepWorkCacheDao.getStepWorkCacheById(id);
+	}
+	
+	@Override
+	public void saveStepWorkCache(StepWorkCache stepWorkCache) {
+		stepWorkCacheDao.saveStepWorkCache(stepWorkCache);
 	}
 
 	@Override
@@ -408,10 +491,30 @@ public class VLEServiceImpl implements VLEService {
 	}
 
 	@Override
+	public VLEStatistics getVLEStatisticsById(Long id) {
+		return vleStatisticsDao.getVLEStatisticsById(id);
+	}
+	
+	@Override
+	public void saveVLEStatistics(VLEStatistics vleStatistics) {
+		vleStatisticsDao.saveVLEStatistics(vleStatistics);
+	}
+	
+	@Override
 	public List<VLEStatistics> getVLEStatistics() {
 		return vleStatisticsDao.getVLEStatistics();
 	}
 
+	@Override
+	public StudentStatus getStudentStatusById(Long id) {
+		return studentStatusDao.getStudentStatusById(id);
+	}
+	
+	@Override
+	public void saveStudentStatus(StudentStatus studentStatus) {
+		studentStatusDao.saveStudentStatus(studentStatus);
+	}
+	
 	@Override
 	public StudentStatus getStudentStatusByWorkgroupId(Long workgroupId) {
 		return studentStatusDao.getStudentStatusByWorkgroupId(workgroupId);
@@ -428,10 +531,30 @@ public class VLEServiceImpl implements VLEService {
 	}
 
 	@Override
+	public RunStatus getRunStatusById(Long id) {
+		return runStatusDao.getRunStatusById(id);
+	}
+	
+	@Override
+	public void saveRunStatus(RunStatus runStatus) {
+		runStatusDao.saveRunStatus(runStatus);
+	}
+	
+	@Override
 	public RunStatus getRunStatusByRunId(Long runId) {
 		return runStatusDao.getRunStatusByRunId(runId);
 	}
 
+	@Override
+	public IdeaBasket getIdeaBasketById(Long id) {
+		return ideaBasketDao.getIdeaBasketById(id);
+	}
+	
+	@Override
+	public void saveIdeaBasket(IdeaBasket ideaBasket) {
+		ideaBasketDao.saveIdeaBasket(ideaBasket);
+	}
+	
 	@Override
 	public IdeaBasket getIdeaBasketByRunIdWorkgroupId(long runId, long workgroupId) {
 		return ideaBasketDao.getIdeaBasketByRunIdWorkgroupId(runId, workgroupId);
@@ -458,6 +581,16 @@ public class VLEServiceImpl implements VLEService {
 	}
 
 	@Override
+	public CRaterRequest getCRaterRequestById(Long id) {
+		return cRaterRequestDao.getCRaterRequestById(id);
+	}
+	
+	@Override
+	public void saveCRaterRequest(CRaterRequest cRaterRequest) {
+		cRaterRequestDao.saveCRaterRequest(cRaterRequest);
+	}
+	
+	@Override
 	public CRaterRequest getCRaterRequestByStepWorkIdNodeStateId(StepWork stepWork, Long nodeStateId) {
 		return cRaterRequestDao.getCRaterRequestByStepWorkIdNodeStateId(stepWork, nodeStateId);
 	}
@@ -466,4 +599,5 @@ public class VLEServiceImpl implements VLEService {
 	public List<CRaterRequest> getIncompleteCRaterRequests() {
 		return cRaterRequestDao.getIncompleteCRaterRequests();
 	}
+
 }

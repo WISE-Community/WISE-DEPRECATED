@@ -23,7 +23,6 @@
 package org.wise.portal.service.vle;
 
 import java.util.List;
-import java.util.Map;
 
 import org.wise.portal.dao.annotation.AnnotationDao;
 import org.wise.portal.dao.crater.CRaterRequestDao;
@@ -85,6 +84,10 @@ public interface VLEService {
 	
 	//UserInfo functions
 	
+	public UserInfo getUserInfoById(Long id);
+	
+	public void saveUserInfo(UserInfo userInfo);
+	
 	public UserInfo getUserInfoByWorkgroupId(Long workgroupId);
 	
 	public UserInfo getUserInfoOrCreateByWorkgroupId(Long workgroupId);
@@ -94,6 +97,10 @@ public interface VLEService {
 	public List<UserInfo> getUserInfosThatHaveWorkedToday(List<UserInfo> userInfos);
 	
 	//Annotation functions
+	
+	public Annotation getAnnotationById(Long id);
+	
+	public void saveAnnotation(Annotation annotation);
 	
 	public List<Annotation> getAnnotationByFromWorkgroupAndWorkByToWorkgroup(UserInfo fromWorkgroup, List<StepWork> workByToWorkgroup, Class<?> clazz);
 	
@@ -131,7 +138,13 @@ public interface VLEService {
 	
 	public List<Annotation> getAnnotationByStepWorkList(List<StepWork> stepWorkList);
 	
+	public List<Annotation> getAnnotationList();
+	
 	//PeerRevieWork functions
+	
+	public PeerReviewWork getPeerReviewWorkById(Long id);
+	
+	public void savePeerReviewWork(PeerReviewWork peerReviewWork);
 	
 	public List<PeerReviewWork> getPeerReviewWorkByRun(Long runId);
 	
@@ -163,7 +176,11 @@ public interface VLEService {
 	
 	public boolean isUserReviewingAuthor(Long runId, Long periodId, Node node, UserInfo userInfo);
 	
-	//PeerReviewDate functions
+	//PeerReviewGate functions
+	
+	public PeerReviewGate getPeerReviewGateById(Long id);
+	
+	public void savePeerReviewGate(PeerReviewGate peerReviewGate);
 	
 	public PeerReviewGate getPeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node);
 	
@@ -177,6 +194,10 @@ public interface VLEService {
 	
 	//Node functions
 	
+	public Node getNodeById(Long id);
+	
+	public void saveNode(Node node);
+	
 	public Node getNodeByNodeIdAndRunId(String nodeId, String runId);
 	
 	public Node getNodeByNodeIdAndRunId(String nodeId, String runId, boolean createIfNotFound);
@@ -186,6 +207,10 @@ public interface VLEService {
 	public List<Node> getNodesByRunId(String runId);
 	
 	//StepWork functions
+	
+	public StepWork getStepWorkById(Long id);
+	
+	public void saveStepWork(StepWork stepWork);
 	
 	public List<StepWork> getStepWorksByUserInfo(UserInfo userInfo);
 	
@@ -199,7 +224,7 @@ public interface VLEService {
 	
 	public List<StepWork> getStepWorksByUserInfosAndNode(List<UserInfo> userInfos, Node node);
 	
-	public List<StepWork> getStepWorksByNodeId(Long id);
+	public List<StepWork> getStepWorksByNode(Node node);
 	
 	public StepWork getStepWorkByStepWorkId(Long id);
 	
@@ -207,15 +232,27 @@ public interface VLEService {
 	
 	//StepWorkCache functions
 	
+	public StepWorkCache getStepWorkCacheById(Long id);
+	
+	public void saveStepWorkCache(StepWorkCache stepWorkCache);
+	
 	public StepWorkCache getStepWorkCacheByUserInfo(UserInfo userInfo);
 	
 	public StepWorkCache getStepWorkCacheByUserInfoGetRevisions(UserInfo userInfo, boolean getRevisions);
 	
 	//VLEStatistics functions
 	
+	public VLEStatistics getVLEStatisticsById(Long id);
+	
+	public void saveVLEStatistics(VLEStatistics vleStatistics);
+	
 	public List<VLEStatistics> getVLEStatistics();
 	
 	//StudentStatus functions
+	
+	public StudentStatus getStudentStatusById(Long id);
+	
+	public void saveStudentStatus(StudentStatus studentStatus);
 	
 	public StudentStatus getStudentStatusByWorkgroupId(Long workgroupId);
 	
@@ -225,9 +262,17 @@ public interface VLEService {
 	
 	//RunStatus functions
 	
+	public RunStatus getRunStatusById(Long id);
+	
+	public void saveRunStatus(RunStatus runStatus);
+	
 	public RunStatus getRunStatusByRunId(Long runId);
 	
 	//IdeaBasket functions
+	
+	public IdeaBasket getIdeaBasketById(Long id);
+	
+	public void saveIdeaBasket(IdeaBasket ideaBasket);
 	
 	public IdeaBasket getIdeaBasketByRunIdWorkgroupId(long runId, long workgroupId);
 	
@@ -240,6 +285,10 @@ public interface VLEService {
 	public IdeaBasket getPublicIdeaBasketForRunIdPeriodId(long runId, long periodId);
 
 	//CRaterRequest functions
+	
+	public CRaterRequest getCRaterRequestById(Long id);
+	
+	public void saveCRaterRequest(CRaterRequest cRaterRequest);
 	
 	public CRaterRequest getCRaterRequestByStepWorkIdNodeStateId(StepWork stepWork, Long nodeStateId);
 	

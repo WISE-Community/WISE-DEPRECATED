@@ -108,7 +108,7 @@ public class VLEIdeaBasketController extends AbstractController {
 						
 						//data is not the same so we will save a new row
 						ideaBasket = new IdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), new Long(workgroupId), data, false, action, new Long(workgroupId), ideaIdLong, workgroupIdLong);
-						ideaBasket.saveOrUpdate();
+						vleService.saveIdeaBasket(ideaBasket);
 						savedBasket = true;
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -119,7 +119,7 @@ public class VLEIdeaBasketController extends AbstractController {
 			} else {
 				//the idea basket was never created before so we will save a new row
 				ideaBasket = new IdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), new Long(workgroupId), data, false, action, new Long(workgroupId), ideaIdLong, workgroupIdLong);
-				ideaBasket.saveOrUpdate();
+				vleService.saveIdeaBasket(ideaBasket);
 				savedBasket = true;
 			}
 			
@@ -556,7 +556,7 @@ public class VLEIdeaBasketController extends AbstractController {
 				if(ideaBasket == null) {
 					//make the IdeaBasket if it does not exist
 					ideaBasket = new IdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), new Long(workgroupId));
-					ideaBasket.saveOrUpdate();
+					vleService.saveIdeaBasket(ideaBasket);
 				}
 				
 				//get the IdeaBasket JSONString
@@ -691,7 +691,7 @@ public class VLEIdeaBasketController extends AbstractController {
 		publicIdeaBasket = new IdeaBasket(runId, periodId, projectId, -1, dataString, true, action, actionPerformer, ideaId, ideaWorkgroupId);
 		
 		//save the public idea basket revision to the database
-		publicIdeaBasket.saveOrUpdate();
+		vleService.saveIdeaBasket(publicIdeaBasket);
 		
 		return publicIdeaBasket;
 	}

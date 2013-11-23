@@ -12,6 +12,10 @@ import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface PeerReviewWorkDao<T extends PeerReviewWork> extends SimpleDao<T> {
 
+	public PeerReviewWork getPeerReviewWorkById(Long id);
+	
+	public void savePeerReviewWork(PeerReviewWork peerReviewWork);
+	
 	public List<PeerReviewWork> getPeerReviewWorkByRun(Long runId);
 	
 	public List<PeerReviewWork> getPeerReviewWorkByRunPeriodNode(Long runId, Long periodId, Node node);

@@ -1,13 +1,14 @@
 package org.wise.portal.dao.status.impl;
 
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.status.RunStatusDao;
 import org.wise.vle.domain.status.RunStatus;
-import org.wise.vle.hibernate.HibernateUtil;
 
 
 public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus> implements RunStatusDao<RunStatus> {
@@ -22,6 +23,22 @@ public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus> imple
 		return null;
 	}
 
+	public RunStatus getRunStatusById(Long id) {
+		RunStatus runStatus = null;
+		
+		try {
+			runStatus = getById(id);
+		} catch (ObjectNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return runStatus;
+	}
+	
+	@Transactional
+	public void saveRunStatus(RunStatus runStatus) {
+		save(runStatus);
+	}
 	
 	/**
 	 * Get a RunStatus object given the run id
@@ -32,7 +49,7 @@ public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus> imple
 		RunStatus result = null;
 		
 		try {
-			Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 			session.beginTransaction();
 			
 			result = (RunStatus) session.createCriteria(RunStatus.class).add(Restrictions.eq("runId", runId)).uniqueResult();

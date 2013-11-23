@@ -2,16 +2,17 @@ package org.wise.portal.dao.peerreview.impl;
 
 import java.util.List;
 
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.peerreview.PeerReviewGateDao;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewGate;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
-import org.wise.vle.hibernate.HibernateUtil;
 
 
 public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewGate> implements PeerReviewGateDao<PeerReviewGate> {
@@ -26,10 +27,26 @@ public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewG
 		return null;
 	}
 
+	public PeerReviewGate getPeerReviewGateById(Long id) {
+		PeerReviewGate peerReviewGate = null;
+		
+		try {
+			peerReviewGate = getById(id);
+		} catch (ObjectNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return peerReviewGate;
+	}
+	
+	@Transactional(readOnly = false)
+	public void savePeerReviewGate(PeerReviewGate peerReviewGate) {
+		save(peerReviewGate);
+	}
 	
 	public PeerReviewGate getPeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node) {
 		try {
-			Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 			session.beginTransaction();
 			PeerReviewGate result = (PeerReviewGate) session.createCriteria(PeerReviewGate.class).add(Restrictions.eq("runId", runId)).add(Restrictions.eq("periodId", periodId)).add(Restrictions.eq("node", node)).uniqueResult();
 			session.getTransaction().commit();
@@ -47,7 +64,7 @@ public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewG
 			peerReviewGate.setRunId(runId);
 			peerReviewGate.setPeriodId(periodId);
 			peerReviewGate.setNode(node);
-			peerReviewGate.saveOrUpdate();
+			savePeerReviewGate(peerReviewGate);
 		}
 		return peerReviewGate;
 	}
@@ -66,7 +83,7 @@ public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewG
 			if(peerReviewGateOpenPercentageTriggerSatisfied(numWorkgroupsSubmitted, numWorkgroups, openPercentageTrigger) &&
 					peerReviewGateOpenNumberTriggerSatisfied(numWorkgroupsSubmitted, openNumberTrigger)) {
 				peerReviewGate.setOpen(true);
-				peerReviewGate.saveOrUpdate();
+				savePeerReviewGate(peerReviewGate);
 				return true;
 			} else {
 				return false;
@@ -108,7 +125,7 @@ public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewG
 	}
 	
 	private List<PeerReviewWork> getPeerReviewWorkByRunPeriodNode(Long runId, Long periodId, Node node) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).add(

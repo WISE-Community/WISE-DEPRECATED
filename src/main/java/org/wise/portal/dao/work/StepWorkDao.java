@@ -10,6 +10,10 @@ import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface StepWorkDao<T extends StepWork> extends SimpleDao<T> {
 
+	public StepWork getStepWorkById(Long id);
+	
+	public void saveStepWork(StepWork stepWork);
+	
 	public List<StepWork> getStepWorksByUserInfo(UserInfo userInfo);
 	
 	public StepWork getLatestStepWorkByUserInfo(UserInfo userInfo);
@@ -22,7 +26,7 @@ public interface StepWorkDao<T extends StepWork> extends SimpleDao<T> {
 	
 	public List<StepWork> getStepWorksByUserInfosAndNode(List<UserInfo> userInfos, Node node);
 	
-	public List<StepWork> getStepWorksByNodeId(Long id);
+	public List<StepWork> getStepWorksByNode(Node node);
 	
 	public StepWork getStepWorkByStepWorkId(Long id);
 	

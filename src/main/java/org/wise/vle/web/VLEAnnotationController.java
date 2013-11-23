@@ -5,7 +5,6 @@ package org.wise.vle.web;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -181,7 +180,7 @@ public class VLEAnnotationController extends AbstractController {
 			if(fromWorkgroupIdStr != null && stepWorkId != null) {
 				//user is requesting an annotation they wrote themselves for a specific stepWork
 				UserInfo fromWorkgroup = vleService.getUserInfoByWorkgroupId(new Long(fromWorkgroupIdStr));
-				StepWork stepWork = (StepWork) StepWork.getById(stepWorkId, StepWork.class);
+				StepWork stepWork = (StepWork) vleService.getStepWorkById(stepWorkId);
 				annotation = vleService.getAnnotationByUserInfoAndStepWork(fromWorkgroup, stepWork, null);
 			} else if(fromWorkgroupIdsStr != null && toWorkgroupIdStr != null) {
 				/*
@@ -222,7 +221,8 @@ public class VLEAnnotationController extends AbstractController {
 				//get all the annotations for the run id
 				annotationList = (List<Annotation>) vleService.getAnnotationByRunId(longRunId, Annotation.class);
 			} else {
-				annotationList = (List<Annotation>) Annotation.getList(Annotation.class);
+				annotationList = (List<Annotation>) vleService.getAnnotationList();
+				
 			}
 			
 		} else if (requestedType.equals("flag") || requestedType.equals("inappropriateFlag")) {
@@ -238,7 +238,7 @@ public class VLEAnnotationController extends AbstractController {
 	    	}
 	    	
 	    	if(map.containsKey("type")) {
-	    		//get the annotaiton type
+	    		//get the annotation type
 	    		type = map.get("type")[0];
 	    	}
 	    	
@@ -249,7 +249,7 @@ public class VLEAnnotationController extends AbstractController {
 	    	if(runId != null && nodeId != null) {
 	    		//get all the annotations for a run id and node id
 	        	Node node = vleService.getNodeByNodeIdAndRunId(nodeId, runId, true);
-	        	List<StepWork> stepWorkList = vleService.getStepWorksByNodeId(node.getId());
+	        	List<StepWork> stepWorkList = vleService.getStepWorksByNode(node);
 	        	annotationList = vleService.getAnnotationByStepWorkList(stepWorkList);
 	    	} else if(runId != null && type != null) {
 	    		//get all the annotations for a run id and annotation type
@@ -538,7 +538,7 @@ public class VLEAnnotationController extends AbstractController {
 
 						// append the cRaterResponse to the existing annotation for this stepwork.
 						annotation.appendNodeStateAnnotation(cRaterResponseJSONObj);
-						annotation.saveOrUpdate();
+						vleService.saveAnnotation(annotation);
 						
 						// update CRaterRequest table and mark this request as completed.
 						CRaterRequest cRaterRequest = vleService.getCRaterRequestByStepWorkIdNodeStateId(stepWork,nodeStateId);
@@ -547,7 +547,7 @@ public class VLEAnnotationController extends AbstractController {
 							Calendar cRaterRequestCompletedTime = Calendar.getInstance();
 							cRaterRequest.setTimeCompleted(new Timestamp(cRaterRequestCompletedTime.getTimeInMillis()));
 							cRaterRequest.setcRaterResponse(cRaterResponseXML);
-							cRaterRequest.saveOrUpdate();						
+							vleService.saveCRaterRequest(cRaterRequest);
 						}
 					}
 				} catch (JSONException e) {
@@ -620,7 +620,7 @@ public class VLEAnnotationController extends AbstractController {
 						}
 
 						annotation = new Annotation(stepWork, fromUser, toUser, new Long(runId), postTime, type, dataJSONObj.toString());
-						annotation.saveOrUpdate();
+						vleService.saveAnnotation(annotation);
 						
 						// update CRaterRequest table and mark this request as completed.
 						CRaterRequest cRaterRequest = vleService.getCRaterRequestByStepWorkIdNodeStateId(stepWork,nodeStateId);
@@ -629,7 +629,7 @@ public class VLEAnnotationController extends AbstractController {
 							Calendar cRaterRequestCompletedTime = Calendar.getInstance();
 							cRaterRequest.setTimeCompleted(new Timestamp(cRaterRequestCompletedTime.getTimeInMillis()));
 							cRaterRequest.setcRaterResponse(cRaterResponse);
-							cRaterRequest.saveOrUpdate();						
+							vleService.saveCRaterRequest(cRaterRequest);
 						}
 					}
 				} else {
@@ -640,7 +640,7 @@ public class VLEAnnotationController extends AbstractController {
 					
 					if(cRaterRequest != null) {
 						cRaterRequest.setFailCount(cRaterRequest.getFailCount()+1);
-						cRaterRequest.saveOrUpdate();						
+						vleService.saveCRaterRequest(cRaterRequest);
 					}
 				}
 			} catch (JSONException e1) {
@@ -675,7 +675,7 @@ public class VLEAnnotationController extends AbstractController {
 		StepWork stepWork = null;
 		
 		if(stepWorkId != null) {
-			stepWork = (StepWork) StepWork.getById(new Long(stepWorkId), StepWork.class);
+			stepWork = (StepWork) vleService.getStepWorkById(new Long(stepWorkId));
 		}
 		
 		UserInfo fromUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(new Long(fromWorkgroup));
@@ -727,7 +727,7 @@ public class VLEAnnotationController extends AbstractController {
 		}
 		
 		//propagate the row/object to the table
-		annotation.saveOrUpdate();
+		vleService.saveAnnotation(annotation);
 		
 		//check if this is a peer review annotation
 		if(action != null && action.equals("peerReviewAnnotate")) {

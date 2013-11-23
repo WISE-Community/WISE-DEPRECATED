@@ -8,6 +8,10 @@ import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface PeerReviewGateDao<T extends PeerReviewGate> extends SimpleDao<T> {
 
+	public PeerReviewGate getPeerReviewGateById(Long id);
+	
+	public void savePeerReviewGate(PeerReviewGate peerReviewGate);
+	
 	public PeerReviewGate getPeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node);
 	
 	public PeerReviewGate getOrCreatePeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node);

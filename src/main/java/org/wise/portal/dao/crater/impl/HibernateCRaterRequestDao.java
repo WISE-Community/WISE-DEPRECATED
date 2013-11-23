@@ -2,14 +2,15 @@ package org.wise.portal.dao.crater.impl;
 
 import java.util.List;
 
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.crater.CRaterRequestDao;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.work.StepWork;
-import org.wise.vle.hibernate.HibernateUtil;
 
 
 public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterRequest> implements CRaterRequestDao<CRaterRequest> {
@@ -24,6 +25,22 @@ public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterReques
 		return null;
 	}
 
+	public CRaterRequest getCRaterRequestById(Long id) {
+		CRaterRequest cRaterRequest = null;
+		
+		try {
+			cRaterRequest = getById(id);
+		} catch (ObjectNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return cRaterRequest;
+	}
+	
+	@Transactional
+	public void saveCRaterRequest(CRaterRequest cRaterRequest) {
+		save(cRaterRequest);
+	}
 	
 	/**
 	 * Returns a CRaterRequest for the specified StepWork and NodeStateId.
@@ -32,7 +49,7 @@ public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterReques
 	 * @return
 	 */
 	public CRaterRequest getCRaterRequestByStepWorkIdNodeStateId(StepWork stepWork, Long nodeStateId) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         CRaterRequest result = 
@@ -51,7 +68,7 @@ public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterReques
 	@SuppressWarnings("unchecked")
 	public List<CRaterRequest> getIncompleteCRaterRequests() {
 		
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<CRaterRequest> result = (List<CRaterRequest>) session.createCriteria(CRaterRequest.class)
         	.add(Restrictions.isNull("timeCompleted")).list();

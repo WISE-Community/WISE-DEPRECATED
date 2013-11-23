@@ -76,7 +76,7 @@ public class RunStatusController extends AbstractController {
 					
 					//create the new run status
 					runStatus = new RunStatus(runId, statusString);
-					runStatus.saveOrUpdate();
+					vleService.saveRunStatus(runStatus);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -134,7 +134,7 @@ public class RunStatusController extends AbstractController {
 			}
 			
 			//save the run status to the db
-			runStatus.saveOrUpdate();
+			vleService.saveRunStatus(runStatus);
 		}
 		
 		return null;

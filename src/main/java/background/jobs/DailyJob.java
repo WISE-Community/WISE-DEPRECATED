@@ -17,6 +17,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.LoggerFactory;
+import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.statistics.VLEStatistics;
 
 
@@ -62,7 +63,8 @@ public class DailyJob implements Job {
 	    	VLEStatistics vleStatisticsObject = new VLEStatistics();
 	    	vleStatisticsObject.setTimestamp(timestamp);
 	    	vleStatisticsObject.setData(vleStatistics.toString());
-	    	vleStatisticsObject.saveOrUpdate();
+	    	VLEService vleService = (VLEService) context.getMergedJobDataMap().get("vleService");
+	    	vleService.saveVLEStatistics(vleStatisticsObject);
 		} catch (Exception ex) {
 			LoggerFactory.getLogger(getClass()).error(ex.getMessage());
 		}

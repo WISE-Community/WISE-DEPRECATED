@@ -283,7 +283,7 @@ public class VLEGetData extends AbstractController {
 
 								try {
 									if (useCachedWork) {												
-										cachedWork.saveOrUpdate();  // save cachedWork if we're in useCacheMode
+										vleService.saveStepWorkCache(cachedWork); // save cachedWork if we're in useCacheMode
 									}
 								} catch(Exception e) {
 									/*

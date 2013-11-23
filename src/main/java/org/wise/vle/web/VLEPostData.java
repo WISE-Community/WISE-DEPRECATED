@@ -190,7 +190,7 @@ public class VLEPostData extends AbstractController {
 				long stepWorkIdLong = Long.parseLong(stepWorkId);
 				
 				//obtain the StepWork with the given id
-				stepWork = (StepWork) StepWork.getById(stepWorkIdLong, StepWork.class);
+				stepWork = (StepWork) vleService.getStepWorkById(stepWorkIdLong);
 			} else if(nodeType != null && nodeType !=""){
 				//step work id was not passed in so we will create a new StepWork object
 				stepWork = new StepWork();
@@ -207,7 +207,7 @@ public class VLEPostData extends AbstractController {
 				stepWork.setStartTime(startTime);
 				stepWork.setEndTime(endTime);
 				stepWork.setDuplicateId(duplicateId);
-				stepWork.saveOrUpdate();
+				vleService.saveStepWork(stepWork);
 				
 				//get the step work id so we can send it back to the client
 				long newStepWorkId = stepWork.getId();
@@ -276,7 +276,7 @@ public class VLEPostData extends AbstractController {
 						if (isCRaterSubmit) {
 							try {
 								CRaterRequest cRR = new CRaterRequest(cRaterItemId, cRaterItemType, stepWork, new Long(lastNodeStateTimestamp), runIdLong);
-								cRR.saveOrUpdate();
+								vleService.saveCRaterRequest(cRR);
 							} catch (Exception cre) {
 								// do nothing if there was an error, let continue
 								cre.printStackTrace();
@@ -304,7 +304,7 @@ public class VLEPostData extends AbstractController {
 							peerReviewWork.setUserInfo(userInfo);
 							peerReviewWork.setStepWork(stepWork);
 							peerReviewWork.setPeriodId(periodIdLong);
-							peerReviewWork.saveOrUpdate();
+							vleService.savePeerReviewWork(peerReviewWork);
 						}
 						
 						//create an entry for the peerreviewgate table if one does not exist already
@@ -340,7 +340,7 @@ public class VLEPostData extends AbstractController {
 			node.setNodeId(nodeId);
 			node.setRunId(runId);
 			node.setNodeType(nodeType);
-			node.saveOrUpdate();
+			vleService.saveNode(node);
 		}
 		return node;
 	}

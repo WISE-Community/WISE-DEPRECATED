@@ -157,7 +157,7 @@ public class StudentStatusController extends AbstractController {
 		}
 		
 		//save the student status to the database
-		studentStatus.saveOrUpdate();
+		vleService.saveStudentStatus(studentStatus);
 		
 		return null;
 	}

@@ -59,6 +59,6 @@ public class ChatLogController extends VLEServlet {
 		chatLog.setDataType(dataType);
 		chatLog.setData(data);
 		chatLog.setPostTime(postTime);
-		chatLog.saveOrUpdate();
+		//chatLog.saveOrUpdate();
 	}
 }

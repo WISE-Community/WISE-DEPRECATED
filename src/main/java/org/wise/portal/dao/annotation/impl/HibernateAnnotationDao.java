@@ -3,9 +3,9 @@ package org.wise.portal.dao.annotation.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 import org.hibernate.Criteria;
@@ -14,10 +14,9 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.annotation.AnnotationDao;
-import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.annotation.Annotation;
-import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.hibernate.HibernateUtil;
@@ -27,14 +26,29 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 
 	@Override
 	protected String getFindAllQuery() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected Class<? extends Annotation> getDataObjectClass() {
-		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public Annotation getAnnotationById(Long id) {
+		Annotation annotation = null;
+		
+		try {
+			annotation = getById(id);
+		} catch (ObjectNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return annotation;
+	}
+	
+	@Transactional
+	public void saveAnnotation(Annotation annotation) {
+		save(annotation);
 	}
 
 	/**
@@ -45,7 +59,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 */
 	@Override
 	public List<Annotation> getAnnotationByFromWorkgroupAndWorkByToWorkgroup(UserInfo fromWorkgroup, List<StepWork> workByToWorkgroup, Class<?> clazz) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         List<Annotation> result = 
@@ -71,7 +85,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 		
 		//check if there was any work
 		if(workByToWorkgroup.size() != 0) {
-			Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 	        session.beginTransaction();
 
 	        result = 
@@ -93,7 +107,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 */
 	@SuppressWarnings("unchecked")
 	public List<? extends Annotation> getAnnotationByRunId(Long runId, Class<?> clazz) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         List<Annotation> result = 
@@ -114,7 +128,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 */
 	@SuppressWarnings("unchecked")
 	public List<? extends Annotation> getAnnotationByRunIdAndType(Long runId, String type, Class<?> clazz) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         List<Annotation> result = 
@@ -132,7 +146,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @return
 	 */
 	public Annotation getAnnotationByUserInfoAndStepWork(UserInfo userInfo, StepWork stepWork, String type) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         Annotation result = null;
@@ -158,7 +172,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	}
 	
 	public Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo, UserInfo toUserInfo, StepWork stepWork, String type) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         Annotation result = null;
@@ -199,7 +213,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups, StepWork stepWork, String type) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         
         List<Annotation> results = null;
@@ -232,7 +246,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Annotation> getAnnotationByStepWork(StepWork stepWork, Class<?> clazz) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         List<Annotation> results = 
@@ -251,7 +265,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Annotation> getAnnotationByFromUserToUserType(List<UserInfo> fromUsers, UserInfo toUser, String annotationType) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         List<Annotation> results = 
@@ -272,7 +286,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Annotation> getAnnotationByToUserType(UserInfo toUser, String annotationType) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         List<Annotation> results = 
@@ -292,7 +306,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 */
 	@SuppressWarnings("unchecked")
 	public Annotation getAnnotationByStepWorkAndAnnotationType(StepWork stepWork, String annotationType) {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         Annotation result = 
@@ -322,7 +336,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 			return null;
 		}
 		
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         /*
@@ -380,7 +394,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 			return null;
 		}
 		
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
 
         /*
@@ -461,7 +475,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	public List<Annotation> getAnnotationByStepWorkList(List<StepWork> stepWorkList) {
 		List<Annotation> result = new ArrayList<Annotation>();
 		if (!stepWorkList.isEmpty()) {
-			Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 			session.beginTransaction();
 
 			result = 
@@ -469,5 +483,13 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 			session.getTransaction().commit();
 		}
 		return result;
+	}
+	
+	public List<Annotation> getAnnotationList() {
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        List<Annotation> result = session.createCriteria(Annotation.class).list();
+        session.getTransaction().commit();
+        return result;
 	}
 }
