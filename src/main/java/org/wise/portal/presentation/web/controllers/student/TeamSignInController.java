@@ -50,7 +50,7 @@ import org.wise.portal.domain.impl.Projectcode;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
-import org.wise.portal.presentation.util.json.JSONArray;
+import org.json.JSONArray;
 import org.wise.portal.presentation.web.TeamSignInForm;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;

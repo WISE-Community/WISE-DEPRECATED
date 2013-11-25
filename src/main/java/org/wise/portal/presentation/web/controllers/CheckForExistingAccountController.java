@@ -10,7 +10,7 @@ import net.sf.sail.webapp.service.UserService;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.presentation.util.json.JSONArray;
+import org.json.JSONArray;
 
 public class CheckForExistingAccountController extends AbstractController {
 

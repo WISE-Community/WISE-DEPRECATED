@@ -49,7 +49,7 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
 import org.wise.portal.domain.project.impl.ProjectType;
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.json.JSONObject;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.wiseup.WiseUpService;
 

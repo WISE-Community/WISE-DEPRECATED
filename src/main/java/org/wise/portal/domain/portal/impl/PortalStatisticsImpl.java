@@ -12,8 +12,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.wise.portal.domain.portal.PortalStatistics;
-import org.wise.portal.presentation.util.json.JSONException;
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 @Entity
 @Table(name = PortalStatisticsImpl.DATA_STORE_NAME)

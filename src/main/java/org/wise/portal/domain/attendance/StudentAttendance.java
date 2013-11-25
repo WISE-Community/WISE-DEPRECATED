@@ -2,7 +2,7 @@ package org.wise.portal.domain.attendance;
 
 import java.util.Date;
 
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.json.JSONObject;
 
 import net.sf.sail.webapp.domain.Persistable;
 

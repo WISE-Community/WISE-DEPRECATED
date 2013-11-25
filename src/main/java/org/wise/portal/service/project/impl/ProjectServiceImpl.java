@@ -45,7 +45,6 @@ import org.wise.portal.domain.project.impl.LaunchReportParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.domain.project.impl.ProjectType;
-import org.wise.portal.presentation.util.json.JSONObject;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.project.ProjectServiceFactory;
 

@@ -11,9 +11,9 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.wise.portal.domain.attendance.StudentAttendance;
-import org.wise.portal.presentation.util.json.JSONArray;
-import org.wise.portal.presentation.util.json.JSONException;
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 @Entity
 @Table(name = StudentAttendanceImpl.DATA_STORE_NAME)

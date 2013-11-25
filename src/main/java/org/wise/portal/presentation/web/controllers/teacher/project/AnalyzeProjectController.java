@@ -21,9 +21,9 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.project.Project;
-import org.wise.portal.presentation.util.json.JSONArray;
-import org.wise.portal.presentation.util.json.JSONException;
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wise.portal.service.project.ProjectService;
 
 public class AnalyzeProjectController extends AbstractController {

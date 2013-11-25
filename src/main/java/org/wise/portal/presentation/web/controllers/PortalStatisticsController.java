@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.portal.PortalStatistics;
-import org.wise.portal.presentation.util.json.JSONArray;
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wise.portal.service.portal.PortalStatisticsService;
 
 public class PortalStatisticsController extends AbstractController {

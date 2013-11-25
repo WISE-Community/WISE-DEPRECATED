@@ -48,8 +48,8 @@ import org.wise.portal.domain.attendance.StudentAttendance;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.domain.run.RunStatus;
-import org.wise.portal.presentation.util.json.JSONException;
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import net.sf.sail.webapp.domain.OfferingVisitor;
 import net.sf.sail.webapp.domain.User;

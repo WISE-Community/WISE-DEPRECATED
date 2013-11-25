@@ -44,7 +44,7 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.Run;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
-import org.wise.portal.presentation.util.json.JSONArray;
+import org.json.JSONArray;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.offering.RunService;
