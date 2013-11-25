@@ -627,7 +627,7 @@ function DetectFlashVer(reqMajorVer, reqMinorVer, reqRevision)
 function checkContentFiltering() {
 	// test loading of swf file
 	$.ajax({ 
-		url: "/wise/flash/tels/convection-intro.swf", 
+		url: "/wise/flash/convection-intro.swf", 
 		context: document.body})
 		.success(function(data, textStatus, jqXHR) {
 			var contentFilterSwfRequirementSatisfied=false;
