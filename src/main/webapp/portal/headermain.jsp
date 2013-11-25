@@ -1,7 +1,7 @@
 <div id="header">
 
 	<div id="bannerArea1" class="banner">
-		<c:if test="${pageContext.request.servletPath == '/WEB-INF/jsp/tels/index.jsp'}">
+		<c:if test="${pageContext.request.servletPath == '/portal/index.jsp'}">
 			<!-- show a link to WISE2 if this is the main homepage -->
 			<div class="announce">
 				<spring:htmlEscape defaultHtmlEscape="false">
