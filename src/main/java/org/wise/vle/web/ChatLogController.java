@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.wise.vle.VLEServlet;
 import org.wise.vle.domain.xmpp.ChatLog;
 import org.wise.vle.utils.SecurityUtils;
 
-public class ChatLogController extends VLEServlet {
+public class ChatLogController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
