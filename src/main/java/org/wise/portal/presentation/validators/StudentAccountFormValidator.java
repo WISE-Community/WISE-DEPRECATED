@@ -24,14 +24,14 @@ package org.wise.portal.presentation.validators;
 
 import java.util.Set;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.group.Group;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.impl.Projectcode;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.project.impl.Projectcode;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.presentation.web.StudentAccountForm;
 import org.wise.portal.service.offering.RunService;
 /**

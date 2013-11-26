@@ -23,17 +23,16 @@ import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.UserService;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.listeners.PasSessionListener;
+import org.wise.portal.service.user.UserService;
 
 /**
  * Custom AuthenticationProcessingFilter that subclasses Acegi Security. This

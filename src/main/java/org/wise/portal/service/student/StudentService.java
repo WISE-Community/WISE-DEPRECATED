@@ -24,18 +24,18 @@ package org.wise.portal.service.student;
 
 import java.util.List;
 
-import org.springframework.transaction.annotation.Transactional;
-import org.wise.portal.domain.PeriodNotFoundException;
-import org.wise.portal.domain.Run;
-import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
-import org.wise.portal.domain.impl.Projectcode;
-import org.wise.portal.domain.run.StudentRunInfo;
-import org.wise.portal.service.offering.RunService;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.AclService;
-import net.sf.sail.webapp.service.group.GroupService;
+import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
+import org.wise.portal.domain.project.impl.Projectcode;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.StudentRunInfo;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.acl.AclService;
+import org.wise.portal.service.group.GroupService;
+import org.wise.portal.service.offering.RunService;
 
 /**
  * Represents the set of operations on a WISE Student user.

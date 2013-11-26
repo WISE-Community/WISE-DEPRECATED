@@ -25,18 +25,17 @@ package org.wise.portal.service.offering;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.service.offering.OfferingService;
 
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
-import org.wise.portal.domain.impl.RunParameters;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.impl.RunParameters;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * A service for working with <code>Run</code> objects

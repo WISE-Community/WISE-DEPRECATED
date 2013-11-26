@@ -25,6 +25,10 @@ package org.wise.portal.domain.authentication;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.wise.portal.domain.Persistable;
+
 /**
  * TELS Portal version of MutableUserDetails interface
  * 
@@ -32,9 +36,130 @@ import java.util.HashMap;
  * 
  * @version $Id$
  */
-public interface MutableUserDetails extends
-		net.sf.sail.webapp.domain.authentication.MutableUserDetails {
+public interface MutableUserDetails extends UserDetails, Persistable {
 
+	/**
+	 * Sets an array of <code>GrantedAuthority</code> for this user. A
+	 * <code>GrantedAuthority</code> represents a role that can be given
+	 * specific access permissions. An example could be Admin, User, Manager,
+	 * and BankTeller roles.
+	 * 
+	 * @param authorities
+	 * @see org.acegisecurity.GrantedAuthority
+	 */
+	public void setAuthorities(GrantedAuthority[] authorities);
+
+	/**
+	 * Sets the user's password. This may or may not be plaintext. It will be up
+	 * to the implementor to decide if encryption is required. If encryption is
+	 * used, it must be representable as a <code>String</code>.
+	 * 
+	 * @param password
+	 */
+	public void setPassword(String password);
+
+	/**
+	 * Sets the user's name.
+	 * 
+	 * @param username
+	 */
+	public void setUsername(String username);
+
+	/**
+	 * Sets the user's email address.
+	 * 
+	 * @param emailAddress
+	 */
+	public void setEmailAddress(String emailAddress);
+
+	/**
+	 * Gets the user's email address.
+	 * 
+	 * @return emailAddress
+	 */
+	public String getEmailAddress();
+
+	/**
+	 * Adds a GrantedAuthority to a user.
+	 * 
+	 * @param authority
+	 */
+	public void addAuthority(GrantedAuthority authority);
+
+	/**
+	 * Returns true iff this user has the specified GrantedAuthority
+	 * @return
+	 */
+	public boolean hasGrantedAuthority(String role);
+
+
+	/**
+	 * Gets the id for this user details object in the persistent store
+	 * 
+	 * @return The id of this user details object
+	 */
+	public Long getId();
+	
+	
+	/**
+	 * Enables/Disables account.
+	 * This does not update the row in the database; only this object.
+	 */
+	public void setEnabled(boolean enabled);
+
+	/**
+	 * Get the recent failed login timestamp
+	 * @return
+	 */
+	public Date getRecentFailedLoginTime();
+	
+	/**
+	 * Set the recent failed login timestamp
+	 * @param recentFailedLoginTime
+	 */
+	public void setRecentFailedLoginTime(Date recentFailedLoginTime);
+	
+	/**
+	 * Get the number of recent failed login attempts
+	 * @return
+	 */
+	public Integer getNumberOfRecentFailedLoginAttempts();
+	
+	/**
+	 * Set the number of recent failed login attempts
+	 * @param numberOfFailedLoginAttempts
+	 */
+	public void setNumberOfRecentFailedLoginAttempts(Integer numberOfFailedLoginAttempts);
+	
+	/**
+	 * Increase the number of recent failed login attempts by 1
+	 */
+	public void incrementNumberOfRecentFailedLoginAttempts();
+	
+	/**
+	 * Set the password key
+	 * @param passwordKey an alphanumeric string
+	 */
+	public void setResetPasswordKey(String passwordKey);
+	
+	/**
+	 * Get the password key
+	 * @return an alphanumeric string
+	 */
+	public String getResetPasswordKey();
+	
+	/**
+	 * Set the time the user requested a password reset
+	 * @param resetPasswordRequestTime the time the user requested the password reset
+	 */
+	public void setResetPasswordRequestTime(Date resetPasswordRequestTime);
+	
+	/**
+	 * Get the time the user requested a password reset
+	 * @return the time the user requested the password reset
+	 */
+	public Date getResetPasswordRequestTime();
+	
 	public String getFirstname();
 	
 	public void setFirstname(String firstname);

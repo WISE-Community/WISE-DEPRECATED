@@ -22,7 +22,6 @@
  */
 package org.wise.portal.service.module;
 
-import net.sf.sail.webapp.service.curnit.CurnitService;
 
 /**
  * A service for working with <code>Project</code> objects

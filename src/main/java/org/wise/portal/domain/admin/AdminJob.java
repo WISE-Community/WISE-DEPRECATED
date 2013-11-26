@@ -31,16 +31,16 @@ import java.util.Set;
 
 import javax.mail.MessagingException;
 
-import net.sf.sail.webapp.dao.user.UserDao;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.mail.IMailFacade;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.wise.portal.dao.offering.RunDao;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.mail.IMailFacade;
 
 /**
  * A cron job for TELS portal.

@@ -28,8 +28,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -40,10 +38,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.UserService;
-import net.sf.sail.webapp.service.authentication.AuthorityNotFoundException;
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaFactory;
 import net.tanesha.recaptcha.ReCaptchaImpl;
@@ -52,20 +46,11 @@ import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
-import org.wise.portal.domain.portal.Portal;
-import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.portal.PortalService;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.user.UserService;
 
 /**
  * Custom AuthenticationProcessingFilter that subclasses Acegi Security. This

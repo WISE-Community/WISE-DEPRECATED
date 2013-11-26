@@ -30,10 +30,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
-
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
 
 /**
  * A WISE Workgroup object implementation
@@ -43,7 +42,7 @@ import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
  */
 @Entity
 @Table(name = WISEWorkgroupImpl.DATA_STORE_NAME)
-public class WISEWorkgroupImpl extends net.sf.sail.webapp.domain.impl.WorkgroupImpl
+public class WISEWorkgroupImpl extends org.wise.portal.domain.workgroup.impl.WorkgroupImpl
 		implements WISEWorkgroup, Comparable<WISEWorkgroupImpl> {
 
 	@Transient

@@ -3,9 +3,6 @@ package org.wise.portal.domain.admin;
 import java.util.Date;
 import java.util.List;
 
-import net.sf.sail.webapp.dao.user.UserDao;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -13,12 +10,15 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.wise.portal.dao.offering.RunDao;
 import org.wise.portal.dao.portal.PortalStatisticsDao;
 import org.wise.portal.dao.project.ProjectDao;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.user.UserDao;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.portal.PortalStatistics;
 import org.wise.portal.domain.portal.impl.PortalStatisticsImpl;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 
 public class DailyAdminJob extends QuartzJobBean {
 

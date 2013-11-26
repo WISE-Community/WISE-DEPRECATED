@@ -25,22 +25,22 @@ package org.wise.portal.presentation.web.controllers.teacher.management;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.UserService;
-import net.sf.sail.webapp.service.authentication.UserDetailsService;
-import net.sf.sail.webapp.service.workgroup.WorkgroupService;
 
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.springframework.web.servlet.view.RedirectView;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.teacher.management.RemoveStudentFromRunParameters;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.student.StudentService;
+import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller for removing students from <code>Run</code>, thereby

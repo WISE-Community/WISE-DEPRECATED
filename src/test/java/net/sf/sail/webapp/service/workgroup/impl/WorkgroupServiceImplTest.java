@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.group.GroupDao;
-import net.sf.sail.webapp.dao.workgroup.WorkgroupDao;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.group.GroupDao;
+import org.wise.portal.dao.workgroup.WorkgroupDao;
 import net.sf.sail.webapp.domain.Offering;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.Workgroup;

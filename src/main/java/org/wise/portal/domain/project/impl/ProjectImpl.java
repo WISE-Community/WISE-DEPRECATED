@@ -44,21 +44,20 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.impl.CurnitImpl;
-import net.sf.sail.webapp.domain.impl.UserImpl;
-
 import org.hibernate.annotations.Cascade;
-import org.wise.portal.domain.Module;
-import org.wise.portal.domain.Run;
-import org.wise.portal.domain.impl.RunImpl;
+import org.wise.portal.domain.module.Curnit;
+import org.wise.portal.domain.module.Module;
+import org.wise.portal.domain.module.impl.CurnitImpl;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectInfo;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.ProjectVisitor;
 import org.wise.portal.domain.project.Tag;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.impl.RunImpl;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.service.module.ModuleService;
 import org.wise.portal.service.module.impl.ModuleServiceImpl;
 

@@ -14,16 +14,16 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.project.Project;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
+import org.wise.portal.domain.project.Project;
 import org.wise.portal.service.project.ProjectService;
 
 public class AnalyzeProjectController extends AbstractController {

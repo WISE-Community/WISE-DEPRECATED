@@ -25,7 +25,7 @@ package org.wise.portal.domain.message;
 import java.util.Date;
 import java.util.Set;
 
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.user.User;
 
 /**
  * A Message from one user to another. Contains:

@@ -23,12 +23,10 @@
 package org.wise.portal.domain.run;
 
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.group.Group;
-
-import org.wise.portal.domain.Run;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * Stores information about a WISE student on a particular

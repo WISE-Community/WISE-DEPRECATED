@@ -30,15 +30,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.UserService;
-
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.domain.admin.StudentFields;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.impl.LookupParameters;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.user.UserService;
 
 /**
  * Controller for admins to look up student user accounts based on specified

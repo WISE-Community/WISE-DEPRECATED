@@ -2,8 +2,8 @@ package org.wise.portal.dao.annotation;
 
 import java.util.List;
 
-import net.sf.sail.webapp.dao.SimpleDao;
 
+import org.wise.portal.dao.SimpleDao;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;

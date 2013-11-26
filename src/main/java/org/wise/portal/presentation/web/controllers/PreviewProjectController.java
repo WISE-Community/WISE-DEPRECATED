@@ -9,14 +9,13 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.util.Util;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;

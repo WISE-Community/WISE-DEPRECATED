@@ -24,8 +24,8 @@ package org.wise.portal.service.newsitem;
 
 import java.util.Set;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
 
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.NewsItemParameters;
 import org.wise.portal.domain.newsitem.NewsItem;
 

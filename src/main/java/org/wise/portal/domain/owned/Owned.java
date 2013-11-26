@@ -22,9 +22,8 @@
  */
 package org.wise.portal.domain.owned;
 
-import net.sf.sail.webapp.domain.User;
-
-import org.wise.portal.domain.Run;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 
 /**
  * Interface that can be used for objects that are associated

@@ -6,9 +6,9 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.wise.portal.dao.attendance.StudentAttendanceDao;
+import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.attendance.StudentAttendance;
 
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 public class HibernateStudentAttendanceDao extends AbstractHibernateDao<StudentAttendance> implements StudentAttendanceDao<StudentAttendance> {
 

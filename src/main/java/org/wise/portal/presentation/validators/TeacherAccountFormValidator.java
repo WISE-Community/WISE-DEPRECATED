@@ -24,7 +24,6 @@ package org.wise.portal.presentation.validators;
 
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;

@@ -23,9 +23,9 @@
 package org.wise.portal.presentation.validators;
 
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import org.wise.portal.domain.impl.LookupParameters;
-import org.springframework.validation.ValidationUtils;
 
 /**
  * @author patrick lawler

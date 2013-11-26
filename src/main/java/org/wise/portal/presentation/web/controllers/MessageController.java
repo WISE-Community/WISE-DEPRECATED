@@ -22,23 +22,23 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.UserService;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.message.Message;
 import org.wise.portal.domain.message.MessageRecipient;
 import org.wise.portal.domain.message.impl.MessageRecipientImpl;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.service.message.MessageService;
+import org.wise.portal.service.user.UserService;
 
 /**
  * @author hirokiterashima

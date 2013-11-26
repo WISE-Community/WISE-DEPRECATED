@@ -19,7 +19,6 @@ package org.wise.portal;
 
 import java.io.FileNotFoundException;
 
-
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.springframework.beans.BeanUtils;
@@ -35,7 +34,7 @@ import org.wise.portal.spring.SpringConfiguration;
  */
 public class DbSchemaExporter {
 	
-	static String springConfigClassname = "org.telscenter.sail.webapp.spring.impl.SpringConfigurationImpl";
+	static String springConfigClassname = "org.wise.portal.spring.impl.SpringConfigurationImpl";
 	static String outputFilename = "src/main/resources/tels/wise4-createtables.sql";
     /**
      * @param args

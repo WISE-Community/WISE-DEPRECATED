@@ -22,8 +22,8 @@
  */
 package org.wise.portal.dao.portal.impl;
 
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
+import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.portal.PortalDao;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.portal.impl.PortalImpl;
@@ -37,7 +37,7 @@ public class HibernatePortalDao extends AbstractHibernateDao<Portal> implements 
 	private static final String FIND_ALL_QUERY = "from PortalImpl";
 
 	/**
-	 * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getDataObjectClass()
+	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
 	 */
 	@Override
 	protected Class<? extends Portal> getDataObjectClass() {
@@ -45,7 +45,7 @@ public class HibernatePortalDao extends AbstractHibernateDao<Portal> implements 
 	}
 
 	/**
-	 * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getFindAllQuery()
+	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
 	 */
 	@Override
 	protected String getFindAllQuery() {

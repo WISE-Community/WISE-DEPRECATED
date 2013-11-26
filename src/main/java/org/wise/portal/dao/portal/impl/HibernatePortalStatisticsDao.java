@@ -2,10 +2,10 @@ package org.wise.portal.dao.portal.impl;
 
 import java.util.List;
 
+import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.portal.PortalStatisticsDao;
 import org.wise.portal.domain.portal.PortalStatistics;
 
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 public class HibernatePortalStatisticsDao extends AbstractHibernateDao<PortalStatistics> implements PortalStatisticsDao<PortalStatistics> {
 

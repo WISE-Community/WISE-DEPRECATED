@@ -30,8 +30,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
-
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.Schoollevel;
 

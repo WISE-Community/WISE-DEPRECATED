@@ -22,24 +22,20 @@
  */
 package org.wise.portal.dao.offering.impl;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.springframework.dao.support.DataAccessUtils;
-import org.wise.portal.dao.offering.RunDao;
-import org.wise.portal.domain.Run;
-import org.wise.portal.domain.impl.RunImpl;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
+import org.springframework.dao.support.DataAccessUtils;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.impl.AbstractHibernateDao;
+import org.wise.portal.dao.offering.RunDao;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.impl.RunImpl;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * DAO for WISE run, which extends offering
@@ -53,7 +49,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	private static final String FIND_ALL_QUERY = "from RunImpl";
 
 	/**
-	 * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getFindAllQuery()
+	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
 	 */
 	@Override
 	protected String getFindAllQuery() {
@@ -77,7 +73,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	}
 
 	/**
-	 * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getDataObjectClass()
+	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
 	 */
 	@Override
 	protected Class<RunImpl> getDataObjectClass() {

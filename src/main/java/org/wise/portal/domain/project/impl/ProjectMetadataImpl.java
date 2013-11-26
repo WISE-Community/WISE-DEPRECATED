@@ -33,9 +33,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.wise.portal.domain.project.ProjectMetadata;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wise.portal.domain.project.ProjectMetadata;
 
 /**
  * @author patrick lawler

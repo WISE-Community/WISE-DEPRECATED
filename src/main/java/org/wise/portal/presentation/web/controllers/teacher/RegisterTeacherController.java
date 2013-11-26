@@ -32,11 +32,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.mail.IMailFacade;
-import net.sf.sail.webapp.service.UserService;
-import net.sf.sail.webapp.service.authentication.DuplicateUsernameException;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.validation.BindException;
@@ -45,7 +40,11 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.domain.authentication.Curriculumsubjects;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.TeacherAccountForm;
+import org.wise.portal.service.authentication.DuplicateUsernameException;
+import org.wise.portal.service.mail.IMailFacade;
+import org.wise.portal.service.user.UserService;
 
 /**
  * Signup controller for TELS teacher user

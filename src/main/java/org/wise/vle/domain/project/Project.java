@@ -11,8 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.vle.domain.node.Node;
-
-import utils.FileManager;
+import org.wise.vle.utils.FileManager;
 
 /**
  * Project Domain Object to encapsulate WISE LD Project

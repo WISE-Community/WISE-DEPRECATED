@@ -21,9 +21,8 @@ import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
-
-import utils.SecurityUtils;
-import utils.VLEDataUtils;
+import org.wise.vle.utils.SecurityUtils;
+import org.wise.vle.utils.VLEDataUtils;
 
 /**
  * Servlet for handling POSTed vle data

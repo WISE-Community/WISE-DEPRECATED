@@ -24,9 +24,9 @@ package org.wise.portal.service.portal.impl;
 
 import java.io.Serializable;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.portal.PortalDao;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.service.portal.PortalService;

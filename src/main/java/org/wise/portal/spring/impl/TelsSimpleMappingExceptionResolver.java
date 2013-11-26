@@ -34,10 +34,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.mail.IMailFacade;
+import org.wise.portal.service.mail.IMailFacade;
 
 /**
  * Resolves Exceptions by gathering the following information and
@@ -51,7 +51,7 @@ import net.sf.sail.webapp.mail.IMailFacade;
  * @version $Id$
  */
 public class TelsSimpleMappingExceptionResolver extends
-		PasSimpleMappingExceptionResolver {
+	SimpleMappingExceptionResolver {
 	
 	protected IMailFacade javaMail;
 

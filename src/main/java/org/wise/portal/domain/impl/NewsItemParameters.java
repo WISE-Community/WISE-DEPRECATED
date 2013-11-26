@@ -25,7 +25,7 @@ package org.wise.portal.domain.impl;
 import java.io.Serializable;
 import java.util.Date;
 
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.user.User;
 
 /**
  * @author patrick lawler

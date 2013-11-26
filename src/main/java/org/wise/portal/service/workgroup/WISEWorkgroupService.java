@@ -24,16 +24,12 @@ package org.wise.portal.service.workgroup;
 
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
 
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
-
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
-import net.sf.sail.webapp.service.workgroup.WorkgroupService;
 
 /**
  * An extended <code>WorkgroupService</code> for WISEWorkgroups
@@ -56,18 +52,4 @@ public interface WISEWorkgroupService extends WorkgroupService {
 	 */
 	public WISEWorkgroup createWISEWorkgroup(String name, Set<User> members, Run run, Group period) throws ObjectNotFoundException;
 	
-	/**
-	 * Generates the url string that users need to go to get the given workgroups' work as PDF
-	 * 
-	 * @param httpRestTransport
-	 * @param request request that was made
-	 * @param run <code>Run</code> that the user is in
-	 * @param workgroup <code>Workgroup</code> that the user is in
-	 * @param retrieveAnnotationBundleUrl
-	 * @returnurl String url representation to download the jnlp and start
-     *     the project
-	 * 
-	 * @return
-	 */
-	public String generateWorkgroupWorkPdfUrlString(HttpRestTransport httpRestTransport, HttpServletRequest request, WISEWorkgroup workgroup);
 }

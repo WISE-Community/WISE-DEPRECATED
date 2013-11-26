@@ -28,14 +28,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.userinfo.UserInfoDao;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;

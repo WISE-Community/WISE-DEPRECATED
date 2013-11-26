@@ -33,10 +33,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.UserService;
-import net.sf.sail.webapp.service.authentication.DuplicateUsernameException;
 
 import org.hibernate.StaleObjectStateException;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -46,13 +42,17 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.AccountQuestion;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.impl.Projectcode;
+import org.wise.portal.domain.project.impl.Projectcode;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.StudentAccountForm;
+import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.student.StudentService;
+import org.wise.portal.service.user.UserService;
 
 /**
  * Signup controller for TELS student user

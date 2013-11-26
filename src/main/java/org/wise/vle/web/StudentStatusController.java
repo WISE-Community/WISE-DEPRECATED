@@ -16,8 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.status.StudentStatus;
-
-import utils.SecurityUtils;
+import org.wise.vle.utils.SecurityUtils;
 
 public class StudentStatusController extends AbstractController {
 	private static final long serialVersionUID = 1L;

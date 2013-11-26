@@ -25,7 +25,7 @@ package org.telscenter.sail.webapp.service.module.impl;
 import org.easymock.EasyMock;
 import org.wise.portal.service.module.impl.ModuleServiceImpl;
 
-import net.sf.sail.webapp.dao.curnit.CurnitDao;
+import org.wise.portal.dao.module.CurnitDao;
 import net.sf.sail.webapp.domain.Curnit;
 import junit.framework.TestCase;
 

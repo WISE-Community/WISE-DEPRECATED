@@ -27,8 +27,7 @@ import org.wise.vle.domain.project.Project;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.domain.work.StepWorkCache;
-
-import utils.SecurityUtils;
+import org.wise.vle.utils.SecurityUtils;
 
 /**
  * Servlet for handling GETting of vle data

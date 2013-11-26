@@ -34,31 +34,24 @@ import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
-import net.sf.sail.webapp.service.AclService;
-import net.sf.sail.webapp.service.NotAuthorizedException;
-import net.sf.sail.webapp.service.UserService;
-import net.sf.sail.webapp.service.curnit.CurnitService;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.AlreadyExistsException;
 import org.springframework.security.acls.model.NotFoundException;
 import org.springframework.security.acls.model.Permission;
-import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.ProjectDao;
-import org.wise.portal.domain.Run;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
-import org.wise.portal.domain.impl.ProjectParameters;
-import org.wise.portal.domain.impl.RunParameters;
+import org.wise.portal.domain.module.Curnit;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectInfo;
@@ -66,17 +59,23 @@ import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.AuthorProjectParameters;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
-import org.wise.portal.domain.project.impl.LaunchReportParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
+import org.wise.portal.domain.project.impl.ProjectParameters;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.impl.RunParameters;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.util.http.Connector;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.premadecomment.PremadeCommentService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.tag.TagService;
+import org.wise.portal.service.user.UserService;
 
 /**
  * @author patrick lawler
@@ -580,11 +579,6 @@ public class LdProjectServiceImpl implements ProjectService {
 	 */
 	public void setRunService(RunService runService) {
 		this.runService = runService;
-	}
-
-	public Object launchReport(LaunchReportParameters launchReportParameters) {
-		// do nothing for now
-		return null;
 	}
 	
 	/**

@@ -42,7 +42,7 @@ public abstract class AbstractTransactionalDaoTests<DAO extends SimpleDao<OBJECT
 
 	/**
 	 * Test method for
-	 * {@link net.sf.sail.webapp.dao.impl.AbstractHibernateDao#delete(java.lang.Object)}.
+	 * {@link org.wise.portal.dao.impl.AbstractHibernateDao#delete(java.lang.Object)}.
 	 */
 	public void testDelete() {
 		this.verifyDataStoreIsEmpty();
@@ -61,13 +61,13 @@ public abstract class AbstractTransactionalDaoTests<DAO extends SimpleDao<OBJECT
 
 	/**
 	 * Test method for
-	 * {@link net.sf.sail.webapp.dao.impl.AbstractHibernateDao#save(java.lang.Object)}.
+	 * {@link org.wise.portal.dao.impl.AbstractHibernateDao#save(java.lang.Object)}.
 	 */
 	public abstract void testSave();
 
 	/**
 	 * Test method for
-	 * {@link net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getList()}.
+	 * {@link org.wise.portal.dao.impl.AbstractHibernateDao#getList()}.
 	 */
 	public void testGetList() {
 		this.verifyDataStoreIsEmpty();
@@ -85,7 +85,7 @@ public abstract class AbstractTransactionalDaoTests<DAO extends SimpleDao<OBJECT
 
 	/**
 	 * Test method for
-	 * {@link net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getById(java.lang.Long)}.
+	 * {@link org.wise.portal.dao.impl.AbstractHibernateDao#getById(java.lang.Long)}.
 	 */
 	public void testGetById() throws Exception {
 		this.verifyDataStoreIsEmpty();

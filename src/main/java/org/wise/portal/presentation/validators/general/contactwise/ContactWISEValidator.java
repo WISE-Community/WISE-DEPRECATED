@@ -24,16 +24,10 @@ package org.wise.portal.presentation.validators.general.contactwise;
 
 import java.util.regex.Pattern;
 
-import net.sf.sail.webapp.domain.User;
-
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.general.contactwise.ContactWISE;
-import org.wise.portal.domain.general.contactwise.impl.ContactWISEGeneral;
 import org.wise.portal.domain.general.contactwise.impl.ContactWISEProject;
 
 /**

@@ -67,7 +67,7 @@ public class HibernateAclEntryDaoTest extends AbstractTransactionalDaoTests<Hibe
     }
 
     /**
-     * Test method for {@link net.sf.sail.webapp.dao.impl.AbstractHibernateDao#save(java.lang.Object)}.
+     * Test method for {@link org.wise.portal.dao.impl.AbstractHibernateDao#save(java.lang.Object)}.
      */
     public void testSave() {
         this.dao.save(dataObject);

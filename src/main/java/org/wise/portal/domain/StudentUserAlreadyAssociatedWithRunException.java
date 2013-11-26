@@ -22,7 +22,8 @@
  */
 package org.wise.portal.domain;
 
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 
 /**
  * A checked exception that gets thrown when the student that was to be

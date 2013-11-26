@@ -31,18 +31,16 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.service.UserService;
-import net.sf.sail.webapp.service.group.GroupService;
-
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.Run;
+import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;
 
 /**

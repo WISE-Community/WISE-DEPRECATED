@@ -23,8 +23,8 @@
 package org.wise.portal.presentation.validators.teacher;
 
 import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
 import org.wise.portal.domain.impl.ChangePeriodParameters;
 
 /**

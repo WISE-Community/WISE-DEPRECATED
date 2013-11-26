@@ -22,8 +22,8 @@
  */
 package org.wise.portal.dao.newsitem.impl;
 
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
+import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.newsitem.NewsItemDao;
 import org.wise.portal.domain.newsitem.NewsItem;
 import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
@@ -37,7 +37,7 @@ public class HibernateNewsItemDao extends AbstractHibernateDao<NewsItem> impleme
 	private static final String FIND_ALL_QUERY = "from NewsItemImpl";
 	
 	/**
-	 * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getFindAllQuery()
+	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
 	 */
 	@Override
 	protected String getFindAllQuery() {
@@ -45,7 +45,7 @@ public class HibernateNewsItemDao extends AbstractHibernateDao<NewsItem> impleme
 	}
 
 	/**
-	 * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getDataObjectClass()
+	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
 	 */
 	@Override
 	protected Class<NewsItemImpl> getDataObjectClass() {

@@ -22,9 +22,8 @@
  */
 package org.wise.portal.dao.module;
 
-import org.wise.portal.domain.Module;
 
-import net.sf.sail.webapp.dao.curnit.CurnitDao;
+import org.wise.portal.domain.module.Module;
 
 /**
  * @author Hiroki Terashima

@@ -7,20 +7,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.service.workgroup.WorkgroupService;
 
-import org.wise.portal.domain.Run;
-import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 public class RunUtil {
 

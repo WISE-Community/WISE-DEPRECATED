@@ -25,7 +25,7 @@ package org.wise.portal.presentation.validators.teacher;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.wise.portal.domain.impl.StartRunParameters;
+import org.wise.portal.domain.run.impl.StartRunParameters;
 
 /**
  * Validator for teacher's StartRunParameters transfer object

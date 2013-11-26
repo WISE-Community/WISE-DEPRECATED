@@ -13,13 +13,9 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.mail.IMailFacade;
-
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.wise.portal.domain.Run;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.general.contactwise.IssueType;
@@ -27,6 +23,9 @@ import org.wise.portal.domain.general.contactwise.OperatingSystem;
 import org.wise.portal.domain.general.contactwise.WebBrowser;
 import org.wise.portal.domain.general.contactwise.impl.ContactWISEProject;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 
@@ -97,7 +96,7 @@ public class ContactWiseProjectController extends SimpleFormController {
 			//loop through the run owners
 			while(runOwnersIterator.hasNext()) {
 				User runOwner = runOwnersIterator.next();
-				net.sf.sail.webapp.domain.authentication.MutableUserDetails userDetails = runOwner.getUserDetails();
+				MutableUserDetails userDetails = runOwner.getUserDetails();
 				
 				//get the run owner email address
 				String emailAddress = userDetails.getEmailAddress();

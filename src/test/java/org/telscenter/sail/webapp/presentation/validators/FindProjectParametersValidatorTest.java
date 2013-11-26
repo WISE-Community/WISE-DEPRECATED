@@ -35,7 +35,7 @@ import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.presentation.validators.FindProjectParametersValidator;
 import org.wise.portal.service.project.ProjectService;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
+import org.wise.portal.dao.ObjectNotFoundException;
 
 /**
  * @author patrick lawler

@@ -22,36 +22,26 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.management;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.UserService;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractWizardFormController;
-import org.wise.portal.domain.Module;
-import org.wise.portal.domain.Run;
-import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
-import org.wise.portal.domain.impl.DefaultPeriodNames;
-import org.wise.portal.domain.impl.RunParameters;
-import org.wise.portal.domain.impl.RunPermission;
-import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.impl.RunPermission;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.user.UserService;
 
 /**
  * @author Sally Ahn

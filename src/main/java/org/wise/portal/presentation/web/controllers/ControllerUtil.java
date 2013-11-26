@@ -19,13 +19,12 @@ package org.wise.portal.presentation.web.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.UserService;
-
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.servlet.ModelAndView;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.user.UserService;
 
 /**
  * @author Laurel Williams

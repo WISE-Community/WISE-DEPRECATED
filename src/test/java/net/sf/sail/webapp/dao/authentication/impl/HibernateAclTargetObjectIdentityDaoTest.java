@@ -91,7 +91,7 @@ public class HibernateAclTargetObjectIdentityDaoTest
 
     /**
      * Test method for
-     * {@link net.sf.sail.webapp.dao.authentication.impl.HibernateAclTargetObjectIdentityDao#findChildren(org.acegisecurity.acls.objectidentity.ObjectIdentity)}.
+     * {@link org.wise.portal.dao.authentication.impl.HibernateAclTargetObjectIdentityDao#findChildren(org.acegisecurity.acls.objectidentity.ObjectIdentity)}.
      */
     public void testFindChildren() {
         try {
@@ -124,7 +124,7 @@ public class HibernateAclTargetObjectIdentityDaoTest
 
     /**
      * Test method for
-     * {@link net.sf.sail.webapp.dao.impl.AbstractHibernateDao#save(java.lang.Object)}.
+     * {@link org.wise.portal.dao.impl.AbstractHibernateDao#save(java.lang.Object)}.
      */
     public void testSave() {
         this.verifyDataStoreIsEmpty();

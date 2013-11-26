@@ -24,9 +24,9 @@ package org.wise.portal.dao.userinfo;
 
 import java.util.List;
 
+import org.wise.portal.dao.SimpleDao;
 import org.wise.vle.domain.user.UserInfo;
 
-import net.sf.sail.webapp.dao.SimpleDao;
 
 
 /**

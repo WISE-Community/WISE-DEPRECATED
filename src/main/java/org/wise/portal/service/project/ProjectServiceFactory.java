@@ -22,10 +22,9 @@
  */
 package org.wise.portal.service.project;
 
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.impl.CurnitImpl;
-
-import org.wise.portal.domain.impl.UrlModuleImpl;
+import org.wise.portal.domain.module.Curnit;
+import org.wise.portal.domain.module.impl.CurnitImpl;
+import org.wise.portal.domain.module.impl.UrlModuleImpl;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.project.impl.ProjectTypeVisitor;

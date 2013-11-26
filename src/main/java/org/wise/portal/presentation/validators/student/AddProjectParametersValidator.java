@@ -25,8 +25,8 @@ package org.wise.portal.presentation.validators.student;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.wise.portal.domain.impl.AddProjectParameters;
-import org.wise.portal.domain.impl.Projectcode;
+import org.wise.portal.domain.project.impl.AddProjectParameters;
+import org.wise.portal.domain.project.impl.Projectcode;
 
 /**
  * Validator for student's AddProjectParameters

@@ -25,9 +25,8 @@ package org.wise.portal.domain.project.impl;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.user.User;
 
 /**
  * Parameters required to author a project

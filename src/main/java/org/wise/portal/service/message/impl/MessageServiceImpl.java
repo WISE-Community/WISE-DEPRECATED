@@ -31,16 +31,16 @@ import java.util.Set;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.mail.IMailFacade;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.message.MessageDao;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.message.Message;
 import org.wise.portal.domain.message.MessageRecipient;
 import org.wise.portal.domain.message.impl.MessageImpl;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.message.MessageService;
 
 /**

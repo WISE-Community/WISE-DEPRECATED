@@ -24,13 +24,13 @@ package org.wise.portal.dao.premadecomment.impl;
 
 import java.util.List;
 
+
+import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.premadecomment.PremadeCommentDao;
-import org.wise.portal.domain.Run;
 import org.wise.portal.domain.premadecomment.PremadeComment;
 import org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl;
-
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 
 /**
  * @author patrick lawler
@@ -41,7 +41,7 @@ public class HibernatePremadeCommentDao extends AbstractHibernateDao<PremadeComm
 	private static final String FIND_ALL_QUERY = "from PremadeCommentImpl";
 
 	/**
-	 * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getFindAllQuery()
+	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
 	 */
 	@Override
 	protected String getFindAllQuery() {
@@ -65,7 +65,7 @@ public class HibernatePremadeCommentDao extends AbstractHibernateDao<PremadeComm
 	}
 	
 	/**
-	 * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getDataObjectClass()
+	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
 	 */
 	@Override
 	protected Class<PremadeCommentImpl> getDataObjectClass() {

@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.wise.vle.VLEServlet;
 import org.wise.vle.domain.xmpp.ChatLog;
-
-import utils.SecurityUtils;
+import org.wise.vle.utils.SecurityUtils;
 
 public class ChatLogController extends VLEServlet {
 

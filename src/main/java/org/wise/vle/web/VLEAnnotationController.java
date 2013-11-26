@@ -29,8 +29,7 @@ import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.webservice.crater.CRaterHttpClient;
 import org.wise.vle.domain.work.StepWork;
-
-import utils.SecurityUtils;
+import org.wise.vle.utils.SecurityUtils;
 
 /**
  * Controllers for handling Annotation GET and POST 

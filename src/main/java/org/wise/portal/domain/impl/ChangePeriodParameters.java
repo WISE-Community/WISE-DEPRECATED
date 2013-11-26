@@ -24,9 +24,8 @@ package org.wise.portal.domain.impl;
 
 import java.io.Serializable;
 
-import org.wise.portal.domain.Run;
-
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 
 /**
  * @author patrick lawler

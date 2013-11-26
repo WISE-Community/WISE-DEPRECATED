@@ -26,12 +26,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-import org.wise.portal.domain.Run;
+import org.wise.portal.domain.Persistable;
+import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.project.impl.ProjectType;
-
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.Persistable;
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 
 /**
  * A WISE Project domain object

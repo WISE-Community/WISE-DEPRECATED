@@ -2,9 +2,9 @@ package org.wise.portal.dao.attendance;
 
 import java.util.List;
 
+import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.attendance.StudentAttendance;
 
-import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface StudentAttendanceDao<T extends StudentAttendance> extends SimpleDao<T> {
 

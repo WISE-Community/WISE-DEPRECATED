@@ -18,7 +18,7 @@
 package net.sf.sail.webapp.presentation.web.controllers.admin;
 
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
+import org.wise.portal.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.Offering;
 import net.sf.sail.webapp.domain.impl.AdminOfferingParameters;
 import net.sf.sail.webapp.domain.impl.OfferingImpl;

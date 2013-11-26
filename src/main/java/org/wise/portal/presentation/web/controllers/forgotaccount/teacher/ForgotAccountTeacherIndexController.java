@@ -33,10 +33,6 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.mail.JavaMailHelper;
-import net.sf.sail.webapp.service.UserService;
-
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.MessageSource;
@@ -44,6 +40,9 @@ import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.mail.MailService;
+import org.wise.portal.service.user.UserService;
 
 /**
  * Controller for lost password teacher username and email lookup
@@ -56,7 +55,7 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 	private static final String EMAIL = "email";
 	private static final String USERNAME = "username";
 	protected UserService userService = null;
-	protected JavaMailHelper javaMail = null;
+	protected MailService javaMail = null;
 	private Properties portalProperties;
 	private MessageSource messageSource;
 	
@@ -67,7 +66,7 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 	 * 
 	 * @return
 	 */
-	public JavaMailHelper getJavaMail() {
+	public MailService getJavaMail() {
 		return javaMail;
 	}
 
@@ -76,7 +75,7 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 	 * 
 	 * @param javaMail
 	 */
-	public void setJavaMail(JavaMailHelper javaMail) {
+	public void setJavaMail(MailService javaMail) {
 		this.javaMail = javaMail;
 	}
 

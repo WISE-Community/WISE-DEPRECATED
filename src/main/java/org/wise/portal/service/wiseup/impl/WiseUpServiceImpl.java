@@ -38,18 +38,17 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.curnit.CurnitService;
-
 import org.apache.commons.io.FileUtils;
-import org.wise.portal.domain.impl.CreateUrlModuleParameters;
-import org.wise.portal.domain.impl.ProjectParameters;
+import org.json.JSONObject;
+import org.wise.portal.domain.module.Curnit;
+import org.wise.portal.domain.module.impl.CreateUrlModuleParameters;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
+import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
-import org.json.JSONObject;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.wiseup.WiseUpService;
 

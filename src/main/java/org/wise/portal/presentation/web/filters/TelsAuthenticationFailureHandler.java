@@ -35,8 +35,6 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpSession;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.UserService;
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaFactory;
 
@@ -46,6 +44,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.user.UserService;
 
 /**
  * @author hirokiterashima

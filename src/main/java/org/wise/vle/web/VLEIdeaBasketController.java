@@ -15,8 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
-
-import utils.SecurityUtils;
+import org.wise.vle.utils.SecurityUtils;
 
 public class VLEIdeaBasketController extends AbstractController {
 

@@ -24,9 +24,7 @@ package org.wise.portal.domain.project.impl;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
-
-import org.wise.portal.domain.Run;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 
 /**

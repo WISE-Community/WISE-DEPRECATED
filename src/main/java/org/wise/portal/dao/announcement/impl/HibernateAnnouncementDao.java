@@ -22,9 +22,9 @@
  */
 package org.wise.portal.dao.announcement.impl;
 
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 import org.wise.portal.dao.announcement.AnnouncementDao;
+import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.announcement.impl.AnnouncementImpl;
 
@@ -37,7 +37,7 @@ public class HibernateAnnouncementDao extends AbstractHibernateDao<Announcement>
 	private final static String FIND_ALL_QUERY = "from AnnouncementImpl";
 	
 	/**
-	 * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getFindAllQuery()
+	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
 	 */
 	@Override
 	protected String getFindAllQuery() {
@@ -45,7 +45,7 @@ public class HibernateAnnouncementDao extends AbstractHibernateDao<Announcement>
 	}
 	
 	/**
-	 * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getDataObjectClass()
+	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
 	 */
 	@Override
 	protected Class<AnnouncementImpl> getDataObjectClass() {

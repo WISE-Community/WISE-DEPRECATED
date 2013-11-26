@@ -24,13 +24,9 @@ package org.wise.portal.presentation.web.controllers.teacher.management;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.sail.webapp.domain.User;
-
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindException;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.TeacherAccountForm;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.teacher.RegisterTeacherController;

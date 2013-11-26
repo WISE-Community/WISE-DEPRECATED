@@ -3,8 +3,7 @@ package org.wise.portal.domain.attendance;
 import java.util.Date;
 
 import org.json.JSONObject;
-
-import net.sf.sail.webapp.domain.Persistable;
+import org.wise.portal.domain.Persistable;
 
 public interface StudentAttendance extends Persistable  {
 

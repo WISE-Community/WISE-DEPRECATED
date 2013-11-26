@@ -33,11 +33,8 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.wise.portal.domain.Run;
-import org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl;
-
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.impl.OfferingImpl;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 
 /**
  * @author patrick lawler

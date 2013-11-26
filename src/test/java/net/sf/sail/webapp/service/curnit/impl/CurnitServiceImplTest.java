@@ -21,8 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.TestCase;
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.curnit.CurnitDao;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.module.CurnitDao;
 import net.sf.sail.webapp.domain.Curnit;
 import net.sf.sail.webapp.domain.impl.CurnitImpl;
 import net.sf.sail.webapp.domain.impl.CurnitParameters;

@@ -24,8 +24,8 @@ package org.wise.portal.domain.impl;
 
 import java.io.Serializable;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * @author Sally Ahn

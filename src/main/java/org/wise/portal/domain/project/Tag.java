@@ -24,7 +24,7 @@ package org.wise.portal.domain.project;
 
 import java.io.Serializable;
 
-import net.sf.sail.webapp.domain.Persistable;
+import org.wise.portal.domain.Persistable;
 
 /**
  * @author patrick lawler

@@ -5,12 +5,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.UserService;
-
+import org.json.JSONArray;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.json.JSONArray;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.user.UserService;
 
 public class CheckForExistingAccountController extends AbstractController {
 

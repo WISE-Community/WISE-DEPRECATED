@@ -24,8 +24,8 @@ package org.wise.portal.service.announcement;
 
 import java.util.Set;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
 
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.impl.AnnouncementParameters;
 
