@@ -1,6 +1,6 @@
 jQuery.i18n.properties({
-    name:'ui-html', 
-    path:'/resources/messages/tels/', 
+    name:'i18n', 
+    path:'/resources/messages/', 
     mode:'both'
 });
 

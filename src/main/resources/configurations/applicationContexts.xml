@@ -979,7 +979,7 @@
 		scope="prototype" />
 
 <util:properties id="uihtmlproperties"
-		location="classpath:messages/ui-html_en_US.properties" />
+		location="classpath:messages/i18n_en_US.properties" />
 
 	<util:properties id="wiseProperties" location="classpath:wise.properties" />
 
