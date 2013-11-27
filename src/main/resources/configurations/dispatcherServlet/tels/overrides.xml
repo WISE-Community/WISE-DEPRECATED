@@ -220,6 +220,7 @@
 				/getExport.html=getExportController
 				/getSpecialExport.html=getSpecialExportController
 				/peerReview.html=peerReviewController
+				/assetManager.html=assetManagerController
 				/**/*.html=urlFilenameViewController
     		</value>
     	</property>

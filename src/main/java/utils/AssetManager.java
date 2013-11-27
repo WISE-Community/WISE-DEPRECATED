@@ -13,11 +13,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
+import net.sf.sail.webapp.domain.User;
+import net.sf.sail.webapp.domain.Workgroup;
+import net.sf.sail.webapp.service.workgroup.WorkgroupService;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -26,6 +30,12 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.domain.Run;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.controllers.CredentialManager;
+import org.wise.portal.service.offering.RunService;
 
 /**
  * Servlet implementation class AssetManager
@@ -33,7 +43,7 @@ import org.json.JSONObject;
  * @author Patrick Lawler
  * @author Geoffrey Kwan
  */
-public class AssetManager extends HttpServlet implements Servlet{
+public class AssetManager extends AbstractController {
 	private static final long serialVersionUID = 1L;
 
 	private final static String COMMAND = "command";
@@ -44,24 +54,17 @@ public class AssetManager extends HttpServlet implements Servlet{
 
 	private final static String FAILED = "failed";
 
-	private static Properties vleProperties = null;
+	private Properties portalProperties;
+	
+	private RunService runService;
+	
+	private WorkgroupService workgroupService;
 
 	private static final String DEFAULT_DIRNAME = "assets";
 
 	private boolean standAlone = true;
 
 	private boolean modeRetrieved = false;
-
-	{
-		try {
-			// Read properties file.
-			vleProperties = new Properties();
-			vleProperties.load(getClass().getClassLoader().getResourceAsStream("wise.properties"));
-		} catch (Exception e) {
-			System.err.println("AssetsManager could not read in vleProperties file");
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -70,21 +73,34 @@ public class AssetManager extends HttpServlet implements Servlet{
 		super();
 	}
 
+
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if (request.getMethod() == AbstractController.METHOD_GET) {
+			return doGet(request, response);
+		} else if (request.getMethod() == AbstractController.METHOD_POST) {
+			return doPost(request, response);
+		}
+		return null;
+	}
+	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.doPost(request, response);
+	protected ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return this.doPost(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(!this.modeRetrieved){
 			this.standAlone = !SecurityUtils.isPortalMode(request);
 			this.modeRetrieved = true;
 		}
+		
+		setAttributes(request, response);
 
 		if(this.standAlone || SecurityUtils.isAuthenticated(request)){
 			this.doRequest(request, response);
@@ -92,9 +108,64 @@ public class AssetManager extends HttpServlet implements Servlet{
 			/* not authenticated send not authorized status */
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 		}
+		
+		return null;
+	}
+	
+	private void setAttributes(HttpServletRequest request, HttpServletResponse response) {
+		String type = request.getParameter("type");
+		
+		if(type == null) {
+			
+		} else if(type.equals("viewStudentAssets")) {
+			String studentuploads_base_dir = getPortalProperties().getProperty("studentuploads_base_dir");
+			
+			if(studentuploads_base_dir != null) {
+				request.setAttribute("studentuploads_base_dir", studentuploads_base_dir);
+			}
+			
+			// workgroups is a ":" separated string of workgroups
+			String workgroups = request.getParameter("workgroups");
+
+			request.setAttribute("dirName", workgroups);
+		} else if(type.equals("studentAssetManager")) {
+			String studentuploads_base_dir = getPortalProperties().getProperty("studentuploads_base_dir");
+			
+			if(studentuploads_base_dir != null) {
+				request.setAttribute("studentuploads_base_dir", studentuploads_base_dir);
+			}
+			
+			User user = ControllerUtil.getSignedInUser();
+			
+			//get the run
+			String runId = request.getParameter("runId");
+			Run run = null;
+			try {
+				run = getRunService().retrieveById(new Long(runId));
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (ObjectNotFoundException e) {
+				e.printStackTrace();
+			}
+			
+			//get the workgroup id
+			List<Workgroup> workgroupListByOfferingAndUser = getWorkgroupService().getWorkgroupListByOfferingAndUser(run, user);
+			Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
+			Long workgroupId = workgroup.getId();
+			
+			request.setAttribute("dirName", run.getId()+"/"+workgroupId+"/unreferenced");  // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
+			
+			String commandParamter = request.getParameter("command");
+			if (commandParamter != null && "studentAssetCopyForReference".equals(commandParamter)) {
+				request.setAttribute("referencedDirName", run.getId()+"/"+workgroupId+"/referenced");  // if we're copying student asset for reference, also pass along the referenced dir. looks like /studentuploads/[runId]/[workgroupId]/referenced				
+			}
+		}
 	}
 
 	protected void doRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		User user = ControllerUtil.getSignedInUser();
+		CredentialManager.setRequestCredentials(request, user);
+		
 		String command = request.getParameter(COMMAND);
 
 		String path = request.getParameter(PATH);
@@ -147,10 +218,10 @@ public class AssetManager extends HttpServlet implements Servlet{
 		ServletFileUpload uploader = new ServletFileUpload(new DiskFileItemFactory());
 		
 		//get the global max project size, we will default to 15MB if none is provided in the wise.properties file
-		Long projectMaxAssetsSize = new Long(vleProperties.getProperty("project_max_total_assets_size", "15728640"));
+		Long projectMaxAssetsSize = new Long(portalProperties.getProperty("project_max_total_assets_size", "15728640"));
 		
 		//get the global max student assets folder size, we will default to 20MB if none is provided in the wise.properties file
-		Long studentMaxAssetsSize = new Long(vleProperties.getProperty("student_max_total_assets_size", "2097152"));
+		Long studentMaxAssetsSize = new Long(portalProperties.getProperty("student_max_total_assets_size", "2097152"));
 		Long maxSize = projectMaxAssetsSize;
 		String folderPath = "";
 		String path = "";
@@ -608,5 +679,31 @@ public class AssetManager extends HttpServlet implements Servlet{
 			} else {
 				return String.valueOf(size) + " b";
 			}
+		}
+
+		public RunService getRunService() {
+			return runService;
+		}
+
+		public void setRunService(RunService runService) {
+			this.runService = runService;
+		}
+
+		public WorkgroupService getWorkgroupService() {
+			return workgroupService;
+		}
+
+		public void setWorkgroupService(WorkgroupService workgroupService) {
+			this.workgroupService = workgroupService;
+		}
+
+
+		public Properties getPortalProperties() {
+			return portalProperties;
+		}
+
+
+		public void setPortalProperties(Properties portalProperties) {
+			this.portalProperties = portalProperties;
 		}
 	}

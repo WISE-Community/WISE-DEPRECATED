@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,6 +20,10 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
+import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
+import net.sf.sail.webapp.service.workgroup.WorkgroupService;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -32,6 +37,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.attendance.StudentAttendance;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.ProjectMetadata;
+import org.wise.portal.presentation.web.controllers.run.RunUtil;
+import org.wise.portal.service.attendance.StudentAttendanceService;
+import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
@@ -52,7 +64,15 @@ public class VLEGetXLS extends AbstractController {
 
 	private static final long serialVersionUID = 1L;
 	
+	private Properties portalProperties;
+	
 	private VLEService vleService;
+	
+	private RunService runService;
+	
+	private WorkgroupService workgroupService;
+	
+	private StudentAttendanceService studentAttendanceService;
 	
 	//the max number of step work columns we need, only used for "allStudentWork"
 	private int maxNumberOfStepWorkParts = 1;
@@ -234,21 +254,65 @@ public class VLEGetXLS extends AbstractController {
 		
 		//obtain the start time for debugging purposes
 		debugStartTime = new Date().getTime();
+		
+		//get the run and project attributes
+		runId = request.getParameter("runId");
+		runName = request.getParameter("runName");
+		projectId = request.getParameter("projectId");
+		projectName = request.getParameter("projectName");
+		parentProjectId = request.getParameter("parentProjectId");
+		
+		//the export type "latestStudentWork" or "allStudentWork"
+		exportType = request.getParameter("exportType");
 
-		//holds the workgroup ids and period ids of the students
-		String classmateUserInfos = (String) request.getAttribute("classmateUserInfos");
+		Run run = null;
+		try {
+			if(runId != null) {
+				//get the run object
+				run = runService.retrieveById(new Long(runId));				
+			}
+		} catch (ObjectNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		
+		Project projectObj = run.getProject();
+		ProjectMetadata metadata = projectObj.getMetadata();
+		String projectMetaDataJSONString = metadata.toJSONString();
+		
+		String curriculumBaseDir = getPortalProperties().getProperty("curriculum_base_dir");
+		String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());		
+		String projectPath = curriculumBaseDir + rawProjectUrl;
+		
+		//get the classmate user infos
+		JSONArray classmateUserInfosJSONArray = RunUtil.getClassmateUserInfos(run, workgroupService, runService);
+		
+		//get the teacher info
+		teacherUserInfoJSONObject = RunUtil.getTeacherUserInfo(run, workgroupService);
+		
+		//get the shared teacher infos
+		JSONArray sharedTeacherUserInfosJSONArray = RunUtil.getSharedTeacherUserInfos(run, workgroupService);
+		
+		//get the run info
+		JSONObject runInfoJSONObject = RunUtil.getRunInfo(run);
+		
+		//get all the student attendance entries for this run
+		List<StudentAttendance> studentAttendanceList = getStudentAttendanceService().getStudentAttendanceByRunId(run.getId());
+		JSONArray studentAttendanceJSONArray = new JSONArray();
 
-		//holds the workgroup id of the teacher
-		String teacherUserInfo = (String) request.getAttribute("teacherUserInfo");
-		
-		//holds the workgroup ids of the shared teachers
-		String sharedTeacherUserInfos = (String) request.getAttribute("sharedTeacherUserInfos");
-		
-		//get the path of the project file on the server
-		String projectPath = (String) request.getAttribute("projectPath");
-		
-		//get the path of the project meta data
-		String projectMetaDataJSONString = (String) request.getAttribute("projectMetaData");
+		/*
+		 * loop through all the student attendance entries so we can
+		 * create JSONObjects out of them to put in our studentAttendanceJSONArray
+		 */
+		for(int x=0; x<studentAttendanceList.size(); x++) {
+			//get a StudenAttendance object
+			StudentAttendance studentAttendance = studentAttendanceList.get(x);
+
+			//get the JSONObject representation
+			JSONObject studentAttendanceJSONObj = studentAttendance.toJSONObject();
+
+			//add it to our array
+			studentAttendanceJSONArray.put(studentAttendanceJSONObj);
+		}
 		
 		if (projectMetaDataJSONString != null) {
 			try {
@@ -259,12 +323,7 @@ public class VLEGetXLS extends AbstractController {
 			}
 		}
 		
-		//holds the run info
-		String runInfo = (String) request.getAttribute("runInfo");
-		
 		try {
-			JSONObject runInfoJSONObject = new JSONObject(runInfo);
-			
 			if(runInfoJSONObject.has("startTime")) {
 				//get the start time as a string
 				String startTimeString = runInfoJSONObject.getString("startTime");
@@ -296,32 +355,11 @@ public class VLEGetXLS extends AbstractController {
 			e1.printStackTrace();
 		}
 		
-		//get the student attendance data which is a JSONArray string
-		String studentAttendanceString = (String) request.getAttribute("studentAttendance");
-		
-		JSONArray studentAttendanceArray = new JSONArray();
-		try {
-			//create the JSONArray from the student attendance data
-			studentAttendanceArray = new JSONArray(studentAttendanceString);
-		} catch (JSONException e1) {
-			e1.printStackTrace();
-		}
-		
 		//parse the student attendance data so we can query it later
-		parseStudentAttendance(studentAttendanceArray);
+		parseStudentAttendance(studentAttendanceJSONArray);
 		
 		//the List that will hold all the workgroup ids
 		Vector<String> workgroupIds = new Vector<String>();
-		
-		//get the run and project attributes
-		runId = request.getParameter("runId");
-		runName = request.getParameter("runName");
-		projectId = request.getParameter("projectId");
-		projectName = request.getParameter("projectName");
-		parentProjectId = request.getParameter("parentProjectId");
-		
-		//the export type "latestStudentWork" or "allStudentWork"
-		exportType = request.getParameter("exportType");
 		
 		//get the file type "xls" or "csv"
 		fileType = request.getParameter("fileType");
@@ -403,10 +441,10 @@ public class VLEGetXLS extends AbstractController {
 			}
 			
 			//get the array of classmates
-			JSONArray classmateUserInfosJSONArray = new JSONArray(classmateUserInfos);
+			//JSONArray classmateUserInfosJSONArray = new JSONArray(classmateUserInfos);
 			
 			//get the teacher user info
-			teacherUserInfoJSONObject = new JSONObject(teacherUserInfo);
+			//teacherUserInfoJSONObject = new JSONObject(teacherUserInfo);
 			
 			//get the owner teacher workgroup id
 			teacherWorkgroupId = teacherUserInfoJSONObject.getString("workgroupId");
@@ -415,7 +453,7 @@ public class VLEGetXLS extends AbstractController {
 			teacherWorkgroupIds.add(teacherWorkgroupId);
 			
 			//get the shared teacher user infos
-			JSONArray sharedTeacherUserInfosJSONArray = new JSONArray(sharedTeacherUserInfos);
+			//JSONArray sharedTeacherUserInfosJSONArray = new JSONArray(sharedTeacherUserInfos);
 			
 			//loop through all the shared teacher user infos
 			for(int z=0; z<sharedTeacherUserInfosJSONArray.length(); z++) {
@@ -9018,5 +9056,37 @@ public class VLEGetXLS extends AbstractController {
 
 	public void setVleService(VLEService vleService) {
 		this.vleService = vleService;
+	}
+
+	public Properties getPortalProperties() {
+		return portalProperties;
+	}
+
+	public void setPortalProperties(Properties portalProperties) {
+		this.portalProperties = portalProperties;
+	}
+
+	public RunService getRunService() {
+		return runService;
+	}
+
+	public void setRunService(RunService runService) {
+		this.runService = runService;
+	}
+
+	public WorkgroupService getWorkgroupService() {
+		return workgroupService;
+	}
+
+	public void setWorkgroupService(WorkgroupService workgroupService) {
+		this.workgroupService = workgroupService;
+	}
+
+	public StudentAttendanceService getStudentAttendanceService() {
+		return studentAttendanceService;
+	}
+
+	public void setStudentAttendanceService(StudentAttendanceService studentAttendanceService) {
+		this.studentAttendanceService = studentAttendanceService;
 	}
 }

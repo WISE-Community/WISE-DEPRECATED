@@ -1,6 +1,7 @@
 package org.wise.vle.web;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,8 @@ import utils.SecurityUtils;
 public class CRaterController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+	
+	private Properties portalProperties;
 
 	/**
 	 * Handle POST requests
@@ -51,12 +54,31 @@ public class CRaterController extends HttpServlet {
 		//get the CRater request type which will be "scoring" or "verify"
 		String cRaterRequestType = request.getParameter("cRaterRequestType");
 		
+		//get the item type which will be "CRATER" or "HENRY"
+		String cRaterItemType = request.getParameter("cRaterItemType");
+		
 		//get the CRater urls
-		String cRaterVerificationUrl = (String) request.getAttribute("cRaterVerificationUrl");
-		String cRaterScoringUrl = (String) request.getAttribute("cRaterScoringUrl");
+		String cRaterVerificationUrl = "";
+		String cRaterScoringUrl = "";
 		
 		//get our client id e.g. "WISETEST"
-		String cRaterClientId = (String) request.getAttribute("cRaterClientId");
+		String cRaterClientId = "";
+		
+		if (cRaterItemType == null || cRaterItemType.equals("CRATER")) {
+			//get the CRater urls
+			cRaterVerificationUrl = portalProperties.getProperty("cRater_verification_url");
+			cRaterScoringUrl = portalProperties.getProperty("cRater_scoring_url");
+			
+			//get our client id e.g. "WISETEST"
+			cRaterClientId = portalProperties.getProperty("cRater_client_id");
+		} else if (cRaterItemType.equals("HENRY")) {
+			//get the CRater urls
+			cRaterVerificationUrl = portalProperties.getProperty("henry_verification_url");
+			cRaterScoringUrl = portalProperties.getProperty("henry_scoring_url");
+			
+			//get our client id e.g. "WISETEST"
+			cRaterClientId = portalProperties.getProperty("henry_client_id");
+		}
 		
 		//get the item id e.g. "Photo_Sun"
 		String itemId = request.getParameter("itemId");
@@ -119,5 +141,13 @@ public class CRaterController extends HttpServlet {
 		String cRaterVerificationResponse = CRaterHttpClient.getCRaterVerificationResponse(cRaterUrl, cRaterClientId, itemId);
 		
 		return cRaterVerificationResponse;
+	}
+
+	public Properties getPortalProperties() {
+		return portalProperties;
+	}
+
+	public void setPortalProperties(Properties portalProperties) {
+		this.portalProperties = portalProperties;
 	}
 }

@@ -10,17 +10,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
+import net.sf.sail.webapp.domain.Workgroup;
+import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.domain.Run;
+import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.project.Project;
@@ -45,6 +53,10 @@ public class VLEGetData extends AbstractController {
 	private boolean standAlone = true;
 
 	private VLEService vleService;
+	
+	private RunService runService;
+	
+	private Properties portalProperties;
 
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -93,7 +105,19 @@ public class VLEGetData extends AbstractController {
 
 		// override userIdStr if user is requesting for aggregate and showAllStudents is requested
 		if ("aggregate".equals(type) && Boolean.parseBoolean(request.getParameter("allStudents"))) {
-			userIdStr = (String) request.getAttribute("userId");  // user id for the entire run is passed in the attribute
+			// request for all students work in run. lookup workgroups in run and construct workgroupIdString
+			String workgroupIdStr = "";
+			try {
+				Set<Workgroup> workgroups = getRunService().getWorkgroups(new Long(runId));
+				for (Workgroup workgroup : workgroups) {
+					workgroupIdStr += workgroup.getId() + ":";
+				}
+				request.setAttribute("userId", workgroupIdStr);
+				
+				userIdStr = workgroupIdStr;
+			} catch (ObjectNotFoundException e) {
+				
+			}	
 		}
 
 		//whether to get the work that has empty states
@@ -162,8 +186,21 @@ public class VLEGetData extends AbstractController {
 				return null;
 			}
 			// now make sure that we can access students' work for all the nodes in the nodeList.
-			String projectPath = (String) request.getAttribute("projectPath"); 	// get the path of the project file on the server
 
+			Run run = null;
+			try {
+				if(runId != null) {
+					//get the run object
+					run = runService.retrieveById(new Long(runId));				
+				}
+			} catch (ObjectNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			
+			//get the path to the project on the server
+			String curriculumBaseDir = getPortalProperties().getProperty("curriculum_base_dir");
+			String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+			String projectPath = curriculumBaseDir + rawProjectUrl;
 
 			File projectFile = new File(projectPath); // create a file handle to the project file
 			Project project = new Project(projectFile); // create a Project object so we can easily get info about the project.
@@ -471,6 +508,22 @@ public class VLEGetData extends AbstractController {
 
 	public void setVleService(VLEService vleService) {
 		this.vleService = vleService;
+	}
+
+	public RunService getRunService() {
+		return runService;
+	}
+
+	public void setRunService(RunService runService) {
+		this.runService = runService;
+	}
+
+	public Properties getPortalProperties() {
+		return portalProperties;
+	}
+
+	public void setPortalProperties(Properties portalProperties) {
+		this.portalProperties = portalProperties;
 	}
 
 }

@@ -548,9 +548,9 @@ public class InformationController extends AbstractController{
 	    	}
 
 	    	//get the url to get idea basket data
-	    	String studentAssetManagerUrl = portalurl + "/wise/bridge/request.html?type=studentAssetManager&runId=" + run.getId().toString();
+	    	String studentAssetManagerUrl = portalurl + "/wise/assetManager.html?type=studentAssetManager&runId=" + run.getId().toString();
 
-	    	String viewStudentAssetsUrl = portalurl + "/wise/bridge/request.html?type=viewStudentAssets&runId=" + run.getId().toString();
+	    	String viewStudentAssetsUrl = portalurl + "/wise/assetManager.html?type=viewStudentAssets&runId=" + run.getId().toString();
 	    	
 	    	// url to authenticate with WISE XMPP
 	    	String wiseXMPPAuthenticateUrl = portalurl + "/wise/bridge/request.html?type=xmppAuthenticate&runId=" + run.getId().toString();

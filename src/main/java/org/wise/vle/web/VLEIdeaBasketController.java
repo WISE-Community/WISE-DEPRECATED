@@ -1,6 +1,7 @@
 package org.wise.vle.web;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,11 +9,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.domain.Run;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
 
@@ -23,6 +29,8 @@ public class VLEIdeaBasketController extends AbstractController {
 	private static final long serialVersionUID = 1L;
 	
 	private VLEService vleService;
+	
+	private RunService runService;
 	
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -58,7 +66,6 @@ public class VLEIdeaBasketController extends AbstractController {
 		
 
 		String projectId = (String) request.getParameter("projectId");
-		//boolean isPrivileged = (Boolean) request.getAttribute("isPrivileged");
 		boolean isPrivileged = true;  // TODO: implement me
 		
 		//get the latest revision of the IdeaBasket for this runId, workgroupId
@@ -544,8 +551,26 @@ public class VLEIdeaBasketController extends AbstractController {
 		String periodId = (String) request.getParameter("periodId");
 		
 		String workgroupId = (String) request.getParameter("workgroupId");
-		String projectId = (String) request.getAttribute("projectId");
-		//boolean isPrivileged = (Boolean) request.getAttribute("isPrivileged");
+
+		String projectId = null;
+		
+		try {
+			//get the run
+			Run run = runService.retrieveById(new Long(runId));
+			
+			//get the project id
+			Project project = run.getProject();
+			Serializable projectIdSerializable = project.getId();
+			
+			if(projectIdSerializable != null) {
+				projectId = projectIdSerializable.toString();			
+			}
+		} catch (NumberFormatException e1) {
+			e1.printStackTrace();
+		} catch (ObjectNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		
 		boolean isPrivileged = true;
 		
 		if(action.equals("getIdeaBasket")) {
@@ -727,5 +752,13 @@ public class VLEIdeaBasketController extends AbstractController {
 
 	public void setVleService(VLEService vleService) {
 		this.vleService = vleService;
+	}
+
+	public RunService getRunService() {
+		return runService;
+	}
+
+	public void setRunService(RunService runService) {
+		this.runService = runService;
 	}
 }

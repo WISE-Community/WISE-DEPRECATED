@@ -11,17 +11,24 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
+import net.sf.sail.webapp.service.workgroup.WorkgroupService;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.domain.Run;
+import org.wise.portal.presentation.web.controllers.run.RunUtil;
+import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.cRater.CRaterRequest;
@@ -42,6 +49,12 @@ public class VLEAnnotationController extends AbstractController {
 	private static final long serialVersionUID = 1L;
 	
 	private VLEService vleService;
+	
+	private Properties portalProperties;
+	
+	private RunService runService;
+	
+	private WorkgroupService workgroupService;
 	
 	private boolean standAlone = true;
 	
@@ -109,8 +122,8 @@ public class VLEAnnotationController extends AbstractController {
 		String annotationType = request.getParameter("annotationType");
 		String nodeStateIdStr = request.getParameter("nodeStateId");
 		
-		String cRaterScoringUrl = (String) request.getAttribute("cRaterScoringUrl");
-		String cRaterClientId = (String) request.getAttribute("cRaterClientId");
+		String cRaterScoringUrl = portalProperties.getProperty("cRater_scoring_url");
+		String cRaterClientId = portalProperties.getProperty("cRater_client_id");
 		
 		//this is only used when students retrieve flags
 		Vector<JSONObject> flaggedAnnotationsList = new Vector<JSONObject>();
@@ -146,14 +159,20 @@ public class VLEAnnotationController extends AbstractController {
 		 */
 		if((requestedType.equals("flag") || requestedType.equals("inappropriateFlag")) && isStudent) {
 			try {
+				Run run = null;
+				
+				try {
+					run = runService.retrieveById(longRunId);
+				} catch (ObjectNotFoundException e) {
+					e.printStackTrace();
+				}
+				
 				//get the signed in student's user info and period id
-				String myUserInfoString = (String) request.getAttribute("myUserInfo");
-				JSONObject myUserInfo = new JSONObject(myUserInfoString);
+				JSONObject myUserInfo = RunUtil.getMyUserInfo(run, workgroupService);
 				periodId = myUserInfo.getLong("periodId");
 				
 				//get the classmate user infos
-				String classmateUserInfosString = (String) request.getAttribute("classmateUserInfos");
-				JSONArray classmateUserInfos = new JSONArray(classmateUserInfosString);
+				JSONArray classmateUserInfos = RunUtil.getClassmateUserInfos(run, workgroupService, runService);
 				
 				//loop through all the classmate user infos
 				for(int x=0; x<classmateUserInfos.length(); x++) {
@@ -744,6 +763,30 @@ public class VLEAnnotationController extends AbstractController {
 
 	public void setVleService(VLEService vleService) {
 		this.vleService = vleService;
+	}
+
+	public Properties getPortalProperties() {
+		return portalProperties;
+	}
+
+	public void setPortalProperties(Properties portalProperties) {
+		this.portalProperties = portalProperties;
+	}
+
+	public RunService getRunService() {
+		return runService;
+	}
+
+	public void setRunService(RunService runService) {
+		this.runService = runService;
+	}
+
+	public WorkgroupService getWorkgroupService() {
+		return workgroupService;
+	}
+
+	public void setWorkgroupService(WorkgroupService workgroupService) {
+		this.workgroupService = workgroupService;
 	}
 
 }

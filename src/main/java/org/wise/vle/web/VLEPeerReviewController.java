@@ -5,11 +5,15 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.sail.webapp.dao.ObjectNotFoundException;
+import net.sf.sail.webapp.domain.Workgroup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +21,7 @@ import org.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.node.Node;
@@ -34,6 +39,8 @@ public class VLEPeerReviewController extends AbstractController {
 	private static final long serialVersionUID = 1L;
 	
 	private VLEService vleService;
+	
+	private RunService runService;
 
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -197,9 +204,41 @@ public class VLEPeerReviewController extends AbstractController {
 		String workgroupId = request.getParameter("workgroupId");
 		String periodId = request.getParameter("periodId");
 		String nodeId = request.getParameter("nodeId");
+		String type = request.getParameter("type");
 
+		/*
+		 * obtain Long and Integer values
+		 */
+		Long runIdLong = null;
+		if(runId != null) {
+			runIdLong = Long.parseLong(runId);
+		}
+
+		Long workgroupIdLong = null;
+		if(runId != null) {
+			workgroupIdLong = Long.parseLong(workgroupId);
+		}
+		
+		Long periodIdLong = null;
+		if(periodId != null) {
+			periodIdLong = Long.parseLong(periodId);
+		}
+		
 		//number of workgroups registered in the period, this is passed in from BridgeController
-		Integer numWorkgroups = (Integer) request.getAttribute("numWorkgroups");
+		Integer numWorkgroups = null;
+		
+		if(type.equals("peerreview")) {
+			try {
+				/*
+				 * set the number of students in the class period for when we need
+				 * to calculate peer review opening
+				 */
+				Set<Workgroup> classmateWorkgroups = runService.getWorkgroups(runIdLong, periodIdLong);
+				numWorkgroups = classmateWorkgroups.size();
+			} catch (ObjectNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 
 		//the percentage of workgroups that need to submit work before the peer review is open
 		String openPercentageTrigger = request.getParameter("openPercentageTrigger");
@@ -215,24 +254,6 @@ public class VLEPeerReviewController extends AbstractController {
 
 		//the array of classmate workgroup ids
 		String[] classmateWorkgroupIdsArray = classmateWorkgroupIds.split(",");
-
-		/*
-		 * obtain Long and Integer values
-		 */
-		Long runIdLong = null;
-		if(runId != null) {
-			runIdLong = Long.parseLong(runId);
-		}
-
-		Long workgroupIdLong = null;
-		if(runId != null) {
-			workgroupIdLong = Long.parseLong(workgroupId);
-		}
-
-		Long periodIdLong = null;
-		if(periodId != null) {
-			periodIdLong = Long.parseLong(periodId);
-		}
 
 		Integer openPercentageTriggerInt = null;
 		if(openPercentageTrigger != null) {
@@ -835,5 +856,13 @@ public class VLEPeerReviewController extends AbstractController {
 
 	public void setVleService(VLEService vleService) {
 		this.vleService = vleService;
+	}
+
+	public RunService getRunService() {
+		return runService;
+	}
+
+	public void setRunService(RunService runService) {
+		this.runService = runService;
 	}
 }

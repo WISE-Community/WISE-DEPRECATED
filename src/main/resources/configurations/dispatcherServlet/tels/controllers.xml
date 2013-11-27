@@ -906,6 +906,8 @@
 
 	<bean id="getStudentDataController" class="org.wise.vle.web.VLEGetData">
 	    <property name="vleService" ref="vleService" />
+	    <property name="runService" ref="runService" />
+	    <property name="portalProperties" ref="portalproperties" />
 	</bean>
 
 	<bean id="postStudentDataController" class="org.wise.vle.web.VLEPostData">
@@ -914,6 +916,9 @@
 
 	<bean id="annotationController" class="org.wise.vle.web.VLEAnnotationController">
 		<property name="vleService" ref="vleService" />
+		<property name="portalProperties" ref="portalproperties" />
+		<property name="workgroupService" ref="wiseWorkgroupService" />
+		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="studentStatusController" class="org.wise.vle.web.StudentStatusController">
@@ -926,18 +931,34 @@
 
 	<bean id="ideaBasketController" class="org.wise.vle.web.VLEIdeaBasketController">
 		<property name="vleService" ref="vleService" />
+		<property name="runService" ref="runService" />
 	</bean>
 	
 	<bean id="getExportController" class="org.wise.vle.web.VLEGetXLS">
 	    <property name="vleService" ref="vleService" />
+	    <property name="studentAttendanceService" ref="studentAttendanceService" />
+	    <property name="portalProperties" ref="portalproperties" />
+	    <property name="runService" ref="runService" />
+	    <property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
 	
 	<bean id="getSpecialExportController" class="org.wise.vle.web.VLEGetSpecialExport">
 	    <property name="vleService" ref="vleService" />
+	    <property name="studentAttendanceService" ref="studentAttendanceService" />
+	    <property name="portalProperties" ref="portalproperties" />
+	    <property name="runService" ref="runService" />
+	    <property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
 	
 	<bean id="peerReviewController" class="org.wise.vle.web.VLEPeerReviewController">
 	    <property name="vleService" ref="vleService" />
+	    <property name="runService" ref="runService" />
+	</bean>
+	
+	<bean id="assetManagerController" class="utils.AssetManager">
+		<property name="portalProperties" ref="portalproperties" />
+	    <property name="runService" ref="runService" />
+	    <property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
 	
 	<bean id="vleGetStatisticsController" class="org.wise.vle.web.VLEGetStatisticsController">

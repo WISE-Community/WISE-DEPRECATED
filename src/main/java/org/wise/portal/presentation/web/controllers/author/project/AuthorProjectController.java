@@ -202,8 +202,14 @@ public class AuthorProjectController extends AbstractController {
 					addRequestAttributeForCommand(request, project, command, forward);
 
 					CredentialManager.setRequestCredentials(request, user);
-					AbstractController fileManager = (AbstractController) this.getApplicationContext().getBean("fileManagerController");
-					fileManager.handleRequest(request, response);
+					
+					if(forward.equals("filemanager")) {
+						AbstractController fileManager = (AbstractController) this.getApplicationContext().getBean("fileManagerController");
+						fileManager.handleRequest(request, response);						
+					} else if(forward.equals("assetmanager")) {
+						AbstractController assetManager = (AbstractController) this.getApplicationContext().getBean("assetManagerController");
+						assetManager.handleRequest(request, response);
+					}
 					 //this.getServletContext().getRequestDispatcher("/vle/" + forward + ".html").forward(request, response);
 
 					if("updateFile".equals(command)) {
