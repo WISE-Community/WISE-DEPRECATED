@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<script type="text/javascript" src="../../javascript/tels/general.js"></script>
+<script type="text/javascript" src="../../javascript/general.js"></script>
     
 <title>Upload Project Page</title>
 

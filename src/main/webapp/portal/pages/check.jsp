@@ -14,7 +14,7 @@
 <script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
 <script type="text/javascript" src="<spring:theme code="browserdetectsource"/>"></script>
 <script type="text/javascript" src="<spring:theme code="checkcompatibilitysource"/>"></script>
-<script type="text/javascript" src="../javascript/tels/deployJava.js"></script>
+<script type="text/javascript" src="../javascript/deployJava.js"></script>
 
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   

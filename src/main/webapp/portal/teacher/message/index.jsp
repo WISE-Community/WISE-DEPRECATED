@@ -3,23 +3,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script type="text/javascript" src="javascript/tels/jquery-1.4.1.min.js" ></script>
+<script type="text/javascript" src="javascript/jquery-1.4.1.min.js" ></script>
 
 <link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 
-<script type="text/javascript" src="../javascript/tels/general.js"></script>
+<script type="text/javascript" src="../javascript/general.js"></script>
 
 <!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->
 <!--[if lt IE 7]>
-<script defer type="text/javascript" src="../../javascript/tels/iefixes.js"></script>
+<script defer type="text/javascript" src="../../javascript/iefixes.js"></script>
 <![endif]-->
 
 <!-- SuperFish drop-down menu from http://www.electrictoolbox.com/jquery-superfish-menus-plugin/  -->
 
 <link rel="stylesheet" type="text/css" href="themes/tels/default/styles/teacher/superfish.css" media="screen">
-<script type="text/javascript" src="javascript/tels/superfish.js"></script>
+<script type="text/javascript" src="javascript/superfish.js"></script>
 
 <script type="text/javascript">
     

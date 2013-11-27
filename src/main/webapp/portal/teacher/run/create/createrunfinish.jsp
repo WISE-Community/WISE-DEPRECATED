@@ -13,10 +13,10 @@
 
 <title><spring:message code="teacher.run.create.createrunfinish.classroomRunCreated" /></title>
 
-<script type="text/javascript" src="/wise/javascript/pas/utils.js"></script>
-<script type="text/javascript" src="/wise/javascript/tels/rotator.js"></script>
-<script type="text/javascript" src="/wise/javascript/tels/general.js"></script>
-<script type="text/javascript" src="/wise/javascript/tels/effects.js"></script>
+<script type="text/javascript" src="/wise/javascript/utils.js"></script>
+<script type="text/javascript" src="/wise/javascript/rotator.js"></script>
+<script type="text/javascript" src="/wise/javascript/general.js"></script>
+<script type="text/javascript" src="/wise/javascript/effects.js"></script>
 
 </head>
 

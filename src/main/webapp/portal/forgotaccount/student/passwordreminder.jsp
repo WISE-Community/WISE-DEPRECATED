@@ -8,8 +8,8 @@
 <link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />  
 <link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
    
-<script type="text/javascript" src="../../javascript/tels/general.js"></script>	
-<script type="text/javascript" src="../../javascript/tels/effects.js"></script>	
+<script type="text/javascript" src="../../javascript/general.js"></script>	
+<script type="text/javascript" src="../../javascript/effects.js"></script>	
 
 <title><spring:message code="forgotaccount.student.passwordreminder.forgotPasswordStudentReminder"/></title>
 </head>

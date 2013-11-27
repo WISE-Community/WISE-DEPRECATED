@@ -12,8 +12,8 @@
   
 <title><spring:message code="credits.1"/></title>
 
-<script type="text/javascript" src="./javascript/pas/utils.js"></script> 
-<script type="text/javascript" src="./javascript/tels/general.js"></script>
+<script type="text/javascript" src="./javascript/utils.js"></script> 
+<script type="text/javascript" src="./javascript/general.js"></script>
 
 </head>
 

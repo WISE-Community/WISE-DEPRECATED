@@ -11,7 +11,7 @@
 <link href="<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
     
-<script src="../../javascript/tels/general.js" 			type="text/javascript"> </script>
+<script src="../../javascript/general.js" 			type="text/javascript"> </script>
 
     
 <title><spring:message code="wiseAdmin" /></title>

@@ -134,7 +134,7 @@ $(document).ready(function() {
 
 <!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->
 <!--[if lt IE 7]>
-<script defer type="text/javascript" src=".././javascript/tels/iefixes.js"></script>
+<script defer type="text/javascript" src=".././javascript/iefixes.js"></script>
 <![endif]-->
 
 <!--[if IE 5]>

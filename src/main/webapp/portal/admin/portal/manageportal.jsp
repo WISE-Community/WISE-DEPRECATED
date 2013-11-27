@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script type="text/javascript" src="../../javascript/tels/jquery/js/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="../../javascript/jquery/js/jquery-1.9.0.min.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
