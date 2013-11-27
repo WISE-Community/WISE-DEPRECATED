@@ -321,7 +321,6 @@
 		<property name="commandClass"
 			value="org.wise.portal.domain.run.impl.RunParameters" />
 		<property name="javaMail" ref="javaMail" />
-		<property name="emaillisteners" ref="emaillisteners" />
 		<property name="messageSource" ref="messageSource" />
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
@@ -409,13 +408,12 @@
 
 	<bean id="contactwisegeneral"
 		class="org.wise.portal.domain.general.contactwise.impl.ContactWISEGeneral">
-		<property name="emaillisteners" ref="emaillisteners" />
+		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="userService" ref="userService" />
 	</bean>
 
 	<bean id="contactWISEProject"
 		class="org.wise.portal.domain.general.contactwise.impl.ContactWISEProject">
-		<property name="emaillisteners" ref="emaillisteners" />
 	</bean>
 
 	<bean id="accessDeniedController"
@@ -612,7 +610,6 @@
 		<property name="commandClass"
 			value="org.wise.portal.domain.impl.AddSharedTeacherParameters" />
 		<property name="javaMail" ref="javaMail" />
-		<property name="emaillisteners" ref="emaillisteners" />
 		<property name="messageSource" ref="messageSource" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="successView" value="shareproject.html" />
@@ -712,7 +709,6 @@
 		<property name="commandClass"
 			value="org.wise.portal.domain.impl.AddSharedTeacherParameters" />
 		<property name="javaMail" ref="javaMail" />
-		<property name="emaillisteners" ref="emaillisteners" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="messageSource" ref="messageSource" />
 		<property name="successView" value="shareprojectrun.html" />
@@ -1105,7 +1101,6 @@
     	<property name="formView" value="teacher/registerteacher" />
     	<property name="successView" value="teacher/registerTeacherConfirm" />
         <property name="javaMail" ref="javaMail"/>
-		<property name="emaillisteners" ref="emaillisteners" />			
 		<property name="wiseProperties" ref="wiseProperties" />        
 		<property name="messageSource" ref="messageSource" />      	
     </bean>
@@ -1144,7 +1139,6 @@
             </props>
         </property>
         <property name="wiseProperties" ref="wiseProperties" />
-        <property name="emaillisteners" ref="emaillisteners" />
         <property name="javaMail" ref="javaMail" />
     </bean>
     

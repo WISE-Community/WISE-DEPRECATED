@@ -56,7 +56,7 @@ public interface ContactWISE extends Serializable {
 	
 	public void setDescription(String description);
 	
-	public void setEmaillisteners(Properties emaillisteners);
+	public void setWiseProperties(Properties wiseProperties);
 	
 	public String[] getMailRecipients();
 	

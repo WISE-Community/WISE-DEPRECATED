@@ -39,7 +39,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.validation.BindException;
@@ -97,8 +96,6 @@ public class CreateRunController extends AbstractWizardFormController {
 	private static final String RUN_KEY = "run";
 	
 	private IMailFacade javaMail = null;
-	
-	private Properties emaillisteners = null;
 	
 	private MessageSource messageSource;
 
@@ -515,7 +512,7 @@ public class CreateRunController extends AbstractWizardFormController {
 			
     		String previewProjectUrl = portalBaseUrlString + "/wise/previewproject.html?projectId="+run.getProject().getId();
 
-			String[] recipients = emaillisteners.getProperty("project_setup").split(",");
+			String[] recipients = wiseProperties.getProperty("project_setup").split(",");
 			
 			
 			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject", 
@@ -562,7 +559,7 @@ public class CreateRunController extends AbstractWizardFormController {
 					defaultMessage,
 					this.locale);
 
-			String fromEmail = emaillisteners.getProperty("portalemailaddress");
+			String fromEmail = wiseProperties.getProperty("portalemailaddress");
 			
 			//for testing out the email functionality without spamming the groups
 			if(DEBUG) {
@@ -606,21 +603,6 @@ public class CreateRunController extends AbstractWizardFormController {
 	public void setJavaMail(IMailFacade javaMail) {
 		this.javaMail = javaMail;
 	}
-
-	/**
-	 * @return the emaillisteners
-	 */
-	public Properties getEmaillisteners() {
-		return emaillisteners;
-	}
-
-	/**
-	 * @param emaillisteners the emaillisteners to set
-	 */
-	public void setEmaillisteners(Properties emaillisteners) {
-		this.emaillisteners = emaillisteners;
-	}
-
 
 	/**
 	 * @param projectService the projectService to set

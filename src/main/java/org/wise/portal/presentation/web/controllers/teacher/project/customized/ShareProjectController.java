@@ -16,7 +16,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.MessageSource;
@@ -54,8 +53,6 @@ public class ShareProjectController extends SimpleFormController {
 	private AclService<Project> aclService;
 	
 	private IMailFacade javaMail = null;
-
-	private Properties emaillisteners = null;
 
 	protected Properties wiseProperties;
 
@@ -240,7 +237,7 @@ public class ShareProjectController extends SimpleFormController {
 
     		String previewProjectUrl = this.portalBaseUrlString + "/wise/previewproject.html?projectId="+project.getId();
 
-    		String[] recipients = (String[]) ArrayUtils.addAll(shareeEmailAddress, emaillisteners.getProperty("uber_admin").split(","));
+    		String[] recipients = (String[]) ArrayUtils.addAll(shareeEmailAddress, wiseProperties.getProperty("uber_admin").split(","));
     		
 			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.project.customized.ShareProjectController.shareProjectConfirmationEmailSubject", 
 					new Object[] {sharerName}, Locale.US);
@@ -268,13 +265,6 @@ public class ShareProjectController extends SimpleFormController {
     	}
     }
 
-	/**
-	 * @param emaillisteners the emaillisteners to set
-	 */
-	public void setEmaillisteners(Properties emaillisteners) {
-		this.emaillisteners = emaillisteners;
-	}
-	
 	/**
 	 * @param javaMail the javaMail to set
 	 */

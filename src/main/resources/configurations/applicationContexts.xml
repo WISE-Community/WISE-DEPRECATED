@@ -981,8 +981,6 @@
 <util:properties id="uihtmlproperties"
 		location="classpath:messages/ui-html_en_US.properties" />
 
-	<util:properties id="emaillisteners" location="classpath:wise.properties" />
-
 	<util:properties id="wiseProperties" location="classpath:wise.properties" />
 
 	<!--  this allows key/value pairs in wise.properties to be used to create beans.  see dataSource bean for example -->
@@ -997,7 +995,6 @@
 
 	<bean id="adminjob" class="org.wise.portal.domain.admin.AdminJob">
 		<property name="javaMail" ref="javaMail" />
-		<property name="emaillisteners" ref="emaillisteners" />
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
@@ -1007,7 +1004,6 @@
 		<property name="jobDataAsMap">
 			<map>
 				<entry key="javaMail" value-ref="javaMail" />
-				<entry key="emaillisteners" value-ref="emaillisteners" />
 				<entry key="wiseProperties" value-ref="wiseProperties" />
 				<entry key="runDao" value-ref="runDao" />
 				<entry key="userDao" value-ref="userDao" />
@@ -1405,7 +1401,7 @@
 		class="org.wise.portal.service.message.impl.MessageServiceImpl">
 		<property name="messageDao" ref="messageDao" />
 		<property name="javaMail" ref="javaMail" />
-		<property name="emaillisteners" ref="emaillisteners" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="tag" scope="prototype"

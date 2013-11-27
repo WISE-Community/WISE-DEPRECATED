@@ -31,7 +31,6 @@ import java.util.Set;
 
 import javax.mail.MessagingException;
 
-
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
@@ -50,7 +49,7 @@ import org.wise.portal.service.mail.IMailFacade;
  * - Number of Teachers and Students that created accounts in the last day
  * - Number of Users that logged in at least once in the last day
  * 
- * It then sends an email to whomever is listening, defined in emaillisteners.
+ * It then sends an email to whomever is listening, defined in wiseProperties.
  * 
  * @author hirokiterashima
  * @version $Id:$
@@ -59,8 +58,6 @@ public class AdminJob extends QuartzJobBean {
 
 	private IMailFacade javaMail = null;
 
-	private Properties emaillisteners = null;
-	
 	private Properties wiseProperties = null;
 	
 	private RunDao<Run> runDao;
@@ -175,7 +172,7 @@ public class AdminJob extends QuartzJobBean {
 	}
 	
 	public void sendEmail(String message) {
-		String[] recipients = emaillisteners.getProperty("uber_admin").split(",");
+		String[] recipients = wiseProperties.getProperty("uber_admin").split(",");
 		
 		String subject = "Daily Admin Report on Portal: "
 		    + " (" + wiseProperties.getProperty("portal.name") + ")";		
@@ -197,13 +194,6 @@ public class AdminJob extends QuartzJobBean {
 	 */
 	public void setJavaMail(IMailFacade javaMail) {
 		this.javaMail = javaMail;
-	}
-
-	/**
-	 * @param emaillisteners the emaillisteners to set
-	 */
-	public void setEmaillisteners(Properties emaillisteners) {
-		this.emaillisteners = emaillisteners;
 	}
 
 	/**

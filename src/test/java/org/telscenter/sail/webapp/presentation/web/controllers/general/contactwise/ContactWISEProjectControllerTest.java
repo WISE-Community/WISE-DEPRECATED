@@ -108,7 +108,7 @@ public class ContactWISEProjectControllerTest extends AbstractModelAndViewTests 
 	
 	private IMailFacade mockMail;
 	
-	private Properties emailListeners;
+	private Properties wiseProperties;
 	
 	private Properties uiHTMLProperties;
 	
@@ -124,14 +124,14 @@ public class ContactWISEProjectControllerTest extends AbstractModelAndViewTests 
 		errors = new BindException(contactDetails, "");
 		mockMail = createMock(IMailFacade.class);
 		
-		emailListeners = new Properties();
-		emailListeners.setProperty("trouble_logging_in", "WISE3-trouble-logging-in@googlegroups.com");
-		emailListeners.setProperty("need_help_using_wise", "WISE3-need-help-using@googlegroups.com");
-		emailListeners.setProperty("project_problems", "WISE3-project-problems@googlegroups.com");
-		emailListeners.setProperty("student_management", "WISE3-student-management@googlegroups.com");
-		emailListeners.setProperty("authoring", "WISE3-authoring-help@googlegroups.com");
-		emailListeners.setProperty("feedback", "WISE3-feedback@googlegroups.com");
-		emailListeners.setProperty("other", "WISE3-other@googlegroups.com");
+		wiseProperties = new Properties();
+		wiseProperties.setProperty("trouble_logging_in", "WISE3-trouble-logging-in@googlegroups.com");
+		wiseProperties.setProperty("need_help_using_wise", "WISE3-need-help-using@googlegroups.com");
+		wiseProperties.setProperty("project_problems", "WISE3-project-problems@googlegroups.com");
+		wiseProperties.setProperty("student_management", "WISE3-student-management@googlegroups.com");
+		wiseProperties.setProperty("authoring", "WISE3-authoring-help@googlegroups.com");
+		wiseProperties.setProperty("feedback", "WISE3-feedback@googlegroups.com");
+		wiseProperties.setProperty("other", "WISE3-other@googlegroups.com");
 
 		uiHTMLProperties = new Properties();
 		uiHTMLProperties.setProperty("issuetypes.TROUBLE_LOGGING_IN", "Trouble Signing In");
@@ -164,7 +164,7 @@ public class ContactWISEProjectControllerTest extends AbstractModelAndViewTests 
 		contactDetails.setIssuetype(issueType);
 		contactDetails.setSummary(SUMMARY);
 		contactDetails.setDescription(DESCRIPTION);
-		contactDetails.setEmaillisteners(emailListeners);
+		contactDetails.setWiseProperties(wiseProperties);
 		contactDetails.setUsersystem("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11");
 		
 		

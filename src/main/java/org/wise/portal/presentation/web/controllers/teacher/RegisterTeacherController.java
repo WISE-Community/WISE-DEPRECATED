@@ -60,8 +60,6 @@ public class RegisterTeacherController extends SimpleFormController {
 
 	private IMailFacade javaMail = null;
 
-	private Properties emaillisteners = null;
-
 	private Properties wiseProperties;
 
 	private MessageSource messageSource;
@@ -212,7 +210,7 @@ public class RegisterTeacherController extends SimpleFormController {
 			String userUsername = newUserDetails.getUsername();
 			String userEmailAddress[] = {newUserDetails.getEmailAddress()};
 
-			String[] recipients = (String[]) ArrayUtils.addAll(userEmailAddress, emaillisteners.getProperty("uber_admin").split(","));
+			String[] recipients = (String[]) ArrayUtils.addAll(userEmailAddress, wiseProperties.getProperty("uber_admin").split(","));
 
 			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, Locale.US);
 			String subject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, defaultSubject, this.locale);
@@ -220,7 +218,7 @@ public class RegisterTeacherController extends SimpleFormController {
 			String gettingStartedUrl = portalbaseurl + "/pages/gettingstarted.html";
 			String defaultBody = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, Locale.US);
 			String message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, defaultBody, this.locale);
-			String fromEmail = emaillisteners.getProperty("portalemailaddress");
+			String fromEmail = wiseProperties.getProperty("portalemailaddress");
 
 			try {
 				//sends the email to the recipients
@@ -232,13 +230,6 @@ public class RegisterTeacherController extends SimpleFormController {
 		}
 	}
 	
-	/**
-	 * @param emaillisteners the emaillisteners to set
-	 */
-	public void setEmaillisteners(Properties emaillisteners) {
-		this.emaillisteners = emaillisteners;
-	}
-
 	/**
 	 * @param javaMail the javaMail to set
 	 */

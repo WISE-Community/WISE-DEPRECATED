@@ -55,8 +55,6 @@ public class TelsSimpleMappingExceptionResolver extends
 	
 	protected IMailFacade javaMail;
 
-	private Properties emaillisteners;
-	
 	private Properties wiseProperties;
 
 	private static final String HANDLE_EXCEPTION_PROPERTY_KEY = "handle_exception";
@@ -77,7 +75,7 @@ public class TelsSimpleMappingExceptionResolver extends
 
 		if (sendEmailOnException) {
 			String portalName = wiseProperties.getProperty("portal.name");
-			String[] recipients = emaillisteners.getProperty(HANDLE_EXCEPTION_PROPERTY_KEY).split(",");
+			String[] recipients = wiseProperties.getProperty(HANDLE_EXCEPTION_PROPERTY_KEY).split(",");
 			String subject = HANDLE_EXCEPTION_MAIL_SUBJECT + ": (" + portalName + ")";
 			String fromEmail = HANDLE_EXCEPTION_FROM_EMAIL;
 			String message = getHandleExceptionMessage(request, response, handler, exception);
@@ -171,13 +169,6 @@ public class TelsSimpleMappingExceptionResolver extends
 	 */
 	public void setJavaMail(IMailFacade javaMail) {
 		this.javaMail = javaMail;
-	}
-	
-	/**
-	 * @param properties the properties to set
-	 */
-	public void setEmaillisteners(Properties emaillisteners) {
-		this.emaillisteners = emaillisteners;
 	}
 	
 	/**
