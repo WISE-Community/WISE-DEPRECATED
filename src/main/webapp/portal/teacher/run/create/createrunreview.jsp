@@ -25,7 +25,7 @@
     	//preload image if browser is not IE because animated gif will just freeze if user is using IE
     	if(navigator.appName != "Microsoft Internet Explorer") {
     		loadingImage = new Image();
-    		loadingImage.src = "/wise/themes/tels/default/images/rel_interstitial_loading.gif";
+    		loadingImage.src = "/wise/themes/default/images/rel_interstitial_loading.gif";
     	}
         
     	/**

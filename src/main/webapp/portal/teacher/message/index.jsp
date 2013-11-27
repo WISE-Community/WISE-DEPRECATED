@@ -18,7 +18,7 @@
 
 <!-- SuperFish drop-down menu from http://www.electrictoolbox.com/jquery-superfish-menus-plugin/  -->
 
-<link rel="stylesheet" type="text/css" href="themes/tels/default/styles/teacher/superfish.css" media="screen">
+<link rel="stylesheet" type="text/css" href="themes/default/styles/teacher/superfish.css" media="screen">
 <script type="text/javascript" src="javascript/superfish.js"></script>
 
 <script type="text/javascript">

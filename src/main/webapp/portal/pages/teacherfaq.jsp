@@ -116,7 +116,7 @@
 <h4><spring:message code="pages.teacherfaq.whatShouldILookForInStudentAnswersQuestion" /></h4>
 
 <spring:message code="pages.teacherfaq.whatShouldILookForInStudentAnswersAnswer" /> 
-<a href="/wise/themes/tels/default/images/SampleRubric.png"><spring:message code="pages.teacherfaq.sampleRubric" /></a>
+<a href="/wise/themes/default/images/SampleRubric.png"><spring:message code="pages.teacherfaq.sampleRubric" /></a>
 
 <h4><spring:message code="pages.teacherfaq.howEncourageStudentsReviewNotesAndCommentsQuestion" /></h4>
 

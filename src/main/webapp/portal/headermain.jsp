@@ -11,7 +11,7 @@
 				</spring:htmlEscape>
 			</div>
 			<img class="announceIcon"
-				src="/wise/themes/tels/default/images/icons/marker.png"
+				src="/wise/themes/default/images/icons/marker.png"
 				alt="announcement" />
 		</c:if>
 

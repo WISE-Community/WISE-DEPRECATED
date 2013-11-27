@@ -75,9 +75,9 @@
 												</div>
 												<div style="clear:both;"></div>
 												<div class="projectSummary">
-													<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+													<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 													<div class="summaryInfo">
-														<div class="libraryIcon"><img src="/wise/themes/tels/default/images/open_book.png" alt="library project" /> <spring:message code="pages.wise-advantage.wiseLibraryProjects" /></div>
+														<div class="libraryIcon"><img src="/wise/themes/default/images/open_book.png" alt="library project" /> <spring:message code="pages.wise-advantage.wiseLibraryProjects" /></div>
 														<div class="basicInfo">
 															<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
 															<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
@@ -196,7 +196,7 @@
 							},
 							404:function() {
 							    // not found, leave alone
-								//$(this).html("<img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></img>");
+								//$(this).html("<img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></img>");
 							}
 						}
 					});

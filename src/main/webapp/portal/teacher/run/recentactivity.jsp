@@ -33,7 +33,7 @@
 								    	    	<!-- the project run is shared with the logged-in user. -->
 							    	    	<c:set var="ownership" value="shared" />
 							    	    	<div class="sharedIcon">
-								    	    	<img src="/wise/themes/tels/default/images/shared.png" alt="shared project" /> <spring:message code="teacher.run.recentactivity.ownedBy"/>
+								    	    	<img src="/wise/themes/default/images/shared.png" alt="shared project" /> <spring:message code="teacher.run.recentactivity.ownedBy"/>
 								    	    	<c:forEach var="owner" items="${run.owners}">
 								    	    		${owner.userDetails.firstname} ${owner.userDetails.lastname}
 								    	    	</c:forEach>
@@ -74,7 +74,7 @@
 						      			<c:if test="${isRunOwner==true}">
 											<tr>
 						      					<td colspan="2" style="padding-top:.5em;">
-						      						<a id="editRun_${run.id}" class="editRun" title="<spring:message code="teacher.run.recentactivity.editRunSettings"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})"><img class="icon" alt="settings" src="/wise/themes/tels/default/images/icons/teal/processing.png" /><span><spring:message code="teacher.run.recentactivity.editRunSettings"/></span></a>
+						      						<a id="editRun_${run.id}" class="editRun" title="<spring:message code="teacher.run.recentactivity.editRunSettings"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})"><img class="icon" alt="settings" src="/wise/themes/default/images/icons/teal/processing.png" /><span><spring:message code="teacher.run.recentactivity.editRunSettings"/></span></a>
 						      					</td>
 						      				</tr>
 						      			</c:if>
@@ -104,7 +104,7 @@
 						            </tr>
 						          </c:forEach>
 						          <c:if test="${isRunOwner==true}">
-				 	                <tr><td colspan="2" class="manageStudentGroups"><a class="manageStudents" title="<spring:message code="teacher.run.recentactivity.manageStudents"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}"><img class="icon" alt="groups" src="/wise/themes/tels/default/images/icons/teal/connected.png" /><span><spring:message code="teacher.run.recentactivity.manageStudents"/></span></a></td></tr>
+				 	                <tr><td colspan="2" class="manageStudentGroups"><a class="manageStudents" title="<spring:message code="teacher.run.recentactivity.manageStudents"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}"><img class="icon" alt="groups" src="/wise/themes/default/images/icons/teal/connected.png" /><span><spring:message code="teacher.run.recentactivity.manageStudents"/></span></a></td></tr>
 				 	              </c:if>
 						        </table>
 						    </td> 
@@ -130,10 +130,10 @@
                     							<c:if test="${isRunOwner==true}">
                     								<c:choose>
 	                    								<c:when test="${isXMPPEnabled && run.XMPPEnabled}">
-	                    									<li><a class="classroomMonitor" title="<spring:message code="teacher.run.recentactivity.classroomMonitor"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="/wise/themes/tels/default/images/icons/teal/bar-chart.png" /><span><spring:message code="teacher.run.recentactivity.classroomMonitor"/></span></a></li>
+	                    									<li><a class="classroomMonitor" title="<spring:message code="teacher.run.recentactivity.classroomMonitor"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="/wise/themes/default/images/icons/teal/bar-chart.png" /><span><spring:message code="teacher.run.recentactivity.classroomMonitor"/></span></a></li>
 	                    								</c:when>
 	                    								<c:otherwise>
-	                    									<li><a class="classroomMonitor" title="<spring:message code="teacher.run.recentactivity.classroomMonitor"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=monitor" style="display:none"><img class="icon" alt="monitor" src="/wise/themes/tels/default/images/icons/teal/bar-chart.png" /><span><spring:message code="teacher.run.recentactivity.classroomMonitor"/></span></a></li>
+	                    									<li><a class="classroomMonitor" title="<spring:message code="teacher.run.recentactivity.classroomMonitor"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=monitor" style="display:none"><img class="icon" alt="monitor" src="/wise/themes/default/images/icons/teal/bar-chart.png" /><span><spring:message code="teacher.run.recentactivity.classroomMonitor"/></span></a></li>
 	                    								</c:otherwise>
 	                    							</c:choose>
                     							</c:if>
@@ -141,10 +141,10 @@
 							               <ul class="actionList">
 										        <li>
 										        	<spring:message code="teacher.run.recentactivity.projectDetails" var="projectDetails"/>
-										        	<spring:message code="teacher.run.recentactivity.project"/>&nbsp;<a href="/wise/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="/wise/themes/tels/default/images/icons/teal/screen.png" /><span><spring:message code="teacher.run.recentactivity.preview"/></span></a>
-									    			|&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="teacher.run.recentactivity.projectDetails"/>"><img class="icon" alt="info" src="/wise/themes/tels/default/images/icons/teal/ID.png" /><span><spring:message code="teacher.run.recentactivity.info"/></span></a>
+										        	<spring:message code="teacher.run.recentactivity.project"/>&nbsp;<a href="/wise/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="/wise/themes/default/images/icons/teal/screen.png" /><span><spring:message code="teacher.run.recentactivity.preview"/></span></a>
+									    			|&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="teacher.run.recentactivity.projectDetails"/>"><img class="icon" alt="info" src="/wise/themes/default/images/icons/teal/ID.png" /><span><spring:message code="teacher.run.recentactivity.info"/></span></a>
 										        	<sec:accesscontrollist domainObject="${run.project}" hasPermission="16">
-										        		|&nbsp;<a onclick="if(confirm('<spring:message code="teacher.run.recentactivity.warningWillBeEditingProjectForRun"/>')){window.top.location='/wise/author/authorproject.html?projectId=${run.project.id}&versionId=${run.versionId}';} return true;"><img class="icon" alt="edit" src="/wise/themes/tels/default/images/icons/teal/edit.png" /><span><spring:message code="teacher.run.recentactivity.editContent"/></span></a>
+										        		|&nbsp;<a onclick="if(confirm('<spring:message code="teacher.run.recentactivity.warningWillBeEditingProjectForRun"/>')){window.top.location='/wise/author/authorproject.html?projectId=${run.project.id}&versionId=${run.versionId}';} return true;"><img class="icon" alt="edit" src="/wise/themes/default/images/icons/teal/edit.png" /><span><spring:message code="teacher.run.recentactivity.editContent"/></span></a>
 										        	</sec:accesscontrollist>
 										        </li>
 										    </ul>
@@ -154,17 +154,17 @@
 								<ul class="actionList">
 			
 									<sec:accesscontrollist domainObject="${run}" hasPermission="16">
-			   					      <li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.run.recentactivity.sharingPermissions"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})"><img class="icon" alt="share" src="/wise/themes/tels/default/images/icons/teal/agent.png" /><span><spring:message code="teacher.run.recentactivity.shareWithAnotherTeacher"/></span></a></li> 
+			   					      <li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.run.recentactivity.sharingPermissions"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})"><img class="icon" alt="share" src="/wise/themes/default/images/icons/teal/agent.png" /><span><spring:message code="teacher.run.recentactivity.shareWithAnotherTeacher"/></span></a></li> 
 			 	                    	</sec:accesscontrollist>
 							    	
 							    	<c:set var="isExternalProject" value="0"/>
 							    	<sec:accesscontrollist domainObject="${run}" hasPermission="16">
-							      		<li><a id="editAnnouncements_${run.id}" class="editAnnouncements" title="<spring:message code="teacher.run.recentactivity.manageAnnouncements"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" ><img class="icon" alt="announcements" src="/wise/themes/tels/default/images/icons/teal/chat-.png" /><spring:message code="teacher.run.recentactivity.manageAnnouncements"/></a></li>
+							      		<li><a id="editAnnouncements_${run.id}" class="editAnnouncements" title="<spring:message code="teacher.run.recentactivity.manageAnnouncements"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" ><img class="icon" alt="announcements" src="/wise/themes/default/images/icons/teal/chat-.png" /><spring:message code="teacher.run.recentactivity.manageAnnouncements"/></a></li>
 							        </sec:accesscontrollist>
-							        <li><a class="researchTools" title="<spring:message code="teacher.run.recentactivity.researcherTools"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=export"><img class="icon" alt="export" src="/wise/themes/tels/default/images/icons/teal/save.png" /><span><spring:message code="teacher.run.recentactivity.researcherTools"/> <spring:message code="teacher.run.recentactivity.exportStudentData"/></span></a></li>			    	
-									<li><a href="/wise/contact/contactwiseproject.html?projectId=${run.project.id}&runId=${run.id}"><img class="icon" alt="contact" src="/wise/themes/tels/default/images/icons/teal/email.png" /><span><spring:message code="teacher.run.recentactivity.reportAProblem"/></span></a></li>
+							        <li><a class="researchTools" title="<spring:message code="teacher.run.recentactivity.researcherTools"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=export"><img class="icon" alt="export" src="/wise/themes/default/images/icons/teal/save.png" /><span><spring:message code="teacher.run.recentactivity.researcherTools"/> <spring:message code="teacher.run.recentactivity.exportStudentData"/></span></a></li>			    	
+									<li><a href="/wise/contact/contactwiseproject.html?projectId=${run.project.id}&runId=${run.id}"><img class="icon" alt="contact" src="/wise/themes/default/images/icons/teal/email.png" /><span><spring:message code="teacher.run.recentactivity.reportAProblem"/></span></a></li>
 				                    <sec:accesscontrollist domainObject="${run}" hasPermission="16">					    	
-							    	  <li><a class="archiveRun" id="archiveRun_runId=${run.id}&runName=<c:out value="${fn:escapeXml(run.name)}" />" title="<spring:message code="teacher.run.recentactivity.archive"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})"><img class="icon" alt="archive" src="/wise/themes/tels/default/images/icons/teal/lock.png" /><span><spring:message code="teacher.run.recentactivity.archiveEndRun"/></span></a></li>
+							    	  <li><a class="archiveRun" id="archiveRun_runId=${run.id}&runName=<c:out value="${fn:escapeXml(run.name)}" />" title="<spring:message code="teacher.run.recentactivity.archive"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})"><img class="icon" alt="archive" src="/wise/themes/default/images/icons/teal/lock.png" /><span><spring:message code="teacher.run.recentactivity.archiveEndRun"/></span></a></li>
 							    	</sec:accesscontrollist>
 							    	
 							    </ul>
@@ -430,7 +430,7 @@
 					},
 					'<spring:message code="ok" />': function(){
 						var processingHtml = '<p>' + processing + '</p>' + 
-							'<p><img src="/wise/themes/tels/default/images/rel_interstitial_loading.gif" /></p>';
+							'<p><img src="/wise/themes/default/images/rel_interstitial_loading.gif" /></p>';
 						$('#unshareDialog').css('text-align','center');
 						$('#unshareDialog').html(processingHtml);
 						$('ui-dialog-titlebar-close',$(this).parent()).hide();

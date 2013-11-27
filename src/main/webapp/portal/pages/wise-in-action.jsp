@@ -37,7 +37,7 @@
 				
 				<div class="panelContent">
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/tels/default/images/features/teacher-profile.png" alt="<spring:message code="pages.wise-in-action.teacherProfileAlt" />" />
+						<img src="/wise/themes/default/images/features/teacher-profile.png" alt="<spring:message code="pages.wise-in-action.teacherProfileAlt" />" />
 						<div class="featureContentHeader"><spring:message code="pages.wise-in-action.teacherProfile" /></div>
 						<div class="featureContent">
 							<p><spring:message code="pages.wise-in-action.teacherProfileQuoteParagraph1" /></p>
@@ -48,7 +48,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/wise/themes/tels/default/images/features/inquiry-curricula.png" alt="<spring:message code="pages.wise-in-action.inquiryCurriculaAlt" />" />
+						<img src="/wise/themes/default/images/features/inquiry-curricula.png" alt="<spring:message code="pages.wise-in-action.inquiryCurriculaAlt" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.wise-in-action.inquiryCurricula" /></div>
 							<p><a href="/wise/previewprojectlist.html"><spring:message code="pages.wise-in-action.wiseUnits" /></a> <spring:message code="pages.wise-in-action.inquiryCurriculaParagraph" /></p>
@@ -56,7 +56,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/tels/default/images/features/teacher-role.png" alt="<spring:message code="pages.wise-in-action.theTeachersRoleAlt" />" />
+						<img src="/wise/themes/default/images/features/teacher-role.png" alt="<spring:message code="pages.wise-in-action.theTeachersRoleAlt" />" />
 						<div class="featureContentHeader"><spring:message code="pages.wise-in-action.theTeachersRole" /></div>
 						<div class="featureContent">
 							<p><spring:message code="pages.wise-in-action.theTeachersRoleParagraph" /> <a href="/wise/pages/teacher-tools.html"><spring:message code="pages.wise-in-action.classroomBasedAneOnlineTools" /></a>.</p>
@@ -64,7 +64,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/wise/themes/tels/default/images/features/partnership-design.png" alt="<spring:message code="pages.wise-in-action.partnershipDesignAlt" />" />
+						<img src="/wise/themes/default/images/features/partnership-design.png" alt="<spring:message code="pages.wise-in-action.partnershipDesignAlt" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader" id="partnershipDesign"><spring:message code="pages.wise-in-action.partnershipDesign" /></div>
 							<p><spring:message code="pages.wise-in-action.partnershipDesignParagraphPart1" /> <a href="/wise/pages/research-tech.html#ki"><spring:message code="pages.wise-in-action.inquiryBasedDesignPrinciples" /></a> <spring:message code="pages.wise-in-action.partnershipDesignParagraphPart2" /></p>
@@ -72,7 +72,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/tels/default/images/features/assessments.png" alt="<spring:message code="pages.wise-in-action.standardsAlignedAssessmentsAlt" />" />
+						<img src="/wise/themes/default/images/features/assessments.png" alt="<spring:message code="pages.wise-in-action.standardsAlignedAssessmentsAlt" />" />
 						<div class="featureContentHeader"><spring:message code="pages.wise-in-action.standardsAlignedAssessments" /></div>
 						<div class="featureContent">
 							<p><spring:message code="pages.wise-in-action.standardsAlignedAssessmentsParagraph" /> (<a href="http://www.tandfonline.com/doi/abs/10.1080/10627190801968224" target="_blank"><spring:message code="pages.wise-in-action.liuLeeHoftstetterLinn" /></a>; <a href="http://www.sciencemag.org/content/313/5790/1049.full.pdf" target="_blank"><spring:message code="pages.wise-in-action.linnEtAl" /></a>).</p>
@@ -80,7 +80,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/wise/themes/tels/default/images/features/administrators.png" alt="<spring:message code="pages.wise-in-action.administrationPartnershipsAlt" />" />
+						<img src="/wise/themes/default/images/features/administrators.png" alt="<spring:message code="pages.wise-in-action.administrationPartnershipsAlt" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.wise-in-action.administrationPartnerships" /></div>
 							<p><spring:message code="pages.wise-in-action.administrationPartnershipsParagraph1" /></p>

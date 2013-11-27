@@ -109,15 +109,15 @@
 																</c:choose>
 															</c:if>
 															<ul class="actions">
-																<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="/wise/themes/tels/default/images/icons/teal/screen.png" />
+																<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="/wise/themes/default/images/icons/teal/screen.png" />
 																	<span<c:if test="${!isChild && !isChildNoRoot}"> style="font-weight:bold;"</c:if>><spring:message code="preview" /></span></a>&nbsp;|
 																</li>
 																<sec:accesscontrollist domainObject="${project}" hasPermission="16">
-																	<li><a title="<spring:message code="share_tip" />" data-id="${project.id}" class="shareProject tooltip" dialog-title="<spring:message code="share_permissionsTitle" /> ${project.name} (<spring:message code="id" /> ${project.id})"><img class="icon" alt="share" src="/wise/themes/tels/default/images/icons/teal/agent.png" /><span><spring:message code="share" /></span></a>&nbsp;|</li>
+																	<li><a title="<spring:message code="share_tip" />" data-id="${project.id}" class="shareProject tooltip" dialog-title="<spring:message code="share_permissionsTitle" /> ${project.name} (<spring:message code="id" /> ${project.id})"><img class="icon" alt="share" src="/wise/themes/default/images/icons/teal/agent.png" /><span><spring:message code="share" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
-																<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="/wise/themes/tels/default/images/icons/teal/copy-item.png" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
+																<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="/wise/themes/default/images/icons/teal/copy-item.png" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
 																<sec:accesscontrollist domainObject="${project}" hasPermission="2">
-																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.edit_tip" />" href="/wise/author/authorproject.html?projectId=${project.id}"><img class="icon" alt="edit" src="/wise/themes/tels/default/images/icons/teal/edit.png" /><span><spring:message code="edit" /></span></a>&nbsp;|</li>
+																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.edit_tip" />" href="/wise/author/authorproject.html?projectId=${project.id}"><img class="icon" alt="edit" src="/wise/themes/default/images/icons/teal/edit.png" /><span><spring:message code="edit" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
 																<!-- <li><a style="color:#666;">Archive</a>
 																<input type='checkbox' id='public_${project.id}' onclick='changePublic("${project.id}")'/> Is Public</li>-->
@@ -128,10 +128,10 @@
 																	</c:if>
 																</c:forEach>
 																<c:if test="${isOwner == 'true'}">
-																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.archive_tip" />" onclick="archiveProject('<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>', ${project.id})"><img class="icon" alt="archive" src="/wise/themes/tels/default/images/icons/teal/lock.png" />
+																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.archive_tip" />" onclick="archiveProject('<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>', ${project.id})"><img class="icon" alt="archive" src="/wise/themes/default/images/icons/teal/lock.png" />
 																	<span><spring:message code="teacher.management.projectlibrarydisplay.archive" /></span></a>&nbsp;|</li>												
 																</c:if>
-																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="../run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="/wise/themes/tels/default/images/icons/teal/computer.png" />
+																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="../run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="/wise/themes/default/images/icons/teal/computer.png" />
 																	<span<c:if test="${!isChild && !isChildNoRoot}"> style="font-weight:bold;"</c:if>><spring:message code="teacher.management.projectlibrarydisplay.startRun" /></span></a>
 																</li>
 															</ul>
@@ -139,7 +139,7 @@
 														<div style="clear:both;"></div>
 													</div>
 													<div class="projectSummary">
-														<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+														<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 														<div class="summaryInfo">
 															<div class="basicInfo">
 																<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
@@ -211,7 +211,7 @@
 																</c:if>
 																<c:if test="${fn:length(project.sharedowners) > 0}">
 																	<div class="sharedIcon">
-																		<img src="/wise/themes/tels/default/images/shared.png" alt="shared project" />
+																		<img src="/wise/themes/default/images/shared.png" alt="shared project" />
 																		<spring:message code="teacher.management.projectlibrarydisplay.sharedWith" /> 
 																		<span style="font-weight:normal"><c:forEach var="sharedowner" items="${project.sharedowners}" varStatus="status">
 																		  <c:out value="${sharedowner.userDetails.firstname}"/>
@@ -348,20 +348,20 @@
 																</c:choose>
 															</c:if>
 															<ul class="actions">
-																<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="/wise/themes/tels/default/images/icons/teal/screen.png" />
+																<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="/wise/themes/default/images/icons/teal/screen.png" />
 																	<span<c:if test="${!isChild && !isChildNoRoot}"> style="font-weight:bold;"</c:if>><spring:message code="preview" /></span></a>&nbsp;|
 																</li>
 																<sec:accesscontrollist domainObject="${project}" hasPermission="16">
-																	<li><a title="<spring:message code="share_tip" />" data-id="${project.id}" class="shareProject tooltip" dialog-title="<spring:message code="share_permissionsTitle" /> ${project.name} (<spring:message code="id" /> ${project.id})"><img class="icon" alt="share" src="/wise/themes/tels/default/images/icons/teal/agent.png" /><span><spring:message code="share" /></span></a>&nbsp;|</li>
+																	<li><a title="<spring:message code="share_tip" />" data-id="${project.id}" class="shareProject tooltip" dialog-title="<spring:message code="share_permissionsTitle" /> ${project.name} (<spring:message code="id" /> ${project.id})"><img class="icon" alt="share" src="/wise/themes/default/images/icons/teal/agent.png" /><span><spring:message code="share" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
-																<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="/wise/themes/tels/default/images/icons/teal/copy-item.png" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
+																<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="/wise/themes/default/images/icons/teal/copy-item.png" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
 																<sec:accesscontrollist domainObject="${project}" hasPermission="2">
-																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.edit_tip" />" href="/wise/author/authorproject.html?projectId=${project.id}"><img class="icon" alt="edit" src="/wise/themes/tels/default/images/icons/teal/edit.png" /><span><spring:message code="edit" /></span></a>&nbsp;|</li>
+																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.edit_tip" />" href="/wise/author/authorproject.html?projectId=${project.id}"><img class="icon" alt="edit" src="/wise/themes/default/images/icons/teal/edit.png" /><span><spring:message code="edit" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
 																
 																<!-- <li><a style="color:#666;">Archive</a>
 																<input type='checkbox' id='public_${project.id}' onclick='changePublic("${project.id}")'/> Is Public</li>-->
-																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="../run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="/wise/themes/tels/default/images/icons/teal/computer.png" />
+																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="../run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="/wise/themes/default/images/icons/teal/computer.png" />
 																	<span<c:if test="${!isChild && !isChildNoRoot}"> style="font-weight:bold;"</c:if>><spring:message code="teacher.management.projectlibrarydisplay.startRun" /></span></a>
 																</li>
 															</ul>
@@ -369,11 +369,11 @@
 														<div style="clear:both;"></div>
 													</div>
 													<div class="projectSummary">
-														<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+														<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 														<div class="summaryInfo">
 															<div class="sharedIcon">
 															<c:if test="${fn:length(project.sharedowners) > 0}">
-																<img src="/wise/themes/tels/default/images/shared.png" alt="shared project" />
+																<img src="/wise/themes/default/images/shared.png" alt="shared project" />
 																<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" /> 
 																<c:forEach var="projectowner" items="${project.owners}" varStatus="status">
 																	<c:out value="${projectowner.userDetails.firstname}" />
@@ -452,7 +452,7 @@
 																</c:if>
 																<c:if test="${fn:length(project.sharedowners) > 0}">
 																	<div class="sharedIcon">
-																		<img src="/wise/themes/tels/default/images/shared.png" alt="shared project" />
+																		<img src="/wise/themes/default/images/shared.png" alt="shared project" />
 																		<spring:message code="teacher.management.projectlibrarydisplay.sharedWith" /> 
 																		<span style="font-weight:normal"><c:forEach var="sharedowner" items="${project.sharedowners}" varStatus="status">
 																		  <c:out value="${sharedowner.userDetails.firstname}"/>
@@ -557,19 +557,19 @@
 														</div>
 														<div class="projectTools">
 															<ul class="actions">
-																<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="/wise/themes/tels/default/images/icons/teal/screen.png" />
+																<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="/wise/themes/default/images/icons/teal/screen.png" />
 																	<span style="font-weight:bold;"><spring:message code="preview" /></span></a>&nbsp;|
 																</li>
 																<sec:accesscontrollist domainObject="${project}" hasPermission="16">
-																	<li><a title="<spring:message code="share_tip" />" data-id="${project.id}" class="shareProject tooltip" dialog-title="<spring:message code="share_permissionsTitle" /> ${project.name} (<spring:message code="id" /> ${project.id})"><img class="icon" alt="share" src="/wise/themes/tels/default/images/icons/teal/agent.png" /><span><spring:message code="share" /></span></a>&nbsp;|</li>
+																	<li><a title="<spring:message code="share_tip" />" data-id="${project.id}" class="shareProject tooltip" dialog-title="<spring:message code="share_permissionsTitle" /> ${project.name} (<spring:message code="id" /> ${project.id})"><img class="icon" alt="share" src="/wise/themes/default/images/icons/teal/agent.png" /><span><spring:message code="share" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
-																<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="/wise/themes/tels/default/images/icons/teal/copy-item.png" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
+																<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="/wise/themes/default/images/icons/teal/copy-item.png" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
 																<sec:accesscontrollist domainObject="${project}" hasPermission="2">
-																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.edit_tip" />" href="/wise/author/authorproject.html?projectId=${project.id}"><img class="icon" alt="edit" src="/wise/themes/tels/default/images/icons/teal/edit.png" /><span><spring:message code="edit" /></span></a>&nbsp;|</li>
+																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.edit_tip" />" href="/wise/author/authorproject.html?projectId=${project.id}"><img class="icon" alt="edit" src="/wise/themes/default/images/icons/teal/edit.png" /><span><spring:message code="edit" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
 																<!-- <li><a style="color:#666;">Archive</a>
 																<input type='checkbox' id='public_${project.id}' onclick='changePublic("${project.id}")'/> Is Public</li>-->
-																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="../run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="/wise/themes/tels/default/images/icons/teal/computer.png" />
+																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="../run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="/wise/themes/default/images/icons/teal/computer.png" />
 																	<span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.startRun" /></span></a>
 																</li>
 															</ul>
@@ -577,11 +577,11 @@
 													</div>
 													<div style="clear:both;"></div>
 													<div class="projectSummary">
-														<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+														<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 														<div class="summaryInfo">
 															<c:if test="${fn:length(project.sharedowners) > 0}">
 																<div class="sharedIcon" style="float:right;">
-																	<img src="/wise/themes/tels/default/images/shared.png" alt="shared project" />
+																	<img src="/wise/themes/default/images/shared.png" alt="shared project" />
 																	<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" /> 
 																	<c:forEach var="projectowner" items="${project.owners}" varStatus="status">
 																		<c:out value="${projectowner.userDetails.firstname}" />
@@ -589,7 +589,7 @@
 																	</c:forEach>
 																</div>
 															</c:if>
-															<div class="libraryIcon"><img src="/wise/themes/tels/default/images/open_book.png" alt="library project" /> <spring:message code="teacher.management.projectlibrarydisplay.libraryProject" /></div>
+															<div class="libraryIcon"><img src="/wise/themes/default/images/open_book.png" alt="library project" /> <spring:message code="teacher.management.projectlibrarydisplay.libraryProject" /></div>
 															<div class="basicInfo">
 																<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
 																<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
@@ -785,10 +785,10 @@
 																		</c:choose>
 																	</c:if>
 																	<ul class="actions">
-																		<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="/wise/themes/tels/default/images/icons/teal/screen.png" />
+																		<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="/wise/themes/default/images/icons/teal/screen.png" />
 																			<span<c:if test="${!isChild && !isChildNoRoot}"> style="font-weight:bold;"</c:if>><spring:message code="preview" /></span></a>&nbsp;|
 																		</li>
-																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="/wise/themes/tels/default/images/icons/teal/copy-item.png" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
+																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="/wise/themes/default/images/icons/teal/copy-item.png" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
 																		<c:set var="isOwner" value="false" />
 																		<c:forEach var="owner" items="${project.owners}">
 																			<c:if test="${owner.id == user.id}">
@@ -796,7 +796,7 @@
 																			</c:if>
 																		</c:forEach>
 																		<c:if test="${isOwner == 'true'}">
-																			<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.restore_tip" />" onclick="archiveProject('<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>', ${project.id}, true)"><img class="icon" alt="restore" src="/wise/themes/tels/default/images/icons/teal/unlock.png" />
+																			<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.restore_tip" />" onclick="archiveProject('<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>', ${project.id}, true)"><img class="icon" alt="restore" src="/wise/themes/default/images/icons/teal/unlock.png" />
 																			<span><spring:message code="teacher.management.projectlibrarydisplay.restore" /></span></a></li>												
 																		</c:if>
 																	</ul>
@@ -804,7 +804,7 @@
 																<div style="clear:both;"></div>
 															</div>
 															<div class="projectSummary">
-																<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+																<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 																<div class="summaryInfo">
 																	<div class="basicInfo">
 																		<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
@@ -876,7 +876,7 @@
 																		</c:if>
 																		<c:if test="${fn:length(project.sharedowners) > 0}">
 																			<div class="sharedIcon">
-																				<img src="/wise/themes/tels/default/images/shared.png" alt="shared project" />
+																				<img src="/wise/themes/default/images/shared.png" alt="shared project" />
 																				<spring:message code="teacher.management.projectlibrarydisplay.sharedWith" /> 
 																				<span style="font-weight:normal"><c:forEach var="sharedowner" items="${project.sharedowners}" varStatus="status">
 																				  <c:out value="${sharedowner.userDetails.firstname}"/>
@@ -1013,20 +1013,20 @@
 																		</c:choose>
 																	</c:if>
 																	<ul class="actions">
-																		<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="/wise/themes/tels/default/images/icons/teal/screen.png" />
+																		<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="/wise/themes/default/images/icons/teal/screen.png" />
 																			<span<c:if test="${!isChild && !isChildNoRoot}"> style="font-weight:bold;"</c:if>><spring:message code="preview" /></span></a>&nbsp;|
 																		</li>
-																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="/wise/themes/tels/default/images/icons/teal/copy-item.png" /><span><spring:message code="copy" /></span></a></li>
+																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="/wise/themes/default/images/icons/teal/copy-item.png" /><span><spring:message code="copy" /></span></a></li>
 																	</ul>
 																</div>
 																<div style="clear:both;"></div>
 															</div>
 															<div class="projectSummary">
-																<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+																<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 																<div class="summaryInfo">
 																	<div class="sharedIcon">
 																	<c:if test="${fn:length(project.sharedowners) > 0}">
-																		<img src="/wise/themes/tels/default/images/shared.png" alt="shared project" />
+																		<img src="/wise/themes/default/images/shared.png" alt="shared project" />
 																		<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" /> 
 																		<c:forEach var="projectowner" items="${project.owners}" varStatus="status">
 																			<c:out value="${projectowner.userDetails.firstname}" />
@@ -1105,7 +1105,7 @@
 																		</c:if>
 																		<c:if test="${fn:length(project.sharedowners) > 0}">
 																			<div class="sharedIcon">
-																				<img src="/wise/themes/tels/default/images/shared.png" alt="shared project" />
+																				<img src="/wise/themes/default/images/shared.png" alt="shared project" />
 																				<spring:message code="teacher.management.projectlibrarydisplay.sharedWith" /> 
 																				<span style="font-weight:normal"><c:forEach var="sharedowner" items="${project.sharedowners}" varStatus="status">
 																				  <c:out value="${sharedowner.userDetails.firstname}"/>
@@ -1210,10 +1210,10 @@
 																</div>
 																<div class="projectTools">
 																	<ul class="actions">
-																		<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="/wise/themes/tels/default/images/icons/teal/screen.png" />
+																		<li><a class="tooltip" href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" title="<spring:message code="preview_tip" />" target="_blank"><img class="icon" alt="preview" src="/wise/themes/default/images/icons/teal/screen.png" />
 																			<span style="font-weight:bold;"><spring:message code="preview" /></span></a>&nbsp;|
 																		</li>
-																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="/wise/themes/tels/default/images/icons/teal/copy-item.png" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
+																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="/wise/themes/default/images/icons/teal/copy-item.png" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
 																		<c:set var="isOwner" value="false" />
 																		<c:forEach var="owner" items="${project.owners}">
 																			<c:if test="${owner.id == user.id}">
@@ -1228,11 +1228,11 @@
 															</div>
 															<div style="clear:both;"></div>
 															<div class="projectSummary">
-																<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+																<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 																<div class="summaryInfo">
 																	<c:if test="${fn:length(project.sharedowners) > 0}">
 																		<div class="sharedIcon" style="float:right;">
-																			<img src="/wise/themes/tels/default/images/shared.png" alt="shared project" />
+																			<img src="/wise/themes/default/images/shared.png" alt="shared project" />
 																			<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" /> 
 																			<c:forEach var="projectowner" items="${project.owners}" varStatus="status">
 																				<c:out value="${projectowner.userDetails.firstname}" />
@@ -1240,7 +1240,7 @@
 																			</c:forEach>
 																		</div>
 																	</c:if>
-																	<div class="libraryIcon"><img src="/wise/themes/tels/default/images/open_book.png" alt="library project" /> <spring:message code="teacher.projects.projectinfo.libraryProject" /></div>
+																	<div class="libraryIcon"><img src="/wise/themes/default/images/open_book.png" alt="library project" /> <spring:message code="teacher.projects.projectinfo.libraryProject" /></div>
 																	<div class="basicInfo">
 																		<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
 																		<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
@@ -1438,7 +1438,7 @@
 				} },
 				{ text: '<spring:message code="ok" />', click: function(){
 					var $copyingDialog = '<p><spring:message code="teacher.management.projectlibrarydisplay.copy_processing" /></p>' + 
-						'<p><img src="/wise/themes/tels/default/images/rel_interstitial_loading.gif" /></p>';
+						'<p><img src="/wise/themes/default/images/rel_interstitial_loading.gif" /></p>';
 					$('#copyDialog').css('text-align','center');
 					$('#copyDialog').html($copyingDialog);
 					$('ui-dialog-titlebar-close',$(this).parent()).hide();
@@ -1536,7 +1536,7 @@
 					},
 					404:function() {
 					    // If not found (returns 400 status), do nothing (use the default image)
-						//$(this).html("<img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></img>");
+						//$(this).html("<img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></img>");
 					}
 				}
 			});
@@ -2325,7 +2325,7 @@
 				} },
 				{ text: '<spring:message code="ok" />', click: function(){
 					var processingHtml = '<p>' + processing + '</p>' + 
-						'<p><img src="/wise/themes/tels/default/images/rel_interstitial_loading.gif" /></p>';
+						'<p><img src="/wise/themes/default/images/rel_interstitial_loading.gif" /></p>';
 					$('#archiveDialog').css('text-align','center');
 					$('#archiveDialog').html(processingHtml);
 					$('ui-dialog-titlebar-close',$(this).parent()).hide();
@@ -2399,7 +2399,7 @@
 				} },
 				{ text: '<spring:message code="ok" />', click: function(){
 					var processingHtml = '<p>' + processing + '</p>' + 
-						'<p><img src="/wise/themes/tels/default/images/rel_interstitial_loading.gif" /></p>';
+						'<p><img src="/wise/themes/default/images/rel_interstitial_loading.gif" /></p>';
 					$('#unshareDialog').css('text-align','center');
 					$('#unshareDialog').html(processingHtml);
 					$('ui-dialog-titlebar-close',$(this).parent()).hide();

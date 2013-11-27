@@ -157,7 +157,7 @@ $(document).ready(function() {
 </style>
 <![endif]-->
 
-<link rel="shortcut icon" href="../themes/tels/default/images/favicon_panda.ico" />
+<link rel="shortcut icon" href="../themes/default/images/favicon_panda.ico" />
 
 </head>
 
@@ -254,7 +254,7 @@ $(document).ready(function() {
 					
 						<div class="sideContent">
 						
-							<div style="text-align:center; margin-top:5px"><img src="/wise/themes/tels/default/images/wise4-logo-new-sm.png" alt="WISE" /></div>
+							<div style="text-align:center; margin-top:5px"><img src="/wise/themes/default/images/wise4-logo-new-sm.png" alt="WISE" /></div>
 							
 							<spring:htmlEscape defaultHtmlEscape="false">
             				<spring:escapeBody htmlEscape="false">

@@ -23,19 +23,19 @@
 	 		<div>
 	 			<div id="footerLogos">
 					<a href="http://www.nsf.gov" title="<spring:message code="footer.link_nsf" />" target="_blank">
-						<img src="/wise/themes/tels/default/images/nsf-logo.png" alt="<spring:message code="footer.link_nsf" />" />
+						<img src="/wise/themes/default/images/nsf-logo.png" alt="<spring:message code="footer.link_nsf" />" />
 					</a>
 					<a href="http://berkeley.edu" title="<spring:message code="footer.link_ucb" />" target="_blank">
-						<img src="/wise/themes/tels/default/images/ucb-logo.png" alt="<spring:message code="footer.link_ucb" />" />
+						<img src="/wise/themes/default/images/ucb-logo.png" alt="<spring:message code="footer.link_ucb" />" />
 					</a>
 					<a href="http://concord.org" title="<spring:message code="footer.link_concord" />" target="_blank">
-						<img src="/wise/themes/tels/default/images/concord-logo.png" alt="<spring:message code="footer.link_concord" />" />
+						<img src="/wise/themes/default/images/concord-logo.png" alt="<spring:message code="footer.link_concord" />" />
 					</a>
 					<!-- <a href="http://www.telscenter.org/confluence/display/SAIL/Home" title="<spring:message code="footer.link_sail" />" target="_blank"> -->
-						<img src="/wise/themes/tels/default/images/sail-logo.png" alt="<spring:message code="footer.link_sail" />" />
+						<img src="/wise/themes/default/images/sail-logo.png" alt="<spring:message code="footer.link_sail" />" />
 					<!-- </a>  -->
 					<a href="http://www.telscenter.org/" title="<spring:message code="footer.link_tels" />" target="_blank">
-						<img src="/wise/themes/tels/default/images/tels-logo-small.png" alt="<spring:message code="footer.link_tels" />" />
+						<img src="/wise/themes/default/images/tels-logo-small.png" alt="<spring:message code="footer.link_tels" />" />
 					</a>
 				</div>
 				<div id="footerText">

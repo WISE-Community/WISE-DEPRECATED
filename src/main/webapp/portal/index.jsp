@@ -52,13 +52,13 @@
 					<div class="slider-wrapper theme-wise">
    				 		<div class="ribbon"></div>
 						<div id="showcaseSlider">
-						    <img src="/wise/themes/tels/default/images/home/whatiswise.png" alt="<spring:message code="index.whatIsWise" />" />
-						    <img src="/wise/themes/tels/default/images/home/curriculumbased.png" alt="<spring:message code="index.curriculumBased" />" />
-						    <img src="/wise/themes/tels/default/images/home/inquiry.png" alt="<spring:message code="index.inquiryProjects" />" />
-						    <img src="/wise/themes/tels/default/images/home/engagement.png" alt="<spring:message code="index.studentEngagement" />" />
-						    <img src="/wise/themes/tels/default/images/home/interactive.png" alt="<spring:message code="index.interactiveModels" />" />
-						    <img src="/wise/themes/tels/default/images/home/teachertools.png" alt="<spring:message code="index.teacherTools" />" />
-						    <img src="/wise/themes/tels/default/images/home/opensource.png" alt="<spring:message code="index.openSource" />" />
+						    <img src="/wise/themes/default/images/home/whatiswise.png" alt="<spring:message code="index.whatIsWise" />" />
+						    <img src="/wise/themes/default/images/home/curriculumbased.png" alt="<spring:message code="index.curriculumBased" />" />
+						    <img src="/wise/themes/default/images/home/inquiry.png" alt="<spring:message code="index.inquiryProjects" />" />
+						    <img src="/wise/themes/default/images/home/engagement.png" alt="<spring:message code="index.studentEngagement" />" />
+						    <img src="/wise/themes/default/images/home/interactive.png" alt="<spring:message code="index.interactiveModels" />" />
+						    <img src="/wise/themes/default/images/home/teachertools.png" alt="<spring:message code="index.teacherTools" />" />
+						    <img src="/wise/themes/default/images/home/opensource.png" alt="<spring:message code="index.openSource" />" />
 						</div>
 					</div>
 				</div>
@@ -71,8 +71,8 @@
 						</c:forEach>
 					</div>
 					<div id="socialLinks">
-						<a href="http://www.facebook.com/pages/WISE-4/150541171679054" title="<spring:message code="index.facebookTitle" />"><img src="/wise/themes/tels/default/images/home/facebook.png" alt="facebook" /></a>
-						<a href="https://twitter.com/#!/WISETELS" title="<spring:message code="index.twitterTitle" />" ><img src="/wise/themes/tels/default/images/home/twitter.png" alt="twitter" /></a>
+						<a href="http://www.facebook.com/pages/WISE-4/150541171679054" title="<spring:message code="index.facebookTitle" />"><img src="/wise/themes/default/images/home/facebook.png" alt="facebook" /></a>
+						<a href="https://twitter.com/#!/WISETELS" title="<spring:message code="index.twitterTitle" />" ><img src="/wise/themes/default/images/home/twitter.png" alt="twitter" /></a>
 					</div>
 				</div>
 			</div>
@@ -99,7 +99,7 @@
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${esProjects}">
 									    		<li class="libraryProject">
-									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
 								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
@@ -126,7 +126,7 @@
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${lsProjects}">
 									    		<li class="libraryProject">
-									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
 								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
@@ -153,7 +153,7 @@
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${psProjects}">
 									    		<li class="libraryProject">
-									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
 								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
@@ -180,7 +180,7 @@
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${bioProjects}">
 									    		<li class="libraryProject">
-									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
 								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
@@ -207,7 +207,7 @@
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${chemProjects}">
 									    		<li class="libraryProject">
-									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
 								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
@@ -234,7 +234,7 @@
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${physProjects}">
 									    		<li class="libraryProject">
-									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
 								      					<p class="metadata">Grades ${project.metadata.gradeRange} | ${project.metadata.totalTime} | ${project.metadata.language}</p>
@@ -262,21 +262,21 @@
 			<div class="showcase">
 				<a id="wiseAdvantage" href="/wise/pages/wise-advantage.html" class="panelSection">
 					<div class="panelHead"><span><spring:message code="index.wiseAdvantage" /></span><span class="panelLink">+</span></div>
-					<div class="panelContent"><img src="/wise/themes/tels/default/images/home/wise-in-classroom.png" alt="<spring:message code="index.wiseAdvantageTitle" />" /></div>
+					<div class="panelContent"><img src="/wise/themes/default/images/home/wise-in-classroom.png" alt="<spring:message code="index.wiseAdvantageTitle" />" /></div>
 				</a>
 				<a id="wiseInAction" href="/wise/pages/wise-in-action.html" class="panelSection">
 					<div class="panelHead"><span><spring:message code="index.wiseInAction" /></span><span class="panelLink">+</span></div>
-					<div class="panelContent"><img src="/wise/themes/tels/default/images/home/wise-teaching.png" alt="<spring:message code="index.wiseInActionTitle" />" /></div>
+					<div class="panelContent"><img src="/wise/themes/default/images/home/wise-teaching.png" alt="<spring:message code="index.wiseInActionTitle" />" /></div>
 				</a>
 				<a id="researchTech" href="/wise/pages/research-tech.html" class="panelSection">
 					<div class="panelHead"><span><spring:message code="index.wiseResearchAndTech" /></span><span class="panelLink">+</span></div>
-					<div class="panelContent"><img src="/wise/themes/tels/default/images/home/wise-research.png" alt="<spring:message code="index.wiseResearchAndTechTitle" />" /></div>
+					<div class="panelContent"><img src="/wise/themes/default/images/home/wise-research.png" alt="<spring:message code="index.wiseResearchAndTechTitle" />" /></div>
 				</a>
 				<div style="clear:both;"></div>
 			</div>
 			
 			<div id="bottomLinks" class="showcase">
-				<div id="telsLink"><a href="http://telscenter.org" target="_blank"><img src="/wise/themes/tels/default/images/home/tels.png"/></a></div>
+				<div id="telsLink"><a href="http://telscenter.org" target="_blank"><img src="/wise/themes/default/images/home/tels.png"/></a></div>
 				<div id="telsLinkLabel"><spring:message code="index.telsCommunity" /></div>
 				<div id="openSourceHeader" class="feature">
 					<span class="featureContent"><spring:message code="index.openSourcePartnerships" /></span>
@@ -386,7 +386,7 @@
 						},
 						404:function() {
 						    // not found, leave alone
-							//$(this).html("<img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></img>");
+							//$(this).html("<img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></img>");
 						}
 					}
 				});

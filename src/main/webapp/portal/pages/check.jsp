@@ -20,7 +20,7 @@
   
 <title><spring:message code="pages.check.title" /></title>
 
-<link rel="shortcut icon" href="./themes/tels/default/images/favicon_panda.ico" /> 
+<link rel="shortcut icon" href="./themes/default/images/favicon_panda.ico" /> 
 
 </head>
 
@@ -56,7 +56,7 @@
 									<td><spring:message code="pages.check.required" /></td>
 									<td><spring:message code="pages.check.enabled" /></td>
 									<td><spring:message code="pages.check.disabled" /></td>
-									<td><img src='../themes/tels/default/images/error_16.gif' /></td>
+									<td><img src='../themes/default/images/error_16.gif' /></td>
 									<td><a href='https://www.google.com/support/adsense/bin/answer.py?answer=12654'><spring:message code="pages.check.browser_howToEnabledJS" /></a></td>
 								</tr>
 								</noscript>

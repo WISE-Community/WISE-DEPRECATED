@@ -12,7 +12,7 @@
   
 <title><spring:message code="signup.title" /></title>
 
-<link rel="shortcut icon" href="./themes/tels/default/images/favicon_panda.ico" /> 
+<link rel="shortcut icon" href="./themes/default/images/favicon_panda.ico" /> 
 
 </head>
 

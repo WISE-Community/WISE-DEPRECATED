@@ -422,8 +422,8 @@ var displayNotification = function(message){
 			<div class="gradingTools">
 				<div id="fixedGradingHeader" class="gradingHeader">
 					<div>
-						<a href="studentlist.html?runId=${run.id}" target="_blank"><img class="icon" alt="print" src="/wise/themes/tels/default/images/icons/teal/print.png" /><span><spring:message code="teacher.management.viewmystudents.print"/></span></a>
-						<a href="studentlistexcel.html?runId=${run.id}"><img class="icon" alt="excel" src="/wise/themes/tels/default/images/icons/teal/addressbook.png" /><span><spring:message code="teacher.management.viewmystudents.export"/></span></a>
+						<a href="studentlist.html?runId=${run.id}" target="_blank"><img class="icon" alt="print" src="/wise/themes/default/images/icons/teal/print.png" /><span><spring:message code="teacher.management.viewmystudents.print"/></span></a>
+						<a href="studentlistexcel.html?runId=${run.id}"><img class="icon" alt="excel" src="/wise/themes/default/images/icons/teal/addressbook.png" /><span><spring:message code="teacher.management.viewmystudents.export"/></span></a>
 					</div>
 					<div style="float:right;">
 						<a class="saveButton disabled" id="saveButton" onclick=""><spring:message code="teacher.management.viewmystudents.save"/></a>
@@ -468,8 +468,8 @@ var displayNotification = function(message){
 							    	<li><spring:message code="teacher.management.viewmystudents.teamsLabel"/>&nbsp;<span class="manageDataStyle">${fn:length(viewmystudentsperiod.workgroups)}</span></li>
 							    	<li><spring:message code="teacher.management.viewmystudents.accessCode"/>&nbsp;<span class="manageDataStyle">${viewmystudentsperiod.run.runcode}</span></li>
 							    	<li style="float:right;">
-							    		<a onclick="createNewWorkgroup(${viewmystudentsperiod.period.id}, ${viewmystudentsperiod.run.id});"><img class="icon" alt="new team" src="/wise/themes/tels/default/images/icons/teal/multi-agents.png" /><span><spring:message code="teacher.management.viewmystudents.createNewTeam"/></span></a>
-							     		<a class="changeAllPasswords" id="changeAllPasswords_groupId=${viewmystudentsperiod.period.id}&runId=${viewmystudentsperiod.run.id}" title="<spring:message code="teacher.management.viewmystudents.changeAllPasswords"/>: <spring:message code="run_period"/> ${viewmystudentsperiod.period.name}"><img class="icon" alt="password" src="/wise/themes/tels/default/images/icons/teal/shield.png" /><span><spring:message code="teacher.management.viewmystudents.changeAllPasswords"/></span></a>
+							    		<a onclick="createNewWorkgroup(${viewmystudentsperiod.period.id}, ${viewmystudentsperiod.run.id});"><img class="icon" alt="new team" src="/wise/themes/default/images/icons/teal/multi-agents.png" /><span><spring:message code="teacher.management.viewmystudents.createNewTeam"/></span></a>
+							     		<a class="changeAllPasswords" id="changeAllPasswords_groupId=${viewmystudentsperiod.period.id}&runId=${viewmystudentsperiod.run.id}" title="<spring:message code="teacher.management.viewmystudents.changeAllPasswords"/>: <spring:message code="run_period"/> ${viewmystudentsperiod.period.name}"><img class="icon" alt="password" src="/wise/themes/default/images/icons/teal/shield.png" /><span><spring:message code="teacher.management.viewmystudents.changeAllPasswords"/></span></a>
 							       		<a><spring:message code="help"/></a>
 							       	</li>
 							    </ul>

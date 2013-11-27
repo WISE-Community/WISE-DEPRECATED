@@ -43,7 +43,7 @@
 						},
 						404:function() {
 						    // not found, leave alone
-							//$(this).html("<img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></img>");
+							//$(this).html("<img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></img>");
 						}
 					}
 				});
@@ -59,9 +59,9 @@
 <div class="projectSummary">
 	<div class="projectInfoDisplay">
 		<div class="panelHeader">${project.name} (ID: ${project.id})
-			<span style="float:right;"><a href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" target="_blank"><img class="icon" alt="preview" src="/wise/themes/tels/default/images/icons/teal/screen.png" /><span><spring:message code="preview"/></span></a></span>
+			<span style="float:right;"><a href="<c:url value="/previewproject.html"><c:param name="projectId" value="${project.id}"/></c:url>" target="_blank"><img class="icon" alt="preview" src="/wise/themes/default/images/icons/teal/screen.png" /><span><spring:message code="preview"/></span></a></span>
 		</div>
-		<div class="projectThumb" thumbUrl="${projectThumbPath}"><img src='/wise/themes/tels/default/images/projectThumb.png' alt='thumb'></div>
+		<div class="projectThumb" thumbUrl="${projectThumbPath}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
 		<div class="summaryInfo">
 			<div class="basicInfo">
 				<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>

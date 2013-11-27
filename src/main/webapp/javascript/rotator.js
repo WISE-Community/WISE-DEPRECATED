@@ -15,22 +15,22 @@ var firstRClicked_T = 0;
 
 //obtained the tips on rotating Images, source code from http://www.communitymx.com/content/article.cfm?cid=651FF
 // Comma separated list of images to rotate
-var wiseinactions = new Array('./themes/tels/default/images/wiseInAction/AirBag.png',
-                     './themes/tels/default/images/wiseInAction/kidsOnComputer.png',
-                     './themes/tels/default/images/wiseInAction/kidsinaquarium.png',
-                     './themes/tels/default/images/wiseInAction/csiScreenshot.png',
-                     './themes/tels/default/images/wiseInAction/Studentputdata.png',
-                     './themes/tels/default/images/wiseInAction/Reflection.png',
-                     './themes/tels/default/images/wiseInAction/PondSim.png',
-                     './themes/tels/default/images/wiseInAction/OnlineDiscussion.png',
-                     './themes/tels/default/images/wiseInAction/MolecularModel.png',
-                     './themes/tels/default/images/wiseInAction/SkinCells.png');
+var wiseinactions = new Array('./themes/default/images/wiseInAction/AirBag.png',
+                     './themes/default/images/wiseInAction/kidsOnComputer.png',
+                     './themes/default/images/wiseInAction/kidsinaquarium.png',
+                     './themes/default/images/wiseInAction/csiScreenshot.png',
+                     './themes/default/images/wiseInAction/Studentputdata.png',
+                     './themes/default/images/wiseInAction/Reflection.png',
+                     './themes/default/images/wiseInAction/PondSim.png',
+                     './themes/default/images/wiseInAction/OnlineDiscussion.png',
+                     './themes/default/images/wiseInAction/MolecularModel.png',
+                     './themes/default/images/wiseInAction/SkinCells.png');
 
-var testimonials = new Array('./themes/tels/default/images/testimonial_1B.png',
-                             './themes/tels/default/images/testimonial_2B.png',
-                             './themes/tels/default/images/testimonial_3B.png',
-                             './themes/tels/default/images/testimonial_4B.png',
-                             './themes/tels/default/images/testimonial_5B.png');
+var testimonials = new Array('./themes/default/images/testimonial_1B.png',
+                             './themes/default/images/testimonial_2B.png',
+                             './themes/default/images/testimonial_3B.png',
+                             './themes/default/images/testimonial_4B.png',
+                             './themes/default/images/testimonial_5B.png');
 							
 							 
 //http://code.blizaga.com/javascript_drawing_gradients.html

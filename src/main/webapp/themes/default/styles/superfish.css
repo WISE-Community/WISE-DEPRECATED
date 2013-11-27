@@ -150,7 +150,7 @@ ul.sf-menu li.align-right li.sfHover ul {
 	height:			10px;
 	text-indent: 	-999em;
 	overflow:		hidden;
-	background:		url('/wise/themes/tels/default/images/arrows-745A34.png') no-repeat -10px -100px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+	background:		url('/wise/themes/default/images/arrows-745A34.png') no-repeat -10px -100px; /* 8-bit indexed alpha png. IE6 gets solid image only */
 }
 a > .sf-sub-indicator {  /* give all except IE6 the correct values */
 	top: 1.7em;
@@ -192,7 +192,7 @@ li.sfHover > a > .sf-sub-indicator {
 
 /*** WISE4 3-Tab Menu Styles ***/
 .sf-menu .level1 {
-	background-image:url("/wise/themes/tels/default/images/accountBg.png");
+	background-image:url("/wise/themes/default/images/accountBg.png");
 	background-color:transparent;
 	display:block;
 }

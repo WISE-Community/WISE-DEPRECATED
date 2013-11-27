@@ -330,7 +330,7 @@ a.viewLesson:hover {
 }
 
 .projectBox a.bookmark {
-	background: url("/wise/themes/tels/default/images/star-empty.png") no-repeat scroll center center transparent;
+	background: url("/wise/themes/default/images/star-empty.png") no-repeat scroll center center transparent;
     display: inline-block;
     height: 15px;
     margin-bottom: -1px;
@@ -343,7 +343,7 @@ a.viewLesson:hover {
 }
 
 .projectBox .bookmark.true {
-	background-image:url("/wise/themes/tels/default/images/star-fill.png");
+	background-image:url("/wise/themes/default/images/star-fill.png");
 }
 
 ul.actions {
