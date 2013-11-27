@@ -985,6 +985,7 @@
 
 	<util:properties id="portalproperties" location="classpath:wise.properties" />
 
+	<!--  this allows key/value pairs in wise.properties to be used to create beans.  see dataSource bean for example -->
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">

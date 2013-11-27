@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
@@ -69,7 +68,7 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 		return userInfo;
 	}
 
-	@Transactional
+	@Transactional(readOnly=false)
 	public void saveUserInfo(UserInfo userInfo) {
 		save(userInfo);
 	}
@@ -90,6 +89,7 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 	 * @param id
 	 * @return
 	 */
+	@Transactional(readOnly=false)
 	public synchronized UserInfo getUserInfoOrCreateByWorkgroupId(Long workgroupId) {
 		UserInfo userInfo = getUserInfoByWorkgroupId(workgroupId);
 		if (userInfo == null) {
