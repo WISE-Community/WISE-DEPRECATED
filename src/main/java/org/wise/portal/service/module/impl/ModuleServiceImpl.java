@@ -25,17 +25,15 @@ package org.wise.portal.service.module.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.impl.CurnitParameters;
-import net.sf.sail.webapp.domain.webservice.http.HttpStatusCodeException;
-import net.sf.sail.webapp.service.curnit.impl.CurnitServiceImpl;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.module.ModuleDao;
-import org.wise.portal.domain.Module;
-import org.wise.portal.domain.impl.CreateUrlModuleParameters;
-import org.wise.portal.domain.impl.UrlModuleImpl;
+import org.wise.portal.domain.module.Curnit;
+import org.wise.portal.domain.module.Module;
+import org.wise.portal.domain.module.impl.CreateUrlModuleParameters;
+import org.wise.portal.domain.module.impl.CurnitParameters;
+import org.wise.portal.domain.module.impl.UrlModuleImpl;
 import org.wise.portal.service.module.ModuleService;
 
 /**
@@ -54,7 +52,7 @@ public class ModuleServiceImpl extends CurnitServiceImpl implements
 	 * @see net.sf.sail.webapp.service.curnit.impl.CurnitServiceImpl#createCurnit(net.sf.sail.webapp.domain.impl.CurnitParameters)
 	 */
 	 @Override
-	 @Transactional(rollbackFor = { HttpStatusCodeException.class })	
+	 @Transactional()	
 	 public Module createCurnit(CurnitParameters curnitParameters) {
 		Module module = null;
 		

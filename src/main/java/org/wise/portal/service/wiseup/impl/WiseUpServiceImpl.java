@@ -38,18 +38,17 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.curnit.CurnitService;
-
 import org.apache.commons.io.FileUtils;
-import org.wise.portal.domain.impl.CreateUrlModuleParameters;
-import org.wise.portal.domain.impl.ProjectParameters;
+import org.json.JSONObject;
+import org.wise.portal.domain.module.Curnit;
+import org.wise.portal.domain.module.impl.CreateUrlModuleParameters;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
+import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.wiseup.WiseUpService;
 
@@ -63,7 +62,7 @@ public class WiseUpServiceImpl implements WiseUpService {
 
 	private CurnitService curnitService;
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	
 	private String wiseUpHubUrl;
 
@@ -78,7 +77,7 @@ public class WiseUpServiceImpl implements WiseUpService {
 		String exportProjectPath = wiseUpHubUrl + "/projectLibrary/exportProject.php" + "?wiseInstanceId=" + externalWiseInstanceId +"&wiseProjectId=" + externalWiseProjectId ;
 		
 		// upload the zipfile to curriculum_base_dir
-		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
 		File uploadDir = new File(curriculumBaseDir);
 		if (!uploadDir.exists()) {
@@ -242,8 +241,8 @@ public class WiseUpServiceImpl implements WiseUpService {
 		this.projectService = projectService;
 	}
 
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	public void setCurnitService(CurnitService curnitService) {

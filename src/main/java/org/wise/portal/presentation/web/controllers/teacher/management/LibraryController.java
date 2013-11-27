@@ -16,22 +16,16 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
-import net.sf.sail.webapp.service.UserService;
-
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.Run;
-import org.wise.portal.domain.message.Message;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.message.MessageService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.user.UserService;
 
 /**
  * Controller for WISE library page
@@ -51,7 +45,7 @@ public class LibraryController extends AbstractController {
 
 	private RunService runService;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	/**
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -180,8 +174,8 @@ public class LibraryController extends AbstractController {
 		//a map to contain projectId to run date
 		Map<Long,Long> projectRunIdMap = new TreeMap<Long,Long>();
 		
-		String curriculumBaseDir = this.portalProperties.getProperty("curriculum_base_dir");
-		String curriculumBaseWWW = this.portalProperties.getProperty("curriculum_base_www");
+		String curriculumBaseDir = this.wiseProperties.getProperty("curriculum_base_dir");
+		String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
 		for (Project p: ownedProjectsList) {
 			if (p.isCurrent()){
 				if(p.isDeleted()){
@@ -400,10 +394,10 @@ public class LibraryController extends AbstractController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

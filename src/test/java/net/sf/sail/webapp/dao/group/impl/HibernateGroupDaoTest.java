@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
+import org.wise.portal.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
@@ -462,7 +462,7 @@ public class HibernateGroupDaoTest extends AbstractTransactionalDbTests {
 
     /**
      * Test method for
-     * {@link net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getList()}.
+     * {@link org.wise.portal.dao.impl.AbstractHibernateDao#getList()}.
      */
     public void testGetList() {
         verifyDataStoreIsEmpty();
@@ -480,7 +480,7 @@ public class HibernateGroupDaoTest extends AbstractTransactionalDbTests {
 
     /**
      * Test method for
-     * {@link net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getById(java.lang.Long)}.
+     * {@link org.wise.portal.dao.impl.AbstractHibernateDao#getById(java.lang.Long)}.
      */
     public void testGetById() throws Exception {
         verifyDataStoreIsEmpty();

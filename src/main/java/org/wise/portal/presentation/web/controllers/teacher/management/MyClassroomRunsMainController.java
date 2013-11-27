@@ -33,19 +33,18 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.service.workgroup.WorkgroupService;
-
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.Run;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Puts run details into the model to be retrieved and displayed on
@@ -63,7 +62,7 @@ public class MyClassroomRunsMainController extends AbstractController {
 
 	private RunService runService;
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	
 	private ProjectService projectService;
 
@@ -102,7 +101,7 @@ public class MyClassroomRunsMainController extends AbstractController {
 
 		boolean isXMPPEnabled = false;
 		
-	    String isXMPPEnabledStr = this.portalProperties.getProperty("isXMPPEnabled");
+	    String isXMPPEnabledStr = this.wiseProperties.getProperty("isXMPPEnabled");
 	    if (isXMPPEnabledStr != null) {
 	    	isXMPPEnabled = Boolean.valueOf(isXMPPEnabledStr);
 	    }
@@ -170,10 +169,10 @@ public class MyClassroomRunsMainController extends AbstractController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 	/**
 	 * @param projectService the projectService to set

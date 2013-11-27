@@ -24,7 +24,7 @@ package org.wise.portal.domain.project;
 
 import java.util.Date;
 
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.json.JSONObject;
 
 /**
  * @author patrick lawler

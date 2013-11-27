@@ -22,7 +22,7 @@
  */
 package org.wise.portal.service.wiseup;
 
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.user.User;
 
 /**
  * A Service for linking this WISE instance with others

@@ -25,7 +25,7 @@ package org.telscenter.sail.webapp.presentation.web.controllers;
 
 import javax.servlet.http.HttpSession;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
+import org.wise.portal.dao.ObjectNotFoundException;
 
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;

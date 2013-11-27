@@ -27,22 +27,22 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.wise.portal.domain.Run;
-import org.wise.portal.domain.impl.BatchStudentChangePasswordParameters;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.authentication.impl.BatchStudentChangePasswordParameters;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.service.acl.AclService;
+import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.offering.RunService;
-
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.service.AclService;
-import net.sf.sail.webapp.service.NotAuthorizedException;
-import net.sf.sail.webapp.service.UserService;
-import net.sf.sail.webapp.service.group.GroupService;
+import org.wise.portal.service.user.UserService;
 
 /**
  * @author Sally Ahn

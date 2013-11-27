@@ -2,3 +2,4 @@
 *.class
 build
 target
+src/main/resources/wise.properties

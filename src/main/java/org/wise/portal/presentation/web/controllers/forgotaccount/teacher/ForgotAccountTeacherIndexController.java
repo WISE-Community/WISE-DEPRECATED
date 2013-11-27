@@ -33,10 +33,6 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.mail.JavaMailHelper;
-import net.sf.sail.webapp.service.UserService;
-
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.MessageSource;
@@ -44,6 +40,9 @@ import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.mail.MailService;
+import org.wise.portal.service.user.UserService;
 
 /**
  * Controller for lost password teacher username and email lookup
@@ -56,8 +55,8 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 	private static final String EMAIL = "email";
 	private static final String USERNAME = "username";
 	protected UserService userService = null;
-	protected JavaMailHelper javaMail = null;
-	private Properties portalProperties;
+	protected MailService javaMail = null;
+	private Properties wiseProperties;
 	private MessageSource messageSource;
 	
 	private String errorView = "/forgotaccount/teacher/error";
@@ -67,7 +66,7 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 	 * 
 	 * @return
 	 */
-	public JavaMailHelper getJavaMail() {
+	public MailService getJavaMail() {
 		return javaMail;
 	}
 
@@ -76,7 +75,7 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 	 * 
 	 * @param javaMail
 	 */
-	public void setJavaMail(JavaMailHelper javaMail) {
+	public void setJavaMail(MailService javaMail) {
 		this.javaMail = javaMail;
 	}
 
@@ -152,9 +151,9 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 			 * e.g.
 			 * http://wise4.berkeley.edu/wise/forgotaccount/resetpassword.html?k=1234567890abc
 			 */
-			String passwordResetLink = portalProperties.getProperty("portal_baseurl") + "/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
+			String passwordResetLink = wiseProperties.getProperty("portal_baseurl") + "/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
 			
-			String portalName = portalProperties.getProperty("portal.name");
+			String portalName = wiseProperties.getProperty("portal.name");
 			
 			String userEmail = user.getUserDetails().getEmailAddress();
 			
@@ -242,10 +241,10 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

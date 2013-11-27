@@ -22,41 +22,13 @@
  */
 package org.wise.portal.presentation.web.controllers.project;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.curnit.CurnitService;
-
-import org.apache.commons.io.FileUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.impl.CreateUrlModuleParameters;
-import org.wise.portal.domain.impl.ProjectParameters;
-import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.ProjectMetadata;
-import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
-import org.wise.portal.domain.project.impl.ProjectType;
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.wiseup.WiseUpService;
 
 /**

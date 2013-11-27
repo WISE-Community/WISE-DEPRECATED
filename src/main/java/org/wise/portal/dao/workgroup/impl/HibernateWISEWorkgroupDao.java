@@ -24,18 +24,16 @@ package org.wise.portal.dao.workgroup.impl;
 
 import java.util.List;
 
+
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.wise.portal.dao.impl.AbstractHibernateDao;
+import org.wise.portal.dao.workgroup.WorkgroupDao;
+import org.wise.portal.domain.run.Offering;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
-
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
-import net.sf.sail.webapp.dao.workgroup.WorkgroupDao;
-import net.sf.sail.webapp.domain.Offering;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.impl.WorkgroupImpl;
 
 /**
  * DAO for <code>WISEWorkgroup</code>
@@ -49,7 +47,7 @@ public class HibernateWISEWorkgroupDao extends AbstractHibernateDao<WISEWorkgrou
     private static final String FIND_ALL_QUERY = "from WISEWorkgroupImpl";
 
     /**
-     * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getFindAllQuery()
+     * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
      */
     @Override
     protected String getFindAllQuery() {
@@ -57,7 +55,7 @@ public class HibernateWISEWorkgroupDao extends AbstractHibernateDao<WISEWorkgrou
     }
     
     /**
-     * @see net.sf.sail.webapp.dao.workgroup.WorkgroupDao#getListByOfferingAndUser(net.sf.sail.webapp.domain.Offering,
+     * @see org.wise.portal.dao.workgroup.WorkgroupDao#getListByOfferingAndUser(net.sf.sail.webapp.domain.Offering,
      *      net.sf.sail.webapp.domain.User)
      */
     @SuppressWarnings("unchecked")
@@ -80,7 +78,7 @@ public class HibernateWISEWorkgroupDao extends AbstractHibernateDao<WISEWorkgrou
     }
 
     /**
-     * @see net.sf.sail.webapp.dao.workgroup.WorkgroupDao#getListByUser(net.sf.sail.webapp.domain.User)
+     * @see org.wise.portal.dao.workgroup.WorkgroupDao#getListByUser(net.sf.sail.webapp.domain.User)
      */
     @SuppressWarnings("unchecked")
     public List<WISEWorkgroup> getListByUser(User user) {
@@ -98,7 +96,7 @@ public class HibernateWISEWorkgroupDao extends AbstractHibernateDao<WISEWorkgrou
     }
     
     /**
-     * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getDataObjectClass()
+     * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
      */
     @Override
     protected Class<WISEWorkgroupImpl> getDataObjectClass() {

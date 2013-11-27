@@ -30,28 +30,25 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.group.GroupDao;
-import net.sf.sail.webapp.dao.user.UserDao;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
-import net.sf.sail.webapp.domain.webservice.http.HttpStatusCodeException;
-import net.sf.sail.webapp.service.offering.impl.OfferingServiceImpl;
 
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.group.GroupDao;
 import org.wise.portal.dao.offering.RunDao;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.announcement.Announcement;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
-import org.wise.portal.domain.impl.RunImpl;
-import org.wise.portal.domain.impl.RunParameters;
 import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.impl.ProjectType;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.impl.RunImpl;
+import org.wise.portal.domain.run.impl.RunParameters;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.DuplicateRunCodeException;
 import org.wise.portal.service.offering.RunService;
@@ -77,7 +74,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	
 	private ProjectService projectService;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	/**
 	 * @param groupDao
@@ -162,9 +159,9 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		String language = locale.getLanguage();  // languages is two-letter ISO639 code, like en, es, he, etc.
 		
 		// read in runcode prefixes from wise.properties.
-		String runcodePrefixesStr = portalProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
-		if (portalProperties.containsKey("runcode_prefixes_"+language)) {
-			runcodePrefixesStr = portalProperties.getProperty("runcode_prefixes_"+language);
+		String runcodePrefixesStr = wiseProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
+		if (wiseProperties.containsKey("runcode_prefixes_"+language)) {
+			runcodePrefixesStr = wiseProperties.getProperty("runcode_prefixes_"+language);
 		}
 		String[] runcodePrefixes = runcodePrefixesStr.split(",");
 		String word = runcodePrefixes[rand.nextInt(runcodePrefixes.length)];
@@ -180,7 +177,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	 * @throws CurnitNotFoundException
 	 * 
 	 */
-	@Transactional(rollbackFor = { HttpStatusCodeException.class })
+	@Transactional()
 	public Run createRun(RunParameters runParameters)
 			throws ObjectNotFoundException {
 		Project project = runParameters.getProject();
@@ -614,7 +611,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		this.runDao.save(run);
 	}
 
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

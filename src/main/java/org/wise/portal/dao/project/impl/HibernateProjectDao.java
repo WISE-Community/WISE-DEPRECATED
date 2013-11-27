@@ -24,22 +24,19 @@ package org.wise.portal.dao.project.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
-import net.sf.sail.webapp.domain.User;
 
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.project.ProjectDao;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectInfo;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.ProjectImpl;
-
-import edu.emory.mathcs.backport.java.util.Collections;
+import org.wise.portal.domain.user.User;
 
 /**
  * @author Hiroki Terashima
@@ -84,7 +81,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	}
 	
 	/**
-	 * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getFindAllQuery()
+	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
 	 */
 	@Override
 	protected String getFindAllQuery() {
@@ -92,7 +89,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	}
 	
 	/**
-	 * @see net.sf.sail.webapp.dao.impl.AbstractHibernateDao#getDataObjectClass()
+	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
 	 */
 	@Override
 	protected Class<? extends ProjectImpl> getDataObjectClass() {
@@ -126,7 +123,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	}
 
 	/**
-	 * @see net.sf.sail.webapp.dao.SimpleDao#getList()
+	 * @see org.wise.portal.dao.SimpleDao#getList()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -135,7 +132,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	}
 	
 	/**
-	 * @see net.sf.sail.webapp.dao.SimpleDao#getById(java.lang.Integer)
+	 * @see org.wise.portal.dao.SimpleDao#getById(java.lang.Integer)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override

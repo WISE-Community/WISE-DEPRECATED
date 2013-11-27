@@ -25,10 +25,10 @@ package org.wise.portal.presentation.web.controllers.teacher.run.manage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.service.offering.RunService;
 
 /**

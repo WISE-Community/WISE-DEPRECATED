@@ -33,11 +33,9 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
-
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.project.FamilyTag;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.service.project.ProjectService;
 
@@ -55,7 +53,7 @@ public class PreviewProjectListController extends AbstractController {
 	// path to project thumb image relative to project folder
 	private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	/**
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -76,7 +74,7 @@ public class PreviewProjectListController extends AbstractController {
 		 }
 		 
 		 Map<Long,String> projectThumbMap = new TreeMap<Long,String>();  // maps projectId to url where its thumbnail can be found
-		 String curriculumBaseWWW = this.portalProperties.getProperty("curriculum_base_www");
+		 String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
 			for (Project p: currentProjectList) {
 				if (p.isCurrent()){
 					String url = (String) p.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
@@ -111,9 +109,9 @@ public class PreviewProjectListController extends AbstractController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

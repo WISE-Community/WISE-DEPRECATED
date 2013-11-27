@@ -24,7 +24,7 @@ package org.wise.portal.domain.newsitem;
 
 import java.util.Date;
 
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.user.User;
 
 /**
  * A News Item that contains an unspecified format for the news

@@ -22,7 +22,7 @@
  */
 package org.wise.portal.domain.premadecomment;
 
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.user.User;
 
 /**
  * An Owned object with the added information of 'comment'

@@ -25,12 +25,10 @@ package org.wise.portal.presentation.web.controllers.project;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Properties;
-import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -38,15 +36,14 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
-
 import org.apache.commons.io.IOUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.project.ProjectService;
@@ -59,7 +56,7 @@ public class ExportProjectController extends AbstractController {
 
 	private ProjectService projectService;
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	static final int BUFFER = 2048;
 
@@ -86,7 +83,7 @@ public class ExportProjectController extends AbstractController {
 			return null;			
 		}
 
-		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
 		String sep = System.getProperty("file.separator");
 
@@ -208,10 +205,10 @@ public class ExportProjectController extends AbstractController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 }

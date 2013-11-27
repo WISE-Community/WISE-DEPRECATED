@@ -27,7 +27,7 @@ import static org.easymock.EasyMock.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
+import org.wise.portal.dao.ObjectNotFoundException;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.impl.UserImpl;
 import net.sf.sail.webapp.service.UserService;

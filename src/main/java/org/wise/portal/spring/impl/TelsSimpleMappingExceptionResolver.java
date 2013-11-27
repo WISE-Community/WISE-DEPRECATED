@@ -34,10 +34,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.mail.IMailFacade;
+import org.wise.portal.service.mail.IMailFacade;
 
 /**
  * Resolves Exceptions by gathering the following information and
@@ -51,13 +51,11 @@ import net.sf.sail.webapp.mail.IMailFacade;
  * @version $Id$
  */
 public class TelsSimpleMappingExceptionResolver extends
-		PasSimpleMappingExceptionResolver {
+	SimpleMappingExceptionResolver {
 	
 	protected IMailFacade javaMail;
 
-	private Properties emaillisteners;
-	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	private static final String HANDLE_EXCEPTION_PROPERTY_KEY = "handle_exception";
 	
@@ -72,12 +70,12 @@ public class TelsSimpleMappingExceptionResolver extends
 	public ModelAndView resolveException(
 			HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {
 		// send email to programmers
-		String sendEmailOnExceptionStr = portalProperties.getProperty("send_email_on_exception");
+		String sendEmailOnExceptionStr = wiseProperties.getProperty("send_email_on_exception");
 		boolean sendEmailOnException = sendEmailOnExceptionStr.equalsIgnoreCase("true");
 
 		if (sendEmailOnException) {
-			String portalName = portalProperties.getProperty("portal.name");
-			String[] recipients = emaillisteners.getProperty(HANDLE_EXCEPTION_PROPERTY_KEY).split(",");
+			String portalName = wiseProperties.getProperty("portal.name");
+			String[] recipients = wiseProperties.getProperty(HANDLE_EXCEPTION_PROPERTY_KEY).split(",");
 			String subject = HANDLE_EXCEPTION_MAIL_SUBJECT + ": (" + portalName + ")";
 			String fromEmail = HANDLE_EXCEPTION_FROM_EMAIL;
 			String message = getHandleExceptionMessage(request, response, handler, exception);
@@ -174,16 +172,9 @@ public class TelsSimpleMappingExceptionResolver extends
 	}
 	
 	/**
-	 * @param properties the properties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setEmaillisteners(Properties emaillisteners) {
-		this.emaillisteners = emaillisteners;
-	}
-	
-	/**
-	 * @param portalProperties the portalProperties to set
-	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

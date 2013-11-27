@@ -33,18 +33,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.group.Group;
-
 import org.hibernate.StaleObjectStateException;
+import org.json.JSONArray;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.Run;
+import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
-import org.wise.portal.presentation.util.json.JSONArray;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.offering.RunService;
@@ -75,7 +74,7 @@ public class StartProjectController extends AbstractController {
 	
 	private StudentAttendanceService studentAttendanceService;
 	
-	protected Properties portalProperties;
+	protected Properties wiseProperties;
 
 	/**
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -178,7 +177,7 @@ public class StartProjectController extends AbstractController {
 				
 				Integer maxWorkgroupSize = run.getMaxWorkgroupSize();
 				if (maxWorkgroupSize == null) {
-					String maxWorkgroupSizeStr = portalProperties.getProperty("maxWorkgroupSize", "3");
+					String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
 					maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
 				}
 				modelAndView.addObject("maxWorkgroupSize",maxWorkgroupSize);
@@ -357,16 +356,16 @@ public class StartProjectController extends AbstractController {
 	}
 
 	/**
-	 * @return the portalProperties
+	 * @return the wiseProperties
 	 */
-	public Properties getPortalProperties() {
-		return portalProperties;
+	public Properties getWiseProperties() {
+		return wiseProperties;
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

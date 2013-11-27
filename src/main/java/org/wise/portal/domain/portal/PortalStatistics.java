@@ -2,9 +2,8 @@ package org.wise.portal.domain.portal;
 
 import java.util.Date;
 
-import org.wise.portal.presentation.util.json.JSONObject;
-
-import net.sf.sail.webapp.domain.Persistable;
+import org.json.JSONObject;
+import org.wise.portal.domain.Persistable;
 
 public interface PortalStatistics extends Persistable {
 

@@ -25,14 +25,13 @@ package org.wise.portal.dao.project;
 import java.util.List;
 import java.util.Set;
 
+
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectInfo;
-import org.wise.portal.domain.project.Tag;
-
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.SimpleDao;
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.user.User;
 
 /**
  * @author Hiroki Terashima

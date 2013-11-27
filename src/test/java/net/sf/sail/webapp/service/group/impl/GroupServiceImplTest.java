@@ -26,8 +26,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.TestCase;
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.group.GroupDao;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.group.GroupDao;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;

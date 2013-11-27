@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.wise.vle.domain.webservice.crater.CRaterHttpClient;
-
-import utils.SecurityUtils;
+import org.wise.vle.utils.SecurityUtils;
 
 public class CRaterController extends HttpServlet {
 

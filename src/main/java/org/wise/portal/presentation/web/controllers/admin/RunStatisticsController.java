@@ -30,8 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.Run;
 import org.wise.portal.domain.attendance.StudentAttendance;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.offering.RunService;
 

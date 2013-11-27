@@ -26,15 +26,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.service.UserService;
-
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.general.contactwise.ContactWISE;
 import org.wise.portal.domain.general.contactwise.IssueType;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.user.UserService;
 
 /**
  * @author Hiroki Terashima
@@ -57,8 +56,6 @@ public class ContactWISEGeneral implements ContactWISE {
 	
 	protected String description;
 	
-	private static Properties emaillisteners;
-	
 	private User user;
 	
 	private Boolean isStudent = false;
@@ -66,13 +63,8 @@ public class ContactWISEGeneral implements ContactWISE {
 	protected String usersystem;
 	
 	private static UserService userService;
-
-	/**
-	 * @param properties the properties to set
-	 */
-	public void setEmaillisteners(Properties emaillisteners) {
-		this.emaillisteners = emaillisteners;
-	}
+	
+	private Properties wiseProperties;
 
 	/**
 	 * @see org.wise.portal.domain.general.contactwise.ContactWISE#getDescription()
@@ -148,7 +140,7 @@ public class ContactWISEGeneral implements ContactWISE {
 		String[] recipients = new String[0];
 		
 		//get the email address that we will send this user request to
-		String contactEmail = emaillisteners.getProperty("contact_email");
+		String contactEmail = wiseProperties.getProperty("contact_email");
 		recipients = contactEmail.split(",");
 		
 		if(recipients.length == 0) {
@@ -158,7 +150,7 @@ public class ContactWISEGeneral implements ContactWISE {
 			 */
 			
 			//get the uber_admin email address
-			String uberAdminEmailAddress = emaillisteners.getProperty("uber_admin");
+			String uberAdminEmailAddress = wiseProperties.getProperty("uber_admin");
 			
 			if(uberAdminEmailAddress != null && !uberAdminEmailAddress.equals("")) {
 				//set the uber_admin email address into the recipients
@@ -349,5 +341,10 @@ public class ContactWISEGeneral implements ContactWISE {
 
 	public void setUserService(UserService userService) {
 		this.userService = userService;
+	}
+
+	@Override
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;		
 	}
 }

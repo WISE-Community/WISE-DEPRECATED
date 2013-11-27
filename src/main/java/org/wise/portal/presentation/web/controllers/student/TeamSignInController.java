@@ -22,7 +22,6 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -33,30 +32,29 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.service.UserService;
-
 import org.hibernate.StaleObjectStateException;
+import org.json.JSONArray;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.springframework.web.servlet.view.RedirectView;
-import org.wise.portal.domain.Run;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
-import org.wise.portal.domain.impl.Projectcode;
+import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
+import org.wise.portal.domain.project.impl.Projectcode;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.StudentRunInfo;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
-import org.wise.portal.presentation.util.json.JSONArray;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.TeamSignInForm;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.student.StudentService;
+import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;
 
 /**
@@ -83,7 +81,7 @@ public class TeamSignInController extends SimpleFormController {
 
 	private StudentAttendanceService studentAttendanceService;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	public TeamSignInController() {
 		setSessionForm(true);
@@ -302,7 +300,7 @@ public class TeamSignInController extends SimpleFormController {
 		TeamSignInForm form = new TeamSignInForm();
 		Long runId = null;
 		
-		String maxWorkgroupSizeStr = portalProperties.getProperty("maxWorkgroupSize", "3");
+		String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
 		int maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
 		form.setMaxWorkgroupSize(maxWorkgroupSize);
 		
@@ -400,7 +398,7 @@ public class TeamSignInController extends SimpleFormController {
 				ModelAndView formToShow = super.showForm(request, response, errors);
 				Integer maxWorkgroupSize = run.getMaxWorkgroupSize();
 				if (maxWorkgroupSize == null) {
-					String maxWorkgroupSizeStr = portalProperties.getProperty("maxWorkgroupSize", "3");
+					String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
 					maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
 				}
 				formToShow.addObject("maxWorkgroupSize", maxWorkgroupSize);
@@ -467,16 +465,16 @@ public class TeamSignInController extends SimpleFormController {
 	}
 
 	/**
-	 * @return the portalProperties
+	 * @return the wiseProperties
 	 */
-	public Properties getPortalProperties() {
-		return portalProperties;
+	public Properties getWiseProperties() {
+		return wiseProperties;
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

@@ -22,10 +22,6 @@
  */
 package org.wise.portal.presentation.validators.student;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.service.UserService;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.dao.SystemWideSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -33,8 +29,11 @@ import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.TeamSignInForm;
+import org.wise.portal.service.user.UserService;
 
 /**
  * Validator for the TeamSignIn form

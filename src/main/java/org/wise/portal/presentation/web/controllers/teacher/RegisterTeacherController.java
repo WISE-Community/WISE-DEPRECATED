@@ -32,11 +32,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.mail.IMailFacade;
-import net.sf.sail.webapp.service.UserService;
-import net.sf.sail.webapp.service.authentication.DuplicateUsernameException;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.validation.BindException;
@@ -45,7 +40,11 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.domain.authentication.Curriculumsubjects;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.TeacherAccountForm;
+import org.wise.portal.service.authentication.DuplicateUsernameException;
+import org.wise.portal.service.mail.IMailFacade;
+import org.wise.portal.service.user.UserService;
 
 /**
  * Signup controller for TELS teacher user
@@ -61,9 +60,7 @@ public class RegisterTeacherController extends SimpleFormController {
 
 	private IMailFacade javaMail = null;
 
-	private Properties emaillisteners = null;
-
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	private MessageSource messageSource;
 
@@ -203,7 +200,7 @@ public class RegisterTeacherController extends SimpleFormController {
 		 */
 		private void sendEmail() {
 
-			String sendEmailEnabledStr = portalProperties.getProperty("send_email_enabled");
+			String sendEmailEnabledStr = wiseProperties.getProperty("send_email_enabled");
 			Boolean sendEmailEnabled = Boolean.valueOf(sendEmailEnabledStr);
 			if (!sendEmailEnabled) {
 				return;
@@ -213,15 +210,15 @@ public class RegisterTeacherController extends SimpleFormController {
 			String userUsername = newUserDetails.getUsername();
 			String userEmailAddress[] = {newUserDetails.getEmailAddress()};
 
-			String[] recipients = (String[]) ArrayUtils.addAll(userEmailAddress, emaillisteners.getProperty("uber_admin").split(","));
+			String[] recipients = (String[]) ArrayUtils.addAll(userEmailAddress, wiseProperties.getProperty("uber_admin").split(","));
 
 			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, Locale.US);
 			String subject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, defaultSubject, this.locale);
-			String portalbaseurl = portalProperties.getProperty("portal_baseurl");
+			String portalbaseurl = wiseProperties.getProperty("portal_baseurl");
 			String gettingStartedUrl = portalbaseurl + "/pages/gettingstarted.html";
 			String defaultBody = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, Locale.US);
 			String message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, defaultBody, this.locale);
-			String fromEmail = emaillisteners.getProperty("portalemailaddress");
+			String fromEmail = wiseProperties.getProperty("portalemailaddress");
 
 			try {
 				//sends the email to the recipients
@@ -234,13 +231,6 @@ public class RegisterTeacherController extends SimpleFormController {
 	}
 	
 	/**
-	 * @param emaillisteners the emaillisteners to set
-	 */
-	public void setEmaillisteners(Properties emaillisteners) {
-		this.emaillisteners = emaillisteners;
-	}
-
-	/**
 	 * @param javaMail the javaMail to set
 	 */
 	public void setJavaMail(IMailFacade javaMail) {
@@ -248,10 +238,10 @@ public class RegisterTeacherController extends SimpleFormController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

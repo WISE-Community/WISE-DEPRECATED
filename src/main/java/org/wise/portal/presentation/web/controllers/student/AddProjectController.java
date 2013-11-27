@@ -25,18 +25,18 @@ package org.wise.portal.presentation.web.controllers.student;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
 
 import org.hibernate.StaleObjectStateException;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
-import org.wise.portal.domain.impl.AddProjectParameters;
-import org.wise.portal.domain.impl.Projectcode;
+import org.wise.portal.domain.project.impl.AddProjectParameters;
+import org.wise.portal.domain.project.impl.Projectcode;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.student.StudentService;
 

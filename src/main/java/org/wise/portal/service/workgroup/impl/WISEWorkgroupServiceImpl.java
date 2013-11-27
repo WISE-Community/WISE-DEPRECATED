@@ -26,25 +26,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.Offering;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.webservice.http.HttpRestTransport;
-import net.sf.sail.webapp.domain.webservice.http.HttpStatusCodeException;
-import net.sf.sail.webapp.service.group.GroupService;
-import net.sf.sail.webapp.service.workgroup.impl.WorkgroupServiceImpl;
 
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.transaction.annotation.Transactional;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
+import org.wise.portal.domain.run.Offering;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
+import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;
 
@@ -60,7 +55,7 @@ WISEWorkgroupService {
 	/**
 	 * @see org.wise.portal.service.workgroup.WISEWorkgroupService#createWISEWorkgroup(java.lang.String, java.util.Set, org.wise.portal.domain.Run, net.sf.sail.webapp.domain.group.Group)
 	 */
-	@Transactional(rollbackFor = { HttpStatusCodeException.class })
+	@Transactional()
 	public WISEWorkgroup createWISEWorkgroup(String name, Set<User> members,
 			Run run, Group period) throws ObjectNotFoundException {
 
@@ -145,21 +140,10 @@ WISEWorkgroupService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.workgroup.WISEWorkgroupService#generateWorkgroupWorkPdfUrlString(net.sf.sail.webapp.domain.webservice.http.HttpRestTransport, javax.servlet.http.HttpServletRequest, org.wise.portal.domain.workgroup.WISEWorkgroup)
-	 */
-	public String generateWorkgroupWorkPdfUrlString(
-			HttpRestTransport httpRestTransport, HttpServletRequest request,
-			WISEWorkgroup workgroup) {
-		String workgroupWorkPdfUrlString = "";
-		return workgroupWorkPdfUrlString;
-	}
-
-
-	/**
 	 * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#getPreviewWorkgroupForRooloOffering(net.sf.sail.webapp.domain.Offering, net.sf.sail.webapp.domain.User)
 	 */
 	@Override
-	@Transactional(rollbackFor = { HttpStatusCodeException.class })
+	@Transactional()
 	public Workgroup getPreviewWorkgroupForRooloOffering(Offering previewOffering, User previewUser){
 		List<Workgroup> listByOfferingAndUser = this.workgroupDao.getListByOfferingAndUser(previewOffering, previewUser);
 		if (listByOfferingAndUser.isEmpty()) {

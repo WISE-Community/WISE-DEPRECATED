@@ -33,14 +33,14 @@
 	<schedule>
 		<job>
 			<name>DailyJob</name>
-			<job-class>background.jobs.DailyJob</job-class>
+			<job-class>org.wise.vle.background.jobs.DailyJob</job-class>
 			<job-data-map>
 				<entry key="vleService" value-ref="vleService" />
 			</job-data-map>
 		</job>
 		<job>
 			<name>CRaterJob</name>
-			<job-class>background.jobs.CRaterJob</job-class>
+			<job-class>org.wise.vle.background.jobs.CRaterJob</job-class>
 			<job-data-map>
 				<entry>
 					<key>cRater_verification_url</key>

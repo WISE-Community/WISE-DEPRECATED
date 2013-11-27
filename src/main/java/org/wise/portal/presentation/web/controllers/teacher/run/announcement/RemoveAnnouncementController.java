@@ -27,8 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.Run;
 import org.wise.portal.domain.announcement.Announcement;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.service.announcement.AnnouncementService;
 import org.wise.portal.service.offering.RunService;
 

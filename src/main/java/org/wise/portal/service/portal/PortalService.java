@@ -24,8 +24,8 @@ package org.wise.portal.service.portal;
 
 import java.io.Serializable;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
 
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.portal.Portal;
 
 /**

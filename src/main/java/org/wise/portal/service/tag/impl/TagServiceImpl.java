@@ -23,12 +23,12 @@
 package org.wise.portal.service.tag.impl;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.TagDao;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.TagImpl;
 import org.wise.portal.service.tag.TagService;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
 
 /**
  * @author patrick lawler

@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.AbstractController;
 
 public class StatisticsController extends AbstractController {
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	/**
 	 * Handle the request to the statistics page
@@ -20,8 +20,8 @@ public class StatisticsController extends AbstractController {
 		ModelAndView modelAndView = new ModelAndView();
 		
 		//add the portal base url and vlewrapper base url to the model so the jsp can access it 
-		modelAndView.addObject("portal_baseurl", portalProperties.getProperty("portal_baseurl"));
-		modelAndView.addObject("vlewrapper_baseurl", portalProperties.getProperty("vlewrapper_baseurl"));
+		modelAndView.addObject("portal_baseurl", wiseProperties.getProperty("portal_baseurl"));
+		modelAndView.addObject("vlewrapper_baseurl", wiseProperties.getProperty("vlewrapper_baseurl"));
 		
 		return modelAndView;
 	}
@@ -30,15 +30,15 @@ public class StatisticsController extends AbstractController {
 	 * Get the portal properties
 	 * @return
 	 */
-	public Properties getPortalProperties() {
-		return portalProperties;
+	public Properties getWiseProperties() {
+		return wiseProperties;
 	}
 
 	/**
 	 * Set the portal properties
-	 * @param portalProperties
+	 * @param wiseProperties
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

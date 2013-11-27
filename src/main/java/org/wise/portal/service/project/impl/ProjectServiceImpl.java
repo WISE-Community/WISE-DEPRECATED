@@ -27,13 +27,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.NotAuthorizedException;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
-import org.wise.portal.domain.impl.ProjectParameters;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectInfo;
@@ -41,11 +38,12 @@ import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.AuthorProjectParameters;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
-import org.wise.portal.domain.project.impl.LaunchReportParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectImpl;
+import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.project.ProjectServiceFactory;
 
@@ -171,14 +169,6 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectService.launchProject(launchProjectParameters);
 	}
 	
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#launchReport(org.wise.portal.domain.project.impl.LaunchReportParameters)
-	 */
-	public Object launchReport(LaunchReportParameters launchReportParameters) {
-		ProjectService projectService = projectServiceFactory.getProjectService(launchReportParameters.getRun().getProject());
-		return projectService.launchReport(launchReportParameters);
-	}
-
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#previewProject(org.wise.portal.domain.project.impl.PreviewProjectParameters)
 	 */

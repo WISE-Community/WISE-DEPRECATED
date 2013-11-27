@@ -22,32 +22,33 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.management;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.service.AclService;
-import net.sf.sail.webapp.service.workgroup.*;
 
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
-
-import org.wise.portal.domain.Run;
-import org.wise.portal.domain.project.impl.ProjectType;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.teacher.management.ViewMyStudentsPeriod;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
-
-import net.sf.sail.webapp.domain.group.*;
-
-import java.util.*;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 
 /**

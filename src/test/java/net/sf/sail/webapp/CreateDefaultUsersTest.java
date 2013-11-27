@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import net.sf.sail.webapp.dao.authentication.UserDetailsDao;
-import net.sf.sail.webapp.dao.authentication.impl.HibernateUserDetailsDao;
+import org.wise.portal.dao.authentication.UserDetailsDao;
+import org.wise.portal.dao.authentication.impl.HibernateUserDetailsDao;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 import net.sf.sail.webapp.junit.AbstractTransactionalDbTests;
 import net.sf.sail.webapp.service.UserService;

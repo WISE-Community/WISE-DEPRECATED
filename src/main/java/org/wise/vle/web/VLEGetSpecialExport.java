@@ -42,9 +42,8 @@ import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
-
-import utils.FileManager;
-import utils.SecurityUtils;
+import org.wise.vle.utils.FileManager;
+import org.wise.vle.utils.SecurityUtils;
 
 public class VLEGetSpecialExport extends AbstractController {
 

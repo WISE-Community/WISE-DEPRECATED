@@ -34,11 +34,11 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.newsitem.NewsItem;
 import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
 import org.wise.portal.domain.project.Project;
@@ -60,7 +60,7 @@ public class IndexController extends AbstractController {
 	
 	private ProjectService projectService;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	
 	/** 
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -149,7 +149,7 @@ public class IndexController extends AbstractController {
 			
 		}*/
 		
-		String curriculumBaseWWW = this.portalProperties.getProperty("curriculum_base_www");
+		String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
 		for (Project p: libraryProjectsList) {
 			if (p.isCurrent()){
 				String url = (String) p.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
@@ -199,10 +199,10 @@ public class IndexController extends AbstractController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 }

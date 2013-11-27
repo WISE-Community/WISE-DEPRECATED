@@ -22,7 +22,7 @@
  */
 package org.telscenter.sail.webapp.dao;
 
-import net.sf.sail.webapp.dao.SimpleDao;
+import org.wise.portal.dao.SimpleDao;
 import net.sf.sail.webapp.domain.Persistable;
 import org.wise.portal.spring.SpringConfiguration;
 

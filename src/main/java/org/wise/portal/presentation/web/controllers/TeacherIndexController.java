@@ -23,31 +23,29 @@
 package org.wise.portal.presentation.web.controllers;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Collections;
-import java.util.Comparator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.service.UserService;
-import net.sf.sail.webapp.service.workgroup.WorkgroupService;
-
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.Run;
 import org.wise.portal.domain.message.Message;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.message.MessageService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller for TELS teacher's index page
@@ -73,7 +71,7 @@ public class TeacherIndexController extends AbstractController {
 
 	private MessageService messageService;
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	private ProjectService projectService;
 
@@ -110,7 +108,7 @@ public class TeacherIndexController extends AbstractController {
 		
 		boolean isXMPPEnabled = false;
 		
-	    String isXMPPEnabledStr = this.portalProperties.getProperty("isXMPPEnabled");
+	    String isXMPPEnabledStr = this.wiseProperties.getProperty("isXMPPEnabled");
 	    if (isXMPPEnabledStr != null) {
 	    	isXMPPEnabled = Boolean.valueOf(isXMPPEnabledStr);
 	    }
@@ -199,10 +197,10 @@ public class TeacherIndexController extends AbstractController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 	/**
 	 * @param messageService the messageService to set

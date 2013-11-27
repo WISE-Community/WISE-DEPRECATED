@@ -2,13 +2,13 @@ package org.wise.portal.dao.peerreview;
 
 import java.util.List;
 
+import org.wise.portal.dao.SimpleDao;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 
-import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface PeerReviewWorkDao<T extends PeerReviewWork> extends SimpleDao<T> {
 

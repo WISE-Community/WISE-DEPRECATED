@@ -29,9 +29,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.authentication.impl.HibernateGrantedAuthorityDao;
-import net.sf.sail.webapp.dao.authentication.impl.HibernateUserDetailsDao;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.authentication.impl.HibernateGrantedAuthorityDao;
+import org.wise.portal.dao.authentication.impl.HibernateUserDetailsDao;
 import net.sf.sail.webapp.domain.authentication.MutableGrantedAuthority;
 import net.sf.sail.webapp.domain.authentication.impl.PersistentGrantedAuthority;
 import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;

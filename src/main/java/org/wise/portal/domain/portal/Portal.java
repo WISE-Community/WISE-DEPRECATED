@@ -24,7 +24,7 @@ package org.wise.portal.domain.portal;
 
 import java.util.Properties;
 
-import net.sf.sail.webapp.domain.Persistable;
+import org.wise.portal.domain.Persistable;
 
 /**
  * Portal domain object. Settings that should be saved in datastore and 

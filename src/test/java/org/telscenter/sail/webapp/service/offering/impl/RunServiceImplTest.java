@@ -30,9 +30,9 @@ import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.curnit.CurnitDao;
-import net.sf.sail.webapp.dao.group.GroupDao;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.module.CurnitDao;
+import org.wise.portal.dao.group.GroupDao;
 import net.sf.sail.webapp.domain.Curnit;
 import net.sf.sail.webapp.domain.Offering;
 import net.sf.sail.webapp.domain.User;

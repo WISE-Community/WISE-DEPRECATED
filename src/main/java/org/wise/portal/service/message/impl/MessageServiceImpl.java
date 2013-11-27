@@ -31,16 +31,15 @@ import java.util.Set;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.mail.IMailFacade;
-
 import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.message.MessageDao;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.message.Message;
 import org.wise.portal.domain.message.MessageRecipient;
 import org.wise.portal.domain.message.impl.MessageImpl;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.message.MessageService;
 
 /**
@@ -53,7 +52,7 @@ public class MessageServiceImpl implements MessageService {
 	
 	private IMailFacade javaMail = null;
 	
-	private Properties emaillisteners = null;
+	private Properties wiseProperties = null;
 	
 	/**
 	 * @see org.wise.portal.service.message.MessageService#markMessageRead(org.wise.portal.domain.message.Message)
@@ -170,7 +169,7 @@ public class MessageServiceImpl implements MessageService {
     		ArrayList<String> recipients = new ArrayList<String>();
     		ArrayList<String> recipientNames = new ArrayList<String>();
     		Set<MessageRecipient> recips = message.getRecipients();
-    		String[] uberAdmins = emaillisteners.getProperty("uber_admin").split(",");
+    		String[] uberAdmins = wiseProperties.getProperty("uber_admin").split(",");
     		for (int i=0; i< uberAdmins.length; i++) {
         		recipients.add(uberAdmins[i]);    			
     		}
@@ -220,10 +219,10 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	/**
-	 * @param emaillisteners the emaillisteners to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setEmaillisteners(Properties emaillisteners) {
-		this.emaillisteners = emaillisteners;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 }

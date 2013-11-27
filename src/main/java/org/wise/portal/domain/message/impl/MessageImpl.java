@@ -39,12 +39,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.impl.UserImpl;
-
 import org.hibernate.annotations.Cascade;
 import org.wise.portal.domain.message.Message;
 import org.wise.portal.domain.message.MessageRecipient;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
 
 /**
  * Message from one WISE4 user to another.

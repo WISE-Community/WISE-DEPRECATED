@@ -24,17 +24,119 @@ package org.wise.portal.service.authentication.impl;
 
 import java.util.List;
 
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
 
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.authentication.GrantedAuthorityDao;
+import org.wise.portal.dao.authentication.UserDetailsDao;
+import org.wise.portal.domain.authentication.MutableGrantedAuthority;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.service.authentication.AuthorityNotFoundException;
+import org.wise.portal.service.authentication.DuplicateAuthorityException;
 import org.wise.portal.service.authentication.UserDetailsService;
 
 /**
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class UserDetailsServiceImpl extends
-		net.sf.sail.webapp.service.authentication.impl.UserDetailsServiceImpl
+public class UserDetailsServiceImpl
 		implements UserDetailsService {
+	
+	protected UserDetailsDao<MutableUserDetails> userDetailsDao;
+
+    private GrantedAuthorityDao<MutableGrantedAuthority> grantedAuthorityDao;
+    
+    /**
+     * @param grantedAuthorityDao
+     *            The granted authority to set.
+     */
+    @Required
+    public void setGrantedAuthorityDao(
+            GrantedAuthorityDao<MutableGrantedAuthority> grantedAuthorityDao) {
+        this.grantedAuthorityDao = grantedAuthorityDao;
+    }
+
+    /**
+     * @see org.acegisecurity.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
+     */
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException, DataAccessException {
+        UserDetails userDetails = this.userDetailsDao.retrieveByName(username);
+        if (userDetails == null) {
+            throw new UsernameNotFoundException("Username: " + username
+                    + " not found.");
+        }
+        return userDetails;
+    }
+
+    /**
+     * @param userDetailsDao
+     *            The userDetailsDao to set.
+     */
+    @Required
+    public void setUserDetailsDao(
+            UserDetailsDao<MutableUserDetails> userDetailsDao) {
+        this.userDetailsDao = userDetailsDao;
+    }
+
+    /**
+     * @see net.sf.sail.webapp.service.authentication.UserDetailsService#createGrantedAuthority(net.sf.sail.webapp.domain.authentication.MutableGrantedAuthority)
+     */
+    @Transactional(rollbackFor = { DuplicateAuthorityException.class })
+    public MutableGrantedAuthority createGrantedAuthority(
+            MutableGrantedAuthority mutableGrantedAuthority)
+            throws DuplicateAuthorityException {
+
+        this.checkNoAuthorityCreationErrors(mutableGrantedAuthority
+                .getAuthority());
+        this.grantedAuthorityDao.save(mutableGrantedAuthority);
+        return mutableGrantedAuthority;
+    }
+
+    /**
+     * Validates user input checks that the data store does not already contain
+     * an authority with the same name
+     * 
+     * @param authority
+     *            The authority to be checked for in the data store.
+     * @throws DuplicateAuthorityException
+     *             If the authority is the same as an authority already in data
+     *             store.
+     */
+    private void checkNoAuthorityCreationErrors(String authority)
+            throws DuplicateAuthorityException {
+
+        if (this.grantedAuthorityDao.hasRole(authority)) {
+            throw new DuplicateAuthorityException(authority);
+        }
+    }
+
+    /**
+     * @see net.sf.sail.webapp.service.authentication.UserDetailsService#loadAuthorityByName(java.lang.String)
+     */
+    @Transactional(readOnly = true)
+    public GrantedAuthority loadAuthorityByName(String authority)
+            throws AuthorityNotFoundException {
+        GrantedAuthority grantedAuthority = this.grantedAuthorityDao
+                .retrieveByName(authority);
+        if (grantedAuthority == null) {
+            throw new AuthorityNotFoundException(authority);
+        }
+        return grantedAuthority;
+    }
+    
+    /**
+     * @override @see net.sf.sail.webapp.service.authentication.UserDetailsService#updateUserDetails(net.sf.sail.webapp.domain.authentication.MutableUserDetails)
+     */
+    @Transactional
+	public void updateUserDetails(MutableUserDetails userDetails) {
+		this.userDetailsDao.save(userDetails);
+	}
 
 	public List<MutableUserDetails> retrieveAllUserDetails(
 			String userDetailsClassname) {

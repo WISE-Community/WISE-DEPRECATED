@@ -24,8 +24,8 @@ package org.wise.portal.domain.impl;
 
 import java.io.Serializable;
 
-import org.wise.portal.domain.Run;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.run.Run;
 
 /**
  * Parameter for adding and editing SharedTeacher permissions

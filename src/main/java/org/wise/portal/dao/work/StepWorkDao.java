@@ -2,11 +2,11 @@ package org.wise.portal.dao.work;
 
 import java.util.List;
 
+import org.wise.portal.dao.SimpleDao;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 
-import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface StepWorkDao<T extends StepWork> extends SimpleDao<T> {
 

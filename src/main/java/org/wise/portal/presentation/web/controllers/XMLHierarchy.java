@@ -22,12 +22,9 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
-import java.util.Set;
-
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
-
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.user.User;
 
 /**
  * @author patrick lawler

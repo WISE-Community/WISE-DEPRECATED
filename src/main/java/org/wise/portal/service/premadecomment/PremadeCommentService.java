@@ -24,14 +24,14 @@ package org.wise.portal.service.premadecomment;
 
 import java.util.Set;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
 
-import org.wise.portal.domain.Run;
-import org.wise.portal.domain.impl.PremadeCommentListParameters;
-import org.wise.portal.domain.impl.PremadeCommentParameters;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.premadecomment.PremadeComment;
 import org.wise.portal.domain.premadecomment.PremadeCommentList;
+import org.wise.portal.domain.premadecomment.impl.PremadeCommentListParameters;
+import org.wise.portal.domain.premadecomment.impl.PremadeCommentParameters;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 
 /**
  * A service for working with <code>PremadeComment</code>

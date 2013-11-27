@@ -5,9 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
-
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -15,11 +12,12 @@ import org.hibernate.criterion.Restrictions;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.annotation.AnnotationDao;
+import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
-import org.wise.vle.hibernate.HibernateUtil;
 
 
 public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> implements AnnotationDao<Annotation> {
@@ -486,7 +484,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	}
 	
 	public List<Annotation> getAnnotationList() {
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         List<Annotation> result = session.createCriteria(Annotation.class).list();
         session.getTransaction().commit();

@@ -1,9 +1,9 @@
 package org.wise.portal.dao.work;
 
+import org.wise.portal.dao.SimpleDao;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWorkCache;
 
-import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface StepWorkCacheDao<T extends StepWorkCache> extends SimpleDao<T> {
 

@@ -28,13 +28,13 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
 
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 
@@ -49,7 +49,7 @@ public class StudentVLEController extends AbstractController {
 
 	private RunService runService;
 	
-	Properties portalProperties;
+	Properties wiseProperties;
 	
 	protected final static String CURRENT_STUDENTRUNINFO_LIST_KEY = "current_run_list";
 
@@ -190,7 +190,7 @@ public class StudentVLEController extends AbstractController {
 		}
 		
 		//get the path to the project file
-		String curriculumBaseWWW = portalProperties.getProperty("curriculum_base_www");
+		String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 		String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		String contentUrl = curriculumBaseWWW + rawProjectUrl;
 
@@ -211,9 +211,9 @@ public class StudentVLEController extends AbstractController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

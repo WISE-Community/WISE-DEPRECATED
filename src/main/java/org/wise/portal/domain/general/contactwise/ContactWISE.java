@@ -25,7 +25,7 @@ package org.wise.portal.domain.general.contactwise;
 import java.io.Serializable;
 import java.util.Properties;
 
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.user.User;
 
 
 /**
@@ -56,7 +56,7 @@ public interface ContactWISE extends Serializable {
 	
 	public void setDescription(String description);
 	
-	public void setEmaillisteners(Properties emaillisteners);
+	public void setWiseProperties(Properties wiseProperties);
 	
 	public String[] getMailRecipients();
 	

@@ -13,8 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.status.RunStatus;
-
-import utils.SecurityUtils;
+import org.wise.vle.utils.SecurityUtils;
 
 public class RunStatusController extends AbstractController {
 	private static final long serialVersionUID = 1L;

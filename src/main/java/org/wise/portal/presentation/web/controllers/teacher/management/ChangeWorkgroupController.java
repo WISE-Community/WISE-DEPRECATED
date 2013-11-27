@@ -27,17 +27,16 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.offering.RunService;
-
-import net.sf.sail.webapp.service.*;
-
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.service.workgroup.WorkgroupService;
+import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * @author Sally Ahn

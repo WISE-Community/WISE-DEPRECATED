@@ -37,11 +37,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.impl.UserImpl;
-
 import org.wise.portal.domain.premadecomment.PremadeComment;
 import org.wise.portal.domain.premadecomment.PremadeCommentList;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
 
 /**
  * 

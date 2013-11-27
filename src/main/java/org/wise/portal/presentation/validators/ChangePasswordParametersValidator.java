@@ -22,9 +22,6 @@
  */
 package org.wise.portal.presentation.validators;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.impl.ChangePasswordParameters;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.dao.SystemWideSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -32,8 +29,9 @@ import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.wise.portal.domain.impl.BatchStudentChangePasswordParameters;
-import org.wise.portal.domain.impl.Passwords;
+import org.wise.portal.domain.authentication.impl.BatchStudentChangePasswordParameters;
+import org.wise.portal.domain.authentication.impl.ChangePasswordParameters;
+import org.wise.portal.domain.user.User;
 
 /**
  * Validator for student's ChangePasswordParameters
@@ -79,9 +77,7 @@ public class ChangePasswordParametersValidator implements Validator {
 		if( errors.getErrorCount() != 0 )
 			return;
 		
-		
-		Passwords passwords = new Passwords(params.getPasswd1(), params.getPasswd2());
-		validatePasswordsMatch(errors, passwords, params);
+		validatePasswordsMatch(errors, params.getPasswd1(), params.getPasswd2(), params);
 	}
 	
 	/**
@@ -156,12 +152,12 @@ public class ChangePasswordParametersValidator implements Validator {
 		this.validatePasswordAlphaNumeric(errors, params.getPasswd2());
 	}
 
-	private void validatePasswordsMatch(Errors errors, Passwords passwords, ChangePasswordParameters params) {
+	private void validatePasswordsMatch(Errors errors, String password1, String password2, ChangePasswordParameters params) {
 		
 		//lengths match
 		validatePasswordLength(errors, params);
 		
-		if (!passwords.match()) {
+		if (!password1.equals(password2)) {
 			errors.rejectValue("passwd1", "presentation.validators.ChangePasswordParametersValidator.errorNewPasswordsDoNotMatch");
 		}
 	}

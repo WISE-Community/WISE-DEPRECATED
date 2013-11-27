@@ -34,8 +34,8 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.wise.portal.domain.portal.Portal;
-import org.wise.portal.presentation.util.json.JSONException;
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * TELS Portal implementation.

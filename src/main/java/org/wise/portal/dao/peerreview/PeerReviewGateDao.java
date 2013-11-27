@@ -1,10 +1,10 @@
 package org.wise.portal.dao.peerreview;
 
 
+import org.wise.portal.dao.SimpleDao;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewGate;
 
-import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface PeerReviewGateDao<T extends PeerReviewGate> extends SimpleDao<T> {
 

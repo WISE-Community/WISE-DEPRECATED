@@ -2,9 +2,9 @@ package org.wise.portal.dao.node;
 
 import java.util.List;
 
+import org.wise.portal.dao.SimpleDao;
 import org.wise.vle.domain.node.Node;
 
-import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface NodeDao<T extends Node> extends SimpleDao<T> {
 

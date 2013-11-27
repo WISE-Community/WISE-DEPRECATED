@@ -2,9 +2,9 @@ package org.wise.portal.dao.status;
 
 import java.util.List;
 
+import org.wise.portal.dao.SimpleDao;
 import org.wise.vle.domain.status.StudentStatus;
 
-import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface StudentStatusDao<T extends StudentStatus> extends SimpleDao<StudentStatus> {
 

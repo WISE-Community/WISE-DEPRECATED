@@ -31,16 +31,15 @@ import java.util.Set;
 
 import javax.mail.MessagingException;
 
-import net.sf.sail.webapp.dao.user.UserDao;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.mail.IMailFacade;
-
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.wise.portal.dao.offering.RunDao;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.mail.IMailFacade;
 
 /**
  * A cron job for TELS portal.
@@ -50,7 +49,7 @@ import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
  * - Number of Teachers and Students that created accounts in the last day
  * - Number of Users that logged in at least once in the last day
  * 
- * It then sends an email to whomever is listening, defined in emaillisteners.
+ * It then sends an email to whomever is listening, defined in wiseProperties.
  * 
  * @author hirokiterashima
  * @version $Id:$
@@ -59,9 +58,7 @@ public class AdminJob extends QuartzJobBean {
 
 	private IMailFacade javaMail = null;
 
-	private Properties emaillisteners = null;
-	
-	private Properties portalProperties = null;
+	private Properties wiseProperties = null;
 	
 	private RunDao<Run> runDao;
 	
@@ -175,10 +172,10 @@ public class AdminJob extends QuartzJobBean {
 	}
 	
 	public void sendEmail(String message) {
-		String[] recipients = emaillisteners.getProperty("uber_admin").split(",");
+		String[] recipients = wiseProperties.getProperty("uber_admin").split(",");
 		
 		String subject = "Daily Admin Report on Portal: "
-		    + " (" + portalProperties.getProperty("portal.name") + ")";		
+		    + " (" + wiseProperties.getProperty("portal.name") + ")";		
 
 		String msg = message;
 		
@@ -200,17 +197,10 @@ public class AdminJob extends QuartzJobBean {
 	}
 
 	/**
-	 * @param emaillisteners the emaillisteners to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setEmaillisteners(Properties emaillisteners) {
-		this.emaillisteners = emaillisteners;
-	}
-
-	/**
-	 * @param portalProperties the portalProperties to set
-	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

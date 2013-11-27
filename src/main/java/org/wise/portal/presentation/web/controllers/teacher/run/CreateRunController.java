@@ -39,12 +39,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
-import net.sf.sail.webapp.mail.IMailFacade;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.validation.BindException;
@@ -52,14 +46,19 @@ import org.springframework.validation.Errors;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractWizardFormController;
 import org.springframework.web.servlet.view.RedirectView;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.DefaultPeriodNames;
-import org.wise.portal.domain.impl.RunParameters;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.impl.RunParameters;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;
@@ -98,11 +97,9 @@ public class CreateRunController extends AbstractWizardFormController {
 	
 	private IMailFacade javaMail = null;
 	
-	private Properties emaillisteners = null;
-	
 	private MessageSource messageSource;
 
-	protected Properties portalProperties;
+	protected Properties wiseProperties;
 
 	private Map<Long,String> postLevelTextMap;
 
@@ -326,7 +323,7 @@ public class CreateRunController extends AbstractWizardFormController {
 			} catch (ObjectNotFoundException e) {
 				e.printStackTrace();
 			}
-			String maxWorkgroupSizeStr = portalProperties.getProperty("maxWorkgroupSize", "3");
+			String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
 			int maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
 			runParameters.setMaxWorkgroupSize(maxWorkgroupSize);
 			model.put("maxWorkgroupSize", maxWorkgroupSize);
@@ -460,7 +457,7 @@ public class CreateRunController extends AbstractWizardFormController {
 
 		public void run() {
 			try {
-				String sendEmailEnabledStr = portalProperties.getProperty("send_email_enabled");
+				String sendEmailEnabledStr = wiseProperties.getProperty("send_email_enabled");
 				Boolean sendEmailEnabled = Boolean.valueOf(sendEmailEnabledStr);
 				if (!sendEmailEnabled) {
 					return;
@@ -515,19 +512,19 @@ public class CreateRunController extends AbstractWizardFormController {
 			
     		String previewProjectUrl = portalBaseUrlString + "/wise/previewproject.html?projectId="+run.getProject().getId();
 
-			String[] recipients = emaillisteners.getProperty("project_setup").split(",");
+			String[] recipients = wiseProperties.getProperty("project_setup").split(",");
 			
 			
 			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject", 
-						new Object[]{portalProperties.getProperty("portal.name")}, Locale.US);
+						new Object[]{wiseProperties.getProperty("portal.name")}, Locale.US);
 			
 			String subject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject", 
-					new Object[]{portalProperties.getProperty("portal.name")},defaultSubject, this.locale);
+					new Object[]{wiseProperties.getProperty("portal.name")},defaultSubject, this.locale);
 			
 
 			String defaultMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailMessage", 
 					new Object[]{
-					portalProperties.getProperty("portal.name"),
+					wiseProperties.getProperty("portal.name"),
 					teacherName,
 					teacherUserDetails.getUsername(),
 					teacherEmail,
@@ -545,7 +542,7 @@ public class CreateRunController extends AbstractWizardFormController {
 
 			String message = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailMessage", 
 					new Object[]{
-					portalProperties.getProperty("portal.name"),
+					wiseProperties.getProperty("portal.name"),
 					teacherName,
 					teacherUserDetails.getUsername(),
 					teacherEmail,
@@ -562,7 +559,7 @@ public class CreateRunController extends AbstractWizardFormController {
 					defaultMessage,
 					this.locale);
 
-			String fromEmail = emaillisteners.getProperty("portalemailaddress");
+			String fromEmail = wiseProperties.getProperty("portalemailaddress");
 			
 			//for testing out the email functionality without spamming the groups
 			if(DEBUG) {
@@ -608,21 +605,6 @@ public class CreateRunController extends AbstractWizardFormController {
 	}
 
 	/**
-	 * @return the emaillisteners
-	 */
-	public Properties getEmaillisteners() {
-		return emaillisteners;
-	}
-
-	/**
-	 * @param emaillisteners the emaillisteners to set
-	 */
-	public void setEmaillisteners(Properties emaillisteners) {
-		this.emaillisteners = emaillisteners;
-	}
-
-
-	/**
 	 * @param projectService the projectService to set
 	 */
 	public void setProjectService(ProjectService projectService) {
@@ -637,10 +619,10 @@ public class CreateRunController extends AbstractWizardFormController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

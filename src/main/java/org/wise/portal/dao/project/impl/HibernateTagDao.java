@@ -24,9 +24,9 @@ package org.wise.portal.dao.project.impl;
 
 import java.util.List;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.project.TagDao;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.TagImpl;

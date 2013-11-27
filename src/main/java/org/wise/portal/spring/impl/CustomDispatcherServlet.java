@@ -19,7 +19,6 @@ package org.wise.portal.spring.impl;
 
 import java.security.InvalidParameterException;
 
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.util.StringUtils;

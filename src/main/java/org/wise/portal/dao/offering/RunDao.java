@@ -25,12 +25,11 @@ package org.wise.portal.dao.offering;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.offering.OfferingDao;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
 
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * @author Hiroki Terashima

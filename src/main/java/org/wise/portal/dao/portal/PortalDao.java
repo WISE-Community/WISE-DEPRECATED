@@ -22,8 +22,8 @@
  */
 package org.wise.portal.dao.portal;
 
-import net.sf.sail.webapp.dao.SimpleDao;
 
+import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.portal.Portal;
 
 /**

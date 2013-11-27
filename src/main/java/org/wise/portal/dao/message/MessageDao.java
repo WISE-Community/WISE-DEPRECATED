@@ -24,10 +24,10 @@ package org.wise.portal.dao.message;
 
 import java.util.List;
 
-import net.sf.sail.webapp.dao.SimpleDao;
-import net.sf.sail.webapp.domain.User;
 
+import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.message.Message;
+import org.wise.portal.domain.user.User;
 
 /**
  * DAO for Message domain.

@@ -39,25 +39,24 @@ import java.util.zip.ZipFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.curnit.CurnitService;
-
 import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.wise.portal.domain.impl.CreateUrlModuleParameters;
-import org.wise.portal.domain.impl.ProjectParameters;
+import org.wise.portal.domain.module.Curnit;
+import org.wise.portal.domain.module.impl.CreateUrlModuleParameters;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.ProjectUpload;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
+import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
-import org.wise.portal.presentation.util.json.JSONObject;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
 
 /**
@@ -73,7 +72,7 @@ public class UploadProjectController extends SimpleFormController {
 	
 	private CurnitService curnitService;
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	/**
 	 * @override @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.validation.BindException)
@@ -91,7 +90,7 @@ public class UploadProjectController extends SimpleFormController {
 		MultipartFile file = projectUpload.getFile();
 
 		// upload the zipfile to curriculum_base_dir
-		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
 		File uploadDir = new File(curriculumBaseDir);
 		if (!uploadDir.exists()) {
@@ -247,9 +246,9 @@ public class UploadProjectController extends SimpleFormController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

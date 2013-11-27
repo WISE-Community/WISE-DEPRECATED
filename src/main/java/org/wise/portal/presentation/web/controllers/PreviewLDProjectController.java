@@ -29,14 +29,13 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
-
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.service.project.ProjectService;
 
 /**
@@ -49,7 +48,7 @@ public class PreviewLDProjectController extends AbstractController {
 
 	ProjectService projectService;
 	
-	Properties portalProperties;
+	Properties wiseProperties;
 	
 	/** 
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -87,7 +86,7 @@ public class PreviewLDProjectController extends AbstractController {
 				}
 				
 				//get the path to the project json file
-				String curriculumBaseWWW = portalProperties.getProperty("curriculum_base_www");
+				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 				String contentUrl = curriculumBaseWWW + rawProjectUrl;
 				
@@ -116,9 +115,9 @@ public class PreviewLDProjectController extends AbstractController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

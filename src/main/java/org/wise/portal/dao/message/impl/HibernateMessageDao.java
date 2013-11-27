@@ -24,12 +24,12 @@ package org.wise.portal.dao.message.impl;
 
 import java.util.List;
 
+
+import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.message.MessageDao;
 import org.wise.portal.domain.message.Message;
 import org.wise.portal.domain.message.impl.MessageImpl;
-
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.user.User;
 
 /**
  * @author hirokiterashima

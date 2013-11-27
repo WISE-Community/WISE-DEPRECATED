@@ -35,19 +35,19 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.util.KeyGenerator;
 import org.wise.portal.presentation.util.http.Base64;
 import org.wise.portal.presentation.web.listeners.PasSessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.project.ProjectService;
-
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
 
 
 /**
@@ -66,7 +66,7 @@ public final class CredentialManager extends AbstractController{
 	
 	private static ProjectService projectService;
 	
-	private static Properties portalProperties;
+	private static Properties wiseProperties;
 	
 	@SuppressWarnings("unchecked")
 	public static void setRequestCredentials(HttpServletRequest request, User user){
@@ -190,7 +190,7 @@ public final class CredentialManager extends AbstractController{
 	 */
 	private static void setAllowedPathAccess(HttpServletRequest request){
 		String idStr = request.getParameter(PROJECTID);
-		String accessPath = portalProperties.getProperty("curriculum_base_dir");
+		String accessPath = wiseProperties.getProperty("curriculum_base_dir");
 		
 		/* catch minify command and set access path to the vle/all */
 		if("minify".equals(request.getParameter("command"))){
@@ -198,7 +198,7 @@ public final class CredentialManager extends AbstractController{
 		}
 		
 		if("studentAssetUpload".equals(request.getParameter("cmd")) || "studentAssetCopyForReference".equals(request.getParameter("command"))) {
-			accessPath = portalProperties.getProperty("studentuploads_base_dir");
+			accessPath = wiseProperties.getProperty("studentuploads_base_dir");
 		}
 		
 		/* if there is a project id parameter, set access level to the project dir */
@@ -232,9 +232,9 @@ public final class CredentialManager extends AbstractController{
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		CredentialManager.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		CredentialManager.wiseProperties = wiseProperties;
 	}
 }

@@ -38,35 +38,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
-import net.sf.sail.webapp.service.NotAuthorizedException;
-import net.sf.sail.webapp.service.curnit.CurnitService;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
-import org.wise.portal.domain.impl.CreateUrlModuleParameters;
-import org.wise.portal.domain.impl.ProjectParameters;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.module.Curnit;
+import org.wise.portal.domain.module.impl.CreateUrlModuleParameters;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.AuthorProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
+import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.util.Util;
-import org.wise.portal.presentation.util.json.JSONArray;
-import org.wise.portal.presentation.util.json.JSONException;
-import org.wise.portal.presentation.util.json.JSONObject;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.CredentialManager;
 import org.wise.portal.presentation.web.controllers.TaggerController;
+import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilter;
 import org.wise.portal.presentation.web.listeners.PasSessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
 
 /**
@@ -85,7 +85,7 @@ public class AuthorProjectController extends AbstractController {
 
 	private ProjectService projectService;
 
-	private Properties portalProperties = null;
+	private Properties wiseProperties = null;
 
 	private CurnitService curnitService;
 
@@ -147,7 +147,7 @@ public class AuthorProjectController extends AbstractController {
 					//command is review update project or to update project
 					if("reviewUpdateProject".equals(command) || "updateProject".equals(command)) {
 						//get the curriculum base directory
-						String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+						String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
 						//get the project url
 						String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
@@ -167,7 +167,7 @@ public class AuthorProjectController extends AbstractController {
 						request.setAttribute("parentProjectUrl", parentProjectUrl);
 					} else if("importSteps".equals(command)) {
 						//get the curriculum base directory
-						String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+						String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
 						//get the project url
 						String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
@@ -317,7 +317,7 @@ public class AuthorProjectController extends AbstractController {
 			request.setAttribute("filePath", filePath);
 		} else if("createProject".equals(command)) {
 			//get the full curriculum base dir
-			String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+			String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 			request.setAttribute("curriculumBaseDir", curriculumBaseDir);
 		} else if("createNode".equals(command)) {
 			//get the full project file path
@@ -333,7 +333,7 @@ public class AuthorProjectController extends AbstractController {
 			request.setAttribute("projectFolderPath", projectFolderPath);
 
 			//get the full curriculum base dir
-			String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+			String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 			request.setAttribute("curriculumBaseDir", curriculumBaseDir);
 		} else if("updateFile".equals(command) ||
 				"copyNode".equals(command) ||
@@ -926,7 +926,7 @@ public class AuthorProjectController extends AbstractController {
 	 */
 	private ModelAndView handleGetCurriculumBaseUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		//get the curriculum_base_www variable from the wise.properties file
-		String vlewrapperBaseUrl = portalProperties.getProperty("curriculum_base_www");
+		String vlewrapperBaseUrl = wiseProperties.getProperty("curriculum_base_www");
 
 		//write the curriculum base url to the response
 		response.getWriter().write(vlewrapperBaseUrl);
@@ -958,7 +958,7 @@ public class AuthorProjectController extends AbstractController {
 		String cRaterRequestUrl = portalUrl + "/wise/bridge/request.html?type=cRater";
 
 		//get the curriculum_base_www variable from the wise.properties file
-		String vlewrapperBaseUrl = portalProperties.getProperty("curriculum_base_www");
+		String vlewrapperBaseUrl = wiseProperties.getProperty("curriculum_base_www");
 
 		//get the url to make CRater requests
 		String deleteProjectUrl = portalUrl + "/wise/deleteproject.html";
@@ -1159,7 +1159,7 @@ public class AuthorProjectController extends AbstractController {
 	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
 	 */
 	private String getProjectFilePath(Project project) {
-		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 		String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		String projectFilePath = curriculumBaseDir + projectUrl;
 		return projectFilePath;
@@ -1200,10 +1200,10 @@ public class AuthorProjectController extends AbstractController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

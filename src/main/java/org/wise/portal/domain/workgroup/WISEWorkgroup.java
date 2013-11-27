@@ -22,8 +22,7 @@
  */
 package org.wise.portal.domain.workgroup;
 
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.group.Group;
+import org.wise.portal.domain.group.Group;
 
 /**
  * A WISE <code>Workgroup</code> is a more specific manifestation of

@@ -17,10 +17,6 @@
  */
 package org.wise.portal.spring.impl;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.wise.portal.spring.SpringConfiguration;
 
 
@@ -35,21 +31,31 @@ import org.wise.portal.spring.SpringConfiguration;
  */
 public final class SpringConfigurationImpl implements SpringConfiguration {
 
+	/*
     private static String[] ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS = new String[] {
         "classpath:configurations/applicationContexts/pas/acegiSecurity.xml",
         "classpath:configurations/applicationContexts/pas/datasource.xml",
         "classpath:configurations/applicationContexts/pas/security.xml",
         "classpath:configurations/applicationContexts/pas/spring.xml",
-        "classpath:configurations/applicationContexts/pas/user.xml",
-        "classpath:configurations/applicationContexts/pas/javamail.xml"};
+        "classpath:configurations/applicationContexts/pas/user.xml"};
+        */
 
+    private static String[] ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS = new String[] {
+    	"classpath:configurations/applicationContexts.xml"
+    };
+
+    private static final String[] DISPATCHER_SERVLET_CONTEXT_CONFIG_LOCATIONS = new String[] {
+        "classpath:configurations/dispatcherServletContexts.xml"
+    };
+    /*
     private static final String[] DISPATCHER_SERVLET_CONTEXT_CONFIG_LOCATIONS = new String[] {
             "classpath:configurations/dispatcherServlet/pas/config.xml",
             "classpath:configurations/dispatcherServlet/pas/controllers.xml",            
             "classpath:configurations/dispatcherServlet/tels/controllers.xml",
             "classpath:configurations/dispatcherServlet/tels/extensions.xml",
             "classpath:configurations/dispatcherServlet/tels/overrides.xml" };
-
+*/
+    /*
     static {
         final List<String> configLocationsList = Collections.list(Collections
                 .enumeration(Arrays.asList(ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS)));
@@ -62,6 +68,7 @@ public final class SpringConfigurationImpl implements SpringConfiguration {
         
         ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS = configLocationsList.toArray(new String[0]);
     }
+    */
 
     /**
      * @see org.wise.portal.spring.SpringConfiguration#getDispatcherServletContextConfigLocations()

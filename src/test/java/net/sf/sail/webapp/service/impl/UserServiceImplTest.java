@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.sf.sail.webapp.dao.authentication.GrantedAuthorityDao;
-import net.sf.sail.webapp.dao.user.UserDao;
+import org.wise.portal.dao.authentication.GrantedAuthorityDao;
+import org.wise.portal.dao.user.UserDao;
 import net.sf.sail.webapp.domain.User;
 import net.sf.sail.webapp.domain.authentication.MutableGrantedAuthority;
 import net.sf.sail.webapp.domain.authentication.MutableUserDetails;

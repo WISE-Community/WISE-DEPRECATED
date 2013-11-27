@@ -37,14 +37,14 @@ public class TelsAnnotationSessionFactoryBean extends
 		AnnotationSessionFactoryBean {
 	
 	protected void postProcessAnnotationConfiguration(AnnotationConfiguration config) {
-		Properties portalProperties = new Properties();
+		Properties wiseProperties = new Properties();
     	try {
-    		portalProperties.load(TelsAnnotationSessionFactoryBean.class.getClassLoader().getResourceAsStream("wise.properties"));
+    		wiseProperties.load(TelsAnnotationSessionFactoryBean.class.getClassLoader().getResourceAsStream("wise.properties"));
 		} catch (IOException e) {
 			// pretend like nothing happened.
 			e.printStackTrace();
 		}
-    	config.addProperties(portalProperties);  // add extra property overrides (like url,username,password) in wise.properties
+    	config.addProperties(wiseProperties);  // add extra property overrides (like url,username,password) in wise.properties
 	}
 
 }

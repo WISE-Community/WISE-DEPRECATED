@@ -55,7 +55,7 @@ public class HibernateCurnitDaoTest extends AbstractTransactionalDaoTests<Hibern
 
     /**
      * Test method for
-     * {@link net.sf.sail.webapp.dao.impl.AbstractHibernateDao#save(java.lang.Object)}.
+     * {@link org.wise.portal.dao.impl.AbstractHibernateDao#save(java.lang.Object)}.
      */
     public void testSave() {
         verifyDataStoreIsEmpty();

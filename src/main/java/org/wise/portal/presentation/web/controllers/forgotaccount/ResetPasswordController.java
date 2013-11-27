@@ -8,23 +8,22 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.mail.JavaMailHelper;
-import net.sf.sail.webapp.service.UserService;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.ReminderParameters;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.mail.MailService;
+import org.wise.portal.service.user.UserService;
 
 public class ResetPasswordController extends SimpleFormController {
 
 	protected UserService userService = null;
-	private Properties portalProperties;
-	protected JavaMailHelper javaMail = null;
+	private Properties wiseProperties;
+	protected MailService javaMail = null;
 	private MessageSource messageSource;
 	
 	/**
@@ -163,7 +162,7 @@ public class ResetPasswordController extends SimpleFormController {
 			String username = user.getUserDetails().getUsername();
 			
 			//get the portal name
-			String portalName = portalProperties.getProperty("portal.name");
+			String portalName = wiseProperties.getProperty("portal.name");
 			
 			//get the user's email
 			String userEmail = user.getUserDetails().getEmailAddress();
@@ -202,10 +201,10 @@ public class ResetPasswordController extends SimpleFormController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**
@@ -213,7 +212,7 @@ public class ResetPasswordController extends SimpleFormController {
 	 * 
 	 * @param javaMail
 	 */
-	public void setJavaMail(JavaMailHelper javaMail) {
+	public void setJavaMail(MailService javaMail) {
 		this.javaMail = javaMail;
 	}
 	

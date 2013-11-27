@@ -27,24 +27,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.service.AclService;
-import net.sf.sail.webapp.service.UserService;
-import net.sf.sail.webapp.service.group.GroupService;
-import net.sf.sail.webapp.service.workgroup.WorkgroupService;
 
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.PeriodNotFoundException;
-import org.wise.portal.domain.Run;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
-import org.wise.portal.domain.impl.Projectcode;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.project.impl.Projectcode;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.StudentRunInfo;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.service.acl.AclService;
+import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.student.StudentService;
+import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * @author Hiroki Terashima

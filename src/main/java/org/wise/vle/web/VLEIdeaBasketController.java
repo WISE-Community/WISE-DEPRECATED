@@ -21,8 +21,7 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
-
-import utils.SecurityUtils;
+import org.wise.vle.utils.SecurityUtils;
 
 public class VLEIdeaBasketController extends AbstractController {
 

@@ -22,7 +22,8 @@
  */
 package org.wise.portal.domain.message;
 
-import net.sf.sail.webapp.domain.User;
+import org.wise.portal.domain.user.User;
+
 
 /**
  * @author patrick lawler

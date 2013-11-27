@@ -24,7 +24,7 @@ package org.telscenter.sail.webapp.presentation.web.controllers.teacher.project;
 
 import static org.easymock.EasyMock.*;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
+import org.wise.portal.dao.ObjectNotFoundException;
 
 import org.junit.After;
 import org.junit.Before;

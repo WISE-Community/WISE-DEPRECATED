@@ -2,9 +2,9 @@ package org.wise.portal.dao.ideabasket;
 
 import java.util.List;
 
+import org.wise.portal.dao.SimpleDao;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
 
-import net.sf.sail.webapp.dao.SimpleDao;
 
 public interface IdeaBasketDao<T extends IdeaBasket> extends SimpleDao<IdeaBasket> {
 

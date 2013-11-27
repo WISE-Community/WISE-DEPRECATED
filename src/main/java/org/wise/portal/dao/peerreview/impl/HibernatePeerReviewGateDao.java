@@ -2,13 +2,13 @@ package org.wise.portal.dao.peerreview.impl;
 
 import java.util.List;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.dao.impl.AbstractHibernateDao;
 
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.peerreview.PeerReviewGateDao;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewGate;

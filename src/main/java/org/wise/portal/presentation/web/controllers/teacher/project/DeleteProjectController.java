@@ -7,14 +7,14 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.service.NotAuthorizedException;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.project.ProjectService;
 
 public class DeleteProjectController extends AbstractController {
