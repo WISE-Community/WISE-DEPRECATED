@@ -41,11 +41,11 @@ public class TelsJdbcMutableAclService extends JdbcMutableAclService {
 	public TelsJdbcMutableAclService(DataSource dataSource,
 			LookupStrategy lookupStrategy, AclCache aclCache) {
 		super(dataSource, lookupStrategy, aclCache);
-		Properties portalProperties = new Properties();
+		Properties wiseProperties = new Properties();
     	try {
-    		portalProperties.load(TelsAnnotationSessionFactoryBean.class.getClassLoader().getResourceAsStream("wise.properties"));
-    		if (portalProperties.containsKey("hibernate.connection.driver_class")) {
-    			String driverClass = (String) portalProperties.get("hibernate.connection.driver_class");
+    		wiseProperties.load(TelsAnnotationSessionFactoryBean.class.getClassLoader().getResourceAsStream("wise.properties"));
+    		if (wiseProperties.containsKey("hibernate.connection.driver_class")) {
+    			String driverClass = (String) wiseProperties.get("hibernate.connection.driver_class");
     			if ("com.mysql.jdbc.Driver".equals(driverClass)) {
     				this.setClassIdentityQuery("SELECT @@IDENTITY");
     				this.setSidIdentityQuery("SELECT @@IDENTITY");

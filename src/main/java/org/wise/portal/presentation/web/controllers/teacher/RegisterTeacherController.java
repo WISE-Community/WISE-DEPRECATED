@@ -62,7 +62,7 @@ public class RegisterTeacherController extends SimpleFormController {
 
 	private Properties emaillisteners = null;
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	private MessageSource messageSource;
 
@@ -202,7 +202,7 @@ public class RegisterTeacherController extends SimpleFormController {
 		 */
 		private void sendEmail() {
 
-			String sendEmailEnabledStr = portalProperties.getProperty("send_email_enabled");
+			String sendEmailEnabledStr = wiseProperties.getProperty("send_email_enabled");
 			Boolean sendEmailEnabled = Boolean.valueOf(sendEmailEnabledStr);
 			if (!sendEmailEnabled) {
 				return;
@@ -216,7 +216,7 @@ public class RegisterTeacherController extends SimpleFormController {
 
 			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, Locale.US);
 			String subject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, defaultSubject, this.locale);
-			String portalbaseurl = portalProperties.getProperty("portal_baseurl");
+			String portalbaseurl = wiseProperties.getProperty("portal_baseurl");
 			String gettingStartedUrl = portalbaseurl + "/pages/gettingstarted.html";
 			String defaultBody = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, Locale.US);
 			String message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, defaultBody, this.locale);
@@ -247,10 +247,10 @@ public class RegisterTeacherController extends SimpleFormController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

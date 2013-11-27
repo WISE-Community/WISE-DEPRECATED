@@ -49,7 +49,7 @@ public class StudentVLEController extends AbstractController {
 
 	private RunService runService;
 	
-	Properties portalProperties;
+	Properties wiseProperties;
 	
 	protected final static String CURRENT_STUDENTRUNINFO_LIST_KEY = "current_run_list";
 
@@ -190,7 +190,7 @@ public class StudentVLEController extends AbstractController {
 		}
 		
 		//get the path to the project file
-		String curriculumBaseWWW = portalProperties.getProperty("curriculum_base_www");
+		String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 		String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		String contentUrl = curriculumBaseWWW + rawProjectUrl;
 
@@ -211,9 +211,9 @@ public class StudentVLEController extends AbstractController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

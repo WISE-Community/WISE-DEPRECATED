@@ -85,7 +85,7 @@ public class AuthorProjectController extends AbstractController {
 
 	private ProjectService projectService;
 
-	private Properties portalProperties = null;
+	private Properties wiseProperties = null;
 
 	private CurnitService curnitService;
 
@@ -147,7 +147,7 @@ public class AuthorProjectController extends AbstractController {
 					//command is review update project or to update project
 					if("reviewUpdateProject".equals(command) || "updateProject".equals(command)) {
 						//get the curriculum base directory
-						String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+						String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
 						//get the project url
 						String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
@@ -167,7 +167,7 @@ public class AuthorProjectController extends AbstractController {
 						request.setAttribute("parentProjectUrl", parentProjectUrl);
 					} else if("importSteps".equals(command)) {
 						//get the curriculum base directory
-						String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+						String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
 						//get the project url
 						String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
@@ -311,7 +311,7 @@ public class AuthorProjectController extends AbstractController {
 			request.setAttribute("filePath", filePath);
 		} else if("createProject".equals(command)) {
 			//get the full curriculum base dir
-			String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+			String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 			request.setAttribute("curriculumBaseDir", curriculumBaseDir);
 		} else if("createNode".equals(command)) {
 			//get the full project file path
@@ -327,7 +327,7 @@ public class AuthorProjectController extends AbstractController {
 			request.setAttribute("projectFolderPath", projectFolderPath);
 
 			//get the full curriculum base dir
-			String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+			String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 			request.setAttribute("curriculumBaseDir", curriculumBaseDir);
 		} else if("updateFile".equals(command) ||
 				"copyNode".equals(command) ||
@@ -920,7 +920,7 @@ public class AuthorProjectController extends AbstractController {
 	 */
 	private ModelAndView handleGetCurriculumBaseUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		//get the curriculum_base_www variable from the wise.properties file
-		String vlewrapperBaseUrl = portalProperties.getProperty("curriculum_base_www");
+		String vlewrapperBaseUrl = wiseProperties.getProperty("curriculum_base_www");
 
 		//write the curriculum base url to the response
 		response.getWriter().write(vlewrapperBaseUrl);
@@ -952,7 +952,7 @@ public class AuthorProjectController extends AbstractController {
 		String cRaterRequestUrl = portalUrl + "/wise/bridge/request.html?type=cRater";
 
 		//get the curriculum_base_www variable from the wise.properties file
-		String vlewrapperBaseUrl = portalProperties.getProperty("curriculum_base_www");
+		String vlewrapperBaseUrl = wiseProperties.getProperty("curriculum_base_www");
 
 		//get the url to make CRater requests
 		String deleteProjectUrl = portalUrl + "/wise/deleteproject.html";
@@ -1153,7 +1153,7 @@ public class AuthorProjectController extends AbstractController {
 	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
 	 */
 	private String getProjectFilePath(Project project) {
-		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 		String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		String projectFilePath = curriculumBaseDir + projectUrl;
 		return projectFilePath;
@@ -1194,10 +1194,10 @@ public class AuthorProjectController extends AbstractController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

@@ -81,7 +81,7 @@ public class TeamSignInController extends SimpleFormController {
 
 	private StudentAttendanceService studentAttendanceService;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	public TeamSignInController() {
 		setSessionForm(true);
@@ -300,7 +300,7 @@ public class TeamSignInController extends SimpleFormController {
 		TeamSignInForm form = new TeamSignInForm();
 		Long runId = null;
 		
-		String maxWorkgroupSizeStr = portalProperties.getProperty("maxWorkgroupSize", "3");
+		String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
 		int maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
 		form.setMaxWorkgroupSize(maxWorkgroupSize);
 		
@@ -398,7 +398,7 @@ public class TeamSignInController extends SimpleFormController {
 				ModelAndView formToShow = super.showForm(request, response, errors);
 				Integer maxWorkgroupSize = run.getMaxWorkgroupSize();
 				if (maxWorkgroupSize == null) {
-					String maxWorkgroupSizeStr = portalProperties.getProperty("maxWorkgroupSize", "3");
+					String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
 					maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
 				}
 				formToShow.addObject("maxWorkgroupSize", maxWorkgroupSize);
@@ -465,16 +465,16 @@ public class TeamSignInController extends SimpleFormController {
 	}
 
 	/**
-	 * @return the portalProperties
+	 * @return the wiseProperties
 	 */
-	public Properties getPortalProperties() {
-		return portalProperties;
+	public Properties getWiseProperties() {
+		return wiseProperties;
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

@@ -90,7 +90,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	
 	protected static Set<String> PREVIEW_PERIOD_NAMES;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	private CurnitService curnitService;
 	
@@ -582,10 +582,10 @@ public class LdProjectServiceImpl implements ProjectService {
 	}
 	
 	/**
-	 * @param portalProperties the portal properties to set
+	 * @param wiseProperties the portal properties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**
@@ -618,8 +618,8 @@ public class LdProjectServiceImpl implements ProjectService {
 	 * @see org.wise.portal.service.project.ProjectService#minifyProject(org.wise.portal.domain.project.Project)
 	 */
 	public String minifyProject(Project project) {
-		String curriculumBaseDir = this.portalProperties.getProperty("curriculum_base_dir");
-		String minifyUrl = this.portalProperties.getProperty("vlewrapper_baseurl") + "/util/minifier.html";
+		String curriculumBaseDir = this.wiseProperties.getProperty("curriculum_base_dir");
+		String minifyUrl = this.wiseProperties.getProperty("vlewrapper_baseurl") + "/util/minifier.html";
 		String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		String params = "command=minifyProject&path=" + curriculumBaseDir + "/" + projectUrl;
 		

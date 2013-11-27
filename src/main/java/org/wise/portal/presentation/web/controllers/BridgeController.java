@@ -78,7 +78,7 @@ public class BridgeController extends AbstractController {
 
 	private WISEWorkgroupService workgroupService;
 	private RunService runService;
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	private StudentAttendanceService studentAttendanceService;
 
 	/**
@@ -912,7 +912,7 @@ public class BridgeController extends AbstractController {
 		ServletContext servletContext2 = this.getServletContext();
 		ServletContext vlewrappercontext = servletContext2.getContext("/vlewrapper");
 		User user = ControllerUtil.getSignedInUser();
-		String studentuploads_base_dir = portalProperties.getProperty("studentuploads_base_dir");
+		String studentuploads_base_dir = wiseProperties.getProperty("studentuploads_base_dir");
 		
 		try {
 			//get the run
@@ -951,7 +951,7 @@ public class BridgeController extends AbstractController {
 		ServletContext servletContext2 = this.getServletContext();
 		ServletContext vlewrappercontext = servletContext2.getContext("/vlewrapper");
 		User user = ControllerUtil.getSignedInUser();
-		String studentuploads_base_dir = portalProperties.getProperty("studentuploads_base_dir");
+		String studentuploads_base_dir = wiseProperties.getProperty("studentuploads_base_dir");
 		
 		try {
 			//get the run
@@ -1057,13 +1057,13 @@ public class BridgeController extends AbstractController {
 	private void setCRaterAttributes(HttpServletRequest request) {
 		String cRaterItemType = request.getParameter("cRaterItemType");
 		if (cRaterItemType == null || cRaterItemType.equals("CRATER")) {
-			request.setAttribute("cRaterVerificationUrl", portalProperties.getProperty("cRater_verification_url"));
-			request.setAttribute("cRaterScoringUrl", portalProperties.getProperty("cRater_scoring_url"));
-			request.setAttribute("cRaterClientId", portalProperties.getProperty("cRater_client_id"));
+			request.setAttribute("cRaterVerificationUrl", wiseProperties.getProperty("cRater_verification_url"));
+			request.setAttribute("cRaterScoringUrl", wiseProperties.getProperty("cRater_scoring_url"));
+			request.setAttribute("cRaterClientId", wiseProperties.getProperty("cRater_client_id"));
 		} else if (cRaterItemType.equals("HENRY")) {
-			request.setAttribute("cRaterVerificationUrl", portalProperties.getProperty("henry_verification_url"));
-			request.setAttribute("cRaterScoringUrl", portalProperties.getProperty("henry_scoring_url"));
-			request.setAttribute("cRaterClientId", portalProperties.getProperty("henry_client_id"));			
+			request.setAttribute("cRaterVerificationUrl", wiseProperties.getProperty("henry_verification_url"));
+			request.setAttribute("cRaterScoringUrl", wiseProperties.getProperty("henry_scoring_url"));
+			request.setAttribute("cRaterClientId", wiseProperties.getProperty("henry_client_id"));			
 		}
 	}
 	
@@ -1074,7 +1074,7 @@ public class BridgeController extends AbstractController {
 	 * @param request
 	 */
 	private void setProjectPath(Run run, HttpServletRequest request) {
-		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 		String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());		
 		String projectPath = curriculumBaseDir + rawProjectUrl;
 		
@@ -1118,10 +1118,10 @@ public class BridgeController extends AbstractController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

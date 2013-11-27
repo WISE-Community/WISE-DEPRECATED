@@ -59,7 +59,7 @@ public class GradeWorkController extends AbstractController {
 
 	private RunService runService;
 	
-	Properties portalProperties;
+	Properties wiseProperties;
 	
 	/**
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -103,7 +103,7 @@ public class GradeWorkController extends AbstractController {
 					String getClassroomMonitorUrl = portalurl + "/wise/vle/classroomMonitor.html";
 					String getClassroomMonitorConfigUrl = portalurl + "/wise/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
 					
-					String curriculumBaseWWW = portalProperties.getProperty("curriculum_base_www");
+					String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 					String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 					String contentUrl = curriculumBaseWWW + rawProjectUrl;
 					
@@ -275,9 +275,9 @@ public class GradeWorkController extends AbstractController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

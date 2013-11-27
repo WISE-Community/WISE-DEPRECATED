@@ -22,7 +22,7 @@ import org.wise.portal.service.user.UserService;
 public class ResetPasswordController extends SimpleFormController {
 
 	protected UserService userService = null;
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	protected MailService javaMail = null;
 	private MessageSource messageSource;
 	
@@ -162,7 +162,7 @@ public class ResetPasswordController extends SimpleFormController {
 			String username = user.getUserDetails().getUsername();
 			
 			//get the portal name
-			String portalName = portalProperties.getProperty("portal.name");
+			String portalName = wiseProperties.getProperty("portal.name");
 			
 			//get the user's email
 			String userEmail = user.getUserDetails().getEmailAddress();
@@ -201,10 +201,10 @@ public class ResetPasswordController extends SimpleFormController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

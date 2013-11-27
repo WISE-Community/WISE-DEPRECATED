@@ -102,7 +102,7 @@ public class CreateRunController extends AbstractWizardFormController {
 	
 	private MessageSource messageSource;
 
-	protected Properties portalProperties;
+	protected Properties wiseProperties;
 
 	private Map<Long,String> postLevelTextMap;
 
@@ -326,7 +326,7 @@ public class CreateRunController extends AbstractWizardFormController {
 			} catch (ObjectNotFoundException e) {
 				e.printStackTrace();
 			}
-			String maxWorkgroupSizeStr = portalProperties.getProperty("maxWorkgroupSize", "3");
+			String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
 			int maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
 			runParameters.setMaxWorkgroupSize(maxWorkgroupSize);
 			model.put("maxWorkgroupSize", maxWorkgroupSize);
@@ -460,7 +460,7 @@ public class CreateRunController extends AbstractWizardFormController {
 
 		public void run() {
 			try {
-				String sendEmailEnabledStr = portalProperties.getProperty("send_email_enabled");
+				String sendEmailEnabledStr = wiseProperties.getProperty("send_email_enabled");
 				Boolean sendEmailEnabled = Boolean.valueOf(sendEmailEnabledStr);
 				if (!sendEmailEnabled) {
 					return;
@@ -519,15 +519,15 @@ public class CreateRunController extends AbstractWizardFormController {
 			
 			
 			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject", 
-						new Object[]{portalProperties.getProperty("portal.name")}, Locale.US);
+						new Object[]{wiseProperties.getProperty("portal.name")}, Locale.US);
 			
 			String subject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject", 
-					new Object[]{portalProperties.getProperty("portal.name")},defaultSubject, this.locale);
+					new Object[]{wiseProperties.getProperty("portal.name")},defaultSubject, this.locale);
 			
 
 			String defaultMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailMessage", 
 					new Object[]{
-					portalProperties.getProperty("portal.name"),
+					wiseProperties.getProperty("portal.name"),
 					teacherName,
 					teacherUserDetails.getUsername(),
 					teacherEmail,
@@ -545,7 +545,7 @@ public class CreateRunController extends AbstractWizardFormController {
 
 			String message = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailMessage", 
 					new Object[]{
-					portalProperties.getProperty("portal.name"),
+					wiseProperties.getProperty("portal.name"),
 					teacherName,
 					teacherUserDetails.getUsername(),
 					teacherEmail,
@@ -637,10 +637,10 @@ public class CreateRunController extends AbstractWizardFormController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

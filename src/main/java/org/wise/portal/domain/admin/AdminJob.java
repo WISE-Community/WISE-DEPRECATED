@@ -61,7 +61,7 @@ public class AdminJob extends QuartzJobBean {
 
 	private Properties emaillisteners = null;
 	
-	private Properties portalProperties = null;
+	private Properties wiseProperties = null;
 	
 	private RunDao<Run> runDao;
 	
@@ -178,7 +178,7 @@ public class AdminJob extends QuartzJobBean {
 		String[] recipients = emaillisteners.getProperty("uber_admin").split(",");
 		
 		String subject = "Daily Admin Report on Portal: "
-		    + " (" + portalProperties.getProperty("portal.name") + ")";		
+		    + " (" + wiseProperties.getProperty("portal.name") + ")";		
 
 		String msg = message;
 		
@@ -207,10 +207,10 @@ public class AdminJob extends QuartzJobBean {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

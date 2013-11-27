@@ -57,7 +57,7 @@ public class ClassroomRunListController extends AbstractController {
 
 	protected static final String GRADING_ENABLED = "GRADING_ENABLED";
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	
 	private RunService runService;
 
@@ -93,7 +93,7 @@ public class ClassroomRunListController extends AbstractController {
 
 		boolean isXMPPEnabled = false;
 		
-	    String isXMPPEnabledStr = this.portalProperties.getProperty("isXMPPEnabled");
+	    String isXMPPEnabledStr = this.wiseProperties.getProperty("isXMPPEnabled");
 	    if (isXMPPEnabledStr != null) {
 	    	isXMPPEnabled = Boolean.valueOf(isXMPPEnabledStr);
 	    }
@@ -160,10 +160,10 @@ public class ClassroomRunListController extends AbstractController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

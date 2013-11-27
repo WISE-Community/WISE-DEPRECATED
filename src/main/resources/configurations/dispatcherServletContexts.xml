@@ -142,7 +142,7 @@
 		<property name="messageService" ref="messageService" />
 		<property name="projectService" ref="projectService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="registerController"
@@ -152,7 +152,7 @@
 		class="org.wise.portal.presentation.web.controllers.IndexController">
 		<property name="newsItemService" ref="newsItemService" />
 		<property name="projectService" ref="projectService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="creditsController"
@@ -169,7 +169,7 @@
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="projectService" ref="projectService" />
 		<property name="studentAttendanceService" ref="studentAttendanceService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="previewprojectController"
@@ -181,14 +181,14 @@
 	<bean id="previewprojectlistController"
 		class="org.wise.portal.presentation.web.controllers.PreviewProjectListController">
 		<property name="projectService" ref="projectService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="authorProjectController"
 		class="org.wise.portal.presentation.web.controllers.author.project.AuthorProjectController">
 		<property name="projectService" ref="projectService" />
 		<property name="curnitService" ref="curnitService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="tagger" ref="taggerController" />
 	</bean>
 
@@ -207,7 +207,7 @@
 		<property name="formView" value="student/teamsignin" />
 		<property name="successView" value="student/teamsigninsuccess" />
 		<property name="studentAttendanceService" ref="studentAttendanceService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="curriculumSubjectsController"
@@ -217,7 +217,7 @@
 	<bean id="gradeWorkController"
 		class="org.wise.portal.presentation.web.controllers.teacher.grading.GradeWorkController">
 		<property name="runService" ref="runService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="submitWorkgroupChangesController"
@@ -289,13 +289,13 @@
 	<bean id="studentVLEController"
 		class="org.wise.portal.presentation.web.controllers.student.StudentVLEController">
 		<property name="runService" ref="runService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="previewLDProjectController"
 		class="org.wise.portal.presentation.web.controllers.PreviewLDProjectController">
 		<property name="projectService" ref="projectService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="informationController"
@@ -304,7 +304,7 @@
 		<property name="runService" ref="runService" />
 		<property name="projectService" ref="projectService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="runInfoController"
@@ -323,7 +323,7 @@
 		<property name="javaMail" ref="javaMail" />
 		<property name="emaillisteners" ref="emaillisteners" />
 		<property name="messageSource" ref="messageSource" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="myClassroomRunsMainController"
@@ -331,12 +331,12 @@
 		<property name="runService" ref="runService" />
 		<property name="projectService" ref="projectService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="myClassroomRunsController"
 		class="org.wise.portal.presentation.web.controllers.teacher.management.ClassroomRunListController">
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="runService" ref="runService" />
 		<property name="projectService" ref="projectService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
@@ -471,7 +471,7 @@
 		<property name="successView" value="forgotaccount/teacher/success" />
 		<property name="errorView" value="forgotaccount/teacher/error" />
 		<property name="javaMail" ref="javaMail" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="messageSource" ref="messageSource" />
 	</bean>
 
@@ -599,7 +599,7 @@
 		<property name="projectService" ref="projectService" />
 		<property name="userService" ref="userService" />
 		<property name="runService" ref="runService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="shareProjectController"
@@ -614,7 +614,7 @@
 		<property name="javaMail" ref="javaMail" />
 		<property name="emaillisteners" ref="emaillisteners" />
 		<property name="messageSource" ref="messageSource" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="successView" value="shareproject.html" />
 		<property name="formView" value="teacher/projects/customized/shareproject" />
 	</bean>
@@ -659,7 +659,7 @@
 		class="org.wise.portal.presentation.web.controllers.teacher.project.ProjectInfoController">
 		<property name="projectService" ref="projectService" />
 		<property name="runService" ref="runService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="addNewsItemController"
@@ -713,7 +713,7 @@
 			value="org.wise.portal.domain.impl.AddSharedTeacherParameters" />
 		<property name="javaMail" ref="javaMail" />
 		<property name="emaillisteners" ref="emaillisteners" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="messageSource" ref="messageSource" />
 		<property name="successView" value="shareprojectrun.html" />
 		<property name="formView" value="teacher/run/shareprojectrun" />
@@ -787,14 +787,14 @@
 	<bean id="exportProjectController"
 		class="org.wise.portal.presentation.web.controllers.project.ExportProjectController">
 		<property name="projectService" ref="projectService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="uploadProjectController"
 		class="org.wise.portal.presentation.web.controllers.admin.UploadProjectController">
 		<property name="projectService" ref="projectService" />
 		<property name="curnitService" ref="curnitService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="sessionForm" value="true" />
 		<property name="commandName" value="projectZipFile" />
 		<property name="commandClass"
@@ -894,7 +894,7 @@
 	<bean id="analyzeProjectController"
 		class="org.wise.portal.presentation.web.controllers.teacher.project.AnalyzeProjectController">
 		<property name="projectService" ref="projectService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 
@@ -995,14 +995,14 @@
 		class="org.wise.portal.presentation.web.controllers.BridgeController">
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="runService" ref="runService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="studentAttendanceService" ref="studentAttendanceService" />
 	</bean>
 
 	<bean id="credentialManager"
 		class="org.wise.portal.presentation.web.controllers.CredentialManager">
 		<property name="projectService" ref="projectService" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="routerController"
@@ -1073,7 +1073,7 @@
 
 	<bean id="statisticsController"
 		class="org.wise.portal.presentation.web.controllers.StatisticsController">
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="resetPasswordController"
@@ -1083,7 +1083,7 @@
 		<property name="commandClass"
 			value="org.wise.portal.domain.impl.ReminderParameters" />
 		<property name="javaMail" ref="javaMail" />
-		<property name="portalProperties" ref="portalproperties" />
+		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="messageSource" ref="messageSource" />
 	</bean>
 	
@@ -1106,7 +1106,7 @@
     	<property name="successView" value="teacher/registerTeacherConfirm" />
         <property name="javaMail" ref="javaMail"/>
 		<property name="emaillisteners" ref="emaillisteners" />			
-		<property name="portalProperties" ref="portalproperties" />        
+		<property name="wiseProperties" ref="wiseProperties" />        
 		<property name="messageSource" ref="messageSource" />      	
     </bean>
     
@@ -1143,7 +1143,7 @@
                 <prop key="org.wise.portal.presentation.web.exception.NotAuthorizedException">accessdenied</prop>
             </props>
         </property>
-        <property name="portalProperties" ref="portalproperties" />
+        <property name="wiseProperties" ref="wiseProperties" />
         <property name="emaillisteners" ref="emaillisteners" />
         <property name="javaMail" ref="javaMail" />
     </bean>

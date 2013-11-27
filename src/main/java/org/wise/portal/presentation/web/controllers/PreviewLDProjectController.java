@@ -48,7 +48,7 @@ public class PreviewLDProjectController extends AbstractController {
 
 	ProjectService projectService;
 	
-	Properties portalProperties;
+	Properties wiseProperties;
 	
 	/** 
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -86,7 +86,7 @@ public class PreviewLDProjectController extends AbstractController {
 				}
 				
 				//get the path to the project json file
-				String curriculumBaseWWW = portalProperties.getProperty("curriculum_base_www");
+				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 				String contentUrl = curriculumBaseWWW + rawProjectUrl;
 				
@@ -115,9 +115,9 @@ public class PreviewLDProjectController extends AbstractController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

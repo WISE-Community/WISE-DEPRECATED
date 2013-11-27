@@ -56,7 +56,7 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 	private static final String USERNAME = "username";
 	protected UserService userService = null;
 	protected MailService javaMail = null;
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	private MessageSource messageSource;
 	
 	private String errorView = "/forgotaccount/teacher/error";
@@ -151,9 +151,9 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 			 * e.g.
 			 * http://wise4.berkeley.edu/wise/forgotaccount/resetpassword.html?k=1234567890abc
 			 */
-			String passwordResetLink = portalProperties.getProperty("portal_baseurl") + "/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
+			String passwordResetLink = wiseProperties.getProperty("portal_baseurl") + "/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
 			
-			String portalName = portalProperties.getProperty("portal.name");
+			String portalName = wiseProperties.getProperty("portal.name");
 			
 			String userEmail = user.getUserDetails().getEmailAddress();
 			
@@ -241,10 +241,10 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

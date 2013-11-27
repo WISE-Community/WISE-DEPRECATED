@@ -57,7 +57,7 @@ public class TelsSimpleMappingExceptionResolver extends
 
 	private Properties emaillisteners;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	private static final String HANDLE_EXCEPTION_PROPERTY_KEY = "handle_exception";
 	
@@ -72,11 +72,11 @@ public class TelsSimpleMappingExceptionResolver extends
 	public ModelAndView resolveException(
 			HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {
 		// send email to programmers
-		String sendEmailOnExceptionStr = portalProperties.getProperty("send_email_on_exception");
+		String sendEmailOnExceptionStr = wiseProperties.getProperty("send_email_on_exception");
 		boolean sendEmailOnException = sendEmailOnExceptionStr.equalsIgnoreCase("true");
 
 		if (sendEmailOnException) {
-			String portalName = portalProperties.getProperty("portal.name");
+			String portalName = wiseProperties.getProperty("portal.name");
 			String[] recipients = emaillisteners.getProperty(HANDLE_EXCEPTION_PROPERTY_KEY).split(",");
 			String subject = HANDLE_EXCEPTION_MAIL_SUBJECT + ": (" + portalName + ")";
 			String fromEmail = HANDLE_EXCEPTION_FROM_EMAIL;
@@ -181,9 +181,9 @@ public class TelsSimpleMappingExceptionResolver extends
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

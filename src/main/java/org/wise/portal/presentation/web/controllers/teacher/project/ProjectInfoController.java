@@ -57,7 +57,7 @@ public class ProjectInfoController extends AbstractController {
 	
 	private RunService runService;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	
 	/**
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -88,7 +88,7 @@ public class ProjectInfoController extends AbstractController {
 					return null;
 				}
 				
-				String curriculumBaseWWW = this.portalProperties.getProperty("curriculum_base_www");
+				String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
 				String url = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 				if(url != null && url != ""){
 					int ndx = url.lastIndexOf("/");
@@ -129,9 +129,9 @@ public class ProjectInfoController extends AbstractController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

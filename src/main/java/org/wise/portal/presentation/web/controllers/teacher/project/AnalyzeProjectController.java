@@ -29,7 +29,7 @@ import org.wise.portal.service.project.ProjectService;
 public class AnalyzeProjectController extends AbstractController {
 
 	private ProjectService projectService;
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	//mapping between node id and step content as a string
 	private HashMap<String, String> nodeIdToNodeContent = new HashMap<String, String>();
@@ -939,7 +939,7 @@ public class AnalyzeProjectController extends AbstractController {
 	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
 	 */
 	private String getProjectFileLocalPath(Project project) {
-		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 		String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		String projectFilePath = curriculumBaseDir + projectUrl;
 		return projectFilePath;
@@ -953,7 +953,7 @@ public class AnalyzeProjectController extends AbstractController {
 	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
 	 */
 	private String getProjectFileWebPath(Project project) {
-		String curriculumBaseWebDir = portalProperties.getProperty("curriculum_base_www");
+		String curriculumBaseWebDir = wiseProperties.getProperty("curriculum_base_www");
 		String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		String projectFilePath = curriculumBaseWebDir + projectUrl;
 		return projectFilePath;
@@ -1245,9 +1245,9 @@ public class AnalyzeProjectController extends AbstractController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

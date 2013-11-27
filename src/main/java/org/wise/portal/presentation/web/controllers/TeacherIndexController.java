@@ -71,7 +71,7 @@ public class TeacherIndexController extends AbstractController {
 
 	private MessageService messageService;
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	private ProjectService projectService;
 
@@ -108,7 +108,7 @@ public class TeacherIndexController extends AbstractController {
 		
 		boolean isXMPPEnabled = false;
 		
-	    String isXMPPEnabledStr = this.portalProperties.getProperty("isXMPPEnabled");
+	    String isXMPPEnabledStr = this.wiseProperties.getProperty("isXMPPEnabled");
 	    if (isXMPPEnabledStr != null) {
 	    	isXMPPEnabled = Boolean.valueOf(isXMPPEnabledStr);
 	    }
@@ -197,10 +197,10 @@ public class TeacherIndexController extends AbstractController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 	/**
 	 * @param messageService the messageService to set

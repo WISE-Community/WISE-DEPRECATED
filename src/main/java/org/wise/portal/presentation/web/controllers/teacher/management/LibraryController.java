@@ -45,7 +45,7 @@ public class LibraryController extends AbstractController {
 
 	private RunService runService;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	/**
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -174,8 +174,8 @@ public class LibraryController extends AbstractController {
 		//a map to contain projectId to run date
 		Map<Long,Long> projectRunIdMap = new TreeMap<Long,Long>();
 		
-		String curriculumBaseDir = this.portalProperties.getProperty("curriculum_base_dir");
-		String curriculumBaseWWW = this.portalProperties.getProperty("curriculum_base_www");
+		String curriculumBaseDir = this.wiseProperties.getProperty("curriculum_base_dir");
+		String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
 		for (Project p: ownedProjectsList) {
 			if (p.isCurrent()){
 				if(p.isDeleted()){
@@ -394,10 +394,10 @@ public class LibraryController extends AbstractController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

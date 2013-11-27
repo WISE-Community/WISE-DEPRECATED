@@ -54,7 +54,7 @@ import org.wise.portal.service.user.UserService;
 public class TelsAuthenticationFailureHandler extends
 		SimpleUrlAuthenticationFailureHandler {
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	
 	public static final Integer recentFailedLoginTimeLimit = 15;
 	
@@ -163,8 +163,8 @@ public class TelsAuthenticationFailureHandler extends
 	protected String determineFailureUrl(javax.servlet.http.HttpServletRequest request, AuthenticationException failed) {
 
 		//check if the public and private keys are set in the wise.properties
-		String reCaptchaPublicKey = portalProperties.getProperty("recaptcha_public_key");
-		String reCaptchaPrivateKey = portalProperties.getProperty("recaptcha_private_key");
+		String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
+		String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
 
 		//check if the public key is valid in case the admin entered it wrong
 		boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
@@ -302,10 +302,10 @@ public class TelsAuthenticationFailureHandler extends
 
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

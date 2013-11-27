@@ -56,7 +56,7 @@ public class ExportProjectController extends AbstractController {
 
 	private ProjectService projectService;
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	static final int BUFFER = 2048;
 
@@ -83,7 +83,7 @@ public class ExportProjectController extends AbstractController {
 			return null;			
 		}
 
-		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
 		String sep = System.getProperty("file.separator");
 
@@ -205,10 +205,10 @@ public class ExportProjectController extends AbstractController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 }

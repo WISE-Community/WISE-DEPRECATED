@@ -62,7 +62,7 @@ public class WiseUpServiceImpl implements WiseUpService {
 
 	private CurnitService curnitService;
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	
 	private String wiseUpHubUrl;
 
@@ -77,7 +77,7 @@ public class WiseUpServiceImpl implements WiseUpService {
 		String exportProjectPath = wiseUpHubUrl + "/projectLibrary/exportProject.php" + "?wiseInstanceId=" + externalWiseInstanceId +"&wiseProjectId=" + externalWiseProjectId ;
 		
 		// upload the zipfile to curriculum_base_dir
-		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
 		File uploadDir = new File(curriculumBaseDir);
 		if (!uploadDir.exists()) {
@@ -241,8 +241,8 @@ public class WiseUpServiceImpl implements WiseUpService {
 		this.projectService = projectService;
 	}
 
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	public void setCurnitService(CurnitService curnitService) {

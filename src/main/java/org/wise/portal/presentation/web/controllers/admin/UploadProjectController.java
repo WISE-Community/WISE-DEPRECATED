@@ -72,7 +72,7 @@ public class UploadProjectController extends SimpleFormController {
 	
 	private CurnitService curnitService;
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	/**
 	 * @override @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.validation.BindException)
@@ -90,7 +90,7 @@ public class UploadProjectController extends SimpleFormController {
 		MultipartFile file = projectUpload.getFile();
 
 		// upload the zipfile to curriculum_base_dir
-		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
 		File uploadDir = new File(curriculumBaseDir);
 		if (!uploadDir.exists()) {
@@ -246,9 +246,9 @@ public class UploadProjectController extends SimpleFormController {
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

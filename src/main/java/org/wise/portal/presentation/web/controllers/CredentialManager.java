@@ -66,7 +66,7 @@ public final class CredentialManager extends AbstractController{
 	
 	private static ProjectService projectService;
 	
-	private static Properties portalProperties;
+	private static Properties wiseProperties;
 	
 	@SuppressWarnings("unchecked")
 	public static void setRequestCredentials(HttpServletRequest request, User user){
@@ -190,7 +190,7 @@ public final class CredentialManager extends AbstractController{
 	 */
 	private static void setAllowedPathAccess(HttpServletRequest request){
 		String idStr = request.getParameter(PROJECTID);
-		String accessPath = portalProperties.getProperty("curriculum_base_dir");
+		String accessPath = wiseProperties.getProperty("curriculum_base_dir");
 		
 		/* catch minify command and set access path to the vle/all */
 		if("minify".equals(request.getParameter("command"))){
@@ -198,7 +198,7 @@ public final class CredentialManager extends AbstractController{
 		}
 		
 		if("studentAssetUpload".equals(request.getParameter("cmd")) || "studentAssetCopyForReference".equals(request.getParameter("command"))) {
-			accessPath = portalProperties.getProperty("studentuploads_base_dir");
+			accessPath = wiseProperties.getProperty("studentuploads_base_dir");
 		}
 		
 		/* if there is a project id parameter, set access level to the project dir */
@@ -232,9 +232,9 @@ public final class CredentialManager extends AbstractController{
 	}
 
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		CredentialManager.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		CredentialManager.wiseProperties = wiseProperties;
 	}
 }

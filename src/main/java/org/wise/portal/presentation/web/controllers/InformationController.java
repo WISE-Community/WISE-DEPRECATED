@@ -64,7 +64,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  */
 public class InformationController extends AbstractController{
 
-	Properties portalProperties;
+	Properties wiseProperties;
 	
 	ProjectService projectService;
 	
@@ -417,12 +417,12 @@ public class InformationController extends AbstractController{
 		String hostName = ControllerUtil.getHostNameFromUrl(portalurl);
 		String infourl = portalurl + "/wise/request/info.html";
 		
-		String curriculumBaseWWW = portalProperties.getProperty("curriculum_base_www");
-		String curriculumBaseDir = portalProperties.getProperty("curriculum_base_dir");
-		String studentUploadsBaseWWW = portalProperties.getProperty("studentuploads_base_www");
-		String wiseBaseURL = portalProperties.getProperty("wiseBaseURL");
+		String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+		String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
+		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 		
-		String excelExportRestriction = portalProperties.getProperty("excelExportRestriction");
+		String excelExportRestriction = wiseProperties.getProperty("excelExportRestriction");
 		
 		String polishedProjectUrl = null;
 		String rawProjectUrl = null;
@@ -567,7 +567,7 @@ public class InformationController extends AbstractController{
 			Integer postLevel = run.getPostLevel();
 
 			//get the websocket base url e.g. ws://wise4.berkeley.edu:8080
-			String webSocketBaseUrl = portalProperties.getProperty("webSocketBaseUrl");
+			String webSocketBaseUrl = wiseProperties.getProperty("webSocketBaseUrl");
 			
 			if(webSocketBaseUrl == null) {
 				/*
@@ -958,10 +958,10 @@ public class InformationController extends AbstractController{
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	/**

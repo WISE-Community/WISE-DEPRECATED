@@ -57,7 +57,7 @@ public class ShareProjectController extends SimpleFormController {
 
 	private Properties emaillisteners = null;
 
-	protected Properties portalProperties;
+	protected Properties wiseProperties;
 
 	private MessageSource messageSource;
 
@@ -283,10 +283,10 @@ public class ShareProjectController extends SimpleFormController {
 	}
 	
 	/**
-	 * @param portalProperties the portalProperties to set
+	 * @param wiseProperties the wiseProperties to set
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 	/**
 	 * @param projectService the projectService to set

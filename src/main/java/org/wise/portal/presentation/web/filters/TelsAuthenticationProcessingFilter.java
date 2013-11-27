@@ -73,7 +73,7 @@ PasAuthenticationProcessingFilter {
 	public static final Integer recentFailedLoginTimeLimit = 15;
 	public static final Integer recentFailedLoginAttemptsLimit = 5;
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	/**
 	 * Check to make sure the public key is valid. We can only check if the public
@@ -199,8 +199,8 @@ PasAuthenticationProcessingFilter {
 							numberOfRecentFailedLoginAttempts >= TelsAuthenticationProcessingFilter.recentFailedLoginAttemptsLimit) {
 
 						//get the public and private keys from the wise.properties
-						String reCaptchaPublicKey = portalProperties.getProperty("recaptcha_public_key");
-						String reCaptchaPrivateKey = portalProperties.getProperty("recaptcha_private_key");
+						String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
+						String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
 
 						//check if the public key is valid in case the admin entered it wrong
 						boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
@@ -281,10 +281,10 @@ PasAuthenticationProcessingFilter {
 
 	/**
 	 * 
-	 * @param portalProperties
+	 * @param wiseProperties
 	 */
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 }
