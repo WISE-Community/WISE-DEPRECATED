@@ -28,7 +28,7 @@
 				<div class="infoContentBox">
 					<div><spring:message code="forgotaccount.student.passwordreminder2.step2"/></div>
 					<div><spring:message code="forgotaccount.student.passwordreminder2.hello"/>, ${username}. <spring:message code="forgotaccount.student.passwordreminder2.answerPasswordReminderQuestion"/></div>
-					<form id="submittedAccountAnswer" method="post" commandName="reminderParameters" autocomplete='off'>
+					<form id="submittedAccountAnswer" method="post" commandName="passwordReminderParameters" autocomplete='off'>
 						<div><spring:message code="forgotaccount.student.passwordreminder2.question"/>: <spring:message code="forgotaccount.student.passwordreminder2.${accountQuestion}"/></div>
 						<div class="forgotPasswordInstructionText3">
 							<label for="send_accountanswer"><spring:message code="forgotaccount.student.passwordreminder2.answer"/>:</label>
@@ -44,7 +44,7 @@
 
 					<div class="errorMsgNoBg">
 							<!-- Support for Spring errors object -->
-							<spring:bind path="reminderParameters.*">
+							<spring:bind path="passwordReminderParameters.*">
 							  <c:forEach var="error" items="${status.errorMessages}">
 							    <p><c:out value="${error}"/></p>
 							  </c:forEach>

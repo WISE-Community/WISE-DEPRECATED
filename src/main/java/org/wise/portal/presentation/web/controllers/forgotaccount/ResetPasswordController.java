@@ -14,7 +14,7 @@ import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.impl.ReminderParameters;
+import org.wise.portal.domain.impl.PasswordReminderParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.mail.MailService;
 import org.wise.portal.service.user.UserService;
@@ -121,11 +121,11 @@ public class ResetPasswordController extends SimpleFormController {
 			HttpServletResponse response, Object command, BindException errors)
 			throws Exception {
 		//get the object that can be referenced in the jsp
-		ReminderParameters reminderParameters = (ReminderParameters) command;
+		PasswordReminderParameters passwordReminderParameters = (PasswordReminderParameters) command;
 		
 		//get the password values the user entered
-		String newPassword = reminderParameters.getNewPassword();
-		String verifyPassword = reminderParameters.getVerifyPassword();
+		String newPassword = passwordReminderParameters.getNewPassword();
+		String verifyPassword = passwordReminderParameters.getVerifyPassword();
 
 		//make the passwords lower case
 		verifyPassword = StringUtils.lowerCase(verifyPassword);

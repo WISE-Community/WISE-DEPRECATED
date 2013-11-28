@@ -27,7 +27,7 @@
 					<div class="infoContentBox">
 						<c:if test="${displayForgotPasswordSelectAccountTypeLink == false && displayLoginLink == false}">
 							<div>
-								<form id="submittedAccountPasswords" method="post" commandName="reminderParameters" autocomplete='off'>
+								<form id="submittedAccountPasswords" method="post" commandName="passwordReminderParameters" autocomplete='off'>
 									<table id="submittedAccountPasswordTable" style="margin:0 auto;">
 									<tr>
 										<td><label id="passwordform" for="send_passwords"><spring:message code="forgotaccount.resetpassword.newPassword" /></label></td>
@@ -53,7 +53,7 @@
 						</c:if>
 					<div class="errorMsgNoBg">
 						<!-- Support for Spring errors object -->
-						<spring:bind path="reminderParameters.*">
+						<spring:bind path="passwordReminderParameters.*">
 						  <c:forEach var="error" items="${status.errorMessages}">
 						    <b>
 						      <p><c:out value="${error}"/></p>

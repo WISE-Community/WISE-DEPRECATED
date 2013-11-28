@@ -25,7 +25,7 @@ package org.wise.portal.domain.impl;
 
 import java.util.HashMap;
 
-public class ReminderParameters extends HashMap<String, String> {
+public class PasswordReminderParameters extends HashMap<String, String> {
 	
 	public static final String SUBMITTEDACCOUNTANSWER = "submittedaccountanswer";
 

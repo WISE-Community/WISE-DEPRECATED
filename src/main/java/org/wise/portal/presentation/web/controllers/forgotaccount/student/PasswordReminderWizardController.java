@@ -38,7 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractWizardFormController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.impl.ReminderParameters;
+import org.wise.portal.domain.impl.PasswordReminderParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.user.UserService;
 
@@ -100,7 +100,7 @@ public class PasswordReminderWizardController extends AbstractWizardFormControll
 	protected void validatePage(Object command, Errors errors, int page) {
 		
 		
-		ReminderParameters reminderParameters = (ReminderParameters) command;
+		PasswordReminderParameters passwordReminderParameters = (PasswordReminderParameters) command;
 
 		switch (page) {
 		case 0:
@@ -109,7 +109,7 @@ public class PasswordReminderWizardController extends AbstractWizardFormControll
 			
 			if(errors.getErrorCount() == 0){
 				try {
-					String username = reminderParameters.getUsername();
+					String username = passwordReminderParameters.getUsername();
 					
 					if(username == null){
 						errors.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorUsernameNotFound");
@@ -135,10 +135,10 @@ public class PasswordReminderWizardController extends AbstractWizardFormControll
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors,
 					"submittedAccountAnswer", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorSubmittedAccountQuestion");
 			
-			String submittedAccountAnswer = reminderParameters
+			String submittedAccountAnswer = passwordReminderParameters
 			.getSubmittedAccountAnswer();
 
-			String accountAnswer = reminderParameters.getAccountAnswer();
+			String accountAnswer = passwordReminderParameters.getAccountAnswer();
 		
 			accountAnswer = StringUtils.lowerCase(accountAnswer);
 		
@@ -166,9 +166,9 @@ public class PasswordReminderWizardController extends AbstractWizardFormControll
 				break;
 			}
 			
-			String newPassword = reminderParameters.getNewPassword();
+			String newPassword = passwordReminderParameters.getNewPassword();
 
-			String verifyPassword = reminderParameters.getVerifyPassword();
+			String verifyPassword = passwordReminderParameters.getVerifyPassword();
 		
 			verifyPassword = StringUtils.lowerCase(verifyPassword);
 		
@@ -198,14 +198,14 @@ public class PasswordReminderWizardController extends AbstractWizardFormControll
 	protected Map<String, Object> referenceData(HttpServletRequest request,
 			Object command, Errors errors, int page) {
 
-		ReminderParameters reminderParameters = (ReminderParameters) command;
+		PasswordReminderParameters passwordReminderParameters = (PasswordReminderParameters) command;
 
 		Map<String, Object> model = new HashMap<String, Object>();
 		switch (page) {
 		case 0:
 			break;
 		case 1:
-			String username = reminderParameters.getUsername();
+			String username = passwordReminderParameters.getUsername();
 			
 			username = StringUtils.trimToNull(username);
 			User user = userService.retrieveUserByUsername(username);
@@ -217,9 +217,9 @@ public class PasswordReminderWizardController extends AbstractWizardFormControll
 			model.put(ACCOUNT_QUESTION, userDetails
 					.getAccountQuestion());
 
-			reminderParameters.setAccountQuestion(userDetails
+			passwordReminderParameters.setAccountQuestion(userDetails
 					.getAccountQuestion());
-			reminderParameters.setAccountAnswer(userDetails
+			passwordReminderParameters.setAccountAnswer(userDetails
 					.getAccountAnswer());
 			break;
 		default:
@@ -244,7 +244,7 @@ public class PasswordReminderWizardController extends AbstractWizardFormControll
 			HttpServletResponse response, Object command, BindException errors)
 			throws Exception {
 
-		ReminderParameters params = (ReminderParameters) command;
+		PasswordReminderParameters params = (PasswordReminderParameters) command;
 
 		String newPassword = params.getNewPassword();
 
@@ -261,7 +261,7 @@ public class PasswordReminderWizardController extends AbstractWizardFormControll
 		ModelAndView modelAndView = new ModelAndView(
 				"forgotaccount/student/passwordreminder4");
 		modelAndView.addObject("username", params
-				.get(ReminderParameters.USERNAME));
+				.get(PasswordReminderParameters.USERNAME));
 		return modelAndView;
 	}
 

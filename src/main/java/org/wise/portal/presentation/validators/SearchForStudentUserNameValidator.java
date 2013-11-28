@@ -3,16 +3,16 @@ package org.wise.portal.presentation.validators;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.wise.portal.domain.impl.ReminderParameters;
+import org.wise.portal.domain.impl.PasswordReminderParameters;
 
 public class SearchForStudentUserNameValidator implements Validator {
 
 	   @SuppressWarnings("unchecked")
 	    public boolean supports(Class clazz) {
-	        return ReminderParameters.class.isAssignableFrom(clazz);
+	        return PasswordReminderParameters.class.isAssignableFrom(clazz);
 	    }
 
-	    public void validate(Object reminderParameters, Errors errors) {
+	    public void validate(Object passwordReminderParameters, Errors errors) {
 	    	//make sure first name field is not empty
 	    	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName","error.firstname-not-specified");
 	    	

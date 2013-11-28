@@ -37,7 +37,7 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.group.Group;
-import org.wise.portal.domain.impl.ReminderParameters;
+import org.wise.portal.domain.impl.PasswordReminderParameters;
 import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -69,7 +69,7 @@ public class CheckProjectCodeController extends
     protected ModelAndView onSubmit(HttpServletRequest request,
             HttpServletResponse response, Object command, BindException errors)
             throws Exception {
-        ReminderParameters params = (ReminderParameters) command;
+        PasswordReminderParameters params = (PasswordReminderParameters) command;
 
         Projectcode projectcode = new Projectcode(params.getProjectCode(), null);
         

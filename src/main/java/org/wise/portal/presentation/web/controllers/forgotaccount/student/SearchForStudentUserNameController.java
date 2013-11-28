@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.wise.portal.domain.impl.ReminderParameters;
+import org.wise.portal.domain.impl.PasswordReminderParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.user.UserService;
 
@@ -59,7 +59,7 @@ public class SearchForStudentUserNameController extends SimpleFormController {
             throws Exception {
     	
     	//get the object that contains the values from the jsp form
-        ReminderParameters params = (ReminderParameters) command;
+        PasswordReminderParameters params = (PasswordReminderParameters) command;
 
         String[] fields = null;
 		String[] values = null;

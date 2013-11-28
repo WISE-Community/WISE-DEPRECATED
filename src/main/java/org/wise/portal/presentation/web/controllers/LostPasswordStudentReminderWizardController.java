@@ -38,7 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractWizardFormController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.impl.ReminderParameters;
+import org.wise.portal.domain.impl.PasswordReminderParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.user.UserService;
 
@@ -101,7 +101,7 @@ public class LostPasswordStudentReminderWizardController extends
 	protected void validatePage(Object command, Errors errors, int page) {
 		
 		
-		ReminderParameters reminderParameters = (ReminderParameters) command;
+		PasswordReminderParameters passwordReminderParameters = (PasswordReminderParameters) command;
 
 		switch (page) {
 		case 0:
@@ -109,7 +109,7 @@ public class LostPasswordStudentReminderWizardController extends
 					"username", "error.username-not-found");
 			try {
 				
-				String username = reminderParameters.get(ReminderParameters.USERNAME);
+				String username = passwordReminderParameters.get(PasswordReminderParameters.USERNAME);
 				username = StringUtils.trimToNull(username);
 				user = userService.retrieveUserByUsername(username);
 			} catch (EmptyResultDataAccessException e) {
@@ -123,10 +123,10 @@ public class LostPasswordStudentReminderWizardController extends
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors,
 					"submittedAccountAnswer", "error.submitted-account-question-blank");
 			
-			String submittedAccountAnswer = reminderParameters
+			String submittedAccountAnswer = passwordReminderParameters
 			.getSubmittedAccountAnswer();
 
-			String accountAnswer = reminderParameters.getAccountAnswer();
+			String accountAnswer = passwordReminderParameters.getAccountAnswer();
 		
 			accountAnswer = StringUtils.lowerCase(accountAnswer);
 		
@@ -151,10 +151,10 @@ public class LostPasswordStudentReminderWizardController extends
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors,
 					"newPassword", "error.verify-newpassword");
 			
-			String newPassword = reminderParameters
+			String newPassword = passwordReminderParameters
 			.getNewPassword();
 
-			String verifyPassword = reminderParameters.getVerifyPassword();
+			String verifyPassword = passwordReminderParameters.getVerifyPassword();
 		
 			verifyPassword = StringUtils.lowerCase(verifyPassword);
 		
@@ -184,7 +184,7 @@ public class LostPasswordStudentReminderWizardController extends
 	protected Map<String, Object> referenceData(HttpServletRequest request,
 			Object command, Errors errors, int page) {
 
-		ReminderParameters reminderParameters = (ReminderParameters) command;
+		PasswordReminderParameters passwordReminderParameters = (PasswordReminderParameters) command;
 
 		Map<String, Object> model = new HashMap<String, Object>();
 		switch (page) {
@@ -199,9 +199,9 @@ public class LostPasswordStudentReminderWizardController extends
 					model.put(ACCOUNT_QUESTION, userDetails
 							.getAccountQuestion());
 
-					reminderParameters.setAccountQuestion(userDetails
+					passwordReminderParameters.setAccountQuestion(userDetails
 							.getAccountQuestion());
-					reminderParameters.setAccountAnswer(userDetails
+					passwordReminderParameters.setAccountAnswer(userDetails
 							.getAccountAnswer());
 			break;
 		default:
@@ -226,7 +226,7 @@ public class LostPasswordStudentReminderWizardController extends
 			HttpServletResponse response, Object command, BindException errors)
 			throws Exception {
 
-		ReminderParameters params = (ReminderParameters) command;
+		PasswordReminderParameters params = (PasswordReminderParameters) command;
 
 		String newPassword = params.getNewPassword();
 
@@ -237,7 +237,7 @@ public class LostPasswordStudentReminderWizardController extends
 		ModelAndView modelAndView = new ModelAndView(
 				"lostpasswordstudentpasswordwizardreminderresult");
 		modelAndView.addObject("username", params
-				.get(ReminderParameters.USERNAME));
+				.get(PasswordReminderParameters.USERNAME));
 		return modelAndView;
 	}
 

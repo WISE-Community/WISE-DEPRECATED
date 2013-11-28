@@ -423,13 +423,13 @@
 	<bean id="lostPasswordStudentReminderWizardController"
 		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentReminderWizardController">
 		<property name="userService" ref="userService" />
-		<property name="commandName" value="reminderParameters" />
+		<property name="commandName" value="passwordReminderParameters" />
 		<property name="commandClass"
-			value="org.wise.portal.domain.impl.ReminderParameters" />
+			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
 	</bean>
 
-	<bean id="reminderParameters"
-		class="org.wise.portal.domain.impl.ReminderParameters"
+	<bean id="passwordReminderParameters"
+		class="org.wise.portal.domain.impl.PasswordReminderParameters"
 		scope="prototype" />
 
 	<bean id="runParameters" class="org.wise.portal.domain.run.impl.RunParameters"
@@ -450,10 +450,10 @@
 	<bean id="lostPasswordStudentProjectCodeController"
 		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentProjectCodeController">
 		<property name="runService" ref="runService" />
-		<property name="commandName" value="reminderParameters" />
+		<property name="commandName" value="passwordReminderParameters" />
 		<property name="validator" ref="lostPasswordStudentProjectCodeValidator" />
 		<property name="commandClass"
-			value="org.wise.portal.domain.impl.ReminderParameters" />
+			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
 		<property name="formView" value="lostpasswordstudentprojectcode" />
 		<property name="successView" value="lostpasswordstudentprojectcoderesult" />
 	</bean>
@@ -488,18 +488,18 @@
 	<bean id="forgotAccountStudentPasswordReminderWizardController"
 		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController">
 		<property name="userService" ref="userService" />
-		<property name="commandName" value="reminderParameters" />
+		<property name="commandName" value="passwordReminderParameters" />
 		<property name="commandClass"
-			value="org.wise.portal.domain.impl.ReminderParameters" />
+			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
 	</bean>
 
 	<bean id="forgotAccountStudentCheckProjectCodeController"
 		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.CheckProjectCodeController">
 		<property name="runService" ref="runService" />
-		<property name="commandName" value="reminderParameters" />
+		<property name="commandName" value="passwordReminderParameters" />
 		<property name="validator" ref="lostPasswordStudentProjectCodeValidator" />
 		<property name="commandClass"
-			value="org.wise.portal.domain.impl.ReminderParameters" />
+			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
 		<property name="formView" value="forgotaccount/student/enterprojectcode" />
 		<property name="successView" value="forgotaccount/student/projectcoderesult" />
 	</bean>
@@ -1069,10 +1069,10 @@
 
 	<bean id="searchForStudentUserNameController"
 		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.SearchForStudentUserNameController">
-		<property name="commandName" value="reminderParameters" />
+		<property name="commandName" value="passwordReminderParameters" />
 		<property name="validator" ref="searchForStudentUserNameValidator" />
 		<property name="commandClass"
-			value="org.wise.portal.domain.impl.ReminderParameters" />
+			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
 		<property name="formView"
 			value="forgotaccount/student/searchforstudentusername" />
 		<property name="successView"
@@ -1096,9 +1096,9 @@
 	<bean id="resetPasswordController"
 		class="org.wise.portal.presentation.web.controllers.forgotaccount.ResetPasswordController">
 		<property name="userService" ref="userService" />
-		<property name="commandName" value="reminderParameters" />
+		<property name="commandName" value="passwordReminderParameters" />
 		<property name="commandClass"
-			value="org.wise.portal.domain.impl.ReminderParameters" />
+			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
 		<property name="javaMail" ref="javaMail" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="messageSource" ref="messageSource" />
