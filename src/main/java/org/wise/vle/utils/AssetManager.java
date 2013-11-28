@@ -18,11 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.service.workgroup.WorkgroupService;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -32,10 +27,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.CredentialManager;
 import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Servlet implementation class AssetManager
@@ -54,7 +53,7 @@ public class AssetManager extends AbstractController {
 
 	private final static String FAILED = "failed";
 
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	
 	private RunService runService;
 	
@@ -118,7 +117,7 @@ public class AssetManager extends AbstractController {
 		if(type == null) {
 			
 		} else if(type.equals("viewStudentAssets")) {
-			String studentuploads_base_dir = getPortalProperties().getProperty("studentuploads_base_dir");
+			String studentuploads_base_dir = getWiseProperties().getProperty("studentuploads_base_dir");
 			
 			if(studentuploads_base_dir != null) {
 				request.setAttribute("studentuploads_base_dir", studentuploads_base_dir);
@@ -129,7 +128,7 @@ public class AssetManager extends AbstractController {
 
 			request.setAttribute("dirName", workgroups);
 		} else if(type.equals("studentAssetManager")) {
-			String studentuploads_base_dir = getPortalProperties().getProperty("studentuploads_base_dir");
+			String studentuploads_base_dir = getWiseProperties().getProperty("studentuploads_base_dir");
 			
 			if(studentuploads_base_dir != null) {
 				request.setAttribute("studentuploads_base_dir", studentuploads_base_dir);
@@ -218,10 +217,10 @@ public class AssetManager extends AbstractController {
 		ServletFileUpload uploader = new ServletFileUpload(new DiskFileItemFactory());
 		
 		//get the global max project size, we will default to 15MB if none is provided in the wise.properties file
-		Long projectMaxAssetsSize = new Long(portalProperties.getProperty("project_max_total_assets_size", "15728640"));
+		Long projectMaxAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
 		
 		//get the global max student assets folder size, we will default to 20MB if none is provided in the wise.properties file
-		Long studentMaxAssetsSize = new Long(portalProperties.getProperty("student_max_total_assets_size", "2097152"));
+		Long studentMaxAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "2097152"));
 		Long maxSize = projectMaxAssetsSize;
 		String folderPath = "";
 		String path = "";
@@ -698,12 +697,12 @@ public class AssetManager extends AbstractController {
 		}
 
 
-		public Properties getPortalProperties() {
-			return portalProperties;
+		public Properties getWiseProperties() {
+			return wiseProperties;
 		}
 
 
-		public void setPortalProperties(Properties portalProperties) {
-			this.portalProperties = portalProperties;
+		public void setWiseProperties(Properties wiseProperties) {
+			this.wiseProperties = wiseProperties;
 		}
 	}

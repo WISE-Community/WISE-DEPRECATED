@@ -21,10 +21,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
-import net.sf.sail.webapp.service.workgroup.WorkgroupService;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -32,14 +28,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.attendance.StudentAttendance;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.presentation.web.controllers.run.RunUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.utils.FileManager;
@@ -49,7 +48,7 @@ public class VLEGetSpecialExport extends AbstractController {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	
 	private VLEService vleService;
 	
@@ -253,7 +252,7 @@ public class VLEGetSpecialExport extends AbstractController {
 		ProjectMetadata metadata = projectObj.getMetadata();
 		String projectMetaDataJSONString = metadata.toJSONString();
 		
-		String curriculumBaseDir = getPortalProperties().getProperty("curriculum_base_dir");
+		String curriculumBaseDir = getWiseProperties().getProperty("curriculum_base_dir");
 		String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());		
 		String projectPath = curriculumBaseDir + rawProjectUrl;
 		
@@ -1133,11 +1132,11 @@ public class VLEGetSpecialExport extends AbstractController {
 		this.studentAttendanceService = studentAttendanceService;
 	}
 
-	public Properties getPortalProperties() {
-		return portalProperties;
+	public Properties getWiseProperties() {
+		return wiseProperties;
 	}
 
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

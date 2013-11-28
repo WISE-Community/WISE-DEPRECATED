@@ -18,8 +18,6 @@
 package org.wise.vle.utils;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
 
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;

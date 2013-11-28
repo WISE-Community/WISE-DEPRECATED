@@ -18,18 +18,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.service.workgroup.WorkgroupService;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.presentation.web.controllers.run.RunUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
@@ -49,7 +48,7 @@ public class VLEAnnotationController extends AbstractController {
 	
 	private VLEService vleService;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 	
 	private RunService runService;
 	
@@ -121,8 +120,8 @@ public class VLEAnnotationController extends AbstractController {
 		String annotationType = request.getParameter("annotationType");
 		String nodeStateIdStr = request.getParameter("nodeStateId");
 		
-		String cRaterScoringUrl = portalProperties.getProperty("cRater_scoring_url");
-		String cRaterClientId = portalProperties.getProperty("cRater_client_id");
+		String cRaterScoringUrl = wiseProperties.getProperty("cRater_scoring_url");
+		String cRaterClientId = wiseProperties.getProperty("cRater_client_id");
 		
 		//this is only used when students retrieve flags
 		Vector<JSONObject> flaggedAnnotationsList = new Vector<JSONObject>();
@@ -764,12 +763,12 @@ public class VLEAnnotationController extends AbstractController {
 		this.vleService = vleService;
 	}
 
-	public Properties getPortalProperties() {
-		return portalProperties;
+	public Properties getWiseProperties() {
+		return wiseProperties;
 	}
 
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 	public RunService getRunService() {

@@ -15,7 +15,7 @@ public class CRaterController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	/**
 	 * Handle POST requests
@@ -65,18 +65,18 @@ public class CRaterController extends HttpServlet {
 		
 		if (cRaterItemType == null || cRaterItemType.equals("CRATER")) {
 			//get the CRater urls
-			cRaterVerificationUrl = portalProperties.getProperty("cRater_verification_url");
-			cRaterScoringUrl = portalProperties.getProperty("cRater_scoring_url");
+			cRaterVerificationUrl = wiseProperties.getProperty("cRater_verification_url");
+			cRaterScoringUrl = wiseProperties.getProperty("cRater_scoring_url");
 			
 			//get our client id e.g. "WISETEST"
-			cRaterClientId = portalProperties.getProperty("cRater_client_id");
+			cRaterClientId = wiseProperties.getProperty("cRater_client_id");
 		} else if (cRaterItemType.equals("HENRY")) {
 			//get the CRater urls
-			cRaterVerificationUrl = portalProperties.getProperty("henry_verification_url");
-			cRaterScoringUrl = portalProperties.getProperty("henry_scoring_url");
+			cRaterVerificationUrl = wiseProperties.getProperty("henry_verification_url");
+			cRaterScoringUrl = wiseProperties.getProperty("henry_scoring_url");
 			
 			//get our client id e.g. "WISETEST"
-			cRaterClientId = portalProperties.getProperty("henry_client_id");
+			cRaterClientId = wiseProperties.getProperty("henry_client_id");
 		}
 		
 		//get the item id e.g. "Photo_Sun"
@@ -142,11 +142,11 @@ public class CRaterController extends HttpServlet {
 		return cRaterVerificationResponse;
 	}
 
-	public Properties getPortalProperties() {
-		return portalProperties;
+	public Properties getWiseProperties() {
+		return wiseProperties;
 	}
 
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }

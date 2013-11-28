@@ -18,16 +18,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.sail.webapp.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.impl.CurnitGetCurnitUrlVisitor;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.domain.Run;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.node.Node;
@@ -55,7 +54,7 @@ public class VLEGetData extends AbstractController {
 	
 	private RunService runService;
 	
-	private Properties portalProperties;
+	private Properties wiseProperties;
 
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -197,7 +196,7 @@ public class VLEGetData extends AbstractController {
 			}
 			
 			//get the path to the project on the server
-			String curriculumBaseDir = getPortalProperties().getProperty("curriculum_base_dir");
+			String curriculumBaseDir = getWiseProperties().getProperty("curriculum_base_dir");
 			String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 			String projectPath = curriculumBaseDir + rawProjectUrl;
 
@@ -517,12 +516,12 @@ public class VLEGetData extends AbstractController {
 		this.runService = runService;
 	}
 
-	public Properties getPortalProperties() {
-		return portalProperties;
+	public Properties getWiseProperties() {
+		return wiseProperties;
 	}
 
-	public void setPortalProperties(Properties portalProperties) {
-		this.portalProperties = portalProperties;
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 
 }
