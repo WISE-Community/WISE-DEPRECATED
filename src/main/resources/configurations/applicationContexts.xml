@@ -1011,7 +1011,7 @@
 		</property>
 	</bean>
 
-	<bean name="daiyAdminJobDetail" class="org.springframework.scheduling.quartz.JobDetailBean">
+	<bean name="dailyAdminJobDetail" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass"
 			value="org.wise.portal.domain.admin.DailyAdminJob" />
 		<property name="jobDataAsMap">
@@ -1020,6 +1020,8 @@
 				<entry key="userDao" value-ref="userDao" />
 				<entry key="projectDao" value-ref="projectDao" />
 				<entry key="portalStatisticsDao" value-ref="portalStatisticsDao" />
+				<entry key="vleService" value-ref="vleService" />
+				<entry key="wiseProperties" value-ref="wiseProperties" />
 			</map>
 		</property>
 	</bean>
@@ -1031,7 +1033,7 @@
 	</bean>
 
 	<bean id="dailyCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-		<property name="jobDetail" ref="daiyAdminJobDetail" />
+		<property name="jobDetail" ref="dailyAdminJobDetail" />
 		<!-- run every night at 11 PM -->
 		<property name="cronExpression" value="0 0 23 * * ?" />
 	</bean>
@@ -1076,6 +1078,7 @@
 		<property name="runStatusDao" ref="runStatusDao" />
 		<property name="ideaBasketDao" ref="ideaBasketDao" />
 		<property name="cRaterRequestDao" ref="cRaterRequestDao" />
+		<property name="vleStatisticsDao" ref="vleStatisticsDao" />
 	</bean>
 	
 	<bean id="userInfoDao"
