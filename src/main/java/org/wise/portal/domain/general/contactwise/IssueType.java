@@ -36,7 +36,7 @@ public enum IssueType {
 	STUDENT_MANAGEMENT, AUTHORING, FEEDBACK, OTHER;
 	
 	//the properties file that contains the user friendly values
-	private static Properties uiHTMLProperties;
+	private static Properties i18nProperties;
 	
 	/**
 	 * @param properties the properties file that contains the user friendly
@@ -44,7 +44,7 @@ public enum IssueType {
 	 * TROUBLE_LOGGING_IN would be resolved to Trouble Logging In
 	 */
 	public static void setProperties(Properties properties) {
-		uiHTMLProperties = properties;
+		i18nProperties = properties;
 	}
 
 
@@ -55,7 +55,7 @@ public enum IssueType {
 	 */
 	@Override
 	public String toString() {
-		return uiHTMLProperties.getProperty("contact.contactwisegeneral." + this.name());
+		return i18nProperties.getProperty("contact.contactwisegeneral." + this.name());
 	}
 
 	/*

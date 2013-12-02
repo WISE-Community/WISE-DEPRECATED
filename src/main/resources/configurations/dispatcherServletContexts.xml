@@ -387,7 +387,7 @@
 		<property name="formView" value="contact/contactwisegeneral" />
 		<property name="successView" value="contact/contactwiseconfirm" />
 		<property name="mailService" ref="mailService" />
-		<property name="uiHTMLProperties" ref="uihtmlproperties" />
+		<property name="i18nProperties" ref="i18nProperties" />
 		<property name="runService" ref="runService" />
 	</bean>
 
@@ -398,7 +398,7 @@
 		<property name="formView" value="contact/contactwiseproject" />
 		<property name="successView" value="contact/contactwiseconfirm" />
 		<property name="mailService" ref="mailService" />
-		<property name="uiHTMLProperties" ref="uihtmlproperties" />
+		<property name="i18nProperties" ref="i18nProperties" />
 		<property name="projectService" ref="projectService" />
 		<property name="runService" ref="runService" />
 	</bean>

@@ -53,7 +53,7 @@ public class ContactWiseController extends SimpleFormController {
 
 	protected IMailFacade mailService = null;
 	
-	protected Properties uiHTMLProperties = null;
+	protected Properties i18nProperties = null;
 	
 	private RunService runService;
 	
@@ -209,16 +209,16 @@ public class ContactWiseController extends SimpleFormController {
 
 
 	/**
-	 * @param uiHTMLProperties contains the regularly formatted (regular 
+	 * @param i18nProperties contains the regularly formatted (regular 
 	 * casing and spaces instead of underscores) for the enums. This properties
 	 * file is set by the contactWiseController bean in controllers.xml.
 	 */
-	public void setUiHTMLProperties(Properties uiHTMLProperties) {
+	public void setI18nProperties(Properties i18nProperties) {
 		/* these are necessary so that the enums can retrieve the values from 
 		the properties file */
-		IssueType.setProperties(uiHTMLProperties);
-		OperatingSystem.setProperties(uiHTMLProperties);
-		WebBrowser.setProperties(uiHTMLProperties);
+		IssueType.setProperties(i18nProperties);
+		OperatingSystem.setProperties(i18nProperties);
+		WebBrowser.setProperties(i18nProperties);
 	}
 
 	/**
