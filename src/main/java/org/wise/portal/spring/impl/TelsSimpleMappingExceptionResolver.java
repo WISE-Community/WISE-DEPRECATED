@@ -53,7 +53,7 @@ import org.wise.portal.service.mail.IMailFacade;
 public class TelsSimpleMappingExceptionResolver extends
 	SimpleMappingExceptionResolver {
 	
-	protected IMailFacade javaMail;
+	protected IMailFacade mailService;
 
 	private Properties wiseProperties;
 
@@ -109,7 +109,7 @@ public class TelsSimpleMappingExceptionResolver extends
 
 		public void run() {
 			try {
-				javaMail.postMail(recipients, subject, message, fromEmail);
+				mailService.postMail(recipients, subject, message, fromEmail);
 			} catch (MessagingException e) {
 				e.printStackTrace();
 			}
@@ -163,12 +163,12 @@ public class TelsSimpleMappingExceptionResolver extends
 	}
 
 	/**
-	 * @param javaMail is the object that contains the functionality to send
-	 * an email. This javaMail is set by the contactWiseController bean 
+	 * @param mailService is the object that contains the functionality to send
+	 * an email. This mailService is set by the contactWiseController bean 
 	 * in controllers.xml.
 	 */
-	public void setJavaMail(IMailFacade javaMail) {
-		this.javaMail = javaMail;
+	public void setMailService(IMailFacade mailService) {
+		this.mailService = mailService;
 	}
 	
 	/**

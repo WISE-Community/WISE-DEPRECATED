@@ -55,28 +55,20 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 	private static final String EMAIL = "email";
 	private static final String USERNAME = "username";
 	protected UserService userService = null;
-	protected MailService javaMail = null;
+	protected MailService mailService = null;
 	private Properties wiseProperties;
 	private MessageSource messageSource;
 	
 	private String errorView = "/forgotaccount/teacher/error";
 
-	/**
-	 * helper for sending emails
-	 * 
-	 * @return
-	 */
-	public MailService getJavaMail() {
-		return javaMail;
-	}
 
 	/**
 	 * helper for sending emails
 	 * 
-	 * @param javaMail
+	 * @param mailService
 	 */
-	public void setJavaMail(MailService javaMail) {
-		this.javaMail = javaMail;
+	public void setMailService(MailService mailService) {
+		this.mailService = mailService;
 	}
 
 	/**
@@ -183,7 +175,7 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 			}
 			
 			// send password in the email here
-			javaMail.postMail(recipients, subject, body, userEmail);
+			mailService.postMail(recipients, subject, body, userEmail);
 			
 			Map<String, String> model = new HashMap<String, String>();
 			model.put(EMAIL, userEmail);

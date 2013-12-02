@@ -95,7 +95,7 @@ public class CreateRunController extends AbstractWizardFormController {
 
 	private static final String RUN_KEY = "run";
 	
-	private IMailFacade javaMail = null;
+	private IMailFacade mailService = null;
 	
 	private MessageSource messageSource;
 
@@ -567,7 +567,7 @@ public class CreateRunController extends AbstractWizardFormController {
 			}
 			
 			//sends the email to the recipients
-			javaMail.postMail(recipients, subject, message, fromEmail);
+			mailService.postMail(recipients, subject, message, fromEmail);
 		}
 	}
 	
@@ -591,17 +591,10 @@ public class CreateRunController extends AbstractWizardFormController {
 	}
 
 	/**
-	 * @return the javaMail
+	 * @param mailService the mailService to set
 	 */
-	public IMailFacade getJavaMail() {
-		return javaMail;
-	}
-
-	/**
-	 * @param javaMail the javaMail to set
-	 */
-	public void setJavaMail(IMailFacade javaMail) {
-		this.javaMail = javaMail;
+	public void setMailService(IMailFacade mailService) {
+		this.mailService = mailService;
 	}
 
 	/**

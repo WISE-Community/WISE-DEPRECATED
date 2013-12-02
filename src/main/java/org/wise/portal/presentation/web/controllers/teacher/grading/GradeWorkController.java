@@ -55,8 +55,6 @@ public class GradeWorkController extends AbstractController {
 
 	public static final String RUN_ID = "runId";
 	
-	public static final String CURNIT_MAP = "curnitMap";
-
 	private RunService runService;
 	
 	Properties wiseProperties;

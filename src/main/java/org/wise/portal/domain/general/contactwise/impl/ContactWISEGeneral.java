@@ -64,7 +64,7 @@ public class ContactWISEGeneral implements ContactWISE {
 	
 	private static UserService userService;
 	
-	private Properties wiseProperties;
+	private static Properties wiseProperties;
 
 	/**
 	 * @see org.wise.portal.domain.general.contactwise.ContactWISE#getDescription()

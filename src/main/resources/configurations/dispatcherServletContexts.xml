@@ -320,7 +320,7 @@
 		<property name="commandName" value="runParameters" />
 		<property name="commandClass"
 			value="org.wise.portal.domain.run.impl.RunParameters" />
-		<property name="javaMail" ref="javaMail" />
+		<property name="mailService" ref="mailService" />
 		<property name="messageSource" ref="messageSource" />
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
@@ -386,7 +386,7 @@
 		<property name="validator" ref="contactWISEValidator" />
 		<property name="formView" value="contact/contactwisegeneral" />
 		<property name="successView" value="contact/contactwiseconfirm" />
-		<property name="javaMail" ref="javaMail" />
+		<property name="mailService" ref="mailService" />
 		<property name="uiHTMLProperties" ref="uihtmlproperties" />
 		<property name="runService" ref="runService" />
 	</bean>
@@ -397,7 +397,7 @@
 		<property name="validator" ref="contactWISEValidator" />
 		<property name="formView" value="contact/contactwiseproject" />
 		<property name="successView" value="contact/contactwiseconfirm" />
-		<property name="javaMail" ref="javaMail" />
+		<property name="mailService" ref="mailService" />
 		<property name="uiHTMLProperties" ref="uihtmlproperties" />
 		<property name="projectService" ref="projectService" />
 		<property name="runService" ref="runService" />
@@ -406,7 +406,7 @@
 	<bean id="contactWISEValidator"
 		class="org.wise.portal.presentation.validators.general.contactwise.ContactWISEValidator" />
 
-	<bean id="contactwisegeneral"
+	<bean id="contactWISEGeneral"
 		class="org.wise.portal.domain.general.contactwise.impl.ContactWISEGeneral">
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="userService" ref="userService" />
@@ -468,7 +468,7 @@
 		<property name="formView" value="forgotaccount/teacher/index" />
 		<property name="successView" value="forgotaccount/teacher/success" />
 		<property name="errorView" value="forgotaccount/teacher/error" />
-		<property name="javaMail" ref="javaMail" />
+		<property name="mailService" ref="mailService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="messageSource" ref="messageSource" />
 	</bean>
@@ -609,7 +609,7 @@
 		<property name="aclService" ref="aclServiceImpl" />
 		<property name="commandClass"
 			value="org.wise.portal.domain.impl.AddSharedTeacherParameters" />
-		<property name="javaMail" ref="javaMail" />
+		<property name="mailService" ref="mailService" />
 		<property name="messageSource" ref="messageSource" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="successView" value="shareproject.html" />
@@ -708,7 +708,7 @@
 		<property name="commandName" value="addSharedTeacherParameters" />
 		<property name="commandClass"
 			value="org.wise.portal.domain.impl.AddSharedTeacherParameters" />
-		<property name="javaMail" ref="javaMail" />
+		<property name="mailService" ref="mailService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="messageSource" ref="messageSource" />
 		<property name="successView" value="shareprojectrun.html" />
@@ -1099,7 +1099,7 @@
 		<property name="commandName" value="passwordReminderParameters" />
 		<property name="commandClass"
 			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
-		<property name="javaMail" ref="javaMail" />
+		<property name="mailService" ref="mailService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="messageSource" ref="messageSource" />
 	</bean>
@@ -1121,7 +1121,7 @@
     	<property name="validator" ref="teacherAccountFormValidator" />
     	<property name="formView" value="teacher/registerteacher" />
     	<property name="successView" value="teacher/registerTeacherConfirm" />
-        <property name="javaMail" ref="javaMail"/>
+        <property name="mailService" ref="mailService"/>
 		<property name="wiseProperties" ref="wiseProperties" />        
 		<property name="messageSource" ref="messageSource" />      	
     </bean>
@@ -1160,7 +1160,7 @@
             </props>
         </property>
         <property name="wiseProperties" ref="wiseProperties" />
-        <property name="javaMail" ref="javaMail" />
+        <property name="mailService" ref="mailService" />
     </bean>
     
     <bean id="openSessionInViewInterceptor"
