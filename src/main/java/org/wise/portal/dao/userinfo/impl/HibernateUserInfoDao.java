@@ -105,6 +105,7 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 	 * @param workgroupIds a list of workgroup ids in String format
 	 * @return a list of UserInfo objects
 	 */
+    @Transactional()	
 	public List<UserInfo> getUserInfoByWorkgroupIds(List<String> workgroupIds) {
 		//the list to hold all the UserInfo objects we will retrieve
 		List<UserInfo> userInfos = new Vector<UserInfo>();
