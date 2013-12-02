@@ -35,14 +35,14 @@ public enum WebBrowser {
 	FIREFOX, IE, SAFARI, OPERA, NETSCAPE, OTHER;
 	
 	//the properties file that contains the user friendly values
-	private static Properties uiHTMLProperties;
+	private static Properties i18nProperties;
 	
 	/**
 	 * @param properties the properties file that contains the user friendly
 	 * (regular casing) values i.e. FIREFOX would be resolved to Firefox
 	 */
 	public static void setProperties(Properties properties) {
-		uiHTMLProperties = properties;
+		i18nProperties = properties;
 	}
 
 
@@ -53,7 +53,7 @@ public enum WebBrowser {
 	 */
 	@Override
 	public String toString() {
-		return uiHTMLProperties.getProperty("webbrowsers." + this.name());
+		return i18nProperties.getProperty("webbrowsers." + this.name());
 	}
 
 	/*

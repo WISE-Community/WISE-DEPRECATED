@@ -978,7 +978,7 @@
 	<bean id="curnit" class="org.wise.portal.domain.module.impl.CurnitImpl"
 		scope="prototype" />
 
-<util:properties id="uihtmlproperties"
+<util:properties id="i18nProperties"
 		location="classpath:messages/i18n_en_US.properties" />
 
 	<util:properties id="wiseProperties" location="classpath:wise.properties" />
@@ -994,7 +994,7 @@
 	</bean>
 
 	<bean id="adminjob" class="org.wise.portal.domain.admin.AdminJob">
-		<property name="javaMail" ref="javaMail" />
+		<property name="mailService" ref="mailService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
@@ -1003,7 +1003,7 @@
 			value="org.wise.portal.domain.admin.AdminJob" />
 		<property name="jobDataAsMap">
 			<map>
-				<entry key="javaMail" value-ref="javaMail" />
+				<entry key="mailService" value-ref="mailService" />
 				<entry key="wiseProperties" value-ref="wiseProperties" />
 				<entry key="runDao" value-ref="runDao" />
 				<entry key="userDao" value-ref="userDao" />
@@ -1403,7 +1403,7 @@
 	<bean id="messageService"
 		class="org.wise.portal.service.message.impl.MessageServiceImpl">
 		<property name="messageDao" ref="messageDao" />
-		<property name="javaMail" ref="javaMail" />
+		<property name="mailService" ref="mailService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
@@ -1448,7 +1448,7 @@
 
 	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" />
 
-	<bean id="javaMail" class="org.wise.portal.service.mail.MailService">
+	<bean id="mailService" class="org.wise.portal.service.mail.MailService">
 		<property name="properties" ref="wiseProperties" />
 		<property name="sender" ref="javaMailSender" />
 	</bean>
@@ -1476,7 +1476,7 @@
 		<property name="configLocations">
 			<list>
 				<value>
-					classpath:configurations/hibernate-wise.cfg.xml
+					classpath:configurations/hibernate.cfg.xml
 				</value>
 			</list>
 		</property>

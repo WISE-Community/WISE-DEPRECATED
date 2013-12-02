@@ -23,7 +23,7 @@ public class ResetPasswordController extends SimpleFormController {
 
 	protected UserService userService = null;
 	private Properties wiseProperties;
-	protected MailService javaMail = null;
+	protected MailService mailService = null;
 	private MessageSource messageSource;
 	
 	/**
@@ -178,7 +178,7 @@ public class ResetPasswordController extends SimpleFormController {
 			String body = messageSource.getMessage("forgotaccount.teacher.index.passwordChangedEmailBody", new Object[] {username,portalName}, defaultBody, userLocale);				
 			
 			// send password in the email here
-			javaMail.postMail(recipients, subject, body, userEmail);
+			mailService.postMail(recipients, subject, body, userEmail);
 			
 			//passwords are the same so we will change their password
 			errors.reject("changePassword_success");
@@ -210,10 +210,10 @@ public class ResetPasswordController extends SimpleFormController {
 	/**
 	 * helper for sending emails
 	 * 
-	 * @param javaMail
+	 * @param mailService
 	 */
-	public void setJavaMail(MailService javaMail) {
-		this.javaMail = javaMail;
+	public void setMailService(MailService mailService) {
+		this.mailService = mailService;
 	}
 	
 	/**

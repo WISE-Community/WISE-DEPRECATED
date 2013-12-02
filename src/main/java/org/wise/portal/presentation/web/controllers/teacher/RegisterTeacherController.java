@@ -58,7 +58,7 @@ public class RegisterTeacherController extends SimpleFormController {
 	
 	protected static final String DISPLAYNAME_KEY = "displayname";
 
-	private IMailFacade javaMail = null;
+	private IMailFacade mailService = null;
 
 	private Properties wiseProperties;
 
@@ -222,7 +222,7 @@ public class RegisterTeacherController extends SimpleFormController {
 
 			try {
 				//sends the email to the recipients
-				javaMail.postMail(recipients, subject, message, fromEmail);
+				mailService.postMail(recipients, subject, message, fromEmail);
 			} catch (MessagingException e) {
 				// do nothing, no notification to uber_admin required.
 				e.printStackTrace();
@@ -231,10 +231,10 @@ public class RegisterTeacherController extends SimpleFormController {
 	}
 	
 	/**
-	 * @param javaMail the javaMail to set
+	 * @param mailService the mailService to set
 	 */
-	public void setJavaMail(IMailFacade javaMail) {
-		this.javaMail = javaMail;
+	public void setMailService(IMailFacade mailService) {
+		this.mailService = mailService;
 	}
 
 	/**

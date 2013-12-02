@@ -79,7 +79,7 @@ public class ShareProjectRunController extends SimpleFormController {
 	
 	private AclService<Run> aclService;
 
-	private IMailFacade javaMail = null;
+	private IMailFacade mailService = null;
 
 	protected Properties wiseProperties;	
 
@@ -291,7 +291,7 @@ public class ShareProjectRunController extends SimpleFormController {
 			
 			//sends the email to the recipients
 			try {
-				javaMail.postMail(recipients, subject, message, fromEmail);
+				mailService.postMail(recipients, subject, message, fromEmail);
 			} catch (MessagingException e) {
 				// do nothing, no notification to uber_admin required.
 				e.printStackTrace();
@@ -300,10 +300,10 @@ public class ShareProjectRunController extends SimpleFormController {
     }
 
 	/**
-	 * @param javaMail the javaMail to set
+	 * @param mailService the mailService to set
 	 */
-	public void setJavaMail(IMailFacade javaMail) {
-		this.javaMail = javaMail;
+	public void setMailService(IMailFacade mailService) {
+		this.mailService = mailService;
 	}
 	
 	/**

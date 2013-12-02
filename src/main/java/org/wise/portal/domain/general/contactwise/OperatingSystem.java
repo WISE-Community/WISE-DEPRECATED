@@ -37,7 +37,7 @@ public enum OperatingSystem {
 	WINDOWS_98, LINUX, OTHER;
 	
 	//the properties file that contains the user friendly values
-	private static Properties uiHTMLProperties;
+	private static Properties i18nProperties;
 	
 	/**
 	 * @param properties the properties file that contains the user friendly
@@ -45,7 +45,7 @@ public enum OperatingSystem {
 	 * WINDOWS_XP_NT_2K would be resolved to Windows XP/NT/2000
 	 */
 	public static void setProperties(Properties properties) {
-		uiHTMLProperties = properties;
+		i18nProperties = properties;
 	}
 
 
@@ -56,7 +56,7 @@ public enum OperatingSystem {
 	 */
 	@Override
 	public String toString() {
-		return uiHTMLProperties.getProperty("operatingsystems." + this.name());
+		return i18nProperties.getProperty("operatingsystems." + this.name());
 	}
 
 	/*

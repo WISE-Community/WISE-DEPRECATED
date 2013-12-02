@@ -50,7 +50,7 @@ public class MessageServiceImpl implements MessageService {
 
 	private MessageDao<Message> messageDao;
 	
-	private IMailFacade javaMail = null;
+	private IMailFacade mailService = null;
 	
 	private Properties wiseProperties = null;
 	
@@ -202,7 +202,7 @@ public class MessageServiceImpl implements MessageService {
     		}
     		//sends the email to the recipients
     		try {
-    			javaMail.postMail(recipientsEmailArray, subject, messageString, fromEmail);
+    			mailService.postMail(recipientsEmailArray, subject, messageString, fromEmail);
     		} catch (MessagingException e) {
     			// do nothing, no notification to uber_admin required.
     			e.printStackTrace();
@@ -212,10 +212,10 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	/**
-	 * @param javaMail the javaMail to set
+	 * @param mailService the mailService to set
 	 */
-	public void setJavaMail(IMailFacade javaMail) {
-		this.javaMail = javaMail;
+	public void setMailService(IMailFacade mailService) {
+		this.mailService = mailService;
 	}
 
 	/**

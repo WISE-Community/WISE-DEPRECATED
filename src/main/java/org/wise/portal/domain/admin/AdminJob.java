@@ -56,7 +56,7 @@ import org.wise.portal.service.mail.IMailFacade;
  */
 public class AdminJob extends QuartzJobBean {
 
-	private IMailFacade javaMail = null;
+	private IMailFacade mailService = null;
 
 	private Properties wiseProperties = null;
 	
@@ -183,17 +183,17 @@ public class AdminJob extends QuartzJobBean {
 		
 		//sends the email to the recipients
 		try {
-			javaMail.postMail(recipients, subject, msg, fromEmail);
+			mailService.postMail(recipients, subject, msg, fromEmail);
 		} catch (MessagingException e) {
 		}
 	}
 	
 	
 	/**
-	 * @param javaMail the javaMail to set
+	 * @param mailService the mailService to set
 	 */
-	public void setJavaMail(IMailFacade javaMail) {
-		this.javaMail = javaMail;
+	public void setMailService(IMailFacade mailService) {
+		this.mailService = mailService;
 	}
 
 	/**
