@@ -1473,7 +1473,7 @@
 		<property name="configLocations">
 			<list>
 				<value>
-					classpath:configurations/hibernate-wise.cfg.xml
+					classpath:configurations/hibernate.cfg.xml
 				</value>
 			</list>
 		</property>
