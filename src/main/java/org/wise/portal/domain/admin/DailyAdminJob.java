@@ -18,6 +18,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.wise.portal.dao.crater.CRaterRequestDao;
 import org.wise.portal.dao.offering.RunDao;
 import org.wise.portal.dao.portal.PortalStatisticsDao;
 import org.wise.portal.dao.project.ProjectDao;
@@ -31,7 +32,10 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.vle.VLEService;
+import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.statistics.VLEStatistics;
+import org.wise.vle.domain.work.StepWork;
+import org.wise.vle.web.VLEAnnotationController;
 
 public class DailyAdminJob extends QuartzJobBean {
 
@@ -47,6 +51,8 @@ public class DailyAdminJob extends QuartzJobBean {
 	
 	private Properties wiseProperties;
 	
+	private CRaterRequestDao<CRaterRequest> cRaterRequestDao;
+	
 	private boolean DEBUG = false;
 	
 	/**
@@ -59,7 +65,10 @@ public class DailyAdminJob extends QuartzJobBean {
 		gatherPortalStatistics();
 		
 		//query the vle tables and save a new row in the vleStatistics table
-		gatherVLEStatistics(context);
+		gatherVLEStatistics();
+		
+		//try to score the CRater student work that previously failed to be scored
+		handleIncompleteCRaterRequests();
 	}
 	
 	/**
@@ -135,7 +144,12 @@ public class DailyAdminJob extends QuartzJobBean {
 		debugOutput("gatherPortalStatistics end");
 	}
 	
-	public void gatherVLEStatistics(JobExecutionContext context) throws JobExecutionException {
+	/**
+	 * Get the VLE statistics from the vle tables
+	 * @param context
+	 * @throws JobExecutionException
+	 */
+	public void gatherVLEStatistics() throws JobExecutionException {
 		try {
 			//get the user name, password, and url for the db
 			String userName = this.wiseProperties.getProperty("hibernate.connection.username");
@@ -404,6 +418,62 @@ public class DailyAdminJob extends QuartzJobBean {
 	}
 	
 	/**
+	 * Try to score the CRater student work that previously failed to be scored
+	 */
+	private void handleIncompleteCRaterRequests() {
+		//get the CRater url and client id
+		String cRaterScoringUrl = this.wiseProperties.getProperty("cRater_scoring_url");
+		String cRaterClientId = this.wiseProperties.getProperty("cRater_client_id");
+		
+		//get the Henry url and client id
+		String henryScoringUrl = this.wiseProperties.getProperty("henry_scoring_url");
+		String henryClientId = this.wiseProperties.getProperty("henry_client_id");
+		
+		if(cRaterScoringUrl != null || henryScoringUrl != null) {
+			//get all the incomplete CRater requests
+			List<CRaterRequest> incompleteCRaterRequests = this.cRaterRequestDao.getIncompleteCRaterRequests();
+			
+			//loop through all the incomplete requests
+			for(int x=0; x<incompleteCRaterRequests.size(); x++) {
+				//get a CRater request that needs to be scored
+				CRaterRequest cRaterRequest = incompleteCRaterRequests.get(x);
+				String cRaterItemType = cRaterRequest.getcRaterItemType();
+				
+				String scoringUrl = "";
+				String clientId = "";
+				
+				//get the appropriate scoring url and client id
+				if(cRaterItemType == null) {
+					scoringUrl = cRaterScoringUrl;
+					clientId = cRaterClientId;
+				} else if(cRaterItemType.equals("CRATER")) {
+					scoringUrl = cRaterScoringUrl;
+					clientId = cRaterClientId;
+				} else if(cRaterItemType.equals("HENRY")) {
+					scoringUrl = henryScoringUrl;
+					clientId = henryClientId;
+				}
+				
+				StepWork stepWork = cRaterRequest.getStepWork();
+				Long stepWorkId = stepWork.getId();
+				Long nodeStateId = cRaterRequest.getNodeStateId();
+				String runId = cRaterRequest.getRunId().toString();
+				String annotationType = "cRater";
+				
+				//make the request to score the student CRater work
+				VLEAnnotationController.getCRaterAnnotation(this.vleService, nodeStateId, runId, stepWorkId, annotationType, scoringUrl, clientId);
+				
+				//sleep for 10 seconds between each request
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}			
+		}
+	}
+	
+	/**
 	 * A function that outputs the string to System.out if DEBUG is true
 	 * @param output a String to output to System.out
 	 */
@@ -458,5 +528,13 @@ public class DailyAdminJob extends QuartzJobBean {
 
 	public void setWiseProperties(Properties wiseProperties) {
 		this.wiseProperties = wiseProperties;
+	}
+
+	public CRaterRequestDao<CRaterRequest> getcRaterRequestDao() {
+		return cRaterRequestDao;
+	}
+
+	public void setcRaterRequestDao(CRaterRequestDao<CRaterRequest> cRaterRequestDao) {
+		this.cRaterRequestDao = cRaterRequestDao;
 	}
 }

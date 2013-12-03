@@ -294,7 +294,7 @@ public class VLEAnnotationController extends AbstractController {
 		
 		// handle request for cRater annotation
 		if ("annotation".equals(requestedType) && "cRater".equals(annotationType)) {
-			annotation = getCRaterAnnotation(nodeStateId, runId, stepWorkId,
+			annotation = getCRaterAnnotation(this.vleService, nodeStateId, runId, stepWorkId,
 					annotationType, cRaterScoringUrl, cRaterClientId);
 		} 
 		
@@ -495,7 +495,7 @@ public class VLEAnnotationController extends AbstractController {
 	 * @param stepWorkId
 	 * @return CRater annotation for the specified stepwork, or null if there was an error getting the CRater response
 	 */
-	public Annotation getCRaterAnnotation(Long nodeStateId,
+	public static Annotation getCRaterAnnotation(VLEService vleService, Long nodeStateId,
 			String runId, Long stepWorkId, String annotationType,
 			String cRaterScoringUrl, String cRaterClientId) {
 
