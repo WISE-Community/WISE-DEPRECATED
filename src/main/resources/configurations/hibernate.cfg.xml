@@ -39,7 +39,7 @@
         <!-- Enable Hibernate's automatic session context management -->
         <property name="current_session_context_class">thread</property>
         
-		<property name="hibernate.dialect">org.wise.portal.util.MySQL5MyISAMDialect</property>
+		<property name="hibernate.dialect">org.wise.util.MySQL5MyISAMDialect</property>
 		
 		       <mapping
             class="org.wise.portal.domain.authentication.impl.PersistentAclEntry" />

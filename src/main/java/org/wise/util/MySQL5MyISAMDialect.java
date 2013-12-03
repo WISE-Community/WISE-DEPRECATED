@@ -1,4 +1,4 @@
-package org.wise.portal.util;
+package org.wise.util;
 
 import org.hibernate.dialect.MySQLMyISAMDialect;
 
