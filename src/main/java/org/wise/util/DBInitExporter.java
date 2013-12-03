@@ -15,9 +15,15 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.wise.portal;
+package org.wise.util;
 
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -28,14 +34,17 @@ import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 import org.wise.portal.spring.SpringConfiguration;
 
 /**
+ * Generates sql file for creating tables and populating them with initial values
+ * 
  * @author Cynick Young
+ * @author Hiroki Terashima
  * 
  * @version $Id$
  */
-public class DbSchemaExporter {
+public class DBInitExporter {
 	
 	static String springConfigClassname = "org.wise.portal.spring.impl.SpringConfigurationImpl";
-	static String outputFilename = "src/main/resources/tels/wise4-createtables.sql";
+	static String outputFilename = "src/main/resources/wise-db-init.sql";
     /**
      * @param args
      */
@@ -52,13 +61,13 @@ public class DbSchemaExporter {
 
     /**
      * @param springConfigClassname
-     * @param filename
+     * @param outputFilename
      * @throws ClassNotFoundException
-     * @throws FileNotFoundException
+     * @throws IOException 
      */
     public static void exportSchemaToFile(String springConfigClassname,
-            String filename) throws ClassNotFoundException,
-            FileNotFoundException {
+            String outputFilename) throws ClassNotFoundException,
+            IOException {
         ConfigurableApplicationContext applicationContext = null;
         try {
             SpringConfiguration springConfig = (SpringConfiguration) BeanUtils
@@ -71,10 +80,30 @@ public class DbSchemaExporter {
             final boolean printScriptToConsole = false, exportScriptToDb = false, justDrop = false, justCreate = true;
             final SchemaExport schemaExport = new SchemaExport(hibernateConfig)
                     .setDelimiter(";").setFormat(true).setHaltOnError(true)
-                    .setOutputFile(filename);
+                    .setOutputFile(outputFilename);
             schemaExport.execute(printScriptToConsole, exportScriptToDb,
                     justDrop, justCreate);
 
+            // now append initial data, which we read in from import.sql
+            File initialDataFile = new File("src/main/resources/import.sql");
+    		FileInputStream initialDataFileInputStream = new FileInputStream(initialDataFile);
+    		BufferedReader initialDataFileReader = new BufferedReader(new InputStreamReader(initialDataFileInputStream));
+    		
+    		boolean doAppend = true;
+            BufferedWriter outputFileWriter = new BufferedWriter( new FileWriter(outputFilename, doAppend));
+            
+    		String aLine = null;
+    		while ((aLine = initialDataFileReader.readLine()) != null) {
+    			// Process each line and add append to output file
+    			outputFileWriter.write(aLine);
+    			outputFileWriter.newLine();
+    		}
+     
+    		// close the buffer reader
+    		initialDataFileReader.close();
+     
+    		// close buffer writer
+    		outputFileWriter.close();
         } finally {
             if (applicationContext != null) {
                 applicationContext.close();
