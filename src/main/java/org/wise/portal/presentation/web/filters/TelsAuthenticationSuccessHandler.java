@@ -28,7 +28,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -107,7 +106,7 @@ public class TelsAuthenticationSuccessHandler extends
         
         // if user is not admin and login is disallowed, redirect user to logout page
         try {
-			Portal portal = portalService.getById(0);
+			Portal portal = portalService.getById(1);
 			if (!userIsAdmin && !portal.isLoginAllowed()) {
 		        	response.sendRedirect(TelsAuthenticationProcessingFilter.LOGOUT_PATH);
 		        	return;
