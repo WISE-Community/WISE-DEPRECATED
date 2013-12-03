@@ -31,7 +31,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -486,10 +485,10 @@ public class InformationController extends AbstractController{
 			String getRunInfoUrl = portalVLEControllerUrl + "&action=getRunInfo";
 			
 			//get the url to get student data
-			String getStudentDataUrl = portalurl + "/wise/getStudentData.html";
+			String getStudentDataUrl = portalurl + "/wise/studentData.html";
 			
 			//get the url to post student data
-			String postStudentDataUrl = portalurl + "/wise/postStudentData.html";
+			String postStudentDataUrl = portalurl + "/wise/studentData.html";
 			
 			//get the url to get flags
 			String getFlagsUrl = portalurl + "/wise/bridge/getdata.html?type=flag&runId=" + run.getId().toString();
@@ -509,17 +508,11 @@ public class InformationController extends AbstractController{
 	    	//get the url to post annotations
 	    	String postAnnotationsUrl = portalurl + "/wise/annotation.html?type=annotation&runId=" + run.getId().toString();
 	    	
-	    	//get the url to post journal data
-	    	String postJournalDataUrl = portalurl + "/wise/bridge/postdata.html?type=journal";
-	    	
-	    	//get the url to get journal data
-			String getJournalDataUrl = portalurl + "/wise/bridge/getdata.html?type=journal";
-			
 			//get the url to get peer review work
 			String getPeerReviewUrl = portalurl + "/wise/bridge/getdata.html?type=peerreview";
 			
 			//get the url for xls export
-	    	String getXLSExportUrl = portalurl + "/wise/bridge/request.html?type=xlsexport&runId=" + run.getId().toString();
+	    	String getXLSExportUrl = portalurl + "/wise/getExport.html?type=xlsexport&runId=" + run.getId().toString();
 	    	
 	    	//get the url for special export
 	    	String getSpecialExportUrl = portalurl + "/wise/bridge/request.html?type=specialExport&runId=" + run.getId().toString();
@@ -598,8 +591,6 @@ public class InformationController extends AbstractController{
 				config.put("gradingType", gradingType);
 				config.put("getRevisions", getRevisions);
 				config.put("getPeerReviewUrl", getPeerReviewUrl);
-				config.put("getJournalDataUrl", getJournalDataUrl);
-				config.put("postJournalDataUrl", postJournalDataUrl);
 				config.put("getIdeaBasketUrl", getIdeaBasketUrl);
 				config.put("postIdeaBasketUrl", postIdeaBasketUrl);
 				config.put("studentAssetManagerUrl", studentAssetManagerUrl);

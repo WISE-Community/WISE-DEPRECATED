@@ -943,15 +943,11 @@
 		<property name="messageService" ref="messageService" />
 		<property name="userService" ref="userService" />
 	</bean>
-
-	<bean id="getStudentDataController" class="org.wise.vle.web.VLEGetData">
+	
+	<bean id="studentDataController" class="org.wise.vle.web.StudentDataController">
 	    <property name="vleService" ref="vleService" />
 	    <property name="runService" ref="runService" />
 	    <property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="postStudentDataController" class="org.wise.vle.web.VLEPostData">
-		<property name="vleService" ref="vleService" />
 	</bean>
 
 	<bean id="annotationController" class="org.wise.vle.web.VLEAnnotationController">
@@ -1286,8 +1282,7 @@
 				/managehierarchytypes.html=manageHierarchyTypesController
 				/managehierarchy.html=manageHierarchyController
 				/message/message.html=messageController
-				/getStudentData.html=getStudentDataController
-				/postStudentData.html=postStudentDataController
+				/studentData.html=studentDataController
 				/annotation.html=annotationController
 				/studentStatus.html=studentStatusController
 				/runStatus.html=runStatusController
