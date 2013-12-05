@@ -358,7 +358,6 @@ public class VLEGetSpecialExport extends AbstractController {
 		
 		//create a file handle to the project file
 		File projectFile = new File(projectPath);
-		FileManager fileManager = new FileManager();
 		
 		//the hash map to store workgroup id to period id
 		HashMap<Integer, Integer> workgroupIdToPeriodId = new HashMap<Integer, Integer>();
@@ -372,7 +371,7 @@ public class VLEGetSpecialExport extends AbstractController {
 		
 		try {
 			//get the project JSON object
-			project = new JSONObject(fileManager.getFileText(projectFile));
+			project = new JSONObject(FileManager.getFileText(projectFile));
 			
 			//create the map of node ids to node titles
 			makeNodeIdToNodeTitleAndNodeMap(project);
@@ -393,7 +392,7 @@ public class VLEGetSpecialExport extends AbstractController {
 				
 				try {
 					//get the text from the file
-					String fileText = fileManager.getFileText(new File(projectFile.getParentFile(), node.getString("ref")));
+					String fileText = FileManager.getFileText(new File(projectFile.getParentFile(), node.getString("ref")));
 					
 					//get the content for the node
 					JSONObject nodeContent = new JSONObject(fileText);

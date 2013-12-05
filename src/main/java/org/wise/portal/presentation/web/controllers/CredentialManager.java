@@ -35,7 +35,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -180,15 +179,7 @@ public final class CredentialManager extends AbstractController{
 		return null;
 	}
 	
-	/**
-	 * Given a <code>HttpServletRequest</code> request, sets the maximum allowed drive
-	 * access to the curriculum dir known to the portal if no projectId is passed as a
-	 * parameter but sets the maximum allowed drive access to that of the project directory
-	 * if a projectId is passed.
-	 * 
-	 * @param request
-	 */
-	private static void setAllowedPathAccess(HttpServletRequest request){
+	public static String getAllowedPathAccess(HttpServletRequest request) {
 		String idStr = request.getParameter(PROJECTID);
 		String accessPath = wiseProperties.getProperty("curriculum_base_dir");
 		
@@ -221,6 +212,22 @@ public final class CredentialManager extends AbstractController{
 			}
 		}
 		
+		return accessPath;
+	}
+	
+	/**
+	 * Given a <code>HttpServletRequest</code> request, sets the maximum allowed drive
+	 * access to the curriculum dir known to the portal if no projectId is passed as a
+	 * parameter but sets the maximum allowed drive access to that of the project directory
+	 * if a projectId is passed.
+	 * 
+	 * @param request
+	 */
+	public static void setAllowedPathAccess(HttpServletRequest request) {
+		//get the access path
+		String accessPath = getAllowedPathAccess(request);
+		
+		//set the access path into the request
 		request.setAttribute("accessPath", accessPath);
 	}
 

@@ -35,15 +35,12 @@ import org.xml.sax.SAXException;
 public class Converter extends HttpServlet implements Servlet{
 	static final long serialVersionUID = 1L;
 	
-	private FileManager fileManager;
-	 
 	private boolean standAlone = true;
 	
 	private boolean modeRetrieved = false;
 	
 	public Converter(){
 		super();
-		fileManager = new FileManager();
 	}
 	
 	/**
@@ -136,7 +133,7 @@ public class Converter extends HttpServlet implements Servlet{
 			if(this.standAlone || SecurityUtils.isAllowedAccess(request, path)){
 				try {
 					/* convert the xml to json object */
-					JSONObject project = this.convertProjectDocToJSONObject(this.getDOMDocumentFromString(this.fileManager.getFileText(new File(path))));
+					JSONObject project = this.convertProjectDocToJSONObject(this.getDOMDocumentFromString(FileManager.getFileText(new File(path))));
 					
 					/* create copy folder and new project file */
 					File copyFolder = this.createCopyFolder(path);
@@ -144,7 +141,7 @@ public class Converter extends HttpServlet implements Servlet{
 					
 					/* write new project file */
 					File newProjectFile = new File(copyFolder, newProjectName);
-					this.fileManager.writeFile(newProjectFile, project.toString(3), true);
+					FileManager.writeFile(newProjectFile, project.toString(3), true);
 					
 					/* copy any existing directories from the existing project folder (assets, audio, etc) */
 					File old_dir = new File(path).getParentFile();
@@ -158,7 +155,7 @@ public class Converter extends HttpServlet implements Servlet{
 								if(!createdDir.exists()){
 									createdDir.mkdir();
 								}
-								this.fileManager.copy(currentFile, createdDir);
+								FileManager.copy(currentFile, createdDir);
 							}
 						}
 					}
@@ -169,10 +166,10 @@ public class Converter extends HttpServlet implements Servlet{
 					File todoFile = new File(old_dir, rootTodoName);
 					File metaFile = new File(old_dir, rootMetaName);
 					if(todoFile.exists()){
-						this.fileManager.copy(todoFile, new File(new_dir, rootTodoName));
+						FileManager.copy(todoFile, new File(new_dir, rootTodoName));
 					}
 					if(metaFile.exists()){
-						this.fileManager.copy(metaFile, new File(new_dir, rootMetaName));
+						FileManager.copy(metaFile, new File(new_dir, rootMetaName));
 					}
 					
 					/* convert each node's content file to JSON */
@@ -202,7 +199,7 @@ public class Converter extends HttpServlet implements Servlet{
 					}
 					
 					/* rewrite project file with html conversion updates */
-					this.fileManager.writeFile(newProjectFile, project.toString(3), true);
+					FileManager.writeFile(newProjectFile, project.toString(3), true);
 					
 					if(failed){
 						response.getWriter().write(failMsg);
@@ -599,7 +596,7 @@ public class Converter extends HttpServlet implements Servlet{
 			
 			/* filter out missing files */
 			if(oldFile.exists()){
-				String data = this.cleanString(this.fileManager.getFileText(oldFile));
+				String data = this.cleanString(FileManager.getFileText(oldFile));
 				Type t = null;
 				
 				/* filter out any custom types that we don't know about */
@@ -656,8 +653,8 @@ public class Converter extends HttpServlet implements Servlet{
 		
 		htmlContent.put("src", contentFilename);
 		
-		this.fileManager.writeFile(new File(jsonFilename), htmlContent.toString(3), true);
-		this.fileManager.writeFile(file, data, true);
+		FileManager.writeFile(new File(jsonFilename), htmlContent.toString(3), true);
+		FileManager.writeFile(file, data, true);
 		return true;
 	}
 	
@@ -689,7 +686,7 @@ public class Converter extends HttpServlet implements Servlet{
 		if(modFile.exists()){
 			/* if there is no data or file is corrupt, do not set modules in content but keep processing */
 			try{
-				String modData = fileManager.getFileText(modFile);
+				String modData = FileManager.getFileText(modFile);
 				/* if we get null or essentially no data, don't do anything, otherwise add mods to content */
 				if(!(modData == null || modData == "" || modData.equals("[]"))){
 					msContent.put("modules", new JSONArray(modData));
@@ -708,7 +705,7 @@ public class Converter extends HttpServlet implements Servlet{
 			msContent.put("prompt", m.group());
 		}
 		
-		this.fileManager.writeFile(new File(file.getAbsolutePath().replace(".html", ".my")), msContent.toString(3), true);
+		FileManager.writeFile(new File(file.getAbsolutePath().replace(".html", ".my")), msContent.toString(3), true);
 		return true;
 	}
 	
@@ -733,8 +730,8 @@ public class Converter extends HttpServlet implements Servlet{
 		
 		htmlContent.put("src", contentFilename);
 		
-		this.fileManager.writeFile(new File(jsonFilename), htmlContent.toString(3), true);
-		this.fileManager.writeFile(file, data, true);
+		FileManager.writeFile(new File(jsonFilename), htmlContent.toString(3), true);
+		FileManager.writeFile(file, data, true);
 		return true;
 	}
 	
@@ -766,7 +763,7 @@ public class Converter extends HttpServlet implements Servlet{
 			}
 			urlContent.put("type", "OutsideUrl");
 			
-			this.fileManager.writeFile(file, urlContent.toString(3), true);
+			FileManager.writeFile(file, urlContent.toString(3), true);
 			return true;
 		} catch(ServletException e){
 			return false;
@@ -839,7 +836,7 @@ public class Converter extends HttpServlet implements Servlet{
 				}
 			}
 			
-			this.fileManager.writeFile(file, orContent.toString(3), true);
+			FileManager.writeFile(file, orContent.toString(3), true);
 			return true;
 		} catch(ServletException e){
 			return false;
@@ -913,7 +910,7 @@ public class Converter extends HttpServlet implements Servlet{
 				}
 			}
 			
-			this.fileManager.writeFile(file, orContent.toString(3), true);
+			FileManager.writeFile(file, orContent.toString(3), true);
 			return true;
 		} catch(ServletException e){
 			return false;
@@ -1034,7 +1031,7 @@ public class Converter extends HttpServlet implements Servlet{
 				}
 			}
 			
-			this.fileManager.writeFile(file, bContent.toString(3), true);
+			FileManager.writeFile(file, bContent.toString(3), true);
 			return true;
 		} catch(ServletException e){
 			return false;
@@ -1208,7 +1205,7 @@ public class Converter extends HttpServlet implements Servlet{
 				rowsArray.put(currentRow);
 			}
 			
-			this.fileManager.writeFile(file, dContent.toString(3), true);
+			FileManager.writeFile(file, dContent.toString(3), true);
 			return true;
 		} catch(ServletException e){
 			return false;
@@ -1281,7 +1278,7 @@ public class Converter extends HttpServlet implements Servlet{
 				fContent.put("customCheck", custom.getFirstChild().getNodeValue());
 			};
 			
-			this.fileManager.writeFile(file, fContent.toString(3), true);
+			FileManager.writeFile(file, fContent.toString(3), true);
 			return true;
 		} catch(ServletException e){
 			return false;
@@ -1405,7 +1402,7 @@ public class Converter extends HttpServlet implements Servlet{
 				choices.put(currentChoice);
 			}
 			
-			this.fileManager.writeFile(file, mContent.toString(3), true);
+			FileManager.writeFile(file, mContent.toString(3), true);
 			return true;
 		} catch(ServletException e){
 			return false;
@@ -1504,7 +1501,7 @@ public class Converter extends HttpServlet implements Servlet{
 				choices.put(currentChoice);
 			}
 			
-			this.fileManager.writeFile(file, mContent.toString(3), true);
+			FileManager.writeFile(file, mContent.toString(3), true);
 			return true;
 		} catch(ServletException e){
 			return false;
@@ -1549,8 +1546,8 @@ public class Converter extends HttpServlet implements Servlet{
 			htmlContent = content.getFirstChild().getNodeValue();
 		}
 		
-		this.fileManager.writeFile(new File(jsonFilename), bContent.toString(3), true);
-		this.fileManager.writeFile(file, htmlContent, true);
+		FileManager.writeFile(new File(jsonFilename), bContent.toString(3), true);
+		FileManager.writeFile(file, htmlContent, true);
 		return true;
 	}
 	

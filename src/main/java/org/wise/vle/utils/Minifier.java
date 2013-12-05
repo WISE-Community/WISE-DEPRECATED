@@ -31,15 +31,12 @@ public class Minifier extends HttpServlet implements Servlet{
 	
 	private static final String COMMAND = "command";
 	
-	private FileManager filemanager;
-	 
 	private boolean standAlone = true;
 	
 	private boolean modeRetrieved = false;
 	
 	public Minifier(){
 		super();
-		this.filemanager = new FileManager();
 	}
 	
 	/**
@@ -247,7 +244,7 @@ public class Minifier extends HttpServlet implements Servlet{
 						}
 						
 						/* write the minified project file to the project directory for caching purposes */
-						this.filemanager.writeFile(minifiedFile, totalProject.toString().replaceAll("[\t\n\r]", ""), true);
+						FileManager.writeFile(minifiedFile, totalProject.toString().replaceAll("[\t\n\r]", ""), true);
 						
 						//get a new timestamp to return as the new last minified time
 						Date newLastMinified = new Date();
@@ -313,7 +310,7 @@ public class Minifier extends HttpServlet implements Servlet{
 	private JSONObject getJSONObjectFromFile(File file) throws ServletException{
 		JSONObject o;
 		try{
-			o = new JSONObject(this.filemanager.getFileText(file));
+			o = new JSONObject(FileManager.getFileText(file));
 			return o;
 		} catch(IOException e){
 			throw new ServletException(e);
@@ -369,13 +366,13 @@ public class Minifier extends HttpServlet implements Servlet{
 		/* if project meta does not exist, we must assume that this project has just been edited,
 		 * create default metadata, write the metadata file and return true */
 		if(!projectMetaFile.exists()){
-			this.filemanager.writeFile(projectMetaFile, this.getDefaultMetadata().toString(), false);
+			FileManager.writeFile(projectMetaFile, this.getDefaultMetadata().toString(), false);
 			return true;
 		} else {
 			/* attempt to get the lastEdited and lastMinified fields from the JSON Object, if
 			 * this fails, we should minify the project */
 			try{
-				JSONObject meta = new JSONObject(this.filemanager.getFileText(projectMetaFile));
+				JSONObject meta = new JSONObject(FileManager.getFileText(projectMetaFile));
 				
 				Long lastEdited = meta.getLong("lastEdited");
 				Long lastMinified = meta.getLong("lastMinified");
@@ -390,7 +387,7 @@ public class Minifier extends HttpServlet implements Servlet{
 				try{
 					/* if there is not last edited field, the project still may have been minified,
 					 * so try to get the last minified field. */
-					JSONObject meta = new JSONObject(this.filemanager.getFileText(projectMetaFile));
+					JSONObject meta = new JSONObject(FileManager.getFileText(projectMetaFile));
 					Long lastMinified = meta.getLong("lastMinified");
 					if(lastMinified != null && lastMinified > 0){
 						return false;

@@ -138,10 +138,23 @@ public final class SecurityUtils {
 	 */
 	public static boolean isAllowedAccess(HttpServletRequest request, File file){
 		String accessPath = (String) request.getAttribute("accessPath");
+		
+		boolean allowedAccess = isAllowedAccess(accessPath, file);
 
-		if(accessPath != null && !accessPath.equals("")){
+		return allowedAccess;
+	}
+	
+	/**
+	 * Determine if the user should have access to the given file
+	 * @param accessPath
+	 * @param file
+	 * @return whether the user should have access to the file
+	 */
+	public static boolean isAllowedAccess(String accessPath, File file) {
+
+		if(accessPath != null && !accessPath.equals("")) {
 			File accessFile = new File(accessPath);
-			if(accessFile.exists()){
+			if(accessFile.exists()) {
 				try{
 					return file.getCanonicalPath().contains(accessFile.getCanonicalPath());
 				} catch (IOException e){
@@ -151,6 +164,34 @@ public final class SecurityUtils {
 		}
 
 		return false;
+	}
+	
+	public static boolean isAllowedAccess(String fileAllowedToAccessPath, String fileTryingToAccessPath) {
+		boolean result = false;
+		
+		File fileAllowedToAccess = new File(fileAllowedToAccessPath);
+		File fileTryingToAccess = new File(fileTryingToAccessPath);
+		
+		result = isAllowedAccess(fileAllowedToAccess, fileTryingToAccess);
+		
+		return result;
+	}
+	
+	public static boolean isAllowedAccess(File fileAllowedToAccess, File fileTryingToAccess) {
+		boolean result = false;
+		
+		if(fileAllowedToAccess != null && fileAllowedToAccess.exists()) {
+			try {
+				String fileAllowedToAccessPath = fileAllowedToAccess.getCanonicalPath();
+				String fileTryingToAccessPath = fileTryingToAccess.getCanonicalPath();
+				
+				result = fileTryingToAccessPath.contains(fileAllowedToAccessPath);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 
 	/**

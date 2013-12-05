@@ -34,9 +34,8 @@ public class Project {
 	 * @param projectFile File containing project json
 	 */
 	public Project(File projectFile) {
-		FileManager fileManager = new FileManager();
 		try {
-			projectJSON = new JSONObject(fileManager.getFileText(projectFile));
+			projectJSON = new JSONObject(FileManager.getFileText(projectFile));
 			
 			//create the map of node ids to node titles
 			makeNodeIdToNodeTitleAndNodeMap(projectJSON);

@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,22 +27,18 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 
 /**
  * Servlet implementation class for Servlet: FileManager
  * 
  * @author patrick lawler
  */
-public class FileManager extends AbstractController {
+public class FileManager {
 	static final long serialVersionUID = 1L;
 
 	private final static String COMMAND = "command";
@@ -61,110 +56,21 @@ public class FileManager extends AbstractController {
 
 	private final static String PROJECT_PATHS = "projectPaths";
 
-	private boolean standAlone = true;
+	private static boolean standAlone = true;
 
 	private boolean modeRetrieved = false;
 
-	private static Properties vleProperties = null;
+	private static Properties wiseProperties = null;
 
-	{
+	static {
 		try {
 			// Read properties file.
-			vleProperties = new Properties();
-			vleProperties.load(getClass().getClassLoader().getResourceAsStream("wise.properties"));
+			wiseProperties = new Properties();
+			wiseProperties.load(FileManager.class.getClassLoader().getResourceAsStream("wise.properties"));
 		} catch (Exception e) {
-			System.err.println("FileManager could not read in vleProperties file");
+			System.err.println("FileManager could not read in wiseProperties file");
 			e.printStackTrace();
 		}
-	}
-   
-
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		if (request.getMethod() == AbstractController.METHOD_GET) {
-			return doGet(request, response);
-		} else if (request.getMethod() == AbstractController.METHOD_POST) {
-			return doPost(request, response);
-		}
-		return null;
-	}
-	
-	/* (non-Java-doc)
-	 * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		return this.doPost(request, response);
-	}  	
-	
-	/* (non-Java-doc)
-	 * @see javax.servlet.http.HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(!this.modeRetrieved){
-			this.standAlone = !SecurityUtils.isPortalMode(request);
-			this.modeRetrieved = true;
-		}
-		
-		if(this.standAlone || SecurityUtils.isAuthenticated(request)){
-			return this.doRequest(request, response);
-		} else {
-			/* if not authenticated send not authorized status */
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-		}
-		return null;
-	}
-	
-	private ModelAndView doRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-		String command = request.getParameter(COMMAND);
-		if(command!=null){
-			if(command.equals("createProject")){
-				response.getWriter().write(this.createProject(request, response));
-			} else if(command.equals("projectList")){
-				response.getWriter().write(this.getProjectList(request, ".project.json"));
-			} else if(command.equals("oldProjectList")){
-				response.getWriter().write(this.getProjectList(request, ".project.xml"));
-			} else if(command.equals("retrieveFile")){
-				try{
-					response.getWriter().write(this.retrieveFile(request, response));
-				} catch(IOException e){
-					response.sendError(HttpServletResponse.SC_NOT_FOUND);
-				}
-			} else if(command.equals("updateFile")){
-				response.getWriter().write(this.updateFile(request, response));
-			} else if(command.equals("createNode")){
-				response.getWriter().write(this.createNode(request, response));
-			} else if(command.equals("createSequence")){
-				response.getWriter().write(this.createSequence(request, response));
-			} else if(command.equals("removeFile")){
-				response.getWriter().write(this.removeFile(request));
-			} else if(command.equals("copyNode")){
-				this.copyNode(request, response);
-			} else if(command.equals("createSequenceFromJSON")){
-				this.createSequenceFromJSON(request, response);
-			} else if(command.equals("getScripts")){
-				this.getScripts(request, response);
-			} else if(command.equals("copyProject")){
-				response.getWriter().write(this.copyProject(request, response));
-			} else if(command.equals("createFile")){
-				this.createFile(request, response);
-			} else if(command.equals("reviewUpdateProject")) {
-				this.reviewUpdateProject(request, response);
-			} else if(command.equals("updateProject")) {
-				this.updateProject(request, response);
-			} else if(command.equals("importSteps")) {
-				this.importSteps(request, response);
-			} else if(command.equals("getProjectUsageAndMax")) {
-				this.getProjectUsageAndMax(request, response);
-			} else {
-				/* we don't understand this command */
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			}
-		} else {
-			/* no command was provided */
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		}
-		return null;
 	}
 	
 	/**
@@ -172,9 +78,8 @@ public class FileManager extends AbstractController {
 	 * 
 	 * @return String
 	 */
-	private String getProjectList(HttpServletRequest request, String projectExt)throws IOException{
-		String rawPaths = request.getParameter(PROJECT_PATHS);
-		String[] paths = rawPaths.split("~");
+	public static String getProjectList(String projectPaths, String projectExt) throws IOException {
+		String[] paths = projectPaths.split("~");
 		List<String> visited = new ArrayList<String>();
 		List<String> projects = new ArrayList<String>();
 		String projectList = "";
@@ -183,7 +88,8 @@ public class FileManager extends AbstractController {
 			for(int p=0;p<paths.length;p++){
 				getProjectFiles(new File(paths[p]), projects, visited, projectExt);
 			}
-			Collections.sort(projects, new CompareByLastModified());
+			CompareByLastModified compareByLastModified = new CompareByLastModified();
+			Collections.sort(projects, compareByLastModified);
 			for(int q=0;q<projects.size();q++){
 				projectList += projects.get(q);
 				if(q!=projects.size()-1){
@@ -205,7 +111,7 @@ public class FileManager extends AbstractController {
 	 * @param visited
 	 * @throws IOException
 	 */
-	private void getProjectFiles(File f, List<String> projects, List<String> visited, String projectExt) throws IOException{
+	public static void getProjectFiles(File f, List<String> projects, List<String> visited, String projectExt) throws IOException{
 		if(f.exists() && !visited.contains(f.getCanonicalPath())){
 			if(f.isFile()){
 				if(f.getName().endsWith(projectExt)){
@@ -232,7 +138,7 @@ public class FileManager extends AbstractController {
 	/**
 	 * A Comparator that compares two <code>String</code> paths by the date it was last modified.
 	 */
-	private class CompareByLastModified implements Comparator<String>{
+	public static class CompareByLastModified implements Comparator<String>{
 
 		public int compare(String arg0, String arg1) {
 			File file1 = new File(arg0);
@@ -254,7 +160,7 @@ public class FileManager extends AbstractController {
 	 * 
 	 * @return boolean
 	 */
-	private boolean ensureDir(File file){
+	public static boolean ensureDir(File file){
 		if(file.isDirectory()){
 			return true;
 		} else {
@@ -272,7 +178,7 @@ public class FileManager extends AbstractController {
 	 * @param <code>boolean</code> overwrite
 	 * @throws <code>IOException</code>
 	 */
-	public void writeFile(File file, String data, boolean overwrite) throws IOException{
+	public static void writeFile(File file, String data, boolean overwrite) throws IOException{
 		if(!file.exists() || overwrite){
 			/* create a new file if it doesn't exist */
 			if(!file.exists()){
@@ -298,9 +204,9 @@ public class FileManager extends AbstractController {
 	 * @param <code>boolean</code> overwrite
 	 * @throws <code>IOException</code>
 	 */
-	public void writeFile(String path, String data, boolean overwrite) throws IOException{
+	public static void writeFile(String path, String data, boolean overwrite) throws IOException{
 		File file = new File(path);
-		this.writeFile(file, data, overwrite);
+		writeFile(file, data, overwrite);
 	}
 	
 	/**
@@ -311,7 +217,9 @@ public class FileManager extends AbstractController {
 	 * @return <code>String</code> text
 	 * @throws <code>IOException</code>
 	 */
-	public String getFileText(File file) throws IOException{
+	public static String getFileText(File file) throws IOException {
+		String result = "error";
+		
 		if(file.exists()){
 			BufferedReader br = new BufferedReader( new InputStreamReader(new FileInputStream(file), "UTF8")); 			
 			
@@ -323,10 +231,12 @@ public class FileManager extends AbstractController {
 			}
 			br.close();
 			
-			return fullText;
+			result = fullText;
 		} else {
 			throw new IOException("Could not find specified file " + file.getAbsolutePath());
 		}
+		
+		return result;
 	}
 	
 	/**
@@ -337,15 +247,8 @@ public class FileManager extends AbstractController {
 	 * @return String
 	 * @throws IOException
 	 */
-	private String retrieveFile(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		String filePath = (String) request.getAttribute("filePath");
-		
-		if(this.standAlone || SecurityUtils.isAllowedAccess(request, filePath)){
-			return this.getFileText(new File(filePath));
-		} else {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-			return "unauthorized";
-		}
+	public static String retrieveFile(String filePath) throws IOException {
+		return getFileText(new File(filePath));
 	}
 	
 	/**
@@ -356,82 +259,62 @@ public class FileManager extends AbstractController {
 	 * @return String
 	 * @throws IOException
 	 */
-	private String updateFile(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		/*
-		 * get the project folder path
-		 * e.g.
-		 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
-		 */
-		String projectFolderPath = (String) request.getAttribute("projectFolderPath");
-		
-		//get the file name
-		String fileName = request.getParameter("fileName");
-		
-		//get the content to save to the file
-		String data = request.getParameter("data");
+	public static String updateFile(String projectFolderPath, String fileName, String data) throws IOException {
+		String result = "not authorized";
 		
 		File dir = new File(projectFolderPath);
-		if(dir.exists()){
+		if(dir.exists()) {
 			File file = new File(dir, fileName);
-			if(this.standAlone || SecurityUtils.isAllowedAccess(request, file)){
-				this.writeFile(file, data, true);
-				return "success";
-			} else {
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-				return "not authorized";
-			}
-		} else {
-			throw new IOException("Unable to find the project at given location: " + dir.getCanonicalPath());
+			
+			writeFile(file, data, true);
+			
+			result = "success";
 		}
+		
+		return result;
 	}
 	
 	/**
 	 * Given the request for this post, extracts the new Project name, creates
 	 * the project folder and creates a template project file in that folder
 	 * 
-	 * @param request
+	 * @param projectName the project name
+	 * @param curriculumBaseDir the curriculum base
+	 * e.g.
+	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
+	 * 
 	 * @return int
 	 * @throws IOException
 	 * @throws JSONException 
 	 * @throws ServletException 
 	 */
-	private String createProject(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-		//get the name of the project
-		String projectName = request.getParameter("projectName");
-		
-		/*
-		 * get the curriculum base
-		 * e.g.
-		 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
-		 */
-		String curriculumBaseDir = (String) request.getAttribute("curriculumBaseDir");
+	public static String createProject(String curriculumBaseDir, String projectName) throws IOException, ServletException {
+		String result = "";
 		
 		File parent = new File(curriculumBaseDir);
 		
-		if(this.standAlone || SecurityUtils.isAllowedAccess(request, parent)){
-			this.ensureDir(parent);
+		ensureDir(parent);
+		
+		//all project json files will be given the filename of wise4.project.json
+		File newFile = new File(createNewprojectPath(parent), "wise4.project.json");
+		
+		try {
+			//write the empty project json to the file
+			writeFile(newFile, Template.getProjectTemplate(projectName).toString(3), false);
 			
-			//all project json files will be given the filename of wise4.project.json
-			File newFile = new File(this.createNewprojectPath(parent), "wise4.project.json");
-			try{
-				//write the empty project json to the file
-				this.writeFile(newFile, Template.getProjectTemplate(projectName).toString(3), false);
-				
-				//get the folder name e.g. 513
-				String folder = newFile.getParentFile().getName();
-				
-				//get the file name e.g. wise4.project.json
-				String fileName = newFile.getName();
-				
-				//return the path to the file
-				return "/" + folder + "/" + fileName;
-			} catch(JSONException e){
-				throw new ServletException(e);
-			}
-		} else {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-			return "unauthorized";
+			//get the folder name e.g. 513
+			String folder = newFile.getParentFile().getName();
+			
+			//get the file name e.g. wise4.project.json
+			String fileName = newFile.getName();
+			
+			//return the path to the file
+			result = "/" + folder + "/" + fileName;
+		} catch(JSONException e) {
+			e.printStackTrace();
 		}
+		
+		return result;
 	}
 
 	/**
@@ -441,7 +324,7 @@ public class FileManager extends AbstractController {
 	 * @param parent
 	 * @return
 	 */
-	private File createNewprojectPath(File parent){
+	public static File createNewprojectPath(File parent){
 		Integer counter = 1;
 		
 		while(true){
@@ -461,20 +344,7 @@ public class FileManager extends AbstractController {
 	 * @param request
 	 * @return String
 	 */
-	private String createNode(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-		/*
-		 * get the project file path
-		 * e.g.
-		 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
-		 */
-		String projectPath = (String) request.getAttribute("projectFilePath");
-		String nodeClass = request.getParameter("nodeClass");
-		String title = request.getParameter("title");
-		String type = request.getParameter("type");
-		
-		//get the string that contains an array of node template params
-		String nodeTemplateParams = request.getParameter("nodeTemplateParams");
-		
+	public static String createNode(String projectPath, String nodeClass, String title, String type, String nodeTemplateParams) throws IOException, ServletException{
 		/*
 		 * the node name, "nodeNotProject" is the default value to return
 		 * which means there was an error creating the file. this variable
@@ -484,71 +354,65 @@ public class FileManager extends AbstractController {
 		
 		File dir = new File(projectPath).getParentFile();
 		if(dir.exists()){
-			if(this.standAlone || SecurityUtils.isAllowedAccess(request, dir)){
+			try {
+				//create the JSONArray of files to create
+				JSONArray filesToCreate = new JSONArray(nodeTemplateParams);
 				
-				try {
-					//create the JSONArray of files to create
-					JSONArray filesToCreate = new JSONArray(nodeTemplateParams);
+				if(filesToCreate != null) {
 					
-					if(filesToCreate != null) {
+					/*
+					 * get the root of the file name for the files we are about to make
+					 * e.g. 'node_1'
+					 */
+					String fileNamePrefix = getUniqueFileNamePrefix(dir);
+					
+					//loop through each file to create
+					for(int x=0; x<filesToCreate.length(); x++) {
+						//get the a file to create
+						JSONObject fileToCreate = filesToCreate.getJSONObject(x);
 						
-						/*
-						 * get the root of the file name for the files we are about to make
-						 * e.g. 'node_1'
-						 */
-						String fileNamePrefix = getUniqueFileNamePrefix(dir);
+						//get the extension for the file type
+						String nodeExtension = fileToCreate.getString("nodeExtension");
 						
-						//loop through each file to create
-						for(int x=0; x<filesToCreate.length(); x++) {
-							//get the a file to create
-							JSONObject fileToCreate = filesToCreate.getJSONObject(x);
+						//get the content to put in the file
+						String nodeTemplateContent = fileToCreate.getString("nodeTemplateContent");
+						
+						if(nodeExtension != null && !nodeExtension.equals("") &&
+								nodeTemplateContent != null && !nodeTemplateContent.equals("")) {
+							/*
+							 * whether this is the main file for this step.
+							 */
+							boolean mainNodeFile = false;
 							
-							//get the extension for the file type
-							String nodeExtension = fileToCreate.getString("nodeExtension");
-							
-							//get the content to put in the file
-							String nodeTemplateContent = fileToCreate.getString("nodeTemplateContent");
-							
-							if(nodeExtension != null && !nodeExtension.equals("") &&
-									nodeTemplateContent != null && !nodeTemplateContent.equals("")) {
+							if(filesToCreate.length() == 1) {
+								//in most cases there is only one file to create so it will be the main file
+								mainNodeFile = true;
+							} else {
 								/*
-								 * whether this is the main file for this step.
+								 * in rare cases there may be multiple files to create such
+								 * as with HtmlNode in which case one of the files is the
+								 * mainNodeFile (.ht) and the other is a supporting file (.html).
+								 * for these cases the param for each file must specify
+								 * whether it is the mainNodeFile or not
 								 */
-								boolean mainNodeFile = false;
-								
-								if(filesToCreate.length() == 1) {
-									//in most cases there is only one file to create so it will be the main file
-									mainNodeFile = true;
-								} else {
-									/*
-									 * in rare cases there may be multiple files to create such
-									 * as with HtmlNode in which case one of the files is the
-									 * mainNodeFile (.ht) and the other is a supporting file (.html).
-									 * for these cases the param for each file must specify
-									 * whether it is the mainNodeFile or not
-									 */
-									mainNodeFile = fileToCreate.getBoolean("mainNodeFile");
-								}
-								
-								//create the file handle e.g. 'node_1.or'
-								File file = new File(dir, fileNamePrefix + "." + nodeExtension);
-								
-								//write the contents to the file
-								this.writeFile(file, nodeTemplateContent, false);
-								
-								//add the node to the project
-								if(mainNodeFile && this.addNodeToProject(new File(projectPath), Template.getProjectNodeTemplate(type, file.getName(), title, nodeClass))){
-									nodeName = file.getName();
-								}								
+								mainNodeFile = fileToCreate.getBoolean("mainNodeFile");
 							}
+							
+							//create the file handle e.g. 'node_1.or'
+							File file = new File(dir, fileNamePrefix + "." + nodeExtension);
+							
+							//write the contents to the file
+							writeFile(file, nodeTemplateContent, false);
+							
+							//add the node to the project
+							if(mainNodeFile && addNodeToProject(new File(projectPath), Template.getProjectNodeTemplate(type, file.getName(), title, nodeClass))){
+								nodeName = file.getName();
+							}								
 						}
 					}
-				} catch (JSONException e) {
-					e.printStackTrace();
 				}
-			} else {
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-				return "not authorized";
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
 		} else {
 			throw new IOException("Unable to find project");
@@ -565,7 +429,7 @@ public class FileManager extends AbstractController {
 	 * @return String
 	 * @throws ServletException
 	 */
-	private String getExtension(String type) throws ServletException {
+	public static String getExtension(String type) throws ServletException {
 		if(type.equals("BrainstormNode")){
 			return ".bs";
 		} else if(type.equals("FillinNode")){
@@ -627,7 +491,7 @@ public class FileManager extends AbstractController {
 	 * @param ext
 	 * @return File
 	 */
-	public File generateUniqueFile(File parent, String ext){
+	public static File generateUniqueFile(File parent, String ext){
 		String name = "node_";
 		int count = 0;
 		
@@ -646,7 +510,7 @@ public class FileManager extends AbstractController {
 	 * @return a String containing a file name prefix that is not
 	 * being used by any other files. e.g. 'node_2'
 	 */
-	public String getUniqueFileNamePrefix(File parent) {
+	public static String getUniqueFileNamePrefix(File parent) {
 		String name = "node_";
 		int count = 0;
 		
@@ -669,7 +533,7 @@ public class FileManager extends AbstractController {
 	 * @param name
 	 * @return boolean
 	 */
-	private boolean duplicateName(File parent, String name){
+	public static boolean duplicateName(File parent, String name){
 		String[] children = parent.list();
 		for(int i=0;i<children.length;i++){
 			File childFile = new File(parent, children[i]);
@@ -701,11 +565,11 @@ public class FileManager extends AbstractController {
 	 * @return boolean
 	 * @throws IOException
 	 */
-	private boolean addNodeToProject(File parent, JSONObject node) throws IOException{
+	public static boolean addNodeToProject(File parent, JSONObject node) throws IOException{
 		try{
-			JSONObject project = new JSONObject(this.getFileText(parent));
+			JSONObject project = new JSONObject(getFileText(parent));
 			project.getJSONArray("nodes").put(node);
-			this.writeFile(parent, project.toString(3), true);
+			writeFile(parent, project.toString(3), true);
 			return true;
 		} catch(JSONException e){
 			e.printStackTrace();
@@ -724,23 +588,8 @@ public class FileManager extends AbstractController {
 	 * @return String
 	 * @throws IOException
 	 */
-	private String createSequence(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		/*
-		 * get the project file name
-		 * e.g.
-		 * /wise4.project.json
-		 */
-		String projectFileName = request.getParameter("projectFileName");
-		String name = request.getParameter("name");
-		String id = request.getParameter("id");
-		
-		/*
-		 * get the project folder path
-		 * e.g.
-		 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
-		 */
-		String projectFolderPath = (String) request.getAttribute("projectFolderPath");
-		
+	public static String createSequence(String projectFileName, String name, String id, String projectFolderPath) throws IOException {
+		String result = "";
 		/*
 		 * get the full project file path
 		 * e.g.
@@ -749,18 +598,14 @@ public class FileManager extends AbstractController {
 		String fullProjectFilePath = projectFolderPath + projectFileName;
 		
 		File file = new File(fullProjectFilePath);
-		if(this.standAlone || SecurityUtils.isAllowedAccess(request, file)){
-			try{
-				this.addSequenceToProject(file, Template.getSequenceTemplate(id, name));
-				return id;
-			} catch (JSONException e){
-				e.printStackTrace();
-				throw new IOException("Could not insert new sequence in project file.");
-			}
-		} else {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-			return "not authorized";
+		try {
+			addSequenceToProject(file, Template.getSequenceTemplate(id, name));
+			result = id;
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+		
+		return result;
 	}
 	
 	/**
@@ -771,11 +616,11 @@ public class FileManager extends AbstractController {
 	 * @param <code>JSONObject</code> sequence
 	 * @throws <code>IOException</code>
 	 */
-	private void addSequenceToProject(File projectFile, JSONObject sequence) throws IOException{
+	public static void addSequenceToProject(File projectFile, JSONObject sequence) throws IOException{
 		try{
-			JSONObject project = new JSONObject(this.getFileText(projectFile));
+			JSONObject project = new JSONObject(getFileText(projectFile));
 			project.getJSONArray("sequences").put(sequence);
-			this.writeFile(projectFile, project.toString(3), true);
+			writeFile(projectFile, project.toString(3), true);
 		} catch(JSONException e){
 			e.printStackTrace();
 			throw new IOException("Could not insert new sequence in project file.");
@@ -791,21 +636,8 @@ public class FileManager extends AbstractController {
 	 * step files are created in createNode and do not use this function.
 	 * @param <code>HttpServletRequest</code> request
 	 */
-	private void createFile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		/*
-		 * get the file name
-		 * e.g.
-		 * /node_1.or
-		 */
-		String fileName = request.getParameter("path");
-		String data = request.getParameter("data");
-		
-		/*
-		 * get the project folder path
-		 * e.g.
-		 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
-		 */
-		String projectFolderPath = (String) request.getAttribute("projectFolderPath");
+	public static String createFile(String projectFolderPath, String fileName, String data) throws ServletException, IOException{
+		String result = "";
 		
 		/*
 		 * get the full file path
@@ -814,11 +646,9 @@ public class FileManager extends AbstractController {
 		 */
 		String fullFilePath = projectFolderPath + fileName;
 		
-		if(this.standAlone || SecurityUtils.isAllowedAccess(request, fullFilePath)){
-			this.writeFile(fullFilePath, data, false);
-		} else {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-		}
+		writeFile(fullFilePath, data, false);
+		
+		return result;
 	}
 	
 	/**
@@ -829,20 +659,7 @@ public class FileManager extends AbstractController {
 	 * @return string
 	 * @throws IOException
 	 */
-	private String removeFile(HttpServletRequest request) throws IOException{
-		/*
-		 * get the project folder path
-		 * e.g.
-		 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
-		 */
-		String projectFolderPath = (String) request.getAttribute("projectFolderPath");
-		
-		/*
-		 * get the file name
-		 * node_1.or
-		 */
-		String fileName = request.getParameter("fileName");
-		
+	public static String removeFile(String projectFolderPath, String fileName) throws IOException{
 		File child = new File(new File(projectFolderPath), fileName);
 		if(child.exists() && child.delete()){
 			return "success";
@@ -861,40 +678,25 @@ public class FileManager extends AbstractController {
 	 * @return <code>String</code> new project path
 	 * @throws IOException
 	 */
-	private String copyProject(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		/*
-		 * get the project folder path
-		 * e.g.
-		 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
-		 */
-		String projectFolderPath = (String) request.getAttribute("projectFolderPath");
-		
-		/*
-		 * get the curriculum base
-		 * e.g.
-		 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
-		 */
-		String curriculumBaseDir = (String) request.getAttribute("curriculumBaseDir");
+	public static String copyProject(String curriculumBaseDir, String projectFolderPath) throws IOException{
+		String result = "";
 		
 		File srcDir = new File(projectFolderPath);
-		if(srcDir.exists() && srcDir.isDirectory()){
-			if(this.standAlone || SecurityUtils.isAllowedAccess(request, srcDir)){
-				File destDir;
-				if(curriculumBaseDir != null && curriculumBaseDir != ""){
-					destDir = this.createNewprojectPath(new File(curriculumBaseDir));
-				} else {
-					destDir = this.createNewprojectPath(srcDir.getParentFile());
-				}
-				
-				this.copy(srcDir, destDir);
-				return destDir.getName();
+		if(srcDir.exists() && srcDir.isDirectory()) {
+			File destDir;
+			if(curriculumBaseDir != null && curriculumBaseDir != ""){
+				destDir = createNewprojectPath(new File(curriculumBaseDir));
 			} else {
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-				return "unauthorized";
+				destDir = createNewprojectPath(srcDir.getParentFile());
 			}
+			
+			copy(srcDir, destDir);
+			result = destDir.getName();
 		} else {
 			throw new IOException("Provided path is not found or is not a directory. Path: " + projectFolderPath);
 		}
+		
+		return result;
 	}
 
 	/**
@@ -906,7 +708,7 @@ public class FileManager extends AbstractController {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void copy(File src, File dest) throws FileNotFoundException, IOException{
+	public static void copy(File src, File dest) throws FileNotFoundException, IOException{
 		if(src.isDirectory()){
 			if(!dest.exists()){
 				dest.mkdir();
@@ -942,27 +744,8 @@ public class FileManager extends AbstractController {
 	 * @throws <code>IOException</code>
 	 * @throws <code>ServletException</code>
 	 */
-	private void copyNode(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-		//get the attributes for the node
-		String data = request.getParameter("data");
-		String type = request.getParameter("type");
-		String title = request.getParameter("title");
-		String nodeClass = request.getParameter("nodeClass");
-		String contentFile = request.getParameter("contentFile");
-		
-		/*
-		 * get the file name
-		 * e.g.
-		 * /node_1.or
-		 */
-		String projectFileName = request.getParameter("projectFileName");
-		
-		/*
-		 * get the project folder path
-		 * e.g.
-		 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
-		 */
-		String projectFolderPath = (String) request.getAttribute("projectFolderPath");
+	public static String copyNode(String projectFolderPath, String projectFileName, String data, String type, String title, String nodeClass, String contentFile) throws IOException, ServletException {
+		String result = "";
 		
 		/*
 		 * get the full path to the file
@@ -972,44 +755,42 @@ public class FileManager extends AbstractController {
 		
 		File dir = new File(fullProjectFilePath).getParentFile();
 		if(dir.exists()){
-			File file = this.generateUniqueFile(dir, this.getExtension(type));
+			File file = generateUniqueFile(dir, getExtension(type));
 			
-			if(this.standAlone || SecurityUtils.isAllowedAccess(request, file)){
-				/* if this is an html type, change the src filename */
-				if(type.equals("HtmlNode") || type.equals("DrawNode") || type.equals("MySystemNode")){
-					try{
-						File content = new File(dir, contentFile);
-						if(content.exists()){
-							this.writeFile(new File(dir, file.getName() + "ml"), this.getFileText(content), false);
-						}
-						JSONObject node = new JSONObject(data);
-						node.put("src", file.getName() + "ml");
-						this.writeFile(file, node.toString(3), false);
-					} catch(JSONException e){
-						throw new ServletException(e);
-					}
-				} else {
-					this.writeFile(file, data, false);
-				}
-				
-				File parent = new File(fullProjectFilePath);
+			
+			/* if this is an html type, change the src filename */
+			if(type.equals("HtmlNode") || type.equals("DrawNode") || type.equals("MySystemNode")){
 				try{
-					if(this.addNodeToProject(parent, Template.getProjectNodeTemplate(type, file.getName(), title, nodeClass))){
-						response.getWriter().write(file.getName());
-						return;
-					} else {
-						throw new IOException("New node file created: " + file.getName() + "  but could not update project file.");
+					File content = new File(dir, contentFile);
+					if(content.exists()){
+						writeFile(new File(dir, file.getName() + "ml"), getFileText(content), false);
 					}
-				} catch (JSONException e){
-					e.printStackTrace();
-					throw new IOException("New node file created: " + file.getName() + "  but could not update project file.");
+					JSONObject node = new JSONObject(data);
+					node.put("src", file.getName() + "ml");
+					writeFile(file, node.toString(3), false);
+				} catch(JSONException e){
+					throw new ServletException(e);
 				}
 			} else {
-				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+				writeFile(file, data, false);
+			}
+			
+			File parent = new File(fullProjectFilePath);
+			try{
+				if(addNodeToProject(parent, Template.getProjectNodeTemplate(type, file.getName(), title, nodeClass))){
+					result = file.getName();
+				} else {
+					throw new IOException("New node file created: " + file.getName() + "  but could not update project file.");
+				}
+			} catch (JSONException e){
+				e.printStackTrace();
+				throw new IOException("New node file created: " + file.getName() + "  but could not update project file.");
 			}
 		} else {
 			throw new IOException("Cannot find provided path, aborting operation.");
 		}
+		
+		return result;
 	}
 	
 	/**
@@ -1020,41 +801,24 @@ public class FileManager extends AbstractController {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void createSequenceFromJSON(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-		/*
-		 * get the project file name
-		 * e.g.
-		 * /wise4.project.json
-		 */
-		String projectFileName = request.getParameter("projectFileName");
-		
-		//get the json for the new sequence we are going to add to the project
-		String data = request.getParameter("data");
-		
-		/*
-		 * get the project folder path
-		 * e.g.
-		 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
-		 */
-		String projectFolderPath = (String) request.getAttribute("projectFolderPath");
+	public static String createSequenceFromJSON(String projectFolderPath, String projectFileName, String data) throws IOException, ServletException {
+		String result = "";
 		
 		String fullProjectFilePath = projectFolderPath + projectFileName;
 		
 		File projectFile = new File(fullProjectFilePath);
-		if(this.standAlone || SecurityUtils.isAllowedAccess(request, projectFile)){
-			try{
-				JSONObject sequence = new JSONObject(data);
-				JSONObject project = new JSONObject(this.getFileText(projectFile));
-				project.getJSONArray("sequences").put(sequence);
-				
-				this.writeFile(projectFile, project.toString(3), true);
-				response.getWriter().write("success");
-			} catch(JSONException e){
-				throw new ServletException(e);
-			}
-		} else {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+		try{
+			JSONObject sequence = new JSONObject(data);
+			JSONObject project = new JSONObject(getFileText(projectFile));
+			project.getJSONArray("sequences").put(sequence);
+			
+			writeFile(projectFile, project.toString(3), true);
+			result = "success";
+		} catch(JSONException e){
+			throw new ServletException(e);
 		}
+		
+		return result;
 	}
 	
 	/**
@@ -1063,13 +827,11 @@ public class FileManager extends AbstractController {
 	 * @param response
 	 * @throws IOException
 	 */
-	private void getScripts(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		String data = request.getParameter(PARAM1);
+	public static String getScripts(ServletContext context, String data) throws IOException{
 		String[] scripts = data.split("~");
 		
-		ServletContext context = this.getServletContext();
+		StringBuffer scriptsText = new StringBuffer();
 		
-		PrintWriter writer = response.getWriter();
 		String out = "";
 		
 		for(String script : scripts){
@@ -1077,12 +839,16 @@ public class FileManager extends AbstractController {
 			if(is != null){
 				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 				while((out = reader.readLine())!=null){
-					writer.println(out);
+					scriptsText.append(out);
+					scriptsText.append("\n");
 				}
 			}
 		}
-			
-		writer.println("scriptloader.scriptAvailable(scriptloader.baseUrl + \"vle/filemanager.html?command=getScripts&param1=" + data + "\");");
+		
+		scriptsText.append("scriptloader.scriptAvailable(scriptloader.baseUrl + \"vle/filemanager.html?command=getScripts&param1=" + data + "\");");
+		scriptsText.append("\n");
+		
+		return scriptsText.toString();
 	}
 	
 	/**
@@ -1094,7 +860,7 @@ public class FileManager extends AbstractController {
 	 * @param response
 	 * @throws IOException
 	 */
-	private void reviewUpdateProject(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public static String reviewUpdateProject(String curriculumBaseDir, String parentProjectUrl, String projectUrl) throws IOException {
 		//stores node id to the node or sequence JSONObject for child project nodes
 		HashMap<String, JSONObject> childNodeIdToNodeOrSequence = new HashMap<String, JSONObject>();
 		
@@ -1134,15 +900,6 @@ public class FileManager extends AbstractController {
 		HashMap<String, String> nodeIdToModified = new HashMap<String, String>();
 		
 		String fileSeparator = System.getProperty("file.separator");
-		
-		//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
-		String curriculumBaseDir = (String) request.getAttribute("curriculumBaseDir");
-		
-		//get the relative child project url e.g. /236/wise4.project.json
-		String projectUrl = (String) request.getAttribute("projectUrl");
-		
-		//get the relative parent project url e.g. /235/wise4.project.json
-		String parentProjectUrl = (String) request.getAttribute("parentProjectUrl");
 		
 		//get the child project folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/236
 		String fullProjectFolderUrl = curriculumBaseDir + projectUrl.substring(0, projectUrl.lastIndexOf(fileSeparator));
@@ -1335,7 +1092,7 @@ public class FileManager extends AbstractController {
 		}
 		
 		//return the status array to the client
-		response.getWriter().write(nodeStatuses.toString());
+		return nodeStatuses.toString();
 	}
 	
 	/**
@@ -1344,17 +1101,10 @@ public class FileManager extends AbstractController {
 	 * @param response
 	 * @throws IOException
 	 */
-	private void updateProject(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public static String updateProject(String curriculumBaseDir, String parentProjectUrl, String childProjectUrl) throws IOException {
+		String result = "";
+		
 		String fileSeparator = System.getProperty("file.separator");
-		
-		//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
-		String curriculumBaseDir = (String) request.getAttribute("curriculumBaseDir");
-		
-		//get the relative child project url e.g. /236/wise4.project.json
-		String childProjectUrl = (String) request.getAttribute("projectUrl");
-		
-		//get the relative parent project url e.g. /235/wise4.project.json
-		String parentProjectUrl = (String) request.getAttribute("parentProjectUrl");
 		
 		//get the child project folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/236
 		String fullChildProjectFolderUrl = curriculumBaseDir + childProjectUrl.substring(0, childProjectUrl.lastIndexOf(fileSeparator));
@@ -1367,6 +1117,8 @@ public class FileManager extends AbstractController {
 		
 		//copy the parent project folder contents to this project's folder
 		copyFile(new File(fullParentProjectFolderUrl), new File(fullChildProjectFolderUrl));
+		
+		return result;
 	}
 	
 	/**
@@ -1375,16 +1127,11 @@ public class FileManager extends AbstractController {
 	 * @param response
 	 * @throws IOException
 	 */
-	private void importSteps(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public static String importSteps(String curriculumBaseDir, String fromProjectUrl, String toProjectUrl, String nodeIds) throws IOException {
+		String result = "";
+		
 		//the file separator for the OS e.g. /
 		String fileSeparator = System.getProperty("file.separator");
-		
-		//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
-		String curriculumBaseDir = (String) request.getAttribute("curriculumBaseDir");
-		
-		
-		//get the relative child project url e.g. /236/wise4.project.json
-		String toProjectUrl = (String) request.getAttribute("projectUrl");
 		
 		//get the full project file url e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/236/wise4.project.json
 		String fullToProjectFileUrl = curriculumBaseDir + toProjectUrl;
@@ -1396,10 +1143,6 @@ public class FileManager extends AbstractController {
 		//get the project assets folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/236/assets
 		String toProjectAssetsUrl = fullToProjectFolderUrl + "/assets";
 		File toProjectAssetsFolder = new File(toProjectAssetsUrl);
-		
-		
-		//get the relative child project url e.g. /172/wise4.project.json
-		String fromProjectUrl = (String) request.getAttribute("fromProjectUrl");
 		
 		//get the full project file url e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172/wise4.project.json
 		String fullFromProjectFileUrl = curriculumBaseDir + fromProjectUrl;
@@ -1422,8 +1165,6 @@ public class FileManager extends AbstractController {
 			e1.printStackTrace();
 		}
 		
-		//get all the files we need to import
-		String nodeIds = (String) request.getParameter("nodeIds");
 		JSONArray nodeIdsArray = null;
 		
 		try {
@@ -1522,13 +1263,15 @@ public class FileManager extends AbstractController {
 						JSONObject newNode = Template.getProjectNodeTemplate(type, newFileName, title, nodeClass);
 						
 						//add the node to our "to" project
-						this.addNodeToProject(new File(fullToProjectFileUrl), newNode);
+						addNodeToProject(new File(fullToProjectFileUrl), newNode);
 					}
 				}
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		
+		return result;
 	}
 	
 	/**
@@ -1537,7 +1280,7 @@ public class FileManager extends AbstractController {
 	 * @param fromProjectAssetsFolder the project we are copying the asset from
 	 * @param toProjectAssetsFolder the project we are copying the asset to
 	 */
-	private String importAssetsInContent(String content, File fromProjectAssetsFolder, File toProjectAssetsFolder) {
+	public static String importAssetsInContent(String content, File fromProjectAssetsFolder, File toProjectAssetsFolder) {
 		/*
 		 * create a pattern that will match any of these below
 		 * "assets/myPicture.jpg"
@@ -1656,7 +1399,7 @@ public class FileManager extends AbstractController {
 	 * @param counter the number to add to the file name
 	 * @return a new file name with '-' and a number added to the end
 	 */
-	private String createNewFileName(String fileName, int counter) {
+	public static String createNewFileName(String fileName, int counter) {
 		String newFileName = "";
 		
 		int lastDot = fileName.lastIndexOf(".");
@@ -1679,7 +1422,7 @@ public class FileManager extends AbstractController {
 	 * @param nodeId the node id
 	 * @return the JSONObject for the node in the project
 	 */
-	private JSONObject getNodeById(JSONObject projectJSON, String nodeId) {
+	public static JSONObject getNodeById(JSONObject projectJSON, String nodeId) {
 		JSONObject node = null;
 		
 		if(nodeId != null && !nodeId.equals("")) {
@@ -1720,7 +1463,7 @@ public class FileManager extends AbstractController {
 	 * 236-1290473717307
 	 * @param projectUrl
 	 */
-	private void renameFolder(String projectUrl) {
+	public static void renameFolder(String projectUrl) {
 		//get a handle on the folder
 		File originalFolder = new File(projectUrl);
 		
@@ -1741,7 +1484,7 @@ public class FileManager extends AbstractController {
 	 * @param targetLocation the folder we want to copy the files to
 	 * @throws IOException
 	 */
-	private void copyFile(File sourceLocation, File targetLocation) throws IOException {
+	public static void copyFile(File sourceLocation, File targetLocation) throws IOException {
         if (sourceLocation.isDirectory()) {
         	//current file is a folder
         	
@@ -1786,7 +1529,7 @@ public class FileManager extends AbstractController {
 	 * An object to hold information for a node. A node can be a sequence
 	 * or a node. 
 	 */
-	public class NodeInfo {
+	public static class NodeInfo {
 		//the step number as seen in the vle
 		private String stepNumber;
 		
@@ -1857,7 +1600,7 @@ public class FileManager extends AbstractController {
 	 * e.g.
 	 * 1.1, 1.2, 1.3, 2.1, 3.1, 3.2, etc.
 	 */
-	public class NodeInfoComparator implements Comparator<NodeInfo> {
+	public static class NodeInfoComparator implements Comparator<NodeInfo> {
 		
 		/**
 		 * Compares the NodeInfo objects such that they will be
@@ -2007,7 +1750,7 @@ public class FileManager extends AbstractController {
 	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/236/wise4.project.json
 	 * @return the JSONObject for the project
 	 */
-	private JSONObject getProjectJSONObject(String projectUrl) {
+	public static JSONObject getProjectJSONObject(String projectUrl) {
 		JSONObject projectJSONObject = null;
 		
 		//get the project file
@@ -2038,7 +1781,7 @@ public class FileManager extends AbstractController {
 	 * @param fileNameToNodeId a HashMap that stores filename to node id
 	 * @param nodeIdToStepNumber a HashMap that stores node id to step number
 	 */
-	private void parseProjectJSONObject(JSONObject projectJSON, 
+	public static void parseProjectJSONObject(JSONObject projectJSON, 
 			HashMap<String, JSONObject> nodeIdToNodeOrSequence,
 			HashMap<String, String> fileNameToNodeId,
 			HashMap<String, String> nodeIdToStepNumber) {
@@ -2100,7 +1843,7 @@ public class FileManager extends AbstractController {
 	 * @param nodeIdToStepNumber the HashMap that we will fill with node id to
 	 * step number
 	 */
-	private void parseNodeStepNumbers(String stepNumber, JSONObject node, HashMap<String, JSONObject> nodeIdToNodeOrSequence, HashMap<String, String> nodeIdToStepNumber) {
+	public static void parseNodeStepNumbers(String stepNumber, JSONObject node, HashMap<String, JSONObject> nodeIdToNodeOrSequence, HashMap<String, String> nodeIdToStepNumber) {
 		
 		try {
 			//get the node type
@@ -2180,7 +1923,7 @@ public class FileManager extends AbstractController {
 	 * @param parentProjectNode the JSONObject for the parent project
 	 * @param childProjectNode the JSONObject for the child project
 	 */
-	private void compareSequences(JSONObject parentProjectNode, JSONObject childProjectNode, 
+	public static void compareSequences(JSONObject parentProjectNode, JSONObject childProjectNode, 
 			HashMap<String, JSONObject> parentNodeIdToNodeOrSequence, HashMap<String, JSONObject> childNodeIdToNodeOrSequence, 
 			HashMap<String, String> parentNodeIdToStepNumber, HashMap<String, String> childNodeIdToStepNumber,
 			HashMap<String, String> nodeIdToStatus, HashMap<String, String> nodeIdToModified) {
@@ -2375,7 +2118,7 @@ public class FileManager extends AbstractController {
 	 * @param nodeIds a TreeSet to store the node ids in
 	 * @param nodeIdsArray a JSONArray of node id strings
 	 */
-	private void extractNodeIdsFromJSONArray(TreeSet<String> nodeIds, JSONArray nodeIdsArray) {
+	public static void extractNodeIdsFromJSONArray(TreeSet<String> nodeIds, JSONArray nodeIdsArray) {
 		//loop through all the node ids in the array
 		for(int x=0; x<nodeIdsArray.length(); x++) {
 			try {
@@ -2397,7 +2140,7 @@ public class FileManager extends AbstractController {
 	 * @param nodeIds a TreeSet to store the node ids in
 	 * @param sequenceNodes a JSONArray of sequence JSONObjects
 	 */
-	private void extractNodeIdsFromSequenceNodeJSONArray(TreeSet<String> nodeIds, JSONArray sequenceNodes) {
+	public static void extractNodeIdsFromSequenceNodeJSONArray(TreeSet<String> nodeIds, JSONArray sequenceNodes) {
 		//loop through all the sequences
 		for(int x=0; x<sequenceNodes.length(); x++) {
 			try {
@@ -2425,7 +2168,7 @@ public class FileManager extends AbstractController {
 	 * @param targetLocation the folder of the child project
 	 * @throws IOException
 	 */
-	private void compareFolder(File sourceLocation, File targetLocation, 
+	public static void compareFolder(File sourceLocation, File targetLocation, 
 			HashMap<String, String> parentFileNameToNodeId, HashMap<String, String> htmlToHt,
 			HashMap<String, String> nodeIdToModified) throws IOException {
         if(sourceLocation.exists() && targetLocation.exists()) {
@@ -2545,7 +2288,7 @@ public class FileManager extends AbstractController {
 	 * @param targetLocation the file or folder from the child project
 	 * @throws IOException
 	 */
-	private void compareFolderHelper(File sourceLocation, File targetLocation, 
+	public static void compareFolderHelper(File sourceLocation, File targetLocation, 
 			HashMap<String, String> parentFileNameToNodeId, HashMap<String, String> htmlToHt,
 			HashMap<String, String> nodeIdToModified) throws IOException {
 		//used to retrieve all the file names
@@ -2586,7 +2329,7 @@ public class FileManager extends AbstractController {
 	 * @param fileNameCollection collection that holds all the file names
 	 * @param fileNames an array of file names
 	 */
-	private void addFileNamesToCollection(TreeSet<String> fileNameCollection, String[] fileNames) {
+	public static void addFileNamesToCollection(TreeSet<String> fileNameCollection, String[] fileNames) {
 		//loop through all the file names
 		for (int i=0; i<fileNames.length; i++) {
 			//add the file name to the collection
@@ -2599,33 +2342,27 @@ public class FileManager extends AbstractController {
 	 * @param request
 	 * @param response
 	 */
-	private void getProjectUsageAndMax(HttpServletRequest request, HttpServletResponse response) {
-		//get the path to the folder
-		String path = (String) request.getAttribute("projectFolderPath");
+	public static String getProjectUsageAndMax(String path, Long projectMaxTotalAssetsSizeLong) {
+		String result = "";
 		
 		//get the amount of disk space the project folder uses
-		String sizeUsed = this.getProjectSize(path);
+		String sizeUsed = getProjectSize(path);
 		
-		//get the max project size for this project if it was separately specified for this project
-		Long projectMaxTotalAssetsSizeLong = (Long) request.getAttribute("projectMaxTotalAssetsSize");
 		String projectMaxTotalAssetsSizeString = null;
 		if (projectMaxTotalAssetsSizeLong != null) {
 			//get the max project size as a string
 			projectMaxTotalAssetsSizeString = projectMaxTotalAssetsSizeLong.toString();
 		} else {
 			//get the global max project size value, we will default to 15MB if none is provided in the wise.properties file
-			projectMaxTotalAssetsSizeString = vleProperties.getProperty("project_max_total_assets_size", "15728640");
+			projectMaxTotalAssetsSizeString = wiseProperties.getProperty("project_max_total_assets_size", "15728640");
 		}
 		
 		//get the project folder size usage as a fraction
 		String usageString = sizeUsed + "/" + projectMaxTotalAssetsSizeString;
 		
-		try {
-			//write the usage string to the response
-			response.getWriter().write(usageString);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		result = usageString;
+		
+		return result;
 	}
 	
 	/**
@@ -2634,7 +2371,7 @@ public class FileManager extends AbstractController {
 	 * @param path the path to the project folder
 	 * @return the size of the folder in bytes as a string
 	 */
-	private String getProjectSize(String path){
+	public static String getProjectSize(String path){
 		if(path==null){
 			return "No project path specified";
 		} else {

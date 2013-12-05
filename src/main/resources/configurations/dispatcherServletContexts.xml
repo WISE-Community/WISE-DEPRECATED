@@ -1000,9 +1000,6 @@
 	<bean id="vleGetStatisticsController" class="org.wise.vle.web.VLEGetStatisticsController">
 	    <property name="vleService" ref="vleService" />
 	</bean>
-	
-	<bean id="fileManagerController" class="org.wise.vle.utils.FileManager">
-	</bean>
 		
 	<bean id="bridgeController"
 		class="org.wise.portal.presentation.web.controllers.BridgeController">
@@ -1287,7 +1284,6 @@
 				/studentStatus.html=studentStatusController
 				/runStatus.html=runStatusController
 				/ideaBasket.html=ideaBasketController
-				/vle/filemanager.html=fileManagerController
 				/bridge/**/*.html=bridgeController
 				/errors/outsideerror.html=outsideErrorController
 				/authorize.html=credentialManager

@@ -38,7 +38,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,6 +67,8 @@ import org.wise.portal.presentation.web.listeners.PasSessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.vle.utils.FileManager;
+import org.wise.vle.utils.SecurityUtils;
 
 /**
  * Controller for users with author privileges to author projects
@@ -144,73 +145,381 @@ public class AuthorProjectController extends AbstractController {
 						return new ModelAndView(new RedirectView("accessdenied.html"));
 					}
 
-					//command is review update project or to update project
-					if("reviewUpdateProject".equals(command) || "updateProject".equals(command)) {
-						//get the curriculum base directory
-						String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-
-						//get the project url
-						String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-
-						//get the parent project id
-						Long parentProjectId = project.getParentProjectId();
-
-						//get the parent project
-						Project parentProject = projectService.getById(parentProjectId);
-
-						//get the parent project url
-						String parentProjectUrl = (String) parentProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-
-						//set the attributes so that FileManager.java can access these values in the vlewrapper
-						request.setAttribute("curriculumBaseDir", curriculumBaseDir);
-						request.setAttribute("projectUrl", projectUrl);
-						request.setAttribute("parentProjectUrl", parentProjectUrl);
-					} else if("importSteps".equals(command)) {
-						//get the curriculum base directory
-						String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-
-						//get the project url
-						String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-
-						//set the attributes so that FileManager.java can access these values in the vlewrapper
-						request.setAttribute("curriculumBaseDir", curriculumBaseDir);
-						request.setAttribute("projectUrl", projectUrl);
-
-						//get the from project id string
-						String fromProjectIdStr = request.getParameter("fromProjectId");
-
-						if(fromProjectIdStr != null) {
-							try {
-								//get the from project id
-								long fromProjectId = Long.parseLong(fromProjectIdStr);
-
-								//get the from project
-								Project fromProject = projectService.getById(fromProjectId);
-
-								//get the from project url e.g. /172/wise4.project.json
-								String fromProjectUrl = (String) fromProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-
-								//set the from project url into the request so we can have access to it in other controllers
-								request.setAttribute("fromProjectUrl", fromProjectUrl);
-							} catch(Exception e) {
-								e.printStackTrace();
-							}
-						}
-					}
-
-					//add any necessary attributes to the request object
-					addRequestAttributeForCommand(request, project, command, forward);
-
 					CredentialManager.setRequestCredentials(request, user);
 					
 					if(forward.equals("filemanager")) {
-						AbstractController fileManager = (AbstractController) this.getApplicationContext().getBean("fileManagerController");
-						fileManager.handleRequest(request, response);						
+						if(command!=null){
+							String pathAllowedToAccess = CredentialManager.getAllowedPathAccess(request);
+							
+							if(command.equals("createProject")){
+								String projectName = request.getParameter("projectName");
+								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+								
+								String result = "";
+								
+								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, curriculumBaseDir)) {
+									result = FileManager.createProject(curriculumBaseDir, projectName);
+								} else {
+									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+									result = "unauthorized";
+								}
+								
+								response.getWriter().write(result);
+							} else if(command.equals("projectList")){
+								String projectPaths = request.getParameter("projectPaths");
+								String projectExt = ".project.json";
+								
+								String result = FileManager.getProjectList(projectPaths, projectExt);
+								
+								response.getWriter().write(result);
+							} else if(command.equals("retrieveFile")){
+								//get the file name
+								String fileName = request.getParameter("fileName");
+
+								//get the full file path
+								String filePath = getFilePath(project, fileName);
+								
+								String result = "";
+								
+								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, filePath)) {
+									result = FileManager.retrieveFile(filePath);
+								} else {
+									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+									result = "unauthorized";
+								}
+								
+								response.getWriter().write(result);
+							} else if(command.equals("updateFile")){
+								/*
+								 * get the project folder path
+								 * e.g.
+								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
+								 */
+								String projectFolderPath = getProjectFolderPath(project);
+								
+								//get the file name
+								String fileName = request.getParameter("fileName");
+								
+								//get the content to save to the file
+								String data = request.getParameter("data");
+								
+								String result = "";
+								
+								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
+									result = FileManager.updateFile(projectFolderPath, fileName, data);									
+								} else {
+									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+									result = "unauthorized";
+								}
+								
+								response.getWriter().write(result);
+							} else if(command.equals("createNode")){
+								/*
+								 * get the project file path
+								 * e.g.
+								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
+								 */
+								String projectPath = getProjectFilePath(project);
+								String nodeClass = request.getParameter("nodeClass");
+								String title = request.getParameter("title");
+								String type = request.getParameter("type");
+								
+								//get the string that contains an array of node template params
+								String nodeTemplateParams = request.getParameter("nodeTemplateParams");
+								
+								String result = "";
+								
+								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectPath)) {
+									result = FileManager.createNode(projectPath, nodeClass, title, type, nodeTemplateParams);
+								} else {
+									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+									result = "not authorized";
+								}
+								
+								response.getWriter().write(result);
+							} else if(command.equals("createSequence")){
+								/*
+								 * get the project file name
+								 * e.g.
+								 * /wise4.project.json
+								 */
+								String projectFileName = request.getParameter("projectFileName");
+								String name = request.getParameter("name");
+								String id = request.getParameter("id");
+								
+								/*
+								 * get the project folder path
+								 * e.g.
+								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
+								 */
+								String projectFolderPath = getProjectFolderPath(project);
+								
+								String result = "";
+								
+								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
+									result = FileManager.createSequence(projectFileName, name, id, projectFolderPath);
+								} else {
+									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+									result = "not authorized";
+								}
+								
+								response.getWriter().write(result);
+							} else if(command.equals("removeFile")){
+								/*
+								 * get the project folder path
+								 * e.g.
+								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
+								 */
+								String projectFolderPath = getProjectFolderPath(project);
+								
+								/*
+								 * get the file name
+								 * node_1.or
+								 */
+								String fileName = request.getParameter("fileName");
+								
+								String result = "";
+
+								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
+									result = FileManager.removeFile(projectFolderPath, fileName);
+								} else {
+									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+									result = "unauthorized";
+								}
+								
+								response.getWriter().write(result);
+							} else if(command.equals("copyNode")){
+								//get the parameters for the node
+								String data = request.getParameter("data");
+								String type = request.getParameter("type");
+								String title = request.getParameter("title");
+								String nodeClass = request.getParameter("nodeClass");
+								String contentFile = request.getParameter("contentFile");
+								
+								/*
+								 * get the file name
+								 * e.g.
+								 * /node_1.or
+								 */
+								String projectFileName = request.getParameter("projectFileName");
+								
+								/*
+								 * get the project folder path
+								 * e.g.
+								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
+								 */
+								String projectFolderPath = getProjectFolderPath(project);
+								
+								String result = "";
+								
+								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)){
+									result = FileManager.copyNode(projectFolderPath, projectFileName, data, type, title, nodeClass, contentFile);									
+								} else {
+									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+								}
+								
+								response.getWriter().write(result);
+							} else if(command.equals("createSequenceFromJSON")){
+								/*
+								 * get the project file name
+								 * e.g.
+								 * /wise4.project.json
+								 */
+								String projectFileName = request.getParameter("projectFileName");
+								
+								//get the json for the new sequence we are going to add to the project
+								String data = request.getParameter("data");
+								
+								/*
+								 * get the project folder path
+								 * e.g.
+								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
+								 */
+								String projectFolderPath = getProjectFolderPath(project);
+								
+								String result = "";
+								
+								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)){
+									result = FileManager.createSequenceFromJSON(projectFolderPath, projectFileName, data);
+								} else {
+									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+								}
+								
+								response.getWriter().write(result);
+							} else if(command.equals("getScripts")){
+								String data = request.getParameter("param1");
+								
+								ServletContext context = this.getServletContext();
+								
+								String result = FileManager.getScripts(context, data);
+								
+								response.getWriter().write(result);
+							} else if(command.equals("copyProject")){
+								/*
+								 * get the project folder path
+								 * e.g.
+								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
+								 */
+								String projectFolderPath = getProjectFolderPath(project);
+								
+								/*
+								 * get the curriculum base
+								 * e.g.
+								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
+								 */
+								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+								
+								String result = "";
+								
+								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
+									result = FileManager.copyProject(curriculumBaseDir, projectFolderPath);									
+								} else {
+									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+									result = "unauthorized";
+								}
+								
+								response.getWriter().write(result);
+							} else if(command.equals("createFile")){
+								/*
+								 * get the file name
+								 * e.g.
+								 * /node_1.or
+								 */
+								String fileName = request.getParameter("path");
+								String data = request.getParameter("data");
+								
+								/*
+								 * get the project folder path
+								 * e.g.
+								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
+								 */
+								String projectFolderPath = getProjectFolderPath(project);
+								
+								String result = "";
+								
+								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
+									result = FileManager.createFile(projectFolderPath, fileName, data);
+								} else {
+									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+								}
+								
+								response.getWriter().write(result);
+							} else if(command.equals("reviewUpdateProject")) {
+								//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
+								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+								
+								//get the relative child project url e.g. /236/wise4.project.json
+								String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+								
+								//get the parent project id
+								Long parentProjectId = project.getParentProjectId();
+
+								//get the parent project
+								Project parentProject = projectService.getById(parentProjectId);
+								
+								//get the relative parent project url e.g. /235/wise4.project.json
+								String parentProjectUrl = (String) parentProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+								
+								String result = FileManager.reviewUpdateProject(curriculumBaseDir, parentProjectUrl, projectUrl);
+								
+								response.getWriter().write(result);
+							} else if(command.equals("updateProject")) {
+								//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
+								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+								
+								//get the relative child project url e.g. /236/wise4.project.json
+								String childProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+								
+								//get the child project folder path
+								String childProjectFolderPath = getProjectFolderPath(project);
+								
+								//get the parent project id
+								Long parentProjectId = project.getParentProjectId();
+
+								//get the parent project
+								Project parentProject = projectService.getById(parentProjectId);
+								
+								//get the relative parent project url e.g. /235/wise4.project.json
+								String parentProjectUrl = (String) parentProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+								
+								String result = "";
+								
+								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, childProjectFolderPath)) {
+									result = FileManager.updateProject(curriculumBaseDir, parentProjectUrl, childProjectUrl);									
+								} else {
+									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+									result = "unauthorized";
+								}
+								
+								response.getWriter().write(result);
+							} else if(command.equals("importSteps")) {
+								//this.importSteps(request, response);
+								
+								//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
+								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+								
+								//get the relative child project url e.g. /172/wise4.project.json
+								String fromProjectUrl = "";
+								
+								//get the from project id string
+								String fromProjectIdStr = request.getParameter("fromProjectId");
+
+								if(fromProjectIdStr != null) {
+									try {
+										//get the from project id
+										long fromProjectId = Long.parseLong(fromProjectIdStr);
+
+										//get the from project
+										Project fromProject = projectService.getById(fromProjectId);
+
+										//get the from project url e.g. /172/wise4.project.json
+										fromProjectUrl = (String) fromProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+									} catch(Exception e) {
+										e.printStackTrace();
+									}
+								}
+								
+								//get the relative child project url e.g. /236/wise4.project.json
+								String toProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+								
+								//get the child project folder path
+								String toProjectFolderPath = getProjectFolderPath(project);
+								
+								//get all the files we need to import
+								String nodeIds = (String) request.getParameter("nodeIds");
+								
+								String result = "";
+								
+								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, toProjectFolderPath)) {
+									result = FileManager.importSteps(curriculumBaseDir, fromProjectUrl, toProjectUrl, nodeIds);									
+								} else {
+									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+									result = "unauthorized";
+								}
+								
+								response.getWriter().write(result);
+							} else if(command.equals("getProjectUsageAndMax")) {
+								//get the path to the folder
+								String path = getProjectFolderPath(project);
+								
+								//get the max project size for this project if it was separately specified for this project
+								Long projectMaxTotalAssetsSizeLong = project.getMaxTotalAssetsSize();
+								
+								String result = FileManager.getProjectUsageAndMax(path, projectMaxTotalAssetsSizeLong);
+								
+								response.getWriter().write(result);
+							} else {
+								/* we don't understand this command */
+								response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+							}
+						} else {
+							/* no command was provided */
+							response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+						}
 					} else if(forward.equals("assetmanager")) {
 						AbstractController assetManager = (AbstractController) this.getApplicationContext().getBean("assetManagerController");
 						assetManager.handleRequest(request, response);
 					}
-					 //this.getServletContext().getRequestDispatcher("/vle/" + forward + ".html").forward(request, response);
 
 					if("updateFile".equals(command)) {
 						//we have updated a file in a project so we will update the project edited timestamp
@@ -298,61 +607,6 @@ public class AuthorProjectController extends AbstractController {
 		}
 
 		return (ModelAndView) projectService.authorProject(params);
-	}
-
-	/**
-	 * Add any necessary attributes to the request object
-	 * @param request the request object
-	 * @param project the project object
-	 * @param command the command e.g. "retrieveFile"
-	 * @param forward the service to forward to e.g. "filemanager"
-	 */
-	private void addRequestAttributeForCommand(HttpServletRequest request, Project project, String command, String forward) {
-		if("retrieveFile".equals(command)) {
-			//get the file name
-			String fileName = request.getParameter("fileName");
-
-			//get the full file path
-			String filePath = getFilePath(project, fileName);
-			request.setAttribute("filePath", filePath);
-		} else if("createProject".equals(command)) {
-			//get the full curriculum base dir
-			String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-			request.setAttribute("curriculumBaseDir", curriculumBaseDir);
-		} else if("createNode".equals(command)) {
-			//get the full project file path
-			String projectFilePath = getProjectFilePath(project);
-			request.setAttribute("projectFilePath", projectFilePath);
-		} else if("getProjectFile".equals(command)) {
-			//get the full project file path
-			String projectFilePath = getProjectFilePath(project);
-			request.setAttribute("filePath", projectFilePath);
-		} else if("copyProject".equals(command)) {
-			//get the full project folder path
-			String projectFolderPath = getProjectFolderPath(project);
-			request.setAttribute("projectFolderPath", projectFolderPath);
-
-			//get the full curriculum base dir
-			String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-			request.setAttribute("curriculumBaseDir", curriculumBaseDir);
-		} else if("updateFile".equals(command) ||
-				"copyNode".equals(command) ||
-				"createSequence".equals(command) ||
-				"createSequenceFromJSON".equals(command) ||
-				"createFile".equals(command) ||
-				"removeFile".equals(command)||
-				"assetList".equals(command) || 
-				"getSize".equals(command) || 
-				"assetmanager".equals(forward) ||
-				"filemanager".equals(forward)) {
-			//get the full project folder path
-			String projectFolderPath = getProjectFolderPath(project);
-			request.setAttribute("projectFolderPath", projectFolderPath);
-
-			// get project asset max size (if overridden by admin) and add it to request
-			Long maxTotalAssetsSize = project.getMaxTotalAssetsSize();
-			request.setAttribute("projectMaxTotalAssetsSize", maxTotalAssetsSize);
-		}
 	}
 
 	/**
