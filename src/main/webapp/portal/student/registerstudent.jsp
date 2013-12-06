@@ -45,11 +45,11 @@ function findPeriods() {
 		  	// or "1,2,3,4,5,...", a comma-separated values of period names
 		  	var responseText = o;
 		  	if (responseText == "not found" || responseText.length < 2) {
-		  		alert("<spring:message code='student.addproject.invalidAccessCode'/>");
+		  		alert("<spring:message code='student.addproject.invalidAccessCode' htmlEscape='false' />");
 		  	} else {
 		  		isRunCodeValid = true;
 			  	var op = document.createElement('option');
-			  	op.appendChild(document.createTextNode("<spring:message code='student.addproject.selectClassPeriod'/>"));
+			  	op.appendChild(document.createTextNode("<spring:message code='student.addproject.selectClassPeriod' htmlEscape='false' />"));
 			  	op.value = 'none';
   				periodSelect.appendChild(op);
 			  	

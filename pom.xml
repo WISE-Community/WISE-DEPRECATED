@@ -18,7 +18,7 @@
 
 <project>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.sf.sail</groupId>
+	<groupId>org.wise</groupId>
 	<artifactId>wise</artifactId>
 	<packaging>war</packaging>
 	<name>Web-based Inquiry Science Environment</name>

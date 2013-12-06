@@ -44,7 +44,7 @@ import org.wise.portal.spring.SpringConfiguration;
 public class DBInitExporter {
 	
 	static String springConfigClassname = "org.wise.portal.spring.impl.SpringConfigurationImpl";
-	static String outputFilename = "src/main/resources/wise-db-init.sql";
+	static String outputFilename = "src/main/resources/wise_db_init.sql";
     /**
      * @param args
      */
@@ -94,9 +94,11 @@ public class DBInitExporter {
             
     		String aLine = null;
     		while ((aLine = initialDataFileReader.readLine()) != null) {
-    			// Process each line and add append to output file
-    			outputFileWriter.write(aLine);
-    			outputFileWriter.newLine();
+    			// Process each line and add append to output file, unless it's a hsqldb-specific line
+    			if (!aLine.contains("SET DATABASE REFERENTIAL INTEGRITY")) {
+    				outputFileWriter.write(aLine);
+    				outputFileWriter.newLine();
+    			}
     		}
      
     		// close the buffer reader
