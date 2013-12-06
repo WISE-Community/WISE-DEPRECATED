@@ -36,10 +36,10 @@
 			// o.responseText can be either "not found" (when runcode doesn't point to an existing run
 			// or "1,2,3,4,5,...", a comma-separated values of period names
 			if (responseText == "not found" || responseText.length < 2) {
-				alert("<spring:message code="student.addproject.invalidAccessCode" />");
+				alert("<spring:message code="student.addproject.invalidAccessCode" htmlEscape="false" />");
 			} else {
 				var op = document.createElement('option');
-				op.appendChild(document.createTextNode("<spring:message code="student.addproject.selectClassPeriod" />"));
+				op.appendChild(document.createTextNode("<spring:message code="student.addproject.selectClassPeriod" htmlEscape="false" />"));
 				op.value = 'none';
 				periodSelect.appendChild(op);
 
@@ -58,7 +58,7 @@
 		};
 
 		var failureCallback = function(responseText) {
-			alert('<spring:message code="student.addproject.serverError" />');
+			alert('<spring:message code="student.addproject.serverError" htmlEscape="false" />');
 		};
 		var runcode = document.getElementById("runCode_part1").value;
 		if (runcode != null && runcode != "") {
@@ -76,13 +76,13 @@
 		var period = document.getElementById("runCode_part2").value;
 
 		if (period != null && period == "none") {
-			alert('<spring:message code="student.addproject.selectClassPeriod" />');
+			alert('<spring:message code="student.addproject.selectClassPeriod" htmlEscape="false" />');
 		} else if (runcode != null && period != null && period != "none") {
 			var projectCode = document.getElementById("projectcode");
 			projectCode.value = runcode + "-" + period;
 			document.getElementById("addproject").submit();
 		} else {
-			alert('<spring:message code="student.addproject.invalidAccessCode" />');
+			alert('<spring:message code="student.addproject.invalidAccessCode" htmlEscape="false"/>');
 		}
 	}
 

@@ -43,7 +43,7 @@ $(document).ready(function() {
 			resizable:false,
 			width:600,
 			height:425,
-			title: '<spring:message code="student.addproject.title"/>',
+			title: '<spring:message code="student.addproject.title" htmlEscape="false" />',
 			buttons: {
 				Cancel: function(){ $(this).dialog('destroy'); }
 			}
