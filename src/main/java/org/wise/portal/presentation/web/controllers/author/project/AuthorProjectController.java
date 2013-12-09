@@ -27,10 +27,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -38,9 +40,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
@@ -67,6 +73,7 @@ import org.wise.portal.presentation.web.listeners.PasSessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.vle.utils.AssetManager;
 import org.wise.vle.utils.FileManager;
 import org.wise.vle.utils.SecurityUtils;
 
@@ -124,8 +131,6 @@ public class AuthorProjectController extends AbstractController {
 
 		/* catch forwarding requests, authenticate and forward request upon successful authentication */
 		if(forward != null && !forward.equals("")){
-			//ServletContext servletContext = this.getServletContext().getContext("/vlewrapper");
-
 			//get the command
 			String command = request.getParameter("command");
 
@@ -177,7 +182,7 @@ public class AuthorProjectController extends AbstractController {
 								String fileName = request.getParameter("fileName");
 
 								//get the full file path
-								String filePath = getFilePath(project, fileName);
+								String filePath = FileManager.getFilePath(project, fileName);
 								
 								String result = "";
 								
@@ -195,7 +200,7 @@ public class AuthorProjectController extends AbstractController {
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
-								String projectFolderPath = getProjectFolderPath(project);
+								String projectFolderPath = FileManager.getProjectFolderPath(project);
 								
 								//get the file name
 								String fileName = request.getParameter("fileName");
@@ -219,7 +224,7 @@ public class AuthorProjectController extends AbstractController {
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
 								 */
-								String projectPath = getProjectFilePath(project);
+								String projectPath = FileManager.getProjectFilePath(project);
 								String nodeClass = request.getParameter("nodeClass");
 								String title = request.getParameter("title");
 								String type = request.getParameter("type");
@@ -252,7 +257,7 @@ public class AuthorProjectController extends AbstractController {
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
-								String projectFolderPath = getProjectFolderPath(project);
+								String projectFolderPath = FileManager.getProjectFolderPath(project);
 								
 								String result = "";
 								
@@ -270,7 +275,7 @@ public class AuthorProjectController extends AbstractController {
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
-								String projectFolderPath = getProjectFolderPath(project);
+								String projectFolderPath = FileManager.getProjectFolderPath(project);
 								
 								/*
 								 * get the file name
@@ -308,7 +313,7 @@ public class AuthorProjectController extends AbstractController {
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
-								String projectFolderPath = getProjectFolderPath(project);
+								String projectFolderPath = FileManager.getProjectFolderPath(project);
 								
 								String result = "";
 								
@@ -335,7 +340,7 @@ public class AuthorProjectController extends AbstractController {
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
-								String projectFolderPath = getProjectFolderPath(project);
+								String projectFolderPath = FileManager.getProjectFolderPath(project);
 								
 								String result = "";
 								
@@ -360,7 +365,7 @@ public class AuthorProjectController extends AbstractController {
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
-								String projectFolderPath = getProjectFolderPath(project);
+								String projectFolderPath = FileManager.getProjectFolderPath(project);
 								
 								/*
 								 * get the curriculum base
@@ -393,7 +398,7 @@ public class AuthorProjectController extends AbstractController {
 								 * e.g.
 								 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
 								 */
-								String projectFolderPath = getProjectFolderPath(project);
+								String projectFolderPath = FileManager.getProjectFolderPath(project);
 								
 								String result = "";
 								
@@ -431,7 +436,7 @@ public class AuthorProjectController extends AbstractController {
 								String childProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 								
 								//get the child project folder path
-								String childProjectFolderPath = getProjectFolderPath(project);
+								String childProjectFolderPath = FileManager.getProjectFolderPath(project);
 								
 								//get the parent project id
 								Long parentProjectId = project.getParentProjectId();
@@ -453,8 +458,6 @@ public class AuthorProjectController extends AbstractController {
 								
 								response.getWriter().write(result);
 							} else if(command.equals("importSteps")) {
-								//this.importSteps(request, response);
-								
 								//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
 								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 								
@@ -483,7 +486,7 @@ public class AuthorProjectController extends AbstractController {
 								String toProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 								
 								//get the child project folder path
-								String toProjectFolderPath = getProjectFolderPath(project);
+								String toProjectFolderPath = FileManager.getProjectFolderPath(project);
 								
 								//get all the files we need to import
 								String nodeIds = (String) request.getParameter("nodeIds");
@@ -500,7 +503,7 @@ public class AuthorProjectController extends AbstractController {
 								response.getWriter().write(result);
 							} else if(command.equals("getProjectUsageAndMax")) {
 								//get the path to the folder
-								String path = getProjectFolderPath(project);
+								String path = FileManager.getProjectFolderPath(project);
 								
 								//get the max project size for this project if it was separately specified for this project
 								Long projectMaxTotalAssetsSizeLong = project.getMaxTotalAssetsSize();
@@ -517,8 +520,87 @@ public class AuthorProjectController extends AbstractController {
 							response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 						}
 					} else if(forward.equals("assetmanager")) {
-						AbstractController assetManager = (AbstractController) this.getApplicationContext().getBean("assetManagerController");
-						assetManager.handleRequest(request, response);
+
+						if(command == null && ServletFileUpload.isMultipartContent(request)) {
+							//user is uploading a file
+							
+							ServletFileUpload uploader = new ServletFileUpload(new DiskFileItemFactory());
+							List<?> fileList = null;
+							try {
+								//get a list of the files the user is uploading
+								fileList = uploader.parseRequest(request);
+							} catch (FileUploadException e) {
+								e.printStackTrace();
+							}
+							
+							//get the project folder path
+							String projectFolderPath = FileManager.getProjectFolderPath(project);
+							
+							//get the folder name that will contain the assets
+							String dirName = "assets";
+							String pathToCheckSize = projectFolderPath;
+							
+							//get the max disk space size this project can use
+							Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
+							
+							if(projectMaxTotalAssetsSize == null) {
+								//get the default max project size
+								projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
+							}
+							
+							DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
+							List<String> fileNames = new ArrayList<String>();
+							Map<String,byte[]> fileMap = new TreeMap<String,byte[]>();
+							
+							//get all the file names and files to be uploaded
+							Iterator iter = multiRequest.getFileNames();
+							while(iter.hasNext()){
+								String filename = (String)iter.next();
+								fileNames.add(filename);
+								fileMap.put(filename, multiRequest.getFile(filename).getBytes());
+							}
+							
+							//tell the asset manager to handle the file upload
+							String result = AssetManager.uploadAsset(fileList, fileNames, fileMap, projectFolderPath, dirName, pathToCheckSize, projectMaxTotalAssetsSize);
+							response.getWriter().write(result);
+						} else if(command.equals("remove")) {
+							//get the project folder path
+							String path = FileManager.getProjectFolderPath(project);
+							
+							//get the assets folder name
+							String dirName = "assets";
+							
+							//get the file name that we are going to remove
+							String assetFileName = request.getParameter("asset");
+							
+							//tell the asset manager to remove the file
+							String result = AssetManager.removeAsset(path, dirName, assetFileName);
+							response.getWriter().write(result);
+						} else if(command.equals("getSize")) {
+							//get the project folder path
+							String path = FileManager.getProjectFolderPath(project);
+							
+							//get the assets folder name
+							String dirName = "assets";
+							
+							//tell the asset manager to get the size of the assets folder
+							String result = AssetManager.getSize(path, dirName);
+							response.getWriter().write(result);
+						} else if(command.equals("assetList")) {
+							//get the project folder path
+							String path = FileManager.getProjectFolderPath(project);
+							
+							//get the assets folder name
+							String dirName = "assets";
+							
+							//get the file names for all the assets in the assets folder
+							String assetList = AssetManager.getAssetList(path, dirName);
+							response.getWriter().write(assetList);
+						} else if(command.equals("studentAssetCopyForReference")) {
+							//AssetManager.copyAssetForReference();
+						} else {
+							response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+						}
 					}
 
 					if("updateFile".equals(command)) {
@@ -1403,47 +1485,6 @@ public class AuthorProjectController extends AbstractController {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Get the full project file path
-	 * @param project the project object
-	 * @return the full project file path
-	 * e.g.
-	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
-	 */
-	private String getProjectFilePath(Project project) {
-		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-		String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-		String projectFilePath = curriculumBaseDir + projectUrl;
-		return projectFilePath;
-	}
-
-	/**
-	 * Get the full file path given the project object and a file name
-	 * @param project the project object
-	 * @param fileName the file name
-	 * @return the full file path
-	 * e.g.
-	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/node_2.or
-	 */
-	private String getFilePath(Project project, String fileName) {
-		String projectFolderPath = getProjectFolderPath(project);
-		String filePath = projectFolderPath + fileName;
-		return filePath;
-	}
-
-	/**
-	 * Get the full project folder path given the project object
-	 * @param project the project object
-	 * @return the full project folder path
-	 * e.g.
-	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
-	 */
-	private String getProjectFolderPath(Project project) {
-		String projectFilePath = getProjectFilePath(project);
-		String projectFolderPath = projectFilePath.substring(0, projectFilePath.lastIndexOf("/"));
-		return projectFolderPath;
 	}
 
 	/**

@@ -577,7 +577,7 @@ View.prototype.viewStudentAssets = function(params) {
 		);		
 	}
 
-	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'assetList'}, function(txt,xml,obj){studentAssetsPopulateOptions(txt,obj);}, this);	
+	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'assetList', type: 'studentAssetManager'}, function(txt,xml,obj){studentAssetsPopulateOptions(txt,obj);}, this);	
 };
 
 /**
@@ -597,7 +597,7 @@ View.prototype.checkStudentAssetSizeLimit = function(){
 			$('#sizeDiv').html(o.getI18NStringWithParams("student_assets_student_usage_message",[studentUsage,maxUsageLimit]));
 		} 
 	};
-	this.connectionManager.request('GET', 1,  this.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'getSize'}, callback, this);
+	this.connectionManager.request('GET', 1,  this.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'getSize', type: 'studentAssetManager'}, callback, this);
 };
 
 /**
@@ -636,7 +636,7 @@ View.prototype.studentAssetSubmitUpload = function() {
 			form.appendChild(createElement(document,'input',{type:'hidden', name:'type', value:'studentAssetManager'}));			
 			form.appendChild(createElement(document,'input',{type:'hidden', name:'runId', value:this.config.getConfigParam("runId")}));
 			form.appendChild(createElement(document,'input',{type:'hidden', name:'forward', value:'assetmanager'}));
-			form.appendChild(createElement(document,'input',{type:'hidden', name:'cmd', value:'studentAssetUpload'}));
+			form.appendChild(createElement(document,'input',{type:'hidden', name:'command', value:'uploadAsset'}));
 			//form.appendChild(createElement(document,'input',{type:'hidden', name:'projectId', value:view.portalProjectId}));
 
 			/* set up the event and callback when the response comes back to the frame */

@@ -32,6 +32,8 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
+import org.wise.portal.domain.project.Project;
 
 /**
  * Servlet implementation class for Servlet: FileManager
@@ -240,11 +242,9 @@ public class FileManager {
 	}
 	
 	/**
-	 * Given the request for this post, extracts the project path and the 
-	 * filename, reads the data from the file and returns a string of the data
-	 * 
-	 * @param request
-	 * @return String
+	 * Get the text in the file
+	 * @param filePath the file path
+	 * @return the text in the file
 	 * @throws IOException
 	 */
 	public static String retrieveFile(String filePath) throws IOException {
@@ -257,6 +257,15 @@ public class FileManager {
 	 * 
 	 * @param request
 	 * @return String
+	 * @throws IOException
+	 */
+	
+	/**
+	 * Update the contents of a file
+	 * @param projectFolderPath the project folder path
+	 * @param fileName the file name
+	 * @param data the text content to put into the file
+	 * @return the text that specifies whether we were successful or not
 	 * @throws IOException
 	 */
 	public static String updateFile(String projectFolderPath, String fileName, String data) throws IOException {
@@ -275,13 +284,13 @@ public class FileManager {
 	}
 	
 	/**
-	 * Given the request for this post, extracts the new Project name, creates
-	 * the project folder and creates a template project file in that folder
+	 * Creates a project in the curriculum directory
 	 * 
-	 * @param projectName the project name
 	 * @param curriculumBaseDir the curriculum base
 	 * e.g.
 	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
+	 * 
+	 * @param projectName the project name
 	 * 
 	 * @return int
 	 * @throws IOException
@@ -343,6 +352,17 @@ public class FileManager {
 	 * 
 	 * @param request
 	 * @return String
+	 */
+	/**
+	 * Creates a node and adds it to the project
+	 * @param projectPath the project path
+	 * @param nodeClass the class for the node
+	 * @param title the title of the step
+	 * @param type the type of step
+	 * @param nodeTemplateParams a JSONArray string that specifies what files to create
+	 * @return the node name
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	public static String createNode(String projectPath, String nodeClass, String title, String type, String nodeTemplateParams) throws IOException, ServletException{
 		/*
@@ -560,8 +580,8 @@ public class FileManager {
 	 * file system. Returns true if operation is successful, otherwise throws
 	 * <code>IOException</code>
 	 * 
-	 * @param project
-	 * @param template
+	 * @param parent the project file
+	 * @param node the node to add to the project
 	 * @return boolean
 	 * @throws IOException
 	 */
@@ -586,6 +606,15 @@ public class FileManager {
 	 * 
 	 * @param request
 	 * @return String
+	 * @throws IOException
+	 */
+	/**
+	 * Create a sequence in the project
+	 * @param projectFileName the project file name
+	 * @param name the name of the sequence to create
+	 * @param id the id of the sequence to create
+	 * @param projectFolderPath the path to the project folder
+	 * @return the id of the sequence
 	 * @throws IOException
 	 */
 	public static String createSequence(String projectFileName, String name, String id, String projectFolderPath) throws IOException {
@@ -628,13 +657,10 @@ public class FileManager {
 	}
 	
 	/**
-	 * Given a <code>HttpServletRequest</code> request with the parameters: 
-	 * param1=fullpath including filename and param2=data to write to file, 
-	 * creates the file if it does not already exists and writes the data to that file.
-	 * NOTE: I don't think this is used anymore since it was used to create
-	 * metadata files in the project but we now store metadata in the db.
-	 * step files are created in createNode and do not use this function.
-	 * @param <code>HttpServletRequest</code> request
+	 * Create a file in the specified folder and put data in the file
+	 * @param projectFolderPath the project folder path
+	 * @param fileName the file name
+	 * @param data the data to put in the file
 	 */
 	public static String createFile(String projectFolderPath, String fileName, String data) throws ServletException, IOException{
 		String result = "";
@@ -652,11 +678,11 @@ public class FileManager {
 	}
 	
 	/**
-	 * Given a <code>HttpServletRequest</code> request with params param1 (project path)
-	 * and param2 (filename), attempts to remove the specified file.
+	 * Remove a file from a project folder
 	 * 
-	 * @param request
-	 * @return string
+	 * @param projectFolderPath the project folder path
+	 * @param fileName the file name to remove
+	 * @return whether it was a success or failure
 	 * @throws IOException
 	 */
 	public static String removeFile(String projectFolderPath, String fileName) throws IOException{
@@ -674,8 +700,9 @@ public class FileManager {
 	 * default project directory location (to create projects), copies the directory
 	 * and returns <code>String</code> the path to the freshly copied directory.
 	 * 
-	 * @param <code>HttpServletRequest</code> request
-	 * @return <code>String</code> new project path
+	 * @param curriculumBaseDir the path to the curriculum directory
+	 * @param projectFolderPath the project folder path of the project we are copying
+	 * @return the path to the new project
 	 * @throws IOException
 	 */
 	public static String copyProject(String curriculumBaseDir, String projectFolderPath) throws IOException{
@@ -734,15 +761,17 @@ public class FileManager {
 	}
 	
 	/**
-	 * Given a <code>HttpServletRequest</code> request with the parameters: param1 - full project path including
-	 * project filename, param2 - data to write, param3 - node type, param4 - node title, and param5 - node class,
-	 * creates a new file with the given data and uses the other parameters to add this node copy to the project file.
-	 * Returns the filename if completes successfully.
-	 *  
-	 * @param <code>HttpServletRequest</code> request
-	 * @return <code>String</code> unique filename
-	 * @throws <code>IOException</code>
-	 * @throws <code>ServletException</code>
+	 * Copy a node in a project
+	 * @param projectFolderPath the project folder path 
+	 * @param projectFileName the project file name
+	 * @param data the data to put in the new node
+	 * @param type the node type
+	 * @param title the node title
+	 * @param nodeClass the node class
+	 * @param contentFile the file name of the node we are copying
+	 * @return the new file name
+	 * @throws IOException
+	 * @throws ServletException
 	 */
 	public static String copyNode(String projectFolderPath, String projectFileName, String data, String type, String title, String nodeClass, String contentFile) throws IOException, ServletException {
 		String result = "";
@@ -794,10 +823,11 @@ public class FileManager {
 	}
 	
 	/**
-	 * Creates the sequence from the specified JSON and adds it to the specified project file.
-	 * This is used when duplicating a sequence (aka activity) in the authoring tool.
-	 * @param request
-	 * @param response
+	 * Create a sequence in a project
+	 * @param projectFolderPath the project folder path
+	 * @param projectFileName the project file name
+	 * @param data the data for the sequence
+	 * @return whether it was a success or not
 	 * @throws IOException
 	 * @throws ServletException
 	 */
@@ -823,8 +853,9 @@ public class FileManager {
 	
 	/**
 	 * Retrieves all of the scripts in the scripts array and writes them out in the <code>HttpServletResponse</code>
-	 * @param request
-	 * @param response
+	 * @param context the context to retrieve the files from
+	 * @param data the script file names
+	 * @return the contents of the scripts
 	 * @throws IOException
 	 */
 	public static String getScripts(ServletContext context, String data) throws IOException{
@@ -852,12 +883,15 @@ public class FileManager {
 	}
 	
 	/**
-	 * Compare the child parent and child projects to find differences.
+	 * Compare the parent and child projects to find differences.
 	 * These differences include whether a node was added, deleted,
 	 * moved, or not moved and whether the content for the node
 	 * was modified.
-	 * @param request
-	 * @param response
+	 * @param curriculumBaseDir the curriculum directory
+	 * @param parentProjectUrl the parent project url e.g. 236/wise4.project.json
+	 * @param projectUrl the child project url e.g. 235/wise4.project.json
+	 * @return the results of the analysis of the difference between the
+	 * parent and child project
 	 * @throws IOException
 	 */
 	public static String reviewUpdateProject(String curriculumBaseDir, String parentProjectUrl, String projectUrl) throws IOException {
@@ -1097,8 +1131,10 @@ public class FileManager {
 	
 	/**
 	 * Updates the child project by copying the parent project folder to the child project folder
-	 * @param request
-	 * @param response
+	 * @param curriculumBaseDir the curriculum directory
+	 * @param parentProjectUrl the parent project url e.g. 236/wise4.project.json
+	 * @param childProjectUrl the child project url e.g. 235/wise4.project.json
+	 * @return the result of the update
 	 * @throws IOException
 	 */
 	public static String updateProject(String curriculumBaseDir, String parentProjectUrl, String childProjectUrl) throws IOException {
@@ -1123,8 +1159,11 @@ public class FileManager {
 	
 	/**
 	 * Import the steps from one project to another project
-	 * @param request
-	 * @param response
+	 * @param curriculumBaseDir the curriculum directory
+	 * @param fromProjectUrl the project to import from
+	 * @param toProjectUrl the from to import to
+	 * @param nodeIds the node ids to import
+	 * @return the result of the import
 	 * @throws IOException
 	 */
 	public static String importSteps(String curriculumBaseDir, String fromProjectUrl, String toProjectUrl, String nodeIds) throws IOException {
@@ -1279,6 +1318,7 @@ public class FileManager {
 	 * @param content the step content
 	 * @param fromProjectAssetsFolder the project we are copying the asset from
 	 * @param toProjectAssetsFolder the project we are copying the asset to
+	 * @return the updated content string
 	 */
 	public static String importAssetsInContent(String content, File fromProjectAssetsFolder, File toProjectAssetsFolder) {
 		/*
@@ -2339,8 +2379,11 @@ public class FileManager {
 	
 	/**
 	 * Get the amount of disk space this project uses and the max project size
-	 * @param request
-	 * @param response
+	 * @param path the path to the project
+	 * @param projectMaxTotalAssetsSizeLong the max allowable project folder size
+	 * @return a string specifying how much space the project is using and what
+	 * the max allowable project folder size is as a fraction e.g. 
+	 * 100kb/10mb 
 	 */
 	public static String getProjectUsageAndMax(String path, Long projectMaxTotalAssetsSizeLong) {
 		String result = "";
@@ -2389,4 +2432,59 @@ public class FileManager {
 		}
 	}
 
+	/**
+	 * Get the full project file path
+	 * @param project the project object
+	 * @return the full project file path
+	 * e.g.
+	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
+	 */
+	public static String getProjectFilePath(Project project) {
+		String projectFilePath = null;
+		
+		if(project != null) {
+			String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+			String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+			projectFilePath = curriculumBaseDir + projectUrl;
+		}
+		
+		return projectFilePath;
+	}
+
+	/**
+	 * Get the full file path given the project object and a file name
+	 * @param project the project object
+	 * @param fileName the file name
+	 * @return the full file path
+	 * e.g.
+	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/node_2.or
+	 */
+	public static String getFilePath(Project project, String fileName) {
+		String filePath = null;
+		
+		if(project != null) {
+			String projectFolderPath = getProjectFolderPath(project);
+			filePath = projectFolderPath + fileName;
+		}
+
+		return filePath;
+	}
+
+	/**
+	 * Get the full project folder path given the project object
+	 * @param project the project object
+	 * @return the full project folder path
+	 * e.g.
+	 * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
+	 */
+	public static String getProjectFolderPath(Project project) {
+		String projectFolderPath = null;
+		
+		if(project != null) {
+			String projectFilePath = getProjectFilePath(project);
+			projectFolderPath = projectFilePath.substring(0, projectFilePath.lastIndexOf("/"));
+		}
+		
+		return projectFolderPath;
+	}
 }
