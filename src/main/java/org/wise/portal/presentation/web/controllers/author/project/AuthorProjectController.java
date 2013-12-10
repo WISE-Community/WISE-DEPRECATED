@@ -1307,6 +1307,9 @@ public class AuthorProjectController extends AbstractController {
 
 		//the post url for premade comments
 		String postPremadeCommentsUrl = portalUrl + "/wise/teacher/grading/premadeComments.html?action=postData";
+		
+		//get the wise base url
+		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 
 		//create a JSONObject to contain the config params
 		JSONObject config = new JSONObject();
@@ -1331,6 +1334,7 @@ public class AuthorProjectController extends AbstractController {
 			config.put("analyzeProjectUrl", analyzeProjectUrl);
 			config.put("getPremadeCommentsUrl", getPremadeCommentsUrl);
 			config.put("postPremadeCommentsUrl", postPremadeCommentsUrl);
+			config.put("wiseBaseURL", wiseBaseURL);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
