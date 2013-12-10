@@ -60,7 +60,7 @@ input[type="submit"],input[type="button"] {
 	cursor: pointer;
 	padding: .25em .5em;
 	border: 1px solid #aaaaaa;
-	background: #eeeeee url(/vlewrapper/vle/images/ui/ui-bg_highlight-hard_100_eeeeee_1x100.png) 50% 50% repeat-x;
+	background: #eeeeee url(/wise/vle/images/ui/ui-bg_highlight-hard_100_eeeeee_1x100.png) 50% 50% repeat-x;
 	font-weight: normal;
 	color: #444444;
 	font-size: .85em;
@@ -79,13 +79,13 @@ input[type="submit"]:hover,input[type="button"]:hover {
 	-webkit-box-shadow:0 0 1px #aaaaaa;
 	box-shadow:0 0 1px #aaaaaa;
 	border: 1px solid #888888;
-	background: #eeeeee url(/vlewrapper/vle/images/ui/ui-bg_highlight-hard_100_eeeeee_1x100.png) 50% 50% repeat-x;
+	background: #eeeeee url(/wise/vle/images/ui/ui-bg_highlight-hard_100_eeeeee_1x100.png) 50% 50% repeat-x;
 	color: #222222;
 }
 
 input[type="submit"]:active,input[type="button"]:active {
 	border: 1px solid #666666;
-	background: #555555 url(/vlewrapper/vle/images/ui/ui-bg_flat_50_555555_40x100.png) 50% 50% repeat-x;
+	background: #555555 url(/wise/vle/images/ui/ui-bg_flat_50_555555_40x100.png) 50% 50% repeat-x;
 	color: #ffffff;
 }
 

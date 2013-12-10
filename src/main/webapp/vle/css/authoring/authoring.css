@@ -40,7 +40,7 @@ body#w4_author {
 #authorHeader {
 	text-align: left;
 	padding: 0 .5em;
-	background:url("/vlewrapper/vle/images/author-header.png") repeat 50% 50% #103BB7;
+	background:url("/wise/vle/images/author-header.png") repeat 50% 50% #103BB7;
 	border:1px solid #103BB7;
 	-moz-border-radius: 6px;
 	-webkit-border-radius: 6px;
@@ -242,7 +242,7 @@ body#w4_author {
 
 #centeredDiv button, #centeredDiv input[type='button'] {
 	border: 1px solid #a1a1a1;
-	background: #c9c9c9 url(/vlewrapper/vle/images/ui-bg_highlight-hard_100_c9c9c9_1x100.png) 50% 50% repeat-x;
+	background: #c9c9c9 url(/wise/vle/images/ui-bg_highlight-hard_100_c9c9c9_1x100.png) 50% 50% repeat-x;
 	font-weight: bold;
 	color: #222222;
 	-moz-border-radius: 4px;
@@ -265,7 +265,7 @@ body#w4_author {
 
 #centeredDiv button:hover, #centeredDiv input[type='button']:hover, #centeredDiv input[type='button']:hover {
 	border-color:#999999;
-	background: #ababab url(/vlewrapper/vle/images/ui-bg_highlight-hard_80_ababab_1x100.png) 50% 50% repeat-x;
+	background: #ababab url(/wise/vle/images/ui-bg_highlight-hard_80_ababab_1x100.png) 50% 50% repeat-x;
 	color: #212121;
 }
 
@@ -315,13 +315,13 @@ button.mid, #centeredDiv button.mid, #centeredDiv input[type='button'].mid {
 	text-align:center;
 	width:56px;
 	color:#FFFFFF !important;
-	/*background:url(/vlewrapper/vle/images/author-button-bg.png) 50% 50% repeat-x !important;*/
+	/*background:url(/wise/vle/images/author-button-bg.png) 50% 50% repeat-x !important;*/
 	background:none !important;
 	border:0px !important;
 }
 
 #authorButtons button:hover {
-	/*background:url(/vlewrapper/vle/images/author-button-bg-hover.png) 50% 50% repeat-x !important;*/
+	/*background:url(/wise/vle/images/author-button-bg-hover.png) 50% 50% repeat-x !important;*/
 	text-decoration:underline;
 }
 

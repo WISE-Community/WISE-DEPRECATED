@@ -908,7 +908,7 @@ View.prototype.enableRichTextAuthoring = function(id,update,fullpage) {
 
 		// Example content CSS (should be your site CSS)
 		// TODO: update this to use a WISE default
-		content_css : "/vlewrapper/vle/jquery/tinymce/examples/css/content.css",
+		content_css : "/wise/vle/jquery/tinymce/examples/css/content.css",
 
 		// Drop lists for link/image/media/template dialogs
 		//template_external_list_url : "lists/template_list.js",
@@ -941,8 +941,8 @@ View.prototype.enableRichTextAuthoring = function(id,update,fullpage) {
 		},
 		urlconverter_callback : function(url, node, on_save){
 			if(on_save){
-				// fix problem caused by automatic url processing of root path links (that begin wih '/vlewrapper') by tinymce
-				url = url.replace(/[..\/]+vlewrapper/, "/vlewrapper");
+				// fix problem caused by automatic url processing of root path links (that begin wih '/wise') by tinymce
+				url = url.replace(/[..\/]+wise/, "/wise");
 			}
 			return url;
 		},

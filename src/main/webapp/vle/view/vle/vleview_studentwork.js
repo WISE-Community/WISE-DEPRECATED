@@ -433,7 +433,7 @@ View.prototype.viewStudentAssets = function(params) {
 		var assetEditorDialogHtml = "<div id='studentAssetEditorDialog' style='display: none; text-align:left;'><div style='margin-bottom:.5em;'>" 
 			+ "<div id='assetUploaderBodyDiv'><span style='float:left;'>"+this.getI18NString("student_assets_upload_new_file")+":</span>"
 			+ "<input style='margin:0 .5em;' type='file' size='30' id='uploadAssetFile' name='uploadAssetFile' onchange=\"eventManager.fire('studentAssetSubmitUpload')\"></input>"
-			+ "<img id='assetProcessing' style='display:none;' class='loadingImg' src='/vlewrapper/vle/images/ajax-loader.gif' alt='loading...' /></div><br>"
+			+ "<img id='assetProcessing' style='display:none;' class='loadingImg' src='/wise/vle/images/ajax-loader.gif' alt='loading...' /></div><br>"
 			+ "<div id='notificationDiv'>"
 			+ "</div></div><div><div style='margin-bottom: 0.5em;'>"+this.getI18NString("student_assets_my_files")+": </div>"
 			+ "<select id='assetSelect' style='width:100%; height:200px; padding:.5em;' size='15'></select>"

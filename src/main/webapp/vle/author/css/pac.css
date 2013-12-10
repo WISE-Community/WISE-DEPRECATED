@@ -27,7 +27,7 @@ body {
 }
 
 #overlay {
-	background: #666666 url(/vlewrapper/vle/jquery/css/custom-theme/images/ui-bg_diagonals-thick_20_666666_40x40.png) 50% 50% repeat;
+	background: #666666 url(/wise/vle/jquery/css/custom-theme/images/ui-bg_diagonals-thick_20_666666_40x40.png) 50% 50% repeat;
 	opacity: .50;
 	filter:Alpha(Opacity=50);
 	position: absolute; top: 0; left: 0; width: 100%; height: 100%;

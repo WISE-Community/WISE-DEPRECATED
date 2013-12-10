@@ -114,7 +114,7 @@ var nodeTemplateParams = [
      * For example if you are creating a quiz node you would change it to
      * 'node/quiz/quizTemplate.qz'
      */
-		nodeTemplateFilePath:'node/seasons2/seasons2Template.ss',
+		nodeTemplateFilePath:'node/seasons2/seasons2Template.ss2',
 
 		/*
      * TODO: rename the extension value for your step type, the value of the

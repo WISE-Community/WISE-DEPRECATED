@@ -233,7 +233,7 @@ BRAINSTORM.prototype.brainfullLoaded = function(frameDoc) {
 				// Register import asset button
 				ed.addButton('importAsset', {
 					title : 'Use My Asset',
-					image : '/vlewrapper/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
+					image : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
 					onclick : function() {
 						var params = {};
 						params.tinymce = this;
@@ -788,7 +788,7 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 							// Register import asset button
 							ed.addButton('importAsset', {
 								title : 'Use My Asset',
-								image : '/vlewrapper/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
+								image : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
 								onclick : function() {
 									var params = {};
 									params.tinymce = this;
