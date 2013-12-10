@@ -102,7 +102,7 @@ BRAINSTORM.prototype.brainliteLoaded = function(frameDoc){
 
 		$('#studentResponse').tinymce({
 			// Location of TinyMCE script
-			script_url : '/vlewrapper/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
+			script_url : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
 
 			// General options
 			theme : "advanced",
@@ -212,7 +212,7 @@ BRAINSTORM.prototype.brainfullLoaded = function(frameDoc) {
 		var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
 		$('#studentResponse').tinymce({
 			// Location of TinyMCE script
-			script_url : '/vlewrapper/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
+			script_url : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
 
 			// General options
 			theme : "advanced",
@@ -767,7 +767,7 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 					var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
 					$('#'+replyTextareaId).tinymce({
 						// Location of TinyMCE script
-						script_url : '/vlewrapper/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
+						script_url : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
 
 						// General options
 						theme : "advanced",

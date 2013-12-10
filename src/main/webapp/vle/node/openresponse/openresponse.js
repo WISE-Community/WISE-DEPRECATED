@@ -1182,7 +1182,7 @@ OPENRESPONSE.prototype.displayRegular = function() {
 		
 		$('#responseBox').tinymce({
 			// Location of TinyMCE script
-			script_url : '/vlewrapper/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
+			script_url : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
 			
 			// General options
 			theme : "advanced",
