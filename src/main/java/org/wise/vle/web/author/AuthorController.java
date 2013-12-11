@@ -26,19 +26,17 @@ public class AuthorController extends HttpServlet {
 		System.out.println(request);
 		
 		String type = request.getParameter("type");
-		ServletContext servletContext2 = this.getServletContext();
-		ServletContext vlewrappercontext = servletContext2.getContext("/wise");
+		ServletContext servletContext = this.getServletContext();
+		ServletContext wiseContext = servletContext.getContext("/wise");
 		
 		if (type == null) {
 			// get student data
 			response.sendRedirect("/wise/author/authorproject.html");
-			//RequestDispatcher requestDispatcher = vlewrappercontext.getRequestDispatcher("/author/authorproject.html");
-			//requestDispatcher.forward(request, response);
 		} else if (type.equals("flag") || type.equals("annotation")){			// get flags
-			RequestDispatcher requestDispatcher = vlewrappercontext.getRequestDispatcher("/annotations.html");
+			RequestDispatcher requestDispatcher = wiseContext.getRequestDispatcher("/annotations.html");
 			requestDispatcher.forward(request, response);
 		} else if (type.equals("journal")) {
-			RequestDispatcher requestDispatcher = vlewrappercontext.getRequestDispatcher("/journaldata.html");
+			RequestDispatcher requestDispatcher = wiseContext.getRequestDispatcher("/journaldata.html");
 			requestDispatcher.forward(request, response);
 		}
 		

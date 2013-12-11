@@ -6,8 +6,8 @@
  * Note: Remove this comment before using file or JSON parsing will fail
  */
 {
-	"projectPaths":["/Users/geoffreykwan/dev/workspaces/portalworkspace/vlewrapper/WebContent/curriculum"],
-	"primaryPath":"/Users/geoffreykwan/dev/workspaces/portalworkspace/vlewrapper/WebContent/curriculum",
+	"projectPaths":["/Users/geoffreykwan/dev/workspaces/portalworkspace/wise/WebContent/curriculum"],
+	"primaryPath":"/Users/geoffreykwan/dev/workspaces/portalworkspace/wise/WebContent/curriculum",
 	"mode":{
 		"portal":true,
 		"portalUrl":"/wise/login.html"

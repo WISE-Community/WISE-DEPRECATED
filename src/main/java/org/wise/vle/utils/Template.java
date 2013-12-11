@@ -491,11 +491,11 @@ public final class Template {
 	
 	private static String getDrawingString(String title){
 		return "<html>" + NL + "<head>" + NL + "<title>" + title + "</title>" + NL + 
-		"<script type=\"text/javascript\" src=\"/vlewrapper/vle/node/draw/wisedraw.js\"></script>" +
+		"<script type=\"text/javascript\" src=\"/wise/vle/node/draw/wisedraw.js\"></script>" +
 		NL + "</head>" + NL + "<body onload=\"doneLoading()\">" + NL +
 		"<input type=\"button\" name=\"drawSave\" value=\"Save\" onClick=\"saveDrawingData()\"></input>" +
 		NL + "<br></br>" + NL +
-		"<applet id=\"wisedraw\" name=\"wisedraw\" width=\"620\" height=\"480\" code=\"org.telstech.pedraw.util.PDLauncher\" codebase=\"/vlewrapper/vle/node/draw/\" archive=\"pedraw.jar,aelfred-1.1.jar,commons-logging-1.0.4.jar,log4j-1.2.8.jar\" mayscript>" +
+		"<applet id=\"wisedraw\" name=\"wisedraw\" width=\"620\" height=\"480\" code=\"org.telstech.pedraw.util.PDLauncher\" codebase=\"/wise/vle/node/draw/\" archive=\"pedraw.jar,aelfred-1.1.jar,commons-logging-1.0.4.jar,log4j-1.2.8.jar\" mayscript>" +
 		NL + "<param name=\"tool:1\" value=\"SelectTool\">" + NL + "<param name=\"tool:2\" value=\"PathTool\">" + NL +
 		"<param name=\"tool:3\" value=\"LineTool\">" + NL + "<param name=\"tool:4\" value=\"ArrowTool\">" + NL +
 		"<param name=\"tool:5\" value=\"RectTool\">" + NL + "<param name=\"tool:6\" value=\"EllipseTool\">" + NL +

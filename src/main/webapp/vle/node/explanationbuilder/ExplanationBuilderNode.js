@@ -99,13 +99,13 @@ ExplanationBuilderNode.prototype.parseDataJSONObj = function(stateJSONObj) {
 	 * that you will use for representing student data for this
 	 * type of step. copy and modify the file below
 	 * 
-	 * vlewrapper/WebContent/vle/node/template/templatestate.js
+	 * wise/src/main/webapp/vle/node/template/templatestate.js
 	 * 
 	 * and use the object defined in your new state.js file instead
 	 * of TEMPLATESTATE. for example if you are creating a
 	 * quiz step type you would copy the file above to
 	 * 
-	 * vlewrapper/WebContent/vle/node/quiz/quizstate.js
+	 * wise/src/main/webapp/vle/node/quiz/quizstate.js
 	 * 
 	 * and in that file you would define QUIZSTATE and therefore
 	 * would change the TEMPLATESTATE to QUIZSTATE below
@@ -246,7 +246,7 @@ ExplanationBuilderNode.prototype.renderGradingView = function(displayStudentWork
 	//create the function to call when the 'Enlarge' button is clicked
 	var enlargeFunction = function() {
 		//open the html page that will display the enlarged view of the student work
-		var newWindow = window.open("/vlewrapper/vle/node/explanationbuilder/enlargeExplanationBuilder.html");
+		var newWindow = window.open("/wise/vle/node/explanationbuilder/enlargeExplanationBuilder.html");
 		
 		/*
 		 * send the necessary ids to the new window so we can reference 

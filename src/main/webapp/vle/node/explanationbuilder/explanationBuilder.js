@@ -12,10 +12,10 @@
  * you created for your new step type
  *
  * your new folder will look something like
- * vlewrapper/WebContent/vle/node/<new step type>/
+ * wise/src/main/webapp/vle/node/<new step type>/
  *
  * e.g. for example if you are creating a quiz step it would look something like
- * vlewrapper/WebContent/vle/node/quiz/
+ * wise/src/main/webapp/vle/node/quiz/
  * 
  * 
  * xTODO: in this file, change all occurrences of the word 'TEMPLATE' to the
@@ -547,13 +547,13 @@ ExplanationBuilder.prototype.save = function() {
 			 * that you will use for representing student data for this
 			 * type of step. copy and modify the file below
 			 * 
-			 * vlewrapper/WebContent/vle/node/template/templatestate.js
+			 * wise/src/main/webapp/vle/node/template/templatestate.js
 			 * 
 			 * and use the object defined in your new state.js file instead
 			 * of TEMPLATESTATE. for example if you are creating a new
 			 * quiz step type you would copy the file above to
 			 * 
-			 * vlewrapper/WebContent/vle/node/quiz/quizstate.js
+			 * wise/src/main/webapp/vle/node/quiz/quizstate.js
 			 * 
 			 * and in that file you would define QUIZSTATE and therefore
 			 * would change the TEMPLATESTATE to QUIZSTATE below
@@ -1310,7 +1310,7 @@ ExplanationBuilder.prototype.addExpIdea = function(context,isLoad,isActive,id,le
 					} else if(lastAcceptedText && ideaText != lastAcceptedText) {
 						changed = true;
 						//the idea has been changed since the idea was used in this step
-						text += " <img class='notification' src='/vlewrapper/vle/images/ideaManager/info.png' alt='warn' />" +
+						text += " <img class='notification' src='/wise/vle/images/ideaManager/info.png' alt='warn' />" +
 							"<div class='tooltip'><div>" + view.getI18NStringWithParams('ideaChangedAlert', [this.ideaTerm],'ExplanationBuilderNode') + "</div>" +
 							"<div class='notificationLinks'><a class='notificationLink revise'>" + view.getI18NString('revise','ExplanationBuilderNode') + "</a>" +
 							"<a class='notificationLink accept'>" + view.getI18NString('keep','ExplanationBuilderNode') + "</a></div></div>";
@@ -1338,7 +1338,7 @@ ExplanationBuilder.prototype.addExpIdea = function(context,isLoad,isActive,id,le
 				timeCreated = this.ideaBasket.deleted[i].timeCreated;
 				
 				// the idea has been deleted since it was used in this step
-				text += " <img class='notification' src='/vlewrapper/vle/images/ideaManager/info.png' alt='warn' />" +
+				text += " <img class='notification' src='/wise/vle/images/ideaManager/info.png' alt='warn' />" +
 					"<div class='tooltip'><div>" + view.getI18NStringWithParams('ideaDeletedAlert', [this.ideaTerm],'ExplanationBuilderNode') + "</div>" +
 					"<div class='notificationLinks'><a class='notificationLink restore'>" + view.getI18NString('restoreAndRevise','ExplanationBuilderNode') + "</a>" + 
 					"<a class='notificationLink remove'>" + view.getI18NString('remove','ExplanationBuilderNode') + "</a>" +

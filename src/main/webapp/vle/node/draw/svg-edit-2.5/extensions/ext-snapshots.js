@@ -34,7 +34,7 @@ svgEditor.addExtension("Snapshots", function(S) {
 	var getUndoStackSize = svgCanvas.getUndoStackSize,
 		resetUndoStack = svgCanvas.getPrivateMethods().resetUndoStack; //getPrivateMethods is being deprecated, change when we next update
 	
-	var extPath = '/vlewrapper/vle/node/draw/svg-edit/extensions/'; // extensions directory path (wise4)
+	var extPath = '/wise/vle/node/draw/svg-edit/extensions/'; // extensions directory path (wise4)
 	
 	function Snapshot(svg, id, description){
 		this.svg = svg;

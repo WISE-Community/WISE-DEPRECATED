@@ -45,7 +45,7 @@ svgEditor.addExtension("ClosePath", function(S) {
 		
 		return {
 			name: "ClosePath",
-			svgicons: "/vlewrapper/vle/node/draw/svg-edit/extensions/closepath_icons.svg", //updated icon path for wise4
+			svgicons: "/wise/vle/node/draw/svg-edit/extensions/closepath_icons.svg", //updated icon path for wise4
 			buttons: [{
 				id: "tool_openpath",
 				type: "context",

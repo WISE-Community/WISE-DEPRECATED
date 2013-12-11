@@ -28,7 +28,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
@@ -47,7 +46,7 @@ import org.wise.portal.service.project.ProjectService;
  * Publishes a LDProject, thereby adding the project to the Project Library.
  * The user specifies:
  * 1) where the project.xml file resides in relation to the ContextRoot.
- *    ex: /vlewrapper/curriculum/15/HelloWorld.project.xml.
+ *    ex: /curriculum/15/HelloWorld.project.xml.
  * 2) project name/curnit name 
  * 
  * The Curnit is added and a project is created for that project.

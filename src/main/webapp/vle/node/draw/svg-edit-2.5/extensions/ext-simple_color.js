@@ -63,7 +63,7 @@ svgEditor.addExtension("Simple Color", function(S) {
 		name: "Simple Color",
 		callback: function() {
 			//add extension css
-			var csspath = '/vlewrapper/vle/node/draw/svg-edit/extensions/jquery-rscp/colorPicker.css'; // corrected path for wise4
+			var csspath = '/wise/vle/node/draw/svg-edit/extensions/jquery-rscp/colorPicker.css'; // corrected path for wise4
 			var fileref=document.createElement("link");
 			fileref.setAttribute("rel", "stylesheet");
 			fileref.setAttribute("type", "text/css");

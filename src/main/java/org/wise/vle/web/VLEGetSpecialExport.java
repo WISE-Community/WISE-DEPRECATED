@@ -287,7 +287,7 @@ public class VLEGetSpecialExport extends AbstractController {
 			studentAttendanceJSONArray.put(studentAttendanceJSONObj);
 		}
 		
-		//get the path of the vlewrapper base dir
+		//get the path of the wise base dir
 		String wiseBaseDir = vleProperties.getProperty("wiseBaseDir");
 		
 		
@@ -1079,7 +1079,7 @@ public class VLEGetSpecialExport extends AbstractController {
 	private void copyFileToFolder(String sourcePath, File folder) {
 		/*
 		 * get the file name
-		 * if the path is /Users/geoffreykwan/dev/apache-tomcat-7.0.28/webapps/vlewrapper/vle/jquery/js/flot/jquery.js
+		 * if the path is /Users/geoffreykwan/dev/apache-tomcat-7.0.28/webapps/wise/vle/jquery/js/flot/jquery.js
 		 * the file name will be
 		 * jquery.js
 		 */

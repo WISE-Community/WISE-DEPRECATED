@@ -544,7 +544,7 @@ var displayNotification = function(message){
 	</div>
  	<div id="loading" style="display:none;">
         <div class="hd"><spring:message code="teacher.management.viewmystudents.saveMessage"/></div>
-        <div class="bd"><img src="/vlewrapper/vle/images/loading.gif"></div>
+        <div class="bd"><img src="/wise/vle/images/loading.gif"></div>
         <div class="ft">
         </div>
     </div>

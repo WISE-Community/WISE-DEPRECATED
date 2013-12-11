@@ -12,10 +12,10 @@
  * you created for your new step type
  *
  * your new folder will look something like
- * vlewrapper/WebContent/vle/node/<new step type>/
+ * wise/src/main/webapp/vle/node/<new step type>/
  *
  * e.g. for example if you are creating a quiz step it would look something like
- * vlewrapper/WebContent/vle/node/quiz/
+ * wise/src/main/webapp/vle/node/quiz/
  * 
  * 
  * TODO: in this file, change all occurrences of the word 'Box2dModel' to the
@@ -469,13 +469,13 @@ Box2dModel.prototype.save = function(evt) {
 		 * that you will use for representing student data for this
 		 * type of step. copy and modify the file below
 		 * 
-		 * vlewrapper/WebContent/vle/node/box2dModel/box2dModelState.js
+		 * wise/src/main/webapp/vle/node/box2dModel/box2dModelState.js
 		 * 
 		 * and use the object defined in your new state.js file instead
 		 * of Box2dModelState. for example if you are creating a new
 		 * quiz step type you would copy the file above to
 		 * 
-		 * vlewrapper/WebContent/vle/node/quiz/quizState.js
+		 * wise/src/main/webapp/vle/node/quiz/quizState.js
 		 * 
 		 * and in that file you would define QuizState and therefore
 		 * would change the Box2dModelState to QuizState below

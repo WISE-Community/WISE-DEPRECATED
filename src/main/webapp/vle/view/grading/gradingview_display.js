@@ -6425,8 +6425,6 @@ View.prototype.getStudentStatusByWorkgroupId = function(workgroupId) {
  * displays the mysystem diagram in the specified div
  */
 function showDiagram(divId, contentBaseUrl) {
-    //var json_data = [{"containers": [{"terminals": [{"wireConfig": {"drawingMethod": "bezierArrows"}, "name": "Terminal1", "direction": [0, -1], "offsetPosition": {"left": 20, "top": -25}, "ddConfig": {"type": "input", "allowedTypes": ["input", "output"]}}, {"wireConfig": {"drawingMethod": "bezierArrows"}, "name": "Terminal2", "direction": [0, 1], "offsetPosition": {"left": 20, "bottom": -25}, "ddConfig": {"type": "output", "allowedTypes": ["input", "output"]}}], "draggable": true, "position": ["191px", "67px"], "className": "WireIt-Container WireIt-ImageContainer", "ddHandle": false, "ddHandleClassName": "WireIt-Container-ddhandle", "resizable": false, "resizeHandleClassName": "WireIt-Container-resizehandle", "close": true, "closeButtonClassName": "WireIt-Container-closebutton", "title": "table", "icon": "http://209.20.92.79:8080/vlewrapper/curriculum/15/images/battery.jpg", "preventSelfWiring": true, "image": "http://209.20.92.79:8080/vlewrapper/curriculum/15/images/battery.jpg", "xtype": "MySystemContainer", "fields": {"energy": 100, "form": "light", "efficiency": 1}, "name": "table", "has_sub": false}, {"terminals": [{"wireConfig": {"drawingMethod": "bezierArrows"}, "name": "Terminal1", "direction": [0, -1], "offsetPosition": {"left": 20, "top": -25}, "ddConfig": {"type": "input", "allowedTypes": ["input", "output"]}}, {"wireConfig": {"drawingMethod": "bezierArrows"}, "name": "Terminal2", "direction": [0, 1], "offsetPosition": {"left": 20, "bottom": -25}, "ddConfig": {"type": "output", "allowedTypes": ["input", "output"]}}], "draggable": true, "position": ["72px", "83px"], "className": "WireIt-Container WireIt-ImageContainer", "ddHandle": false, "ddHandleClassName": "WireIt-Container-ddhandle", "resizable": false, "resizeHandleClassName": "WireIt-Container-resizehandle", "close": true, "closeButtonClassName": "WireIt-Container-closebutton", "icon": "http://209.20.92.79:8080/vlewrapper/curriculum/15/images/battery.jpg", "preventSelfWiring": true, "image": "./images/thermodynamics/hotbowl.png", "xtype": "MySystemContainer", "fields": {"name": "hot bowl", "energy": 100, "form": "light", "efficiency": 1}, "name": "hot bowl", "has_sub": false}], "wires": [{"src": {"moduleId": 1, "terminal": "Terminal2"}, "tgt": {"moduleId": 0, "terminal": "Terminal2"}, "options": {"className": "WireIt-Wire", "coeffMulDirection": 100, "drawingMethod": "bezierArrows", "cap": "round", "bordercap": "round", "width": 5, "borderwidth": 1, "color": "#BD1550", "bordercolor": "#000000", "fields": {"name": "flow", "width": 5, "color": "color2"}, "selected": false}}]}];
-    //var json_data = eval(document.getElementById(divId).innerHTML);
     var json_data = document.getElementById(divId).innerHTML;
     document.getElementById(divId).innerHTML = "";
     var width="800";
@@ -6485,7 +6483,7 @@ function enlargeDraw(divId){
 	svg = svg.replace(/(<image.*)href(.*)(>)/gmi,'$1xlink:href$2\/$3');
 	window.open("data:image/svg+xml;base64," + Utils.encode64(svg));*/
 
-	var newwindow = window.open("/vlewrapper/vle/node/draw/svg-edit/svg-editor-grading.html");
+	var newwindow = window.open("/wise/vle/node/draw/svg-edit/svg-editor-grading.html");
 	newwindow.divId = divId;
 }
 
@@ -6499,7 +6497,7 @@ function enlargeMS(divId){
     mysystem.config.jsonURL = contentString;
     mySystem = mysystem.loadMySystem();
 	*/
-	var newwindow = window.open("/vlewrapper/vle/node/mysystem/grading/mysystem.html");
+	var newwindow = window.open("/wise/vle/node/mysystem/grading/mysystem.html");
 	newwindow.divId = divId;
 }
 

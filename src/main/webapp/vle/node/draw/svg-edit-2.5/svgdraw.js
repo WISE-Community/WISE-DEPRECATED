@@ -210,7 +210,7 @@ SVGDRAW.prototype.loadCallback = function(studentWorkJSON, context) {
 					context.svgCanvas.setSvgString(svgString.replace("</svg>", annotationValue + "</svg>"));
 					context.svgCanvas.setCurrentLayer('Layer 1');
 				};
-				//context.dataService.vle.connectionManager.request('GET', 3, 'http://localhost:8080/vlewrapper/vle/echo.html', {}, processGetDrawAnnotationResponse);
+				//context.dataService.vle.connectionManager.request('GET', 3, 'http://localhost:8080/wise/vle/echo.html', {}, processGetDrawAnnotationResponse);
 				
 				var getAnnotationsParams = {
 												runId: context.dataService.vle.getConfig().getConfigParam('runId'),

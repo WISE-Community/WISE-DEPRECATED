@@ -28,7 +28,6 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -148,7 +147,7 @@ public class StudentVLEController extends AbstractController {
 	private ModelAndView handlePostData(HttpServletRequest request,
 			HttpServletResponse response, Run run) {
 		String baseurl = ControllerUtil.getBaseUrlString(request);
-		ModelAndView modelAndView = new ModelAndView("forward:" + baseurl + "/vlewrapper/postdata.html");
+		ModelAndView modelAndView = new ModelAndView("forward:" + baseurl + "/wise/postdata.html");
 		return modelAndView;
 	}
 
@@ -163,7 +162,7 @@ public class StudentVLEController extends AbstractController {
 	private ModelAndView handleGetData(HttpServletRequest request,
 			HttpServletResponse response, Run run) {
 		String baseurl = ControllerUtil.getBaseUrlString(request);
-		ModelAndView modelAndView = new ModelAndView("forward:" + baseurl + "/vlewrapper/getdata.html");
+		ModelAndView modelAndView = new ModelAndView("forward:" + baseurl + "/wise/getdata.html");
 		return modelAndView;
 	}
 

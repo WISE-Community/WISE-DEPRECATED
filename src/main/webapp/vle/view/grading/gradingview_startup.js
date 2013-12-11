@@ -7,7 +7,7 @@ View.prototype.getGradingConfig = function(gradingConfigUrl) {
 	
 	/* set the servlet request urls - assumes that the grading tool is always run in portal mode */
 	var loc = window.location.toString();
-	var base = loc.substring(0, loc.lastIndexOf('/vlewrapper/vle/'));
+	var base = loc.substring(0, loc.lastIndexOf('/wise/vle/'));
 	this.minifierUrl = base + '/wise/router.html';
 };
 

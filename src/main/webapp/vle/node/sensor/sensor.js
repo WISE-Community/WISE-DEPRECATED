@@ -1987,18 +1987,18 @@ SENSOR.prototype.insertApplet = function() {
 	
 	/*
 	 * get the document url, it will look something like
-	 * http://wise4.telscenter.org/vlewrapper/vle/vle.html
+	 * http://wise.berkeley.edu/wise/vle/vle.html
 	 */ 
 	var documentURL = document.URL;
 	
-	//get the index of vlewrapper
-	var vlewrapperPos = documentURL.indexOf("vlewrapper");
+	//get the index of wise
+	var wisePos = documentURL.indexOf("wise");
 	
 	/*
-	 * get everything up to after vlewrapper so codebase will look something like
-	 * http://wise4.telscenter.org/vlewrapper/
+	 * get everything up to after wise so codebase will look something like
+	 * http://wise.berkeley.edu/wise/
 	 */
-	var codebase = documentURL.substring(0, vlewrapperPos + "vlewrapper".length + 1);
+	var codebase = documentURL.substring(0, wisePos + "wise".length + 1);
 	
 	/*
 	 * create the html applet tag that we will insert into the sensor.html

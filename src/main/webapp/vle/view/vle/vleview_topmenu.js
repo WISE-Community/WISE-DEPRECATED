@@ -1186,7 +1186,7 @@ View.prototype.displayIdeaBasket = function() {
 View.prototype.ideaBasketDivOpen = function() {
 	/*
 	 * remove href attribute in 'X' close link of ui-dialog, as clicking
-	 * X to close dialog results in window request for '/vlewrapper/vle/#'
+	 * X to close dialog results in window request for '/wise/vle/#'
 	 * after deleting/restoring an idea in the basket for some unknown
 	 * reason when in preview mode
 	 */

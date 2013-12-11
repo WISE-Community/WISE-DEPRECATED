@@ -298,7 +298,7 @@ svgEditor.addExtension("Connector", function(S) {
 	
 	return {
 		name: "Connector",
-		svgicons: "/vlewrapper/vle/node/draw/svg-edit/images/conn.svg", // corrected for wise4 images path
+		svgicons: "/wise/vle/node/draw/svg-edit/images/conn.svg", // corrected for wise4 images path
 		buttons: [{
 			id: "mode_connect",
 			type: "mode",

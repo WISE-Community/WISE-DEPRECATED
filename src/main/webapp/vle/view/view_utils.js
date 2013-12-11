@@ -1460,7 +1460,7 @@ View.prototype.blockUI = function(message) {
  * Used in Show My Work for draw steps
  */
 function enlargeDraw(divId){
-	var newwindow = window.open("/vlewrapper/vle/node/draw/svg-edit/svg-editor-grading.html");
+	var newwindow = window.open("/wise/vle/node/draw/svg-edit/svg-editor-grading.html");
 	newwindow.divId = divId;
 };
 

@@ -75,7 +75,7 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 							// check to see if we've already fetched i18n files for this node type
 							if (!view.i18n.supportedLocales[currNode.type]) {
 								view.i18n.supportedLocales[currNode.type] = nodePrototype.supportedLocales;
-								view.retrieveLocales(currNode.type,view.config.getConfigParam("wiseBaseURL")+nodePrototype.i18nPath);								
+								view.retrieveLocales(currNode.type,view.config.getConfigParam("wiseBaseURL") + "/" + nodePrototype.i18nPath);								
 							} 
 						}							
 					}

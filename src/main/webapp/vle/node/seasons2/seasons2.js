@@ -12,10 +12,10 @@
  * you created for your new step type
  *
  * your new folder will look something like
- * vlewrapper/WebContent/vle/node/<new step type>/
+ * wise/src/main/webapp/vle/node/<new step type>/
  *
  * e.g. for example if you are creating a quiz step it would look something like
- * vlewrapper/WebContent/vle/node/quiz/
+ * wise/src/main/webapp/vle/node/quiz/
  *
  *
  * TODO: in this file, change all occurrences of the word 'SEASONS2' to the
@@ -83,19 +83,19 @@ SEASONS2.prototype.render = function() {
 	var modelType = this.content.modelType;
 
 	if (modelType == "whatIstheShapeofEarthsOrbit") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons1-1.html");
+		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-1.html");
 	} else if (modelType == "whatTemperaturePatternsDoYouSee") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons1-2.html");
+		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-2.html");
 	} else if (modelType == "whatTemperaturePatternsDoYouSeeLite") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons1-2-lite.html");
+		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-2-lite.html");
 	} else if (modelType == "howDoesEarthsTiltAffectTemperature") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons1-3.html");
+		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-3.html");
 	} else if (modelType == "howDoesEarthsTiltAffectTemperatureLite") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons1-3-lite.html");
+		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-3-lite.html");
 	} else if (modelType == "howDoesEarthsTiltAffectHoursOfDaylight") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons1-4.html");
+		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-4.html");
 	} else if (modelType == "howDoesEarthsTiltAffectHoursOfDaylightLite") {
-		$("#modelIFrame").attr("src","/vlewrapper/vle/node/seasons2/earth/seasons1-4-lite.html");
+		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-4-lite.html");
 	}
 };
 
@@ -147,13 +147,13 @@ SEASONS2.prototype.save = function() {
    * that you will use for representing student data for this
    * type of step. copy and modify the file below
    *
-   * vlewrapper/WebContent/vle/node/seasons2/seasons2state.js
+   * wise/src/main/webapp/vle/node/seasons2/seasons2state.js
    *
    * and use the object defined in your new state.js file instead
    * of SEASONS2STATE. for example if you are creating a new
    * quiz step type you would copy the file above to
    *
-   * vlewrapper/WebContent/vle/node/quiz/quizstate.js
+   * wise/src/main/webapp/vle/node/quiz/quizstate.js
    *
    * and in that file you would define QUIZSTATE and therefore
    * would change the SEASONS2STATE to QUIZSTATE below

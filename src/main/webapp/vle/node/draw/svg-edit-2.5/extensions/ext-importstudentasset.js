@@ -7,7 +7,7 @@ svgEditor.addExtension("Import Student Asset", function() {
 
 		return {
 			name: "import student asset",
-			svgicons: "/vlewrapper/vle/node/draw/svg-edit/extensions/import_student_asset.xml", // corrected path for wise4
+			svgicons: "/wise/vle/node/draw/svg-edit/extensions/import_student_asset.xml", // corrected path for wise4
 			
 			buttons: [{
 				id: "tool_import_student_asset",

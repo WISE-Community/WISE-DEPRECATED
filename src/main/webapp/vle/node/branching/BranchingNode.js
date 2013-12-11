@@ -78,13 +78,13 @@ BranchingNode.prototype.parseDataJSONObj = function(stateJSONObj) {
 	 * that you will use for representing student data for this
 	 * type of step. copy and modify the file below
 	 * 
-	 * vlewrapper/WebContent/vle/node/branching/branchingState.js
+	 * wise/src/main/webapp/vle/node/branching/branchingState.js
 	 * 
 	 * and use the object defined in your new state.js file instead
 	 * of BranchingState. for example if you are creating a
 	 * quiz step type you would copy the file above to
 	 * 
-	 * vlewrapper/WebContent/vle/node/quiz/quizState.js
+	 * wise/src/main/webapp/vle/node/quiz/quizState.js
 	 * 
 	 * and in that file you would define QuizState and therefore
 	 * would change the BranchingState to QuizState below

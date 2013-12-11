@@ -42,7 +42,8 @@ View.prototype.startPortalMode = function(url, command, relativeProjectUrl, proj
 	if(this.config != null) {
 		//set some variables from values in the config
 		this.portalUsername = this.config.getConfigParam("username");
-		this.vlewrapperBaseUrl = this.config.getConfigParam("vlewrapperBaseUrl");
+		this.wiseBaseUrl = this.config.getConfigParam("wiseBaseUrl");
+		this.curriculumBaseUrl = this.config.getConfigParam("curriculumBaseUrl");
 	}
 	
 	if(command && command!=''){
@@ -176,7 +177,7 @@ View.prototype.getProjectPaths = function(){
 			/* get the mode that the authoring tool is to run in (portal/standalone) */
 			if(settingsJSON.mode && settingsJSON.mode.portal && settingsJSON.mode.portalUrl) {
 				var rawLoc = window.location.toString();
-				var loginUrl = rawLoc.substring(0,rawLoc.indexOf('/vlewrapper/vle/author.html')) + settingsJSON.mode.portalUrl + '?redirect=/author/authorproject.html';
+				var loginUrl = rawLoc.substring(0,rawLoc.indexOf('/wise/vle/author.html')) + settingsJSON.mode.portalUrl + '?redirect=/author/authorproject.html';
 				window.location = loginUrl;
 			}
 			
@@ -244,8 +245,8 @@ View.prototype.getCurriculumBaseUrl = function(){
  */
 View.prototype.getCurriculumBaseUrlSuccess = function(t,x,o){
 	if(t && t!=''){
-		//set the vlewrapper base url into the view
-		o.vlewrapperBaseUrl = t;
+		//set the wise base url into the view
+		o.curriculumBaseUrl = t;
 		
 		//set the authoring mode to true in the view
 		o.authoringMode = true;

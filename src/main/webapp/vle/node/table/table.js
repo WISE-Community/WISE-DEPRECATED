@@ -12,10 +12,10 @@
  * you created for your new step type
  *
  * your new folder will look something like
- * vlewrapper/WebContent/vle/node/<new step type>/
+ * wise/src/main/webapp/vle/node/<new step type>/
  *
  * e.g. for example if you are creating a quiz step it would look something like
- * vlewrapper/WebContent/vle/node/quiz/
+ * wise/src/main/webapp/vle/node/quiz/
  * 
  * 
  * TODO: in this file, change all occurrences of the word 'TEMPLATE' to the
@@ -673,13 +673,13 @@ Table.prototype.save = function() {
 		 * that you will use for representing student data for this
 		 * type of step. copy and modify the file below
 		 * 
-		 * vlewrapper/WebContent/vle/node/template/templatestate.js
+		 * wise/src/main/webapp/vle/node/template/templatestate.js
 		 * 
 		 * and use the object defined in your new state.js file instead
 		 * of TEMPLATESTATE. for example if you are creating a new
 		 * quiz step type you would copy the file above to
 		 * 
-		 * vlewrapper/WebContent/vle/node/quiz/quizstate.js
+		 * wise/src/main/webapp/vle/node/quiz/quizstate.js
 		 * 
 		 * and in that file you would define QUIZSTATE and therefore
 		 * would change the TEMPLATESTATE to QUIZSTATE below

@@ -321,11 +321,11 @@ WISE = {
         				
         				
         				if(status.maxAlertLevel >= 0 && status.maxAlertLevel < 2) {
-        					$('#teamStatus_' + workgroupId).html("<img src='/vlewrapper/vle/images/check16.gif' />");
+        					$('#teamStatus_' + workgroupId).html("<img src='/wise/vle/images/check16.gif' />");
         				} else if(status.maxAlertLevel >= 2 && status.maxAlertLevel < 4) { 
         					$('#teamStatus_' + workgroupId).html("warning");
         				} else if(status.maxAlertLevel >= 4) {
-        					$('#teamStatus_' + workgroupId).html("<img src='/vlewrapper/vle/images/warn16.gif' />");
+        					$('#teamStatus_' + workgroupId).html("<img src='/wise/vle/images/warn16.gif' />");
         				}
         				
     					$('#teamStatus_' + workgroupId).unbind('click');

@@ -28,7 +28,7 @@ Netlogo.prototype = {
     var appletStr = '';
 
     if(this.content.activity_uri !== '') {
-      var codebase = '/vlewrapper/vle/node/netlogo'
+      var codebase = '/wise/vle/node/netlogo'
       var model    = '<param name="DefaultModel" value="' + this.content.activity_uri + '">';
       var extLoc   = '<param name="nlogo.extensions.url" value="' + codebase + '/extensions' + '">';
       appletStr    = '<applet id="netlogo-applet" code="org.nlogo.lite.Applet" codebase="' + codebase +

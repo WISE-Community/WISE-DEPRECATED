@@ -66,7 +66,7 @@ public class RouterController extends AbstractController{
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 				return null;
 			} else {
-				ServletContext servletContext = this.getServletContext().getContext("/vlewrapper");
+				ServletContext servletContext = this.getServletContext().getContext("/wise");
 				CredentialManager.setRequestCredentials(request, user);
 				if(forward.equals("convert") || forward.equals("minifier")){
 					
@@ -90,7 +90,7 @@ public class RouterController extends AbstractController{
 									
 									/*
 									 * set the timestamps into the request so that we
-									 * have access to them in the vlewrapper controller 
+									 * have access to them in the wise controller 
 									 */
 									request.setAttribute("lastEdited", lastEdited);
 									request.setAttribute("lastMinified", lastMinified);						

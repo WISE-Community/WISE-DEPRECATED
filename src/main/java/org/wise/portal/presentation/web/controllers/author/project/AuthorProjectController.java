@@ -1252,9 +1252,9 @@ public class AuthorProjectController extends AbstractController {
 	}
 
 	/**
-	 * Get the url to the curriculum base on the vlewrapper
+	 * Get the url to the curriculum base
 	 * e.g.
-	 * http://localhost:8080/vlewrapper/curriculum
+	 * http://localhost:8080/curriculum
 	 * @param request
 	 * @param response
 	 * @return
@@ -1262,10 +1262,10 @@ public class AuthorProjectController extends AbstractController {
 	 */
 	private ModelAndView handleGetCurriculumBaseUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		//get the curriculum_base_www variable from the wise.properties file
-		String vlewrapperBaseUrl = wiseProperties.getProperty("curriculum_base_www");
+		String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
 
 		//write the curriculum base url to the response
-		response.getWriter().write(vlewrapperBaseUrl);
+		response.getWriter().write(curriculumBaseUrl);
 
 		return null;
 	}
@@ -1294,7 +1294,7 @@ public class AuthorProjectController extends AbstractController {
 		String cRaterRequestUrl = portalUrl + "/wise/bridge/request.html?type=cRater";
 
 		//get the curriculum_base_www variable from the wise.properties file
-		String vlewrapperBaseUrl = wiseProperties.getProperty("curriculum_base_www");
+		String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
 
 		//get the url to make CRater requests
 		String deleteProjectUrl = portalUrl + "/wise/deleteproject.html";
@@ -1318,7 +1318,7 @@ public class AuthorProjectController extends AbstractController {
 			//set the config variables
 			config.put("username", username);
 			config.put("projectMetaDataUrl", projectMetaDataUrl);
-			config.put("vlewrapperBaseUrl", vlewrapperBaseUrl);
+			config.put("curriculumBaseUrl", curriculumBaseUrl);
 			config.put("indexUrl", ControllerUtil.getPortalUrlString(request) + TelsAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 			int maxInactiveInterval = request.getSession().getMaxInactiveInterval() * 1000;
 			config.put("sessionTimeoutInterval", maxInactiveInterval);			// add sessiontimeout interval, in milleseconds
@@ -1473,11 +1473,11 @@ public class AuthorProjectController extends AbstractController {
 
 			//make sure the signed in user has write access
 			if(this.projectService.canAuthorProject(project, user)) {
-				//get the vlewrapper context
-				ServletContext servletContext = this.getServletContext().getContext("/vlewrapper");
+				//get the wise context
+				ServletContext servletContext = this.getServletContext().getContext("/wise");
 				CredentialManager.setRequestCredentials(request, user);
 
-				//forward the request to the vlewrapper
+				//forward the request to the appropriate controller
 				servletContext.getRequestDispatcher("/vle/" + forward + ".html").forward(request, response);
 
 				//TODO: update the project edited timestamp

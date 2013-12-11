@@ -564,14 +564,14 @@ NavigationPanel.prototype.addBaseHref = function(navHtml) {
 	/*
 	 * get the href of the current document. it will look something
 	 * like
-	 * http://wise4.telscenter.org/vlewrapper/vle/vle.html
+	 * http://wise.berkeley.edu/wise/vle/vle.html
 	 */
 	var documentLocationHref = document.location.href;
 
 	/*
 	 * get everything up until the last '/' inclusive. the documentBase
 	 * will look something like
-	 * http://wise4.telscenter.org/vlewrapper/vle/
+	 * http://wise.berkeley.edu/wise/vle/
 	 */
 	var documentBase = documentLocationHref.substring(0, documentLocationHref.lastIndexOf('/') + 1);
 

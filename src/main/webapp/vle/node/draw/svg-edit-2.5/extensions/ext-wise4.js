@@ -78,7 +78,7 @@ svgEditor.addExtension("WISE4", function(S) {
 		//$('#zoom_panel .tool_sep').remove();
 		$('#zoom_panel').hide();
 		$('#sidepanels').css('min-height','402px');
-		//$('ellipse#svg_1').attr('fill','url(http://localhost:8080/vlewrapper/vle/vle.html#xxsvg_47010)'); // needed for some reason in wise4
+		//$('ellipse#svg_1').attr('fill','url(http://localhost:8080/wise/vle/vle.html#xxsvg_47010)'); // needed for some reason in wise4
 		
 		svgCanvas.setFontFamily('sans-serif'); // set default font family
 		
@@ -182,7 +182,7 @@ svgEditor.addExtension("WISE4", function(S) {
             type: "context",
             panel: "editor_panel",
             title: "Erase Current Drawing",
-            icon: '/vlewrapper/vle/node/draw/svg-edit/images/erase.png',
+            icon: '/wise/vle/node/draw/svg-edit/images/erase.png',
             events: {
                 'click': function() {
                     $('#revert_dialog').dialog('open');

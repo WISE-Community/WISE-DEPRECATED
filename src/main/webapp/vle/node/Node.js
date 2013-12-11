@@ -627,13 +627,13 @@ Node.prototype.injectBaseRef = function(content) {
 			//get the content url path e.g. "node/openresponse"
 			contentUrlPath = contentUrl.substring(0, contentUrl.lastIndexOf('/'));
 
-			//get the window location e.g. "http://localhost:8080/vlewrapper/vle/vle.html"
+			//get the window location e.g. "http://localhost:8080/wise/vle/vle.html"
 			var loc = window.location.toString();
 
-			//get the vle location e.g. "http://localhost:8080/vlewrapper/vle/"
+			//get the vle location e.g. "http://localhost:8080/wise/vle/"
 			var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
 
-			//create the base href path e.g. "http://localhost:8080/vlewrapper/vle/node/openresponse/"
+			//create the base href path e.g. "http://localhost:8080/wise/vle/node/openresponse/"
 			cbu = vleLoc + contentUrlPath + '/';
 		}
 
@@ -660,7 +660,7 @@ Node.prototype.injectBaseRef = function(content) {
 		}
 
 		// check for tinymce flv embed instances, inject baseURI into any 'url' flashvars
-		if(newContent.match('/vlewrapper/vle/jquery/tinymce/jscripts/tiny_mce/plugins/media/moxieplayer.swf')){
+		if(newContent.match('/wise/vle/jquery/tinymce/jscripts/tiny_mce/plugins/media/moxieplayer.swf')){
 			newContent = newContent.replace(/url=assets/g,'url=' + cbu + 'assets');
 		}
 
@@ -911,7 +911,7 @@ Node.prototype.containsBodyCloseTag = function(content) {
 /**
  * Gets the contentBaseUrl for when the user is previewing a step using the authoring tool.
  * This is not used when the user is previewing the project in the authoring tool.
- * @return the contentBaseUrl from the vlewrapper
+ * @return the contentBaseUrl
  */
 Node.prototype.getAuthoringModeContentBaseUrl = function() {
 	/*
@@ -946,14 +946,14 @@ Node.prototype.getAuthoringModeContentBaseUrl = function() {
 	var projectFolder = "";
 
 	/*
-	 * get the vlewrapper base url
+	 * Get the curriculum base url
 	 * e.g.
 	 * http://localhost:8080/curriculum
 	 */
-	var vlewrapperBaseUrl = "";
+	var curriculumBaseUrl = "";
 
-	if(this.view.vlewrapperBaseUrl) {
-		vlewrapperBaseUrl = this.view.vlewrapperBaseUrl;
+	if(this.view.curriculumBaseUrl) {
+		curriculumBaseUrl = this.view.curriculumBaseUrl;
 	}
 
 	//try to get the project folder from the relativeProjectUrl
@@ -982,13 +982,13 @@ Node.prototype.getAuthoringModeContentBaseUrl = function() {
 	}
 
 	/*
-	 * combine the vlewrapper base url and the project folder
+	 * Combine the curiculum base url and the project folder
 	 * e.g.
-	 * vlewrapperBaseUrl=http://localhost:8080/curriculum
+	 * curriculumBaseUrl=http://localhost:8080/curriculum
 	 * projectFolder=/135
 	 * contentBaseUrl=http://localhost:8080/curriculum/135/
 	 */
-	var contentBaseUrl = vlewrapperBaseUrl + projectFolder;
+	var contentBaseUrl = curriculumBaseUrl + projectFolder;
 
 	return contentBaseUrl;
 };

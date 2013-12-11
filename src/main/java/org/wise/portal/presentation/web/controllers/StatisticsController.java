@@ -19,7 +19,7 @@ public class StatisticsController extends AbstractController {
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView modelAndView = new ModelAndView();
 		
-		//add the portal base url and vlewrapper base url to the model so the jsp can access it 
+		//add the wise base url to the model so the jsp can access it 
 		modelAndView.addObject("wiseBaseURL", wiseProperties.getProperty("wiseBaseURL"));
 		
 		return modelAndView;
