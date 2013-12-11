@@ -1177,7 +1177,8 @@
     		    /contact/contactwiseproject.html=contactWiseProjectController
     		    /contact/checkforexistingaccount.html=checkForExistingAccountController
     		    /pages/statistics.html=statisticsController
-    		    /getportalstatistics.html=portalStatisticsController
+    		    /getPortalStatistics.html=portalStatisticsController
+    		    /getVLEStatistics.html=vleGetStatisticsController
     		    /student/index.html=studentIndexController
     		    /student/vle/vle.html=studentVLEController
     		    /student/selectteam.html=selectteamController

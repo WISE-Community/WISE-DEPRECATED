@@ -34,7 +34,6 @@ import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -619,7 +618,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	 */
 	public String minifyProject(Project project) {
 		String curriculumBaseDir = this.wiseProperties.getProperty("curriculum_base_dir");
-		String minifyUrl = this.wiseProperties.getProperty("vlewrapper_baseurl") + "/util/minifier.html";
+		String minifyUrl = this.wiseProperties.getProperty("wiseBaseURL") + "/util/minifier.html";
 		String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		String params = "command=minifyProject&path=" + curriculumBaseDir + "/" + projectUrl;
 		

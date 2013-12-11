@@ -20,8 +20,7 @@ public class StatisticsController extends AbstractController {
 		ModelAndView modelAndView = new ModelAndView();
 		
 		//add the portal base url and vlewrapper base url to the model so the jsp can access it 
-		modelAndView.addObject("portal_baseurl", wiseProperties.getProperty("portal_baseurl"));
-		modelAndView.addObject("vlewrapper_baseurl", wiseProperties.getProperty("vlewrapper_baseurl"));
+		modelAndView.addObject("wiseBaseURL", wiseProperties.getProperty("wiseBaseURL"));
 		
 		return modelAndView;
 	}

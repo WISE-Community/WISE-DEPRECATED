@@ -248,12 +248,11 @@ function isLastEntryOfMonth(portalStatisticsEntry, nextPortalStatisticsEntry) {
 	return result;
 }
 
-//get the portal and vle base urls
-var portal_baseurl = "${portal_baseurl}";
-var vlewrapper_baseurl = "${vlewrapper_baseurl}";
+//get the wise base urls
+var wiseBaseURL = "${wiseBaseURL}";
 
 //get the pages to request statistics from the portal and vle
-var portalStatisticsPage = "/getportalstatistics.html";
+var portalStatisticsPage = "/getPortalStatistics.html";
 var vleStatisticsPage = "/getVLEStatistics.html";
 
 //boolean for checking if we are done
@@ -324,7 +323,7 @@ var annotationCountsComparisonTicks = [];
  */
 function getPortalStatistics() {
 	$.ajax({
-		url:portal_baseurl + portalStatisticsPage,
+		url:wiseBaseURL + portalStatisticsPage,
 		success:getPortalStatisticsCallback,
 		dataType:'json'
 	});
@@ -458,7 +457,7 @@ function parsePortalStatistics(portalStatisticsArray) {
  */
 function getVLEStatistics() {
 	$.ajax({
-		url:vlewrapper_baseurl + vleStatisticsPage,
+		url:wiseBaseURL + vleStatisticsPage,
 		success:getVLEStatisticsCallback,
 		dataType:'json'
 	});
