@@ -11,11 +11,11 @@
 				</spring:htmlEscape>
 			</div>
 			<img class="announceIcon"
-				src="/wise/themes/default/images/icons/marker.png"
+				src="themes/default/images/icons/marker.png"
 				alt="announcement" />
 		</c:if>
 
-		<a id="name" href="/wise/" title="WISE Homepage">WISE
+		<a id="name" href="" title="WISE Homepage">WISE
 		</a>
 
 		<%@ include file="accountmenu.jsp"%>

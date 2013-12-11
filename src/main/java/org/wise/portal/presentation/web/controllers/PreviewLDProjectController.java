@@ -62,12 +62,12 @@ public class PreviewLDProjectController extends AbstractController {
 		Set<String> tagNames = new TreeSet<String>();
 		tagNames.add("library");
 		String step = request.getParameter("step");
+		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 
 		if(projectId != null && project != null){
 			if(project.hasTags(tagNames) || 
 					project.getFamilytag().equals(FamilyTag.TELS) || this.projectService.canReadProject(project, user)){
-				String portalurl = ControllerUtil.getBaseUrlString(request);
-				String vleConfigUrl = portalurl + "/wise/request/info.html" + "?projectId=" + request.getParameter("projectId") + "&action=getVLEConfig&requester=portalpreview";
+				String vleConfigUrl = wiseBaseURL + "/request/info.html" + "?projectId=" + request.getParameter("projectId") + "&action=getVLEConfig&requester=portalpreview";
 
 				if(step != null) {
 					//this is set if the request is to preview the project and load a specific step such as 1.2
@@ -90,7 +90,7 @@ public class PreviewLDProjectController extends AbstractController {
 				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 				String contentUrl = curriculumBaseWWW + rawProjectUrl;
 				
-				String vleurl = portalurl + "/wise/vle/vle.html";
+				String vleurl = wiseBaseURL + "/vle/vle.html";
 		
 				ModelAndView modelAndView = new ModelAndView("preview/preview");
 		    	modelAndView.addObject("vleurl",vleurl);
