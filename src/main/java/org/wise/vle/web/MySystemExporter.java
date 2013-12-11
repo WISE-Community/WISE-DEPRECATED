@@ -14,8 +14,8 @@ public class MySystemExporter {
 	Vector<String> filesToCopy;
 	Vector<String> directoriesToCopy;
 
-	public MySystemExporter(String _vlewrapperBaseDir, File _zipFolder) {
-		basedir = _vlewrapperBaseDir;
+	public MySystemExporter(String _wiseBaseDir, File _zipFolder) {
+		basedir = _wiseBaseDir;
 		zipFolder = _zipFolder;
 		filesToCopy = new Vector<String>();
 		directoriesToCopy = new Vector<String>();

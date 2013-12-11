@@ -288,7 +288,7 @@ public class VLEGetSpecialExport extends AbstractController {
 		}
 		
 		//get the path of the vlewrapper base dir
-		String vlewrapperBaseDir = vleProperties.getProperty("vlewrapperBaseDir");
+		String wiseBaseDir = vleProperties.getProperty("wiseBaseDir");
 		
 		
 		try {
@@ -546,9 +546,9 @@ public class VLEGetSpecialExport extends AbstractController {
 			if(nodeType == null) {
 				
 			} else if(nodeType.equals("svgdraw")) {
-				if(vlewrapperBaseDir != null && vlewrapperBaseDir != "") {
+				if(wiseBaseDir != null && wiseBaseDir != "") {
 					//get the lz77.js file from the server
-					File sourcelz77File = new File(vlewrapperBaseDir + "/vle/node/draw/svg-edit/lz77.js");
+					File sourcelz77File = new File(wiseBaseDir + "/vle/node/draw/svg-edit/lz77.js");
 					
 					//create a lz77.js file in the folder we are creating
 					File newlz77File = new File(zipFolder, "lz77.js");
@@ -557,7 +557,7 @@ public class VLEGetSpecialExport extends AbstractController {
 					FileUtils.copyFile(sourcelz77File, newlz77File);
 					
 					//get the viewStudentWork.html file for svgdraw
-					File sourceViewStudentWorkFile = new File(vlewrapperBaseDir + "/vle/node/draw/viewStudentWork.html");
+					File sourceViewStudentWorkFile = new File(wiseBaseDir + "/vle/node/draw/viewStudentWork.html");
 					
 					//create a viewStudentWork.html file in the folder we are creating
 					File newViewStudentWorkFile = new File(zipFolder, "viewStudentWork.html");
@@ -566,24 +566,24 @@ public class VLEGetSpecialExport extends AbstractController {
 					FileUtils.copyFile(sourceViewStudentWorkFile, newViewStudentWorkFile);
 				}
 			} else if(nodeType.equals("mysystem2")) {
-				if(vlewrapperBaseDir != null && vlewrapperBaseDir != "") { 
-					MySystemExporter myExporter  = new MySystemExporter(vlewrapperBaseDir,zipFolder);
+				if(wiseBaseDir != null && wiseBaseDir != "") { 
+					MySystemExporter myExporter  = new MySystemExporter(wiseBaseDir,zipFolder);
 					myExporter.copyFiles();
 				}
 			} else if(nodeType.equals("sensor")) {
-				if(vlewrapperBaseDir != null && vlewrapperBaseDir != "") {
+				if(wiseBaseDir != null && wiseBaseDir != "") {
 					//get the paths of all the files we need to copy
 					Vector<String> filesToCopy = new Vector<String>();
-					filesToCopy.add(vlewrapperBaseDir + "/vle/content/content.js");
-					filesToCopy.add(vlewrapperBaseDir + "/vle/common/helperfunctions.js");
-					filesToCopy.add(vlewrapperBaseDir + "/vle/jquery/js/flot/jquery.flot.js");
-					filesToCopy.add(vlewrapperBaseDir + "/vle/jquery/js/flot/jquery.js");
-					filesToCopy.add(vlewrapperBaseDir + "/vle/node/Node.js");
-					filesToCopy.add(vlewrapperBaseDir + "/vle/data/nodevisit.js");
-					filesToCopy.add(vlewrapperBaseDir + "/vle/node/sensor/sensor.js");
-					filesToCopy.add(vlewrapperBaseDir + "/vle/node/sensor/SensorNode.js");
-					filesToCopy.add(vlewrapperBaseDir + "/vle/node/sensor/sensorstate.js");
-					filesToCopy.add(vlewrapperBaseDir + "/vle/node/sensor/viewStudentWork.html");
+					filesToCopy.add(wiseBaseDir + "/vle/content/content.js");
+					filesToCopy.add(wiseBaseDir + "/vle/common/helperfunctions.js");
+					filesToCopy.add(wiseBaseDir + "/vle/jquery/js/flot/jquery.flot.js");
+					filesToCopy.add(wiseBaseDir + "/vle/jquery/js/flot/jquery.js");
+					filesToCopy.add(wiseBaseDir + "/vle/node/Node.js");
+					filesToCopy.add(wiseBaseDir + "/vle/data/nodevisit.js");
+					filesToCopy.add(wiseBaseDir + "/vle/node/sensor/sensor.js");
+					filesToCopy.add(wiseBaseDir + "/vle/node/sensor/SensorNode.js");
+					filesToCopy.add(wiseBaseDir + "/vle/node/sensor/sensorstate.js");
+					filesToCopy.add(wiseBaseDir + "/vle/node/sensor/viewStudentWork.html");
 					
 					//loop through all the file paths
 					for(int x=0; x<filesToCopy.size(); x++) {
