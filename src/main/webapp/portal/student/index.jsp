@@ -8,16 +8,16 @@
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
 <title><spring:message code="student.title" /></title>
 
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jqueryuisource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jquerycookiesource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="browserdetectsource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="checkcompatibilitysource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="../<spring:theme code="jquerysource"/>"></script>
+<script type="text/javascript" src="../<spring:theme code="jqueryuisource"/>"></script>
+<script type="text/javascript" src="../<spring:theme code="jquerycookiesource"/>"></script>
+<script type="text/javascript" src="../<spring:theme code="browserdetectsource"/>"></script>
+<script type="text/javascript" src="../<spring:theme code="checkcompatibilitysource"/>"></script>
+<script type="text/javascript" src="../<spring:theme code="generalsource"/>"></script>
 
-<link href="<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="studenthomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="../<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="../<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="../<spring:theme code="studenthomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript">
 // only alert user about browser comptibility issue once.
@@ -254,7 +254,7 @@ $(document).ready(function() {
 					
 						<div class="sideContent">
 						
-							<div style="text-align:center; margin-top:5px"><img src="/wise/themes/default/images/wise4-logo-new-sm.png" alt="WISE" /></div>
+							<div style="text-align:center; margin-top:5px"><img src="themes/default/images/wise4-logo-new-sm.png" alt="WISE" /></div>
 							
 							<spring:htmlEscape defaultHtmlEscape="false">
             				<spring:escapeBody htmlEscape="false">
@@ -309,7 +309,7 @@ $(document).ready(function() {
 												</c:otherwise>
 											</c:choose>
 											<li class="announcements"><a id="viewAnnouncements_${studentRunInfo.run.id}" class="viewAnnouncements"><spring:message code="student.index.viewAnnouncements"/></a></li>
-											<li><a href="/wise/contact/contactwiseproject.html?projectId=${studentRunInfo.run.project.id}&runId=${studentRunInfo.run.id}"><spring:message code="student.index.reportProblem"/></a></li>
+											<li><a href="contact/contactwiseproject.html?projectId=${studentRunInfo.run.project.id}&runId=${studentRunInfo.run.id}"><spring:message code="student.index.reportProblem"/></a></li>
 										</ul>
 								 	</td>
 								</tr>

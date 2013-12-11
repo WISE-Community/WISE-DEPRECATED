@@ -28,7 +28,6 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -177,10 +176,9 @@ public class StudentVLEController extends AbstractController {
 	 */
 	private ModelAndView handleLaunchVLE(HttpServletRequest request,
 			Run run) throws ObjectNotFoundException {
-		String portalurl = ControllerUtil.getBaseUrlString(request);
-		
-		String vleurl = portalurl + "/wise/vle/vle.html";
-		String vleConfigUrl = portalurl + "/wise/request/info.html?runId=" + run.getId() + "&action=getVLEConfig";
+		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+		String vleurl = wiseBaseURL + "/vle/vle.html";
+		String vleConfigUrl = wiseBaseURL + "/request/info.html?runId=" + run.getId() + "&action=getVLEConfig";
 
 		String previewRequest = request.getParameter("preview");
 		if (previewRequest != null && Boolean.valueOf(previewRequest)) {

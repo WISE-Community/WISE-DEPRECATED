@@ -156,7 +156,7 @@ View.prototype.retrieveLocale = function(locale,componentName,localePath) {
 	}
 	if (componentName == "main") {
 		isAsync = false;  // fetching i18n files for vle needs to happen synchronously.
-		localePath = wiseBaseUrl + "vle/view/i18n/i18n_" + locale + ".json";		
+		localePath = wiseBaseUrl + "/vle/view/i18n/i18n_" + locale + ".json";		
 	} else if (localePath) {
 		// trying to load locale for a node, does not need to be sync.
 		// get localePath

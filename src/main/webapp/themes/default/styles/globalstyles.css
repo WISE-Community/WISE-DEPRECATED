@@ -54,8 +54,8 @@ body {
 	text-align: left;
 	overflow:auto;
 	color: #444;
-	background:url("/wise/themes/default/images/body-bg.png") repeat-y scroll center top #555555;
-	/*background:url("/wise/themes/default/images/body-bg-circles.png") repeat-y scroll center top #555555;*/
+	background:url("themes/default/images/body-bg.png") repeat-y scroll center top #555555;
+	/*background:url("themes/default/images/body-bg-circles.png") repeat-y scroll center top #555555;*/
 }
 	
 img {border: 0px;}
@@ -256,7 +256,7 @@ img.icon {
 }
 
 #pageWrapper {
-	background:url("/wise/themes/default/images/wrapper-bg.png") no-repeat scroll center top transparent;
+	background:url("themes/default/images/wrapper-bg.png") no-repeat scroll center top transparent;
 	margin:0 auto;
 	padding:1em 0 0;
 	min-width:1025px;
@@ -267,11 +267,11 @@ img.icon {
 }
 
 #header {
-	background:url("/wise/themes/default/images/header-bg.png") no-repeat scroll center top transparent;
+	background:url("themes/default/images/header-bg.png") no-repeat scroll center top transparent;
 }
 
 #headerSmall {
-	background:url("/wise/themes/default/images/wise4-logo-new.png") no-repeat scroll center top transparent;
+	background:url("themes/default/images/wise4-logo-new.png") no-repeat scroll center top transparent;
 	width:500px;
 	height:145px;
 	margin: 0 auto;
@@ -605,7 +605,7 @@ a#name {
 .loginPanel {
 	width:500px;
 	height:300px;
-	background:url('/wise/themes/default/images/home/login-header.png') no-repeat center center;
+	background:url('themes/default/images/home/login-header.png') no-repeat center center;
 	margin:0 auto;
 	position:relative;
 }
@@ -720,7 +720,7 @@ a#name {
 }
 
 #accountMenu.guest {
-	background:url("/wise/themes/default/images/accountBg-guest.png");
+	background:url("themes/default/images/accountBg-guest.png");
 }
 
 ul.welcome-menu {
@@ -892,7 +892,7 @@ form {margin:0px; padding:0px;}
 /* Styles for buttons */
 
 .wisebutton {
-	background-image: url("/wise/themes/default/images/wise4-buttons-new.png");
+	background-image: url("themes/default/images/wise4-buttons-new.png");
     background-color:transparent;
    	background-position: -3px -3px;
     color: #FFFFFF !important;
@@ -1159,7 +1159,7 @@ form {margin:0px; padding:0px;}
 }
 
 a.printLesson {
-	background: url("/wise/themes/default/images/print.png") no-repeat scroll left center transparent;
+	background: url("themes/default/images/print.png") no-repeat scroll left center transparent;
     color: #00748F;
     font-family: Arial,Helvetica,Tahoma,sans-serif;
     font-size: 0.9em;
