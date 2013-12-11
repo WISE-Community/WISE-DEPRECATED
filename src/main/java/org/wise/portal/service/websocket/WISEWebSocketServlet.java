@@ -29,7 +29,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-
 import org.apache.catalina.websocket.MessageInbound;
 import org.apache.catalina.websocket.StreamInbound;
 import org.apache.catalina.websocket.WebSocketServlet;
@@ -327,13 +326,13 @@ public class WISEWebSocketServlet extends WebSocketServlet {
     	
     	if(wiseProperties != null) {
     		//get the portal base url e.g. http://wise.berkeley.edu:8080/wise
-    		String portalBaseUrl = wiseProperties.getProperty("portal_baseurl");
+    		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
     		
     		//remove the /wise to leave the host e.g. http://wise.berkeley.edu:8080
-    		portalBaseUrl = portalBaseUrl.replace("/wise", "");
+    		wiseBaseURL = wiseBaseURL.replace("/wise", "");
     		
     		//check if the origin matches the portal base url
-    		if(origin != null && origin.equals(portalBaseUrl)) {
+    		if(origin != null && origin.equals(wiseBaseURL)) {
     			//the origin matches
     			verified = true;
     		}

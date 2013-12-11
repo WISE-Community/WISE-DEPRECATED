@@ -214,8 +214,8 @@ public class RegisterTeacherController extends SimpleFormController {
 
 			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, Locale.US);
 			String subject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, defaultSubject, this.locale);
-			String portalbaseurl = wiseProperties.getProperty("portal_baseurl");
-			String gettingStartedUrl = portalbaseurl + "/pages/gettingstarted.html";
+			String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+			String gettingStartedUrl = wiseBaseURL + "/pages/gettingstarted.html";
 			String defaultBody = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, Locale.US);
 			String message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, defaultBody, this.locale);
 			String fromEmail = wiseProperties.getProperty("portalemailaddress");

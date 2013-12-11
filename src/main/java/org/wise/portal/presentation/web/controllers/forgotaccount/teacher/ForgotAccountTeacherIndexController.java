@@ -143,7 +143,7 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 			 * e.g.
 			 * http://wise4.berkeley.edu/wise/forgotaccount/resetpassword.html?k=1234567890abc
 			 */
-			String passwordResetLink = wiseProperties.getProperty("portal_baseurl") + "/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
+			String passwordResetLink = wiseProperties.getProperty("wiseBaseURL") + "/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
 			
 			String portalName = wiseProperties.getProperty("portal.name");
 			
