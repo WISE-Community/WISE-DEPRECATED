@@ -191,18 +191,6 @@
         "value": "feedback van de leerkracht ",
         "description": "The label for the teacher feedback"
     },
-    "this_is_your": {
-        "value": "Dit is jouw",
-        "description": "The beginning of the message that says this is your x revision"
-    },
-    "revision": {
-        "value": "herwerking",
-        "description": "The end of the message that says this is your x revision"
-    },
-    "this_is_your_first_revision": {
-        "value": "Dit is jouw eerste herwerking.",
-        "description": "The message that tells the student this is their first revision"
-    },
     "this_step_not_available_yet": {
         "value": "Deze stap is nog niet beschikbaar.",
         "description": "The message that tells the student that the step is not available yet"

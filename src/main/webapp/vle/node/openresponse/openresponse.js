@@ -436,8 +436,8 @@ OPENRESPONSE.prototype.responseEdited = function() {
 	} else {
 		this.setCheckAnswerAvailable();
 	}
-	
-	displayNumberAttempts("This is your", "revision", this.states);
+	var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_revision_x",[this.states.length+1],"OpenResponseNode");
+	$("#numberAttemptsDiv").html(numberAttemptsMessage);
 };
 
 /**
@@ -1422,10 +1422,6 @@ OPENRESPONSE.prototype.displayTeacherReview = function() {
 		//the label for the teacher feedback
 		var teacher_feedback = this.view.getI18NString('teacher_feedback', 'OpenResponseNode');
 		
-		//the text to show this is your x revision
-		var this_is_your = this.view.getI18NString('this_is_your', 'OpenResponseNode');
-		var revision = this.view.getI18NString('revision', 'OpenResponseNode');
-		
 		//set the teacher annotation text and make it visible
 		document.getElementById('annotationLabelDiv').innerHTML = teacher_feedback;
 		document.getElementById('annotationTextDiv').innerHTML = latestCommentAnnotationForStep;
@@ -1436,15 +1432,16 @@ OPENRESPONSE.prototype.displayTeacherReview = function() {
 			//set their previous revision to when they last worked on this step
 			document.getElementById('responseBox').value = this.states[this.states.length - 1].response;
 			this.setSaveUnavailable();
-			displayNumberAttempts(this_is_your, revision, this.states);
 			
+			var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_revision_x",[this.states.length+1],"OpenResponseNode");
+			$("#numberAttemptsDiv").html(numberAttemptsMessage);
+
 			//tell the node that the student has completed it
 			this.node.setCompleted();
 		} else {
 			//the message that says this is your first revision
-			var this_is_your_first_revision = this.view.getI18NString('this_is_your_first_revision', 'OpenResponseNode');
-			
-			document.getElementById("numberAttemptsDiv").innerHTML = this_is_your_first_revision;
+			var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_revision_x",[1],"OpenResponseNode");
+			$("#numberAttemptsDiv").html(numberAttemptsMessage);
 			
 			if(latestWorkForassociatedStartNode != null && latestWorkForassociatedStartNode != '') {
 				//set the latest work from the original step in the responseBox so the student can revise it
@@ -1837,21 +1834,18 @@ OPENRESPONSE.prototype.retrieveAnnotationAndWorkCallback = function(text, xml, a
 		/* set value of text area base on previous work, if any */
 		if (thisOr.states!=null && thisOr.states.length > 0) {
 			//the message that says this is your x revision
-			var this_is_your = thisOr.view.getI18NString('this_is_your', 'OpenResponseNode');
-			var revision = thisOr.view.getI18NString('revision', 'OpenResponseNode');
-			
 			document.getElementById('responseBox').value = thisOr.states[thisOr.states.length - 1].response;
 			thisOr.setSaveUnavailable();
-			displayNumberAttempts(this_is_your, revision, thisOr.states);
-			
+			var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_revision_x",[thisOr.states.length+1],"OpenResponseNode");
+			$("#numberAttemptsDiv").html(numberAttemptsMessage);
+
 			//tell the node that the student has completed it
 			thisOr.node.setCompleted();
 		} else {
 			//the message that says this is your first revision
-			var this_is_your_first_revision = thisOr.view.getI18NString('this_is_your_first_revision', 'OpenResponseNode');
-			
-			document.getElementById("numberAttemptsDiv").innerHTML = this_is_your_first_revision;
-			
+			var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_revision_x",[1],"OpenResponseNode");
+			$("#numberAttemptsDiv").html(numberAttemptsMessage);
+
 			if(latestWork != null && latestWorkText != null) {
 				if(thisOr.richTextEditor != null) {
 					thisOr.richTextEditor.setContent(latestWorkText);
@@ -2010,17 +2004,17 @@ OPENRESPONSE.prototype.setResponse = function() {
 	/* set value of text area base on previous work, if any */
 	if (this.states!=null && this.states.length > 0) {
 		//the message that says this is your x revision
-		var this_is_your = this.view.getI18NString('this_is_your', 'OpenResponseNode');
-		var revision = this.view.getI18NString('revision', 'OpenResponseNode');
-		
 		document.getElementById('responseBox').value = this.states[this.states.length - 1].response;
 		this.setSaveUnavailable();
-		displayNumberAttempts(this_is_your, revision, this.states);
+		
+		var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_revision_x",[this.states.length+1],"OpenResponseNode");
+		$("#numberAttemptsDiv").html(numberAttemptsMessage);
+
 	} else {
 		//the message that says this is your first revision
-		var this_is_your_first_revision = this.view.getI18NString('this_is_your_first_revision', 'OpenResponseNode');
-		
-		document.getElementById("numberAttemptsDiv").innerHTML = this_is_your_first_revision;
+		var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_revision_x",[1],"OpenResponseNode");
+		$("#numberAttemptsDiv").html(numberAttemptsMessage);
+
 		document.getElementById('responseBox').value = "";
 	 	this.setSaveAvailable();
 	 	

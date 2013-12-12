@@ -227,10 +227,8 @@ MC.prototype.render = function() {
 		document.getElementById("tryAgainButton").innerHTML = edit_answer;
 	} else {
 		//the text that shows this is your x attempt
-		var this_is_your = this.view.getI18NString('this_is_your', 'MultipleChoiceNode');
-		var attempt = this.view.getI18NString('attempt', 'MultipleChoiceNode');
-		
-		displayNumberAttempts(this_is_your, attempt, this.attempts);
+		var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_attempt_x",[this.attempts.length+1],"MultipleChoiceNode");
+		$("#numberAttemptsDiv").html(numberAttemptsMessage);
 	};
 	
 	if(latestState != null && latestState.isCorrect) {

@@ -31,14 +31,6 @@
         "value": "Bewerk antwoord",
         "description": "The text for the button to edit the answer if there is no correct answer"
     },
-    "this_is_your": {
-        "value": "Dit is jouw",
-        "description": "The text 'This is your' to show this is your nth attempt"
-    },
-    "attempt": {
-        "value": "poging",
-        "description": "The text 'attempt' to show this is your nth attempt"
-    },
     "you_received": {
         "value": "Je kreeg",
         "description": "The text 'You received' to show you received x points"

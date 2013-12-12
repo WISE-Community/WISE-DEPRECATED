@@ -75,31 +75,6 @@ function setResponseBoxEnabled(doEnable) {
 };
 
 /**
- * Updates text in div with id numberAttemptsDiv with info on number of
- * attempts. The text will generally follow the format:
- * This is your ___ attempt.  Or This is your ___ revision.
- * part1 example: This is your
- * part2 example: attempt
- * part2 example2: revision
- */
-function displayNumberAttempts(part1, part2, states) {
-	var nextAttemptNum = states.length + 1;
-	var nextAttemptString = "";
-	if (nextAttemptNum == 1) {
-		nextAttemptString = "1st";		
-	} else if (nextAttemptNum == 2) {
-		nextAttemptString = "2nd";		
-	} else if (nextAttemptNum == 3) {
-		nextAttemptString = "3rd";		
-	} else {
-		nextAttemptString = nextAttemptNum + "th";		
-	}
-	var numAttemptsDiv = document.getElementById("numberAttemptsDiv");
-	var numAttemptsDivHtml = part1 + " " + nextAttemptString + " " + part2 +".";
-	numAttemptsDiv.innerHTML = numAttemptsDivHtml;
-};
-
-/**
  * Updates text in div with id lastAttemptDiv with info on
  * student's last attempt
  * javascript Date method reference:

@@ -1216,8 +1216,6 @@ MS.prototype.enableCheckAnswerButton = function() {
 	if(this.showFeedback) {
 		var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_attempt_x",[this.attempts.length+1],"MatchSequenceNode");
 		$("#numberAttemptsDiv").html(numberAttemptsMessage);
-
-		//displayNumberAttempts("This is your", "attempt", this.attempts);
 	}
 };
 
@@ -1238,7 +1236,6 @@ MS.prototype.canSubmitButtonBeEnabled = function() {
  */
 MS.prototype.displayCurrentAttemptNumber = function() {
 	var numAttempts = this.attempts.length + 1;
-	//displayNumberAttemptsMessage("This is your", "attempt", numAttempts);
 	
 	var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_attempt_x",[numAttempts],"MatchSequenceNode");
 	$("#numberAttemptsDiv").html(numberAttemptsMessage);
@@ -1251,54 +1248,9 @@ MS.prototype.displayCurrentAttemptNumber = function() {
  */
 MS.prototype.displayPreviousAttemptNumber = function() {
 	var numAttempts = this.attempts.length;
-	//displayNumberAttemptsMessage("This was your", "attempt", numAttempts);
 	
 	var numberAttemptsMessage = this.view.getI18NStringWithParams("this_was_attempt_x",[numAttempts],"MatchSequenceNode");
 	$("#numberAttemptsDiv").html(numberAttemptsMessage);
-};
-
-
-/**
- * No longer used. Replaced by "this is attempt #x" format as it's easier to translate.
- * Displays the number of attempts message e.g.
- * "This is your 2nd attempt."
- * @param part1 the beginning of the message e.g. "This is your"
- * @param part2 the end of the message e.g. "attempt"
- * @param numAttempts the number of attempts
- */
-function displayNumberAttemptsMessage(part1, part2, numAttempts) {
-	//get the message
-	var numberAttemptsMessage = getNumberAttemptsMessage(part1, part2, numAttempts);
-	
-	//set the message in the div
-	$("#numberAttemptsDiv").html(numberAttemptsMessage);
-}
-
-/**
- * Make the number of attempts message e.g.
- * "This is your 2nd attempt."
- * @param part1 the beginning of the message e.g. "This is your"
- * @param part2 the end of the message e.g. "attempt"
- * @param numAttempts the number of attempts
- * @returns the number of attempts message string
- */
-function getNumberAttemptsMessage(part1, part2, numAttempts) {
-	var attemptsMessage = "";
-	
-	if(numAttempts == null) {
-		
-	} else if (numAttempts == 1) {
-		attemptsMessage = "1st";		
-	} else if (numAttempts == 2) {
-		attemptsMessage = "2nd";		
-	} else if (numAttempts == 3) {
-		attemptsMessage = "3rd";		
-	} else {
-		attemptsMessage = numAttempts + "th";		
-	}
-
-	var numAttemptsDivHtml = part1 + " " + attemptsMessage + " " + part2 +".";
-	return numAttemptsDivHtml;
 };
 
 /**

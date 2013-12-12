@@ -203,18 +203,10 @@
 		"value":"teacher feedback",
 		"description":"The label for the teacher feedback"
 	},
-	"this_is_your": {
-		"value":"This is your",
-		"description":"The beginning of the message that says this is your x revision"
-	},
-	"revision": {
-		"value":"revision",
-		"description":"The end of the message that says this is your x revision"
-	},
-	"this_is_your_first_revision": {
-		"value":"This is your first revision.",
-		"description":"The message that tells the student this is their first revision"
-	},
+	"this_is_revision_x":{
+		"value": "This is revision #{0}",
+		"description":"Message to display to student which revision they're on"
+	},	
 	"this_step_not_available_yet": {
 		"value":"This step is not available yet.",
 		"description":"The message that tells the student that the step is not available yet"

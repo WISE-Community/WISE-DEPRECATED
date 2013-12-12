@@ -167,18 +167,10 @@
         "value": "retroalimentación del docente",
         "description": "The label for the teacher feedback"
     },
-    "this_is_your": {
-        "value": "Esta es su",
-        "description": "The beginning of the message that says this is your x revision"
-    },
-    "revision": {
-        "value": "revisión",
-        "description": "The end of the message that says this is your x revision"
-    },
-    "this_is_your_first_revision": {
-        "value": "Esta es su primer revisión",
-        "description": "The message that tells the student this is their first revision"
-    },
+    "this_is_revision_x": {
+        "value": "Este es el revisión #{0}",
+        "description": "Message to display to student which attempt they're on"
+    },  
     "this_step_not_available_yet": {
         "value": "Este paso no está disponible aún.",
         "description": "The message that tells the student that the step is not available yet"
