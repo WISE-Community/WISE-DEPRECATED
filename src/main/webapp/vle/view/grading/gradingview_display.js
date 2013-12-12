@@ -654,9 +654,9 @@ View.prototype.getGradingHeaderTableHtml = function() {
 
 	//display whether we are showing all revisions or only latest work
 	if(this.getRevisions) {
-		gradingHeaderHtml += "<span> (All Revisions)</span>";
+		gradingHeaderHtml += "<span> ("+this.getI18NString("grading_all_revisions")+")</span>";
 	} else {
-		gradingHeaderHtml += "<span> (Latest Work)</span>";
+		gradingHeaderHtml += "<span> ("+this.getI18NString("grading_latest_work")+")</span>";
 	}
 	
 	// TODO: classroom monitor link button could go here
@@ -1720,7 +1720,7 @@ View.prototype.displayGradeByStepGradingPageGenerator = function(stepNumber, nod
 
 	//show the step title and prompt
 	//gradeByStepGradingPageHtml += "<table class='objectToGradeHeaderTable'><tr><td class='objectToGradeTd'>" + stepNumber + " " + this.getProject().getNodeById(nodeId).getTitle() + "</td>";
-	gradeByStepGradingPageHtml += "<div class='gradingHeader'><span class='instructions'>Current Step: " + stepNumber + " " + this.getProject().getNodeById(nodeId).getTitle() + " <span class='nodeTypeClass'>(" + this.getProject().getNodeById(nodeId).getType() + ")</span></span>";
+	gradeByStepGradingPageHtml += "<div class='gradingHeader'><span class='instructions'>"+this.getI18NString("grading_current_step")+": " + stepNumber + " " + this.getProject().getNodeById(nodeId).getTitle() + " <span class='nodeTypeClass'>(" + this.getProject().getNodeById(nodeId).getType() + ")</span></span>";
 	gradeByStepGradingPageHtml += "<div style='float:right;'>";
 	
 	var previousAndNextNodeIds = this.getProject().getPreviousAndNextNodeIds(nodeId);
@@ -1851,7 +1851,7 @@ View.prototype.displayGradeByStepGradingPageGenerator = function(stepNumber, nod
 		}
 	}
 	
-	gradeByStepGradingPageHtml += "Sort By: ";
+	gradeByStepGradingPageHtml += this.getI18NString("grading_sort_by")+": ";
 	
 	//create the sort by username radio button
 	gradeByStepGradingPageHtml += "<input type='radio' id='sortByUsernameRadioButton' name='gradeByStepSortBy' value='username' onClick=\"eventManager.fire('filterStudentRowsRequested')\" " + sortByUsernameChecked + "/><p style='display:inline'>Username</p>";

@@ -23,6 +23,18 @@
 		"value":"You have completed this step.",
 		"description":"The text that notifies the student that they have completed the step"
 	},
+	"current_possible_score": {
+		"value":"Current Possible Score:",
+		"description":"The text 'Current Possible Score:' that shows the score that the student can receive when they answer correctly"
+	},	
+	"check_answer": {
+		"value":"Check Answer",
+		"description":"The text for the button to check the answer"
+	},
+	"try_again": {
+		"value":"Try Again",
+		"description":"The text for the button to try again when the student answered incorrectly"
+	},
 	"save_answer": {
 		"value":"Save Answer",
 		"description":"The text for the button to save the answer if there is no correct answer"
@@ -82,5 +94,17 @@
 	"auto_graded_score": {
 		"value":"Auto-Graded Score",
 		"description":"The label for the auto graded score in the grading view"
-	}
+	},
+	"take_me_there": {
+		"value":"Take me there!",
+		"description":"The button text 'take me there' to show students when they answer the Challenge Question incorrectly."
+	},
+	"close_dialog": {
+		"value":"Close",
+		"description":"The button text 'close' to close the dialog."
+	},
+	"back_to_cq": {
+		"value":"Back to Challenge Question",
+		"description":"The button text 'Back to Challenge Question' to bring student back to the Challenge Question step."
+	}			
 }

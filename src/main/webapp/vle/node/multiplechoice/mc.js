@@ -229,6 +229,10 @@ MC.prototype.render = function() {
 		//the text that shows this is your x attempt
 		var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_attempt_x",[this.attempts.length+1],"MultipleChoiceNode");
 		$("#numberAttemptsDiv").html(numberAttemptsMessage);
+		
+		//the text for the save answer and edit answer buttons
+		$("#checkAnswerButton").val(this.view.getI18NString('check_answer', 'MultipleChoiceNode'));
+		$("#tryAgainButton").val(this.view.getI18NString('try_again', 'MultipleChoiceNode'));
 	};
 	
 	if(latestState != null && latestState.isCorrect) {

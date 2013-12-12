@@ -200,7 +200,7 @@ AssessmentListNode.prototype.getStudentWorkHtmlView = function(nodeState) {
 				}
 
 				//add the response to the student work
-				studentWorkSoFar += "Part " + (x+1) + ": <br/>";
+				studentWorkSoFar += view.getI18NStringWithParams("grading_item_part_number",[(x+1)], "AssessmentListNode") + "<br/>";
 				var assessment = nodeState.assessments[x];
 
 				if (assessment.type && assessment.response) {

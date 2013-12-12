@@ -358,6 +358,11 @@ IdeaBasket.prototype.processSettingsUI = function(){
 		
 		$('#deletedIdeaConfirm1').text(view.getI18NStringWithParams('ideaManager_deleteIdea_confirm1', [this.ideaTerm]));
 		$('#deletedIdeaConfirm2').text(view.getI18NString('ideaManager_deleteIdea_confirm2'))
+		$('#showDeleted').text(view.getI18NString("ideaBasket_showDeleted"));
+
+		var numDeleted = this.deleted.length;
+		$('#numDeleted').text(view.getI18NString("ideaBasket_trashLabel") + ' (' + numDeleted + ')');
+
 		
 		// clear add and edit idea forms, idea tables
 		var ideaDialog = $('#ideaForm > fieldset').html('');

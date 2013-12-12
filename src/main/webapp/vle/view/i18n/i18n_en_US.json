@@ -435,6 +435,14 @@
 		"value":"Grade By Team",
 		"description":"GradingTool: Text in the grade-by-team button"
 	},
+	"grading_all_revisions":{
+		"value":"All Revisions",
+		"description":"GradingTool: Text 'all revisions' to show all student revisions"
+	},
+	"grading_latest_work":{
+		"value":"Latest Work",
+		"description":"GradingTool: Text 'latest work' to show only the latest student work"
+	},
 	"grading_button_view_student_uploaded_files":{
 		"value":"View Student Uploaded Files",
 		"description":"GradingTool: Text in the View Student Uploaded Files button"
@@ -559,6 +567,10 @@
 		"value":"Hide/Show the Question",
 		"description":"'hide/show question' link that toggles the question's visibility in the grading tool"
 	},
+	"grading_current_step":{
+		"value":"Current Step",
+		"description":"'Current Step' label in the grading tool that shows the title of the current step in the project"
+	},			
 	"grading_previous_step":{
 		"value":"< Previous",
 		"description":"'Previous Step' button in the grading tool that will show the previous step in the project"
@@ -577,7 +589,11 @@
 	},	
 	"grading_next_step_not_exist":{
 		"value":"Next Step does not exist: this is the last gradable step",
-		"description":"Text to show when next step does not exist because this is the last gradable step in teh project"
+		"description":"Text to show when next step does not exist because this is the last gradable step in the project"
+	},	
+	"grading_sort_by":{
+		"value":"Sort By",
+		"description":"Label 'Sort By' to let user choose which column to sort the view by"
 	},	
 	"period":{
 		"value":"Period",

@@ -66,5 +66,9 @@
 	"autograded_score":{
 		"value": "Auto-Graded Score: {0}",
 		"description":"Auto graded score that gets displayed in the teacher grading tool."
-	}
+	},
+	"current_possible_score": {
+		"value":"Current Possible Score:",
+		"description":"The text 'Current Possible Score:' that shows the score that the student can receive when they answer correctly"
+	}	
 }

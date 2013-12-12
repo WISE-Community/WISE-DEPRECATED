@@ -31,6 +31,10 @@
 		"value":"SAVE RESPONSE",
 		"description":"Text for the save explanation response button"
 	},
+	"undoChanges":{
+		"value":"Undo Changes",
+		"description":"Text for the save explanation response button"
+	},
 	"organizingSpace_instructions":{
 		"value":"This is your Organizing Space. Drag {0} here to help you build a response to the question or instructions above.",
 		"description":"Instructions to show when the idea organizing space is empty."

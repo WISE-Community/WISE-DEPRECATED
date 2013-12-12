@@ -110,5 +110,9 @@
 	"you_have_completed_this_step": {
 		"value":"You have completed this step.",
 		"description":"The text that notifies the user that they have completed this step"
+	},
+	"grading_item_part_number": {
+		"value":"Part {0}:",
+		"description":"'Part X:' to show in the grading view for each item part"
 	}
 }

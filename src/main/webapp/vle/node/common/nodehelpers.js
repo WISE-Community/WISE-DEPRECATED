@@ -133,7 +133,7 @@ function getCurrentPossibleScoreTable(numAttempts, scores) {
 	currentPossibleScoreHtml += "<tr>";
 	
 	//display the current possible score text
-	currentPossibleScoreHtml += "<td>Current Possible Score:</td>";
+	currentPossibleScoreHtml += "<td data-i18n='current_possible_score'>Current Possible Score:</td>";
 	
 	currentPossibleScoreHtml += "<td>";
 	//create the table that will hold the possible scores

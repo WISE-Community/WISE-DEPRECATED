@@ -389,6 +389,10 @@ ExplanationBuilder.prototype.initializeUI = function() {
 		});
 	}
 	
+	$("#showResponse").html(view.getI18NString("readyToExplain", "ExplanationBuilderNode"));
+	$("#save").html(view.getI18NString("saveResponse", "ExplanationBuilderNode"));
+	$("#cancel").html(view.getI18NString("undoChanges", "ExplanationBuilderNode"));
+	
 	var title = view.getI18NStringWithParams("addIdea_title", [view.utils.capitalize(this.ideaTerm)], 'ExplanationBuilderNode');
 	$('#ideaDialog').dialog({title:title, autoOpen:false, modal:true, resizable:false, width:'470', 
 		buttons:[

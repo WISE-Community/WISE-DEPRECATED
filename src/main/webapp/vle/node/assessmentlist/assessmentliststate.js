@@ -66,7 +66,7 @@ ASSESSMENTLISTSTATE.prototype.getStudentWorkString = function(showAutoScoreResul
 			}
 			
 			//add the response to the student work
-			studentWorkSoFar += "Part " + (x+1) + ": <br/>";
+			studentWorkSoFar += view.getI18NStringWithParams("grading_item_part_number",[(x+1)], "AssessmentListNode") + "<br/>";
 			var assessment = this.assessments[x];
 
 			if (assessment.type && assessment.response) {

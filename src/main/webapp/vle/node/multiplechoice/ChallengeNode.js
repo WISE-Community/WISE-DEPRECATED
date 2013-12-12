@@ -105,10 +105,10 @@ ChallengeNode.prototype.showFeedbackDialog = function(feedback, isCorrect){
 	
 	if(isCorrect) {
 		//the student answered correctly so the button will close the dialog
-		buttonText = "Close";
+		buttonText =  this.view.getI18NString('close_dialog', 'MultipleChoiceNode');
 	} else {
 		//the student answered incorrectly so the button will take them to the evidence step
-		buttonText = "Take me there!";
+		buttonText =  this.view.getI18NString('take_me_there', 'MultipleChoiceNode');
 	}
 	
 	var dialogButtons = [
@@ -125,11 +125,11 @@ ChallengeNode.prototype.showFeedbackDialog = function(feedback, isCorrect){
             		 */
             		if (!visited) {
             			view.goToNodePosition(toVisitPosition);
-            			$('.challenge-button > .ui-button-text').text('Back to Challenge Question');
+            			$('.challenge-button > .ui-button-text').text(this.view.getI18NString('back_to_cq', 'MultipleChoiceNode'));
             			visited = true;
             		} else {
             			view.goToNodePosition(challengePosition);
-            			$('.challenge-button > .ui-button-text').text('Take me there!');
+            			$('.challenge-button > .ui-button-text').text(this.view.getI18NString('take_me_there', 'MultipleChoiceNode'));
             			visited = false;
             		}            		
             	}

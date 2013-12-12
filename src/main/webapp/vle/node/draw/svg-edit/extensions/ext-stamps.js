@@ -190,7 +190,7 @@ svgEditor.addExtension("Stamps", function(S) {
 	function setupDisplay(){
 		// setup extension UI components
 		var stampChooser = '<div id="tools_stamps">' +
-			'<div class="tools_title" id="tools_stamps_title">Choose a Stamp:</div>' +
+			'<div class="tools_title" id="tools_stamps_title" data-i18n="stamps_title">Choose a Stamp:</div>' +
 			'<div id="stamp_images"></div>' +
 			'</div>';
 		var preview = '<img id="stamp_preview" />';
