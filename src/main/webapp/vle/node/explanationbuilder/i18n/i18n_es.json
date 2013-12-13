@@ -110,5 +110,9 @@
     "ok": {
         "value": "OK",
         "description": "Text for the word 'OK'"
+    },
+    "undoChanges": {
+        "value": "Deshacer los cambios",
+        "description": "Text for the save explanation response button"
     }
 }

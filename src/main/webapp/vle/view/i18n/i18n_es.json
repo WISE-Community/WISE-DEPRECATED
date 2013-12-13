@@ -946,5 +946,61 @@
     "hints_viewAll": {
         "value": "Debés ver todas las {0} antes de cerrar.",
         "description": "The message in the hints popup that says the student must view all hints before closing the hints popup"
+    },
+    "grading_all_revisions": {
+        "value": "Todas las revisiones",
+        "description": "GradingTool: Text 'all revisions' to show all student revisions"
+    },
+    "grading_latest_work": {
+        "value": "Lo último trabajado",
+        "description": "GradingTool: Text 'latest work' to show only the latest student work"
+    },
+    "grading_current_step": {
+        "value": "Paso actual",
+        "description": "'Current Step' label in the grading tool that shows the title of the current step in the project"
+    },
+    "grading_sort_by": {
+        "value": "Ordenado por",
+        "description": "Label 'Sort By' to let user choose which column to sort the view by"
+    },
+    "constraint_dialog_title": {
+        "value": "Este elemento está bloqueado",
+        "description": "Title text for dialog alerting users about locked steps or activities (unable to visit because of navigation constraints)"
+    },
+    "constraint_allItems": {
+        "value": "(todos los items)",
+        "description": "Text to add after activity name when a constraint requires user to satisfy a requirement for all items in an activity"
+    },
+    "constraint_message_mustCompleteStepBeforeAdvancing": {
+        "value": "Debes completar el {0} actual antes de continuar.",
+        "description": "The message shown to students telling them to complete work on the current step before moving on"
+    },
+    "constraint_message_mustCompleteActivityBeforeAdvancing": {
+        "value": "Debes completar todos los items en el {0} actual antes de continuar.",
+        "description": "The message shown to students telling them to complete work on the current activity before moving on"
+    },
+    "constraint_message_mustCompleteStepBeforeExiting": {
+        "value": "Debes completar el {0} actual antes de salir.",
+        "description": "The message shown to students telling them to complete work on the current step before exiting"
+    },
+    "constraint_message_mustCompleteActivityBeforeExiting": {
+        "value": "Debes completar todos los items en el {0} actual antes de salir.",
+        "description": "The message shown to students telling them to complete work on the current activity before exiting"
+    },
+    "constraint_message_mustCompleteXBeforeVisiting": {
+        "value": "Debes completar lo siguiente antes de ver este item:",
+        "description": "The message shown to students telling them to complete work on previous items before working on the selected step or activity"
+    },
+    "constraint_message_mustVisitXBeforeVisiting": {
+        "value": "Debes visitar lo siguiente antes de ver este item:",
+        "description": "The message shown to students telling them to visit items before working on the selected step or activity"
+    },
+    "constraint_message_mustUnlockXBeforeVisiting": {
+        "value": "Debes desbloquear lo siguiente antes de ver este item:",
+        "description": "The message shown to students telling them to unlock (make visitable) previous items before working on the selected step or activity"
+    },
+    "constraint_message_xMustHaveStatusY": {
+        "value": "Lo siguiente debe tener el estado '{0}' seteado como '{1}' antes de ver este item:",
+        "description": "The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the selected step"
     }
 }
