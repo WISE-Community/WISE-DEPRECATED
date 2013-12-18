@@ -565,13 +565,15 @@ public class InformationController extends AbstractController{
 			if(webSocketBaseUrl == null) {
 				/*
 				 * if the websocket base url was not provided in the portal properties
-				 * we will use the default websocket base url
+				 * we will use the default websocket base url.
+				 * e.g.
+				 * ws://localhost:8080/wise
 				 */
-				webSocketBaseUrl = "ws://" + hostName + ":8080";
+				webSocketBaseUrl = wiseBaseURL.replace("http", "ws");
 			}
 			
 			//get the url for websocket connections
-			String webSocketUrl = webSocketBaseUrl + "/websocket/wise";
+			String webSocketUrl = webSocketBaseUrl + "/websocket.html";
 			
 			//get the url for sending and receiving student statuses
 			String studentStatusUrl = wiseBaseURL + "/studentStatus.html";

@@ -147,7 +147,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>wiseWebSocket</servlet-name>
-		<url-pattern>/websocket/wise</url-pattern>
+		<url-pattern>/websocket.html</url-pattern>
 	</servlet-mapping>
 
 	<!-- Make it distributable for load balancing purposes. That means HttpSessions 

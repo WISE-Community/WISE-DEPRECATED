@@ -1097,7 +1097,7 @@
 		<property name="messageSource" ref="messageSource" />
 	</bean>
 	
-	  <bean id="registerstudentController"
+	<bean id="registerstudentController"
     	class="org.wise.portal.presentation.web.controllers.student.RegisterStudentController">
     	<property name="userService" ref="userService" />
     	<property name="studentService" ref="studentService" />
@@ -1107,7 +1107,7 @@
     	<property name="successView" value="student/registerstudentsuccess" />
     </bean>
     
-        <bean id="registerteacherController"
+   <bean id="registerteacherController"
     	class="org.wise.portal.presentation.web.controllers.teacher.RegisterTeacherController">
     	<property name="userService" ref="userService" />
     	<property name="commandName" value="teacherAccountForm" />
