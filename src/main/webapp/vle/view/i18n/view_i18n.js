@@ -21,12 +21,14 @@ View.prototype.i18n.supportedLocales = {
 		main: {
 			"en_US":"en_US",
 			"es":"es",
+			"it":"it",
 			"ja":"ja",
-			"zh_CN":"zh_CN",
-			"zh_TW":"zh_TW",
 			"nl":"nl",
 			"nl_NL":"nl",
-			"nl_BG":"nl"
+			"nl_BG":"nl",
+			"tr":"tr",
+			"zh_CN":"zh_CN",
+			"zh_TW":"zh_TW"
 		},
 		theme: {
 			"en_US":"en_US",

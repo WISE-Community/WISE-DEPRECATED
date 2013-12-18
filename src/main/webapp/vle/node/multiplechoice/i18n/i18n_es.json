@@ -4,7 +4,7 @@
         "description": "The word 'help'"
     },
     "multiple_choice": {
-        "value": "Opci√≥n m√∫ltiple",
+        "value": "Opción múltiple",
         "description": "The text 'Multiple Choice'"
     },
     "question": {
@@ -34,7 +34,7 @@
     "this_is_attempt_x": {
         "value": "Este es el intento #{0}",
         "description": "Message to display to student which attempt they're on"
-    },    
+    },
     "you_received": {
         "value": "Obtuviste",
         "description": "The text 'You received' to show you received x points"
@@ -44,11 +44,11 @@
         "description": "The text 'point(s).' to show you received x points"
     },
     "you_have_selected_too_many_please_select": {
-        "value": "Seleccionaste demasiados. Eleg√≠ s√≥lo",
+        "value": "Seleccionaste demasiados. Elegí sólo",
         "description": "The text that tells the student they have selected too many checkboxes"
     },
     "you_have_not_selected_enough_please_select": {
-        "value": "No seleccionaste las suficientes. Eleg√≠",
+        "value": "No seleccionaste las suficientes. Elegí",
         "description": "The text that tells the student they have not selected enough items"
     },
     "choices": {
@@ -72,11 +72,35 @@
         "description": "The end of the text that tells the student to please visit a previous step before trying again"
     },
     "you_must_visit": {
-        "value": "Deb√©s visitar",
+        "value": "Debés visitar",
         "description": "The beginning of the text that tells the student to please visit a previous step before trying again"
     },
     "auto_graded_score": {
-        "value": "Auto-evaluaci√≥n",
+        "value": "Auto-evaluación",
         "description": "The label for the auto graded score in the grading view"
+    },
+    "current_possible_score": {
+        "value": "Máximo puntaje posible:",
+        "description": "The text 'Current Possible Score:' that shows the score that the student can receive when they answer correctly"
+    },
+    "check_answer": {
+        "value": "Comprobar respuesta",
+        "description": "The text for the button to check the answer"
+    },
+    "try_again": {
+        "value": "Intentar de nuevo",
+        "description": "The text for the button to try again when the student answered incorrectly"
+    },
+    "take_me_there": {
+        "value": "Volver a ese paso",
+        "description": "The button text 'take me there' to show students when they answer the Challenge Question incorrectly."
+    },
+    "close_dialog": {
+        "value": "Cerrar",
+        "description": "The button text 'close' to close the dialog."
+    },
+    "back_to_cq": {
+        "value": "Volver a la pregunta",
+        "description": "The button text 'Back to Challenge Question' to bring student back to the Challenge Question step."
     }
 }

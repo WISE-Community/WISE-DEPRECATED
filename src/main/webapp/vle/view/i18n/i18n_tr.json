@@ -1,0 +1,62 @@
+{
+	"file_button_text": {
+        "value": "Dosyalar",
+        "description": "Text on the File Manager button for Student VLE"
+    },
+    "ideas_button_text": {
+        "value": "Düşünceler",
+        "description": "Text on the Idea Manager button for Student VLE"
+    },
+    "addidea_button_text": {
+        "value": "Düşünce Ekle",
+        "description": "Text on Add Idea buttons for Student VLE"
+    },
+    "mywork_button_text": {
+        "value": "Çalışmam",
+        "description": "Text on the My Work button for Student VLE"
+    },
+    "display_chat_room": {
+        "value": "Sohbet Ortamı Açma",
+        "description": "Text on the Chat Room button for Student VLE"
+    },
+    "mywork_button_title": {
+        "value": "Çalışmamı Gözden Geçir",
+        "description": "Text for mouse hover title on the My Work button"
+    },
+    "flagged_button_text": {
+        "value": "Etiket",
+        "description": "Text on the Flagged button"
+    },
+    "flagged_button_title": {
+        "value": "Öğretmen Etiketli Çalışmaları Gözden Geçir",
+        "description": "Text for mouse hover title on the Flagged button"
+    },
+    "journal_button_text": {
+        "value": "Günlük",
+        "description": "Text on the Journal button"
+    },
+    "toggle_nav_button_text": {
+        "value": "Tam Ekran",
+        "description": "Text on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "toggle_nav_button_title": {
+        "value": "Tam Ekran Modu",
+        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "toggle_nav_button_text_off": {
+        "value": "Menüyü Göster",
+        "description": "Text on the Toggle Navigation button when navigation UI is off (hidden)"
+    },
+    "toggle_nav_button_title_off": {
+        "value": "Gezinme Menüsünü Göster",
+        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "signout_button_text": {
+        "value": "Çıkış",
+        "description": "Text on the Log out button"
+    },
+    "signout_button_title": {
+        "value": "WISE'ı Sakla ve Çıkış Yap",
+        "description": "Text for mouse hover title on the Log out button"
+    }
+}
