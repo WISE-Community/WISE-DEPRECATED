@@ -9,7 +9,7 @@
 var portalAuthorUrl = "${portalAuthorUrl}";
 
 function notifyFatal(type,args,obj){
-	window.location = '/wise/errors/outsideerror.html?msg=' + encodeURIComponent(args[0]);
+	window.location = '${contextPath}/errors/outsideerror.html?msg=' + encodeURIComponent(args[0]);
 };
 
 function notifyCleaningComplete(type,args,obj){
@@ -30,6 +30,6 @@ function loaded(){
  [Iframes not enabled]
 </iframe>
 </iframe>
-<div id="hiddenLogoutDiv" style="display:none"><a id="hiddenLogoutLink" onclick="window.location='/wise/index.html'"></a></div>
+<div id="hiddenLogoutDiv" style="display:none"><a id="hiddenLogoutLink" onclick="window.location='${contextPath}/index.html'"></a></div>
 </body>
 </html>

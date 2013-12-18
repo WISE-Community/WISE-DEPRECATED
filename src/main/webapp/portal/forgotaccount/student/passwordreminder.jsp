@@ -5,11 +5,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />  
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />  
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
    
-<script type="text/javascript" src="../../javascript/general.js"></script>	
-<script type="text/javascript" src="../../javascript/effects.js"></script>	
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>	
+<script type="text/javascript" src="${contextPath}/<spring:theme code="effectssource"/>"></script>	
 
 <title><spring:message code="forgotaccount.student.passwordreminder.forgotPasswordStudentReminder"/></title>
 </head>
@@ -22,7 +22,7 @@
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/wise/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 			</div>
 			
 			<div class="infoContent">
@@ -52,7 +52,7 @@
 					</div>
 					<div><a id="forgotUsernameLink" href="searchforstudentusername.html"><spring:message code="forgotaccount.student.passwordreminder.iCantRememberUsername"/></a></div>
 				</div>
-				<a href="/wise/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

@@ -5,11 +5,11 @@
 <head>
 <script type="text/javascript" src="javascript/jquery-1.4.1.min.js" ></script>
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 
-<script type="text/javascript" src="../javascript/general.js"></script>
+<script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
 
 <!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->
 <!--[if lt IE 7]>
@@ -68,7 +68,7 @@ function archiveMessage(messageId, sender, isRead) {
 	if (isRead == "false") {
 		action="unarchive";
 	}
-	YAHOO.util.Connect.asyncRequest('POST', '/wise/message.html?action='+action+'&messageId='+messageId, callback, null);
+	YAHOO.util.Connect.asyncRequest('POST', '${contextPath}/message.html?action='+action+'&messageId='+messageId, callback, null);
 }
 
 // sends a new (if originalMessageId is -1) or reply (if originalMessageId is set) message
@@ -126,7 +126,7 @@ function sendMessage(originalMessageId) {
 			scope:this
 		};	
 	
-	YAHOO.util.Connect.asyncRequest('POST', '/wise/message.html?action=compose', callback, postData);
+	YAHOO.util.Connect.asyncRequest('POST', '${contextPath}/message.html?action=compose', callback, postData);
 }
 
 function clearComposeMessageForm() {

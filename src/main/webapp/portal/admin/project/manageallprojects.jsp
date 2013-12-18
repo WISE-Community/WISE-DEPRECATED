@@ -5,14 +5,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
     
-<script src="<spring:theme code="jquerysource"/>" type="text/javascript"></script>
-<script src="<spring:theme code="jquerymigrate.js"/>" type="text/javascript"></script>
-<script src="<spring:theme code="projecttags.js"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerymigrate.js"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="projecttags.js"/>" type="text/javascript"></script>
     
 <title><spring:message code="wiseAdmin" /></title>
 
@@ -78,7 +78,7 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 <%@page import="org.wise.portal.domain.project.impl.ProjectType" %>
 
 
-<h5 style="color:#0000CC;"><a href="../index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <c:out value="${message}" />
 
@@ -140,11 +140,11 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 			</div>
 		</td>
 		<td>
-		<a href="../../author/authorproject.html?projectId=${project.id}">Edit Project (Authoring tool)</a>&nbsp;|&nbsp;
+		<a href="${contextPath}/author/authorproject.html?projectId=${project.id}">Edit Project (Authoring tool)</a>&nbsp;|&nbsp;
 <!-- 	<a href="editproject.html?projectId=${project.id}">Edit Project Metadata</a>&nbsp;|&nbsp;		 -->	
-		<a href="../../previewproject.html?projectId=${project.id}">Preview</a>&nbsp;|&nbsp;
-		<a href="../../teacher/projects/customized/shareproject.html?projectId=${project.id}">Manage Ownership/Shared Teachers</a>&nbsp;|&nbsp;
-		<a href="../../project/exportproject.html?projectId=${project.id}">Export project as Zip</a>&nbsp;|&nbsp;
+		<a href="${contextPath}/previewproject.html?projectId=${project.id}">Preview</a>&nbsp;|&nbsp;
+		<a href="${contextPath}/teacher/projects/customized/shareproject.html?projectId=${project.id}">Manage Ownership/Shared Teachers</a>&nbsp;|&nbsp;
+		<a href="${contextPath}/project/exportproject.html?projectId=${project.id}">Export project as Zip</a>&nbsp;|&nbsp;
 		</td>		
 	</tr>
 	</c:forEach>

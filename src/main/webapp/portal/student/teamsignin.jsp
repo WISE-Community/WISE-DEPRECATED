@@ -6,14 +6,14 @@
 
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 
 
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jqueryuisource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 
 <title><spring:message code="student.teamsignin.teamSignIn" /></title>
 
@@ -94,7 +94,7 @@
 		  </c:forEach>
 			</table>
 			
-	<div><a href="../forgotaccount/student/passwordreminder.html" id="forgotlink"><spring:message code="student.teamsignin.forgotUsernameOrPassword"/></a>  </div>
+	<div><a href="${contextPath}/forgotaccount/student/passwordreminder.html" id="forgotlink"><spring:message code="student.teamsignin.forgotUsernameOrPassword"/></a>  </div>
 	
 	 <div id="finalRunProjectButton" onclick="setTimeout('self.close()', 15000);">
  	    <input type="submit" class="wisebutton" name="_finish" value="Run Project" id="runproject" />

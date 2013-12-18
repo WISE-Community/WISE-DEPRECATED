@@ -9,18 +9,18 @@
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script> 
-<script type="text/javascript" src="<spring:theme code="jqueryuisource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jquerymigrate.js"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jquerycookiesource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="browserdetectsource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="checkcompatibilitysource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script> 
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerymigrate.js"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="browserdetectsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="checkcompatibilitysource"/>"></script>
 <!-- <script type="text/javascript" src="<spring:theme code="utilssource"/>"></script> -->
 
 <title><spring:message code="teacher.index.wiseTeacherDashboard" /></title>
@@ -53,13 +53,13 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 				
 						<table id="teacherQuickLinks">
 							<tr>
-								<td><a href="/wise/pages/gettingstarted.html" target="_blank"><spring:message code="teacher.index.quickstartGuide"/></a></td>
+								<td><a href="${contextPath}/pages/gettingstarted.html" target="_blank"><spring:message code="teacher.index.quickstartGuide"/></a></td>
 							</tr>
 							<tr>
-								<td><a href="/wise/teacher/management/library.html"><spring:message code="teacher.index.browseWISEProjects"/></a></td>
+								<td><a href="${contextPath}/teacher/management/library.html"><spring:message code="teacher.index.browseWISEProjects"/></a></td>
 							</tr>
 							<tr>
-								<td><a href="/wise/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>
+								<td><a href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>
 							</tr>
 						</table>
 					</div>
@@ -176,7 +176,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
     	link.parent().append(updatingText);
     	$.ajax({
 			type: 'post',
-			url: '/wise/teacher/run/manage/extendremindertime.html?runId=' + id,
+			url: '${contextPath}/teacher/run/manage/extendremindertime.html?runId=' + id,
 			success: function(request){
 				updatingText.remove();
 				link.css('text-decoration','strike-through');
@@ -200,7 +200,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
         	link.parent().append(updatingText);
         	$.ajax({
 				type: 'post',
-				url: '/wise/teacher/run/manage/extendremindertime.html?runId=' + id,
+				url: '${contextPath}/teacher/run/manage/extendremindertime.html?runId=' + id,
 				success: function(request){
 					updatingText.remove();
 					link.css('text-decoration','strike-through');
@@ -223,7 +223,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 
 		$.ajax({
 			type: 'post',
-			url: '/wise/message.html?action=archive&messageId='+messageId,
+			url: '${contextPath}/message.html?action=archive&messageId='+messageId,
 			success: function(request){
 				/* update message on teacher index page announcements section */
 				messageDiv.remove();

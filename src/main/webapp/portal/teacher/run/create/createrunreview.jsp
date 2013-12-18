@@ -6,16 +6,16 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
 
-<link href="<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
     
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>
-<script src="<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
-<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 
 <title><spring:message code="teacher.run.create.createrunreview.settingUpAProjectRunStep5" /></title>
 
@@ -25,7 +25,7 @@
     	//preload image if browser is not IE because animated gif will just freeze if user is using IE
     	if(navigator.appName != "Microsoft Internet Explorer") {
     		loadingImage = new Image();
-    		loadingImage.src = "/wise/themes/default/images/rel_interstitial_loading.gif";
+    		loadingImage.src = "${contextPath}/themes/default/images/rel_interstitial_loading.gif";
     	}
         
     	/**
@@ -62,7 +62,7 @@
    			if(type=='LD'){
    	   			//calls filemanager to copy project folder contents
    	   			$.ajax({
-   	   	   				url: '/wise/author/authorproject.html',
+   	   	   				url: '${contextPath}/author/authorproject.html',
    	   	   	   			async: false,
    	   	   	   			type:"POST",
    	   	   	   			data:'forward=filemanager&projectId=' + pID + '&command=copyProject',
@@ -83,7 +83,7 @@
    							
    							//call to make the project on the portal with the new folder
    							$.ajax({
-   	   							url:"/wise/author/authorproject.html",
+   	   							url:"${contextPath}/author/authorproject.html",
    	   							async:false,
    	   							type:"POST",
    	   							data:{"command":"createProject","parentProjectId":pID,"projectPath":projectPath,"projectName":projectName},
@@ -109,7 +109,7 @@
 	$('a.projectDetail').on('click',function(){
 		var title = $(this).attr('title');
 		var projectId = $(this).attr('id').replace('projectDetail_','');
-		var path = "/wise/teacher/projects/projectinfo.html?projectId=" + projectId;
+		var path = "${contextPath}/teacher/projects/projectinfo.html?projectId=" + projectId;
 		var div = $('#projectDetailDialog').html('<iframe id="projectIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
 			width: '800',

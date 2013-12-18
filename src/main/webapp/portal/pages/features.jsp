@@ -10,13 +10,13 @@
 	Remove this if you use the .htaccess -->
 <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
 
-<link href="<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="homepagestylesheet"/>" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="homepagestylesheet"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
 
-<script src="<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 
-<link rel="shortcut icon" href="<spring:theme code="favicon"/>" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 
 <title><spring:message code="pages.features.title" /></title>
 
@@ -37,7 +37,7 @@
 				
 				<div class="panelContent">
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/wise-vle.png" alt="<spring:message code="pages.features.vle" />" />
+						<img src="${contextPath}/<spring:theme code="wise_vle"/>" alt="<spring:message code="pages.features.vle" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.features.vle" /></div>
 							<p><spring:message code="pages.features.vle_content_p1" /></p>
@@ -47,7 +47,7 @@
 					</div>
 					<div class="featureContentHeader"><spring:message code="pages.features.projectsAndTools" /></div>
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/vle-prompts.png" alt="<spring:message code="pages.features.readWrite" />" />
+						<img src="${contextPath}/<spring:theme code="vle_prompts"/>" alt="<spring:message code="pages.features.readWrite" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.features.readWrite" /></p>
 							<ul>
@@ -60,7 +60,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/wise/themes/default/images/features/vle-argumentation.png" alt="<spring:message code="pages.features.argumentation" />" />
+						<img src="${contextPath}/<spring:theme code="vle_argumentation"/>" alt="<spring:message code="pages.features.argumentation" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.features.argumentation" /></p>
 							<ul>
@@ -72,7 +72,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/vle-activities.png" alt="<spring:message code="pages.features.activityTemplates" />" />
+						<img src="${contextPath}/<spring:theme code="vle_activities"/>" alt="<spring:message code="pages.features.activityTemplates" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.features.activityTemplates" /></p>
 							<ul>
@@ -84,7 +84,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/wise/themes/default/images/features/vle-simulations.png" alt="<spring:message code="pages.features.simulations" />" />
+						<img src="${contextPath}/<spring:theme code="vle_simulations"/>" alt="<spring:message code="pages.features.simulations" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.features.simulations" /></p>
 							<ul>

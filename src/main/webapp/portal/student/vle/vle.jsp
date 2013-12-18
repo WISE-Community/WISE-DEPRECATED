@@ -10,7 +10,7 @@
 var contentUrl = "${contentUrl}";
 
 function notifyFatal(type,args,obj){
-	window.location = '/wise/errors/outsideerror.html?msg=' + encodeURIComponent(args[0]);
+	window.location = '${contextPath}/errors/outsideerror.html?msg=' + encodeURIComponent(args[0]);
 }
 
 function startWithConfig() {

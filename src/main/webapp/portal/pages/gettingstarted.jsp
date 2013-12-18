@@ -5,8 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title><spring:message code="pages.gettingstarted.title" /></title>
 </head>
@@ -33,7 +33,7 @@
 							<li><spring:message code="pages.gettingstarted.technical_browser" /></li>
 							<li><spring:message code="pages.gettingstarted.technical_flash" /> <a href="http://get.adobe.com/flashplayer/" target="_blank">http://get.adobe.com/flashplayer/</a></li>
 							<li><spring:message code="pages.gettingstarted.technical_java" /> <a href="http://java.sun.com/getjava/download.html" target="_blank">http://java.sun.com/getjava/download.html</a></li>
-							<li><spring:message code="pages.gettingstarted.technical_compatibility" /> <a href="/wise/pages/check.html" target="_blank"><spring:message code="pages.gettingstarted.technical_compatibility_link" /> </a></li>
+							<li><spring:message code="pages.gettingstarted.technical_compatibility" /> <a href="${contextPath}/pages/check.html" target="_blank"><spring:message code="pages.gettingstarted.technical_compatibility_link" /> </a></li>
 						</ol>
 					</div>
 					
@@ -41,7 +41,7 @@
 					<div class="sectionContent">
 						<ol>
 							
-							<li><spring:message code="pages.gettingstarted.registration_createAccount" /> <a href="/wise/signup.html"><spring:message code="signUp" /></a></li>
+							<li><spring:message code="pages.gettingstarted.registration_createAccount" /> <a href="${contextPath}/signup.html"><spring:message code="signUp" /></a></li>
 							
 							<li><spring:message code="pages.gettingstarted.registration_selectTeacher" /></li>
 							

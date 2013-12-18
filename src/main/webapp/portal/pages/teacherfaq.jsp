@@ -116,7 +116,7 @@
 <h4><spring:message code="pages.teacherfaq.whatShouldILookForInStudentAnswersQuestion" /></h4>
 
 <spring:message code="pages.teacherfaq.whatShouldILookForInStudentAnswersAnswer" /> 
-<a href="/wise/themes/default/images/SampleRubric.png"><spring:message code="pages.teacherfaq.sampleRubric" /></a>
+<a href="${contextPath}/<spring:theme code="sample_rubric"/>"><spring:message code="pages.teacherfaq.sampleRubric" /></a>
 
 <h4><spring:message code="pages.teacherfaq.howEncourageStudentsReviewNotesAndCommentsQuestion" /></h4>
 
@@ -130,7 +130,7 @@
 <h4><spring:message code="pages.teacherfaq.websiteWontLoadQuestion" /></h4>
 
 <spring:message code="pages.teacherfaq.websiteWontLoadAnswerPart1" />
-<a href="/wise/pages/check.html"><spring:message code="pages.teacherfaq.wiseCompatibilityTest" /></a><br/><br/>
+<a href="${contextPath}/pages/check.html"><spring:message code="pages.teacherfaq.wiseCompatibilityTest" /></a><br/><br/>
 
 <spring:message code="pages.teacherfaq.websiteWontLoadAnswerPart2" />
 <a target=_blank href="http://www.wikihow.com/Clear-Your-Browser's-Cache"><spring:message code="pages.teacherfaq.howToClearCache" /></a>
@@ -138,7 +138,7 @@
 <h4><spring:message code="pages.teacherfaq.canIRunWISE2ProjectsInWISE4Question" /></h4>
 <ul>
     <li><spring:message code="pages.teacherfaq.canIRunWISE2ProjectsInWISE4AnswerPart1" /> (<a href="<spring:message code="pages.teacherfaq.wise2Link" />"><spring:message code="pages.teacherfaq.wise2Link" /></a>)</li>
-    <li><a href="../contact/contactwisegeneral.html"><spring:message code="pages.teacherfaq.canIRunWISE2ProjectsInWISE4AnswerPart2" /></a></li>
+    <li><a href="${contextPath}/contact/contactwisegeneral.html"><spring:message code="pages.teacherfaq.canIRunWISE2ProjectsInWISE4AnswerPart2" /></a></li>
     <li><spring:message code="pages.teacherfaq.canIRunWISE2ProjectsInWISE4AnswerPart3" /></li>
 </ul>
 <h4><spring:message code="pages.teacherfaq.howManyComputersDoINeedQuestion" /></h4>

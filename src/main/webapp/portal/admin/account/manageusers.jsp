@@ -4,13 +4,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>  
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>  
 <!-- <link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />  -->
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
     
-<script type="text/javascript" src="../../javascript/general.js"></script>
+<script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
     
 <title><spring:message code="wiseAdmin" /></title>
 
@@ -25,7 +25,7 @@ function findRunByRunId(runId) {
 <body>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<h5 style="color:#0000CC;"><a href="../index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <c:choose>
 <c:when test="${fn:length(loggedInTeacherUsernames) > 0 || fn:length(loggedInStudentUsernames) > 0}">

@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 
 <title><spring:message code="errors.securityFriendlyError.accessDenied" /> <spring:message code="wiseHomepage" /></title>
 </head>
@@ -18,7 +18,7 @@
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/wise/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 			</div>
 			
 			<div class="infoContent">
@@ -27,7 +27,7 @@
 						<p><spring:message code="errors.securityFriendlyError.accessDeniedNotEnoughPermissions" /></p>
 					</div>
 				</div>
-				<a href="/wise/index.html" title="<spring:message code="wiseHome" />"><spring:message code="wiseHomepage"/></a>
+				<a href="${contextPath}/index.html" title="<spring:message code="wiseHome" />"><spring:message code="wiseHomepage"/></a>
 			</div>
 		</div>
 	</div>

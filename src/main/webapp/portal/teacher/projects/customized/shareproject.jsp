@@ -5,11 +5,11 @@
 <html lang="en">
 <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 
-<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
  
 <title><spring:message code="teacher.projects.customized.shareproject.title"/></title>
 

@@ -5,9 +5,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
     
-<script src="<spring:theme code="generalsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
 
 <title><spring:message code="forgotaccount.selectaccounttype.findYourPassword" /></title>
 </head>
@@ -20,7 +20,7 @@
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/wise/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 			</div>
 			
 			<div class="infoContent">
@@ -31,7 +31,7 @@
 					<div><spring:message code="forgotaccount.selectaccounttype.or"/></div>
 					<div><a href="teacher/index.html" class="wisebutton" style="margin-top:.25em;"><spring:message code="forgotaccount.selectaccounttype.teacherAccount"/></a></div>
 				</div>
-				<a href="/wise/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

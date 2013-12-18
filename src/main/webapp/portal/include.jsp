@@ -33,3 +33,5 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!-- $Id$ -->
+
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>

@@ -10,13 +10,13 @@
 	Remove this if you use the .htaccess -->
 <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
 
-<link href="<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="homepagestylesheet"/>" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="homepagestylesheet"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
 
-<script src="<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 
-<link rel="shortcut icon" href="<spring:theme code="favicon"/>" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 
 <title><spring:message code="pages.wise-in-action.wiseInAction" /></title>
 
@@ -37,7 +37,7 @@
 				
 				<div class="panelContent">
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/teacher-profile.png" alt="<spring:message code="pages.wise-in-action.teacherProfileAlt" />" />
+						<img src="${contextPath}/<spring:theme code="teacher_profile"/>" alt="<spring:message code="pages.wise-in-action.teacherProfileAlt" />" />
 						<div class="featureContentHeader"><spring:message code="pages.wise-in-action.teacherProfile" /></div>
 						<div class="featureContent">
 							<p><spring:message code="pages.wise-in-action.teacherProfileQuoteParagraph1" /></p>
@@ -48,31 +48,31 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/wise/themes/default/images/features/inquiry-curricula.png" alt="<spring:message code="pages.wise-in-action.inquiryCurriculaAlt" />" />
+						<img src="${contextPath}/<spring:theme code="inquiry_curricula"/>" alt="<spring:message code="pages.wise-in-action.inquiryCurriculaAlt" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.wise-in-action.inquiryCurricula" /></div>
-							<p><a href="/wise/previewprojectlist.html"><spring:message code="pages.wise-in-action.wiseUnits" /></a> <spring:message code="pages.wise-in-action.inquiryCurriculaParagraph" /></p>
+							<p><a href="${contextPath}/previewprojectlist.html"><spring:message code="pages.wise-in-action.wiseUnits" /></a> <spring:message code="pages.wise-in-action.inquiryCurriculaParagraph" /></p>
 						</div>
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/teacher-role.png" alt="<spring:message code="pages.wise-in-action.theTeachersRoleAlt" />" />
+						<img src="${contextPath}/<spring:theme code="teacher_role"/>" alt="<spring:message code="pages.wise-in-action.theTeachersRoleAlt" />" />
 						<div class="featureContentHeader"><spring:message code="pages.wise-in-action.theTeachersRole" /></div>
 						<div class="featureContent">
-							<p><spring:message code="pages.wise-in-action.theTeachersRoleParagraph" /> <a href="/wise/pages/teacher-tools.html"><spring:message code="pages.wise-in-action.classroomBasedAneOnlineTools" /></a>.</p>
+							<p><spring:message code="pages.wise-in-action.theTeachersRoleParagraph" /> <a href="${contextPath}/pages/teacher-tools.html"><spring:message code="pages.wise-in-action.classroomBasedAneOnlineTools" /></a>.</p>
 						</div>
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/wise/themes/default/images/features/partnership-design.png" alt="<spring:message code="pages.wise-in-action.partnershipDesignAlt" />" />
+						<img src="${contextPath}/<spring:theme code="partnership_design"/>" alt="<spring:message code="pages.wise-in-action.partnershipDesignAlt" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader" id="partnershipDesign"><spring:message code="pages.wise-in-action.partnershipDesign" /></div>
-							<p><spring:message code="pages.wise-in-action.partnershipDesignParagraphPart1" /> <a href="/wise/pages/research-tech.html#ki"><spring:message code="pages.wise-in-action.inquiryBasedDesignPrinciples" /></a> <spring:message code="pages.wise-in-action.partnershipDesignParagraphPart2" /></p>
+							<p><spring:message code="pages.wise-in-action.partnershipDesignParagraphPart1" /> <a href="${contextPath}/pages/research-tech.html#ki"><spring:message code="pages.wise-in-action.inquiryBasedDesignPrinciples" /></a> <spring:message code="pages.wise-in-action.partnershipDesignParagraphPart2" /></p>
 						</div>
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/assessments.png" alt="<spring:message code="pages.wise-in-action.standardsAlignedAssessmentsAlt" />" />
+						<img src="${contextPath}/<spring:theme code="assessments"/>" alt="<spring:message code="pages.wise-in-action.standardsAlignedAssessmentsAlt" />" />
 						<div class="featureContentHeader"><spring:message code="pages.wise-in-action.standardsAlignedAssessments" /></div>
 						<div class="featureContent">
 							<p><spring:message code="pages.wise-in-action.standardsAlignedAssessmentsParagraph" /> (<a href="http://www.tandfonline.com/doi/abs/10.1080/10627190801968224" target="_blank"><spring:message code="pages.wise-in-action.liuLeeHoftstetterLinn" /></a>; <a href="http://www.sciencemag.org/content/313/5790/1049.full.pdf" target="_blank"><spring:message code="pages.wise-in-action.linnEtAl" /></a>).</p>
@@ -80,11 +80,11 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/wise/themes/default/images/features/administrators.png" alt="<spring:message code="pages.wise-in-action.administrationPartnershipsAlt" />" />
+						<img src="${contextPath}/<spring:theme code="administrators"/>" alt="<spring:message code="pages.wise-in-action.administrationPartnershipsAlt" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.wise-in-action.administrationPartnerships" /></div>
 							<p><spring:message code="pages.wise-in-action.administrationPartnershipsParagraph1" /></p>
-							<p><spring:message code="pages.wise-in-action.administrationPartnershipsParagraph2Part1" /> <a href="/wise/contact/contactwisegeneral.html"><spring:message code="pages.wise-in-action.contactUs" /></a> <spring:message code="pages.wise-in-action.administrationPartnershipsParagraph2Part2" /></p>
+							<p><spring:message code="pages.wise-in-action.administrationPartnershipsParagraph2Part1" /> <a href="${contextPath}/contact/contactwisegeneral.html"><spring:message code="pages.wise-in-action.contactUs" /></a> <spring:message code="pages.wise-in-action.administrationPartnershipsParagraph2Part2" /></p>
 						</div>
 						<div style="clear:both;"></div>
 					</div>

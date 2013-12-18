@@ -7,11 +7,11 @@
 
 <title>Contact WISE General Issues</title>
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="homepagestylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="homepagestylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
 
 </head>
 
@@ -114,7 +114,7 @@
 					                  
 					</form:form>
 				</div>
-				<a href="/wise/index.html" title="<spring:message code="wiseHome"/>"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/index.html" title="<spring:message code="wiseHome"/>"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 		<div style="clear: both;"></div>

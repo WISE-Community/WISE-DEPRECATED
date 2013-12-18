@@ -5,8 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 
 <title><spring:message code="wiseAdmin" /></title>
 </head>
@@ -16,7 +16,7 @@
 
 <div id="page">
 <div id="pageContent" class="contentPanel">
-<h5 style="color:#0000CC;"><a href="../index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <h3><spring:message code="run_plural" /> ${period} (${fn:length(runs)} <spring:message code="run_plural" />)</h3>
 <table id="runStatsTable" border="1">
@@ -38,15 +38,15 @@
 				<td>${run.timesRun}</td>
 				<td>
 					<c:forEach var="owner" items="${run.owners}">
-						<a href="../../j_acegi_switch_user?j_username=${owner.userDetails.username}">${owner.userDetails.username}</a><br/>
+						<a href="${contextPath}/j_acegi_switch_user?j_username=${owner.userDetails.username}">${owner.userDetails.username}</a><br/>
 						(${owner.userDetails.schoolname}, ${owner.userDetails.city}, ${owner.userDetails.state},${owner.userDetails.country})
 					</c:forEach>
 				</td>
 			    <td>
 			    	<ul>
 			    		<sec:authorize ifAnyGranted="ROLE_ADMINISTRATOR">
-			    		  <li><a href="../../teacher/run/shareprojectrun.html?runId=${run.id}"><spring:message code="admin.run.manageSharedTeachers" /></a></li>
-			    		  <li><a href="../../teacher/management/viewmystudents.html?runId=${run.id}"><spring:message code="admin.run.manageStudents" /></a></li>
+			    		  <li><a href="${contextPath}/teacher/run/shareprojectrun.html?runId=${run.id}"><spring:message code="admin.run.manageSharedTeachers" /></a></li>
+			    		  <li><a href="${contextPath}/teacher/management/viewmystudents.html?runId=${run.id}"><spring:message code="admin.run.manageStudents" /></a></li>
 			    		</sec:authorize>
 			    	</ul>
 			    </td>

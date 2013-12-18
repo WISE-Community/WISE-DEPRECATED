@@ -5,16 +5,16 @@
 
 <title><spring:message code="teacher.run.recentactivity.manageStudents" /></title>
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="teachergrading.css"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" /> 
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="teachergrading.css"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" /> 
 
 <head>
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jqueryuisource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="utilssource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="utilssource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 
 <!-- TODO: move to js file once js i18n is implemented for portal -->
 <script type="text/javascript">
@@ -66,7 +66,7 @@ $(document).ready(function(){
 	$('.studentInfo').on('click',function(){
 		var title = $(this).attr('title');
 		var username = $(this).attr('id').replace('studentInfo_','');
-		var path = "/wise/studentinfo.html?userName=" + username;
+		var path = "${contextPath}/studentinfo.html?userName=" + username;
 		var dialog = $('<div id="studentInfoDialog" style="overflow-y:hidden;"></div>');
 		var div = dialog.html('<iframe id="studentInfoIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
@@ -408,10 +408,10 @@ var displayNotification = function(message){
 
 </script>
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="viewmystudentsstylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="viewmystudentsstylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -422,8 +422,8 @@ var displayNotification = function(message){
 			<div class="gradingTools">
 				<div id="fixedGradingHeader" class="gradingHeader">
 					<div>
-						<a href="studentlist.html?runId=${run.id}" target="_blank"><img class="icon" alt="print" src="/wise/themes/default/images/icons/teal/print.png" /><span><spring:message code="teacher.management.viewmystudents.print"/></span></a>
-						<a href="studentlistexcel.html?runId=${run.id}"><img class="icon" alt="excel" src="/wise/themes/default/images/icons/teal/addressbook.png" /><span><spring:message code="teacher.management.viewmystudents.export"/></span></a>
+						<a href="studentlist.html?runId=${run.id}" target="_blank"><img class="icon" alt="print" src="${contextPath}/<spring:theme code="print"/>" /><span><spring:message code="teacher.management.viewmystudents.print"/></span></a>
+						<a href="studentlistexcel.html?runId=${run.id}"><img class="icon" alt="excel" src="${contextPath}/<spring:theme code="address_book"/>" /><span><spring:message code="teacher.management.viewmystudents.export"/></span></a>
 					</div>
 					<div style="float:right;">
 						<a class="saveButton disabled" id="saveButton" onclick=""><spring:message code="teacher.management.viewmystudents.save"/></a>
@@ -468,8 +468,8 @@ var displayNotification = function(message){
 							    	<li><spring:message code="teacher.management.viewmystudents.teamsLabel"/>&nbsp;<span class="manageDataStyle">${fn:length(viewmystudentsperiod.workgroups)}</span></li>
 							    	<li><spring:message code="teacher.management.viewmystudents.accessCode"/>&nbsp;<span class="manageDataStyle">${viewmystudentsperiod.run.runcode}</span></li>
 							    	<li style="float:right;">
-							    		<a onclick="createNewWorkgroup(${viewmystudentsperiod.period.id}, ${viewmystudentsperiod.run.id});"><img class="icon" alt="new team" src="/wise/themes/default/images/icons/teal/multi-agents.png" /><span><spring:message code="teacher.management.viewmystudents.createNewTeam"/></span></a>
-							     		<a class="changeAllPasswords" id="changeAllPasswords_groupId=${viewmystudentsperiod.period.id}&runId=${viewmystudentsperiod.run.id}" title="<spring:message code="teacher.management.viewmystudents.changeAllPasswords"/>: <spring:message code="run_period"/> ${viewmystudentsperiod.period.name}"><img class="icon" alt="password" src="/wise/themes/default/images/icons/teal/shield.png" /><span><spring:message code="teacher.management.viewmystudents.changeAllPasswords"/></span></a>
+							    		<a onclick="createNewWorkgroup(${viewmystudentsperiod.period.id}, ${viewmystudentsperiod.run.id});"><img class="icon" alt="new team" src="${contextPath}/<spring:theme code="multi_agents"/>" /><span><spring:message code="teacher.management.viewmystudents.createNewTeam"/></span></a>
+							     		<a class="changeAllPasswords" id="changeAllPasswords_groupId=${viewmystudentsperiod.period.id}&runId=${viewmystudentsperiod.run.id}" title="<spring:message code="teacher.management.viewmystudents.changeAllPasswords"/>: <spring:message code="run_period"/> ${viewmystudentsperiod.period.name}"><img class="icon" alt="password" src="${contextPath}/<spring:theme code="shield"/>" /><span><spring:message code="teacher.management.viewmystudents.changeAllPasswords"/></span></a>
 							       		<a><spring:message code="help"/></a>
 							       	</li>
 							    </ul>
@@ -544,7 +544,7 @@ var displayNotification = function(message){
 	</div>
  	<div id="loading" style="display:none;">
         <div class="hd"><spring:message code="teacher.management.viewmystudents.saveMessage"/></div>
-        <div class="bd"><img src="/wise/vle/images/loading.gif"></div>
+        <div class="bd"><img src="${contextPath}/vle/images/loading.gif"></div>
         <div class="ft">
         </div>
     </div>

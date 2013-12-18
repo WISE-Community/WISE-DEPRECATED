@@ -6,13 +6,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jqueryuisource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 
 <title><spring:message code="student.registerstudent.studentRegistration" /></title>
 <script type="text/javascript">
@@ -72,7 +72,7 @@ function findPeriods() {
 	var runcode = document.getElementById("runCode_part1").value;
 	if (runcode != null && runcode != "") {
 		$.ajax({
-			url:"/wise/runinfo.html?runcode=" + runcode,
+			url:"${contextPath}/runinfo.html?runcode=" + runcode,
 			dataType:"text",		
 			success:successCallback,
 			error:failureCallback
@@ -365,7 +365,7 @@ function checkRunCode() {
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/wise/index.html" title="WISE Homepage"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}/index.html" title="WISE Homepage"><spring:message code="wise" /></a>
 			</div>
 			
 			<div class="infoContent">
@@ -501,7 +501,7 @@ function checkRunCode() {
 					      
 				  	<div style="margin-top:1em;">
 				 	  	<a style="margin-bottom:1em;" class="wisebutton" onclick="checkForExistingAccountsAndCreateAccount()"><spring:message code="student.registerstudent.createAccount"/></a>
-				 	  	<a href="/wise/index.html"><spring:message code="cancel"/></a>
+				 	  	<a href="${contextPath}/index.html"><spring:message code="cancel"/></a>
 					 </div> 
 					 
 					 </form:form>

@@ -5,12 +5,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet" type="text/css" />
 
-<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jqueryuisource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
 
 <title><spring:message code="student.title" /></title>
 
@@ -63,7 +63,7 @@
 		var runcode = document.getElementById("runCode_part1").value;
 		if (runcode != null && runcode != "") {
 			$.ajax({
-				url : "/wise/runinfo.html?runcode=" + runcode,
+				url : "${contextPath}/runinfo.html?runcode=" + runcode,
 				dataType : "text",
 				success : successCallback,
 				error : failureCallback

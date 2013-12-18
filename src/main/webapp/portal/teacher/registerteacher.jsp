@@ -5,13 +5,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jqueryuisource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 
 
 <script type="text/javascript">
@@ -215,7 +215,7 @@ $(document).ready(function(){
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/wise/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise" /></a>
 			</div>
 			
 			<div class="infoContent">
@@ -358,7 +358,7 @@ $(document).ready(function(){
                
 				 	 <div id="regButtons">
 				 	  	<a style="margin-bottom:1em;" id="createAccountLink" class="wisebutton" onclick="checkForExistingAccountsAndCreateAccount()"><spring:message code="teacher.registerteacher.createAccount"/></a>
-				 	  	<a href="/wise/index.html"><spring:message code="teacher.registerteacher.cancel"/></a>
+				 	  	<a href="${contextPath}/index.html"><spring:message code="teacher.registerteacher.cancel"/></a>
 					 </div>
 					</form:form>
 					<div id="existingAccounts" style="display:none"></div>

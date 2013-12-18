@@ -6,19 +6,19 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
 
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script> 
-<script type="text/javascript" src="<spring:theme code="jquerydatatables.js"/>"></script>
-<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jqueryuisource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="facetedfilter.js"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script> 
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerydatatables.js"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="facetedfilter.js"/>"></script>
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherhomepagestylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="jquerydatatables.css"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="facetedfilter.css"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerydatatables.css"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="facetedfilter.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 
 <title><spring:message code="wiseAdmin" /></title>
 
@@ -31,7 +31,7 @@
 	$('.grading, .researchTools, .classroomMonitor').on('click',function(){
 		var settings = $(this).attr('id');
 		var title = $(this).attr('title');
-		var path = "/wise/teacher/grading/gradework.html?" + settings;
+		var path = "${contextPath}/teacher/grading/gradework.html?" + settings;
 		var div = $('#gradingDialog').html('<iframe id="gradingIfrm" width="100%" height="100%" style="overflow-y:hidden;"></iframe>');
 		$('body').css('overflow','hidden');
 		div.dialog({
@@ -54,7 +54,7 @@
 	$('.shareRun').on('click',function(){
 		var title = $(this).attr('title');
 		var runId = $(this).attr('id').replace('shareRun_','');
-		var path = "/wise/teacher/run/shareprojectrun.html?runId=" + runId;
+		var path = "${contextPath}/teacher/run/shareprojectrun.html?runId=" + runId;
 		var div = $('#shareDialog').html('<iframe id="shareIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
 			modal: true,
@@ -76,7 +76,7 @@
 	$('.editRun').on('click',function(){
 		var title = $(this).attr('title');
 		var runId = $(this).attr('id').replace('editRun_','');
-		var path = "/wise/teacher/run/editrun.html?runId=" + runId;
+		var path = "${contextPath}/teacher/run/editrun.html?runId=" + runId;
 		var div = $('#editRunDialog').html('<iframe id="editIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
 			modal: true,
@@ -104,10 +104,10 @@
 		var title = $(this).attr('title');
 		if($(this).hasClass('archiveRun')){
 			var params = $(this).attr('id').replace('archiveRun_','');
-			var path = "/wise/teacher/run/manage/archiveRun.html?" + params;
+			var path = "${contextPath}/teacher/run/manage/archiveRun.html?" + params;
 		} else if($(this).hasClass('activateRun')){
 			var params = $(this).attr('id').replace('activateRun_','');
-			var path = "/wise/teacher/run/manage/startRun.html?" + params;
+			var path = "${contextPath}/teacher/run/manage/startRun.html?" + params;
 		}
 		var div = $('#archiveRunDialog').html('<iframe id="archiveIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
@@ -135,7 +135,7 @@
 	$('.manageStudents').on('click',function(){
 		var title = $(this).attr('title');
 		var params = $(this).attr('id').replace('manageStudents_','');
-		var path = "/wise/teacher/management/viewmystudents.html?" + params;
+		var path = "${contextPath}/teacher/management/viewmystudents.html?" + params;
 		var div = $('#manageStudentsDialog').html('<iframe id="manageStudentsIfrm" width="100%" height="100%"></iframe>');
 		$('body').css('overflow','hidden');
 		div.dialog({
@@ -182,7 +182,7 @@
 		} else if($(this).hasClass('projectInfo')){
 			var projectId = $(this).attr('id').replace('projectInfo_','');
 		}
-		var path = "/wise/teacher/projects/projectinfo.html?projectId=" + projectId;
+		var path = "${contextPath}/teacher/projects/projectinfo.html?projectId=" + projectId;
 		var div = $('#projectDetailDialog').html('<iframe id="projectIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
 			modal: true,
@@ -346,7 +346,7 @@
 		
 		<div id="pageContent">
 
-<h5 style="color:#0000CC;"><a href="../index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 			<div class="contentPanel">
 				<div class="panelHeader"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/>
@@ -380,7 +380,7 @@
 								    	    	<!-- the project run is shared with the logged-in user. -->
 								    	    	<c:set var="ownership" value="shared" />
 								    	    	<div class="sharedIcon">
-									    	    	<img src="/wise/themes/default/images/shared.png" alt="shared project" /> <spring:message code="teacher.management.projectruntabs.ownedBy"/>
+									    	    	<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" /> <spring:message code="teacher.management.projectruntabs.ownedBy"/>
 									    	    	<c:forEach var="owner" items="${run.owners}">
 									    	    		${owner.userDetails.firstname} ${owner.userDetails.lastname}
 									    	    	</c:forEach>
@@ -421,7 +421,7 @@
 							      			<c:if test="${isRunOwner==true}">
 							      				<tr>
 							      					<td colspan="2" style="padding-top:.5em;">
-							      						<a id="editRun_${run.id}" class="editRun" title="<spring:message code="teacher.management.projectruntabs.editSettings"/>: ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="settings" src="/wise/themes/default/images/icons/teal/processing.png" /><span><spring:message code="teacher.management.projectruntabs.editSettings"/></span></a>
+							      						<a id="editRun_${run.id}" class="editRun" title="<spring:message code="teacher.management.projectruntabs.editSettings"/>: ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="settings" src="${contextPath}/<spring:theme code="processing"/>" /><span><spring:message code="teacher.management.projectruntabs.editSettings"/></span></a>
 							      					</td>
 							      				</tr>
 							      			</c:if>
@@ -451,7 +451,7 @@
 							            </tr>
 							          </c:forEach>
 							          <c:if test="${isRunOwner==true}">
-				 	                    <tr><td colspan="2" class="manageStudentGroups"><a class="manageStudents" title="<spring:message code="teacher.management.projectruntabs.manageStudents"/>: ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}"><img class="icon" alt="groups" src="/wise/themes/default/images/icons/teal/connected.png" /><span><spring:message code="teacher.management.projectruntabs.manageStudents"/></span></a></td></tr>
+				 	                    <tr><td colspan="2" class="manageStudentGroups"><a class="manageStudents" title="<spring:message code="teacher.management.projectruntabs.manageStudents"/>: ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}"><img class="icon" alt="groups" src="${contextPath}/<spring:theme code="connected"/>" /><span><spring:message code="teacher.management.projectruntabs.manageStudents"/></span></a></td></tr>
 				 	                  </c:if>
 							        </table>
 							    </td> 
@@ -476,20 +476,20 @@
 		                    						<c:if test="${isRunOwner==true}">
 		                    							<c:choose>
 		                    								<c:when test="${isXMPPEnabled && run.XMPPEnabled}">
-		                    									<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="/wise/themes/default/images/icons/teal/bar-chart.png" /><span><spring:message code="teacher.management.projectruntabs.monitor"/></span></a></li>
+		                    									<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.monitor"/></span></a></li>
 		                    								</c:when>
 		                    								<c:otherwise>
-		                    									<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor" style="display:none"><img class="icon" alt="monitor" src="/wise/themes/default/images/icons/teal/bar-chart.png" /><span><spring:message code="teacher.management.projectruntabs.monitor"/></span></a></li>
+		                    									<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor" style="display:none"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.monitor"/></span></a></li>
 		                    								</c:otherwise>
 		                    							</c:choose>
 		                    						</c:if>
 								               </ul>
 								               <ul class="actionList">
 											        <li>
-											        	<spring:message code="teacher.management.projectruntabs.projectLabel"/>&nbsp;<a href="/wise/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="/wise/themes/default/images/icons/teal/screen.png" /><span><spring:message code="preview"/></span></a>
-										    			|&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="project_details"/>"><img class="icon" alt="info" src="/wise/themes/default/images/icons/teal/ID.png" /><span><spring:message code="teacher.management.projectruntabs.projectInfo"/></span></a>
+											        	<spring:message code="teacher.management.projectruntabs.projectLabel"/>&nbsp;<a href="${contextPath}/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" /><span><spring:message code="preview"/></span></a>
+										    			|&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="project_details"/>"><img class="icon" alt="info" src="${contextPath}/<spring:theme code="id"/>" /><span><spring:message code="teacher.management.projectruntabs.projectInfo"/></span></a>
 											        	<sec:accesscontrollist domainObject="${run.project}" hasPermission="16">
-											        		|&nbsp;<a onclick="if(confirm('<spring:message code="teacher.management.projectruntabs.editWarning"/>')){window.top.location='/wise/author/authorproject.html?projectId=${run.project.id}&versionId=${run.versionId}';} return true;"><img class="icon" alt="edit" src="/wise/themes/default/images/icons/teal/edit.png" /><span><spring:message code="teacher.management.projectruntabs.edit"/></span></a>
+											        		|&nbsp;<a onclick="if(confirm('<spring:message code="teacher.management.projectruntabs.editWarning"/>')){window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}&versionId=${run.versionId}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.management.projectruntabs.edit"/></span></a>
 											        	</sec:accesscontrollist>
 											        </li>
 											    </ul>
@@ -499,17 +499,17 @@
 									<ul class="actionList">
 				
 										<sec:accesscontrollist domainObject="${run}" hasPermission="16">
-				   					      <li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.management.projectruntabs.sharingPermissionsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="share" src="/wise/themes/default/images/icons/teal/agent.png" /><span><spring:message code="teacher.management.projectruntabs.sharingPermissions"/></span></a></li> 
+				   					      <li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.management.projectruntabs.sharingPermissionsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="teacher.management.projectruntabs.sharingPermissions"/></span></a></li> 
 				 	                    	</sec:accesscontrollist>
 								    	
 								    	<c:set var="isExternalProject" value="0"/>
 								    	<sec:accesscontrollist domainObject="${run}" hasPermission="16">
-								      		<li><a id="editAnnouncements_${run.id}" class="editAnnouncements" title="<spring:message code="teacher.management.projectruntabs.announcementsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" ><img class="icon" alt="announcements" src="/wise/themes/default/images/icons/teal/chat-.png" /><spring:message code="teacher.management.projectruntabs.announcements"/></a></li>
+								      		<li><a id="editAnnouncements_${run.id}" class="editAnnouncements" title="<spring:message code="teacher.management.projectruntabs.announcementsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" ><img class="icon" alt="announcements" src="${contextPath}/<spring:theme code="chat"/>" /><spring:message code="teacher.management.projectruntabs.announcements"/></a></li>
 								        </sec:accesscontrollist>
-								        <li><a class="researchTools" title="<spring:message code="teacher.management.projectruntabs.researcherTools"/>: ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=export"><img class="icon" alt="export" src="/wise/themes/default/images/icons/teal/save.png" /><span><spring:message code="teacher.management.projectruntabs.researcherTools"/> <spring:message code="teacher.management.projectruntabs.exportStudentData"/></span></a></li>	    	
-										<li><a href="/wise/contact/contactwiseproject.html?projectId=${run.project.id}&runId=${run.id}"><img class="icon" alt="contact" src="/wise/themes/default/images/icons/teal/email.png" /><span><spring:message code="teacher.management.projectruntabs.reportProblem"/></span></a></li>
+								        <li><a class="researchTools" title="<spring:message code="teacher.management.projectruntabs.researcherTools"/>: ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=export"><img class="icon" alt="export" src="${contextPath}/<spring:theme code="save"/>" /><span><spring:message code="teacher.management.projectruntabs.researcherTools"/> <spring:message code="teacher.management.projectruntabs.exportStudentData"/></span></a></li>	    	
+										<li><a href="${contextPath}//contact/contactwiseproject.html?projectId=${run.project.id}&runId=${run.id}"><img class="icon" alt="contact" src="${contextPath}/<spring:theme code="email"/>" /><span><spring:message code="teacher.management.projectruntabs.reportProblem"/></span></a></li>
 					                    <sec:accesscontrollist domainObject="${run}" hasPermission="16">					    	
-								    	  <li><a class="archiveRun" id="archiveRun_runId=${run.id}&runName=<c:out value="${fn:escapeXml(run.name)}" />" title="<spring:message code="teacher.management.projectruntabs.archive_title"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="archive" src="/wise/themes/default/images/icons/teal/lock.png" /><span><spring:message code="teacher.management.projectruntabs.archive"/></span></a></li>
+								    	  <li><a class="archiveRun" id="archiveRun_runId=${run.id}&runName=<c:out value="${fn:escapeXml(run.name)}" />" title="<spring:message code="teacher.management.projectruntabs.archive_title"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="archive" src="${contextPath}/<spring:theme code="lock"/>" /><span><spring:message code="teacher.management.projectruntabs.archive"/></span></a></li>
 								    	</sec:accesscontrollist>
 								    	
 								    </ul>

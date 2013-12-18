@@ -10,13 +10,13 @@
 	Remove this if you use the .htaccess -->
 <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
 
-<link href="<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="homepagestylesheet"/>" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="homepagestylesheet"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
 
-<script src="<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 
-<link rel="shortcut icon" href="<spring:theme code="favicon"/>" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 
 <title><spring:message code="pages.research-tech.title" /></title>
 
@@ -38,7 +38,7 @@
 				
 				<div class="panelContent">
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/wise-research.png" alt="<spring:message code="pages.research-tech.research" />" />
+						<img src="${contextPath}/<spring:theme code="wise_research"/>" alt="<spring:message code="pages.research-tech.research" />" />
 						<div class="featureContentHeader"><spring:message code="pages.research-tech.research" /></div>
 						<div class="featureContent">
 							<p><spring:message code="pages.research-tech.research_content" /></p>
@@ -46,7 +46,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/wise/themes/default/images/features/ki.png" alt="<spring:message code="pages.research-tech.ki" />" />
+						<img src="${contextPath}/<spring:theme code="ki"/>" alt="<spring:message code="pages.research-tech.ki" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader" id="ki"><spring:message code="pages.research-tech.ki" /></div>
 							<p><spring:message code="pages.research-tech.ki_content" /></p>
@@ -54,7 +54,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/wise-group.png" alt="<spring:message code="pages.research-tech.goals" />" />
+						<img src="${contextPath}/<spring:theme code="wise_group"/>" alt="<spring:message code="pages.research-tech.goals" />" />
 						<div class="featureContentHeader"><spring:message code="pages.research-tech.goals" /></div>
 						<div class="featureContent">
 							<ol><li><span style="font-weight:bold;"><spring:message code="pages.research-tech.goals_curriculum" /></span> <spring:message code="pages.research-tech.goals_curriculum_content" /></li>
@@ -67,7 +67,7 @@
 					</div>
 					<div class="featuresShowcase left">
 						<div class="featureContent">
-							<img src="/wise/themes/default/images/features/tels-projects.png" alt="<spring:message code="pages.research-tech.grants" />" />
+							<img src="${contextPath}/<spring:theme code="tels_projects"/>" alt="<spring:message code="pages.research-tech.grants" />" />
 							<div class="featureContentHeader"><spring:message code="pages.research-tech.grants" /></div>
 							<p><spring:message code="pages.research-tech.grants_intro" /></p>
 							<ol>
@@ -81,7 +81,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/wise-results.png" alt="<spring:message code="pages.research-tech.results" />" />
+						<img src="${contextPath}/<spring:theme code="wise_results"/>" alt="<spring:message code="pages.research-tech.results" />" />
 						<div class="featureContentHeader"><spring:message code="pages.research-tech.results" /></div>
 						<div class="featureContent">
 							<p><spring:message code="pages.research-tech.results_content" /></p>
@@ -89,7 +89,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/wise/themes/default/images/features/collaborators.png" alt="<spring:message code="pages.research-tech.openSource" />" />
+						<img src="${contextPath}/<spring:theme code="collaborators"/>" alt="<spring:message code="pages.research-tech.openSource" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader" id="technology"><spring:message code="pages.research-tech.openSource" /></div>
 							<p><spring:message code="pages.research-tech.openSource_content" />
@@ -97,7 +97,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/wise4-org.png" alt="<spring:message code="pages.research-tech.development" />" />
+						<img src="${contextPath}/<spring:theme code="wise4_org"/>" alt="<spring:message code="pages.research-tech.development" />" />
 						<div class="featureContentHeader"><spring:message code="pages.research-tech.development" /></div>
 						<div class="featureContent">
 							<p><spring:message code="pages.research-tech.development_content" /></p>

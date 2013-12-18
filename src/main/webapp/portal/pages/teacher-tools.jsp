@@ -10,14 +10,14 @@
 	Remove this if you use the .htaccess -->
 <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
 
-<link href="<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="homepagestylesheet"/>" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="homepagestylesheet"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
 
-<script src="<spring:theme code="jquerysource"/>" type="text/javascript"></script>
-<script src="<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
 
-<link rel="shortcut icon" href="<spring:theme code="favicon"/>" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 
 <title><spring:message code="pages.teacher-tools.wiseLearningEnvironment" /></title>
 
@@ -40,7 +40,7 @@
 				
 				<div class="panelContent">
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/wise-teacher.png" alt="<spring:message code="pages.teacher-tools.teachingWithWISE" />" />
+						<img src="${contextPath}/<spring:theme code="wise_teacher"/>" alt="<spring:message code="pages.teacher-tools.teachingWithWISE" />" />
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.teacher-tools.wiseTeacherTools" /></div>
 							<p><spring:message code="pages.teacher-tools.wiseTeacherToolsParagraph1" /></p>
@@ -51,7 +51,7 @@
 					</div>
 					<div class="featureContentHeader"><spring:message code="pages.teacher-tools.highlightedFeatures" /></div>
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/teacher-manage.png" alt="<spring:message code="pages.teacher-tools.managementAlt" />" />
+						<img src="${contextPath}/<spring:theme code="teacher_manage"/>" alt="<spring:message code="pages.teacher-tools.managementAlt" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.teacher-tools.managingPacingEngagingStudents" /></p>
 							<ul>
@@ -64,7 +64,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase left">
-						<img src="/wise/themes/default/images/features/teacher-grading.png" alt="<spring:message code="pages.teacher-tools.gradingAndFeedbackAlt" />" />
+						<img src="${contextPath}/<spring:theme code="teacher_grading"/>" alt="<spring:message code="pages.teacher-tools.gradingAndFeedbackAlt" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.teacher-tools.gradingAndFeedback" /></p>
 							<ul>
@@ -76,7 +76,7 @@
 						<div style="clear:both;"></div>
 					</div>
 					<div class="featuresShowcase right">
-						<img src="/wise/themes/default/images/features/teacher-customization.png" alt="<spring:message code="pages.teacher-tools.customizationAlt" />" />
+						<img src="${contextPath}/<spring:theme code="teacher_customization"/>" alt="<spring:message code="pages.teacher-tools.customizationAlt" />" />
 						<div class="featureContent">
 							<p class="featureHeader"><spring:message code="pages.teacher-tools.customizingCurricula" /></p>
 							<ul>

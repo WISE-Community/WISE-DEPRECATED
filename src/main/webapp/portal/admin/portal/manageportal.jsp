@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script type="text/javascript" src="../../javascript/jquery/js/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource" />"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -25,7 +25,7 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
-<h5 style="color:#0000CC;"><a href="../index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 <br/><br/>
 <br/>
 name: ${portal.portalName}
@@ -51,6 +51,6 @@ Is Login Allowed:
 
 
 <br/><br/>
-<h5 style="color:#0000CC;"><a href="../index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 </body>
 </html>

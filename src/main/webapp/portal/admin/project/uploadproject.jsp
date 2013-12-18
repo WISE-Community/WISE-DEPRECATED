@@ -5,14 +5,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<script type="text/javascript" src="../../javascript/general.js"></script>
+<script type="text/javascript" src="${contextPath}/portal/javascript/general.js"></script>
     
 <title>Upload Project Page</title>
 
 </head>
 <body>
 
-<h5 style="color:#0000CC;"><a href="../index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <c:out value="${msg}" />
 

@@ -9,9 +9,9 @@
 
 <title><spring:message code="pages.statistics.title" /></title>
 
-<script src="/wise/javascript/flot/jquery.js" type="text/javascript"></script>
-<script src="/wise/javascript/flot/jquery.flot.js" type="text/javascript"></script>
-<script src="/wise/javascript/flot/excanvas.js" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquery.js"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="flot.js"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="excanvas.js"/>" type="text/javascript"></script>
 
 <script type="text/javascript">
 

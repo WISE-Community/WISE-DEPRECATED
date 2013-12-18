@@ -7,13 +7,13 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherhomepagestylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="jquerydatatables.css"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="facetedfilter.css"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerydatatables.css"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="facetedfilter.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 
 <title><spring:message code="teacher.management.library.title" /></title>
 
@@ -75,9 +75,9 @@
 												</div>
 												<div style="clear:both;"></div>
 												<div class="projectSummary">
-													<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></div>
+													<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 													<div class="summaryInfo">
-														<div class="libraryIcon"><img src="/wise/themes/default/images/open_book.png" alt="library project" /> <spring:message code="pages.wise-advantage.wiseLibraryProjects" /></div>
+														<div class="libraryIcon"><img src="${contextPath}/<spring:theme code="open_book"/>" alt="library project" /> <spring:message code="pages.wise-advantage.wiseLibraryProjects" /></div>
 														<div class="basicInfo">
 															<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
 															<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
@@ -102,9 +102,9 @@
 														</div>
 														<div class="details" id="details_${project.id}">
 															<c:if test="${project.metadata.keywords != null && project.metadata.keywords != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tags" /></span> ${project.metadata.keywords}</p></c:if>
-															<c:if test="${project.metadata.techDetailsString != null && project.metadata.techDetailsString != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="/wise/pages/check.html" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p></c:if>
+															<c:if test="${project.metadata.techDetailsString != null && project.metadata.techDetailsString != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_tech" /></span> ${project.metadata.techDetailsString} (<a href="${contextPath}/pages/check.html" target="_blank"><spring:message code="teacher.projects.projectinfo.checkCompatibility" /></a>)</p></c:if>
 															<c:if test="${project.metadata.compTime != null && project.metadata.compTime != ''}"><p><span style="font-weight:bold;"><spring:message code="teacher.projects.projectinfo.meta_compTime" /></span> ${project.metadata.compTime}</p></c:if>
-															<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="/wise/contact/contactwiseproject.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
+															<p><span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.projectContact" /></span> <a href="${contextPath}/contact/contactwiseproject.html?projectId=${project.id}"><spring:message code="contact_wise" /></a></p>
 															<c:if test="${project.metadata.author != null && project.metadata.author != ''}"><p><span style="font-weight:bold;"><spring:message code="author_plural" /></span> ${project.metadata.author}</p></c:if>
 															<c:set var="lastEdited" value="${project.metadata.lastEdited}" />
 															<c:if test="${lastEdited == null || lastEdited == ''}">
@@ -165,13 +165,13 @@
 	
 </div>
 
-	<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>
-	<script type="text/javascript" src="<spring:theme code="jquerycookiesource"/>"></script>
-	<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
-	<script type="text/javascript" src="<spring:theme code="jqueryuisource"/>"></script>
-	<script type="text/javascript" src="<spring:theme code="jqueryprintelement.js"/>"></script>
-	<script type="text/javascript" src="<spring:theme code="jquerydatatables.js"/>"></script>
-	<script type="text/javascript" src="<spring:theme code="facetedfilter.js"/>"></script>
+	<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+	<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
+	<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
+	<script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
+	<script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryprintelement.js"/>"></script>
+	<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerydatatables.js"/>"></script>
+	<script type="text/javascript" src="${contextPath}/<spring:theme code="facetedfilter.js"/>"></script>
 	
 	<script type='text/javascript'>
 		var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
@@ -196,7 +196,7 @@
 							},
 							404:function() {
 							    // not found, leave alone
-								//$(this).html("<img src='/wise/themes/default/images/projectThumb.png' alt='thumb'></img>");
+								//$(this).html("<img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></img>");
 							}
 						}
 					});
@@ -227,7 +227,7 @@
 			$('a.projectDetail').on('click',function(){
 				var title = $(this).attr('title');
 				var projectId = $(this).attr('id').replace('projectDetail_','');
-				var path = "/wise/teacher/projects/projectinfo.html?projectId=" + projectId;
+				var path = "${contextPath}/teacher/projects/projectinfo.html?projectId=" + projectId;
 				var div = $('#projectDetailDialog').html('<iframe id="projectIfrm" width="100%" height="100%"></iframe>');
 				$('body').css('overflow-y','hidden');
 				div.dialog({
@@ -259,7 +259,7 @@
 			// Set up print lesson click action for each project
 			$('.printLesson').on('click',function(){
 				var id = $(this).attr('id').replace('printLesson_','');
-				var printstyle = "<spring:theme code="teacherrunstylesheet"/>"; // TODO: create print-optimized stylesheet
+				var printstyle = "${contextPath}/<spring:theme code="teacherrunstylesheet"/>"; // TODO: create print-optimized stylesheet
 				$('#lessonPlan_' + id).printElement({
 					pageTitle:'LessonPlan-WISE4-Project-' + id + '.html',
 					overrideElementCSS:[{href:printstyle, media:'print'}] // TODO: create print-optimized stylesheet

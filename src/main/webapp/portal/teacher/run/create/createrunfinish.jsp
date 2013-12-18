@@ -5,18 +5,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link href="<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 
 <title><spring:message code="teacher.run.create.createrunfinish.classroomRunCreated" /></title>
 
-<script type="text/javascript" src="/wise/javascript/utils.js"></script>
-<script type="text/javascript" src="/wise/javascript/rotator.js"></script>
-<script type="text/javascript" src="/wise/javascript/general.js"></script>
-<script type="text/javascript" src="/wise/javascript/effects.js"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="utilssource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="rotatorsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="effectssource"/>"></script>
 
 </head>
 
@@ -44,7 +44,7 @@
 						<div class="sectionHead"><spring:message code="teacher.run.create.createrunfinish.classroomRunCreated"/></div>
 						<div class="sectionContent">
 		
-							<h5><spring:message code="teacher.run.create.createrunfinish.newRunHasBeenPlaced"/>&nbsp;<a href="/wise/teacher/management/classroomruns.html"><spring:message code="teacher.run.create.createrunfinish.gradeAndManageClassroomRuns"/></a>&nbsp;<spring:message code="teacher.run.create.createrunfinish.section"/></h5>
+							<h5><spring:message code="teacher.run.create.createrunfinish.newRunHasBeenPlaced"/>&nbsp;<a href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="teacher.run.create.createrunfinish.gradeAndManageClassroomRuns"/></a>&nbsp;<spring:message code="teacher.run.create.createrunfinish.section"/></h5>
 			
 							<table id="projectRunConfirmTable">
 								<tr>
@@ -74,7 +74,7 @@
 						</div>
 					</div>
 					<div style="margin-top:1em;">
-						<a class="wisebutton" style="margin:0 auto;" href="/wise/teacher/management/classroomruns.html"><spring:message code="teacher.run.create.createrunfinish.myClassroomRuns"/></a>
+						<a class="wisebutton" style="margin:0 auto;" href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="teacher.run.create.createrunfinish.myClassroomRuns"/></a>
 					</div>
 				</div>
 			</div>

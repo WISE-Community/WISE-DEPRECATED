@@ -6,21 +6,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
     
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jquerycookiesource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="utilssource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="browserdetectsource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="checkcompatibilitysource"/>"></script>
-<script type="text/javascript" src="../javascript/deployJava.js"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="utilssource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="browserdetectsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="checkcompatibilitysource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="deployJava.js"/>"></script>
 
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   
 <title><spring:message code="pages.check.title" /></title>
 
-<link rel="shortcut icon" href="./themes/default/images/favicon_panda.ico" /> 
+<link rel="shortcut icon" href="${contextPath}/themes/default/images/favicon_panda.ico" /> 
 
 </head>
 
@@ -56,7 +56,7 @@
 									<td><spring:message code="pages.check.required" /></td>
 									<td><spring:message code="pages.check.enabled" /></td>
 									<td><spring:message code="pages.check.disabled" /></td>
-									<td><img src='../themes/default/images/error_16.gif' /></td>
+									<td><img src='${contextPath}/themes/default/images/error_16.gif' /></td>
 									<td><a href='https://www.google.com/support/adsense/bin/answer.py?answer=12654'><spring:message code="pages.check.browser_howToEnabledJS" /></a></td>
 								</tr>
 								</noscript>
@@ -260,7 +260,7 @@
 								</tbody>
 							</table> 
 						</div>
-						<div style="margin-top:1em;"><a href="./schoolIT.html"><spring:message code="pages.check.schoolTech" /></a></div>
+						<div style="margin-top:1em;"><a href="${contextPath}/pages/schoolIT.html"><spring:message code="pages.check.schoolTech" /></a></div>
 					</div>
 				</div>
 			</div>

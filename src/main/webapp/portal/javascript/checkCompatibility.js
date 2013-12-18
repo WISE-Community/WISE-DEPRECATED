@@ -140,10 +140,10 @@ function getRequirementSatisfiedIcon(satisfied) {
 	
 	if(satisfied) {
 		//the client satisfies the requirement
-		iconImg = "<img alt='check' src='../themes/default/images/check_16.gif' />";
+		iconImg = "<img alt='check' src='../portal/themes/default/images/check_16.gif' />";
 	} else {
 		//the client does not satisfy the requirement
-		iconImg = "<img alt='error' src='../themes/default/images/error_16.gif' />";
+		iconImg = "<img alt='error' src='../portal/themes/default/images/error_16.gif' />";
 	}
 	
 	return iconImg;
@@ -166,7 +166,7 @@ function getOS() {
  */
 function checkJavascript() {
 	$('#jsEnabled').show();
-	document.getElementById('javascriptRequirementSatisfied').innerHTML = "<img alt='check' src='../themes/default/images/check_16.gif' />";
+	document.getElementById('javascriptRequirementSatisfied').innerHTML = "<img alt='check' src='../portal/themes/default/images/check_16.gif' />";
 
 	return true;
 }
@@ -627,7 +627,7 @@ function DetectFlashVer(reqMajorVer, reqMinorVer, reqRevision)
 function checkContentFiltering() {
 	// test loading of swf file
 	$.ajax({ 
-		url: "/wise/flash/convection-intro.swf", 
+		url: "../flash/convection-intro.swf", 
 		context: document.body})
 		.success(function(data, textStatus, jqXHR) {
 			var contentFilterSwfRequirementSatisfied=false;
@@ -648,7 +648,7 @@ function checkContentFiltering() {
 
 	// test loading of jar file
 	var jqxhr = $.ajax({ 
-		url: "/wise/library/jar/commons-logging-1.1.jar", 
+		url: "../library/jar/commons-logging-1.1.jar", 
 		context: document.body})
 		.success(function(data, textStatus, jqXHR) {			
 			var contentFilterRequirementSatisfied=false;

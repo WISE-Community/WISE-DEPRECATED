@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 
 <title><spring:message code="forgotaccount.teacher.success.teacherForgottenPasswordConfirmationScreen"/></title>
 </head>
@@ -19,7 +19,7 @@
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/wise/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 			</div>
 			
 			<div class="infoContent">
@@ -29,10 +29,10 @@
 						<spring:message code="forgotaccount.teacher.success.anEmailHasBeenSent"/>
 					</div>
 					<div>
-						<spring:message code="forgotaccount.teacher.success.ifYouHaveAnyOtherProblemsOrQuestions"/> <a href="/wise/contact/contactwisegeneral.html"> <spring:message code="forgotaccount.teacher.success.contactWISE"/></a>
+						<spring:message code="forgotaccount.teacher.success.ifYouHaveAnyOtherProblemsOrQuestions"/> <a href="${contextPath}/contact/contactwisegeneral.html"> <spring:message code="forgotaccount.teacher.success.contactWISE"/></a>
 					</div>
 				</div>
-				<a href="/wise/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

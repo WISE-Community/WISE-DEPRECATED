@@ -1,10 +1,10 @@
-<link rel="stylesheet" type="text/css" href="<spring:theme code="jquerystylesheet"/>">
-<link rel="stylesheet" type="text/css" href="<spring:theme code="superfishstylesheet"/>" media="screen">
+<link rel="stylesheet" type="text/css" href="${contextPath}/<spring:theme code="jquerystylesheet"/>">
+<link rel="stylesheet" type="text/css" href="${contextPath}/<spring:theme code="superfishstylesheet"/>" media="screen">
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <sec:authorize ifNotGranted="ROLE_USER">
 	<div id="userInfoBlock">
-		<form id="home" method="post" action="/wise/j_acegi_security_check" autocomplete="off">
+		<form id="home" method="post" action="${contextPath}/j_acegi_security_check" autocomplete="off">
 			<div id="signinForm">
 				<div>
 					<label for="username"><spring:message code="usernameLabel" /></label><input class="dataBoxStyle" type="text" name="j_username" id="j_username" size="18" maxlength="60" />
@@ -24,7 +24,7 @@
 		<ul class="welcome-menu">
 			<li><spring:message code="accountmenu.welcomeNewToWise"/></li>
 		</ul>
-		<a id="createAccountButton" href="/wise/signup.html" class="wisebutton signup" title="<spring:message code="accountmenu.createAccountTitle"/>"><spring:message code="accountmenu.createAccount"/></a>
+		<a id="createAccountButton" href="${contextPath}/signup.html" class="wisebutton signup" title="<spring:message code="accountmenu.createAccountTitle"/>"><spring:message code="accountmenu.createAccount"/></a>
 	</div>
 </sec:authorize>
 
@@ -41,18 +41,18 @@
 		</div>
 		<sec:authorize ifNotGranted="ROLE_STUDENT">
 			<div>
-				<a href="/wise/teacher/management/updatemyaccount.html"><spring:message code="accountmenu.myAccount" /></a>
-				<!-- <a href="/wise/message.html?action=index" ><spring:message code="accountmenu.messages"/><span id="unreadMsg"></span></a>  -->
+				<a href="${contextPath}/teacher/management/updatemyaccount.html"><spring:message code="accountmenu.myAccount" /></a>
+				<!-- <a href="${contextPath}/message.html?action=index" ><spring:message code="accountmenu.messages"/><span id="unreadMsg"></span></a>  -->
 			</div>
 		</sec:authorize>
 		<sec:authorize ifAnyGranted="ROLE_ADMINISTRATOR">
-			<a id="adminTools" class="wisebutton smallbutton-wide" href="/wise/admin/index.html" ><spring:message code="accountmenu.admin"/></a>
+			<a id="adminTools" class="wisebutton smallbutton-wide" href="${contextPath}/admin/index.html" ><spring:message code="accountmenu.admin"/></a>
 		</sec:authorize>
 		<sec:authorize ifAnyGranted="ROLE_RESEARCHER">
-			<a id="researchTools" class="wisebutton smallbutton-wide" href="/wise/admin/index.html" ><spring:message code="accountmenu.research"/></a>
+			<a id="researchTools" class="wisebutton smallbutton-wide" href="${contextPath}/admin/index.html" ><spring:message code="accountmenu.research"/></a>
 		</sec:authorize>
 		<sec:authorize ifAnyGranted="ROLE_STUDENT">
-			<a id="researchTools" class="wisebutton smallbutton-wide" href="/wise/student/index.html" ><spring:message code="accountmenu.student"/></a>
+			<a id="researchTools" class="wisebutton smallbutton-wide" href="${contextPath}/student/index.html" ><spring:message code="accountmenu.student"/></a>
 		</sec:authorize>
 	</div>
 	
@@ -63,25 +63,25 @@
 					<li class="level1 menu1">
 						<a><spring:message code="accountmenu.help"/></a> 
 						<ul>	
-							<li><a href="/wise/pages/gettingstarted.html"><spring:message code="accountmenu.quickstart"/></a></li>
-							<li><a href="/wise/pages/teacherfaq.html"><spring:message code="accountmenu.faq"/></a></li>
+							<li><a href="${contextPath}/pages/gettingstarted.html"><spring:message code="accountmenu.quickstart"/></a></li>
+							<li><a href="${contextPath}/pages/teacherfaq.html"><spring:message code="accountmenu.faq"/></a></li>
 							<!--  
 				            <li><a href="#" style="color:#999;">Search the Help Guide</a></li>
 				            -->
-				            <li><a href="/wise/contact/contactwisegeneral.html"><spring:message code="accountmenu.contact"/></a></li>
+				            <li><a href="${contextPath}/contact/contactwisegeneral.html"><spring:message code="accountmenu.contact"/></a></li>
 						</ul>
 					</li>
 					
 					<li class="level1 menu2">
 						<a><spring:message code="accountmenu.management"/></a>
 					    <ul>
-				            <li><a href="/wise/teacher/management/library.html"><spring:message code="accountmenu.library"/></a></li>
-				            <li><a href="/wise/teacher/management/classroomruns.html"><spring:message code="accountmenu.runs"/></a></li>
-							<li><a href="/wise/author/authorproject.html"><spring:message code="accountmenu.authoring"/></a></li>
+				            <li><a href="${contextPath}/teacher/management/library.html"><spring:message code="accountmenu.library"/></a></li>
+				            <li><a href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="accountmenu.runs"/></a></li>
+							<li><a href="${contextPath}/author/authorproject.html"><spring:message code="accountmenu.authoring"/></a></li>
 							<li><a onclick="editPremadeComments()"><spring:message code="accountmenu.editpremadecomments"/></a></li>
 				        </ul>
 						</li>
-					<li class="level1 menu3"><a href="/wise/teacher/index.html" ><spring:message code="accountmenu.teacherHome"/></a></li>
+					<li class="level1 menu3"><a href="${contextPath}/teacher/index.html" ><spring:message code="accountmenu.teacherHome"/></a></li>
 					
 				</sec:authorize>
 	   	</ul>
@@ -92,7 +92,7 @@
 		<ul class="welcome-menu">
 			<li><spring:message code="accountmenu.welcomeNewToWise"/></li>
 		</ul>
-		<a id="createAccountButton" href="/wise/signup.html" class="wisebutton signup" title="<spring:message code="accountmenu.createAccountTitle"/>"><spring:message code="accountmenu.createAccount"/></a>
+		<a id="createAccountButton" href="${contextPath}/signup.html" class="wisebutton signup" title="<spring:message code="accountmenu.createAccountTitle"/>"><spring:message code="accountmenu.createAccount"/></a>
 	</div>
 	</sec:authorize>
 </sec:authorize>
@@ -100,10 +100,10 @@
 <div id="editPremadeCommentsDiv" style="display:none;"></div>
 <div id="editPremadeCommentsLoadingDiv" style="display:none;"><h5 style="text-align:center"><spring:message code="accountmenu.loadingPremadeComments"/></h5></div>
 
-<script src="<spring:theme code="jquerysource"/>" type="text/javascript"></script>
-<script src="<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
-<script type="text/javascript" src="<spring:theme code="superfishsource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="jquerycookiesource"/>"></script>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="superfishsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
 
 <script type="text/javascript">
 	
@@ -154,7 +154,7 @@
 		 * tool. we are only loading the authoring tool so that the vle
 		 * is loaded and can then open the premade comments editing view.
 		 */
-		var path = '/wise/author/authorproject.html?editPremadeComments=true';
+		var path = 'author/authorproject.html?editPremadeComments=true';
 		
 		//set the path to start loading the authoring tool
 		$("#editPremadeCommentsIfrm").attr('src',path);

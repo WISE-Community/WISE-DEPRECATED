@@ -4,14 +4,14 @@
 	 		<div id="footerLinks">
 	 			<div id="wiseLinks">
 	 				<ul>
-						<li class="first"><a href="/wise/index.html"><spring:message code="footer.home" /></a></li>
-						<li><a href="/wise/signup.html"><spring:message code="footer.createAccount" /></a></li>
-						<li><a href="/wise/pages/wise-advantage.html"><spring:message code="footer.wiseAdvantage" /></a></li>
-						<li><a href="/wise/pages/features.html"><spring:message code="footer.wiseFeatures" /></a></li>
-						<li><a href="/wise/pages/teacher-tools.html"><spring:message code="footer.teacherTools" /></a></li>
-						<li><a href="/wise/pages/teacherfaq.html"><spring:message code="footer.faq" /></a></li>
-						<li><a href="/wise/pages/gettingstarted.html"><spring:message code="footer.gettingStarted" /></a></li>
-						<li class="last"><a href="/wise/contact/contactwisegeneral.html"><spring:message code="footer.contact" /></a></li>
+						<li class="first"><a href="${contextPath}/index.html"><spring:message code="footer.home" /></a></li>
+						<li><a href="${contextPath}/signup.html"><spring:message code="footer.createAccount" /></a></li>
+						<li><a href="${contextPath}/pages/wise-advantage.html"><spring:message code="footer.wiseAdvantage" /></a></li>
+						<li><a href="${contextPath}/pages/features.html"><spring:message code="footer.wiseFeatures" /></a></li>
+						<li><a href="${contextPath}/pages/teacher-tools.html"><spring:message code="footer.teacherTools" /></a></li>
+						<li><a href="${contextPath}/pages/teacherfaq.html"><spring:message code="footer.faq" /></a></li>
+						<li><a href="${contextPath}/pages/gettingstarted.html"><spring:message code="footer.gettingStarted" /></a></li>
+						<li class="last"><a href="${contextPath}/contact/contactwisegeneral.html"><spring:message code="footer.contact" /></a></li>
 						<!-- <li class="last"><a href="credits.html"><spring:message code="footer.credits" /></a></li> -->
 					</ul>
 	 			</div>
@@ -23,19 +23,19 @@
 	 		<div>
 	 			<div id="footerLogos">
 					<a href="http://www.nsf.gov" title="<spring:message code="footer.link_nsf" />" target="_blank">
-						<img src="/wise/themes/default/images/nsf-logo.png" alt="<spring:message code="footer.link_nsf" />" />
+						<img src="${contextPath}/<spring:theme code="nsf_logo"/>" alt="<spring:message code="footer.link_nsf" />" />
 					</a>
 					<a href="http://berkeley.edu" title="<spring:message code="footer.link_ucb" />" target="_blank">
-						<img src="/wise/themes/default/images/ucb-logo.png" alt="<spring:message code="footer.link_ucb" />" />
+						<img src="${contextPath}/<spring:theme code="ucb_logo"/>" alt="<spring:message code="footer.link_ucb" />" />
 					</a>
 					<a href="http://concord.org" title="<spring:message code="footer.link_concord" />" target="_blank">
-						<img src="/wise/themes/default/images/concord-logo.png" alt="<spring:message code="footer.link_concord" />" />
+						<img src="${contextPath}/<spring:theme code="concord_logo"/>" alt="<spring:message code="footer.link_concord" />" />
 					</a>
 					<!-- <a href="http://www.telscenter.org/confluence/display/SAIL/Home" title="<spring:message code="footer.link_sail" />" target="_blank"> -->
-						<img src="/wise/themes/default/images/sail-logo.png" alt="<spring:message code="footer.link_sail" />" />
+						<img src="${contextPath}/<spring:theme code="sail_logo"/>" alt="<spring:message code="footer.link_sail" />" />
 					<!-- </a>  -->
 					<a href="http://www.telscenter.org/" title="<spring:message code="footer.link_tels" />" target="_blank">
-						<img src="/wise/themes/default/images/tels-logo-small.png" alt="<spring:message code="footer.link_tels" />" />
+						<img src="${contextPath}/<spring:theme code="tels_logo_small"/>" alt="<spring:message code="footer.link_tels" />" />
 					</a>
 				</div>
 				<div id="footerText">

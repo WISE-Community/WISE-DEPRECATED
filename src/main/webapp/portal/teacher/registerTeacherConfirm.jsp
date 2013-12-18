@@ -5,14 +5,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
   
 <title><spring:message code="teacher.registerTeacherConfirm.createAWiseAccount" /></title>
 
-<script type="text/javascript" src="<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="utilssource"/>"></script>
-<script type="text/javascript" src="<spring:theme code="generalsource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="utilssource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 </head>
 
 <div id="pageWrapper">
@@ -21,7 +21,7 @@
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="/wise/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise" /></a>
 			</div>
 			
 			<div class="infoContent">
@@ -38,7 +38,7 @@
 						<div><span class="usernameDisplay">${displayname}</span> <a href="management/updatemyaccountinfo.html"><spring:message code="teacher.registerTeacherConfirm.edit"/></a></div>
 								
 					</div>
-	  				<br /><div><a href="/wise/login.html" class="wisebutton"><spring:message code="teacher.registerTeacherConfirm.signInToWise"/></a></div>
+	  				<br /><div><a href="${contextPath}/login.html" class="wisebutton"><spring:message code="teacher.registerTeacherConfirm.signInToWise"/></a></div>
 				</div>
 			</div>
 		</div>

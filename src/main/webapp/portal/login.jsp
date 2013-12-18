@@ -10,13 +10,13 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="description" content="login for portal"/>
 
-<link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 
 <style type="text/css" media="screen">
-  .inplaceeditor-saving {background: url(<spring:theme code="wait"/>) bottom right no-repeat; }
+  .inplaceeditor-saving {background: url(${contextPath}/<spring:theme code="wait"/>) bottom right no-repeat; }
 </style>
 
-<link rel="shortcut icon" href="<spring:theme code="favicon"/>" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 
 <title><spring:message code="signIn" /></title>
 
@@ -71,7 +71,7 @@
 				        <ul id="signInLinkPosition"> <!-- TODO: make these open in top window -->
 				       		<li><a href="forgotaccount/selectaccounttype.html" class="forgotlink"><spring:message code="login.forgot"/></a>  </li>
 				       		<li><a href="signup.html" class="joinlink"><spring:message code="login.createAccount"/></a></li>
-				       		<li><a href="/wise/index.html" class="joinlink"><spring:message code="returnHome"/></a></li>
+				       		<li><a href="${contextPath}/index.html" class="joinlink"><spring:message code="returnHome"/></a></li>
 				        </ul>
 			 		</div>
 				</div>
