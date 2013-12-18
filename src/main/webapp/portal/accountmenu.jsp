@@ -154,7 +154,7 @@
 		 * tool. we are only loading the authoring tool so that the vle
 		 * is loaded and can then open the premade comments editing view.
 		 */
-		var path = 'author/authorproject.html?editPremadeComments=true';
+		var path = '${contextPath}/author/authorproject.html?editPremadeComments=true';
 		
 		//set the path to start loading the authoring tool
 		$("#editPremadeCommentsIfrm").attr('src',path);
