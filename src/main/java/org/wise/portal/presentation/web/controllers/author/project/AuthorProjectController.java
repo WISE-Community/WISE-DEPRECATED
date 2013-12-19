@@ -620,6 +620,10 @@ public class AuthorProjectController extends AbstractController {
 				} else {
 					return new ModelAndView(new RedirectView("accessdenied.html"));
 				}
+			} else if(command.equals("getTimestamp")) {
+				//get the current timestamp on the server and write it to the response
+				response.getWriter().write(String.valueOf(new Date().getTime()));
+				return null;
 			} else if(forward.equals("minifier")){
 				if(this.isProjectlessRequest(request, forward) || this.projectService.canAuthorProject(project, user)){
 					CredentialManager.setRequestCredentials(request, user);
