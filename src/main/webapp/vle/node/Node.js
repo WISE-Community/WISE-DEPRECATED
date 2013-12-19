@@ -1084,7 +1084,7 @@ Node.prototype.insertPreviousWorkIntoPage = function(doc){
 					}
 
 					//display the previous work step number and title along with the work
-					html += 'Remember, your work from "Step ' + stepNumberAndTitle + '" was<br>' + work + '</br></br>';
+					html += this.view.getI18NStringWithParams("show_previous_work_message",[stepNumberAndTitle, work]);
 				};
 			}
 		};
