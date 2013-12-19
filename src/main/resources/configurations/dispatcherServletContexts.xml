@@ -1119,6 +1119,11 @@
 		<property name="messageSource" ref="messageSource" />      	
     </bean>
     
+    <bean id="loginController"
+		class="org.wise.portal.presentation.web.controllers.LoginController">
+		<property name="wiseProperties" ref="wiseProperties" />
+	</bean>
+    
     <!-- Specifies where theme properties are located -->
     <bean id="themeSource"
         class="org.springframework.ui.context.support.ResourceBundleThemeSource">
@@ -1169,6 +1174,7 @@
     			/request/info.html=informationController
     			/metadata.html=projectMetadataController
     		    /index.html=urlFilenameViewController
+    		    /login.html=loginController
     		    /errors/friendlyError.html=urlFilenameViewController
     		    /accessdenied.html=accessDeniedController
     		    /router.html=routerController
