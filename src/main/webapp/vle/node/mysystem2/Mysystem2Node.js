@@ -181,7 +181,7 @@ Mysystem2Node.prototype.renderGradingView = function(displayStudentWorkDiv, node
             // put the student work and content in a hidden element
             // add enlarge link to show student's diagram in a popup window
             divContent += "<a class='msEnlarge' style='text-decoration:underline; color:blue;'" +
-                "onclick='var newWindow=window.open(\"/wise/vle/node/mysystem2/mysystem2.html\"); newWindow.divId=\""+divId+"_"+nodeStateIndex+"\"'>enlarge</a>" +
+                "onclick='var newWindow=window.open(\"node/mysystem2/mysystem2.html\"); newWindow.divId=\""+divId+"_"+nodeStateIndex+"\"'>enlarge</a>" +
                 "<span id='content_"+divId+"_"+nodeStateIndex+"' style='display:none'>"+contentString+"</span>" +
                 "<span id='studentwork_"+divId+"_"+nodeStateIndex+"' style='display:none'>"+studentWork+"</span>";
 

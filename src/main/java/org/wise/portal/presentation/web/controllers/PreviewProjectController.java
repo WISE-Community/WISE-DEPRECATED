@@ -77,7 +77,10 @@ public class PreviewProjectController extends AbstractController {
 			params.setVersionId(request.getParameter(VERSION_ID));
 			return (ModelAndView) projectService.previewProject(params);
 		} else {
-			return new ModelAndView(new RedirectView("/wise/accessdenied.html"));
+			//get the context path e.g. /wise
+			String contextPath = request.getContextPath();
+			
+			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
 		}
     }
 	

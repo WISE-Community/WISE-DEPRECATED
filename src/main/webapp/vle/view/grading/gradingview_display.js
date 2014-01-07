@@ -6483,7 +6483,10 @@ function enlargeDraw(divId){
 	svg = svg.replace(/(<image.*)href(.*)(>)/gmi,'$1xlink:href$2\/$3');
 	window.open("data:image/svg+xml;base64," + Utils.encode64(svg));*/
 
-	var newwindow = window.open("/wise/vle/node/draw/svg-edit/svg-editor-grading.html");
+	//get the context path e.g. /wise
+	var contextPath = view.getConfig().getConfigParam('contextPath');
+	
+	var newwindow = window.open(contextPath + "/vle/node/draw/svg-edit/svg-editor-grading.html");
 	newwindow.divId = divId;
 }
 
@@ -6497,7 +6500,11 @@ function enlargeMS(divId){
     mysystem.config.jsonURL = contentString;
     mySystem = mysystem.loadMySystem();
 	*/
-	var newwindow = window.open("/wise/vle/node/mysystem/grading/mysystem.html");
+	
+	//get the context path e.g. /wise
+	var contextPath = view.getConfig().getConfigParam('contextPath');
+	
+	var newwindow = window.open(contextPath + "/vle/node/mysystem/grading/mysystem.html");
 	newwindow.divId = divId;
 }
 

@@ -20,11 +20,11 @@ public final class SecurityUtils {
 
 	private static List<String> ALLOWED_REFERRERS;
 
-	private static Properties vleProperties;
+	private static Properties wiseProperties;
 
-	private final static String AUTHENTICATION_URL = "/wise/authorize.html";
+	private final static String AUTHENTICATION_URL = "authorize.html";
 
-	private final static String MODEMASTER_URL = "/wise/modemaster.html";
+	private final static String MODEMASTER_URL = "modemaster.html";
 
 	private static boolean retrievedPortalMode = false;
 
@@ -32,22 +32,22 @@ public final class SecurityUtils {
 	
 	static{
 		ALLOWED_REFERRERS = new ArrayList<String>();
-		ALLOWED_REFERRERS.add("/wise/vle/author.html");
-		ALLOWED_REFERRERS.add("/wise/util/util.html");
-		ALLOWED_REFERRERS.add("/wise/vle/vle.html");
-		ALLOWED_REFERRERS.add("/wise/vle/gradework.html");
-		ALLOWED_REFERRERS.add("/wise/vle/classroomMonitor.html");
-		ALLOWED_REFERRERS.add("/wise/teacher/projects/telsprojectlibrary.html");
-		ALLOWED_REFERRERS.add("/wise/teacher/projects/customized/index.html");
-		ALLOWED_REFERRERS.add("/wise/teacher/run/createRun.html");
-		ALLOWED_REFERRERS.add("/wise/teacher/management/library.html");
+		ALLOWED_REFERRERS.add("/vle/author.html");
+		ALLOWED_REFERRERS.add("/util/util.html");
+		ALLOWED_REFERRERS.add("/vle/vle.html");
+		ALLOWED_REFERRERS.add("/vle/gradework.html");
+		ALLOWED_REFERRERS.add("/vle/classroomMonitor.html");
+		ALLOWED_REFERRERS.add("/teacher/projects/telsprojectlibrary.html");
+		ALLOWED_REFERRERS.add("/teacher/projects/customized/index.html");
+		ALLOWED_REFERRERS.add("/teacher/run/createRun.html");
+		ALLOWED_REFERRERS.add("/teacher/management/library.html");
 
 		try {
 			// Read properties file.
-			vleProperties = new Properties();
-			vleProperties.load(SecurityUtils.class.getClassLoader().getResourceAsStream("wise.properties"));
-			if(vleProperties.containsKey("isStandAlone")) {
-				boolean isStandAlone = Boolean.valueOf(vleProperties.getProperty("isStandAlone"));
+			wiseProperties = new Properties();
+			wiseProperties.load(SecurityUtils.class.getClassLoader().getResourceAsStream("wise.properties"));
+			if(wiseProperties.containsKey("isStandAlone")) {
+				boolean isStandAlone = Boolean.valueOf(wiseProperties.getProperty("isStandAlone"));
 				isPortalMode = !isStandAlone;
 			}
 		} catch (Exception e) {
@@ -68,9 +68,12 @@ public final class SecurityUtils {
 		String referer = request.getHeader("referer");
 		String domain =  "http://" + request.getServerName();
 		String domainWithPort = domain + ":" + request.getLocalPort();
+		
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
 
 		for(int x=0;x<ALLOWED_REFERRERS.size();x++){
-			if(referer != null && (referer.contains(domain + ALLOWED_REFERRERS.get(x)) || referer.contains(domainWithPort + ALLOWED_REFERRERS.get(x)))){
+			if(referer != null && (referer.contains(domain + contextPath + ALLOWED_REFERRERS.get(x)) || referer.contains(domainWithPort + contextPath + ALLOWED_REFERRERS.get(x)))){
 				return true;
 			}
 		}

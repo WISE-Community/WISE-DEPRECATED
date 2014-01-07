@@ -108,7 +108,10 @@ public class TelsAuthenticationSuccessHandler extends
         try {
 			Portal portal = portalService.getById(1);
 			if (!userIsAdmin && !portal.isLoginAllowed()) {
-		        	response.sendRedirect(TelsAuthenticationProcessingFilter.LOGOUT_PATH);
+				//get the context path e.g. /wise
+				String contextPath = request.getContextPath();
+				
+		        	response.sendRedirect(contextPath + TelsAuthenticationProcessingFilter.LOGOUT_PATH);
 		        	return;
 		    }
         } catch (ObjectNotFoundException e) {

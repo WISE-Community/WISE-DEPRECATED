@@ -325,14 +325,11 @@ public class WISEWebSocketServlet extends WebSocketServlet {
     	boolean verified = false;
     	
     	if(wiseProperties != null) {
-    		//get the portal base url e.g. http://wise.berkeley.edu:8080/wise
+    		//get the portal base url e.g. http://wise.berkeley.edu/wise
     		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
     		
-    		//remove the /wise to leave the host e.g. http://wise.berkeley.edu:8080
-    		wiseBaseURL = wiseBaseURL.replace("/wise", "");
-    		
     		//check if the origin matches the portal base url
-    		if(origin != null && origin.equals(wiseBaseURL)) {
+    		if(wiseBaseURL != null && origin != null && wiseBaseURL.startsWith(origin)) {
     			//the origin matches
     			verified = true;
     		}

@@ -480,7 +480,7 @@ svgEditor.addExtension("Markers", function(S) {
 
 	return {
 		name: "Markers",
-		svgicons: "/wise/vle/node/draw/svg-edit/extensions/markers-icons.xml", //edited to wise4 extensions path
+		svgicons: "../../../../node/draw/svg-edit/extensions/markers-icons.xml", //edited to wise4 extensions path
 		buttons: buildButtonList(),
 		context_tools: [
 		   {

@@ -38,7 +38,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.security.acls.domain.BasePermission;
@@ -87,22 +86,27 @@ public class BridgeController extends AbstractController {
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+		
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+		
 		// check if user is logged in
 		if (ControllerUtil.getSignedInUser() == null) {
-			response.sendRedirect("/wise/login.html");
+			response.sendRedirect(contextPath + "/login.html");
 			return null;
 		}
 		boolean authorized = authorize(request);
 		if (!authorized) {
 			// if request is for posting unsaved data and the user is not the same user as the one that should be posting it,
 			// forward them to the homepage
-			if (request.getRequestURI().equals("/wise/bridge/postdata.html")) {
+			
+			if (request.getRequestURI().equals(contextPath + "/bridge/postdata.html")) {
 				User signedInUser = ControllerUtil.getSignedInUser();
 				if (signedInUser.getUserDetails() instanceof TeacherUserDetails) {
-					response.sendRedirect("/wise" + TelsAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+					response.sendRedirect(contextPath + TelsAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 					return null;
 				} else if (signedInUser.getUserDetails() instanceof StudentUserDetails) {
-					response.sendRedirect("/wise" + TelsAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
+					response.sendRedirect(contextPath + TelsAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
 					return null;
 				} else {
 					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this page");

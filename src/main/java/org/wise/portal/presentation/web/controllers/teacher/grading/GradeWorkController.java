@@ -75,6 +75,9 @@ public class GradeWorkController extends AbstractController {
 		//get the boolean whether to get revisions
 		String getRevisions = request.getParameter("getRevisions");
 		
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+		
 		String action = request.getParameter("action");
 		if(action != null) {
 			if(action.equals("postMaxScore")) {
@@ -94,12 +97,12 @@ public class GradeWorkController extends AbstractController {
 						this.runService.hasRunPermission(run, user, BasePermission.READ)){
 					String portalurl = ControllerUtil.getBaseUrlString(request);
 	
-			    	String getGradeWorkUrl = portalurl + "/wise/vle/gradework.html";
-					String getGradingConfigUrl = portalurl + "/wise/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
+			    	String getGradeWorkUrl = portalurl + contextPath + "/vle/gradework.html";
+					String getGradingConfigUrl = portalurl + contextPath + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
 					
 					//get the classroom monitor urls
-					String getClassroomMonitorUrl = portalurl + "/wise/vle/classroomMonitor.html";
-					String getClassroomMonitorConfigUrl = portalurl + "/wise/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
+					String getClassroomMonitorUrl = portalurl + contextPath + "/vle/classroomMonitor.html";
+					String getClassroomMonitorConfigUrl = portalurl + contextPath + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
 					
 					String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 					String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());

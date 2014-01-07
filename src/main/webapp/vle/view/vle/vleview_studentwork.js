@@ -406,9 +406,12 @@ View.prototype.onWindowUnload = function(logout){
 	 * the argument to onWindowUnload will be an event object.
 	 */
 	if(logout === true) {
+		//get the context path e.g. /wise
+		var contextPath = this.getConfig().getConfigParam('contextPath');
+		
 		//logout the user
-		this.connectionManager.request('GET',1,"/wise/j_spring_security_logout", null, function(){},null,null,true);
-		window.top.location = "/wise/index.html"; // redirect the top level window to the login page
+		this.connectionManager.request('GET',1, contextPath + "/j_spring_security_logout", null, function(){},null,null,true);
+		window.top.location = contextPath + "/index.html"; // redirect the top level window to the login page
 	}
 
 	$('#onUnloadSaveDiv').dialog('close');
@@ -428,12 +431,15 @@ View.prototype.viewStudentAssets = function(params) {
 
 	//check if the studentAssetsDiv exists
 	if($('#studentAssetsDiv').size()==0){
+		//get the context path e.g. /wise
+		var contextPath = this.getConfig().getConfigParam('contextPath');
+		
 		//it does not exist so we will create it
 		$('#w4_vle').append('<div id="studentAssetsDiv" style="margin-bottom:.3em;"></div>');
 		var assetEditorDialogHtml = "<div id='studentAssetEditorDialog' style='display: none; text-align:left;'><div style='margin-bottom:.5em;'>" 
 			+ "<div id='assetUploaderBodyDiv'><span style='float:left;'>"+this.getI18NString("student_assets_upload_new_file")+":</span>"
 			+ "<input style='margin:0 .5em;' type='file' size='30' id='uploadAssetFile' name='uploadAssetFile' onchange=\"eventManager.fire('studentAssetSubmitUpload')\"></input>"
-			+ "<img id='assetProcessing' style='display:none;' class='loadingImg' src='/wise/vle/images/ajax-loader.gif' alt='loading...' /></div><br>"
+			+ "<img id='assetProcessing' style='display:none;' class='loadingImg' src=" + contextPath + "'/vle/images/ajax-loader.gif' alt='loading...' /></div><br>"
 			+ "<div id='notificationDiv'>"
 			+ "</div></div><div><div style='margin-bottom: 0.5em;'>"+this.getI18NString("student_assets_my_files")+": </div>"
 			+ "<select id='assetSelect' style='width:100%; height:200px; padding:.5em;' size='15'></select>"

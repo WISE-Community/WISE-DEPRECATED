@@ -25,7 +25,6 @@ package org.wise.portal.presentation.web.controllers.teacher.management;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
@@ -101,7 +100,10 @@ public class RemoveStudentFromRunController extends SimpleFormController {
 	
 	    		modelAndView = new ModelAndView(getSuccessView());
     		} else {
-    			modelAndView = new ModelAndView(new RedirectView("/wise/accessdenied.html"));
+    			//get the context path e.g. /wise
+    			String contextPath = request.getContextPath();
+    			
+    			modelAndView = new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
     		}
     	} catch (ObjectNotFoundException e) {
 			errors.rejectValue("runId", "error.illegal-runId");

@@ -62,13 +62,13 @@ SEASONS.prototype.render = function() {
 	var modelType = this.content.modelType;
 	
 	if (modelType == "distanceAndShape") {		
-		$("#modelIFrame").attr("src","/wise/vle/node/seasons/earth/seasons1-1.html");
+		$("#modelIFrame").attr("src","earth/seasons1-1.html");
 	} else if (modelType == "distanceAndTemperature") {		
-		$("#modelIFrame").attr("src","/wise/vle/node/seasons/earth/seasons1-2a.html");
+		$("#modelIFrame").attr("src","earth/seasons1-2a.html");
 	} else if (modelType == "tiltAndTemperature") {		
-		$("#modelIFrame").attr("src","/wise/vle/node/seasons/earth/seasons1-3.html");
+		$("#modelIFrame").attr("src","earth/seasons1-3.html");
 	} else if (modelType == "tiltAndHoursOfDaylight") {		
-		$("#modelIFrame").attr("src","/wise/vle/node/seasons/earth/seasons4.html");
+		$("#modelIFrame").attr("src","earth/seasons4.html");
 	} 	
 };
 

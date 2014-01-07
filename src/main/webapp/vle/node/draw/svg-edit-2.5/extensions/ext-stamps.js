@@ -124,7 +124,7 @@ svgEditor.addExtension("Stamps", function(S) {
 	
 	return {
 		name: "Stamps",
-		svgicons: "/wise/vle/node/draw/svg-edit/extensions/stamp.xml", // corrected path for wise4
+		svgicons: "../../../../node/draw/svg-edit/extensions/stamp.xml", // corrected path for wise4
 		buttons: [{
 			id: "tool_stamp",
 			type: "mode",
@@ -143,7 +143,7 @@ svgEditor.addExtension("Stamps", function(S) {
 		}],
 		callback: function() {
 			//add extension css
-			var csspath = '/wise/vle/node/draw/svg-edit/extensions/ext-stamps.css'; // corrected path for wise4
+			var csspath = '../../../../node/draw/svg-edit/extensions/ext-stamps.css'; // corrected path for wise4
 			var fileref=document.createElement("link");
 			fileref.setAttribute("rel", "stylesheet");
 			fileref.setAttribute("type", "text/css");

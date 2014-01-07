@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.hibernate.StaleObjectStateException;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
@@ -91,7 +90,11 @@ public class RegisterStudentController extends SimpleFormController {
 		String domain =  "http://" + request.getServerName();
 		String domainWithPort = domain + ":" + request.getLocalPort();
 		String referrer = request.getHeader("referer");
-		String registerUrl = "/wise/student/registerstudent.html";
+
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+		
+		String registerUrl = contextPath + "/student/registerstudent.html";
 		
 		if(referrer != null && (referrer.contains(domain + registerUrl) || referrer.contains(domainWithPort + registerUrl))){
 			StudentAccountForm accountForm = (StudentAccountForm) command;

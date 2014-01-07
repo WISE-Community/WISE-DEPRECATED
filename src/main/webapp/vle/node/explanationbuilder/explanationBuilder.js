@@ -1314,7 +1314,7 @@ ExplanationBuilder.prototype.addExpIdea = function(context,isLoad,isActive,id,le
 					} else if(lastAcceptedText && ideaText != lastAcceptedText) {
 						changed = true;
 						//the idea has been changed since the idea was used in this step
-						text += " <img class='notification' src='/wise/vle/images/ideaManager/info.png' alt='warn' />" +
+						text += " <img class='notification' src='../../images/ideaManager/info.png' alt='warn' />" +
 							"<div class='tooltip'><div>" + view.getI18NStringWithParams('ideaChangedAlert', [this.ideaTerm],'ExplanationBuilderNode') + "</div>" +
 							"<div class='notificationLinks'><a class='notificationLink revise'>" + view.getI18NString('revise','ExplanationBuilderNode') + "</a>" +
 							"<a class='notificationLink accept'>" + view.getI18NString('keep','ExplanationBuilderNode') + "</a></div></div>";
@@ -1342,7 +1342,7 @@ ExplanationBuilder.prototype.addExpIdea = function(context,isLoad,isActive,id,le
 				timeCreated = this.ideaBasket.deleted[i].timeCreated;
 				
 				// the idea has been deleted since it was used in this step
-				text += " <img class='notification' src='/wise/vle/images/ideaManager/info.png' alt='warn' />" +
+				text += " <img class='notification' src='../../images/ideaManager/info.png' alt='warn' />" +
 					"<div class='tooltip'><div>" + view.getI18NStringWithParams('ideaDeletedAlert', [this.ideaTerm],'ExplanationBuilderNode') + "</div>" +
 					"<div class='notificationLinks'><a class='notificationLink restore'>" + view.getI18NString('restoreAndRevise','ExplanationBuilderNode') + "</a>" + 
 					"<a class='notificationLink remove'>" + view.getI18NString('remove','ExplanationBuilderNode') + "</a>" +

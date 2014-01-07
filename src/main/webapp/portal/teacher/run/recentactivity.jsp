@@ -187,7 +187,7 @@
 		<c:otherwise>
 			<spring:htmlEscape defaultHtmlEscape="false">
 			<spring:escapeBody htmlEscape="false">
-				<p class="info"><spring:message code="teacher.run.recentactivity.noActiveProjectRuns"/> <a href\="${contextPath}/teacher/management/library.html"><spring:message code="teacher.run.recentactivity.wiseProjectLibrary"/></a> <spring:message code="teacher.run.recentactivity.andClickStartNewRun"/> <a href\="${contextPath}/author/authorproject.html"><spring:message code="teacher.run.recentactivity.wiseAuthoringTool"/></a></p>
+				<p class="info"><spring:message code="teacher.run.recentactivity.noActiveProjectRuns"/> <a href="${contextPath}/teacher/management/library.html"><spring:message code="teacher.run.recentactivity.wiseProjectLibrary"/></a> <spring:message code="teacher.run.recentactivity.andClickStartNewRun"/> <a href="${contextPath}/author/authorproject.html"><spring:message code="teacher.run.recentactivity.wiseAuthoringTool"/></a></p>
 			</spring:escapeBody>
 			</spring:htmlEscape>
 		</c:otherwise>

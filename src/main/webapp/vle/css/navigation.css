@@ -181,7 +181,7 @@ p  {font-size:.8em; line-height:150%;padding:0px; margin:0px;}
 }
 
 #hintsHeader {
-	background-image: url("/wise/vle/images/hint/star.png");
+	background-image: url("../images/hint/star.png");
     background-position: -2px 50%;
     background-repeat: no-repeat;
     padding: 2px 0 0 24px;
@@ -216,7 +216,7 @@ a#hintsLink:hover {
 }
 
 #hintsTabs .hintHeader {
-	background-image: url("/wise/vle/images/panda.png");
+	background-image: url("../images/panda.png");
 	background-position: left 50%;
     background-repeat: no-repeat;
     color: #FF9D1E;
@@ -278,7 +278,7 @@ a#hintsLink:hover {
 }
 
 #nodeAnnotationsHeader {
-	background-image: url("/wise/vle/images/addNode.png");
+	background-image: url("../images/addNode.png");
     background-position: -2px 50%;
     background-repeat: no-repeat;
     padding: 2px 0 0 24px;
@@ -300,7 +300,7 @@ a#nodeAnnotationsLink:hover {
 
 
 .nodeAnnotationsPanel .nodeAnnotationsHeader {
-	background-image: url("/wise/vle/images/panda.png");
+	background-image: url("../images/panda.png");
 	background-position: left 50%;
     background-repeat: no-repeat;
     color: #FF9D1E;
@@ -326,13 +326,13 @@ a#nodeAnnotationsLink:hover {
 
 .tabPrev {
 	float:left;
-	background: url("/wise/vle/images/hint/previous.png") no-repeat scroll left 50% transparent;
+	background: url("../images/hint/previous.png") no-repeat scroll left 50% transparent;
 	padding-left:15px;
 }
 
 .tabNext {
 	float:right;
-	background: url("/wise/vle/images/hint/next.png") no-repeat scroll right 50% transparent;
+	background: url("../images/hint/next.png") no-repeat scroll right 50% transparent;
 	padding-right:15px;
 }
 

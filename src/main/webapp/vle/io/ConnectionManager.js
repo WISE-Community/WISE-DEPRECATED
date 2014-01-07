@@ -152,12 +152,15 @@ Connection.prototype.success = function(data, status, request) {
 			//do nothing
 		}
 		
+		//get the context path e.g. /wise
+		var contextPath = view.getConfig().getConfigParam('contextPath');
+		
 		if(mode == "grading") {
 			//we are in grading mode
 			alert("You have been inactive for too long and have been logged out. Please sign in to continue.");
 			
 			//redirect the teacher to the login page
-			window.top.location = "/wise/j_spring_security_logout";
+			window.top.location = contextPath + "/j_spring_security_logout";
 		} else {
 			if(notificationManager){
 				notificationManager.notify("You have been inactive for too long and have been logged out. Please sign in to continue.",3);
@@ -166,7 +169,7 @@ Connection.prototype.success = function(data, status, request) {
 			}
 			
 			//redirect the user to the login page
-			window.top.location = "/wise/j_spring_security_logout";			
+			window.top.location = contextPath + "/j_spring_security_logout";			
 		}
 	} else if (this.handler) {
 		this.handler(data, data, this.hArgs);

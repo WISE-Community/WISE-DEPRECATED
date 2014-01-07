@@ -6484,13 +6484,13 @@ MySystemContainer.openContextFor = new YAHOO.util.CustomEvent("openContextFor");
 
         collapse: function () {
             this.elem.css({ height: '32px' });
-            this.icon.attr({'src': '/wise/vle/node/mysystem/images/down-arrow.png'});
+            this.icon.attr({'src': '../images/down-arrow.png'});
             this.collapsed = true;
         },
 
         expand: function () {
             this.elem.css({ height: 'auto' });
-            this.icon.attr({'src': '/wise/vle/node/mysystem/images/up-arrow.png'});
+            this.icon.attr({'src': '../images/up-arrow.png'});
             this.collapsed = false;
         }
 

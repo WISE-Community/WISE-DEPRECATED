@@ -166,11 +166,14 @@ View.prototype.displayGlobalTools = function() {
 	$('#prevNode').html(prevNodeLink);
 	$('#nextNode').html(nextNodeLink);
 	
+	//get the context path e.g. /wise
+	var contextPath = this.getConfig().getConfigParam('contextPath');
+	
 	// Insert sign out and exit to home links
-	var goHomeHref = "/wise/student/index.html";
+	var goHomeHref = contextPath + "/student/index.html";
 	var userType = this.config.getConfigParam('userType');
 	if (userType && userType == "teacher") {
-		goHomeHref = "/wise/teacher/index.html";
+		goHomeHref = contextPath + "/teacher/index.html";
 	}
 	var signOutLink = '<a id="signOutLink" title="'+this.getI18NString("signout_button_title")+'" onclick="view.logout()">'+this.getI18NString("signout_button_text")+'</a>';
 	var exitLink = '<a id="exitLink" target="_parent" title="'+this.getI18NString("gohome_button_title")+'" onclick="window.parent.location=\'' + goHomeHref + '\'">'+this.getI18NString("gohome_button_text")+'</a>';
@@ -624,10 +627,12 @@ View.prototype.onThemeLoad = function(){
 		//if preview mode, only get the user and class info and not learner data
 		this.loadUserAndClassInfo(createContent(this.config.getConfigParam('getUserInfoUrl')));
 		
+		//get the context path e.g. /wise
+		var contextPath = this.getConfig().getConfigParam('contextPath');
 		
 		/* if (TODO: check for any constraints in project) {*/
 			// we are in preview mode (and the project contains constraints)
-			var path = '/wise/preview.html?projectId=' + this.getProjectMetadata().projectId;
+			var path = contextPath + '/preview.html?projectId=' + this.getProjectMetadata().projectId;
 			if(this.getConfig().getConfigParam("isConstraintsDisabled")){
 				// constraints are disabled, so show enable constraints link
 				//this.notificationManager.notify('Student navigation constraints are currently disabled. To preview project with all constraints, <a href="' + path + '">click here</a>.', 3, 'keepMsg');

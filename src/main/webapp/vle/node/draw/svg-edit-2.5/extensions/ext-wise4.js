@@ -182,7 +182,7 @@ svgEditor.addExtension("WISE4", function(S) {
             type: "context",
             panel: "editor_panel",
             title: "Erase Current Drawing",
-            icon: '/wise/vle/node/draw/svg-edit/images/erase.png',
+            icon: '../../../../node/draw/svg-edit/images/erase.png',
             events: {
                 'click': function() {
                     $('#revert_dialog').dialog('open');

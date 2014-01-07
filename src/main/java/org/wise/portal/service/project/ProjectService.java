@@ -27,7 +27,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-
 import org.springframework.security.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -37,7 +36,6 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectInfo;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
-import org.wise.portal.domain.project.impl.AuthorProjectParameters;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectParameters;
@@ -207,15 +205,6 @@ public interface ProjectService {
 	 * @throws IOException when the url cannot be loaded
 	 */
 	public Object previewProject(PreviewProjectParameters previewProjectParameters) throws Exception;
-
-	/**
-	 * Allows users to author a project
-	 * 
-	 * @param authorProjectParameters
-	 * @return
-	 * @throws Exception
-	 */
-	public Object authorProject(AuthorProjectParameters authorProjectParameters) throws Exception;
 
 	/**
 	 * Gets a project with the given projectid

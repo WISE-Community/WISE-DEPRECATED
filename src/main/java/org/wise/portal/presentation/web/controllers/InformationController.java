@@ -423,6 +423,9 @@ public class InformationController extends AbstractController{
 		
 		String excelExportRestriction = wiseProperties.getProperty("excelExportRestriction");
 		
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+		
 		String polishedProjectUrl = null;
 		String rawProjectUrl = null;
 		String portalVLEControllerUrl = null;
@@ -580,9 +583,10 @@ public class InformationController extends AbstractController{
 			
 			//get the url for sending and receiving run statuses
 			String runStatusUrl = wiseBaseURL + "/runStatus.html";
-	    	
+			
 	    	//put all the config params into the json object
 			try {
+				config.put("contextPath", contextPath);
 				config.put("getFlagsUrl", getFlagsUrl);
 				config.put("getInappropriateFlagsUrl", getInappropriateFlagsUrl);
 				config.put("getAnnotationsUrl", getAnnotationsUrl);
@@ -695,6 +699,7 @@ public class InformationController extends AbstractController{
 				}
 			}
 			
+			config.put("contextPath", contextPath);
 			config.put("mode", requester);
 			config.put("projectId", projectIdStr);
 			config.put("parentProjectId", parentProjectId);

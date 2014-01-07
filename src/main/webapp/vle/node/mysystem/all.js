@@ -10597,13 +10597,13 @@ MySystemData.defaultTerminals = function() {
 
     collapse: function() {
       $(this.elemId).setStyle({ height: '32px' });
-      $(this.iconId).writeAttribute('src', '/wise/vle/node/mysystem/images/down-arrow.png');
+      $(this.iconId).writeAttribute('src', 'images/down-arrow.png');
       this.collapsed = true;
     },
 
     expand: function() {
       $(this.elemId).setStyle({ height: 'auto' });
-      $(this.iconId).writeAttribute('src', '/wise/vle/node/mysystem/images/up-arrow.png');
+      $(this.iconId).writeAttribute('src', 'images/up-arrow.png');
       this.collapsed = false;
     }
   };

@@ -20,7 +20,7 @@ MW.prototype.init = function(jsonURL){
 
 MW.prototype.loadApplet = function(jsonfilename, context){
 	var applet = '<applet id="mw_applet"' + 
-		'archive="/wise/vle/node/mw/mwapplet.jar"' + 
+		'archive="../../node/mw/mwapplet.jar"' + 
 		'code="org.concord.modeler.MwApplet" width="' + this.content.width + '" height="' + this.content.height + '">' +
 		'<param name="script" value="page:0:import ' + this.content.activity_uri + '"/>' +
 		'</applet>';

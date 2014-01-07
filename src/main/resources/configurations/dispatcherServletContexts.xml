@@ -190,6 +190,7 @@
 		<property name="curnitService" ref="curnitService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="tagger" ref="taggerController" />
+		<property name="aclService" ref="aclServiceImpl" />
 	</bean>
 
 

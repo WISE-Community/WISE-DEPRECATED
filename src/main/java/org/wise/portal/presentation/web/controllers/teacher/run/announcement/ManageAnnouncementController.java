@@ -66,7 +66,10 @@ public class ManageAnnouncementController extends AbstractController{
 			
 			return modelAndView;
 		} else {
-			return new ModelAndView(new RedirectView("/wise/accessdenied.html"));
+			//get the context path e.g. /wise
+			String contextPath = request.getContextPath();
+			
+			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
 		}
 	}
 

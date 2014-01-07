@@ -66,7 +66,8 @@ public class RouterController extends AbstractController{
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 				return null;
 			} else {
-				ServletContext servletContext = this.getServletContext().getContext("/wise");
+				String contextPath = request.getContextPath();
+				ServletContext servletContext = this.getServletContext().getContext(contextPath);
 				CredentialManager.setRequestCredentials(request, user);
 				if(forward.equals("convert") || forward.equals("minifier")){
 					

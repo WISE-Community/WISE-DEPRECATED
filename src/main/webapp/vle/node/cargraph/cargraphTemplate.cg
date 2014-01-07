@@ -22,7 +22,7 @@
          "graphLabel": "Green Car",
          "graphColor": "green",
          "graphName": "G",
-         "img": "/wise/vle/node/cargraph/images/car-green.png",
+         "img": "images/car-green.png",
          "height": 22
       },
       {
@@ -30,7 +30,7 @@
          "graphLabel": "Yellow Car",
          "graphColor": "yellow",
          "graphName": "Y",
-         "img": "/wise/vle/node/cargraph/images/car-yellow.png",
+         "img": "images/car-yellow.png",
          "height": 25
       }
    ],
@@ -39,31 +39,31 @@
          "id": "school",
          "label": "School",
          "tickIndex": 0,
-         "img": "/wise/vle/node/cargraph/images/school.png"
+         "img": "images/school.png"
       },
       {
          "id": "redHouse",
          "label": "Rita's",
          "tickIndex": 4,
-         "img": "/wise/vle/node/cargraph/images/house-red.png"
+         "img": "images/house-red.png"
       },
       {
          "id": "cafe",
          "label": "Coffee Shop",
          "tickIndex": 7,
-         "img": "/wise/vle/node/cargraph/images/cafe.png"
+         "img": "images/cafe.png"
       },
       {
          "id": "blueHouse",
          "label": "Sam's",
          "tickIndex": 11,
-         "img": "/wise/vle/node/cargraph/images/house-blue.png"
+         "img": "images/house-blue.png"
       },
       {
          "id": "redHouse2",
          "label": "Melissa's",
          "tickIndex": 20,
-         "img": "/wise/vle/node/cargraph/images/house-red.png"
+         "img": "images/house-red.png"
       }
    ],
    "graphTitle": "title",

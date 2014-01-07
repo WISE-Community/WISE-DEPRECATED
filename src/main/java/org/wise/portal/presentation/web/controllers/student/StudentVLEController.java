@@ -147,7 +147,11 @@ public class StudentVLEController extends AbstractController {
 	private ModelAndView handlePostData(HttpServletRequest request,
 			HttpServletResponse response, Run run) {
 		String baseurl = ControllerUtil.getBaseUrlString(request);
-		ModelAndView modelAndView = new ModelAndView("forward:" + baseurl + "/wise/postdata.html");
+		
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+		
+		ModelAndView modelAndView = new ModelAndView("forward:" + baseurl + contextPath + "/postdata.html");
 		return modelAndView;
 	}
 
@@ -162,7 +166,11 @@ public class StudentVLEController extends AbstractController {
 	private ModelAndView handleGetData(HttpServletRequest request,
 			HttpServletResponse response, Run run) {
 		String baseurl = ControllerUtil.getBaseUrlString(request);
-		ModelAndView modelAndView = new ModelAndView("forward:" + baseurl + "/wise/getdata.html");
+		
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+		
+		ModelAndView modelAndView = new ModelAndView("forward:" + baseurl + contextPath + "/getdata.html");
 		return modelAndView;
 	}
 

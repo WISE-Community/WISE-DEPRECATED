@@ -56,7 +56,6 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectInfo;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
-import org.wise.portal.domain.project.impl.AuthorProjectParameters;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectParameters;
@@ -161,92 +160,6 @@ public class LdProjectServiceImpl implements ProjectService {
 				// do nothing. permissions might get be deleted if user requesting the deletion is not the owner of the project.
 			}
 		}
-	}
-
-	public ModelAndView authorProject(AuthorProjectParameters params)
-			throws Exception {
-		String portalUrl = ControllerUtil.getBaseUrlString(params.getHttpServletRequest());
-		String vleAuthorUrl = portalUrl + "/wise/vle/author.html";
-		String portalAuthorUrl = portalUrl + "/wise/author/authorproject.html";
-		String command = params.getHttpServletRequest().getParameter("param1");
-		
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("portalAuthorUrl", portalAuthorUrl);
-		mav.addObject("vleAuthorUrl", vleAuthorUrl);
-		
-		if(command != null && command != ""){
-			mav.addObject("command", command);
-		}
-		
-		/*
-		 * this value will be set to "true" only if the user is opening the premade comments
-		 * from the teacher home page. this value is used to tell the authoring tool
-		 * to immediately open the premade comments after the vle is loaded because
-		 * we will not actually display the authoring tool to the user. we only need
-		 * to load the authoring tool so that the vle is loaded and can then open
-		 * the editing view for the premade comments.
-		 */
-		String editPremadeComments = params.getHttpServletRequest().getParameter("editPremadeComments");
-		mav.addObject("editPremadeComments", editPremadeComments);
-		
-		User author = params.getAuthor();
-		Project project = params.getProject();
-		if(project != null){
-			if(author.isAdmin() || this.aclService.hasPermission(project, BasePermission.WRITE, params.getAuthor()) ||
-					this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, params.getAuthor())){
-				String title = null;
-				if(project.getMetadata() != null && project.getMetadata().getTitle() != null && !project.getMetadata().getTitle().equals("")){
-					title = project.getMetadata().getTitle();
-				} else {
-					title = project.getName();
-				}
-				
-				if(title != null) {
-					/*
-					 * replace " with \" because if we don't escape it, the " may
-					 * short circuit the parent string that we put the title in
-					 */
-					title = title.replaceAll("\"", "\\\\\"");					
-				}
-				
-				if(command == null){
-					mav.addObject("command", "editProject");
-				}
-				
-				/* get the url for the project content file 
-				String versionId = null;
-				if(params.getVersionId() != null && !params.getVersionId().equals("")){
-					versionId = params.getVersionId();
-				} else {
-					versionId = this.getActiveVersion(project);
-				}
-				*/
-				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-				String polishedProjectUrl = null;
-				polishedProjectUrl = rawProjectUrl;
-				/* The polishedProjectUrl is the project url with the version id inserted into the project filename
-				 * If null or empty string is returned, we want to use the rawUrl 
-				if(versionId==null || versionId.equals("")){
-					polishedProjectUrl = rawProjectUrl;
-				} else {
-					polishedProjectUrl = rawProjectUrl.replace(".project.json", ".project." + versionId + ".json");
-				}
-				*/
-				
-				//get the project attributes
-				String relativeProjectUrl = polishedProjectUrl;
-				String projectId = project.getId().toString();
-				String projectTitle = title;
-				
-				//put the project attributes into the model so it can be accessed in the .jsp page
-				mav.addObject("relativeProjectUrl", relativeProjectUrl);
-				mav.addObject("projectId", projectId);
-				mav.addObject("projectTitle", projectTitle);
-			} else {
-				return new ModelAndView(new RedirectView("/wise/accessdenied.html"));
-			}
-		}
-		return mav;
 	}
 
 	/**

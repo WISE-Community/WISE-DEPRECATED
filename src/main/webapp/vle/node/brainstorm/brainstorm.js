@@ -25,6 +25,7 @@ function BRAINSTORM(node){
 	// insert i18n translations
 	$('#brain_instructions').html(this.view.getI18NStringWithParams('instructions',[this.view.getI18NString('save','BrainstormNode')],'BrainstormNode'));
 
+	this.contextPath = this.view.getConfig().getConfigParam('contextPath');
 };
 
 /**
@@ -102,7 +103,7 @@ BRAINSTORM.prototype.brainliteLoaded = function(frameDoc){
 
 		$('#studentResponse').tinymce({
 			// Location of TinyMCE script
-			script_url : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
+			script_url : this.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
 
 			// General options
 			theme : "advanced",
@@ -211,8 +212,10 @@ BRAINSTORM.prototype.brainfullLoaded = function(frameDoc) {
 		var loc = window.location.toString();
 		var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
 		$('#studentResponse').tinymce({
+			contextPath: this.contextPath,
+			
 			// Location of TinyMCE script
-			script_url : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
+			script_url : this.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
 
 			// General options
 			theme : "advanced",
@@ -233,7 +236,7 @@ BRAINSTORM.prototype.brainfullLoaded = function(frameDoc) {
 				// Register import asset button
 				ed.addButton('importAsset', {
 					title : 'Use My Asset',
-					image : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
+					image : this.settings.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
 					onclick : function() {
 						var params = {};
 						params.tinymce = this;
@@ -766,8 +769,10 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 					var loc = window.location.toString();
 					var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
 					$('#'+replyTextareaId).tinymce({
+						contextPath: this.contextPath,
+						
 						// Location of TinyMCE script
-						script_url : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
+						script_url : this.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
 
 						// General options
 						theme : "advanced",
@@ -788,7 +793,7 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 							// Register import asset button
 							ed.addButton('importAsset', {
 								title : 'Use My Asset',
-								image : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
+								image : this.settings.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
 								onclick : function() {
 									var params = {};
 									params.tinymce = this;

@@ -83,19 +83,19 @@ SEASONS2.prototype.render = function() {
 	var modelType = this.content.modelType;
 
 	if (modelType == "whatIstheShapeofEarthsOrbit") {
-		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-1.html");
+		$("#modelIFrame").attr("src","earth/seasons1-1.html");
 	} else if (modelType == "whatTemperaturePatternsDoYouSee") {
-		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-2.html");
+		$("#modelIFrame").attr("src","earth/seasons1-2.html");
 	} else if (modelType == "whatTemperaturePatternsDoYouSeeLite") {
-		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-2-lite.html");
+		$("#modelIFrame").attr("src","earth/seasons1-2-lite.html");
 	} else if (modelType == "howDoesEarthsTiltAffectTemperature") {
-		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-3.html");
+		$("#modelIFrame").attr("src","earth/seasons1-3.html");
 	} else if (modelType == "howDoesEarthsTiltAffectTemperatureLite") {
-		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-3-lite.html");
+		$("#modelIFrame").attr("src","earth/seasons1-3-lite.html");
 	} else if (modelType == "howDoesEarthsTiltAffectHoursOfDaylight") {
-		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-4.html");
+		$("#modelIFrame").attr("src","earth/seasons1-4.html");
 	} else if (modelType == "howDoesEarthsTiltAffectHoursOfDaylightLite") {
-		$("#modelIFrame").attr("src","/wise/vle/node/seasons2/earth/seasons1-4-lite.html");
+		$("#modelIFrame").attr("src","earth/seasons1-4-lite.html");
 	}
 };
 

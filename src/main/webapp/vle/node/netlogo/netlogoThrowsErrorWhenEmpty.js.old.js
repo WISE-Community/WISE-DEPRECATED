@@ -21,7 +21,7 @@ Netlogo.prototype.render = function(){
 	if(this.content.version == '4'){
 		archive = 'NetLogoLite.jar';
 	}
-	var applet = '<applet code="org.nlogo.lite.Applet" codebase="/wise/vle/node/netlogo/"' +  
+	var applet = '<applet code="org.nlogo.lite.Applet" codebase="."' +  
         'archive="' + archive + '" width="' + this.content.width + '" height="' + this.content.height + '">' +
         '<param name="DefaultModel" value="' + this.content.activity_uri + '">' + 
         '</applet>';

@@ -23,15 +23,18 @@ public class AuthorController extends HttpServlet {
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
-		System.out.println(request);
 		
 		String type = request.getParameter("type");
+		
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+		
 		ServletContext servletContext = this.getServletContext();
-		ServletContext wiseContext = servletContext.getContext("/wise");
+		ServletContext wiseContext = servletContext.getContext(contextPath);
 		
 		if (type == null) {
 			// get student data
-			response.sendRedirect("/wise/author/authorproject.html");
+			response.sendRedirect(contextPath + "/author/authorproject.html");
 		} else if (type.equals("flag") || type.equals("annotation")){			// get flags
 			RequestDispatcher requestDispatcher = wiseContext.getRequestDispatcher("/annotations.html");
 			requestDispatcher.forward(request, response);

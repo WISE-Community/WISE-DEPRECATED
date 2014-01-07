@@ -872,6 +872,10 @@ View.prototype.enableRichTextAuthoring = function(id,update,fullpage) {
 	var target = $('#' + id);
 	var view = this;
 	var plugins = "";
+	
+	//get the context path e.g. /wise
+	var contextPath = this.getConfig().getConfigParam('contextPath');
+	
 	if(fullpage == true){
 		// if full page editing is allowed, include fullpage plugin
 		plugins = "fullpage,preview,media,style,layer,table,advhr,advimage,advlist,advimagescale,loremipsum,image_tools,emotions,jqueryinlinepopups,tableextras,searchreplace,contextmenu,paste,directionality,fullscreen,visualchars,xhtmlxtras,template,wordcount";
@@ -882,7 +886,7 @@ View.prototype.enableRichTextAuthoring = function(id,update,fullpage) {
 	// enable rich text editing on prompt textarea
 	target.tinymce({
 		// Location of TinyMCE script
-		script_url : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
+		script_url : contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
 
 		// General options
 		doctype : '<!DOCTYPE html>',
@@ -908,7 +912,7 @@ View.prototype.enableRichTextAuthoring = function(id,update,fullpage) {
 
 		// Example content CSS (should be your site CSS)
 		// TODO: update this to use a WISE default
-		content_css : "/wise/vle/jquery/tinymce/examples/css/content.css",
+		content_css : contextPath + "/vle/jquery/tinymce/examples/css/content.css",
 
 		// Drop lists for link/image/media/template dialogs
 		//template_external_list_url : "lists/template_list.js",
@@ -941,8 +945,13 @@ View.prototype.enableRichTextAuthoring = function(id,update,fullpage) {
 		},
 		urlconverter_callback : function(url, node, on_save){
 			if(on_save){
+				//get the context path without the slash e.g. wise
+				var contextPathWithoutSlash = contextPath.replace("/", "");
+				
+				var regex = new RegExp("/[..\/]+" + contextPathWithoutSlash + "/");
+				
 				// fix problem caused by automatic url processing of root path links (that begin wih '/wise') by tinymce
-				url = url.replace(/[..\/]+wise/, "/wise");
+				url = url.replace(regex, contextPath);
 			}
 			return url;
 		},

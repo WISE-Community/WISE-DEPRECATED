@@ -177,7 +177,11 @@ View.prototype.getProjectPaths = function(){
 			/* get the mode that the authoring tool is to run in (portal/standalone) */
 			if(settingsJSON.mode && settingsJSON.mode.portal && settingsJSON.mode.portalUrl) {
 				var rawLoc = window.location.toString();
-				var loginUrl = rawLoc.substring(0,rawLoc.indexOf('/wise/vle/author.html')) + settingsJSON.mode.portalUrl + '?redirect=/author/authorproject.html';
+				
+				//get the context path e.g. /wise
+				var contextPath = o.getConfig().getConfigParam('contextPath');
+				
+				var loginUrl = rawLoc.substring(0,rawLoc.indexOf(contextPath + '/vle/author.html')) + settingsJSON.mode.portalUrl + '?redirect=/author/authorproject.html';
 				window.location = loginUrl;
 			}
 			

@@ -97,7 +97,9 @@ public class InfoController extends AbstractController{
 			
 	        return modelAndView;
 		} else {
-			return new ModelAndView(new RedirectView("/wise/accessdenied.html"));
+			//get the context path e.g. /wise
+			String contextPath = servletRequest.getContextPath();
+			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
 		}
     }
 

@@ -602,6 +602,9 @@ Node.prototype.injectBaseRef = function(content) {
 		// no injection needed because base is already in the html
 		return content;
 	} else {
+		//get the context path e.g. /wise
+		var contextPath = this.view.getConfig().getConfigParam('contextPath');
+		
 		// NATE did this...  to check for node specific base urls
 		// var contentBaseUrl = "";
 		var cbu = "";   
@@ -660,7 +663,7 @@ Node.prototype.injectBaseRef = function(content) {
 		}
 
 		// check for tinymce flv embed instances, inject baseURI into any 'url' flashvars
-		if(newContent.match('/wise/vle/jquery/tinymce/jscripts/tiny_mce/plugins/media/moxieplayer.swf')){
+		if(newContent.match(contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/plugins/media/moxieplayer.swf')){
 			newContent = newContent.replace(/url=assets/g,'url=' + cbu + 'assets');
 		}
 

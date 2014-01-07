@@ -91,7 +91,7 @@ public class CreateRunController extends AbstractWizardFormController {
 	
 	private static final String COMPLETE_VIEW_NAME = "teacher/run/create/createrunfinish";
 	
-	private static final String CANCEL_VIEW_NAME = "/wise/teacher/management/library.html";
+	private static final String CANCEL_VIEW_NAME = "/teacher/management/library.html";
 
 	private static final String RUN_KEY = "run";
 	
@@ -430,8 +430,12 @@ public class CreateRunController extends AbstractWizardFormController {
 		User user = ControllerUtil.getSignedInUser();
 		Locale locale = request.getLocale();
 		String portalBaseUrlString = ControllerUtil.getBaseUrlString(request);
+		
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+				
 		CreateRunEmailService emailService = 
-			new CreateRunEmailService(command, run, user, locale, portalBaseUrlString);
+			new CreateRunEmailService(command, run, user, locale, contextPath + portalBaseUrlString);
 		Thread thread = new Thread(emailService);
 		thread.start();
 		
@@ -510,7 +514,7 @@ public class CreateRunController extends AbstractWizardFormController {
 			projectID = runParameters.getProject().getId();
 			Long runID = run.getId();
 			
-    		String previewProjectUrl = portalBaseUrlString + "/wise/previewproject.html?projectId="+run.getProject().getId();
+    		String previewProjectUrl = portalBaseUrlString + "/previewproject.html?projectId="+run.getProject().getId();
 
 			String[] recipients = wiseProperties.getProperty("project_setup").split(",");
 			
@@ -580,7 +584,10 @@ public class CreateRunController extends AbstractWizardFormController {
 	@Override
 	protected ModelAndView processCancel(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors) {
-		return new ModelAndView(new RedirectView(CANCEL_VIEW_NAME));
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+		
+		return new ModelAndView(new RedirectView(contextPath + CANCEL_VIEW_NAME));
 	}
 
 	/**

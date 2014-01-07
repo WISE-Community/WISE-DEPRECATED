@@ -1171,6 +1171,7 @@ OPENRESPONSE.prototype.displayRegular = function() {
 		var context = this;
 		var loc = window.location.toString();
 		var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
+		var contextPath = this.view.getConfig().getConfigParam('contextPath');
 		
 		//set the text editor to be editable by default
 		var readOnly = 0;
@@ -1182,7 +1183,7 @@ OPENRESPONSE.prototype.displayRegular = function() {
 		
 		$('#responseBox').tinymce({
 			// Location of TinyMCE script
-			script_url : '/wise/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
+			script_url : contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
 			
 			// General options
 			theme : "advanced",

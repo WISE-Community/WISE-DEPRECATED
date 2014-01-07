@@ -7,8 +7,12 @@ View.prototype.getGradingConfig = function(gradingConfigUrl) {
 	
 	/* set the servlet request urls - assumes that the grading tool is always run in portal mode */
 	var loc = window.location.toString();
-	var base = loc.substring(0, loc.lastIndexOf('/wise/vle/'));
-	this.minifierUrl = base + '/wise/router.html';
+	
+	//get the context path e.g. /wise
+	var contextPath = this.getConfig().getConfigParam('contextPath');
+	
+	var base = loc.substring(0, loc.lastIndexOf(contextPath + '/vle/'));
+	this.minifierUrl = base + contextPath + '/router.html';
 };
 
 /**
@@ -147,7 +151,10 @@ View.prototype.onWindowUnload = function(){
 };
 
 function projectSummary(){
-	window.open("/wise/student/vle/vle.html?runId=" + runId + "&summary=true", "Project Summary", "height=600, width=800");
+	//get the context path e.g. /wise
+	var contextPath = this.view.getConfig().getConfigParam('contextPath');
+	
+	window.open(contextPath + "/student/vle/vle.html?runId=" + runId + "&summary=true", "Project Summary", "height=600, width=800");
 };
 
 

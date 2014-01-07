@@ -27,7 +27,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
@@ -36,7 +35,6 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectInfo;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
-import org.wise.portal.domain.project.impl.AuthorProjectParameters;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectImpl;
@@ -72,15 +70,6 @@ public class ProjectServiceImpl implements ProjectService {
 	public List<Project> getAllProjectsList(){
 		ProjectService projectService = projectServiceFactory.getProjectService(new ProjectImpl());
 		return projectService.getAllProjectsList();
-	}
-	
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#authorProject(org.wise.portal.domain.project.impl.AuthorProjectParameters)
-	 */
-	public Object authorProject(AuthorProjectParameters authorProjectParameters)
-			throws Exception {
-		ProjectService projectService = projectServiceFactory.getProjectService(authorProjectParameters.getProject());
-		return projectService.authorProject(authorProjectParameters);
 	}
 
 	/**

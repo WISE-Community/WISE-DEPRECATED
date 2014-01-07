@@ -104,8 +104,12 @@ public class RegisterTeacherController extends SimpleFormController {
 		String domain =  "http://" + request.getServerName();
 		String domainWithPort = domain + ":" + request.getLocalPort();
 		String referrer = request.getHeader("referer");
-		String registerUrl = "/wise/teacher/registerteacher.html";
-		String updateAccountInfoUrl = "/wise/teacher/management/updatemyaccountinfo.html";
+		
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+				
+		String registerUrl = contextPath + "/teacher/registerteacher.html";
+		String updateAccountInfoUrl = contextPath + "/teacher/management/updatemyaccountinfo.html";
 		
 		if(referrer.contains(domain + registerUrl) || 
 				referrer.contains(domainWithPort + registerUrl) ||

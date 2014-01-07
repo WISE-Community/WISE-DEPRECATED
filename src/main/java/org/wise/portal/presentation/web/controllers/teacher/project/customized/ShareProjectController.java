@@ -143,6 +143,9 @@ public class ShareProjectController extends SimpleFormController {
     	User retrievedUser = userService.retrieveUserByUsername(params.getSharedOwnerUsername());
     	ModelAndView modelAndView;
 
+    	//get the context path e.g. /wise
+    	String contextPath = request.getContextPath();
+    	
     	if (retrievedUser == null) {
     		modelAndView = new ModelAndView(new RedirectView("shareproject.html"));
 	    	modelAndView.addObject(PROJECTID_PARAM_NAME, params.getProject().getId());
@@ -179,7 +182,7 @@ public class ShareProjectController extends SimpleFormController {
     				if (newSharedOwner) {
     					Locale locale = request.getLocale();
     					ShareProjectEmailService emailService = 
-    						new ShareProjectEmailService(signedInUser, retrievedUser, project, ControllerUtil.getBaseUrlString(request),locale);
+    						new ShareProjectEmailService(signedInUser, retrievedUser, project, ControllerUtil.getBaseUrlString(request),locale, contextPath);
     					Thread thread = new Thread(emailService);
     					thread.start();
     				}
@@ -204,14 +207,16 @@ public class ShareProjectController extends SimpleFormController {
     	private Project project;
     	private String portalBaseUrlString;
 		private Locale locale;
+		private String contextPath;
 
 		public ShareProjectEmailService(User sharer, User sharee,
-				Project project, String portalBaseUrlString, Locale locale) {
+				Project project, String portalBaseUrlString, Locale locale, String contextPath) {
 			this.sharer = sharer;
 			this.sharee = sharee;
 			this.project = project;
 			this.portalBaseUrlString = portalBaseUrlString;
 			this.locale = locale;
+			this.contextPath = contextPath;
 		}
 
 		public void run() {
@@ -235,7 +240,7 @@ public class ShareProjectController extends SimpleFormController {
 
     		String[] shareeEmailAddress = {shareeDetails.getEmailAddress()};
 
-    		String previewProjectUrl = this.portalBaseUrlString + "/wise/previewproject.html?projectId="+project.getId();
+    		String previewProjectUrl = this.portalBaseUrlString + this.contextPath + "/previewproject.html?projectId="+project.getId();
 
     		String[] recipients = (String[]) ArrayUtils.addAll(shareeEmailAddress, wiseProperties.getProperty("uber_admin").split(","));
     		

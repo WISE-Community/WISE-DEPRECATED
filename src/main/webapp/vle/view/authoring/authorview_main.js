@@ -789,7 +789,10 @@ View.prototype.submitUpload = function() {
  */
 View.prototype.exportProject = function(params){
 	if(this.getProject() && this.portalProjectId){
-		window.open("/wise/project/exportproject.html?projectId=" + this.portalProjectId);
+		//get the context path e.g. /wise
+		var contextPath = this.getConfig().getConfigParam('contextPath');
+		
+		window.open(contextPath + "/project/exportproject.html?projectId=" + this.portalProjectId);
 	} else {
 		this.notificationManager.notify("Please open or create a project that you wish to export.", 3);
 	}
@@ -1756,7 +1759,11 @@ View.prototype.retrieveProjectRunStatus = function(){
 			"projectId":this.portalProjectId,
 			"command":"getNumberOfRuns"
 		};
-		this.connectionManager.request('GET', 1, '/wise/teacher/projects/projectinfo.html', requestParams, this.retrieveProjectRunStatusSuccess, this, this.retrieveProjectRunStatusFailure);
+		
+		//get the context path e.g. /wise
+		var contextPath = this.getConfig().getConfigParam('contextPath');
+		
+		this.connectionManager.request('GET', 1, contextPath + '/teacher/projects/projectinfo.html', requestParams, this.retrieveProjectRunStatusSuccess, this, this.retrieveProjectRunStatusFailure);
 	} else {
 		this.projectHasRun = false;
 	}
@@ -2110,8 +2117,11 @@ View.prototype.onWindowUnload = function(logout){
 	this.notifyPortalCloseProject(true);
 
 	if(logout === true) {
+		//get the context path e.g. /wise
+		var contextPath = this.getConfig().getConfigParam('contextPath');
+		
 		//log out the user
-		window.top.location = "/wise/j_spring_security_logout";		
+		window.top.location = contextPath + "/j_spring_security_logout";		
 	}
 };
 

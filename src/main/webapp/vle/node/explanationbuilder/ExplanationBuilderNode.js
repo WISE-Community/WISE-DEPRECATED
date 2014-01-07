@@ -246,7 +246,7 @@ ExplanationBuilderNode.prototype.renderGradingView = function(displayStudentWork
 	//create the function to call when the 'Enlarge' button is clicked
 	var enlargeFunction = function() {
 		//open the html page that will display the enlarged view of the student work
-		var newWindow = window.open("/wise/vle/node/explanationbuilder/enlargeExplanationBuilder.html");
+		var newWindow = window.open("enlargeExplanationBuilder.html");
 		
 		/*
 		 * send the necessary ids to the new window so we can reference 

@@ -46,6 +46,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -70,6 +71,7 @@ import org.wise.portal.presentation.web.controllers.TaggerController;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilter;
 import org.wise.portal.presentation.web.listeners.PasSessionListener;
+import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
@@ -98,6 +100,8 @@ public class AuthorProjectController extends AbstractController {
 	private CurnitService curnitService;
 
 	private TaggerController tagger;
+	
+	private AclService<Project> aclService;
 
 	private final static List<String> filemanagerProjectlessRequests;
 
@@ -644,7 +648,7 @@ public class AuthorProjectController extends AbstractController {
 		String command = request.getParameter(COMMAND);
 		if(command != null && command != ""){
 			if(command.equals("launchAuthoring")){
-				return (ModelAndView) projectService.authorProject(params);
+				return handleLaunchAuthoring(request, response);
 			} else if(command.equals("createProject")){
 				return handleCreateProject(request, response);
 			} else if(command.equals("projectList")){
@@ -692,7 +696,115 @@ public class AuthorProjectController extends AbstractController {
 			}
 		}
 
-		return (ModelAndView) projectService.authorProject(params);
+		return handleLaunchAuthoring(request, response);
+	}
+	
+	/**
+	 * Launch the authoring tool
+	 * @param request
+	 * @param response
+	 * @return the model and view containing the necessary variables
+	 */
+	private ModelAndView handleLaunchAuthoring(HttpServletRequest request, HttpServletResponse response) {
+		User author = ControllerUtil.getSignedInUser();
+		String portalUrl = ControllerUtil.getBaseUrlString(request);
+		
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+		
+		String vleAuthorUrl = portalUrl + contextPath + "/vle/author.html";
+		String portalAuthorUrl = portalUrl + contextPath + "/author/authorproject.html";
+		String command = request.getParameter("param1");
+		
+		String projectIdStr = request.getParameter(PROJECT_ID_PARAM_NAME);
+		Project project = null;
+		if(projectIdStr != null && !projectIdStr.equals("") && !projectIdStr.equals("none")){
+			try {
+				project = projectService.getById(Long.parseLong(projectIdStr));
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (ObjectNotFoundException e) {
+				e.printStackTrace();
+			}
+		} else {
+			project = null;
+		}
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("portalAuthorUrl", portalAuthorUrl);
+		mav.addObject("vleAuthorUrl", vleAuthorUrl);
+		
+		if(command != null && command != ""){
+			mav.addObject("command", command);
+		}
+		
+		/*
+		 * this value will be set to "true" only if the user is opening the premade comments
+		 * from the teacher home page. this value is used to tell the authoring tool
+		 * to immediately open the premade comments after the vle is loaded because
+		 * we will not actually display the authoring tool to the user. we only need
+		 * to load the authoring tool so that the vle is loaded and can then open
+		 * the editing view for the premade comments.
+		 */
+		String editPremadeComments = request.getParameter("editPremadeComments");
+		mav.addObject("editPremadeComments", editPremadeComments);
+		
+		if(project != null){
+			if(author.isAdmin() || this.getAclService().hasPermission(project, BasePermission.WRITE, author) ||
+					this.getAclService().hasPermission(project, BasePermission.ADMINISTRATION, author)){
+				String title = null;
+				if(project.getMetadata() != null && project.getMetadata().getTitle() != null && !project.getMetadata().getTitle().equals("")){
+					title = project.getMetadata().getTitle();
+				} else {
+					title = project.getName();
+				}
+				
+				if(title != null) {
+					/*
+					 * replace " with \" because if we don't escape it, the " may
+					 * short circuit the parent string that we put the title in
+					 */
+					title = title.replaceAll("\"", "\\\\\"");					
+				}
+				
+				if(command == null){
+					mav.addObject("command", "editProject");
+				}
+				
+				/* get the url for the project content file 
+				String versionId = null;
+				if(params.getVersionId() != null && !params.getVersionId().equals("")){
+					versionId = params.getVersionId();
+				} else {
+					versionId = this.getActiveVersion(project);
+				}
+				*/
+				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				String polishedProjectUrl = null;
+				polishedProjectUrl = rawProjectUrl;
+				/* The polishedProjectUrl is the project url with the version id inserted into the project filename
+				 * If null or empty string is returned, we want to use the rawUrl 
+				if(versionId==null || versionId.equals("")){
+					polishedProjectUrl = rawProjectUrl;
+				} else {
+					polishedProjectUrl = rawProjectUrl.replace(".project.json", ".project." + versionId + ".json");
+				}
+				*/
+				
+				//get the project attributes
+				String relativeProjectUrl = polishedProjectUrl;
+				String projectId = project.getId().toString();
+				String projectTitle = title;
+				
+				//put the project attributes into the model so it can be accessed in the .jsp page
+				mav.addObject("relativeProjectUrl", relativeProjectUrl);
+				mav.addObject("projectId", projectId);
+				mav.addObject("projectTitle", projectTitle);
+			} else {
+				return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
+			}
+		}
+		return mav;
 	}
 
 	/**
@@ -1290,27 +1402,30 @@ public class AuthorProjectController extends AbstractController {
 
 		//get the portal url
 		String portalUrl = ControllerUtil.getBaseUrlString(request);
-
+		
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+		
 		//get the url to get and post metadata
-		String projectMetaDataUrl = portalUrl + "/wise/metadata.html";
+		String projectMetaDataUrl = portalUrl + contextPath + "/metadata.html";
 
 		//get the url to make CRater requests
-		String cRaterRequestUrl = portalUrl + "/wise/bridge/request.html?type=cRater";
+		String cRaterRequestUrl = portalUrl + contextPath + "/bridge/request.html?type=cRater";
 
 		//get the curriculum_base_www variable from the wise.properties file
 		String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
 
 		//get the url to make CRater requests
-		String deleteProjectUrl = portalUrl + "/wise/deleteproject.html";
+		String deleteProjectUrl = portalUrl + contextPath + "/deleteproject.html";
 
 		//get the url to make analyze project requests
-		String analyzeProjectUrl = portalUrl + "/wise/analyzeproject.html";
+		String analyzeProjectUrl = portalUrl + contextPath + "/analyzeproject.html";
 
 		//the get url for premade comments
-		String getPremadeCommentsUrl = portalUrl + "/wise/teacher/grading/premadeComments.html?action=getData";
+		String getPremadeCommentsUrl = portalUrl + contextPath + "/teacher/grading/premadeComments.html?action=getData";
 
 		//the post url for premade comments
-		String postPremadeCommentsUrl = portalUrl + "/wise/teacher/grading/premadeComments.html?action=postData";
+		String postPremadeCommentsUrl = portalUrl + contextPath + "/teacher/grading/premadeComments.html?action=postData";
 		
 		//get the wise base url
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
@@ -1477,8 +1592,9 @@ public class AuthorProjectController extends AbstractController {
 
 			//make sure the signed in user has write access
 			if(this.projectService.canAuthorProject(project, user)) {
-				//get the wise context
-				ServletContext servletContext = this.getServletContext().getContext("/wise");
+				//get the wise context e.g. /wise
+				String contextPath = request.getContextPath();
+				ServletContext servletContext = this.getServletContext().getContext(contextPath);
 				CredentialManager.setRequestCredentials(request, user);
 
 				//forward the request to the appropriate controller
@@ -1521,5 +1637,13 @@ public class AuthorProjectController extends AbstractController {
 	 */
 	public void setTagger(TaggerController tagger) {
 		this.tagger = tagger;
+	}
+
+	public AclService<Project> getAclService() {
+		return aclService;
+	}
+
+	public void setAclService(AclService<Project> aclService) {
+		this.aclService = aclService;
 	}
 }

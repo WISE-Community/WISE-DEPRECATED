@@ -353,8 +353,11 @@ View.prototype.saveMaxScore = function(runId, nodeId) {
 				//the user is not logged in because their session has timed out
 				alert("Your latest grade has not been saved.\n\nYou have been inactive for too long and have been logged out. Please sign in to continue.");
 				
+				//get the context path e.g. /wise
+				var contextPath = thisView.getConfig().getConfigParam('contextPath');
+				
 				//redirect the user to the login page
-				window.top.location = "/wise/j_spring_security_logout";
+				window.top.location = contextPath + "/j_spring_security_logout";
 			} else {
 				//there was a server error
 				
@@ -523,8 +526,11 @@ View.prototype.replaceSlashNWithBR = function(studentWork) {
  * after their session has timed out.
  */
 View.prototype.forceLogout = function() {
+	//get the context path e.g. /wise
+	var contextPath = this.getConfig().getConfigParam('contextPath');
+	
 	alert("You have been inactive for too long and have been logged out. Please log back in to continue.");
-	parent.window.location = "/wise/j_spring_security_logout";
+	parent.window.location = contextPath + "/j_spring_security_logout";
 };
 
 /**
@@ -1460,7 +1466,10 @@ View.prototype.blockUI = function(message) {
  * Used in Show My Work for draw steps
  */
 function enlargeDraw(divId){
-	var newwindow = window.open("/wise/vle/node/draw/svg-edit/svg-editor-grading.html");
+	//get the context path e.g. /wise
+	var contextPath = view.getConfig().getConfigParam('contextPath');
+	
+	var newwindow = window.open(contextPath + "/vle/node/draw/svg-edit/svg-editor-grading.html");
 	newwindow.divId = divId;
 };
 

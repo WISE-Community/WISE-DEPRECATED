@@ -22,7 +22,7 @@ View.prototype.Mysystem2Node.generatePage = function(view){
   this.buildPage();
 
   var iframe = createElement(document, 'iframe', {
-    src: '/wise/vle/node/mysystem2/authoring/index.html',
+    src: 'authoring/index.html',
     width: '99%',
     style: 'display: block; height: 100%;',
     id: 'mysystem2-authoring-iframe',

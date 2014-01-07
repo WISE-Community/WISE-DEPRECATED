@@ -78,7 +78,7 @@ svgEditor.addExtension("Description", function(S) {
 		name: "Description",
 		callback: function() {
 			//add extension css
-			var csspath = '/wise/vle/node/draw/svg-edit/extensions/ext-description.css'; // corrected path for wise4
+			var csspath = '../../../../node/draw/svg-edit/extensions/ext-description.css'; // corrected path for wise4
 			var fileref=document.createElement("link");
 			fileref.setAttribute("rel", "stylesheet");
 			fileref.setAttribute("type", "text/css");

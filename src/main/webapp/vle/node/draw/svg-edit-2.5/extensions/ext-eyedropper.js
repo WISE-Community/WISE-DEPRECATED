@@ -54,7 +54,7 @@ svgEditor.addExtension("eyedropper", function(S) {
 		
 		return {
 			name: "eyedropper",
-			svgicons: "/wise/vle/node/draw/svg-edit/extensions/eyedropper-icon.xml", // corrected for wise4 extensions path
+			svgicons: "../../../../node/draw/svg-edit/extensions/eyedropper-icon.xml", // corrected for wise4 extensions path
 			buttons: [{
 				id: "tool_eyedropper",
 				type: "mode",

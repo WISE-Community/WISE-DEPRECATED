@@ -19,7 +19,7 @@ svgEditor.addExtension("Prompt", function(S) {
 	function addLink(){
 		var linktext = '<div id="tool_prompt" class="extension_link">' +
 			'<a class="label tool_prompt" title="Review Instructions">Review Instructions</a>' +
-			'<img class="tool_prompt" src="/wise/vle/node/draw/svg-edit/extensions/prompt.png" ' + // image path edited for wise4
+			'<img class="tool_prompt" src="../../../../node/draw/svg-edit/extensions/prompt.png" ' + // image path edited for wise4
 			'title="Review Instructions" alt="icon" />' +
 			'</div>';
 	
@@ -58,7 +58,7 @@ svgEditor.addExtension("Prompt", function(S) {
 		name: "Prompt",
 		callback: function() {
 			//add extension css
-			var csspath = '/wise/vle/node/draw/svg-edit/extensions/ext-prompt.css'; // corrected path for wise4
+			var csspath = '../../../../node/draw/svg-edit/extensions/ext-prompt.css'; // corrected path for wise4
 			var fileref=document.createElement("link");
 			fileref.setAttribute("rel", "stylesheet");
 			fileref.setAttribute("type", "text/css");

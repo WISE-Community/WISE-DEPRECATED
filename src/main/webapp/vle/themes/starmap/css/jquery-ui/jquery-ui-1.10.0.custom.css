@@ -1361,7 +1361,7 @@ body .ui-tooltip {
  * jQuery UI Dialog special styles
  */
 .ui-dialog.settings .ui-dialog-title {
-	background-image: url("/wise/vle/images/icons/settings-white.png");
+	background-image: url("../../../../images/icons/settings-white.png");
     background-repeat: no-repeat;
     background-position:left 1px;
     padding-left:26px;
