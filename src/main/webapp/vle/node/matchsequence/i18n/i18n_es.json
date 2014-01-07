@@ -66,5 +66,9 @@
     "step_completed": {
         "value": "Este paso está completo. Continuar con el siguiente.",
         "description": "The text to notify the student that they've completed the step and that they should move on"
+    },
+    "current_possible_score": {
+        "value": "Puntaje máximo posible:",
+        "description": "The text 'Current Possible Score:' that shows the score that the student can receive when they answer correctly"
     }
 }

@@ -126,5 +126,9 @@
     "delete": {
         "value": "Eliminar",
         "description": "The label for the delete button for graph point annotations"
+    },
+    "you_must_make_a_prediction_in_steps": {
+        "value": "Debes hacer tu predicción en los pasos de abajo",
+        "description": "The beginning of the text that says you must make a prediction in the steps below before you can work on this step"
     }
 }

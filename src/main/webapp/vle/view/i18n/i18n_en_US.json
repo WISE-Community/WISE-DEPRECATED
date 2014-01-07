@@ -131,6 +131,10 @@
 		"value":"You can always view this feedback by clicking on the \"{0}\" icon.",
 		"description":"The message at the bottom of the feedback popup to tell the student they can always bring the popup back up"
 	},
+	"show_previous_work_message": {
+		"value":"Remember, your work from \"Step {0}\" was</br>{1}</br></br>",
+		"description":"The message that shows the step number and title and the work from a previous step."
+	},
 	"navigation_expand_all":{
 		"value":"Show All",
 		"description":"Text on a button to show all navigation items"
