@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -50,9 +49,9 @@ public class VLEPeerReviewController extends AbstractController {
 		
 		if(requestMethod == null) {
 			
-		} else if(requestMethod.equals(RequestMethod.GET)) {
+		} else if(requestMethod.equals(AbstractController.METHOD_GET)) {
 			modelAndView = doGet(request, response);
-		} else if(requestMethod.equals(RequestMethod.POST)) {
+		} else if(requestMethod.equals(AbstractController.METHOD_POST)) {
 			modelAndView = doPost(request, response);
 		}
 		

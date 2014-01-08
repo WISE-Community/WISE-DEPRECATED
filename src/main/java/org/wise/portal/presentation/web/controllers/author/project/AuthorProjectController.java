@@ -1410,7 +1410,7 @@ public class AuthorProjectController extends AbstractController {
 		String projectMetaDataUrl = portalUrl + contextPath + "/metadata.html";
 
 		//get the url to make CRater requests
-		String cRaterRequestUrl = portalUrl + contextPath + "/bridge/request.html?type=cRater";
+		String cRaterRequestUrl = portalUrl + contextPath + "/cRater.html?type=cRater";
 
 		//get the curriculum_base_www variable from the wise.properties file
 		String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
@@ -1454,6 +1454,7 @@ public class AuthorProjectController extends AbstractController {
 			config.put("getPremadeCommentsUrl", getPremadeCommentsUrl);
 			config.put("postPremadeCommentsUrl", postPremadeCommentsUrl);
 			config.put("wiseBaseURL", wiseBaseURL);
+			config.put("contextPath", contextPath);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

@@ -4,36 +4,19 @@ import java.io.IOException;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.vle.domain.webservice.crater.CRaterHttpClient;
 import org.wise.vle.utils.SecurityUtils;
 
-public class CRaterController extends HttpServlet {
+public class CRaterController extends AbstractController {
 
 	private static final long serialVersionUID = 1L;
 	
 	private Properties wiseProperties;
-
-	/**
-	 * Handle POST requests
-	 * @param request
-	 * @param response
-	 */
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		handleRequest(request, response);
-	}
-	
-	/**
-	 * Handle GET requests
-	 * @param request
-	 * @param response
-	 */
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		handleRequest(request, response);
-	}
 	
 	/**
 	 * Handle requests to the CRater server
@@ -41,13 +24,14 @@ public class CRaterController extends HttpServlet {
 	 * @param response
 	 * @throws IOException 
 	 */
-	private void handleRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		/* make sure that this request is authenticated through the portal before proceeding */
 		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
 			/* not authenticated send not authorized status */
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
+			return null;
 		}
 
 		//get the CRater request type which will be "scoring" or "verify"
@@ -106,12 +90,14 @@ public class CRaterController extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		
+		return null;
 	}
 	
 	/**
 	 * Handle the scoring request to the CRater server
 	 * e.g.
-	 * http://localhost:8080/wise/bridge/request.html?type=cRater&cRaterRequestType=scoring&itemId=Photo_Sun&responseId=1&studentData=hello
+	 * http://localhost:8080/wise/cRater.html?type=cRater&cRaterRequestType=scoring&itemId=Photo_Sun&responseId=1&studentData=hello
 	 * 
 	 * @param cRaterUrl the CRater server url for scoring
 	 * @param cRaterClientId the client id e.g. "WISETEST"
@@ -129,7 +115,7 @@ public class CRaterController extends HttpServlet {
 	/**
 	 * Handle the verify request to the CRater server
 	 * e.g.
-	 * http://localhost:8080/wise/bridge/request.html?type=cRater&cRaterRequestType=verify&itemId=Photo_Sun
+	 * http://localhost:8080/wise/cRater.html?type=cRater&cRaterRequestType=verify&itemId=Photo_Sun
 	 * 
 	 * @param cRaterUrl the CRater server url for verifying
 	 * @param cRaterClientId the client id e.g. "WISETEST"

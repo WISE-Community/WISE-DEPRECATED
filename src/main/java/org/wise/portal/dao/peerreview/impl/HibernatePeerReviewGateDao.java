@@ -2,7 +2,6 @@ package org.wise.portal.dao.peerreview.impl;
 
 import java.util.List;
 
-
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -39,7 +38,7 @@ public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewG
 		return peerReviewGate;
 	}
 	
-	@Transactional(readOnly = false)
+	@Transactional
 	public void savePeerReviewGate(PeerReviewGate peerReviewGate) {
 		save(peerReviewGate);
 	}
@@ -57,6 +56,7 @@ public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewG
 		}
 	}
 	
+	@Transactional
 	public PeerReviewGate getOrCreatePeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node) {
 		PeerReviewGate peerReviewGate = getPeerReviewGateByRunIdPeriodIdNodeId(runId, periodId, node);
 		if(peerReviewGate == null) {
@@ -69,6 +69,7 @@ public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewG
 		return peerReviewGate;
 	}
 	
+	@Transactional
 	public boolean calculatePeerReviewOpen(Long runId, Long periodId, Node node,
 			int numWorkgroups, int openPercentageTrigger, int openNumberTrigger) {
 		PeerReviewGate peerReviewGate = getPeerReviewGateByRunIdPeriodIdNodeId(runId, periodId, node);

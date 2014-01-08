@@ -741,7 +741,7 @@ public class StudentDataController extends AbstractController {
 						
 						if(peerReviewWork == null) {
 							/*
-							 * the user has not submitted peer review work for thie step yet
+							 * the user has not submitted peer review work for this step yet
 							 * so we will create it
 							 */
 							peerReviewWork = new PeerReviewWork();

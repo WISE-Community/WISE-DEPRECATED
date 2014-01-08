@@ -563,6 +563,10 @@ View.prototype.OpenResponseNode.updateCRater = function(){
 	//get the item id the user has entered
 	var itemId = $('#cRaterItemIdInput').val();
 
+	if(this.content.cRater.cRaterItemType == null) {
+		this.content.cRater.cRaterItemType = 'CRATER';
+	}
+	
 	var cRaterItemType = this.content.cRater.cRaterItemType;
 	
 	//make a verify request to the CRater server with the item id the user has entered

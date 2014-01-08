@@ -24,6 +24,7 @@ package org.wise.portal.service.vle.impl;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.annotation.AnnotationDao;
 import org.wise.portal.dao.crater.CRaterRequestDao;
 import org.wise.portal.dao.ideabasket.IdeaBasketDao;
@@ -366,11 +367,13 @@ public class VLEServiceImpl implements VLEService {
 	}
 
 	@Override
+	@Transactional
 	public PeerReviewGate getOrCreatePeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node) {
 		return peerReviewGateDao.getOrCreatePeerReviewGateByRunIdPeriodIdNodeId(runId, periodId, node);
 	}
 
 	@Override
+	@Transactional
 	public boolean calculatePeerReviewOpen(Long runId, Long periodId, Node node, int numWorkgroups, int openPercentageTrigger, int openNumberTrigger) {
 		return peerReviewGateDao.calculatePeerReviewOpen(runId, periodId, node, numWorkgroups, openPercentageTrigger, openNumberTrigger);
 	}

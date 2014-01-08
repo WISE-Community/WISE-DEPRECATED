@@ -494,16 +494,16 @@ public class InformationController extends AbstractController{
 			String postStudentDataUrl = wiseBaseURL + "/studentData.html";
 			
 			//get the url to get flags
-			String getFlagsUrl = wiseBaseURL + "/bridge/getdata.html?type=flag&runId=" + run.getId().toString();
+			String getFlagsUrl = wiseBaseURL + "/annotation.html?type=flag&runId=" + run.getId().toString();
 			
 			//get the url to post flags
-			String postFlagsUrl = wiseBaseURL + "/bridge/getdata.html?type=flag&runId=" + run.getId().toString();
+			String postFlagsUrl = wiseBaseURL + "/annotation.html?type=flag&runId=" + run.getId().toString();
 			
 			//get the url to get inappropriate flags
-			String getInappropriateFlagsUrl = wiseBaseURL + "/bridge/getdata.html?type=inappropriateFlag&runId=" + run.getId().toString();
+			String getInappropriateFlagsUrl = wiseBaseURL + "/annotation.html?type=inappropriateFlag&runId=" + run.getId().toString();
 			
 			//get the url to post inappropriate flags
-			String postInappropriateFlagsUrl = wiseBaseURL + "/bridge/getdata.html?type=inappropriateFlag&runId=" + run.getId().toString();
+			String postInappropriateFlagsUrl = wiseBaseURL + "/annotation.html?type=inappropriateFlag&runId=" + run.getId().toString();
 
 			//get the url to get annotations
 	    	String getAnnotationsUrl = wiseBaseURL + "/annotation.html?type=annotation&runId=" + run.getId().toString();
@@ -512,13 +512,13 @@ public class InformationController extends AbstractController{
 	    	String postAnnotationsUrl = wiseBaseURL + "/annotation.html?type=annotation&runId=" + run.getId().toString();
 	    	
 			//get the url to get peer review work
-			String getPeerReviewUrl = wiseBaseURL + "/bridge/getdata.html?type=peerreview";
+			String getPeerReviewUrl = wiseBaseURL + "/peerReview.html?type=peerreview";
 			
 			//get the url for xls export
 	    	String getXLSExportUrl = wiseBaseURL + "/getExport.html?type=xlsexport&runId=" + run.getId().toString();
 	    	
 	    	//get the url for special export
-	    	String getSpecialExportUrl = wiseBaseURL + "/bridge/request.html?type=specialExport&runId=" + run.getId().toString();
+	    	String getSpecialExportUrl = wiseBaseURL + "/getSpecialExport.html?type=specialExport&runId=" + run.getId().toString();
 	    	
 	    	//get the url for premade comments
 	    	String getPremadeCommentsUrl = wiseBaseURL + "/teacher/grading/premadeComments.html?action=getData";
@@ -548,16 +548,10 @@ public class InformationController extends AbstractController{
 
 	    	String viewStudentAssetsUrl = wiseBaseURL + "/assetManager.html?type=viewStudentAssets&runId=" + run.getId().toString();
 	    	
-	    	// url to authenticate with WISE XMPP
-	    	String wiseXMPPAuthenticateUrl = wiseBaseURL + "/bridge/request.html?type=xmppAuthenticate&runId=" + run.getId().toString();
-	    	
 	    	String getStudentListUrl = wiseBaseURL + "/teacher/management/studentlistexcel.html?runId=" + run.getId().toString();
 	    	
 	    	//get the url to make CRater requests
-	    	String cRaterRequestUrl = wiseBaseURL + "/bridge/request.html?type=cRater";
-	    	
-	    	//get the url to make chat log requests
-	    	String chatLogUrl = wiseBaseURL + "/bridge/request.html?type=chatLog";
+	    	String cRaterRequestUrl = wiseBaseURL + "/cRater.html?type=cRater";
 	    	
 			/* Set the post level if specified in the run */
 			Integer postLevel = run.getPostLevel();
@@ -601,12 +595,10 @@ public class InformationController extends AbstractController{
 				config.put("postIdeaBasketUrl", postIdeaBasketUrl);
 				config.put("studentAssetManagerUrl", studentAssetManagerUrl);
 				config.put("viewStudentAssetsUrl", viewStudentAssetsUrl);
-				config.put("wiseXMPPAuthenticateUrl", wiseXMPPAuthenticateUrl);
 				config.put("runInfo", run.getInfo());
 				config.put("isXMPPEnabled", true);  // make this run-specific setting
 				config.put("hostName", hostName);
 				config.put("cRaterRequestUrl", cRaterRequestUrl);
-				config.put("chatLogUrl", chatLogUrl);
 				config.put("webSocketUrl", webSocketUrl);
 				config.put("studentStatusUrl", studentStatusUrl);
 				config.put("runStatusUrl", runStatusUrl);

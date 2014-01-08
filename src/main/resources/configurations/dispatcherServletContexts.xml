@@ -1001,14 +1001,6 @@
 	<bean id="vleGetStatisticsController" class="org.wise.vle.web.VLEGetStatisticsController">
 	    <property name="vleService" ref="vleService" />
 	</bean>
-		
-	<bean id="bridgeController"
-		class="org.wise.portal.presentation.web.controllers.BridgeController">
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="runService" ref="runService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="studentAttendanceService" ref="studentAttendanceService" />
-	</bean>
 
 	<bean id="credentialManager"
 		class="org.wise.portal.presentation.web.controllers.CredentialManager">
@@ -1122,6 +1114,11 @@
     
     <bean id="loginController"
 		class="org.wise.portal.presentation.web.controllers.LoginController">
+		<property name="wiseProperties" ref="wiseProperties" />
+	</bean>
+	
+	<bean id="cRaterController"
+		class="org.wise.vle.web.CRaterController">
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
     
@@ -1292,7 +1289,6 @@
 				/studentStatus.html=studentStatusController
 				/runStatus.html=runStatusController
 				/ideaBasket.html=ideaBasketController
-				/bridge/**/*.html=bridgeController
 				/errors/outsideerror.html=outsideErrorController
 				/authorize.html=credentialManager
 				/pages/check.html=compatibilityCheckController
@@ -1301,6 +1297,7 @@
 				/getSpecialExport.html=getSpecialExportController
 				/peerReview.html=peerReviewController
 				/assetManager.html=assetManagerController
+				/cRater.html=cRaterController
 				/**/*.html=urlFilenameViewController
     		</value>
     	</property>

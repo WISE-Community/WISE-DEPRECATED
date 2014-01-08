@@ -2,7 +2,6 @@ package org.wise.portal.dao.peerreview.impl;
 
 import java.util.List;
 
-
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,6 +97,7 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
         return peerReviewWork;
 	}
 	
+	@Transactional
 	public PeerReviewWork setPeerReviewAnnotation(
 			Long runId, Long periodId, Node node, StepWork stepWork, UserInfo reviewer, Annotation annotation) {
 		PeerReviewWork peerReviewWork = getPeerReviewWorkByRunPeriodNodeStepWorkReviewer(runId, periodId, node, stepWork, reviewer);
