@@ -1260,7 +1260,7 @@ View.prototype.editProjectMetadata = function(){
 		
 		if(this.projectHasRun && parseInt(imVersion, 10) < 2){
 			// project has run in classroom and uses older version of Idea Manager, so remove IM v2 settings panel
-			$('#ideaManagerSettings').remove();
+			$('#ideaManagerSettings').hide();
 		} else {
 			// since project hasn't run and Idea Manager version hasn't been set < 2, we can use IM v2 for this project
 			imVersion = '2';

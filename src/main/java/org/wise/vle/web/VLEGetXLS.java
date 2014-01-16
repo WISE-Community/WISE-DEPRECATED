@@ -478,7 +478,13 @@ public class VLEGetXLS extends AbstractController {
 				//make sure workgroupId and periodId exist and are not null
 				if(classmate.has("workgroupId") && !classmate.isNull("workgroupId")) {
 					//get the workgroup id for the classmate
-					int workgroupId = classmate.getInt("workgroupId");
+					Integer workgroupId = null;
+					
+					try {
+						workgroupId = classmate.getInt("workgroupId");
+					} catch(JSONException e) {
+						workgroupId = null;
+					}
 					
 					if(classmate.has("periodId") && !classmate.isNull("periodId")) {
 						//get the period id for the classmate
@@ -6875,7 +6881,11 @@ public class VLEGetXLS extends AbstractController {
 				
 				//get the workgroup id if it is available
 				if(idea.has("workgroupId")) {
-					ideaWorkgroupId = idea.getInt("workgroupId");
+					try {
+						ideaWorkgroupId = idea.getInt("workgroupId");						
+					} catch(JSONException e) {
+						ideaWorkgroupId = null;
+					}
 				}
 				
 				//create a new row
@@ -7239,12 +7249,20 @@ public class VLEGetXLS extends AbstractController {
 			for(int x=ideas.length() - 1; x>=0; x--) {
 				JSONObject activeIdea = ideas.getJSONObject(x);
 				
+				Integer activeIdeaWorkgroupId = null;
+				
+				try {
+					activeIdeaWorkgroupId = activeIdea.getInt("workgroupId");
+				} catch(JSONException e) {
+					activeIdeaWorkgroupId = null;
+				}
+				
 				/*
 				 * check if the idea id matches the one we want. if a workgroup id
 				 * is passed in as a parameter we will make sure that matches too.
 				 */
 				if(activeIdea != null && activeIdea.getInt("id") == ideaId &&
-						(workgroupId == null || activeIdea.getInt("workgroupId") == workgroupId.intValue())) {
+						(workgroupId == null || activeIdeaWorkgroupId == workgroupId.intValue())) {
 					//we have found the idea we want so we will stop searching
 					idea = activeIdea;
 					ideaFound = true;
@@ -7257,12 +7275,20 @@ public class VLEGetXLS extends AbstractController {
 				for(int y=deleted.length() - 1; y>=0; y--) {
 					JSONObject deletedIdea = deleted.getJSONObject(y);
 					
+					Integer deletedIdeaWorkgroupId = null;
+					
+					try {
+						deletedIdeaWorkgroupId = deletedIdea.getInt("workgroupId");
+					} catch(JSONException e) {
+						deletedIdeaWorkgroupId = null;
+					}
+					
 					/*
 					 * check if the idea id matches the one we want. if a workgroup id
 					 * is passed in as a parameter we will make sure that matches too.
 					 */
 					if(deletedIdea != null && deletedIdea.getInt("id") == ideaId &&
-							(workgroupId == null || deletedIdea.getInt("workgroupId") == workgroupId.intValue())) {
+							(workgroupId == null || deletedIdeaWorkgroupId == workgroupId.intValue())) {
 						//we have found the idea we want so we will stop searching
 						idea = deletedIdea;
 						ideaFound = true;
@@ -7329,8 +7355,12 @@ public class VLEGetXLS extends AbstractController {
 				Integer workgroupId = null;
 				
 				if(idea.has("workgroupId")) {
-					//get the workgroup id that owns the idea
-					workgroupId = idea.getInt("workgroupId");
+					try {
+						//get the workgroup id that owns the idea
+						workgroupId = idea.getInt("workgroupId");						
+					} catch(JSONException e) {
+						workgroupId = null;
+					}
 				}
 				
 				//get the ideas
@@ -7341,12 +7371,20 @@ public class VLEGetXLS extends AbstractController {
 				for(int x=ideas.length() - 1; x>=0; x--) {
 					JSONObject activeIdea = ideas.getJSONObject(x);
 					
+					Integer activeIdeaWorkgroupId = null;
+					
+					try {
+						activeIdeaWorkgroupId = activeIdea.getInt("workgroupId");
+					} catch(JSONException e) {
+						activeIdeaWorkgroupId = null;
+					}
+					
 					/*
 					 * check if the idea id matches the one we want. if a workgroup id
 					 * is passed in as a parameter we will make sure that matches too.
 					 */
 					if(activeIdea != null && activeIdea.getInt("id") == ideaId &&
-							(workgroupId == null || activeIdea.getInt("workgroupId") == workgroupId.intValue())) {
+							(workgroupId == null || activeIdeaWorkgroupId == workgroupId.intValue())) {
 						//we have found the idea we want so we will stop searching
 						idea = activeIdea;
 						ideaFound = true;
@@ -7359,12 +7397,20 @@ public class VLEGetXLS extends AbstractController {
 					for(int y=deleted.length() - 1; y>=0; y--) {
 						JSONObject deletedIdea = deleted.getJSONObject(y);
 						
+						Integer deletedIdeaWorkgroupId = null;
+						
+						try {
+							deletedIdeaWorkgroupId = deletedIdea.getInt("workgroupId");
+						} catch(JSONException e) {
+							deletedIdeaWorkgroupId = null;
+						}
+						
 						/*
 						 * check if the idea id matches the one we want. if a workgroup id
 						 * is passed in as a parameter we will make sure that matches too.
 						 */
 						if(deletedIdea != null && deletedIdea.getInt("id") == ideaId &&
-								(workgroupId == null || deletedIdea.getInt("workgroupId") == workgroupId)) {
+								(workgroupId == null || deletedIdeaWorkgroupId == workgroupId)) {
 							//we have found the idea we want so we will stop searching
 							idea = deletedIdea;
 							ideaInTrash = true;
@@ -7402,8 +7448,12 @@ public class VLEGetXLS extends AbstractController {
 				Integer workgroupId = null;
 				
 				if(idea.has("workgroupId")) {
-					//get the workgroup id that owns the idea
-					workgroupId = idea.getInt("workgroupId");
+					try {
+						//get the workgroup id that owns the idea
+						workgroupId = idea.getInt("workgroupId");						
+					} catch(JSONException e) {
+						workgroupId = null;
+					}
 				}
 				
 				//try to get the idea from the previous basket revision
@@ -7442,8 +7492,12 @@ public class VLEGetXLS extends AbstractController {
 				Integer workgroupId = null;
 				
 				if(idea.has("workgroupId")) {
-					//get the workgroup id that owns the idea
-					workgroupId = idea.getInt("workgroupId");
+					try {
+						//get the workgroup id that owns the idea
+						workgroupId = idea.getInt("workgroupId");
+					} catch(JSONException e) {
+						workgroupId = null;
+					}
 				}
 				
 				//get the idea from the previous basket revision
@@ -7674,7 +7728,14 @@ public class VLEGetXLS extends AbstractController {
 				 */
 				if(idea.has("id") && idea.has("workgroupId") && idea.has("isPublishedToPublic")) {
 					Integer ideaId = idea.getInt("id");
-					Integer workgroupId = idea.getInt("workgroupId");
+					Integer workgroupId = null;
+					
+					try {
+						workgroupId = idea.getInt("workgroupId");
+					} catch(JSONException e) {
+						workgroupId = null;
+					}
+					
 					boolean isPublishedToPublic = idea.getBoolean("isPublishedToPublic");
 					
 					if(previousIdeaBasket != null) {
@@ -7739,7 +7800,14 @@ public class VLEGetXLS extends AbstractController {
 				 */
 				if(idea.has("id") && idea.has("workgroupId") && idea.has("isPublishedToPublic")) {
 					Integer ideaId = idea.getInt("id");
-					Integer workgroupId = idea.getInt("workgroupId");
+					Integer workgroupId = null;
+					
+					try {
+						workgroupId = idea.getInt("workgroupId");
+					} catch(JSONException e) {
+						workgroupId = null;
+					}
+					
 					boolean isPublishedToPublic = idea.getBoolean("isPublishedToPublic");
 					boolean isPrivate = !isPublishedToPublic;
 					
@@ -7808,7 +7876,14 @@ public class VLEGetXLS extends AbstractController {
 				 */
 				if(idea.has("id") && idea.has("workgroupId") && idea.has("wasCopiedFromPublic")) {
 					Integer ideaId = idea.getInt("id");
-					Integer workgroupId = idea.getInt("workgroupId");
+					Integer workgroupId = null;
+					
+					try {
+						workgroupId = idea.getInt("workgroupId");
+					} catch(JSONException e) {
+						workgroupId = null;
+					}
+					
 					boolean wasCopiedFromPublic = idea.getBoolean("wasCopiedFromPublic");
 					
 					if(previousIdeaBasket != null) {
@@ -7878,7 +7953,14 @@ public class VLEGetXLS extends AbstractController {
 				 */
 				if(idea.has("id") && idea.has("workgroupId") && idea.has("workgroupIdsThatHaveCopied")) {
 					Integer ideaId = idea.getInt("id");
-					Integer workgroupId = idea.getInt("workgroupId");
+					Integer workgroupId = null;
+					
+					try {
+						workgroupId = idea.getInt("workgroupId");
+					} catch(JSONException e) {
+						workgroupId = null;
+					}
+					
 					JSONArray workgroupIdsThatHaveCopied = idea.getJSONArray("workgroupIdsThatHaveCopied");
 					int workgroupIdsThatHaveCopiedCount = workgroupIdsThatHaveCopied.length();
 					
@@ -7959,7 +8041,14 @@ public class VLEGetXLS extends AbstractController {
 				 */
 				if(idea.has("id") && idea.has("workgroupId") && idea.has("workgroupIdsThatHaveCopied")) {
 					Integer ideaId = idea.getInt("id");
-					Integer workgroupId = idea.getInt("workgroupId");
+					Integer workgroupId = null;
+					
+					try {
+						workgroupId = idea.getInt("workgroupId");
+					} catch(JSONException e) {
+						workgroupId = null;
+					}
+					
 					JSONArray workgroupIdsThatHaveCopied = idea.getJSONArray("workgroupIdsThatHaveCopied");
 					int workgroupIdsThatHaveCopiedCount = workgroupIdsThatHaveCopied.length();
 					
@@ -8142,8 +8231,12 @@ public class VLEGetXLS extends AbstractController {
 				Integer workgroupId = null;
 				
 				if(idea.has("workgroupId")) {
-					//get the workgroup id that owns the idea
-					workgroupId = idea.getInt("workgroupId");
+					try {
+						//get the workgroup id that owns the idea
+						workgroupId = idea.getInt("workgroupId");						
+					} catch(JSONException e) {
+						workgroupId = null;
+					}
 				}
 				
 				//get the idea from the previous revision
