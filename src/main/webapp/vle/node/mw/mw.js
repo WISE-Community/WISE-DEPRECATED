@@ -23,6 +23,7 @@ MW.prototype.loadApplet = function(jsonfilename, context){
 		'archive="../../node/mw/mwapplet.jar"' + 
 		'code="org.concord.modeler.MwApplet" width="' + this.content.width + '" height="' + this.content.height + '">' +
 		'<param name="script" value="page:0:import ' + this.content.activity_uri + '"/>' +
+		'<param name="permissions" value="sandbox"/>' +
 		'</applet>';
 	$('#mw_wrapper').html(applet);
 	context.applet = document.getElementById('mw_applet');

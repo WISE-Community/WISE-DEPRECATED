@@ -31,9 +31,10 @@ Netlogo.prototype = {
       var codebase = '.';
       var model    = '<param name="DefaultModel" value="' + this.content.activity_uri + '">';
       var extLoc   = '<param name="nlogo.extensions.url" value="' + codebase + '/extensions' + '">';
+      var permissions   = '<param name="permissions" value="sandbox"/>';
       appletStr    = '<applet id="netlogo-applet" code="org.nlogo.lite.Applet" codebase="' + codebase +
         '" archive="' + archive + '" width="' + this.content.width + '" height="' + this.content.height + '">' +
-        model + extLoc + '</applet>';
+        model + extLoc + permissions + '</applet>';
     }
 
     $('#netlogo_wrapper').html(appletStr);

@@ -2076,6 +2076,7 @@ SENSOR.prototype.insertApplet = function() {
 	'<param name="resource" value="' + otmlFileName + '"/> ' + 
 	'<param name="name" value="sensor"/> ' +
 	'<param name="listenerPath" value="jsListener"/> ' +
+	'<param name="permissions" value="all-permissions"/> ' +
 	'<param name="MAYSCRIPT" value="true"/><font color="red" style="font-family:arial">' + error_applets_are_disabled + ' <a href="http://java.com/en/download/help/enable_browser.xml" target="_blank">' + here + '</a> ' + to_enable_applets + '</font>' +
 	'</applet>';
 	
