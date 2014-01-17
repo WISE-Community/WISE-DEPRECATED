@@ -1110,18 +1110,26 @@ Epigame.prototype.processTagMaps = function() {
 				}
 
 				if(result != null) {
-					if (result.pass == false)
-						enableStep = false;
-					if (result.message != "")
-						messages.push(result.message);
-					if (result.highScore_performance)
+					if(this.isConstraintsEnabled()) {
+						if (result.pass == false) {
+							enableStep = false;
+						}
+						if (result.message != "") {
+							messages.push(result.message);
+						}
+					}
+					if (result.highScore_performance) {
 						perfScore = result.highScore_performance;
-					if (result.highScore_explanation)
+					}
+					if (result.highScore_explanation) {
 						explScore = result.highScore_explanation;
-					if (result.finalScore)
+					}
+					if (result.finalScore) {
 						warpScore = result.finalScore;
-					if (result.minScore)
+					}
+					if (result.minScore) {
 						minScore = result.minScore;
+					}
 				}
 			}
 		}
@@ -1321,6 +1329,25 @@ Epigame.prototype.save = function(st) {
 		this.processTagMaps();
 	}
 */
+};
+
+/**
+ * Get whether constraints are enabled
+ */
+Epigame.prototype.isConstraintsEnabled = function() {
+	var result = true;
+	
+	if(this.view != null && this.view.getConfig() != null) {
+		//get the config param if it is availabled
+		var isConstraintsDisabled = this.view.getConfig().getConfigParam("isConstraintsDisabled");
+		
+		if(isConstraintsDisabled != null) {
+			//the config param is available so we will set our result based its value
+			result = !isConstraintsDisabled;
+		}
+	}
+	
+	return result;
 };
 
 //used to notify scriptloader that this script has finished loading
