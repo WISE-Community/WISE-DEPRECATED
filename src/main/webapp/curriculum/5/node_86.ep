@@ -1,0 +1,7 @@
+{
+   "levelString": "M|$testMission|$Green Mission 2|$Don't be afraid to launch the Fuzzies left and right to see how it changes your velocity!|$Navigate your ship to an open portal.|$6|3|0|3|0|0|0|$|$|$3|$P|*20|6|*1|3|*0|*0|*TR:1,3|*MO;spawn;1;1;3;|MO;pod;1;2;3;0|MO;pod;1;3;3;0|MO;pod;1;4;3;0|MO;velocityzone;1;6;0;1,1,90,2.881844380403458|MO;velocityzone;1;6;5;10,15,270|MO;velocityzone;1;9;0;3,3,90,2.881844380403458|MO;velocityzone;1;9;5;10,15,270|MO;velocityzone;1;13;0;2,2,90,2.881844380403458|MO;velocityzone;1;13;5;10,15,270|MO;goal;1;19;3;|*|*|*|$AP|^AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|$1|$0|$100|$|$0|$0|$1|$AP|^|$1|$0|$0|$1|$1|$1|$1|$1|$1|$1|$1",
+   "excelExportStringTemplate": "{response}",
+   "customUri": "",
+   "mode": "mission",
+   "type": "Epigame"
+}

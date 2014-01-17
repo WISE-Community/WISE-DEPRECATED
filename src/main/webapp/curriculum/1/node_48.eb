@@ -1,0 +1,10 @@
+{
+   "background": "",
+   "bgPosition": "left-top",
+   "prompt": "What evidence about DENSITY, HEAT ENERGY, and CONVECTION can you use to explain how convection currents go up and down?\n\nDrag the most useful ideas into the space below.",
+   "instructions": "(1) What further evidence do you need to write a convincing explanation?\n(2) What you will do to find this missing evidence? For example, what step will you revisit? Who will you ask?\n\nAfter writing your response, go collect your evidence and return to add it to this step before moving on.",
+   "enableStudentTextArea": true,
+   "isMustComplete": true,
+   "selectedAttribute": "NcfyHR5B6P",
+   "type": "ExplanationBuilder"
+}

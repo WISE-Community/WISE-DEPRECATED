@@ -1,0 +1,25 @@
+{
+   "assessmentItem":{
+      "adaptive":false,
+      "identifier":"OpenResponse",
+      "interaction":{
+         "expectedLines":"5",
+         "hasInlineFeedback":false,
+         "placeholderText":"",
+         "prompt":"<table border=\"0\" style=\"float:left; margin-right:10px;\"> <tr><td><img src=\"http://dl.dropbox.com/u/1077325/WC.png\" style=\"float:left; margin-right:0px;\"></td></tr> </table>\u000a<br><br><br><br><br><br><br><br><br><br><br>\u000aThis map shows where earthquakes and volcanoes happen on the West Coast. \u000a<br><br>\u000aThere are both earthquakes and volcanoes in Washington. But in Southern California, even though there are also earthquakes, there are very few volcanoes.\u000a<br><br>\u000aWhy do you think that is?  \u000a<br><br><br><br><br><br><br><br><br><br><br>",
+         "responseIdentifier":"OR"
+      },
+      "responseDeclaration":{
+         "baseType":"string",
+         "cardinality":"single",
+         "identifier":"OR"
+      },
+      "timeDependent":false
+   },
+   "isRichTextEditorAllowed":false,
+   "starterSentence":{
+      "display":"0",
+      "sentence":""
+   },
+   "type":"OpenResponse"
+}

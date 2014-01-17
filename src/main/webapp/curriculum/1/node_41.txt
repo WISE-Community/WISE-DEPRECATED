@@ -1,0 +1,81 @@
+{
+   "type": "mysystem2",
+   "prompt": "<p><span><span>Make a MySystem to show how ENERGY is involved in plate tectonics.<br /><br />Make sure your diagram shows</span></span></p>\n<p>1. where the energy comes from</p>\n<p>2. HOW the energy moves</p>\n<p>3. where the energy goes</p>",
+   "modules": [
+      {
+         "uuid": "09d3471b-de6b-4d53-af83-5d88d0c9c23f",
+         "name": "Core",
+         "image": "assets/Core80.gif"
+      },
+      {
+         "uuid": "5e72ef55-1906-44f2-a7f8-dc18e2635fff",
+         "name": "Upper Mantle",
+         "image": "assets/umantle80.gif"
+      },
+      {
+         "uuid": "6836873e-5516-4773-bbc8-32052b79633b",
+         "name": "Lower Mantle",
+         "image": "assets/lmantle80.gif"
+      },
+      {
+         "uuid": "21e4186c-7c12-437b-b7c6-e0a9eaeec036",
+         "name": "Continental Crust",
+         "image": "assets/CCrust.gif"
+      },
+      {
+         "uuid": "1275d2a8-ad2f-4b32-80ad-a0d797a5c5de",
+         "name": "Oceanic Crust",
+         "image": "assets/OCrust.gif"
+      },
+      {
+         "uuid": "4db19566-aafb-4747-853c-c8da95355f0d",
+         "name": "Earthquake",
+         "image": "assets/Earthquake80.gif"
+      },
+      {
+         "uuid": "e05a85fd-3031-4033-8ead-1300d96af5b9",
+         "name": "Volcano",
+         "image": "assets/Volcano80.gif"
+      },
+      {
+         "uuid": "8203827c-080e-4ea9-9663-d916131ac4a6",
+         "name": "Mountain",
+         "image": "assets/Mountain80.gif"
+      }
+   ],
+   "energy_types": [
+      {
+         "uuid": "58e89730-e54a-4842-a7c1-884d7fe43da6",
+         "label": "Heat Energy (Conduction)",
+         "color": "#DE2D26"
+      },
+      {
+         "uuid": "d35853a8-0ec4-404f-8001-9c5effe22c15",
+         "label": "Heat Energy (Convection)",
+         "color": "#DE2D26"
+      },
+      {
+         "uuid": "f174f26c-e76f-46df-9575-fddba8eb8330",
+         "label": "Kinetic Energy (Movement)",
+         "color": "#FCBF18"
+      }
+   ],
+   "diagram_rules": [],
+   "minimum_requirements": [],
+   "correctFeedback": "Your diagram has been saved.",
+   "maxFeedbackItems": 0,
+   "minimumRequirementsFeedback": "",
+   "enableNodeDescriptionEditing": false,
+   "enableLinkDescriptionEditing": false,
+   "enableLinkLabelEditing": false,
+   "enableCustomRuleEvaluator": false,
+   "customRuleEvaluator": "",
+   "enableNodeLabelEditing": false,
+   "maxSubmissionClicks": 0,
+   "maxSubmissionFeedback": "You have clicked 'submit' too many times. Please continue working without hints.",
+   "feedbackPanelHeight": 250,
+   "feedbackPanelWidth": 500,
+   "terminalRadius": 14,
+   "nodeWidth": "80",
+   "nodeHeight": "80"
+}

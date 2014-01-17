@@ -1610,6 +1610,8 @@
 					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/vle/**/*.html"
 					access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/curriculum/**/*.html"
+					access="ROLE_ANONYMOUS,ROLE_USER" />
 								<sec:intercept-url pattern="/*.html" access="ROLE_USER" />
 				<sec:intercept-url pattern="/**/*.html" access="ROLE_USER" />
 			</sec:filter-security-metadata-source>

@@ -1,0 +1,7 @@
+{
+   "levelString": "M|$testMission|$Operation Fuzzy Drop|$You can drop Fuzzies , too.  After picking one up, boost in the direction you'd like for them to travel and use the \"Drop Cargo\" option to detach the Fuzzy Pod from your ship.  Remember, that an object in motion will stay in motion, so they will keep traveling in the same direction.  Because of their special shields, Fuzzies can travel through Caustic Nebula to hit switches.|$Navigate your ship to an open portal.|$-1|-1|-1|-1|-1|-1|-1|$|$|$7|$P|*11|7|*1|3|*0|*0|*TR:1,3|*MO;spawn;1;1;3;|MO;pod;1;3;3;0|MO;switch;1;9;3;1|MO;neb;1;10;4;48|MO;neb;1;10;3;28|MO;neb;1;10;2;24|MO;neb;1;9;2;46|MO;neb;1;8;2;26|MO;neb;1;8;3;28|MO;neb;1;8;4;68|MO;neb;1;9;4;46|MO;goal;1;10;6;|MO;rad;1;2;6;68|MO;rad;1;3;6;468|MO;rad;1;4;6;468|MO;rad;1;5;6;468|MO;rad;1;6;6;48|MO;rad;1;6;5;24|MO;rad;1;5;5;246|MO;rad;1;4;5;246|MO;rad;1;3;5;246|MO;rad;1;2;5;26|MO;rad;1;0;0;26|MO;rad;1;1;0;246|MO;rad;1;2;0;246|MO;rad;1;3;0;246|MO;rad;1;4;0;46|MO;rad;1;5;0;4|MO;rad;1;0;1;68|MO;rad;1;1;1;468|MO;rad;1;2;1;468|MO;rad;1;3;1;48|*|*|*|$AP|^AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|$0|$0|$100|$|$0|$0|$1|$AP|^|$1|$0|$1|$1|$1|$1|$1|$1|$1|$1|$1",
+   "excelExportStringTemplate": "{response}",
+   "customUri": "",
+   "mode": "mission",
+   "type": "Epigame"
+}

@@ -1,0 +1,8 @@
+{
+   "background": "assets/UsefulnessSortingBkg-01.png",
+   "prompt": "Look at the ideas you collected so far on \"Predicting CF.\" Which ones are USEFUL for explaining <i>how</i> to predict whether Eric's new brother or sister will be born with cystic fibrosis? Which ones are NOT useful?\n\n<br><br>\nSort your ideas by dragging them from your Basket into the categories on the right.",
+   "instructions": "Use your most useful ideas to explain HOW to predict whether Eric's new brother or sister will be born with cystic fibrosis. Make sure to use EVIDENCE in your explanation.",
+   "enableStudentTextArea": true,
+   "type": "ExplanationBuilder",
+   "selectedAttribute": "3IueyfoeMS"
+}

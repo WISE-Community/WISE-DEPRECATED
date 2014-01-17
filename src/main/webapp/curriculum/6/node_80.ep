@@ -1,0 +1,7 @@
+{
+   "levelString": "M|$testMission|$Green Mission 1|$Rockets are not the only forces you can use.  When you are low on fuel you can also launch Fuzzies to get moving.|$Navigate your ship to an open portal.|$5|2|0|2|0|0|0|$|$|$3|$P|*9|11|*4|0|*0|*0|*TR:4,0|*MO;goal;1;4;10;|MO;pod;1;4;1;0|MO;pod;1;4;2;0|MO;velocityzone;1;0;3;3,3,0,4.610951008645533|MO;velocityzone;1;8;3;10,15,180|MO;rad;1;0;0;2|MO;rad;1;0;1;28|MO;rad;1;0;2;8|MO;rad;1;8;0;2|MO;rad;1;8;1;28|MO;rad;1;8;2;8|MO;rad;1;8;4;2|MO;rad;1;8;5;28|MO;rad;1;8;6;28|MO;rad;1;8;7;28|MO;rad;1;8;10;|MO;rad;1;0;10;|MO;rad;1;0;4;2|MO;rad;1;0;5;28|MO;rad;1;0;6;28|MO;rad;1;0;7;28|MO;spawn;1;4;0;|MO;laser;1;0;9;1,0,1|MO;laserreceiver;1;8;9;1,180,1,4.610951008645533|MO;laserswitch;1;4;8;1|MO;rad;1;0;8;8|MO;rad;1;8;8;8|*|*|*|$AP|^AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|$1|$0|$100|$|$0|$0|$1|$AP|^|$1|$0|$0|$1|$1|$1|$1|$1|$1|$1|$1",
+   "excelExportStringTemplate": "{response}",
+   "customUri": "",
+   "mode": "mission",
+   "type": "Epigame"
+}

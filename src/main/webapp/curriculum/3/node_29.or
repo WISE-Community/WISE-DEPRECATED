@@ -1,0 +1,25 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "OpenResponse",
+      "interaction": {
+         "expectedLines": "0",
+         "hasInlineFeedback": false,
+         "placeholderText": "",
+         "prompt": "Based on the convection current exploration activities, write a story about <b>changes</b> in the mantle as it moves from the Earth's core towards the crust and back down to the core. Make sure you include the following information: <ul> <li>Where does the energy come from? <li>Where does the energy go? <li>How does the energy move? <li>How does the energy change? <li><b>What role does the energy play in changes in the mantle?</b> </li></ul> *Hint: You can review <a style=\"color:red\" onclick=\"node.linkTo('223TNHvgzL')\">step 5.1</a> to help you write your story.",
+         "responseIdentifier": "OR"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "OR"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": false,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "type": "OpenResponse"
+}

@@ -1,0 +1,166 @@
+{
+   "numColumns": 7,
+   "numRows": 5,
+   "globalCellSize": 10,
+   "prompt": "Now fill out this table for trait 2 ",
+   "prompt2": "",
+   "starterSentence": "",
+   "hideEverythingBelowTable": false,
+   "tableData": [
+      [
+         {
+            "text": "MomGeno",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ],
+      [
+         {
+            "text": "DadGeno",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ],
+      [
+         {
+            "text": "Sperm",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ],
+      [
+         {
+            "text": "Egg",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ],
+      [
+         {
+            "text": "BabyPheno",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ],
+      [
+         {
+            "text": "MomPheno",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ],
+      [
+         {
+            "text": "DadPheno",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ]
+   ],
+   "type": "Table"
+}

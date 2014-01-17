@@ -1,0 +1,7 @@
+{
+   "levelString": "M|$testMission|$Red Boss Mission 1|$Time to put your skills to the test!  Turn the ship to navigate around that radiation.|$Navigate your ship to an open portal.|$6|0|0|0|0|0|0|$|$|$7|$P|*9|11|*2|9|*0|*0|*TR:2,9|*MO;rad;1;0;0;2|MO;rad;1;0;1;28|MO;rad;1;0;2;28|MO;rad;1;0;9;28|MO;rad;1;0;10;8|MO;rad;1;0;4;8|MO;rad;1;0;6;2|MO;rad;1;0;8;28|MO;rad;1;4;10;8|MO;rad;1;4;9;28|MO;rad;1;4;8;2|MO;rad;1;8;10;8|MO;rad;1;8;9;28|MO;rad;1;8;8;2|MO;goal;1;6;9;|MO;velocityzone;1;4;7;8,8,0,2.3054755043227666|MO;velocityzone;1;8;7;10,15,180|MO;rad;1;4;6;|MO;velocityzone;1;0;5;2,2,0,2.3054755043227666|MO;velocityzone;1;4;5;10,15,180|MO;rad;1;8;6;8|MO;rad;1;8;5;28|MO;rad;1;8;4;28|MO;rad;1;8;3;28|MO;rad;1;8;2;28|MO;rad;1;8;1;28|MO;rad;1;8;0;2|MO;rad;1;4;4;|MO;rad;1;0;3;28|MO;rad;1;0;7;28|MO;velocityzone;1;4;3;4,4,-90,1.7291066282420748|MO;velocityzone;1;4;0;10,15,90|MO;spawn;1;2;9;|*|*|*|$AP|^AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|$0|$0|$100|$|$0|$0|$1|$AP|^|$1|$0|$0|$1|$1|$1|$1|$1|$1|$1|$1",
+   "excelExportStringTemplate": "{response}",
+   "customUri": "",
+   "mode": "mission",
+   "type": "Epigame"
+}

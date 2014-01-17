@@ -1,0 +1,4 @@
+{
+   "type": "OutsideUrl",
+   "url": "docs.google.com/a/u.northwestern.edu/spreadsheet/tq?key=0Avnqu5bmrjxrdHJFVUF1YmpXaGpySDdzcHY5bEJmdUE&transpose=0&headers=1&range=A1%3AC5&gid=0&pub=1\",\"options\":{\"titleTextStyle\":{\"fontSize\":16},\"vAxes\":[{\"useFormatFromData\":true,\"title\":\"Left vertical axis title\",\"minValue\":null,\"viewWindowMode\":\"pretty\",\"viewWindow\":{\"min\":null,\"max\":null},\"maxValue\":null},{\"useFormatFromData\":true,\"minValue\":null,\"viewWindowMode\":\"pretty\",\"viewWindow\":{\"min\":null,\"max\":null},\"maxValue\":null}],\"booleanRole\":\"certainty\",\"title\":\"Chart title\",\"animation\":{\"duration\":500},\"legend\":\"right\",\"hAxis\":{\"useFormatFromData\":true,\"title\":\"Horizontal axis title\",\"minValue\":null,\"viewWindowMode\":null,\"viewWindow\":null,\"maxValue\":null},\"isStacked\":false,\"width\":600,\"height\":371},\"state\":{},\"view\":{},\"chartType\":\"AreaChart\",\"chartName\":\"Chart 1"
+}

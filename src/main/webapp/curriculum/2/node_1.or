@@ -1,0 +1,26 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "MasterWorkNote(82227)",
+      "interaction": {
+         "expectedLines": "12",
+         "hasInlineFeedback": false,
+         "placeholderText": "**Three important traits of a good scientific investigation are:  1.  2.  3.",
+         "prompt": "<p><span style=\"font-size: small; font-family: arial, helvetica, sans-serif;\">Journalists and scientists both hold rigorous standards of investigation.</span></p>\n<p><span style=\"font-size: small; font-family: arial, helvetica, sans-serif;\">In what ways do you think journalism and science are the SAME?</span></p>\n<p><span style=\"font-size: small; font-family: arial, helvetica, sans-serif;\">In what ways do you think they're DIFFERENT?</span></p>",
+         "responseIdentifier": "NOTE_RESPONSE_1",
+         "type": "text"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "NOTE_RESPONSE_1"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": false,
+   "starterSentence": {
+      "display": "1",
+      "sentence": "**Three important traits of a good scientific investigation are:  1.  2.  3."
+   },
+   "type": "Note"
+}

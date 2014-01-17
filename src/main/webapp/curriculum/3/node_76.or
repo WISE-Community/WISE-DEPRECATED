@@ -1,0 +1,25 @@
+{
+   "assessmentItem":{
+      "adaptive":false,
+      "identifier":"OpenResponse",
+      "interaction":{
+         "expectedLines":"5",
+         "hasInlineFeedback":false,
+         "placeholderText":"",
+         "prompt":"<img src=\"assets/lamp1.jpg\"> <center><font size=\"-4\">Lava Lamp / <a style=\"color:black\" href=\"http://www.flickr.com/photos/adblues/\">AD Blues</a> / <a style=\"color:black\" rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC BY-SA 2.0</a></font></center> Lava lamps are special lamps full of fluid. <br /><br /> <img src=\"assets/lamp2.jpg\"> <center><font size=\"-4\">A Rising \"Blob\" / <a style=\"color:black\" href=\"http://www.flickr.com/photos/de3euk/\">de3euk</a> / <a rel=\"license\" style=\"color:black\" href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC BY-SA 2.0</a></font></center> Every so often, a blob of colored fluid will go up to the top of the lamp, then go back down again. How do you think lava lamps work? <br /><br /> <b>Using what you know about HEAT and DENSITY, explain how you think lava lamps work.</b>",
+         "responseIdentifier":"OR"
+      },
+      "responseDeclaration":{
+         "baseType":"string",
+         "cardinality":"single",
+         "identifier":"OR"
+      },
+      "timeDependent":false
+   },
+   "isRichTextEditorAllowed":false,
+   "starterSentence":{
+      "display":"0",
+      "sentence":""
+   },
+   "type":"OpenResponse"
+}

@@ -1,0 +1,13 @@
+{
+   "flashvars": {},
+   "height": "800",
+   "width": "1200",
+   "minPlayerVersion": "7.0.0",
+   "activity_uri": "assets/MotionComic1.swf",
+   "prompt": "",
+   "enableData": false,
+   "enableGrading": false,
+   "gradingType": "data",
+   "excelExportStringTemplate": "{response}",
+   "type": "Flash"
+}

@@ -1,0 +1,1084 @@
+{
+   "autoStep": true,
+   "stepLevelNum": false,
+   "stepTerm": "Step",
+   "title": "Chemical Reactions: How Can We Slow Climate Change?",
+   "constraints": [],
+   "nodes": [
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_62.sd",
+         "title": "Animate the greenhouse effect",
+         "hints": [],
+         "ref": "node_62.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_72.eb",
+         "title": "Suggest how to decrease CO₂ production",
+         "hints": [],
+         "ref": "node_72.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_81.ib",
+         "title": "Add evidence to your basket",
+         "hints": [],
+         "ref": "node_81.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_45.eb",
+         "title": "Suggest how to decrease CO2 production",
+         "hints": [],
+         "ref": "node_45.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_84.or",
+         "title": "How to decrease CO2 production",
+         "hints": [],
+         "ref": "node_84.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_78.sd",
+         "title": "Draw what happens to sunlight energy",
+         "hints": [],
+         "ref": "node_78.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_58.sd",
+         "title": "Animate what happens to sunlight energy 1",
+         "hints": [],
+         "ref": "node_58.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_34.ht",
+         "title": "Model the Greenhouse Effect",
+         "hints": [],
+         "ref": "node_34.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_36.al",
+         "title": "Record Thoughts",
+         "hints": [],
+         "ref": "node_36.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_42.ht",
+         "title": "What Do Greenhouse Gases Do?",
+         "hints": [],
+         "ref": "node_42.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_43.al",
+         "title": "Put it together",
+         "hints": [],
+         "ref": "node_43.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_44.ht",
+         "title": "Where do Greenhouse Gases Come From?",
+         "hints": [],
+         "ref": "node_44.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "MultipleChoiceNode",
+         "identifier": "node_18.mc",
+         "title": "Question",
+         "hints": [],
+         "ref": "node_18.mc",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "multiplechoice"
+      },
+      {
+         "type": "MWNode",
+         "identifier": "node_64.mw",
+         "title": "Ethane Combustion (MW)",
+         "hints": [],
+         "ref": "node_64.mw",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "simulation"
+      },
+      {
+         "type": "MWNode",
+         "identifier": "node_65.mw",
+         "title": "Limiting Reactants (MW)",
+         "hints": [],
+         "ref": "node_65.mw",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "simulation"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_11.ht",
+         "title": "Evaluation Guidelines",
+         "hints": [],
+         "ref": "node_11.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_12.al",
+         "title": "Evaluate Your Explanation",
+         "hints": [],
+         "ref": "node_12.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_13.al",
+         "title": "Rate the simulation",
+         "hints": [],
+         "ref": "node_13.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_14.ht",
+         "title": "Coefficients and Ratios",
+         "hints": [],
+         "ref": "node_14.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_15.al",
+         "title": "Checkpoint II",
+         "hints": [],
+         "ref": "node_15.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_63.al",
+         "title": "Rate Yourself",
+         "hints": [],
+         "ref": "node_63.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_19.ht",
+         "title": "How do humans contribute?",
+         "hints": [],
+         "ref": "node_19.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_27.al",
+         "title": "Rate the hydrogen simulation",
+         "hints": [],
+         "ref": "node_27.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_30.al",
+         "title": "How well do you understand?",
+         "hints": [],
+         "ref": "node_30.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_25.ht",
+         "title": "Hydrogen Explosion ",
+         "hints": [],
+         "ref": "node_25.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_29.al",
+         "title": "Simulation questions",
+         "hints": [],
+         "ref": "node_29.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_48.ht",
+         "title": "A: 20% Renewable by 2020",
+         "hints": [],
+         "ref": "node_48.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_50.ht",
+         "title": "B: 40 Miles Per Gallon",
+         "hints": [],
+         "ref": "node_50.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_49.al",
+         "title": "Option A Notes",
+         "hints": [],
+         "ref": "node_49.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_51.al",
+         "title": "Option B Notes",
+         "hints": [],
+         "ref": "node_51.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_52.ht",
+         "title": "Go Over Work to Create Outline",
+         "hints": [],
+         "ref": "node_52.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_55.ht",
+         "title": "Project Close",
+         "hints": [],
+         "ref": "node_55.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_53.or",
+         "title": "Write Letter",
+         "hints": [],
+         "ref": "node_53.or",
+         "previousWorkNodeIds": [
+            "node_84.or",
+            "node_83.or",
+            "node_85.or"
+         ],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_56.ht",
+         "title": "Add Clouds to the Model *",
+         "hints": [],
+         "ref": "node_56.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_0.ht",
+         "title": "Introduction",
+         "hints": [],
+         "ref": "node_0.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_1.al",
+         "title": "What do you think?",
+         "hints": [],
+         "ref": "node_1.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_2.ht",
+         "title": "Climate Change Video",
+         "hints": [],
+         "ref": "node_2.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_4.ht",
+         "title": "What Should We Do?",
+         "hints": [],
+         "ref": "node_4.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_5.ht",
+         "title": "Greenhouse gases on the rise",
+         "hints": [],
+         "ref": "node_5.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_6.al",
+         "title": "What I Know About Carbon Dioxide",
+         "hints": [],
+         "ref": "node_6.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_7.ht",
+         "title": "We need energy",
+         "hints": [],
+         "ref": "node_7.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_8.al",
+         "title": "Checkpoint 1",
+         "hints": [],
+         "ref": "node_8.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_10.al",
+         "title": "Explain your drawings",
+         "hints": [],
+         "ref": "node_10.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_16.ht",
+         "title": "Limiting Reactants",
+         "hints": [],
+         "ref": "node_16.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_17.al",
+         "title": "How did you do?",
+         "hints": [],
+         "ref": "node_17.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_21.ht",
+         "title": "Other ways to get energy",
+         "hints": [],
+         "ref": "node_21.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_22.al",
+         "title": "What do you think?",
+         "hints": [],
+         "ref": "node_22.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_23.ht",
+         "title": "Hydrogen combustion",
+         "hints": [],
+         "ref": "node_23.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_26.al",
+         "title": "Thoughts on the molecular visualization",
+         "hints": [],
+         "ref": "node_26.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_31.ht",
+         "title": "The hydrogen future?",
+         "hints": [],
+         "ref": "node_31.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_33.ht",
+         "title": "What is the Greenhouse Effect?",
+         "hints": [],
+         "ref": "node_33.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_35.ht",
+         "title": "Greenhouse Model",
+         "hints": [],
+         "ref": "node_35.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_39.ht",
+         "title": "Add Gases to the Model",
+         "hints": [],
+         "ref": "node_39.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_41.sd",
+         "title": "Draw the greenhouse effect",
+         "hints": [],
+         "ref": "node_41.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_46.ht",
+         "title": "What can we do?",
+         "hints": [],
+         "ref": "node_46.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_47.ht",
+         "title": "Research Introduction",
+         "hints": [],
+         "ref": "node_47.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_54.ht",
+         "title": "How to send your letter",
+         "hints": [],
+         "ref": "node_54.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_57.ou",
+         "title": "What can you do every day?",
+         "hints": [],
+         "ref": "node_57.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_59.ou",
+         "title": "More about electric cars",
+         "hints": [],
+         "ref": "node_59.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_60.ou",
+         "title": "More about Hybrid Cars",
+         "hints": [],
+         "ref": "node_60.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_61.ou",
+         "title": "More about Hydrogen",
+         "hints": [],
+         "ref": "node_61.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "MWNode",
+         "identifier": "node_66.mw",
+         "title": "Hydrogen Explosion (MW)",
+         "hints": [],
+         "ref": "node_66.mw",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "simulation"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_37.ch",
+         "title": "Check your understanding",
+         "hints": [],
+         "ref": "node_37.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_68.ch",
+         "title": "Check your understanding",
+         "hints": [],
+         "ref": "node_68.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_69.ib",
+         "title": "Add evidence to your basket",
+         "hints": [],
+         "ref": "node_69.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_70.ib",
+         "title": "Add new evidence to your basket",
+         "hints": [],
+         "ref": "node_70.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_71.txt",
+         "title": "Add new evidence to your basket",
+         "hints": [],
+         "ref": "node_71.txt",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_38.ht",
+         "title": "The Energy Balance",
+         "hints": [],
+         "ref": "node_38.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_67.al",
+         "title": "Predict the effect of adding CO₂?",
+         "hints": [],
+         "ref": "node_67.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_40.al",
+         "title": "What is the effect of CO₂?",
+         "hints": [],
+         "ref": "node_40.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_73.eb",
+         "title": "Suggest how to decrease CO₂ production",
+         "hints": [],
+         "ref": "node_73.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_9.ht",
+         "title": "Chemical reactions are like making a bicycle",
+         "hints": [],
+         "ref": "node_9.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_74.ht",
+         "title": "Fossil fuels are hydrocarbons",
+         "hints": [],
+         "ref": "node_74.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_75.ht",
+         "title": "Reactants combine in specific ratios 1",
+         "hints": [],
+         "ref": "node_75.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_76.sd",
+         "title": "Combust methane!",
+         "hints": [],
+         "ref": "node_76.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_77.ch",
+         "title": "Checkpoint 2",
+         "hints": [],
+         "ref": "node_77.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_79.ch",
+         "title": "Make more bicycles",
+         "hints": [],
+         "ref": "node_79.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_80.sd",
+         "title": "Combust ethane!",
+         "hints": [],
+         "ref": "node_80.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_20.ib",
+         "title": "Add evidence to your basket",
+         "hints": [],
+         "ref": "node_20.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "FillinNode",
+         "identifier": "node_82.fi",
+         "title": "Complete the balanced chemical equation",
+         "hints": [],
+         "ref": "node_82.fi",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "fillblank"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_85.or",
+         "title": "How to decrease CO₂ production",
+         "hints": [],
+         "ref": "node_85.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_28.ht",
+         "title": "Hydrogen Cars?",
+         "hints": [],
+         "ref": "node_28.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_24.or",
+         "title": "Why hydrogen?",
+         "hints": [],
+         "ref": "node_24.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_86.ht",
+         "title": "Renewable energy sources",
+         "hints": [],
+         "ref": "node_86.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_87.ib",
+         "title": "Add evidence to your basket",
+         "hints": [],
+         "ref": "node_87.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_88.ib",
+         "title": "Add evidence to your basket",
+         "hints": [],
+         "ref": "node_88.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_89.al",
+         "title": "Revisit Ideas",
+         "hints": [],
+         "ref": "node_89.al",
+         "previousWorkNodeIds": [
+            "node_1.al"
+         ],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_3.ht",
+         "title": "Conduct some research",
+         "hints": [],
+         "ref": "node_3.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_90.or",
+         "title": "Write your letter to Congress",
+         "hints": [],
+         "ref": "node_90.or",
+         "previousWorkNodeIds": [
+            "node_84.or",
+            "node_83.or",
+            "node_85.or"
+         ],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_83.or",
+         "title": "How to decrease CO₂ production",
+         "hints": [],
+         "ref": "node_83.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_91.al",
+         "title": "Global Climate",
+         "hints": [],
+         "ref": "node_91.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_93.sd",
+         "title": "Combust ethane! (improved)",
+         "hints": [],
+         "ref": "node_93.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_92.sd",
+         "title": "Combust methane! (improved)",
+         "hints": [],
+         "ref": "node_92.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      }
+   ],
+   "sequences": [
+      {
+         "type": "sequence",
+         "identifier": "master",
+         "title": "master",
+         "view": "",
+         "refs": [
+            "seq_0",
+            "seq_3",
+            "seq_1",
+            "seq_2",
+            "seq_4",
+            "seq_5",
+            "seq_6"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_0",
+         "title": "What Causes Climate Change?",
+         "view": "",
+         "refs": [
+            "node_0.ht",
+            "node_1.al",
+            "node_2.ht",
+            "node_89.al",
+            "node_4.ht",
+            "node_69.ib"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_1",
+         "title": "Human Contribution",
+         "view": "",
+         "refs": [
+            "node_5.ht",
+            "node_6.al",
+            "node_7.ht",
+            "node_74.ht",
+            "node_91.al",
+            "node_9.ht",
+            "node_75.ht",
+            "node_20.ib",
+            "node_8.al",
+            "node_76.sd",
+            "node_10.al",
+            "node_77.ch",
+            "node_16.ht",
+            "node_79.ch",
+            "node_80.sd",
+            "node_17.al",
+            "node_82.fi"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_2",
+         "title": "Other Chemical Reactions",
+         "view": "",
+         "refs": [
+            "node_21.ht",
+            "node_22.al",
+            "node_28.ht",
+            "node_24.or",
+            "node_23.ht",
+            "node_87.ib",
+            "node_66.mw",
+            "node_26.al",
+            "node_31.ht",
+            "node_83.or",
+            "node_86.ht",
+            "node_88.ib",
+            "node_73.eb",
+            "node_85.or"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_4",
+         "title": "Write Your Congressperson",
+         "view": "",
+         "refs": [
+            "node_46.ht",
+            "node_47.ht",
+            "node_3.ht",
+            "node_90.or",
+            "node_54.ht"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_5",
+         "title": "Extra for experts",
+         "view": "",
+         "refs": [
+            "node_57.ou",
+            "node_59.ou",
+            "node_60.ou",
+            "node_61.ou"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_3",
+         "title": "Greenhouse Investigation",
+         "view": "",
+         "refs": [
+            "node_33.ht",
+            "node_35.ht",
+            "node_37.ch",
+            "node_38.ht",
+            "node_70.ib",
+            "node_67.al",
+            "node_39.ht",
+            "node_68.ch",
+            "node_40.al",
+            "node_41.sd",
+            "node_71.txt"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_6",
+         "title": "Your improved drawings",
+         "view": "normal",
+         "refs": [
+            "node_92.sd",
+            "node_93.sd"
+         ]
+      }
+   ],
+   "startPoint": "master",
+   "navMode": null,
+   "theme": null
+}

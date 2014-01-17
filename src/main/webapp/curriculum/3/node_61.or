@@ -1,0 +1,25 @@
+{
+   "assessmentItem":{
+      "adaptive":false,
+      "identifier":"OpenResponse",
+      "interaction":{
+         "expectedLines":"5",
+         "hasInlineFeedback":false,
+         "placeholderText":"",
+         "prompt":"[Original]Based on the feedback you received from your teacher/peers, <u>revise</u> your earlier explanation about how convection currents work.\u000a<br><br>\u000a[Revised Candidate]You are now experts in critiquing evidence in explanations.  Based on your experience and the feedback you received, <u>revise</u> your earlier explanation about how convection currents work.",
+         "responseIdentifier":"OR"
+      },
+      "responseDeclaration":{
+         "baseType":"string",
+         "cardinality":"single",
+         "identifier":"OR"
+      },
+      "timeDependent":false
+   },
+   "isRichTextEditorAllowed":false,
+   "starterSentence":{
+      "display":"0",
+      "sentence":""
+   },
+   "type":"OpenResponse"
+}

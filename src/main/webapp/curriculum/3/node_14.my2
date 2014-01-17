@@ -1,0 +1,46 @@
+{
+   "type": "mysystem2",
+   "prompt": "Make a MySystem to show how ENERGY is involved in plate tectonics.<br><br>Make sure your diagram shows:<br><ul><li>where the energy comes from<li>HOW the energy moves<li>where the energy goes</li></ul><br><b>Make sure you label the arrows and describe how the energy is flowing between objects.</b>",
+   "modules": [
+      {
+         "uuid": "7a459016-cbdf-49bb-95a3-b2bfa1ae7f6a",
+         "name": "Core",
+         "image": "http://wise4.berkeley.edu/curriculum/1080/assets/Core80.gif"
+      },
+      {
+         "uuid": "ef425f89-cfad-4e4b-9edc-313ab199665a",
+         "image": "http://wise4.berkeley.edu/curriculum/1080/assets/lmantle80.gif",
+         "name": "Lower Mantle"
+      },
+      {
+         "uuid": "eae664a1-2521-492b-97fa-a5fe676b0dd9",
+         "image": "http://wise4.berkeley.edu/curriculum/1080/assets/umantle80.gif",
+         "name": "Upper Mantle"
+      },
+      {
+         "uuid": "e73e3de6-cf55-4a83-a890-e44208ca6801",
+         "image": "http://wise4.berkeley.edu/curriculum/1080/assets/CCrust.gif",
+         "name": "Continental Crust"
+      },
+      {
+         "uuid": "1e972888-6ff1-49ec-be1f-0d5e996462c6",
+         "image": "http://wise4.berkeley.edu/curriculum/1080/assets/OCrust.gif",
+         "name": "Oceanic Crust"
+      }
+   ],
+   "energy_types": [
+      {
+         "label": "heat",
+         "color": "#E97F02",
+         "uuid": "70ef1e05-db8f-4aee-a7a2-7d6c7499736b"
+      }
+   ],
+   "diagram_rules": [
+      {
+         "comparison": "exactly",
+         "type": "Core",
+         "number": "1",
+         "suggestion": "Where is the energy coming from?"
+      }
+   ]
+}

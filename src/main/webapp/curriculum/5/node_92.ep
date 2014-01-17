@@ -1,0 +1,7 @@
+{
+   "levelString": "M|$testMission|$Green Boss Level 1|$Launching Fuzzies can help us his those switches hidden behind the nebulas.  The purple nebulas will hurt our ships but Fuzzies have special shields that protect them|$Navigate your ship to an open portal.|$12|2|0|2|0|0|0|$|$|$7|$P|*15|10|*1|1|*0|*0|*TR:1,1|*MO;pod;1;2;1;0|MO;rad;1;5;0;2|MO;rad;1;5;1;28|MO;rad;1;5;2;28|MO;rad;1;5;4;28|MO;rad;1;5;5;8|MO;goal;1;7;1;|MO;rad;1;9;0;2|MO;rad;1;9;1;28|MO;rad;1;9;2;28|MO;rad;1;9;4;28|MO;rad;1;9;5;8|MO;rad;1;0;6;6|MO;rad;1;1;6;46|MO;rad;1;2;6;4|MO;rad;1;12;6;6|MO;rad;1;13;6;46|MO;rad;1;14;6;4|MO;spawn;1;1;1;|MO;neb;1;2;7;|MO;neb;1;12;7;|MO;rad;1;0;8;6|MO;rad;1;1;8;46|MO;rad;1;2;8;4|MO;rad;1;12;8;6|MO;rad;1;13;8;46|MO;rad;1;14;8;4|MO;switch;1;1;7;1|MO;switch;1;13;7;1|MO;pod;1;4;1;0|MO;rad;1;5;3;28|MO;rad;1;9;3;28|*|*|*|$AP|^AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|$0|$0|$100|$|$0|$0|$1|$AP|^|$1|$0|$0|$1|$1|$1|$1|$1|$1|$1|$1",
+   "excelExportStringTemplate": "{response}",
+   "customUri": "",
+   "mode": "mission",
+   "type": "Epigame"
+}
