@@ -453,7 +453,6 @@ View.prototype.retrieveAnnotations = function() {
 		var thisView = args[0];
 		thisView.setAnnotations(Annotations.prototype.parseDataJSONString(text));
 		eventManager.fire("retrieveAnnotationsCompleted");
-		thisView.getFlags();
 	};
 	
 	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam('getAnnotationsUrl'), null, getAnnotationsCallback, [this]);

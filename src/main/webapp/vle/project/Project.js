@@ -1,6 +1,6 @@
 /* Modular Project Object */
-function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectContent){
-	return function(content, cbu, ll, view, totalProjectContent){
+function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectContent, loadStepI18NFiles){
+	return function(content, cbu, ll, view, totalProjectContent, loadStepI18NFiles){
 		var content = content,
 		contentBaseUrl = cbu,
 		lazyLoading = ll,
@@ -22,6 +22,7 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 		constraints = []
 		usedNodeTypes = []
 		globalTagMaps = [];
+		loadStepI18NFiles = loadStepI18NFiles;
 
 		/* When parsing a minified project, looks up and returns each node's content
 		 * based on the given id.*/
@@ -67,19 +68,21 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 				if(usedNodeTypes.indexOf(currNode.type) == -1) {
 					//add current node type to our array of node types if it is not already in the array
 					usedNodeTypes.push(currNode.type);
-					var nodeConstructor = NodeFactory.nodeConstructors[currNode.type];
-					if (nodeConstructor != null) {
-						var nodePrototype = nodeConstructor.prototype;
-						// also fetch i18n files
-						if (nodePrototype.i18nEnabled) {		
-							// check to see if we've already fetched i18n files for this node type
-							if (!view.i18n.supportedLocales[currNode.type]) {
-								view.i18n.supportedLocales[currNode.type] = nodePrototype.supportedLocales;
-								view.retrieveLocales(currNode.type,view.config.getConfigParam("wiseBaseURL")+"/"+nodePrototype.i18nPath);								
-							} 
-						}							
+					
+					if(loadStepI18NFiles) {
+						var nodeConstructor = NodeFactory.nodeConstructors[currNode.type];
+						if (nodeConstructor != null) {
+							var nodePrototype = nodeConstructor.prototype;
+							// also fetch i18n files
+							if (nodePrototype.i18nEnabled) {		
+								// check to see if we've already fetched i18n files for this node type
+								if (!view.i18n.supportedLocales[currNode.type]) {
+									view.i18n.supportedLocales[currNode.type] = nodePrototype.supportedLocales;
+									view.retrieveLocales(currNode.type,nodePrototype.i18nPath);								
+								} 
+							}							
+						}
 					}
-
 				}
 				var thisNode = NodeFactory.createNode(currNode, view);
 				if(thisNode == null) {
@@ -2645,7 +2648,7 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 			/* get the global tag maps */
 			getGlobalTagMaps:function() {return getGlobalTagMaps();}
 		};
-	}(content, contentBaseUrl, lazyLoading, view, totalProjectContent);
+	}(content, contentBaseUrl, lazyLoading, view, totalProjectContent, loadStepI18NFiles);
 };
 
 //used to notify scriptloader that this script has finished loading
