@@ -1678,11 +1678,19 @@ Table.prototype.getOptions = function(tableData, graphOptions) {
 	if (typeof this.content.graphOptions.graphType !== "undefined" && this.content.graphOptions.graphType == "scatterPlotbySeries"){
 		var dataInGoogleFormat = this.getDataInGoogleFormat(tableData, graphOptions);
 		var gdata = this.getGoogleDataTableForSeries(dataInGoogleFormat, graphOptions);
+		// since google appears to change its keys in this data structure we need to find the right data manually
+		var gdataH = {};
+		for (var key in gdata){
+			if (gdata[key] !== null && gdata[key].length > 0 && typeof gdata[key][0] !== "undefined" && typeof gdata[key][0]["labels"] !== "undefined"){
+				gdataH = gdata[key];
+				break;
+			}
+		}
 		var series = [];
 		if (typeof this.content.graphOptions.seriesLabels !== "undefined"  && this.content.graphOptions.seriesLabels.length > 0){
 			// loop through column headers
-			for (var h = 1; h < gdata.H.length; h++){
-				var hvalue = gdata.H[h].label;
+			for (var h = 1; h < gdataH.length; h++){
+				var hvalue = gdataH[h].label;
 				if (cTitle.length > 0) hvalue = hvalue.replace(cTitle + " = ","");
 				if (pTitle.length > 0) hvalue = hvalue.replace(pTitle + " = ","");
 				var lindex = this.content.graphOptions.seriesLabels.indexOf(hvalue);
@@ -1698,7 +1706,7 @@ Table.prototype.getOptions = function(tableData, graphOptions) {
 		} else {
 			var clevels = {};
 			var plevels = {};
-			for (var h = 1; h < gdata.H.length; h++){
+			for (var h = 1; h < gdataH.length; h++){
 				// do we have multiple series, are they by color pointsize or both?
 				var seriesObj = {};
 				if (cTitle.length > 0 && pTitle.length == 0){
@@ -1706,7 +1714,7 @@ Table.prototype.getOptions = function(tableData, graphOptions) {
 				} else if (cTitle.length == 0 && pTitle.length > 0){
 					seriesObj = {'color':"#0000ff", 'pointSize':5*h}; 
 				} else if (cTitle.length > 0 && pTitle.length > 0){
-					var hvalue = gdata.H[h].label;
+					var hvalue = gdataH[h].label;
 					hvalue = hvalue.replace(cTitle + " = ","");
 					hvalue = hvalue.replace(pTitle + " = ","");
 					vals = hvalue.split(" and ");
@@ -2424,6 +2432,9 @@ Table.prototype.processTagMaps = function() {
 								this.states[this.states.length-1].timestamp < bstate.timestamp
 							)
 						){
+						var response = "";
+						// even if we are over-riding a previous state we should keep the most recent written response.
+						if (this.states.length > 0) response = this.states[this.states.length-1].response;
 						
 						var ptableData = bstate.response.tableData;
 						// must copy all values in table so that we don't change them when we go back to box2d
@@ -2579,7 +2590,7 @@ Table.prototype.processTagMaps = function() {
 						var tableState = {
 							"graphOptions":{},
 							"graphRendered":false,
-							"response":"",
+							"response":response,
 							"tableData":tableData,
 							"tableOptions":{
 								"numColumns":tableData.length,
