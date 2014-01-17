@@ -163,7 +163,7 @@ View.prototype.retrieveLocale = function(locale,componentName,localePath) {
 		// trying to load locale for a node, does not need to be sync.
 		// get localePath
 		//localePath = "node/"
-		localePath = localePath + "i18n_" + locale + ".json";
+		localePath = wiseBaseUrl + "/" + localePath + "i18n_" + locale + ".json";
 	}
 	$.ajax({"url":localePath,
 		async:isAsync,

@@ -587,7 +587,7 @@ View.prototype.onProjectLoad = function(){
 
 View.prototype.retrieveThemeLocales = function(){
 	if('theme' in this){
-		this.retrieveLocales("theme",view.config.getConfigParam("wiseBaseURL")+"/vle/themes/" + this.theme + "/i18n/");
+		this.retrieveLocales("theme","vle/themes/" + this.theme + "/i18n/");
 	} else {
 		this.onThemeLoad();
 	}
