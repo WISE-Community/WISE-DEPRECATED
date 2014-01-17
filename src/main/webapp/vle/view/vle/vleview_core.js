@@ -923,10 +923,10 @@ View.prototype.renderNode = function(position){
 	this.getState().setCurrentNodeVisit(nodeToVisit);
 	nodeToVisit.render(null, studentWork, status.value);
 	
+	this.eventManager.fire('renderNodeCompleted', this.currentPosition);
+	
 	//update the active tag map constraints to see if any have been satisfied and we need to remove any
 	this.updateActiveTagMapConstraints();
-	
-	this.eventManager.fire('renderNodeCompleted', this.currentPosition);
 };
 
 /**
