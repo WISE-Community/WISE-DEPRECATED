@@ -2,7 +2,7 @@ EpigameNode.prototype = new Node();
 EpigameNode.prototype.constructor = EpigameNode;
 EpigameNode.prototype.parent = Node.prototype;
 EpigameNode.prototype.i18nEnabled = true;
-EpigameNode.prototype.i18nPath = "vle/node/epigame/i18n/";
+EpigameNode.prototype.i18nPath = "/vlewrapper/vle/node/epigame/i18n/";
 EpigameNode.prototype.supportedLocales = {
 	"en_US":"en_US"	
 };
@@ -48,11 +48,18 @@ EpigameNode.specialStatusValues = [
 EpigameNode.prototype.getQuizData = function(customURL) {
 	var content = null;
 	
+//	console.log("gettingQuizData with customURL: " + customURL + "Defaultquiz: " + this.defaultQuizContent);
+	
 	if (customURL && customURL != "") {
 		content = createContent(customURL);
 	} else {
-		if (!this.defaultQuizContent)
-			this.defaultQuizContent = createContent("node/epigame/adaptiveQuizData.json");
+		console.log("Looking at default quiz content");
+//		if (!this.defaultQuizContent) {
+//			this.defaultQuizContent = createContent("node/epigame/adaptiveQuizData.json");
+
+			//move quiz data to the asset location
+			this.defaultQuizContent = createContent(this.view.getConfig().getConfigParam('getContentBaseUrl')+"assets/adaptiveQuizData.json");
+//		}
 			
 		content = this.defaultQuizContent;
 	}
@@ -65,10 +72,13 @@ EpigameNode.prototype.getAdaptiveMissionData = function(customURL) {
 	if (customURL && customURL != "") {
 		content = createContent(customURL);
 	} else {
-		if (!this.defaultAdaptiveMissionContent) {
-			this.defaultAdaptiveMissionContent = createContent("node/epigame/adaptiveMissionData.json");		
-		}
-			
+//		if (!this.defaultAdaptiveMissionContent) {
+//			this.defaultAdaptiveMissionContent = createContent("node/epigame/adaptiveMissionData.json");		
+//		}
+
+		console.log("Loading:" + this.view.getConfig().getConfigParam('getContentBaseUrl')+"assets/adaptiveMissionData.json");
+		this.defaultAdaptiveMissionContent = createContent(this.view.getConfig().getConfigParam('getContentBaseUrl')+"assets/adaptiveMissionData.json");
+	
 		content = this.defaultAdaptiveMissionContent;
 	}
 	return content.getContentJSON();
@@ -145,16 +155,18 @@ EpigameNode.prototype.translateStudentWork = function(studentWork) {
 /**
  * Notify the HTML so it can save state on exit if desired.
  */
-EpigameNode.prototype.onExit = function() {
-	try {
-		//check if the content panel has been set
-		if (this.contentPanel && this.contentPanel.save) {
-			//tell the content panel to save
-			this.contentPanel.save();
-		}
-	} catch(e) {
-		
-	}
+EpigameNode.prototype.onExit = function () {
+  try {
+    //check if the content panel has been set
+    if (this.contentPanel && this.contentPanel.save) {
+      console.log(this.contentPanel);
+      console.log(this.contentPanel.save);
+      //tell the content panel to save
+      this.contentPanel.save();
+    }
+  } catch (e) {
+
+  }
 };
 
 /**
