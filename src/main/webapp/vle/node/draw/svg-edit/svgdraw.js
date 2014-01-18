@@ -551,6 +551,13 @@ SVGDRAW.prototype.hideTools = function(option){
  * Auto grade the drawing
  */
 SVGDRAW.prototype.autoGradeWork = function() {
+	// check to see if workgroup has made any changes
+	if(!svgEditor.changed && !this.node.studentWork.length){
+		// no work has been done, alert user
+		alert(this.view.getI18NString('autoGrade_noWork', 'SVGDrawNode'));
+		return;
+	}
+	
 	//create the object that will auto grade the drawing
 	var scorer = new DrawScorer();
 	
