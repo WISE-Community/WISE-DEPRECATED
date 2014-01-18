@@ -4,11 +4,12 @@
 	"isMustCompleteAllPartsBeforeExit":true,
    	"type": "Box2dModel",
 	"LAB_HEIGHT" : 560,
-	"INCLUDE_BUILDER": false,
+	"INCLUDE_BLOCKCOMP_BUILDER": false,
 	"INCLUDE_CYLINDER_BUILDER":false,
 	"INCLUDE_RECTPRISM_BUILDER":false,
 	"INCLUDE_BEAKER_BUILDER":false,
 	"ALLOW_REVISION":true,
+	"ALLOW_DUPLICATION":false,
 	"BUILDER_SHOW_SLIDER_VALUES":true,
 	"BUILDER_SLIDER_INCREMENTS": 0.1,
 	"BUILDER_RANDOMIZE_INITIAL_SLIDER_VALUES":false,
@@ -452,6 +453,7 @@
 	{
 		"Water":
 		{
+			"name":"Water",
 			"display_name":"Water",
 			"density":1.0,
 			"fill_color":"rgba(180,180,255,0.4)",
@@ -461,7 +463,8 @@
 		},
 		"OliveOil" :
 		{
-			"display_name":"Oil",
+			"name":"OliveOil",
+			"display_name":"Olive Oil",
 			"density":0.8,
 			"fill_color":"rgba(200,225,140,0.4)",
 			"stroke_color": "rgba(200,225,140,0.8)",
@@ -469,7 +472,8 @@
 			"stroke_color_container":"rgba(100,125,70,1.0)"
 		},
 		"CitricAcid": {
-         "display_name": "Acid",
+		 "name":"CitricAcid",
+         "display_name": "Citric Acid",
          "density": 1.7,
          "fill_color": "rgba(250,250,140,0.4)",
          "stroke_color": "rgba(220,220,140,0.8)",

@@ -50,6 +50,7 @@ Box2D.inherit(Myb2BuoyancyController, Box2D.Dynamics.Controllers.b2Controller);
       for (var i = this.m_bodyList; i; i = i.nextBody) {
          var body = i.body;
          body.percentSubmergedChangedFlag = false;
+         body.percentSubmerged = 0;
          //if (body.IsAwake() == false) {
            // continue;
         // }
@@ -58,6 +59,7 @@ Box2D.inherit(Myb2BuoyancyController, Box2D.Dynamics.Controllers.b2Controller);
          var massc = new b2Vec2();
          var area = 0.0;
          var mass = 0.0;
+         var total_area = 0;
          for (var fixture = body.GetFixtureList(); fixture; fixture = fixture.GetNext()) {
             var sc = new b2Vec2();
             var sarea = fixture.GetShape().ComputeSubmergedArea(this.normal, -1*(this.y + this.offset), body.GetTransform(), sc);
@@ -67,6 +69,7 @@ Box2D.inherit(Myb2BuoyancyController, Box2D.Dynamics.Controllers.b2Controller);
                fixture.percentSubmerged = sarea/fixture.area;
                if (typeof body.percentSubmerged2d !== "undefined") body.percentSubmerged2d[fixture.x_index][fixture.y_index] = fixture.percentSubmerged;
             }
+            total_area += fixture.area;
            
             area += sarea;
             areac.x += sarea * sc.x;
@@ -91,7 +94,7 @@ Box2D.inherit(Myb2BuoyancyController, Box2D.Dynamics.Controllers.b2Controller);
             // adjust offset based on the amount of object submerged
             if (this.surfaceArea > 0) { offset -= sarea * shapeDensity / this.surfaceArea;}
          }
-         
+         body.percentSubmerged = area/total_area;
          areac.x /= area;
          areac.y /= area;
          massc.x /= mass;

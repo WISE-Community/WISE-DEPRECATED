@@ -664,7 +664,8 @@
 		savedObject.liquid_volume = 0;
 		savedObject.liquid_perc_volume = 0;
 		savedObject.is_deletable = true;
-		savedObject.is_revisable = true;
+		if (GLOBAL_PARAMETERS.ALLOW_REVISION){ savedObject.is_revisable = true; } else { savedObject.is_revisable = false; }
+		if (GLOBAL_PARAMETERS.ALLOW_DUPLICATION){ savedObject.is_duplicable = true; } else { savedObject.is_duplicable = false; }
 		
 		return savedObject;
 	}

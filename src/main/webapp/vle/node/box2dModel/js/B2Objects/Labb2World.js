@@ -43,7 +43,7 @@
 		floorFixture.filter.categoryBits = 2;
 		floorFixture.filter.maskBits = 3;
 		floorFixture.shape = new b2PolygonShape;
-		floorFixture.shape.SetAsBox(this.width_units / 2, this.FLOOR_HEIGHT_UNITS / 2 );
+		floorFixture.shape.SetAsBox(this.width_units / 2, 1.0 / 2 );
 		var floorBodyDef = new b2BodyDef;
 		floorBodyDef.type = b2Body.b2_staticBody;
 		floorBodyDef.position.x = this.position_x + this.width_units / 2;
@@ -122,8 +122,7 @@
 	}
 
 	/** Place an object directly in the world */
-	p.createObjectInWorld = function (savedObject, x, y, rotation, type, overrideEvent)
-	{
+	p.createObjectInWorld = function (savedObject, x, y, rotation, type, overrideEvent, premade_name){
 		// when loading previous models, may load a deleted model, we don't make it but we do add to the objects made array
 		if (typeof savedObject.is_deleted === "undefined" || !savedObject.is_deleted){
 			var object_count = 0;
@@ -143,7 +142,30 @@
 				compShape = new RectPrismCompShape(GLOBAL_PARAMETERS.SCALE, GLOBAL_PARAMETERS.SCALE, GLOBAL_PARAMETERS.SCALE, 5, savedObject);
 			}
 
-			savedObject.id = "Obj-" + GLOBAL_PARAMETERS.objects_made.length;
+			// Give a new name only if this object doesn't already have a name
+			if (typeof savedObject.id === "undefined"){
+				if (typeof premade_name !== "undefined" && premade_name.length > 0) {
+					savedObject.id = premade_name;
+					savedObject.premade_name = premade_name;
+				} else {
+					GLOBAL_PARAMETERS.custom_objects_made_count++;
+					savedObject.id = "Obj-" + (GLOBAL_PARAMETERS.custom_objects_made_count);
+				}
+			}
+			GLOBAL_PARAMETERS.total_objects_made++;
+
+			/*
+			if (typeof savedObject.id === "undefined" || (typeof premade_name !== "undefined" && premade_name.length > 0)){
+				savedObject.id = "Obj-" + (GLOBAL_PARAMETERS.total_objects_made+1);
+				GLOBAL_PARAMETERS.total_objects_made++;
+				savedObject.premade_name = typeof premade_name !== "undefined" ? premade_name : ""; 
+			} else {
+				// in the case where we are picking up an old id, extract the number and make it the total_objects_made
+				var total_objects_made = parseInt(savedObject.id.substr(4))
+				GLOBAL_PARAMETERS.total_objects_made = Math.max(GLOBAL_PARAMETERS.total_objects_made+1, total_objects_made);
+			}
+			*/
+			 
 
 			// draw to imgstage
 			if (typeof compShape.shape !== "undefined" && compShape.shape != null){
@@ -179,11 +201,13 @@
 				actor.onPress = this.actorPressHandler.bind(this);
 			}
 			GLOBAL_PARAMETERS.objects_made.push(savedObject);
-			if (typeof overrideEvent === "undefined" || !overrideEvent) eventManager.fire('make-model',[actor.skin.savedObject], box2dModel);
+			if (typeof overrideEvent === "undefined" || !overrideEvent) 
+				eventManager.fire('make-model',[actor.skin.savedObject], box2dModel);
+			return actor;
 		} else {
 			GLOBAL_PARAMETERS.objects_made.push(savedObject);
-		}
-		return actor;
+			return null;
+		}		
 	}	
 
 	/** Place an interactive beaker in the testing world */
@@ -309,7 +333,7 @@
 	p.addActorToShelf = function(actor, x, y){
 		// if the y position is negative will be placed on shelf in open space
 		if (y < 0){
-			var running_left_x = 0;
+			var running_left_x = GLOBAL_PARAMETERS.SCALE;
 			var placed = false;
 			var o = null;
 			for (var i = 0; i < this.objects_on_shelf.length; i++){
@@ -813,20 +837,37 @@
 		// do we need to add html?
 		var b_id = "library-button-" + o.id;
 		var htmlText;
-		if (o.skin.savedObject.is_deletable){
-			if (o.skin.savedObject.is_revisable){
-				htmlText = '<div id ="' + b_id + '" style="font-size:14px; position:absolute"><input type="submit"/><ul><li><a href="#">Duplicate</a></li><li><a href="#">Delete</a></li><li><a href="#">Revise</a></li></ul></div>';
+		if (o.skin.savedObject.is_deletable && GLOBAL_PARAMETERS.INCLUDE_BUILDER){
+			if (o.skin.savedObject.is_revisable && GLOBAL_PARAMETERS.INCLUDE_BUILDER){
+				if (o.skin.savedObject.is_duplicable && GLOBAL_PARAMETERS.INCLUDE_BUILDER){
+					htmlText = '<div id ="' + b_id + '" style="font-size:14px; position:absolute"><input type="submit"/><ul><li><a href="#">Duplicate</a></li><li><a href="#">Delete</a></li><li><a href="#">Revise</a></li></ul></div>';
+				} else {
+					htmlText = '<div id ="' + b_id + '" style="font-size:14px; position:absolute"><input type="submit"/><ul><li><a href="#">Delete</a></li><li><a href="#">Revise</a></li></ul></div>';
+				}
 			} else {
-				htmlText = '<div id ="' + b_id + '" style="font-size:14px; position:absolute"><input type="submit"/><ul><li><a href="#">Duplicate</a></li><li><a href="#">Delete</a></li></ul></div>';
+				if (o.skin.savedObject.is_duplicable && GLOBAL_PARAMETERS.INCLUDE_BUILDER){
+					htmlText = '<div id ="' + b_id + '" style="font-size:14px; position:absolute"><input type="submit"/><ul><li><a href="#">Duplicate</a></li><li><a href="#">Delete</a></li></ul></div>';
+				} else {
+					htmlText = '<div id ="' + b_id + '" style="font-size:14px; position:absolute"><input type="submit"/><ul><li><a href="#">Delete</a></li></ul></div>';
+				}
 			}
 		} else {
-			if (o.skin.savedObject.is_revisable){
-				htmlText = '<div id ="' + b_id + '" style="font-size:14px; position:absolute"><input type="submit"/><ul><li><a href="#">Duplicate</a></li><li><a href="#">Revise</a></li></ul></div>';	
+			if (o.skin.savedObject.is_revisable && GLOBAL_PARAMETERS.INCLUDE_BUILDER){
+				if (o.skin.savedObject.is_duplicable && GLOBAL_PARAMETERS.INCLUDE_BUILDER){
+					htmlText = '<div id ="' + b_id + '" style="font-size:14px; position:absolute"><input type="submit"/><ul><li><a href="#">Duplicate</a></li><li><a href="#">Revise</a></li></ul></div>';	
+				} else {
+					htmlText = '<div id ="' + b_id + '" style="font-size:14px; position:absolute"><input type="submit"/><ul><li><a href="#">Revise</a></li></ul></div>';	
+				}
 			} else {
-				htmlText = '<div id ="' + b_id + '" style="font-size:14px; position:absolute"><input type="submit"/><ul><li><a href="#">Duplicate</a></li></ul></div>';			
+				if (o.skin.savedObject.is_duplicable && GLOBAL_PARAMETERS.INCLUDE_BUILDER){
+					htmlText = '<div id ="' + b_id + '" style="font-size:14px; position:absolute"><input type="submit"/><ul><li><a href="#">Duplicate</a></li></ul></div>';			
+				} else {
+					htmlText = '';
+				}
 			}
 		}
 
+		//if (htmlText.length > 0){
 		$('#library-button-holder').append(htmlText);id ="' + b_id + '"
 		$('#library-button-holder').find("ul").menu().hide();
 			var htmlElement = $("#" + b_id).find("input").button({
@@ -899,6 +940,7 @@
 		p.duplicateObject = function (o){
 			// always make duplicates deletable
 			o.skin.savedObject.is_deletable = true;
+			o.skin.savedObject.is_duplicable = false;
 			var actor = this.createObjectInWorld(this.duplicateSavedObject(o.skin.savedObject), 0, -1, 0, "dynamic", true);
 			// since we are deleting an actor we may be opening a spot for a new actor
 			if(typeof builder !== "undefined" && builder != null ){

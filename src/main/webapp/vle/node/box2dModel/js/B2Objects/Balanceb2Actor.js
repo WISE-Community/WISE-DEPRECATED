@@ -230,6 +230,7 @@
 		base.volume += 0.5 * (this.stem_width_units + this.base_width_units) * (this.base_height_units - this.base_height_edge_units) * this.base_width_units;
 		// rectangle underneath
 		base.volume += this.base_width_units * this.base_height_edge_units * this.base_width_units;
+		base.percentSubmerged = 0;
 		base.SetFixedRotation(true);
 		this.baseFixture.materialSpaces = base.volume;
 		this.baseFixture.protectedSpaces = 0;
@@ -249,6 +250,7 @@
 		this.leftBeamFixture = beam.CreateFixture(this.leftBeamFixtureDef);
 		this.rightBeamFixture = beam.CreateFixture(this.rightBeamFixtureDef);
 		beam.volume = 2 * ((this.beam_length_x_units * this.beam_height_units - this.beam_length_x_units * this.beam_height_edge_units) * this.beam_height_units );
+		beam.percentSubmerged = 0;
 		this.leftBeamFixture.materialSpaces = beam.volume/2;
 		this.leftBeamFixture.protectedSpaces = 0;
 		this.leftBeamFixture.interiorSpaces = 0;
@@ -276,7 +278,7 @@
 		this.leftPanFixtureR.area = this.pan_height_units * this.pan_width_units/2;
 		this.leftPanFixtureR.materialSpaces = this.leftPanFixtureR.area * this.pan_width_units; this.leftPanFixtureR.protectedSpaces = 0; this.leftPanFixtureR.interiorSpaces = 0;
 		leftPan.volume = this.leftPanFixtureL.materialSpaces + this.leftPanFixtureR.materialSpaces;
-
+		leftPan.percentSubmerged = 0;
 		this.leftPanJointDef.Initialize(beam, leftPan, new b2Vec2(position_x - this.beam_length_x_units, position_y - this.stem_height_units + this.beam_length_y_units));
 		this.leftPanJoint = this.b2world.CreateJoint (this.leftPanJointDef);
 		
@@ -293,7 +295,7 @@
 		this.rightPanFixtureR.area = this.pan_height_units * this.pan_width_units/2;
 		this.rightPanFixtureR.materialSpaces = this.rightPanFixtureR.area * this.pan_width_units; this.rightPanFixtureR.protectedSpaces = 0; this.rightPanFixtureR.interiorSpaces = 0;
 		rightPan.volume = this.rightPanFixtureL.materialSpaces + this.rightPanFixtureR.materialSpaces;
-
+		rightPan.percentSubmerged = 0;
 		this.rightPanJointDef.Initialize(beam, rightPan, new b2Vec2(position_x + this.beam_length_x_units, position_y - this.stem_height_units + this.beam_length_y_units));
 		this.rightPanJoint = this.b2world.CreateJoint (this.rightPanJointDef);
 		

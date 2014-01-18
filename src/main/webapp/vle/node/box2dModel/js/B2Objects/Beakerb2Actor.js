@@ -44,7 +44,7 @@
 		this.savedObject.init_liquid_volume_perc = init_liquid_volume_perc;
 		this.savedObject.spilloff_volume_perc = spilloff_volume_perc;
 		this.savedObject.liquid_density = liquid.density;
-		this.savedObject.liquid_name = liquid.display_name;
+		this.savedObject.liquid_name = typeof liquid.name !== "undefined" ? liquid.name : liquid.display_name;
 
 		this.skin = new BeakerShape(this, width_units*GLOBAL_PARAMETERS.SCALE, height_units*GLOBAL_PARAMETERS.SCALE, depth_units*GLOBAL_PARAMETERS.SCALE, init_liquid_volume_perc, spilloff_volume_perc, showRuler, this.savedObject);
 		this.addChild(this.skin.backContainer);
@@ -169,9 +169,9 @@
 		body.GetMassData(massData);
 		massData.mass += this.liquid.density * this.liquid_volume;
 		body.SetMassData(massData);
-		
+		body.volume = this.beaker_volume;
+		body.percentSubmerged = 0;
 		this.skin.redraw(-this.controller.offset, true);
-
 		
 		this.draining = false;
 
@@ -469,6 +469,76 @@
 		for (var i = actors.length-1; i >= 0; i--){
 			if (actors[i].parent == this){
 				var i_index = this.getChildIndex(actors[i]);
+				var bodyi = typeof actors[i].body !== "undefined" ? actors[i].body : actors[i].base; 
+				for (var j = i+1; j < actors.length; j++){
+					if (actors[j].parent == this){
+						var j_index = this.getChildIndex(actors[j]);
+						var bodyj = typeof actors[j].body !== "undefined" ? actors[j].body : actors[j].base; 
+						// do the position of these two objects overlap vertically?
+						//console.log(actors[i].x - actors[i].width_px_left , "[",actors[j].x- actors[j].width_px_left, actors[j].x + actors[j].width_px_right, "] OR ", actors[i].x + actors[i].width_px_right, "[", actors[j].x - actors[j].width_px_left, actors[j].x + actors[j].width_px_right,"]");
+						// is one object completely above the other object?
+						if (actors[i].y + actors[i].height_px_below - 1 <= actors[j].y - actors[j].height_px_above){
+							// actor i is above actor j
+							if (i_index < j_index){
+								console.log("switch by yvalue, i < j", i_index, j_index);
+								this.swapChildrenAt(i_index, j_index);
+								i_index = j_index;								
+							} else {
+								continue;
+							}
+						} else if (actors[j].y + actors[j].height_px_below - 1 <= actors[i].y - actors[i].height_px_above){
+							// actor j is above actor i
+							if (j_index < i_index){
+								console.log("switch by yvalue, j < i", j_index, i_index);
+								this.swapChildrenAt(j_index, i_index);
+								j_index = i_index;								
+							} else {
+								continue;
+							}
+						} 
+						else if ( (actors[i].x - actors[i].width_px_left >= actors[j].x - actors[j].width_px_left && actors[i].x - actors[i].width_px_left <= actors[j].x + actors[j].width_px_right) || (actors[i].x + actors[i].width_px_right >= actors[j].x - actors[j].width_px_left && actors[i].x + actors[i].width_px_left <= actors[j].x + actors[j].width_px_right)){
+							// compare center of mass
+							// is object i higher than j, and therefore should have a larger display index?
+							if (bodyi.GetWorldCenter().y < bodyj.GetWorldCenter().y){
+								if (i_index < j_index){
+									console.log("switch by yvalue (overlap), i < j", i_index, j_index);
+									this.swapChildrenAt(i_index, j_index);
+									i_index = j_index;									
+								}
+							} else {
+								if (j_index < i_index){
+									console.log("switch by yvalue (overlap), j < i", j_index, i_index);
+									this.swapChildrenAt(i_index, j_index);
+									i_index = j_index;									
+								}
+							}
+						} else {
+							// these objects don't overlap, put them in order of right-most-point
+							if (actors[i].x + actors[i].width_px_right > actors[j].x + actors[j].width_px_right){
+								if (i_index < j_index){
+									console.log("switch by xvalue, i < j", i_index, j_index);
+									this.swapChildrenAt(i_index, j_index);
+									i_index = j_index;									
+								}
+							} else {
+								if (j_index < i_index){
+									console.log("switch by xvalue, j < i", j_index, i_index);
+									this.swapChildrenAt(i_index, j_index);
+									i_index = j_index;									
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	/*
+	p.sortActorsDisplayDepth = function(){
+		var actors = this.actors;
+		for (var i = actors.length-1; i >= 0; i--){
+			if (actors[i].parent == this){
+				var i_index = this.getChildIndex(actors[i]);
 				var bodyi = typeof actors[i].body !== "undefined" ? actors[i].body : (typeof actors[i].base !== "undefined" ? actors[i].base : null); 
 				for (var j = i+1; j < actors.length; j++){
 					if (actors[j].parent == this){
@@ -522,6 +592,7 @@
 			}
 		}
 	}
+	*/
 
 	/** Update skin to reflect position of b2 body on screen */
 	p.update = function ()

@@ -25,7 +25,7 @@ var imgstage;
 var builder;
 var labWorld;
 		
-function init(wiseData, previousModels, forceDensityValue, tableData){
+function init(wiseData, previousModels, forceDensityValue, tableData, custom_objects_made_count){
 	if (typeof canvas !== "undefined" && canvas != null){
 		// this means we are not working with a clear canvas
 		var ctx = canvas.getContext('2d');
@@ -40,12 +40,12 @@ function init(wiseData, previousModels, forceDensityValue, tableData){
 	GLOBAL_PARAMETERS["DEBUG"] = false;
 	GLOBAL_PARAMETERS["DEBUG_DEEP"] =false;
 	GLOBAL_PARAMETERS["LAB_HEIGHT"] =560;
-	GLOBAL_PARAMETERS["INCLUDE_BUILDER"] =false;
+	GLOBAL_PARAMETERS["INCLUDE_BLOCKCOMP_BUILDER"] =false;
 	GLOBAL_PARAMETERS["INCLUDE_CYLINDER_BUILDER"] = false;
 	GLOBAL_PARAMETERS["INCLUDE_RECTPRISM_BUILDER"] = false;
 	GLOBAL_PARAMETERS["INCLUDE_BEAKER_BUILDER"] = false;
-	GLOBAL_PARAMETERS["INCLUDE_LIBRARY"] = true;
 	GLOBAL_PARAMETERS["ALLOW_REVISION"] = true;
+	GLOBAL_PARAMETERS["ALLOW_DUPLICATION"] = false;
 	GLOBAL_PARAMETERS["BUILDER_SHOW_SLIDER_VALUES"] = true;
 	GLOBAL_PARAMETERS["BUILDER_RANDOMIZE_INITIAL_SLIDER_VALUES"] = false;
 	GLOBAL_PARAMETERS["BUILDER_SLIDER_INCREMENTS"] =1.0;	
@@ -90,6 +90,8 @@ function init(wiseData, previousModels, forceDensityValue, tableData){
 		[{"text":"Tested_on_Scale", "uneditable":true}],
 		[{"text":"Tested_on_Balance", "uneditable":true}]];
 	GLOBAL_PARAMETERS["objects_made"] = [];		
+	GLOBAL_PARAMETERS["custom_objects_made_count"] = custom_objects_made_count;
+	GLOBAL_PARAMETERS["total_objects_made"] = 0;		
 	GLOBAL_PARAMETERS["total_beakers_made"] = 0;
 	GLOBAL_PARAMETERS["total_scales_made"] = 0;
 	GLOBAL_PARAMETERS["total_balances_made"] = 0;
@@ -145,9 +147,10 @@ function init(wiseData, previousModels, forceDensityValue, tableData){
 			});
 		}
 	// can't manually change stage height, only lab height
+		GLOBAL_PARAMETERS.INCLUDE_BUILDER = GLOBAL_PARAMETERS.INCLUDE_BLOCKCOMP_BUILDER || GLOBAL_PARAMETERS.INCLUDE_CYLINDER_BUILDER || GLOBAL_PARAMETERS.INCLUDE_RECTPRISM_BUILDER; 
 		GLOBAL_PARAMETERS.STAGE_HEIGHT = GLOBAL_PARAMETERS.LAB_HEIGHT;
 		
-		if (GLOBAL_PARAMETERS.INCLUDE_BUILDER || GLOBAL_PARAMETERS.INCLUDE_RECTPRISM_BUILDER || GLOBAL_PARAMETERS.INCLUDE_CYLINDER_BUILDER || GLOBAL_PARAMETERS.INCLUDE_BEAKER_BUILDER){
+		if (GLOBAL_PARAMETERS.INCLUDE_BUILDER){
 			 GLOBAL_PARAMETERS.BUILDER_HEIGHT = GLOBAL_PARAMETERS.SCALE * 3 * 5;
 		} else {
 			 GLOBAL_PARAMETERS.BUILDER_HEIGHT = 0;
@@ -168,8 +171,6 @@ function init(wiseData, previousModels, forceDensityValue, tableData){
 		GLOBAL_PARAMETERS.MATERIAL_COUNT = GLOBAL_PARAMETERS.materials_available.length;
 				
 		GLOBAL_PARAMETERS.TESTER_HEIGHT = GLOBAL_PARAMETERS.STAGE_HEIGHT - GLOBAL_PARAMETERS.BUILDER_HEIGHT;
-		GLOBAL_PARAMETERS.ALLOW_REVISION = GLOBAL_PARAMETERS.INCLUDE_BUILDER || GLOBAL_PARAMETERS.INCLUDE_CYLINDER_BUILDER || GLOBAL_PARAMETERS.INCLUDE_RECTPRISM_BUILDER ? GLOBAL_PARAMETERS.ALLOW_REVISION : false; 
-		GLOBAL_PARAMETERS.INCLUDE_LIBRARY = !GLOBAL_PARAMETERS.INCLUDE_BUILDER && !GLOBAL_PARAMETERS.INCLUDE_CYLINDER_BUILDER && !GLOBAL_PARAMETERS.INCLUDE_RECTPRISM_BUILDER ? GLOBAL_PARAMETERS.INCLUDE_LIBRARY : true; 
 		if (typeof forceDensityValue != "undefined" && forceDensityValue > 0){
 			for (var key in GLOBAL_PARAMETERS.materials){
 				GLOBAL_PARAMETERS.materials[key].density = forceDensityValue;
@@ -178,6 +179,7 @@ function init(wiseData, previousModels, forceDensityValue, tableData){
 		if(typeof GLOBAL_PARAMETERS.materials["Pyrex"] === "undefined"){
 			GLOBAL_PARAMETERS.materials["Pyrex"] = 
 			{
+				"name":"Pyrex",
 				"display_name":"Pyrex",
 				"density":2.21,
 				"fill_colors":["rgba(127,127,127,0.4)", "rgba(200,200,200,0.4)","rgba(225,225,255,0.4)", "rgba(200,200,200,0.4)", "rgba(127,127,127,0.4)"],
@@ -196,6 +198,7 @@ function init(wiseData, previousModels, forceDensityValue, tableData){
 		if (typeof GLOBAL_PARAMETERS.liquids["Water"] === "undefined"){
 			GLOBAL_PARAMETERS.liquids["Water"] =
 			{
+				"name":"Water",
 				"display_name":"Water",
 				"density":1.0,
 				"fill_color":"rgba(180,180,255,0.4)",
@@ -239,7 +242,43 @@ function init(wiseData, previousModels, forceDensityValue, tableData){
 			}
 		//}
 		// use old table or update new one?
-		if (tableData != null){
+		var reuseTable = false;
+		//var object_ids = [];
+		
+		if (tableData != null && tableData.length > 0 && tableData[0].length > 1){
+			reuseTable = true;
+			// only use table rows corresponding to ids in previous models
+			for (var i = tableData[0].length-1; i >= 1; i--){
+				var match_found = false;
+				for (var p = 0; p < previousModels.length; p++){
+					// is there a match of this row with an undeleted model
+					if (tableData[0][i].text == previousModels[p].id && (typeof previousModels[p].is_deleted === "undefined" || !previousModels[p].is_deleted)){
+						match_found = true; break;
+					}
+				}
+				if (!match_found){
+					for (var j = 0; j < tableData.length; j++){
+						tableData[j].splice(i, 1);
+					}
+				}
+			}
+			/*
+			var p = 1;
+			for (var i = 0; i < previousModels.length; i++){
+				if ((typeof previousModels[i].is_deleted === "undefined" || !previousModels[i].is_deleted) && object_ids.indexOf(previousModels[i].id) == -1){
+					if (tableData[0].length > p && tableData[0][p].text != previousModels[i].id){
+						reuseTable = false;
+						break;
+					}
+					//object_ids.push(previousModels[i].id); 
+					p++;
+					reuseTable = true;
+				}				
+			}
+			*/
+		}
+		
+		if (reuseTable){
 			GLOBAL_PARAMETERS.tableData = tableData;
 		} else {
 			for (var i = 0; i < GLOBAL_PARAMETERS.liquids_in_world.length; i++){
@@ -252,6 +291,7 @@ function init(wiseData, previousModels, forceDensityValue, tableData){
 				GLOBAL_PARAMETERS.tableData.push([{"text":"Tested_in_"+liquid_name, "uneditable":true}]);
 			}
 		}	
+	
 		start(previousModels);
 	});
 }
@@ -267,7 +307,7 @@ function start(previousModels){
 	// setup builder
 	var labWorld_y;
 	var wall_width_units = 0.3;
-	if (GLOBAL_PARAMETERS.INCLUDE_BUILDER)
+	if (GLOBAL_PARAMETERS.INCLUDE_BLOCKCOMP_BUILDER)
 	{
 		builder = new BlockCompBuildingPanel(GLOBAL_PARAMETERS.STAGE_WIDTH, GLOBAL_PARAMETERS.BUILDER_HEIGHT, wall_width_units*GLOBAL_PARAMETERS.SCALE);
 		labWorld_y = builder.height_px;	
@@ -315,38 +355,57 @@ function start(previousModels){
 
 		labWorld.createBeakerInWorld(premade, px, py, ptype);
 	}
+	var premades_in_world_names = [];
+	for (var i = 0; i < GLOBAL_PARAMETERS.premades_in_world.length; i++){
+		premades_in_world_names.push(GLOBAL_PARAMETERS.premades_in_world[i].premade);
+	}
 
-	// make premades in world
-	if (GLOBAL_PARAMETERS.premades_available.length > 0){
-		for (var i = 0; i < GLOBAL_PARAMETERS.premades_available.length; i++){
-			var premade_in_world = {};
-			premade_in_world.premade = GLOBAL_PARAMETERS.premades_available[i];
-			premade_in_world.x = 0;
-			premade_in_world.y = -1;
-			if (GLOBAL_PARAMETERS.premades_in_world.indexOf(premade_in_world) == -1)
-				GLOBAL_PARAMETERS.premades_in_world.push(premade_in_world);
+	// standard premades become a premade in the world
+	for (var i = 0; i < GLOBAL_PARAMETERS.premades_available.length; i++){
+		var premade_in_world = {};
+		premade_in_world.premade = GLOBAL_PARAMETERS.premades_available[i];
+		premade_in_world.x = 0;
+		premade_in_world.y = -1;
+		if (premades_in_world_names.indexOf(premade_in_world.premade) == -1 && GLOBAL_PARAMETERS.premades_in_world.indexOf(premade_in_world) == -1){
+			GLOBAL_PARAMETERS.premades_in_world.push(premade_in_world);
 		}		
 	}
 	
+	var object_ids = [];
+	var premade_names = [];
+
+	// just get all premade names to be made here
 	for (i = 0; i < GLOBAL_PARAMETERS.premades_in_world.length; i++){
 		var premade = GLOBAL_PARAMETERS.premades_in_world[i];
-		if(typeof premade.premade !== "undefined" && GLOBAL_PARAMETERS.premades[premade.premade] !== "undefined"){
+		if (typeof premade.premade !== "undefined" && premade.premade.length > 0 && typeof GLOBAL_PARAMETERS.premades[premade.premade] !== "undefined" && GLOBAL_PARAMETERS.objects_made.indexOf(GLOBAL_PARAMETERS.premades[premade.premade]) == -1 && premade_names.indexOf(premade.premade) == -1){
+			premade_names.push(premade.premade);
+		}		
+	}
+
+	// custom models built on previous visits (ones not already here, must have unique id)
+	for (i = 0; i < previousModels.length; i++){
+		if (GLOBAL_PARAMETERS.objects_made.indexOf(previousModels[i]) == -1 && object_ids.indexOf(previousModels[i].id) == -1 ){
+			var premade_name = typeof previousModels[i].premade_name !== "undefined" ? previousModels[i].premade_name : "";	
+			if (premade_name.length == 0 || premade_names.indexOf(premade_name) == -1){
+				if (labWorld.createObjectInWorld(previousModels[i], 0, -1, 0, "dynamic", false) != null){ 
+					object_ids.push(previousModels[i].id);
+				}
+			}
+		}				
+	}
+
+	// create all the premade objects, make sure that this premade doesn't already exist
+	for (i = 0; i < GLOBAL_PARAMETERS.premades_in_world.length; i++){
+		var premade = GLOBAL_PARAMETERS.premades_in_world[i];
+		if (premade_names.indexOf(premade.premade) > -1){
 			var px = typeof premade.x !== "undefined" ? premade.x : 0;
 			var py = typeof premade.y !== "undefined" ? premade.y : -1; 
 			var protation = typeof premade.rotation !== "undefined" ? premade.rotation : 0; 
 			var ptype = typeof premade.type !== "undefined" ? premade.type : "dynamic"; 
-			if (GLOBAL_PARAMETERS.objects_made.indexOf(GLOBAL_PARAMETERS.premades[premade.premade]) == -1 && typeof GLOBAL_PARAMETERS.premades[premade.premade] !== "undefined")
-				labWorld.createObjectInWorld(GLOBAL_PARAMETERS.premades[premade.premade], px, py, protation, ptype);
+			labWorld.createObjectInWorld(GLOBAL_PARAMETERS.premades[premade.premade], px, py, protation, ptype, false, premade.premade);
 		} 
 	}
-
-	// custom models built on previous visits (ones not already here)
-	for (i = 0; i < previousModels.length; i++){
-		if (GLOBAL_PARAMETERS.objects_made.indexOf(previousModels[i]) == -1){
-			labWorld.createObjectInWorld(previousModels[i], 0, -1, 0, "dynamic");
-		}				
-	}
-
+	
 	createjs.Ticker.setFPS(24);
 	createjs.Ticker.addListener(window);
 }		

@@ -98,13 +98,13 @@ Box2dModelNode.prototype.parseDataJSONObj = function(stateJSONObj) {
 	 * that you will use for representing student data for this
 	 * type of step. copy and modify the file below
 	 * 
-	 * wise/src/main/webapp/vle/node/box2dModel/box2dModelState.js
+	 * vlewrapper/WebContent/vle/node/box2dModel/box2dModelState.js
 	 * 
 	 * and use the object defined in your new state.js file instead
 	 * of Box2dModelState. for example if you are creating a
 	 * quiz step type you would copy the file above to
 	 * 
-	 * wise/src/main/webapp/vle/node/quiz/quizState.js
+	 * vlewrapper/WebContent/vle/node/quiz/quizState.js
 	 * 
 	 * and in that file you would define QuizState and therefore
 	 * would change the Box2dModelState to QuizState below
