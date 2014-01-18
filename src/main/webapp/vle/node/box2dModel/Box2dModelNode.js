@@ -349,6 +349,15 @@ Box2dModelNode.prototype.getTagMapFunctionByName = function(functionName) {
 	
 	return fun;
 };
+
+/**
+ * Returns whether this step type can be special exported
+ * @return a boolean value
+ */
+Box2dModelNode.prototype.canSpecialExport = function() {
+	return true;
+};
+
 /*
  * Add this node to the node factory so the vle knows it exists.
  * TODO: rename both occurrences of Box2dModelNode
