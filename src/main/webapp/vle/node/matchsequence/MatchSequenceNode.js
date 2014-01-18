@@ -204,6 +204,94 @@ MatchSequenceNode.prototype.getBranchPathOrderValues = function() {
 	return branchPathOrder;
 };
 
+/**
+ * Return the student work in html format so it can be displayed
+ * @param work the student node state for this step
+ * @return a string containing the html that will display the student
+ * work for this step
+ */
+MatchSequenceNode.prototype.getStudentWorkHtmlView = function(work) {
+	var html = '';
+	
+	if(work != null) {
+		//get the buckets from the work
+		var buckets = work.buckets;
+		
+		if(buckets != null) {
+			//create the table that will display the buckets and choices
+			var table = $('<table></table>');
+			table.css('border', '1px solid black');
+			table.css('border-collapse', 'collapse');
+			
+			//loop through all the buckets
+			for(var x=0; x<buckets.length; x++) {
+				//get a bucket
+				var bucket = buckets[x];
+
+				//make a row for the bucket and the choices that were placed in the bucket
+				var tr = $('<tr></tr>');
+				
+				if(bucket != null) {
+					//get the bucket name
+					var bucketText = bucket.text;
+					
+					//get the choices the student put in this bucket
+					var choices = bucket.choices;
+					
+					//add the bucket name in a td
+					var bucketTextTD = $('<td><p>' + bucketText + '</p></td>');
+					bucketTextTD.css('border', '1px solid black');
+					bucketTextTD.css('vertical-align', 'top');
+					bucketTextTD.css('padding', '10');
+					tr.append(bucketTextTD);
+					
+					if(choices != null) {
+						var choiceTextForBucket = '';
+						
+						/*
+						 * loop through all the choices the student put in this bucket
+						 * and accumulate them so we can put them all in a single td
+						 */
+						for(var y=0; y<choices.length; y++) {
+							//get a choice
+							var choice = choices[y];
+							
+							if(choice != null) {
+								//get the choice text
+								var choiceText = choice.text;
+								
+								//add the choice text in a p
+								choiceTextForBucket += '<p>' + choiceText + '</p>';
+							}
+						}
+						
+						//put all the choices the student placed in the bucket into a td
+						var choiceTextTD = $('<td>' + choiceTextForBucket + '</td>');
+						choiceTextTD.css('border', '1px solid black');
+						choiceTextTD.css('vertical-align', 'top');
+						choiceTextTD.css('padding', '10');
+						tr.append(choiceTextTD);
+					}
+				}
+				
+				//add the row to the table
+				table.append(tr);
+			}
+			
+			//create a temporary div just so we can get the table html including the table tags
+			var tempDiv = $('<div></div>');
+			
+			//add the table to the div
+			tempDiv.append(table);
+			
+			//get the html inside the div which will be the table html
+			html += tempDiv.html();
+		}
+	}
+	
+	return html;
+};
+
 MatchSequenceNode.prototype.getHTMLContentTemplate = function() {
 	return createContent('node/matchsequence/matchsequence.html');
 };
