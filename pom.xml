@@ -150,9 +150,6 @@
 			    <!-- application path always starts with /-->
 			    <path>/${project.build.finalName}</path>
 			    <!-- Have Tomcat look in the file filtering folder -->
-			    <warSourceDirectory>
-			      ${project.build.directory}/${project.build.finalName}
-			    </warSourceDirectory>
 			    <systemProperties>
 			      <appserver.base>${project.build.directory}/appserver-base</appserver.base>
 			      <appserver.home>${project.build.directory}/appserver-home</appserver.home>
