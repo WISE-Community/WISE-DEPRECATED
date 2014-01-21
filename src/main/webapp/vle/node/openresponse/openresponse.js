@@ -815,38 +815,47 @@ OPENRESPONSE.prototype.render = function() {
 	}
 	
 	/*
-	 * check if we are displaying the score or feedback to the student
-	 * and that the step is not locked
+	 * check if the student has previously submitted work and received a crater
+	 * score or feedback.
 	 */
-	if(this.content.cRater && (this.content.cRater.displayCRaterScoreToStudent || this.content.cRater.displayCRaterFeedbackToStudent) && !this.isLocked()) {
-		var response = this.states[this.states.length - 1].response;
+	if(this.states.length > 0 && this.content.cRater && (this.content.cRater.displayCRaterScoreToStudent || this.content.cRater.displayCRaterFeedbackToStudent) && !this.isLocked()) {
+		//get the latest node state
+		var nodeState = this.states[this.states.length - 1];
 		
-		/*
-		 * if the student work is blank and the crater score requires the student to rewrite
-		 * their response, we will show the previous response
-		 */
-		if(response == '') {
-			var latestCRaterAnnotation = this.getLatestAnnotationByType('cRater');
+		if(nodeState != null) {
+			//get the previous student response
+			var response = nodeState.response;
 			
-			//get the value of the annotation
-			var value = latestCRaterAnnotation.value;
-			
-			if(value != null) {
-				//get the latest value
-				var latestValue = value[value.length - 1];
+			/*
+			 * if the student work is blank and the crater score requires the student to rewrite
+			 * their response, we will show the previous response
+			 */
+			if(response == '') {
+				//get the latest crater annotation if any
+				var latestCRaterAnnotation = this.getLatestAnnotationByType('cRater');
 				
-				if(latestValue != null) {
-					//get the score
-					var score = latestValue.score;
+				if(latestCRaterAnnotation != null) {
+					//get the value of the annotation
+					var value = latestCRaterAnnotation.value;
 					
-					if(score != null) {
-						//get the student action for the given score
-						var studentAction = this.getStudentAction(score);
+					if(value != null) {
+						//get the latest value
+						var latestValue = value[value.length - 1];
 						
-						if(studentAction == null) {
-							//do nothing
-						} else if(studentAction == 'rewrite') {
-							this.showPreviousWorkThatHasAnnotation(null, 'cRater');
+						if(latestValue != null) {
+							//get the score
+							var score = latestValue.score;
+							
+							if(score != null) {
+								//get the student action for the given score
+								var studentAction = this.getStudentAction(score);
+								
+								if(studentAction == null) {
+									//do nothing
+								} else if(studentAction == 'rewrite') {
+									this.showPreviousWorkThatHasAnnotation(null, 'cRater');
+								}
+							}
 						}
 					}
 				}

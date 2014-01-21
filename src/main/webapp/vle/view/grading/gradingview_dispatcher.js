@@ -8,7 +8,7 @@ View.prototype.gradingDispatcher = function(type, args, obj) {
 	} else if(type=='inappropriateFlagCheckboxClicked') {
 		obj.inappropriateFlagCheckboxClickedEventListener(args[0], args[1], args[2], args[3], args[4], args[5]);
 	} else if(type=='processUserAndClassInfoCompleted') {
-		obj.retrieveProjectMetaData();
+		obj.retrieveAnnotations();
 	} else if(type=='gradingConfigUrlReceived') {
 		obj.getGradingConfig(args[0]);
 	} else if(type=='getGradingConfigCompleted') {

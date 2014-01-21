@@ -12,10 +12,10 @@
  * you created for your new step type
  *
  * your new folder will look something like
- * wise/src/main/webapp/vle/node/<new step type>/
+ * vlewrapper/WebContent/vle/node/<new step type>/
  *
  * e.g. if you are creating a quiz step it would look something like
- * wise/src/main/webapp/vle/node/quiz/
+ * vlewrapper/WebContent/vle/node/quiz/
  * 
  * TODO: in this file, change all occurrences of the word 'Box2dModelState' to
  * 

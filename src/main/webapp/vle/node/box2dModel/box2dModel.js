@@ -12,10 +12,10 @@
  * you created for your new step type
  *
  * your new folder will look something like
- * wise/src/main/webapp/vle/node/<new step type>/
+ * vlewrapper/WebContent/vle/node/<new step type>/
  *
  * e.g. for example if you are creating a quiz step it would look something like
- * wise/src/main/webapp/vle/node/quiz/
+ * vlewrapper/WebContent/vle/node/quiz/
  * 
  * 
  * TODO: in this file, change all occurrences of the word 'Box2dModel' to the
@@ -77,7 +77,10 @@ Box2dModel.prototype.checkPreviousModelsForTags = function(tagName, functionArgs
 					//get the latest work for the node
 					var latestWork = this.view.getState().getLatestWorkByNodeId(nodeId);
 					//console.log(latestWork, latestWork.response.savedModels, result.previousModels,  result.previousModels.concat(latestWork.response.savedModels))
-					if (typeof latestWork.response !== "undefined") result.previousModels = result.previousModels.concat(latestWork.response.savedModels);					
+					if (typeof latestWork.response !== "undefined"){
+						result.previousModels = result.previousModels.concat(latestWork.response.savedModels);					
+						result.custom_objects_made_count = latestWork.response.custom_objects_made_count;
+					}
 				}
 			}
 		}		
@@ -139,14 +142,16 @@ Box2dModel.prototype.render = function() {
 	$('#promptDiv').html(this.content.prompt);
 	
 	var previousModels = [];
+	var custom_objects_made_count = 0;
 	var density = -2;
 	var tableData = null;
 	//process the tag maps if we are not in authoring mode
 	if(typeof this.view.authoringMode === "undefined" || this.view.authoringMode == null || !this.view.authoringMode) {
 		var tagMapResults = this.processTagMaps();
 		//get the result values
-		if (typeof tagMapResults.previousModels != "undefined") previousModels = tagMapResults.previousModels;
-		if (typeof tagMapResults.density != "undefined") density = tagMapResults.density;		
+		if (typeof tagMapResults.previousModels !== "undefined") previousModels = tagMapResults.previousModels;
+		if (typeof tagMapResults.custom_objects_made_count !== "undefined") custom_objects_made_count = tagMapResults.custom_objects_made_count;
+		if (typeof tagMapResults.density !== "undefined") density = tagMapResults.density;		
 	}
 
 	//load any previous responses the student submitted for this step
@@ -160,10 +165,23 @@ Box2dModel.prototype.render = function() {
 		 */
 		var latestResponse = latestState.response;
 		if (typeof latestResponse != "undefined"){
-		 	previousModels = previousModels.concat(latestResponse.savedModels);
+		 	previousModels = latestResponse.savedModels.concat(previousModels);
+		 	// remove any models with a repeat id
+		 	var model_ids = [];
+		 	for (var i = previousModels.length-1; i >= 0; i--){
+		 		var match_found = false;
+		 		for (var j = 0; j < model_ids.length; j++){
+		 			if (model_ids[j] == previousModels[i].id){
+		 				previousModels.splice(i, 1);
+		 				match_found = true;
+		 				break;
+		 			}
+		 		}
+		 		if (!match_found) model_ids.push(previousModels[i].id);
+		 	}
 		 	tableData = latestResponse.tableData.slice();
+		 	custom_objects_made_count = Math.max(custom_objects_made_count, latestResponse.custom_objects_made_count);
 		 }
-		
 		
 		//set the previous student work into the text area
 		$('#studentResponseTextArea').val(latestResponse); 
@@ -178,7 +196,7 @@ Box2dModel.prototype.render = function() {
 	}
 
 	if (typeof tester == "undefined" || tester == null){ // if we are already in this step, the following is unnecessary
-		init(box2dModel.content, previousModels, density >= 0 ? density : undefined, tableData);
+		init(box2dModel.content, previousModels, density >= 0 ? density : undefined, tableData, custom_objects_made_count);
 	}
 	//eventManager.fire("box2dInit", [{}], this);
 	//this.view.pushStudentWork(this.node.id, {});
@@ -194,6 +212,7 @@ Box2dModel.prototype.render = function() {
 Box2dModel.prototype.processTagMaps = function() {
 	
 	var previousModels = [];
+	var custom_objects_made_count = 0;
 	//the tag maps
 	var tagMaps = this.node.tagMaps;
 	//check if there are any tag maps
@@ -216,6 +235,7 @@ Box2dModel.prototype.processTagMaps = function() {
 					//get the result of the check
 					var result = this.checkPreviousModelsForTags(tagName, functionArgs);					
 					previousModels = previousModels.concat(result.previousModels);
+					custom_objects_made_count += result.custom_objects_made_count;
 				} else if (functionName == "getValueFromTableForDensity"){
 					var density = this.checkTableForValue(tagName, functionArgs);
 				}
@@ -225,7 +245,7 @@ Box2dModel.prototype.processTagMaps = function() {
 	var returnObject = {};
 	if (previousModels.length > 0){ 
 		//put the variables in an object so we can return multiple variables
-		returnObject = {"previousModels":previousModels}; 
+		returnObject = {"previousModels":previousModels, "custom_objects_made_count":custom_objects_made_count}; 
 	} else if (typeof density != "undefined"){
 		returnObject = {"density":density}; 
 	}
@@ -274,11 +294,10 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 	// was orignally in save, but put it here instead - still only doing for make/delete/test
 	var tableData = GLOBAL_PARAMETERS.tableData;
 	
-	// loop through args looking for "Obj" models
+	// loop through args looking for "Obj" models (including premades)
 	for (var a = 0; a < args.length; a++){
-		if (typeof args[a].id !== "undefined" && args[a].id.substr(0,3) == "Obj"){
+		if ( (typeof args[a].id !== "undefined" && args[a].id.substr(0,3) == "Obj") || (typeof args[a].premade_name !== "undefined" && args[a].premade_name != null && args[a].premade_name.length > 0)){
 			var model = {};
-
 			model.id = args[a].id;
 			model.Materials = typeof args[a].unique_materials !== "undefined" ? args[a].unique_materials.slice().sort().toString() : "";
 			model.Total_Volume = args[a].total_volume;
@@ -303,9 +322,9 @@ Box2dModel.prototype.interpretEvent = function(type, args, obj) {
 				var liquid_name = GLOBAL_PARAMETERS.liquids_in_world[i];
 				var liquid_density = GLOBAL_PARAMETERS.liquids[liquid_name].density;
 				if (model.Total_Density > liquid_density){
-					model["Sink_in_"+liquid_name] = "Yes";
+					model["Sink_in_"+liquid_name] = "Sink";
 				} else {
-					model["Sink_in_"+liquid_name] = "No";
+					model["Sink_in_"+liquid_name] = "Float";
 				}
 				model["Percent_Submerged_in_"+liquid_name] = Math.min(1, model.Total_Density / liquid_density);
 				model["Percent_Above_"+liquid_name] = 1 - model["Percent_Submerged_in_"+liquid_name];
@@ -432,6 +451,7 @@ Box2dModel.prototype.save = function(evt) {
 	response.savedModels = GLOBAL_PARAMETERS.objects_made.slice();
 	
 	// for each savedModel attach an associated image if model is not deleted
+	
 	for (i = 0; i < response.savedModels.length; i++){
 		if (typeof response.savedModels[i] === "undefined" || !response.savedModels[i].is_deleted){
 			var id = response.savedModels[i].id;
@@ -441,10 +461,10 @@ Box2dModel.prototype.save = function(evt) {
 				if (img.id == id){
 					response.images.push(img);
 				}
-			}
+			}	
 		}
 	}
-
+	response.custom_objects_made_count = GLOBAL_PARAMETERS.custom_objects_made_count;
 	response.tableData = GLOBAL_PARAMETERS.tableData;
 
 	// save event history
@@ -469,13 +489,13 @@ Box2dModel.prototype.save = function(evt) {
 		 * that you will use for representing student data for this
 		 * type of step. copy and modify the file below
 		 * 
-		 * wise/src/main/webapp/vle/node/box2dModel/box2dModelState.js
+		 * vlewrapper/WebContent/vle/node/box2dModel/box2dModelState.js
 		 * 
 		 * and use the object defined in your new state.js file instead
 		 * of Box2dModelState. for example if you are creating a new
 		 * quiz step type you would copy the file above to
 		 * 
-		 * wise/src/main/webapp/vle/node/quiz/quizState.js
+		 * vlewrapper/WebContent/vle/node/quiz/quizState.js
 		 * 
 		 * and in that file you would define QuizState and therefore
 		 * would change the Box2dModelState to QuizState below

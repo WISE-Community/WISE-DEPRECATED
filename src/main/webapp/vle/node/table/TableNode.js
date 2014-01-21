@@ -823,6 +823,41 @@ TableNode.prototype.canSpecialExport = function() {
 	return true;
 };
 
+/**
+ * Check if the student has completed the step. We will just check
+ * if there are any node states and if there are, the student
+ * has completed the step.
+ * 
+ * @param nodeVisits the student node visits for the step
+ * 
+ * @return whether the student has completed the step or not
+ */
+TableNode.prototype.isCompleted = function(nodeVisits) {
+	var result = false;
+
+	if(nodeVisits != null) {
+		//loop through all the node visits
+		for(var x=0; x<nodeVisits.length; x++) {
+			//get a node visit
+			var nodeVisit = nodeVisits[x];
+			
+			if(nodeVisit != null) {
+				//get the node states
+				var nodeStates = nodeVisit.nodeStates;
+				
+				if(nodeStates != null) {
+					if(nodeStates.length > 0) {
+						//there are node states so the student has completed the step
+						result = true;
+					}
+				}
+			}
+		}
+	}
+
+	return result;
+};
+
 /*
  * Add this node to the node factory so the vle knows it exists.
  * TODO: rename both occurrences of TemplateNode

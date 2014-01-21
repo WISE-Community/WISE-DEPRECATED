@@ -133,6 +133,9 @@ View.prototype.EpigameNode.generatePage = function(view){
 	var settingsSpatialToggle = createElement(document, "input", {id: 'spatialToggle', type:"checkbox", onclick:"eventManager.fire('epigameChangeSettings')"});
 	var settingsSpatialLabel = $(createElement(document, 'label', {id:'spatialLabel', "for":"spatialToggle"})).text('Use Spatial Interface');
 
+	var settingsHideScoreScreenToggle = createElement(document, "input", {id: 'hideScoreScreenToggle', type:"checkbox", onclick:"eventManager.fire('epigameChangeSettings')"});
+	var settingsHideScoreScreenLabel = $(createElement(document, 'label', {id:'hideScoreScreenLabel', "for":"hideScoreScreenToggle"})).text('Hide Score Screen');
+	
 	var rank1Name = $(createElement(document, 'label', {id:'rank1Name', "for":"rank1Name"})).text('Fluffy');
 	var rank2Name = $(createElement(document, 'label', {id:'rank2Name', "for":"rank2Name"})).text('Planet Hopper');
 	var rank3Name = $(createElement(document, 'label', {id:'rank3Name', "for":"rank3Name"})).text('Stratosplorer');
@@ -180,7 +183,8 @@ View.prototype.EpigameNode.generatePage = function(view){
 	.append(settingsScoreReqsToggle).append(settingsScoreReqsLabel).append(createBreak()).append(createBreak())
 	.append(settingsQuestionsToggle).append(settingsQuestionsLabel).append(createBreak()).append(createBreak())
 	.append(settingsNoQuestionToggle).append(settingsNoQuestionLabel).append(createBreak()).append(createBreak())
-	.append(settingsSpatialToggle).append(settingsSpatialLabel);
+	.append(settingsSpatialToggle).append(settingsSpatialLabel).append(createBreak())
+	.append(settingsHideScoreScreenToggle).append(settingsHideScoreScreenLabel)
 	
 	settingsDiv.append(createBreak()).append(createBreak()).append(questionSpan).append(createBreak()).append(noTimeToggle).append(noTimeLabel).append(createBreak());
 	settingsDiv.append(testTimeToggle).append(testTimeLabel).append(testTimeBox).append(createBreak());
@@ -368,6 +372,7 @@ View.prototype.EpigameNode.updateSettings = function() {
 			showQuestions: Boolean($("#questionsToggle").prop("checked")),
 			showNoQuestions: Boolean($("#noQuestionsToggle").prop("checked")),
 			spatialInterface: Boolean($("#spatialToggle").prop("checked")),
+			hideScoreScreen: Boolean($("#hideScoreScreenToggle").prop("checked")),
 			globalizeReqs: Boolean($("#scoreReqsToggle").prop("checked")),
 			noTime: Boolean($("#noTimeToggle").prop("checked")),
 			testTime: Boolean($("#testTimeToggle").prop("checked")),
@@ -410,7 +415,8 @@ View.prototype.EpigameNode.updateSettingsDisplay = function() {
 		$("#scoreReqsToggle").prop("checked", Boolean(this.content.settings.globalizeReqs));
 		$("#questionsToggle").prop("checked", Boolean(this.content.settings.showQuestions));
 		$("#noQuestionsToggle").prop("checked", Boolean(this.content.settings.showNoQuestions));
-		$("#spatialToggle").prop("checked", Boolean(this.content.settings.spatialInterface));	
+		$("#spatialToggle").prop("checked", Boolean(this.content.settings.spatialInterface));
+		$("#hideScoreScreenToggle").prop("checked", Boolean(this.content.settings.hideScoreScreen));		
 		$("#noTimeToggle").prop("checked", Boolean(this.content.settings.noTime));
 		$("#testTimeToggle").prop("checked", Boolean(this.content.settings.testTime));
 		$("#questionTimeToggle").prop("checked", Boolean(this.content.settings.questionTime));
@@ -448,6 +454,7 @@ View.prototype.EpigameNode.toggleSettings = function() {
 			showQuestions: false,
 			showNoQuestions: false,
 			spatialInterface: false,
+			hideScoreScreen: false,
 			globalizeReqs: false,
 			noTime: true,
 			testTime: false,
@@ -473,6 +480,7 @@ View.prototype.EpigameNode.toggleSettings = function() {
 		$("#questionsToggle").prop("checked", this.content.settings.showQuestions);
 		$("#noQuestionsToggle").prop("checked", this.content.settings.showNoQuestions);
 		$("#spatialToggle").prop("checked", this.content.settings.spatialToggle);		
+		$("#hideScoreScreenToggle").prop("checked", this.content.settings.spatialToggle);				
 		$("#noTimeToggle").prop("checked", this.content.settings.noTime);
 		$("#testTimeToggle").prop("checked", this.content.settings.testTime);
 		$("#questionTimeToggle").prop("checked", this.content.settings.questionTime);

@@ -917,7 +917,7 @@
 			g.drawCircle(0,0, 2);
 			g.endFill();
 		}
-		stage.needs_to_update = true;
+		if (stage != null) stage.needs_to_update = true;
 	}
 
 	window.BlockCompShape = BlockCompShape;

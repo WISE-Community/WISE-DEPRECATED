@@ -103,6 +103,10 @@
 		"value":"Thank you for submitting your work.",
 		"description":"Confirmation message to display when users submit an auto scored answer"
 	},
+	"autoGrade_noWork": {
+		"value":"Please add some items to your answer before submitting your work.",
+		"description":"Message to display when students have not added any work to an auto scored step but press the submit button"
+	},
 	"sizeLimit_title": {
 		"value":"Drawing is Too Big",
 		"description":"Title text for dialog alerting users that the drawing has exceeded the allowed file size"

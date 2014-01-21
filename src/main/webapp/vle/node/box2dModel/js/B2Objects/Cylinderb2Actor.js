@@ -128,6 +128,7 @@
 		body.volume = volume;
 		body.fullySubmerged = false;
 		body.fullyEmerged = true;
+		body.percentSubmerged = 0;
 		body.percentSubmerged2d = bodyDef.percentSubmerged2d;
 		body.percentSubmergedChangedFlag = false;
 		body.soaked = false;

@@ -587,7 +587,7 @@ View.prototype.onProjectLoad = function(){
 
 View.prototype.retrieveThemeLocales = function(){
 	if('theme' in this){
-		this.retrieveLocales("theme",view.config.getConfigParam("wiseBaseURL")+"/vle/themes/" + this.theme + "/i18n/");
+		this.retrieveLocales("theme","vle/themes/" + this.theme + "/i18n/");
 	} else {
 		this.onThemeLoad();
 	}
@@ -923,10 +923,10 @@ View.prototype.renderNode = function(position){
 	this.getState().setCurrentNodeVisit(nodeToVisit);
 	nodeToVisit.render(null, studentWork, status.value);
 	
+	this.eventManager.fire('renderNodeCompleted', this.currentPosition);
+	
 	//update the active tag map constraints to see if any have been satisfied and we need to remove any
 	this.updateActiveTagMapConstraints();
-	
-	this.eventManager.fire('renderNodeCompleted', this.currentPosition);
 };
 
 /**

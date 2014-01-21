@@ -135,7 +135,11 @@
 		
 		pan_y = typeof pan_y === "undefined"? 0 : pan_y;
 		if (pan_y != this.panShape.y){
+			//console.log(this.max_pan_dy_px,-pan_y - this.base_height_px + this.pan_height_px, pan_y, this.base_height_px, this.pan_height_px);
 			this.panShape.y = pan_y;
+			this.height_px = -pan_y;// + this.pan_height_px;
+			this.height_px_above = this.height_px;
+			//console.log(this.height_px);
 			this.drawPan();
 			
 		}
