@@ -1,0 +1,114 @@
+
+<html>
+<head>
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	 <script type="text/javascript">
+	
+	   var latestGGBState;
+	
+	   function myLittleConstruction() {
+	     var applet = document.getElementById("iffy").contentWindow.ggbApplet;
+	     applet.evalCommand("A = (1,1)"); 
+	     applet.evalCommand("B = (3,2)"); 
+	     applet.evalCommand("s = Line[A, B]"); 
+	
+	   }
+	
+		function showState() {
+			var applet = document.getElementById("iffy").contentWindow.ggbApplet;
+			applet.getBase64( acallback );
+		}
+		
+		function acallback( bsfour ) {
+			console.log(bsfour);
+		}
+		
+		//JUST A DEMO STATE
+		function loadState() {
+			var state = "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"
+			var applet = document.getElementById("iffy").contentWindow.ggbApplet;
+			applet.setBase64( state );
+		}
+		
+		
+		////REQUIRED FUNCTIONS
+		function setup() {
+			
+			//load any the last state the student submitted for this step (if any)
+			var astate = parent.wiseAPI().getLatestState();   
+			console.log("latest state");
+			console.log(astate);
+			latestGGBState = astate.stateString;
+			
+			console.log("latest statestring");
+			console.log(latestGGBState);
+			if(latestGGBState != null) {
+				var applet = document.getElementById("iffy").contentWindow.ggbApplet;
+				applet.setBase64( latestGGBState );
+			}
+			
+		}
+
+		function updateSavedState( thedata ) {
+			latestGGBState = thedata;
+			
+			console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>in updateSavedState");
+			console.log(latestGGBState);
+			return thedata;
+		}
+
+		function provideStateString() {
+			console.log("asked to provide Saved State");
+			var applet = document.getElementById("iffy").contentWindow.ggbApplet;
+			applet.getBase64( updateSavedState );
+			return latestGGBState;
+		}
+		
+		function provideGradingViewHTML() {
+			console.log("asked to provide Grading HTML");
+			var applet = document.getElementById("iffy").contentWindow.ggbApplet;
+			///applet./////get image
+			var gradingHTML = "<button type='button' onclick='alert(\""+latestGGBState+"\");'>Show State String</button>";
+			gradingHTML += "<br><button type='button' onclick='window.open(\"geogebraTeacher.html\");'>Open Win</button>";
+			
+			return gradingHTML;
+		}
+		
+		
+		
+	
+		function initializers() {
+			console.log("called initializers");
+			setup(); 
+			parent.wiseAPI().appReady(); 
+		}
+	
+		$( document ).ready( initializers );
+
+		
+	 </script>
+	
+	
+
+</head>
+
+<body >
+	
+	<iframe id="iffy" scrolling="no"
+	src="ggb.html"
+	width="100%"
+	height="93%"
+	style="border-style:solid;
+	border-color:black;
+	border-width:1px;">
+	</iframe>
+ 
+ <form>
+   <input type='button' value='Save' onclick='parent.wiseAPI().triggerSaveState()'></input>  &nbsp; &nbsp;<input type="button" value="Do construction" onclick="myLittleConstruction();"> &nbsp; &nbsp;<input type="button" value="Dump State to Console" onclick="showState();">&nbsp; &nbsp;<input type="button" value="Load Demo State" onclick="loadState();"> &nbsp;&nbsp; &nbsp;<input type='button' value='Load Prior State' onclick='setup();'></input>  
+
+ </form>
+
+
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<html>
+	<head>
+		<script type="text/javascript">
+		
+			function wiseAPI() {
+				if ( !(webApp.api) ) {
+					console.log("NULL API OBJECT -- SHOULD NEVER HAPPEN");
+				}
+				return webApp.api;
+			}
+			
+			/*
+			 * TODO: Copy this file and rename it to
+			 * 
+			 * <new step type>.html
+			 * e.g. quiz.html
+			 *
+			 * and then put the new file into the new folder
+			 * you created for your new step type
+			 *
+			 * your new folder will look something like
+			 * vlewrapper/WebContent/vle/node/<new step type>/
+			 *
+			 * e.g. if you are creating a quiz step it would look
+			 * something like this
+			 * vlewrapper/WebContent/vle/node/quiz/
+			 */
+		
+			//var webApp;
+		
+			function loadContentAfterScriptsLoad(node) {
+				/*
+				 * TODO: rename WebApp
+				 * 
+				 * make sure you rename WebApp to the object you created in
+				 * the file when you copied and modified
+				 * 
+				 * vlewrapper/WebContent/vle/node/webApp/webApp.js
+				 * 
+				 * for example if you are creating a quiz step and you
+				 * created the file
+				 *
+				 * vlewrapper/WebContent/vle/node/quiz/quiz.js
+				 *
+				 * and in that file you defined the Quiz object, you would
+				 * change WebApp to Quiz
+				 *
+				 * TODO: rename webApp variable
+				 * 
+				 * you should also rename the local var webApp variable to something
+				 * appropriate. following my previous example I would rename it
+				 * to quiz.
+				 */
+	        	webApp = new WebApp(node);
+	        	webApp.render();
+	        };
+			
+	        function loadContent(node) {
+		        /*
+		         * this loadScripts() function call will load the javascript imports
+		         * into this html file 
+		         * 
+		         * TODO: rename webApp
+		         *
+		         * you will need to rename webApp to the variable name that you
+		         * used in 
+		         * 
+		         * vlewrapper/WebContent/vle/util/scriptloader.js
+		         *
+		         * when you defined your script paths in the 'scripts' array
+		         * 
+		         * for example if you are creating a quiz step and you added
+		         * the variable named quiz to the scripts array, you would change
+		         * 'webApp' to 'quiz'
+		         */
+				//NOTE:  added by corey --> WISE issue.
+				console.log("DEBUG:  about to dump 'this' variable from html file.");
+				console.log(this);
+				console.log("DEBUG:  About to call scriptloader in html file. Will test existence first.  if fails try to reassign");
+				if (typeof scriptloader === 'undefined') {
+					console.log("reassigning scriptloader variable!");
+					scriptloader = this.scriptloader;
+				}
+				//end added code...
+	        	scriptloader.loadScripts('webApp', document, node.id, eventManager);
+	        };
+
+	        /*
+	         * This is called when the student clicks on the save button below in the body
+	         */
+	        function save() {
+		        /*
+		         * calls the save function in webApp.js
+				 *
+		         * TODO: rename webApp variable
+		         */
+				webApp.save();
+	        }
+		</script>
+	</head>
+
+	<body>
+		<!-- TODO create the html UI that the student will see when they visit the step -->
+		
+		<!-- the promptDiv, responseDiv, saveButtonDiv are not required, they are only provided as an example,
+			 you may delete all of these divs and create the body however you like -->
+			<div id='promptDiv'></div>
+			<iframe id="ouriframe" width="100%" height="100%" seamless></iframe>
+			<div id='responseDiv'><textarea id='studentResponseTextArea' rows='8' cols='80'></textarea></div>
+		
+	</body>
+</html>

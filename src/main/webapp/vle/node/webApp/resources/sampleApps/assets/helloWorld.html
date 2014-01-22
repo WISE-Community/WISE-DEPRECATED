@@ -1,0 +1,23 @@
+<html>
+
+<head>
+
+<script src="helloWorld.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script type="text/javascript">
+	$( document ).ready( initializers );
+	
+	function initializers() {
+		setup(); 
+		parent.wiseAPI().appReady(); 
+	}
+</script>
+</head>
+
+<body >
+<canvas id="draw_space" width="450" height="300" draggable="false"></canvas>
+<div id='buttons'><input type='button' value='Save' onclick='parent.wiseAPI().triggerSaveState()'></input>  &nbsp;
+	<input type='button' value='Clear' onclick='clearCanvas()'></input>
+	</div>
+</body>
+</html>
