@@ -31,7 +31,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.user.UserDao;
@@ -103,13 +102,13 @@ public class ViewAllUsersController extends AbstractController{
 					.getServletContext().getAttribute("studentsToRuns");
 
 			ArrayList<Object> loggedInStudent = new ArrayList<Object>();
-			ArrayList<String> loggedInTeacherUsernames = new ArrayList<String>();
+			ArrayList<Object> loggedInTeacher = new ArrayList<Object>();
 			if (allLoggedInUsers != null) {
 				for (String sessionId : allLoggedInUsers.keySet()) {
 					User loggedInUser = allLoggedInUsers.get(sessionId);
 					if (loggedInUser.getUserDetails() instanceof StudentUserDetails) {
 						Object[] loggedInStudentArray=new Object[2];
-						loggedInStudentArray[0] = loggedInUser.getUserDetails().getUsername();
+						loggedInStudentArray[0] = loggedInUser;
 						// since this is a student, look in the studentToRuns session variable and see if this student is running
 						// any projects
 						if (studentsToRuns != null && studentsToRuns.containsKey(sessionId)) {
@@ -118,12 +117,12 @@ public class ViewAllUsersController extends AbstractController{
 						}
 						loggedInStudent.add(loggedInStudentArray);
 					} else {
-						loggedInTeacherUsernames.add(loggedInUser.getUserDetails().getUsername());					
+						loggedInTeacher.add(loggedInUser);					
 					}
 				}
 			}
 			modelAndView.addObject(LOGGED_IN_STUDENT_USERNAMES, loggedInStudent);
-			modelAndView.addObject(LOGGED_IN_TEACHER_USERNAMES, loggedInTeacherUsernames);
+			modelAndView.addObject(LOGGED_IN_TEACHER_USERNAMES, loggedInTeacher);
 		} else if (onlyShowUsersWhoLoggedInToday != null && onlyShowUsersWhoLoggedInToday.equals("true")) {
 			AdminJob adminJob = (AdminJob) this.getApplicationContext().getBean("adminjob");
 			adminJob.setUserDao((UserDao<User>) this.getApplicationContext().getBean("userDao"));
