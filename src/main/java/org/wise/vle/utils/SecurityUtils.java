@@ -6,11 +6,24 @@ package org.wise.vle.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.workgroup.WISEWorkgroupService;
 
 /**
  * @author patrick lawler
@@ -21,6 +34,8 @@ public final class SecurityUtils {
 	private static List<String> ALLOWED_REFERRERS;
 
 	private static Properties wiseProperties;
+	private static WISEWorkgroupService workgroupService;
+	private static RunService runService;
 
 	private final static String AUTHENTICATION_URL = "authorize.html";
 
@@ -29,33 +44,6 @@ public final class SecurityUtils {
 	private static boolean retrievedPortalMode = false;
 
 	private static boolean isPortalMode = true;
-	
-	static{
-		ALLOWED_REFERRERS = new ArrayList<String>();
-		ALLOWED_REFERRERS.add("/vle/author.html");
-		ALLOWED_REFERRERS.add("/util/util.html");
-		ALLOWED_REFERRERS.add("/vle/vle.html");
-		ALLOWED_REFERRERS.add("/vle/gradework.html");
-		ALLOWED_REFERRERS.add("/vle/classroomMonitor.html");
-		ALLOWED_REFERRERS.add("/teacher/projects/telsprojectlibrary.html");
-		ALLOWED_REFERRERS.add("/teacher/projects/customized/index.html");
-		ALLOWED_REFERRERS.add("/teacher/run/createRun.html");
-		ALLOWED_REFERRERS.add("/teacher/management/library.html");
-
-		try {
-			// Read properties file.
-			wiseProperties = new Properties();
-			wiseProperties.load(SecurityUtils.class.getClassLoader().getResourceAsStream("wise.properties"));
-			if(wiseProperties.containsKey("isStandAlone")) {
-				boolean isStandAlone = Boolean.valueOf(wiseProperties.getProperty("isStandAlone"));
-				isPortalMode = !isStandAlone;
-			}
-		} catch (Exception e) {
-			System.err.println("SecurityUtils: could not read in vleProperties file");
-			e.printStackTrace();
-		}
-
-	}
 
 	/**
 	 * Checks the list of allowed referrers and returns <code>boolean</code> true if
@@ -89,7 +77,7 @@ public final class SecurityUtils {
 	 * @return boolean
 	 */
 	public static boolean isAuthenticated(HttpServletRequest request){
-		return true;
+		boolean result = true;
 		/*
 		String fullUrl = request.getRequestURL().toString();
 		String fullUri = request.getRequestURI();
@@ -103,8 +91,8 @@ public final class SecurityUtils {
 				// authenticate to the portal 
 				String params = "authenticate&credentials=" + credentials;
 				try{
-					String result = Connector.request(urlBase + AUTHENTICATION_URL, params);
-					if(result.equals("true")){
+					String response = Connector.request(urlBase + AUTHENTICATION_URL, params);
+					if(response.equals("true")){
 						return true;
 					}
 				} catch(IOException e){
@@ -112,9 +100,8 @@ public final class SecurityUtils {
 				}
 			}
 		}
-
-		return false;
 		*/
+		return result;
 	}
 
 	/**
@@ -196,6 +183,252 @@ public final class SecurityUtils {
 		
 		return result;
 	}
+	
+	/**
+	 * Find out if the user is a student
+	 * @param user a user
+	 * @return whether the user is a student or not
+	 */
+	public static boolean isStudent(User user) {
+		boolean isStudent = false;
+		
+		//get the authorities for the signed in user
+		MutableUserDetails signedInUserDetails = user.getUserDetails();
+		Collection<? extends GrantedAuthority> authorities = signedInUserDetails.getAuthorities();
+
+		for (GrantedAuthority authority : authorities) {
+			if(authority.getAuthority().equals(UserDetailsService.STUDENT_ROLE)) {
+				//the user is a student
+				isStudent = true;
+			}
+		}
+		
+		return isStudent;
+	}
+	
+	/**
+	 * Find out if the user is a teacher
+	 * @param user a user
+	 * @return whether the user is a teacher or not
+	 */
+	public static boolean isTeacher(User user) {
+		boolean isTeacher = false;
+		
+		//get the authorities for the signed in user
+		MutableUserDetails signedInUserDetails = user.getUserDetails();
+		Collection<? extends GrantedAuthority> authorities = signedInUserDetails.getAuthorities();
+
+		for (GrantedAuthority authority : authorities) {
+			if(authority.getAuthority().equals(UserDetailsService.TEACHER_ROLE)) {
+				//the user is a teacher
+				isTeacher = true;
+			}
+		}
+		
+		return isTeacher;
+	}
+	
+	/**
+	 * Find out if the user is an admin
+	 * @param user a user
+	 * @return whether the user is an admin or not
+	 */
+	public static boolean isAdmin(User user) {
+		boolean isAdmin = false;
+		
+		//get the authorities for the signed in user
+		MutableUserDetails signedInUserDetails = user.getUserDetails();
+		Collection<? extends GrantedAuthority> authorities = signedInUserDetails.getAuthorities();
+
+		for (GrantedAuthority authority : authorities) {
+			if (authority.getAuthority().equals(UserDetailsService.ADMIN_ROLE)) {
+				//the user is an admin
+				isAdmin = true;					
+			}
+		}
+		
+		return isAdmin;
+	}
+	
+	/**
+	 * Check if a user is the owner or shared owner of a run
+	 * @param user the signed in user
+	 * @param runId the run id
+	 * @return whether the user is an owner of the run
+	 */
+	public static boolean isUserOwnerOfRun(User user, Long runId) {
+		boolean result = false;
+		
+		if(user != null && runId != null) {
+			try {
+				//get the run
+				Run run = getRunService().retrieveById(runId);
+				
+				if(run != null) {
+					//get the owners and shared owners
+					Set<User> owners = run.getOwners();
+					Set<User> sharedowners = run.getSharedowners();
+					
+					if(owners.contains(user) || sharedowners.contains(user)) {
+						//the user is the owner or a shared owner
+						result = true;
+					}
+				}
+			} catch (ObjectNotFoundException e) {
+				e.printStackTrace();
+			}			
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Check if the user is in the run
+	 * @param user the user
+	 * @param runId the run id
+	 * @return whether the user is in the run
+	 */
+	public static boolean isUserInRun(User user, Long runId) {
+		boolean result = false;
+		
+		if(user != null && runId != null) {
+			//get the list of runs this user is in
+			List<Run> runList = getRunService().getRunList(user);
+			
+			Iterator<Run> runListIterator = runList.iterator();
+			
+			//loop through all the runs this user is in
+			while(runListIterator.hasNext()) {
+				//get a run
+				Run tempRun = runListIterator.next();
+				
+				if(tempRun != null) {
+					//get the run id
+					Long tempRunId = tempRun.getId();
+					
+					//check if the run id matches the one we are searching for
+					if(runId.equals(tempRunId)) {
+						//the run id matches so the user is in the run
+						result = true;
+						break;
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Check if the user is in the period
+	 * @param user the user
+	 * @param runId the run id
+	 * @param periodId the period id
+	 * @return whether the user is in the period
+	 */
+	public static boolean isUserInPeriod(User user, Long runId, Long periodId) {
+		boolean result = false;
+		
+		if(user != null && runId != null && periodId != null) {
+			try {
+				//get the run
+				Run run = getRunService().retrieveById(runId);
+				
+				//get the period the student is in for the run
+				Group periodOfStudent = run.getPeriodOfStudent(user);
+				
+				if(periodOfStudent != null) {
+					//get the period id
+					Long tempPeriodId = periodOfStudent.getId();
+					
+					//check if the period id matches the one we are searching for
+					if(periodId.equals(tempPeriodId)) {
+						//the period id matches so the user is in the period
+						result = true;
+					}
+				}
+			} catch (ObjectNotFoundException e) {
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Check if the user is in the workgroup id
+	 * @param user the user
+	 * @param workgroupId the workgroup id
+	 * @return whether the user is in the workgroup
+	 */
+	public static boolean isUserInWorkgroup(User user, Long workgroupId) {
+		boolean result = false;
+		
+		if(user != null && workgroupId != null) {
+			//get all the workgroups this user is in
+			List<Workgroup> workgroupsForUser = getWorkgroupService().getWorkgroupsForUser(user);
+			
+			Iterator<Workgroup> workgroupsForUserIterator = workgroupsForUser.iterator();
+			
+			//loop through all the workgroups this user is in
+			while(workgroupsForUserIterator.hasNext()) {
+				//get a workgroup
+				Workgroup tempWorkgroup = workgroupsForUserIterator.next();
+				
+				if(tempWorkgroup != null) {
+					//get the workgroup id
+					Long tempWorkgroupId = tempWorkgroup.getId();
+					
+					//check if the workgroup id matches the one we are searching for
+					if(workgroupId.equals(tempWorkgroupId)) {
+						//the workgroup id matches so the user is in the workgroup
+						result = true;
+						break;
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Check if the workgroup is in the run
+	 * @param workgroupId the workgroup id
+	 * @param runId the run id
+	 * @return whether the workgroup is in the run
+	 */
+	public static boolean isWorkgroupInRun(Long workgroupId, Long runId) {
+		boolean result = false;
+		
+		if(workgroupId != null && runId != null) {
+			try {
+				//get all the workgroups in the run
+				Set<Workgroup> workgroupsInRun = runService.getWorkgroups(runId);
+				
+				Iterator<Workgroup> workgroupsInRunIterator = workgroupsInRun.iterator();
+				
+				//loop through all the workgroups in the run
+				while(workgroupsInRunIterator.hasNext()) {
+					//get a workgroup
+					Workgroup tempWorkgroup = workgroupsInRunIterator.next();
+					
+					//get the workgroup id
+					Long tempWorkgroupId = tempWorkgroup.getId();
+					
+					//check if the workgroup id is the one we are looking for
+					if(workgroupId.equals(tempWorkgroupId)) {
+						//we have found the workgroup id that we want
+						result = true;
+						break;
+					}
+				}
+			} catch (ObjectNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
 
 	/**
 	 * Given a <code>HttpServletRequest</code> request, makes a request to the mode master
@@ -207,5 +440,29 @@ public final class SecurityUtils {
 	 */
 	public static boolean isPortalMode(HttpServletRequest request){
 		return isPortalMode;
+	}
+
+	public static Properties getWiseProperties() {
+		return wiseProperties;
+	}
+
+	public static void setWiseProperties(Properties wiseProperties) {
+		SecurityUtils.wiseProperties = wiseProperties;
+	}
+
+	public static WISEWorkgroupService getWorkgroupService() {
+		return workgroupService;
+	}
+
+	public static void setWorkgroupService(WISEWorkgroupService workgroupService) {
+		SecurityUtils.workgroupService = workgroupService;
+	}
+
+	public static RunService getRunService() {
+		return runService;
+	}
+
+	public static void setRunService(RunService runService) {
+		SecurityUtils.runService = runService;
 	}
 }

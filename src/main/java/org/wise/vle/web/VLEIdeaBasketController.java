@@ -17,6 +17,8 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
@@ -41,18 +43,10 @@ public class VLEIdeaBasketController extends AbstractController {
 		return null;
 	}
 	
-	public ModelAndView doPost(HttpServletRequest request,
-			HttpServletResponse response)
-	throws ServletException, IOException {
-		
-		/* make sure that this request is authenticated through the portal before proceeding */
-		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-			/* not authenticated send not authorized status */
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
+	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
 
-		
 		//get all the params
 		String runId = request.getParameter("runId");
 		String periodId = request.getParameter("periodId");
@@ -62,9 +56,52 @@ public class VLEIdeaBasketController extends AbstractController {
 		String ideaString = request.getParameter("ideaString");
 		String ideaId = request.getParameter("ideaId");
 		
-
 		String projectId = (String) request.getParameter("projectId");
-		boolean isPrivileged = true;  // TODO: implement me
+		
+		Long runIdLong = null;
+		if(runId != null) {
+			try {
+				runIdLong = new Long(runId);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Long workgroupIdLong = null;
+		if(workgroupId != null) {
+			try {
+				workgroupIdLong = new Long(workgroupId);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		boolean allowedAccess = false;
+		boolean isPrivileged = false;
+		
+		/*
+		 * admins can make a request
+		 * teachers can make a request if they are the owner of the run
+		 * students can make a request if they are in the run and in the workgroup
+		 */
+		if(SecurityUtils.isAdmin(signedInUser)) {
+			//the user is an admin so we will allow this request
+			allowedAccess = true;
+			isPrivileged = true;
+		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
+			allowedAccess = true;
+			isPrivileged = true;
+		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong) && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupIdLong)) {
+			//the student is in the run and in the workgroup so we will allow this request
+			allowedAccess = true;
+		}
+		
+		if(!allowedAccess) {
+			//user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
 		
 		//get the latest revision of the IdeaBasket for this runId, workgroupId
 		IdeaBasket ideaBasket = vleService.getIdeaBasketByRunIdWorkgroupId(new Long(runId), new Long(workgroupId));
@@ -75,17 +112,7 @@ public class VLEIdeaBasketController extends AbstractController {
 				 action.equals("deletePrivateIdea") || action.equals("restorePrivateIdea") || action.equals("reOrderPrivateBasket")) {
 			boolean savedBasket = false;
 			
-			Long workgroupIdLong = null;
 			Long ideaIdLong = null;
-			
-			if(workgroupId != null && !"undefined".equals(workgroupId) && !"null".equals(workgroupId)) {
-				try {
-					//get the long value if a workgroup id was passed in as an argument
-					workgroupIdLong = new Long(workgroupId);
-				} catch(NumberFormatException e) {
-					
-				}
-			}
 			
 			if(ideaId != null && !"undefined".equals(ideaId) && !"null".equals(workgroupId)) {
 				try {
@@ -95,7 +122,6 @@ public class VLEIdeaBasketController extends AbstractController {
 					
 				}
 			}
-			
 			
 			if(ideaBasket != null) {
 				//the idea basket was created before
@@ -149,7 +175,7 @@ public class VLEIdeaBasketController extends AbstractController {
 			//add a public idea to the public idea basket and save a new revision
 			
 			//make sure the signed in user is allowed to perform this add public idea request
-			if(isAllowedToModifyPublicIdeaBasket(new Boolean(isPrivileged), new Long(workgroupId), new Long(workgroupId))) {
+			if(isAllowedToModifyPublicIdeaBasket(new Boolean(isPrivileged), signedInUser, new Long(workgroupId))) {
 				JSONObject newIdeaJSON = null;
 				long newIdeaId = 0;
 				long newIdeaWorkgroupId = 0;
@@ -259,7 +285,7 @@ public class VLEIdeaBasketController extends AbstractController {
 			//delete a public idea from the public idea basket and save a new revision
 			
 			//make sure the signed in user is allowed to perform this delete public idea request
-			if(isAllowedToModifyPublicIdeaBasket(new Boolean(isPrivileged), new Long(workgroupId), new Long(workgroupId))) {
+			if(isAllowedToModifyPublicIdeaBasket(new Boolean(isPrivileged), signedInUser, new Long(workgroupId))) {
 				//get the latest revision of the public idea basket
 				IdeaBasket publicIdeaBasket = getPublicIdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), action, new Long(workgroupId), new Long(ideaId), new Long(workgroupId));
 				
@@ -531,17 +557,9 @@ public class VLEIdeaBasketController extends AbstractController {
 		return null;
 	}
 
-	public ModelAndView doGet(HttpServletRequest request,
-			HttpServletResponse response)
-	throws ServletException, IOException {
-		
-		/* make sure that this request is authenticated through the portal before proceeding */
-		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-			/* not authenticated send not authorized status */
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
-
+	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
 		
 		//get all the params
 		String runId = request.getParameter("runId");
@@ -549,7 +567,52 @@ public class VLEIdeaBasketController extends AbstractController {
 		String periodId = (String) request.getParameter("periodId");
 		
 		String workgroupId = (String) request.getParameter("workgroupId");
-
+		
+		Long runIdLong = null;
+		if(runId != null) {
+			try {
+				runIdLong = new Long(runId);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Long workgroupIdLong = null;
+		if(workgroupId != null) {
+			try {
+				workgroupIdLong = new Long(workgroupId);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		boolean isPrivileged = false;
+		boolean allowedAccess = false;
+		
+		/*
+		 * admins can make a request
+		 * teachers that are owners of the run can make a request
+		 * students that are in the run and in the workgroup can make a request
+		 */
+		if(SecurityUtils.isAdmin(signedInUser)) {
+			//the user is an admin so we will allow this request
+			allowedAccess = true;
+			isPrivileged = true;
+		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
+			allowedAccess = true;
+			isPrivileged = true;
+		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong) && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupIdLong)) {
+			//the student is in the run and in the workgroup so we will allow this request
+			allowedAccess = true;
+		}
+		
+		if(!allowedAccess) {
+			//user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
+		
 		String projectId = null;
 		
 		try {
@@ -568,8 +631,6 @@ public class VLEIdeaBasketController extends AbstractController {
 		} catch (ObjectNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		
-		boolean isPrivileged = true;
 		
 		if(action.equals("getIdeaBasket")) {
 			if(runId != null && workgroupId != null) {
@@ -652,10 +713,10 @@ public class VLEIdeaBasketController extends AbstractController {
 	 * @param workgroupId the workgroup id retrieved from the user
 	 * @return whether the signed in user can modify the public idea basket
 	 */
-	private boolean isAllowedToModifyPublicIdeaBasket(boolean isPrivileged, long signedInWorkgroupId, long workgroupId) {
+	private boolean isAllowedToModifyPublicIdeaBasket(boolean isPrivileged, User signedInUser, long workgroupId) {
 		boolean result = false;
 		
-		if(isPrivileged || signedInWorkgroupId == workgroupId) {
+		if(isPrivileged || SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
 			result = true;
 		}
 		

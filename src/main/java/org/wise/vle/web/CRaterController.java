@@ -3,12 +3,13 @@ package org.wise.vle.web;
 import java.io.IOException;
 import java.util.Properties;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.vle.domain.webservice.crater.CRaterHttpClient;
 import org.wise.vle.utils.SecurityUtils;
 
@@ -26,16 +27,31 @@ public class CRaterController extends AbstractController {
 	 */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-		/* make sure that this request is authenticated through the portal before proceeding */
-		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-			/* not authenticated send not authorized status */
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+		
+		//get the CRater request type which will be "scoring" or "verify"
+		String cRaterRequestType = request.getParameter("cRaterRequestType");
+		
+		boolean allowedAccess = false;
+		
+		/*
+		 * teachers can make all CRater requests
+		 * students can only make CRater scoring requests
+		 */
+		if(SecurityUtils.isTeacher(signedInUser)) {
+			//the user is a teacher so we will allow this request
+			allowedAccess = true;
+		} else if(SecurityUtils.isStudent(signedInUser) && (cRaterRequestType != null && cRaterRequestType.equals("scoring"))) {
+			//the user is a student making a scoring request so we will allow this request
+			allowedAccess = true;
+		}
+		
+		if(!allowedAccess) {
+			//user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
-
-		//get the CRater request type which will be "scoring" or "verify"
-		String cRaterRequestType = request.getParameter("cRaterRequestType");
 		
 		//get the item type which will be "CRATER" or "HENRY"
 		String cRaterItemType = request.getParameter("cRaterItemType");

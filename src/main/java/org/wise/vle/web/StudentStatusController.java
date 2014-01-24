@@ -14,6 +14,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.status.StudentStatus;
 import org.wise.vle.utils.SecurityUtils;
@@ -42,13 +44,9 @@ public class StudentStatusController extends AbstractController {
 	 * @throws IOException 
 	 */
 	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		/* make sure that this request is authenticated through the portal before proceeding */
-		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-			/* not authenticated send not authorized status */
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
-
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+		
 		//get the run id
 		String runIdString = request.getParameter("runId");
 		
@@ -60,6 +58,30 @@ public class StudentStatusController extends AbstractController {
 			e.printStackTrace();
 		}
 		
+		boolean allowedAccess = false;
+		
+		/*
+		 * teachers that are owners of the run can make a request
+		 * students can not make a request
+		 */
+		if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+			//the user is a teacher that is an owner or shared owner of the run so we will allow the request
+			allowedAccess = true;
+		}
+		
+		if(!allowedAccess) {
+			//the user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
+		
+		/* make sure that this request is authenticated through the portal before proceeding */
+		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
+			/* not authenticated send not authorized status */
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
+
 		//get all the student statuses for the run id
 		List<StudentStatus> studentStatuses = vleService.getStudentStatusesByRunId(runId);
 		
@@ -107,13 +129,9 @@ public class StudentStatusController extends AbstractController {
 	 * @throws IOException 
 	 */
 	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		/* make sure that this request is authenticated through the portal before proceeding */
-		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-			/* not authenticated send not authorized status */
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
-
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+		
 		//get the post parameters
 		String runIdString = request.getParameter("runId");
 		String periodIdString = request.getParameter("periodId");
@@ -142,6 +160,24 @@ public class StudentStatusController extends AbstractController {
 			e.printStackTrace();
 		}
 		
+		boolean allowedAccess = false;
+		
+		/*
+		 * teachers can not make a request
+		 * students can make a request if they are in the run and in the workgroup
+		 */
+		if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) &&
+				SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
+			//the student is in the run and the workgroup so we will allow this request
+			allowedAccess = true;
+		}
+		
+		if(!allowedAccess) {
+			//the user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
+
 		//get the student status object for the workgroup id if it already exists
 		StudentStatus studentStatus = vleService.getStudentStatusByWorkgroupId(workgroupId);
 		

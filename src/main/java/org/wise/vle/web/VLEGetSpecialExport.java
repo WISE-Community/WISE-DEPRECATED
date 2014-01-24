@@ -34,6 +34,8 @@ import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.run.RunUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.offering.RunService;
@@ -211,12 +213,8 @@ public class VLEGetSpecialExport extends AbstractController {
 	 * Generates and returns an excel xls of exported student data.
 	 */
 	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/* make sure that this request is authenticated through the portal before proceeding */
-		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-			/* not authenticated send not authorized status */
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
 
 		/*
 		 * clear the instance variables because only one instance of a servlet
@@ -238,14 +236,41 @@ public class VLEGetSpecialExport extends AbstractController {
 		//the export type "latestStudentWork" or "allStudentWork"
 		exportType = request.getParameter("exportType");
 		
+		Long runIdLong = null;
+		try {
+			runIdLong = new Long(runId);
+		} catch(NumberFormatException e) {
+			e.printStackTrace();
+		}
+		
 		Run run = null;
 		try {
 			if(runId != null) {
 				//get the run object
-				run = runService.retrieveById(new Long(runId));				
+				run = runService.retrieveById(runIdLong);				
 			}
 		} catch (ObjectNotFoundException e1) {
 			e1.printStackTrace();
+		}
+		
+		boolean allowedAccess = false;
+		
+		/*
+		 * admins can make a request
+		 * teachers that are owners of the run can make a request
+		 */
+		if(SecurityUtils.isAdmin(signedInUser)) {
+			//the user is an admin so we will allow this request
+			allowedAccess = true;
+		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
+			allowedAccess = true;
+		}
+		
+		if(!allowedAccess) {
+			//user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return null;
 		}
 		
 		Project projectObj = run.getProject();

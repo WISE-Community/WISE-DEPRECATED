@@ -948,6 +948,7 @@
 	<bean id="studentDataController" class="org.wise.vle.web.StudentDataController">
 	    <property name="vleService" ref="vleService" />
 	    <property name="runService" ref="runService" />
+	    <property name="workgroupService" ref="wiseWorkgroupService" />
 	    <property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
@@ -1162,6 +1163,13 @@
     <bean id="openSessionInViewInterceptor"
         class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
         <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+	<bean id="securityUtils"
+        class="org.wise.vle.utils.SecurityUtils">
+        <property name="wiseProperties" ref="wiseProperties" />
+        <property name="runService" ref="runService" />
+        <property name="workgroupService" ref="wiseWorkgroupService" />
     </bean>
     
     <bean

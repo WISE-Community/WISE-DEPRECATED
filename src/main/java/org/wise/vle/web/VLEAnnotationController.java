@@ -25,6 +25,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.run.RunUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
@@ -68,31 +70,12 @@ public class VLEAnnotationController extends AbstractController {
 		return null;
 	}
 
-	public ModelAndView doPost(HttpServletRequest request,
-			HttpServletResponse response)
-	throws ServletException, IOException {
-		
-		/* make sure that this request is authenticated through the portal before proceeding */
-		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-			/* not authenticated send not authorized status */
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
-
+	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPostJSON(request, response);
 		return null;
     }
 	
-	public ModelAndView doGet(HttpServletRequest request,
-			HttpServletResponse response)
-	throws ServletException, IOException {
-		/* make sure that this request is authenticated through the portal before proceeding */
-		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-			/* not authenticated send not authorized status */
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
-		
+	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGetJSON(request, response);
 		return null;
     }
@@ -107,9 +90,10 @@ public class VLEAnnotationController extends AbstractController {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("unchecked")
-	public void doGetJSON(HttpServletRequest request,
-			HttpServletResponse response)
-	throws ServletException, IOException {
+	public void doGetJSON(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+		
 		String requestedType = request.getParameter("type");
 		String fromWorkgroupIdStr = request.getParameter("fromWorkgroup");
 		String fromWorkgroupIdsStr = request.getParameter("fromWorkgroups");
@@ -119,6 +103,7 @@ public class VLEAnnotationController extends AbstractController {
 		String isStudentStr = request.getParameter("isStudent");
 		String annotationType = request.getParameter("annotationType");
 		String nodeStateIdStr = request.getParameter("nodeStateId");
+		String periodIdStr = request.getParameter("periodId");
 		
 		String cRaterScoringUrl = wiseProperties.getProperty("cRater_scoring_url");
 		String cRaterClientId = wiseProperties.getProperty("cRater_client_id");
@@ -130,10 +115,17 @@ public class VLEAnnotationController extends AbstractController {
 		HashMap<Long, Long> classmateWorkgroupIdToPeriodIdMap = new HashMap<Long, Long>();
 		
 		Long periodId = null;
+		if(periodIdStr != null) {
+			try {
+				periodId = new Long(periodIdStr);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		Long longRunId = null;
 		if(runId != null) {
-			longRunId = Long.parseLong(runId);			
+			longRunId = Long.parseLong(runId);
 		}
 		
 		Long stepWorkId = null;
@@ -151,6 +143,76 @@ public class VLEAnnotationController extends AbstractController {
 			nodeStateId = Long.parseLong(nodeStateIdStr);
 		}
 		
+		Long runIdLong = null;
+		if(runId != null) {
+			try {
+				runIdLong = new Long(runId);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Long fromWorkgroupId = null;
+		if(fromWorkgroupIdStr != null) {
+			try {
+				fromWorkgroupId = new Long(fromWorkgroupIdStr);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Long toWorkgroupId = null;
+		if(toWorkgroupIdStr != null) {
+			try {
+				toWorkgroupId = new Long(toWorkgroupIdStr);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		boolean allowedAccess = false;
+		
+		/*
+		 * teachers can get all annotations if they own the run
+		 * students can get annotations that are from them and to them, or are for
+		 * CRater or flags
+		 */
+		if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+			//the teacher is an owner or shared owner of the run so we will allow this request
+			allowedAccess = true;
+		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong)) {
+			//the student is in the run
+			
+			if(SecurityUtils.isUserInWorkgroup(signedInUser, fromWorkgroupId) || SecurityUtils.isUserInWorkgroup(signedInUser, toWorkgroupId)) {
+				//the student is the from or the to so we will allow this request
+				allowedAccess = true;				
+			} else if("cRater".equals(annotationType)) {
+				//the user is getting a CRater annotation
+				StepWork stepWork = getVleService().getStepWorkById(stepWorkId);
+				
+				UserInfo stepWorkUserInfo = stepWork.getUserInfo();
+				Long stepWorkWorkgroupId = stepWorkUserInfo.getWorkgroupId();
+				
+				//make sure the user is in the workgroup
+				if(SecurityUtils.isUserInWorkgroup(signedInUser, stepWorkWorkgroupId)) {
+					allowedAccess = true;
+				}
+			} else if("flag".equals(requestedType)) {
+				//the user is getting a flag
+				
+				//make sure the user is in the period
+				if(SecurityUtils.isUserInPeriod(signedInUser, runIdLong, periodId)) {
+					allowedAccess = true;
+				}
+			}
+		}
+		
+		if(!allowedAccess) {
+			//user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
+		
 		/*
 		 * retrieval of periods is only required when students request flagged work
 		 * because we only want students to see flagged work from their own period
@@ -164,10 +226,6 @@ public class VLEAnnotationController extends AbstractController {
 				} catch (ObjectNotFoundException e) {
 					e.printStackTrace();
 				}
-				
-				//get the signed in student's user info and period id
-				JSONObject myUserInfo = RunUtil.getMyUserInfo(run, workgroupService);
-				periodId = myUserInfo.getLong("periodId");
 				
 				//get the classmate user infos
 				JSONArray classmateUserInfos = RunUtil.getClassmateUserInfos(run, workgroupService, runService);
@@ -676,17 +734,71 @@ public class VLEAnnotationController extends AbstractController {
 	 */
 	private void doPostJSON(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+		
 		//obtain the parameters
 		String runId = request.getParameter("runId");
 		String nodeId = request.getParameter("nodeId");
-		String toWorkgroup = request.getParameter("toWorkgroup");
-		String fromWorkgroup = request.getParameter("fromWorkgroup");
+		String toWorkgroupIdStr = request.getParameter("toWorkgroup");
+		String fromWorkgroupIdStr = request.getParameter("fromWorkgroup");
 		String type = request.getParameter("annotationType");
 		String value = request.getParameter("value");
 		String stepWorkId = request.getParameter("stepWorkId");
 		String action = request.getParameter("action");
 		String periodId = request.getParameter("periodId");
 
+		Long runIdLong = null;
+		if(runId != null) {
+			try {
+				runIdLong = new Long(runId);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Long fromWorkgroupId = null;
+		if(fromWorkgroupIdStr != null) {
+			try {
+				fromWorkgroupId = new Long(fromWorkgroupIdStr);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Long toWorkgroupId = null;
+		if(toWorkgroupIdStr != null) {
+			try {
+				toWorkgroupId = new Long(toWorkgroupIdStr);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		boolean allowedAccess = false;
+		
+		/*
+		 * teachers can post an annotation if they own the run
+		 * students can post an annotation if it is from them
+		 */
+		if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+			//the teacher is the owner or shared owner of the run so we will allow this request
+			allowedAccess = true;
+		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong)) {
+			//the student is in the run
+			
+			if(SecurityUtils.isUserInWorkgroup(signedInUser, fromWorkgroupId)) {
+				//the student is in the workgroup so we will allow this request 
+				allowedAccess = true;
+			}
+		}
+		
+		if(!allowedAccess) {
+			//user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
+		
 		Calendar now = Calendar.getInstance();
 		Timestamp postTime = new Timestamp(now.getTimeInMillis());
 		StepWork stepWork = null;
@@ -695,15 +807,15 @@ public class VLEAnnotationController extends AbstractController {
 			stepWork = (StepWork) vleService.getStepWorkById(new Long(stepWorkId));
 		}
 		
-		UserInfo fromUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(new Long(fromWorkgroup));
-		UserInfo toUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(new Long(toWorkgroup));
+		UserInfo fromUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(fromWorkgroupId);
+		UserInfo toUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(toWorkgroupId);
 
 		JSONObject annotationEntryJSONObj = new JSONObject();
 		try {
 			annotationEntryJSONObj.put("runId", runId);
 			annotationEntryJSONObj.put("nodeId", nodeId);
-			annotationEntryJSONObj.put("toWorkgroup", toWorkgroup);
-			annotationEntryJSONObj.put("fromWorkgroup", fromWorkgroup);
+			annotationEntryJSONObj.put("toWorkgroup", toWorkgroupIdStr);
+			annotationEntryJSONObj.put("fromWorkgroup", fromWorkgroupIdStr);
 			annotationEntryJSONObj.put("stepWorkId", stepWorkId);
 			annotationEntryJSONObj.put("type", type);
 			

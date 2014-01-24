@@ -18,7 +18,9 @@ import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.annotation.Annotation;
@@ -26,6 +28,7 @@ import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
+import org.wise.vle.utils.SecurityUtils;
 
 
 /**
@@ -102,14 +105,31 @@ public class VLEPeerReviewController extends AbstractController {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void handleTeacherRequest(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	private void handleTeacherRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
 		//get the run id
 		String runId = request.getParameter("runId");
 		
 		Long runIdLong = null;
 		if(runId != null) {
 			runIdLong = Long.parseLong(runId);
+		}
+		
+		boolean allowedAccess = false;
+		
+		/*
+		 * a teacher can make a request if they are the owner of the run
+		 */
+		if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+			//the teacher is an owner or shared owner of the run so we will allow the request
+			allowedAccess = true;
+		}
+		
+		if(!allowedAccess) {
+			//the user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
 		}
 		
 		//get all the peer review work for the run
@@ -195,8 +215,10 @@ public class VLEPeerReviewController extends AbstractController {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	private void handleStudentRequest(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	private void handleStudentRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+				
 		//parameters to specify which node instance we are working with for peer review
 		String runId = request.getParameter("runId");
 		String workgroupId = request.getParameter("workgroupId");
@@ -220,6 +242,22 @@ public class VLEPeerReviewController extends AbstractController {
 		Long periodIdLong = null;
 		if(periodId != null) {
 			periodIdLong = Long.parseLong(periodId);
+		}
+		
+		boolean allowedAccess = false;
+		
+		/*
+		 * the student can make a request if they are in the run
+		 */
+		if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong)) {
+			//the student is in the run so we will allow the request
+			allowedAccess = true;
+		}
+		
+		if(!allowedAccess) {
+			//user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
 		}
 		
 		//number of workgroups registered in the period, this is passed in from BridgeController

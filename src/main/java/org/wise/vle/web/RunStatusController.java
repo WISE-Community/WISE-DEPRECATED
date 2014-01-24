@@ -11,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.status.RunStatus;
 import org.wise.vle.utils.SecurityUtils;
@@ -37,13 +39,9 @@ public class RunStatusController extends AbstractController {
 	 * @param response
 	 */
 	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		/* make sure that this request is authenticated through the portal before proceeding */
-		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-			/* not authenticated send not authorized status */
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
-
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+		
 		//get the run id
 		String runIdString = request.getParameter("runId");
 		
@@ -57,6 +55,26 @@ public class RunStatusController extends AbstractController {
 			e.printStackTrace();
 		}
 		
+		boolean allowedAccess = false;
+		
+		/*
+		 * teachers that are owners of the run can make a request
+		 * students that are in the run can make a request
+		 */
+		if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
+			allowedAccess = true;
+		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId)) {
+			//the student is in the run so we will allow this request
+			allowedAccess = true;
+		}
+		
+		if(!allowedAccess) {
+			//user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
+
 		if(runId != null) {
 			//try to retrieve the run status for the run id
 			RunStatus runStatus = vleService.getRunStatusByRunId(runId);
@@ -102,7 +120,10 @@ public class RunStatusController extends AbstractController {
 	 * @param request
 	 * @param response
 	 */
-	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+
 		//get the run id
 		String runIdString = request.getParameter("runId");
 		
@@ -116,6 +137,23 @@ public class RunStatusController extends AbstractController {
 			runId = new Long(runIdString);
 		} catch(NumberFormatException e) {
 			e.printStackTrace();
+		}
+		
+		boolean allowedAccess = false;
+		
+		/*
+		 * teachers that are owners of the run can make a request
+		 * students can not make a request
+		 */
+		if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+			//the user is a teacher that is an owner or shared owner of the run
+			allowedAccess = true;
+		}
+		
+		if(!allowedAccess) {
+			//user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return null;
 		}
 		
 		if(runId != null && status != null) {

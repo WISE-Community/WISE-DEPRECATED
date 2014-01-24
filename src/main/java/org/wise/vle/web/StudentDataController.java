@@ -23,9 +23,12 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
+import org.wise.portal.service.workgroup.WISEWorkgroupService;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
@@ -47,6 +50,8 @@ public class StudentDataController extends AbstractController {
 	private VLEService vleService;
 	
 	private RunService runService;
+	
+	private static WISEWorkgroupService workgroupService;
 	
 	private Properties wiseProperties;
 	
@@ -71,24 +76,9 @@ public class StudentDataController extends AbstractController {
 	public ModelAndView doGet(HttpServletRequest request,
 			HttpServletResponse response)
 					throws ServletException, IOException {
-
-		boolean useCachedWork = true;
-		if (request.getParameter("useCachedWork") != null) {
-			useCachedWork = Boolean.valueOf(request.getParameter("useCachedWork"));
-		}
-
-		/* make sure that this request is authenticated through the portal before proceeding */
-		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-			/* not authenticated send not authorized status */
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
-
-		/* set headers so that browsers don't cache the data (due to ie problem */
-		response.setHeader("Pragma", "no-cache");
-		response.setHeader("Cache-Control", "no-cache");
-		response.setDateHeader("Expires", 0);
-
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+		
 		/*
 		 * obtain the get parameters. there are two use cases at the moment.
 		 * 1. only userId is provided (multiple userIds can be delimited by :)
@@ -99,19 +89,139 @@ public class StudentDataController extends AbstractController {
 		// NOT the userId in the vle_database.
 		// to convert to userId, see the mapping in userInfo table.
 		String nodeId = request.getParameter("nodeId");
-		String runId = request.getParameter("runId");
+		String runIdStr = request.getParameter("runId");
 		String type = request.getParameter("type");
 		String nodeTypes = request.getParameter("nodeTypes");
 		String nodeIds = request.getParameter("nodeIds");
 		String getAllWorkStr = request.getParameter("getAllWork");
 		String getRevisionsStr = request.getParameter("getRevisions");
+		
+		String periodString = request.getParameter("periodId");
+		
+		Long period = null;
+		
+		if(periodString != null) {
+			period = Long.parseLong(periodString);	
+		}
+		
+		if (userIdStr == null) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "get data: userId missing.");
+			return null;
+		}
+		
+		//the get request can be for multiple ids that are delimited by ':'
+		String[] userIdArray = userIdStr.split(":");
+		
+		Long runId = null;
+		if(runIdStr != null) {
+			try {
+				//get the run id as a Long
+				runId = new Long(runIdStr);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Run run = null;
+		if(runId != null) {
+			try {
+				//get the run object
+				run = runService.retrieveById(runId);				
+			} catch (ObjectNotFoundException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+		boolean allowedAccess = false;
+		
+		/*
+		 * teachers that are owners of the run can make a request
+		 * students that are accessing their own work can make a request
+		 * students that are accessing aggregate data for a step can make a request
+		 */
+		if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+			//the teacher is an owner or shared owner of the run so we will allow this request
+			allowedAccess = true;
+		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId)) {
+			//the user is a student
+			
+			if(type == null) {
+				//the student is trying to access their own work
+				
+				Long workgroupId = null;
+				
+				try {
+					//get the workgroup id
+					workgroupId = new Long(userIdStr);
+				} catch(NumberFormatException e) {
+					
+				}
+				
+				//check if the signed in user is really in the workgroup
+				if(SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
+					//the signed in user is really in the workgroup so we will allow this request
+					allowedAccess = true;
+				}
+			} else if(type.equals("brainstorm") || type.equals("aggregate")) {
+				//the student is trying to access work from their classmates
+				
+				/*
+				 * boolean value to keep track of whether all the workgroup ids
+				 * that the user is trying to access work for is in the run.
+				 * this will be set to false if we find a single workgroup id that
+				 * is not in the run.
+				 */
+				boolean allWorkgroupIdsInRun = true;
+				
+				//loop through all the classmate workgroup ids
+				for(int x=0; x<userIdArray.length; x++) {
+					//get a workgroup id
+					String classmateWorkgroupIdString = userIdArray[x];
+
+					Long classmateWorkgroupId = null;
+					try {
+						classmateWorkgroupId = new Long(classmateWorkgroupIdString);					
+					} catch(NumberFormatException e) {
+						
+					}
+					
+					//check if the workgroup id is in the run
+					if(!SecurityUtils.isWorkgroupInRun(classmateWorkgroupId, runId)) {
+						//the workgroup id is not in the run
+						allWorkgroupIdsInRun = false;
+						break;
+					}
+				}
+				
+				//only allow access if all the workgroup ids are in the run
+				if(allWorkgroupIdsInRun) {
+					allowedAccess = true;
+				}
+			}
+		}
+		
+		if(!allowedAccess) {
+			//the user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
+		
+		boolean useCachedWork = true;
+		if (request.getParameter("useCachedWork") != null) {
+			useCachedWork = Boolean.valueOf(request.getParameter("useCachedWork"));
+		}
+
+		/* set headers so that browsers don't cache the data (due to ie problem */
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setDateHeader("Expires", 0);
 
 		// override userIdStr if user is requesting for aggregate and showAllStudents is requested
 		if ("aggregate".equals(type) && Boolean.parseBoolean(request.getParameter("allStudents"))) {
 			// request for all students work in run. lookup workgroups in run and construct workgroupIdString
 			String workgroupIdStr = "";
 			try {
-				Set<Workgroup> workgroups = getRunService().getWorkgroups(new Long(runId));
+				Set<Workgroup> workgroups = getRunService().getWorkgroups(runId);
 				for (Workgroup workgroup : workgroups) {
 					workgroupIdStr += workgroup.getId() + ":";
 				}
@@ -146,11 +256,6 @@ public class StudentDataController extends AbstractController {
 			getRevisions = Boolean.parseBoolean(getRevisionsStr);
 		}
 
-		if (userIdStr == null) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "get data: userId missing.");
-			return null;
-		}
-
 		//the list that contains the types of nodes we want to return
 		List<String> nodeTypesList = null;
 
@@ -171,7 +276,7 @@ public class StudentDataController extends AbstractController {
 			//loop through the node ids
 			for(int x=0; x<nodeIdsArray.length; x++) {
 				//obtain a handle on the Node with the node id
-				Node tempNode = vleService.getNodeByNodeIdAndRunId(nodeIdsArray[x], runId);
+				Node tempNode = vleService.getNodeByNodeIdAndRunId(nodeIdsArray[x], runIdStr);
 
 				if(tempNode != null) {
 					//add the Node to our list
@@ -190,16 +295,6 @@ public class StudentDataController extends AbstractController {
 			}
 			// now make sure that we can access students' work for all the nodes in the nodeList.
 
-			Run run = null;
-			try {
-				if(runId != null) {
-					//get the run object
-					run = runService.retrieveById(new Long(runId));				
-				}
-			} catch (ObjectNotFoundException e1) {
-				e1.printStackTrace();
-			}
-			
 			//get the path to the project on the server
 			String curriculumBaseDir = getWiseProperties().getProperty("curriculum_base_dir");
 			String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
@@ -224,16 +319,13 @@ public class StudentDataController extends AbstractController {
 			//this case is when userId is passed in as a GET argument
 			// this is currently only being used for brainstorm steps and aggregate steps
 
-			//the get request can be for multiple ids that are delimited by ':'
-			String[] userIdArray = userIdStr.split(":");
-
 			if(nodeId != null && !nodeId.equals("")) {
 				/*
 				 * return an array of node visits for a specific node id.
 				 * this case uses userIdStr and nodeId.
 				 */
 
-				Node node = vleService.getNodeByNodeIdAndRunId(nodeId, runId);
+				Node node = vleService.getNodeByNodeIdAndRunId(nodeId, runIdStr);
 
 				List<UserInfo> userInfos = new ArrayList<UserInfo>();
 
@@ -306,7 +398,7 @@ public class StudentDataController extends AbstractController {
 							} else {
 								// lastPostTime happened before lastCachedTime or we never cached, so we need to retrieve student data
 								if (nodeList.size() == 0) {
-									nodeList = vleService.getNodesByRunId(runId);
+									nodeList = vleService.getNodesByRunId(runIdStr);
 								}
 								nodeVisitsJSON = getNodeVisitsForStudent(nodeList,nodeTypesList,userInfo, getAllWork, getRevisions);
 
@@ -521,13 +613,9 @@ public class StudentDataController extends AbstractController {
 			nodesWithLargeStudentWork.add(nodes_with_large_student_work_array[i]);
 		}
 		
-		/* make sure that this request is authenticated through the portal before proceeding */
-		if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-			/* not authenticated send not authorized status */
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
-
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+		
 		String runId = request.getParameter("runId");
 		String userId = request.getParameter("userId");
 		String periodId = request.getParameter("periodId");
@@ -552,7 +640,34 @@ public class StudentDataController extends AbstractController {
 			periodIdLong = new Long(periodId);
 		}
 		
-		UserInfo userInfo = (UserInfo) vleService.getUserInfoOrCreateByWorkgroupId(new Long(userId));
+		Long workgroupId = null;
+		if(userId != null) {
+			try {
+				workgroupId = new Long(userId);
+			} catch(NumberFormatException e) {
+				
+			}
+		}
+		
+		boolean allowedAccess = false;
+		
+		/*
+		 * teachers can not make a request
+		 * students can make a request if they are in the run and in the workgroup
+		 */
+		if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong) &&
+				SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
+			//the student is in the run and the workgroup so we will allow the request
+			allowedAccess = true;
+		}
+		
+		if(!allowedAccess) {
+			//the user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
+		
+		UserInfo userInfo = (UserInfo) vleService.getUserInfoOrCreateByWorkgroupId(workgroupId);
 
 		JSONObject nodeVisitJSON = null;
 		try {
@@ -813,6 +928,14 @@ public class StudentDataController extends AbstractController {
 
 	public void setWiseProperties(Properties wiseProperties) {
 		this.wiseProperties = wiseProperties;
+	}
+
+	public static WISEWorkgroupService getWorkgroupService() {
+		return workgroupService;
+	}
+
+	public static void setWorkgroupService(WISEWorkgroupService workgroupService) {
+		StudentDataController.workgroupService = workgroupService;
 	}
 
 }
