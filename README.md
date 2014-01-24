@@ -3,7 +3,7 @@ WISE
 
 Web-based Inquiry Science Education (WISE).
 
-Setup WISE Local Development: https://github.com/WISE-Community/WISE/wiki/How-to-Develop-WISE
+Setup WISE Local Development: https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE:-Local-Development-Environment-without-using-IDE
 
 Other documentation: https://github.com/WISE-Community/WISE/wiki
 
