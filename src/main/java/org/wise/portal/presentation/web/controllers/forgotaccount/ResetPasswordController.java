@@ -162,7 +162,7 @@ public class ResetPasswordController extends SimpleFormController {
 			String username = user.getUserDetails().getUsername();
 			
 			//get the portal name
-			String portalName = wiseProperties.getProperty("portal.name");
+			String portalName = wiseProperties.getProperty("wise.name");
 			
 			//get the user's email
 			String userEmail = user.getUserDetails().getEmailAddress();

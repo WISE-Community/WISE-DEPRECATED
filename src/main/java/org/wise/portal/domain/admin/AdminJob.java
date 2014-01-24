@@ -175,7 +175,7 @@ public class AdminJob extends QuartzJobBean {
 		String[] recipients = wiseProperties.getProperty("uber_admin").split(",");
 		
 		String subject = "Daily Admin Report on Portal: "
-		    + " (" + wiseProperties.getProperty("portal.name") + ")";		
+		    + " (" + wiseProperties.getProperty("wise.name") + ")";		
 
 		String msg = message;
 		
