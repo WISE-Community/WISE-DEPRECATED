@@ -1,0 +1,3392 @@
+{
+   "autoStep": false,
+   "stepLevelNum": true,
+   "stepTerm": "Mission",
+   "stepTermPlural": "Steps",
+   "activityTerm": "",
+   "activityTermPlural": "",
+   "title": "EPIGAME Base Warp Version II",
+   "constraints": [],
+   "nodes": [
+      {
+         "type": "HtmlNode",
+         "identifier": "node_110.ht",
+         "title": "Take Pregame Quiz (Placeholder)",
+         "hints": [],
+         "ref": "node_110.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "icons": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_111.ht",
+         "title": "Take Postgame Quiz (Placeholder)",
+         "hints": [],
+         "ref": "node_111.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "icons": [],
+         "class": "display"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_10.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_10.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level1",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_8.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_8.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level3",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level2"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_17.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_17.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level5",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level4"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_23.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_23.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level7",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level6"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_29.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_29.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level9",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level8"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_35.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_35.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level11",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level10"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_41.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_41.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level13",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level12"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_47.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_47.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level15",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level14"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_53.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_53.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level17",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level16"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_59.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_59.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level19",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level18"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_65.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_65.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level21",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level20"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_71.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_71.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level23",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level22"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_77.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_77.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level25",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level24"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_83.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_83.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level27",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level26"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_89.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_89.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level29",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level28"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_95.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_95.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level31",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level30"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_96.ep",
+         "title": "Silver",
+         "hints": [],
+         "ref": "node_96.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level31",
+            "Silver",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level30"
+            },
+            {
+               "functionArgs": [
+                  3100,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  1080,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "silver"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_97.ep",
+         "title": "Gold",
+         "hints": [],
+         "ref": "node_97.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level31",
+            "Gold",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level30"
+            },
+            {
+               "functionArgs": [
+                  11500,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  1750,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  70
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "gold"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_98.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_98.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level32",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level31"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_99.ep",
+         "title": "Silver",
+         "hints": [],
+         "ref": "node_99.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level32",
+            "Silver",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level31"
+            },
+            {
+               "functionArgs": [
+                  3200,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  1120,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "silver"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_100.ep",
+         "title": "Gold",
+         "hints": [],
+         "ref": "node_100.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level32",
+            "Gold",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level31"
+            },
+            {
+               "functionArgs": [
+                  12100,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  1820,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  70
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "gold"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_101.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_101.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level33",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level32"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_102.ep",
+         "title": "Silver",
+         "hints": [],
+         "ref": "node_102.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level33",
+            "Silver",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level32"
+            },
+            {
+               "functionArgs": [
+                  3300,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  1160,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "silver"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_103.ep",
+         "title": "Gold",
+         "hints": [],
+         "ref": "node_103.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level33",
+            "Gold",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level32"
+            },
+            {
+               "functionArgs": [
+                  12400,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  1890,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  75
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "gold"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_104.ep",
+         "title": "Bronze",
+         "hints": [],
+         "ref": "node_104.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level34",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level33"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_105.ep",
+         "title": "Silver",
+         "hints": [],
+         "ref": "node_105.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level34",
+            "Silver",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level33"
+            },
+            {
+               "functionArgs": [
+                  3400,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  1200,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "silver"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_106.ep",
+         "title": "Gold",
+         "hints": [],
+         "ref": "node_106.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level34",
+            "Gold",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level33"
+            },
+            {
+               "functionArgs": [
+                  12800,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  1960,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  75
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            }
+         ],
+         "links": [],
+         "icons": [],
+         "class": "gold"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_5.txt",
+         "title": "Take Postgame Quiz",
+         "hints": [],
+         "ref": "node_5.txt",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Posttest"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAll",
+               "tagName": "Pretest"
+            },
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "Level32"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/PrePostTestIcon-Charged.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_5.txt",
+                     "statusType": "isCompleted",
+                     "statusValue": "true"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/PrePostTestIcon-Uncharged.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_5.txt",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_5.txt",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "mission"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_92.ep",
+         "title": "Green Boss Mission 1",
+         "hints": [],
+         "ref": "node_92.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level30",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level29"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            },
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "greenWarpStep"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_92.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_92.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_92.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_92.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_92.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_86.ep",
+         "title": "Green Mission 2",
+         "hints": [],
+         "ref": "node_86.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level28",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level27"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            },
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "Level26"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_86.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_86.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_86.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_86.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_86.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_80.ep",
+         "title": "Green Mission 1",
+         "hints": [],
+         "ref": "node_80.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level26",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level25"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            },
+            {
+               "tagName": "Level20",
+               "functionName": "xMustHaveStatusY",
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ]
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_80.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_80.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_80.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_80.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_80.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_62.ep",
+         "title": "Blue Boss Mission 2",
+         "hints": [],
+         "ref": "node_62.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level20",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level19"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            },
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "Level18"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_62.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_62.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_62.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_62.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_62.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_56.ep",
+         "title": "Blue Boss Mission 1",
+         "hints": [],
+         "ref": "node_56.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level18",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level17"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            },
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "blueWarpStep"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_56.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_56.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_56.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_56.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_56.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_50.ep",
+         "title": "Blue Mission 2",
+         "hints": [],
+         "ref": "node_50.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level16",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level15"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            },
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "Level14"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_50.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_50.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_50.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_50.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_50.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_44.ep",
+         "title": "Blue Mission 1",
+         "hints": [],
+         "ref": "node_44.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level14",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level13"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            },
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "Level8"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_44.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_44.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_44.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_44.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_44.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_26.ep",
+         "title": "Red Boss Mission 2",
+         "hints": [],
+         "ref": "node_26.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level8",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level7"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            },
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "Level6"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_26.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_26.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_26.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_26.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_26.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_20.ep",
+         "title": "Red Boss Mission 1",
+         "hints": [],
+         "ref": "node_20.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level6",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level5"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            },
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "redWarpStep"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_20.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_20.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_20.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_20.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_20.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_14.ep",
+         "title": "Red Mission 2",
+         "hints": [],
+         "ref": "node_14.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level4",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level3"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            },
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "Level2"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_14.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_14.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_14.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_14.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_14.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_0.ep",
+         "title": "Red Mission 1",
+         "hints": [],
+         "ref": "node_0.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level2",
+            "Bronze",
+            "EpiMission"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [],
+               "functionName": "checkCompletedAny",
+               "tagName": "Level1"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  "Bronze:1;Silver:2;Gold:3"
+               ],
+               "functionName": "getTotalPerformance",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0,
+                  0
+               ],
+               "functionName": "getTotalExplanation",
+               "tagName": "EpiMission"
+            },
+            {
+               "functionArgs": [
+                  0
+               ],
+               "functionName": "getTotalAdaptive",
+               "tagName": "EpiWarp"
+            },
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "EpiTut"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_0.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_0.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_0.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_0.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_0.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "bronze"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_2.ep",
+         "title": "Tutorial",
+         "hints": [],
+         "ref": "node_2.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "EpiTut"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "Pretest"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_2.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_2.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_2.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_2.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_2.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "mission"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_4.ep",
+         "title": "Take Pregame Quiz",
+         "hints": [],
+         "ref": "node_4.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Pretest"
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/PrePostTestIcon-Charged.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_4.ep",
+                     "statusType": "isCompleted",
+                     "statusValue": "true"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/PrePostTestIcon-Uncharged.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_4.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_4.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "mission"
+      },
+      {
+         "type": "FlashNode",
+         "identifier": "node_1.fl",
+         "title": "CS: Meeting Surge",
+         "hints": [],
+         "ref": "node_1.fl",
+         "previousWorkNodeIds": [],
+         "tagMaps": [
+            {
+               "tagName": "EpiTut",
+               "functionName": "xMustHaveStatusY",
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ]
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/FuzzyTv-1.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_1.fl",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_1.fl",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "simulation"
+      },
+      {
+         "type": "FlashNode",
+         "identifier": "node_3.fl",
+         "title": "CS: Pricklies!",
+         "hints": [],
+         "ref": "node_3.fl",
+         "previousWorkNodeIds": [],
+         "tagMaps": [
+            {
+               "tagName": "Level8",
+               "functionName": "xMustHaveStatusY",
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ]
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/FuzzyTv-2.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_3.fl",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_3.fl",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "simulation"
+      },
+      {
+         "type": "FlashNode",
+         "identifier": "node_11.fl",
+         "title": "CS: Sneaking into the Station!",
+         "hints": [],
+         "ref": "node_11.fl",
+         "previousWorkNodeIds": [],
+         "tagMaps": [
+            {
+               "tagName": "Level20",
+               "functionName": "xMustHaveStatusY",
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ]
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/FuzzyTv-3.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_11.fl",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_11.fl",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "simulation"
+      },
+      {
+         "type": "FlashNode",
+         "identifier": "node_12.fl",
+         "title": "CS: The Final Confrontation!",
+         "hints": [],
+         "ref": "node_12.fl",
+         "previousWorkNodeIds": [],
+         "tagMaps": [
+            {
+               "tagName": "Level32",
+               "functionName": "xMustHaveStatusY",
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ]
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/FuzzyTv-4.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_12.fl",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_12.fl",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "simulation"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_6.ep",
+         "title": "Warp Mission Red",
+         "hints": [],
+         "ref": "node_6.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "redWarpStep"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "Level4"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-red.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_6.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-red.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_6.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-red.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_6.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-red.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_6.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_6.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "planet-easy"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_7.ep",
+         "title": "Warp Mission Blue",
+         "hints": [],
+         "ref": "node_7.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "blueWarpStep"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "Level16"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-blue.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_7.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-blue.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_7.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-blue.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_7.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-blue.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_7.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_7.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "planet-medium"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_9.ep",
+         "title": "Warp Mission Green",
+         "hints": [],
+         "ref": "node_9.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "greenWarpStep"
+         ],
+         "tagMaps": [
+            {
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ],
+               "functionName": "xMustHaveStatusY",
+               "tagName": "Level28"
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-green.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_9.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-green.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_9.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-green.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_9.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-green.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_9.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_9.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ],
+         "class": "planet-hard"
+      },
+      {
+         "type": "EpigameNode",
+         "identifier": "node_13.ep",
+         "title": "Green Boss Mission 2",
+         "hints": [],
+         "ref": "node_13.ep",
+         "previousWorkNodeIds": [],
+         "tags": [
+            "Level32"
+         ],
+         "tagMaps": [
+            {
+               "tagName": "Level30",
+               "functionName": "xMustHaveStatusY",
+               "functionArgs": [
+                  "isCompleted",
+                  "true"
+               ]
+            }
+         ],
+         "links": [],
+         "icons": [
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-bronze.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_13.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "bronze"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-silver.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_13.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "silver"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-gold.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_13.ep",
+                     "statusType": "epigameMedal",
+                     "statusValue": "gold"
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_13.ep",
+                     "statusType": "isVisitable",
+                     "statusValue": true
+                  }
+               ]
+            },
+            {
+               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
+               "statuses": [
+                  {
+                     "nodeId": "node_13.ep",
+                     "statusType": "isVisible",
+                     "statusValue": true
+                  }
+               ]
+            }
+         ]
+      }
+   ],
+   "sequences": [
+      {
+         "type": "sequence",
+         "identifier": "seq_2",
+         "title": "Pretest",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_1",
+         "title": "Tutorial",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_5",
+         "title": "Switch it Up!",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_7",
+         "title": "Spaceway to Heaven",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_9",
+         "title": "You Spin Me Right Round",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_11",
+         "title": "Fuzzies I Choose You!",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_13",
+         "title": "All The Single Fuzzies",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_15",
+         "title": "The Mass Effect",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_4",
+         "title": "Warp Mission Red",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_17",
+         "title": "I Hope I Don't Lose My Launch",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_19",
+         "title": "Fuzzy You're A Firework",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_21",
+         "title": "The Trouble With Fuzzies",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_23",
+         "title": "Fuzzy You're My Only Hope",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_25",
+         "title": "A Tricky Situation",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_27",
+         "title": "Whip My Fuzzies Back and Forth",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_6",
+         "title": "Warp Mission Purple",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_29",
+         "title": "Drop It Like It's Hot",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_31",
+         "title": "Not Just Another Pretty Space",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_33",
+         "title": "Fuzz On Fuzz Off",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_8",
+         "title": "Warp Mission Green",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_3",
+         "title": "Posttest",
+         "view": "normal",
+         "refs": []
+      },
+      {
+         "type": "sequence",
+         "identifier": "master",
+         "title": "Master",
+         "view": "normal",
+         "refs": [
+            "node_4.ep",
+            "node_2.ep",
+            "node_1.fl",
+            "node_0.ep",
+            "node_14.ep",
+            "node_6.ep",
+            "node_20.ep",
+            "node_26.ep",
+            "node_3.fl",
+            "node_44.ep",
+            "node_50.ep",
+            "node_7.ep",
+            "node_56.ep",
+            "node_62.ep",
+            "node_11.fl",
+            "node_80.ep",
+            "node_86.ep",
+            "node_9.ep",
+            "node_92.ep",
+            "node_13.ep",
+            "node_12.fl",
+            "node_5.txt"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_10",
+         "title": "CS: The Final Confrontation!",
+         "view": "normal",
+         "refs": []
+      }
+   ],
+   "startPoint": "master",
+   "navMode": null,
+   "theme": null,
+   "globalTagMaps": [
+      {
+         "functionArgs": [],
+         "functionName": "pilotRating",
+         "scores": [
+            {
+               "icon": "themes/starmap/navigation/map/images/Pilot Medal0005.png",
+               "rank": "Pilot Rank 5",
+               "score": 12000
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Pilot Medal0004.png",
+               "rank": "Pilot Rank 4",
+               "score": 9000
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Pilot Medal0003.png",
+               "rank": "Pilot Rank 3",
+               "score": 6000
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Pilot Medal0002.png",
+               "rank": "Pilot Rank 2",
+               "score": 3000
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Pilot Medal0001.png",
+               "rank": "Pilot Rank 1",
+               "score": 0
+            }
+         ],
+         "tagName": "pilotSteps"
+      },
+      {
+         "functionArgs": [],
+         "functionName": "warpRating",
+         "scores": [
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Red0005.png",
+               "rank": "Red Warp Rank 5",
+               "score": 0.8
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Red0004.png",
+               "rank": "Red Warp Rank 4",
+               "score": 0.6
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Red0003.png",
+               "rank": "Red Warp Rank 3",
+               "score": 0.4
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Red0002.png",
+               "rank": "Red Warp Rank 2",
+               "score": 0.2
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Red0001.png",
+               "rank": "Red Warp Rank 1",
+               "score": 0
+            }
+         ],
+         "tagName": "redWarpStep"
+      },
+      {
+         "functionArgs": [],
+         "functionName": "warpRating",
+         "scores": [
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Blue0005.png",
+               "rank": "Purple Warp Rank 5",
+               "score": 0.8
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Blue0004.png",
+               "rank": "Purple Warp Rank 4",
+               "score": 0.6
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Blue0003.png",
+               "rank": "Purple Warp Rank 3",
+               "score": 0.4
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Blue0002.png",
+               "rank": "Purple Warp Rank 2",
+               "score": 0.2
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Blue0001.png",
+               "rank": "Purple Warp Rank 1",
+               "score": 0
+            }
+         ],
+         "tagName": "blueWarpStep"
+      },
+      {
+         "functionArgs": [],
+         "functionName": "warpRating",
+         "scores": [
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Green0005.png",
+               "rank": "Green Warp Rank 5",
+               "score": 0.8
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Green0004.png",
+               "rank": "Green Warp Rank 4",
+               "score": 0.6
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Green0003.png",
+               "rank": "Green Warp Rank 3",
+               "score": 0.4
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Green0002.png",
+               "rank": "Green Warp Rank 2",
+               "score": 0.2
+            },
+            {
+               "icon": "themes/starmap/navigation/map/images/Warp Medal Green0001.png",
+               "rank": "Green Warp Rank 1",
+               "score": 0
+            }
+         ],
+         "tagName": "greenWarpStep"
+      }
+   ]
+}

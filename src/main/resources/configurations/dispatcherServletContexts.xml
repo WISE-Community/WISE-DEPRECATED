@@ -1313,4 +1313,6 @@
     
                 <mvc:resources mapping="/vle/**" location="/vle/" order="1" />
     
+                <mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
+                
 </beans>

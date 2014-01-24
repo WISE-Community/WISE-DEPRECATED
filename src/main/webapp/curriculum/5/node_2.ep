@@ -1,0 +1,8 @@
+{
+   "levelString": "",
+   "excelExportStringTemplate": "{response}",
+   "useCustomSwf": "false",
+   "customUri": "",
+   "type": "Epigame",
+   "mode": "tutorial"
+}

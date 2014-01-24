@@ -1,0 +1,25 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "OpenResponse",
+      "interaction": {
+         "expectedLines": "0",
+         "hasInlineFeedback": false,
+         "placeholderText": "",
+         "prompt": "<p><span style=\"font-size: small;\">Based on the convection current exploration activities and your MySystem diagram, write a story about <span style=\"color: #ff0000;\"><strong>changes</strong></span> in the mantle as it moves from the Earth's core towards the crust and back down to the core. Make sure you include the following information:</span></p>\n<ul>\n<li><span style=\"font-size: small;\">Where does the energy come from?</span></li>\n<li><span style=\"font-size: small;\">Where does the energy go?</span></li>\n<li><span style=\"font-size: small;\">How does the energy move?</span></li>\n<li><span style=\"font-size: small;\">How does the energy change?</span></li>\n<li><span style=\"color: #ff0000; font-size: small;\"><strong>What role does the energy play in changes in the mantle?</strong></span></li>\n</ul>\n<p><span style=\"font-size: small;\">*Hint: Use your&nbsp;<a style=\"color: blue; cursor: pointer;\" onclick=\"node.linkTo('awO4J1TmxM')\">MySystem diagram</a> to think about answers to the questions above.</span></p>",
+         "responseIdentifier": "OR"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "OR"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": false,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "type": "OpenResponse"
+}

@@ -1,0 +1,1109 @@
+{
+   "autoStep": false,
+   "stepLevelNum": true,
+   "stepTerm": "",
+   "title": "Plate Tectonics 2013",
+   "constraints": [],
+   "nodes": [
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_20.or",
+         "title": "Questionnaire 1",
+         "hints": [],
+         "ref": "node_20.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "Mysystem2Node",
+         "identifier": "node_14.my2",
+         "title": "MySystem2",
+         "hints": [],
+         "ref": "node_14.my2",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "mysystem"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_29.or",
+         "title": "Energy Story -MS",
+         "hints": [],
+         "ref": "node_29.or",
+         "previousWorkNodeIds": [],
+         "links": [
+            {
+               "key": "223TNHvgzL",
+               "nodePosition": "4.0"
+            }
+         ],
+         "class": "openresponse"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_16.al",
+         "title": "What Happened? OLD",
+         "hints": [],
+         "ref": "node_16.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_10.html",
+         "title": "How to Create MySystem Diagrams",
+         "hints": [],
+         "ref": "node_10.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "simulation"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "evidence6",
+         "title": "Are All Plate Boundaries the Same?",
+         "hints": [],
+         "ref": "evidence6.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "displaypage7",
+         "title": "Why Do Plates Move?",
+         "hints": [],
+         "ref": "displaypage7.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "displaypage8",
+         "title": "What's Going on in the Mantle?",
+         "hints": [],
+         "ref": "displaypage8.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_19.html",
+         "title": "Convection in Action",
+         "hints": [],
+         "ref": "node_19.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "movie"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_1.html",
+         "title": "Exploring Convection - Zooming In",
+         "hints": [],
+         "ref": "node_1.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "simulation"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_2.html",
+         "title": "Exploring Convection - Zooming Out",
+         "hints": [],
+         "ref": "node_2.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "simulation"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "notes4",
+         "title": "Revise Your Explanation",
+         "hints": [],
+         "ref": "notes4.or",
+         "previousWorkNodeIds": [
+            "node_15.or"
+         ],
+         "links": [
+            {
+               "key": "C8pdmMzySn",
+               "nodePosition": "4.8"
+            }
+         ],
+         "class": "note"
+      },
+      {
+         "type": "MatchSequenceNode",
+         "identifier": "node_32.ms",
+         "title": "Checkpoint - Heat and Density",
+         "hints": [],
+         "ref": "node_32.ms",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "matchsequence"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_34.html",
+         "title": "Complete the Circle",
+         "hints": [],
+         "ref": "node_34.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "summary"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_33.or",
+         "title": "Revisit Your Energy Story",
+         "hints": [],
+         "ref": "node_33.or",
+         "previousWorkNodeIds": [
+            "node_9.or"
+         ],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_42.html",
+         "title": "Which Way Are Plates Moving?",
+         "hints": [],
+         "ref": "node_42.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "simulation"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_44.html",
+         "title": "What Will You See?",
+         "hints": [],
+         "ref": "node_44.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "movie"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "evidence3",
+         "title": "Mountains in the United States",
+         "hints": [],
+         "ref": "evidence3.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "evidence2",
+         "title": "Active Volcanoes in the United States",
+         "hints": [],
+         "ref": "evidence2.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "evidence4",
+         "title": "Earth's Crust and Plate Boundaries",
+         "hints": [],
+         "ref": "evidence4.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "evidence5",
+         "title": "Plate Boundaries and Geologic Features",
+         "hints": [],
+         "ref": "evidence5.ht",
+         "previousWorkNodeIds": [],
+         "links": [
+            {
+               "key": "FFfPMkjV5d",
+               "nodePosition": "1.6"
+            }
+         ],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_30.al",
+         "title": "Reflection - Boundary Types",
+         "hints": [],
+         "ref": "node_30.al",
+         "previousWorkNodeIds": [],
+         "links": [
+            {
+               "key": "jvnqzwXLyY",
+               "nodePosition": "2.3"
+            },
+            {
+               "key": "IeBPmEyhgy",
+               "nodePosition": "2.4"
+            }
+         ],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_57.al",
+         "title": "What Decides Whether a Plate Subducts?",
+         "hints": [],
+         "ref": "node_57.al",
+         "previousWorkNodeIds": [],
+         "links": [
+            {
+               "key": "IAXcUvl7Og",
+               "nodePosition": "2.4"
+            }
+         ],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_62.al",
+         "title": "*Draft*Treatment 1: Check the Feedback",
+         "hints": [],
+         "ref": "node_62.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_63.al",
+         "title": "*Draft*Treatment 2: Check for Evidence",
+         "hints": [],
+         "ref": "node_63.al",
+         "previousWorkNodeIds": [],
+         "links": [
+            {
+               "key": "uJrtHslIey",
+               "nodePosition": "2.4"
+            },
+            {
+               "key": "tL6c0UZSA0",
+               "nodePosition": "2.7"
+            }
+         ],
+         "class": "instantquiz"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_60.or",
+         "title": "*Draft*Check for Evidence",
+         "hints": [],
+         "ref": "node_60.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_61.or",
+         "title": "*Draft*Revise Your Explanation",
+         "hints": [],
+         "ref": "node_61.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_64.al",
+         "title": "*Draft*How Was the Feedback?",
+         "hints": [],
+         "ref": "node_64.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_24.or",
+         "title": "Why Do We Have Mountains, Volcanoes, and Earthquakes?",
+         "hints": [],
+         "ref": "node_24.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_50.html",
+         "title": "Introduction",
+         "hints": [],
+         "ref": "node_50.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_3.sd",
+         "title": "Build a Model",
+         "hints": [],
+         "ref": "node_3.sd",
+         "previousWorkNodeIds": [],
+         "links": [
+            {
+               "key": "j8I5KO2Izy",
+               "nodePosition": "6.0"
+            }
+         ],
+         "class": "quickdraw"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_4.ht",
+         "title": "Introduction",
+         "hints": [],
+         "ref": "node_4.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_23.or",
+         "title": "Questionnaire 2",
+         "hints": [],
+         "ref": "node_23.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_25.ht",
+         "title": "Good Job!",
+         "hints": [],
+         "ref": "node_25.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "summary"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_53.ht",
+         "title": "Good Job!",
+         "hints": [],
+         "ref": "node_53.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_54.ht",
+         "title": "How Was It?",
+         "hints": [],
+         "ref": "node_54.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "MWNode",
+         "identifier": "node_59.mw",
+         "title": "Exploring Convection - Zooming In 2",
+         "hints": [],
+         "ref": "node_59.mw",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "simulation"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_65.al",
+         "title": "Questionnaire 3 - Partner 1",
+         "hints": [],
+         "ref": "node_65.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_68.al",
+         "title": "Where Are Volcanoes in the United States?",
+         "hints": [],
+         "ref": "node_68.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_69.al",
+         "title": "Where Are Plate Boundaries?",
+         "hints": [],
+         "ref": "node_69.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_70.al",
+         "title": "Mountains and Volcanoes",
+         "hints": [],
+         "ref": "node_70.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_72.al",
+         "title": "What Did You See?",
+         "hints": [],
+         "ref": "node_72.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_73.al",
+         "title": "Let's Compare Plates",
+         "hints": [],
+         "ref": "node_73.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_13.html",
+         "title": "What's The Big Picture?",
+         "hints": [],
+         "ref": "node_13.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "summary"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_8.html",
+         "title": "Convection and Plate Movement",
+         "hints": [],
+         "ref": "node_8.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_46.or",
+         "title": "How Does Convection Work?",
+         "hints": [],
+         "ref": "node_46.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_6.html",
+         "title": "Where's Convection in Earth?",
+         "hints": [],
+         "ref": "node_6.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_74.al",
+         "title": "Questionnaire 3 - Partner 2",
+         "hints": [],
+         "ref": "node_74.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_78.al",
+         "title": "Questionnaire 3 - Partner 2 ",
+         "hints": [],
+         "ref": "node_78.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_77.al",
+         "title": "Questionnaire 3 - Partner 1 ",
+         "hints": [],
+         "ref": "node_77.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_76.or",
+         "title": "Questionnaire 2 ",
+         "hints": [],
+         "ref": "node_76.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_21.html",
+         "title": "Do You Remember MySystem?",
+         "hints": [],
+         "ref": "node_21.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_45.ht",
+         "title": "Why Do Plates Move? - original",
+         "hints": [],
+         "ref": "node_45.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_84.or",
+         "title": "Revise Your Explanation",
+         "hints": [],
+         "ref": "node_84.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_81.al",
+         "title": "Why Do We Have Mountains, Volcanoes, and Earthquakes?",
+         "hints": [],
+         "ref": "node_81.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "MySystemNode",
+         "identifier": "node_21_mysystem.html",
+         "title": "Build Your MySystem ",
+         "hints": [],
+         "ref": "mysystem1.my",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "mysystem"
+      },
+      {
+         "type": "MySystemNode",
+         "identifier": "node_10_mysystem.html",
+         "title": "Revisit Your MySystem",
+         "hints": [],
+         "ref": "mysystem2.my",
+         "previousWorkNodeIds": [
+            "node_21_mysystem.html"
+         ],
+         "links": [],
+         "class": "mysystem"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "evidence7",
+         "title": "Extra for Experts: Where on Earth?",
+         "hints": [],
+         "ref": "evidence7.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "notes6",
+         "title": "Extra Credit: How Can That Be?",
+         "hints": [],
+         "ref": "notes6.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_31.or",
+         "title": "Extra Credit: Challenge Question",
+         "hints": [],
+         "ref": "node_31.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_80.al",
+         "title": "Extra Credit: What's Going on in Japan?",
+         "hints": [],
+         "ref": "node_80.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_56.al",
+         "title": "Extra Credit: Improve a MySystem",
+         "hints": [],
+         "ref": "node_56.al",
+         "previousWorkNodeIds": [],
+         "links": [
+            {
+               "key": "QlQLDpnVvV",
+               "nodePosition": "3.5"
+            }
+         ],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_85.al",
+         "title": "Make a Prediction",
+         "hints": [],
+         "ref": "node_85.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_58.al",
+         "title": "Extra Credit: Explain a Geologic Process",
+         "hints": [],
+         "ref": "node_58.al",
+         "previousWorkNodeIds": [],
+         "links": [
+            {
+               "key": "NvIj1cOhFU",
+               "nodePosition": "4.6"
+            }
+         ],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_71.al",
+         "title": "Predict What Will Happen",
+         "hints": [],
+         "ref": "node_71.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_82.al",
+         "title": "Do You Remember Conduction?",
+         "hints": [],
+         "ref": "node_82.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_0.ht",
+         "title": "What Kinds of Plates Are Involved?",
+         "hints": [],
+         "ref": "node_0.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "simulation"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_66.al",
+         "title": "Let's Compare",
+         "hints": [],
+         "ref": "node_66.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "evidence1",
+         "title": "Did You Feel It?",
+         "hints": [],
+         "ref": "evidence1.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_5.al",
+         "title": "What Happens When Plates Meet?",
+         "hints": [],
+         "ref": "node_5.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_12.ht",
+         "title": "Extra Credit: Exploring Plate Boundaries",
+         "hints": [],
+         "ref": "node_12.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_15.ch",
+         "title": "Challenge Question 1",
+         "hints": [],
+         "ref": "node_15.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_17.ch",
+         "title": "Challenge Question 2",
+         "hints": [],
+         "ref": "node_17.ch",
+         "previousWorkNodeIds": [],
+         "links": [
+            {
+               "key": "2QLKv4jg0t",
+               "nodePosition": "3.6"
+            }
+         ],
+         "class": "challengequestion"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_18.ch",
+         "title": "Challenge Question",
+         "hints": [],
+         "ref": "node_18.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_27.or",
+         "title": "Explain the Mystery",
+         "hints": [],
+         "ref": "node_27.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "MatchSequenceNode",
+         "identifier": "node_39.ms",
+         "title": "Checkpoint - Plate Types",
+         "hints": [],
+         "ref": "node_39.ms",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "matchsequence"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_28.ch",
+         "title": "Challenge Question",
+         "hints": [],
+         "ref": "node_28.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_9.or",
+         "title": "Energy Story",
+         "hints": [],
+         "ref": "node_9.or",
+         "previousWorkNodeIds": [],
+         "links": [
+            {
+               "key": "awO4J1TmxM",
+               "nodeIdentifier": "node_40.my2"
+            }
+         ],
+         "class": "openresponse"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_35.al",
+         "title": "Questionnaire 4",
+         "hints": [],
+         "ref": "node_35.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_36.al",
+         "title": "Questionnaire 4",
+         "hints": [],
+         "ref": "node_36.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_37.or",
+         "title": "Questionnaire 1",
+         "hints": [],
+         "ref": "node_37.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_38.or",
+         "title": "Questionnaire 1",
+         "hints": [],
+         "ref": "node_38.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "Mysystem2Node",
+         "identifier": "node_40.my2",
+         "title": "Build Your MySystem",
+         "hints": [],
+         "ref": "node_40.my2",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "mysystem2"
+      },
+      {
+         "type": "Mysystem2Node",
+         "identifier": "node_41.txt",
+         "title": "Revisit Your MySystem",
+         "hints": [],
+         "ref": "node_41.txt",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "mysystem2"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_43.ib",
+         "title": "Track your ideas",
+         "hints": [],
+         "ref": "node_43.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_47.eb",
+         "title": "Take Stock of Your Ideas",
+         "hints": [],
+         "ref": "node_47.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_48.eb",
+         "title": "Take Stock of Your Ideas",
+         "hints": [],
+         "ref": "node_48.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_49.eb",
+         "title": "Take Stock of Your Ideas",
+         "hints": [],
+         "ref": "node_49.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      }
+   ],
+   "sequences": [
+      {
+         "type": "sequence",
+         "identifier": "startsequence",
+         "title": "",
+         "view": "",
+         "refs": [
+            "seq_1",
+            "activity2",
+            "activity4",
+            "activity5",
+            "seq_3",
+            "activity7",
+            "seq_2",
+            "activity6"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "activity2",
+         "title": "What's Our Country Like?",
+         "view": "",
+         "refs": [
+            "evidence1",
+            "node_66.al",
+            "node_68.al",
+            "node_69.al",
+            "node_43.ib"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "activity4",
+         "title": "What's Happening Outside?",
+         "view": "",
+         "refs": [
+            "node_70.al",
+            "evidence6",
+            "node_71.al",
+            "node_42.html",
+            "node_28.ch",
+            "node_72.al",
+            "node_5.al",
+            "node_0.ht",
+            "node_73.al",
+            "node_18.ch",
+            "node_39.ms",
+            "node_47.eb",
+            "node_27.or"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "activity5",
+         "title": "What's Going On Inside?",
+         "view": "",
+         "refs": [
+            "displaypage7",
+            "displaypage8",
+            "node_82.al",
+            "node_44.html",
+            "node_85.al",
+            "node_19.html",
+            "node_1.html",
+            "node_59.mw",
+            "node_15.ch",
+            "node_17.ch",
+            "node_2.html",
+            "node_32.ms"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "activity7",
+         "title": "Reflection",
+         "view": "",
+         "refs": [
+            "node_49.eb",
+            "node_34.html",
+            "node_41.txt",
+            "node_33.or"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_1",
+         "title": "Initial Ideas",
+         "view": "normal",
+         "refs": [
+            "node_4.ht",
+            "node_37.or",
+            "node_23.or",
+            "node_65.al",
+            "node_74.al",
+            "node_35.al",
+            "node_25.ht"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_2",
+         "title": "Wrap Up",
+         "view": "normal",
+         "refs": [
+            "node_54.ht",
+            "node_38.or",
+            "node_76.or",
+            "node_77.al",
+            "node_78.al",
+            "node_36.al",
+            "node_53.ht"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_3",
+         "title": "What's Convection Like Within Earth?",
+         "view": "normal",
+         "refs": [
+            "node_6.html",
+            "node_48.eb",
+            "node_46.or",
+            "node_21.html",
+            "node_40.my2",
+            "node_9.or",
+            "node_8.html",
+            "node_13.html"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "activity6",
+         "title": "Extra Credit",
+         "view": "",
+         "refs": [
+            "node_58.al",
+            "node_50.html",
+            "node_3.sd",
+            "notes4",
+            "node_80.al",
+            "evidence7",
+            "node_31.or",
+            "node_56.al",
+            "notes6",
+            "node_12.ht"
+         ]
+      }
+   ],
+   "startPoint": "startsequence",
+   "navMode": null,
+   "theme": null
+}

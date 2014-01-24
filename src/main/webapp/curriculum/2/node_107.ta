@@ -1,0 +1,57 @@
+{
+   "numColumns": 2,
+   "numRows": 5,
+   "globalCellSize": 10,
+   "prompt": "<table style=\"background-color: #ffffff; border: 0px solid #ffffff;\" border=\"0\" cellspacing=\"5\" cellpadding=\"15\" align=\"center\">\n<tbody>\n<tr class=\"first even\">\n<td class=\"first\">\n<p style=\"text-align: left;\"><strong><span style=\"font-family: arial, helvetica, sans-serif; color: #008080; font-size: large;\">GENOTYPES AND PHENOTYPES</span><br /></strong></p>\n<hr style=\"width: auto;\" width=\"950\" />\n<p><img style=\"float: left; border: 5px solid white;\" title=\"Portrait of American geneticist Mary-Claire King (b.1946) examining human DNA fingerprints. She is director of the Human Genome Diversity Project, an international project which is mapping the genetic diversity of human mitochondrial DNA in order to help conserve ancient human populations. King is also working to isolate the gene responsible for inherited breast cancer (which affects 1 in 200 cancer victims) and the gene for inherited deafness. She has unmasked genetic differences in how people with AIDS react to the HIV virus. Her genetic work has also helped to reunite lost families who were displaced during the 1970's civil unrest in Argentina.\" src=\"http://www.sciencephoto.com/image/226239/large/H4110061-Portrait_of_American_geneticist,_Mary-Claire_King-SPL.jpg\" alt=\"The Geneticist\" width=\"230\" height=\"224\" /></p>\n<p><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\">The traits you inherit from your parents are determined by portions of their DNA called&nbsp;<strong>genes</strong>. <span>Genes have different forms, called <strong>alleles</strong>.</span><br /></span></p>\n<p><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\">You inherit <em>half</em> your genes from your <strong>mom&nbsp;</strong>and <em>half</em> from your <strong>dad</strong>, and t</span><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\">he combination of alleles you get (your </span><strong style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\">genotype</strong><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\">) will determine your trait (your </span><strong style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\">phenotype</strong><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\">).</span></p>\n<p><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\">Think of earlobes as an example. Let's say one gene determines the shape of your earlobe, and that gene has two different alleles:</span><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\"><br /></span></p>\n<p><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\">&nbsp;</span></p>\n<p style=\"text-align: left;\"><span style=\"font-family: arial,helvetica,sans-serif; font-size: medium;\"><span style=\"font-family: Arial,Helvetica,sans-serif;\"><img style=\"display: block; margin-left: auto; margin-right: auto;\" title=\"Earlobe phenotypes\" src=\"assets/earlobes.jpg\" alt=\"Earlobe phenotypes\" width=\"350\" height=\"202\" /></span></span></p>\n<p><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\">We'll use&nbsp;<img style=\"vertical-align: middle;\" title=\"E allele\" src=\"assets/E_big.PNG\" alt=\"E allele\" width=\"43\" height=\"43\" />&nbsp;and&nbsp;<img style=\"vertical-align: middle;\" title=\"e allele\" src=\"assets/E_little.PNG\" alt=\"e allele\" width=\"46\" height=\"45\" />to represent these different <strong>earlobe&nbsp;alleles</strong>.</span></p>\n<p><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\">Drag the letters over the circles to make different combinations of alleles (<strong>genotypes</strong>) and see what kind of earlobe&nbsp;<strong>phenotypes</strong>&nbsp;result. Fill out the table below with your findings.</span></p>\n<p><object id=\"earlobes\" style=\"display: block; margin-left: auto; margin-right: auto;\" width=\"460\" height=\"360\" classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0\" align=\"middle\" bgcolor=\"#ffffff\"><param name=\"allowScriptAccess\" value=\"sameDomain\" /><param name=\"quality\" value=\"high\" /><param name=\"src\" value=\"./assets/earlobes.swf\" /><param name=\"allowscriptaccess\" value=\"sameDomain\" /><param name=\"pluginspage\" value=\"http://www.macromedia.com/go/getflashplayer\" /><embed id=\"earlobes\" style=\"display: block; margin-left: auto; margin-right: auto;\" width=\"460\" height=\"360\" type=\"application/x-shockwave-flash\" src=\"./assets/earlobes.swf\" allowScriptAccess=\"sameDomain\" quality=\"high\" allowscriptaccess=\"sameDomain\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" align=\"middle\" bgcolor=\"#ffffff\" /> </object></p>\n<table style=\"line-height: 1.5em; background-color: #95cfc6;\" border=\"0\" cellpadding=\"15\" align=\"center\">\n<tbody>\n<tr>\n<td class=\"last first\">\n<p><span style=\"font-size: medium; font-family: arial, helvetica, sans-serif;\"><strong style=\"line-height: 1.5em;\">WORDS TO REMEMBER</strong></span></p>\n<p><span style=\"font-size: medium; font-family: arial, helvetica, sans-serif;\"><strong style=\"line-height: 1.5em;\">Alleles </strong>(pronounced uh-LEELS)&nbsp;are different&nbsp;forms of a gene.</span></p>\n<p><span style=\"font-size: medium; font-family: arial, helvetica, sans-serif;\"><strong style=\"line-height: 1.5em;\">Genotype&nbsp;</strong><span style=\"line-height: 1.5em;\">is the combination of alleles in your DNA. You get one from your mom, one from your dad.</span></span></p>\n<p><span style=\"font-size: medium; font-family: arial, helvetica, sans-serif;\"><strong>Phenotype</strong>&nbsp;is the observable trait that results from your genotype.&nbsp;</span></p>\n</td>\n</tr>\n</tbody>\n</table>\n<p style=\"text-align: left;\">&nbsp;</p>\n</td>\n</tr>\n</tbody>\n</table>",
+   "prompt2": "",
+   "starterSentence": "",
+   "hideEverythingBelowTable": true,
+   "tableData": [
+      [
+         {
+            "text": "GENOTYPE",
+            "uneditable": true
+         },
+         {
+            "text": "EE",
+            "uneditable": true
+         },
+         {
+            "text": "ee",
+            "uneditable": true
+         },
+         {
+            "text": "eE",
+            "uneditable": true
+         },
+         {
+            "text": "Ee",
+            "uneditable": true
+         }
+      ],
+      [
+         {
+            "text": "PHENOTYPE (free or attached?)",
+            "uneditable": true,
+            "cellSize": "30"
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ]
+   ],
+   "type": "Table"
+}

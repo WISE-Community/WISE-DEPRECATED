@@ -1,0 +1,7 @@
+{
+   "levelString": "M|$testMission|$Remain Calm and Fuzzy On!|$Launching on the run can create angles and straighten your path. |$Navigate your ship to an open portal.|$4|1|0|1|0|0|0|$|$|$7|$P|*10|7|*1|3|*0|*0|*TR:1,3|*MO;goal;1;9;0;|MO;spawn;1;1;3;|MO;neb;1;1;6;468|MO;neb;1;1;5;2468|MO;neb;1;1;4;246|MO;neb;1;0;4;26|MO;neb;1;0;5;268|MO;neb;1;0;6;68|MO;neb;1;9;1;24|MO;neb;1;9;2;248|MO;neb;1;9;3;248|MO;neb;1;9;4;248|MO;neb;1;9;5;248|MO;neb;1;9;6;48|MO;neb;1;8;1;246|MO;neb;1;8;2;2468|MO;neb;1;8;3;2468|MO;neb;1;8;4;2468|MO;neb;1;8;5;2468|MO;neb;1;8;6;468|MO;neb;1;7;1;26|MO;neb;1;7;2;2468|MO;neb;1;7;3;2468|MO;neb;1;7;4;2468|MO;neb;1;7;5;2468|MO;neb;1;7;6;468|MO;neb;1;6;2;26|MO;neb;1;6;3;2468|MO;neb;1;6;4;2468|MO;neb;1;6;5;2468|MO;neb;1;6;6;468|MO;neb;1;5;3;26|MO;neb;1;5;4;2468|MO;neb;1;5;5;2468|MO;neb;1;5;6;468|MO;neb;1;4;4;246|MO;neb;1;3;4;246|MO;neb;1;2;4;246|MO;neb;1;2;5;2468|MO;neb;1;2;6;468|MO;neb;1;3;6;468|MO;neb;1;4;6;468|MO;neb;1;4;5;2468|MO;neb;1;3;5;2468|MO;pod;1;3;3;0|MO;neb;1;3;1;48|MO;neb;1;3;0;246|MO;neb;1;4;0;4|MO;neb;1;2;0;246|MO;neb;1;1;0;246|MO;neb;1;0;0;26|MO;neb;1;0;1;68|MO;neb;1;1;1;468|MO;neb;1;2;1;468|*|*|*|$AP|^AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|$0|$0|$100|$|$0|$0|$1|$AP|^|$1|$0|$0|$1|$1|$1|$1|$1|$1|$1|$1",
+   "excelExportStringTemplate": "{response}",
+   "customUri": "",
+   "mode": "mission",
+   "type": "Epigame"
+}

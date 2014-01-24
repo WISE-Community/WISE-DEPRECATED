@@ -1,0 +1,7 @@
+{
+   "levelString": "M|$testMission|$Launch Me Maybe?|$It looks like we're in a tight spot!  Luckily the fuzzies are here to help us out.  Try using the release and launch options, but be careful about how they will affect our trajectory!  There's not much room for error with all this radiation!|$Navigate your ship to an open portal.|$16|2|1|1|0|0|0|$1|2|3|$|$7|$P|*10|8|*1|5|*3|*0|*TR:1,5|*MO;switch;1;9;5;1|MO;switch;1;7;7;1|MO;goal;1;7;1;|MO;neb;1;8;5;2|MO;neb;1;8;6;48|MO;neb;1;7;6;46|MO;neb;1;6;6;26|MO;neb;1;6;7;8|MO;rad;1;9;4;8|MO;rad;1;9;3;28|MO;rad;1;9;2;28|MO;rad;1;9;1;28|MO;rad;1;9;0;24|MO;rad;1;8;0;46|MO;rad;1;7;0;46|MO;rad;1;6;0;46|MO;rad;1;5;0;46|MO;rad;1;4;0;46|MO;rad;1;3;0;46|MO;rad;1;2;0;46|MO;rad;1;1;0;46|MO;rad;1;0;0;6|MO;rad;1;0;7;6|MO;rad;1;1;7;46|MO;rad;1;2;7;46|MO;rad;1;3;7;46|MO;rad;1;4;7;46|MO;rad;1;5;7;4|MO;pod;1;3;5;0|MO;pod;1;7;5;0|MO;spawn;1;1;5;|*|*|*|$AP|^AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|$0|$0|$100|$|$0|$0|$1|$AP|^|$1|$0|$0|$1|$1|$1|$1|$1|$1|$1|$1",
+   "excelExportStringTemplate": "{response}",
+   "customUri": "",
+   "mode": "mission",
+   "type": "Epigame"
+}

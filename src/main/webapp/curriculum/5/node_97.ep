@@ -1,0 +1,7 @@
+{
+   "levelString": "M|$testMission|$All in All, You're Just a Wall|$Wow, you're going to be bouncing all over the place here! But don't be overwhelmed. As long as you remember that your approach to the wall and your rebound are opposites, you'll do just fine.|$Navigate your ship to an open portal.|$2|0|0|0|18|0|0|$|$4|$7|$P|*11|10|*0|0|*0|*0|*TR:0,0|*MO;wall;1;2;5;|MO;wall;1;0;7;|MO;wall;1;2;9;|MO;wall;1;4;9;|MO;wall;1;7;6;|MO;wall;1;8;3;|MO;wall;1;5;0;|MO;wall;1;0;3;|MO;wall;1;3;0;|MO;goal;1;7;9;|MO;wall;1;10;7;|MO;wall;1;10;5;|MO;switch;1;6;6;1|MO;switch;1;1;1;1|MO;switch;1;2;2;1|MO;switch;1;3;3;1|MO;switch;1;4;4;1|MO;switch;1;5;5;1|MO;switch;1;5;7;1|MO;switch;1;4;8;1|MO;spawn;1;0;0;|*|*|*|$AP|^AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|$0|$0|$100|$",
+   "excelExportStringTemplate": "{response}",
+   "customUri": "",
+   "mode": "mission",
+   "type": "Epigame"
+}

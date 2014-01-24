@@ -1,0 +1,16 @@
+{
+   "prompt": "",
+   "stateString": "",
+   "gradingViewHTML":"Grading View HTML goes <b>here</b>",
+   "width":800,
+   "height":600,
+   "url":"",
+   "initialState":"",
+	"exportColumns":[
+     {
+        "columnName":"Response",
+        "field":"response"
+     }
+  	 ],
+   "type": "WebApp"
+}

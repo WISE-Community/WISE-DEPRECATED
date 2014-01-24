@@ -62,8 +62,7 @@ function lookupFieldChanged() {
 	
 	<form:input path="lookupData" id="lookupData"/>
 	
-	<input type="image" id="save" src="<spring:theme code="register_save" />" 
-    	onmouseover="swapSaveImage('save',1)"onmouseout="swapSaveImage('save',0)"   />
+	<input type="submit" id="save" value="<spring:message code="submit" />" />
 </form:form>
 </div>
 </div>

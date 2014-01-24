@@ -1,0 +1,79 @@
+{
+   "numColumns": 3,
+   "numRows": 5,
+   "globalCellSize": 10,
+   "prompt": "<!-- Original:  Hanz Broden (webmeister@v-wave.com) Web Site:  http://plaza.v-wave.com/dotcom Modified By:  Ronnie T. Moore, Editor This script and many more are available free online at The JavaScript Source!! http://javascript.internet.com --> <script>function flipCoin() {var x = parseInt(Math.random() * 2, 10);coinsrc = (!x) ? 'assets/heads.gif' : 'assets/tails.gif';document.coinform.coinbutton.value = 'Flipping';ID = window.setTimeout('changeCoin();', 750);}function changeCoin() {document['coin'].src = coinsrc;document.coinform.coinbutton.value = 'Flip Coin';}</script><font face='arial'><font size='4'><font color='660099'>Probability and Coin Flipping</font color></br></b></font size><br>Using the model below, you and your partner will test your predicted probabilities from the previous step.<ul><li>Each partner will flip the coin <font color='ff6600'><b>10 times</font color></b> while the other partner counts and records the data in the data table at the bottom of this page.</li><li>Calculate the %heads by using the following formula:<br><b><font size='4'>% heads=(#heads/#total tosses) x 100 </b></li></ul></font size>While you are using the model, consider the following:<ul><li>Are there any <font color='ff6600'><b>patterns</font color></b> to the way the coins are landing?</li><li>Is coin flipping a <font color='ff6600'><b>randomly occuring, or independent, event?</font color></b></li><li>Do your results <font color='ff6600'><b>match</font color></b> your predicted probability?</li></ul><center><form name=coinform><table border=0 height=200><tr valign=top><td><input type=button name=coinbutton value='Flip Coin' onClick='flipCoin();'></td><td><img name=coin src='http://wise.berkeley.edu/upload/23008/heads.gif' width=190 height=190></td></tr></table></form></center>",
+   "prompt2": "",
+   "starterSentence": "",
+   "hideEverythingBelowTable": true,
+   "tableData": [
+      [
+         {
+            "text": "",
+            "uneditable": true
+         },
+         {
+            "text": "Trial 1",
+            "uneditable": true
+         },
+         {
+            "text": "Trial 2",
+            "uneditable": true,
+            "cellSize": ""
+         },
+         {
+            "text": "Totals",
+            "uneditable": true
+         },
+         {
+            "text": "Percentages",
+            "uneditable": true
+         }
+      ],
+      [
+         {
+            "text": "Heads",
+            "uneditable": true
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ],
+      [
+         {
+            "text": "Tails",
+            "uneditable": true
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ]
+   ],
+   "type": "Table"
+}

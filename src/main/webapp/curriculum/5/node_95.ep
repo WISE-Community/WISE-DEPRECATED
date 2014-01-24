@@ -1,0 +1,7 @@
+{
+   "levelString": "M|$testMission|$All in All, You're Just a Wall|$Sometimes rebounding off Collision Walls is the only way to get where you're going. Your ship doesn't have many Rocket Boosts available, so make the best of each wall.|$Navigate your ship to an open portal.|$2|0|0|0|6|0|0|$|$4|$7|$P|*11|10|*2|2|*0|*0|*TR:2,2|*MO;goal;1;5;9;|MO;wall;1;4;5;|MO;wall;1;6;1;|MO;wall;1;9;4;|MO;wall;1;3;8;|MO;switch;1;4;4;1|MO;switch;1;6;2;1|MO;switch;1;8;4;1|MO;switch;1;4;8;1|MO;switch;1;3;3;1|MO;switch;1;5;3;1|MO;spawn;1;2;2;|*|*|*|$AP|^AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|$0|$0|$100|$",
+   "excelExportStringTemplate": "{response}",
+   "customUri": "",
+   "mode": "mission",
+   "type": "Epigame"
+}

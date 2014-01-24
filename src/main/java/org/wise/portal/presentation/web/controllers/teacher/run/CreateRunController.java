@@ -520,15 +520,15 @@ public class CreateRunController extends AbstractWizardFormController {
 			
 			
 			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject", 
-						new Object[]{wiseProperties.getProperty("portal.name")}, Locale.US);
+						new Object[]{wiseProperties.getProperty("wise.name")}, Locale.US);
 			
 			String subject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject", 
-					new Object[]{wiseProperties.getProperty("portal.name")},defaultSubject, this.locale);
+					new Object[]{wiseProperties.getProperty("wise.name")},defaultSubject, this.locale);
 			
 
 			String defaultMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailMessage", 
 					new Object[]{
-					wiseProperties.getProperty("portal.name"),
+					wiseProperties.getProperty("wise.name"),
 					teacherName,
 					teacherUserDetails.getUsername(),
 					teacherEmail,
@@ -546,7 +546,7 @@ public class CreateRunController extends AbstractWizardFormController {
 
 			String message = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailMessage", 
 					new Object[]{
-					wiseProperties.getProperty("portal.name"),
+					wiseProperties.getProperty("wise.name"),
 					teacherName,
 					teacherUserDetails.getUsername(),
 					teacherEmail,

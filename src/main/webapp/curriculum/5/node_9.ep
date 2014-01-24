@@ -1,0 +1,7 @@
+{
+   "levelString": "3",
+   "excelExportStringTemplate": "{response}",
+   "customUri": "",
+   "mode": "adaptiveMission",
+   "type": "Epigame"
+}

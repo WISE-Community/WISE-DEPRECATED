@@ -1,0 +1,25 @@
+{
+   "assessmentItem":{
+      "adaptive":false,
+      "identifier":"OpenResponse",
+      "interaction":{
+         "expectedLines":"5",
+         "hasInlineFeedback":false,
+         "placeholderText":"",
+         "prompt":"<img src=\"assets/Mt%20Hood.png\">\u000a<br><br>This is Mount Hood. It is a part of the mountain range called the Cascades on the West Coast in Oregon.<br /><br />Write a story to explain how the mountain formed.  <br /><br />Be as specific and detailed as you can!",
+         "responseIdentifier":"OR"
+      },
+      "responseDeclaration":{
+         "baseType":"string",
+         "cardinality":"single",
+         "identifier":"OR"
+      },
+      "timeDependent":false
+   },
+   "isRichTextEditorAllowed":false,
+   "starterSentence":{
+      "display":"0",
+      "sentence":""
+   },
+   "type":"OpenResponse"
+}

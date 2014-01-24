@@ -1,0 +1,168 @@
+{
+   "numColumns": 6,
+   "numRows": 6,
+   "globalCellSize": 10,
+   "prompt": "What are the possible genotypes for the Dragons?\nWhat are the possible phenotypes?\n",
+   "prompt2": "Does your baby dragon have exactly the same phenotypic traits as his or her same-sex parent?  If not, choose one trait that differs between the baby and the same-sex parent, and explain the genetic reason for this difference.\n",
+   "starterSentence": "",
+   "hideEverythingBelowTable": false,
+   "tableData": [
+      [
+         {
+            "text": "X",
+            "uneditable": false
+         },
+         {
+            "text": "X",
+            "uneditable": false
+         },
+         {
+            "text": "DadGeno",
+            "uneditable": false
+         },
+         {
+            "text": "DadGeno",
+            "uneditable": false
+         },
+         {
+            "text": "DadGeno",
+            "uneditable": false
+         },
+         {
+            "text": "DadGeno",
+            "uneditable": false
+         }
+      ],
+      [
+         {
+            "text": "X",
+            "uneditable": false
+         },
+         {
+            "text": "X",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ],
+      [
+         {
+            "text": "MomGeno",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ],
+      [
+         {
+            "text": "MomGeno",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ],
+      [
+         {
+            "text": "MomGeno",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ],
+      [
+         {
+            "text": "MomGeno",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         },
+         {
+            "text": "",
+            "uneditable": false
+         }
+      ]
+   ],
+   "type": "Table"
+}

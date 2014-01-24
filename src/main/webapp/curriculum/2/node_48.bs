@@ -1,0 +1,25 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "Brainstorm",
+      "interaction": {
+         "expectedLines": "0",
+         "prompt": "If a genetic counselor informed you that you had a 50% chance of having a child with some genetic disorder like Cystic Fibrosis, would you still want to have a child?  Why or why not? Be sure to use your new knowledge of CF, genetics, and probability to back up your decision.",
+         "responseIdentifier": "Brainstorm"
+      },
+      "timeDependent": false
+   },
+   "cannedResponses": [],
+   "displayName": "0",
+   "isGated": true,
+   "isInstantPollActive": false,
+   "isPollEnded": false,
+   "isRichTextEditorAllowed": false,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "title": "",
+   "type": "Brainstorm",
+   "useServer": true
+}

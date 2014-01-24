@@ -1,0 +1,26 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "MasterWorkNote(82230)",
+      "interaction": {
+         "expectedLines": "12",
+         "hasInlineFeedback": false,
+         "placeholderText": "",
+         "prompt": "<p><span style=\"font-size: small;\">Now that you have more information about cystic fibrosis and Eric's family history, how do you think Eric developed the disease?</span></p>",
+         "responseIdentifier": "NOTE_RESPONSE_1",
+         "type": "text"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "NOTE_RESPONSE_1"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": false,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "type": "Note"
+}

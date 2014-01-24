@@ -33,7 +33,7 @@ public class StudentStatus extends PersistableDomain {
 	@Column(name="timestamp")
 	private Timestamp timestamp = null;
 	
-	@Column(name="status")
+        @Column(name="status", length=5120000)
 	private String status = null;
 	
 	/**

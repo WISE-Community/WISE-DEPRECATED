@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<boundaries>
+	<boundary id="0">
+		<url>pt-conv-c-c.swf</url>
+		<img>boundaries-convergent.gif</img>
+		<title>Mountains</title>
+		<facts>
+			<fact>When two continental plates move toward each other, neither plate goes under into the mantle (because continental plates are less dense than the underlying mantle).</fact>
+			<fact>The continental crust on the two plates crumples from the stress and rises up to form mountains.</fact>
+			<fact>The movement of the plates also causes earthquakes.</fact>
+		</facts>
+	</boundary>
+	<boundary id="1">
+		<url>pt-conv-o-o.swf</url>
+		<img>boundaries-convergent.gif</img>
+		<title>Island Arcs</title>
+		<facts>
+			<fact>When two oceanic plates move toward each other, the denser, heavier oceanic plate will go under the other plate.</fact>
+			<fact>When one plate goes under the other plate, the process is called subduction.</fact>
+			<fact>Subduction in the ocean results in deep ocean trenches  and underwater volcanoes.</fact>
+			<fact>As the underwater volcanoes grow, they eventually emerge from the ocean as islands called island arcs.</fact>
+			<fact>The movement of the plates also causes earthquakes.</fact>
+		</facts>
+	</boundary>
+	<boundary id="2">
+		<url>pt-conv-c-o.swf</url>
+		<img>boundaries-convergent.gif</img>
+		<title>Volcanic Arcs</title>
+		<facts>
+			<fact>When a continental plate and an oceanic plate move toward each other, the denser, heavier oceanic plate will go under the less dense, lighter continental plate.</fact>
+			<fact>When one plate goes under the other plate, the process is called subduction.</fact>
+			<fact>Subduction in the ocean along the edge of the continent results in deep ocean trenches and volcanoes.</fact>
+			<fact>The string of volcanoes along the edge of the continent is called a volcanic arc.</fact>
+			<fact>The movement of the plates also causes earthquakes.</fact>
+		</facts>
+	</boundary>
+	<boundary id="3">
+		<url>pt-div-c-c.swf</url>
+		<img>boundaries-divergent.gif</img>
+		<title>Continental Rifting</title>
+		<facts>
+			<fact>When two continental plates move away from each other, it results in a continental rift with its own rift valley.</fact>
+			<fact>Continental rift valleys are different from oceanic rift valleys.  Because the continental crust is thicker than the oceanic crust, the rift is wider.</fact>
+			<fact>As a rift widens, water can collect in it to form lakes.</fact>
+			<fact>A growing rift may also reach an ocean and become a narrow ocean.</fact>
+			<fact>The movement of the plates also causes earthquakes.</fact>
+		</facts>
+	</boundary>
+	<boundary id="4">
+		<url>pt-div-o-o.swf</url>
+		<img>boundaries-divergent.gif</img>
+		<title>Sea Floor Spread</title>
+		<facts>
+			<fact>When two oceanic plates move away from each other, it results in seafloor spread  and underwater mountains.</fact>
+			<fact>Earth's longest mountain range is in the ocean.  It is over 47,000 miles long and goes around the world.</fact>
+			<fact>Along the top of this underwater mountain range is a deep crack, called a rift valley. </fact>
+			<fact>New ocean floor is continuously being created in this rift valley.</fact>
+			<fact>The movement of the plates also causes earthquakes.</fact>
+		</facts>
+	</boundary>
+	<boundary id="5">
+		<url>pt-trans-c-c.swf</url>
+		<img>boundaries-transform.gif</img>
+		<title>Earthquakes</title>
+		<facts>
+			<fact>When two plates slide past each other, it can cause earthquakes.</fact>
+		</facts>
+	</boundary>
+	<boundary id="6">
+		<url>pt-trans-o-o.swf</url>
+		<img>boundaries-transform.gif</img>
+		<title>Tsunamis</title>
+		<facts>
+			<fact>A big earthquake in the ocean can cause tsunamis.</fact>
+		</facts>
+	</boundary>
+</boundaries>

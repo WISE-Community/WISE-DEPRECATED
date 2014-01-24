@@ -1,0 +1,26 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "MasterWorkNote(95524)",
+      "interaction": {
+         "expectedLines": "6",
+         "hasInlineFeedback": false,
+         "placeholderText": "Hydrogen combustion...",
+         "prompt": "Recall the hydrogen combustion reaction: 2H<sub>2</sub> + O<sub>2</sub> --> 2H<sub>2</sub>O + Energy<br><br>\nWhy do you think hydrogen could be a cleaner fuel than hydrocarbons?",
+         "responseIdentifier": "NOTE_RESPONSE_1",
+         "type": "text"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "NOTE_RESPONSE_1"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": false,
+   "starterSentence": {
+      "display": "1",
+      "sentence": "Hydrogen combustion..."
+   },
+   "type": "Note"
+}

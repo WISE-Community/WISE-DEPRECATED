@@ -1,0 +1,7 @@
+{
+   "levelString": "M|$testMission|$Mass Appeal|$Seems like we do not have enough mass to get through the mass gate.  Pick up the fuzzy so we can get through.|$Navigate your ship to an open portal.|$-1|1|0|0|0|0|0|$|$|$7|$P|*10|11|*1|8|*0|*0|*TR:3,3|*MO;rad;1;0;4;68|MO;rad;1;1;4;468|MO;rad;1;2;4;468|MO;rad;1;3;4;468|MO;rad;1;0;3;268|MO;rad;1;1;3;2468|MO;rad;1;2;3;2468|MO;rad;1;3;3;2468|MO;rad;1;3;2;2468|MO;rad;1;3;1;2468|MO;rad;1;4;0;246|MO;rad;1;3;0;246|MO;rad;1;2;0;246|MO;rad;1;1;0;246|MO;rad;1;0;0;26|MO;rad;1;0;1;268|MO;rad;1;0;2;268|MO;rad;1;1;2;2468|MO;rad;1;1;1;2468|MO;rad;1;2;1;2468|MO;rad;1;2;2;2468|MO;rad;1;5;0;246|MO;rad;1;6;0;246|MO;goal;1;9;2;|MO;momentumzone;1;9;4;2,2,180,2.3054755043227666|MO;momentumzone;1;5;4;10,15,360|MO;rad;1;4;4;48|MO;rad;1;4;3;2468|MO;rad;1;5;3;468|MO;rad;1;6;3;468|MO;rad;1;7;3;48|MO;rad;1;7;2;248|MO;rad;1;7;1;248|MO;rad;1;6;1;2468|MO;rad;1;7;0;246|MO;rad;1;8;0;46|MO;rad;1;9;0;4|MO;rad;1;4;2;2468|MO;rad;1;4;1;2468|MO;rad;1;5;1;2468|MO;rad;1;5;2;2468|MO;rad;1;6;2;2468|MO;spawn;1;1;8;|MO;pod;1;7;8;0|*|*|*|$AP|^AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|$0|$0|$100|$|$0|$0|$1|$AP|^|$1|$0|$0|$1|$1|$1|$1|$1|$1|$0|$0",
+   "excelExportStringTemplate": "{response}",
+   "customUri": "",
+   "mode": "mission",
+   "type": "Epigame"
+}

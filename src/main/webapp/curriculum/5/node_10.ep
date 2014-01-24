@@ -1,0 +1,8 @@
+{
+   "levelString": "M|$testMission|$Don't Block Me, Bro!|$Welcome to your first mission.  Make it to the space portal on the other end of the zone.  Along the way make sure to hit the yellow switch to unlock the door.  |$Navigate your ship to an open portal.|$-1|0|0|0|0|0|0|$|$|$7|$P|*11|8|*1|6|*0|*0|*TR:1,6|*MO;spawn;1;1;6;|MO;goal;1;10;3;|MO;rad;1;0;4;68|MO;rad;1;1;4;468|MO;rad;1;2;4;48|MO;rad;1;0;3;268|MO;rad;1;1;3;2468|MO;rad;1;2;3;2468|MO;rad;1;3;3;48|MO;rad;1;0;0;26|MO;rad;1;0;1;268|MO;rad;1;0;2;268|MO;rad;1;1;2;2468|MO;rad;1;2;2;2468|MO;rad;1;3;2;2468|MO;rad;1;4;2;48|MO;rad;1;1;1;2468|MO;rad;1;2;1;2468|MO;rad;1;3;1;2468|MO;rad;1;4;1;2468|MO;rad;1;5;1;48|MO;rad;1;1;0;246|MO;rad;1;2;0;246|MO;rad;1;3;0;246|MO;rad;1;4;0;246|MO;rad;1;5;0;246|MO;rad;1;6;0;4|MO;switch;1;7;6;1|*|*|*|$AP|^AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|$0|$0|$100|$|$0|$0|$1|$AP|^|$0|$0|$0|$1|$1|$1|$1|$1|$0|$0|$0",
+   "excelExportStringTemplate": "{response}",
+   "useCustomSwf": "false",
+   "customUri": "",
+   "type": "Epigame",
+   "mode": "mission"
+}

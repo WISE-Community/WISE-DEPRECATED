@@ -354,7 +354,7 @@
     create table runStatus (
         id bigint not null auto_increment,
         runId bigint,
-        status varchar(255),
+        status mediumtext,
         timestamp datetime,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -366,7 +366,7 @@
         info varchar(255),
         lastRun datetime,
         loggingLevel integer,
-        maxworkgroupsize integer,
+        maxWorkgroupSize integer,
         name varchar(255),
         postLevel integer,
         run_code varchar(255) not null unique,
@@ -429,7 +429,7 @@
         id bigint not null auto_increment,
         periodId bigint,
         runId bigint,
-        status varchar(255),
+        status mediumtext,
         timestamp datetime,
         workgroupId bigint,
         primary key (id)

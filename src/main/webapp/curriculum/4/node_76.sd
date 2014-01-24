@@ -1,0 +1,46 @@
+{
+   "description_active": true,
+   "description_default": "Enter description here.",
+   "prompt": "<p style=\"text-align: left;\">(1) Use stamps to create TWO methane molecules (CH<sub>4</sub>).&nbsp;</p>\n<p style=\"text-align: left;\">(2) Create EXACTLY the number of oxygen molecules (O<sub>2</sub>) needed to react with your TWO methane molecules.</p>\n<p style=\"text-align: left;\">(3) Create a new frame.</p>\n<p style=\"text-align: left;\">(4) REARRANGE the atoms in the 2nd frame to make carbon dioxide (CO<sub>2</sub>) and water (H<sub>2</sub>O) molecules. Show clearly which atoms belong to which molecules.</p>",
+   "snapshots_active": true,
+   "stamps": [
+      {
+         "title": "Carbon",
+         "uri": "assets/carbon.png",
+         "width": 50,
+         "height": 50
+      },
+      {
+         "title": "Oxygen",
+         "uri": "assets/oxygen.png",
+         "width": 35,
+         "height": 35
+      },
+      {
+         "title": "Hydrogen",
+         "uri": "assets/hydrogen.png",
+         "width": 25,
+         "height": 25
+      }
+   ],
+   "svg_background": "<svg width=\"600\" height=\"450\" xmlns=\"http://www.w3.org/2000/svg\"     xmlns:xlink=\"http://www.w3.org/1999/xlink\">    <g>   <title>bgtiredraw</title>    <image x=\"0\" y=\"0\" width=\"600\" height=\"450\"      xlink:href=\"assets/methanebackground.png\" />   </g>      </svg>",
+   "type": "SVGDraw",
+   "snapshots_max": 2,
+   "toolbar_options": {
+      "pencil": false,
+      "line": false,
+      "connector": false,
+      "rectangle": false,
+      "ellipse": false,
+      "polygon": false,
+      "text": false,
+      "importStudentAsset": false
+   },
+   "autoScoring": {
+      "autoScoringCheckWorkChances": "",
+      "autoScoringCriteria": "",
+      "autoScoringDisplayScoreToStudent": true,
+      "autoScoringDisplayFeedbackToStudent": true,
+      "autoScoringFeedback": []
+   }
+}

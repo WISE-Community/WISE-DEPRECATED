@@ -74,7 +74,7 @@ public class TelsSimpleMappingExceptionResolver extends
 		boolean sendEmailOnException = sendEmailOnExceptionStr.equalsIgnoreCase("true");
 
 		if (sendEmailOnException) {
-			String portalName = wiseProperties.getProperty("portal.name");
+			String portalName = wiseProperties.getProperty("wise.name");
 			String[] recipients = wiseProperties.getProperty(HANDLE_EXCEPTION_PROPERTY_KEY).split(",");
 			String subject = HANDLE_EXCEPTION_MAIL_SUBJECT + ": (" + portalName + ")";
 			String fromEmail = HANDLE_EXCEPTION_FROM_EMAIL;

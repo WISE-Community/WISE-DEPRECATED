@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<boundaries>
+	<boundary id="0">
+		<url>pt-conv-c-c2.swf</url>
+		<img>boundaries-convergent.gif</img>
+		<title>What's Happening?</title>
+		<facts>
+			<fact>At a convergent boundary between two continental plates, neither plate goes under into the mantle (because continental plates are less dense than the underlying mantle).</fact>
+        	<fact>As the plates move toward each other, the crust crumples from the stress and rises up to form mountains.</fact>
+		</facts>
+	</boundary>
+	<boundary id="1">
+		<url>pt-conv-c-o2.swf</url>
+		<img>boundaries-convergent.gif</img>
+		<title>What's Happening?</title>
+		
+	</boundary>
+	<boundary id="2">
+		<url>pt-div-o-o2.swf</url>
+		<img>boundaries-divergent.gif</img>
+		<title>What's Happening?</title>
+		<facts>
+			<fact>At a divergent boundary between two oceanic plates, an underwater mountain range forms because of pressure from the rising magma below.  The mountain range has a deep crack called a rift valley at its top.</fact>
+			<fact>As the plates move, the two sides of the mountain range are carried away from the rift valley.</fact>
+			<fact>Magma wells up from the Earth's interior to fill the rift.</fact>
+			<fact>The magma is rapidly cooled by the sea and solidifies into rock, creating new ocean floor.</fact>
+		</facts>
+	</boundary>
+	<boundary id="3">
+		<url>pt-trans-c-c2.swf</url>
+		<img>boundaries-transform.gif</img>
+		<title>What's Happening?</title>
+		<facts>
+			<fact>At a transform boundary between two continental plates, the two plates are sliding past each other.</fact>
+			<fact>The two plates do not move smoothly past each other because of friction.</fact>
+			<fact>When friction prevents plate movement, the energy of movement (kinetic energy) becomes “trapped” or stored at the boundary as elastic strain.</fact>
+			<fact>When enough energy, or strain, builds up, the plates are able to move.</fact>
+			<fact>The movement releases the stored up energy in the form of seismic waves, which result in earthquakes.</fact>
+		</facts>
+	</boundary>
+</boundaries>

@@ -1,0 +1,26 @@
+{
+   "levelString": "M|$testMission|$Red Mission 1|$Let's learn how to change the velocity of your ship.  Match the velocity on the gate or you won't be able to get through.|$Navigate your ship to an open portal.|$2|0|0|0|0|0|0|$|$|$7|$P|*12|5|*1|2|*0|*0|*TR:1,2,null|*MO;velocityzone;1;5;0;3,3,90,2.3054755043227666|MO;velocityzone;1;5;4;10,15,270|MO;goal;1;10;2;|MO;spawn;1;1;2;|*|*|*|$AP|^AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|AS;;;|$0|$0|$100|$|$0|$0|$1|$AP|^|$1|$0|$0|$1|$1|$1|$1|$1|$0|$0|$0",
+   "excelExportStringTemplate": "{response}",
+   "customUri": "",
+   "mode": "mission",
+   "type": "Epigame",
+   "settings": {
+      "showPerfScore": true,
+      "showExplScore": false,
+      "showWarpScore": false,
+      "showQuestions": false,
+      "showNoQuestions": false,
+      "spatialInterface": false,
+      "globalizeReqs": true,
+      "noTime": true,
+      "testTime": false,
+      "questionTime": false,
+      "testTimeVal": "30",
+      "questionTimeVal": "30",
+      "rank1Val": "0",
+      "rank2Val": "1200",
+      "rank3Val": "3600",
+      "rank4Val": "7200",
+      "rank5Val": "11000"
+   }
+}
