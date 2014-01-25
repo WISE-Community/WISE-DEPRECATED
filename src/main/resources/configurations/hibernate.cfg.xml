@@ -35,6 +35,7 @@
 		<property name="hibernate.c3p0_max_statements">0</property>
 		<property name="hibernate.c3p0_min_size">10</property>
 		<property name="hibernate.c3p0_timeout">100</property><!-- seconds -->
+		<property name="hibernate.hbm2ddl.auto">validate</property>
 
         <!-- Enable Hibernate's automatic session context management -->
         <property name="current_session_context_class">thread</property>
