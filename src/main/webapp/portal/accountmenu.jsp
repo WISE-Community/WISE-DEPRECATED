@@ -15,7 +15,7 @@
 			</div>
 			<div id="submitSignIn">
 				<input type="submit" id="signInButton" name="signInButton" class="wisebutton smallbutton" value="<spring:message code="signIn"/>"></input>
-				<div id="forgotLogin"><a href="forgotaccount/selectaccounttype.html"><spring:message code="accountmenu.forgot" /></a></div>
+				<div id="forgotLogin"><a href="${contextPath}/forgotaccount/selectaccounttype.html"><spring:message code="accountmenu.forgot" /></a></div>
 			</div>
 		</form>
 	</div>
