@@ -70,7 +70,7 @@ public class NewsItemImpl implements NewsItem, Comparable<NewsItem> {
 	private static final long serialVersionUID = 1L;
     
     @Lob
-    @Column(name = NewsItemImpl.COLUMN_NAME_NEWS, nullable = false)
+    @Column(name = NewsItemImpl.COLUMN_NAME_NEWS, length=5120000, nullable = false)
     private String news = null;
 	
     @Column(name = NewsItemImpl.COLUMN_NAME_DATE, nullable = false)

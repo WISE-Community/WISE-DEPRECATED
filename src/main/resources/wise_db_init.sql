@@ -121,7 +121,7 @@
         primary key (group_fk, user_fk)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table ideaBasket (
+    create table ideabasket (
         id bigint not null auto_increment,
         action varchar(255),
         actionPerformer bigint,
@@ -153,7 +153,7 @@
 
     create table messages (
         id bigint not null auto_increment,
-        body varchar(255) not null,
+        body varchar(1024) not null,
         date datetime not null,
         subject varchar(255) not null,
         originalMessage bigint,
@@ -189,7 +189,7 @@
     create table newsitem (
         id bigint not null auto_increment,
         date datetime not null,
-        news text not null,
+        news mediumtext not null,
         title varchar(255) not null,
         owner bigint not null,
         primary key (id)
@@ -291,12 +291,12 @@
         last_cleaned datetime,
         last_edited datetime,
         last_minified datetime,
-        lesson_plan text,
-        max_scores text,
+        lesson_plan mediumtext,
+        max_scores mediumtext,
         nav_mode varchar(255),
         post_level bigint,
         project_fk bigint,
-        standards text,
+        standards mediumtext,
         subject varchar(255),
         summary varchar(255),
         tech_reqs varchar(255),
@@ -351,7 +351,7 @@
         primary key (project_fk, tag_fk)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table runStatus (
+    create table runstatus (
         id bigint not null auto_increment,
         runId bigint,
         status mediumtext,
@@ -362,7 +362,7 @@
     create table runs (
         archive_reminder datetime not null,
         end_time datetime,
-        extras varchar(255),
+        extras mediumtext,
         info varchar(255),
         lastRun datetime,
         loggingLevel integer,
@@ -419,13 +419,13 @@
     create table stepwork_cache (
         id bigint not null auto_increment,
         cacheTime datetime,
-        data mediumtext,
+        data longtext,
         getRevisions bit,
         userInfo_id bigint,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table studentStatus (
+    create table studentstatus (
         id bigint not null auto_increment,
         periodId bigint,
         runId bigint,

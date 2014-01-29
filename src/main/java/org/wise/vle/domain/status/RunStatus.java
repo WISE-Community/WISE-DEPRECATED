@@ -27,7 +27,7 @@ public class RunStatus extends PersistableDomain {
 	@Column(name="timestamp")
 	private Timestamp timestamp = null;
 	
-       @Column(name="status", length=5120000)
+    @Column(name="status", length=5120000)
 	private String status = null;
 	
 	/**

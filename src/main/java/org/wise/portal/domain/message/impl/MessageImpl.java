@@ -113,7 +113,7 @@ public class MessageImpl implements Message {
     @Column(name=MessageImpl.COLUMN_NAME_SUBJECT, nullable=false)
     private String subject;
 
-    @Column(name=MessageImpl.COLUMN_NAME_BODY, nullable=false)
+    @Column(name=MessageImpl.COLUMN_NAME_BODY, length=1024, nullable=false)
     private String body;
 
 	/**

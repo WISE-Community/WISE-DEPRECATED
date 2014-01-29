@@ -153,11 +153,11 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable{
 	@Column(name = COLUMN_NAME_TOOLS, length = 32768)
 	private String tools;   // text (blob) 2^15
 
-	@Column(name = COLUMN_NAME_LESSON_PLAN, length = 32768)
-	private String lessonPlan;  // text (blob) 2^15
+	@Column(name = COLUMN_NAME_LESSON_PLAN, length = 5120000)
+	private String lessonPlan;
 
-	@Column(name = COLUMN_NAME_STANDARDS, length = 32768)
-	private String standards;  // text (blob) 2^15
+	@Column(name = COLUMN_NAME_STANDARDS, length = 5120000)
+	private String standards;
 
 	@Column(name = COLUMN_NAME_KEYWORDS)
 	private String keywords;
@@ -183,7 +183,7 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable{
 	@Column(name = COLUMN_NAME_POST_LEVEL)
 	private Long postLevel;
 	
-	@Column(name = COLUMN_NAME_MAX_SCORES, length = 32768)
+	@Column(name = COLUMN_NAME_MAX_SCORES, length = 5120000)
 	private String maxScores;
 	
 	@Column(name = COLUMN_NAME_THEME)

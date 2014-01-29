@@ -35,7 +35,7 @@ public class StepWorkCache extends PersistableDomain {
 	@Column(name="cacheTime")
 	private Timestamp cacheTime;
 
-	@Column(name="data", length=16777215)  // this makes the db mediumtext
+	@Column(name="data", length=2147483647)
 	private String data;
 	
 	@Column(name="getRevisions")
