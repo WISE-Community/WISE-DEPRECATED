@@ -58,7 +58,7 @@ EpigameNode.prototype.getQuizData = function(customURL) {
 //			this.defaultQuizContent = createContent("node/epigame/adaptiveQuizData.json");
 
 			//move quiz data to the asset location
-			this.defaultQuizContent = createContent(this.view.getConfig().getConfigParam('getContentBaseUrl')+"assets/adaptiveQuizData.json");
+			this.defaultQuizContent = createContent(this.view.getConfig().getConfigParam('getContentBaseUrl')+"/assets/adaptiveQuizData.json");
 //		}
 			
 		content = this.defaultQuizContent;
@@ -76,8 +76,8 @@ EpigameNode.prototype.getAdaptiveMissionData = function(customURL) {
 //			this.defaultAdaptiveMissionContent = createContent("node/epigame/adaptiveMissionData.json");		
 //		}
 
-		console.log("Loading:" + this.view.getConfig().getConfigParam('getContentBaseUrl')+"assets/adaptiveMissionData.json");
-		this.defaultAdaptiveMissionContent = createContent(this.view.getConfig().getConfigParam('getContentBaseUrl')+"assets/adaptiveMissionData.json");
+		console.log("Loading:" + this.view.getConfig().getConfigParam('getContentBaseUrl')+"/assets/adaptiveMissionData.json");
+		this.defaultAdaptiveMissionContent = createContent(this.view.getConfig().getConfigParam('getContentBaseUrl')+"/assets/adaptiveMissionData.json");
 	
 		content = this.defaultAdaptiveMissionContent;
 	}

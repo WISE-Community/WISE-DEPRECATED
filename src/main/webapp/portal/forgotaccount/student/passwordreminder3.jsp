@@ -57,7 +57,7 @@
 					<spring:bind path="passwordReminderParameters.*">
 					  <c:forEach var="error" items="${status.errorMessages}">
 					    <b>
-					      <p><c:out value="${error}"/></p>
+					      <p><c:out value="${error}" escapeXml="false"/></p>
 					    </b>
 					  </c:forEach>
 					</spring:bind>

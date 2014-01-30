@@ -46,7 +46,7 @@
 						<!-- Support for Spring errors object -->
 						<spring:bind path="passwordReminderParameters.*">
 						  <c:forEach var="error" items="${status.errorMessages}">
-						    <p><c:out value="${error}"/></p>
+						    <p><c:out value="${error}" escapeXml="false"/></p>
 						  </c:forEach>
 						</spring:bind>
 					</div>
