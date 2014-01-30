@@ -234,6 +234,14 @@
 	"idea_basket_add_an_idea":{
 		"value":"Add Idea +",
 		"description":"The text for buttons to add a new idea in the Idea Manager"
+	},	
+	"idea_basket_private":{
+		"value":"Private Idea Basket",
+		"description":"The text for the private idea basket"
+	},	
+	"idea_basket_public":{
+		"value":"Public Idea Basket",
+		"description":"The text for the public idea basket"
 	},
 	"idea_basket_retrieval_error":{
 		"value":"Error: Could not open Idea Basket, refresh the project to try again",
