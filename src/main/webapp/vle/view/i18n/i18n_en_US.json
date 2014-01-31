@@ -552,7 +552,7 @@
 		"description":"GradingTool: grade by step scored items only table column"
 	},				
 	"grading_grade_by_step_percent_completed_step":{
-		"value":"% Visited Step",
+		"value":"% Completed Step",
 		"description":"GradingTool: grade by step % of Students Who Have Completed This Step table column"
 	},
 	"grading_grade_by_step_all_periods":{
