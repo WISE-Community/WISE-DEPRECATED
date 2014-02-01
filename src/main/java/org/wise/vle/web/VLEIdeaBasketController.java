@@ -48,29 +48,66 @@ public class VLEIdeaBasketController extends AbstractController {
 		User signedInUser = ControllerUtil.getSignedInUser();
 
 		//get all the params
-		String runId = request.getParameter("runId");
-		String periodId = request.getParameter("periodId");
-		String workgroupId = request.getParameter("workgroupId");
+		String runIdStr = request.getParameter("runId");
+		String periodIdStr = request.getParameter("periodId");
+		String workgroupIdStr = request.getParameter("workgroupId");
+		String ideaWorkgroupIdStr = request.getParameter("ideaWorkgroupId");
 		String action = request.getParameter("action");
 		String data = request.getParameter("data");
 		String ideaString = request.getParameter("ideaString");
-		String ideaId = request.getParameter("ideaId");
+		String ideaIdStr = request.getParameter("ideaId");
 		
-		String projectId = (String) request.getParameter("projectId");
+		String projectIdStr = (String) request.getParameter("projectId");
 		
-		Long runIdLong = null;
-		if(runId != null) {
+		Long projectId = null;
+		if(projectIdStr != null) {
 			try {
-				runIdLong = new Long(runId);
+				projectId = new Long(projectIdStr);
 			} catch(NumberFormatException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		Long workgroupIdLong = null;
-		if(workgroupId != null) {
+		Long runId = null;
+		if(runIdStr != null) {
 			try {
-				workgroupIdLong = new Long(workgroupId);
+				runId = new Long(runIdStr);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Long periodId = null;
+		if(periodIdStr != null) {
+			try {
+				periodId = new Long(periodIdStr);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Long workgroupId = null;
+		if(workgroupIdStr != null) {
+			try {
+				workgroupId = new Long(workgroupIdStr);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Long ideaWorkgroupId = null;
+		if(ideaWorkgroupIdStr != null) {
+			try {
+				ideaWorkgroupId = new Long(ideaWorkgroupIdStr);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Long ideaId = null;
+		if(ideaIdStr != null) {
+			try {
+				ideaId = new Long(ideaIdStr);
 			} catch(NumberFormatException e) {
 				e.printStackTrace();
 			}
@@ -88,11 +125,11 @@ public class VLEIdeaBasketController extends AbstractController {
 			//the user is an admin so we will allow this request
 			allowedAccess = true;
 			isPrivileged = true;
-		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
 			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
 			allowedAccess = true;
 			isPrivileged = true;
-		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong) && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupIdLong)) {
+		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
 			//the student is in the run and in the workgroup so we will allow this request
 			allowedAccess = true;
 		}
@@ -104,24 +141,13 @@ public class VLEIdeaBasketController extends AbstractController {
 		}
 		
 		//get the latest revision of the IdeaBasket for this runId, workgroupId
-		IdeaBasket ideaBasket = vleService.getIdeaBasketByRunIdWorkgroupId(new Long(runId), new Long(workgroupId));
+		IdeaBasket ideaBasket = vleService.getIdeaBasketByRunIdWorkgroupId(runId, workgroupId);
 
 		if(action == null) {
 			
 		} else if(action.equals("saveIdeaBasket") || action.equals("addPrivateIdea") || action.equals("editPrivateIdea") ||
 				 action.equals("deletePrivateIdea") || action.equals("restorePrivateIdea") || action.equals("reOrderPrivateBasket")) {
 			boolean savedBasket = false;
-			
-			Long ideaIdLong = null;
-			
-			if(ideaId != null && !"undefined".equals(ideaId) && !"null".equals(workgroupId)) {
-				try {
-					//get the long value if an idea id was passed in as an argument
-					ideaIdLong = new Long(ideaId);
-				} catch(NumberFormatException e) {
-					
-				}
-			}
 			
 			if(ideaBasket != null) {
 				//the idea basket was created before
@@ -138,7 +164,7 @@ public class VLEIdeaBasketController extends AbstractController {
 						JSONObject dataJSONObj = new JSONObject(data);
 						
 						//data is not the same so we will save a new row
-						ideaBasket = new IdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), new Long(workgroupId), data, false, action, new Long(workgroupId), ideaIdLong, workgroupIdLong);
+						ideaBasket = new IdeaBasket(runId, periodId, projectId, workgroupId, data, false, action, workgroupId, ideaId, workgroupId);
 						vleService.saveIdeaBasket(ideaBasket);
 						savedBasket = true;
 					} catch (JSONException e) {
@@ -149,7 +175,7 @@ public class VLEIdeaBasketController extends AbstractController {
 				}
 			} else {
 				//the idea basket was never created before so we will save a new row
-				ideaBasket = new IdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), new Long(workgroupId), data, false, action, new Long(workgroupId), ideaIdLong, workgroupIdLong);
+				ideaBasket = new IdeaBasket(runId, periodId, projectId, workgroupId, data, false, action, workgroupId, ideaId, workgroupId);
 				vleService.saveIdeaBasket(ideaBasket);
 				savedBasket = true;
 			}
@@ -160,7 +186,7 @@ public class VLEIdeaBasketController extends AbstractController {
 				 * previous revision and send it back to the vle so they
 				 * can reload the previous revision.
 				 */
-				ideaBasket = vleService.getIdeaBasketByRunIdWorkgroupId(new Long(runId), new Long(workgroupId));
+				ideaBasket = vleService.getIdeaBasketByRunIdWorkgroupId(runId, workgroupId);
 				response.getWriter().print(ideaBasket.toJSONString());
 			} else {
 				/*
@@ -175,7 +201,7 @@ public class VLEIdeaBasketController extends AbstractController {
 			//add a public idea to the public idea basket and save a new revision
 			
 			//make sure the signed in user is allowed to perform this add public idea request
-			if(isAllowedToModifyPublicIdeaBasket(new Boolean(isPrivileged), signedInUser, new Long(workgroupId))) {
+			if(isAllowedToModifyPublicIdeaBasket(new Boolean(isPrivileged), signedInUser, workgroupId)) {
 				JSONObject newIdeaJSON = null;
 				long newIdeaId = 0;
 				long newIdeaWorkgroupId = 0;
@@ -194,7 +220,7 @@ public class VLEIdeaBasketController extends AbstractController {
 				}
 				
 				//get the latest revision of the public idea basket
-				IdeaBasket publicIdeaBasket = getPublicIdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), action, new Long(workgroupId), newIdeaId, newIdeaWorkgroupId);
+				IdeaBasket publicIdeaBasket = getPublicIdeaBasket(runId, periodId, projectId, action, workgroupId, newIdeaId, newIdeaWorkgroupId);
 				
 				//get the data from the public idea basket
 				String dataString = publicIdeaBasket.getData();
@@ -213,7 +239,7 @@ public class VLEIdeaBasketController extends AbstractController {
 						 * make sure the signed in user workgroup id is the same as the
 						 * workgroup id field in the idea JSON  
 						 */
-						if(new Long(workgroupId) == newIdeaWorkgroupId) {
+						if(workgroupId == newIdeaWorkgroupId) {
 							
 							/*
 							 * loop through all the ideas in the public idea basket
@@ -246,7 +272,7 @@ public class VLEIdeaBasketController extends AbstractController {
 								ideasJSON.put(newIdeaJSON);
 								
 								//create a new public idea basket revision
-								IdeaBasket publicIdeaBasketRevision = createPublicIdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), dataJSON.toString(), action, new Long(workgroupId), newIdeaId, newIdeaWorkgroupId);
+								IdeaBasket publicIdeaBasketRevision = createPublicIdeaBasket(runId, periodId, projectId, dataJSON.toString(), action, workgroupId, newIdeaId, newIdeaWorkgroupId);
 								
 								//get the string representation
 								String publicIdeaBasketRevisionString = publicIdeaBasketRevision.toJSONString();
@@ -285,9 +311,9 @@ public class VLEIdeaBasketController extends AbstractController {
 			//delete a public idea from the public idea basket and save a new revision
 			
 			//make sure the signed in user is allowed to perform this delete public idea request
-			if(isAllowedToModifyPublicIdeaBasket(new Boolean(isPrivileged), signedInUser, new Long(workgroupId))) {
+			if(isAllowedToModifyPublicIdeaBasket(new Boolean(isPrivileged), signedInUser, workgroupId)) {
 				//get the latest revision of the public idea basket
-				IdeaBasket publicIdeaBasket = getPublicIdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), action, new Long(workgroupId), new Long(ideaId), new Long(workgroupId));
+				IdeaBasket publicIdeaBasket = getPublicIdeaBasket(runId, periodId, projectId, action, workgroupId, ideaId, workgroupId);
 				
 				//get the data
 				String dataString = publicIdeaBasket.getData();
@@ -311,7 +337,7 @@ public class VLEIdeaBasketController extends AbstractController {
 							long tempId = idea.getLong("id");
 							long tempWorkgroupId = idea.getLong("workgroupId");
 							
-							if(new Long(ideaId) == tempId && new Long(workgroupId) == tempWorkgroupId) {
+							if(ideaId == tempId && workgroupId == tempWorkgroupId) {
 								//the idea id and workgroup id match so we will remove this idea
 								JSONObject removedIdea = (JSONObject) ideasJSON.remove(x);
 								
@@ -339,7 +365,7 @@ public class VLEIdeaBasketController extends AbstractController {
 						//we have found and deleted the public idea
 						
 						//create a new public idea basket revision
-						IdeaBasket publicIdeaBasketRevision = createPublicIdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), dataJSON.toString(), action, new Long(workgroupId), new Long(ideaId), new Long(workgroupId));
+						IdeaBasket publicIdeaBasketRevision = createPublicIdeaBasket(runId, periodId, projectId, dataJSON.toString(), action, workgroupId, ideaId, workgroupId);
 						
 						//get the string representation
 						String publicIdeaBasketRevisionString = publicIdeaBasketRevision.toJSONString();
@@ -372,7 +398,7 @@ public class VLEIdeaBasketController extends AbstractController {
 			 */
 			
 			//get the latest revision of the public idea basket
-			IdeaBasket publicIdeaBasket = getPublicIdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), action, new Long(workgroupId), new Long(ideaId), new Long(workgroupId));
+			IdeaBasket publicIdeaBasket = getPublicIdeaBasket(runId, periodId, projectId, action, workgroupId, ideaId, ideaWorkgroupId);
 			
 			//get the data
 			String dataString = publicIdeaBasket.getData();
@@ -398,7 +424,7 @@ public class VLEIdeaBasketController extends AbstractController {
 						long tempId = idea.getLong("id");
 						long tempWorkgroupId = idea.getLong("workgroupId");
 						
-						if(new Long(ideaId) == tempId && new Long(workgroupId) == tempWorkgroupId) {
+						if(ideaId == tempId && ideaWorkgroupId == tempWorkgroupId) {
 							//we have found the public idea that is being copied
 							foundPublicIdea = true;
 							
@@ -414,7 +440,7 @@ public class VLEIdeaBasketController extends AbstractController {
 							for(int y=0; y<workgroupIdsThatHaveCopied.length(); y++) {
 								long workgroupIdThatHasCopied = workgroupIdsThatHaveCopied.getLong(y);
 								
-								if(new Long(workgroupId) == workgroupIdThatHasCopied) {
+								if(workgroupId == workgroupIdThatHasCopied) {
 									/*
 									 * we found the signed in workgroup id in the array which
 									 * means the workgroup has previously copied this idea
@@ -430,7 +456,7 @@ public class VLEIdeaBasketController extends AbstractController {
 								 * add this workgroup to the array of workgroups that have copied 
 								 * this idea 
 								 */
-								workgroupIdsThatHaveCopied.put(new Long(workgroupId));
+								workgroupIdsThatHaveCopied.put(workgroupId);
 								ideaCopied = true;								
 							}
 						}
@@ -439,7 +465,7 @@ public class VLEIdeaBasketController extends AbstractController {
 				
 				if(ideaCopied) {
 					//create a new public idea basket revision
-					IdeaBasket publicIdeaBasketRevision = createPublicIdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), dataJSON.toString(), action, new Long(workgroupId), new Long(ideaId), new Long(workgroupId));
+					IdeaBasket publicIdeaBasketRevision = createPublicIdeaBasket(runId, periodId, projectId, dataJSON.toString(), action, workgroupId, ideaId, ideaWorkgroupId);
 
 					//get the string representation
 					String publicIdeaBasketRevisionString = publicIdeaBasketRevision.toJSONString();
@@ -454,7 +480,7 @@ public class VLEIdeaBasketController extends AbstractController {
 				} else if(!foundPublicIdea) {
 					//the public idea with the given id and workgroupId was not found
 					JSONObject errorMessageJSONObject = new JSONObject();
-					errorMessageJSONObject.put("errorMessage", "Error: Did not find public idea with id=" + ideaId + " and workgroupId=" + workgroupId);
+					errorMessageJSONObject.put("errorMessage", "Error: Did not find public idea with id=" + ideaId + " and workgroupId=" + ideaWorkgroupId);
 					response.getWriter().print(errorMessageJSONObject.toString());
 				}
 			} catch (JSONException e) {
@@ -467,7 +493,7 @@ public class VLEIdeaBasketController extends AbstractController {
 			 */
 			
 			//get the latest revision of the public idea basket
-			IdeaBasket publicIdeaBasket = getPublicIdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), action, new Long(workgroupId), new Long(ideaId), new Long(workgroupId));
+			IdeaBasket publicIdeaBasket = getPublicIdeaBasket(runId, periodId, projectId, action, workgroupId, ideaId, ideaWorkgroupId);
 			
 			//get the data
 			String dataString = publicIdeaBasket.getData();
@@ -493,8 +519,8 @@ public class VLEIdeaBasketController extends AbstractController {
 						long tempId = idea.getLong("id");
 						long tempWorkgroupId = idea.getLong("workgroupId");
 						
-						if(new Long(ideaId) == tempId && new Long(workgroupId) == tempWorkgroupId) {
-							//we have found the public idea that is being copied
+						if(ideaId == tempId && ideaWorkgroupId == tempWorkgroupId) {
+							//we have found the public idea that is being uncopied
 							foundPublicIdea = true;
 							
 							//create the array of workgroup ids that have copied if it does not exist
@@ -509,7 +535,7 @@ public class VLEIdeaBasketController extends AbstractController {
 							for(int y=0; y<workgroupIdsThatHaveCopied.length(); y++) {
 								long workgroupIdThatHasCopied = workgroupIdsThatHaveCopied.getLong(y);
 								
-								if(new Long(workgroupId) == workgroupIdThatHasCopied) {
+								if(workgroupId == workgroupIdThatHasCopied) {
 									/*
 									 * we found the signed in workgroup id in the array so
 									 * we will remove it. we will also move the counter back
@@ -530,7 +556,7 @@ public class VLEIdeaBasketController extends AbstractController {
 				
 				if(publicIdeaBasketChanged) {
 					//create a new public idea basket revision
-					IdeaBasket publicIdeaBasketRevision = createPublicIdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), dataJSON.toString(), action, new Long(workgroupId), new Long(ideaId), new Long(workgroupId));
+					IdeaBasket publicIdeaBasketRevision = createPublicIdeaBasket(runId, periodId, projectId, dataJSON.toString(), action, workgroupId, ideaId, ideaWorkgroupId);
 					
 					//get the string representation
 					String publicIdeaBasketRevisionString = publicIdeaBasketRevision.toJSONString();
@@ -541,7 +567,7 @@ public class VLEIdeaBasketController extends AbstractController {
 					if(!foundPublicIdea) {
 						//the public idea with the given id and workgroupId was not found
 						JSONObject errorMessageJSONObject = new JSONObject();
-						errorMessageJSONObject.put("errorMessage", "Error: Did not find public idea with id=" + ideaId + " and workgroupId=" + workgroupId);
+						errorMessageJSONObject.put("errorMessage", "Error: Did not find public idea with id=" + ideaId + " and workgroupId=" + ideaWorkgroupId);
 						response.getWriter().print(errorMessageJSONObject.toString());
 					} else if(!previouslyCopied) {
 						//the signed in workgroup has not previously copied the public idea before
@@ -562,25 +588,34 @@ public class VLEIdeaBasketController extends AbstractController {
 		User signedInUser = ControllerUtil.getSignedInUser();
 		
 		//get all the params
-		String runId = request.getParameter("runId");
+		String runIdStr = request.getParameter("runId");
 		String action = request.getParameter("action");
-		String periodId = (String) request.getParameter("periodId");
+		String periodIdStr = (String) request.getParameter("periodId");
 		
-		String workgroupId = (String) request.getParameter("workgroupId");
+		String workgroupIdStr = (String) request.getParameter("workgroupId");
 		
-		Long runIdLong = null;
-		if(runId != null) {
+		Long runId = null;
+		if(runIdStr != null) {
 			try {
-				runIdLong = new Long(runId);
+				runId = new Long(runIdStr);
 			} catch(NumberFormatException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		Long workgroupIdLong = null;
-		if(workgroupId != null) {
+		Long periodId = null;
+		if(periodIdStr != null) {
 			try {
-				workgroupIdLong = new Long(workgroupId);
+				periodId = new Long(periodIdStr);
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Long workgroupId = null;
+		if(workgroupIdStr != null) {
+			try {
+				workgroupId = new Long(workgroupIdStr);
 			} catch(NumberFormatException e) {
 				e.printStackTrace();
 			}
@@ -598,11 +633,11 @@ public class VLEIdeaBasketController extends AbstractController {
 			//the user is an admin so we will allow this request
 			allowedAccess = true;
 			isPrivileged = true;
-		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
 			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
 			allowedAccess = true;
 			isPrivileged = true;
-		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong) && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupIdLong)) {
+		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
 			//the student is in the run and in the workgroup so we will allow this request
 			allowedAccess = true;
 		}
@@ -613,18 +648,23 @@ public class VLEIdeaBasketController extends AbstractController {
 			return null;
 		}
 		
-		String projectId = null;
+		Long projectId = null;
 		
 		try {
 			//get the run
-			Run run = runService.retrieveById(new Long(runId));
+			Run run = runService.retrieveById(runId);
 			
 			//get the project id
 			Project project = run.getProject();
 			Serializable projectIdSerializable = project.getId();
 			
 			if(projectIdSerializable != null) {
-				projectId = projectIdSerializable.toString();			
+				try {
+					projectId = new Long(projectIdSerializable.toString());
+				} catch(NumberFormatException e) {
+					e.printStackTrace();
+				}
+							
 			}
 		} catch (NumberFormatException e1) {
 			e1.printStackTrace();
@@ -635,11 +675,11 @@ public class VLEIdeaBasketController extends AbstractController {
 		if(action.equals("getIdeaBasket")) {
 			if(runId != null && workgroupId != null) {
 				//get the IdeaBasket
-				IdeaBasket ideaBasket = vleService.getIdeaBasketByRunIdWorkgroupId(new Long(runId), new Long(workgroupId));
+				IdeaBasket ideaBasket = vleService.getIdeaBasketByRunIdWorkgroupId(runId, workgroupId);
 				
 				if(ideaBasket == null) {
 					//make the IdeaBasket if it does not exist
-					ideaBasket = new IdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), new Long(workgroupId));
+					ideaBasket = new IdeaBasket(runId, periodId, projectId, workgroupId);
 					vleService.saveIdeaBasket(ideaBasket);
 				}
 				
@@ -650,7 +690,7 @@ public class VLEIdeaBasketController extends AbstractController {
 		} else if(action.equals("getAllIdeaBaskets")) {
 			if(isPrivileged) {
 				//get all the idea baskets for a run
-				List<IdeaBasket> latestIdeaBasketsForRunId = vleService.getLatestIdeaBasketsForRunId(new Long(runId));
+				List<IdeaBasket> latestIdeaBasketsForRunId = vleService.getLatestIdeaBasketsForRunId(runId);
 				
 				//convert the list to a JSONArray
 				JSONArray ideaBaskets = ideaBasketListToJSONArray(latestIdeaBasketsForRunId);
@@ -681,7 +721,7 @@ public class VLEIdeaBasketController extends AbstractController {
 				
 				if(workgroupIds.size() > 0) {
 					//query for the baskets with the given run and workgroup ids
-					latestIdeaBasketsForRunIdWorkgroupIds = vleService.getLatestIdeaBasketsForRunIdWorkgroupIds(new Long(runId), workgroupIds);					
+					latestIdeaBasketsForRunIdWorkgroupIds = vleService.getLatestIdeaBasketsForRunIdWorkgroupIds(runId, workgroupIds);					
 				}
 				
 				//convert the list to a JSONArray
@@ -695,7 +735,7 @@ public class VLEIdeaBasketController extends AbstractController {
 			}
 		} else if(action.equals("getPublicIdeaBasket")) {
 			//get the latest public idea basket revision
-			IdeaBasket publicIdeaBasket = getPublicIdeaBasket(new Long(runId), new Long(periodId), new Long(projectId), action, new Long(workgroupId), null, null);
+			IdeaBasket publicIdeaBasket = getPublicIdeaBasket(runId, periodId, projectId, action, workgroupId, null, null);
 			
 			//get the JSON string representation of the public idea basket
 			String publicIdeaBasketJSONString = publicIdeaBasket.toJSONString();
