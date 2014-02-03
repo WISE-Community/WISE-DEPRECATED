@@ -15,7 +15,7 @@
 
 </head>
 <body>
-<%@ include file="../adminheader.jsp"%>
+<%@ include file="../../headermain.jsp"%>
 
 <spring:message code="admin.news.confirmRemove" />: ${newsTitle}
 <br><br>

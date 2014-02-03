@@ -74,7 +74,7 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 <div id="page">
 <div id="pageContent" class="contentPanel">
 
-<%@ include file="../adminheader.jsp"%>
+<%@ include file="../../headermain.jsp"%>
 <%@page import="org.wise.portal.domain.project.impl.ProjectType" %>
 
 

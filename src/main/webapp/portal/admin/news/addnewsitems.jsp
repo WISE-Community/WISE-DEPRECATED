@@ -15,7 +15,7 @@
 
 </head>
 <body>
-<%@ include file="../adminheader.jsp"%>
+<%@ include file="../../headermain.jsp"%>
 
 <!-- Support for Spring errors object -->
 <spring:bind path="newsItemParameters.*">
@@ -36,9 +36,7 @@
 		<dt><label for="newsField"><spring:message code="message" /></label></dt>
 		<dd><form:textarea rows="10" cols="50" path="news" id="newsField"/></dd>
 		</dl>
- 	
- 	   <input type="image" id="save" src="<spring:theme code="register_save" />" 
-    	onmouseover="swapSaveImage('save',1)"onmouseout="swapSaveImage('save',0)"   />
+		 <input type="submit" id="save" value="<spring:message code="submit" />" />
 
 	</form:form>
 </body>

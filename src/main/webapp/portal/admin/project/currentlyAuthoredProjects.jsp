@@ -21,7 +21,7 @@
 <div id="page">
 <div id="pageContent" class="contentPanel">
 
-<%@ include file="../adminheader.jsp"%>
+<%@ include file="../../headermain.jsp"%>
 
 <h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
