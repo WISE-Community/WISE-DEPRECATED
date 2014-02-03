@@ -24,16 +24,15 @@ package org.wise.portal.domain.announcement.impl;
 
 import java.util.Date;
 
-import org.wise.portal.domain.announcement.Announcement;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.wise.portal.domain.announcement.Announcement;
 
 /**
  * Announcement domain object that contains Title (String), Timestamp (Date),
@@ -68,8 +67,7 @@ public class AnnouncementImpl implements Announcement, Comparable<Announcement>{
 	@Column(name = AnnouncementImpl.COLUMN_NAME_TIMESTAMP, nullable=false)
 	private Date timestamp;
 	
-	@Lob
-	@Column(name = AnnouncementImpl.COLUMN_NAME_ANNOUNCEMENT, nullable=false)
+	@Column(name = AnnouncementImpl.COLUMN_NAME_ANNOUNCEMENT, length=5120000, nullable=false)
 	private String announcement;
 	
 	@Id

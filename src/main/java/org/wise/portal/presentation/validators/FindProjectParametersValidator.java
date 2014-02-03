@@ -94,7 +94,7 @@ public class FindProjectParametersValidator implements Validator{
 			
 			/* make sure that a user with that name exists */
 			if(userService.retrieveUserByUsername(param.getUserName()) ==  null){
-				errors.rejectValue("userName", "error.teacher-not-found");
+				errors.reject("userName", "Username not found.");
 			}
 		}
 		

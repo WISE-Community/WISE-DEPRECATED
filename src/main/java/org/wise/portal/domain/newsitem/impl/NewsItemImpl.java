@@ -31,7 +31,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -69,8 +68,7 @@ public class NewsItemImpl implements NewsItem, Comparable<NewsItem> {
 	@Transient
 	private static final long serialVersionUID = 1L;
     
-    @Lob
-    @Column(name = NewsItemImpl.COLUMN_NAME_NEWS, length=5120000, nullable = false)
+    @Column(name = NewsItemImpl.COLUMN_NAME_NEWS, length=64000, nullable = false)
     private String news = null;
 	
     @Column(name = NewsItemImpl.COLUMN_NAME_DATE, nullable = false)

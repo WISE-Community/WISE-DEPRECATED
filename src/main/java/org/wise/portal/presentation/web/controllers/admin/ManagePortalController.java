@@ -54,7 +54,7 @@ public class ManagePortalController extends AbstractController {
 			HttpServletResponse response) throws Exception {
 		String portalId = request.getParameter(PORTAL_ID_PARAM);
 		if (portalId == null) {
-			portalId = "0";
+			portalId = "1";
 		}
 
 		Portal portal = portalService.getById(Long.valueOf(portalId));
