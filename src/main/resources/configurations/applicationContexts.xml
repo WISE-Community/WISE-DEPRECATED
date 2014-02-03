@@ -1536,8 +1536,6 @@
 					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/checkforexistingaccount.html"
 					access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/statistics.html"
-					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/getPortalStatistics.html"
 					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/getVLEStatistics.html"

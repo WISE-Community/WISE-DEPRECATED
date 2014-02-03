@@ -1188,7 +1188,6 @@
     		    /contact/contactwisegeneral.html=contactWiseController
     		    /contact/contactwiseproject.html=contactWiseProjectController
     		    /contact/checkforexistingaccount.html=checkForExistingAccountController
-    		    /pages/statistics.html=statisticsController
     		    /getPortalStatistics.html=portalStatisticsController
     		    /getVLEStatistics.html=vleGetStatisticsController
     		    /student/index.html=studentIndexController
@@ -1254,6 +1253,7 @@
 				/author/authorproject.html=authorProjectController
 				/project/exportproject.html=exportProjectController
 				/project/importexternalproject.html=importExternalProjectController
+    		    /admin/statistics.html=statisticsController
 				/admin/project/uploadproject.html=uploadProjectController
 				/admin/account/manageusers.html=viewAllUsersController
 				/admin/account/enabledisableuser.html=enableDisableUserController
