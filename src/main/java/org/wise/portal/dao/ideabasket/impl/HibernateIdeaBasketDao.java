@@ -56,17 +56,17 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         session.beginTransaction();
         
-        //find all the IdeaBasket objects that match
-        List<IdeaBasket> result =  session.createCriteria(IdeaBasket.class).add(
+        //find the latest IdeaBasket object that matches
+        List<IdeaBasket> result = session.createCriteria(IdeaBasket.class).add(
         		Restrictions.eq("runId", runId)).add(
-        				Restrictions.eq("workgroupId", workgroupId)).addOrder(Order.desc("postTime")).list();
+        				Restrictions.eq("workgroupId", workgroupId)).addOrder(Order.desc("postTime")).setMaxResults(1).list();
         session.getTransaction().commit();
         
         IdeaBasket ideaBasket = null;
         if(result.size() > 0) {
         	/*
         	 * get the first IdeaBasket from the result list since 
-        	 * that will be the latest revision of that idea basket
+        	 * there will only be one element in the list
         	 */
         	ideaBasket = result.get(0);
         }
@@ -189,7 +189,7 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
         session.beginTransaction();
         
         //find all the IdeaBasket objects that match
-        List<IdeaBasket> result =  session.createCriteria(IdeaBasket.class).add(
+        List<IdeaBasket> result = session.createCriteria(IdeaBasket.class).add(
         		Restrictions.eq("runId", runId)).addOrder(Order.asc("workgroupId")).addOrder(Order.asc("periodId")).addOrder(Order.asc("postTime")).list();
         session.getTransaction().commit();
         return result;
@@ -206,15 +206,15 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
         session.beginTransaction();
         
         //get the latest idea basket revision that matches
-        List<IdeaBasket> result =  session.createCriteria(IdeaBasket.class).add(
-        		Restrictions.eq("runId", runId)).add(Restrictions.eq("periodId", periodId)).add(Restrictions.eq("isPublic", true)).addOrder(Order.desc("id")).list();
+        List<IdeaBasket> result = session.createCriteria(IdeaBasket.class).add(
+        		Restrictions.eq("runId", runId)).add(Restrictions.eq("periodId", periodId)).add(Restrictions.eq("isPublic", true)).addOrder(Order.desc("id")).setMaxResults(1).list();
         session.getTransaction().commit();
         
         IdeaBasket ideaBasket = null;
         if(result.size() > 0) {
         	/*
         	 * get the first IdeaBasket from the result list since 
-        	 * that will be the latest revision of that idea basket
+        	 * there will only be one element in the list
         	 */
         	ideaBasket = result.get(0);
         }
