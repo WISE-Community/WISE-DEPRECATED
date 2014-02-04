@@ -85,7 +85,6 @@
 		<mapping class="org.wise.vle.domain.node.Node" />
 		<mapping class="org.wise.vle.domain.work.StepWork" />
 		<mapping class="org.wise.vle.domain.work.StepWorkCache" />
-		<mapping class="org.wise.vle.domain.journal.Journal" />
 		<mapping class="org.wise.vle.domain.annotation.Annotation" />
 		<mapping class="org.wise.vle.domain.cRater.CRaterRequest" />
 		<mapping class="org.wise.vle.domain.peerreview.PeerReviewWork" />

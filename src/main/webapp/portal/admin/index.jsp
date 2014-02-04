@@ -101,9 +101,10 @@
 						<div class="sectionContent">
 							<h5><a href="news/managenewsitems.html"><spring:message code='admin.index.workWithNewsItems'/></a></h5>
 						</div>
-					
+
 						<div class="sectionHead"><spring:message code='admin.index.portalManagement'/></div>
 						<div class="sectionContent">
+							<h5><a href="statistics.html"><spring:message code='admin.index.statistics'/></a></h5>
 							<h5><a href="portal/manageportal.html"><spring:message code='admin.index.configurePortalSettings'/></a></h5>
 						</div>
 						

@@ -709,7 +709,6 @@ NavigationPanel.prototype.getNavigationHtml = function(node, depth, position) {
 
 	if (node == null) {
 		// this is for nodes that don't appear in navigation
-		// like journal
 		return;
 	}
 

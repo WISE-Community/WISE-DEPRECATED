@@ -251,8 +251,6 @@ public class BridgeController extends AbstractController {
 						canAccessOtherWorkgroups = true;
 					}
 				}
-			} else if (type.equals("journal")) {
-				workgroupIdStr = request.getParameter("workgroupId");
 			} else if(type.equals("peerreview")) {
 				//return true for now until logic is implemented
 				return true;
@@ -433,9 +431,6 @@ public class BridgeController extends AbstractController {
 			
 			RequestDispatcher requestDispatcher = vlewrappercontext.getRequestDispatcher("/annotations.html");
 			requestDispatcher.forward(request, response);
-		} else if (type.equals("journal")) {
-			RequestDispatcher requestDispatcher = vlewrappercontext.getRequestDispatcher("/journaldata.html");
-			requestDispatcher.forward(request, response);
 		} else if (type.equals("peerreview")) {
 			//get the period id
 			String periodString = request.getParameter("periodId");
@@ -517,9 +512,6 @@ public class BridgeController extends AbstractController {
 			requestDispatcher.forward(request, response);
 		} else if (type.equals("flag") || type.equals("inappropriateFlag") || type.equals("annotation")){
 			RequestDispatcher requestDispatcher = vlewrappercontext.getRequestDispatcher("/annotations.html");
-			requestDispatcher.forward(request, response);
-		} else if (type.equals("journal")) {
-			RequestDispatcher requestDispatcher = vlewrappercontext.getRequestDispatcher("/journaldata.html");
 			requestDispatcher.forward(request, response);
 		} else if (type.equals("peerreview")) {
 			RequestDispatcher requestDispatcher = vlewrappercontext.getRequestDispatcher("/peerreview.html");

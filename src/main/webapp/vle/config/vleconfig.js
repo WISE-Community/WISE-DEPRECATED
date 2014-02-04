@@ -18,8 +18,6 @@ function VLEConfig(contentObject) {
 		var runId;
 		var postDataUrl;
 		var getDataUrl;
-		var postJournalDataUrl;
-		var getJournalDataUrl;
 		var contentUrl;
 		var contentBaseUrl;
 		var userInfoUrl;
@@ -84,16 +82,6 @@ function VLEConfig(contentObject) {
 				getDataUrl = vleConfigXML.getElementsByTagName("getDataUrl")[0].firstChild.nodeValue;
 				postDataUrl = vleConfigXML.getElementsByTagName("postDataUrl")[0].firstChild.nodeValue;
 				
-				//check if the getJournalDataUrl tag exists in the xml
-				if(vleConfigXML.getElementsByTagName("getJournalDataUrl").length != 0) {
-					getJournalDataUrl = vleConfigXML.getElementsByTagName("getJournalDataUrl")[0].firstChild.nodeValue;	
-				}
-				
-				//check if the postJournalDataUrl tag exists in the xml
-				if(vleConfigXML.getElementsByTagName("postJournalDataUrl").length != 0) {
-					postJournalDataUrl = vleConfigXML.getElementsByTagName("postJournalDataUrl")[0].firstChild.nodeValue;	
-				}
-				
 				runInfoUrl = vleConfigXML.getElementsByTagName("runInfoUrl")[0].firstChild.nodeValue;
 				runInfoRequestInterval = vleConfigXML.getElementsByTagName("runInfoRequestInterval")[0].firstChild.nodeValue;
 				
@@ -131,12 +119,6 @@ function VLEConfig(contentObject) {
 			},
 			getGetDataurl:function() {
 				return getDataUrl;
-			},
-			getPostJournalDataUrl:function() {
-				return postJournalDataUrl;
-			},
-			getGetJournalDataUrl:function() {
-				return getJournalDataUrl;
 			},
 			getContentUrl:function() {
 				return contentUrl;

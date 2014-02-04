@@ -57,7 +57,7 @@
 						    <img src="${contextPath}/<spring:theme code="inquiry"/>" alt="<spring:message code="index.inquiryProjects" />" />
 						    <img src="${contextPath}/<spring:theme code="engagement"/>" alt="<spring:message code="index.studentEngagement" />" />
 						    <img src="${contextPath}/<spring:theme code="interactive"/>" alt="<spring:message code="index.interactiveModels" />" />
-						    <img src="${contextPath}/<spring:theme code="teacher_tools"/>" alt="<spring:message code="index.teacherTools" />" />
+						    <img src="${contextPath}/<spring:theme code="teacher_tools_home"/>" alt="<spring:message code="index.teacherTools" />" />
 						    <img src="${contextPath}/<spring:theme code="open_source"/>" alt="<spring:message code="index.openSource" />" />
 						</div>
 					</div>
