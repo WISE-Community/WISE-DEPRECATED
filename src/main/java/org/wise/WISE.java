@@ -49,7 +49,7 @@ public class WISE {
 			switch (mainMenuOptionSelected) {
 			case 0:
 				while (true) {
-					System.out.println("\nThis will wipe out all data. Continue? [y/n]:");
+					System.out.println("\nThis will wipe out all WISE data and reset to initial state. Continue? [y/n]:");
 					Scanner reader = new Scanner(System.in);
 					String input = reader.next();
 					if (input.equals("y")) {
