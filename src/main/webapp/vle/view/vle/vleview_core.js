@@ -153,9 +153,6 @@ View.prototype.displayGlobalTools = function() {
 	var flaggedLink = "<a id='viewFlaggedLink' onclick='eventManager.fire(\"showFlaggedWork\")' title='"+this.getI18NString("flagged_button_title")+"'>"+this.getI18NString("flagged_button_text")+"</a>";
 	$('#viewFlagged').html(flaggedLink);
 	
-	// Journal is disabled for now in WISE4
-	//var journalLink = "<li id='journalTD' style=\"display:none\"><a class=\"\" onclick='view.showJournal()' title=\"Show Student Journal\"><img src=\"images/Journal28x28.png\" alt=\"Show My Journal\" border=\"0\" />&nbsp;"+this.getI18NString("journal_button_text")+"</a></li>";
-	
 	// Insert navigation toggle
 	var toggleNavLink = "<a id='toggleNavLink' onclick='eventManager.fire(\"navigationPanelToggleVisibilityButtonClicked\")' title='"+this.getI18NString("toggle_nav_button_title")+"'>"+this.getI18NString("toggle_nav_button_text")+"</a>";
 	$('#toggleNav').html(toggleNavLink);
@@ -386,7 +383,6 @@ View.prototype.loadTheme = function(themeName){
 			$("#quitAndLogoutLink").attr("href","../index.php");
 			$("#goHomeLink").attr("href","../page/index.php");
 			$("#myWorkTD").hide();
-			$("#journalTD").hide();
 			$("#flaggedWorkTD").hide();
 		} else {
 		}
@@ -792,7 +788,7 @@ View.prototype.isAnyNavigationLoadingCompleted = function(){
  * Save nodevisit state for current position, close popups, remove highlighted steps, etc.
  */
 View.prototype.endCurrentNode = function(){
-	/* ensures that only one popup (any notes and journal) is open at any given time */
+	/* ensures that only one popup (any notes) is open at any given time */
 	this.utils.closeDialogs();
 	
 	var currentNode = null;

@@ -462,7 +462,7 @@ public class FileManager {
 			return ".ms";
 		} else if(type.equals("MultipleChoiceNode")){
 			return ".mc";
-		} else if(type.equals("NoteNode") || type.equals("JournalEntryNode") || type.equals("OpenResponseNode")){
+		} else if(type.equals("NoteNode") || type.equals("OpenResponseNode")){
 			return ".or";
 		} else if(type.equals("OutsideUrlNode")){
 			return ".ou";

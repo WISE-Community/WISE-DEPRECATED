@@ -38,11 +38,7 @@ public class AuthorController extends HttpServlet {
 		} else if (type.equals("flag") || type.equals("annotation")){			// get flags
 			RequestDispatcher requestDispatcher = wiseContext.getRequestDispatcher("/annotations.html");
 			requestDispatcher.forward(request, response);
-		} else if (type.equals("journal")) {
-			RequestDispatcher requestDispatcher = wiseContext.getRequestDispatcher("/journaldata.html");
-			requestDispatcher.forward(request, response);
-		}
-		
+		} 
 	}
 	
 	public void doPost(HttpServletRequest request,

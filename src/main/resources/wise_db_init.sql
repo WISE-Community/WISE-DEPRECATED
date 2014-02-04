@@ -137,13 +137,6 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table journal (
-        id bigint not null auto_increment,
-        data text,
-        userInfo_id bigint,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
     create table message_recipient (
         id bigint not null auto_increment,
         isRead bit,
@@ -620,12 +613,6 @@
         add constraint FK3311F7E3F36B7C77 
         foreign key (user_fk) 
         references users (id);
-
-    alter table journal 
-        add index FKAB64AF37F572C312 (userInfo_id), 
-        add constraint FKAB64AF37F572C312 
-        foreign key (userInfo_id) 
-        references userinfo (id);
 
     alter table message_recipient 
         add index FK398E4FE1478EAB69 (recipient_fk), 

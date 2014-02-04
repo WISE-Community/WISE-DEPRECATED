@@ -6,7 +6,7 @@
  */
 var iconUrlOld = 'images/stepIcons/UCCP/';
 var nodeTypesOld = ['HtmlNode', 'BrainstormNode', 'FillinNode', 'MatchSequenceNode', 'MultipleChoiceNode', 
-		'NoteNode', 'JournalEntryNode', 'OutsideUrlNode', 'OpenResponseNode', 'BlueJNode', 'DrawNode',
+		'NoteNode', 'OutsideUrlNode', 'OpenResponseNode', 'BlueJNode', 'DrawNode',
 		'DataGraphNode', 'MySystemNode', 'SVGDrawNode', 'MWNode', 'AssessmentListNode', 'ChallengeNode',
 		'BranchNode', 'SensorNode', 'ExplanationBuilderNode'];
 var nodeClassesOld = [['intro', 'curriculum', 'display', 'cartoon', 'codeit', 'simulation', 'movie', 'homework', 'summary'],
@@ -15,7 +15,6 @@ var nodeClassesOld = [['intro', 'curriculum', 'display', 'cartoon', 'codeit', 's
 			['matchsequence'],
 			['multiplechoice'],
 			['note'],
-			['journal'],
 			['www'],
 			['openresponse'],
 			['codeit'],
@@ -35,7 +34,6 @@ var nodeClassTextOld = [['Introductory Page', 'Curriculum Page', 'Display Page',
 			['Match & Sequence'],
 			['Multiple Choice'],
 			['Reflection Note (popup)'],
-			['Journal Question'],
 			['WWW Page'],
 			['Open Response'],
 			['Code it'],
