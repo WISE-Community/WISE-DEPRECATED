@@ -1074,6 +1074,9 @@ public class VLEGetXLS extends AbstractController {
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Teacher Score");
 		    	
 		    	//header time the student spent on the step in seconds column
+		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Teacher Max Score");
+		    	
+		    	//header time the student spent on the step in seconds column
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Teacher Comment Timestamp");
 		    	
 		    	//header time the student spent on the step in seconds column
@@ -1404,11 +1407,22 @@ public class VLEGetXLS extends AbstractController {
     	if(rows.size() > 0) {
     		//there are rows
     		
+    		if(isCRaterType(nodeContent)) {
+    			//this is a CRater step so we will add the column name for the auto score max value
+    			columnNames.add("Auto-Score Max Value");
+    		}
+    		
     		//loop through all the rows
     		for(int x=0; x<rows.size(); x++) {
     			//get a row
     			ArrayList<Object> row = rows.get(x);
 
+        		if(isCRaterType(nodeContent)) {
+        			//this is a CRater step so we will get the CRater max score for the step
+        			Long cRaterMaxScore = getCRaterMaxScore(nodeContent);
+        			row.add(cRaterMaxScore);
+        		}
+    			
     			//write the row to the excel
     			writeAllStudentWorkRow(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, columnNames, row);
     			
@@ -1774,7 +1788,7 @@ public class VLEGetXLS extends AbstractController {
     	stepWorkList.add(stepWork);
     	
     	//set the latest annotation score and timestamp
-    	tempColumn = setLatestAnnotationScoreAndTimestamp(stepWorkList, tempRow, tempRowVector, tempColumn);
+    	tempColumn = setLatestAnnotationScoreAndTimestamp(stepWorkList, tempRow, tempRowVector, tempColumn, nodeId);
     	
     	//set the latest annotation comment and timestamp
     	tempColumn = setLatestAnnotationCommentAndTimestamp(stepWorkList, tempRow, tempRowVector, tempColumn);
@@ -2835,7 +2849,7 @@ public class VLEGetXLS extends AbstractController {
 				}
 				
 				//set the latest annotation score and timestamp from any of the teachers
-				workgroupColumnCounter = setLatestAnnotationScoreAndTimestamp(stepWorksForNodeId, rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter);
+				workgroupColumnCounter = setLatestAnnotationScoreAndTimestamp(stepWorksForNodeId, rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, nodeId);
 				
 				//set the latest annotation comment and timestamp from any of the teachers
 				workgroupColumnCounter = setLatestAnnotationCommentAndTimestamp(stepWorksForNodeId, rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter);
@@ -3307,6 +3321,15 @@ public class VLEGetXLS extends AbstractController {
 				nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
 		
 		stepExtra = "teacher score";
+		
+		//set the step extra cell
+		columnCounter = setGetLatestStepWorkHeaderCells(
+				columnCounter, 
+				stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
+				stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
+				nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
+		
+		stepExtra = "teacher max score";
 		
 		//set the step extra cell
 		columnCounter = setGetLatestStepWorkHeaderCells(
@@ -8477,10 +8500,11 @@ public class VLEGetXLS extends AbstractController {
 	 * for the associated annotation
 	 * @param rowForWorkgroupId the row
 	 * @param workgroupColumnCounter the column index
+	 * @param nodeId the node id for the step
 	 * 
 	 * @return the updated column counter pointing to the next empty column
 	 */
-	private int setLatestAnnotationScoreAndTimestamp(List<StepWork> stepWorksForNodeId, Row rowForWorkgroupId, Vector<String> rowForWorkgroupIdVector, int workgroupColumnCounter) {
+	private int setLatestAnnotationScoreAndTimestamp(List<StepWork> stepWorksForNodeId, Row rowForWorkgroupId, Vector<String> rowForWorkgroupIdVector, int workgroupColumnCounter, String nodeId) {
 		/*
 		 * get the latest annotation associated with any of the StepWork objects
 		 * and have fromWorkgroup as any of the workgroup ids in teacherWorkgroupIds
@@ -8515,6 +8539,11 @@ public class VLEGetXLS extends AbstractController {
 			workgroupColumnCounter += 2;
 			addEmptyElementsToVector(rowForWorkgroupIdVector, 2);
 		}
+
+		//get the max score for the step
+		Long maxScore = getMaxScoreByNodeId(nodeId);
+		
+		workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, maxScore);
 		
 		return workgroupColumnCounter;
 	}
@@ -9164,6 +9193,79 @@ public class VLEGetXLS extends AbstractController {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * Get the max score for a step
+	 * @param nodeId the node id for the step
+	 * @return the max score for the step or null if there is no max score for the step
+	 */
+	private Long getMaxScoreByNodeId(String nodeId) {
+		Long maxScore = null;
+		
+		if(nodeId != null) {
+			if(projectMetaData != null) {
+				//get the maxScores field from the project meta data
+				String maxScoresStr = projectMetaData.optString("maxScores");
+				
+				if(maxScoresStr != null) {
+					try {
+						JSONArray maxScoresJSON = new JSONArray(maxScoresStr);
+						
+						//loop through all the max score objects
+						for(int x=0; x<maxScoresJSON.length(); x++) {
+							JSONObject tempMaxScoreObj = maxScoresJSON.optJSONObject(x);
+							
+							if(tempMaxScoreObj != null) {
+								//get the node id for the max score object
+								String tempNodeId = tempMaxScoreObj.optString("nodeId");
+								
+								if(tempNodeId != null) {
+									//check if the node id matches the one we are searching for
+									if(nodeId.equals(tempNodeId)) {
+										//get the max score value for the step
+										maxScore = tempMaxScoreObj.optLong("maxScoreValue");
+										break;
+									}
+								}
+							}
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
+		return maxScore;
+	}
+	
+	/**
+	 * Get the CRater max score from the step content
+	 * @param nodeContent the step content
+	 * @return the max score for the CRater step
+	 */
+	private Long getCRaterMaxScore(JSONObject nodeContent) {
+		Long cRaterMaxScore = null;
+		
+		if(nodeContent != null) {
+			//get the CRater object from the step content if it exists
+			JSONObject cRaterObj = nodeContent.optJSONObject("cRater");
+			
+			if(cRaterObj != null) {
+				//the CRater object exists in the step content
+				try {
+					if(cRaterObj.has("cRaterMaxScore")) {
+						//get the CRater max score
+						cRaterMaxScore = cRaterObj.getLong("cRaterMaxScore");						
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return cRaterMaxScore;
 	}
 
 	public VLEService getVleService() {
