@@ -16,7 +16,7 @@ View.prototype.vleDispatcher = function(type,args,obj){
 		// start the xmpp if xmpp is enabled
 		if (obj.isXMPPEnabled) {
 			//obj.startXMPP();
-			obj.getRunStatus();
+			//obj.getRunStatus();
 		}
 	} else if(type=='processLoadViewStateResponseCompleted'){
 		obj.getAnnotationsToCheckForNewTeacherAnnotations();
@@ -62,7 +62,8 @@ View.prototype.vleDispatcher = function(type,args,obj){
 	} else if (type == 'startVLECompleted') {
 		obj.renderStartNode();
 		if(obj.isXMPPEnabled) {
-			obj.sendStudentStatusWebSocketMessage();			
+			obj.sendStudentStatusWebSocketMessage();
+			obj.getRunStatus();
 		}
 	} else if (type == 'assetUploaded') {
 		obj.assetUploaded(args[0], args[1]);
