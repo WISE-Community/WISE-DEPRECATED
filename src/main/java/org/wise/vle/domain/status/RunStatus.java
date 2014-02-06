@@ -10,11 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Index;
 import org.wise.vle.domain.PersistableDomain;
 
 
 @Entity
-@Table(name="runStatus")
+@Table(name="runstatus")
 public class RunStatus extends PersistableDomain {
 
 	@Id
@@ -22,6 +23,7 @@ public class RunStatus extends PersistableDomain {
 	private Long id = null;
 	
 	@Column(name="runId")
+	@Index(name="runIdIndex")
 	private Long runId = null;
 	
 	@Column(name="timestamp")

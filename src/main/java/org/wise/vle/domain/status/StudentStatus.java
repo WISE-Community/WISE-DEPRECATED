@@ -10,11 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Index;
 import org.wise.vle.domain.PersistableDomain;
 
 
 @Entity
-@Table(name="studentStatus")
+@Table(name="studentstatus")
 public class StudentStatus extends PersistableDomain {
 
 	@Id
@@ -22,12 +23,14 @@ public class StudentStatus extends PersistableDomain {
 	private Long id = null;
 	
 	@Column(name="runId")
+	@Index(name="runIdIndex")
 	private Long runId = null;
 	
 	@Column(name="periodId")
 	private Long periodId = null;
 	
 	@Column(name="workgroupId")
+	@Index(name="workgroupIdIndex")
 	private Long workgroupId = null;
 	
 	@Column(name="timestamp")
