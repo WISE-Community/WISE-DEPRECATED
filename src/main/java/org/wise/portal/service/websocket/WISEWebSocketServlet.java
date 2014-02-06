@@ -19,6 +19,8 @@ package org.wise.portal.service.websocket;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -49,7 +51,9 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.vle.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.vle.domain.status.StudentStatus;
 
 /**
  * Example web socket servlet for chat.
@@ -69,6 +73,9 @@ public class WISEWebSocketServlet extends WebSocketServlet {
     
     //the workgroup service
     private static WorkgroupService workgroupService = null;
+    
+    //the vle service
+    private static VLEService vleService = null;
     
     //the portal properties
     private static Properties wiseProperties = null;
@@ -94,6 +101,7 @@ public class WISEWebSocketServlet extends WebSocketServlet {
     		runService = (RunService) ctx.getBean("runService");
     		userService = (UserService) ctx.getBean("userService");
     		workgroupService = (WorkgroupService) ctx.getBean("wiseWorkgroupService");
+    		vleService = (VLEService) ctx.getBean("vleService");
     		wiseProperties = (Properties) ctx.getBean("wiseProperties");
     		
     		//set this flag to true so we don't need to initialize the services again
@@ -760,6 +768,7 @@ public class WISEWebSocketServlet extends WebSocketServlet {
 	 */
     private final class WISEMessageInbound extends MessageInbound {
 
+    	private User user = null;
         private String userName = null;
         private String firstName = null;
         private String lastName = null;
@@ -768,6 +777,14 @@ public class WISEWebSocketServlet extends WebSocketServlet {
         private Long workgroupId = null;
         private boolean isTeacher = false;
 
+		public User getUser() {
+			return user;
+		}
+
+		public void setUser(User user) {
+			this.user = user;
+		}
+		
 		public String getUserName() {
 			return userName;
 		}
@@ -848,6 +865,7 @@ public class WISEWebSocketServlet extends WebSocketServlet {
 				String userName = WISEWebSocketServlet.getUserName(user);
 				
 				//set the fields
+				setUser(user);
 				setRunId(runId);
 				setFirstName(firstName);
 				setLastName(lastName);
@@ -866,6 +884,7 @@ public class WISEWebSocketServlet extends WebSocketServlet {
 				String userName = WISEWebSocketServlet.getWorkgroupUserNames(workgroupId);
 				
 				//set the fields
+				setUser(user);
 				setRunId(runId);
 				setPeriodId(periodId);
 				setWorkgroupId(workgroupId);
@@ -1070,22 +1089,78 @@ public class WISEWebSocketServlet extends WebSocketServlet {
 						//TODO
 					}
 				}
+				
+				//if this is a student status message we will save it to the database
+				if(messageJSON.has("messageType")) {
+					String messageType = messageJSON.optString("messageType");
+					
+					if(messageType != null && messageType.equals("studentStatus")) {
+						//this is a student status message so we will save the student status to the database
+						saveStudentStatusToDatabase(messageJSON);
+					}
+				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
         }
         
         /**
-         * Handle the message that a student is sending to the teachers
+         * Save the student status to the database. This function will inject
+         * the run id, period id, and workgroup id into the student status JSON.
+         * @param messageJSON the student status JSON
+         */
+        private void saveStudentStatusToDatabase(JSONObject messageJSON) {
+			//get the signed in user
+	    	User signedInUser = getUser();
+	    	
+    		Long runId = getRunId();
+    		Long periodId = getPeriodId();
+    		Long workgroupId = getWorkgroupId();
+			
+			//make sure the user is actually in the given run id, period id, and workgroup id
+			if(validateStudent(signedInUser, runId, periodId, workgroupId)) {
+				try {
+					//add the run id, period id, and workgroup id of the student into the message
+					messageJSON.put("runId", runId);
+					messageJSON.put("periodId", periodId);
+					messageJSON.put("workgroupId", workgroupId);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+				//get the student status object for the workgroup id if it already exists
+				StudentStatus studentStatus = vleService.getStudentStatusByWorkgroupId(workgroupId);
+				
+				if(studentStatus == null) {
+					//the student status object does not already exist so we will create it
+					studentStatus = new StudentStatus(runId, periodId, workgroupId, messageJSON.toString());			
+				} else {
+					//the student status object already exists so we will update the timestamp and status
+					Calendar now = Calendar.getInstance();
+					studentStatus.setTimestamp(new Timestamp(now.getTimeInMillis()));
+					studentStatus.setStatus(messageJSON.toString());
+				}
+				
+				//save the student status to the database
+				vleService.saveStudentStatus(studentStatus);
+			}
+        }
+        
+        /**
+         * Handle the message that a student is sending to the teachers.
+         * This function will inject the run id, period id, and workgroup id
+         * into the messageJSON object.
          * @param messageJSON the message to send
          */
         private void sendStudentToTeachersMessage(JSONObject messageJSON) {
         	try {
         		//add the run id, period id, and workgroup id of the student into the message
         		Long runId = getRunId();
+        		Long periodId = getPeriodId();
+        		Long workgroupId = getWorkgroupId();
 				messageJSON.put("runId", runId);
-				messageJSON.put("periodId", getPeriodId());
-				messageJSON.put("workgroupId", getWorkgroupId());
+				messageJSON.put("periodId", periodId);
+				messageJSON.put("workgroupId", workgroupId);
 				
 				//get the message as a string 
 				String message = messageJSON.toString();
