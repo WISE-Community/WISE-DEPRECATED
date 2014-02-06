@@ -839,18 +839,6 @@ hr.stepHints {
 	font-size:.9em;
 }
 
-/* STUDENT JOURNAL STYLES */
-
-#journalFrame {
-	background-color:#FFF;
-	margin:0 auto;
-	width:98%; 
-	height:98%; 
-	text-align:left; 
-	overflow: auto;
-	padding:.25em;
-}
-
 /* TESTING AREAS */
 
 #experimental {

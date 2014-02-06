@@ -8,11 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.wise.vle.domain.PersistableDomain;
-import org.wise.vle.domain.journal.Journal;
 
 
 /**
@@ -32,9 +30,6 @@ public class UserInfo extends PersistableDomain {
 	@Column(name="workgroupId", unique=true)
 	private Long workgroupId = null;
 	
-	@OneToOne(mappedBy = "userInfo")
-	public Journal journal;
-	
     public Long getId() {
         return id;
     }
@@ -50,20 +45,6 @@ public class UserInfo extends PersistableDomain {
 
 	public void setWorkgroupId(Long workgroupId) {
 		this.workgroupId = workgroupId;
-	}
-
-	/**
-	 * @return the journal
-	 */
-	public Journal getJournal() {
-		return journal;
-	}
-
-	/**
-	 * @param journal the journal to set
-	 */
-	public void setJournal(Journal journal) {
-		this.journal = journal;
 	}
 
 	/**

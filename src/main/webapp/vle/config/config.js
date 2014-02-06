@@ -15,8 +15,6 @@
  * getContentBaseUrl - base url of content
  * getStudentDataUrl - where to get student work
  * postStudentDataUrl - where to post student work
- * getJournalDataUrl - where to get journal work
- * postJournalDataUrl - where to post journal work
  * getFlagsUrl - where to get flags
  * postFlagsUrl - where to post flags
  * getAnnotationsUrl - where to get annotations

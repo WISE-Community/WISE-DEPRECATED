@@ -566,36 +566,6 @@ View.prototype.getIdeaBasketByWorkgroupId = function(workgroupId) {
 };
 
 /**
- * Determines whether a nodeType knows how to render its grading view
- * @param nodeType the type of the node
- * @return whether this node type implements renderGradingView()
- */
-/*
-View.prototype.isSelfRenderingGradingViewNodeType = function(nodeType) {
-	var isSelfRenderingGradingView = false;
-	
-	if(nodeType != 'HtmlNode' && 
-			nodeType != 'BrainstormNode' && 
-			nodeType != 'FillinNode' && 
-			nodeType != 'NoteNode' && 
-			nodeType != 'JournalEntryNode' && 
-			nodeType != 'OutsideUrlNode' && 
-			nodeType != 'OpenResponseNode' && 
-			nodeType != 'BlueJNode' && 
-			nodeType != 'DrawNode' && 
-			nodeType != 'DataGraphNode' && 
-			nodeType != 'MySystemNode' && 
-			nodeType != 'SVGDrawNode' && 
-			nodeType != 'MWNode' &&  
-			nodeType != 'BranchNode') {
-		isSelfRenderingGradingView = true;
-	}
-	
-	return isSelfRenderingGradingView;
-};
-*/
-
-/**
  * Get the max possible score for the project
  * @return the max possible score for the project
  */
