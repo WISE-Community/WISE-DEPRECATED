@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Index;
 import org.wise.vle.domain.PersistableDomain;
 
 
@@ -30,6 +31,7 @@ public class Node extends PersistableDomain {
 	private String nodeId;
 	
 	@Column(name="runId")
+	@Index(name="runIdIndex")
 	private String runId;
 	
 	@Column(name="nodeType")

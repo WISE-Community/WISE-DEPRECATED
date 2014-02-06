@@ -163,7 +163,7 @@ public class RunImpl extends OfferingImpl implements Run {
     @Column(name = RunImpl.COLUMN_NAME_ARCHIVE_REMINDER_TIME, nullable = false)
     private Date archiveReminderTime;
 
-	@OneToMany(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
+	@OneToMany(targetEntity = PersistentGroup.class, fetch = FetchType.EAGER)
     @JoinTable(name = PERIODS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = PERIODS_JOIN_COLUMN_NAME, nullable = false))
     @Sort(type = SortType.NATURAL)
     private Set<Group> periods = new TreeSet<Group>();

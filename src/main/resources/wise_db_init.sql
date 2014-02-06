@@ -121,7 +121,7 @@
         primary key (group_fk, user_fk)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table ideaBasket (
+    create table ideabasket (
         id bigint not null auto_increment,
         action varchar(255),
         actionPerformer bigint,
@@ -344,14 +344,6 @@
         primary key (project_fk, tag_fk)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table runStatus (
-        id bigint not null auto_increment,
-        runId bigint,
-        status mediumtext,
-        timestamp datetime,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
     create table runs (
         archive_reminder datetime not null,
         end_time datetime,
@@ -397,6 +389,14 @@
         primary key (runs_fk, shared_owners_fk)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+    create table runstatus (
+        id bigint not null auto_increment,
+        runId bigint,
+        status mediumtext,
+        timestamp datetime,
+        primary key (id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
     create table stepwork (
         id bigint not null auto_increment,
         data mediumtext,
@@ -415,16 +415,6 @@
         data longtext,
         getRevisions bit,
         userInfo_id bigint,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table studentStatus (
-        id bigint not null auto_increment,
-        periodId bigint,
-        runId bigint,
-        status mediumtext,
-        timestamp datetime,
-        workgroupId bigint,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -449,6 +439,16 @@
         numberoflogins integer not null,
         signupdate datetime not null,
         id bigint not null,
+        primary key (id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+    create table studentstatus (
+        id bigint not null auto_increment,
+        periodId bigint,
+        runId bigint,
+        status mediumtext,
+        timestamp datetime,
+        workgroupId bigint,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -614,6 +614,8 @@
         foreign key (user_fk) 
         references users (id);
 
+    create index runIdAndWorkgroupIdIndex on ideabasket (runId, workgroupId);
+
     alter table message_recipient 
         add index FK398E4FE1478EAB69 (recipient_fk), 
         add constraint FK398E4FE1478EAB69 
@@ -667,6 +669,8 @@
         add constraint FK532D64662848171 
         foreign key (owner) 
         references users (id);
+
+    create index runIdIndex on node (runId);
 
     alter table peerreviewgate 
         add index FKD0AB7705D61E3A7B (node_id), 
@@ -854,6 +858,8 @@
         foreign key (runs_fk) 
         references runs (id);
 
+    create index runIdIndex on runstatus (runId);
+
     alter table stepwork 
         add index FK553587DDD61E3A7B (node_id), 
         add constraint FK553587DDD61E3A7B 
@@ -878,6 +884,10 @@
         foreign key (id) 
         references user_details (id);
 
+    create index workgroupIdIndex on studentstatus (workgroupId);
+
+    create index runIdIndex on studentstatus (runId);
+
     alter table teacher_user_details 
         add index FKAC84070B77270DDB (id), 
         add constraint FKAC84070B77270DDB 
@@ -901,6 +911,8 @@
         add constraint FKE6A5FBDE66374446 
         foreign key (granted_authorities_fk) 
         references granted_authorities (id);
+
+    create index workgroupIdIndex on userinfo (workgroupId);
 
     alter table users 
         add index FK6A68E088904ED96 (user_details_fk), 

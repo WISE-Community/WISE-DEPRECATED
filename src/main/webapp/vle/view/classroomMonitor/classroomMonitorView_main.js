@@ -1463,36 +1463,38 @@ View.prototype.updateStudentProgressTimeSpent = function(workgroupId) {
 			//get the student status object
 			var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
 			
-			//get the current timestamp
-			var date = new Date();
-			var timestamp = date.getTime();
-			
-			//get the timestamp for when the student began working on the step
-			var studentTimestamp = studentStatus.timestamp;
-			
-			if(studentTimestamp != null) {
-				//get the time difference
-				var timeSpentMilliseconds = timestamp - studentTimestamp;
+			if(studentStatus != null) {
+				//get the current timestamp
+				var date = new Date();
+				var timestamp = date.getTime();
 				
-				//convert the time to seconds
-				var timeSpentSeconds = parseInt(timeSpentMilliseconds / 1000);
+				//get the timestamp for when the student began working on the step
+				var studentTimestamp = studentStatus.timestamp;
 				
-				//get the number of minutes
-				var minutes = Math.floor(timeSpentSeconds / 60);
-				
-				//get the number of seconds
-				var seconds = timeSpentSeconds % 60;
+				if(studentTimestamp != null) {
+					//get the time difference
+					var timeSpentMilliseconds = timestamp - studentTimestamp;
+					
+					//convert the time to seconds
+					var timeSpentSeconds = parseInt(timeSpentMilliseconds / 1000);
+					
+					//get the number of minutes
+					var minutes = Math.floor(timeSpentSeconds / 60);
+					
+					//get the number of seconds
+					var seconds = timeSpentSeconds % 60;
 
-				//prepent a '0' to the seconds if necessary
-				if(seconds < 10) {
-					seconds = '0' + seconds;
-				}
-			
-				//create the time e.g. '1:32'
-				var timeSpentDisplay = minutes + ':' + seconds;
+					//prepent a '0' to the seconds if necessary
+					if(seconds < 10) {
+						seconds = '0' + seconds;
+					}
 				
-				//update the time spent in the UI for the workgroup
-				$('#studentProgressTableDataTimeSpent_' + workgroupId).text(timeSpentDisplay);
+					//create the time e.g. '1:32'
+					var timeSpentDisplay = minutes + ':' + seconds;
+					
+					//update the time spent in the UI for the workgroup
+					$('#studentProgressTableDataTimeSpent_' + workgroupId).text(timeSpentDisplay);
+				}
 			}
 		} else {
 			//the student is not online so we will clear the cell 
