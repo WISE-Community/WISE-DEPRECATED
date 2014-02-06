@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Index;
 import org.wise.vle.domain.PersistableDomain;
 
 
@@ -28,6 +29,7 @@ public class UserInfo extends PersistableDomain {
 	private Long id = null;
 
 	@Column(name="workgroupId", unique=true)
+	@Index(name="workgroupIdIndex")
 	private Long workgroupId = null;
 	
     public Long getId() {

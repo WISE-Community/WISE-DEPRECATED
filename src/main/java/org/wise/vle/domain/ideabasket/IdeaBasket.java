@@ -11,13 +11,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.vle.domain.PersistableDomain;
 
 
 @Entity
-@Table(name="ideaBasket")
+@Table(name="ideabasket")
+@org.hibernate.annotations.Table(appliesTo="ideabasket",
+	indexes = {
+		@Index(name="runIdAndWorkgroupIdIndex", columnNames={"runId", "workgroupId"})	
+	}
+)
 public class IdeaBasket extends PersistableDomain implements Serializable {
 
 	private static final long serialVersionUID = 1L;
