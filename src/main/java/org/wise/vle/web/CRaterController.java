@@ -39,7 +39,10 @@ public class CRaterController extends AbstractController {
 		 * teachers can make all CRater requests
 		 * students can only make CRater scoring requests
 		 */
-		if(SecurityUtils.isTeacher(signedInUser)) {
+		if(SecurityUtils.isAdmin(signedInUser)) {
+			//the user is an admin so we will allow this request
+			allowedAccess = true;
+		} else if(SecurityUtils.isTeacher(signedInUser)) {
 			//the user is a teacher so we will allow this request
 			allowedAccess = true;
 		} else if(SecurityUtils.isStudent(signedInUser) && (cRaterRequestType != null && cRaterRequestType.equals("scoring"))) {
