@@ -519,6 +519,7 @@ public class VLEServiceImpl implements VLEService {
 	}
 	
 	@Override
+	@Transactional
 	public StudentStatus getStudentStatusByWorkgroupId(Long workgroupId) {
 		return studentStatusDao.getStudentStatusByWorkgroupId(workgroupId);
 	}
