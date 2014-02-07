@@ -2,7 +2,6 @@ package org.wise.portal.dao.status.impl;
 
 import java.util.List;
 
-
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -47,6 +46,7 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
 	 * @param workgroupId the workgroup id
 	 * @return the StudentStatus with the given workgroup id or null if none is found
 	 */
+	@Transactional
 	public StudentStatus getStudentStatusByWorkgroupId(Long workgroupId) {
 		StudentStatus result = null;
 		
@@ -54,7 +54,18 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
 			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 			session.beginTransaction();
 			
-			result = (StudentStatus) session.createCriteria(StudentStatus.class).add( Restrictions.eq("workgroupId", workgroupId)).uniqueResult();
+			/*
+			 * get all the student status rows with the given workgroup id.
+			 * there should only be one but somehow there are a couple of
+			 * workgroups that have multiple rows, perhaps because the 
+			 * transactions were not synchronized.
+			 */
+			List<StudentStatus> list = session.createCriteria(StudentStatus.class).add(Restrictions.eq("workgroupId", workgroupId)).list();
+			
+			if(list != null && list.size() > 0) {
+				//get the first element in the list if the list contains more than one element
+				result = list.get(0);
+			}
 			
 			session.getTransaction().commit();
 		} catch (NonUniqueResultException e) {
