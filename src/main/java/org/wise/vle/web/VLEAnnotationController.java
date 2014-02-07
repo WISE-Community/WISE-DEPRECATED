@@ -177,7 +177,11 @@ public class VLEAnnotationController extends AbstractController {
 		 * students can get annotations that are from them and to them, or are for
 		 * CRater or flags
 		 */
-		if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
+		
+		if(SecurityUtils.isAdmin(signedInUser)) {
+			//the user is an admin so we will allow this request
+			allowedAccess = true;
+		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runIdLong)) {
 			//the teacher is an owner or shared owner of the run so we will allow this request
 			allowedAccess = true;
 		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong)) {
