@@ -165,7 +165,7 @@ View.prototype.startWebSocketConnection = function() {
 					if(data != null) {
 						//get the message type
 						var messageType = data.messageType;
-						console.log('messageType=' + messageType);
+
 						if(messageType == null || messageType == '') {
 							
 						} else if(messageType == 'pauseScreen') {
@@ -186,27 +186,48 @@ View.prototype.startWebSocketConnection = function() {
  * Send the web socket message
  * @param messageJSON the message to send. this is a JSONObject that we
  * will convert to a string
+ * @return whether the message was successfully sent
  */
 View.prototype.sendStudentWebSocketMessage = function(messageJSON) {
-	if(this.socket != null) {
-		//get the state of the web socket connection
-		var readyState = this.socket.readyState;
+	var result = true;
+	
+	try {
+		if(this.socket != null) {
+			//get the state of the web socket connection
+			var readyState = this.socket.readyState;
 
-		if(readyState == 1) {
-			//the web socket connection is open
-			if(messageJSON != null) {
-				//send the message
-				this.socket.send(JSON.stringify(messageJSON));			
+			if(readyState == 1) {
+				//the web socket connection is open
+				if(messageJSON != null) {
+					try {
+						//send the message
+						this.socket.send(JSON.stringify(messageJSON));					
+					} catch(e) {
+						//we failed to send the message
+						result = false;
+					}
+				}
+			} else {
+				/*
+				 * the web socket connection is not open so we will save
+				 * this message in a queue to send later once the connection
+				 * opens
+				 */
+				this.webSocketMessageQueue.push(messageJSON);
+				
+				//we failed to send the message
+				result = false;
 			}
 		} else {
-			/*
-			 * the web socket connection is not open so we will save
-			 * this message in a queue to send later once the connection
-			 * opens
-			 */
-			this.webSocketMessageQueue.push(messageJSON);
+			//we do not have a websocket object so we could not send the websocket message
+			result = false;
 		}
+	} catch(e) {
+		//an error occurred so we were unable to send the message
+		result = false;
 	}
+	
+	return result;
 };
 
 /**
@@ -236,7 +257,15 @@ View.prototype.sendStudentStatusWebSocketMessage = function() {
 	messageJSON.nodeStatuses = nodeStatuses;
 	
 	//send the message to the web socket server to be forwarded to the teacher
-	this.sendStudentWebSocketMessage(messageJSON);
+	var result = this.sendStudentWebSocketMessage(messageJSON);
+	
+	if(result == null || result == false) {
+		/*
+		 * we failed to send the student status through the websocket so we will
+		 * send it directly to the student status controller
+		 */
+		this.sendStudentStatusToServer();
+	}
 };
 
 /**

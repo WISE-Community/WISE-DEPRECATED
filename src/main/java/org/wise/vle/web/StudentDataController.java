@@ -139,7 +139,10 @@ public class StudentDataController extends AbstractController {
 		 * students that are accessing their own work can make a request
 		 * students that are accessing aggregate data for a step can make a request
 		 */
-		if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+		if(SecurityUtils.isAdmin(signedInUser)) {
+			//the user is an admin so we will allow this request
+			allowedAccess = true;
+		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
 			//the teacher is an owner or shared owner of the run so we will allow this request
 			allowedAccess = true;
 		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId)) {

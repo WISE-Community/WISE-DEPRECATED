@@ -26,6 +26,7 @@
 						       <th style="display:none;" class="tableHeaderMain">source</th>
 						       <th style="display:none;" class="tableHeaderMain">ownership</th>
 						       <th style="display:none;" class="tableHeaderMain">periods</th>
+						       <th style="display:none;" class="tableHeaderMain">run title</th>
 						    </tr>
 						</thead>
 						<tbody>
@@ -183,6 +184,7 @@
 								<td style="display:none;">
 									<c:forEach var="period" items="${run.periods}">${period.name},</c:forEach>
 							   </td>
+							   <td style="display:none;">${run.name}</td>
 							   </tr>
 							  </c:forEach>
 							</c:if>
@@ -216,6 +218,7 @@
 						       <th style="display:none;" class="tableHeaderMain">source</th>
 						       <th style="display:none;" class="tableHeaderMain">ownership</th>
 						       <th style="display:none;" class="tableHeaderMain">periods</th>
+						       <th style="display:none;" class="tableHeaderMain">run title</th>
 						    </tr>
 						</thead>
 						<tbody>				
@@ -312,6 +315,7 @@
 									<td style="display:none;">
 										<c:forEach var="period" items="${run.periods}">${period.name},</c:forEach>
 								   </td>
+								   <td style="display:none;">${run.name}</td>
 								</tr>
 								</c:forEach>
 							</c:if>
@@ -401,10 +405,10 @@
 		// define sort options
 		var sortParams = {
 			"items": [
-				{"label": "<spring:message code="teacher.management.projectruntabs.sort_AZ"/>", "column": 3, "direction": "desc" },
-				{"label": "<spring:message code="teacher.management.projectruntabs.sort_ZA"/>", "column": 3, "direction": "asc" },
-				{"label": "<spring:message code="teacher.management.projectruntabs.sort_NewOld"/>", "column": 0, "direction": "asc" },
-				{"label": "<spring:message code="teacher.management.projectruntabs.sort_OldNew"/>", "column": 0, "direction": "desc" }
+				{"label": "<spring:message code="teacher.management.projectruntabs.sort_NewOld"/>", "column": 3, "direction": "desc" },
+				{"label": "<spring:message code="teacher.management.projectruntabs.sort_OldNew"/>", "column": 3, "direction": "asc" },
+				{"label": "<spring:message code="teacher.management.projectruntabs.sort_AZ"/>", "column": 8, "direction": "asc" },
+				{"label": "<spring:message code="teacher.management.projectruntabs.sort_ZA"/>", "column": 8, "direction": "desc" }
 			]
 		}
 		

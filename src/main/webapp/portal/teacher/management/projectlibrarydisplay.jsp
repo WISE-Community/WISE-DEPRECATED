@@ -33,6 +33,7 @@
 						<th>libraryFamilyName</th>
 						<th>libraryFamilyId</th>
 						<th>last updated</th>
+						<th>project title</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -269,6 +270,7 @@
 										<td style="display:none;">${libraryFamilyName}</td>
 										<td style="display:none;">${libraryFamilyId}</td>
 										<td style="display:none;">${lastEdited}</td>
+										<td style="display:none;">${projectName}</td>
 									</tr>
 								</c:if>
 							</c:forEach>
@@ -510,6 +512,7 @@
 										<td style="display:none;">${libraryFamilyName}</td>
 										<td style="display:none;">${libraryFamilyId}</td>
 										<td style="display:none;">${lastEdited}</td>
+										<td style="display:none;">${projectName}</td>
 									</tr>
 								</c:if>
 							</c:forEach>
@@ -675,6 +678,7 @@
 										<td style="display:none;">${project.name}</td>
 										<td style="display:none;">${project.id}</td>
 										<td style="display:none;">${lastEdited}</td>
+										<td style="display:none;">${projectName}</td>
 									</tr>
 								</c:if>
 							</c:forEach>
@@ -709,6 +713,7 @@
 								<th>libraryFamilyName</th>
 								<th>libraryFamilyId</th>
 								<th>last updated</th>
+								<th>project title</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -934,6 +939,7 @@
 												<td style="display:none;">${libraryFamilyName}</td>
 												<td style="display:none;">${libraryFamilyId}</td>
 												<td style="display:none;">${lastEdited}</td>
+												<td style="display:none;">${projectName}</td>
 											</tr>
 										</c:if>
 									</c:forEach>
@@ -1163,6 +1169,7 @@
 												<td style="display:none;">${libraryFamilyName}</td>
 												<td style="display:none;">${libraryFamilyId}</td>
 												<td style="display:none;">${lastEdited}</td>
+												<td style="display:none;">${projectName}</td>
 											</tr>
 										</c:if>
 									</c:forEach>
@@ -1326,6 +1333,7 @@
 												<td style="display:none;">${project.name}</td>
 												<td style="display:none;">${project.id}</td>
 												<td style="display:none;">${lastEdited}</td>
+												<td style="display:none;">${projectName}</td>
 											</tr>
 										</c:if>
 									</c:forEach>
@@ -1878,8 +1886,8 @@
 				{"label": "<spring:message code="teacher.management.projectlibrarydisplay.sort_NewOld"/>", "columns": [8], "directions": ["desc"] },
 				{"label": "<spring:message code="teacher.management.projectlibrarydisplay.sort_OldNew"/>", "columns": [8], "directions": ["asc"] },
 				{"label": "<spring:message code="teacher.management.projectlibrarydisplay.sort_recent"/>", "columns": [14], "directions": ["desc"] },
-				{"label": "<spring:message code="teacher.management.projectlibrarydisplay.sort_AZ"/>", "columns": [0], "directions": ["asc"] },
-				{"label": "<spring:message code="teacher.management.projectlibrarydisplay.sort_ZA"/>", "columns": [0], "directions": ["desc"] }
+				{"label": "<spring:message code="teacher.management.projectlibrarydisplay.sort_AZ"/>", "columns": [15], "directions": ["asc"] },
+				{"label": "<spring:message code="teacher.management.projectlibrarydisplay.sort_ZA"/>", "columns": [15], "directions": ["desc"] }
 			]
 		}
 		var i;
