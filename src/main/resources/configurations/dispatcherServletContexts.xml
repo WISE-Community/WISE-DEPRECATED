@@ -145,6 +145,10 @@
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
+	<bean id="adminIndexController"
+		class="org.wise.portal.presentation.web.controllers.admin.AdminIndexController">
+	</bean>
+	
 	<bean id="registerController"
 		class="org.wise.portal.presentation.web.controllers.RegisterController" />
 
@@ -1253,6 +1257,7 @@
 				/author/authorproject.html=authorProjectController
 				/project/exportproject.html=exportProjectController
 				/project/importexternalproject.html=importExternalProjectController
+				/admin/index.html=adminIndexController
     		    /admin/statistics.html=statisticsController
 				/admin/project/uploadproject.html=uploadProjectController
 				/admin/account/manageusers.html=viewAllUsersController
