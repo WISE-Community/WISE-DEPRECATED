@@ -272,12 +272,6 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 				this.node.setCompleted();
 			}
 
-			//fire the event to push this state to the global view.states object
-			this.view.pushStudentWork(this.node.id, orState);
-
-			//push the state object into this or object's own copy of states
-			this.states.push(orState);
-
 			/*
 			 * if we want to check answer immediately (e.g. for CRater), post answer immediately, before going to the next step.
 			 * if checkAnswer is true and saveAndLock is false, we will run the CRater check answer
@@ -313,7 +307,7 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 					 * post the current node visit to the db immediately without waiting
 					 * for the student to exit the step.
 					 */
-					this.node.view.postCurrentNodeVisit();
+					this.node.save(orState);
 				}
 				
 				if((this.content.cRater != null && this.content.cRater.maxCheckAnswers != null && this.isCRaterMaxCheckAnswersUsedUp()) || this.isLocked()) {
@@ -323,8 +317,13 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 					//the student still has check answer submits available
 					this.setCheckAnswerAvailable();
 				}
+			} else {
+				this.node.save(orState);
 			}
 
+			//push the state object into this or object's own copy of states
+			this.states.push(orState);
+			
 			if(this.content.cRater != null) {
 				//check if the student is required to submit and revise before exiting the step
 				if(this.content.cRater.mustSubmitAndReviseBeforeExit) {

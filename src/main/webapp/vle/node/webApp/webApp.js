@@ -47,11 +47,35 @@ function WebApp(node) {
 	};
 	
 	this.api = {
-		"version":0.1
+		"version":0.1,
+		"content":this.content
 	};
 	
 	this.api.triggerSaveState = function(  ) { save(); };
+	this.api.save = function(response, successCallback, failureCallback, callbackData) { 
+		var nodeState = new WebAppState(response);
+		node.save(nodeState, successCallback, failureCallback, callbackData); 
+	};
+	this.api.getContentJSON = function() { 
+		return this.content;
+	};
+	this.api.renderGradingView = function(displayStudentWorkDiv, nodeVisit, childDivIdPrefix, workgroupId) {
+		// override by children
+	};
 	this.api.appReady = function() { console.log("app tells us it's ready"); };
+
+	//load any previous responses the student submitted for this step
+	var latestState = this.getLatestState();
+	var latestResponse = "";
+	if(latestState != null) {
+		/*
+		 * get the response from the latest state. the response variable is
+		 * just provided as an example. you may use whatever variables you
+		 * would like from the state object (look at webAppState.js)
+		 */
+		latestResponse = latestState.response;
+	}
+	this.api.getLatestState = function() { console.log("using api's getLatestState"); return latestResponse; }
 };
 
 /**
@@ -77,24 +101,6 @@ WebApp.prototype.render = function() {
 	
 	//display any prompts to the student
 	$('#promptDiv').html(this.content.prompt);
-	
-	//load any previous responses the student submitted for this step
-	var latestState = this.getLatestState();
-	var latestResponse = "";
-	if(latestState != null) {
-		/*
-		 * get the response from the latest state. the response variable is
-		 * just provided as an example. you may use whatever variables you
-		 * would like from the state object (look at webAppState.js)
-		 */
-		latestResponse = latestState.response;
-	}
-	//set the previous student work into the text area
-	$('#studentResponseTextArea').val(latestResponse);
-	
-	console.log("setting up getLatestState API call......");
-	this.api.getLatestState = function() { console.log("using api's getLatestState"); return latestState; }
-	console.log(".....it is expected to return " + latestState);
 	
 	//NOTE: I do this last in proof of concept to detect if there were any surprise crashes in the above 
 	iframe.src = mypath + this.content.url;
