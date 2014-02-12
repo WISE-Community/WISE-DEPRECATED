@@ -74,7 +74,7 @@ public class NewsItemImpl implements NewsItem, Comparable<NewsItem> {
     @Column(name = NewsItemImpl.COLUMN_NAME_DATE, nullable = false)
 	private Date date = null;
     
-    @ManyToOne(targetEntity = UserImpl.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
     @JoinColumn(name = NewsItemImpl.JOIN_COLUMN_NAME_OWNER, nullable = false, unique = false)    
     private User owner;
     

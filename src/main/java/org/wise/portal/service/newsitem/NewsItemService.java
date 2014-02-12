@@ -22,7 +22,9 @@
  */
 package org.wise.portal.service.newsitem;
 
+import java.util.List;
 import java.util.Set;
+
 
 
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -68,7 +70,7 @@ public interface NewsItemService {
 	 * 
 	 * @return a Set of NewsItem
 	 */
-	public Set<NewsItem> retrieveAllNewsItem();
+	public List<NewsItem> retrieveAllNewsItem();
 	
 	/**
 	 * retrieves a NewsItem given an ID
@@ -78,12 +80,4 @@ public interface NewsItemService {
 	 * @throws ObjectNotFoundException
 	 */
 	public NewsItem retrieveById(Long id) throws ObjectNotFoundException;
-	
-	/**
-	 * retrieves the newest NewsItem
-	 * 
-	 * @return NewsItem
-	 */
-	public NewsItem retrieveLatest() throws ObjectNotFoundException;
-
 }
