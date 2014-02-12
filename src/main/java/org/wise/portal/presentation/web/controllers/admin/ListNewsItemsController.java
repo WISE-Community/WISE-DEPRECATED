@@ -55,9 +55,7 @@ public class ListNewsItemsController extends AbstractController{
 		ModelAndView modelAndView = new ModelAndView();
     	ControllerUtil.addUserToModelAndView(servletRequest, modelAndView);
 		
-		Set<NewsItem> all_news = newsItemService.retrieveAllNewsItem();
-		
-		modelAndView.addObject(ALL_NEWS, all_news);
+		modelAndView.addObject(ALL_NEWS, newsItemService.retrieveAllNewsItem());
 		return modelAndView;
 	}
 

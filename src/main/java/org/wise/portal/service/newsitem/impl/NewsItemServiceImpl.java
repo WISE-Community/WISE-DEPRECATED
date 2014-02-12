@@ -64,13 +64,9 @@ public class NewsItemServiceImpl implements NewsItemService{
 		}
 	}
 	
-	@Transactional()
-	public Set<NewsItem> retrieveAllNewsItem(){
-		TreeSet<NewsItem> allNews = new TreeSet<NewsItem>();
-		List<NewsItem> newsList = newsItemDao.getList();
-		
-		allNews.addAll(newsList);
-		return allNews;
+	@Transactional(readOnly = true)
+	public List<NewsItem> retrieveAllNewsItem(){
+		return newsItemDao.getList();
 	}
 
 	@Transactional()
@@ -97,16 +93,6 @@ public class NewsItemServiceImpl implements NewsItemService{
 			throw e;
 		}
 	}
-	
-	@Transactional()
-	public NewsItem retrieveLatest() throws ObjectNotFoundException{
-		Set<NewsItem> allNews = this.retrieveAllNewsItem();
-		if(allNews.isEmpty())
-			throw new ObjectNotFoundException(new Long(0), NewsItem.class);
-		
-		return allNews.iterator().next();
-	}
-	
 	
 	/**
 	 * @param newsItemDao the newsItemDao to set
