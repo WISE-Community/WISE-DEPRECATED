@@ -857,7 +857,7 @@ Epigame.prototype.getCurrentAdaptiveMissionData = function(levelString) {
 	//if we didn't finish the last warp attempt, go back
 	if(this.states != null && this.states.length > 0) {
 		console.log("looking for last mission: ");			
-		if(this.states[this.states.length - 1].response) {
+		if(!this.states[this.states.length - 1].response.missionData.isExit) {
 			var lastWarpIndex = this.states[this.states.length - 1].response.warpIndex;
 			var successInWarpFound = false;
 			var successIndex = -1;
@@ -1231,11 +1231,21 @@ Epigame.prototype.saveGameState = function(reportString) {
 	return this.save(reportString);
 };
 
-Epigame.prototype.saveExitState = function() {
-	var elem = this.getGameElement();
-	if (elem && elem.getExitReport) {
-		this.save(elem.getExitReport(),true);
-	}
+Epigame.prototype.saveExitState = function () {
+  var elem = this.getGameElement();
+
+  if (elem && elem.getExitReport) {
+    console.log("saving exit");
+    var topDoc = window.parent.document;
+
+    var starmap = topDoc.getElementById('navigation');
+    var epigameSwf = topDoc.getElementById('stepContent');
+
+    var isEnter = starmap.style.cssText=="" || starmap.style.display == "block";
+    console.log("Enter? " + isEnter);
+
+    this.save(elem.getExitReport(), !isEnter);
+  }
 };
 
 Epigame.prototype.getMissionData = function () {
@@ -1245,7 +1255,7 @@ Epigame.prototype.getMissionData = function () {
   dataLog.workgroupID = this.node.view.userAndClassInfo.getWorkgroupId();
   dataLog.studentIDs = this.node.view.userAndClassInfo.getUserIds();
   dataLog.studentName = this.node.view.userAndClassInfo.getUserName();
-  dataLog.step=this.node.view.model.currentNodePosition;
+  dataLog.step = this.node.view.model.currentNodePosition;
   dataLog.stepVisit = 1;
 
   var numAttempts = 0;
@@ -1265,15 +1275,22 @@ Epigame.prototype.getMissionData = function () {
     }
 
     //Player has started a trial (not a question)
-    else if (this.states[i].response.missionData.timeIntroScreen > 0) {
+    else if (this.states[i].response.missionData.timeIntroScreen > 0 || this.states[i].response.missionData.trackQuestion) {
       numTrials++;
       unsuccessfulTrialNum++;
     }
 
-    if (this.states[i].response.isExit && !this.states[i].response.missionData.isNodeExit) {
+
+    if (this.states[i].response.missionData.isNodeExit) {
       dataLog.stepVisit++;
     }
-
+    /*
+    if (this.states[i].response.isExit && !this.states[i].response.missionData.isNodeExit) {
+    dataLog.stepVisit++;
+    }
+    else if (this.states[i].response.missionData.isExit && !this.states[i].response.missionData.isNodeExit){
+    dataLog.stepVisit++;
+    }*/
 
     if (this.states[i].response.missionData && this.states[i].response.missionData.totalTrials) {
       numTrials = this.states[i].response.missionData.totalTrials;
@@ -1281,8 +1298,9 @@ Epigame.prototype.getMissionData = function () {
     //console.log(Object.keys(this.states[i].response).length);
   }
   //account for the fact that an exit report is saved when entering 
-  dataLog.stepVisit = Math.round(dataLog.stepVisit);
 
+  //dataLog.stepVisit = dataLog.stepVisit;
+  console.log(dataLog.stepVisit);
   dataLog.attempts = 1 + numAttempts;
   dataLog.attemptTrials = unsuccessfulTrialNum;
   dataLog.totalTrials = numTrials;
@@ -1306,16 +1324,16 @@ Epigame.prototype.save = function (st, isNodeExit) {
 
   //Create the state that will store the new work the student just submitted
   var epigameState = new EpigameState(stateJSON);
-
+  console.log("Last Warp Index: "+this.lastWarpIndex);
   //save warp index used if it exists
   if (!isNaN(this.lastWarpIndex)) {
     epigameState.response.warpIndex = this.lastWarpIndex;
   }
 
-  if(epigameState.response.missionData!=undefined){
+  if (epigameState.response.missionData != undefined) {
     epigameState.response.missionData.isNodeExit = isNodeExit;
   }
-  
+
 
   //Push this state to the global view.states object.
   //eventManager.fire('pushStudentWork', epigameState);
