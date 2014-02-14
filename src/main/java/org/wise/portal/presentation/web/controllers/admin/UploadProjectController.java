@@ -94,7 +94,7 @@ public class UploadProjectController extends SimpleFormController {
 
 		File uploadDir = new File(curriculumBaseDir);
 		if (!uploadDir.exists()) {
-			throw new Exception("curriculum upload directory does not exist.");
+			throw new Exception("curriculum upload directory \""+curriculumBaseDir+"\" does not exist.");
 		}
 
 		// save the upload zip file in the curriculum folder.
@@ -142,7 +142,7 @@ public class UploadProjectController extends SimpleFormController {
 					// if this is the case, import will fail, so throw an error.
 					if (i==0) {
 						if (!entry.getName().startsWith(filename)) {
-							throw new Exception("Zip file name does not match folder name. Do not change zip filename");
+						    throw new Exception("Zip file name \""+entry.getName()+"\" does not match folder name \""+filename+"\". Do not change zip filename");
 						}
 						i++;						
 					}

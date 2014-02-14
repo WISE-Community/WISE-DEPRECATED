@@ -127,6 +127,10 @@ SetupNodes.setupFiles = [
 	{
 		nodeName:"GrapherNode",
 		nodeSetupPath:"vle/node/grapher/setup.js"
+	},
+	{
+		nodeName:"WebAppNode",
+		nodeSetupPath:"vle/node/webApp/setup.js"
 	}
 ];
 

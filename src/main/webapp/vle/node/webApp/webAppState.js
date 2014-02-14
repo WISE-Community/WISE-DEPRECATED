@@ -37,10 +37,20 @@
  * 
  * @constructor
  */
-function WebAppState(response, statestring, gradingHTML ) {
+function WebAppState(response, timestamp ) {
 	console.log("DEBUG: entered constructor in webappstate.js");
+	
+	this.type = "wa";
 
-	this.response = "";
+	this.response = response;
+	
+	if(!timestamp) {
+		//if the second argument (timestamp) was ommitted just set it to the current time
+		this.timestamp = Date.parse(new Date());
+	} else {
+		this.timestamp = timestamp;
+	}
+	/*
 	this.stateString = "";
 	this.gradingViewHTML = "<html>test</html>";
 
@@ -53,6 +63,7 @@ function WebAppState(response, statestring, gradingHTML ) {
 	if(gradingHTML != null) {
 		this.gradingViewHTML = gradingHTML;
 	}
+	*/
 };
 
 /**

@@ -119,6 +119,21 @@ Node.prototype.setTitle = function(title){
 };
 
 /**
+ * Adds provided nodeState to  global view.states object and POSTs unended node visit to WISE server right away.
+ */
+Node.prototype.save = function(nodeState, successCallback, failureCallback, callbackData) {
+
+	//fire the event to push this state to the global view.states object
+	this.view.pushStudentWork(this.id, nodeState);
+	
+	/*
+	 * post the current node visit to the db immediately without waiting
+	 * for the student to exit the step.
+	 */
+	this.view.postCurrentNodeVisit(successCallback,failureCallback,callbackData);
+};
+
+/**
  * Retrieves the hints for this node, if exists.
  * @return array of hints if exists. if not exist, return null
  */

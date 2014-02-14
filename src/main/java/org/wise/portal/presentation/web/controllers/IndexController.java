@@ -70,21 +70,15 @@ public class IndexController extends AbstractController {
 	protected ModelAndView handleRequestInternal(HttpServletRequest arg0,
 			HttpServletResponse arg1) throws Exception {
 		
-		Set<NewsItem> newsItems = null;
-		NewsItem newsItem;
-		try{
-			newsItem = newsItemService.retrieveLatest();
-			newsItems = newsItemService.retrieveAllNewsItem();
-		} catch (ObjectNotFoundException e){
-			if(newsItems != null) {
-				newsItem = new NewsItemImpl();
-				newsItem.setDate(Calendar.getInstance().getTime());
-				newsItem.setTitle("No News found - default News Title");
-				newsItem.setNews("This will be filled with the latest news " +
-						"once News Items are created. This can be done by your " +
-						"administrator or other helpful WISE personnel.");
-				newsItems.add(newsItem);
-			}
+		List<NewsItem> newsItems = newsItemService.retrieveAllNewsItem();
+		if (newsItems.size() == 0) {
+			NewsItem newsItem = new NewsItemImpl();
+			newsItem.setDate(Calendar.getInstance().getTime());
+			newsItem.setTitle("No News found - default News Title");
+			newsItem.setNews("This will be filled with the latest news " +
+					"once News Items are created. This can be done by your " +
+					"administrator or other helpful WISE personnel.");
+			newsItems.add(newsItem);
 		}
 		
 		Map<Long,String> projectThumbMap = new TreeMap<Long,String>();  // maps projectId to url where its thumbnail can be found
