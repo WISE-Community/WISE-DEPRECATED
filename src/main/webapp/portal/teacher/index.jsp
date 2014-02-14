@@ -153,10 +153,11 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 					display: none; margin-top: 5px;"></iframe> -->
 					<%@ include file="run/recentactivity.jsp"%>
 				</div>
-								
-				<div class="panelFooter" style="text-align:center; padding:10px; color:#745A33">
-					<span>Interested in using WISE in a different language? <a target=_blank href="http://discuss.wise4.org/t/wise-in-other-languages/18">Click here!</a></span>				
-				</div>
+				
+				 <div class="panelFooter" style="text-align:center; padding:10px; color:#745A33">
+                    <span>Questions using WISE in your classroom? <a target=_blank href="http://discuss.wise4.org/category/teaching-with-wise">Ask the WISE Teacher Community!</a></span>
+                 </div>
+
 			</div>
 		</div>
 		<div style="clear: both;"></div>
@@ -246,10 +247,6 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 			}
 		});
     }
-	var language = window.navigator.userLanguage || window.navigator.language;
-	if (language == "en-US" || language == "es") {
-		$(".panelFooter").remove();
-	};
 </script>
 
 </body>
