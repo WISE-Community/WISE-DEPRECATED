@@ -16,5 +16,15 @@
       },
       "timeDependent": false
    },
-   "type": "MultipleChoice"
+   "type": "MultipleChoice",
+   "exportColumns": [
+      {
+         "columnName": "Response",
+         "field": "response"
+      },
+      {
+         "columnName": "Is Correct",
+         "field": "isCorrect"
+      }
+   ]
 }

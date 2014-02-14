@@ -1407,9 +1407,25 @@ public class VLEGetXLS extends AbstractController {
     	if(rows.size() > 0) {
     		//there are rows
     		
-    		if(isCRaterType(nodeContent)) {
-    			//this is a CRater step so we will add the column name for the auto score max value
-    			columnNames.add("Auto-Score Max Value");
+    		boolean columnNamesOriginallyContainsMaxScore = false;
+    		Long maxScoreFromContent = null;
+    		
+    		//check if there is already a max score column
+    		if(columnNames.contains("Max Score")) {
+    			//there is already a max score column
+    			columnNamesOriginallyContainsMaxScore = true;
+    		}
+    		
+    		if(!columnNamesOriginallyContainsMaxScore) {
+    			//column names does not have a max score column
+    			
+    			//try to get the max score from the content if it exists
+    			maxScoreFromContent = getMaxScoreFromContent(nodeId);
+    			
+    			if(maxScoreFromContent != null) {
+    				//the max score exists in the content so we will add a max score column
+        			columnNames.add("Max Score");
+        		}
     		}
     		
     		//loop through all the rows
@@ -1417,11 +1433,14 @@ public class VLEGetXLS extends AbstractController {
     			//get a row
     			ArrayList<Object> row = rows.get(x);
 
-        		if(isCRaterType(nodeContent)) {
-        			//this is a CRater step so we will get the CRater max score for the step
-        			Long cRaterMaxScore = getCRaterMaxScore(nodeContent);
-        			row.add(cRaterMaxScore);
-        		}
+    			if(!columnNamesOriginallyContainsMaxScore) {
+    				//column names did not originally have a max score column
+    				
+    				if(maxScoreFromContent != null) {
+    					//there is a max score in the content so we will display it
+            			row.add(maxScoreFromContent);
+            		}
+    			}
     			
     			//write the row to the excel
     			writeAllStudentWorkRow(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, columnNames, row);
@@ -1471,35 +1490,84 @@ public class VLEGetXLS extends AbstractController {
 					//get the step content
 					JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 					
-					//get the assessments array that contains the students answers for each part
-					JSONArray assessments = nodeState.getJSONArray("assessments");
+					//get the student work assessments array that contains the students answers for each part
+					JSONArray nodeStateAssessments = nodeState.getJSONArray("assessments");
 					
-					//loop through all the parts in the assessment
-					for(int x=0; x<assessments.length(); x++) {
-						//get a part
-						JSONObject assessmentPart = assessments.getJSONObject(x);
+					//loop through all the student work assessment parts
+					for(int x=0; x<nodeStateAssessments.length(); x++) {
+						//get a student work assessment part
+						JSONObject nodeStateAssessmentPart = nodeStateAssessments.getJSONObject(x);
+						
+						String nodeStateAssessmentPartId = nodeStateAssessmentPart.optString("id");
 						
 						String response = null;
+						Boolean isAutoScoreEnabled = false;
+						Boolean isCorrect = null;
+						Long choiceScore = null;
+						Long maxScore = null;
 
-						//check if the response is null
-						if(!assessmentPart.isNull("response")) {
-							//get the response object
-							JSONObject responseObject = assessmentPart.optJSONObject("response");
-							
-							if(responseObject != null) {
-								//get the response text
-								String responseText = responseObject.optString("text");
+						if(nodeStateAssessmentPart != null) {
+							//check if the response is null
+							if(!nodeStateAssessmentPart.isNull("response")) {
+								//get the response object
+								JSONObject responseObject = nodeStateAssessmentPart.optJSONObject("response");
+								
+								if(responseObject != null) {
+									//get the response text
+									String responseText = responseObject.optString("text");
 
-								if(responseText != null) {
-									response = responseText;
+									if(responseText != null) {
+										response = responseText;
+									}
+									
+									//try to get the auto score result object
+									JSONObject autoScoreResult = responseObject.optJSONObject("autoScoreResult");
+									
+									if(autoScoreResult != null) {
+										//get the auto score values
+										isCorrect = autoScoreResult.optBoolean("isCorrect");
+										choiceScore = autoScoreResult.optLong("choiceScore");
+										maxScore = autoScoreResult.optLong("maxScore");
+									}
 								}
 							}
 						}
 						
+						//get the assessment part from the step content
+						JSONObject nodeContentAssessmentPart = getStepContentAssessmentByAssessmentId(nodeId, nodeStateAssessmentPartId);
+						
+						if(nodeContentAssessmentPart.optBoolean("isAutoScoreEnabled")) {
+							//the assessment part is auto scored
+							isAutoScoreEnabled = true;
+						}
+						
+						//set the response
 						if(response == null) {
 							row.add("");
 						} else {
 							row.add(response);
+						}
+						
+						if(isAutoScoreEnabled) {
+							//auto score is enabled for this part so we will set the auto score values
+							
+							if(isCorrect == null) {
+								row.add("");
+							} else {
+								row.add(isCorrect);
+							}
+							
+							if(choiceScore == null) {
+								row.add("");
+							} else {
+								row.add(choiceScore);
+							}
+							
+							if(maxScore == null) {
+								row.add("");
+							} else {
+								row.add(maxScore);
+							}
 						}
 					}
 					
@@ -1553,42 +1621,57 @@ public class VLEGetXLS extends AbstractController {
 		} else if(nodeType.equals("AssessmentList")) {
 			//the step is an assessment list step
 			
-			if(nodeState != null) {
-				//get the assessment parts from the student work
-				JSONArray assessments = nodeState.optJSONArray("assessments");
+			//get the step content
+			JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
+			
+			if(nodeContent != null) {
+				//get the assessment parts from the step content
+				JSONArray nodeContentAssessments = nodeContent.optJSONArray("assessments");
 				
-				if(assessments != null) {
-					//loop through all the parts
-					for(int x=0; x<assessments.length(); x++) {
-						String prompt = null;
+				//the counter for the assessment parts
+				int partCounter = 1;
+				
+				//loop through all the assessment parts in the step content
+				for(int x=0; x<nodeContentAssessments.length(); x++) {
+					String prompt = null;
+					boolean isAutoScoreEnabled = false;
+					
+					//the label for the assessment part e.g. Part 1
+					String partLabel = "Part " + partCounter;
+					
+					//get an assessment part from the step content
+					JSONObject nodeContentAssessment = nodeContentAssessments.optJSONObject(x);
+					
+					if(nodeContentAssessment != null) {
+						//get the prompt for the part
+						prompt = nodeContentAssessment.optString("prompt");
 						
-						//get the assessment object
-						JSONObject assessment = assessments.optJSONObject(x);
-						
-						if(assessment != null) {
-							//get the assessment id
-							String assessmentId = assessment.optString("id");
-							
-							if(assessmentId != null) {
-								//get the prompt for the assessment id
-								prompt = getAssessmentPromptByAssessmentId(nodeId, assessmentId);								
-							}
-						}
-						
-						if(prompt == null) {
-							columnNames.add("");
-						} else {
-							columnNames.add(prompt);
-						}
-					}		
+						//get whether auto scoring is enabled for the part
+						isAutoScoreEnabled = nodeContentAssessment.optBoolean("isAutoScoreEnabled");
+					}
+					
+					if(prompt == null) {
+						//there is no prompt
+						columnNames.add(partLabel + ": ");
+					} else {
+						//there is a prompt for this part so we will add it to the column names e.g. Part 1: How do plants obtain energy?
+						columnNames.add(partLabel + ": " + prompt);
+					}
+					
+					if(isAutoScoreEnabled) {
+						//this part is auto scored so we will add these additional columns
+						columnNames.add(partLabel + ": " + "Is Correct");
+						columnNames.add(partLabel + ": " + "Score");
+						columnNames.add(partLabel + ": " + "Max Score");
+					}
+					
+					//increment the part counter
+					partCounter++;
 				}
-
-				//get the step content
-				JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
 				
 				boolean isLockAfterSubmit = false;
 				
-				if(nodeContent != null && nodeContent.has("isLockAfterSubmit")) {
+				if(nodeContent.has("isLockAfterSubmit")) {
 					try {
 						//get whether this step locks after submit
 						isLockAfterSubmit = nodeContent.getBoolean("isLockAfterSubmit");
@@ -1650,6 +1733,83 @@ public class VLEGetXLS extends AbstractController {
 		}
 		
 		return prompt;
+	}
+	
+	/**
+	 * Get the assessment part from the step content given the assessment id
+	 * @param nodeId the node id
+	 * @param assessmentId the assessment id
+	 * @return the assessment part from the step content
+	 */
+	private JSONObject getStepContentAssessmentByAssessmentId(String nodeId, String assessmentId) {
+		JSONObject assessment = null;
+		
+		if(nodeId != null && assessmentId != null) {
+			//get the node content
+			JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
+			
+			if(nodeContent != null) {
+				//get the assessments from the step content
+				JSONArray assessments = nodeContent.optJSONArray("assessments");
+				
+				if(assessments != null) {
+					
+					//loop through all the assessment parts in the step content
+					for(int x=0; x<assessments.length(); x++) {
+						//get an assessment part from the step content
+						JSONObject tempAssessment = assessments.optJSONObject(x);
+						
+						if(tempAssessment != null) {
+							//get the assessment id
+							String tempAssessmentId = tempAssessment.optString("id");
+						
+							//check if this is the assessment id we want
+							if(assessmentId.equals(tempAssessmentId)) {
+								//this is the assessment we want
+								assessment = tempAssessment;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return assessment;
+	}
+	
+	/**
+	 * Get the assessment part from the student work given the assessment id
+	 * @param studentWorkAssessments the assessment parts from the student work
+	 * @param assessmentId the assessment id
+	 * @return the assessment part from the student work with the given assessment id
+	 */
+	private JSONObject getStudentWorkAssessmentByAssessmentId(JSONArray studentWorkAssessments, String assessmentId) {
+		JSONObject assessment = null;
+		
+		if(studentWorkAssessments != null && assessmentId != null) {
+			//loop through all the assessment parts in the student work
+			for(int x=0; x<studentWorkAssessments.length(); x++) {
+				//get a student work assessment part
+				JSONObject studentWorkAssessment = studentWorkAssessments.optJSONObject(x);
+				
+				if(studentWorkAssessment != null) {
+					//get the id of the student work assessment part
+					String studentWorkAssessmentId = studentWorkAssessment.optString("id");
+					
+					if(studentWorkAssessmentId != null) {
+						//check if the assessment id matches the one we want
+						if(assessmentId.equals(studentWorkAssessmentId)) {
+							//the assessment id matches the one we want
+							assessment = studentWorkAssessment;
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		return assessment;
 	}
 	
 	/**
@@ -2253,7 +2413,7 @@ public class VLEGetXLS extends AbstractController {
 							if(isExportColumnReferencingSameObject) {
 								/*
 								 * our current column references the same object so we will get the
-								 * expand and multipley amounts for the visited export column so we
+								 * expand and multiply amounts for the visited export column so we
 								 * can apply it to our new column.
 								 */
 								relatedColumnExpandAndMultiplyAmounts = expandAndMultiplyAmountsList.get(visitedColumnIndex);
@@ -2262,7 +2422,7 @@ public class VLEGetXLS extends AbstractController {
 						}
 						
 						//get the student data values for the field
-						ArrayList<Object> newColumn = getColumnValuesForField(exportColumn, nodeState);
+						ArrayList<Object> newColumn = getColumnValuesForField(exportColumn, nodeState, nodeId);
 						
 						if(relatedColumnExpandAndMultiplyAmounts == null) {
 							//we did not find any previous columns that referenced the same object
@@ -4831,7 +4991,7 @@ public class VLEGetXLS extends AbstractController {
 	 * in the student data. if the field only contains one value, there
 	 * will only be one element in the array.
 	 */
-	private ArrayList<Object> getColumnValuesForField(JSONObject fieldObject, JSONObject studentWork) {
+	private ArrayList<Object> getColumnValuesForField(JSONObject fieldObject, JSONObject studentWork, String nodeId) {
 		//the array to hold the values
 		ArrayList<Object> values = new ArrayList<Object>();
 		
@@ -4840,6 +5000,7 @@ public class VLEGetXLS extends AbstractController {
 				if(fieldObject != null) {
 					String field = null;
 					JSONObject childFieldObject = null;
+					
 
 					//get the field
 					if(fieldObject.has("field")) {
@@ -4850,7 +5011,7 @@ public class VLEGetXLS extends AbstractController {
 					if(fieldObject.has("childField")) {
 						childFieldObject = fieldObject.getJSONObject("childField");
 					}
-
+					
 					if(field != null) {
 						if(studentWork.has(field)) {
 							//get the value in the field in the student work
@@ -4863,7 +5024,7 @@ public class VLEGetXLS extends AbstractController {
 									
 									if(childFieldObject != null) {
 										//there is a childField specified so we will recursively go deeper into the student work
-										values.addAll(getColumnValuesForField(childFieldObject, jsonObjectValue));							
+										values.addAll(getColumnValuesForField(childFieldObject, jsonObjectValue, nodeId));							
 									} else {
 										//there is no childField so we have traversed as far as we need to and will get this value 
 										values.add(jsonObjectValue.toString());
@@ -4874,7 +5035,7 @@ public class VLEGetXLS extends AbstractController {
 									
 									if(childFieldObject != null) {
 										//there is a childField specified so we will recursively go deeper into the student work
-										values.addAll(getValueForField(childFieldObject, jsonArrayValue));							
+										values.addAll(getValueForField(childFieldObject, jsonArrayValue, nodeId));							
 									} else {
 										/*
 										 * there is no childField so we have traversed as far as we need to and will get this value.
@@ -4901,6 +5062,89 @@ public class VLEGetXLS extends AbstractController {
 									//the value is a Float
 									values.add(value);
 								}
+							} else {
+								values.add("");
+							}
+						} else {
+							/*
+							 * student work does not have the field so we will try to get the
+							 * field from the step content. currently we only do this for
+							 * max score fields.
+							 */
+							
+							boolean valueAdded = false;
+							
+							if(nodeId != null) {
+								//get the step content
+								JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
+								
+								if(nodeContent != null) {
+									//get the step type
+									String type = nodeContent.optString("type");
+									
+									if(type != null) {
+										/*
+										 * we will look for the max score in the content if
+										 * the step type is OpenResponse and the field is cRaterMaxScore
+										 * or
+										 * the step type is Challenge and the field is maxScore
+										 * or
+										 * the step type is SVGDraw and the field is maxAutoScore
+										 */
+										if((type.equals("OpenResponse") && field.equals("cRaterMaxScore")) ||
+												(type.equals("Challenge") && field.equals("maxScore")) ||
+												(type.equals("SVGDraw") && field.equals("maxAutoScore"))) {
+											//try to get the max score from the content
+											Long maxScoreFromContent = getMaxScoreFromContent(nodeId);
+
+											if(maxScoreFromContent != null) {
+												//we obtained a max score from the content so we will add it to the values
+												values.add(maxScoreFromContent);
+												valueAdded = true;
+											}
+										}
+									}
+								}
+							}
+							
+							//check if we have already added a value
+							if(!valueAdded) {
+								//we have not added a value so we will add an empty string
+								values.add("");
+							}
+						}
+					} else {
+						/*
+						 * this is the special case when the field value has a hardcoded value
+						 * 
+						 * e.g.
+						 * {
+						 *    "columnName":"Max Score",
+						 *    "value":10
+						 * }
+						 * 
+						 * usage of the "value" allows the author to specify a value for the column
+						 * that will be the same for every row for this specific step. 
+						 */
+						if(fieldObject.has("value")) {
+							Object value = fieldObject.get("value");
+							
+							if(value != null) {
+								if(value instanceof String) {
+									values.add(value);
+								} else if(value instanceof Boolean) {
+									values.add(value);
+								} else if(value instanceof Long) {
+									values.add(value);
+								} else if(value instanceof Integer) {
+									values.add(value);
+								} else if(value instanceof Double) {
+									values.add(value);
+								} else if(value instanceof Float) {
+									values.add(value);
+								}
+							} else {
+								values.add("");
 							}
 						}
 					}
@@ -4912,6 +5156,148 @@ public class VLEGetXLS extends AbstractController {
 		}
 		
 		return values;
+	}
+	
+	/**
+	 * Get the max score from the content
+	 * @param nodeId the node id
+	 * @return the max score value obtained from the step content or null if not found
+	 */
+	private Long getMaxScoreFromContent(String nodeId) {
+		Long maxScore = null;
+		
+		if(nodeId != null) {
+			//get the step content
+			JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
+			
+			if(nodeContent != null) {
+				//get the step type
+				String type = nodeContent.optString("type");
+				
+				if(type != null) {
+					if(type.equals("Challenge")) {
+						//this is a challenge question step
+						maxScore = getMaxScoreFromChallengeQuestionStep(nodeContent);
+					} else if(type.equals("OpenResponse")) {
+						//this is an open response step
+						maxScore = getMaxScoreFromOpenResponse(nodeContent);
+					} else if(type.equals("SVGDraw")) {
+						//this is a draw step
+						maxScore = getMaxScoreFromDraw(nodeContent);
+					}
+				}
+			}
+		}
+		
+		return maxScore;
+	}
+	
+	/**
+	 * Get the max score value from the challenge question step
+	 * @param nodeContent the step content
+	 * @return the max score for the challenge question step or null if not found
+	 */
+	private Long getMaxScoreFromChallengeQuestionStep(JSONObject nodeContent) {
+		Long maxScore = null;
+		
+		if(nodeContent != null) {
+			//get the assessment item
+			JSONObject assessmentItem = nodeContent.optJSONObject("assessmentItem");
+			
+			if(assessmentItem != null) {
+				//get the interaction
+				JSONObject interaction = assessmentItem.optJSONObject("interaction");
+				
+				if(interaction != null) {
+					//get the attempts
+					JSONObject attempts = interaction.optJSONObject("attempts");
+					
+					if(attempts != null) {
+						//get the scores
+						JSONObject scores = attempts.optJSONObject("scores");
+						
+						if(scores != null) {
+							//get the score given when the student only uses one try
+							Long firstScore = scores.optLong("1");
+							
+							if(firstScore != null) {
+								maxScore = firstScore;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return maxScore;
+	}
+	
+	/**
+	 * Get the max score value from the open response step
+	 * @param nodeContent the step content
+	 * @return the max score from the open response step or null if not found
+	 */
+	private Long getMaxScoreFromOpenResponse(JSONObject nodeContent) {
+		Long maxScore = null;
+
+		if(nodeContent != null) {
+			//get the cRater object
+			JSONObject cRaterObj = nodeContent.optJSONObject("cRater");
+			
+			if(cRaterObj != null) {
+				//get the cRater max score
+				Long cRaterMaxScore = cRaterObj.optLong("cRaterMaxScore");
+				
+				if(cRaterMaxScore != null) {
+					maxScore = cRaterMaxScore;
+				}
+			}
+		}
+		
+		return maxScore;
+	}
+	
+	/**
+	 * Get the max score value from the draw step
+	 * @param nodeContent the step content
+	 * @return the max score from the draw step or null if not found
+	 */
+	private Long getMaxScoreFromDraw(JSONObject nodeContent) {
+		Long maxScore = null;
+		
+		if(nodeContent != null) {
+			//get the auto scoring object
+			JSONObject autoScoringObj = nodeContent.optJSONObject("autoScoring");
+			
+			if(autoScoringObj != null) {
+				//get the array containing the feedback
+				JSONArray autoScoringFeedbackArray = autoScoringObj.optJSONArray("autoScoringFeedback");
+				
+				if(autoScoringFeedbackArray != null) {
+					
+					//loop through all the feedback objects
+					for(int x=0; x<autoScoringFeedbackArray.length(); x++) {
+						JSONObject feedbackObj = autoScoringFeedbackArray.optJSONObject(x);
+						
+						if(feedbackObj != null) {
+							//get the score for the feedback
+							Long tempScore = feedbackObj.optLong("score");
+							
+							if(tempScore != null) {
+								//remember the max score that we encounter
+								if(maxScore == null) {
+									maxScore = tempScore;
+								} else if(tempScore > maxScore) {
+									maxScore = tempScore;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return maxScore;
 	}
 	
 	/**
@@ -4943,7 +5329,7 @@ public class VLEGetXLS extends AbstractController {
 	 * 
 	 * @return an array that contains the field value from each element in the array
 	 */
-	private ArrayList<Object> getValueForField(JSONObject fieldObject, JSONArray studentWork) {
+	private ArrayList<Object> getValueForField(JSONObject fieldObject, JSONArray studentWork, String nodeId) {
 		ArrayList<Object> values = new ArrayList<Object>();
 		
 		if(studentWork != null) {
@@ -4989,7 +5375,7 @@ public class VLEGetXLS extends AbstractController {
 										
 										if(childFieldObject != null) {
 											//there is a child field so we will traverse deeper into the student work
-											values.add(getColumnValuesForField(childFieldObject, (JSONObject) value));							
+											values.add(getColumnValuesForField(childFieldObject, (JSONObject) value, nodeId));							
 										} else {
 											//there is no child field so we will just get the string value of the object
 											values.add(value.toString());
@@ -4997,7 +5383,7 @@ public class VLEGetXLS extends AbstractController {
 									} else if(value instanceof JSONArray) {
 										if(childFieldObject != null) {
 											//there is a child field so we will traverse deeper into the student work
-											values.add(getValueForField(childFieldObject, (JSONArray) value));							
+											values.add(getValueForField(childFieldObject, (JSONArray) value, nodeId));							
 										} else {
 											//there is no child field so we will just get the string value of the array
 											values.add(value.toString());

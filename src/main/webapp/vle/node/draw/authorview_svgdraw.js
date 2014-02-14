@@ -1170,24 +1170,28 @@ View.prototype.SVGDrawNode.setRegularExportColumns = function() {
 View.prototype.SVGDrawNode.setAutoGradedExportColumns = function() {
 	this.content.exportColumns = [
           {
-        	  "columnName": "Submit",
-        	  "field": "checkWork"
+        	  "columnName": "Data",
+        	  "field": "data"
           },
           {
-        	  "columnName": "Auto-Feedback Key",
-        	  "field": "autoFeedbackKey"
-          },
-          {
-        	  "columnName": "Auto-Score",
+        	  "columnName": "Score",
         	  "field": "autoScore"
           },
           {
-        	  "columnName": "Auto-Feedback",
+        	  "columnName": "Max Score",
+        	  "field": "maxAutoScore"
+          },
+          {
+        	  "columnName": "Feedback Key",
+        	  "field": "autoFeedbackKey"
+          },
+          {
+        	  "columnName": "Feedback",
         	  "field": "autoFeedback"
           },
           {
-        	  "columnName": "Data",
-        	  "field": "data"
+        	  "columnName": "Submit",
+        	  "field": "checkWork"
           }
   	];
 	

@@ -21,5 +21,23 @@
       "timeDependent": false
    },
    "excelExportStringTemplate": "Is Correct: {isCorrect}, Score: {score}, Answer: {response}",
-   "type": "Challenge"
+   "type": "Challenge",
+   "exportColumns": [
+      {
+         "columnName": "Response",
+         "field": "response"
+      },
+      {
+         "columnName": "Is Correct",
+         "field": "isCorrect"
+      },
+      {
+         "columnName": "Score",
+         "field": "score"
+      },
+      {
+         "columnName": "Max Score",
+         "field": "maxScore"
+      }
+   ]
 }

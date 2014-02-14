@@ -245,12 +245,13 @@ SVGDRAW.prototype.save = function() {
 	/* compress nodeState data */
 	var compressedData = "--lz77--" + this.lz77.compress(JSON.stringify(data));
 	var autoScore = this.autoScore;
+	var maxAutoScore = this.maxAutoScore;
 	var autoFeedback = this.autoFeedback;
 	var autoFeedbackKey = this.autoFeedbackKey;
 	var checkWork = this.checkWork;
 
 	//create a new svgdrawstate
-	var svgDrawState = new SVGDRAWSTATE(compressedData, null, autoScore, autoFeedback, autoFeedbackKey, checkWork);
+	var svgDrawState = new SVGDRAWSTATE(compressedData, null, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore);
 	
 	//fire the event to push this state to the global view.states object
 	this.view.pushStudentWork(this.node.id, svgDrawState);
@@ -262,6 +263,7 @@ SVGDRAW.prototype.save = function() {
     
     //clear out the auto score and auto feedback
     this.autoScore = null;
+    this.maxAutoScore = null;
 	this.autoFeedback = null;
 	this.autoFeedbackKey = null;
 	this.checkWork = null;
@@ -646,7 +648,7 @@ SVGDRAW.prototype.autoGradeWork = function() {
 				var scoreObject = this.studentData.rubricScore,
 					score = null,
 					key = null,
-					max = '5'; // TODO: get the max score from auto scoring config in the future
+					max = 5; // TODO: get the max score from auto scoring config in the future
 				
 				if(scoreObject != null) {
 					score = scoreObject.score;
@@ -675,6 +677,7 @@ SVGDRAW.prototype.autoGradeWork = function() {
 				
 				//set the score and feedback so we can access them later when we save the svgdrawstate
 				this.autoScore = score;
+				this.maxAutoScore = max;
 				this.autoFeedback = message;
 				this.autoFeedbackKey = key;
 				this.checkWork = true;
