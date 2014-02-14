@@ -155,7 +155,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 				</div>
 				
 				 <div class="panelFooter" style="text-align:center; padding:10px; color:#745A33">
-                    <span>Questions using WISE in your classroom? <a target=_blank href="http://discuss.wise4.org/category/teaching-with-wise">Ask the WISE Teacher Community!</a></span>
+                    <span>Questions using WISE in your classroom? <a target=_blank href="http://wise4.org/community/teacher">Ask the WISE Teacher Community!</a></span>
                  </div>
 
 			</div>
