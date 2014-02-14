@@ -535,6 +535,9 @@ MC.prototype.checkAnswer = function() {
 				//student answered incorrectly
 				mcState.score = 0;
 			}
+			
+			//set the max possible score value into the node state
+			mcState.maxScore = this.getMaxPossibleScore();
 		}
 		
 		if(!isCorrect) {

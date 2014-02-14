@@ -21,5 +21,11 @@
       "display": "0",
       "sentence": ""
    },
-   "type": "Note"
+   "type": "Note",
+   "exportColumns":[
+		{
+			"columnName":"Response",
+			"field":"response"
+		}
+	]
 }

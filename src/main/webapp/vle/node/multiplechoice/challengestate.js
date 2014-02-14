@@ -5,6 +5,7 @@
 function CHALLENGESTATE(args) {
 	this.type = "challenge";
 	this.isCorrect = null;
+	this.maxScore = null;
 	
 	//stores the human readable value of the choice chosen
 	this.response = new Array();
@@ -64,6 +65,7 @@ CHALLENGESTATE.prototype.parseDataJSONObj = function(stateJSONObj) {
 	challengeState.timestamp = stateJSONObj.timestamp;
 	challengeState.choices = stateJSONObj.choices;
 	challengeState.score = stateJSONObj.score;
+	challengeState.maxScore = stateJSONObj.maxScore;
 	
 	/*
 	 * an array containing the human readable value of the choice(s)
@@ -82,6 +84,11 @@ CHALLENGESTATE.prototype.getHumanReadableForm = function() {
 	var humanReadableText = "isCorrect: " + this.isCorrect;
 	humanReadableText += "choices: " + this.choices;
 	humanReadableText += "score: " + this.score;
+	
+	if(this.maxScore != null) {
+		humanReadableText += "/" + this.maxScore;
+	}
+	
 	return humanReadableText;
 };
 
@@ -110,6 +117,10 @@ CHALLENGESTATE.prototype.getStudentWorkString = function() {
 		if(this.score != null){
 			studentWork += "<br><br>";
 			studentWork += "Auto-Graded Score: " + this.score;
+			
+			if(this.maxScore != null) {
+				studentWork += "/" + this.maxScore;
+			}
 		}
 	}
 	

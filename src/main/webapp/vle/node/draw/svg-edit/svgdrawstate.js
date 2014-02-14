@@ -7,7 +7,7 @@
  * @param autoFeedback the auto graded feedback
  * @returns
  */
-function SVGDRAWSTATE(data, timestamp, autoScore, autoFeedback, autoFeedbackKey, checkWork) {
+function SVGDRAWSTATE(data, timestamp, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore) {
 	this.type = "html";
 	this.data = data;
 	
@@ -36,6 +36,11 @@ function SVGDRAWSTATE(data, timestamp, autoScore, autoFeedback, autoFeedbackKey,
 		//set the auto graded check work value if provided
 		this.checkWork = checkWork;
 	}
+	
+	if(maxAutoScore != null) {
+		//set the max auto graded score
+		this.maxAutoScore = maxAutoScore;
+	}
 };
 
 /**
@@ -54,6 +59,7 @@ SVGDRAWSTATE.prototype.parseDataJSONObj = function(stateJSONObj) {
 	state.autoFeedback = stateJSONObj.autoFeedback;
 	state.autoFeedbackKey = stateJSONObj.autoFeedbackKey;
 	state.checkWork = stateJSONObj.checkWork;
+	state.maxAutoScore = stateJSONObj.maxAutoScore;
 	
 	//return the SVGDRAWSTATE object
 	return state;

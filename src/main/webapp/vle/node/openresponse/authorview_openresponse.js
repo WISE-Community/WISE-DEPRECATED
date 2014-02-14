@@ -1190,20 +1190,24 @@ View.prototype.OpenResponseNode.setRegularExportColumns = function() {
 View.prototype.OpenResponseNode.setAutoGradedExportColumns = function() {
 	this.content.exportColumns = [
           {
-        	  "columnName": "Submit",
-        	  "field": "isCRaterSubmit"
+        	  "columnName": "Response",
+        	  "field": "response"
           },
           {
-        	  "columnName": "Auto-Score",
+        	  "columnName": "Score",
         	  "field": "cRaterScore"
           },
           {
-        	  "columnName": "Auto-Feedback",
+        	  "columnName": "Max Score",
+        	  "field": "cRaterMaxScore"
+          },
+          {
+        	  "columnName": "Feedback",
         	  "field": "cRaterFeedbackText"
           },
           {
-        	  "columnName": "Response",
-        	  "field": "response"
+        	  "columnName": "Submit",
+        	  "field": "isCRaterSubmit"
           }
   	];
 	
