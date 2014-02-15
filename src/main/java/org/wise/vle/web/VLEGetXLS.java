@@ -1971,25 +1971,7 @@ public class VLEGetXLS extends AbstractController {
         			//get the column index
         			int cellColumn = tempColumn;
         			
-        			if(object instanceof String) {
-        				//set the cell string value
-                		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (String) object);        				
-        			} else if(object instanceof Long) {
-        				//set the cell long value
-                		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (Long) object);        				
-        			} else if(object instanceof Integer) {
-        				//set the cell integer value
-                		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (Integer) object);
-        			} else if(object instanceof Double) {
-        				//set the cell integer value
-                		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (Double) object);
-        			} else if(object instanceof Float) {
-        				//set the cell integer value
-                		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (Float) object);
-        			} else {
-        				//set the cell value as a string
-        				tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, object.toString());
-        			}
+        			String comment = null;
         			
         			//check if there are column names
             		if(columnNames != null) {
@@ -1999,17 +1981,37 @@ public class VLEGetXLS extends AbstractController {
             			 */
             			if(columnNames.size() > x) {
             				//there is a column name for the column index so we will get the column name for the column
-            				String comment = (String) columnNames.get(x);
-                			
-                			if(comment != null) {
-                				/*
-                				 * set the column name as a comment for the cell which will display when
-                				 * the user mouseovers the cell
-                				 */
-                				setCellComment(userIdSheet, tempRow, cellColumn, comment);
-                			}            				
+            				comment = (String) columnNames.get(x);
             			}
             		}
+
+        			if(object instanceof String) {
+        				//set the cell string value
+                		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (String) object, comment);
+        			} else if(object instanceof Long) {
+        				//set the cell long value
+                		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (Long) object, comment);
+        			} else if(object instanceof Integer) {
+        				//set the cell integer value
+                		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (Integer) object, comment);
+        			} else if(object instanceof Double) {
+        				//set the cell integer value
+                		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (Double) object, comment);
+        			} else if(object instanceof Float) {
+        				//set the cell integer value
+                		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, (Float) object, comment);
+        			} else {
+        				//set the cell value as a string
+        				tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, object.toString(), comment);
+        			}
+        			
+        			if(comment != null) {
+        				/*
+        				 * set the column name as a comment for the cell which will display when
+        				 * the user mouseovers the cell
+        				 */
+        				setCellComment(userIdSheet, tempRow, cellColumn, comment);
+        			}  
         		} else {
         			//this column does not have student data so we will move the column counter to skip this cell
         			tempColumn++;
@@ -9018,6 +9020,40 @@ public class VLEGetXLS extends AbstractController {
 	}
 	
 	/**
+	 * Set the integer value into the cell
+	 * 
+	 * @param row the excel row
+	 * @param rowVector the vector that holds the string for the csv output
+	 * @param columnCounter the column index
+	 * @param value the value to set in the cell
+	 * 
+	 * @return the new column index for the next empty cell
+	 */
+	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, Integer value, String comment) {
+		int returnValue;
+		
+		if(value == null) {
+			if(rowVector != null) {
+				//set an empty string into the vector
+				rowVector.add("");				
+			}
+			
+			//increment the column counter
+			returnValue = columnCounter++;
+		} else {
+			try {
+				//try to convert the value to a long
+				returnValue = setCellValue(row, rowVector, columnCounter, new Long(value), comment);	
+			} catch (NumberFormatException e) {
+				//we were unable to convert the value to a long so we will use the string value
+				returnValue = setCellValue(row, rowVector, columnCounter, value + "", comment);
+			}
+		}
+		
+		return returnValue;
+	}
+	
+	/**
 	 * Set the long value into the cell
 	 * 
 	 * @param row the excel row
@@ -9041,6 +9077,43 @@ public class VLEGetXLS extends AbstractController {
 			
 			if(rowVector != null) {
 				rowVector.add(value + "");				
+			}
+		}
+		
+		//increment the column counter
+		columnCounter++;
+		
+		return columnCounter;
+	}
+	
+	/**
+	 * Set the long value into the cell
+	 * 
+	 * @param row the excel row
+	 * @param rowVector the vector that holds the string for the csv output
+	 * @param columnCounter the column index
+	 * @param value the value to set in the cell
+	 * 
+	 * @return the new column index for the next empty cell
+	 */
+	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, Long value, String comment) {
+		if(value == null) {
+			if(rowVector != null) {
+				//set an empty string into the vector
+				rowVector.add("");				
+			}
+		} else {
+			if(row != null) {
+				//set the value into the cell
+				row.createCell(columnCounter).setCellValue(value);
+			}
+			
+			if(rowVector != null) {
+				if(comment == null) {
+					rowVector.add(value + "");
+				} else {
+					rowVector.add("[" + comment + "]=" + value);					
+				}
 			}
 		}
 		
@@ -9084,6 +9157,43 @@ public class VLEGetXLS extends AbstractController {
 	}
 	
 	/**
+	 * Set the double value into the cell
+	 * 
+	 * @param row the excel row
+	 * @param rowVector the vector that holds the string for the csv output
+	 * @param columnCounter the column index
+	 * @param value the value to set in the cell
+	 * 
+	 * @return the new column index for the next empty cell
+	 */
+	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, Double value, String comment) {
+		if(value == null) {
+			if(rowVector != null) {
+				//set an empty string into the vector
+				rowVector.add("");				
+			}
+		} else {
+			if(row != null) {
+				//set the value into the cell
+				row.createCell(columnCounter).setCellValue(value);
+			}
+			
+			if(rowVector != null) {
+				if(comment == null) {
+					rowVector.add(value + "");					
+				} else {
+					rowVector.add("[" + comment + "]=" + value);
+				}
+			}
+		}
+		
+		//increment the column counter
+		columnCounter++;
+		
+		return columnCounter;
+	}
+	
+	/**
 	 * Set the float value into the cell
 	 * 
 	 * @param row the excel row
@@ -9107,6 +9217,43 @@ public class VLEGetXLS extends AbstractController {
 			
 			if(rowVector != null) {
 				rowVector.add(value + "");				
+			}
+		}
+		
+		//increment the column counter
+		columnCounter++;
+		
+		return columnCounter;
+	}
+	
+	/**
+	 * Set the float value into the cell
+	 * 
+	 * @param row the excel row
+	 * @param rowVector the vector that holds the string for the csv output
+	 * @param columnCounter the column index
+	 * @param value the value to set in the cell
+	 * 
+	 * @return the new column index for the next empty cell
+	 */
+	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, Float value, String comment) {
+		if(value == null) {
+			if(rowVector != null) {
+				//set an empty string into the vector
+				rowVector.add("");				
+			}
+		} else {
+			if(row != null) {
+				//set the value into the cell
+				row.createCell(columnCounter).setCellValue(value);
+			}
+			
+			if(rowVector != null) {
+				if(comment == null) {
+					rowVector.add(value + "");
+				} else {
+					rowVector.add("[" + comment + "]=" + value);					
+				}
 			}
 		}
 		
@@ -9186,6 +9333,49 @@ public class VLEGetXLS extends AbstractController {
 		
 		if(rowVector != null) {
 			rowVector.add(value);			
+		}
+		
+		//check if the value has more characters than the max allowable for an excel cell
+		if(value.length() > 32767) {
+			//response has more characters than the max allowable so we will truncate it
+			value = value.substring(0, 32767);
+			
+			//increment the counter to keep track of how many oversized responses we have
+			oversizedResponses++;
+		}
+		
+		if(row != null) {
+			//set the value into the cell
+			row.createCell(columnCounter).setCellValue(value);
+		}
+
+		//increment the column counter
+		columnCounter++;
+		
+		return columnCounter;
+	}
+	
+	/**
+	 * Set the value in the row at the given column.
+	 * 
+	 * @param row the row
+	 * @param columnCounter the column index
+	 * @param value the value to set in the cell
+	 * 
+	 * @return the next empty column
+	 */
+	private int setCellValue(Row row, Vector<String> rowVector, int columnCounter, String value, String comment) {
+		if(value == null) {
+			//value is null so we will just use empty string
+			value = "";
+		}
+		
+		if(rowVector != null) {
+			if(comment == null) {
+				rowVector.add(value);				
+			} else {
+				rowVector.add("[" + comment + "]=" + value);
+			}
 		}
 		
 		//check if the value has more characters than the max allowable for an excel cell
