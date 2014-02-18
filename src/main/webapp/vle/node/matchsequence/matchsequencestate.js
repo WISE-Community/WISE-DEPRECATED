@@ -34,6 +34,7 @@ function MSSTATE() {
     this.buckets = [];
     this.score = null;
     this.isCorrect = null;
+    this.maxScore = null;
 }
 
 /**
@@ -94,6 +95,11 @@ MSSTATE.prototype.getJsonifiableState = function() {
 		msState.isCorrect = this.isCorrect;
 	}
 	
+	if(this.maxScore != null) {
+		//set the max score
+		msState.maxScore = this.maxScore;
+	}
+	
 	//return the MSSTATE
 	return msState;
 };
@@ -118,6 +124,9 @@ MSSTATE.prototype.parseDataJSONObj = function(stateJSONObj) {
 	
 	//get whether the state is correct
 	msState.isCorrect = stateJSONObj.isCorrect;
+	
+	//get the max score from the json
+	msState.maxScore = stateJSONObj.maxScore;
 	
 	//return the MCSTATE object
 	return msState;

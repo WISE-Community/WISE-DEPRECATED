@@ -854,6 +854,10 @@ MS.prototype.checkAnswer = function() {
 		//check if there are any scores enabled for this challenge question
 		if(this.isChallengeScoringEnabled()) {
 			this.displayCurrentPossibleScoreTable(numWrongChoices);
+			
+			//get the max score and put it into the state
+			var maxScore = this.getMaxPossibleScore();
+			state.maxScore = maxScore;
 		}
 		
 		//fire the event to push this state to the global view.states object

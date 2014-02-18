@@ -1238,6 +1238,9 @@ View.prototype.MatchSequenceNode.addNewAttemptScore = function(){
 	//make sure this.content.assessmentItem.interaction.attempts is populated
 	this.populateAttemptsObjectIfNecessary();
 	
+	//add export columns if necessary
+	this.addExportColumnsIfNecessary();
+	
 	/* get the new attempt number */
 	var attemptNum = this.getLastAttemptNumber() + 1;
 	
@@ -1354,6 +1357,135 @@ View.prototype.MatchSequenceNode.populateAttemptsObjectIfNecessary = function() 
 	    };
 	}
 };
+
+/**
+ * Add export columns if they do not already exist
+ */
+View.prototype.MatchSequenceNode.addExportColumnsIfNecessary = function() {
+	//add the default export columns if they do not exist
+	this.addDefaultExportColumnsIfDoesNotExist();
+	
+	//add the score export columns if they do not exist
+	this.addScoreExportColumnsIfDoesNotExist();
+};
+
+/**
+ * Create the export columns array in the step content if it does not exist
+ */
+View.prototype.MatchSequenceNode.createExportColumnsIfDoesNotExist = function() {
+	if(this.content != null) {
+		if(this.content.exportColumns == null) {
+			this.content.exportColumns = [];
+		}
+	}
+};
+
+/**
+ * Add the export column if it does not exist
+ * @param columnName the column name for the export column
+ * @param field the field for the export column
+ */
+View.prototype.MatchSequenceNode.addExportColumnIfDoesNotExist = function(columnName, field) {
+	this.createExportColumnsIfDoesNotExist();
+	
+	if(columnName != null && field != null) {
+		//check if the export column already exists
+		if(!this.isInExportColumns(columnName, field)) {
+			//the export column does not exist so we will add it
+			this.addExportColumn(columnName, field);
+		}		
+	}
+};
+
+/**
+ * Add the default export columns if they do not exist. The
+ * default export columns are "Buckets" and "Is Correct"
+ */
+View.prototype.MatchSequenceNode.addDefaultExportColumnsIfDoesNotExist = function() {
+	//create the export columns array if it does not exist
+	this.createExportColumnsIfDoesNotExist();
+	
+	//add the Buckets export column
+	this.addExportColumnIfDoesNotExist("Buckets", "buckets");
+	
+	//add the Is Correct export column
+	this.addExportColumnIfDoesNotExist("Is Correct", "isCorrect");
+};
+
+/**
+ * Add the score export columns if they do not exist. The
+ * score export columns are "Score" and "Max Score"
+ */
+View.prototype.MatchSequenceNode.addScoreExportColumnsIfDoesNotExist = function() {
+	//create the export columns array if it does not exist
+	this.createExportColumnsIfDoesNotExist();
+	
+	//add the Score export column
+	this.addExportColumnIfDoesNotExist("Score", "score");
+	
+	//add the Max Score export column
+	this.addExportColumnIfDoesNotExist("Max Score", "maxScore");
+};
+
+/**
+ * Check if the an export column with the given columnName and field already exists.
+ * @param columnName the column name for the export column
+ * @param field the field for the export column
+ * @return whether there is an export column with the given columnName and field
+ */
+View.prototype.MatchSequenceNode.isInExportColumns = function(columnName, field) {
+	var result = false;
+	
+	if(this.content != null) {
+		if(this.content.exportColumns != null) {
+			
+			//get the export columns from the step content
+			var exportColumns = this.content.exportColumns;
+			
+			//loop through all the export column objects
+			for(var x=0; x<exportColumns.length; x++) {
+				//get an export column object
+				var tempExportColumn = exportColumns[x];
+				
+				if(tempExportColumn != null) {
+					//get the column name from the export column object
+					var tempColumnName = tempExportColumn.columnName;
+					
+					//get the field from the export column object
+					var tempField = tempExportColumn.field;
+					
+					//check if the column name and field match the one we are looking for
+					if(columnName == tempColumnName && field == tempField) {
+						//the values match so we have found the one we are looking for
+						result = true;
+					}
+				}
+			}
+		}
+	}
+	
+	return result;
+};
+
+/**
+ * Add the export column object to the export columns array
+ * @param columnName the column name for the new export column object
+ * @param field the field for the new export column object
+ */
+View.prototype.MatchSequenceNode.addExportColumn = function(columnName, field) {
+	if(this.content != null) {
+		if(this.content.exportColumns != null) {
+			//create the new export column object
+			var newExportColumn = {
+				"columnName": columnName,
+				"field": field
+			}
+			
+			//add the new export column object to the export columns array
+			this.content.exportColumns.push(newExportColumn);
+		}
+	}
+}
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
