@@ -24,5 +24,15 @@
    "numSubmitsAllowedBeforeLock":-1,   
    "hasCorrectness": true,
    "sourceBucketName":"Choices",
-   "type": "MatchSequence"
+   "type": "MatchSequence",
+   "exportColumns": [
+      {
+         "columnName": "Buckets",
+         "field": "buckets"
+      },
+      {
+         "columnName": "Is Correct",
+         "field": "isCorrect"
+      }
+   ]
 }
