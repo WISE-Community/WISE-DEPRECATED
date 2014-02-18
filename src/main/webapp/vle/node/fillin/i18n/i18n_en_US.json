@@ -36,7 +36,7 @@
 		"description":"Text for the 'Next Blank' button"
 	},	
 	"all_correct_msg": {
-		"value": " You successfully filled all of the blanks.  Impressive work!",
+		"value": " You successfully filled all of the blanks.  Impressive work! ",
 		"description":"The message to display when student fills in all the right answers."
 	},
 	"not_correct_msg": {
@@ -44,7 +44,7 @@
 		"description":"The message to display when student fills in an incorrect answer."
 	},
 	"successfully_filled_in_part1": {
-		"value": "You successfully filled",
+		"value": "You successfully filled ",
 		"description":"'You successfully filled' part of 'You successfully filled x blanks in y tries'"
 	},
 	"successfully_filled_in_one_blank_in": {
@@ -56,11 +56,11 @@
 		"description":"'x blanks in' part of 'You successfully filled x blanks in y tries'"
 	},
 	"successfully_filled_in_one_try": {
-		"value": "1 try",
+		"value": "1 try.",
 		"description":"'1 try' part of 'You successfully filled x blanks in y tries'"
 	},
 	"successfully_filled_in_y_tries": {
-		"value": "{0} tries ",
+		"value": "{0} tries.",
 		"description":"'y tries' part of 'You successfully filled x blanks in y tries'"
 	}
 }
