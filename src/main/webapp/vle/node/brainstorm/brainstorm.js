@@ -545,7 +545,7 @@ BRAINSTORM.prototype.filterInappropriatePosts = function(vle){
 					var flagJSON = flagArray[i];
 					if (flagJSON.type == "inappropriateFlag" && flagJSON.value == "flagged") {
 						// replace student's response with generic message
-						$("div[bsNodeVisitId="+flagJSON.stepWorkId+"]").each(function() { $(this).find(".responseTextArea").html(view.getI18NString('flag_inappropriate','BrainstormNode')) });
+						$("div[bsNodeVisitId="+flagJSON.stepWorkId+"]").each(function() { $(this).find(".responseTextArea").html(handlerArgs.vle.getI18NString('flag_inappropriate','BrainstormNode')) });
 					}
 				}
 			}
@@ -676,14 +676,21 @@ BRAINSTORM.prototype.savePost = function(frameDoc){
 			 * we are using a server backend so we can retrieve other students'
 			 * responses
 			 */
+			currentState.userId=this.node.view.getUserAndClassInfo().getWorkgroupId();
 
+			// create additional data for reply save callback function 
+			var additionalCallbackData = {
+					"isNewPost":true,
+					"replyState":currentState,
+					"bs":this
+			}
+
+			this.showClassmateResponses(frameDoc);
 			/*
 			 * post the current node visit to the db immediately without waiting
 			 * for the student to exit the step.
 			 */
-			this.node.view.postCurrentNodeVisit(this.processPostSuccessResponse,this.processPostSuccessResponse,{"hi":"ho"});
-
-			this.showClassmateResponses(frameDoc);
+			this.node.view.postCurrentNodeVisit(this.processPostSuccessResponse,this.processPostSuccessResponse,additionalCallbackData);
 		} else {
 			for(var x=0; x<this.states.length; x++) {
 				this.addStudentResponse(this.states[x], this.node.view, this.content);
@@ -1038,6 +1045,12 @@ BRAINSTORM.prototype.processPostSuccessResponse = function(responseText, respons
 
 		// also show this reply on the forum immediately so student doesn't have to refresh.
 		bs.addStudentResponse(replyState, this.vle, content);		
+	} else if (args.additionalData.isNewPost) {
+		// this is a callback for a new post that was saved successfully. Diplay the new post in the UI
+		var bs = args.additionalData.bs;
+		var content = bs.content;
+		bs.addStudentResponse(replyState, this.vle, content);
+		
 	}
 };
 

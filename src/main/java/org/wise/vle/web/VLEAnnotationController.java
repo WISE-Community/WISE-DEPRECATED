@@ -201,7 +201,7 @@ public class VLEAnnotationController extends AbstractController {
 				if(SecurityUtils.isUserInWorkgroup(signedInUser, stepWorkWorkgroupId)) {
 					allowedAccess = true;
 				}
-			} else if("flag".equals(requestedType)) {
+			} else if("flag".equals(requestedType) || "inappropriateFlag".equals(requestedType)) {
 				//the user is getting a flag
 				
 				//make sure the user is in the period
