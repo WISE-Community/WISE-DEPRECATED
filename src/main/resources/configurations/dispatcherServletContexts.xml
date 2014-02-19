@@ -394,6 +394,7 @@
 		<property name="mailService" ref="mailService" />
 		<property name="i18nProperties" ref="i18nProperties" />
 		<property name="runService" ref="runService" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="contactWiseProjectController"
