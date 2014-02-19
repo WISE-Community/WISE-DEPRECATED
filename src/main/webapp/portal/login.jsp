@@ -43,6 +43,8 @@
 								<label for="password"><spring:message code="passwordLabel"/></label><input class="dataBoxStyle" type="password" name="j_password" id="j_password" size="18" maxlength="30" />
 							</div>
 							<c:if test="${requireCaptcha && reCaptchaPublicKey != null && reCaptchaPrivateKey != null}">
+								<div style="width: 60%; margin:0 auto">
+								<p><spring:message code='login.recaptcha'/></p>
 								<%
 									//get the captcha public and private key so we can make the captcha
 									String reCaptchaPublicKey = (String) request.getAttribute("reCaptchaPublicKey");
@@ -54,12 +56,10 @@
 									//make the html that will display the captcha
 									String reCaptchaHtml = c.createRecaptchaHtml(null, null);
 									
-									//output the instructions for the captcha
-									out.print("<p><spring:message code='login.recaptcha'/></p>");
-									
 									//output the captcha html to the page
 									out.print(reCaptchaHtml);
 								%>
+								</div>
 							</c:if>
 							<input type='hidden' value='${redirect}' name='redirect'/>
 						</div>
