@@ -106,17 +106,6 @@ public class ViewMyStudentsController extends AbstractController{
     	ControllerUtil.addUserToModelAndView(servletRequest, modelAndView);
  
 		User user = ControllerUtil.getSignedInUser();
-		List<Run> runList = this.runService.getRunList();
-		// this is a temporary solution to filtering out runs that the logged-in user owns.
-		// when the ACL entry permissions is figured out, we shouldn't have to do this filtering
-		// start temporary code
-		List<Run> runList2 = new ArrayList<Run>();
-		for (Run run : runList) {
-			if (run.getOwners().contains(user)) {
-				runList2.add(run);
-			}
-		}
-		// end temporary code
 
 		Map<Group, List<Workgroup>> workgroupMap = new HashMap<Group, List<Workgroup>>();
 		
