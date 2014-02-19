@@ -285,7 +285,7 @@ public class CreateRunController extends AbstractWizardFormController {
 			break;
 		case 1:
 			// for page 2 of the wizard, display existing runs for this user
-			List<Run> allRuns = runService.getRunList();
+			List<Run> allRuns = runService.getRunListByOwner(user);
 			
 			// this is a temporary solution to filtering out runs that the logged-in user owns.
 			// when the ACL entry permissions is figured out, we shouldn't have to do this filtering
