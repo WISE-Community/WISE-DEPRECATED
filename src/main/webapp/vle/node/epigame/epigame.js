@@ -12,7 +12,7 @@ function Epigame(node) {
 	if(node.studentWork != null) {
 		this.states = node.studentWork; 
 	} else {
-		this.states = [];  
+		this.states = [];
 	};
 };
 
