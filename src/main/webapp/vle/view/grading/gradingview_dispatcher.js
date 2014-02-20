@@ -29,9 +29,23 @@ View.prototype.gradingDispatcher = function(type, args, obj) {
 	} else if(type=='maxScoreChanged') {
 		obj.saveMaxScore(args[0], args[1]);
 	} else if(type=='gradeByStepViewSelected') {
+		//display the grade by step view
 		obj.displayGradeByStepSelectPage();
+		
+		/*
+		 * this will set off a chain of events that will retrieve the
+		 * annotations and the student statuses
+		 */
+		obj.retrieveAnnotations();
 	} else if(type=='gradeByTeamViewSelected') {
+		//display the grade by team view
 		obj.displayGradeByTeamSelectPage();
+		
+		/*
+		 * this will set off a chain of events that will retrieve the
+		 * annotations and the student statuses
+		 */
+		obj.retrieveAnnotations();
 	} else if(type=='displayStudentUploadedFilesSelected') {
 		obj.displayStudentUploadedFiles();
 	} else if(type=='checkForNewWorkButtonClicked') {

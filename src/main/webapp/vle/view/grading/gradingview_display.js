@@ -60,8 +60,11 @@ View.prototype.initiateGradingDisplay = function() {
 		//permission parameter was not found so we will default to read
 		this.gradingPermission = "read";
 	}
-	
-	this.gradingType = this.getConfig().getConfigParam('gradingType');
+
+	//get the grading type from the config if it has not already been set
+	if(this.gradingType == null) {
+		this.gradingType = this.getConfig().getConfigParam('gradingType');		
+	}
 	
 	if(this.gradingType != "monitor" && this.gradingType != "export") {
 		this.getRevisions = false;
@@ -93,11 +96,9 @@ View.prototype.initiateGradingDisplay = function() {
 	this.studentWorkRowRevisions = {};
 	
 	if(this.gradingType == "step") {
-		this.displayGradeByStepSelectPage();	
-		eventManager.fire("initiateGradingDisplayStarted");
+		this.displayGradeByStepSelectPage();
 	} else if(this.gradingType == "team") {
 		this.displayGradeByTeamSelectPage();
-		eventManager.fire("initiateGradingDisplayStarted");
 	} else if(this.gradingType == "monitor") {
 		this.checkXMPPEnabled();
 		
@@ -1577,6 +1578,9 @@ View.prototype.resizeTextArea = function(textArea) {
  * @param nodeId the node id
  */
 View.prototype.displayGradeByStepGradingPage = function(stepNumber, nodeId) {
+	//retrieve the student work for the step and display the grading page for the step
+	this.getWorkForNodeId(nodeId);
+	/*
 	//get the work for the step
 	var work = this.model.getWorkByNodeId(nodeId);
 	
@@ -1587,6 +1591,7 @@ View.prototype.displayGradeByStepGradingPage = function(stepNumber, nodeId) {
 		//we have already retrieved the work for the step so we will display the grading page
 		this.displayGradeByStepGradingPageGenerator(stepNumber, nodeId);
 	}
+	*/
 };
 
 /**
@@ -2176,8 +2181,13 @@ View.prototype.displayGradeByStepGradingPageGenerator = function(stepNumber, nod
 View.prototype.calculateGradingStatistics = function(gradingType) {
 	//check if gradingType was passed into this fuction
 	if(gradingType == null) {
-		//gradingType was not passed in so we will retrieve it from the config
-		gradingType = this.getConfig().getConfigParam('gradingType');	
+		if(this.gradingType != null) {
+			//get the grading view the teacher was previously on e.g. "step" or "team"
+			gradingType = this.gradingType;
+		} else {
+			//gradingType was not passed and not previously set so we will retrieve it from the config
+			gradingType = this.getConfig().getConfigParam('gradingType');			
+		}
 	}
 	
 	if(gradingType == "step") {
@@ -3591,6 +3601,9 @@ View.prototype.getToolsTdHtml = function(workgroupId, nodeId, teacherId, runId, 
  * @param workgroupId the workgroup id
  */
 View.prototype.displayGradeByTeamGradingPage = function(workgroupId) {
+	//retrieve the student work for the team and display the grading page for the team
+	this.getWorkForWorkgroupId(workgroupId);
+	/*
 	//get the work for the workgroup id
 	var work = this.model.getWorkByWorkgroupId(workgroupId);
 	
@@ -3601,6 +3614,7 @@ View.prototype.displayGradeByTeamGradingPage = function(workgroupId) {
 		//we have the work for the workgroup id so we wil display the grading page
 		this.displayGradeByTeamGradingPageGenerator(workgroupId);
 	}
+	*/
 };
 
 /**
