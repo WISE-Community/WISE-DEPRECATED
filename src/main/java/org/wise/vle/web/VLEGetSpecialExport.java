@@ -518,7 +518,7 @@ public class VLEGetSpecialExport extends AbstractController {
 	    if(exportType.equals("specialExport")) {
 
 	    	String nodeTitleWithPosition = "Step " + nodeIdToNodeTitlesWithPosition.get(nodeId);
-	    	String fileName = projectName + "-" + runId + "-" + nodeTitleWithPosition;
+	    	String fileName = runName + "-" + runId + "-" + nodeTitleWithPosition;
 	    	fileName = fileName.replaceAll(" ", "_");
 	    	
 	    	/*
@@ -542,6 +542,7 @@ public class VLEGetSpecialExport extends AbstractController {
 				//add the project, run, and step information
 				data.put("projectName", projectName);
 				data.put("projectId", projectId);
+				data.put("runName", runName);
 				data.put("runId", runId);
 				data.put("stepName", nodeTitleWithPosition);
 				data.put("nodeId", nodeId);

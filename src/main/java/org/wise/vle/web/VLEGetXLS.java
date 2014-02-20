@@ -585,25 +585,25 @@ public class VLEGetXLS extends AbstractController {
 	    if(exportType == null) {
 	    	//error
 	    } else if(exportType.equals("latestStudentWork")) {
-	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + projectName + "-" + runId + "-latest-student-work." + fileType + "\"");
+	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-latest-student-work." + fileType + "\"");
 	    	wb = getLatestStudentWorkXLSExport(nodeIdToNodeTitlesWithPosition, workgroupIds, nodeIdList, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
 	    } else if(exportType.equals("allStudentWork")) {
-	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + projectName + "-" + runId + "-all-student-work." + fileType + "\"");
+	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-all-student-work." + fileType + "\"");
 	    	wb = getAllStudentWorkXLSExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
 	    } else if(exportType.equals("ideaBaskets")) {
-	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + projectName + "-" + runId + "-idea-baskets." + fileType + "\"");
+	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-idea-baskets." + fileType + "\"");
 	    	wb = getIdeaBasketsExcelExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
 	    } else if(exportType.equals("explanationBuilderWork")) {
-	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + projectName + "-" + runId + "-explanation-builder-work." + fileType + "\"");
+	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-explanation-builder-work." + fileType + "\"");
 	    	wb = getExplanationBuilderWorkExcelExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
 	    } else if(exportType.equals("customLatestStudentWork")) {
-	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + projectName + "-" + runId + "-custom-latest-student-work." + fileType + "\"");
+	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-custom-latest-student-work." + fileType + "\"");
 	    	wb = getLatestStudentWorkXLSExport(nodeIdToNodeTitlesWithPosition, workgroupIds, nodeIdList, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
 	    } else if(exportType.equals("customAllStudentWork")) {
-	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + projectName + "-" + runId + "-custom-all-student-work." + fileType + "\"");
+	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-custom-all-student-work." + fileType + "\"");
 	    	wb = getAllStudentWorkXLSExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
 	    } else if(exportType.equals("flashStudentWork")) {
-	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + projectName + "-" + runId + "-custom-flash-student-work." + fileType + "\"");
+	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-custom-flash-student-work." + fileType + "\"");
 	    	wb = getFlashWorkExcelExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, workgroupIds);
 	    } else {
 	    	//error
