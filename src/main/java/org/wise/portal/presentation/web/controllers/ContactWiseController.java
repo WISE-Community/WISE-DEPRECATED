@@ -236,7 +236,7 @@ public class ContactWiseController extends SimpleFormController {
 			//check if the public key is valid in case the admin entered it wrong
 			boolean reCaptchaKeyValid = TelsAuthenticationProcessingFilter.isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
 
-			if (reCaptchaPrivateKey != null && reCaptchaPublicKey != null && reCaptchaKeyValid) {
+			if(reCaptchaPrivateKey != null && reCaptchaPublicKey != null && reCaptchaKeyValid) {
 				//get the reCaptcha challenge
 				String reCaptchaChallengeField = request.getParameter("recaptcha_challenge_field");
 				
@@ -255,9 +255,24 @@ public class ContactWiseController extends SimpleFormController {
 					//check if the user answer the reCaptcha correctly
 					ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, reCaptchaChallengeField, reCaptchaResponseField);
 
-					if (reCaptchaResponse.isValid()) {
+					if(!reCaptchaResponse.isValid()) {
 						//the user did not answer the reCaptcha correctly so we will throw an error and display a message
-						errors.reject("400", "Invalid ReCaptcha text.");
+						
+						String reCaptchaError = "";
+						Properties i18nProperties = getI18nProperties();
+						
+						if(i18nProperties != null) {
+							//get the invalid reCaptcha message
+							reCaptchaError = i18nProperties.getProperty("error.contactwise-recaptcha");
+						}
+
+						//if the error.contactwise-recaptcha key is not in the properties, the value will be null
+						if(reCaptchaError == null) {
+							reCaptchaError = "";
+						}
+						
+						//create the error so that the form is not submitted and the message is displayed
+						errors.reject("400", reCaptchaError);
 					}
 				}
 			}
@@ -285,6 +300,11 @@ public class ContactWiseController extends SimpleFormController {
 		IssueType.setProperties(i18nProperties);
 		OperatingSystem.setProperties(i18nProperties);
 		WebBrowser.setProperties(i18nProperties);
+		this.i18nProperties = i18nProperties;
+	}
+	
+	public Properties getI18nProperties() {
+		return this.i18nProperties;
 	}
 
 	/**
