@@ -4944,8 +4944,30 @@ public class VLEGetXLS extends AbstractController {
 		if(nodeState != null) {
 			if(nodeState.has("response")) {
 				try {
-					//get the response
-					response = nodeState.getString("response");
+					boolean displayResponse = true;
+					
+					if(nodeId != null) {
+						//get the node
+						JSONObject node = nodeIdToNode.get(nodeId);
+						
+						if(node != null) {
+							//get the node type
+							String nodeType = node.optString("type");
+							
+							/*
+							 * check if the node type is Mysystem2Node or Box2dModelNode because
+							 * we do not want to display the response for those step types
+							 */
+							if(nodeType != null && (nodeType.equals("Mysystem2Node") || nodeType.equals("Box2dModelNode"))) {
+								displayResponse = false;
+							}
+						}
+					}
+					
+					if(displayResponse) {
+						//get the response
+						response = nodeState.getString("response");
+					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
