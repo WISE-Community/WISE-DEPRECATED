@@ -122,16 +122,18 @@ function CARGRAPH(node) {
 	this.dragPoint = null;
 
 	//whether we want to show the correct graph
-	this.showCorrectGraph = false;
+	if (this.content != null && typeof this.content.graphCorrectAnswer === "boolean"){
+		this.showCorrectGraph = this.content.graphCorrectAnswer;
+	} else {
+		this.showCorrectGraph = false;
+	}
 
 	this.REACHED_MAX_DATA_LENGTH = false;
-	if (this.content != null && this.content.MAX_DATA_LENGTH !== "undefined" && !isNaN()){
+	if (this.content != null && typeof this.content.MAX_DATA_LENGTH !== "undefined" && !isNaN(this.content.MAX_DATA_LENGTH)){
 		this.MAX_DATA_LENGTH = this.content.MAX_DATA_LENGTH;
 	} else {
 		this.MAX_DATA_LENGTH = 2000;
 	}
-
-	
 };
 
 /** 
@@ -169,7 +171,11 @@ CARGRAPH.prototype.render = function() {
 	}
 	
 	var graphParams = this.getGraphParams();
-	this.animationTimeScaleFactor = typeof this.content.animationTimeScaleFactor !== "undefined" ? this.content.animationTimeScaleFactor : parseFloat(graphParams.xaxis.max) / 60;
+	// if we have manually set the grid width and height do so here
+	if (typeof this.content.graphParams.width === "number") $('#graphDiv').width(this.content.graphParams.width);
+	if (typeof this.content.graphParams.height === "number") $('#graphDiv').height(this.content.graphParams.height);
+
+	this.animationTimeScaleFactor = typeof this.content.animationTimeScaleFactor === "number" ? this.content.animationTimeScaleFactor : parseFloat(graphParams.xaxis.max) / 60;
 	var middleVal = parseFloat(graphParams.xaxis.max) / 30;
 	$('#modelSpeedSlider')
 		.attr('min', middleVal / 10)
@@ -238,7 +244,7 @@ CARGRAPH.prototype.render = function() {
 	}));
 	$("#" + this.graphDivId).bind('mouseup', {thisCarGraph:this}, (function(event) {
 		event.data.thisCarGraph.mouseDown = false;
-		event.data.thisCarGraph.saveCurrentObservation();
+		event.data.thisCarGraph.saveCurrentObservation(true);
 	}));
 
 	//listen for the keydown event
@@ -319,7 +325,7 @@ CARGRAPH.prototype.render = function() {
 		$("#animationDiv").append("<img class='staticImage' style='top:" + 25 + "px;left:"+left+"' src='"+staticImage.img+"'></img>");
 	
 	}		
-
+	
 	// display the ticks in the animationDiv
 	if (this.tickValues.length > 0){
 		for (var i = 0; i < this.tickValues.length; i++){
@@ -334,8 +340,15 @@ CARGRAPH.prototype.render = function() {
 	}
 	
 	var topSoFar = 90;  // offset from the top of the screen, to ensure that the images don't overlap
+
 	// display the dynamic images (e.g. cars) at time=0 (starting point)
 	for (var i=0; i< this.content.dynamicImages.length; i++) {
+
+		// place an image along the path of the dynamic images (background)
+		if (typeof this.content.pathBackgroundImage !== "undefined"){
+			$("#animationDiv").append("<img class='staticImage' style='top:" + topSoFar + "px; left:0' src='"+this.content.pathBackgroundImage+"'></img>");
+		}
+
 		var dynamicImage = this.content.dynamicImages[i];	
 
 		var predictionStartingYValue = ymin+this.NOT_GRAPHED_ERROR;  // if no prediction at time=0, hide this car from the view.	
@@ -351,13 +364,10 @@ CARGRAPH.prototype.render = function() {
 	    		dynamicImage.predictionInitialYValue = yinc; break;
 	    	}
 	    }
-	    // display the user's car
-    	var dynamicImage = this.content.dynamicImages[i];	
-    	dynamicImage.y = topSoFar;	
-		$("#animationDiv").append("<img id='"+dynamicImage.id+"' style='top:"+ topSoFar +"; left: "+predictionStartingYValue+"' class='dynamicImage' src='"+dynamicImage.img+"'></img>");
-		
-		// increment topSoFar
-		topSoFar += dynamicImage.height+15;	
+	    
+		var dynamicImage = this.content.dynamicImages[i];	
+		dynamicImage.y = topSoFar;	
+			
 		// display the correct images (e.g. cars) if runCorrectAnswer is enabled
 		if (typeof this.content.runCorrectAnswer !== "undefined" && this.content.runCorrectAnswer) {
 
@@ -373,21 +383,34 @@ CARGRAPH.prototype.render = function() {
 				if(dynamicImage != null && expectedResult != null) {
 					//check if we have found an expected result for the car that is used in this step
 					if(dynamicImage.id == expectedResult.id) {
-						var expectedResultArray = expectedResult.expectedPoints;
+						var useRelativeValues = typeof expectedResult.useRelativeValues !== "undefined"? expectedResult.useRelativeValues:false;
+    					var expectedResultArray = expectedResult.expectedPoints;
+    					expectedResultArray = this.useQualitativeSpeed(predictionArr, expectedResultArray, parseFloat(graphParams.xaxis.max), parseFloat(graphParams.yaxis.max), useRelativeValues);
+    		    	    
 						var yValue = this.getYValueObj(0,expectedResultArray);
-						if (typeof expectedResult.useRelativeValues != "undefined" && expectedResult.useRelativeValues){
-							correctStartingYValue = (yValue + dynamicImage.predictionInitialYValue)/this.tickSpacing*this.yTickSize;
-							//console.log("prediction start", dynamicImage.predictionInitialYValue, correctStartingYValue, yValue/this.tickSpacing*this.yTickSize );
-						} else {
+						//if (typeof expectedResult.useRelativeValues != "undefined" && expectedResult.useRelativeValues){
+						//	correctStartingYValue = (yValue + dynamicImage.predictionInitialYValue)/this.tickSpacing*this.yTickSize;
+						//} else {
 							correctStartingYValue = yValue/this.tickSpacing*this.yTickSize;
-						}
+						//}
 					}
 				}
 			}
-			
+			if (typeof this.content.showAnalysisHints !== "undefined" && this.content.showAnalysisHints){
+				$("#animationDiv").append("<img id='"+dynamicImage.id+"' style='top:"+ topSoFar +"; left: "+predictionStartingYValue+"' class='dynamicImage' src='"+dynamicImage.img+"'></img>");		
+				topSoFar += dynamicImage.height+15;	
+			}
 			$("#animationDiv").append("<img id='"+dynamicImage.id+"-correct' style='top:"+ topSoFar +"; left:"+correctStartingYValue+"' class='dynamicImage' src='"+dynamicImage.img.replace(".png","-correct.png")+"'></img>");
+			if (typeof this.content.showAnalysisHints === "undefined" || !this.content.showAnalysisHints){
+				$("#animationDiv").append("<img id='"+dynamicImage.id+"' style='top:"+ topSoFar +"; left: "+predictionStartingYValue+"' class='dynamicImage' src='"+dynamicImage.img+"'></img>");		
+				topSoFar += dynamicImage.height+15;	
+			}
+			
 		} else if (typeof this.content.showAnalysisHints !== "undefined" && typeof this.content.showAnalysisHints){
-			$("#animationDiv").append("<div id='animationError"+i+"' style='position:absolute;color:#FF0000;left:"+ymin+";top:"+topSoFar+"'></div>");	
+			// display the user's car
+			$("#animationDiv").append("<img id='"+dynamicImage.id+"' style='top:"+ topSoFar +"; left: "+predictionStartingYValue+"' class='dynamicImage' src='"+dynamicImage.img+"'></img>");		
+			topSoFar += dynamicImage.height+15;	
+			$("#animationDiv").append("<div id='animationError"+i+"' style='position:absolute;color:#FF0000;background-color:#ffffff;left:"+ymin+";top:"+topSoFar+"'></div>");	
 		}
 		// increment topSoFar
 		topSoFar += dynamicImage.height+15;
@@ -401,6 +424,14 @@ CARGRAPH.prototype.render = function() {
 		}
 		$("#dynamicImageRadioDiv").append("<input class='dynamicImageRadio' name='dynamic' type='radio' "+checked+" onclick='dynamicImageChanged(\""+dynamicImage.id+"\")'>"+dynamicImage.graphLabel+"</input>");
 		dynamicImage.backInTime = false;
+	
+		// show a score
+		if (typeof this.content.showScore === "boolean" && this.content.showScore){
+			$("#animationDiv").append("<div id='scoreArea-"+dynamicImage.id+"' style='position:relative;color:#0000ff;left:"+40+";top:"+topSoFar+"'><table><tbody><tr><td><h2 id='scoreLabel-"+dynamicImage.id+"'>Score:</h2></td><td><h2 id='scoreValue-"+dynamicImage.id+"'>0</h2></td></tr></tbody></table></div>");	
+			topSoFar += dynamicImage.height+30;
+			$("#animationDiv").height(topSoFar);
+		}
+		dynamicImage.score = 0;
 	}	
 
 	//refresh observation array
@@ -412,7 +443,7 @@ CARGRAPH.prototype.render = function() {
 	this.initialTimestamp = new Date().getTime();
 	
 
-	this.displayOneFrame(0);
+	this.displayOneFrame(0, 0);
 };
 
 /**
@@ -422,7 +453,7 @@ CARGRAPH.prototype.render = function() {
  * 
  * @param xValue the current value of the x-axis that is being animated.
  */
-CARGRAPH.prototype.displayOneFrame = function(xValue) {		  
+CARGRAPH.prototype.displayOneFrame = function(xValue, animationFrameXIncrement) {		  
 	var graphParams = this.getGraphParams();
 	var moe = typeof this.content.marginOfErrorAsPercent !== "undefined" ? (this.content.marginOfErrorAsPercent > 1 ? this.content.marginOfErrorAsPercent / 100 : this.content.marginOfErrorAsPercent) : 0.05;
     var moeX = moe * (graphParams.xaxis.max - graphParams.xaxis.min);
@@ -440,7 +471,7 @@ CARGRAPH.prototype.displayOneFrame = function(xValue) {
     		var x = $("#"+dynamicImage.id).position().left;
     		var y = $("#"+dynamicImage.id).position().top;
     		if ($('#animationError'+i).length == 0){		   	
-    		   	$("#animationDiv").append("<div id='animationError"+i+"' style='position:absolute;color:#FF0000;left:"+x+";top:"+y+"'>"+analysis+"</div>");
+    		   	$("#animationDiv").append("<div id='animationError"+i+"' style='position:absolute;color:#FF0000;background-color:#FFFFFF;left:"+x+";top:"+y+"'>"+analysis+"</div>");
     		} else {
     			$("#animationError"+i).text(analysis);
     			$("#animationError"+i).css("top", y);
@@ -459,81 +490,80 @@ CARGRAPH.prototype.displayOneFrame = function(xValue) {
 	    $("#"+dynamicImage.id).css("left",leftValue);
     	this.setCrosshair({x:xValue,y:yValue});  // show cross hair on current x
 
+    	// get expected result
+    	var expectedResults = this.content.expectedResults;
+    	for(var y=0; y<expectedResults.length; y++) {
+    		var expectedResult = expectedResults[y];
+    		if (dynamicImage != null && expectedResult != null && dynamicImage.id == expectedResult.id) {
+    			var useRelativeValues = typeof expectedResult.useRelativeValues !== "undefined"? expectedResult.useRelativeValues:false;
+    			var expectedResultArray = expectedResult.expectedPoints;
+    			expectedResultArray = this.useQualitativeSpeed(predictionArr, expectedResultArray, parseFloat(graphParams.xaxis.max), parseFloat(graphParams.yaxis.max), useRelativeValues);
+    			var eyValue = this.getYValueObj(xValue,expectedResultArray);
+    			break;
+    		} else {
+    			expectedResult = null;
+    		}
+    	}
+
+    	// get score
+    	var score = 0;
+    	// update score if yvalues are near each other
+    	if (expectedResult != null && xValue > 0 && Math.abs(eyValue-yValue) < 0.05 * (graphParams.yaxis.max - graphParams.yaxis.min)){
+    		// find score in the carGraphState
+    		dynamicImage.score += 100 * animationFrameXIncrement / (graphParams.xaxis.max - graphParams.xaxis.min);
+    		if (typeof this.content.showScore === "boolean" && this.content.showScore) $('#scoreValue-'+dynamicImage.id).text(dynamicImage.score.toFixed(0));
+    	}
+
     	if (this.content.runCorrectAnswer) {
-    		//get the expected results
-    		var expectedResults = this.content.expectedResults;
-    		//loop through all the expected results
-    		for(var y=0; y<expectedResults.length; y++) {
-    			//get an expected result
-    			var expectedResult = expectedResults[y];
-    			
-    			if(dynamicImage != null && expectedResult != null) {
-    				//check if we have found an expected result for the car that is used in this step
-    				if(dynamicImage.id == expectedResult.id) {
-    					var expectedResultArray = expectedResult.expectedPoints;
-    		    	    var eyValue = this.getYValueObj(xValue,expectedResultArray);
-    		    	    var leftValue;
-    		    	    if (typeof expectedResult.useRelativeValues != "undefined" && expectedResult.useRelativeValues){
-    		    	    	leftValue = (eyValue+dynamicImage.predictionInitialYValue)/this.tickSpacing*this.yTickSize;
-    		    	    } else {
-    		    	    	leftValue = eyValue/this.tickSpacing*this.yTickSize;
-    		    	    }
-    		    	    $("#"+dynamicImage.id+"-correct").css("left",leftValue);
-    				}
-    			}
+    		if(expectedResult != null) {
+    			//check if we have found an expected result for the car that is used in this step		
+    		    var leftValue;
+    		     //if (typeof expectedResult.useRelativeValues != "undefined" && expectedResult.useRelativeValues){
+    		     //	leftValue = (eyValue+dynamicImage.predictionInitialYValue)/this.tickSpacing*this.yTickSize;
+    		    //} else {
+    		    leftValue = eyValue/this.tickSpacing*this.yTickSize;
+    		    //}
+    		    $("#"+dynamicImage.id+"-correct").css("left",leftValue);
     		}
     	} else if (!dynamicImage.backInTime && typeof this.content.showAnalysisHints !== "undefined" && this.content.showAnalysisHints){
     		// analyze current position relative to expected position
-    		//get the expected results
-    		var expectedResults = this.content.expectedResults;
-    		//loop through all the expected results
-    		for(var y=0; y<expectedResults.length; y++) {
-    			//get an expected result
-    			var expectedResult = expectedResults[y];
-    			
-    			if(dynamicImage != null && expectedResult != null) {
-    				//check if we have found an expected result for the car that is used in this step
-    				if(dynamicImage.id == expectedResult.id) {
-    					var expectedResultArray = expectedResult.expectedPoints;
-    		    	    var eyValue = this.getYValueObj(xValue,expectedResultArray);
-    		    	    if (typeof expectedResult.useRelativeValues != "undefined" && expectedResult.useRelativeValues) eyValue += dynamicImage.predictionInitialYValue;
-    		    	    var eslope = 0;
-    		    	    var slope = 0;
-    		    	    var xunit = 0.01 * parseFloat(graphParams.xaxis.max);
-    		    	    if (xValue - xunit > 0){
-    		    	    	var epyValue = this.getYValueObj(xValue-xunit,expectedResultArray); 
-    		    	    	if (typeof expectedResult.useRelativeValues != "undefined" && expectedResult.useRelativeValues) epyValue += dynamicImage.predictionInitialYValue;
-    		    	    	eslope = Math.atan((eyValue - epyValue)/xunit);
-    		    	    	var pyValue = this.getYValue(xValue-xunit,predictionArr); 
-    		    	    	slope = Math.atan((yValue - pyValue)/xunit);
-    		    	    }	
+    		if(expectedResult != null) {
+    			//if (typeof expectedResult.useRelativeValues != "undefined" && expectedResult.useRelativeValues) eyValue += dynamicImage.predictionInitialYValue;
+    		    var eslope = 0;
+    		    var slope = 0;
+    		    var xunit = 0.01 * parseFloat(graphParams.xaxis.max);
+    		    if (xValue - xunit > 0){
+	    		    var epyValue = this.getYValueObj(xValue-xunit,expectedResultArray); 
+	    		    //if (typeof expectedResult.useRelativeValues != "undefined" && expectedResult.useRelativeValues) epyValue += dynamicImage.predictionInitialYValue;
+	    		    eslope = Math.atan((eyValue - epyValue)/xunit);
+	    		    var pyValue = this.getYValue(xValue-xunit,predictionArr); 
+	    		    slope = Math.atan((yValue - pyValue)/xunit);
+    		    }	
 
-    		    	    if (predictionArr.length == 0 || yValue == this.NOT_GRAPHED_ERROR){
-    		    	       analysis = "Graph this!";
-    		    	    } else if (Math.abs(slope) > moeA && Math.abs(eslope) < moeA && xValue < parseFloat(graphParams.xaxis.max)){
-						   analysis = "Should be stopped!";
-						} else if (Math.abs(slope) < moeA && Math.abs(eslope) > moeA && xValue < parseFloat(graphParams.xaxis.max)){
-						   analysis = "Should be moving!";
-						} else if (Math.abs(slope) > moeA && slope/Math.abs(slope) != eslope/Math.abs(eslope) && xValue < parseFloat(graphParams.xaxis.max)){
-						   analysis = "Wrong direction!";
-						} else if (Math.abs(slope) - Math.abs(eslope) > moeA && xValue < parseFloat(graphParams.xaxis.max)){
-							analysis = "Too fast!";
-						} else if (Math.abs(eslope) - Math.abs(slope) > moeA && xValue < parseFloat(graphParams.xaxis.max)){
-							analysis = "Too slow!";
-						} else if (yValue - eyValue > moeY){
-							analysis = "Incorrect Position!";
-						} else if (eyValue - yValue > moeY){
-							analysis = "Incorrect Position!";
-						} else {
-							analysis = ""; // good segment
-						}
+    		    if (predictionArr.length == 0 || yValue == this.NOT_GRAPHED_ERROR){
+    		    	analysis = "Graph this!";
+    		    } else if (Math.abs(slope) > moeA && Math.abs(eslope) < moeA && xValue < parseFloat(graphParams.xaxis.max)){
+					analysis = "Should be stopped!";
+				} else if (Math.abs(slope) < moeA && Math.abs(eslope) > moeA && xValue < parseFloat(graphParams.xaxis.max)){
+				   analysis = "Should be moving!";
+				} else if (Math.abs(slope) > moeA && slope/Math.abs(slope) != eslope/Math.abs(eslope) && xValue < parseFloat(graphParams.xaxis.max)){
+				   analysis = "Wrong direction!";
+				} else if (Math.abs(slope) - Math.abs(eslope) > moeA && xValue < parseFloat(graphParams.xaxis.max)){
+					analysis = "Too fast!";
+				} else if (Math.abs(eslope) - Math.abs(slope) > moeA && xValue < parseFloat(graphParams.xaxis.max)){
+					analysis = "Too slow!";
+				} else if (yValue - eyValue > moeY){
+					analysis = "Incorrect Position!";
+				} else if (eyValue - yValue > moeY){
+					analysis = "Incorrect Position!";
+				} else {
+					analysis = ""; // good segment
+				}
 
-    		    	    leftValue = Math.max(0,yValue)/this.tickSpacing*this.yTickSize;
+    		    leftValue = Math.max(0,yValue)/this.tickSpacing*this.yTickSize;
 
-    		    	    $("#animationError"+i).text(analysis);
-    					$("#animationError"+i).css("left", leftValue);
-    				}
-    			}
+    		    $("#animationError"+i).text(analysis);
+    			$("#animationError"+i).css("left", leftValue);
     		}
     	}
     }
@@ -646,6 +676,71 @@ CARGRAPH.prototype.getYValueObj = function(xValue,predictionArray) {
     }
     return this.NOT_GRAPHED_ERROR;
 };
+
+/**
+ *	If expected points have a third field, called "qspeed" with a value of ["fast", "slow", "zero"]
+ *  then this function will perform a matching process between predicted and expected points
+ *  to provide for a qualitative narrative.
+ *  For example, if a point 2 is described as "fast", then the slope from point 1 to point 2
+ *  should be greater than plot-height/plot.width. (vice-versa for "slow")
+ *  If the predicted point matches the description, the point is substituted into the expected points.
+ *  This process is continued through every point of the predicted array which has a corresponding speed column in the expected array.
+ *  If any match between actual speed (in prediction) and expected speed fails, then return the expected points as is.
+ *  Either the entire prediction matches or no transformation is made.
+ */
+ CARGRAPH.prototype.useQualitativeSpeed = function (predictionArray, expectedPoints, plotWidth, plotHeight, useRelativeValues){
+ 	//console.log(predictionArray);
+ 	//console.log(expectedPoints);
+ 	if (predictionArray.length < 2) return (expectedPoints);
+ 	if (useRelativeValues){
+ 		var expectedPointsUpdated = [{x:predictionArray[0][0], y:predictionArray[0][1]}];
+ 	} else {
+ 		var expectedPointsUpdated = [{x:expectedPoints[0].x, y:expectedPoints[0].y}];
+ 	}
+ 	
+ 	var discrepancyFound = false;
+ 	for (var i = 1; i < predictionArray.length; i++){
+ 		if (i < expectedPoints.length){
+ 			if (typeof expectedPoints[i].qspeed === "string"){
+ 				var speed = Math.abs((predictionArray[i][1] - predictionArray[i-1][1]) / (predictionArray[i][0] - predictionArray[i-1][0]));
+ 				var dir = (predictionArray[i][1] - predictionArray[i-1][1]) / Math.abs(predictionArray[i][1] - predictionArray[i-1][1]);
+ 				var edir = (expectedPoints[i].y - expectedPoints[i-1].y) / Math.abs(expectedPoints[i].y - expectedPoints[i-1].y);
+ 				
+ 				if (expectedPoints[i].qspeed == "fast"){
+ 					if (speed > plotHeight/plotWidth && dir == edir && Math.abs(expectedPoints[i].x - predictionArray[i][0]) < 0.3*plotWidth){
+ 						expectedPointsUpdated.push({x:predictionArray[i][0], y:predictionArray[i][1]});
+ 					} else {
+ 						discrepancyFound = true;
+ 						break;
+ 					} 					
+ 				} else if (expectedPoints[i].qspeed == "slow"){
+ 					if (speed < plotHeight/plotWidth && dir == edir && Math.abs(expectedPoints[i].x - predictionArray[i][0]) < 0.3*plotWidth){
+ 						expectedPointsUpdated.push({x:predictionArray[i][0], y:predictionArray[i][1]});
+ 					} else {
+ 						discrepancyFound = true;
+ 						break;
+ 					} 					
+ 				} else if (expectedPoints[i].qspeed == "none"){
+ 					if (speed < 0.05*plotHeight/plotWidth && dir == edir && Math.abs(expectedPoints[i].x - predictionArray[i][0]) < 0.3*plotWidth){
+ 						expectedPointsUpdated.push({x:predictionArray[i][0], y:predictionArray[i][1]});
+ 					} else {
+ 						discrepancyFound = true;
+ 						break;
+ 					} 					
+ 				} else {
+ 					expectedPointsUpdated.push({x:expectedPoints[i].x, y:expectedPoints[i].y})
+ 				}
+ 			} else {
+ 				expectedPointsUpdated.push({x:expectedPoints[i].x, y:expectedPoints[i].y})
+ 			}
+ 		} 
+ 	}
+ 	if (discrepancyFound){
+ 		return(expectedPoints);
+ 	} else {
+ 		return(expectedPointsUpdated);
+ 	} 	
+ }
 
 /**
  * Get the latest student work for this step
@@ -793,6 +888,8 @@ CARGRAPH.prototype.parseGraphParams = function(contentGraphParams) {
 	}
 
 	graphParams.crosshair = { mode: "x" };
+
+	graphParams.legend = {container:$('#legendDiv')};
 	return graphParams;
 };
 
@@ -811,7 +908,15 @@ CARGRAPH.prototype.getGraphParams = function() {
 /**
  * Save the current observation in the state's observationArray
  */
-CARGRAPH.prototype.saveCurrentObservation = function() {
+CARGRAPH.prototype.saveCurrentObservation = function(isStart) {
+		if (typeof isStart === "boolean" && isStart){
+			// reset scores of dynamic images to zero
+			for (var i = 0; i < this.content.dynamicImages.length; i++){
+				var dynamicImage = this.content.dynamicImages[i];
+				dynamicImage.score = 0;
+				if (typeof this.content.showScore === "boolean" && this.content.showScore) $('#scoreValue-'+dynamicImage.id).text(dynamicImage.score.toFixed(0));
+			}
+		}
 		//var carGraphState = this.getLatestState();
 		carGraphState = this.carGraphState;
 		if (typeof carGraphState.observationArray === "undefined") carGraphState.observationArray = [];
@@ -859,6 +964,21 @@ CARGRAPH.prototype.save = function(fromHtml) {
 		//set the student response into the state
 		this.carGraphState.response = response;
 		
+		// update score field in the predictionArray
+		// place a score field in the predictionArray of corresponding state id
+		for (var i=0; i<this.content.dynamicImages.length;i++) {
+			var dynamicImage = this.content.dynamicImages[i];
+			for (var j = 0; j < this.carGraphState.predictionArray.length; j++){
+				if (this.carGraphState.predictionArray[j].id == dynamicImage.id){
+					if (typeof this.carGraphState.predictionArray[j].score){
+						this.carGraphState.predictionArray[j].score = dynamicImage.score;
+					} else {
+						this.carGraphState.predictionArray[j].score = Math.max(this.carGraphState.predictionArray[j].score, dynamicImage.score);
+					}
+				}
+			}
+		}
+
 		//fire the event to push this state to the global view.states object
 		this.view.pushStudentWork(this.node.id, this.carGraphState);
 
@@ -951,7 +1071,8 @@ CARGRAPH.prototype.plotData = function(graphDiv, graphCheckBoxesDiv) {
 		for(var x=0; x<dynamicImages.length; x++) {
 			//get a car
 			var dynamicImage = dynamicImages[x];
-			
+			var predictionArr = this.getPredictionArrayByPredictionId(dynamicImage.id);
+
 			//loop through all the expected results
 			for(var y=0; y<expectedResults.length; y++) {
 				//get an expected result
@@ -960,12 +1081,16 @@ CARGRAPH.prototype.plotData = function(graphDiv, graphCheckBoxesDiv) {
 				if(dynamicImage != null && expectedResult != null) {
 					//check if we have found an expected result for the car that is used in this step
 					if(dynamicImage.id == expectedResult.id) {
+						var useRelativeValues = typeof expectedResult.useRelativeValues !== "undefined"? expectedResult.useRelativeValues:false;
+						var expectedResultArray = expectedResult.expectedPoints;
+						expectedResultArray = this.useQualitativeSpeed(predictionArr, expectedResultArray, parseFloat(graphParams.xaxis.max), parseFloat(graphParams.yaxis.max), useRelativeValues);
+						 	    
 						//get the array of correct points so we can plot them
-						var expectedPoints = this.convertToPlottableArray(expectedResult.expectedPoints);
+						var expectedPoints = this.convertToPlottableArray(expectedResultArray);
 						
 						//get the graph line label
 						var graphLabel = "Correct " + dynamicImage.graphLabel;
-						
+						var graphColorCorrect = typeof dynamicImage.graphColorCorrect !== "undefined"? dynamicImage.graphColorCorrect : "gray";
 						/*
 						 * get the graph line name. we will just convert the graphLabel to
 						 * have no white space and change the first character to lower case
@@ -979,7 +1104,7 @@ CARGRAPH.prototype.plotData = function(graphDiv, graphCheckBoxesDiv) {
 
 						if(expectedPoints != null) {
 							//add the line that will show the correct points
-							dataSets.push({data:expectedPoints, label:graphLabel, color:"blue", name:graphName});			
+							dataSets.push({data:expectedPoints, label:graphLabel, lines:{lineWidth:0.5}, points:{show:false}, color:graphColorCorrect, name:graphName});			
 						}
 					}
 				}
@@ -2447,7 +2572,7 @@ CARGRAPH.prototype.setupAxisValues = function() {
 };
 
 /**
- * Get the prediction from the prevWorkNodeIds
+ * Get the prediction from the prevWorkNodeIds or use default predictions if stored in the content (Vitale)
  * @return
  */
 CARGRAPH.prototype.getPreviousPrediction = function() {
@@ -2524,7 +2649,7 @@ CARGRAPH.prototype.getPreviousPrediction = function() {
 							//put the previous work into our state
 							this.carGraphState.predictionArray.push(predictionObject);
 						} else {
-							this.carGraphState.predictionArray = [predictionObject]
+							this.carGraphState.predictionArray = [predictionObject];
 						}
 						
 						var predictionAnnotations = [];
@@ -2576,6 +2701,20 @@ CARGRAPH.prototype.getPreviousPrediction = function() {
 					this.carGraphState.yMax = predictionState.yMax;
 					this.axisRangeChanged = true;
 				}
+			}
+		}
+	} else if (typeof this.content.dynamicImages !== undefined && this.content.dynamicImages.length > 0){
+		// search through each dynamic image in the content. If a predictions array is there, then use that.
+		for (var x=0; x<this.content.dynamicImages.length; x++) {
+			var dynamicImage = this.content.dynamicImages[x];
+			if (typeof dynamicImage.predictions !== "undefined" && dynamicImage.predictions.length > 0){
+				//create a prediction object from the previous work from the previous work node
+				var predictionObject = {
+					id:dynamicImage.id,
+					predictions:dynamicImage.predictions
+				};
+				this.carGraphState.predictionArray = [predictionObject];
+				this.graphChanged = true;
 			}
 		}
 	}

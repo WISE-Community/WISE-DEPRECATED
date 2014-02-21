@@ -200,7 +200,10 @@ Grapher.prototype.render = function() {
 	} else {
 		//set the prompt into the step
 		$('#promptDiv').html(this.content.prompt);
-
+		$('#previousWorkDiv').before($('#promptDiv'));
+		if (typeof this.content.graphParams.width === "number") $('#graphDiv').width(this.content.graphParams.width);
+		if (typeof this.content.graphParams.height === "number") $('#graphDiv').height(this.content.graphParams.height);
+					
 		//set the graph title
 		$('#graphTitle').html(this.content.graphTitle);
 
@@ -582,6 +585,7 @@ Grapher.prototype.parseGraphParams = function(contentGraphParams) {
 	}
 
 	graphParams.crosshair = { mode: "x" };
+	graphParams.legend = {container:$('#legendDiv')};
 	return graphParams;
 };
 
