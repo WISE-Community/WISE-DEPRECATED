@@ -2386,7 +2386,7 @@ Grapher.prototype.getPreviousPrediction = function() {
 			//get the node type for the previous work
 			var prevWorkNodeType = this.view.getProject().getNodeById(this.node.prevWorkNodeIds[0]).type;
 			//we can only pre populate the work from a previous node if it is a graph step like this one
-			if(prevWorkNodeType == 'GrapherNode' || prevWorkNodeType == 'GrapherNode') {
+			if(prevWorkNodeType == 'GrapherNode' || prevWorkNodeType == 'CarGraphNode') {
 				//get the state from the previous step that this step is linked to
 				var predictionState = this.view.getState().getLatestWorkByNodeId(this.node.prevWorkNodeIds[0]);
 				
@@ -2399,66 +2399,74 @@ Grapher.prototype.getPreviousPrediction = function() {
 				 */
 				if(predictionState != null && predictionState != "" && (this.grapherState.predictionArray.length == 0 || !this.createPrediction)) {
 
-					var predictionId = "";
+					//var predictionId = "";
 					
 					//get the labels that are used in this step
-					var seriesLabels = this.content.seriesLabels;
+					//var seriesLabels = this.content.seriesLabels;
 					
 					/*
 					 * find the id of the series that is used in this step, we will assume
 					 * only one series is used
 					 */
-					for(var x=0; x<seriesLabels.length; x++) {
-						var seriesLabel = seriesLabels[x];
+					//for(var x=0; x<seriesLabels.length; x++) {
+					//	var seriesLabel = seriesLabels[x];
 						
-						if(seriesLabel != null) {
+					//	if(seriesLabel != null) {
 							//get the id of the series e.g. "greenCar"
-							predictionId = seriesLabel;
-						}
-					}
+					//		predictionId = seriesLabel;
+					//	}
+					//}
 					
 					/*
 					 * make a copy of the prediction array and set it into our grapher state
 					 * so we don't accidentally modify the data from the other state
 					 */
-					var predictions = JSON.parse(JSON.stringify(predictionState.predictionArray));
-					
-					//create a prediction object from the previous work from the previous work node
-					var predictionObject = {
-						id:predictionId,
-						predictions:predictions
-					};
+					var predictionArray = JSON.parse(JSON.stringify(predictionState.predictionArray));
+					for (var x = 0; x < predictionArray.length; x++){
+						this.grapherState.predictionArray.push(predictionArray[x]);
+					}
+
+					var annotationArray = JSON.parse(JSON.stringify(predictionState.annotationArray));
+					for (var x = 0; x < annotationArray.length; x++){
+						this.grapherState.annotationArray.push(annotationArray[x]);
+					}
+
+					//create a prediction object from the previus work from the previous work node
+					//var predictionObject = {
+					//	id:predictionId,
+					//	predictions:predictions
+					//};
 					
 					// if we cannot create a new prediction, set predictionArray to previous - jonathan vitale
-					if (this.createPrediction){
+					//if (this.createPrediction){
 						//put the previous work into our state
-						this.grapherState.predictionArray.push(predictionObject);
-					} else {
-						this.grapherState.predictionArray = [predictionObject]
-					}
+					//	this.grapherState.predictionArray.push(predictionArray);
+					//} else {
+					//	this.grapherState.predictionArray = [predictionArray]
+					//}
 					
-					var predictionAnnotations = [];
+					//var predictionAnnotations = [];
 					
 					//get all the prediction annotations
-					for(var x=0; x<predictionState.annotationArray.length; x++) {
-						var annotation = predictionState.annotationArray[x];
+					//for(var x=0; x<predictionState.annotationArray.length; x++) {
+					//	var annotation = predictionState.annotationArray[x];
 						
-						if(annotation.seriesName.indexOf("prediction") != -1) {
-							predictionAnnotations.push(annotation);
-						}
-					}
+					//	if(annotation.seriesName.indexOf("prediction") != -1) {
+					//		predictionAnnotations.push(annotation);
+					//	}
+					//}
 					
 					/*
 					 * make a copy of the prediction annotations so we don't accidentally modify
 					 * the data in the other state 
 					 */ 
-					predictionAnnotations = JSON.parse(JSON.stringify(predictionAnnotations));
+				//	predictionAnnotations = JSON.parse(JSON.stringify(predictionAnnotations));
 					
 					//add the prediction annotations to our annotation array
-					for(var y=0; y<predictionAnnotations.length; y++) {
-						this.grapherState.annotationArray.push(predictionAnnotations[y]);
-					}
-					
+				//	for(var y=0; y<predictionAnnotations.length; y++) {
+				//		this.grapherState.annotationArray.push(predictionAnnotations[y]);
+				//	}
+				//	
 					this.graphChanged = true;
 				}
 				// update axis and labels

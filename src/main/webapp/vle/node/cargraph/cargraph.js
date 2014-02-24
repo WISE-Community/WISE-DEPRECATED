@@ -738,6 +738,9 @@ CARGRAPH.prototype.getYValueObj = function(xValue,predictionArray) {
  	if (discrepancyFound){
  		return(expectedPoints);
  	} else {
+ 		if (expectedPointsUpdated.length < expectedPoints.length){
+ 			expectedPointsUpdated = expectedPointsUpdated.concat(expectedPoints.slice(expectedPointsUpdated.length, expectedPoints.length));
+ 		}
  		return(expectedPointsUpdated);
  	} 	
  }
