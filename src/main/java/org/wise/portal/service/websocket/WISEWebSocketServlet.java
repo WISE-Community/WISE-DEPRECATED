@@ -702,7 +702,7 @@ public class WISEWebSocketServlet extends WebSocketServlet {
 					Set<User> owners = run.getOwners();
 					Set<User> sharedowners = run.getSharedowners();
 					
-					if(owners.contains(user) || sharedowners.contains(user)) {
+					if(owners.contains(user) || sharedowners.contains(user) || user.isAdmin()) {
 						//the user is the owner or a shared owner
 						validated = true;
 					}
