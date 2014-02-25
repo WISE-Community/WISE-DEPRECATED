@@ -160,5 +160,6 @@ body {
 }
 
 .replyLink {
-	float:right;
+  float:right;
+  cursor:pointer;
 }
