@@ -77,7 +77,14 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 	public UserInfo getUserInfoByWorkgroupId(Long workgroupId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 		session.beginTransaction();
-		UserInfo userInfo = (UserInfo) session.createCriteria(UserInfo.class).add(Restrictions.eq("workgroupId", workgroupId)).uniqueResult();
+		List<UserInfo> list = session.createCriteria(UserInfo.class).add(Restrictions.eq("workgroupId", workgroupId)).list();
+		
+		UserInfo userInfo = null;
+		
+		if(list != null && list.size() > 0) {
+			userInfo = list.get(0);
+		}
+		
 		session.getTransaction().commit();
 		return userInfo;
 	}
