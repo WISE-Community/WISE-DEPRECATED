@@ -813,6 +813,7 @@
 		<property name="runService" ref="runService" />
 		<property name="userService" ref="userService" />
 		<property name="projectService" ref="projectService" />
+		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="validator" ref="findProjectParametersValidator" />
 	</bean>
 

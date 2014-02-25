@@ -24,9 +24,12 @@ package org.wise.portal.presentation.web.controllers.admin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+
 
 
 import org.springframework.validation.BindException;
@@ -54,10 +57,19 @@ public class FindProjectRunsController extends SimpleFormController{
 	private ProjectService projectService;
 	
 	private UserService userService;
+	
+	private Properties wiseProperties;
 
     @Override
     protected ModelAndView onSubmit(HttpServletRequest request,
             HttpServletResponse response, Object command, BindException errors){
+
+		boolean isXMPPEnabled = false;
+		
+	    String isXMPPEnabledStr = wiseProperties.getProperty("isXMPPEnabled");
+	    if (isXMPPEnabledStr != null) {
+	    	isXMPPEnabled = Boolean.valueOf(isXMPPEnabledStr);
+	    }
 
 		ModelAndView modelAndView = new ModelAndView();
 		FindProjectParameters param = (FindProjectParameters) command;
@@ -81,7 +93,8 @@ public class FindProjectRunsController extends SimpleFormController{
 
 		modelAndView = new ModelAndView(VIEW);
 		modelAndView.addObject("runList", runList);
-
+		modelAndView.addObject("isXMPPEnabled", isXMPPEnabled);
+		
 		return modelAndView;
     }
 
@@ -169,5 +182,9 @@ public class FindProjectRunsController extends SimpleFormController{
 	 */
 	public void setProjectService(ProjectService projectService) {
 		this.projectService = projectService;
+	}
+
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
 	}
 }
