@@ -53,7 +53,7 @@ public class WISE {
 					Scanner reader = new Scanner(System.in);
 					String input = reader.next();
 					if (input.equals("y")) {
-						System.out.println("Deleting data and reverting to initial state...");
+						System.out.println("Deleting any existing data and reverting to initial state...");
 						resetDB(springConfigClassname);
 						System.out.println("WISE has been reset to initial state. Exiting WISE Setup...");
 						break;

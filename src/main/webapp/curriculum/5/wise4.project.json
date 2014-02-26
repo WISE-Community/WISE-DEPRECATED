@@ -1,3392 +1,1084 @@
 {
-   "autoStep": false,
-   "stepLevelNum": true,
-   "stepTerm": "Mission",
-   "stepTermPlural": "Steps",
-   "activityTerm": "",
-   "activityTermPlural": "",
-   "title": "EPIGAME Base Warp Version II",
+   "autoStep": true,
+   "stepLevelNum": false,
+   "stepTerm": "Step",
+   "title": "Chemical Reactions: How Can We Slow Climate Change?",
    "constraints": [],
    "nodes": [
       {
-         "type": "HtmlNode",
-         "identifier": "node_110.ht",
-         "title": "Take Pregame Quiz (Placeholder)",
+         "type": "SVGDrawNode",
+         "identifier": "node_62.sd",
+         "title": "Animate the greenhouse effect",
          "hints": [],
-         "ref": "node_110.ht",
+         "ref": "node_62.sd",
          "previousWorkNodeIds": [],
          "links": [],
-         "icons": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_72.eb",
+         "title": "Suggest how to decrease CO₂ production",
+         "hints": [],
+         "ref": "node_72.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_81.ib",
+         "title": "Add evidence to your basket",
+         "hints": [],
+         "ref": "node_81.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_45.eb",
+         "title": "Suggest how to decrease CO2 production",
+         "hints": [],
+         "ref": "node_45.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_84.or",
+         "title": "How to decrease CO2 production",
+         "hints": [],
+         "ref": "node_84.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_78.sd",
+         "title": "Draw what happens to sunlight energy",
+         "hints": [],
+         "ref": "node_78.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_58.sd",
+         "title": "Animate what happens to sunlight energy 1",
+         "hints": [],
+         "ref": "node_58.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_34.ht",
+         "title": "Model the Greenhouse Effect",
+         "hints": [],
+         "ref": "node_34.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_36.al",
+         "title": "Record Thoughts",
+         "hints": [],
+         "ref": "node_36.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_42.ht",
+         "title": "What Do Greenhouse Gases Do?",
+         "hints": [],
+         "ref": "node_42.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_43.al",
+         "title": "Put it together",
+         "hints": [],
+         "ref": "node_43.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_44.ht",
+         "title": "Where do Greenhouse Gases Come From?",
+         "hints": [],
+         "ref": "node_44.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "MultipleChoiceNode",
+         "identifier": "node_18.mc",
+         "title": "Question",
+         "hints": [],
+         "ref": "node_18.mc",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "multiplechoice"
+      },
+      {
+         "type": "MWNode",
+         "identifier": "node_64.mw",
+         "title": "Ethane Combustion (MW)",
+         "hints": [],
+         "ref": "node_64.mw",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "simulation"
+      },
+      {
+         "type": "MWNode",
+         "identifier": "node_65.mw",
+         "title": "Limiting Reactants (MW)",
+         "hints": [],
+         "ref": "node_65.mw",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "simulation"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_11.ht",
+         "title": "Evaluation Guidelines",
+         "hints": [],
+         "ref": "node_11.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_12.al",
+         "title": "Evaluate Your Explanation",
+         "hints": [],
+         "ref": "node_12.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_13.al",
+         "title": "Rate the simulation",
+         "hints": [],
+         "ref": "node_13.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_14.ht",
+         "title": "Coefficients and Ratios",
+         "hints": [],
+         "ref": "node_14.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_15.al",
+         "title": "Checkpoint II",
+         "hints": [],
+         "ref": "node_15.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_63.al",
+         "title": "Rate Yourself",
+         "hints": [],
+         "ref": "node_63.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_19.ht",
+         "title": "How do humans contribute?",
+         "hints": [],
+         "ref": "node_19.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_27.al",
+         "title": "Rate the hydrogen simulation",
+         "hints": [],
+         "ref": "node_27.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_30.al",
+         "title": "How well do you understand?",
+         "hints": [],
+         "ref": "node_30.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_25.ht",
+         "title": "Hydrogen Explosion ",
+         "hints": [],
+         "ref": "node_25.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_29.al",
+         "title": "Simulation questions",
+         "hints": [],
+         "ref": "node_29.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_48.ht",
+         "title": "A: 20% Renewable by 2020",
+         "hints": [],
+         "ref": "node_48.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_50.ht",
+         "title": "B: 40 Miles Per Gallon",
+         "hints": [],
+         "ref": "node_50.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_49.al",
+         "title": "Option A Notes",
+         "hints": [],
+         "ref": "node_49.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_51.al",
+         "title": "Option B Notes",
+         "hints": [],
+         "ref": "node_51.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_52.ht",
+         "title": "Go Over Work to Create Outline",
+         "hints": [],
+         "ref": "node_52.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_55.ht",
+         "title": "Project Close",
+         "hints": [],
+         "ref": "node_55.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_53.or",
+         "title": "Write Letter",
+         "hints": [],
+         "ref": "node_53.or",
+         "previousWorkNodeIds": [
+            "node_84.or",
+            "node_83.or",
+            "node_85.or"
+         ],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_56.ht",
+         "title": "Add Clouds to the Model *",
+         "hints": [],
+         "ref": "node_56.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_0.ht",
+         "title": "Introduction",
+         "hints": [],
+         "ref": "node_0.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_1.al",
+         "title": "What do you think?",
+         "hints": [],
+         "ref": "node_1.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_2.ht",
+         "title": "Climate Change Video",
+         "hints": [],
+         "ref": "node_2.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_4.ht",
+         "title": "What Should We Do?",
+         "hints": [],
+         "ref": "node_4.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_5.ht",
+         "title": "Greenhouse gases on the rise",
+         "hints": [],
+         "ref": "node_5.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_6.al",
+         "title": "What I Know About Carbon Dioxide",
+         "hints": [],
+         "ref": "node_6.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_7.ht",
+         "title": "We need energy",
+         "hints": [],
+         "ref": "node_7.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_8.al",
+         "title": "Checkpoint 1",
+         "hints": [],
+         "ref": "node_8.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_10.al",
+         "title": "Explain your drawings",
+         "hints": [],
+         "ref": "node_10.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_16.ht",
+         "title": "Limiting Reactants",
+         "hints": [],
+         "ref": "node_16.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_17.al",
+         "title": "How did you do?",
+         "hints": [],
+         "ref": "node_17.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_21.ht",
+         "title": "Other ways to get energy",
+         "hints": [],
+         "ref": "node_21.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_22.al",
+         "title": "What do you think?",
+         "hints": [],
+         "ref": "node_22.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_23.ht",
+         "title": "Hydrogen combustion",
+         "hints": [],
+         "ref": "node_23.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_26.al",
+         "title": "Thoughts on the molecular visualization",
+         "hints": [],
+         "ref": "node_26.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_31.ht",
+         "title": "The hydrogen future?",
+         "hints": [],
+         "ref": "node_31.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_33.ht",
+         "title": "What is the Greenhouse Effect?",
+         "hints": [],
+         "ref": "node_33.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_35.ht",
+         "title": "Greenhouse Model",
+         "hints": [],
+         "ref": "node_35.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_39.ht",
+         "title": "Add Gases to the Model",
+         "hints": [],
+         "ref": "node_39.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_41.sd",
+         "title": "Draw the greenhouse effect",
+         "hints": [],
+         "ref": "node_41.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_46.ht",
+         "title": "What can we do?",
+         "hints": [],
+         "ref": "node_46.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
          "class": "display"
       },
       {
          "type": "HtmlNode",
-         "identifier": "node_111.ht",
-         "title": "Take Postgame Quiz (Placeholder)",
+         "identifier": "node_47.ht",
+         "title": "Research Introduction",
          "hints": [],
-         "ref": "node_111.ht",
+         "ref": "node_47.ht",
          "previousWorkNodeIds": [],
          "links": [],
-         "icons": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_54.ht",
+         "title": "How to send your letter",
+         "hints": [],
+         "ref": "node_54.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_57.ou",
+         "title": "What can you do every day?",
+         "hints": [],
+         "ref": "node_57.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_59.ou",
+         "title": "More about electric cars",
+         "hints": [],
+         "ref": "node_59.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_60.ou",
+         "title": "More about Hybrid Cars",
+         "hints": [],
+         "ref": "node_60.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_61.ou",
+         "title": "More about Hydrogen",
+         "hints": [],
+         "ref": "node_61.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "MWNode",
+         "identifier": "node_66.mw",
+         "title": "Hydrogen Explosion (MW)",
+         "hints": [],
+         "ref": "node_66.mw",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "simulation"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_37.ch",
+         "title": "Check your understanding",
+         "hints": [],
+         "ref": "node_37.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_68.ch",
+         "title": "Check your understanding",
+         "hints": [],
+         "ref": "node_68.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_69.ib",
+         "title": "Add evidence to your basket",
+         "hints": [],
+         "ref": "node_69.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_70.ib",
+         "title": "Add new evidence to your basket",
+         "hints": [],
+         "ref": "node_70.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_71.txt",
+         "title": "Add new evidence to your basket",
+         "hints": [],
+         "ref": "node_71.txt",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_38.ht",
+         "title": "The Energy Balance",
+         "hints": [],
+         "ref": "node_38.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_67.al",
+         "title": "Predict the effect of adding CO₂?",
+         "hints": [],
+         "ref": "node_67.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_40.al",
+         "title": "What is the effect of CO₂?",
+         "hints": [],
+         "ref": "node_40.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_73.eb",
+         "title": "Suggest how to decrease CO₂ production",
+         "hints": [],
+         "ref": "node_73.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_9.ht",
+         "title": "Chemical reactions are like making a bicycle",
+         "hints": [],
+         "ref": "node_9.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_74.ht",
+         "title": "Fossil fuels are hydrocarbons",
+         "hints": [],
+         "ref": "node_74.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_75.ht",
+         "title": "Reactants combine in specific ratios 1",
+         "hints": [],
+         "ref": "node_75.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_76.sd",
+         "title": "Combust methane!",
+         "hints": [],
+         "ref": "node_76.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_77.ch",
+         "title": "Checkpoint 2",
+         "hints": [],
+         "ref": "node_77.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_79.ch",
+         "title": "Make more bicycles",
+         "hints": [],
+         "ref": "node_79.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_80.sd",
+         "title": "Combust ethane!",
+         "hints": [],
+         "ref": "node_80.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_20.ib",
+         "title": "Add evidence to your basket",
+         "hints": [],
+         "ref": "node_20.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "FillinNode",
+         "identifier": "node_82.fi",
+         "title": "Complete the balanced chemical equation",
+         "hints": [],
+         "ref": "node_82.fi",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "fillblank"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_85.or",
+         "title": "How to decrease CO₂ production",
+         "hints": [],
+         "ref": "node_85.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_28.ht",
+         "title": "Hydrogen Cars?",
+         "hints": [],
+         "ref": "node_28.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_24.or",
+         "title": "Why hydrogen?",
+         "hints": [],
+         "ref": "node_24.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_86.ht",
+         "title": "Renewable energy sources",
+         "hints": [],
+         "ref": "node_86.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "curriculum"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_87.ib",
+         "title": "Add evidence to your basket",
+         "hints": [],
+         "ref": "node_87.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_88.ib",
+         "title": "Add evidence to your basket",
+         "hints": [],
+         "ref": "node_88.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_89.al",
+         "title": "Revisit Ideas",
+         "hints": [],
+         "ref": "node_89.al",
+         "previousWorkNodeIds": [
+            "node_1.al"
+         ],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_3.ht",
+         "title": "Conduct some research",
+         "hints": [],
+         "ref": "node_3.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
          "class": "display"
       },
       {
-         "type": "EpigameNode",
-         "identifier": "node_10.ep",
-         "title": "Bronze",
+         "type": "OpenResponseNode",
+         "identifier": "node_90.or",
+         "title": "Write your letter to Congress",
          "hints": [],
-         "ref": "node_10.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level1",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
+         "ref": "node_90.or",
+         "previousWorkNodeIds": [
+            "node_84.or",
+            "node_83.or",
+            "node_85.or"
          ],
          "links": [],
-         "icons": [],
-         "class": "bronze"
+         "class": "openresponse"
       },
       {
-         "type": "EpigameNode",
-         "identifier": "node_8.ep",
-         "title": "Bronze",
+         "type": "NoteNode",
+         "identifier": "node_83.or",
+         "title": "How to decrease CO₂ production",
          "hints": [],
-         "ref": "node_8.ep",
+         "ref": "node_83.or",
          "previousWorkNodeIds": [],
-         "tags": [
-            "Level3",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level2"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
          "links": [],
-         "icons": [],
-         "class": "bronze"
+         "class": "note"
       },
       {
-         "type": "EpigameNode",
-         "identifier": "node_17.ep",
-         "title": "Bronze",
+         "type": "AssessmentListNode",
+         "identifier": "node_91.al",
+         "title": "Global Climate",
          "hints": [],
-         "ref": "node_17.ep",
+         "ref": "node_91.al",
          "previousWorkNodeIds": [],
-         "tags": [
-            "Level5",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level4"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
          "links": [],
-         "icons": [],
-         "class": "bronze"
+         "class": "instantquiz"
       },
       {
-         "type": "EpigameNode",
-         "identifier": "node_23.ep",
-         "title": "Bronze",
+         "type": "SVGDrawNode",
+         "identifier": "node_93.sd",
+         "title": "Combust ethane! (improved)",
          "hints": [],
-         "ref": "node_23.ep",
+         "ref": "node_93.sd",
          "previousWorkNodeIds": [],
-         "tags": [
-            "Level7",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level6"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
          "links": [],
-         "icons": [],
-         "class": "bronze"
+         "class": "quickdraw"
       },
       {
-         "type": "EpigameNode",
-         "identifier": "node_29.ep",
-         "title": "Bronze",
+         "type": "SVGDrawNode",
+         "identifier": "node_92.sd",
+         "title": "Combust methane! (improved)",
          "hints": [],
-         "ref": "node_29.ep",
+         "ref": "node_92.sd",
          "previousWorkNodeIds": [],
-         "tags": [
-            "Level9",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level8"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
          "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_35.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_35.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level11",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level10"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_41.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_41.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level13",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level12"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_47.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_47.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level15",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level14"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_53.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_53.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level17",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level16"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_59.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_59.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level19",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level18"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_65.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_65.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level21",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level20"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_71.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_71.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level23",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level22"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_77.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_77.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level25",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level24"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_83.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_83.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level27",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level26"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_89.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_89.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level29",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level28"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_95.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_95.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level31",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level30"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_96.ep",
-         "title": "Silver",
-         "hints": [],
-         "ref": "node_96.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level31",
-            "Silver",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level30"
-            },
-            {
-               "functionArgs": [
-                  3100,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  1080,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "silver"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_97.ep",
-         "title": "Gold",
-         "hints": [],
-         "ref": "node_97.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level31",
-            "Gold",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level30"
-            },
-            {
-               "functionArgs": [
-                  11500,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  1750,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  70
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "gold"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_98.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_98.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level32",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level31"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_99.ep",
-         "title": "Silver",
-         "hints": [],
-         "ref": "node_99.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level32",
-            "Silver",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level31"
-            },
-            {
-               "functionArgs": [
-                  3200,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  1120,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "silver"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_100.ep",
-         "title": "Gold",
-         "hints": [],
-         "ref": "node_100.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level32",
-            "Gold",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level31"
-            },
-            {
-               "functionArgs": [
-                  12100,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  1820,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  70
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "gold"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_101.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_101.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level33",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level32"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_102.ep",
-         "title": "Silver",
-         "hints": [],
-         "ref": "node_102.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level33",
-            "Silver",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level32"
-            },
-            {
-               "functionArgs": [
-                  3300,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  1160,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "silver"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_103.ep",
-         "title": "Gold",
-         "hints": [],
-         "ref": "node_103.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level33",
-            "Gold",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level32"
-            },
-            {
-               "functionArgs": [
-                  12400,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  1890,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  75
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "gold"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_104.ep",
-         "title": "Bronze",
-         "hints": [],
-         "ref": "node_104.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level34",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level33"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_105.ep",
-         "title": "Silver",
-         "hints": [],
-         "ref": "node_105.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level34",
-            "Silver",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level33"
-            },
-            {
-               "functionArgs": [
-                  3400,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  1200,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "silver"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_106.ep",
-         "title": "Gold",
-         "hints": [],
-         "ref": "node_106.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level34",
-            "Gold",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level33"
-            },
-            {
-               "functionArgs": [
-                  12800,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  1960,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  75
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            }
-         ],
-         "links": [],
-         "icons": [],
-         "class": "gold"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_5.txt",
-         "title": "Take Postgame Quiz",
-         "hints": [],
-         "ref": "node_5.txt",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Posttest"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAll",
-               "tagName": "Pretest"
-            },
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "Level32"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/PrePostTestIcon-Charged.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_5.txt",
-                     "statusType": "isCompleted",
-                     "statusValue": "true"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/PrePostTestIcon-Uncharged.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_5.txt",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_5.txt",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "mission"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_92.ep",
-         "title": "Green Boss Mission 1",
-         "hints": [],
-         "ref": "node_92.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level30",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level29"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            },
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "greenWarpStep"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_92.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_92.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_92.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_92.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_92.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_86.ep",
-         "title": "Green Mission 2",
-         "hints": [],
-         "ref": "node_86.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level28",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level27"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            },
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "Level26"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_86.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_86.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_86.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_86.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_86.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_80.ep",
-         "title": "Green Mission 1",
-         "hints": [],
-         "ref": "node_80.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level26",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level25"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            },
-            {
-               "tagName": "Level20",
-               "functionName": "xMustHaveStatusY",
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ]
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_80.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_80.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_80.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_80.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_80.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_62.ep",
-         "title": "Blue Boss Mission 2",
-         "hints": [],
-         "ref": "node_62.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level20",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level19"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            },
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "Level18"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_62.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_62.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_62.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_62.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_62.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_56.ep",
-         "title": "Blue Boss Mission 1",
-         "hints": [],
-         "ref": "node_56.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level18",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level17"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            },
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "blueWarpStep"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_56.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_56.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_56.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_56.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_56.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_50.ep",
-         "title": "Blue Mission 2",
-         "hints": [],
-         "ref": "node_50.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level16",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level15"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            },
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "Level14"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_50.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_50.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_50.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_50.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_50.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_44.ep",
-         "title": "Blue Mission 1",
-         "hints": [],
-         "ref": "node_44.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level14",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level13"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            },
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "Level8"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_44.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_44.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_44.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-medium.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_44.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_44.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_26.ep",
-         "title": "Red Boss Mission 2",
-         "hints": [],
-         "ref": "node_26.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level8",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level7"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            },
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "Level6"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_26.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_26.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_26.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_26.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_26.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_20.ep",
-         "title": "Red Boss Mission 1",
-         "hints": [],
-         "ref": "node_20.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level6",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level5"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            },
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "redWarpStep"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_20.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_20.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_20.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_20.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_20.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_14.ep",
-         "title": "Red Mission 2",
-         "hints": [],
-         "ref": "node_14.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level4",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level3"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            },
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "Level2"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_14.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_14.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_14.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_14.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_14.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_0.ep",
-         "title": "Red Mission 1",
-         "hints": [],
-         "ref": "node_0.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level2",
-            "Bronze",
-            "EpiMission"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [],
-               "functionName": "checkCompletedAny",
-               "tagName": "Level1"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  "Bronze:1;Silver:2;Gold:3"
-               ],
-               "functionName": "getTotalPerformance",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0,
-                  0
-               ],
-               "functionName": "getTotalExplanation",
-               "tagName": "EpiMission"
-            },
-            {
-               "functionArgs": [
-                  0
-               ],
-               "functionName": "getTotalAdaptive",
-               "tagName": "EpiWarp"
-            },
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "EpiTut"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_0.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_0.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_0.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-hard.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_0.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_0.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "bronze"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_2.ep",
-         "title": "Tutorial",
-         "hints": [],
-         "ref": "node_2.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "EpiTut"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "Pretest"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_2.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_2.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_2.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_2.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_2.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "mission"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_4.ep",
-         "title": "Take Pregame Quiz",
-         "hints": [],
-         "ref": "node_4.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Pretest"
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/PrePostTestIcon-Charged.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_4.ep",
-                     "statusType": "isCompleted",
-                     "statusValue": "true"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/PrePostTestIcon-Uncharged.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_4.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_4.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "mission"
-      },
-      {
-         "type": "FlashNode",
-         "identifier": "node_1.fl",
-         "title": "CS: Meeting Surge",
-         "hints": [],
-         "ref": "node_1.fl",
-         "previousWorkNodeIds": [],
-         "tagMaps": [
-            {
-               "tagName": "EpiTut",
-               "functionName": "xMustHaveStatusY",
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ]
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/FuzzyTv-1.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_1.fl",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_1.fl",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "simulation"
-      },
-      {
-         "type": "FlashNode",
-         "identifier": "node_3.fl",
-         "title": "CS: Pricklies!",
-         "hints": [],
-         "ref": "node_3.fl",
-         "previousWorkNodeIds": [],
-         "tagMaps": [
-            {
-               "tagName": "Level8",
-               "functionName": "xMustHaveStatusY",
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ]
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/FuzzyTv-2.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_3.fl",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_3.fl",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "simulation"
-      },
-      {
-         "type": "FlashNode",
-         "identifier": "node_11.fl",
-         "title": "CS: Sneaking into the Station!",
-         "hints": [],
-         "ref": "node_11.fl",
-         "previousWorkNodeIds": [],
-         "tagMaps": [
-            {
-               "tagName": "Level20",
-               "functionName": "xMustHaveStatusY",
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ]
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/FuzzyTv-3.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_11.fl",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_11.fl",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "simulation"
-      },
-      {
-         "type": "FlashNode",
-         "identifier": "node_12.fl",
-         "title": "CS: The Final Confrontation!",
-         "hints": [],
-         "ref": "node_12.fl",
-         "previousWorkNodeIds": [],
-         "tagMaps": [
-            {
-               "tagName": "Level32",
-               "functionName": "xMustHaveStatusY",
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ]
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/FuzzyTv-4.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_12.fl",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_12.fl",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "simulation"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_6.ep",
-         "title": "Warp Mission Red",
-         "hints": [],
-         "ref": "node_6.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "redWarpStep"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "Level4"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-red.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_6.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-red.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_6.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-red.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_6.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-red.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_6.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_6.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "planet-easy"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_7.ep",
-         "title": "Warp Mission Blue",
-         "hints": [],
-         "ref": "node_7.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "blueWarpStep"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "Level16"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-blue.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_7.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-blue.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_7.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-blue.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_7.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-blue.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_7.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_7.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "planet-medium"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_9.ep",
-         "title": "Warp Mission Green",
-         "hints": [],
-         "ref": "node_9.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "greenWarpStep"
-         ],
-         "tagMaps": [
-            {
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ],
-               "functionName": "xMustHaveStatusY",
-               "tagName": "Level28"
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-green.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_9.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-green.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_9.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-green.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_9.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/warp-green.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_9.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_9.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ],
-         "class": "planet-hard"
-      },
-      {
-         "type": "EpigameNode",
-         "identifier": "node_13.ep",
-         "title": "Green Boss Mission 2",
-         "hints": [],
-         "ref": "node_13.ep",
-         "previousWorkNodeIds": [],
-         "tags": [
-            "Level32"
-         ],
-         "tagMaps": [
-            {
-               "tagName": "Level30",
-               "functionName": "xMustHaveStatusY",
-               "functionArgs": [
-                  "isCompleted",
-                  "true"
-               ]
-            }
-         ],
-         "links": [],
-         "icons": [
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-bronze.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_13.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "bronze"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-silver.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_13.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "silver"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy-gold.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_13.ep",
-                     "statusType": "epigameMedal",
-                     "statusValue": "gold"
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-easy.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_13.ep",
-                     "statusType": "isVisitable",
-                     "statusValue": true
-                  }
-               ]
-            },
-            {
-               "iconPath": "/vlewrapper/vle/node/epigame/icons/planet-locked.png",
-               "statuses": [
-                  {
-                     "nodeId": "node_13.ep",
-                     "statusType": "isVisible",
-                     "statusValue": true
-                  }
-               ]
-            }
-         ]
+         "class": "quickdraw"
       }
    ],
    "sequences": [
       {
          "type": "sequence",
-         "identifier": "seq_2",
-         "title": "Pretest",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_1",
-         "title": "Tutorial",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_5",
-         "title": "Switch it Up!",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_7",
-         "title": "Spaceway to Heaven",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_9",
-         "title": "You Spin Me Right Round",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_11",
-         "title": "Fuzzies I Choose You!",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_13",
-         "title": "All The Single Fuzzies",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_15",
-         "title": "The Mass Effect",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_4",
-         "title": "Warp Mission Red",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_17",
-         "title": "I Hope I Don't Lose My Launch",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_19",
-         "title": "Fuzzy You're A Firework",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_21",
-         "title": "The Trouble With Fuzzies",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_23",
-         "title": "Fuzzy You're My Only Hope",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_25",
-         "title": "A Tricky Situation",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_27",
-         "title": "Whip My Fuzzies Back and Forth",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_6",
-         "title": "Warp Mission Purple",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_29",
-         "title": "Drop It Like It's Hot",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_31",
-         "title": "Not Just Another Pretty Space",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_33",
-         "title": "Fuzz On Fuzz Off",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_8",
-         "title": "Warp Mission Green",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
-         "identifier": "seq_3",
-         "title": "Posttest",
-         "view": "normal",
-         "refs": []
-      },
-      {
-         "type": "sequence",
          "identifier": "master",
-         "title": "Master",
-         "view": "normal",
+         "title": "master",
+         "view": "",
          "refs": [
-            "node_4.ep",
-            "node_2.ep",
-            "node_1.fl",
-            "node_0.ep",
-            "node_14.ep",
-            "node_6.ep",
-            "node_20.ep",
-            "node_26.ep",
-            "node_3.fl",
-            "node_44.ep",
-            "node_50.ep",
-            "node_7.ep",
-            "node_56.ep",
-            "node_62.ep",
-            "node_11.fl",
-            "node_80.ep",
-            "node_86.ep",
-            "node_9.ep",
-            "node_92.ep",
-            "node_13.ep",
-            "node_12.fl",
-            "node_5.txt"
+            "seq_0",
+            "seq_3",
+            "seq_1",
+            "seq_2",
+            "seq_4",
+            "seq_5",
+            "seq_6"
          ]
       },
       {
          "type": "sequence",
-         "identifier": "seq_10",
-         "title": "CS: The Final Confrontation!",
+         "identifier": "seq_0",
+         "title": "What Causes Climate Change?",
+         "view": "",
+         "refs": [
+            "node_0.ht",
+            "node_1.al",
+            "node_2.ht",
+            "node_89.al",
+            "node_4.ht",
+            "node_69.ib"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_1",
+         "title": "Human Contribution",
+         "view": "",
+         "refs": [
+            "node_5.ht",
+            "node_6.al",
+            "node_7.ht",
+            "node_74.ht",
+            "node_91.al",
+            "node_9.ht",
+            "node_75.ht",
+            "node_20.ib",
+            "node_8.al",
+            "node_76.sd",
+            "node_10.al",
+            "node_77.ch",
+            "node_16.ht",
+            "node_79.ch",
+            "node_80.sd",
+            "node_17.al",
+            "node_82.fi"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_2",
+         "title": "Other Chemical Reactions",
+         "view": "",
+         "refs": [
+            "node_21.ht",
+            "node_22.al",
+            "node_28.ht",
+            "node_24.or",
+            "node_23.ht",
+            "node_87.ib",
+            "node_66.mw",
+            "node_26.al",
+            "node_31.ht",
+            "node_83.or",
+            "node_86.ht",
+            "node_88.ib",
+            "node_73.eb",
+            "node_85.or"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_4",
+         "title": "Write Your Congressperson",
+         "view": "",
+         "refs": [
+            "node_46.ht",
+            "node_47.ht",
+            "node_3.ht",
+            "node_90.or",
+            "node_54.ht"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_5",
+         "title": "Extra for experts",
+         "view": "",
+         "refs": [
+            "node_57.ou",
+            "node_59.ou",
+            "node_60.ou",
+            "node_61.ou"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_3",
+         "title": "Greenhouse Investigation",
+         "view": "",
+         "refs": [
+            "node_33.ht",
+            "node_35.ht",
+            "node_37.ch",
+            "node_38.ht",
+            "node_70.ib",
+            "node_67.al",
+            "node_39.ht",
+            "node_68.ch",
+            "node_40.al",
+            "node_41.sd",
+            "node_71.txt"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_6",
+         "title": "Your improved drawings",
          "view": "normal",
-         "refs": []
+         "refs": [
+            "node_92.sd",
+            "node_93.sd"
+         ]
       }
    ],
    "startPoint": "master",
    "navMode": null,
-   "theme": null,
-   "globalTagMaps": [
-      {
-         "functionArgs": [],
-         "functionName": "pilotRating",
-         "scores": [
-            {
-               "icon": "themes/starmap/navigation/map/images/Pilot Medal0005.png",
-               "rank": "Pilot Rank 5",
-               "score": 12000
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Pilot Medal0004.png",
-               "rank": "Pilot Rank 4",
-               "score": 9000
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Pilot Medal0003.png",
-               "rank": "Pilot Rank 3",
-               "score": 6000
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Pilot Medal0002.png",
-               "rank": "Pilot Rank 2",
-               "score": 3000
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Pilot Medal0001.png",
-               "rank": "Pilot Rank 1",
-               "score": 0
-            }
-         ],
-         "tagName": "pilotSteps"
-      },
-      {
-         "functionArgs": [],
-         "functionName": "warpRating",
-         "scores": [
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Red0005.png",
-               "rank": "Red Warp Rank 5",
-               "score": 0.8
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Red0004.png",
-               "rank": "Red Warp Rank 4",
-               "score": 0.6
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Red0003.png",
-               "rank": "Red Warp Rank 3",
-               "score": 0.4
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Red0002.png",
-               "rank": "Red Warp Rank 2",
-               "score": 0.2
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Red0001.png",
-               "rank": "Red Warp Rank 1",
-               "score": 0
-            }
-         ],
-         "tagName": "redWarpStep"
-      },
-      {
-         "functionArgs": [],
-         "functionName": "warpRating",
-         "scores": [
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Blue0005.png",
-               "rank": "Purple Warp Rank 5",
-               "score": 0.8
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Blue0004.png",
-               "rank": "Purple Warp Rank 4",
-               "score": 0.6
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Blue0003.png",
-               "rank": "Purple Warp Rank 3",
-               "score": 0.4
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Blue0002.png",
-               "rank": "Purple Warp Rank 2",
-               "score": 0.2
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Blue0001.png",
-               "rank": "Purple Warp Rank 1",
-               "score": 0
-            }
-         ],
-         "tagName": "blueWarpStep"
-      },
-      {
-         "functionArgs": [],
-         "functionName": "warpRating",
-         "scores": [
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Green0005.png",
-               "rank": "Green Warp Rank 5",
-               "score": 0.8
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Green0004.png",
-               "rank": "Green Warp Rank 4",
-               "score": 0.6
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Green0003.png",
-               "rank": "Green Warp Rank 3",
-               "score": 0.4
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Green0002.png",
-               "rank": "Green Warp Rank 2",
-               "score": 0.2
-            },
-            {
-               "icon": "themes/starmap/navigation/map/images/Warp Medal Green0001.png",
-               "rank": "Green Warp Rank 1",
-               "score": 0
-            }
-         ],
-         "tagName": "greenWarpStep"
-      }
-   ]
+   "theme": null
 }
