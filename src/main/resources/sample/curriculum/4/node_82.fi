@@ -1,0 +1,93 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "Fillin",
+      "interaction": [
+         {
+            "type": "htmltext",
+            "text": "Fill in the coefficients of the balanced chemical reaction for the combustion of two molecules of ethane: <br><br>\n\n<center><b>"
+         },
+         {
+            "type": "textEntryInteraction",
+            "responseIdentifier": "response_0",
+            "expectedLength": 3
+         },
+         {
+            "type": "htmltext",
+            "text": "C<sub>2</sub>H<sub>6</sub> + "
+         },
+         {
+            "type": "textEntryInteraction",
+            "responseIdentifier": "response_1",
+            "expectedLength": 3
+         },
+         {
+            "type": "htmltext",
+            "text": "O<sub>2</sub> --> "
+         },
+         {
+            "type": "textEntryInteraction",
+            "responseIdentifier": "response_2",
+            "expectedLength": 3
+         },
+         {
+            "type": "htmltext",
+            "text": "CO<sub>2</sub> + "
+         },
+         {
+            "type": "textEntryInteraction",
+            "responseIdentifier": "response_3",
+            "expectedLength": 3
+         },
+         {
+            "type": "htmltext",
+            "text": "H<sub>2</sub>O"
+         }
+      ],
+      "outcomeDeclaration": {
+         "baseType": "float",
+         "cardinality": "single",
+         "identifier": "SCORE"
+      },
+      "responseDeclarations": [
+         {
+            "correctResponses": [
+               {
+                  "response": "2",
+                  "value": "1"
+               }
+            ],
+            "identifier": "response_0"
+         },
+         {
+            "correctResponses": [
+               {
+                  "response": "7",
+                  "value": "1"
+               }
+            ],
+            "identifier": "response_1"
+         },
+         {
+            "correctResponses": [
+               {
+                  "response": "4",
+                  "value": "1"
+               }
+            ],
+            "identifier": "response_2"
+         },
+         {
+            "correctResponses": [
+               {
+                  "response": "6",
+                  "value": "1"
+               }
+            ],
+            "identifier": "response_3"
+         }
+      ],
+      "timeDependent": false
+   },
+   "type": "Fillin"
+}

@@ -1,0 +1,25 @@
+{
+   "assessmentItem":{
+      "adaptive":false,
+      "identifier":"OpenResponse",
+      "interaction":{
+         "expectedLines":"0",
+         "hasInlineFeedback":false,
+         "placeholderText":"",
+         "prompt":"You now have the opportunity to review the energy story you wrote earlier. Can you revise what you wrote to <b>improve</b> what you wrote and <b>add</b> what you learned?<br><br>Tip: You can copy and paste your original response into the space below, then make changes.",
+         "responseIdentifier":"OR"
+      },
+      "responseDeclaration":{
+         "baseType":"string",
+         "cardinality":"single",
+         "identifier":"OR"
+      },
+      "timeDependent":false
+   },
+   "isRichTextEditorAllowed":false,
+   "starterSentence":{
+      "display":"0",
+      "sentence":""
+   },
+   "type":"OpenResponse"
+}

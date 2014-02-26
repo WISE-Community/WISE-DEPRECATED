@@ -1,0 +1,64 @@
+{
+   "description_active": true,
+   "description_default": "",
+   "prompt": "<p style=\"text-align: left;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\"><span><strong><span> Eric's Family Pedigree</span></strong> <br /></span></span></p>\n<ol style=\"text-align: left;\">\n<li><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\">Use the&nbsp;</span><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\"><strong>stamp tool&nbsp;</strong><img style=\"vertical-align: middle;\" title=\"Stamp Tool\" src=\"assets/StampToolIcon.png\" alt=\"Stamp Tool\" width=\"32\" height=\"32\" />&nbsp;to a</span><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\">dd all of Eric's extended family members to the pedigree chart.</span></li>\n<li><span style=\"font-size: medium; font-family: arial, helvetica, sans-serif;\">Place the X stamp over each member that has CF.</span></li>\n<li><span style=\"font-size: medium; font-family: arial, helvetica, sans-serif;\">If you make a mistake, use the <span><strong>select tool&nbsp;</strong><img style=\"vertical-align: middle;\" title=\"Select Tool\" src=\"assets/SelectToolIcon.png?w=32&amp;h=26\" alt=\"Select Tool\" width=\"32\" height=\"26\" />&nbsp;to select the object or text to delete and click on <strong>DELETE</strong>. </span></span></li>\n<li><span style=\"font-size: medium; font-family: arial, helvetica, sans-serif;\">When you have finished mapping Eric's family pedigree, be sure to click on <strong>SAVE</strong> at the top left of the box.</span></li>\n</ol>\n<p style=\"text-align: left;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\"><br /><strong>After completing Eric's pedigree chart, discuss with your partner how Eric could have developed CF. <br />Report your conclusions to the Editor in the next step.</strong> </span></p>",
+   "snapshots_active": false,
+   "stamps": [
+      {
+         "height": 30,
+         "title": "Grandma Betsy",
+         "uri": "http://wise-dev.berkeley.edu/upload/12708/Female_with_CS.gif",
+         "width": 30
+      },
+      {
+         "height": 30,
+         "title": "Grandpa Ben",
+         "uri": "http://wise-dev.berkeley.edu/upload/12708/Female_without_CS.gif",
+         "width": 30
+      },
+      {
+         "height": 30,
+         "title": "Uncle Jay",
+         "uri": "http://wise-dev.berkeley.edu/upload/12708/Male_with_CS.gif",
+         "width": 30
+      },
+      {
+         "height": 30,
+         "title": "Grandma Jane",
+         "uri": "http://wise-dev.berkeley.edu/upload/12708/Male_without_CS.gif",
+         "width": 30
+      },
+      {
+         "title": "Grandpa Kyle",
+         "uri": "",
+         "width": 30,
+         "height": 30
+      },
+      {
+         "title": "Aunt Sandy",
+         "uri": "",
+         "width": 30,
+         "height": 30
+      }
+   ],
+   "svg_background": "<svg xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 450'><g><title>teacher</title><image xlink:href='http://wise4.berkeley.edu/curriculum/26342/assets/initial_tree6.gif' id='svg_1' height='432' width='684' y='2' x='2'/></g></svg>",
+   "type": "SVGDraw",
+   "snapshots_max": 10,
+   "autoScoring": {
+      "autoScoringCheckWorkChances": "",
+      "autoScoringCriteria": "",
+      "autoScoringDisplayScoreToStudent": true,
+      "autoScoringDisplayFeedbackToStudent": true,
+      "autoScoringFeedback": []
+   },
+   "toolbar_options": {
+      "pencil": false,
+      "line": false,
+      "connector": false,
+      "rectangle": false,
+      "ellipse": false,
+      "polygon": false,
+      "text": false,
+      "importStudentAsset": false
+   }
+}

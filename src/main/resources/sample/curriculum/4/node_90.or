@@ -1,0 +1,25 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "OpenResponse",
+      "interaction": {
+         "expectedLines": "25",
+         "hasInlineFeedback": false,
+         "placeholderText": "",
+         "prompt": "Here you will compose your letter to Congress.  <br><br>\n\n(1) In the 1st paragraph, describe how hydrocarbon combustion contributes to global climate change.<br><Br>\n\n\n(2) In the 2nd paragraph, tell your Congressperson what you think is the best approach to reduce the human impact on global climate change,  using hydrogen technology and/or using renewable energy sources.\n<br><br>In supporting your choice, discuss not only CO<sub>2</sub> emissions, but also <font color=\"black\">the overall impact on our society</font>. Other factors include the speed of adopting new technologies, whether it would create new jobs, and the cost to taxpayers.  ",
+         "responseIdentifier": "OR"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "OR"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": true,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "type": "OpenResponse"
+}

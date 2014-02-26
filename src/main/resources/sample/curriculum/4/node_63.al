@@ -1,0 +1,30 @@
+{
+   "assessments":[{
+         "id":"fiKA8AJnTN",
+         "type":"radio",
+         "prompt":"Rate your understanding of limiting reactants in chemical reactions:",
+         "choices":[{
+               "id":"UaJqj26sV4",
+               "text":"Poor"
+            },
+            {
+               "id":"UJz4OEBL2I",
+               "text":"Fair"
+            },
+            {
+               "id":"fleiXNi2rd",
+               "text":"Very good"
+            },
+            {
+               "id":"jglxDqH8S2",
+               "text":"Excellent"
+            }
+         ]
+      }
+   ],
+   "displayAnswerAfterSubmit":true,
+   "isLockAfterSubmit":false,
+   "isMustCompleteAllPartsBeforeExit":false,
+   "prompt":"",
+   "type":"AssessmentList"
+}
