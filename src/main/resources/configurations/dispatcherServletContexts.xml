@@ -46,36 +46,10 @@
     <bean id="viewNameTranslator"
         class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator" />
 
-    <!-- maps request URLs to Controller names -->
-    <bean
-        class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
-        <property name="order" value="1" />
-		<property name="interceptors">
-		   <list>
-			<ref bean="localeChangeInterceptor" />
-		    </list>
-		</property>        
-    </bean>
 
     <!-- maps request URLs to view file names -->
     <bean id="urlFilenameViewController"
         class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
-
-    <!-- no 'id' required, HandlerMapping beans are automatically detected by the DispatcherServlet -->
-    <!--  
-    <bean
-        class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="order" value="2"></property>
-        <property name="mappings">
-            <value>/index.html=urlFilenameViewController</value>
-        </property>
-        <property name="interceptors">
-		   <list>
-			<ref bean="localeChangeInterceptor" />
-		    </list>
-		</property>
-    </bean>
-    -->
     
     <bean id="controllerUtil"
     	class="org.wise.portal.presentation.web.controllers.ControllerUtil">
