@@ -199,10 +199,7 @@
 					<!-- application path always starts with / -->
 					<path>/${project.build.finalName}</path>
 					<systemProperties>
-						<appserver.base>${project.build.directory}/appserver-base</appserver.base>
-						<appserver.home>${project.build.directory}/appserver-home</appserver.home>
-						<derby.system.home>${project.build.directory}/appserver-base/logs</derby.system.home>
-						<java.io.tmpdir>${project.build.directory}</java.io.tmpdir>
+	                    <JAVA_OPTS>-Xms512m -Xmx1024m -XX:MaxPermSize=512m</JAVA_OPTS>					
 					</systemProperties>
 					<useTestClasspath>false</useTestClasspath>
 				</configuration>
