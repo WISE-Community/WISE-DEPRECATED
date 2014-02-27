@@ -157,7 +157,6 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 			sb.insert(0, "0");
 		}
 		String language = locale.getLanguage();  // languages is two-letter ISO639 code, like en, es, he, etc.
-		
 		// read in runcode prefixes from wise.properties.
 		String runcodePrefixesStr = wiseProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
 		if (wiseProperties.containsKey("runcode_prefixes_"+language)) {

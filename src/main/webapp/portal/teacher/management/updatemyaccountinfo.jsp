@@ -149,6 +149,18 @@
 								     </div>
 							 	</td>
 							 </tr>
+
+						    <tr>
+						    	<td><label for="language" id="language"><spring:message code="teacher.registerteacher.language" /></label></td>
+								<td>
+									<form:select path="userDetails.language" id="language">           
+							    		<c:forEach items="${languages}" var="languageOption">
+							            	<form:option value="${languageOption}"><spring:message code="language.${languageOption}" /></form:option>
+							          	</c:forEach>
+						        	</form:select>
+						        	<span class="hint"><spring:message code="teacher.registerteacher.required"/><span class="hint-pointer"></span></span></td>
+						    </tr>
+							 
 						  </table>
 						      
 					      <div><input type="submit" value="Save Changes"/></div>

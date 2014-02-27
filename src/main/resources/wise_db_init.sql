@@ -490,6 +490,7 @@
         credentials_not_expired bit not null,
         email_address varchar(255),
         enabled bit not null,
+        language varchar(255),
         recent_number_of_failed_login_attempts integer,
         password varchar(255) not null,
         recent_failed_login_time datetime,
