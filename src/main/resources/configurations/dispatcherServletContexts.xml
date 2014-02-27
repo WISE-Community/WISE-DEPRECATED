@@ -1290,7 +1290,6 @@
 				/project/exportproject.html=exportProjectController
 				/project/importexternalproject.html=importExternalProjectController
 				/admin/index.html=adminIndexController
-    		    /admin/statistics.html=statisticsController
 				/admin/project/uploadproject.html=uploadProjectController
 				/admin/account/manageusers.html=viewAllUsersController
 				/admin/account/enabledisableuser.html=enableDisableUserController
@@ -1336,6 +1335,7 @@
 				/ideaBasket.html=ideaBasketController
 				/errors/outsideerror.html=outsideErrorController
 				/authorize.html=credentialManager
+    		    /pages/statistics.html=statisticsController
 				/pages/check.html=compatibilityCheckController
 				/pages/memorymonitor.html=memoryMonitorController
 				/getExport.html=getExportController
