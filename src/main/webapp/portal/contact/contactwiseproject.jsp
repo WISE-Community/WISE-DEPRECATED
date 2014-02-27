@@ -1,4 +1,6 @@
 <%@ include file="../include.jsp"%>
+<%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
+<%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
 
 <!DOCTYPE html>
 <html>
@@ -101,7 +103,27 @@
 					    <form:hidden path="usersystem" id="usersystem" /> 
 					  </dl>    
 					     <div id="asterixWarning"><spring:message code="contact.contactwiseproject.itemsWithStarAreRequired"/></div>  
-					        
+
+							<c:if test="${user == null && reCaptchaPublicKey != null && reCaptchaPrivateKey != null}">
+								<div style="width: 50%; margin:0 auto;">
+								<p><spring:message code='login.recaptcha'/></p>
+								<%
+									//get the captcha public and private key so we can make the captcha
+									String reCaptchaPublicKey = (String) request.getAttribute("reCaptchaPublicKey");
+									String reCaptchaPrivateKey = (String) request.getAttribute("reCaptchaPrivateKey");
+									
+									//create the captcha factory
+									ReCaptcha c = ReCaptchaFactory.newReCaptcha(reCaptchaPublicKey, reCaptchaPrivateKey, false);
+									
+									//make the html that will display the captcha
+									String reCaptchaHtml = c.createRecaptchaHtml(null, null);
+									
+									//output the captcha html to the page
+									out.print(reCaptchaHtml);
+								%>
+								</div>
+							</c:if>
+
 					    <div>
 					    	<input type="submit" onclick="detectUserSystem();" id="sendMessageButton" value="<spring:message code="contact.contactwiseproject.sendMessage"/>"></input>
 					  	</div>
