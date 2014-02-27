@@ -1,0 +1,21 @@
+{
+   "description_active":true,
+   "description_default":"",
+   "prompt":"Look again at Eric's Family Pedigree below.  \u000a<ul><li>Using the <b>STAMP</b> tool, label the members of Eric's family that are carriers of CF. </li>\u000a<li>A carrier is someone who carries one dominant allele, but does NOT show the disease.</li></ul>",
+   "snapshots_active":false,
+   "stamps":[{
+         "height":36,
+         "title":"female_carrier3.jpg",
+         "uri":"http://wise-dev.berkeley.edu/upload/23008/female_carrier3.jpg",
+         "width":36
+      },
+      {
+         "height":36,
+         "title":"male_carrier_3.jpg",
+         "uri":"http://wise-dev.berkeley.edu/upload/23008/male_carrier_3.jpg",
+         "width":38
+      }
+   ],
+   "svg_background":"<svg xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 450'><g><title>teacher</title><image xlink:href='http://wise4.berkeley.edu/curriculum/26342/assets/CarrierPedigree2.jpg' id='svg_1' height='400' width='500' y='2' x='2'/></g></svg>",
+   "type":"SVGDraw"
+}

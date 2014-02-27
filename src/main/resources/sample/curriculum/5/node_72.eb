@@ -1,0 +1,6 @@
+{
+   "background": "assets/ethanol_hydrogen.png",
+   "prompt": "Which of the following would you expect to produce LESS carbon dioxide: (1) ethanol-based cars or (2) hydrogen-based cars? Organize your evidence according to which side it supports.",
+   "instructions": "",
+   "type": "ExplanationBuilder"
+}

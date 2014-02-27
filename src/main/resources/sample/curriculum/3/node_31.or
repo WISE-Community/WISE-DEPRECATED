@@ -1,0 +1,25 @@
+{
+   "assessmentItem":{
+      "adaptive":false,
+      "identifier":"OpenResponse",
+      "interaction":{
+         "expectedLines":"0",
+         "hasInlineFeedback":false,
+         "placeholderText":"",
+         "prompt":"<table border=\"0\" style=\"float:left; margin-right:10px;\"> <tr><td><img src=\"http://dl.getdropbox.com/u/1077325/balloon.jpg\" style=\"float:left; margin-right:0px;\"> <center><font size=\"-6\">Image by <a style=\"color:black\" href=\"http://www.flickr.com/photos/ronnie44052/\">ronnie44052</a>  / <a style=\"color:black\" rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC BY-SA 2.0</a></font></center> </td></tr> </table> Ben is going on a hot air balloon tour of Napa Valley. Ben is anxious about the trip because he's not sure the hot air balloon will stay afloat or be able to come back down without crashing. <br /><br />Hot air balloons have heaters that can control the temperature of the air inside the balloon. Thinking back to what you learned about how <b>convection</b> works, can you reassure Ben? <b>Explain to Ben how hot air balloons work by telling a story about how they rise up in the air and go back down.</b> <br /><br /> Hints: <br /> What happens when air inside the balloon is heated?<br /> What happens when air inside the balloon cools down?<br />",
+         "responseIdentifier":"OR"
+      },
+      "responseDeclaration":{
+         "baseType":"string",
+         "cardinality":"single",
+         "identifier":"OR"
+      },
+      "timeDependent":false
+   },
+   "isRichTextEditorAllowed":false,
+   "starterSentence":{
+      "display":"0",
+      "sentence":""
+   },
+   "type":"OpenResponse"
+}

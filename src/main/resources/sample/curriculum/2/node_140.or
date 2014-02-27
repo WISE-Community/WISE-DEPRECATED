@@ -1,0 +1,25 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "Note",
+      "interaction": {
+         "expectedLines": "5",
+         "hasInlineFeedback": false,
+         "placeholderText": "",
+         "prompt": "<p><img style=\"float: right;\" title=\"fruit flies\" src=\"assets/FruitFlies.PNG\" alt=\"fruit flies\" width=\"200\" height=\"185\" /></p>\n<p>&nbsp;</p>\n<p><span style=\"font-size: small; font-family: arial, helvetica, sans-serif;\">Geneticists often use&nbsp;<strong>fruit flies</strong>&nbsp;to study the inheritance of traits.&nbsp;</span></p>\n<p><span style=\"font-size: small; font-family: arial, helvetica, sans-serif;\">These insects have a&nbsp;<strong>lifespan of just 2 weeks</strong>. But </span><span style=\"font-family: arial,helvetica,sans-serif; font-size: small;\">in that time, they can produce&nbsp;<em>hundreds of eggs!</em></span></p>\n<p><span style=\"font-family: arial,helvetica,sans-serif; font-size: small;\"><strong>How does the fruit fly's rapid reproduction rate help geneticists understand patterns of inheritance?</strong></span></p>\n<p><span style=\"font-size: small; font-family: arial, helvetica, sans-serif;\"><strong>&nbsp;</strong></span></p>",
+         "responseIdentifier": "Note"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "Note"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": true,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "type": "Note"
+}

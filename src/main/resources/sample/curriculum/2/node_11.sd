@@ -1,0 +1,54 @@
+{
+   "description_active": false,
+   "description_default": "",
+   "prompt": "<p style=\"text-align: left;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\">With the information from our interviews, we can now <em>visualize</em> the occurrence of cystic fibrosis in Eric's family.</span></p>\n<ol>\n<li style=\"text-align: left;\"><span style=\"line-height: 1.5em; font-size: medium; font-family: arial, helvetica, sans-serif;\"><span style=\"line-height: 1.5em;\">Close these instructions to see Eric's pedigree.</span></span></li>\n<li style=\"text-align: left;\"><span style=\"line-height: 1.5em; font-size: medium; font-family: arial, helvetica, sans-serif;\"><span style=\"line-height: 1.5em;\">Use th</span><span style=\"line-height: 1.5em;\">e&nbsp;</span></span><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\"><strong>stamp tool&nbsp;</strong><img style=\"vertical-align: middle;\" title=\"Stamp Tool\" src=\"assets/StampToolIcon.png\" alt=\"Stamp Tool\" width=\"32\" height=\"32\" />&nbsp;and follow the <strong>KEY</strong> to show which of</span><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\">&nbsp;Eric's family members has cystic fibrosis.</span></li>\n</ol>\n<p style=\"padding-left: 30px; text-align: left;\"><span style=\"font-size: small;\"><span style=\"font-family: arial, helvetica, sans-serif; line-height: 1.5em;\"><strong>HINT:</strong>&nbsp;If you make a mistake, use the </span><span style=\"font-family: arial, helvetica, sans-serif; line-height: 1.5em;\"><strong>select tool&nbsp;</strong><img style=\"vertical-align: middle;\" title=\"Select Tool\" src=\"assets/SelectToolIcon.png?w=32&amp;h=26\" alt=\"Select Tool\" width=\"32\" height=\"26\" />&nbsp;to move or delete your stamps.</span></span></p>\n<p style=\"text-align: left;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\"><strong>Based on this pedigree, discuss with your partner how Eric could have developed cystic fibrosis. You'll report your ideas in the next step.</strong> </span></p>",
+   "snapshots_active": false,
+   "stamps": [
+      {
+         "title": "Female with Cystic Fibrosis",
+         "uri": "assets/BlackCircle.png",
+         "width": 38,
+         "height": 38
+      },
+      {
+         "title": "Female without Cystic Fibrosis",
+         "uri": "assets/WhiteCircle.png",
+         "width": 38,
+         "height": 38
+      },
+      {
+         "title": "Male with Cystic Fibrosis",
+         "uri": "assets/BlackSquare.png",
+         "width": 38,
+         "height": 38
+      },
+      {
+         "title": "Male without Cystic Fibrosis",
+         "uri": "assets/WhiteSquare.png",
+         "width": 38,
+         "height": 38
+      }
+   ],
+   "svg_background": "",
+   "type": "SVGDraw",
+   "snapshots_max": 10,
+   "autoScoring": {
+      "autoScoringCheckWorkChances": "",
+      "autoScoringCriteria": "",
+      "autoScoringDisplayScoreToStudent": true,
+      "autoScoringDisplayFeedbackToStudent": true,
+      "autoScoringFeedback": []
+   },
+   "toolbar_options": {
+      "pencil": false,
+      "line": false,
+      "connector": false,
+      "rectangle": false,
+      "ellipse": false,
+      "polygon": false,
+      "text": false,
+      "importStudentAsset": false
+   },
+   "img_background": "assets/FamilyPedigreeBkg.png",
+   "bg_position": "center-middle"
+}

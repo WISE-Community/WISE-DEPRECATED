@@ -1,0 +1,10 @@
+{
+   "background": "assets/Article_SortingBkg.png",
+   "bgPosition": "center-middle",
+   "prompt": "Organize your ideas to prepare your news column. (The questions in the categories below are mean to guide you. You may include any ideas and organize them the way you like.)",
+   "instructions": "Use the ideas you organized to write your column on Eric and his cystic fibrosis.",
+   "enableStudentTextArea": true,
+   "isMustComplete": true,
+   "selectedAttribute": "hw8JDrsHfa",
+   "type": "ExplanationBuilder"
+}

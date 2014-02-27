@@ -1,0 +1,25 @@
+{
+   "assessmentItem":{
+      "adaptive":false,
+      "identifier":"Note",
+      "interaction":{
+         "expectedLines":"6",
+         "hasInlineFeedback":false,
+         "placeholderText":"",
+         "prompt":"Based on what you learned from creating the model, revise and improve your <a style=\"color:blue\" onclick=\"node.linkTo('C8pdmMzySn')\">original explanation</a>. <br /><br /><b>Copy and paste the original response above to the space below, and revise.</b><br /><br />Be sure that your explanation has:<br /><br />\u000a<ol><li>details about the processes involved\u000a<li>details about the layers involved\u000a<li>scientific terms</li></ol>",
+         "responseIdentifier":"Note"
+      },
+      "responseDeclaration":{
+         "baseType":"string",
+         "cardinality":"single",
+         "identifier":"Note"
+      },
+      "timeDependent":false
+   },
+   "isRichTextEditorAllowed":false,
+   "starterSentence":{
+      "display":"0",
+      "sentence":""
+   },
+   "type":"Note"
+}

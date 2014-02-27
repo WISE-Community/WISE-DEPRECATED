@@ -1,0 +1,25 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "Note",
+      "interaction": {
+         "expectedLines": "6",
+         "hasInlineFeedback": false,
+         "placeholderText": "",
+         "prompt": "Which alternative to hydrocarbon combustion do you think we should focus on in the short term: (1) hydrogen fuel/fuel cells (2) renewable sources like wind and solar? Use the evidence you organized in the previous step.",
+         "responseIdentifier": "Note"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "Note"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": true,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "type": "Note"
+}

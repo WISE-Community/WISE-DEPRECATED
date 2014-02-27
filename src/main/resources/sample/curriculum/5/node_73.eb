@@ -1,0 +1,7 @@
+{
+   "background": "assets/hydroven_renewable.png",
+   "prompt": "Which alternative to hydrocarbon combustion do you think we should focus on in the short term: (1) hydrogen fuel/fuel cells (2) renewable sources like wind and solar? Organize your evidence according to which side it supports.",
+   "instructions": "Type notes here",
+   "type": "ExplanationBuilder",
+   "enableStudentTextArea": false
+}

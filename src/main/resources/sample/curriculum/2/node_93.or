@@ -1,0 +1,28 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "OpenResponse",
+      "interaction": {
+         "expectedLines": "5",
+         "hasInlineFeedback": false,
+         "placeholderText": "",
+         "prompt": "<p>&nbsp;</p>\n<table style=\"line-height: 1.5em; background-color: #ffffff;\" border=\"0\" cellspacing=\"5\" cellpadding=\"15\" align=\"center\">\n<tbody>\n<tr class=\"first even\">\n<td class=\"first\">\n<p><strong><span style=\"font-family: arial, helvetica, sans-serif; color: #008080; font-size: large;\">LETTERS TO THE EDITOR</span><br /></strong></p>\n<hr style=\"width: auto;\" width=\"950\" />\n<p><br /><img style=\"float: left; border: 10px solid white;\" title=\"The Editor\" src=\"assets/Editor_PointingRight_stockimages.png\" alt=\"The Editor\" width=\"307\" height=\"262\" /><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\"><strong>Wow!</strong></span></p>\n<p><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium; line-height: 1.5em;\">Your article has been getting lots of attention! We have email from our readers already.</span></p>\n<p><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\"><span style=\"line-height: 24px;\">Here's what one reader, Bobby, had to say:</span></span></p>\n<p><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\"><span style=\"line-height: 24px;\">&nbsp;</span></span></p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<table style=\"line-height: 1.5em; background-color: #95cfc6; border: 1px solid #808080;\" border=\"1\" cellpadding=\"15\" align=\"center\">\n<tbody>\n<tr>\n<td class=\"last first\"><address><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\"><span style=\"line-height: 0.5cm;\">To: &lt;The Weekly Gazette&gt; \"the-editor@weekly-gazette.com\"</span></span></address><address><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\"><span style=\"line-height: 0.5cm;\">From: &lt;Bobby Fernando&gt; \"bobby@gmail.com\"</span></span></address>\n<p><span style=\"font-size: medium;\"><span style=\"font-family: arial, helvetica, sans-serif;\"><strong><span style=\"line-height: 0.5cm;\">&nbsp;</span></strong></span></span></p>\n<p><span style=\"font-size: medium;\"><span style=\"line-height: 1.5em;\">Dear Gazette,</span></span></p>\n<p><span style=\"font-size: medium;\"><span style=\"line-height: 1.5em;\">My name is Bobby. I read your article the other day. It said that Eric&rsquo;s mother, Linda, was having another baby. My family found out recently that my mom is having a baby, and that I will get a new brother. I asked my parents if there were any family members that had cystic fibrosis, and they said that they didn&rsquo;t know of any. Should I still be worried? Why or why not?</span></span></p>\n<address><span style=\"font-size: medium;\">Thanks,</span></address><address><span style=\"font-size: medium;\">Bobby</span></address></td>\n</tr>\n</tbody>\n</table>\n<p><span style=\"font-family: arial, helvetica, sans-serif;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\">&nbsp;</span></span></p>\n<p><span style=\"font-family: arial, helvetica, sans-serif;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\"><strong><em>Should</em> Bobby be worried?</strong></span></span></p>\n<p><span style=\"font-family: arial, helvetica, sans-serif;\"><span style=\"font-family: arial, helvetica, sans-serif; font-size: medium;\">Reply to him with your answer. And be sure to explain with evidence from your investigations!</span></span></p>\n</td>\n</tr>\n</tbody>\n</table>\n<p>&nbsp;</p>",
+         "responseIdentifier": "OR"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "OR"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": false,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "displayAnswerAfterSubmit": true,
+   "isLockAfterSubmit": false,
+   "isMustCompleteAllPartsBeforeExit": false,
+   "type": "OpenResponse"
+}

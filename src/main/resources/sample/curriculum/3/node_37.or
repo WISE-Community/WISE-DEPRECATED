@@ -1,0 +1,25 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "OpenResponse",
+      "interaction": {
+         "expectedLines": "5",
+         "hasInlineFeedback": false,
+         "placeholderText": "",
+         "prompt": "<center><img src=\"assets/Mt.jpg\"><br>\n<font size=\"-2\">View from Mt. Mitchell / <a style=\"color:black\" href=\"http://www.flickr.com/photos/kiddocone/\">*Kid*Doc*One*</a> / <a style=\"color:black\" rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-nd/2.0/\">CC BY-NC-ND 2.0</a></font></center>\n<br>This photograph was taken from Mt. Mitchell. Mt. Mitchell is  the highest mountain in the Appalachian Mountains, which are located in the East Coast.<br /><br />Write a story to explain how the mountain formed.  <br /><br />Be as specific and detailed as you can!",
+         "responseIdentifier": "OR"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "OR"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": false,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "type": "OpenResponse"
+}

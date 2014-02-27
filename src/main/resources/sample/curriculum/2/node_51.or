@@ -1,0 +1,25 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "Note",
+      "interaction": {
+         "expectedLines": "5",
+         "hasInlineFeedback": false,
+         "placeholderText": "",
+         "prompt": "<p><span style=\"font-size: small;\">Our genes play a role in determining our traits. But NON-GENETIC factors, like our environment or behavior, are also important. Sometimes these other factors can CHANGE the traits we inherit!</span></p>\n<p><span style=\"font-size: small;\">What's an example of a trait that can be changed by our behavior or environment?</span></p>",
+         "responseIdentifier": "Note"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "Note"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": true,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "type": "Note"
+}
