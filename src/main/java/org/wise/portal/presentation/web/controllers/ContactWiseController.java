@@ -295,12 +295,13 @@ public class ContactWiseController extends SimpleFormController {
 	 * file is set by the contactWiseController bean in controllers.xml.
 	 */
 	public void setI18nProperties(Properties i18nProperties) {
+		this.i18nProperties = i18nProperties;
+		
 		/* these are necessary so that the enums can retrieve the values from 
 		the properties file */
 		IssueType.setProperties(i18nProperties);
 		OperatingSystem.setProperties(i18nProperties);
 		WebBrowser.setProperties(i18nProperties);
-		this.i18nProperties = i18nProperties;
 	}
 	
 	public Properties getI18nProperties() {

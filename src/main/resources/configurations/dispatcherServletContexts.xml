@@ -407,6 +407,7 @@
 		<property name="i18nProperties" ref="i18nProperties" />
 		<property name="projectService" ref="projectService" />
 		<property name="runService" ref="runService" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="contactWISEValidator"

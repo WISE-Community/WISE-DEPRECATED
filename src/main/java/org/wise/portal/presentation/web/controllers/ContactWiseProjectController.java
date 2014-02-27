@@ -13,6 +13,9 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.tanesha.recaptcha.ReCaptchaImpl;
+import net.tanesha.recaptcha.ReCaptchaResponse;
+
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
@@ -25,6 +28,7 @@ import org.wise.portal.domain.general.contactwise.impl.ContactWISEProject;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilter;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
@@ -38,10 +42,12 @@ public class ContactWiseProjectController extends SimpleFormController {
 	protected IMailFacade mailService = null;
 	
 	protected Properties i18nProperties = null;
-	
+
 	private ProjectService projectService;
 	
 	private RunService runService;
+	
+	private Properties wiseProperties;
 
 	/* change this to true if you are testing and do not want to send mail to
 	   the actual groups */
@@ -219,13 +225,91 @@ public class ContactWiseProjectController extends SimpleFormController {
 			throws Exception {
 		Map<String, Object> model = new HashMap<String, Object>();
 		
+		//get the signed in user or null if not signed in
+		User user = ControllerUtil.getSignedInUser();
+		
 		//places the array of constants into the model so the view can display
 		model.put("issuetypes", IssueType.values());
 		model.put("operatingsystems", OperatingSystem.values());
 		model.put("webbrowsers", WebBrowser.values());
+		
+		//get the public and private keys from the wise.properties
+		String reCaptchaPublicKey = getWiseProperties().getProperty("recaptcha_public_key");
+		String reCaptchaPrivateKey = getWiseProperties().getProperty("recaptcha_private_key");
+		
+		if(reCaptchaPublicKey != null && reCaptchaPrivateKey != null) {
+			//put the reCaptcha keys into the model so the jsp page 
+			model.put("reCaptchaPublicKey", reCaptchaPublicKey);
+			model.put("reCaptchaPrivateKey", reCaptchaPrivateKey);			
+		}
+		
+		//add the user to the model so that the jsp can check if the user is logged in or not
+		model.put("user", user);
+
 		return model;
 	}
 
+	/**
+	 * If the user is not logged in, we will check that they answered the reCaptcha correctly.
+	 * This is called after ContactWISEValidator.validate()
+	 * @see org.springframework.web.servlet.mvc.BaseCommandController#onBindAndValidate(javax.servlet.http.HttpServletRequest, java.lang.Object, org.springframework.validation.BindException)
+	 */
+	@Override
+	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) {
+		//get the signed in user or null if not signed in
+		User user = ControllerUtil.getSignedInUser();
+		
+		if(user == null) {
+			//get the public and private keys from the wise.properties
+			String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
+			String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+
+			//check if the public key is valid in case the admin entered it wrong
+			boolean reCaptchaKeyValid = TelsAuthenticationProcessingFilter.isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
+
+			if(reCaptchaPrivateKey != null && reCaptchaPublicKey != null && reCaptchaKeyValid) {
+				//get the reCaptcha challenge
+				String reCaptchaChallengeField = request.getParameter("recaptcha_challenge_field");
+				
+				//get what the user typed into the reCaptcha text input
+				String reCaptchaResponseField = request.getParameter("recaptcha_response_field");
+				
+				//get the client's IP address
+				String remoteAddr = request.getRemoteAddr();
+
+				if(reCaptchaChallengeField != null && reCaptchaResponseField != null && remoteAddr != null) {
+					//the user filled in the captcha
+
+					ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
+					reCaptcha.setPrivateKey(reCaptchaPrivateKey);
+					
+					//check if the user answer the reCaptcha correctly
+					ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, reCaptchaChallengeField, reCaptchaResponseField);
+
+					if(!reCaptchaResponse.isValid()) {
+						//the user did not answer the reCaptcha correctly so we will throw an error and display a message
+						
+						String reCaptchaError = "";
+						Properties i18nProperties = getI18nProperties();
+						
+						if(i18nProperties != null) {
+							//get the invalid reCaptcha message
+							reCaptchaError = i18nProperties.getProperty("error.contactwise-recaptcha");
+						}
+
+						//if the error.contactwise-recaptcha key is not in the properties, the value will be null
+						if(reCaptchaError == null) {
+							reCaptchaError = "";
+						}
+						
+						//create the error so that the form is not submitted and the message is displayed
+						errors.reject("400", reCaptchaError);
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * @param mailService is the object that contains the functionality to send
 	 * an email. This mailService is set by the contactWiseController bean 
@@ -242,11 +326,17 @@ public class ContactWiseProjectController extends SimpleFormController {
 	 * file is set by the contactWiseController bean in controllers.xml.
 	 */
 	public void setI18nProperties(Properties i18nProperties) {
+		this.i18nProperties = i18nProperties;
+		
 		/* these are necessary so that the enums can retrieve the values from 
 		the properties file */
 		IssueType.setProperties(i18nProperties);
 		OperatingSystem.setProperties(i18nProperties);
 		WebBrowser.setProperties(i18nProperties);
+	}
+	
+	public Properties getI18nProperties() {
+		return i18nProperties;
 	}
 
 	/**
@@ -276,4 +366,12 @@ public class ContactWiseProjectController extends SimpleFormController {
 	public void setRunService(RunService runService) {
 		this.runService = runService;
 	}	
+
+	public Properties getWiseProperties() {
+		return wiseProperties;
+	}
+
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
+	}
 }
