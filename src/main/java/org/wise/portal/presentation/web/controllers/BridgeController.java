@@ -143,6 +143,10 @@ public class BridgeController extends AbstractController {
 				if ("cRater".equals(type)) {
 					//any teacher can make a cRater request
 					return true;
+				} else if ("rstat".equals(type)) { // any request to rapache
+					return true;
+				} else if ("rimage".equals(type)) {
+					return true;
 				}
 				
 				Run run = null;
@@ -262,6 +266,10 @@ public class BridgeController extends AbstractController {
 			} else if(type.equals("studentAssetManager")) {
 				return true;
 			} else if(type.equals("xmppAuthenticate")) {
+				return true;
+			} else if (type.equals("rstat")) { // authorize requests to rapache
+			 	return true;
+			} else if (type.equals("rimage")) {
 				return true;
 			} else if(type.equals("cRater")) {
 				//allow students to make cRater scoring requests
