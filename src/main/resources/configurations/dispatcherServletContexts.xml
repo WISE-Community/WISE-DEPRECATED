@@ -300,7 +300,7 @@
 	</bean>
 
 	<bean id="runInfoController"
-		class="org.wise.portal.presentation.web.controllers.student.RunInfoController">
+		class="org.wise.portal.presentation.web.controllers.run.RunInfoController">
 		<property name="runService" ref="runService" />
 	</bean>
 
@@ -1298,7 +1298,7 @@
 				/student/viewannouncements.html=viewAnnouncementsController
 				/createhierarchytype.html=createHierarchyTypeController
 				/createnode.html=createNodeController
-				/runInfo.html=runInfoController
+				/runinfo.html=runInfoController
 				/managehierarchytypes.html=manageHierarchyTypesController
 				/managehierarchy.html=manageHierarchyController
 				/message/message.html=messageController
