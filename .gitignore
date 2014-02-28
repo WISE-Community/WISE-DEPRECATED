@@ -1,5 +1,6 @@
 *~
 *.class
+*.DS_Store
 build
 target
 src/main/resources/wise.properties
