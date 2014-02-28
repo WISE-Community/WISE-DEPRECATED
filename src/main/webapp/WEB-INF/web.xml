@@ -151,8 +151,13 @@
 		<url-pattern>/websocket.html</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>rApache</servlet-name>
+		<servlet-class>org.wise.vle.web.RApacheController
+		</servlet-class>
+	</servlet>
 	<servlet-mapping>
-   		<servlet-name>rapache</servlet-name>
+   		<servlet-name>rApache</servlet-name>
    		<url-pattern>/rapache.html</url-pattern>
  	</servlet-mapping>
 
