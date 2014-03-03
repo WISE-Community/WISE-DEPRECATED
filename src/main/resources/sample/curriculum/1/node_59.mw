@@ -1,0 +1,9 @@
+{
+	"activity_uri": "assets/thermalexpansion-custom.cml",
+	"height": "600",
+	"width": "100%",
+	"params":{
+		"auto_start": false
+	},
+	"type": "MW"
+}

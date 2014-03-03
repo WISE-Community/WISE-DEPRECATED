@@ -25,6 +25,7 @@ package org.wise.portal.presentation.web.controllers;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 
@@ -701,7 +702,18 @@ public class InformationController extends AbstractController{
 			config.put("getContentBaseUrl", getContentBaseUrl);
 			config.put("getStudentUploadsBaseUrl", studentUploadsBaseWWW);
 			config.put("theme", "WISE");
-			config.put("locale", request.getLocale());
+
+			User signedInUser = ControllerUtil.getSignedInUser();
+			
+	        // set user's locale
+	        Locale locale = request.getLocale();
+	        if (signedInUser != null) {
+	        	String userLanguage = signedInUser.getUserDetails().getLanguage();
+	        	if (userLanguage != null) {
+	        		locale = new Locale(userLanguage);
+	        	} 
+	        }
+			config.put("locale", locale);
 			config.put("runInfoRequestInterval", GET_RUNINFO_REQUEST_INTERVAL);
 			config.put("wiseBaseURL",wiseBaseURL);
 			
@@ -736,7 +748,6 @@ public class InformationController extends AbstractController{
 			}
 			
 			// add userType {teacher, student, null}
-			User signedInUser = ControllerUtil.getSignedInUser();
 			if (signedInUser != null) {
 		        UserDetails userDetails = (UserDetails) signedInUser.getUserDetails();
 		        if (userDetails instanceof StudentUserDetails) {

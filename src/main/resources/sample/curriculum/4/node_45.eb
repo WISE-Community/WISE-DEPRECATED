@@ -1,0 +1,6 @@
+{
+   "background": "assets/tax_fuel.png",
+   "prompt": "To decrease carbon dioxide production, which policy do you think would be more effective? (1) Increasing the tax on gasoline by 20% (2) require cars to be 20% more fuel efficient? Organize your evidence according to which side it supports.",
+   "instructions": "Type notes here:",
+   "type": "ExplanationBuilder"
+}

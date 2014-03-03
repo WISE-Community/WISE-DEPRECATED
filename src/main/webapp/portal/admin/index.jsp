@@ -180,7 +180,7 @@
 									</tbody>
 								</table>
 								<h5>
-									<a href="statistics.html"><spring:message
+									<a href="${contextPath}/pages/statistics.html"><spring:message
 											code='admin.index.statistics' /></a>
 								</h5>
 								<h5>

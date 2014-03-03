@@ -1,0 +1,26 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "MasterWorkNote(95537)",
+      "interaction": {
+         "expectedLines": "36",
+         "hasInlineFeedback": false,
+         "placeholderText": "",
+         "prompt": "Using all of your past notes, use this space to compose a letter to your congressperson. Be sure to include how chemical reactions, the greenhouse effect, and humans fit together with climate change, as well as your research in this activity to ask your congressperson to take action on this issue.",
+         "responseIdentifier": "NOTE_RESPONSE_1",
+         "type": "text"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "NOTE_RESPONSE_1"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": false,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "type": "Note"
+}

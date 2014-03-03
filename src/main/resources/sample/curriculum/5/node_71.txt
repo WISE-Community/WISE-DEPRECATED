@@ -1,0 +1,4 @@
+{
+   "prompt": "Based on the CO<sub>2</sub> model, add some evidence to your basket about how CO<sub>2</sub> contributes to climate change.",
+   "type": "IdeaBasket"
+}

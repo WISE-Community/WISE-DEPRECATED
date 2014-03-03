@@ -1,0 +1,25 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "Note",
+      "interaction": {
+         "expectedLines": "6",
+         "hasInlineFeedback": false,
+         "placeholderText": "",
+         "prompt": "To decrease CO<sub>2</sub> production, which policy do you think would be more effective? (1) Increasing the tax on gasoline by 20% (2) require cars to be 20% more fuel efficient? Use the evidence you organized in the previous step.",
+         "responseIdentifier": "Note"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "Note"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": true,
+   "starterSentence": {
+      "display": "0",
+      "sentence": ""
+   },
+   "type": "Note"
+}

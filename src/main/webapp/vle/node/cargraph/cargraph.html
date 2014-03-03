@@ -118,7 +118,7 @@
 	        // the comparison work, if not done xmax is a string and xValue 7.0 is bigger
 	        // than xmax 60
 		    if (xValue <= (xmax*1.0)) {	    
-			    cargraph.displayOneFrame(xValue);
+			    cargraph.displayOneFrame(xValue, animationFrameXIncrement*animationTimeScaleFactor);
 		        animationFrameIndex++;
 		    } else {
 			    // the crosshair has exceeded the xMax. stop the animation
@@ -131,7 +131,7 @@
 			var xmin = typeof cargraph.carGraphState.xMin != "undefined" ? parseFloat(cargraph.carGraphState.xMin) : parseFloat(cargraph.content.graphParams.xmin);
 			var animationTimeScaleFactor = typeof cargraph.animationTimeScaleFactor !== "undefined" ? cargraph.animationTimeScaleFactor : 1.0;
 			animationFrameIndex = (xValue - parseInt(xmin)) / (animationFrameXIncrement * parseInt(xmax) / 60 * animationTimeScaleFactor);
-			cargraph.displayOneFrame(xValue);
+			cargraph.displayOneFrame(xValue, animationTimeScaleFactor*animationFrameXIncrement);
 	    }
 
 	    /** 
@@ -164,7 +164,7 @@
 				// save so that we can update constraints
 				if (typeof cargraph !== "undefined"){
 					cargraph.currentObservation = ['Start', [new Date().getTime() - cargraph.initialTimestamp, xValue]];
-					cargraph.saveCurrentObservation();
+					cargraph.saveCurrentObservation(true);
 					cargraph.save();	
 				} 
 				/*
@@ -205,8 +205,9 @@
 		    animationIntervalId = -1;
 		    animationFrameIndex = 0;        // reset animationframeindex to beginning			    
 	    	$("#startButton").val("Start");		    
-	    	cargraph.clearCrosshair();     // hide crosshair
+	    	
 	    	if (typeof cargraph !== "undefined"){
+	    		cargraph.clearCrosshair();     // hide crosshair
 				cargraph.currentObservation = ['Stop', [new Date().getTime() - cargraph.initialTimestamp, xValue]];
 				cargraph.saveCurrentObservation();
 			} 
@@ -298,6 +299,7 @@
 		    					</table>
 		    				</td>
 		    				<td><div id="graphDiv" style="width:600px;height:300px;"></div></td>
+		    				<td valign="top"><div id="legendDiv"></div></td>
 		    			</tr>
 		    			<tr>
 		    				<td><div id="bottomLeftGraphDiv"></div></td>

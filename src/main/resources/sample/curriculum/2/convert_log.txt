@@ -1,0 +1,81 @@
+copying: upload/SI_NoteSpace.doc to /Users/geoffreykwan/Desktop/wise2projects/26342/upload/SI_NoteSpace.doc
+copying: upload/Pedigree_Practice.doc to /Users/geoffreykwan/Desktop/wise2projects/26342/upload/Pedigree_Practice.doc
+copying: upload/Human_Traits_Search.doc to /Users/geoffreykwan/Desktop/wise2projects/26342/upload/Human_Traits_Search.doc
+copying: upload/Making_Babies.doc to /Users/geoffreykwan/Desktop/wise2projects/26342/upload/Making_Babies.doc
+copying: upload/Ideas_for_grading_the_final_newspaper_story.doc to /Users/geoffreykwan/Desktop/wise2projects/26342/upload/Ideas_for_grading_the_final_newspaper_story.doc
+copying: upload/Human_Traits_Search.pdf to /Users/geoffreykwan/Desktop/wise2projects/26342/upload/Human_Traits_Search.pdf
+copying: upload/Final_Story_Rubric.pdf to /Users/geoffreykwan/Desktop/wise2projects/26342/upload/Final_Story_Rubric.pdf
+copying: upload/Making_Babies!.2.pdf to /Users/geoffreykwan/Desktop/wise2projects/26342/upload/Making_Babies!.2.pdf
+copying: upload/Making_Babies!.3.pdf to /Users/geoffreykwan/Desktop/wise2projects/26342/upload/Making_Babies!.3.pdf
+copying: upload/Making_Babies!.pdf to /Users/geoffreykwan/Desktop/wise2projects/26342/upload/Making_Babies!.pdf
+copying: upload/Pedigree_Practice.pdf to /Users/geoffreykwan/Desktop/wise2projects/26342/upload/Pedigree_Practice.pdf
+copying: upload/SI_NoteSpace.pdf to /Users/geoffreykwan/Desktop/wise2projects/26342/upload/SI_NoteSpace.pdf
+
+[Activity 1: Your First Assignment]
+[x] DisplayPage - node_0.ht - 1. The Weekly Gazette!
+[x] Notes - node_1.or - 2.  A Good Scientist
+[x] DisplayPage - node_2.ht - 3. Eric's Case File: Personal Background
+[x] DisplayPage - node_3.ht - 4. Eric's Case File: Medical Background
+[x] DisplayPage - node_4.ht - 5.  Eric's Case File: Medical Background 2
+[x] Journal - node_5.al - 6. Report to the Editor #1
+
+[Activity 2: All in the Family]
+[x] DisplayPage - node_6.ht - 1.  Your Next Assignment
+[x] Notes - node_7.or - 2.  Make a Prediction
+[x] DisplayPage - node_8.ht - 3.  Interview the Family
+[x] Notes - node_9.al - 4. Update Mr. Editor
+[x] DisplayPage - node_10.ht - 5.  The Pedigree
+[x] Wisedraw2 - node_11.sd - 6. Mapping the Family Pedigree
+[x] Journal - node_12.al - 7. Report to the Editor #2
+[x] Notes - node_13.or - 8.  Revise Your Prediction
+
+[Activity 3: The Forensics Lab]
+[x] DisplayPage - node_14.ht - 1. Is it Inherited?
+[x] DisplayPage - node_15.ht - 2. The Forensics Lab
+[x] Notes - node_16.al - 3. Your Observations
+[x] DisplayPage - node_17.ht - 4. Genes
+[x] DisplayPage - node_18.ht - 5. Are You Free or Attached?
+[x] Notes - node_19.al - 6. What are the Genotypes?
+[x] ChallengeQuestion - node_20.mc - 7.  Genotype Challenge!
+[x] DisplayPage - node_21.ht - 8. Two to Tango
+[x] Notes - node_22.al - 9. Note on Alleles and Genes
+[x] ChallengeQuestion - node_23.mc - 10.  Allele Challenge!
+[x] DisplayPage - node_24.ht - 11. Continuing Investigation
+
+[Activity 4: Cystic Fibrosis Sleuth]
+[x] DisplayPage - node_25.ht - 1.  The Genetics of CF
+[x] Notes - node_26.al - 2.  Eric's Family Genotypes
+[x] DisplayPage - node_27.ht - 3.  Ready to Report?
+[x] Journal - node_28.al - 4. Report to the Editor #3
+
+[Activity 5: Flip of the Gene]
+[x] DisplayPage - node_29.ht - 1. Predictions
+[x] DisplayPage - node_30.ht - 2. Is it by chance?
+[x] SelfTest - node_31.al - 3.  Predict the Probability
+[x] DataGrid - node_32.dg - 4.  Probability and Coin Flipping
+[x] Notes - node_33.al - 5.  Coin flipping notes
+[x] DisplayPage - node_34.ht - 6. Back at the Lab
+[x] Notes - node_35.al - 7. Count the Combos
+[x] DisplayPage - node_36.ht - 8. Dependent or Independent?
+[x] Notes - node_37.al - 9. Depend on Me
+[x] DisplayPage - node_38.ht - 10. The Punnett Square
+[x] Notes - node_39.al - 11. What are the Possibilities?
+[x] DisplayPage - node_40.ht - 12. Back to Work
+[x] Journal - node_41.al - 13. Report to the Editor #4
+
+[Activity 6: Writing the Story]
+[x] DisplayPage - node_42.ht - 1. Prepare for the Story
+[x] Journal - node_43.al - 2. Write the Story
+[x] DisplayPage - node_44.ht - 3. The Readers Write
+[x] Notes - node_45.or - 4. Respond to E-mail
+
+[Activity 7: ALL FINISHED?]
+[x] Alerts - node_46.ht - Genetics Explorations
+[x] Wisedraw2 - node_47.sd - Pedigree Challenge
+[x] Discussion - node_48.bs - Gentic Counselling:  Something to think about?
+[x] Bookmarks - node_49.ht - More On Genetic Diseases
+
+====================
+
+Converted project 26342
+Successfully converted all steps

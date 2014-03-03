@@ -1,0 +1,26 @@
+{
+   "assessmentItem": {
+      "adaptive": false,
+      "identifier": "MasterWorkNote(82240)",
+      "interaction": {
+         "expectedLines": "12",
+         "hasInlineFeedback": false,
+         "placeholderText": "Dear Suzy (Student A).... -or- Dear Bobby (Student B)....",
+         "prompt": "Please respond to ONE of the e-mail questions from the last step.",
+         "responseIdentifier": "NOTE_RESPONSE_1",
+         "type": "text"
+      },
+      "responseDeclaration": {
+         "baseType": "string",
+         "cardinality": "single",
+         "identifier": "NOTE_RESPONSE_1"
+      },
+      "timeDependent": false
+   },
+   "isRichTextEditorAllowed": false,
+   "starterSentence": {
+      "display": "1",
+      "sentence": "Dear Suzy (Student A).... -or- Dear Bobby (Student B)...."
+   },
+   "type": "Note"
+}

@@ -69,6 +69,7 @@ public class TelsSimpleMappingExceptionResolver extends
 	@Override
 	public ModelAndView resolveException(
 			HttpServletRequest request, HttpServletResponse response, Object handler, Exception exception) {
+		exception.printStackTrace();
 		// send email to programmers
 		String sendEmailOnExceptionStr = wiseProperties.getProperty("send_email_on_exception");
 		boolean sendEmailOnException = sendEmailOnExceptionStr.equalsIgnoreCase("true");

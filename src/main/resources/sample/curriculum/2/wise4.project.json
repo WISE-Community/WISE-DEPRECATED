@@ -1,0 +1,1417 @@
+{
+   "autoStep": false,
+   "stepLevelNum": true,
+   "stepTerm": "",
+   "title": "Who inherits Cystic Fibrosis? (Simple Inheritance 2013)",
+   "constraints": [],
+   "nodes": [
+      {
+         "type": "HtmlNode",
+         "identifier": "node_14.ht",
+         "title": "Is it Inherited?",
+         "hints": [],
+         "ref": "node_14.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_44.ht",
+         "title": "The Readers Write",
+         "hints": [],
+         "ref": "node_44.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_45.or",
+         "title": "Respond to E-mail",
+         "hints": [],
+         "ref": "node_45.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_87.or",
+         "title": "DELETE Is cystic fibrosis inherited?",
+         "hints": [],
+         "ref": "node_87.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_13.or",
+         "title": "Revise Your prediction",
+         "hints": [],
+         "ref": "node_13.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_9.ht",
+         "title": "DELETE Pedigree",
+         "hints": [],
+         "ref": "node_9.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_10.ht",
+         "title": "ABSORB The Pedigree",
+         "hints": [],
+         "ref": "node_10.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_31.al",
+         "title": "REMOVE Predict the Probability",
+         "hints": [],
+         "ref": "node_31.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "TableNode",
+         "identifier": "node_50.ta",
+         "title": "REMOVE Probability and Coin Flipping",
+         "hints": [],
+         "ref": "node_50.ta",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "table"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_56.ht",
+         "title": "REMOVE Coin Flip Instructions",
+         "hints": [],
+         "ref": "node_56.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_55.ou",
+         "title": "REMOVE Google doc coin toss ",
+         "hints": [],
+         "ref": "node_55.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_60.ou",
+         "title": "REMOVE Google Chart",
+         "hints": [],
+         "ref": "node_60.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_63.or",
+         "title": "REMOVE Pop up over chart",
+         "hints": [],
+         "ref": "node_63.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_33.al",
+         "title": "REMOVE Coin flipping notes",
+         "hints": [],
+         "ref": "node_33.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_62.ht",
+         "title": "REMOVE Homework 2: Instructions ",
+         "hints": [],
+         "ref": "node_62.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "homework"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_64.ht",
+         "title": "REMOVE  Homework 3",
+         "hints": [],
+         "ref": "node_64.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "homework"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_69.ht",
+         "title": "Intro to dragon breeding",
+         "hints": [],
+         "ref": "node_69.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "TableNode",
+         "identifier": "node_72.ta",
+         "title": "Dragon Table",
+         "hints": [],
+         "ref": "node_72.ta",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "table"
+      },
+      {
+         "type": "TableNode",
+         "identifier": "node_73.ta",
+         "title": "Dragon Table Trait 2",
+         "hints": [],
+         "ref": "node_73.ta",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "table"
+      },
+      {
+         "type": "TableNode",
+         "identifier": "node_74.ta",
+         "title": "Combined Dragon Traits Table",
+         "hints": [],
+         "ref": "node_74.ta",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "table"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_67.ou",
+         "title": "Dragon Breeding",
+         "hints": [],
+         "ref": "node_67.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_66.ht",
+         "title": "REMOVE Homework 4",
+         "hints": [],
+         "ref": "node_66.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "homework"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_68.ht",
+         "title": "REMOVE  Homework 5",
+         "hints": [],
+         "ref": "node_68.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "homework"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_70.ht",
+         "title": "REMOVE Homework 6",
+         "hints": [],
+         "ref": "node_70.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "homework"
+      },
+      {
+         "type": "DataGraphNode",
+         "identifier": "node_32.dg",
+         "title": "4.  Probability and Coin Flipping",
+         "hints": [],
+         "ref": "node_32.dg",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "datatable"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_2.ht",
+         "title": "Eric's personal background",
+         "hints": [],
+         "ref": "node_2.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_5.al",
+         "title": "Report your findings",
+         "hints": [],
+         "ref": "node_5.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_8.ht",
+         "title": "Interview Eric's family",
+         "hints": [],
+         "ref": "node_8.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_11.sd",
+         "title": "Mapping the family pedigree",
+         "hints": [],
+         "ref": "node_11.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "MultipleChoiceNode",
+         "identifier": "node_20.mc",
+         "title": "Genotype Challenge!",
+         "hints": [],
+         "ref": "node_20.mc",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "multiplechoice"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_22.al",
+         "title": "Dominant and recessive alleles",
+         "hints": [],
+         "ref": "node_22.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "MultipleChoiceNode",
+         "identifier": "node_23.mc",
+         "title": "Allele Challenge!",
+         "hints": [],
+         "ref": "node_23.mc",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "multiplechoice"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_26.al",
+         "title": "The genetics of cystic fibrosis",
+         "hints": [],
+         "ref": "node_26.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_35.al",
+         "title": "A model of simple inheritance",
+         "hints": [],
+         "ref": "node_35.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_37.al",
+         "title": "Is inheritance dependent or independent?",
+         "hints": [],
+         "ref": "node_37.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_39.al",
+         "title": "The Punnett square",
+         "hints": [],
+         "ref": "node_39.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_41.al",
+         "title": "Your report on probability",
+         "hints": [],
+         "ref": "node_41.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_42.ht",
+         "title": "Prepare to write the story",
+         "hints": [],
+         "ref": "node_42.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_46.ht",
+         "title": "Genetics Explorations",
+         "hints": [],
+         "ref": "node_46.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_47.sd",
+         "title": "Pedigree Challenge",
+         "hints": [],
+         "ref": "node_47.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_49.ht",
+         "title": "More On Genetic Diseases",
+         "hints": [],
+         "ref": "node_49.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_52.ht",
+         "title": "Google Doc Coin Flip",
+         "hints": [],
+         "ref": "node_52.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "TableNode",
+         "identifier": "node_54.txt",
+         "title": "4.  Probability and Coin Flipping 1",
+         "hints": [],
+         "ref": "node_54.txt",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "table"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_71.al",
+         "title": "Albinism",
+         "hints": [],
+         "ref": "node_71.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_75.al",
+         "title": "Cystic Fibrosis",
+         "hints": [],
+         "ref": "node_75.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_76.al",
+         "title": "Question 3",
+         "hints": [],
+         "ref": "node_76.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_77.al",
+         "title": "Polydactyly",
+         "hints": [],
+         "ref": "node_77.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_80.eb",
+         "title": "Take Stock of Your Ideas",
+         "hints": [],
+         "ref": "node_80.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_81.ht",
+         "title": "How to navigate this unit",
+         "hints": [],
+         "ref": "node_81.ht",
+         "previousWorkNodeIds": [],
+         "links": [
+            {
+               "key": "0a2lKmYInH",
+               "nodeIdentifier": "node_83.ht"
+            }
+         ],
+         "class": "intro"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_83.ht",
+         "title": "Your thoughts on genetics and inheritance",
+         "hints": [],
+         "ref": "node_83.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_84.al",
+         "title": "Treating cystic fibrosis",
+         "hints": [],
+         "ref": "node_84.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_86.sd",
+         "title": "Mapping the Family Pedigree 1",
+         "hints": [],
+         "ref": "node_86.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_89.ht",
+         "title": "Interview the Family 1",
+         "hints": [],
+         "ref": "node_89.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_94.al",
+         "title": "video test",
+         "hints": [],
+         "ref": "node_94.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_90.ht",
+         "title": "Your second assignment",
+         "hints": [],
+         "ref": "node_90.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_7.ch",
+         "title": "Who has cystic fibrosis?",
+         "hints": [],
+         "ref": "node_7.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_92.or",
+         "title": "What's your evidence?",
+         "hints": [],
+         "ref": "node_92.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_93.or",
+         "title": "Letters to the Editor",
+         "hints": [],
+         "ref": "node_93.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_79.ib",
+         "title": "Track your ideas",
+         "hints": [],
+         "ref": "node_79.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_1.or",
+         "title": "A good science journalist",
+         "hints": [],
+         "ref": "node_1.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_96.al",
+         "title": "REVISE/REMOVE What you will learn 1",
+         "hints": [],
+         "ref": "node_96.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_78.al",
+         "title": "The Weekly Gazette",
+         "hints": [],
+         "ref": "node_78.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_97.ht",
+         "title": "Eric's Case File: Symptoms of cystic fibrosis 1",
+         "hints": [],
+         "ref": "node_97.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_98.al",
+         "title": "The symptoms of cystic fibrosis",
+         "hints": [],
+         "ref": "node_98.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_99.al",
+         "title": "Your first assignment",
+         "hints": [],
+         "ref": "node_99.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_100.al",
+         "title": "VIDEO ISSUE The symptoms of cystic fibrosis 1",
+         "hints": [],
+         "ref": "node_100.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_88.eb",
+         "title": "Explain how Eric got cystic fibrosis ",
+         "hints": [],
+         "ref": "node_88.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_85.ib",
+         "title": "Predict how Eric got CF",
+         "hints": [],
+         "ref": "node_85.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "ChallengeNode",
+         "identifier": "node_91.ch",
+         "title": "What does cystic fibrosis affect?",
+         "hints": [],
+         "ref": "node_91.ch",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "challengequestion"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_102.ib",
+         "title": "Share your ideas",
+         "hints": [],
+         "ref": "node_102.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_105.eb",
+         "title": "Your explanation: Predicting disease inheritance",
+         "hints": [],
+         "ref": "node_105.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "TableNode",
+         "identifier": "node_107.ta",
+         "title": "Genotypes and phenotypes",
+         "hints": [],
+         "ref": "node_107.ta",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "table"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_111.al",
+         "title": "Inherited traits",
+         "hints": [],
+         "ref": "node_111.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_103.ib",
+         "title": "Your Third Assignment",
+         "hints": [],
+         "ref": "node_103.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_113.ou",
+         "title": "Your family's health history",
+         "hints": [],
+         "ref": "node_113.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "OutsideUrlNode",
+         "identifier": "node_114.ou",
+         "title": "Genetics: Tour of the Basics",
+         "hints": [],
+         "ref": "node_114.ou",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "www"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_16.ht",
+         "title": "Class phenotype survey (Partner 1) 1",
+         "hints": [],
+         "ref": "node_16.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_108.ht",
+         "title": "Chart test",
+         "hints": [],
+         "ref": "node_108.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_116.ht",
+         "title": "chart",
+         "hints": [],
+         "ref": "node_116.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_117.ht",
+         "title": "chart",
+         "hints": [],
+         "ref": "node_117.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_17.ht",
+         "title": "DELETE Genes (earlobes)",
+         "hints": [],
+         "ref": "node_17.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_18.ht",
+         "title": "DELETE Are You Free or Attached?",
+         "hints": [],
+         "ref": "node_18.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_19.al",
+         "title": "DELETE What are the Genotypes?",
+         "hints": [],
+         "ref": "node_19.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_21.ht",
+         "title": "DELETE Two to Tango",
+         "hints": [],
+         "ref": "node_21.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_24.ht",
+         "title": "DELETE Continuing Investigation",
+         "hints": [],
+         "ref": "node_24.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_82.al",
+         "title": "DELETE Genetics roundup",
+         "hints": [],
+         "ref": "node_82.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_27.ht",
+         "title": "DELETE Ready to Report?",
+         "hints": [],
+         "ref": "node_27.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_25.ht",
+         "title": "DELETE The Genetics of CF",
+         "hints": [],
+         "ref": "node_25.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "MultipleChoiceNode",
+         "identifier": "node_126.mc",
+         "title": "Eric's family genotypes",
+         "hints": [],
+         "ref": "node_126.mc",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "multiplechoice"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_110.ht",
+         "title": "DELETE? Class phenotype survey (Partner 1)",
+         "hints": [],
+         "ref": "node_110.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_109.ht",
+         "title": "DELETE? Class phenotype survey (Partner 2)",
+         "hints": [],
+         "ref": "node_109.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "intro"
+      },
+      {
+         "type": "OpenResponseNode",
+         "identifier": "node_101.or",
+         "title": "(DELETE) HTML Genotypes and Phenotypes",
+         "hints": [],
+         "ref": "node_101.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "openresponse"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_29.ht",
+         "title": "Predictions",
+         "hints": [],
+         "ref": "node_29.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_127.al",
+         "title": "HTML Can you predict the future?",
+         "hints": [],
+         "ref": "node_127.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_119.or",
+         "title": "The effects of alleles",
+         "hints": [],
+         "ref": "node_119.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_120.or",
+         "title": "The ideas you shared",
+         "hints": [],
+         "ref": "node_120.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_121.or",
+         "title": "The ideas you copied",
+         "hints": [],
+         "ref": "node_121.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_51.or",
+         "title": "Genes and the environment",
+         "hints": [],
+         "ref": "node_51.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_122.ib",
+         "title": "Genetics roundup",
+         "hints": [],
+         "ref": "node_122.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_123.txt",
+         "title": "Share your ideas",
+         "hints": [],
+         "ref": "node_123.txt",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_124.eb",
+         "title": "Your explanation: How is CF inherited?",
+         "hints": [],
+         "ref": "node_124.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_125.or",
+         "title": "The ideas you copied",
+         "hints": [],
+         "ref": "node_125.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_28.or",
+         "title": "The ideas you shared",
+         "hints": [],
+         "ref": "node_28.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_128.ht",
+         "title": "Living with cystic fibrosis",
+         "hints": [],
+         "ref": "node_128.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "movie"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_129.ib",
+         "title": "Can you predict the future?",
+         "hints": [],
+         "ref": "node_129.ib",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "SVGDrawNode",
+         "identifier": "node_130.sd",
+         "title": "Mapping the family history of CF",
+         "hints": [],
+         "ref": "node_130.sd",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "quickdraw"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_131.al",
+         "title": "What is probability?",
+         "hints": [],
+         "ref": "node_131.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_132.ht",
+         "title": "The Punnett Square (old)",
+         "hints": [],
+         "ref": "node_132.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_104.txt",
+         "title": "PASTE HTML HERE Share your ideas 1",
+         "hints": [],
+         "ref": "node_104.txt",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_36.ht",
+         "title": "CHANGE TO E Dependent or Independent?",
+         "hints": [],
+         "ref": "node_36.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_106.al",
+         "title": "COPY HTML Share Ideas: Predicting Disease",
+         "hints": [],
+         "ref": "node_106.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_30.ht",
+         "title": "DELETE REMOVE COIN REF Is it by chance?",
+         "hints": [],
+         "ref": "node_30.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_34.ht",
+         "title": "DELETE Back at the Lab",
+         "hints": [],
+         "ref": "node_34.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_136.or",
+         "title": "The ideas you copied",
+         "hints": [],
+         "ref": "node_136.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_135.or",
+         "title": "The ideas you shared",
+         "hints": [],
+         "ref": "node_135.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "IdeaBasketNode",
+         "identifier": "node_134.txt",
+         "title": "Share your ideas",
+         "hints": [],
+         "ref": "node_134.txt",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "ideabasket"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_137.al",
+         "title": "COPY HTML Writing the story",
+         "hints": [],
+         "ref": "node_137.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_43.al",
+         "title": "[CHANGE TO EB] Write the Story",
+         "hints": [],
+         "ref": "node_43.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "ExplanationBuilderNode",
+         "identifier": "node_138.eb",
+         "title": "Organize and write",
+         "hints": [],
+         "ref": "node_138.eb",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "codeit"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_139.al",
+         "title": "You're done!",
+         "hints": [],
+         "ref": "node_139.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      },
+      {
+         "type": "BrainstormNode",
+         "identifier": "node_48.bs",
+         "title": "Genetic Counselling:  Something to think about?",
+         "hints": [],
+         "ref": "node_48.bs",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "brainstorm"
+      },
+      {
+         "type": "NoteNode",
+         "identifier": "node_140.or",
+         "title": "Why fruit flies?",
+         "hints": [],
+         "ref": "node_140.or",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "note"
+      },
+      {
+         "type": "HtmlNode",
+         "identifier": "node_141.ht",
+         "title": "Observing probability",
+         "hints": [],
+         "ref": "node_141.ht",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "display"
+      },
+      {
+         "type": "AssessmentListNode",
+         "identifier": "node_133.al",
+         "title": "Report your findings",
+         "hints": [],
+         "ref": "node_133.al",
+         "previousWorkNodeIds": [],
+         "links": [],
+         "class": "instantquiz"
+      }
+   ],
+   "sequences": [
+      {
+         "type": "sequence",
+         "identifier": "seq_6",
+         "title": "Extras for Experts",
+         "view": "",
+         "refs": [
+            "node_46.ht",
+            "node_47.sd",
+            "node_49.ht"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_7",
+         "title": "Pretest",
+         "view": "normal",
+         "refs": [
+            "node_83.ht",
+            "node_71.al",
+            "node_75.al",
+            "node_77.al"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "master",
+         "title": "master",
+         "view": "",
+         "refs": [
+            "seq_8",
+            "seq_0",
+            "seq_1",
+            "seq_2",
+            "seq_3",
+            "seq_4",
+            "seq_5",
+            "seq_13"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_0",
+         "title": "Research Eric's medical case file",
+         "view": "",
+         "refs": [
+            "node_99.al",
+            "node_2.ht",
+            "node_98.al",
+            "node_128.ht",
+            "node_84.al",
+            "node_91.ch",
+            "node_5.al"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_1",
+         "title": "Trace CF in Eric's family history",
+         "view": "",
+         "refs": [
+            "node_85.ib",
+            "node_90.ht",
+            "node_8.ht",
+            "node_92.or",
+            "node_7.ch",
+            "node_11.sd",
+            "node_102.ib",
+            "node_120.or",
+            "node_121.or",
+            "node_88.eb"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_8",
+         "title": "Welcome!",
+         "view": "normal",
+         "refs": [
+            "node_78.al",
+            "node_79.ib",
+            "node_1.or",
+            "node_81.ht"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_13",
+         "title": "Extras for Experts",
+         "view": "normal",
+         "refs": [
+            "node_114.ou",
+            "node_113.ou",
+            "node_48.bs"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_2",
+         "title": "Dominant and Recessive Alleles",
+         "view": "",
+         "refs": [
+            "node_103.ib",
+            "node_111.al",
+            "node_107.ta",
+            "node_119.or",
+            "node_20.mc",
+            "node_22.al",
+            "node_23.mc",
+            "node_51.or",
+            "node_122.ib"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_3",
+         "title": "The Genetics of CF",
+         "view": "",
+         "refs": [
+            "node_26.al",
+            "node_130.sd",
+            "node_123.txt",
+            "node_28.or",
+            "node_125.or",
+            "node_124.eb"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_4",
+         "title": "Predicting Disease",
+         "view": "",
+         "refs": [
+            "node_129.ib",
+            "node_131.al",
+            "node_141.ht",
+            "node_140.or",
+            "node_35.al",
+            "node_37.al",
+            "node_39.al",
+            "node_41.al",
+            "node_134.txt",
+            "node_135.or",
+            "node_136.or",
+            "node_105.eb"
+         ]
+      },
+      {
+         "type": "sequence",
+         "identifier": "seq_5",
+         "title": "Writing the Story",
+         "view": "",
+         "refs": [
+            "node_42.ht",
+            "node_138.eb",
+            "node_93.or",
+            "node_139.al"
+         ]
+      }
+   ],
+   "startPoint": "master",
+   "navMode": null,
+   "theme": null
+}

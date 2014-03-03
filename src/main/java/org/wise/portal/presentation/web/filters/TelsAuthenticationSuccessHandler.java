@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,6 +36,9 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
@@ -61,7 +65,7 @@ public class TelsAuthenticationSuccessHandler extends
             Authentication authentication)
      throws javax.servlet.ServletException,
             java.io.IOException {
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		MutableUserDetails userDetails = (MutableUserDetails) authentication.getPrincipal();
         boolean userIsAdmin = false;
         if (userDetails instanceof StudentUserDetails) {        	
         	// pLT= previous login time (not this time, but last time)
@@ -119,6 +123,17 @@ public class TelsAuthenticationSuccessHandler extends
 		} catch (IOException ioe) {
 			// do nothing
 		}
+        
+        // set user's language (if specified)
+        Locale locale = null;
+        String userLanguage = userDetails.getLanguage();
+        if (userLanguage != null) {
+        	locale = new Locale(userLanguage);
+        } else {
+        	// user default browser locale setting if user hasn't specified locale
+        	locale = request.getLocale();
+        }
+        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
       
         /* redirect if specified in the login request */
         SavedRequest savedRequest = 

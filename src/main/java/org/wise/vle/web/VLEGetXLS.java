@@ -1536,7 +1536,7 @@ public class VLEGetXLS extends AbstractController {
 						//get the assessment part from the step content
 						JSONObject nodeContentAssessmentPart = getStepContentAssessmentByAssessmentId(nodeId, nodeStateAssessmentPartId);
 						
-						if(nodeContentAssessmentPart.optBoolean("isAutoScoreEnabled")) {
+						if(nodeContentAssessmentPart != null && nodeContentAssessmentPart.optBoolean("isAutoScoreEnabled")) {
 							//the assessment part is auto scored
 							isAutoScoreEnabled = true;
 						}

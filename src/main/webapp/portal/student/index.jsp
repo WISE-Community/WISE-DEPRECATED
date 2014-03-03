@@ -72,6 +72,28 @@ $(document).ready(function() {
 
 	});
 	
+	// create update userinfo dialog
+	$("#updateStudentAccountLink").bind("click", function() {
+		var updateStudentAccountDialogHtml = '<div style="display:none; overflow-y:hidden;" id="updateStudentAccountDialog">'+
+		'<iframe id="updateStudentAccountFrame" src="updatestudentaccount.html" width="100%" height="99%" frameborder="0" allowTransparency="false"> </iframe>'+			
+		'</div>';
+		if ($("#updateStudentAccountDialog").length == 0) {
+			$("#page").append(updateStudentAccountDialogHtml);	
+		}
+		$("#updateStudentAccountDialog").dialog({
+			position:["center","center"],
+			modal:true,
+			resizable:false,
+			width:600,
+			height:425,
+			title: '<spring:message code="student.updateaccount.title" htmlEscape="false" />',
+			buttons: {
+				Cancel: function(){ $(this).dialog('destroy'); }
+			}
+		});
+
+	});
+	
 	// setup announcement link click handlers
 	$('.viewAnnouncements').on('click',function(){
 		var runIds = $(this).attr('id').replace('viewAnnouncements_','');
@@ -233,7 +255,7 @@ $(document).ready(function() {
 								<tr>
 									<td><spring:message code="student.index.thisVisit"/></td>
 									<c:choose>
-										<c:when test="${user.userDetails.lastLoginTime} == null}">
+										<c:when test="${user.userDetails.lastLoginTime == null}">
 											<c:set var="thisLogin" value="${current_date}" />
 										</c:when>
 										<c:otherwise>
@@ -247,7 +269,14 @@ $(document).ready(function() {
 								</tr>
 								<tr>
 									<td class="listTitle2"><spring:message code="student.index.language"/></td> 
-									<td id="language"><spring:message code="english"/></td>
+									<c:choose>
+									<c:when test="${user.userDetails.language == null}">
+										<td id="language"><spring:message code="english"/> (<a id="updateStudentAccountLink"><spring:message code="change" /></a>)</td>
+									</c:when>
+									<c:otherwise>
+										<td id="language"><spring:message code="language.${user.userDetails.language}"/> (<a style=""id="updateStudentAccountLink"><spring:message code="change" /></a>)</td>
+									</c:otherwise>
+									</c:choose>
 								</tr>
 							</table>
 						</div>

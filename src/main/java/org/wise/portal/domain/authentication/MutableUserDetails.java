@@ -220,6 +220,20 @@ public interface MutableUserDetails extends UserDetails, Persistable {
 	public void setLastLoginTime(Date lastLoginTime);
 	
 	/**
+	 * Get the user's language.
+	 * 
+	 * @return user's language, "en", "es", "ja", null if not set explicitly.
+	 */
+	public String getLanguage();
+
+	/**
+	 * Sets the user's language
+	 * 
+	 * @param user's language, "en", "es", "ja", etc
+	 */
+	public void setLanguage(String language);
+	
+	/**
 	 * Increments the number of times the user has logined into the system
 	 * 
 	 * @param numberOfLogins

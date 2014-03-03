@@ -1,0 +1,8 @@
+{
+   "background": "assets/UsefulnessSortingBkg-01.png",
+   "prompt": "Look at the ideas you collected so far about \"How people get CF.\" Which ones are USEFUL for explaining <i>how</i> Eric got cystic fibrosis? Which ones are NOT useful?\n\n<br><br>\nSort your ideas by dragging them from your Basket into the categories on the right.",
+   "instructions": "Use your most useful ideas to explain HOW you think Eric got cystic fibrosis. Make sure to use EVIDENCE in your explanation.",
+   "enableStudentTextArea": true,
+   "type": "ExplanationBuilder",
+   "selectedAttribute": "3IueyfoeMS"
+}

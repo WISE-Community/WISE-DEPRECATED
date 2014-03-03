@@ -53,8 +53,9 @@ public class WISE {
 					Scanner reader = new Scanner(System.in);
 					String input = reader.next();
 					if (input.equals("y")) {
-						System.out.println("Deleting data and reverting to initial state...");
+						System.out.println("Deleting any existing data and reverting to initial state...");
 						resetDB(springConfigClassname);
+						resetCurriculum();
 						System.out.println("WISE has been reset to initial state. Exiting WISE Setup...");
 						break;
 					} else if (input.equals("n")) {
@@ -90,6 +91,17 @@ public class WISE {
 		} catch (InputMismatchException ime) {
 			return mainMenuPrompt();
 		}
+	}
+	
+	/**
+	 * Resets curriculum to initial state (stored in src/main/resources/sample/curriculum)
+	 * @throws IOException 
+	 */
+	private static void resetCurriculum() throws IOException {
+		File destination_curriculum_dir = new File("src/main/webapp/curriculum");
+		File sample_curriculum_dir = new File("src/main/resources/sample/curriculum");
+		FileUtils.deleteDirectory(destination_curriculum_dir);
+		FileUtils.copyDirectory(sample_curriculum_dir, destination_curriculum_dir);
 	}
 
 	/**

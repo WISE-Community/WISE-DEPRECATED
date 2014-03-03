@@ -490,6 +490,7 @@
         credentials_not_expired bit not null,
         email_address varchar(255),
         enabled bit not null,
+        language varchar(255),
         recent_number_of_failed_login_attempts integer,
         password varchar(255) not null,
         recent_failed_login_time datetime,
@@ -952,7 +953,7 @@ INSERT INTO granted_authorities VALUES (1,'ROLE_USER',0),(2,'ROLE_ADMINISTRATOR'
 
 INSERT INTO portal (id,settings,sendmail_on_exception,OPTLOCK) VALUES (1,'{isLoginAllowed:true}',1,0);
 
-INSERT INTO user_details (id, account_not_expired, account_not_locked, credentials_not_expired, email_address, enabled, password, username, OPTLOCK)  VALUES (1,1,1,1,NULL,1,'24c002f26c14d8e087ade986531c7b5d','admin',0),(2,1,1,1,NULL,1,'4cd92091d686b42ec74a29a26432915a','preview',0);
+INSERT INTO user_details (id, account_not_expired, account_not_locked, credentials_not_expired, email_address, enabled, language, password, username, OPTLOCK)  VALUES (1,1,1,1,NULL,1,'en','24c002f26c14d8e087ade986531c7b5d','admin',0),(2,1,1,1,NULL,1,'en','4cd92091d686b42ec74a29a26432915a','preview',0);
 
 INSERT INTO users (id, OPTLOCK, user_details_fk) VALUES (1,0,1),(2,0,2);
 
@@ -1005,7 +1006,7 @@ INSERT INTO groups VALUES(1,'1',0,NULL);
 INSERT INTO groups VALUES(2,'2',0,NULL);
 INSERT INTO groups VALUES(3,'3',0,NULL);
 INSERT INTO offerings VALUES(1,0);
-INSERT INTO runs VALUES('2013-07-05 15:53:00.142000',NULL,NULL,NULL,NULL,NULL,3,'Plate Tectonics',5,'Snake223','2013-06-05 15:53:00.135000',NULL,NULL,1,3);
+INSERT INTO runs VALUES('2013-07-05 15:53:00.142000',NULL,NULL,'{"isXMPPEnabled":true}',NULL,NULL,3,'Plate Tectonics',5,'Snake223','2013-06-05 15:53:00.135000',NULL,NULL,1,3);
 INSERT INTO acl_class VALUES(2,'org.wise.portal.domain.run.impl.RunImpl',NULL);
 INSERT INTO acl_object_identity VALUES(4,1,NULL,1,NULL,2,2,NULL);
 INSERT INTO acl_entry VALUES(4,0,0,0,1,16,NULL,2,4);
@@ -1022,7 +1023,7 @@ INSERT INTO acl_entry VALUES(5,0,0,0,1,16,NULL,2,5);
 INSERT INTO groups_related_to_users VALUES(4,2);
 
 /* add test students student0101~0103 to plate tectonics run */
-INSERT INTO user_details VALUES(3,1,1,1,NULL,1,0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0101',0);
+INSERT INTO user_details VALUES(3,1,1,1,NULL,1,'en',0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0101',0);
 INSERT INTO student_user_details VALUES('wise','QUESTION_ONE','2013-01-01 15:55:51.240000','studen',0,NULL,'t',0,'2013-06-05 15:55:51.240000',3);
 INSERT INTO users VALUES(3,0,3);
 INSERT INTO user_details_related_to_roles VALUES(3,4);
@@ -1031,8 +1032,7 @@ DELETE FROM groups WHERE ID=1;
 INSERT INTO groups VALUES(1,'1',1,NULL);
 INSERT INTO groups_related_to_users VALUES(1,3);
 
-
-INSERT INTO user_details VALUES(4,1,1,1,NULL,1,0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0102',0);
+INSERT INTO user_details VALUES(4,1,1,1,NULL,1,'en',0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0102',0);
 INSERT INTO student_user_details VALUES('wise','QUESTION_ONE','2013-01-02 16:01:28.450000','studen',0,NULL,'t',0,'2013-06-05 16:01:28.450000',4);
 INSERT INTO users VALUES(4,0,4);
 INSERT INTO user_details_related_to_roles VALUES(4,4);
@@ -1041,7 +1041,7 @@ DELETE FROM groups WHERE ID=2;
 INSERT INTO groups VALUES(2,'2',1,NULL);
 INSERT INTO groups_related_to_users VALUES(2,4);
 
-INSERT INTO user_details VALUES(5,1,1,1,NULL,1,0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0103',0);
+INSERT INTO user_details VALUES(5,1,1,1,NULL,1,'en',0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0103',0);
 INSERT INTO student_user_details VALUES('wise','QUESTION_ONE','2013-01-03 16:01:46.941000','studen',0,NULL,'t',0,'2013-06-05 16:01:46.941000',5);
 INSERT INTO users VALUES(5,0,5);
 INSERT INTO user_details_related_to_roles VALUES(5,4);
@@ -1065,67 +1065,42 @@ INSERT INTO projects_related_to_tags VALUES(4,1);
 INSERT INTO projects_related_to_tags VALUES(4,2);
 
 
-/* Add EPIGAME sample project */
-INSERT INTO curnits VALUES(5,NULL,0);
-INSERT INTO modules VALUES(NULL,NULL,NULL,NULL,NULL,NULL,NULL,5);
-INSERT INTO urlmodules VALUES('/5/wise4.project.json',5);
-INSERT INTO project_metadata VALUES(5,'{"username":"DeanneAdams","fullname":"Deanne Adams"}',NULL,'',NULL,'',NULL,NULL,NULL,NULL,'','[]','map',NULL,NULL,'','Physics','','{"techDetails":"","flash":false,"quickTime":false,"java":false}','starmap','EPIGAME Base Warp Version II','{"isStudentAssetUploaderEnabled":false,"ideaManagerSettings":{"publicBasketTerm":"N/A","ideaTermPlural":"ideas","ideaAttributes":[{"id":"BFPgy8HPdv","allowCustom":false,"isRequired":true,"name":"Source","type":"source","options":["EvidenceStep","VisualizationorModel","Movie/Video","EverydayObservation","SchoolorTeacher"]},{"id":"KwE3uMi1jt","isRequired":false,"name":"Icon","type":"icon","options":["blank","important","question"]}],"basketTerm":"IdeaBasket","addIdeaTerm":"AddIdea+","ideaTerm":"idea","ebTerm":"ExplanationBuilder","privateBasketTerm":"N/A","version":"2"},"isPublicIdeaManagerEnabled":false,"isIdeaManagerEnabled":false,"themeSettings":[],"navSettings":[{"navMode":"map","theme":"starmap","nodeSettings":{"node_14.ep":{"y":90.65265504123295,"x":702.2863061765547},"node_92.ep":{"y":352.71348399447,"x":572.5690350391425},"node_11.fl":{"y":178.71837873775223,"x":562.260324644418},"node_6.ep":{"y":163.2512303223769,"x":795.9505988823153},"node_56.ep":{"y":244.90401761777682,"x":328.566361747303},"node_12.fl":{"y":287.80177924500373,"x":409.9279131169279},"node_44.ep":{"y":424.2479806657159,"x":502.0110737680059},"node_7.ep":{"y":340.40918063680635,"x":276.7747937233931},"node_5.txt":{"y":250.73270477345153,"x":502.0696419186129},"node_0.ep":{"y":64.89648899999989,"x":556.3216121621413},"node_4.ep":{"y":199.8196375975159,"x":264.2447639050285},"node_3.fl":{"y":438.11295021026984,"x":650.2146045889939},"node_86.ep":{"y":275.15661252341056,"x":738.827649756646},"node_9.ep":{"y":278.72951629149986,"x":634.0146610147365},"node_26.ep":{"y":376.00175060164383,"x":779.9263124655988},"node_50.ep":{"y":443.1878514287957,"x":349.43671391916047},"node_20.ep":{"y":275.15959968420657,"x":819.4340261638574},"node_2.ep":{"y":119.36113729911295,"x":330.09207896503426},"node_62.ep":{"y":167.0162350147504,"x":427.33997076129896},"node_13.ep":{"y":368.1344634296162,"x":439.5871548141363},"node_80.ep":{"y":160.78475544160614,"x":682.6898005034674},"node_1.fl":{"y":99.54926550685084,"x":434.2172578074868}}}]}',NULL,NULL);
-INSERT INTO projects VALUES(5,'2013-09-26 11:16:28.337000',NULL,0,1,0,0,NULL,'EPIGAME',NULL,4,0,5,5,NULL);
-INSERT INTO acl_object_identity VALUES(7,5,NULL,1,NULL,1,1,NULL);
-INSERT INTO acl_entry VALUES(7,0,0,0,1,16,NULL,1,7);
-INSERT INTO projects_related_to_owners VALUES(5,1);
+/* Create Run with Chemical Reactions project */
+INSERT INTO curnits VALUES(5,NULL,0)
+INSERT INTO modules VALUES(NULL,NULL,NULL,NULL,NULL,NULL,NULL,5)
+INSERT INTO urlmodules VALUES('/5/wise4.project.json',5)
+INSERT INTO project_metadata VALUES(5,'{"username":"admin","fullname":"ad min"}','4-5 hours','','6-12','balanced equations, reactants, products, global warming, hydrocarbons','English',NULL,NULL,NULL,'','[{"nodeId":"node_150.or","maxScoreValue":1},{"nodeId":"node_151.or","maxScoreValue":3},{"nodeId":"node_157.or","maxScoreValue":2},{"nodeId":"node_52.al","maxScoreValue":1},{"nodeId":"node_66.or","maxScoreValue":3},{"nodeId":"node_54.al","maxScoreValue":1},{"nodeId":"node_97.al","maxScoreValue":1},{"nodeId":"node_103.or","maxScoreValue":2},{"nodeId":"node_89.al","maxScoreValue":0},{"nodeId":"node_147.or","maxScoreValue":2},{"nodeId":"node_159.my","maxScoreValue":10},{"nodeId":"node_102.al","maxScoreValue":5},{"nodeId":"node_158.fi","maxScoreValue":1},{"nodeId":"node_12.mc","maxScoreValue":0},{"nodeId":"node_160.fi","maxScoreValue":0},{"nodeId":"node_152.my","maxScoreValue":5},{"nodeId":"node_163.al","maxScoreValue":10},{"nodeId":"node_150.al","maxScoreValue":2},{"nodeId":"node_164.or","maxScoreValue":1},{"nodeId":"node_167.mc","maxScoreValue":2},{"nodeId":"node_166.or","maxScoreValue":2},{"nodeId":"node_169.al","maxScoreValue":3},{"nodeId":"node_171.al","maxScoreValue":2},{"nodeId":"node_170.al","maxScoreValue":5},{"nodeId":"node_172.fi","maxScoreValue":0},{"nodeId":"node_173.al","maxScoreValue":2},{"nodeId":"node_161.al","maxScoreValue":0},{"nodeId":"node_165.or","maxScoreValue":1},{"nodeId":"node_168.mc","maxScoreValue":2},{"nodeId":"node_167.or","maxScoreValue":2},{"nodeId":"node_172.al","maxScoreValue":2},{"nodeId":"node_55.al","maxScoreValue":5},{"nodeId":"node_66.al","maxScoreValue":3},{"nodeId":"node_68.al","maxScoreValue":3},{"nodeId":"node_69.al","maxScoreValue":3},{"nodeId":"node_70.al","maxScoreValue":3},{"nodeId":"node_71.al","maxScoreValue":6},{"nodeId":"node_72.al","maxScoreValue":6},{"nodeId":"node_165.al","maxScoreValue":10},{"nodeId":"node_166.al","maxScoreValue":10},{"nodeId":"node_171.or","maxScoreValue":10},{"nodeId":"node_172.mc","maxScoreValue":10},{"nodeId":"node_168.al","maxScoreValue":10},{"nodeId":"node_174.al","maxScoreValue":10},{"nodeId":"node_179.al","maxScoreValue":10},{"nodeId":"node_180.al","maxScoreValue":10},{"nodeId":"node_2.my","maxScoreValue":0},{"nodeId":"node_164.al","maxScoreValue":10},{"nodeId":"node_177.al","maxScoreValue":10},{"nodeId":"node_178.al","maxScoreValue":10},{"nodeId":"node_94.fi","maxScoreValue":5},{"nodeId":"node_8.or","maxScoreValue":5},{"nodeId":"node_86.al","maxScoreValue":5},{"nodeId":"node_88.al","maxScoreValue":10},{"nodeId":"node_95.or","maxScoreValue":5},{"nodeId":"node_82.al","maxScoreValue":10},{"nodeId":"node_106.al","maxScoreValue":5},{"nodeId":"node_96.or","maxScoreValue":10},{"nodeId":"node_79.al","maxScoreValue":10},{"nodeId":"node_105.al","maxScoreValue":10},{"nodeId":"node_40.fi","maxScoreValue":5},{"nodeId":"node_77.al","maxScoreValue":5},{"nodeId":"node_85.al","maxScoreValue":10},{"nodeId":"node_80.al","maxScoreValue":10},{"nodeId":"node_6.mc","maxScoreValue":5},{"nodeId":"node_92.al","maxScoreValue":10},{"nodeId":"node_57.al","maxScoreValue":10},{"nodeId":"node_93.al","maxScoreValue":10},{"nodeId":"node_101.my","maxScoreValue":10}]',NULL,NULL,NULL,'','Physical Science','Students investigate chemical reactions that result in an increase of greenhouse gases in the atmosphere. They then apply the evidence they have gathered to understand the impact of human actions on global climate change.','{"techDetails":""}',NULL,'Chemical Reactions: How Can We Slow Climate Change?','{"isIdeaManagerEnabled":"checked"}','4-5 hours',NULL)
+INSERT INTO projects VALUES(5,'2014-02-25 15:41:29.980000',NULL,0,'1','0','0',NULL,'Chemical Reactions: How Can We Slow Climate Change?',4,4,0,5,5,NULL)
+INSERT INTO acl_entry VALUES(7,0,'0','0','1',16,NULL,2,7)
+INSERT INTO acl_object_identity VALUES(7,5,NULL,'1',NULL,1,2,NULL)
+INSERT INTO projects_related_to_owners VALUES(5,2)
+INSERT INTO groups VALUES(5,'2',0,NULL)
+INSERT INTO groups VALUES(6,'4',0,NULL)
+INSERT INTO offerings VALUES(2,0)
+INSERT INTO runs VALUES('2014-03-27 15:41:43.205000',NULL,NULL,'{"isXMPPEnabled":true}',NULL,NULL,3,'Chemical Reactions: How Can We Slow Climate Change?',5,'Dodo968','2014-02-25 15:41:43.195000',NULL,NULL,2,5)
+INSERT INTO acl_entry VALUES(9,0,'0','0','1',16,NULL,2,9)
+INSERT INTO acl_object_identity VALUES(9,2,NULL,'1',NULL,2,2,NULL)
+INSERT INTO runs_related_to_owners VALUES(2,2)
+INSERT INTO runs_related_to_groups VALUES(2,5)
+INSERT INTO runs_related_to_groups VALUES(2,6)
+INSERT INTO groups VALUES(7,' preview',0,NULL)
+INSERT INTO workgroups VALUES(2,0,7,2)
+INSERT INTO wiseworkgroups VALUES(NULL,'1',2,NULL)
+INSERT INTO acl_entry VALUES(10,0,'0','0','1',16,NULL,2,10)
+INSERT INTO acl_object_identity VALUES(10,2,NULL,'1',NULL,3,2,NULL)
+INSERT INTO groups_related_to_users VALUES(7,2)
 
-INSERT INTO projects_related_to_tags VALUES(5,1);
-INSERT INTO projects_related_to_tags VALUES(5,2);
+/* add test students student0101~0103 to chemical reactions run */
+DELETE FROM GROUPS WHERE ID=5
+INSERT INTO GROUPS VALUES(5,'2',1,NULL)
+INSERT INTO GROUPS_RELATED_TO_USERS VALUES(5,3)
 
-/* Create run with Epigame project */
-INSERT INTO curnits VALUES(6,NULL,0);
-INSERT INTO modules VALUES(NULL,NULL,NULL,NULL,NULL,NULL,NULL,6);
-INSERT INTO urlmodules VALUES('/6/wise4.project.json',6);
-INSERT INTO project_metadata VALUES(6,'{"username":"DeanneAdams","fullname":"Deanne Adams"}',NULL,'',NULL,'',NULL,NULL,NULL,NULL,'','[]','map',NULL,NULL,'','Physics','','{"techDetails":"","flash":false,"quickTime":false,"java":false}','starmap','EPIGAME Base Warp Version II','{"isStudentAssetUploaderEnabled":false,"ideaManagerSettings":{"publicBasketTerm":"N/A","ideaTermPlural":"ideas","ideaAttributes":[{"id":"BFPgy8HPdv","allowCustom":false,"isRequired":true,"name":"Source","type":"source","options":["EvidenceStep","VisualizationorModel","Movie/Video","EverydayObservation","SchoolorTeacher"]},{"id":"KwE3uMi1jt","isRequired":false,"name":"Icon","type":"icon","options":["blank","important","question"]}],"basketTerm":"IdeaBasket","addIdeaTerm":"AddIdea+","ideaTerm":"idea","ebTerm":"ExplanationBuilder","privateBasketTerm":"N/A","version":"2"},"isPublicIdeaManagerEnabled":false,"isIdeaManagerEnabled":false,"themeSettings":[],"navSettings":[{"navMode":"map","theme":"starmap","nodeSettings":{"node_14.ep":{"y":90.65265504123295,"x":702.2863061765547},"node_92.ep":{"y":352.71348399447,"x":572.5690350391425},"node_11.fl":{"y":178.71837873775223,"x":562.260324644418},"node_6.ep":{"y":163.2512303223769,"x":795.9505988823153},"node_56.ep":{"y":244.90401761777682,"x":328.566361747303},"node_12.fl":{"y":287.80177924500373,"x":409.9279131169279},"node_44.ep":{"y":424.2479806657159,"x":502.0110737680059},"node_7.ep":{"y":340.40918063680635,"x":276.7747937233931},"node_5.txt":{"y":250.73270477345153,"x":502.0696419186129},"node_0.ep":{"y":64.89648899999989,"x":556.3216121621413},"node_4.ep":{"y":199.8196375975159,"x":264.2447639050285},"node_3.fl":{"y":438.11295021026984,"x":650.2146045889939},"node_86.ep":{"y":275.15661252341056,"x":738.827649756646},"node_9.ep":{"y":278.72951629149986,"x":634.0146610147365},"node_26.ep":{"y":376.00175060164383,"x":779.9263124655988},"node_50.ep":{"y":443.1878514287957,"x":349.43671391916047},"node_20.ep":{"y":275.15959968420657,"x":819.4340261638574},"node_2.ep":{"y":119.36113729911295,"x":330.09207896503426},"node_62.ep":{"y":167.0162350147504,"x":427.33997076129896},"node_13.ep":{"y":368.1344634296162,"x":439.5871548141363},"node_80.ep":{"y":160.78475544160614,"x":682.6898005034674},"node_1.fl":{"y":99.54926550685084,"x":434.2172578074868}}}]}',NULL,NULL);
-INSERT INTO projects VALUES(6,'2013-09-26 11:21:25.553000',NULL,0,1,0,0,NULL,'EPIGAME',5,4,0,6,6,NULL);
-INSERT INTO acl_object_identity VALUES(8,6,NULL,1,NULL,1,2,NULL);
-INSERT INTO acl_entry VALUES(8,0,0,0,1,16,NULL,2,8);
-INSERT INTO projects_related_to_owners VALUES(6,2);
-INSERT INTO groups VALUES(5,'1',0,NULL);
-INSERT INTO groups VALUES(6,'2',0,NULL);
-INSERT INTO offerings VALUES(2,0);
-INSERT INTO runs VALUES('2013-10-26 11:21:25.594000',NULL,NULL,NULL,NULL,NULL,3,'EPIGAME',5,'Tiger796','2013-09-26 11:21:25.588000',NULL,NULL,2,6);
-INSERT INTO acl_object_identity VALUES(9,2,NULL,1,NULL,2,2,NULL);
-INSERT INTO acl_entry VALUES(9,0,0,0,1,16,NULL,2,9);
-INSERT INTO runs_related_to_owners VALUES(2,2);
-INSERT INTO runs_related_to_groups VALUES(2,5);
-INSERT INTO runs_related_to_groups VALUES(2,6);
-INSERT INTO groups VALUES(7,' preview',0,NULL);
-INSERT INTO workgroups VALUES(2,0,7,2);
-INSERT INTO wiseworkgroups VALUES(NULL,1,2,NULL);
-INSERT INTO acl_object_identity VALUES(10,2,NULL,1,NULL,3,2,NULL);
-INSERT INTO acl_entry VALUES(10,0,0,0,1,16,NULL,2,10);
-INSERT INTO groups_related_to_users VALUES(7,2);
+DELETE FROM GROUPS WHERE ID=5
+INSERT INTO GROUPS VALUES(5,'2',2,NULL)
+INSERT INTO GROUPS_RELATED_TO_USERS VALUES(5,4)
 
-/* Add student0101~0103 to Epigame run */
-DELETE FROM user_details WHERE ID=3;
-INSERT INTO user_details VALUES(3,1,1,1,NULL,1,0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0101',1);
-DELETE FROM student_user_details WHERE ID=3;
-INSERT INTO student_user_details VALUES('wise','QUESTION_ONE','2013-01-01 15:55:51.240000','studen',0,'2013-09-26 11:24:03.994000','t',1,'2013-06-05 15:55:51.240000',3);
-DELETE FROM groups WHERE ID=5;
-INSERT INTO groups VALUES(5,'1',1,NULL);
-INSERT INTO groups_related_to_users VALUES(5,3);
+DELETE FROM GROUPS WHERE ID=5
+INSERT INTO GROUPS VALUES(5,'2',3,NULL)
+INSERT INTO GROUPS_RELATED_TO_USERS VALUES(5,5)
 
-
-DELETE FROM user_details WHERE ID=4;
-INSERT INTO user_details VALUES(4,1,1,1,NULL,1,0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0102',1);
-DELETE FROM student_user_details WHERE ID=4;
-INSERT INTO student_user_details VALUES('wise','QUESTION_ONE','2013-01-02 16:01:28.450000','studen',0,'2013-09-26 11:25:24.922000','t',1,'2013-06-05 16:01:28.450000',4);
-DELETE FROM groups WHERE ID=5;
-INSERT INTO groups VALUES(5,'1',2,NULL);
-INSERT INTO groups_related_to_users VALUES(5,4);
-
-DELETE FROM user_details WHERE ID=5;
-INSERT INTO user_details VALUES(5,1,1,1,NULL,1,0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0103',1);
-DELETE FROM student_user_details WHERE ID=5;
-INSERT INTO student_user_details VALUES('wise','QUESTION_ONE','2013-01-03 16:01:46.941000','studen',0,'2013-09-26 11:25:35.957000','t',1,'2013-06-05 16:01:46.941000',5);
-DELETE FROM groups WHERE ID=5;
-INSERT INTO groups VALUES(5,'1',3,NULL);
-INSERT INTO groups_related_to_users VALUES(5,5);
 

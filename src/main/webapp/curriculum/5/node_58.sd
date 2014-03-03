@@ -1,0 +1,46 @@
+{
+   "description_active": true,
+   "description_default": "",
+   "prompt": "ANIMATE WHAT CAN HAPPEN TO SUNLIGHT ENERGY WHEN IT HITS THE EARTH'S SURFACE<BR>\n- Use stamps to draw the sun rays, heat energy, and IR rays<br>\n- Create new frames to animate the movement of energy<br>\n- Explain your drawing in the space at the bottom<br>\n\n\n",
+   "snapshots_active": true,
+   "stamps": [
+      {
+         "height": 12,
+         "title": "HeatEnergy_1.png",
+         "uri": "http://wise.berkeley.edu/upload/26156/HeatEnergy_1.png",
+         "width": 12
+      },
+      {
+         "height": 21,
+         "title": "Infrared_Down.png",
+         "uri": "http://wise.berkeley.edu/upload/26156/Infrared_Down.png",
+         "width": 15
+      },
+      {
+         "height": 21,
+         "title": "Infrared_Up_1.png",
+         "uri": "http://wise.berkeley.edu/upload/26156/Infrared_Up_1.png",
+         "width": 15
+      },
+      {
+         "height": 21,
+         "title": "Sunlight_Down.png",
+         "uri": "http://wise.berkeley.edu/upload/26156/Sunlight_Down.png",
+         "width": 15
+      },
+      {
+         "height": 21,
+         "title": "Sunlight_Up_1.png",
+         "uri": "http://wise.berkeley.edu/upload/26156/Sunlight_Up_1.png",
+         "width": 15
+      }
+   ],
+   "svg_background": "<svg xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 450'><g><title>teacher</title><image xlink:href='assets/greenhousebackground1animate.png' id='svg_1' height='402' width='590' y='2' x='2'/></g></svg>",
+   "type": "SVGDraw",
+   "snapshots_max": 10,
+   "toolbar_options": {
+      "basic": false,
+      "annotate": false,
+      "freehand": false
+   }
+}
