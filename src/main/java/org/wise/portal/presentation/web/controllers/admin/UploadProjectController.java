@@ -98,7 +98,7 @@ public class UploadProjectController extends SimpleFormController {
 		}
 
 		// save the upload zip file in the curriculum folder.
-		String sep = System.getProperty("file.separator");
+		String sep = "/";
 		long timeInMillis = Calendar.getInstance().getTimeInMillis();
 		String zipFilename = file.getOriginalFilename();
 		String filename = zipFilename.substring(0, zipFilename.indexOf(".zip"));
