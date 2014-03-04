@@ -48,7 +48,7 @@ var scriptloader = function(){
 	var scriptLoaderWait = 30000;
 	var callerId;
 	var loaded = [];
-	var jquerySrc = 'vle/jquery/js/jquery-1.9.1.min.js';
+	var jquerySrc = 'vle/jquery/js/jquery-1.11.0.min.js';
 	var jqueryUISrc = 'vle/jquery/js/jquery-ui-1.10.0.custom.min.js';
 	var jqueryUICss = 'vle/jquery/css/wise-theme/jquery-ui-1.10.0.custom.css';
 	
