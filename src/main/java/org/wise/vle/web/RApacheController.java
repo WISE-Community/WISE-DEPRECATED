@@ -1,4 +1,4 @@
-package vle.web;
+package org.wise.vle.web;
 
 import java.io.IOException;
 import java.net.URLDecoder;
