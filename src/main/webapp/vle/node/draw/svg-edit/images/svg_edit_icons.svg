@@ -29,7 +29,6 @@
   <path d="m181.32031,242.54688c0.5,20.5 26.75,45 46.75,48.5l-66.25,20l19.5,-68.5z" id="svg_3" fill="#27382f" stroke="none"/>
  </g>
  <g>
-  <title>Layer 2</title>
   <path d="m152.82031,317.04688l51,-152l157,-153c40,-12.00001 118,48 105,105l-157,152.99999l-156,47z" id="svg_1" fill="none" stroke="#800000" stroke-width="17"/>
  </g>
 </svg>
@@ -509,7 +508,7 @@
  </g>
 </svg>
 </g>
-<!--<g id="clone">
+<!-- <g id="clone">
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
  <defs>
   <linearGradient y2="1" x2="1" y1="0" x1="0" id="svg_36">
@@ -527,7 +526,7 @@
   <line x1="2.44838" y1="12.03512" x2="15.5524" y2="12.03512" id="svg_39" stroke="#f9f3de" fill="none"/>
   <path d="m6.72427,12.55859l4.74203,0l-2.30831,2.07258l-2.43372,-2.07258z" id="svg_43" fill="#000000" stroke="none"/>
 </svg>
-</g>-->
+</g> -->
 
 <g id="delete">
 <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -652,7 +651,7 @@
 </svg>
 </g>
 
-<g id="group">
+<g id="group_elements">
 <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
  <defs>
   <linearGradient id="svg_90" x1="0" y1="0" x2="1" y2="1">
@@ -1034,7 +1033,6 @@
   </linearGradient>
  </defs>
  <g>
-  <title>Layer 1</title>
   <g opacity="0.8" id="svg_5">
    <circle id="svg_1" r="27.90625" cy="33" cx="33" stroke-width="0" stroke="#AAAAAA" fill="url(#svg_8)"/>
    <g id="svg_7">

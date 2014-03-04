@@ -1,173 +1,136 @@
 ﻿/*
-function embedded_svg_edit(frame){
-  //initialize communication
-  this.frame = frame;
-  this.stack = []; //callback stack
-  
-  var editapi = this;
-  
-  window.addEventListener("message", function(e){
-    if(e.data.substr(0,5) == "ERROR"){
-      editapi.stack.splice(0,1)[0](e.data,"error")
-    }else{
-      editapi.stack.splice(0,1)[0](e.data)
-    }
-  }, false)
-}
-
-embedded_svg_edit.prototype.call = function(code, callback){
-  this.stack.push(callback);
-  this.frame.contentWindow.postMessage(code,"*");
-}
-
-embedded_svg_edit.prototype.getSvgString = function(callback){
-  this.call("svgCanvas.getSvgString()",callback)
-}
-
-embedded_svg_edit.prototype.setSvgString = function(svg){
-  this.call("svgCanvas.setSvgString('"+svg.replace(/'/g, "\\'")+"')");
-}
-*/
-
-
-/*
 Embedded SVG-edit API
 
 General usage:
 - Have an iframe somewhere pointing to a version of svg-edit > r1000
 - Initialize the magic with:
-var svgCanvas = new embedded_svg_edit(window.frames['svgedit']);
+var svgCanvas = new EmbeddedSVGEdit(window.frames.svgedit);
 - Pass functions in this format:
 svgCanvas.setSvgString("string")
 - Or if a callback is needed:
 svgCanvas.setSvgString("string")(function(data, error){
-  if(error){
-    //there was an error
-  }else{
-    //handle data
+  if (error){
+    // There was an error
+  } else{
+    // Handle data
   }
 })
 
-Everything is done with the same API as the real svg-edit, 
-and all documentation is unchanged. The only difference is
-when handling returns, the callback notation is used instead. 
+Everything is done with the same API as the real svg-edit,
+and all documentation is unchanged.
 
-var blah = new embedded_svg_edit(window.frames['svgedit']);
+However, this file depends on the postMessage API which
+can only support JSON-serializable arguments and
+return values, so, for example, arguments whose value is
+"undefined", a function, a non-finite number, or a built-in
+object like Date(), RegExp(), etc. will most likely not behave
+as expected. In such a case one may need to host
+the SVG editor on the same domain and reference the
+JavaScript methods on the frame itself.
+
+The only other difference is
+when handling returns: the callback notation is used instead.
+
+var blah = new EmbeddedSVGEdit(window.frames.svgedit);
 blah.clearSelection("woot","blah",1337,[1,2,3,4,5,"moo"],-42,{a: "tree",b:6, c: 9})(function(){console.log("GET DATA",arguments)})
 */
 
-function embedded_svg_edit(frame){
-  //initialize communication
+(function () {'use strict';
+
+var cbid = 0;
+
+function getCallbackSetter (d) {
+  return function(){
+    var t = this, // New callback
+      args = [].slice.call(arguments),
+      cbid = t.send(d, args, function(){});  // The callback (currently it's nothing, but will be set later)
+
+    return function(newcallback){
+      t.callbacks[cbid] = newcallback; // Set callback
+    };
+  };
+}
+
+function EmbeddedSVGEdit(frame){
+  if (!(this instanceof EmbeddedSVGEdit)) { // Allow invocation without "new" keyword
+    return new EmbeddedSVGEdit(frame);
+  }
+  // Initialize communication
   this.frame = frame;
-  //this.stack = [] //callback stack
-  this.callbacks = {}; //successor to stack
-  this.encode = embedded_svg_edit.encode;
-  //List of functions extracted with this:
-  //Run in firebug on http://svg-edit.googlecode.com/svn/trunk/docs/files/svgcanvas-js.html
-  
-  //for(var i=0,q=[],f = document.querySelectorAll("div.CFunction h3.CTitle a");i<f.length;i++){q.push(f[i].name)};q
-  //var functions = ["clearSelection", "addToSelection", "removeFromSelection", "open", "save", "getSvgString", "setSvgString",
-  //"createLayer", "deleteCurrentLayer", "setCurrentLayer", "renameCurrentLayer", "setCurrentLayerPosition", "setLayerVisibility",
-  //"moveSelectedToLayer", "clear"];
-  
-  
-  //Newer, well, it extracts things that aren't documented as well. All functions accessible through the normal thingy can now be accessed though the API
-  //var l=[];for(var i in svgCanvas){if(typeof svgCanvas[i] == "function"){l.push(i)}};
-  //run in svgedit itself
-  var functions = ["updateElementFromJson", "embedImage", "fixOperaXML", "clearSelection", "addToSelection",
-		"removeFromSelection", "addNodeToSelection", "open", "save", "getSvgString", "setSvgString", "createLayer",
-		"deleteCurrentLayer", "getCurrentDrawing", "setCurrentLayer", "renameCurrentLayer", "setCurrentLayerPosition",
-		"setLayerVisibility", "moveSelectedToLayer", "clear", "clearPath", "getNodePoint", "clonePathNode", "deletePathNode",
-		"getResolution", "getImageTitle", "setImageTitle", "setResolution", "setBBoxZoom", "setZoom", "getMode", "setMode",
-		"getStrokeColor", "setStrokeColor", "getFillColor", "setFillColor", "setStrokePaint", "setFillPaint", "getStrokeWidth",
-		"setStrokeWidth", "getStrokeStyle", "setStrokeStyle", "getOpacity", "setOpacity", "getFillOpacity", "setFillOpacity",
-		"getStrokeOpacity", "setStrokeOpacity", "getTransformList", "getBBox", "getRotationAngle", "setRotationAngle", "each",
-		"bind", "setIdPrefix", "getBold", "setBold", "getItalic", "setItalic", "getFontFamily", "setFontFamily", "getFontSize",
-		"setFontSize", "getText", "setTextContent", "setImageURL", "setRectRadius", "setSegType", "quickClone",
-		"changeSelectedAttributeNoUndo", "changeSelectedAttribute", "deleteSelectedElements", "groupSelectedElements", "zoomChanged",
-		"ungroupSelectedElement", "moveToTopSelectedElement", "moveToBottomSelectedElement", "moveSelectedElements",
-		"getStrokedBBox", "getVisibleElements", "cycleElement", "getUndoStackSize", "getRedoStackSize", "getNextUndoCommandText",
-		"getNextRedoCommandText", "undo", "redo", "cloneSelectedElements", "alignSelectedElements", "getZoom", "getVersion",
-		"setIconSize", "setLang", "setCustomHandlers"];
-  
-  //TODO: rewrite the following, it's pretty scary.
-  for(var i = 0; i < functions.length; i++){
-    this[functions[i]] = (function(d){
-      return function(){
-        var t = this //new callback
-        for(var g = 0, args = []; g < arguments.length; g++){
-          args.push(arguments[g]);
-        }
-        var cbid = t.send(d,args, function(){})  //the callback (currently it's nothing, but will be set later
-        
-        return function(newcallback){
-          t.callbacks[cbid] = newcallback; //set callback
-        }
-      }
-    })(functions[i])
+  this.callbacks = {};
+  // List of functions extracted with this:
+  // Run in firebug on http://svg-edit.googlecode.com/svn/trunk/docs/files/svgcanvas-js.html
+
+  // for (var i=0,q=[],f = document.querySelectorAll("div.CFunction h3.CTitle a"); i < f.length; i++) { q.push(f[i].name); }; q
+  // var functions = ["clearSelection", "addToSelection", "removeFromSelection", "open", "save", "getSvgString", "setSvgString",
+  // "createLayer", "deleteCurrentLayer", "setCurrentLayer", "renameCurrentLayer", "setCurrentLayerPosition", "setLayerVisibility",
+  // "moveSelectedToLayer", "clear"];
+
+  // Newer, well, it extracts things that aren't documented as well. All functions accessible through the normal thingy can now be accessed though the API
+  // var l = []; for (var i in svgCanvas){ if (typeof svgCanvas[i] == "function") { l.push(i);} };
+  // Run in svgedit itself
+  var i,
+    t = this,
+    functions = ["updateElementFromJson", "embedImage", "fixOperaXML", "clearSelection",
+      "addToSelection",
+      "removeFromSelection", "addNodeToSelection", "open", "save", "getSvgString", "setSvgString", "createLayer",
+      "deleteCurrentLayer", "getCurrentDrawing", "setCurrentLayer", "renameCurrentLayer", "setCurrentLayerPosition",
+      "setLayerVisibility", "moveSelectedToLayer", "clear", "clearPath", "getNodePoint", "clonePathNode", "deletePathNode",
+      "getResolution", "getImageTitle", "setImageTitle", "setResolution", "setBBoxZoom", "setZoom", "getMode", "setMode",
+      "getStrokeColor", "setStrokeColor", "getFillColor", "setFillColor", "setStrokePaint", "setFillPaint", "getStrokeWidth",
+      "setStrokeWidth", "getStrokeStyle", "setStrokeStyle", "getOpacity", "setOpacity", "getFillOpacity", "setFillOpacity",
+      "getStrokeOpacity", "setStrokeOpacity", "getTransformList", "getBBox", "getRotationAngle", "setRotationAngle", "each",
+      "bind", "setIdPrefix", "getBold", "setBold", "getItalic", "setItalic", "getFontFamily", "setFontFamily", "getFontSize",
+      "setFontSize", "getText", "setTextContent", "setImageURL", "setRectRadius", "setSegType", "quickClone",
+      "changeSelectedAttributeNoUndo", "changeSelectedAttribute", "deleteSelectedElements", "groupSelectedElements", "zoomChanged",
+      "ungroupSelectedElement", "moveToTopSelectedElement", "moveToBottomSelectedElement", "moveSelectedElements",
+      "getStrokedBBox", "getVisibleElements", "cycleElement", "getUndoStackSize", "getRedoStackSize", "getNextUndoCommandText",
+      "getNextRedoCommandText", "undo", "redo", "cloneSelectedElements", "alignSelectedElements", "getZoom", "getVersion",
+      "setIconSize", "setLang", "setCustomHandlers"];
+
+  // TODO: rewrite the following, it's pretty scary.
+  for (i = 0; i < functions.length; i++) {
+    this[functions[i]] = getCallbackSetter(functions[i]);
   }
-  //TODO: use AddEvent for Trident browsers, currently they dont support SVG, but they do support onmessage
+
+  // Older IE may need a polyfill for addEventListener, but so it would for SVG
+  window.addEventListener('message', function(e) {
+    // We accept and post strings as opposed to objets for the sake of IE9 support; this
+    //   will most likely be changed in the future
+    if (typeof e.data !== 'string') {
+      return;
+    }
+    var result, cbid,
+      data = e.data && JSON.parse(e.data);
+    if (!data || typeof data !== 'object' || data.namespace !== 'svg-edit') {
+      return;
+    }
+    result = data.result || data.error;
+    cbid = data.id;
+    if (t.callbacks[cbid]) {
+      if (data.result) {
+       t.callbacks[cbid](result);
+      } else {
+        t.callbacks[cbid](result, "error");
+      }
+    }
+  }, false);
+}
+
+EmbeddedSVGEdit.prototype.send = function(name, args, callback){
   var t = this;
-  window.addEventListener("message", function(e){
-    if(e.data.substr(0,4)=="SVGe"){ //because svg-edit is too longish
-      var data = e.data.substr(4);
-      var cbid = data.substr(0, data.indexOf(";"));
-      if(t.callbacks[cbid]){
-        if(data.substr(cbid.length + 1,6) != "error:"){
-          t.callbacks[cbid](eval("("+data.substr(cbid.length+1)+")"))
-        }else{
-          t.callbacks[cbid](data, "error");
-        }
-      }
-    }
-    //this.stack.shift()[0](e.data,e.data.substr(0,5) == "ERROR"?'error':null) //replace with shift
-  }, false)
-}
+  cbid++;
 
-embedded_svg_edit.encode = function(obj){
-  //simple partial JSON encoder implementation
-  if(window.JSON && JSON.stringify) return JSON.stringify(obj);
-  var enc = arguments.callee; //for purposes of recursion
-  
-  if(typeof obj == "boolean" || typeof obj == "number"){
-      return obj+'' //should work...
-  }else if(typeof obj == "string"){
-    //a large portion of this is stolen from Douglas Crockford's json2.js
-    return '"'+
-          obj.replace(
-            /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g
-          , function (a) {
-            return '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-          })
-          +'"'; //note that this isn't quite as purtyful as the usualness
-  }else if(obj.length){ //simple hackish test for arrayish-ness
-    for(var i = 0; i < obj.length; i++){
-      obj[i] = enc(obj[i]); //encode every sub-thingy on top
-    }
-    return "["+obj.join(",")+"]";
-  }else{
-    var pairs = []; //pairs will be stored here
-    for(var k in obj){ //loop through thingys
-      pairs.push(enc(k)+":"+enc(obj[k])); //key: value
-    }
-    return "{"+pairs.join(",")+"}" //wrap in the braces
-  }
-}
-
-embedded_svg_edit.prototype.send = function(name, args, callback){
-  var cbid = Math.floor(Math.random()*31776352877+993577).toString();
-  //this.stack.push(callback);
   this.callbacks[cbid] = callback;
-  for(var argstr = [], i = 0; i < args.length; i++){
-    argstr.push(this.encode(args[i]))
-  }
-  var t = this;
-  setTimeout(function(){//delay for the callback to be set in case its synchronous
-    t.frame.contentWindow.postMessage(cbid+";svgCanvas['"+name+"']("+argstr.join(",")+")","*");
+  setTimeout(function(){ // Delay for the callback to be set in case its synchronous
+    // Todo: Handle non-JSON arguments and return values (undefined, nonfinite numbers, functions, and built-in objects like Date, RegExp), etc.?
+    // We accept and post strings for the sake of IE9 support
+    t.frame.contentWindow.postMessage(JSON.stringify({namespace: "svgCanvas", id: cbid, name: name, args: args}), '*');
   }, 0);
   return cbid;
-  //this.stack.shift()("svgCanvas['"+name+"']("+argstr.join(",")+")")
-}
+};
 
+window.embedded_svg_edit = EmbeddedSVGEdit; // Export old, deprecated API
+window.EmbeddedSVGEdit = EmbeddedSVGEdit; // Follows common JS convention of CamelCase and, as enforced in JSLint, of initial caps for constructors
 
-
+}());
