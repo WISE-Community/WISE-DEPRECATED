@@ -89,7 +89,10 @@ public class PersistentUserDetails implements MutableUserDetails {
     
     @Transient
     public static final String COLUMN_NAME_RESET_PASSWORD_REQUEST_TIME = "reset_password_request_time";
-    
+
+    @Transient
+    public static final String COLUMN_NAME_LANGUAGE = "language";
+
     @Transient
     private static final long serialVersionUID = 1L;
 
@@ -140,6 +143,9 @@ public class PersistentUserDetails implements MutableUserDetails {
     
     @Column(name = PersistentUserDetails.COLUMN_NAME_RESET_PASSWORD_REQUEST_TIME, nullable = true)
     private Date resetPasswordRequestTime = null;
+    
+    @Column(name = PersistentUserDetails.COLUMN_NAME_LANGUAGE, nullable = true)
+    private String language = null;
     
     public Long getId() {
         return id;
@@ -516,6 +522,14 @@ public class PersistentUserDetails implements MutableUserDetails {
 	public void setLastLoginTime(Date lastLoginTime) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	@Override

@@ -7,6 +7,6 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
     <property name="context-root" value="wise"/>
     <property name="java-output-path" value="/target/classes"/>
-        <property name="component.exclusion.patterns" value="WEB-INF/classes/wise.properties,WEB-INF/classes/wise_development.properties,curriculum/**,studentuploads/**"/>
+        <property name="component.exclusion.patterns" value="WEB-INF/classes/sample/**,WEB-INF/classes/wise.properties,WEB-INF/classes/wise_development.properties,curriculum/**,studentuploads/**"/>
   </wb-module>
 </project-modules>

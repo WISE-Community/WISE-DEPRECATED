@@ -405,13 +405,15 @@ CARGRAPH.prototype.render = function() {
 				$("#animationDiv").append("<img id='"+dynamicImage.id+"' style='top:"+ topSoFar +"; left: "+predictionStartingYValue+"' class='dynamicImage' src='"+dynamicImage.img+"'></img>");		
 				topSoFar += dynamicImage.height+15;	
 			}
-			
+			$('#'+dynamicImage.id+'-correct').data('flipped', false);
 		} else if (typeof this.content.showAnalysisHints !== "undefined" && typeof this.content.showAnalysisHints){
 			// display the user's car
 			$("#animationDiv").append("<img id='"+dynamicImage.id+"' style='top:"+ topSoFar +"; left: "+predictionStartingYValue+"' class='dynamicImage' src='"+dynamicImage.img+"'></img>");		
 			topSoFar += dynamicImage.height+15;	
 			$("#animationDiv").append("<div id='animationError"+i+"' style='position:absolute;color:#FF0000;background-color:#ffffff;left:"+ymin+";top:"+topSoFar+"'></div>");	
 		}
+		$('#'+dynamicImage.id).data('flipped', false);
+		
 		// increment topSoFar
 		topSoFar += dynamicImage.height+15;
 		$("#animationDiv").height(topSoFar);
@@ -485,8 +487,27 @@ CARGRAPH.prototype.displayOneFrame = function(xValue, animationFrameXIncrement) 
     			$("#animationError"+i).css("top", dynamicImage.y + dynamicImage.height+15);
     		}
     	}
-
+    	//console.log( $("#"+dynamicImage.id).data('flipped'));
+    	var oldleftValue = $("#"+dynamicImage.id).position().left;
     	var leftValue = yValue/this.tickSpacing*this.yTickSize;
+    	if (leftValue - oldleftValue < 0 && !$("#"+dynamicImage.id).data('flipped')){
+    		$("#"+dynamicImage.id).css("-moz-transform", "scaleX(-1)");
+    		$("#"+dynamicImage.id).css("-o-transform", "scaleX(-1)");
+    		$("#"+dynamicImage.id).css("-webkit-transform", "scaleX(-1)");
+    		$("#"+dynamicImage.id).css("transform", "scaleX(-1)");
+    		$("#"+dynamicImage.id).css("filter", "scaleX(-1)");
+    		$("#"+dynamicImage.id).css("-ms-filter", "scaleX(-1)");    		
+    		$("#"+dynamicImage.id).data('flipped',true);
+    	} else if (leftValue - oldleftValue > 0 && $("#"+dynamicImage.id).data('flipped')){
+    		$("#"+dynamicImage.id).css("-moz-transform", "scaleX(1)");
+    		$("#"+dynamicImage.id).css("-o-transform", "scaleX(1)");
+    		$("#"+dynamicImage.id).css("-webkit-transform", "scaleX(1)");
+    		$("#"+dynamicImage.id).css("transform", "scaleX(1)");
+    		$("#"+dynamicImage.id).css("filter", "scaleX(1)");
+    		$("#"+dynamicImage.id).css("-ms-filter", "scaleX(1)");    
+    		$("#"+dynamicImage.id).data('flipped',false);
+    	}
+
 	    $("#"+dynamicImage.id).css("left",leftValue);
     	this.setCrosshair({x:xValue,y:yValue});  // show cross hair on current x
 
@@ -523,6 +544,24 @@ CARGRAPH.prototype.displayOneFrame = function(xValue, animationFrameXIncrement) 
     		    //} else {
     		    leftValue = eyValue/this.tickSpacing*this.yTickSize;
     		    //}
+    		    oldleftValue = $("#"+dynamicImage.id+"-correct").position().left;
+    			if (leftValue - oldleftValue < 0 && !$("#"+dynamicImage.id+"-correct").data('flipped')){
+    				$("#"+dynamicImage.id+"-correct").css("-moz-transform", "scaleX(-1)");
+    				$("#"+dynamicImage.id+"-correct").css("-o-transform", "scaleX(-1)");
+    				$("#"+dynamicImage.id+"-correct").css("-webkit-transform", "scaleX(-1)");
+    				$("#"+dynamicImage.id+"-correct").css("transform", "scaleX(-1)");
+    				$("#"+dynamicImage.id+"-correct").css("filter", "scaleX(-1)");
+    				$("#"+dynamicImage.id+"-correct").css("-ms-filter", "scaleX(-1)");    		
+    				$("#"+dynamicImage.id+"-correct").data('flipped', true);
+    			} else if (leftValue - oldleftValue > 0 && $("#"+dynamicImage.id+"-correct").data('flipped')) {
+    				$("#"+dynamicImage.id+"-correct").css("-moz-transform", "scaleX(1)");
+    				$("#"+dynamicImage.id+"-correct").css("-o-transform", "scaleX(1)");
+    				$("#"+dynamicImage.id+"-correct").css("-webkit-transform", "scaleX(1)");
+    				$("#"+dynamicImage.id+"-correct").css("transform", "scaleX(1)");
+    				$("#"+dynamicImage.id+"-correct").css("filter", "scaleX(1)");
+    				$("#"+dynamicImage.id+"-correct").css("-ms-filter", "scaleX(1)");    
+    				$("#"+dynamicImage.id+"-correct").data('flipped', false);
+    			}
     		    $("#"+dynamicImage.id+"-correct").css("left",leftValue);
     		}
     	} else if (!dynamicImage.backInTime && typeof this.content.showAnalysisHints !== "undefined" && this.content.showAnalysisHints){

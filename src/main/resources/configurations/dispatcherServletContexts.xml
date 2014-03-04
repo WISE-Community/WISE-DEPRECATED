@@ -31,8 +31,10 @@
  	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
     <!-- Switch locales according to the user's browser -->
-    <bean id="localeResolver"
-        class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver" />
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="en" />
+	</bean>
 
     <!-- Use a default fixed theme -->
     <bean id="themeResolver"
@@ -44,25 +46,10 @@
     <bean id="viewNameTranslator"
         class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator" />
 
-    <!-- maps request URLs to Controller names -->
-    <bean
-        class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
-        <property name="order" value="1" />
-    </bean>
 
     <!-- maps request URLs to view file names -->
     <bean id="urlFilenameViewController"
         class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
-
-    <!-- no 'id' required, HandlerMapping beans are automatically detected by the DispatcherServlet -->
-    <bean
-        class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="order" value="2"></property>
-        <property name="mappings">
-            <value>/index.html=urlFilenameViewController</value>
-        </property>
-    </bean>
-
     
     <bean id="controllerUtil"
     	class="org.wise.portal.presentation.web.controllers.ControllerUtil">
@@ -313,7 +300,7 @@
 	</bean>
 
 	<bean id="runInfoController"
-		class="org.wise.portal.presentation.web.controllers.student.RunInfoController">
+		class="org.wise.portal.presentation.web.controllers.run.RunInfoController">
 		<property name="runService" ref="runService" />
 	</bean>
 
@@ -379,6 +366,15 @@
 		<property name="validator" ref="teacherAccountFormValidator" />
 		<property name="formView" value="teacher/management/updatemyaccountinfo" />
 		<property name="successView" value="teacher/management/updatemyaccount" />
+	</bean>
+
+	<bean id="studentUpdateMyAccountInfoController"
+		class="org.wise.portal.presentation.web.controllers.student.StudentUpdateMyAccountInfoController">
+		<property name="userService" ref="userService" />
+		<property name="commandName" value="studentAccountForm" />
+		<property name="validator" ref="studentAccountFormValidator" />
+		<property name="formView" value="student/updatestudentaccount" />
+		<property name="successView" value="student/updatestudentaccountsuccess" />
 	</bean>
 
 	<bean id="changeTeacherPasswordSuccessController"
@@ -1150,6 +1146,12 @@
 		<property name="basename" value="classpath:messages/i18n" />
 		<property name="defaultEncoding" value="UTF-8"/>
     </bean>
+
+	<!--  allows user to change language via ?lang=XX url param -->
+	<bean id="localeChangeInterceptor"
+		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="lang" />
+	</bean>    
     
     <!--  The real exceptions are logged to the tomcat/logs/catalina.out file. Look there if you've got a problem. -->
     <bean id="exceptionResolver"
@@ -1205,6 +1207,7 @@
     		    /student/startproject.html=startProjectController
     		    /student/registerstudent.html=registerstudentController
 				/student/changestudentpassword.html=changeUserPasswordController
+				/student/updatestudentaccount.html=studentUpdateMyAccountInfoController				
 				/teacher/index.html=teacherIndexController
     		    /teacher/termsofuse.html=termsOfUseController
     		    /teacher/registerteacher.html=registerteacherController
@@ -1261,7 +1264,6 @@
 				/project/exportproject.html=exportProjectController
 				/project/importexternalproject.html=importExternalProjectController
 				/admin/index.html=adminIndexController
-    		    /admin/statistics.html=statisticsController
 				/admin/project/uploadproject.html=uploadProjectController
 				/admin/account/manageusers.html=viewAllUsersController
 				/admin/account/enabledisableuser.html=enableDisableUserController
@@ -1296,7 +1298,7 @@
 				/student/viewannouncements.html=viewAnnouncementsController
 				/createhierarchytype.html=createHierarchyTypeController
 				/createnode.html=createNodeController
-				/runInfo.html=runInfoController
+				/runinfo.html=runInfoController
 				/managehierarchytypes.html=manageHierarchyTypesController
 				/managehierarchy.html=manageHierarchyController
 				/message/message.html=messageController
@@ -1307,6 +1309,7 @@
 				/ideaBasket.html=ideaBasketController
 				/errors/outsideerror.html=outsideErrorController
 				/authorize.html=credentialManager
+    		    /pages/statistics.html=statisticsController
 				/pages/check.html=compatibilityCheckController
 				/pages/memorymonitor.html=memoryMonitorController
 				/getExport.html=getExportController
@@ -1317,6 +1320,11 @@
 				/**/*.html=urlFilenameViewController
     		</value>
     	</property>
+    	<property name="interceptors">
+		   <list>
+			<ref bean="localeChangeInterceptor" />
+		    </list>
+		</property>
     </bean>
     
                 <mvc:resources mapping="/vle/**" location="/vle/" order="1" />

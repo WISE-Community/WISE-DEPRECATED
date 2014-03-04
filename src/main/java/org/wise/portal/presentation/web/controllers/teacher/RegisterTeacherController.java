@@ -36,6 +36,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.domain.authentication.Curriculumsubjects;
 import org.wise.portal.domain.authentication.Schoollevel;
@@ -86,6 +87,7 @@ public class RegisterTeacherController extends SimpleFormController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("schoollevels", Schoollevel.values());
 		model.put("curriculumsubjects",Curriculumsubjects.values());
+		model.put("languages", new String[]{"en", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
 		return model;
 	}
 	
@@ -147,6 +149,11 @@ public class RegisterTeacherController extends SimpleFormController {
 				teacherUserDetails.setState(userDetails.getState());
 				teacherUserDetails.setDisplayname(userDetails.getDisplayname());
 				teacherUserDetails.setEmailValid(true);
+				teacherUserDetails.setLanguage(userDetails.getLanguage());
+		        String userLanguage = userDetails.getLanguage();
+				Locale locale = new Locale(userLanguage);
+		        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
+
 	
 				userService.updateUser(user);
 				// update user in session

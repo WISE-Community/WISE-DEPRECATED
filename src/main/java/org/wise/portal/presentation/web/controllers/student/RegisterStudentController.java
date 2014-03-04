@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.AccountQuestion;
@@ -95,8 +97,13 @@ public class RegisterStudentController extends SimpleFormController {
 		String contextPath = request.getContextPath();
 		
 		String registerUrl = contextPath + "/student/registerstudent.html";
+		String updateAccountInfoUrl = contextPath + "/student/updatestudentaccount.html";
 		
-		if(referrer != null && (referrer.contains(domain + registerUrl) || referrer.contains(domainWithPort + registerUrl))){
+		if(referrer != null && 
+				(referrer.contains(domain + registerUrl) || 
+				 referrer.contains(domainWithPort + registerUrl) ||
+  				 referrer.contains(domain + updateAccountInfoUrl) ||
+				 referrer.contains(domainWithPort + updateAccountInfoUrl))){
 			StudentAccountForm accountForm = (StudentAccountForm) command;
 			StudentUserDetails userDetails = (StudentUserDetails) accountForm.getUserDetails();
 	
@@ -155,7 +162,17 @@ public class RegisterStudentController extends SimpleFormController {
 		    		return showForm(request, response, errors);
 		    	}
 			} else {
-				//userService.updateUser(userDetails);    // TODO HT: add updateUser() to UserService
+				User user = userService.retrieveUserByUsername(userDetails.getUsername());
+				StudentUserDetails studentUserDetails = (StudentUserDetails) user.getUserDetails();
+				studentUserDetails.setLanguage(userDetails.getLanguage());
+		        String userLanguage = userDetails.getLanguage();
+				Locale locale = new Locale(userLanguage);
+		        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
+
+				userService.updateUser(user);
+				// update user in session
+				request.getSession().setAttribute(
+						User.CURRENT_USER_SESSION_KEY, user);
 			}
 	
 			ModelAndView modelAndView = new ModelAndView(getSuccessView());
@@ -178,6 +195,7 @@ public class RegisterStudentController extends SimpleFormController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("genders", Gender.values());
 		model.put("accountQuestions",AccountQuestion.values());
+		model.put("languages", new String[]{"en", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
 		return model;
 	}
 	

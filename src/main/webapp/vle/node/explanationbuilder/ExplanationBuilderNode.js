@@ -244,9 +244,9 @@ ExplanationBuilderNode.prototype.renderGradingView = function(displayStudentWork
 	var enlargeButton = $('<button/>', {id:'enlargeExplanationBuilderButton_' + stepWorkId, text:'Enlarge'});
 	
 	//create the function to call when the 'Enlarge' button is clicked
-	var enlargeFunction = function() {
+	var enlargeFunction = function(view) {
 		//open the html page that will display the enlarged view of the student work
-		var newWindow = window.open("enlargeExplanationBuilder.html");
+	    var newWindow = window.open(view.config.getConfigParam("contextPath")+"/vle/node/explanationbuilder/enlargeExplanationBuilder.html");
 		
 		/*
 		 * send the necessary ids to the new window so we can reference 
@@ -267,7 +267,7 @@ ExplanationBuilderNode.prototype.renderGradingView = function(displayStudentWork
 	displayStudentWorkDiv.append(enlargeButton);
 	
 	//bind the enlargeFunction to the click event
-	enlargeButton.click(enlargeFunction);
+	enlargeButton.click(function(){enlargeFunction(view)});
 	
 	//add the explanationBuilderContainerDiv to the grading div
 	displayStudentWorkDiv.append(explanationBuilderContainerDiv);

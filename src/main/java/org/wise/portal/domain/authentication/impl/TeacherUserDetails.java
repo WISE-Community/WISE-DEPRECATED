@@ -44,8 +44,7 @@ import org.wise.portal.domain.authentication.Schoollevel;
  */
 @Entity
 @Table(name = TeacherUserDetails.DATA_STORE_NAME)
-public class TeacherUserDetails extends PersistentUserDetails implements
-		MutableUserDetails {
+public class TeacherUserDetails extends PersistentUserDetails implements MutableUserDetails {
 
 	@Transient
 	public static final String DATA_STORE_NAME = "teacher_user_details";
@@ -58,10 +57,10 @@ public class TeacherUserDetails extends PersistentUserDetails implements
 
 	@Transient
 	private static final String COLUMN_NAME_SIGNUPDATE = "signupdate";
-	
+
 	@Transient
 	public static final String COLUMN_NAME_CITY = "city";
-	
+
 	@Transient
 	public static final String COLUMN_NAME_STATE = "state";
 
@@ -70,7 +69,7 @@ public class TeacherUserDetails extends PersistentUserDetails implements
 
 	@Transient
 	public static final String COLUMN_NAME_SCHOOLNAME = "schoolname";
-	
+
 	@Transient
 	public static final String COLUMN_NAME_CURRICULUMSUBJECTS = "curriculumsubjects";
 
@@ -79,64 +78,64 @@ public class TeacherUserDetails extends PersistentUserDetails implements
 
 	@Transient
 	public static final String COLUMN_NAME_NUMBEROFLOGINS = "numberoflogins";
-	
+
 	@Transient
 	public static final String COLUMN_NAME_LASTLOGINTIME = "lastlogintime";
-	
+
 	@Transient
 	public static final String COMUN_NAME_DISPLAYNAME = "displayname";
 
 	@Transient
 	private static final String COMUN_NAME_EMAILVALID = "isEmailValid";
-	
+
 	@Transient
 	private static final String COLUMN_NAME_HOW_HEAR = "howDidYouHearAboutUs";
 
-    @Transient
-    private static final long serialVersionUID = 1L;
-    
-    @Column(name = TeacherUserDetails.COLUMN_NAME_FIRSTNAME, nullable = false)
+	@Transient
+	private static final long serialVersionUID = 1L;
+
+	@Column(name = TeacherUserDetails.COLUMN_NAME_FIRSTNAME, nullable = false)
 	private String firstname;
-    
-    @Column(name = TeacherUserDetails.COLUMN_NAME_LASTNAME, nullable = false)
+
+	@Column(name = TeacherUserDetails.COLUMN_NAME_LASTNAME, nullable = false)
 	private String lastname;
-    
-    @Column(name = TeacherUserDetails.COLUMN_NAME_SIGNUPDATE, nullable = false)
-    private Date signupdate;
-    
-    @Column(name = TeacherUserDetails.COLUMN_NAME_CITY)
+
+	@Column(name = TeacherUserDetails.COLUMN_NAME_SIGNUPDATE, nullable = false)
+	private Date signupdate;
+
+	@Column(name = TeacherUserDetails.COLUMN_NAME_CITY)
 	private String city;
-    
-    @Column(name = TeacherUserDetails.COLUMN_NAME_STATE)
+
+	@Column(name = TeacherUserDetails.COLUMN_NAME_STATE)
 	private String state;
-    
-    @Column(name = TeacherUserDetails.COLUMN_NAME_COUNTRY, nullable = false)
+
+	@Column(name = TeacherUserDetails.COLUMN_NAME_COUNTRY, nullable = false)
 	private String country;
-    
-    @Column(name = TeacherUserDetails.COLUMN_NAME_SCHOOLNAME, nullable = false)
+
+	@Column(name = TeacherUserDetails.COLUMN_NAME_SCHOOLNAME, nullable = false)
 	private String schoolname;
-    
-    @Column(name = TeacherUserDetails.COLUMN_NAME_CURRICULUMSUBJECTS)
+
+	@Column(name = TeacherUserDetails.COLUMN_NAME_CURRICULUMSUBJECTS)
 	private String[] curriculumsubjects;
-    
-    @Column(name = TeacherUserDetails.COLUMN_NAME_SCHOOLLEVEL, nullable = false)
+
+	@Column(name = TeacherUserDetails.COLUMN_NAME_SCHOOLLEVEL, nullable = false)
 	private Schoollevel schoollevel;
-    
-    @Column(name = TeacherUserDetails.COLUMN_NAME_NUMBEROFLOGINS, nullable = false)
-    private Integer numberOfLogins;
-    
-    @Column(name = TeacherUserDetails.COLUMN_NAME_LASTLOGINTIME)
-    private Date lastLoginTime;
-    
-    @Column(name = TeacherUserDetails.COMUN_NAME_DISPLAYNAME)
-    private String displayname;
-	
-    @Column(name = TeacherUserDetails.COMUN_NAME_EMAILVALID, nullable=false)
-    private boolean emailValid = true;
-    
-    @Column(name = TeacherUserDetails.COLUMN_NAME_HOW_HEAR)
-    private String howDidYouHearAboutUs;
-    
+
+	@Column(name = TeacherUserDetails.COLUMN_NAME_NUMBEROFLOGINS, nullable = false)
+	private Integer numberOfLogins;
+
+	@Column(name = TeacherUserDetails.COLUMN_NAME_LASTLOGINTIME)
+	private Date lastLoginTime;
+
+	@Column(name = TeacherUserDetails.COMUN_NAME_DISPLAYNAME)
+	private String displayname;
+
+	@Column(name = TeacherUserDetails.COMUN_NAME_EMAILVALID, nullable=false)
+	private boolean emailValid = true;
+
+	@Column(name = TeacherUserDetails.COLUMN_NAME_HOW_HEAR)
+	private String howDidYouHearAboutUs;
+
 	/**
 	 * @return the firstname
 	 */
@@ -259,9 +258,9 @@ public class TeacherUserDetails extends PersistentUserDetails implements
 	 */
 	public String[] getUsernameSuffixes() {
 		return new String[] {"", "1", "2", "3", "4", "5", "6", "7", "8",
-	            "9", "10", "11", "12", "13", "14", "15", "16"};
+				"9", "10", "11", "12", "13", "14", "15", "16"};
 	}
-	
+
 	/**
 	 * Get the next username suffix. For teachers the suffix is just an integer
 	 * that we will increment
@@ -271,7 +270,7 @@ public class TeacherUserDetails extends PersistentUserDetails implements
 	 */
 	public String getNextUsernameSuffix(String currentUsernameSuffix) {
 		String nextUsernameSuffix = "";
-		
+
 		if(currentUsernameSuffix == null) {
 			//empty suffix string
 			nextUsernameSuffix = "";
@@ -286,14 +285,14 @@ public class TeacherUserDetails extends PersistentUserDetails implements
 				e.printStackTrace();
 			}
 		}
-		
+
 		return nextUsernameSuffix;
 	}
-	
+
 	public Integer getNumberOfLogins() {
 		return this.numberOfLogins;
 	}
-	
+
 	public void setNumberOfLogins(Integer numberOfLogins) {
 		this.numberOfLogins = numberOfLogins;
 	}
@@ -315,7 +314,7 @@ public class TeacherUserDetails extends PersistentUserDetails implements
 	public void incrementNumberOfLogins() {
 		this.numberOfLogins++;
 	}
-	
+
 	/**
 	 * @override @see org.telscenter.sail.webapp.domain.authentication.MutableUserDetails#getInfo()
 	 */
@@ -331,8 +330,10 @@ public class TeacherUserDetails extends PersistentUserDetails implements
 		infoMap.put("School Name", this.getSchoolname());
 		infoMap.put("School Level", this.getSchoollevel().toString());
 		String subjects = "";
-		for(String s:curriculumsubjects) {
-			subjects = subjects + s + " ";
+		if (curriculumsubjects != null) {
+			for(String s:curriculumsubjects) {
+				subjects = subjects + s + " ";
+			}
 		}
 		infoMap.put("Curriculum Subjects", subjects);
 		infoMap.put("Number of Logins", this.getNumberOfLogins().toString());
@@ -343,14 +344,14 @@ public class TeacherUserDetails extends PersistentUserDetails implements
 		infoMap.put("Email", this.getEmailAddress());
 		return infoMap;
 	}
-	
+
 	/**
 	 * @return the displayname
 	 */
 	public String getDisplayname() {
 		return displayname;
 	}
-	
+
 	/**
 	 * @param displayname the displayname to set
 	 */
@@ -369,7 +370,7 @@ public class TeacherUserDetails extends PersistentUserDetails implements
 	public void setEmailValid(boolean emailValid) {
 		this.emailValid = emailValid;
 	}
-	
+
 	/**
 	 * Get the how the teacher heard about us
 	 * @return
@@ -377,7 +378,7 @@ public class TeacherUserDetails extends PersistentUserDetails implements
 	public String getHowDidYouHearAboutUs() {
 		return howDidYouHearAboutUs;
 	}
-	
+
 	/**
 	 * Set how the teacher heard about us
 	 * @param howDidYouHearAboutUs

@@ -32,8 +32,16 @@ Netlogo.prototype = {
       var model    = '<param name="DefaultModel" value="' + this.content.activity_uri + '">';
       var extLoc   = '<param name="nlogo.extensions.url" value="' + codebase + '/extensions' + '">';
       var permissions   = '<param name="permissions" value="sandbox"/>';
+      var mayscript = '';
+      if (this.content.permissions != null && this.content.permissions !== '') {
+    	  permissions = '<param name="permissions" value="'+this.content.permissions+'">';
+      }
+      if (this.content.permissions != null && this.content.permissions == "all-permissions") {
+    	mayscript = 'mayscript';
+        archive = 'NetLogoLite-5.0.x-d27c65c-logging.jar';
+      }
       appletStr    = '<applet id="netlogo-applet" code="org.nlogo.lite.Applet" codebase="' + codebase +
-        '" archive="' + archive + '" width="' + this.content.width + '" height="' + this.content.height + '">' +
+        '" archive="' + archive + '" width="' + this.content.width + '" height="' + this.content.height + '" '+mayscript+'>' +
         model + extLoc + permissions + '</applet>';
     }
 

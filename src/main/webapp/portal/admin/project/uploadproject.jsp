@@ -14,7 +14,9 @@
 
 <h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
+<span style="font-size:1.2em;font-weight:bold">
 <c:out value="${msg}" />
+</span>
 
 <p>
 NOTE:

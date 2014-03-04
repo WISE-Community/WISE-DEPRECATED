@@ -490,6 +490,7 @@
         credentials_not_expired bit not null,
         email_address varchar(255),
         enabled bit not null,
+        language varchar(255),
         recent_number_of_failed_login_attempts integer,
         password varchar(255) not null,
         recent_failed_login_time datetime,
@@ -952,7 +953,7 @@ INSERT INTO granted_authorities VALUES (1,'ROLE_USER',0),(2,'ROLE_ADMINISTRATOR'
 
 INSERT INTO portal (id,settings,sendmail_on_exception,OPTLOCK) VALUES (1,'{isLoginAllowed:true}',1,0);
 
-INSERT INTO user_details (id, account_not_expired, account_not_locked, credentials_not_expired, email_address, enabled, password, username, OPTLOCK)  VALUES (1,1,1,1,NULL,1,'24c002f26c14d8e087ade986531c7b5d','admin',0),(2,1,1,1,NULL,1,'4cd92091d686b42ec74a29a26432915a','preview',0);
+INSERT INTO user_details (id, account_not_expired, account_not_locked, credentials_not_expired, email_address, enabled, language, password, username, OPTLOCK)  VALUES (1,1,1,1,NULL,1,'en','24c002f26c14d8e087ade986531c7b5d','admin',0),(2,1,1,1,NULL,1,'en','4cd92091d686b42ec74a29a26432915a','preview',0);
 
 INSERT INTO users (id, OPTLOCK, user_details_fk) VALUES (1,0,1),(2,0,2);
 
@@ -1022,7 +1023,7 @@ INSERT INTO acl_entry VALUES(5,0,0,0,1,16,NULL,2,5);
 INSERT INTO groups_related_to_users VALUES(4,2);
 
 /* add test students student0101~0103 to plate tectonics run */
-INSERT INTO user_details VALUES(3,1,1,1,NULL,1,0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0101',0);
+INSERT INTO user_details VALUES(3,1,1,1,NULL,1,'en',0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0101',0);
 INSERT INTO student_user_details VALUES('wise','QUESTION_ONE','2013-01-01 15:55:51.240000','studen',0,NULL,'t',0,'2013-06-05 15:55:51.240000',3);
 INSERT INTO users VALUES(3,0,3);
 INSERT INTO user_details_related_to_roles VALUES(3,4);
@@ -1031,7 +1032,7 @@ DELETE FROM groups WHERE ID=1;
 INSERT INTO groups VALUES(1,'1',1,NULL);
 INSERT INTO groups_related_to_users VALUES(1,3);
 
-INSERT INTO user_details VALUES(4,1,1,1,NULL,1,0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0102',0);
+INSERT INTO user_details VALUES(4,1,1,1,NULL,1,'en',0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0102',0);
 INSERT INTO student_user_details VALUES('wise','QUESTION_ONE','2013-01-02 16:01:28.450000','studen',0,NULL,'t',0,'2013-06-05 16:01:28.450000',4);
 INSERT INTO users VALUES(4,0,4);
 INSERT INTO user_details_related_to_roles VALUES(4,4);
@@ -1040,7 +1041,7 @@ DELETE FROM groups WHERE ID=2;
 INSERT INTO groups VALUES(2,'2',1,NULL);
 INSERT INTO groups_related_to_users VALUES(2,4);
 
-INSERT INTO user_details VALUES(5,1,1,1,NULL,1,0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0103',0);
+INSERT INTO user_details VALUES(5,1,1,1,NULL,1,'en',0,'4cd92091d686b42ec74a29a26432915a',NULL,NULL,NULL,'student0103',0);
 INSERT INTO student_user_details VALUES('wise','QUESTION_ONE','2013-01-03 16:01:46.941000','studen',0,NULL,'t',0,'2013-06-05 16:01:46.941000',5);
 INSERT INTO users VALUES(5,0,5);
 INSERT INTO user_details_related_to_roles VALUES(5,4);

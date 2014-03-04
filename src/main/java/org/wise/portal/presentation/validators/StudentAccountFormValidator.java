@@ -106,6 +106,9 @@ public class StudentAccountFormValidator extends UserAccountFormValidator {
 					}
 				}
 			}
+        } else {
+        	// if this is not a new account form (student is updating account info), we don't need to check any more.
+        	return;
         }
 		
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.gender",
