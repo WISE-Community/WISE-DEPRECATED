@@ -97,22 +97,6 @@ by creating the following file and adding by calls to svgEditor.setConfig -->
 	onExit = function () {
 		svgdraw.saveToVLE();
 	};
-	
-	svgEditor.setConfig({
-		canvas_expansion: 0,
-		dimensions: [600,450],
-		iconsize:'m',
-		extPath: '../../../node/draw/svg-edit/extensions/',
-	    imgPath: '../../../node/draw/svg-edit/images/',
-	    langPath: '../../../node/draw/svg-edit/locale/',
-	    jGraduatePath: '../../../node/draw/svg-edit/jgraduate/images/',
-	    no_save_warning: true,
-	    show_outside_canvas:false,
-	    extensions: ['ext-closepath.js','ext-arrows.js','ext-connector.js','ext-simple_color.js','ext-wise4.js', 'ext-clearlayer.js', 'ext-stamps.js', 'ext-prompt.js', 'ext-description.js', 'ext-snapshots.js', 'ext-importstudentasset.js'],
-	    initTool: 'select',
-		wireframe: false,
-		showRulers: false
-	});
 </script>
 
 <!--[if gte IE 9]>

@@ -273,22 +273,24 @@ SVGDRAW.prototype.load = function() {
 	this.dataService.load(this, this.loadCallback);	
 };
 
-// populate instructions, stamp images, description/annotation text, and snapshots (wise4)
+// populate instructions, stamp images, description/annotation text, and snapshots
 SVGDRAW.prototype.initDisplay = function(data,context) {
 	var ready = true,
-		extensions = ['ext_prompt', 'ext_stamps', 'ext_snapshots', 'ext_description', 
-	                  'ext_importstudentasset', 'ext_wise4', 'ext_clearlayer'];
-	var e = extensions.length-1;
+		node = this.node,
+		wiseExtensions = ['ext_prompt', 'ext_stamps', 'ext_snapshots', 'ext_description', 'ext_importstudentasset', 'ext_wise4', 'ext_clearlayer'];
+	var e = node.extensions.length-1;
 	for(; e>-1; --e){
-		var prop = extensions[e];
-		if(svgEditor.hasOwnProperty(prop)){
-			if(!svgEditor[prop].isLoaded()){
+		var prop = node.extensions[e];
+		if($.inArray(prop, wiseExtensions) > -1) {
+			if(svgEditor.hasOwnProperty(prop)){
+				if(!svgEditor[prop].isLoaded()){
+					ready = false;
+					break;
+				}
+			} else {
 				ready = false;
 				break;
 			}
-		} else {
-			ready = false;
-			break;
 		}
 	}
 	
