@@ -130,6 +130,11 @@ public class UserDetailsServiceImpl
         return grantedAuthority;
     }
     
+    @Transactional(readOnly = true)
+	public List<MutableGrantedAuthority> retrieveAllAuthorities() {
+		return  this.grantedAuthorityDao.getList();
+	}
+
     /**
      * @override @see net.sf.sail.webapp.service.authentication.UserDetailsService#updateUserDetails(net.sf.sail.webapp.domain.authentication.MutableUserDetails)
      */

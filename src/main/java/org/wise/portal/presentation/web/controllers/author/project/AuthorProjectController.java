@@ -1416,10 +1416,10 @@ public class AuthorProjectController extends AbstractController {
 		String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
 
 		//get the url to make CRater requests
-		String deleteProjectUrl = portalUrl + contextPath + "/deleteproject.html";
+		String deleteProjectUrl = portalUrl + contextPath + "/teacher/projects/deleteproject.html";
 
 		//get the url to make analyze project requests
-		String analyzeProjectUrl = portalUrl + contextPath + "/analyzeproject.html";
+		String analyzeProjectUrl = portalUrl + contextPath + "/teacher/projects/analyzeproject.html";
 
 		//the get url for premade comments
 		String getPremadeCommentsUrl = portalUrl + contextPath + "/teacher/grading/premadeComments.html?action=getData";
