@@ -421,6 +421,8 @@ View.prototype.createPauseScreensDisplay = function() {
 	
 	//create the pause button
 	var pauseButton = $('<input/>').attr({id:'pauseButton', type:'button', name:'pauseButton', value:'Paused'});
+	pauseButton.css('width', '300px');
+	pauseButton.css('height', '100px');
 	pauseButton.addClass(pauseButtonsClass);
 	
 	//set the click event for the pause button
@@ -442,6 +444,8 @@ View.prototype.createPauseScreensDisplay = function() {
 
 	//create the un-pause button
 	var unPauseButton = $('<input/>').attr({id:'unPauseButton', type:'button', name:'unPauseButton', value:'Un-Paused'});
+	unPauseButton.css('width', '300px');
+	unPauseButton.css('height', '100px');
 	unPauseButton.addClass(pauseButtonsClass);
 	
 	//set the click event for the un-pause button
@@ -538,7 +542,7 @@ View.prototype.createStudentProgressDisplay = function() {
 	$('#studentProgressDisplayTable').append(headerTR);
 	
 	//get all the workgroup ids in the class
-	var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIds();
+	var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIdsInInAlphabeticalOrder();
 	
 	if(workgroupIds != null) {
 		//loop through all the workgroup ids
@@ -652,6 +656,11 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		var studentRowClickedParams = {
 			view:this,
 			workgroupId:workgroupId
+		}
+		
+		if(studentOnline) {
+			//the student is online so we will make the row green
+			studentTR.css('background', 'limegreen');
 		}
 		
 		//set the function to be called when the row is clicked 
@@ -1898,6 +1907,14 @@ View.prototype.updateStudentOnline = function(workgroupId, isOnline) {
 	if(workgroupId != null) {
 		//update the online status in the UI for the student
 		$('#studentProgressTableDataOnline_' + workgroupId).text(isOnline);
+		
+		if(isOnline) {
+			//the student is online so we will make the row green
+			$('#studentProgressTableRow_' + workgroupId).css('background', 'limegreen');			
+		} else {
+			//the student is not online so we will remove the color from the row
+			$('#studentProgressTableRow_' + workgroupId).css('background', '');
+		}
 	}
 };
 
@@ -2141,7 +2158,12 @@ View.prototype.pauseScreenReceived = function(data) {
  * Called when the classroom monitor window closes
  */
 View.prototype.onWindowUnload = function() {
-	
+	/*
+	 * the classroom monitor window is being closed so we will make sure
+	 * the student screens are unpaused so the students aren't stuck
+	 * at the pause screen
+	 */
+	this.unPauseScreens();
 };
 
 //used to notify scriptloader that this script has finished loading

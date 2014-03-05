@@ -363,6 +363,37 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			return allStudentsInPeriod;
 		};
 		
+		/**
+		 * Get the classmates in alphabetical order and then get the workgroup ids
+		 * @return an array containing the workgroup ids in alphabetical order based
+		 * on the user name
+		 */
+		var getClassmateWorkgroupIdsInInAlphabeticalOrder = function() {
+			var workgroupIds = [];
+			
+			//get all the classmates in alphabetical order
+			var classmatesInAlphabeticalOrder = getClassmatesInAlphabeticalOrder();
+			
+			if(classmatesInAlphabeticalOrder != null) {
+				//loop through all the classmates
+				for(var x=0; x<classmatesInAlphabeticalOrder.length; x++) {
+					//get a classmate
+					var classmate = classmatesInAlphabeticalOrder[x];
+					
+					if(classmate != null) {
+						//get the workgroup id
+						var workgroupId = classmate.workgroupId;
+						
+						if(workgroupId != null) {
+							workgroupIds.push(workgroupId);
+						}
+					}
+				}
+			}
+			
+			return workgroupIds;
+		}
+		
 		return {
 			getWorkgroupId:function() {
 				return getWorkgroupId();
@@ -438,6 +469,9 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			},
 			getClassmateWorkgroupIdsInPeriodId:function(periodId) {
 				return getClassmateWorkgroupIdsInPeriodId(periodId);
+			},
+			getClassmateWorkgroupIdsInInAlphabeticalOrder:function() {
+				return getClassmateWorkgroupIdsInInAlphabeticalOrder();
 			}
 		};
 	}(myUserInfo, periods, classmateUserInfos, teacherUserInfo, sharedTeacherUserInfos);
