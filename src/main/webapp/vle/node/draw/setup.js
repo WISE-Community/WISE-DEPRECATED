@@ -8,20 +8,6 @@ var coreMinScripts = [
 ];
 
 var studentVLEScripts = [
-    /*'vle/node/draw/svg-edit/jquery.js',
-    'vle/node/draw/svg-edit/jquery-ui/jquery-ui-1.8.17.custom.min.js',
-    'vle/jquery/js/jsonplugin.js',
-	'vle/node/draw/svg-edit/js-hotkeys/jquery.hotkeys.min.js',
-	'vle/node/draw/svg-edit/jquerybbq/jquery.bbq.min.js',
-	'vle/node/draw/svg-edit/svgicons/jquery.svgicons.js',
-	'vle/node/draw/svg-edit/jgraduate/jquery.jgraduate.min.js',
-	'vle/node/draw/svg-edit/jgraduate/jpicker.min.js',
-	'vle/node/draw/svg-edit/spinbtn/JQuerySpinBtn.min.js',
-	'vle/node/draw/svg-edit/touch.js',
-	'vle/node/draw/svg-edit/svgedit.compiled.js',
-	'vle/node/draw/svg-edit/lz77.js',
-	'vle/node/draw/svg-edit/utils.js',
-	'vle/node/draw/svg-edit/jquery.timers-1.2.js',*/
 	'vle/node/draw/svg-edit/svgdraw.js',
 	'vle/node/draw/svg-edit/svgdrawstate.js'
 ];

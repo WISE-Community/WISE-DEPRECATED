@@ -273,94 +273,106 @@ SVGDRAW.prototype.load = function() {
 	this.dataService.load(this, this.loadCallback);	
 };
 
-// populate instructions, stamp images, description/annotation text, and snapshots (wise4)
+// populate instructions, stamp images, description/annotation text, and snapshots
 SVGDRAW.prototype.initDisplay = function(data,context) {
 	var ready = true,
-		extensions = ['ext_prompt', 'ext_stamps', 'ext_snapshots', 'ext_description', 
-	                  'ext_importstudentasset', 'ext_wise4', 'ext_clearlayer'];
-	var e = extensions.length-1;
+		node = this.node,
+		wiseExtensions = ['ext_prompt', 'ext_stamps', 'ext_snapshots', 'ext_description', 'ext_importstudentasset', 'ext_wise4', 'ext_clearlayer'];
+	var e = node.extensions.length-1;
 	for(; e>-1; --e){
-		var prop = extensions[e];
-		if(svgEditor.hasOwnProperty(prop)){
-			if(!svgEditor[prop].isLoaded()){
+		var prop = node.extensions[e];
+		if($.inArray(prop, wiseExtensions) > -1) {
+			if(svgEditor.hasOwnProperty(prop)){
+				if(!svgEditor[prop].isLoaded()){
+					ready = false;
+					break;
+				}
+			} else {
 				ready = false;
 				break;
 			}
-		} else {
-			ready = false;
-			break;
 		}
 	}
 	
 	if(ready){
+		var promptExt = svgEditor.ext_prompt,
+			descriptionExt = svgEditor.ext_description,
+			stampsExt = svgEditor.ext_stamps,
+			snapshotsExt = svgEditor.ext_snapshots,
+			importExt = svgEditor.ext_importstudentasset
+			clearExt = svgEditor.ext_clearlayer;
 		
 		// insert i18n text elements
 		$('#drawlimit_title').attr('title', this.view.getI18NString('sizeLimit_title','SVGDrawNode'));
 		$('#drawlimit_warning').html(this.view.getI18NString('sizeLimit_warning','SVGDrawNode'));
 		$('#drawlimit_warning').html(this.view.getI18NString('sizeLimit_instructions','SVGDrawNode'));
 		$('#drawlimit_confirm > .ui-button-text').html(this.view.getI18NString('OK','SVGDrawNode'));
-		$('#tools_stamp_title').html(this.view.getI18NString('stamps_title','SVGDrawNode'));
-		$('#tool_stamp').attr('title', this.view.getI18NString('stamps_button','SVGDrawNode'));
-		$('#description span.minimized').data('default', this.view.getI18NString('description_header_add','SVGDrawNode'));
-		$('#description span.minimized').text(this.view.getI18NString('description_header_add','SVGDrawNode'));
-		$('#description_header').attr('title', this.view.getI18NString('description_header_title','SVGDrawNode'));
-		$('#description_header_text > span.panel_title').html(this.view.getI18NString('description_header_label','SVGDrawNode'));
-		$('#description_header_max').html(this.view.getI18NString('description_header_maximized','SVGDrawNode'));
-		$('#description_edit').html(this.view.getI18NString('description_edit_link','SVGDrawNode'));
-		$('#description_edit').attr('title', this.view.getI18NString('description_edit_title','SVGDrawNode'));
-		$('#description_collapse').html(this.view.getI18NString('Save','SVGDrawNode'));
-		$('#tool_import_student_asset').attr('title', this.view.getI18NString('importStudentAsset_button','SVGDrawNode'));
-		$('#tool_prompt > a').html(this.view.getI18NString('prompt_link','SVGDrawNode'));
-		$('#tool_prompt > a').attr('title', this.view.getI18NString('prompt_title','SVGDrawNode'));
-		$('#snapHolder .snap').attr('title', this.view.getI18NString('snapshots_snapHover','SVGDrawNode'));
-		$('#snapHolder .snap_delete').attr('title', this.view.getI18NString('snapshots_snapDelete_title','SVGDrawNode'));
-		$('#snapshot_header > h3').html(this.view.getI18NString('snapshots_header','SVGDrawNode'));
-		$('#close_snapshots').attr('title', this.view.getI18NString('snapshots_closeTitle','SVGDrawNode'));
-		$('#snap_loop').attr('title', this.view.getI18NString('snapshots_playback_playLoop','SVGDrawNode'));
-		$('#snap_play').attr('title', this.view.getI18NString('snapshots_playback_playOnce','SVGDrawNode'));
-		$('#snap_pause').attr('title', this.view.getI18NString('snapshots_playback_pause','SVGDrawNode'));
-		$('#play_speed').attr('title', this.view.getI18NString('snapshots_playback_speed','SVGDrawNode'));
-		$('#speed_units').html(this.view.getI18NString('snapshots_playback_units','SVGDrawNode'));
-		$('#new_snapshot > a').html(this.view.getI18NString('snapshots_addNew_link','SVGDrawNode'));
-		$('#new_snapshot').attr('title', this.view.getI18NString('snapshots_addNew_title','SVGDrawNode'));
-		$('#tool_snapshot > a').html(this.view.getI18NString('snapshots_toggle_link','SVGDrawNode'));
-		$('#tool_snapshot').attr('title', this.view.getI18NString('snapshots_toggle_title','SVGDrawNode'));
-		$('#deletesnap_dialog').attr('title', this.view.getI18NString('snapshots_dialog_delete_title','SVGDrawNode'));
-		$('#deletesnap_warning').html(this.view.getI18NString('snapshots_dialog_delete_warning','SVGDrawNode'));
-		$('#deletesnap_instructions').html(this.view.getI18NString('snapshots_dialog_delete_confirm','SVGDrawNode'));
-		$('#snapnumber_dialog').attr('title', this.view.getI18NString('snapshots_dialog_tooMany_title','SVGDrawNode'));
-		$('#snapnumber_warning').html(this.view.getI18NStringWithParams('snapshots_dialog_tooMany_warning',[svgEditor.ext_snapshots.max()],'SVGDrawNode'));
-		$('#snapnumber_instructions').html(this.view.getI18NString('snapshots_dialog_tooMany_instructions','SVGDrawNode'));
-		$('#snapnumber_confirm > .ui-button-text').html(this.view.getI18NString('OK','SVGDrawNode'));
-		$('#deletesnap_confirm > .ui-button-text').html(this.view.getI18NString('Yes','SVGDrawNode'));
-		$('#deletesnap_cancel > .ui-button-text').html(this.view.getI18NString('Cancel','SVGDrawNode'));
-		$('#tool_erase').attr('title', this.view.getI18NString('eraseDrawing_button','SVGDrawNode'));
-		$('#revert_confirm > .ui-button-text').html(this.view.getI18NString('OK','SVGDrawNode'));
-		$('#revert_cancel > .ui-button-text').html(this.view.getI18NString('Cancel','SVGDrawNode'));
-		$('#revert_dialog').attr('title', this.view.getI18NString('eraseDrawing_dialog_title','SVGDrawNode'));
-		$('#revert_warning').html(this.view.getI18NStringWithParams('eraseDrawing_dialog_warning',[svgEditor.ext_snapshots.max()],'SVGDrawNode'));
-		$('#revert_instructions').html(this.view.getI18NString('eraseDrawing_dialog_instructions','SVGDrawNode'));
 		
-		var promptExt = svgEditor.ext_prompt,
-			descriptionExt = svgEditor.ext_description,
-			stampsExt = svgEditor.ext_stamps,
-			snapshotsExt = svgEditor.ext_snapshots;
+		if(stampsExt){
+			$('#tools_stamp_title').html(this.view.getI18NString('stamps_title','SVGDrawNode'));
+			$('#tool_stamp').attr('title', this.view.getI18NString('stamps_button','SVGDrawNode'));
+		}
+		if(descriptionExt){
+			$('#description span.minimized').data('default', this.view.getI18NString('description_header_add','SVGDrawNode'));
+			$('#description span.minimized').text(this.view.getI18NString('description_header_add','SVGDrawNode'));
+			$('#description_header').attr('title', this.view.getI18NString('description_header_title','SVGDrawNode'));
+			$('#description_header_text > span.panel_title').html(this.view.getI18NString('description_header_label','SVGDrawNode'));
+			$('#description_header_max').html(this.view.getI18NString('description_header_maximized','SVGDrawNode'));
+			$('#description_edit').html(this.view.getI18NString('description_edit_link','SVGDrawNode'));
+			$('#description_edit').attr('title', this.view.getI18NString('description_edit_title','SVGDrawNode'));
+			$('#description_collapse').html(this.view.getI18NString('Save','SVGDrawNode'));
+		}
+		if(importExt){
+			$('#tool_import_student_asset').attr('title', this.view.getI18NString('importStudentAsset_button','SVGDrawNode'));
+		}
+		if(promptExt){
+			$('#tool_prompt > a').html(this.view.getI18NString('prompt_link','SVGDrawNode'));
+			$('#tool_prompt > a').attr('title', this.view.getI18NString('prompt_title','SVGDrawNode'));
+		}
+		if(snapshotsExt){
+			$('#snapHolder .snap').attr('title', this.view.getI18NString('snapshots_snapHover','SVGDrawNode'));
+			$('#snapHolder .snap_delete').attr('title', this.view.getI18NString('snapshots_snapDelete_title','SVGDrawNode'));
+			$('#snapshot_header > h3').html(this.view.getI18NString('snapshots_header','SVGDrawNode'));
+			$('#close_snapshots').attr('title', this.view.getI18NString('snapshots_closeTitle','SVGDrawNode'));
+			$('#snap_loop').attr('title', this.view.getI18NString('snapshots_playback_playLoop','SVGDrawNode'));
+			$('#snap_play').attr('title', this.view.getI18NString('snapshots_playback_playOnce','SVGDrawNode'));
+			$('#snap_pause').attr('title', this.view.getI18NString('snapshots_playback_pause','SVGDrawNode'));
+			$('#play_speed').attr('title', this.view.getI18NString('snapshots_playback_speed','SVGDrawNode'));
+			$('#speed_units').html(this.view.getI18NString('snapshots_playback_units','SVGDrawNode'));
+			$('#new_snapshot > a').html(this.view.getI18NString('snapshots_addNew_link','SVGDrawNode'));
+			$('#new_snapshot').attr('title', this.view.getI18NString('snapshots_addNew_title','SVGDrawNode'));
+			$('#tool_snapshot > a').html(this.view.getI18NString('snapshots_toggle_link','SVGDrawNode'));
+			$('#tool_snapshot').attr('title', this.view.getI18NString('snapshots_toggle_title','SVGDrawNode'));
+			$('#deletesnap_dialog').attr('title', this.view.getI18NString('snapshots_dialog_delete_title','SVGDrawNode'));
+			$('#deletesnap_warning').html(this.view.getI18NString('snapshots_dialog_delete_warning','SVGDrawNode'));
+			$('#deletesnap_instructions').html(this.view.getI18NString('snapshots_dialog_delete_confirm','SVGDrawNode'));
+			$('#snapnumber_dialog').attr('title', this.view.getI18NString('snapshots_dialog_tooMany_title','SVGDrawNode'));
+			$('#snapnumber_warning').html(this.view.getI18NStringWithParams('snapshots_dialog_tooMany_warning',[svgEditor.ext_snapshots.max()],'SVGDrawNode'));
+			$('#snapnumber_instructions').html(this.view.getI18NString('snapshots_dialog_tooMany_instructions','SVGDrawNode'));
+			$('#snapnumber_confirm > .ui-button-text').html(this.view.getI18NString('OK','SVGDrawNode'));
+			$('#deletesnap_confirm > .ui-button-text').html(this.view.getI18NString('Yes','SVGDrawNode'));
+			$('#deletesnap_cancel > .ui-button-text').html(this.view.getI18NString('Cancel','SVGDrawNode'));
+		}
+		if(clearExt){
+			$('#tool_erase').attr('title', this.view.getI18NString('eraseDrawing_button','SVGDrawNode'));
+			$('#revert_confirm > .ui-button-text').html(this.view.getI18NString('OK','SVGDrawNode'));
+			$('#revert_cancel > .ui-button-text').html(this.view.getI18NString('Cancel','SVGDrawNode'));
+			$('#revert_dialog').attr('title', this.view.getI18NString('eraseDrawing_dialog_title','SVGDrawNode'));
+			$('#revert_warning').html(this.view.getI18NStringWithParams('eraseDrawing_dialog_warning',[svgEditor.ext_snapshots.max()],'SVGDrawNode'));
+			$('#revert_instructions').html(this.view.getI18NString('eraseDrawing_dialog_instructions','SVGDrawNode'));
+		}
 		
 		// initiate prompt/instructions
-		if(context.instructions && context.instructions !== ""){
+		if(promptExt){
 			promptExt.content(context.instructions); // set content
 			if(!data){
 				// if student hasn't saved any work, show prompt
 				promptExt.show();
 			}
-		} else {
-			// no prompt set, so remove prompt UI elements
-			$('#tool_prompt').remove();
-			$('#prompt_dialog').remove();
 		}
 		
 		//initiate snapshots
-		if(context.snapshotsActive){
+		if(snapshotsExt){
 			snapshotsExt.max(context.snapshots_max);
 			if(context.snapshots_max < 11){
 				svgEditor.maxDrawSize = 40960;
@@ -381,26 +393,19 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 					svgEditor.loadedWISE = true;
 				});
 			}
-			
-		} else {
-			// snapshots are disabled, so remove UI elements
-			$('#tool_snapshot').remove();
-			$('#snapshotpanel').remove();
+			if(promptExt){
+				$('#tool_prompt').insertAfter('#tool_snapshot');
+			}
 		}
 		
 		//initiate stamps
-		if(context.stamps.length > 0){
+		if(stampsExt){
 			stampsExt.content(context.stamps);
-		} else {
-			$('#tools_stamps').remove();
-			$('#tool_stamp').remove();
 		}
 		
-		$('#tool_prompt').insertAfter('#tool_snapshot');
-	
 		// initiate description/annotation
-		if(context.descriptionActive){
-			if (context.snapshotsActive) { // check whether snapshots are active
+		if(descriptionExt){
+			if (snapshotsExt) { // check whether snapshots are active
 				var i = 0;
 				if (data && data.selected > -1) { // check whether a snapshot is selected
 					for (i; i<data.snapshots.length; i++) {
@@ -449,8 +454,6 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 					descriptionExt.content(context.defaultDescription);
 				}
 			}
-		} else {
-			$('#description').remove();
 		}
 		
 		// process tool visibilty options
@@ -469,40 +472,44 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 		}
 		
 		// setup content changed listener functions
-		snapshotsExt.changed = function(){
-			svgEditor.changed = true;
-			if(context.descriptionActive){
-				var activeId = snapshotsExt.open();
-				if(activeId > -1){
-					var snaps = snapshotsExt.content(),
-						snapDescriptions = context.snapDescriptions;
-					// add descriptions to each snapshot
-					var description  = '';
-					if(snapDescriptions.hasOwnProperty(activeId)){
-						description = snapDescriptions[activeId];
+		if(snapshotsExt){
+			snapshotsExt.changed = function(){
+				svgEditor.changed = true;
+				if(descriptionExt){
+					var activeId = snapshotsExt.open();
+					if(activeId > -1){
+						var snaps = snapshotsExt.content(),
+							snapDescriptions = context.snapDescriptions;
+						// add descriptions to each snapshot
+						var description  = '';
+						if(snapDescriptions.hasOwnProperty(activeId)){
+							description = snapDescriptions[activeId];
+						}
+						descriptionExt.content(description);
+						$('#description').show();
+						// set header preview text position
+						var left = $('#description .panel_title').width() + 12;
+						var right = $('#description .description_buttons').width() + 15;
+						$('#description span.minimized').css({'left': left, 'right': right});
+					} else {
+						$('#description').hide();
 					}
-					descriptionExt.content(description);
-					$('#description').show();
-					// set header preview text position
-					var left = $('#description .panel_title').width() + 12;
-					var right = $('#description .description_buttons').width() + 15;
-					$('#description span.minimized').css({'left': left, 'right': right});
-				} else {
-					$('#description').hide();
 				}
-			}
-		};
+			};
+		}
 		
-		descriptionExt.changed = function(){
-			svgEditor.changed = true;
-			context.description = descriptionExt.content();
-			if(context.snapshotsActive){
-				var activeId = snapshotsExt.open();
-				if(activeId > -1){
-					context.snapDescriptions[activeId] = context.description;
+		if(descriptionExt){
+			descriptionExt.changed = function(){
+				svgEditor.changed = true;
+				context.description = descriptionExt.content();
+				if(context.snapshotsActive){
+					var activeId = snapshotsExt.open();
+					if(activeId > -1){
+						context.snapDescriptions[activeId] = context.description;
+					}
 				}
-			}
-		};
+			};
+		}
 		
 		setTimeout(function(){
 			$('#closepath_panel').insertAfter('#path_node_panel');
@@ -544,8 +551,6 @@ SVGDRAW.prototype.hideTools = function(option){
 		$('#tool_path').hide();
 	} else if (option==='text'){
 		$('#tool_text').hide();
-	} else if (option==='importStudentAsset'){
-		$('#tool_import_student_asset').hide();
 	}
 };
 

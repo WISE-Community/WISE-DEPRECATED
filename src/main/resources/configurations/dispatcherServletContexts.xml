@@ -1,62 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    * Copyright (c) 2007 Encore Research Group, University of Toronto
-    * 
-    * This library is free software; you can redistribute it and/or
-    * modify it under the terms of the GNU Lesser General Public
-    * License as published by the Free Software Foundation; either
-    * version 2.1 of the License, or (at your option) any later version.
-    *
-    * This library is distributed in the hope that it will be useful,
-    * but WITHOUT ANY WARRANTY; without even the implied warranty of
-    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    * Lesser General Public License for more details.
-    *
-    * You should have received a copy of the GNU Lesser General Public
-    * License along with this library; if not, write to the Free Software
-    * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
--->
+<!-- * Copyright (c) 2007 Encore Research Group, University of Toronto * 
+	* This library is free software; you can redistribute it and/or * modify 
+	it under the terms of the GNU Lesser General Public * License as published 
+	by the Free Software Foundation; either * version 2.1 of the License, or 
+	(at your option) any later version. * * This library is distributed in the 
+	hope that it will be useful, * but WITHOUT ANY WARRANTY; without even the 
+	implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+	See the GNU * Lesser General Public License for more details. * * You should 
+	have received a copy of the GNU Lesser General Public * License along with 
+	this library; if not, write to the Free Software * Foundation, Inc., 51 Franklin 
+	Street, Fifth Floor, Boston, MA 02110-1301 USA -->
 
 <!-- $Id$ -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:util="http://www.springframework.org/schema/util"
-    xmlns:mvc="http://www.springframework.org/schema/mvc"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
     http://www.springframework.org/schema/util 
     http://www.springframework.org/schema/util/spring-util-3.0.xsd
     http://www.springframework.org/schema/mvc
  	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
-    <!-- Switch locales according to the user's browser -->
+	<!-- Switch locales according to the user's browser -->
 	<bean id="localeResolver"
 		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="en" />
 	</bean>
 
-    <!-- Use a default fixed theme -->
-    <bean id="themeResolver"
-        class="org.springframework.web.servlet.theme.FixedThemeResolver">
-        <property name="defaultThemeName" value="default" />
-    </bean>
+	<!-- Use a default fixed theme -->
+	<bean id="themeResolver"
+		class="org.springframework.web.servlet.theme.FixedThemeResolver">
+		<property name="defaultThemeName" value="default" />
+	</bean>
 
-    <!-- this bean with the well known name generates view names for us -->
-    <bean id="viewNameTranslator"
-        class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator" />
+	<!-- this bean with the well known name generates view names for us -->
+	<bean id="viewNameTranslator"
+		class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator" />
 
 
-    <!-- maps request URLs to view file names -->
-    <bean id="urlFilenameViewController"
-        class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
-    
-    <bean id="controllerUtil"
-    	class="org.wise.portal.presentation.web.controllers.ControllerUtil">
-    	<property name="userService" ref="userService"/>
-    </bean>
-    
-        <!-- Custom controllers -->
+	<!-- maps request URLs to view file names -->
+	<bean id="urlFilenameViewController"
+		class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
+
+	<bean id="controllerUtil"
+		class="org.wise.portal.presentation.web.controllers.ControllerUtil">
+		<property name="userService" ref="userService" />
+	</bean>
+
+	<!-- Custom controllers -->
 
 	<bean id="studentUserDetailsValidator"
 		class="org.wise.portal.presentation.validators.StudentUserDetailsValidator" />
@@ -120,8 +113,7 @@
 
 
 
-	<bean
-		class="org.wise.portal.presentation.web.controllers.TestController" />
+	<bean class="org.wise.portal.presentation.web.controllers.TestController" />
 
 	<bean id="teacherIndexController"
 		class="org.wise.portal.presentation.web.controllers.TeacherIndexController">
@@ -135,7 +127,7 @@
 	<bean id="adminIndexController"
 		class="org.wise.portal.presentation.web.controllers.admin.AdminIndexController">
 	</bean>
-	
+
 	<bean id="registerController"
 		class="org.wise.portal.presentation.web.controllers.RegisterController" />
 
@@ -431,8 +423,7 @@
 			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
 	</bean>
 
-	<bean id="passwordReminderParameters"
-		class="org.wise.portal.domain.impl.PasswordReminderParameters"
+	<bean id="passwordReminderParameters" class="org.wise.portal.domain.impl.PasswordReminderParameters"
 		scope="prototype" />
 
 	<bean id="runParameters" class="org.wise.portal.domain.run.impl.RunParameters"
@@ -531,9 +522,9 @@
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
-	
-    <bean id="changePasswordParametersValidator"
-		class="org.wise.portal.presentation.validators.ChangePasswordParametersValidator" >
+
+	<bean id="changePasswordParametersValidator"
+		class="org.wise.portal.presentation.validators.ChangePasswordParametersValidator">
 		<property name="systemSaltSource" ref="systemSaltSource" />
 	</bean>
 
@@ -633,8 +624,7 @@
 		<property name="projectService" ref="projectService" />
 	</bean>
 
-	<bean id="projectParameters"
-		class="org.wise.portal.domain.project.impl.ProjectParameters">
+	<bean id="projectParameters" class="org.wise.portal.domain.project.impl.ProjectParameters">
 	</bean>
 
 	<bean id="infoController"
@@ -723,8 +713,7 @@
 		<property name="runService" ref="runService" />
 	</bean>
 
-	<bean id="addSharedTeacherParameters"
-		class="org.wise.portal.domain.impl.AddSharedTeacherParameters">
+	<bean id="addSharedTeacherParameters" class="org.wise.portal.domain.impl.AddSharedTeacherParameters">
 	</bean>
 
 	<bean id="addSharedTeacherController"
@@ -796,8 +785,7 @@
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="sessionForm" value="true" />
 		<property name="commandName" value="projectZipFile" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.project.ProjectUpload" />
+		<property name="commandClass" value="org.wise.portal.domain.project.ProjectUpload" />
 		<property name="successView" value="admin/project/uploadproject" />
 		<property name="formView" value="admin/project/uploadproject" />
 	</bean>
@@ -818,8 +806,7 @@
 		class="org.wise.portal.presentation.web.controllers.admin.LookupTeacherController">
 		<property name="userService" ref="userService" />
 		<property name="commandName" value="lookupParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.LookupParameters" />
+		<property name="commandClass" value="org.wise.portal.domain.impl.LookupParameters" />
 		<property name="validator" ref="lookupParametersValidator" />
 	</bean>
 
@@ -829,11 +816,15 @@
 		class="org.wise.portal.presentation.web.controllers.admin.LookupStudentController">
 		<property name="userService" ref="userService" />
 		<property name="commandName" value="lookupParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.LookupParameters" />
+		<property name="commandClass" value="org.wise.portal.domain.impl.LookupParameters" />
 		<property name="validator" ref="lookupParametersValidator" />
 	</bean>
 
+	<bean id="manageUserRolesController"
+		class="org.wise.portal.presentation.web.controllers.admin.ManageUserRolesController">
+		<property name="userService" ref="userService" />
+		<property name="userDetailsService" ref="userDetailsService" />
+	</bean>
 
 
 	<bean id="manageAnnouncementController"
@@ -947,12 +938,12 @@
 		<property name="messageService" ref="messageService" />
 		<property name="userService" ref="userService" />
 	</bean>
-	
+
 	<bean id="studentDataController" class="org.wise.vle.web.StudentDataController">
-	    <property name="vleService" ref="vleService" />
-	    <property name="runService" ref="runService" />
-	    <property name="workgroupService" ref="wiseWorkgroupService" />
-	    <property name="wiseProperties" ref="wiseProperties" />
+		<property name="vleService" ref="vleService" />
+		<property name="runService" ref="runService" />
+		<property name="workgroupService" ref="wiseWorkgroupService" />
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="annotationController" class="org.wise.vle.web.VLEAnnotationController">
@@ -974,36 +965,36 @@
 		<property name="vleService" ref="vleService" />
 		<property name="runService" ref="runService" />
 	</bean>
-	
+
 	<bean id="getExportController" class="org.wise.vle.web.VLEGetXLS">
-	    <property name="vleService" ref="vleService" />
-	    <property name="studentAttendanceService" ref="studentAttendanceService" />
-	    <property name="wiseProperties" ref="wiseProperties" />
-	    <property name="runService" ref="runService" />
-	    <property name="workgroupService" ref="wiseWorkgroupService" />
+		<property name="vleService" ref="vleService" />
+		<property name="studentAttendanceService" ref="studentAttendanceService" />
+		<property name="wiseProperties" ref="wiseProperties" />
+		<property name="runService" ref="runService" />
+		<property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
-	
+
 	<bean id="getSpecialExportController" class="org.wise.vle.web.VLEGetSpecialExport">
-	    <property name="vleService" ref="vleService" />
-	    <property name="studentAttendanceService" ref="studentAttendanceService" />
-	    <property name="wiseProperties" ref="wiseProperties" />
-	    <property name="runService" ref="runService" />
-	    <property name="workgroupService" ref="wiseWorkgroupService" />
+		<property name="vleService" ref="vleService" />
+		<property name="studentAttendanceService" ref="studentAttendanceService" />
+		<property name="wiseProperties" ref="wiseProperties" />
+		<property name="runService" ref="runService" />
+		<property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
-	
+
 	<bean id="peerReviewController" class="org.wise.vle.web.VLEPeerReviewController">
-	    <property name="vleService" ref="vleService" />
-	    <property name="runService" ref="runService" />
+		<property name="vleService" ref="vleService" />
+		<property name="runService" ref="runService" />
 	</bean>
-	
+
 	<bean id="assetManagerController" class="org.wise.vle.utils.AssetManager">
 		<property name="wiseProperties" ref="wiseProperties" />
-	    <property name="runService" ref="runService" />
-	    <property name="workgroupService" ref="wiseWorkgroupService" />
+		<property name="runService" ref="runService" />
+		<property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
-	
+
 	<bean id="vleGetStatisticsController" class="org.wise.vle.web.VLEGetStatisticsController">
-	    <property name="vleService" ref="vleService" />
+		<property name="vleService" ref="vleService" />
 	</bean>
 
 	<bean id="credentialManager"
@@ -1093,161 +1084,160 @@
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="messageSource" ref="messageSource" />
 	</bean>
-	
+
 	<bean id="registerstudentController"
-    	class="org.wise.portal.presentation.web.controllers.student.RegisterStudentController">
-    	<property name="userService" ref="userService" />
-    	<property name="studentService" ref="studentService" />
-    	<property name="commandName" value="studentAccountForm" />
-    	<property name="validator" ref="studentAccountFormValidator" />
-    	<property name="formView" value="student/registerstudent" />
-    	<property name="successView" value="student/registerstudentsuccess" />
-    </bean>
-    
-   <bean id="registerteacherController"
-    	class="org.wise.portal.presentation.web.controllers.teacher.RegisterTeacherController">
-    	<property name="userService" ref="userService" />
-    	<property name="commandName" value="teacherAccountForm" />
-    	<property name="validator" ref="teacherAccountFormValidator" />
-    	<property name="formView" value="teacher/registerteacher" />
-    	<property name="successView" value="teacher/registerTeacherConfirm" />
-        <property name="mailService" ref="mailService"/>
-		<property name="wiseProperties" ref="wiseProperties" />        
-		<property name="messageSource" ref="messageSource" />      	
-    </bean>
-    
-    <bean id="loginController"
+		class="org.wise.portal.presentation.web.controllers.student.RegisterStudentController">
+		<property name="userService" ref="userService" />
+		<property name="studentService" ref="studentService" />
+		<property name="commandName" value="studentAccountForm" />
+		<property name="validator" ref="studentAccountFormValidator" />
+		<property name="formView" value="student/registerstudent" />
+		<property name="successView" value="student/registerstudentsuccess" />
+	</bean>
+
+	<bean id="registerteacherController"
+		class="org.wise.portal.presentation.web.controllers.teacher.RegisterTeacherController">
+		<property name="userService" ref="userService" />
+		<property name="commandName" value="teacherAccountForm" />
+		<property name="validator" ref="teacherAccountFormValidator" />
+		<property name="formView" value="teacher/registerteacher" />
+		<property name="successView" value="teacher/registerTeacherConfirm" />
+		<property name="mailService" ref="mailService" />
+		<property name="wiseProperties" ref="wiseProperties" />
+		<property name="messageSource" ref="messageSource" />
+	</bean>
+
+	<bean id="loginController"
 		class="org.wise.portal.presentation.web.controllers.LoginController">
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
-	
-	<bean id="cRaterController"
-		class="org.wise.vle.web.CRaterController">
+
+	<bean id="cRaterController" class="org.wise.vle.web.CRaterController">
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
-    
-    <!-- Specifies where theme properties are located -->
-    <bean id="themeSource"
-        class="org.springframework.ui.context.support.ResourceBundleThemeSource">
-        <property name="basenamePrefix" value="themes/" />
-    </bean>           
 
-    <!-- JSP with optional JSTL views -->
-    <bean id="viewResolver"
-        class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-        <property name="viewClass"
-            value="org.springframework.web.servlet.view.JstlView" />
-        <property name="prefix" value="/portal/" />
-        <property name="suffix" value=".jsp" />
-    </bean>
+	<!-- Specifies where theme properties are located -->
+	<bean id="themeSource"
+		class="org.springframework.ui.context.support.ResourceBundleThemeSource">
+		<property name="basenamePrefix" value="themes/" />
+	</bean>
 
-    <bean id="messageSource"
-        class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	<!-- JSP with optional JSTL views -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/portal/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basename" value="classpath:messages/i18n" />
-		<property name="defaultEncoding" value="UTF-8"/>
-    </bean>
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
 
-	<!--  allows user to change language via ?lang=XX url param -->
+	<!-- allows user to change language via ?lang=XX url param -->
 	<bean id="localeChangeInterceptor"
 		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
 		<property name="paramName" value="lang" />
-	</bean>    
-    
-    <!--  The real exceptions are logged to the tomcat/logs/catalina.out file. Look there if you've got a problem. -->
-    <bean id="exceptionResolver"
-        class="org.wise.portal.spring.impl.TelsSimpleMappingExceptionResolver">
-        <property name="exceptionMappings">
-            <props>
-                <prop key="java.lang.Exception">errors/friendlyError</prop>
-                <prop key="org.acegisecurity.AccessDeniedException">
-                    errors/securityFriendlyError
-                </prop>
-                <prop key="org.wise.portal.presentation.web.exception.NotAuthorizedException">accessdenied</prop>
-            </props>
-        </property>
-        <property name="wiseProperties" ref="wiseProperties" />
-        <property name="mailService" ref="mailService" />
-    </bean>
-    
-    <bean id="openSessionInViewInterceptor"
-        class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
-        <property name="sessionFactory" ref="sessionFactory" />
-    </bean>
-    
-	<bean id="securityUtils"
-        class="org.wise.vle.utils.SecurityUtils">
-        <property name="wiseProperties" ref="wiseProperties" />
-        <property name="runService" ref="runService" />
-        <property name="workgroupService" ref="wiseWorkgroupService" />
-    </bean>
-    
-    <bean
-    	class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-    	<property name="order" value="2"></property>
-    	<property name="mappings">
-    		<value>
-    			/request/info.html=informationController
-    			/metadata.html=projectMetadataController
-    		    /index.html=urlFilenameViewController
-    		    /login.html=loginController
-    		    /errors/friendlyError.html=urlFilenameViewController
-    		    /accessdenied.html=accessDeniedController
-    		    /router.html=routerController
-    		    /preview.html=previewLDProjectController
-    		    /contact/contactwisegeneral.html=contactWiseController
-    		    /contact/contactwiseproject.html=contactWiseProjectController
-    		    /contact/checkforexistingaccount.html=checkForExistingAccountController
-    		    /getPortalStatistics.html=portalStatisticsController
-    		    /getVLEStatistics.html=vleGetStatisticsController
-    		    /student/index.html=studentIndexController
-    		    /student/vle/vle.html=studentVLEController
-    		    /student/selectteam.html=selectteamController
-    		    /student/teamsignin.html=teamSignInController
-    		    /student/addproject.html=addProjectController
-    		    /student/startproject.html=startProjectController
-    		    /student/registerstudent.html=registerstudentController
+	</bean>
+
+	<!-- The real exceptions are logged to the tomcat/logs/catalina.out file. 
+		Look there if you've got a problem. -->
+	<bean id="exceptionResolver"
+		class="org.wise.portal.spring.impl.TelsSimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.Exception">errors/friendlyError</prop>
+				<prop key="org.acegisecurity.AccessDeniedException">
+					errors/securityFriendlyError
+				</prop>
+				<prop
+					key="org.wise.portal.presentation.web.exception.NotAuthorizedException">accessdenied</prop>
+			</props>
+		</property>
+		<property name="wiseProperties" ref="wiseProperties" />
+		<property name="mailService" ref="mailService" />
+	</bean>
+
+	<bean id="openSessionInViewInterceptor"
+		class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="securityUtils" class="org.wise.vle.utils.SecurityUtils">
+		<property name="wiseProperties" ref="wiseProperties" />
+		<property name="runService" ref="runService" />
+		<property name="workgroupService" ref="wiseWorkgroupService" />
+	</bean>
+
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="order" value="2"></property>
+		<property name="mappings">
+			<value>
+				/request/info.html=informationController
+				/metadata.html=projectMetadataController
+				/index.html=urlFilenameViewController
+				/login.html=loginController
+				/errors/friendlyError.html=urlFilenameViewController
+				/accessdenied.html=accessDeniedController
+				/router.html=routerController
+				/preview.html=previewLDProjectController
+				/contact/contactwisegeneral.html=contactWiseController
+				/contact/contactwiseproject.html=contactWiseProjectController
+				/contact/checkforexistingaccount.html=checkForExistingAccountController
+				/getPortalStatistics.html=portalStatisticsController
+				/getVLEStatistics.html=vleGetStatisticsController
+				/student/index.html=studentIndexController
+				/student/vle/vle.html=studentVLEController
+				/student/selectteam.html=selectteamController
+				/student/teamsignin.html=teamSignInController
+				/student/addproject.html=addProjectController
+				/student/startproject.html=startProjectController
+				/student/registerstudent.html=registerstudentController
 				/student/changestudentpassword.html=changeUserPasswordController
-				/student/updatestudentaccount.html=studentUpdateMyAccountInfoController				
+				/student/updatestudentaccount.html=studentUpdateMyAccountInfoController
 				/teacher/index.html=teacherIndexController
-    		    /teacher/termsofuse.html=termsOfUseController
-    		    /teacher/registerteacher.html=registerteacherController
-    		    /teacher/curriculumsubjects.html=curriculumSubjectsController
-    		    /teacher/projects/languagetranslations.html=languageTranslationsController
-    		    /teacher/projects/projectinfo.html=projectInfoController
-    		    /teacher/projects/customized/shareproject.html=shareProjectController
-    		    /teacher/projects/customized/unshareproject.html=unShareProjectController
-    		    /teacher/run/shareprojectrun.html=shareProjectRunController
-    		    /teacher/run/unshareprojectrun.html=unShareProjectRunController
-    		    /teacher/run/manage/archiveRun.html=endRunController
-    		    /teacher/run/manage/startRun.html=startRunController
-    		    /teacher/run/createRun.html=createRunController
-    		    /teacher/run/updaterun.html=updateRunController
-    		    /teacher/run/editrun.html=editRunController
-    		    /teacher/grading/gradework.html=gradeWorkController
+				/teacher/termsofuse.html=termsOfUseController
+				/teacher/registerteacher.html=registerteacherController
+				/teacher/curriculumsubjects.html=curriculumSubjectsController
+				/teacher/projects/languagetranslations.html=languageTranslationsController
+				/teacher/projects/projectinfo.html=projectInfoController
+				/teacher/projects/customized/shareproject.html=shareProjectController
+				/teacher/projects/customized/unshareproject.html=unShareProjectController
+				/teacher/run/shareprojectrun.html=shareProjectRunController
+				/teacher/run/unshareprojectrun.html=unShareProjectRunController
+				/teacher/run/manage/archiveRun.html=endRunController
+				/teacher/run/manage/startRun.html=startRunController
+				/teacher/run/createRun.html=createRunController
+				/teacher/run/updaterun.html=updateRunController
+				/teacher/run/editrun.html=editRunController
+				/teacher/grading/gradework.html=gradeWorkController
 				/teacher/grading/premadeComments.html=premadeCommentsController
 				/teacher/classroomMonitor/classroomMonitor.html=gradeWorkController
-    		    /teacher/management/overview.html=managementOverviewController
-    		    /teacher/management/managemystudents.html=manageStudentsController
-    		    /teacher/management/updatemyaccount.html=updateMyAccountController
-    		    /teacher/management/library.html=libraryController
-    		    /teacher/management/changeteacherpasswordsuccess.html=changeTeacherPasswordSuccessController
-    		    /teacher/management/classroomruns.html=myClassroomRunsMainController
-    		    /teacher/management/projectruntabs.html=myClassroomRunsController
-    		    /teacher/management/submitworkgroupchanges.html=submitWorkgroupChangesController
-    		    /studentinfo.html=infoController
-    		    /teacher/management/studentlist.html=studentListController
-    		    /teacher/management/studentlistexcel.html=listStudentNamesController
-    		    /teacher/management/addsharedteacher.html=addSharedTeacherController
-    		    /teacher/vle/vle.html=studentVLEController
-    		    /**/index.html=indexController
-    		    /previewproject.html=previewprojectController
-    		    /previewprojectlist.html=previewprojectlistController
-    		    /credits.html=creditsController
-    		    /forgotaccount/selectaccounttype.html=selectAccountTypeController
-    		    /forgotaccount/teacher/index.html=forgotAccountTeacherIndexController
-    		    /forgotaccount/teacher/success.html=forgotAccountTeacherSuccessController
-    		    /forgotaccount/teacher/error.html=forgotAccountTeacherErrorController
-	  			/forgotaccount/student/passwordreminder*.html=forgotAccountStudentPasswordReminderWizardController
+				/teacher/management/overview.html=managementOverviewController
+				/teacher/management/managemystudents.html=manageStudentsController
+				/teacher/management/updatemyaccount.html=updateMyAccountController
+				/teacher/management/library.html=libraryController
+				/teacher/management/changeteacherpasswordsuccess.html=changeTeacherPasswordSuccessController
+				/teacher/management/classroomruns.html=myClassroomRunsMainController
+				/teacher/management/projectruntabs.html=myClassroomRunsController
+				/teacher/management/submitworkgroupchanges.html=submitWorkgroupChangesController
+				/studentinfo.html=infoController
+				/teacher/management/studentlist.html=studentListController
+				/teacher/management/studentlistexcel.html=listStudentNamesController
+				/teacher/management/addsharedteacher.html=addSharedTeacherController
+				/teacher/vle/vle.html=studentVLEController
+				/**/index.html=indexController
+				/previewproject.html=previewprojectController
+				/previewprojectlist.html=previewprojectlistController
+				/credits.html=creditsController
+				/forgotaccount/selectaccounttype.html=selectAccountTypeController
+				/forgotaccount/teacher/index.html=forgotAccountTeacherIndexController
+				/forgotaccount/teacher/success.html=forgotAccountTeacherSuccessController
+				/forgotaccount/teacher/error.html=forgotAccountTeacherErrorController
+				/forgotaccount/student/passwordreminder*.html=forgotAccountStudentPasswordReminderWizardController
 				/forgotaccount/student/enterprojectcode.html=forgotAccountStudentCheckProjectCodeController
 				/forgotaccount/student/searchforstudentusername.html=searchForStudentUserNameController
 				/forgotaccount/resetpassword.html=resetPasswordController
@@ -1269,12 +1259,13 @@
 				/admin/account/enabledisableuser.html=enableDisableUserController
 				/admin/account/lookupteacher.html=lookupTeacherController
 				/admin/account/lookupstudent.html=lookupStudentController
+				/admin/account/manageuserroles.html=manageUserRolesController
 				/admin/project/manageallprojects.html=manageAllProjectsController
 				/admin/run/manageallprojectruns.html=manageAllProjectRunsController
 				/admin/run/findprojectrunsbyprojectid.html=findProjectRunsController
 				/admin/run/findprojectrunsbyteacher.html=findProjectRunsController
 				/admin/run/findprojectrunsbyrunid.html=findProjectRunsController
-				/admin/run/runstats.html=runStatisticsController				
+				/admin/run/runstats.html=runStatisticsController
 				/admin/news/managenewsitems.html=listNewsItemsController
 				/admin/news/addnewsitems.html=addNewsItemController
 				/admin/news/editnewsitem.html=editNewsItemController
@@ -1309,7 +1300,7 @@
 				/ideaBasket.html=ideaBasketController
 				/errors/outsideerror.html=outsideErrorController
 				/authorize.html=credentialManager
-    		    /pages/statistics.html=statisticsController
+				/pages/statistics.html=statisticsController
 				/pages/check.html=compatibilityCheckController
 				/pages/memorymonitor.html=memoryMonitorController
 				/getExport.html=getExportController
@@ -1318,17 +1309,18 @@
 				/assetManager.html=assetManagerController
 				/cRater.html=cRaterController
 				/**/*.html=urlFilenameViewController
-    		</value>
-    	</property>
-    	<property name="interceptors">
-		   <list>
-			<ref bean="localeChangeInterceptor" />
-		    </list>
+			</value>
 		</property>
-    </bean>
-    
-                <mvc:resources mapping="/vle/**" location="/vle/" order="1" />
-    
-                <mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
-                
+		<property name="interceptors">
+			<list>
+				<ref bean="localeChangeInterceptor" />
+			</list>
+		</property>
+	</bean>
+
+	<mvc:resources mapping="/vle/**" location="/vle/" order="1" />
+
+	<mvc:resources mapping="/curriculum/**" location="/curriculum/"
+		order="1" />
+
 </beans>

@@ -1,3 +1,4 @@
+/*globals svgEditor */
 svgEditor.readLang({
 	lang: "pt-BR",
 	dir : "ltr",
@@ -84,7 +85,7 @@ svgEditor.readLang({
 		"smallest_object": "menor objeto",
 		"new_doc": "Nova imagem",
 		"open_doc": "Abrir imagem",
-		"export_png": "Exportar como PNG",
+		"export_img": "Export",
 		"save_doc": "Salvar imagem",
 		"import_doc": "Importar SVG",
 		"align_to_page": "Alinhar elemento na página",
@@ -118,7 +119,7 @@ svgEditor.readLang({
 		"toggle_grid": "Mostrar/Esconder grade",
 		"clone": "Clonar Elemento(s)",
 		"del": "Deletar Elemento(s)",
-		"group": "Agrupar Elementos",
+		"group_elements": "Agrupar Elementos",
 		"make_link": "Criar (hyper)link",
 		"set_link_url": "Alterar URL (em branco para remover)",
 		"to_path": "Converter para Contorno",
@@ -214,7 +215,7 @@ svgEditor.readLang({
 		"enterUniqueLayerName":"Insira um nome único",
 		"enterNewLayerName":"Insira um novo nome",
 		"layerHasThatName":"A camada já pussui este nome",
-    "QmoveElemsToLayer":"Mover elementos selecionados para a camada: \"%s\"?",
+		"QmoveElemsToLayer":"Mover elementos selecionados para a camada: \"%s\"?",
 		"QwantToClear":"Deseja criar um novo arquivo?\nO histórico também será apagado!",
 		"QwantToOpen":"Deseja abrir um novo arquivo?\nO histórico também será apagado!",
 		"QerrorsRevertToSource":"Foram encontrados erros ná análise do código SVG.\nReverter para o código SVG original?",

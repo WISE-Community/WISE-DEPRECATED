@@ -1,3 +1,4 @@
+/*globals svgEditor */
 svgEditor.readLang({
 	lang: "fy",
 	dir : "ltr",
@@ -84,7 +85,7 @@ svgEditor.readLang({
 		"smallest_object": "Lytste ûnderdiel",
 		"new_doc": "Nije ôfbielding",
 		"open_doc": "Ôfbielding iepenje",
-		"export_png": "Export as PNG",
+		"export_img": "Export",
 		"save_doc": "Ôfbielding bewarje",
 		"import_doc": "Import SVG",
 		"align_to_page": "Align Element to Page",
@@ -118,7 +119,7 @@ svgEditor.readLang({
 		"toggle_grid": "Show/Hide Grid",
 		"clone": "Clone Element(s)",
 		"del": "Delete Element(s)",
-		"group": "Ûnderdielen groepearje",
+		"group_elements": "Ûnderdielen groepearje",
 		"make_link": "Make (hyper)link",
 		"set_link_url": "Set link URL (leave empty to remove)",
 		"to_path": "Omsette nei paad",
@@ -182,7 +183,8 @@ svgEditor.readLang({
 		"base_unit": "Base Unit:",
 		"grid": "Grid",
 		"snapping_onoff": "Snapping on/off",
-		"snapping_stepsize": "Snapping Step-Size:"
+		"snapping_stepsize": "Snapping Step-Size:",
+		"grid_color": "Grid color"
 	},
 	shape_cats: {
 		"basic": "Basic",

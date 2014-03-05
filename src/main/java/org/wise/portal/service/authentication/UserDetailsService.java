@@ -49,6 +49,8 @@ public interface UserDetailsService extends
 	
 	public static final String AUTHOR_ROLE = "ROLE_AUTHOR";
 
+	public static final String TRUSTED_AUTHOR_ROLE = "ROLE_TRUSTED_AUTHOR";
+
 	public static final String RESEARCHER_ROLE = "ROLE_RESEARCHER";
 
 	public static final String RUN_GRADE_ROLE = "ROLE_RUN_GRADE";
@@ -87,13 +89,19 @@ public interface UserDetailsService extends
      */
     public GrantedAuthority loadAuthorityByName(String authority)
             throws AuthorityNotFoundException;
+
+    /**
+     * Returns a list of all existing authorities in the system.
+     * 
+     * @return A List of MutableGrantedAuthority objects
+     */
+    public List<MutableGrantedAuthority> retrieveAllAuthorities();
     
     /**
      * Given a MutableUserDetails, updates the data of that object in the database
      * @param userDetails
      */
     public void updateUserDetails(final MutableUserDetails userDetails);
-    
 
 
 	public List<MutableUserDetails> retrieveAllUserDetails(String userDetailsClassName);

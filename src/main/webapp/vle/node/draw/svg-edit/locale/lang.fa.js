@@ -1,3 +1,4 @@
+/*globals svgEditor */
 svgEditor.readLang({
 	lang: "fa",
 	dir : "ltr",
@@ -84,7 +85,7 @@ svgEditor.readLang({
 		"smallest_object": "‫کوچکترین شئ‬",
 		"new_doc": "‫تصویر جدید ‬",
 		"open_doc": "‫باز کردن تصویر ‬",
-		"export_png": "Export as PNG",
+		"export_img": "Export",
 		"save_doc": "‫ذخیره تصویر ‬",
 		"import_doc": "Import SVG",
 		"align_to_page": "Align Element to Page",
@@ -118,7 +119,7 @@ svgEditor.readLang({
 		"toggle_grid": "Show/Hide Grid",
 		"clone": "Clone Element(s)",
 		"del": "Delete Element(s)",
-		"group": "‫قرار دادن عناصر در گروه ‬",
+		"group_elements": "‫قرار دادن عناصر در گروه ‬",
 		"make_link": "Make (hyper)link",
 		"set_link_url": "Set link URL (leave empty to remove)",
 		"to_path": "‫تبدیل به مسیر‬",
@@ -182,7 +183,8 @@ svgEditor.readLang({
 		"base_unit": "Base Unit:",
 		"grid": "Grid",
 		"snapping_onoff": "Snapping on/off",
-		"snapping_stepsize": "Snapping Step-Size:"
+		"snapping_stepsize": "Snapping Step-Size:",
+		"grid_color": "Grid color"
 	},
 	shape_cats: {
 		"basic": "Basic",

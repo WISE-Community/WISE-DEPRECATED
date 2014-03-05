@@ -353,6 +353,15 @@ public class PersistentUserDetails implements MutableUserDetails {
     }
 
     /**
+     * @see net.sf.sail.webapp.domain.authentication.MutableUserDetails#removeAuthority(org.acegisecurity.GrantedAuthority)
+     */
+    public synchronized void removeAuthority(GrantedAuthority authority) {
+        if (this.grantedAuthorities != null && this.grantedAuthorities.contains(authority)) {
+        	this.grantedAuthorities.remove(authority);
+        }
+    }
+    
+    /**
      * @see net.sf.sail.webapp.domain.authentication.MutableUserDetails#hasGrantedAuthority(java.lang.String)
      */
 	public boolean hasGrantedAuthority(String authority) {

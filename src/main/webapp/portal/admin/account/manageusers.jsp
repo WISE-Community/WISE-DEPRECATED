@@ -54,6 +54,7 @@ $(document).ready(function() {
 			<td><a href="#" onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
 			<td><a href="../../j_acegi_switch_user?j_username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
 			<td><a href="#" onclick="javascript:popup640('../../teacherinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
+			<td><a href="#" onclick="javascript:popup640('manageuserroles.html?userName=${username}');"><spring:message code="admin.index.manageUserRoles" /></a></td>
 		</tr>
 	</c:forEach>
 </table>
@@ -155,6 +156,7 @@ $(document).ready(function() {
 			<td><a href="#" onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
 			<td><a href="../../j_acegi_switch_user?j_username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
 			<td><a href="#" onclick="javascript:popup640('../../teacherinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
+			<td><a href="#" onclick="javascript:popup640('manageuserroles.html?userName=${username}');"><spring:message code="admin.index.manageUserRoles" /></a></td>
 		</tr>
 	</c:forEach>
 </table>

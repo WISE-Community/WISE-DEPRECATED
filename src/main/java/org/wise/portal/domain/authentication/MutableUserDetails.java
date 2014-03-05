@@ -85,6 +85,13 @@ public interface MutableUserDetails extends UserDetails, Persistable {
 	 * @param authority
 	 */
 	public void addAuthority(GrantedAuthority authority);
+	
+	/**
+	 * Removes a GrantedAuthority from a user.
+	 * 
+	 * @param authority
+	 */
+	public void removeAuthority(GrantedAuthority authority);
 
 	/**
 	 * Returns true iff this user has the specified GrantedAuthority
@@ -239,5 +246,5 @@ public interface MutableUserDetails extends UserDetails, Persistable {
 	 * @param numberOfLogins
 	 */
 	public void incrementNumberOfLogins();
-	
+
 }

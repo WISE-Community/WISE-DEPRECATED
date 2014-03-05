@@ -1,3 +1,4 @@
+/*globals svgEditor */
 svgEditor.readLang({
 	lang: "zh-HK",
 	dir : "ltr",
@@ -84,7 +85,7 @@ svgEditor.readLang({
 		"smallest_object": "最小的对象",
 		"new_doc": "新形象",
 		"open_doc": "打开图像",
-		"export_png": "Export as PNG",
+		"export_img": "Export",
 		"save_doc": "保存图像",
 		"import_doc": "Import SVG",
 		"align_to_page": "Align Element to Page",
@@ -118,7 +119,7 @@ svgEditor.readLang({
 		"toggle_grid": "Show/Hide Grid",
 		"clone": "Clone Element(s)",
 		"del": "Delete Element(s)",
-		"group": "族元素",
+		"group_elements": "族元素",
 		"make_link": "Make (hyper)link",
 		"set_link_url": "Set link URL (leave empty to remove)",
 		"to_path": "Convert to Path",
@@ -182,7 +183,8 @@ svgEditor.readLang({
 		"base_unit": "Base Unit:",
 		"grid": "Grid",
 		"snapping_onoff": "Snapping on/off",
-		"snapping_stepsize": "Snapping Step-Size:"
+		"snapping_stepsize": "Snapping Step-Size:",
+		"grid_color": "Grid color"
 	},
 	shape_cats: {
 		"basic": "Basic",
