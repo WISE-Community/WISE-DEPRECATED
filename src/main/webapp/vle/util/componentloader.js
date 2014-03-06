@@ -583,7 +583,6 @@ var componentloader = function(em, sl){
 					view.initializeCreateSequenceDialog();
 					view.initializeCreateNodeDialog();
 					view.initializeEditProjectFileDialog();
-					//view.initializeAssetUploaderDialog();
 					view.initializeAssetEditorDialog();
 					view.initializeCopyProjectDialog();
 					view.initializeEditProjectMetadataDialog();

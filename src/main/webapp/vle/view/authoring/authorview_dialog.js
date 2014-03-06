@@ -377,65 +377,6 @@ View.prototype.initializeEditProjectFileDialog = function(){
 };
 
 /**
- * Initializes and renders the asset uploader dialog.
- */
-View.prototype.initializeAssetUploaderDialog = function(){
-	var view = this;
-	
-	var submit = function(){
-		var filename = $('#uploadAssetFile').val();
-		
-		if(filename && filename != ''){
-			filename = filename.replace("C:\\fakepath\\", "");  // chrome/IE8 fakepath issue: http://acidmartin.wordpress.com/2009/06/09/the-mystery-of-cfakepath-unveiled/
-			if(!view.utils.fileFilter(view.allowedAssetExtensions,filename)){
-				view.notificationManager.notify('Sorry, the specified file type is not allowed.', 3);
-				return;
-			} else {
-				var frameId = 'assetUploadTarget_' + Math.floor(Math.random() * 1000001);
-				var frame = createElement(document, 'iframe', {id:frameId, name:frameId, src:'about:blank', style:'display:none;'});
-				var form = createElement(document, 'form', {id:'assetUploaderFrm', method:'POST', enctype:'multipart/form-data', action:view.assetRequestUrl, target:frameId, style:'display:none;'});
-				var assetPath = view.utils.getContentPath(view.authoringBaseUrl,view.getProject().getContentBase());
-				
-				/* create and append elements */
-				document.body.appendChild(frame);
-				document.body.appendChild(form);
-				form.appendChild(createElement(document,'input',{type:'hidden', name:'path', value:assetPath}));
-				form.appendChild(createElement(document,'input',{type:'hidden', name:'forward', value:'assetmanager'}));
-				form.appendChild(createElement(document,'input',{type:'hidden', name:'projectId', value:view.portalProjectId}));
-
-				/* set up the event and callback when the response comes back to the frame */
-				frame.addEventListener('load',view.assetUploaded,false);
-				
-				/* change the name attribute to reflect that of the file selected by user */
-				document.getElementById('uploadAssetFile').setAttribute("name", filename).setAttribute("size","40");
-				
-				/* remove file input from the dialog and append it to the frame before submitting, we'll put it back later */
-				var fileInput = document.getElementById('uploadAssetFile');
-				form.appendChild(fileInput);
-				
-				/* submit hidden form */
-				form.submit();
-				
-				/* put the file input back and remove form now that the form has been submitted */
-				document.getElementById('assetUploaderBodyDiv').insertBefore(fileInput, document.getElementById('assetUploaderBodyDiv').firstChild);
-				document.body.removeChild(form);
-				
-				/* close the dialog */
-				$('#assetUploaderDialog').dialog('close');
-			}
-		} else {
-			view.notificationManager.notify('Please specify a file to upload.',3);
-		}
-	};
-
-	var cancel = function(){
-		$('#uploadAssetFile').val('');
-	};
-	
-	$('#assetUploaderDialog').dialog({autoOpen:false, draggable:false, modal:true, width:600, buttons: {'Submit':submit}, close: cancel});
-};
-
-/**
  * Initializes and renders copy project dialog
  */
 View.prototype.initializeCopyProjectDialog = function (){
