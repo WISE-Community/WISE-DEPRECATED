@@ -511,14 +511,15 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 					}
 				}
 			};
+			descriptionExt.toggle().toggle(true);  // hack to position description holder correctly in Chrome; TODO: fix
 		}
 		
 		setTimeout(function(){
 			$('#closepath_panel').insertAfter('#path_node_panel');
 			svgCanvas.undoMgr.resetUndoStack(); // reset undo stack to prevent users from deleting stored starting image
 			$("#tool_undo").addClass("tool_button_disabled").addClass("disabled");
-			$('#fit_to_canvas').mouseup();
 			this.node.view.eventManager.fire('contentRenderCompleted', this.node.id, this.node);
+			svgEditor.resizeCanvas();
 			$('#loading_overlay').fadeOut();
 			svgEditor.loadedWISE = true;
 		},500);
