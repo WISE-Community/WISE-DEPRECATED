@@ -47,6 +47,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -552,16 +553,27 @@ public class AuthorProjectController extends AbstractController {
 								projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
 							}
 							
+							String allowedProjectAssetContentTypesStr = wiseProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
+							if (user.isTrustedAuthor()) {
+								allowedProjectAssetContentTypesStr += "," + wiseProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
+							}
+
 							DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
 							List<String> fileNames = new ArrayList<String>();
-							Map<String,byte[]> fileMap = new TreeMap<String,byte[]>();
+							Map<String,MultipartFile> fileMap = new TreeMap<String,MultipartFile>();
 							
 							//get all the file names and files to be uploaded
 							Iterator iter = multiRequest.getFileNames();
 							while(iter.hasNext()){
 								String filename = (String)iter.next();
 								fileNames.add(filename);
-								fileMap.put(filename, multiRequest.getFile(filename).getBytes());
+								MultipartFile oneFile = multiRequest.getFile(filename);
+								String contentType = oneFile.getContentType();
+								if (!allowedProjectAssetContentTypesStr.contains(contentType)) {
+									response.getWriter().write("Uploading this file type is not allowed. Operation aborted.");
+									return null;
+								}
+								fileMap.put(filename, oneFile);
 							}
 							
 							//tell the asset manager to handle the file upload

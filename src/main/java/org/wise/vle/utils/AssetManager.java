@@ -6,13 +6,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,9 +28,11 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -57,13 +63,13 @@ public class AssetManager extends AbstractController {
 	private final static String FAILED = "failed";
 
 	private static Properties wiseProperties = null;
-	
+
 	private RunService runService;
-	
+
 	private WorkgroupService workgroupService;
-	
+
 	private ProjectService projectService;
-	
+
 	private static final String DEFAULT_DIRNAME = "assets";
 
 	private boolean standAlone = true;
@@ -80,7 +86,7 @@ public class AssetManager extends AbstractController {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -98,23 +104,23 @@ public class AssetManager extends AbstractController {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		//get the command such as assetList or getSize 
 		String command = request.getParameter("command");
 		String type = request.getParameter("type");
-		
+
 		if(type.equals("studentAssetManager")) {
 			//the user is a student
-			
+
 			if(command.equals("assetList")) {
 				//we are going to list the 
 				User user = ControllerUtil.getSignedInUser();
-				
+
 				//get the run
 				String runId = request.getParameter("runId");
 				Run run = null;
@@ -125,24 +131,24 @@ public class AssetManager extends AbstractController {
 				} catch (ObjectNotFoundException e) {
 					e.printStackTrace();
 				}
-				
+
 				//get the workgroup id
 				List<Workgroup> workgroupListByOfferingAndUser = getWorkgroupService().getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
-				
+
 				//get the directory name for the workgroup for this run
 				String dirName = run.getId()+"/"+workgroupId+"/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-				
+
 				//get the student uploads base directory path
 				String path = wiseProperties.getProperty("studentuploads_base_dir");
-				
+
 				//get a list of file names in this workgroup's upload directory
 				String assetList = getAssetList(path, dirName);
 				response.getWriter().write(assetList);
 			} else if(command.equals("getSize")) {
 				User user = ControllerUtil.getSignedInUser();
-				
+
 				//get the run
 				String runId = request.getParameter("runId");
 				Run run = null;
@@ -153,24 +159,24 @@ public class AssetManager extends AbstractController {
 				} catch (ObjectNotFoundException e) {
 					e.printStackTrace();
 				}
-				
+
 				//get the workgroup id
 				List<Workgroup> workgroupListByOfferingAndUser = getWorkgroupService().getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
-				
+
 				//get the directory name for the workgroup for this run
 				String dirName = run.getId()+"/"+workgroupId+"/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-				
+
 				//get the student uploads base directory path
 				String path = wiseProperties.getProperty("studentuploads_base_dir");
-				
+
 				//get the disk space usage of the workgroup's upload directory
 				String result = getSize(path, dirName);
 				response.getWriter().write(result);
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -180,15 +186,15 @@ public class AssetManager extends AbstractController {
 	protected ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String command = request.getParameter("command");
 		String type = request.getParameter("type");
-		
+
 		if(type.equals("studentAssetManager")) {
 			//the user is a student
-			
+
 			if(command.equals("remove")) {
 				//the student is removing an asset
-				
+
 				User user = ControllerUtil.getSignedInUser();
-				
+
 				//get the run
 				String runId = request.getParameter("runId");
 				Run run = null;
@@ -199,28 +205,28 @@ public class AssetManager extends AbstractController {
 				} catch (ObjectNotFoundException e) {
 					e.printStackTrace();
 				}
-				
+
 				//get the workgroup id
 				List<Workgroup> workgroupListByOfferingAndUser = getWorkgroupService().getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
-				
+
 				//get the directory name for the workgroup for this run
 				String dirName = run.getId()+"/"+workgroupId+"/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-				
+
 				//get the student uploads base directory path
 				String path = wiseProperties.getProperty("studentuploads_base_dir");
-				
+
 				//get the file name the student wants to remove
 				String assetFileName = request.getParameter("asset");
-				
+
 				//remove the file from the student asset folder
 				String result = removeAsset(path, dirName, assetFileName);
-				
+
 				response.getWriter().write(result);
 			} else if(command.equals("studentAssetCopyForReference")) {
 				User user = ControllerUtil.getSignedInUser();
-				
+
 				//get the run
 				String runId = request.getParameter("runId");
 				Run run = null;
@@ -231,31 +237,31 @@ public class AssetManager extends AbstractController {
 				} catch (ObjectNotFoundException e) {
 					e.printStackTrace();
 				}
-				
+
 				//get the workgroup id
 				List<Workgroup> workgroupListByOfferingAndUser = getWorkgroupService().getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
-				
+
 				// looks like /studentuploads/[runId]/[workgroupId]/unreferenced
 				String dirName = run.getId()+"/"+workgroupId+"/unreferenced";
-				
+
 				String referencedDirName = "";
 				String commandParameter = request.getParameter("command");
 				if (commandParameter != null && "studentAssetCopyForReference".equals(commandParameter)) {
 					// if we're copying student asset for reference, also pass along the referenced dir. looks like /studentuploads/[runId]/[workgroupId]/referenced
 					referencedDirName = run.getId()+"/"+workgroupId+"/referenced";
 				}
-				
+
 				//get the file name to copy
 				String fileName = request.getParameter("assetFilename");
-				
+
 				String result = copyAssetForReference(dirName, referencedDirName, fileName);
-				
+
 				response.getWriter().write(result);
 			} else if(command.equals("uploadAsset")) {
 				//the student is uploading an asset
-				
+
 				ServletFileUpload uploader = new ServletFileUpload(new DiskFileItemFactory());
 				List<?> fileList = null;
 				try {
@@ -264,9 +270,9 @@ public class AssetManager extends AbstractController {
 				} catch (FileUploadException e) {
 					e.printStackTrace();
 				}
-				
+
 				User user = ControllerUtil.getSignedInUser();
-				
+
 				//get the run
 				String runId = request.getParameter("runId");
 				Run run = null;
@@ -277,42 +283,42 @@ public class AssetManager extends AbstractController {
 				} catch (ObjectNotFoundException e) {
 					e.printStackTrace();
 				}
-				
+
 				//get the workgroup id
 				List<Workgroup> workgroupListByOfferingAndUser = getWorkgroupService().getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
-				
+
 				//get the directory name for the workgroup for this run
 				String dirName = run.getId()+"/"+workgroupId+"/unreferenced";
-				
+
 				//get the student uploads base directory path
 				String path = wiseProperties.getProperty("studentuploads_base_dir");
 				Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "2097152"));
 				String pathToCheckSize = path + "/" + dirName;
-				
+
 				DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
 				List<String> fileNames = new ArrayList<String>();
-				Map<String,byte[]> fileMap = new TreeMap<String,byte[]>();
-				
+				Map<String,MultipartFile> fileMap = new TreeMap<String,MultipartFile>();
+
 				//get all the file names and files to be uploaded
 				Iterator iter = multiRequest.getFileNames();
 				while(iter.hasNext()){
 					String filename = (String)iter.next();
 					fileNames.add(filename);
-					fileMap.put(filename, multiRequest.getFile(filename).getBytes());
+					fileMap.put(filename, multiRequest.getFile(filename));
 				}
-				
+
 				//upload the files
 				String result = uploadAsset(fileList, fileNames, fileMap, path, dirName, pathToCheckSize, studentMaxTotalAssetsSize);
-				
+
 				response.getWriter().write(result);
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 
 	/**
 	 * Uploads the specified file to the given path.
@@ -329,9 +335,9 @@ public class AssetManager extends AbstractController {
 	 * @return the message of the status of the upload
 	 */
 	@SuppressWarnings("unchecked")
-	public static String uploadAsset(List<?> fileList, List<String> fileNames, Map<String,byte[]> fileMap, String path, String dirName, String pathToCheckSize, Long maxTotalAssetsSize) {
+	public static String uploadAsset(List<?> fileList, List<String> fileNames, Map<String,MultipartFile> fileMap, String path, String dirName, String pathToCheckSize, Long maxTotalAssetsSize) {
 		String fullPath = path + "/" + dirName;
-		
+
 		try{
 			/* if request was forwarded from the portal, the fileList will be empty because
 			 * Spring already retrieved the list (it can only be done once). But Spring wrapped
@@ -385,7 +391,8 @@ public class AssetManager extends AbstractController {
 						while(iter.hasNext()){
 							String filename = iter.next();
 							File asset = new File(assetsDir, filename);
-							byte[] content = fileMap.get(filename);
+							MultipartFile file = fileMap.get(filename);
+							byte[] content = file.getBytes();
 
 							if(Long.parseLong(getFolderSize(pathToCheckSize)) + content.length > maxTotalAssetsSize){
 								successMessage += "Uploading " + filename + " of size " + appropriateSize(content.length) + " would exceed your maximum storage capacity of "  + appropriateSize(maxTotalAssetsSize) + ". Operation aborted.";
@@ -396,8 +403,30 @@ public class AssetManager extends AbstractController {
 
 								FileOutputStream fos = new FileOutputStream(asset);
 								fos.write(content);
-
+								fos.flush();
+								fos.close();
 								successMessage += asset.getName() + " was successfully uploaded! ";
+							}
+
+							if ("application/zip".equals(file.getContentType())) {
+								// if user uploaded a zip file, unzip it
+								ZipFile zipFile = new ZipFile(asset);
+								Enumeration<? extends ZipEntry> entries = zipFile.entries();
+								while (entries.hasMoreElements()) {
+									ZipEntry entry = entries.nextElement();
+									File entryDestination = new File(assetsDir, entry.getName());
+									if (entry.isDirectory()) {
+										entryDestination.mkdirs();
+									} else {
+										InputStream in = zipFile.getInputStream(entry);
+										OutputStream out = new FileOutputStream(entryDestination);
+										IOUtils.copy(in, out);
+										IOUtils.closeQuietly(in);
+										IOUtils.closeQuietly(out);
+									}
+								}								
+								successMessage += "WISE also extracted files from the zip file! ";
+							} else {
 							}
 						}
 					}
@@ -414,7 +443,7 @@ public class AssetManager extends AbstractController {
 
 		return FAILED;
 	}
-	
+
 	/**
 	 * Copies a student uploaded asset to the referenced directory with a 
 	 * timestamp and returns a JSON string that includes the filename of that copied file.
@@ -462,316 +491,316 @@ public class AssetManager extends AbstractController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			response.put("result", "SUCCESS");
 			response.put("newFilename", newFilename);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		return response.toString();
 	}
 
-		/**
-		 * Copies the given <code>File</code> src to the given <code>File</code> dest. If they
-		 * are directories, recursively copies the contents of the directories.
-		 * 
-		 * @param File src
-		 * @param File dest
-		 * @throws FileNotFoundException
-		 * @throws IOException
-		 */
-		public void copy(File src, File dest) throws FileNotFoundException, IOException{
-			if(src.isDirectory()){
-				if(!dest.exists()){
-					dest.mkdir();
-				}
-
-				String[] files = src.list();
-				for(int a=0;a<files.length;a++){
-					copy(new File(src, files[a]), new File(dest, files[a]));
-				}
-			} else {
-				InputStream in = new FileInputStream(src);
-				FileOutputStream out = new FileOutputStream(dest);
-
-				byte[] buffer = new byte[2048];
-				int len;
-				while((len = in.read(buffer)) > 0){
-					out.write(buffer, 0, len);
-				}
-
-				in.close();
-				out.close();
+	/**
+	 * Copies the given <code>File</code> src to the given <code>File</code> dest. If they
+	 * are directories, recursively copies the contents of the directories.
+	 * 
+	 * @param File src
+	 * @param File dest
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void copy(File src, File dest) throws FileNotFoundException, IOException{
+		if(src.isDirectory()){
+			if(!dest.exists()){
+				dest.mkdir();
 			}
-		}
 
-		/**
-		 * Checks to make sure the provided project path exists. If not returns false,
-		 * if it does, then checks to see if the dirName directory exists. If it does, returns
-		 * true, if not, attempts to create it. If the creation is successful, returns true,
-		 * if not returns false.
-		 * 
-		 * @param <code>String</code> path
-		 * @param <code>String</code> dirName
-		 * @return boolean
-		 */
-		public static boolean ensureAssetPath(String path, String dirName) {
-			File projectDir = new File(path);
-			if(projectDir.exists()){
-				File assetsDir = new File(projectDir, dirName);
-				if(assetsDir.exists() && assetsDir.isDirectory()){
-					return true;
-				} else {
-					return assetsDir.mkdir();
-				}
-			} else {
-				return false;
+			String[] files = src.list();
+			for(int a=0;a<files.length;a++){
+				copy(new File(src, files[a]), new File(dest, files[a]));
 			}
-		}
+		} else {
+			InputStream in = new FileInputStream(src);
+			FileOutputStream out = new FileOutputStream(dest);
 
-		/**
-		 * Returns the size in bytes of all of the files in the specified path/dirname
-		 * @param path the path to the parent directory
-		 * @param dirName the directory name 
-		 * @return the disk space usage of the folder
-		 */
-		public static String getSize(String path, String dirName){
-			if(path==null){
-				return "No project path specified";
-			} else {
-				File projectDir = new File(path);
-				if(projectDir.exists()){
-					File assetsDir = new File(projectDir, dirName);
-					if(assetsDir.exists() && assetsDir.isDirectory()){
-						long total = 0;
-						//get all file sizes and add to total
-						File[] files = assetsDir.listFiles();
-						for(int q=0;q<files.length;q++){
-							total += files[q].length();
-						}
-						return String.valueOf(total);
-					} else {
-						return "0";
-					}
-				} else {
-					return "Given project path does not exist.";
-				}
+			byte[] buffer = new byte[2048];
+			int len;
+			while((len = in.read(buffer)) > 0){
+				out.write(buffer, 0, len);
 			}
-		}
-		
-		/**
-		 * Returns the size in bytes of all of the files in the specified path/dirname
-		 * 
-		 * @param <code>String</code> folderPath the path to the folder as a string
-		 * @return <code>String</code> size of all files in assets folder in bytes
-		 */
-		public static String getFolderSize(String folderPath) {
-			String folderSize = "";
-			
-			if(folderPath != null) {
-				//get a handle on the folder
-				File folder = new File(folderPath);
-				
-				//make sure the folder exists and is a folder
-				if(folder.exists() && folder.isDirectory()) {
-					//get the size of the folder
-					long sizeOfDirectory = FileUtils.sizeOfDirectory(folder);
-					
-					//get the folder size as a string
-					folderSize = String.valueOf(sizeOfDirectory);
-				} else {
-					//folder does not exist or is not a folder
-					folderSize = "Given folder path does not exist or is not a folder.";
-				}
-			} else {
-				//folder path is null
-				folderSize = "Folder path not provided.";
-			}
-			
-			return folderSize;
-		}
 
-		/**
-		 * Removes an asset from the folder
-		 * @param path the path to the parent folder
-		 * @param dirName the folder name
-		 * @param assetFileName the file name
-		 * @return a string that specifies whether the removal was successful or not
-		 * @throws IOException
-		 */
-		public static String removeAsset(String path, String dirName, String assetFileName) throws IOException{
-			String result = "";
-			
-			File projectDir = new File(path);
-			if(path==null || !(projectDir.exists()) || !(projectDir.isDirectory())){
-				result = "Bad Request";
-			} else {
-				File assetDir = new File(projectDir, dirName);
-				if(!assetDir.exists() || !assetDir.isDirectory()){
-					result = "Bad Request";
-				} else {
-					if(assetFileName==null){
-						result = "Bad Request";
-					} else {
-						File assetFile = new File(assetDir, assetFileName);
-						if(assetFile.exists() && assetFile.isFile()){
-							if(SecurityUtils.isAllowedAccess(path, assetFile.getCanonicalPath())) {
-								if(assetFile.delete()){
-									result = "Asset " + assetFileName + " successfully deleted from server.";
-								} else {
-									result = "Server Error";
-								}
-							} else {
-								result = "Unauthorized";
-							}
-						} else {
-							result = "Bad Request";
-						}
-					}
-				}
-			}
-			
-			return result;
-		}
-
-		/**
-		 * Given a <code>HttpServletRequest</code> request, returns
-		 * a <code>String</code> ':' denoted list of all filenames
-		 * within the project path directory.
-		 * In the request:
-		 * - path
-		 * - dirName
-		 * path + dirName = full content folder path
-		 * 
-		 * 
-		 * @param <code>HttpServletRequest</code> request
-		 * 
-		 * 
-		 * @param dirName
-		 * @param type
-		 * 
-		 * @param studentUploadsBaseDir
-		 * @param projectFolderPath
-		 * 
-		 * @return <code>String</code>
-		 */
-		
-		/**
-		 * Get a list of the file names in the folder
-		 * @param path the path to the parent folder
-		 * @param dirName the name of the folder
-		 * @return a JSONArray string containing the file names 
-		 */
-		public static String getAssetList(String path, String dirName) {
-			// if dirname is : separated, get asset list for each dir and return concatenated result
-			String[] dirNames = dirName.split(":");
-			if (dirNames.length > 1) {
-				JSONArray jsonArr = new JSONArray();
-				try {
-					for (int i=0; i<dirNames.length; i++) {
-						String currDirName = dirNames[i];
-						String currAssetList = getAssetListFromFolder(path,currDirName);
-						if (!"".equals(currAssetList)) {
-							JSONObject jsonObj = new JSONObject();
-							jsonObj.put("workgroupId", currDirName);
-							jsonObj.put("assets", currAssetList);
-							jsonArr.put(jsonObj);
-						}
-					}
-					return jsonArr.toString();
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					return "";
-				}				
-			} else {
-				return getAssetListFromFolder(path,dirName);
-			}
-		}
-
-		/**
-		 * Get the file names in the folder
-		 * @param path the path to the parent folder
-		 * @param dirName the folder name
-		 * @return the disk usage of the folder
-		 */
-		public static String getAssetListFromFolder(String path, String dirName) {
-			File projectDir = new File(path);
-			if(projectDir.exists()){
-				File assetsDir = new File(projectDir, dirName);
-				if(assetsDir.exists() && assetsDir.isDirectory()){
-					File[] files = assetsDir.listFiles();
-
-					JSONArray fileNames = new JSONArray();
-
-					if(files==null){//no files in this dir
-						return "";
-					} else {
-						for(int v=0;v<files.length;v++){
-							fileNames.put(files[v].getName());
-						}
-						return fileNames.toString();
-					}
-				} else {
-					return "";
-				}
-			} else {
-				return "Given project path does not exist";
-			}
-		}
-
-		/**
-		 * Given a <code>long</code> size of bytes, returns a <code>String</code>
-		 * with the size either in: bytes, kilobytes or megabytes rounded
-		 * to the nearest 10th.
-		 * 
-		 * @param <code>long</code> size
-		 * @return <code>String</code>
-		 */
-		public static String appropriateSize(long size){
-			if(size>1048576){
-				return String.valueOf(Math.round(((size/1024)/1024)*10)/10) + " mb";
-			} else if (size>1024){
-				return String.valueOf(Math.round((size/1024)*10)/10) + " kb";
-			} else {
-				return String.valueOf(size) + " b";
-			}
-		}
-
-		public RunService getRunService() {
-			return runService;
-		}
-
-		public void setRunService(RunService runService) {
-			this.runService = runService;
-		}
-
-		public WorkgroupService getWorkgroupService() {
-			return workgroupService;
-		}
-
-		public void setWorkgroupService(WorkgroupService workgroupService) {
-			this.workgroupService = workgroupService;
-		}
-
-
-		public Properties getWiseProperties() {
-			return wiseProperties;
-		}
-
-
-		public void setWiseProperties(Properties wiseProperties) {
-			this.wiseProperties = wiseProperties;
-		}
-
-
-		public ProjectService getProjectService() {
-			return projectService;
-		}
-
-
-		public void setProjectService(ProjectService projectService) {
-			this.projectService = projectService;
+			in.close();
+			out.close();
 		}
 	}
+
+	/**
+	 * Checks to make sure the provided project path exists. If not returns false,
+	 * if it does, then checks to see if the dirName directory exists. If it does, returns
+	 * true, if not, attempts to create it. If the creation is successful, returns true,
+	 * if not returns false.
+	 * 
+	 * @param <code>String</code> path
+	 * @param <code>String</code> dirName
+	 * @return boolean
+	 */
+	public static boolean ensureAssetPath(String path, String dirName) {
+		File projectDir = new File(path);
+		if(projectDir.exists()){
+			File assetsDir = new File(projectDir, dirName);
+			if(assetsDir.exists() && assetsDir.isDirectory()){
+				return true;
+			} else {
+				return assetsDir.mkdir();
+			}
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Returns the size in bytes of all of the files in the specified path/dirname
+	 * @param path the path to the parent directory
+	 * @param dirName the directory name 
+	 * @return the disk space usage of the folder
+	 */
+	public static String getSize(String path, String dirName){
+		if(path==null){
+			return "No project path specified";
+		} else {
+			File projectDir = new File(path);
+			if(projectDir.exists()){
+				File assetsDir = new File(projectDir, dirName);
+				if(assetsDir.exists() && assetsDir.isDirectory()){
+					long total = 0;
+					//get all file sizes and add to total
+					File[] files = assetsDir.listFiles();
+					for(int q=0;q<files.length;q++){
+						total += files[q].length();
+					}
+					return String.valueOf(total);
+				} else {
+					return "0";
+				}
+			} else {
+				return "Given project path does not exist.";
+			}
+		}
+	}
+
+	/**
+	 * Returns the size in bytes of all of the files in the specified path/dirname
+	 * 
+	 * @param <code>String</code> folderPath the path to the folder as a string
+	 * @return <code>String</code> size of all files in assets folder in bytes
+	 */
+	public static String getFolderSize(String folderPath) {
+		String folderSize = "";
+
+		if(folderPath != null) {
+			//get a handle on the folder
+			File folder = new File(folderPath);
+
+			//make sure the folder exists and is a folder
+			if(folder.exists() && folder.isDirectory()) {
+				//get the size of the folder
+				long sizeOfDirectory = FileUtils.sizeOfDirectory(folder);
+
+				//get the folder size as a string
+				folderSize = String.valueOf(sizeOfDirectory);
+			} else {
+				//folder does not exist or is not a folder
+				folderSize = "Given folder path does not exist or is not a folder.";
+			}
+		} else {
+			//folder path is null
+			folderSize = "Folder path not provided.";
+		}
+
+		return folderSize;
+	}
+
+	/**
+	 * Removes an asset from the folder
+	 * @param path the path to the parent folder
+	 * @param dirName the folder name
+	 * @param assetFileName the file name
+	 * @return a string that specifies whether the removal was successful or not
+	 * @throws IOException
+	 */
+	public static String removeAsset(String path, String dirName, String assetFileName) throws IOException{
+		String result = "";
+
+		File projectDir = new File(path);
+		if(path==null || !(projectDir.exists()) || !(projectDir.isDirectory())){
+			result = "Bad Request";
+		} else {
+			File assetDir = new File(projectDir, dirName);
+			if(!assetDir.exists() || !assetDir.isDirectory()){
+				result = "Bad Request";
+			} else {
+				if(assetFileName==null){
+					result = "Bad Request";
+				} else {
+					File assetFile = new File(assetDir, assetFileName);
+					if(assetFile.exists() && assetFile.isFile()){
+						if(SecurityUtils.isAllowedAccess(path, assetFile.getCanonicalPath())) {
+							if(assetFile.delete()){
+								result = "Asset " + assetFileName + " successfully deleted from server.";
+							} else {
+								result = "Server Error";
+							}
+						} else {
+							result = "Unauthorized";
+						}
+					} else {
+						result = "Bad Request";
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Given a <code>HttpServletRequest</code> request, returns
+	 * a <code>String</code> ':' denoted list of all filenames
+	 * within the project path directory.
+	 * In the request:
+	 * - path
+	 * - dirName
+	 * path + dirName = full content folder path
+	 * 
+	 * 
+	 * @param <code>HttpServletRequest</code> request
+	 * 
+	 * 
+	 * @param dirName
+	 * @param type
+	 * 
+	 * @param studentUploadsBaseDir
+	 * @param projectFolderPath
+	 * 
+	 * @return <code>String</code>
+	 */
+
+	/**
+	 * Get a list of the file names in the folder
+	 * @param path the path to the parent folder
+	 * @param dirName the name of the folder
+	 * @return a JSONArray string containing the file names 
+	 */
+	public static String getAssetList(String path, String dirName) {
+		// if dirname is : separated, get asset list for each dir and return concatenated result
+		String[] dirNames = dirName.split(":");
+		if (dirNames.length > 1) {
+			JSONArray jsonArr = new JSONArray();
+			try {
+				for (int i=0; i<dirNames.length; i++) {
+					String currDirName = dirNames[i];
+					String currAssetList = getAssetListFromFolder(path,currDirName);
+					if (!"".equals(currAssetList)) {
+						JSONObject jsonObj = new JSONObject();
+						jsonObj.put("workgroupId", currDirName);
+						jsonObj.put("assets", currAssetList);
+						jsonArr.put(jsonObj);
+					}
+				}
+				return jsonArr.toString();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				return "";
+			}				
+		} else {
+			return getAssetListFromFolder(path,dirName);
+		}
+	}
+
+	/**
+	 * Get the file names in the folder
+	 * @param path the path to the parent folder
+	 * @param dirName the folder name
+	 * @return the disk usage of the folder
+	 */
+	public static String getAssetListFromFolder(String path, String dirName) {
+		File projectDir = new File(path);
+		if(projectDir.exists()){
+			File assetsDir = new File(projectDir, dirName);
+			if(assetsDir.exists() && assetsDir.isDirectory()){
+				File[] files = assetsDir.listFiles();
+
+				JSONArray fileNames = new JSONArray();
+
+				if(files==null){//no files in this dir
+					return "";
+				} else {
+					for(int v=0;v<files.length;v++){
+						fileNames.put(files[v].getName());
+					}
+					return fileNames.toString();
+				}
+			} else {
+				return "";
+			}
+		} else {
+			return "Given project path does not exist";
+		}
+	}
+
+	/**
+	 * Given a <code>long</code> size of bytes, returns a <code>String</code>
+	 * with the size either in: bytes, kilobytes or megabytes rounded
+	 * to the nearest 10th.
+	 * 
+	 * @param <code>long</code> size
+	 * @return <code>String</code>
+	 */
+	public static String appropriateSize(long size){
+		if(size>1048576){
+			return String.valueOf(Math.round(((size/1024)/1024)*10)/10) + " mb";
+		} else if (size>1024){
+			return String.valueOf(Math.round((size/1024)*10)/10) + " kb";
+		} else {
+			return String.valueOf(size) + " b";
+		}
+	}
+
+	public RunService getRunService() {
+		return runService;
+	}
+
+	public void setRunService(RunService runService) {
+		this.runService = runService;
+	}
+
+	public WorkgroupService getWorkgroupService() {
+		return workgroupService;
+	}
+
+	public void setWorkgroupService(WorkgroupService workgroupService) {
+		this.workgroupService = workgroupService;
+	}
+
+
+	public Properties getWiseProperties() {
+		return wiseProperties;
+	}
+
+
+	public void setWiseProperties(Properties wiseProperties) {
+		this.wiseProperties = wiseProperties;
+	}
+
+
+	public ProjectService getProjectService() {
+		return projectService;
+	}
+
+
+	public void setProjectService(ProjectService projectService) {
+		this.projectService = projectService;
+	}
+}
