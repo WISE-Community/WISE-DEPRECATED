@@ -1178,7 +1178,7 @@
 			<value>
 				/request/info.html=informationController
 				/metadata.html=projectMetadataController
-				/index.html=urlFilenameViewController
+				/index.html=indexController
 				/login.html=loginController
 				/errors/friendlyError.html=urlFilenameViewController
 				/accessdenied.html=accessDeniedController
