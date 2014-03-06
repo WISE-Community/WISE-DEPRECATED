@@ -3,6 +3,7 @@
    "description_default": "Enter description here.",
    "prompt": "",
    "snapshots_active": true,
+   "snapshots_max": 10,
    "stamps": [],
    "svg_background": "",
    "img_background": "",
