@@ -232,13 +232,19 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-		// separate possibly comma-separated permissions string into array of permissions
-		String[] permissions = ((String) permission).split(",");
 		boolean hasAllPermissions = true;
-		for (String permissionStr : permissions) {
-			int permissionMask = Integer.valueOf((String) permissionStr);
+		ArrayList<Integer> permissionsList = new ArrayList<Integer>();
+		// separate possibly comma-separated permissions string into array of permissions
+		if (permission instanceof String) {
+			String[] permissions = ((String) permission).split(",");
+			for (String permissionStr : permissions) {
+				permissionsList.add(Integer.valueOf((String) permissionStr));
+			}
+		} else if (permission instanceof Integer) {
+			permissionsList.add((Integer) permission);
+		}
+		for (int permissionMask : permissionsList) {
 			Permission p = null;
-
 			if (permissionMask == BasePermission.ADMINISTRATION.getMask()) {
 				p = BasePermission.ADMINISTRATION;			
 			} else if (permissionMask == BasePermission.READ.getMask()) {
