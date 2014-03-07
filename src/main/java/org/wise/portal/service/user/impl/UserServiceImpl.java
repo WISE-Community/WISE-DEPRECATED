@@ -298,6 +298,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(readOnly = true)
 	public User retrieveUserByUsername(String username) {
+		if (username == null || username.isEmpty()) {
+			return null;
+		}
 		User user = null;
 		try {
 			user =  this.userDao.retrieveByUsername(username);
