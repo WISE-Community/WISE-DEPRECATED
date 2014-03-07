@@ -29,6 +29,11 @@ $(document).ready(function() {
 	}
 });
 </script>
+<style type="text/css">
+.newTeacher, .newStudent {
+  background-color:pink;
+}
+</style>
 </head>
 <body>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -39,12 +44,12 @@ $(document).ready(function() {
 <c:when test="${fn:length(loggedInTeacherUsernames) > 0 || fn:length(loggedInStudentUsernames) > 0}">
 <div><spring:message code="admin.account.manageusers.currentlyLoggedInTeachers" /> (${fn:length(loggedInTeacherUsernames)}).  <spring:message code="admin.account.manageusers.newTeachersMsg" /> <span class='newTeacherTotal'></span></div>
 <table id="teachersTable" border="2">
-    <tr><th><spring:message code="username" /></th><th colspan="3"><spring:message code="available_actions" /></th></tr>
+    <tr><th><spring:message code="username" /></th><th colspan="4"><spring:message code="available_actions" /></th></tr>
 	<c:forEach var="user" items="${loggedInTeacherUsernames}">
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
 		<c:choose>
 		<c:when test="${user.userDetails.numberOfLogins == 1}">
-			<tr style="background-color:lightpink" class="newTeacher">
+			<tr class="newTeacher">
 		</c:when>
 		<c:otherwise>
 			<tr>
@@ -70,7 +75,7 @@ $(document).ready(function() {
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
 		<c:choose>
 		<c:when test="${user.userDetails.numberOfLogins == 1}">
-			<tr style="background-color:lightpink" class="newStudent">
+			<tr class="newStudent">
 		</c:when>
 		<c:otherwise>
 			<tr>
@@ -104,7 +109,7 @@ $(document).ready(function() {
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
 		<c:choose>
 		<c:when test="${user.userDetails.numberOfLogins == 1}">
-			<tr style="background-color:lightpink" class="newTeacher">
+			<tr class="newTeacher">
 		</c:when>
 		<c:otherwise>
 			<tr>
@@ -127,7 +132,7 @@ $(document).ready(function() {
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
 		<c:choose>
 		<c:when test="${user.userDetails.numberOfLogins == 1}">
-			<tr style="background-color:lightpink" class="newStudent">
+			<tr class="newStudent">
 		</c:when>
 		<c:otherwise>
 			<tr>
