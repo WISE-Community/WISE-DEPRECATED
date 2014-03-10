@@ -16,7 +16,7 @@ var studentVLEScripts = [
 	'vle/node/brainstorm/brainstorm.js',
 	'vle/node/brainstorm/brainstormstate.js',
 	'vle/data/nodevisit.js',
-	'vle/jquery/tinymce/jscripts/tiny_mce/jquery.tinymce.js'
+	'vle/jquery/tinymce4/js/tinymce/tinymce.min.js'
 ];
 
 var authorScripts = [

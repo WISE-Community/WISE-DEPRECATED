@@ -101,30 +101,11 @@ BRAINSTORM.prototype.brainliteLoaded = function(frameDoc){
 		var loc = window.location.toString();
 		var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
 
-		$('#studentResponse').tinymce({
-			// Location of TinyMCE script
-			script_url : this.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
-
-			// General options
-			theme : "advanced",
-			plugins : "emotions",
-
-			// Theme options
-			theme_advanced_buttons1: 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,emotions,|,forecolor,backcolor,|,formatselect,fontselect,fontsizeselect',
-			theme_advanced_buttons2: '',
-			theme_advanced_buttons3: '',
-			theme_advanced_buttons4: '',
-			theme_advanced_toolbar_location : "top",
-			theme_advanced_toolbar_align : "left",
-			theme_advanced_statusbar_location : "bottom",
-			relative_urls: false,
-			remove_script_host: true,
-			document_base_url: vleLoc,
-
-			setup: function(ed){
-				// store editor as prototype variable
-				context.richTextEditor = ed;
-			}
+		tinymce.init({
+		    selector: "#studentResponse",
+		    menubar:false,
+		    statusbar: false,
+		    toolbar: "bold italic"
 		});
 	}
 
@@ -209,41 +190,11 @@ BRAINSTORM.prototype.brainfullLoaded = function(frameDoc) {
 	/* start the rich text editor if specified */
 	/* rte disabled for now. erroneous behavior saving/loading */
 	if(this.content.isRichTextEditorAllowed){
-		var loc = window.location.toString();
-		var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
-		$('#studentResponse').tinymce({
-			contextPath: this.contextPath,
-			
-			// Location of TinyMCE script
-			script_url : this.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
-
-			// General options
-			theme : "advanced",
-			skin : "cirkuit",
-
-			// Theme options
-			theme_advanced_buttons1: 'bold,italic,importAsset',
-			theme_advanced_buttons2: '',
-			theme_advanced_buttons3: '',
-			theme_advanced_buttons4: '',
-			theme_advanced_toolbar_location : "top",
-			theme_advanced_toolbar_align : "left",
-			theme_advanced_statusbar_location : "bottom",
-			relative_urls: false,
-			remove_script_host: true,
-			document_base_url: vleLoc,
-			setup : function(ed) {
-				// Register import asset button
-				ed.addButton('importAsset', {
-					title : 'Use My Asset',
-					image : this.settings.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
-					onclick : function() {
-						var params = {};
-						params.tinymce = this;
-						eventManager.fire('viewStudentAssets',params);
-					}
-				});
-			}
+		tinymce.init({
+		    selector: "textarea",
+		    menubar:false,
+		    statusbar: false,
+		    toolbar: "bold italic"
 		});
 	} 
 
@@ -644,6 +595,10 @@ BRAINSTORM.prototype.savePost = function(frameDoc){
 	};
 
 	var response = $('#studentResponse').val();
+	
+	if(this.content.isRichTextEditorAllowed) {
+		response = tinymce.get("studentResponse").getContent();
+	} 
 
 	//obtain the dom object that holds all the responses
 	var responsesParent = frameDoc.getElementById('responses');
@@ -760,6 +715,9 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 					var bs = event.data.bs;
 					// when Post Reply button is clicked, post reply to server and update UI
 					var replyText = $(this).siblings(".replyTextarea").val();
+					if (bs.content.isRichTextEditorAllowed) {
+						replyText = tinymce.get($(this).siblings(".replyTextarea").attr('id')).getContent();
+					}
 					var replyToNodeVisitId = $(this).parents(".replyDiv").attr("bsNodeVisitId");
 					var replyToNodeStateTimestamp = $(this).parents(".replyDiv").attr("bsNodeStateTimestamp");
 					//var bs = handlerArgs.bs;
@@ -773,41 +731,11 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 
 				// make the reply textareas into a rich text editor
 				if(content.isRichTextEditorAllowed){
-					var loc = window.location.toString();
-					var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
-					$('#'+replyTextareaId).tinymce({
-						contextPath: this.contextPath,
-						
-						// Location of TinyMCE script
-						script_url : this.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
-
-						// General options
-						theme : "advanced",
-						skin : "cirkuit",
-
-						// Theme options
-						theme_advanced_buttons1: 'bold,italic,importAsset',
-						theme_advanced_buttons2: '',
-						theme_advanced_buttons3: '',
-						theme_advanced_buttons4: '',
-						theme_advanced_toolbar_location : "top",
-						theme_advanced_toolbar_align : "left",
-						theme_advanced_statusbar_location : "bottom",
-						relative_urls: false,
-						remove_script_host: true,
-						document_base_url: vleLoc,
-						setup : function(ed) {
-							// Register import asset button
-							ed.addButton('importAsset', {
-								title : 'Use My Asset',
-								image : this.settings.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
-								onclick : function() {
-									var params = {};
-									params.tinymce = this;
-									eventManager.fire('viewStudentAssets',params);
-								}
-							});
-						}
+					tinymce.init({
+					    selector: "#"+replyTextareaId,
+					    menubar:false,
+					    statusbar: false,
+					    toolbar: "bold italic"
 					});
 				} 
 			});
