@@ -95,6 +95,17 @@ ClassroomMonitorModel.prototype.addWorkByStudent = function(workgroupId, work) {
 };
 
 /**
+ * Get a vle state for a workgroup id
+ * @param workgroupId the workgroup id
+ * @return the vle state for the workgroup id or null
+ */
+ClassroomMonitorModel.prototype.getWorkByStudent = function(workgroupId) {
+	var vleState = this.workgroupIdToWork[workgroupId];
+	
+	return vleState;
+};
+
+/**
  * Add an array of student work for a step
  * 
  * @param nodeId the node id
@@ -103,6 +114,61 @@ ClassroomMonitorModel.prototype.addWorkByStudent = function(workgroupId, work) {
 ClassroomMonitorModel.prototype.addWorkByStep = function(nodeId, work) {
 	//remember the work for the node id
 	this.nodeIdToWork[nodeId] = work;
+};
+
+/**
+ * Get an array of student work for a step
+ * 
+ * @param nodeId the node id
+ * @return work an array of node visits for the step
+ */
+ClassroomMonitorModel.prototype.getWorkByStep = function(nodeId) {
+	var workForStep = this.nodeIdToWork[nodeId];
+	
+	return workForStep;
+};
+
+/**
+ * Get all the work for a specific step for a specific student
+ * @param nodeId the node id
+ * @param workgroupId the workgroup id
+ * @return a vle state object that only contains work for a specific
+ * step for a specific student
+ */
+ClassroomMonitorModel.prototype.getWorkByStepAndWorkgroupId = function(nodeId, workgroupId) {
+	var vleState = null;
+	
+	/*
+	 * get all the work for a specific step. the vle states is an array
+	 * of vle states. each vle state only contains the work for the specific 
+	 * step for a specific student.
+	 */
+	var vleStates = this.nodeIdToWork[nodeId];
+	
+	if(vleStates != null) {
+		
+		//loop through all the vle states
+		for(var x=0; x<vleStates.length; x++) {
+			//get a vle state
+			var tempVleState = vleStates[x];
+			
+			if(tempVleState != null) {
+				//get the workgroup id for the vle state
+				var tempWorkgroupId = tempVleState.workgroupId;
+				
+				if(workgroupId == tempWorkgroupId) {
+					/*
+					 * the workgroup id matches the one we want so we have found
+					 * the vle state that we want
+					 */
+					vleState = tempVleState;
+					break;
+				}
+			}
+		}		
+	}
+	
+	return vleState;
 };
 
 /**

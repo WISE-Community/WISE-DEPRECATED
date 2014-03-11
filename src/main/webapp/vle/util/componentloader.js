@@ -17,7 +17,7 @@ var componentloader = function(em, sl){
 		grading_min: ['setup', 'core_min', 'config', 'teacherXMPP_min', 'studentwork_min', 'user', 'session', 'grading_min', 'annotations_min', 'maxscores_min', 'ideabasket'],
 		authoring: ['ddMenu', 'setup', 'core','keystroke','customcontextmenu', 'config', 'session','messagemanager','author','authoringcomponents', 'maxscores'],
 		summary: ['core'],
-		classroomMonitor: ['setup', 'core', 'config', 'studentwork', 'user', 'session', 'maxscores', 'teacherWebSocket']
+		classroomMonitor: ['setup', 'core', 'config', 'studentwork', 'user', 'session', 'annotations', 'maxscores', 'teacherWebSocket']
 	};
 	
 	//components are comprised of variables, events, methods, and initialization.

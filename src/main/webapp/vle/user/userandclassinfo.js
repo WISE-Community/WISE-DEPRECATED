@@ -365,10 +365,11 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 		
 		/**
 		 * Get the classmates in alphabetical order and then get the workgroup ids
+		 * @param periodId (optional) period id
 		 * @return an array containing the workgroup ids in alphabetical order based
 		 * on the user name
 		 */
-		var getClassmateWorkgroupIdsInInAlphabeticalOrder = function() {
+		var getClassmateWorkgroupIdsInAlphabeticalOrder = function(periodId) {
 			var workgroupIds = [];
 			
 			//get all the classmates in alphabetical order
@@ -382,16 +383,64 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 					
 					if(classmate != null) {
 						//get the workgroup id
-						var workgroupId = classmate.workgroupId;
+						var tempWorkgroupId = classmate.workgroupId;
+						var tempPeriodId = classmate.periodId;
 						
-						if(workgroupId != null) {
-							workgroupIds.push(workgroupId);
+						if(tempWorkgroupId != null) {
+							if(periodId == null) {
+								//period id was not passed in so we will add all classmates
+								workgroupIds.push(tempWorkgroupId);
+							} else if(periodId == tempPeriodId) {
+								//period id was provided and matches so we will add this classmate
+								workgroupIds.push(tempWorkgroupId);
+							}
 						}
 					}
 				}
 			}
 			
 			return workgroupIds;
+		}
+		
+		/**
+		 * Get the previous and next workgroup ids. The order of the workgroup ids
+		 * is in user name alphabetical order.
+		 * @param workgroupId we will get the previous and next workgroup ids relative
+		 * to this workgroup id
+		 * @param periodId (optional) we will only look at workgroup ids in the period
+		 * if this parameter is provided
+		 */
+		var getPreviousAndNextWorkgroupIdsInAlphabeticalOrder = function(workgroupId, periodId) {
+			var previousAndNextWorkgroupIds = new Object();
+			
+			if(workgroupId != null) {
+				/*
+				 * get the workgroup ids in alphabetical order. only look at workgroup ids
+				 * in the period if the period is provided.
+				 */ 
+				var workgroupIds = getClassmateWorkgroupIdsInAlphabeticalOrder(periodId);
+				
+				//loop through all the workgroup ids
+				for(var x=0; x<workgroupIds.length; x++) {
+					//get a workgroup id
+					var tempWorkgroupId = workgroupIds[x];
+					
+					if(workgroupId == tempWorkgroupId) {
+						//get the previous workgroup id
+						var previousWorkgroupId = workgroupIds[x - 1];
+						
+						//get the next workgroup id
+						var nextWorkgroupId = workgroupIds[x + 1];
+						
+						//add the previous and next workgroup ids to the object that we will return
+						previousAndNextWorkgroupIds.previousWorkgroupId = previousWorkgroupId;
+						previousAndNextWorkgroupIds.nextWorkgroupId = nextWorkgroupId;
+						break;
+					}
+				}				
+			}
+			
+			return previousAndNextWorkgroupIds;
 		}
 		
 		return {
@@ -470,8 +519,11 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			getClassmateWorkgroupIdsInPeriodId:function(periodId) {
 				return getClassmateWorkgroupIdsInPeriodId(periodId);
 			},
-			getClassmateWorkgroupIdsInInAlphabeticalOrder:function() {
-				return getClassmateWorkgroupIdsInInAlphabeticalOrder();
+			getClassmateWorkgroupIdsInAlphabeticalOrder:function(periodId) {
+				return getClassmateWorkgroupIdsInAlphabeticalOrder(periodId);
+			},
+			getPreviousAndNextWorkgroupIdsInAlphabeticalOrder:function(workgroupId, periodId) {
+				return getPreviousAndNextWorkgroupIdsInAlphabeticalOrder(workgroupId, periodId);
 			}
 		};
 	}(myUserInfo, periods, classmateUserInfos, teacherUserInfo, sharedTeacherUserInfos);
