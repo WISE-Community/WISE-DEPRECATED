@@ -86,6 +86,14 @@ public class UserImpl implements User {
     }
     
     /**
+     * @see net.sf.sail.webapp.domain.User#isAdmin()
+     */
+    public boolean isTrustedAuthor(){
+    	return this.userDetails.hasGrantedAuthority(UserDetailsService.TRUSTED_AUTHOR_ROLE);
+    }
+
+    
+    /**
      * @return the id
      */
     @SuppressWarnings("unused")

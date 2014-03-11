@@ -277,11 +277,12 @@ SVGDRAW.prototype.load = function() {
 SVGDRAW.prototype.initDisplay = function(data,context) {
 	var ready = true,
 		node = this.node,
-		wiseExtensions = ['ext_prompt', 'ext_stamps', 'ext_snapshots', 'ext_description', 'ext_importstudentasset', 'ext_wise4', 'ext_clearlayer'];
+		wiseExtensions = ['ext-prompt.js', 'ext-stamps.js', 'ext-snapshots.js', 'ext-description.js', 'ext-importstudentasset.js', 'ext-wise4.js', 'ext-clearlayer.js'];
 	var e = node.extensions.length-1;
 	for(; e>-1; --e){
-		var prop = node.extensions[e];
-		if($.inArray(prop, wiseExtensions) > -1) {
+		var ext = node.extensions[e];
+		if($.inArray(ext, wiseExtensions) > -1) {
+			var prop = ext.replace(/\.js$/,'').replace(/^ext-/,'ext_');
 			if(svgEditor.hasOwnProperty(prop)){
 				if(!svgEditor[prop].isLoaded()){
 					ready = false;
@@ -373,7 +374,8 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 		
 		//initiate snapshots
 		if(snapshotsExt){
-			snapshotsExt.max(context.snapshots_max);
+			var max = context.snapshots_max ? context.snapshots_max : 10;
+			snapshotsExt.max(max);
 			if(context.snapshots_max < 11){
 				svgEditor.maxDrawSize = 40960;
 			} else {
@@ -383,7 +385,7 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 				// load existing snapshots
 				snapshotsExt.content(data.snapshots, data.selected, data.snapTotal, function(){
 					snapshotsExt.min(1).toggleDisplay(false);
-					if(context.descriptionActive){
+					if(descriptionExt){
 						$('#description').show();
 					}
 				});
@@ -509,14 +511,15 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 					}
 				}
 			};
+			descriptionExt.toggle().toggle(true);  // hack to position description holder correctly in Chrome; TODO: fix
 		}
 		
 		setTimeout(function(){
 			$('#closepath_panel').insertAfter('#path_node_panel');
 			svgCanvas.undoMgr.resetUndoStack(); // reset undo stack to prevent users from deleting stored starting image
 			$("#tool_undo").addClass("tool_button_disabled").addClass("disabled");
-			$('#fit_to_canvas').mouseup();
 			this.node.view.eventManager.fire('contentRenderCompleted', this.node.id, this.node);
+			svgEditor.resizeCanvas();
 			$('#loading_overlay').fadeOut();
 			svgEditor.loadedWISE = true;
 		},500);

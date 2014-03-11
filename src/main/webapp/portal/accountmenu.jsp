@@ -3,8 +3,19 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <sec:authorize ifNotGranted="ROLE_USER">
+<script type="text/javascript">
+function validateLoginForm() {
+	var username=document.getElementById("j_username").value;
+	var password=document.getElementById("j_password").value;
+	if (username==null || username=="" || password==null || password=="") {
+	  	window.location="login.html?failed=true";
+	  	return false;
+	}
+	return true;
+}
+</script>
 	<div id="userInfoBlock">
-		<form id="home" method="post" action="${contextPath}/j_acegi_security_check" autocomplete="off">
+		<form id="home" method="post" action="${contextPath}/j_acegi_security_check" onsubmit="return validateLoginForm()" autocomplete="off">
 			<div id="signinForm">
 				<div>
 					<label for="username"><spring:message code="usernameLabel" /></label><input class="dataBoxStyle" type="text" name="j_username" id="j_username" size="18" maxlength="60" />

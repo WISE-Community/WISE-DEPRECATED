@@ -52,4 +52,11 @@ public interface User extends Persistable {
      * @return boolean
      */
     public boolean isAdmin();
+    
+    /**
+     * Returns true if this use is a trusted author, false otherwise
+     * 
+     * @return boolean
+     */
+    public boolean isTrustedAuthor();
 }

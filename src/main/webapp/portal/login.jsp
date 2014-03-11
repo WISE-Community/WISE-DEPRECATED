@@ -20,6 +20,17 @@
 
 <title><spring:message code="signIn" /></title>
 
+<script type="text/javascript">
+function validateLoginForm() {
+	var username=document.getElementById("j_username").value;
+	var password=document.getElementById("j_password").value;
+	if (username==null || username=="" || password==null || password=="") {
+	  	window.location="login.html?failed=true";
+	  	return false;
+	}
+	return true;
+}
+</script>
 </head>
 
 <body onload="document.getElementById('j_username').focus();">
@@ -29,7 +40,7 @@
 			<div class="infoContent loginContent">
 				<div class="panelHeader"><spring:message code="signIn"/></div>
 				<div>
-					<form id="home" method="post" action="j_acegi_security_check" autocomplete="off">
+					<form id="home" method="post" action="j_acegi_security_check" onsubmit="return validateLoginForm()" autocomplete="off">
 						<div id="signinForm">
 							<div class="errorMsgNoBg">
 								<c:if test="${failed}">
