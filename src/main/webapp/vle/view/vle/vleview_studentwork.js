@@ -422,6 +422,10 @@ View.prototype.onWindowUnload = function(logout){
  * @param params Object (optional) specifying asset editor options (type, extensions to show, optional text for new button, callback function)
  */
 View.prototype.viewStudentAssets = function(params) {
+	if (this.config.getConfigParam("mode") == "portalpreview") {
+		alert(this.getI18NString("student_assets_preview_mode"));
+		return;
+	}
 	var view = this;
 	if (params){
 		view.assetEditorParams = params;

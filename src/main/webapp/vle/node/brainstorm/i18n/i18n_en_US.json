@@ -15,6 +15,10 @@
 		"value":"Save",
 		"description":"The text 'Save' on the button to save and post a brainstorm response"
 	},
+	"save_preview_mode": {
+		"value":"You can save your answer and view other students' answers when this project is set up for a classroom run.",
+		"description":"The text to show when user clicks on the Save button in preview mode."
+	},
 	"other_student_responses": {
 		"value":"Other Student Responses",
 		"description":"The text 'Other Student Responses' that is displayed above the list of other students' responses"
@@ -22,6 +26,10 @@
 	"check_for_new_responses": {
 		"value":"Check for New Responses",
 		"description":"The text 'Check for New Responses' that is displayed on a button that triggers the loading of other students' responses"
+	},
+	"check_for_new_responses_preview_mode": {
+		"value":"You can view other students' answers when this project is set up for a classroom run.",
+		"description":"The text to show when user clicks on the Check for New Responses button in preview mode."
 	},
 	"showStarterSentence":{
 		"value":"Show Starter Sentence",

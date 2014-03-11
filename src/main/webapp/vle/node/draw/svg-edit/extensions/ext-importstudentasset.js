@@ -34,7 +34,6 @@ svgEditor.addExtension("Import Student Asset", function() {
 			}
 		}],
 		callback: function(){
-			//$('#tool_import_student_asset').insertAfter('#tool_text'); // place connector button directly after text_tool
 			// reset flyout positions
 			setTimeout(function(){
 				$('.tools_flyout').each(function() {
