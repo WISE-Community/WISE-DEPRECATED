@@ -196,7 +196,7 @@
 		"description":"Text above where the aggregate view would be displayed"
 	},
 	"student_aggregate_view_preview_mode_default_text": {
-		"value":"Aggregate view for this step will appear when you set up a run with real students.",
+		"value":"Aggregate view of students' work for {0} will appear here when you set up a classroom run.",
 		"description":"Default text to display for aggregate view when in preview mode."
 	},
 	"cancel":{

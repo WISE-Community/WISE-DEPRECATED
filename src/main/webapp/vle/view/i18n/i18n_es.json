@@ -184,7 +184,7 @@
         "description": "Text 'OK'"
     },
     "student_aggregate_view_preview_mode_default_text": {
-        "value": "La vista general de este paso aparecerá cuando se haga una ejecución real con estudiantes.",
+        "value": "La vista general de {0} aparecerá cuando se haga una ejecución real con estudiantes.",
         "description": "Default text to display for aggregate view when in preview mode."
     },
     "done": {
