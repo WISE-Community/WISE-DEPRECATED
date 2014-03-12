@@ -560,7 +560,7 @@
         "description": ""
     },
 	"constraint_must_complete_x_before": {
-		"value":"まず　{0} をやってください",
+		"value":"まず　{0} を終わらせてください",
 		"description":"The message shown to students telling them to complete work on a previous step before working on the current step"
 	},
 	"constraint_must_complete_these_before": {

@@ -188,7 +188,7 @@
         "description": "Text above where the aggregate view would be displayed"
     },
     "student_aggregate_view_preview_mode_default_text": {
-        "value": "La vista aggregata per questo passo apparirà quando eseguirai la lezione con gli studenti",
+        "value": "La vista aggregata per {0} apparirà quando eseguirai la lezione con gli studenti",
         "description": "Default text to display for aggregate view when in preview mode."
     },
     "cancel": {

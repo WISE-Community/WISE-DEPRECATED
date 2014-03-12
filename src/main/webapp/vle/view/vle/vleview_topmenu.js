@@ -315,6 +315,10 @@ View.prototype.displayFlaggedWorkForNodeId = function(nodeId) {
  * they can get grades and comments the teacher made immediately.
  */
 View.prototype.showAllWork = function(annotationsRetrieved, projectMetaDataRetrieved){
+	if (this.config.getConfigParam("mode") == "portalpreview") {
+		alert(this.getI18NString("mywork_preview_mode"));
+		return;
+	}
 	//clear out these values so that the respective data will be retrieved again
 	this.annotationsRetrieved = annotationsRetrieved;
 	this.projectMetaDataRetrieved = projectMetaDataRetrieved;
@@ -512,6 +516,10 @@ View.prototype.retrieveAnnotations = function(callerId) {
  * Retrieve the flagged work and display it
  */
 View.prototype.getFlaggedWork = function() {
+	if (this.config.getConfigParam("mode") == "portalpreview") {
+		alert(this.getI18NString("flagged_preview_mode"));
+		return;
+	}
 	var processGetFlaggedWorkResponse = function(responseText, responseXML, args) {
 		var thisView = args[0];
 		var callerId = args[1];

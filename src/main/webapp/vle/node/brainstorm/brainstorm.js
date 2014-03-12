@@ -591,6 +591,7 @@ BRAINSTORM.prototype.showRecentResponses = function(frameDoc, recentResponses, r
  */
 BRAINSTORM.prototype.savePost = function(frameDoc){
 	if (this.node.view.config.getConfigParam('mode') != "run") {
+		alert(this.node.view.getI18NString("save_preview_mode","BrainstormNode"));
 		return;
 	};
 
@@ -843,6 +844,11 @@ BRAINSTORM.prototype.showStarter = function(){
  * @param frameDoc
  */
 BRAINSTORM.prototype.refreshResponses = function(frameDoc) {
+	if (this.node.view.config.getConfigParam('mode') == "portalpreview") {
+	   alert(this.node.view.getI18NString("check_for_new_responses_preview_mode","BrainstormNode"));
+	   return;
+	}
+
 	/*
 	 * clear the responses because the show functions after this
 	 * just append to the div
@@ -851,7 +857,7 @@ BRAINSTORM.prototype.refreshResponses = function(frameDoc) {
 
 	//show the canned responses
 	this.showCannedResponses(frameDoc);
-
+	
 	//check if we are using a server
 	if(this.content.useServer) {
 		//show the classmate responses by requesting them from the server

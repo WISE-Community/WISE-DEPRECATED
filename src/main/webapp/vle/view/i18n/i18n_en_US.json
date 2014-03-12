@@ -23,6 +23,10 @@
 		"value":"Review My Work",
 		"description":"Text for mouse hover title on the My Work button"
 	},
+	"mywork_preview_mode":{
+		"value":"My Work is not available in preview mode.  In a classroom run, this is where your work and grades will be displayed.",
+		"description":"Text to display when user clicks on review work button in preview mode"
+	},
 	"flagged_button_text":{
 		"value":"Flagged",
 		"description":"Text on the Flagged button"
@@ -30,6 +34,10 @@
 	"flagged_button_title":{
 		"value":"Review Teacher Flagged Work",
 		"description":"Text for mouse hover title on the Flagged button"
+	},
+	"flagged_preview_mode":{
+		"value":"Flagged is not available in preview mode. In a classroom run, this is where items that the teacher flags will be displayed.",
+		"description":"Text to display when user clicks on flagged work button in preview mode"
 	},
 	"journal_button_text":{
 		"value":"Journal",
@@ -179,12 +187,16 @@
 		"value":"Maximum space exceeded! Maximum allowed is {0}, total on server is {1}. Please delete some files.",
 		"description":"Text on a button in Student Asset Manager to delete a selected file"
 	},
+	"student_assets_preview_mode":{
+		"value":"Student Assets is not available in preview mode. In a classroom run, this is where students can upload assets like images and use them in responses.",
+		"description":"Message to show users when they click on student assets button in preview mode"
+	},
 	"student_aggregate_view_intro_text":{
 		"value":"Summary View for step {0}",
 		"description":"Text above where the aggregate view would be displayed"
 	},
 	"student_aggregate_view_preview_mode_default_text": {
-		"value":"Aggregate view for this step will appear when you set up a run with real students.",
+		"value":"Aggregate view of students' work for {0} will appear here when you set up a classroom run.",
 		"description":"Default text to display for aggregate view when in preview mode."
 	},
 	"cancel":{

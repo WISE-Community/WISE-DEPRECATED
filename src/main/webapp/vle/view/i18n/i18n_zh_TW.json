@@ -512,7 +512,7 @@
         "description": "Text above where the aggregate view would be displayed"
     },
     "student_aggregate_view_preview_mode_default_text": {
-        "value": "Aggregate view for this step will appear when you set up a run with real students.",
+        "value": "Aggregate view for {0} will appear when you set up a run with real students.",
         "description": "Default text to display for aggregate view when in preview mode."
     },
     "explanation_builder": {
