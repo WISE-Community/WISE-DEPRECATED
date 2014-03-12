@@ -92,6 +92,11 @@ ASSESSMENTLISTSTATE.prototype.getStudentWorkString = function(showAutoScoreResul
 						autoScoreTotalScore += studentScore;
 						autoScoreTotalMaxScore += maxScore;
 					}
+				} else if (assessment.type == "checkbox") {
+					for (var i=0; i<assessment.response.length; i++) {
+						studentWorkSoFar += assessment.response[i].text;
+						studentWorkSoFar += "<br/>";
+					}
 				} else if (assessment.type == "text") {
 					studentWorkSoFar += assessment.response.text;
 				}

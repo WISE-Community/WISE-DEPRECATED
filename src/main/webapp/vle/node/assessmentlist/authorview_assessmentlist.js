@@ -208,9 +208,9 @@ View.prototype.AssessmentListNode.generateAssessments = function(){
 	parent.appendChild(createBreak());
 	
 	if(this.content.assessments.length>0){
-		var assText = document.createTextNode("Existing Assessments");
+		var assText = document.createTextNode("Existing Assessment Items");
 	} else {
-		var assText = document.createTextNode("Create Assessments");
+		var assText = document.createTextNode("Create Assessment Item");
 	};
 	
 	parent.appendChild(assText);
@@ -218,12 +218,14 @@ View.prototype.AssessmentListNode.generateAssessments = function(){
 	
 	//create current mod elements
 	for(var a=0;a<this.content.assessments.length;a++){
-		var assDiv = createElement(document, 'div', {id: 'assDiv_' + a});
-		var assText = document.createTextNode('Assessment Item');
+		var assDiv = createElement(document, 'div', {id: 'assDiv_' + a, class: 'assessmentItemDiv'});
+		var assText = document.createTextNode('Assessment Item: ');
 		if (this.content.assessments[a].type == "radio") {
-			var typeText = document.createTextNode("Type: Multiple Choice");
+			var typeText = document.createTextNode("Multiple Choice: Choose One");
+		} else if (this.content.assessments[a].type == "checkbox") {
+			var typeText = document.createTextNode("Multiple Choice: Choose Multiple");
 		} else if (this.content.assessments[a].type == "text") {
-			var typeText = document.createTextNode("Type: Open Response");
+			var typeText = document.createTextNode("Open Response");
 		};
 		
 		var promptText = document.createTextNode("Prompt: ");
@@ -236,7 +238,6 @@ View.prototype.AssessmentListNode.generateAssessments = function(){
 
 		parent.appendChild(assDiv);
 		assDiv.appendChild(assText);
-		assDiv.appendChild(createBreak());
 		assDiv.appendChild(typeText);
 		assDiv.appendChild(createBreak());
 		assDiv.appendChild(promptText);
@@ -244,9 +245,6 @@ View.prototype.AssessmentListNode.generateAssessments = function(){
 		assDiv.appendChild(createBreak());		
 
 		if (this.content.assessments[a].type == "radio") {
-			var choiceText = document.createTextNode("Choices: ");
-			assDiv.appendChild(choiceText);
-			assDiv.appendChild(createBreak());
 			// add "enable automated scoring" checkbox
 			if (this.content.assessments[a].isAutoScoreEnabled) {
 				var isAutoScoringEnabledInput = createElement(document, "input", 
@@ -259,13 +257,18 @@ View.prototype.AssessmentListNode.generateAssessments = function(){
 			}
 			assDiv.appendChild(isAutoScoringEnabledInput);
 			assDiv.appendChild(document.createTextNode("Enable automated scoring for this item"));
+			assDiv.appendChild(createBreak());
+			
+			var choiceText = document.createTextNode("Choices: ");
+			assDiv.appendChild(choiceText);
+			assDiv.appendChild(createBreak());
 			
 			var choices = this.content.assessments[a].choices;
 			for (var c=0; c<choices.length; c++) {
 				var choiceText = choices[c].text;
 				var choiceDiv = createElement(document, 'div', {"class":'assessmentlistRadioItemDiv'});
 				
-				// add choice text input
+				// add new choice text input
 				var choiceInput = createElement(document, 'input', 
 						{id: 'textInput_' + a + '_' + c, 'class':'assessmentlistRadioItemInput', type:'text', size:'80',
 						 name:'choiceInput',value:choiceText,wrap:'hard',
@@ -305,17 +308,44 @@ View.prototype.AssessmentListNode.generateAssessments = function(){
 				choiceDiv.appendChild(createBreak());
 
 				// add "Remove this choice" button
-				var removeChoiceButt = createElement(document, 'input', {type:'button',id:'removeChoiceButt',value:'remove choice',onclick: "eventManager.fire('assessmentlistRadioItemRemoveChoice',['"+ a +"','"+ c +"'])"});
+				var removeChoiceButt = createElement(document, 'input', {type:'button',id:'removeChoiceButt',value:'Remove Choice',onclick: "eventManager.fire('assessmentlistRadioItemRemoveChoice',['"+ a +"','"+ c +"'])"});
 				choiceDiv.appendChild(removeChoiceButt);
 				assDiv.appendChild(choiceDiv);
 				assDiv.appendChild(createBreak());
 			};
-			var addChoiceButt = createElement(document, 'input', {type:'button',id:'addChoiceButt',value:'add choice',onclick: "eventManager.fire('assessmentlistAddChoice','"+ a + "')"});
+			var addChoiceButt = createElement(document, 'input', {type:'button',id:'addChoiceButt',value:'Add New Choice',onclick: "eventManager.fire('assessmentlistAddChoice','"+ a + "')"});
+			assDiv.appendChild(addChoiceButt);
+			assDiv.appendChild(createBreak());
+		} else if (this.content.assessments[a].type == "checkbox") {
+			var choiceText = document.createTextNode("Choices: ");
+			assDiv.appendChild(choiceText);
+			assDiv.appendChild(createBreak());
+			
+			var choices = this.content.assessments[a].choices;
+			for (var c=0; c<choices.length; c++) {
+				var choiceText = choices[c].text;
+				var choiceDiv = createElement(document, 'div', {"class":'assessmentlistRadioItemDiv'});
+				
+				// add new choice text input
+				var choiceInput = createElement(document, 'input', 
+						{id: 'textInput_' + a + '_' + c, 'class':'assessmentlistRadioItemInput', type:'text', size:'80',
+						 name:'choiceInput',value:choiceText,wrap:'hard',
+						 onkeyup:"eventManager.fire('assessmentlistRadioItemFieldUpdated',['text','"+ a +"','"+ c +"'])"});
+				choiceDiv.appendChild(choiceInput);
+				choiceDiv.appendChild(createBreak());
+
+				// add "Remove this choice" button
+				var removeChoiceButt = createElement(document, 'input', {type:'button',id:'removeChoiceButt',value:'Remove Choice',onclick: "eventManager.fire('assessmentlistRadioItemRemoveChoice',['"+ a +"','"+ c +"'])"});
+				choiceDiv.appendChild(removeChoiceButt);
+				assDiv.appendChild(choiceDiv);
+				assDiv.appendChild(createBreak());
+			};
+			var addChoiceButt = createElement(document, 'input', {type:'button',id:'addChoiceButt',value:'Add New Choice',onclick: "eventManager.fire('assessmentlistAddChoice','"+ a + "')"});
 			assDiv.appendChild(addChoiceButt);
 			assDiv.appendChild(createBreak());
 		} else if(this.content.assessments[a].type == "text") {
-			var richTextEditorText = document.createTextNode("Use Rich Text Editor");
 			/* not sure if we really need rich text editor for assessmentlist at this time
+			var richTextEditorText = document.createTextNode("Use Rich Text Editor");
 			assDiv.appendChild(richTextEditorText);
 			assDiv.appendChild(this.generateRichText(a));
 			assDiv.appendChild(createBreak());
@@ -348,17 +378,20 @@ View.prototype.AssessmentListNode.generateAssessments = function(){
 			assDiv.appendChild(createBreak());
 		}
 		
-		var removeButt = createElement(document, 'input', {type: 'button', id: 'removeButt', value: 'remove item', onclick: "eventManager.fire('assessmentlistRemoveItem','" + a + "')"});
+		var removeButt = createElement(document, 'input', {type: 'button', id: 'removeButt', value: 'Remove Assessment Item', onclick: "eventManager.fire('assessmentlistRemoveItem','" + a + "')"});
 		
+		assDiv.appendChild(createBreak());
 		assDiv.appendChild(removeButt);
-		assDiv.appendChild(createBreak());
-		assDiv.appendChild(createBreak());
 	};
 	
 	//create buttons to create new assessments
-	var createNewRadioButt = createElement(document, 'input', {type:'button', value:'add new multiple choice item', onclick:"eventManager.fire('assessmentlistAddNewItem','radio')"});
+	var createNewRadioButt = createElement(document, 'input', {type:'button', value:'Add Item: Choose One', onclick:"eventManager.fire('assessmentlistAddNewItem','radio')"});
 	parent.appendChild(createNewRadioButt);
-	var createNewOpenResponseButt = createElement(document, 'input', {type:'button', value:'add new open response item', onclick:"eventManager.fire('assessmentlistAddNewItem','text')"});
+	parent.appendChild(createBreak());
+	var createNewCheckboxButt = createElement(document, 'input', {type:'button', value:'Add Item: Choose Multiple', onclick:"eventManager.fire('assessmentlistAddNewItem','checkbox')"});
+	parent.appendChild(createNewCheckboxButt);
+	parent.appendChild(createBreak());
+	var createNewOpenResponseButt = createElement(document, 'input', {type:'button', value:'Add Item: Open Response', onclick:"eventManager.fire('assessmentlistAddNewItem','text')"});
 	parent.appendChild(createNewOpenResponseButt);
 };
 
@@ -473,6 +506,18 @@ View.prototype.AssessmentListNode.addNewItem = function(type){
 	if (type == "radio") {
 		var item = {id:this.view.activeNode.utils.generateKey(),
 			    type:'radio',
+			    prompt:'Edit prompt here',
+			    choices:[]
+			    };
+	
+		this.content.assessments.push(item);
+		this.generateAssessments();
+		
+		/* fire source updated event */
+		this.view.eventManager.fire('sourceUpdated');
+	} else if (type == "checkbox") {
+		var item = {id:this.view.activeNode.utils.generateKey(),
+			    type:'checkbox',
 			    prompt:'Edit prompt here',
 			    choices:[]
 			    };

@@ -768,6 +768,27 @@ ASSESSMENTLIST.prototype.getResponse = function(assessmentJSON) {
 		} else {
 			return null;
 		}
+	} else if  (assessmentJSON.type == "checkbox") {
+		var responses = [];
+		var checkedCheckboxes = $("input[name='" + assessmentJSON.id + "']:checked");
+		if (checkedCheckboxes.length == 0) {
+			return null;
+		}
+		for (var i=0; i<checkedCheckboxes.length; i++) {
+			var choiceId = $(checkedCheckboxes[i]).val();
+			if (choiceId != null && choiceId != "") {
+				var response = {};
+				response.id = choiceId;
+				// get text of choice from assessment obj
+				for (var x=0; x < assessmentJSON.choices.length; x++) {
+					if (assessmentJSON.choices[x].id == choiceId) {
+						response.text = assessmentJSON.choices[x].text;
+					}
+				}
+				responses.push(response);
+			}			
+		}
+		return responses;
 	};
 	return "";
 };
@@ -788,6 +809,8 @@ ASSESSMENTLIST.prototype.getHTML = function(assessmentJSON,index) {
 		html += this.getHTMLText(assessmentJSON);
 	} else if  (assessmentJSON.type == "radio") {
 		html += this.getHTMLRadio(assessmentJSON);
+	} else if  (assessmentJSON.type == "checkbox") {
+		html += this.getHTMLCheckbox(assessmentJSON);
 	};
 	html += "</div>";
 	return html;
@@ -815,6 +838,45 @@ ASSESSMENTLIST.prototype.getHTMLRadio = function(radioJSON) {
 			}
 			html += "<span class='choicetextSpan'>"+choice.text+"</span>"
 			    +"</div>";
+		};
+		html += "</div>";
+	}
+
+	return html;
+};
+
+/**
+ * Returns HTML String to display a checkbox  assessment, like multiple choice: choose multiple. The assessment object
+ * is passed in as JSON object, and is of type checkbox.
+ * @param checkboxJSON
+ * @return
+ */
+ASSESSMENTLIST.prototype.getHTMLCheckbox = function(checkboxJSON) {
+	var html = "";
+	
+	if(checkboxJSON.choices.length > 0) {
+		html = "<div id='"+checkboxJSON.id+"checkboxChoicesDiv' class='checkboxChoicesDiv'>";
+		var lastChosenChoices = this.getLastSavedResponse(checkboxJSON);
+		for (var i=0;i<checkboxJSON.choices.length;i++) {
+			var choice = checkboxJSON.choices[i];
+			html+="<div id='"+choice.id+"choiceDiv' class='checkboxChoiceDiv'>";
+			if (lastChosenChoices != null) {
+				var checked = false;
+				for (var j=0; j<lastChosenChoices.length; j++) {
+					var oneOfLastChosenChoiceIds = lastChosenChoices[j].id;
+					if (oneOfLastChosenChoiceIds == choice.id) {
+						checked = true;
+					}
+				}
+				if (checked) {
+				    html += "<input class='interactable' type='checkbox' name='"+checkboxJSON.id+"' value='"+choice.id+"' onchange='javascript:assessmentListChanged()' checked>";						
+				} else {
+				    html += "<input class='interactable' type='checkbox' name='"+checkboxJSON.id+"' value='"+choice.id+"' onchange='javascript:assessmentListChanged()'>";
+				}
+			} else {
+			    html += "<input class='interactable' type='checkbox' name='"+checkboxJSON.id+"' value='"+choice.id+"' onchange='javascript:assessmentListChanged()'>";
+			}
+			html += "<span class='choicetextSpan'>"+choice.text+"</span></div>";
 		};
 		html += "</div>";
 	}
@@ -890,6 +952,8 @@ ASSESSMENTLIST.prototype.getLastSavedResponse = function(assessmentJSON) {
 					//the student does have a previous response/answer
 					if (assessmentJSON.type == "radio") {
 						return latestState.assessments[i].response.id;
+					} else if (assessmentJSON.type == "checkbox") {
+						return latestState.assessments[i].response;
 					} else if (assessmentJSON.type == "text") {
 						return latestState.assessments[i].response.text;
 					};
