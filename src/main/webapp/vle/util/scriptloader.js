@@ -520,6 +520,7 @@ var scriptloader = function(){
  		premadecomments:['vle/css/globalstyles.css',
  		                 'vle/css/premadecomments/premadecomments.css',
  		                jqueryUICss],
+ 		teacherWebSocket:['vle/css/classroomMonitor/classroomMonitor.css']
     	         
 	};
 	

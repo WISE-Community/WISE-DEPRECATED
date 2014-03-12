@@ -1,0 +1,16 @@
+.exIdea {
+  width: 150px;
+  padding: .5em;
+  border: 2px solid #444;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background-color:rgb(38, 84, 207);
+  /*background-color:#2654CF;*/
+  color:#fff;
+  text-align:center;
+  cursor:pointer;
+  box-shadow: 0px 0px 4px #fff;
+  -moz-box-shadow: 0px 0px 4px #fff;
+  -webkit-box-shadow: 0px 0px 6px #fff;
+}

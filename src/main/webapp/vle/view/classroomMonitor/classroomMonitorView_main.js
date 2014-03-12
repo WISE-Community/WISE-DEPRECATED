@@ -33,7 +33,7 @@ View.prototype.startClassroomMonitor = function() {
 	$('#classroomMonitorHeader').text('Classroom Monitor');
 	
 	//display a loading message
-	$('#classroomMonitorButtonDiv').text('Loading...');
+	$('#selectDisplayButtonsDiv').text('Loading...');
 	
 	//initialize the session
 	this.initializeSession();
@@ -75,6 +75,10 @@ View.prototype.hideAllDisplays = function() {
  * Show the pause all screens display
  */
 View.prototype.showPauseScreensDisplay = function() {
+	//clear any existing buttons in the upper right
+	this.clearDisplaySpecificButtonsDiv();
+	this.clearSaveButtonDiv();
+	
 	//hide all the other display divs
 	this.hideAllDisplays();
 	
@@ -90,6 +94,10 @@ View.prototype.showPauseScreensDisplay = function() {
  * Show the student progress display
  */
 View.prototype.showStudentProgressDisplay = function() {
+	//clear any existing buttons in the upper right
+	this.clearDisplaySpecificButtonsDiv();
+	this.clearSaveButtonDiv();
+	
 	//hide all the other display divs
 	this.hideAllDisplays();
 	
@@ -105,6 +113,10 @@ View.prototype.showStudentProgressDisplay = function() {
  * Show the step progress display
  */
 View.prototype.showStepProgressDisplay = function() {
+	//clear any existing buttons in the upper right
+	this.clearDisplaySpecificButtonsDiv();
+	this.clearSaveButtonDiv();
+	
 	//hide all the other display divs
 	this.hideAllDisplays();
 	
@@ -202,10 +214,10 @@ View.prototype.createClassroomMonitorButtons = function() {
 		thisView.showStepProgressDisplay();
 	});
 	
-	//add all the buttons to the button div
-	$('#classroomMonitorButtonDiv').append(pauseScreensToolButton);
-	$('#classroomMonitorButtonDiv').append(studentProgressButton);
-	$('#classroomMonitorButtonDiv').append(stepProgressButton);
+	//add the select display buttons
+	$('#selectDisplayButtonsDiv').append(pauseScreensToolButton);
+	$('#selectDisplayButtonsDiv').append(studentProgressButton);
+	$('#selectDisplayButtonsDiv').append(stepProgressButton);
 	
 	//fix the height so scrollbars display correctly
 	this.fixClassroomMonitorDisplayHeight();
@@ -252,7 +264,7 @@ View.prototype.createClassroomMonitorPeriods = function() {
 	this.setActiveButtonBackgroundColor(allPeriodsButton);
 	
 	//add the all periods button to the UI
-	$('#classroomMonitorPeriodsDiv').append(allPeriodsButton);
+	$('#selectPeriodButtonsDiv').append(allPeriodsButton);
 	
 	//set the click event for the all periods button
 	allPeriodsButton.click({thisView:this}, function(event) {
@@ -293,7 +305,7 @@ View.prototype.createClassroomMonitorPeriods = function() {
 			periodButton.addClass(periodButtonClass);
 			
 			//add the button to the UI
-			$('#classroomMonitorPeriodsDiv').append(periodButton);
+			$('#selectPeriodButtonsDiv').append(periodButton);
 			
 			//set the click event for the period button
 			periodButton.click({thisView:this}, function(event) {
@@ -775,6 +787,13 @@ View.prototype.studentRowClicked = function(event) {
  * @param workgroupId the workgroup id of the row that was clicked
  */
 View.prototype.studentRowClickedHandler = function(workgroupId) {
+	//hide all the other displays
+	this.hideAllDisplays();
+	
+	//display a loading message in the grade by student display
+	$('#gradeByStudentDisplay').html('Loading...');
+	$('#gradeByStudentDisplay').show();
+	
 	//get the url for retrieving student data
 	var getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl');
 	
@@ -786,16 +805,17 @@ View.prototype.studentRowClickedHandler = function(workgroupId) {
 	var nodeIds = this.getProject().getNodeIds();
 	nodeIds = nodeIds.join(':');
 	
-	//create the GET params for retrieving the student data
-	var getStudentDataUrlWithParams = getStudentDataUrl + 
-		"?userId=" + workgroupId + 
-		"&grading=true" + 
-		"&runId=" + runId + 
-		"&nodeIds" + nodeIds + 
-		"&getRevisions=true";
+	var getStudentDataParams = {
+		userId:workgroupId,
+		grading:true,
+		runId:runId,
+		nodeIds:nodeIds,
+		getRevisions:true,
+		useCachedWork:false
+	};
 	
 	//make the request to retrieve the student data
-	this.connectionManager.request('GET', 1, getStudentDataUrlWithParams, null, this.getGradeByStudentWorkInClassroomMonitorCallback, [this, workgroupId], this.getGradeByStudentWorkInClassroomMonitorCallbackFail);
+	this.connectionManager.request('GET', 1, getStudentDataUrl, getStudentDataParams, this.getGradeByStudentWorkInClassroomMonitorCallback, [this, workgroupId], this.getGradeByStudentWorkInClassroomMonitorCallbackFail);
 };
 
 /**
@@ -864,6 +884,10 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	var gradeByStudentHeaderTable = $('<table>');
 	gradeByStudentHeaderTable.attr('id', 'gradeByStudentHeaderTable');
 	gradeByStudentHeaderTable.attr('width', '100%');
+	gradeByStudentHeaderTable.css('position', 'fixed');
+	gradeByStudentHeaderTable.css('top', '85px');
+	gradeByStudentHeaderTable.css('left', '5px');
+	gradeByStudentHeaderTable.css('background', 'white');
 	
 	//create the row that will display the user name, workgroup id, period name, navigation buttons, and save button
 	var gradeByStudentHeaderTR = $('<tr>');
@@ -879,15 +903,17 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	gradeByStudentHeaderRefreshButtonTD.attr('width', '30%');
 	
 	//create the refresh button
-	var refreshButton = $('<button>');
+	var refreshButton = $('<input>');
 	refreshButton.attr('id', 'refreshButton');
-	refreshButton.text('Refresh');
+	refreshButton.attr('type', 'button');
+	refreshButton.val('Check for New Work');
 	refreshButton.click({thisView:this, workgroupId:workgroupId}, this.studentRowClicked);
 	
 	//create the save button
-	var saveButton = $('<button>');
+	var saveButton = $('<input>');
 	saveButton.attr('id', 'saveButton');
-	saveButton.text('Save');
+	saveButton.attr('type', 'button');
+	saveButton.val('Save');
 	saveButton.attr('disabled', true);
 	
 	var periodIdSelected = null;
@@ -903,9 +929,10 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	var nextWorkgroupId = previousAndNextWorkgroupIds.nextWorkgroupId;
 
 	//make the button for the previous workgroup id
-	var previousWorkgroupIdButton = $('<button>');
+	var previousWorkgroupIdButton = $('<input>');
 	previousWorkgroupIdButton.attr('id', 'previousWorkgroup');
-	previousWorkgroupIdButton.text('Previous Workgroup');
+	previousWorkgroupIdButton.attr('type', 'button');
+	previousWorkgroupIdButton.val('Previous Workgroup');
 	
 	if(previousWorkgroupId == null) {
 		//there is no previous workgroup id so we will disable the button
@@ -916,9 +943,10 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	}
 	
 	//make the button for the next workgroup id
-	var nextWorkgroupIdButton = $('<button>');
+	var nextWorkgroupIdButton = $('<input>');
 	nextWorkgroupIdButton.attr('id', 'nextWorkgroup');
-	nextWorkgroupIdButton.text('Next Workgroup');
+	nextWorkgroupIdButton.attr('type', 'button');
+	nextWorkgroupIdButton.val('Next Workgroup');
 	
 	if(nextWorkgroupId == null) {
 		//there is no next workgroup id so we will disable the button
@@ -928,11 +956,15 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 		nextWorkgroupIdButton.click({thisView:this, workgroupId:nextWorkgroupId}, this.studentRowClicked);		
 	}
 	
+	//clear any existing buttons in the upper right
+	this.clearDisplaySpecificButtonsDiv();
+	this.clearSaveButtonDiv();
+
 	//add the buttons
-	gradeByStudentHeaderRefreshButtonTD.append(previousWorkgroupIdButton);
-	gradeByStudentHeaderRefreshButtonTD.append(refreshButton);
-	gradeByStudentHeaderRefreshButtonTD.append(nextWorkgroupIdButton);
-	gradeByStudentHeaderRefreshButtonTD.append(saveButton);
+	$('#displaySpecificButtonsDiv').append(previousWorkgroupIdButton);
+	$('#displaySpecificButtonsDiv').append(refreshButton);
+	$('#displaySpecificButtonsDiv').append(nextWorkgroupIdButton);
+	$('#saveButtonDiv').append(saveButton);
 	
 	//add the tds to the row
 	gradeByStudentHeaderTR.append(gradeByStudentHeaderUserNameTD);
@@ -954,6 +986,14 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	
 	//get all the node ids. this includes activity and step node ids.
 	var nodeIds = this.getProject().getAllNodeIds();
+	
+	//create an empty row for spacing
+	var blankTR = $('<tr>');
+	var emptyTD = $('<td>');
+	emptyTD.html('&nbsp');
+	emptyTD.css('border', 'none');
+	blankTR.append(emptyTD);
+	$('#gradeByStudentDisplayTable').append(blankTR);
 	
 	//loop through all the node ids
 	for(var x=0; x<nodeIds.length; x++) {
@@ -1142,18 +1182,6 @@ View.prototype.createRowsForNodeVisits = function(nodeId, workgroupId, parentTab
 			stepWorkDiv.attr('id', 'stepWorkTD_' + stepWorkId);
 			stepWorkDiv.css('height', '100%');
 			
-			//get the node
-			var node = this.getProject().getNodeById(nodeId);
-			
-			//render the student work into the div
-			node.renderGradingView(stepWorkDiv, nodeVisit, null, workgroupId);
-			
-			if(visitPostTime != null) {
-				//set the timestamp for the student work
-				var visitPostTimeDate = new Date(visitPostTime);
-				stepWorkDiv.append('<br>Timestamp: ' + visitPostTimeDate);
-			}
-			
 			//add the div to the td
 			stepWorkTD.append(stepWorkDiv);
 			
@@ -1176,6 +1204,22 @@ View.prototype.createRowsForNodeVisits = function(nodeId, workgroupId, parentTab
 			
 			//add the row to the table that contains all the revisions
 			parentTable.append(stepWorkTR);
+			
+			//get the node
+			var node = this.getProject().getNodeById(nodeId);
+			
+			try {
+				//render the student work into the div
+				node.renderGradingView(stepWorkDiv, nodeVisit, null, workgroupId);
+			} catch(e) {
+				console.log(e);
+			}
+			
+			if(visitPostTime != null) {
+				//set the timestamp for the student work
+				var visitPostTimeDate = new Date(visitPostTime);
+				stepWorkDiv.append('<br>Timestamp: ' + visitPostTimeDate);
+			}
 			
 			/*
 			 * set the boolean to false so that all subsequent revisions do
@@ -1715,15 +1759,6 @@ View.prototype.createStepProgressDisplay = function() {
 			var node = this.getProject().getNodeById(nodeId);
 			
 			if(node != null) {
-				var nodePrefix = '';
-				
-				//get the prefix
-				if(node.type == 'sequence') {
-					nodePrefix = 'Activity';
-				} else {
-					nodePrefix = 'Step';
-				}
-				
 				//get the number of students on this step
 				var numberOfStudentsOnStep = this.getNumberOfStudentsOnStep(nodeId);
 				
@@ -1742,8 +1777,14 @@ View.prototype.createStepProgressDisplay = function() {
 					nodeType = '';
 				}
 				
+				var stepTitle = '';
+				
 				//create the step title
-				var stepTitle = nodePrefix + ' ' + stepNumberAndTitle + ' (' + nodeType + ')';
+				if(node.type == 'sequence') {
+					stepTitle = 'Activity ' + stepNumberAndTitle;
+				} else {
+					stepTitle = 'Step ' + stepNumberAndTitle + ' (' + nodeType + ')';
+				}
 				
 				//create the row element for this step
 				tr = this.createStepProgressDisplayRow(nodeId, stepTitle, numberOfStudentsOnStep, completionPercentage);
@@ -1803,23 +1844,28 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
 		stepTR.append(numberStudentsOnStepTD);
 		stepTR.append(completionPercentageTD);
 		
-		//create the params to be used when this the teacher clicks this row
-		var stepRowClickedParams = {
-			thisView:this,
-			nodeId:nodeId
+		var node = this.getProject().getNodeById(nodeId);
+		
+		//make gradable steps clickable
+		if(node != null && node.isLeafNode() && node.hasGradingView()) {
+			//create the params to be used when this the teacher clicks this row
+			var stepRowClickedParams = {
+				thisView:this,
+				nodeId:nodeId
+			}
+			
+			//set the function to be called when the row is clicked
+			stepTR.click(stepRowClickedParams, this.stepRowClicked);
+			
+			//make the cursor turn into a hand when the user mouseovers the row
+			stepTR.css('cursor', 'pointer');
+			
+			//set the mouse enter event to highlight the row on mouse over
+			stepTR.mouseenter({thisView:this}, this.mouseEnterTR);
+			
+			//set the mouse leave event to remove the highlight when the mouse exits the row
+			stepTR.mouseleave({thisView:this}, this.mouseLeaveTR);
 		}
-		
-		//set the function to be called when the row is clicked
-		stepTR.click(stepRowClickedParams, this.stepRowClicked);
-		
-		//make the cursor turn into a hand when the user mouseovers the row
-		stepTR.css('cursor', 'pointer');
-		
-		//set the mouse enter event to highlight the row on mouse over
-		stepTR.mouseenter({thisView:this}, this.mouseEnterTR);
-		
-		//set the mouse leave event to remove the highlight when the mouse exits the row
-		stepTR.mouseleave({thisView:this}, this.mouseLeaveTR);
 	}
 	
 	return stepTR;
@@ -1886,6 +1932,13 @@ View.prototype.stepRowClicked = function(event) {
  * @param nodeId the node id of the row that was clicked
  */
 View.prototype.stepRowClickedHandler = function(nodeId) {
+	//hide all the other displays
+	this.hideAllDisplays();
+
+	//display a loading message in the grade by step display
+	$('#gradeByStepDisplay').html('Loading...');
+	$('#gradeByStepDisplay').show();
+	
 	//get the url for retrieving student data
 	var getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl');
 	
@@ -1899,17 +1952,17 @@ View.prototype.stepRowClickedHandler = function(nodeId) {
 	//join the workgroup ids into a single string delimited by ':'
 	userIds = workgroupIds.join(':');
 	
-	//create the GET params for retrieving the student data
-	var getStudentDataUrlWithParams = getStudentDataUrl + 
-		"?nodeIds=" + nodeId +
-		"&userId=" + userIds + 
-		"&grading=true" + 
-		"&runId=" + runId + 
-		"&getRevisions=true";
+	var getStudentDataParams = {
+		nodeIds:nodeId,
+		userId:userIds,
+		grading:true,
+		runId:runId,
+		getRevisions:true,
+		useCachedWork:false
+	}
 	
 	//make the request to retrieve the student data
-	this.connectionManager.request('GET', 1, getStudentDataUrlWithParams, null, this.getGradeByStepWorkInClassroomMonitorCallback, [this, nodeId], this.getStepWorkInClassroomMonitorCallbackFail);
-
+	this.connectionManager.request('GET', 1, getStudentDataUrl, getStudentDataParams, this.getGradeByStepWorkInClassroomMonitorCallback, [this, nodeId], this.getStepWorkInClassroomMonitorCallbackFail);
 };
 
 /**
@@ -1997,6 +2050,10 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			var gradeByStepHeaderTable = $('<table>');
 			gradeByStepHeaderTable.attr('id', 'gradeByStepHeaderTable');
 			gradeByStepHeaderTable.attr('width', '100%');
+			gradeByStepHeaderTable.css('position', 'fixed');
+			gradeByStepHeaderTable.css('top', '85px');
+			gradeByStepHeaderTable.css('left', '5px');
+			gradeByStepHeaderTable.css('background', 'white');
 			
 			//create the row that will contain the step title and the buttons
 			var gradeByStepHeaderTR = $('<tr>');
@@ -2012,15 +2069,17 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			gradeByStepHeaderRefreshButtonTD.attr('width', '30%');
 			
 			//create the refresh button
-			var refreshButton = $('<button>');
+			var refreshButton = $('<input>');
 			refreshButton.attr('id', 'refreshButton');
-			refreshButton.text('Refresh');
+			refreshButton.attr('type', 'button');
+			refreshButton.val('Check for New Work');
 			refreshButton.click({thisView:this, nodeId:nodeId}, this.stepRowClicked);
 			
 			//create the save button
-			var saveButton = $('<button>');
+			var saveButton = $('<input>');
 			saveButton.attr('id', 'saveButton');
-			saveButton.text('Save');
+			saveButton.attr('type', 'button');
+			saveButton.val('Save');
 			saveButton.attr('disabled', true);
 			
 			//get the previous and next node ids
@@ -2028,9 +2087,10 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			
 			//create the previous step button
 			var previousNodeId = previousAndNextNodeIds.previousNodeId;
-			var previousStepButton = $('<button>');
+			var previousStepButton = $('<input>');
 			previousStepButton.attr('id', 'previousStepButton');
-			previousStepButton.text('Previous Step');
+			previousStepButton.attr('type', 'button');
+			previousStepButton.val('Previous Step');
 			
 			if(previousNodeId == null) {
 				//there is no previous step so we will disable the button
@@ -2042,9 +2102,10 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			
 			//create the next step button
 			var nextNodeId = previousAndNextNodeIds.nextNodeId;
-			var nextStepButton = $('<button>');
+			var nextStepButton = $('<input>');
 			nextStepButton.attr('id', 'nextStepButton');
-			nextStepButton.text('Next Step');
+			nextStepButton.attr('type', 'button');
+			nextStepButton.val('Next Step');
 			
 			if(nextNodeId == null) {
 				//there is no next step so we will disable the button
@@ -2054,11 +2115,15 @@ View.prototype.displayGradeByStep = function(nodeId) {
 				nextStepButton.click({thisView:this, nodeId:nextNodeId}, this.stepRowClicked);				
 			}
 			
+			//clear any existing buttons in the upper right
+			this.clearDisplaySpecificButtonsDiv();
+			this.clearSaveButtonDiv();
+
 			//add the buttons
-			gradeByStepHeaderRefreshButtonTD.append(previousStepButton);
-			gradeByStepHeaderRefreshButtonTD.append(refreshButton);
-			gradeByStepHeaderRefreshButtonTD.append(nextStepButton);
-			gradeByStepHeaderRefreshButtonTD.append(saveButton);
+			$('#displaySpecificButtonsDiv').append(previousStepButton);
+			$('#displaySpecificButtonsDiv').append(refreshButton);
+			$('#displaySpecificButtonsDiv').append(nextStepButton);
+			$('#saveButtonDiv').append(saveButton);
 			
 			//add the tds to the row
 			gradeByStepHeaderTR.append(gradeByStepHeaderStepTitleTD);
@@ -2077,6 +2142,14 @@ View.prototype.displayGradeByStep = function(nodeId) {
 
 			//add the table to the student progress div
 			$('#gradeByStepDisplay').append(gradeByStepDisplayTable);
+			
+			//create a blank row for spacing
+			var blankTR = $('<tr>');
+			var emptyTD = $('<td>');
+			emptyTD.html('&nbsp');
+			emptyTD.css('border', 'none');
+			blankTR.append(emptyTD);
+			$('#gradeByStepDisplayTable').append(blankTR);
 			
 			//get the workgroup ids in alphabetical order
 			var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIdsInAlphabeticalOrder();
@@ -2473,7 +2546,7 @@ View.prototype.getStudentCurrentStepByWorkgroupId = function(workgroupId) {
  */
 View.prototype.studentsOnlineListReceived = function(data) {
 	//remove the loading message
-	$('#classroomMonitorButtonDiv').text("");
+	$('#selectDisplayButtonsDiv').text("");
 	
 	//get the list of workgroup ids that are online
 	var studentsOnlineList = data.studentsOnlineList;
@@ -3416,6 +3489,20 @@ View.prototype.retrieveAnnotationsCallbackHandler = function(annotationsJSONStri
 	}
 	
 	eventManager.fire("retrieveAnnotationsCompleted");
+};
+
+/**
+ * Remove everything in the display specific buttons div
+ */
+View.prototype.clearDisplaySpecificButtonsDiv = function() {
+	$('#displaySpecificButtonsDiv').html('');
+};
+
+/**
+ * Remove everything in the save button div
+ */
+View.prototype.clearSaveButtonDiv = function() {
+	$('#saveButtonDiv').html('');
 };
 
 

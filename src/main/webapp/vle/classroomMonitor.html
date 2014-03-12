@@ -50,11 +50,21 @@ function bootstrapListener(type,args,obj){
 
 </head>
 <body onload='loaded()' style='overflow-y:auto;'>
-<h3 id='classroomMonitorHeader'></h3>
-<div id='classroomMonitorButtonDiv'></div>
-<br>
-<div id='classroomMonitorPeriodsDiv'></div>
-<br>
-<div id='classroomMonitorMainDiv'></div>
+<div id='topNavigationDiv' style='position:fixed;z-index:2;background:white;width:100%;top:0px;left:0px'>
+	<h3 id='classroomMonitorHeader' style='margin:0'></h3>
+	<table id='navigationButtonsTable' style='width:100%'>
+		<tr>
+			<td style='width:60%'><div id='selectDisplayButtonsDiv'></div></td>
+			<td style='width:39%'><div id='displaySpecificButtonsDiv' style="text-align:right"></div></td>
+			<td style='width:1%'></td>
+		</tr>
+		<tr>
+			<td style='width:60%'><div id='selectPeriodButtonsDiv'></div></td>
+			<td style='width:39%'><div id='saveButtonDiv' style="text-align:right"></div></td>
+			<td style='width:1%'></td>
+		</tr>
+	</table>
+</div>
+<div id='classroomMonitorMainDiv' style='position:relative;top:90px;z-index:1'></div>
 </body>
 </html>
