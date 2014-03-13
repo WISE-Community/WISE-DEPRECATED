@@ -323,7 +323,13 @@ Node.prototype.render = function(contentPanel, studentWork, disable) {
 		/* use default ifrm */
 		this.contentPanel = window.frames['ifrm'];
 	}
-
+	
+	// set scriptloader and eventmanager in the contentpanel
+	if (this.contentPanel != null) {
+		this.contentPanel.scriptloader = this.view.scriptloader;
+		this.contentPanel.eventManager = eventManager;
+	}
+	
 	/* 
 	 * if node is not self rendering which means it is a node that
 	 * requires an html file and a content file
@@ -370,10 +376,10 @@ Node.prototype.render = function(contentPanel, studentWork, disable) {
 
 	if(this.contentPanel != null) {
 		//set the event manager into the content panel so the html has access to it
+		this.contentPanel.scriptloader = this.view.scriptloader;
 		this.contentPanel.eventManager = eventManager;
 		this.contentPanel.nodeId = this.id;
 		this.contentPanel.node = this;
-		this.contentPanel.scriptloader = this.view.scriptloader;
 
 		if(this.type == 'MySystemNode' || this.type == 'SVGDrawNode' || 
 				this.type == 'OpenResponseNode' || this.type == 'HtmlNode' ||
