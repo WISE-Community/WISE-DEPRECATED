@@ -703,7 +703,8 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		
 		//create the cell to display whether the workgroup is online
 		var onlineTD = $('<td>').attr({id:'studentProgressTableDataOnline_' + workgroupId});
-		onlineTD.text(studentOnline);
+		onlineTD.css('text-align', 'center');
+		onlineTD.html(this.getIsOfflineHTML());
 		
 		//create the cell to display the usernames for the workgroup
 		var userNameTD = $('<td>').attr({id:'studentProgressTableDataUserNames_' + workgroupId});
@@ -892,11 +893,39 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	//create the row that will display the user name, workgroup id, period name, navigation buttons, and save button
 	var gradeByStudentHeaderTR = $('<tr>');
 	
+	/*
+	 * create the div that will show the green or red dot to show whether
+	 * the student is online
+	 */
+	var isOnlineDiv = $('<div>');
+	isOnlineDiv.attr('id', 'isOnlineDiv_' + workgroupId);
+	isOnlineDiv.css('float', 'left');
+	isOnlineDiv.css('width', '20px');
+	isOnlineDiv.css('margin', '1px');
+	isOnlineDiv.css('text-align', 'center');
+	
+	var isOnline = this.isStudentOnline(workgroupId);
+	
+	if(isOnline) {
+		//the student is online
+		isOnlineDiv.html(this.getIsOnlineHTML());
+	} else {
+		//the student is offline
+		isOnlineDiv.html(this.getIsOfflineHTML());
+	}
+	
 	//create the table data that will display the user name, workgroup id, and period name
 	var gradeByStudentHeaderUserNameTD = $('<td>');
 	gradeByStudentHeaderUserNameTD.attr('width', '70%');
-	gradeByStudentHeaderUserNameTD.html(userNames + ' [Workgroup Id: ' + workgroupId + ']' + ' [Period ' + periodName + ']');
 	gradeByStudentHeaderUserNameTD.css('background', 'yellow');
+	
+	//create the div to show the user name
+	var userNameDiv = $('<div>');
+	userNameDiv.css('float', 'left');
+	userNameDiv.html(userNames + ' [Workgroup Id: ' + workgroupId + ']' + ' [Period ' + periodName + ']');
+	
+	gradeByStudentHeaderUserNameTD.append(isOnlineDiv);
+	gradeByStudentHeaderUserNameTD.append(userNameDiv);
 	
 	//create the table data that will contain the navigation buttons, and save button
 	var gradeByStudentHeaderRefreshButtonTD = $('<td>');
@@ -2221,13 +2250,35 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
 		
 		//create the row and td for the user name
 		var userNameTR = $('<tr>');
-		var userNameTD = $('<td>');
+
+		/*
+		 * create the div that will show the green or red dot to show whether
+		 * the student is online
+		 */
+		var isOnlineDiv = $('<div>');
+		isOnlineDiv.attr('id', 'isOnlineDiv_' + workgroupId);
+		isOnlineDiv.css('float', 'left');
+		isOnlineDiv.css('width', '20px');
+		isOnlineDiv.css('margin', '1px');
+		isOnlineDiv.css('text-align', 'center');
 		
-		//set the user name, workgroup id and period
-		userNameTD.html(userNames + ' [Workgroup Id: ' + workgroupId + ']' + ' [Period ' + period + ']');
+		var isOnline = this.isStudentOnline(workgroupId);
 		
-		//add the td to the row
-		userNameTR.append(userNameTD);
+		if(isOnline) {
+			//the student is online
+			isOnlineDiv.html(this.getIsOnlineHTML());
+		} else {
+			//the student is offline
+			isOnlineDiv.html(this.getIsOfflineHTML());
+		}
+		
+		//create the div to show the user name
+		var userNameDiv = $('<div>');
+		userNameDiv.css('float', 'left');
+		userNameDiv.html(userNames + ' [Workgroup Id: ' + workgroupId + ']' + ' [Period ' + period + ']');
+		
+		userNameTR.append(isOnlineDiv);
+		userNameTR.append(userNameDiv);
 		
 		//add the row to the table
 		stepTable.append(userNameTR);
@@ -2678,7 +2729,7 @@ View.prototype.insertTimestamp = function(studentStatusObject) {
  */
 View.prototype.updateStudentProgress = function(runId, periodId, workgroupId, currentNodeId, previousNodeVisit, nodeStatuses, timeSpent) {
 	//set the student to be online
-	$('#studentProgressTableDataOnline_' + workgroupId).text(true);
+	this.updateStudentOnline(workgroupId, true);
 	
 	//set the current step
 	var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(currentNodeId);
@@ -3171,15 +3222,28 @@ View.prototype.removeStudentOnline = function(workgroupId) {
  */
 View.prototype.updateStudentOnline = function(workgroupId, isOnline) {
 	if(workgroupId != null) {
-		//update the online status in the UI for the student
-		$('#studentProgressTableDataOnline_' + workgroupId).text(isOnline);
-		
 		if(isOnline) {
 			//the student is online so we will make the row green
-			$('#studentProgressTableRow_' + workgroupId).css('background', 'limegreen');			
+			$('#studentProgressTableRow_' + workgroupId).css('background', 'limegreen');
+			
+			//set the green icon in the online column
+			$('#studentProgressTableDataOnline_' + workgroupId).html(this.getIsOnlineHTML());
+			
+			//check if the isOnlineDiv is currently being displayed
+			if($('#isOnlineDiv_' + workgroupId).length != 0){
+				$('#isOnlineDiv_' + workgroupId).html(this.getIsOnlineHTML());
+			}
 		} else {
 			//the student is not online so we will remove the color from the row
 			$('#studentProgressTableRow_' + workgroupId).css('background', '');
+			
+			//set the red icon in the online column
+			$('#studentProgressTableDataOnline_' + workgroupId).html(this.getIsOfflineHTML());
+			
+			//check if the isOnlineDiv is currently being displayed
+			if($('#isOnlineDiv_' + workgroupId).length != 0){
+				$('#isOnlineDiv_' + workgroupId).html(this.getIsOfflineHTML());
+			}
 		}
 	}
 };
@@ -3505,6 +3569,23 @@ View.prototype.clearSaveButtonDiv = function() {
 	$('#saveButtonDiv').html('');
 };
 
+/**
+ * Get the html that will display the green dot as an image
+ */
+View.prototype.getIsOnlineHTML = function() {
+	var html = '<img src="images/greenDot.png"/>';
+	
+	return html;
+};
+
+/**
+ * Get the html that will display the red dot as an image
+ */
+View.prototype.getIsOfflineHTML = function() {
+	var html = '<img src="images/redDot.png"/>';
+	
+	return html;
+};
 
 /**
  * Called when the classroom monitor window closes
