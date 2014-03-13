@@ -88,7 +88,8 @@ var dependencies = [
  * (using that nodeClass in the filenames) to the 'icons' directory
  */
 var nodeClasses = [
-	{nodeClass:'webApp', nodeClassText:'WebApp'}
+	{nodeClass:'lightbulb', nodeClassText:'Generic WebApp Page', icon:'node/webApp/icons/lightbulb28.png'},
+
 ];
 
 /*
