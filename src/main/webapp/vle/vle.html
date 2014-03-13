@@ -74,7 +74,6 @@ function bootstrapListener(type,args,obj){
 					vleConfigUrl = "getConfig.html?projectId="+projectId;
 				}
 				vleConfigUrl = getParameterByName("getConfigURL");
-				//"http://localhost/WISE/static_sample_project_2/vleConfig.json";
 				view.startVLEFromConfig(vleConfigUrl);
 				console.warn('No window.parent or window.opener, cannot start VLE');
 			};
