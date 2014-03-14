@@ -291,6 +291,8 @@ ExplanationBuilder.prototype.initializeUI = function() {
 		workToImport = [],
 		view = this.view;
 	
+	var nodeIdsToFilter = null;
+	
 	//process the tag maps if we are not in authoring mode
 	if(!view.authoringMode) {
 		//get the tag map results
@@ -494,9 +496,13 @@ ExplanationBuilder.prototype.initializeUI = function() {
 		//get the answer the student typed last time
 		answer = latestState.answer;
 	}
+	
+	if(this.content.filterIdeasByNodeIds) {
+		nodeIdsToFilter = this.content.nodeIdsToFilter;
+	}
 
 	//load idea basket, the explanation ideas, and other elements of the UI
-	this.load(question, instructions, bg, explanationIdeas, answer);
+	this.load(question, instructions, bg, explanationIdeas, answer, nodeIdsToFilter);
 };
 
 /**
@@ -726,7 +732,7 @@ ExplanationBuilder.prototype.init = function(context){
 	});
 };
 
-ExplanationBuilder.prototype.load = function(question, instructions, bg, explanationIdeas, answer){
+ExplanationBuilder.prototype.load = function(question, instructions, bg, explanationIdeas, answer, nodeIdsToFilter){
 	if(question != null){
 		this.question = question;
 		$('#promptLabel').html(question);
@@ -786,8 +792,34 @@ ExplanationBuilder.prototype.load = function(question, instructions, bg, explana
 		
 		//loop through all the ideas in the basket
 		for(var i=0; i<this.ideaBasket.ideas.length; i++){
-			//add the idea to the display where we show all the ideas in the basket
-			this.addRow(this.ideaBasket.ideas[i],true);
+			//get an idea
+			var idea = this.ideaBasket.ideas[i];
+			var ideaNodeId = null;
+			
+			if(idea != null) {
+				var addIdea = true;
+				
+				if(nodeIdsToFilter != null) {
+					/*
+					 * an array of node ids was passed in so we will only add
+					 * ideas that were made on the steps with those node ids
+					 */
+					
+					//get the node id this idea was made on
+					ideaNodeId = idea.nodeId;
+					
+					//check if the node id the idea was made on is in the filter array
+					if(nodeIdsToFilter.indexOf(ideaNodeId) == -1) {
+						//the node id is not in the array so we will not add this idea
+						addIdea = false;
+					}
+				}
+				
+				if(addIdea) {
+					//add the idea to the display where we show all the ideas in the basket
+					this.addRow(idea,true);
+				}
+			}
 		}
 		
 		if(explanationIdeas){
