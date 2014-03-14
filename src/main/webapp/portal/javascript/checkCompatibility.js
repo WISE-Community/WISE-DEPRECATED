@@ -627,7 +627,7 @@ function DetectFlashVer(reqMajorVer, reqMinorVer, reqRevision)
 function checkContentFiltering() {
 	// test loading of swf file
 	$.ajax({ 
-		url: "../portal/flash/convection-intro.swf", 
+		url: "../portal/pages/resources/convection-intro.swf", 
 		context: document.body})
 		.success(function(data, textStatus, jqXHR) {
 			var contentFilterSwfRequirementSatisfied=false;
@@ -648,7 +648,7 @@ function checkContentFiltering() {
 
 	// test loading of jar file
 	var jqxhr = $.ajax({ 
-		url: "../portal/library/jar/commons-logging-1.1.jar", 
+		url: "../portal/pages/resources/commons-logging-1.1.jar", 
 		context: document.body})
 		.success(function(data, textStatus, jqXHR) {			
 			var contentFilterRequirementSatisfied=false;
