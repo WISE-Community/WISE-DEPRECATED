@@ -649,14 +649,6 @@ public class AuthorProjectController extends AbstractController {
 			}
 		}
 
-		AuthorProjectParameters params = new AuthorProjectParameters();
-		params.setAuthor(user);
-		params.setProject(project);
-		params.setHttpServletRequest(request);
-		params.setHttpServletResponse(response);
-		params.setPortalUrl(Util.getPortalUrl(request));
-		params.setVersionId(request.getParameter("versionId"));
-
 		String command = request.getParameter(COMMAND);
 		if(command != null && command != ""){
 			if(command.equals("launchAuthoring")){
@@ -783,25 +775,9 @@ public class AuthorProjectController extends AbstractController {
 					mav.addObject("command", "editProject");
 				}
 				
-				/* get the url for the project content file 
-				String versionId = null;
-				if(params.getVersionId() != null && !params.getVersionId().equals("")){
-					versionId = params.getVersionId();
-				} else {
-					versionId = this.getActiveVersion(project);
-				}
-				*/
 				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 				String polishedProjectUrl = null;
 				polishedProjectUrl = rawProjectUrl;
-				/* The polishedProjectUrl is the project url with the version id inserted into the project filename
-				 * If null or empty string is returned, we want to use the rawUrl 
-				if(versionId==null || versionId.equals("")){
-					polishedProjectUrl = rawProjectUrl;
-				} else {
-					polishedProjectUrl = rawProjectUrl.replace(".project.json", ".project." + versionId + ".json");
-				}
-				*/
 				
 				//get the project attributes
 				String relativeProjectUrl = polishedProjectUrl;
@@ -1196,7 +1172,6 @@ public class AuthorProjectController extends AbstractController {
 	 */
 	private ModelAndView handlePublishMetadata(HttpServletRequest request, HttpServletResponse response) throws ObjectNotFoundException, IOException{
 		Long projectId = Long.parseLong(request.getParameter("projectId"));
-		//String versionId = request.getParameter("versionId");
 		String metadataString = request.getParameter("metadata");
 		JSONObject metadata = null;
 
@@ -1209,12 +1184,8 @@ public class AuthorProjectController extends AbstractController {
 		Project project = this.projectService.getById(projectId);
 		User user = ControllerUtil.getSignedInUser();
 
-		/* retrieve the metadata from the file */
-		//JSONObject metadata = this.projectService.getProjectMetadataFile(project, versionId);
-
 		/* set the fields in the ProjectMetadata where appropriate */
 		if(metadata != null){
-			//ProjectMetadata pMeta = this.projectService.getMetadata(projectId, versionId);
 			ProjectMetadata pMeta = project.getMetadata();
 
 			/* if no previous metadata exists for this project, then we want to create one
