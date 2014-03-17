@@ -478,7 +478,7 @@
 											        	<spring:message code="teacher.management.projectruntabs.projectLabel"/>&nbsp;<a href="${contextPath}/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" /><span><spring:message code="preview"/></span></a>
 										    			|&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="project_details"/>"><img class="icon" alt="info" src="${contextPath}/<spring:theme code="id"/>" /><span><spring:message code="teacher.management.projectruntabs.projectInfo"/></span></a>
 											        	<sec:accesscontrollist domainObject="${run.project}" hasPermission="16">
-											        		|&nbsp;<a onclick="if(confirm('<spring:message code="teacher.management.projectruntabs.editWarning"/>')){window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}&versionId=${run.versionId}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.management.projectruntabs.edit"/></span></a>
+											        		|&nbsp;<a onclick="if(confirm('<spring:message code="teacher.management.projectruntabs.editWarning"/>')){window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.management.projectruntabs.edit"/></span></a>
 											        	</sec:accesscontrollist>
 											        </li>
 											    </ul>
