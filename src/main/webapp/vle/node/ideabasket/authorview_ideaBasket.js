@@ -3,7 +3,7 @@
  * @constructor
  * TODO: rename TemplateNode
  */
-View.prototype.IdeaBasketNode = {};
+View.prototype.IdeaBasketNode = new AuthoringNode();
 
 /*
  * Add the name of the common component that this step will use. The
@@ -93,6 +93,9 @@ View.prototype.IdeaBasketNode.generatePage = function(view){
 	
 	//populate the prompt if this step has been authored before
 	this.populatePrompt();
+	
+	//add the filter ideas authoring
+	this.addFilterIdeasAuthoring(pageDiv);
 };
 
 /**

@@ -497,7 +497,9 @@ ExplanationBuilder.prototype.initializeUI = function() {
 		answer = latestState.answer;
 	}
 	
+	//check if we need to filter ideas by their node id
 	if(this.content.filterIdeasByNodeIds) {
+		//we need to filter the ideas so we will get the node ids to filter on
 		nodeIdsToFilter = this.content.nodeIdsToFilter;
 	}
 
@@ -2146,8 +2148,16 @@ ExplanationBuilder.prototype.ideaBasketChanged = function(updatedIdeaBasket) {
 	//set the new ideaBasket
 	this.ideaBasket = updatedIdeaBasket;
 	
+	var nodeIdsToFilter = null;
+	
+	//check if we need to filter ideas by their node id
+	if(this.content.filterIdeasByNodeIds) {
+		//we need to filter the ideas so we will get the node ids to filter on
+		nodeIdsToFilter = this.content.nodeIdsToFilter;
+	}
+	
 	//reload everything in the step
-	this.load(this.question, this.instructions, this.bg, this.explanationIdeas, this.answer);
+	this.load(this.question, this.instructions, this.bg, this.explanationIdeas, this.answer, nodeIdsToFilter);
 };
 
 /**

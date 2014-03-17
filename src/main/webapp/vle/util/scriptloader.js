@@ -409,6 +409,7 @@ var scriptloader = function(){
                  'vle/view/authoring/authorview_previouswork.js',
                  'vle/view/authoring/authorview_projecttags.js',
                  'vle/view/authoring/authorview_authorstep.js',
+                 'vle/view/authoring/authorview_authoringnode.js',
                  'vle/view/authoring/authorview_tags.js',
                  'vle/view/authoring/authorview_import.js',
                  'vle/view/authoring/authorview_icons.js',

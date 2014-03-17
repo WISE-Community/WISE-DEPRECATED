@@ -953,6 +953,26 @@ IdeaBasket.prototype.addRow = function(target,idea,load){
 	}
 	
 	$('tr .header').removeClass('headerSortDown').removeClass('headerSortUp');
+	
+	//check if we need to filter the ideas
+	if(this.content != null && this.content.filterIdeasByNodeIds) {
+		/*
+		 * we will filter the ideas and only show the ideas that were created
+		 * on the specified steps
+		 */
+		
+		//get the node id for this idea
+		var nodeId = idea.nodeId;
+		
+		//get the node ids we want to show
+		var nodeIdsToFilter = this.content.nodeIdsToFilter;
+		
+		//check if the node id for this idea is in the array of node ids we want to show
+		if(nodeIdsToFilter.indexOf(nodeId) == -1) {
+			//the node id is not in the array so we will hide this idea
+			$newTr.hide();
+		}
+	}
 };
 
 IdeaBasket.prototype.openEditDialog = function(context,id,$clicked){
