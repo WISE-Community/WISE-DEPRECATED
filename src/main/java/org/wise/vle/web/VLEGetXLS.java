@@ -301,7 +301,11 @@ public class VLEGetXLS extends AbstractController {
 
 		Project projectObj = run.getProject();
 		ProjectMetadata metadata = projectObj.getMetadata();
-		String projectMetaDataJSONString = metadata.toJSONString();
+		String projectMetaDataJSONString = null;
+		
+		if(metadata != null) {
+			projectMetaDataJSONString = metadata.toJSONString();
+		}
 		
 		String curriculumBaseDir = getWiseProperties().getProperty("curriculum_base_dir");
 		String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());		
