@@ -47,15 +47,26 @@ function WebApp(node) {
 	};
 	
 	this.api = {
-		"version":0.1,
-		"content":this.content
+		thisWebApp:this,
+		version:0.1,
+		content:this.content,
+		states:this.states
 	};
 	
 	this.api.triggerSaveState = function(  ) { save(); };
+	
+	//function that saves a new node state to the local array of node states and also to the database
 	this.api.save = function(response, successCallback, failureCallback, callbackData) { 
+		//create the new node state
 		var nodeState = new WebAppState(response);
+		
+		//add the new node state to this step's local copy of the node states
+		this.states.push(nodeState);
+		
+		//save the node state to the database
 		node.save(nodeState, successCallback, failureCallback, callbackData); 
 	};
+	
 	this.api.getContentJSON = function() { 
 		return this.content;
 	};
@@ -64,18 +75,17 @@ function WebApp(node) {
 	};
 	this.api.appReady = function() { console.log("app tells us it's ready"); };
 
-	//load any previous responses the student submitted for this step
-	var latestState = this.getLatestState();
-	var latestResponse = "";
-	if(latestState != null) {
-		/*
-		 * get the response from the latest state. the response variable is
-		 * just provided as an example. you may use whatever variables you
-		 * would like from the state object (look at webAppState.js)
-		 */
-		latestResponse = latestState.response;
+	//function that gets the latest node state from this step's local copy of the node states
+	this.api.getLatestState = function() {
+		var latestState = null;
+		
+		if(this.thisWebApp != null) {
+			//this calls WebApp.prototype.getLatestState() 
+			latestState = this.thisWebApp.getLatestState();
+		}
+		
+		return latestState;
 	}
-	this.api.getLatestState = function() { console.log("using api's getLatestState"); return latestResponse; }
 };
 
 /**
