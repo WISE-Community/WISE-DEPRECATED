@@ -288,7 +288,16 @@ public interface RunService extends OfferingService {
      * @throws ObjectNotFoundException
      */
     public void setXMPPEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
-    
+
+    /**
+     * Update public and private run notes for this run
+     * @param runId
+     * @param privateNotes String private notes
+     * @param publicNotes String public notes
+     * @throws ObjectNotFoundException
+     */
+    public void updateNotes(Long runId, String privateNotes, String publicNotes) throws ObjectNotFoundException;
+
     /**
      * Given a <code>Long</code> runId, changes the archiveReminderTime to be 30 days
      * from today.

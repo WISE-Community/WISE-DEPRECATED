@@ -342,4 +342,28 @@ public interface Run extends Offering {
 	 * @param studentAttendanceByRunIdAndPeriod
 	 */
 	public List<StudentAttendance> getStudentAttendance();
+	
+	/**
+	 * Gets private notes for this run
+	 * @return String private notes for this run
+	 */
+	public String getPrivateNotes();
+
+	/**
+	 * Sets private notes for this run
+	 * @param String private notes for this run
+	 */
+	public void setPrivateNotes(String privateNotes);
+	
+	/**
+	 * Gets public notes for this run
+	 * @return String public notes for this run
+	 */
+	public String getPublicNotes();
+	
+	/**
+	 * Sets public notes for this run
+	 * @return String public notes for this run
+	 */
+	public void setPublicNotes(String publicNotes);
 }
