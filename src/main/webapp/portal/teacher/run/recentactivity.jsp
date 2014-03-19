@@ -152,21 +152,18 @@
 							           </c:choose>
 								
 								<ul class="actionList">
-			
-									<sec:accesscontrollist domainObject="${run}" hasPermission="16">
-			   					      <li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.run.recentactivity.sharingPermissions"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="teacher.run.recentactivity.shareWithAnotherTeacher"/></span></a></li> 
-			 	                    	</sec:accesscontrollist>
-							    	
+										    	
 							    	<c:set var="isExternalProject" value="0"/>
 							    	<sec:accesscontrollist domainObject="${run}" hasPermission="16">
+							      		<li><a id="myNotes_${run.id}" class="myNotes" title="<spring:message code="teacher.run.notes.myNotes"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" ><img class="icon" alt="notes" src="${contextPath}/<spring:theme code="edit"/>" /><spring:message code="teacher.run.notes.myNotes"/></a></li>
 							      		<li><a id="editAnnouncements_${run.id}" class="editAnnouncements" title="<spring:message code="teacher.run.recentactivity.manageAnnouncements"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" ><img class="icon" alt="announcements" src="${contextPath}/<spring:theme code="chat"/>" /><spring:message code="teacher.run.recentactivity.manageAnnouncements"/></a></li>
-							        </sec:accesscontrollist>
+  			   					        <li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.run.recentactivity.sharingPermissions"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="teacher.run.recentactivity.shareWithAnotherTeacher"/></span></a></li> 
+			 	                    </sec:accesscontrollist>
 							        <li><a class="researchTools" title="<spring:message code="teacher.run.recentactivity.researcherTools"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=export"><img class="icon" alt="export" src="${contextPath}/<spring:theme code="save"/>" /><span><spring:message code="teacher.run.recentactivity.researcherTools"/> <spring:message code="teacher.run.recentactivity.exportStudentData"/></span></a></li>			    	
 									<li><a href="${contextPath}/contact/contactwiseproject.html?projectId=${run.project.id}&runId=${run.id}"><img class="icon" alt="contact" src="${contextPath}/<spring:theme code="email"/>" /><span><spring:message code="teacher.run.recentactivity.reportAProblem"/></span></a></li>
 				                    <sec:accesscontrollist domainObject="${run}" hasPermission="16">					    	
 							    	  <li><a class="archiveRun" id="archiveRun_runId=${run.id}&runName=<c:out value="${fn:escapeXml(run.name)}" />" title="<spring:message code="teacher.run.recentactivity.archive"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})"><img class="icon" alt="archive" src="${contextPath}/<spring:theme code="lock"/>" /><span><spring:message code="teacher.run.recentactivity.archiveEndRun"/></span></a></li>
 							    	</sec:accesscontrollist>
-							    	
 							    </ul>
 			
 							</td>
@@ -198,6 +195,7 @@
 <div id="shareDialog" class="dialog"></div>
 <div id="unshareDialog" class="dialog"></div>
 <div id="editRunDialog" class="dialog"></div>
+<div id="myNotesDialog" class="dialog"></div>
 <div id="editAnnouncementsDialog" class="dialog"></div>
 <div id="manageStudentsDialog" style="overflow:hidden;" class="dialog"></div>
 <div id="projectDetailDialog" style="overflow:hidden;" class="dialog"></div>
@@ -293,6 +291,27 @@
 				}
 			});
 			$("#editRunDialog > #editIfrm").attr('src',path);
+		});
+		
+		// setup my notes dialog
+		$('.myNotes').on('click',function(){
+			var title = $(this).attr('title');
+			var runId = $(this).attr('id').replace('myNotes_','');
+			var path = "${contextPath}/teacher/run/notes.html?runId=" + runId;
+			var div = $('#myNotesDialog').html('<iframe id="myNotesIfrm" width="100%" height="95%"></iframe>');
+			div.dialog({
+				modal: true,
+				width: '700',
+				height: '600',
+				title: title,
+				close: function(){ $(this).html(''); },
+				buttons: {
+					Close: function(){
+						$(this).dialog('close');
+					}
+				}
+			});
+			$("#myNotesDialog > #myNotesIfrm").attr('src',path);
 		});
 		
 		// setup edit manage announcements dialog

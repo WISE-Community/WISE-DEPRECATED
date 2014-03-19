@@ -1019,11 +1019,6 @@
 		<property name="runService" ref="runService" />
 	</bean>
 
-	<bean id="editRunController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.EditRunController">
-		<property name="runService" ref="runService" />
-	</bean>
-
 	<bean id="taggerController"
 		class="org.wise.portal.presentation.web.controllers.TaggerController">
 		<property name="projectService" ref="projectService" />
@@ -1212,7 +1207,8 @@
 				/teacher/run/manage/startRun.html=startRunController
 				/teacher/run/createRun.html=createRunController
 				/teacher/run/updaterun.html=updateRunController
-				/teacher/run/editrun.html=editRunController
+				/teacher/run/editrun.html=updateRunController
+				/teacher/run/notes.html=updateRunController
 				/teacher/grading/gradework.html=gradeWorkController
 				/teacher/grading/premadeComments.html=premadeCommentsController
 				/teacher/classroomMonitor/classroomMonitor.html=gradeWorkController

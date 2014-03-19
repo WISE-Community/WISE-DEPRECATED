@@ -30,7 +30,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
-
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
@@ -609,6 +608,19 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		run.setXMPPEnabled(isEnabled);
 		this.runDao.save(run);
 	}
+	
+	/**
+	 * @throws ObjectNotFoundException 
+	 * @see org.wise.portal.service.offering.RunService#updateNotes(java.lang.Long, String, String)
+	 */
+	@Transactional
+    public void updateNotes(Long runId, String privateNotes, String publicNotes) throws ObjectNotFoundException {
+		Run run = this.retrieveById(runId);
+		run.setPrivateNotes(privateNotes);
+		run.setPublicNotes(publicNotes);
+		this.runDao.save(run);
+	}
+
 
 	public void setWiseProperties(Properties wiseProperties) {
 		this.wiseProperties = wiseProperties;

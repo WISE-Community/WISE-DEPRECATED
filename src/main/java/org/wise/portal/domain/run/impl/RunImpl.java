@@ -144,7 +144,13 @@ public class RunImpl extends OfferingImpl implements Run {
     
     @Transient
     private static final String COLUMN_NAME_VERSION_ID = "versionId";
+
+    @Transient
+    private static final String COLUMN_NAME_PRIVATE_NOTES = "private_notes";
     
+    @Transient
+    private static final String COLUMN_NAME_PUBLIC_NOTES = "public_notes";
+
     @Column(name = RunImpl.COLUMN_NAME_LAST_RUN)
     private Date lastRun;
     
@@ -214,6 +220,12 @@ public class RunImpl extends OfferingImpl implements Run {
     @Column(name = RunImpl.COLUMN_NAME_VERSION_ID)
     private String versionId;
     
+	@Column(name = COLUMN_NAME_PRIVATE_NOTES, length = 32768)
+	private String privateNotes;   // text (blob) 2^15
+
+	@Column(name = COLUMN_NAME_PUBLIC_NOTES, length = 32768)
+	private String publicNotes;   // text (blob) 2^15
+
     /**
      * @return the endtime
      */
@@ -648,5 +660,21 @@ public class RunImpl extends OfferingImpl implements Run {
 	@Override
 	public List<StudentAttendance> getStudentAttendance() {
 		return this.studentAttendance;
+	}
+
+	public String getPrivateNotes() {
+		return privateNotes;
+	}
+
+	public void setPrivateNotes(String privateNotes) {
+		this.privateNotes = privateNotes;
+	}
+
+	public String getPublicNotes() {
+		return publicNotes;
+	}
+
+	public void setPublicNotes(String publicNotes) {
+		this.publicNotes = publicNotes;
 	}
 }

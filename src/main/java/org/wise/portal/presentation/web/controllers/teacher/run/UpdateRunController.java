@@ -39,14 +39,22 @@ public class UpdateRunController extends AbstractController {
 	
 	private RunService runService;
 
+	
 	/**
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String runId = request.getParameter("runId");
-		String command = request.getParameter("command");
+
+		if (request.getMethod() == METHOD_GET) {
+			ModelAndView mav = new ModelAndView();
+			mav.addObject("run", this.runService.retrieveById(Long.parseLong(request.getParameter("runId"))));
+			return mav;
+		}
 		
+		String command = request.getParameter("command");
+
 		if(command.equals("updateTitle")){
 			String title = request.getParameter("title");
 			this.runService.updateRunName(Long.parseLong(runId), title);
@@ -66,6 +74,11 @@ public class UpdateRunController extends AbstractController {
 		} else if (command.equals("enableXMPP")) {
 			boolean isEnabled = Boolean.parseBoolean(request.getParameter("isEnabled"));
 			this.runService.setXMPPEnabled(Long.parseLong(runId), isEnabled);
+			response.getWriter().write("success");
+		} else if (command.equals("saveNotes")) {
+			String privateNotes = request.getParameter("privateNotes");
+			String publicNotes = request.getParameter("publicNotes");
+			this.runService.updateNotes(Long.parseLong(runId), privateNotes, publicNotes);
 			response.getWriter().write("success");
 		}
 		

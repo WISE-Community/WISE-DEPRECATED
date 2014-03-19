@@ -354,6 +354,8 @@
         maxWorkgroupSize integer,
         name varchar(255),
         postLevel integer,
+        private_notes text,
+        public_notes text,
         run_code varchar(255) not null unique,
         start_time datetime not null,
         timesRun integer,
@@ -949,7 +951,7 @@
 -- initial data for wise
 
 
-INSERT INTO granted_authorities VALUES (1,'ROLE_USER',0),(2,'ROLE_ADMINISTRATOR',0),(3,'ROLE_TEACHER',0),(4,'ROLE_STUDENT',0),(5,'ROLE_AUTHOR',0),(6,'ROLE_RESEARCHER',0);
+INSERT INTO granted_authorities VALUES (1,'ROLE_USER',0),(2,'ROLE_ADMINISTRATOR',0),(3,'ROLE_TEACHER',0),(4,'ROLE_STUDENT',0),(5,'ROLE_AUTHOR',0),(6,'ROLE_RESEARCHER',0),(7,'ROLE_TRUSTED_AUTHOR',0);
 
 INSERT INTO portal (id,settings,sendmail_on_exception,OPTLOCK) VALUES (1,'{isLoginAllowed:true}',1,0);
 
