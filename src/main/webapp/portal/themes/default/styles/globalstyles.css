@@ -559,6 +559,23 @@ a#name {
 	font-weight:bold;
 }
 
+.sectionContent .question {
+	font-weight:bold;
+	font-size:100%;
+	margin-top:25px;
+	margin-bottom:10px;
+}
+
+.sectionContent .answer, .sectionContent .answer p  {
+	font-weight:normal;
+	font-size:100%;
+	line-height:125%;
+}
+
+.sectionContent .answer ul  {
+	list-style:inherit;
+}
+
 /** Dialog Styles **/
 .dialogContent {
 	background:#FFFFFF;
