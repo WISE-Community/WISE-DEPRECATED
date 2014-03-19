@@ -1931,6 +1931,24 @@ IdeaBasket.prototype.saveIdeaBasket = function(thisView, action, workgroupId, id
 			workgroupId:workgroupId,
 			ideaId:ideaId
 	};
+
+	/*
+	 * remove the field from the params if it is undefined otherwise
+	 * the field will be interpreted as the string 'undefined' on the
+	 * server
+	 */
+	if(ideaBasketParams.workgroupId == undefined) {
+		delete ideaBasketParams['workgroupId'];
+	}
+	
+	/*
+	 * remove the field from the params if it is undefined otherwise
+	 * the field will be interpreted as the string 'undefined' on the
+	 * server
+	 */
+	if(ideaBasketParams.ideaId == undefined) {
+		delete ideaBasketParams['ideaId'];
+	}
 	
 	//check if we are in preview mode
 	if(thisView.config.getConfigParam('mode') !== "portalpreview") {
