@@ -28,10 +28,10 @@
 	$(document).ready(function() {
 
 	//setup grading and classroom monitor dialogs
-	$('.grading, .researchTools, .classroomMonitor').on('click',function(){
+	$('.grading, .researchTools').on('click',function(){
 		var settings = $(this).attr('id');
 		var title = $(this).attr('title');
-		var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor.html?" + settings;
+		var path = "${contextPath}/teacher/grading/gradework.html?" + settings;
 		var div = $('#gradingDialog').html('<iframe id="gradingIfrm" width="100%" height="100%" style="overflow-y:hidden;"></iframe>');
 		$('body').css('overflow','hidden');
 		div.dialog({
@@ -48,6 +48,28 @@
 			}
 		});
 		$("#gradingDialog > #gradingIfrm").attr('src',path);
+	});
+	
+	// setup grading and classroom monitor dialogs
+	$('.classroomMonitor').on('click',function(){
+		var settings = $(this).attr('id');
+		var title = $(this).attr('title');
+		var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor.html?" + settings;
+		var div = $('#classroomMonitorDialog').html('<iframe id="classroomMonitorIfrm" width="100%" height="100%" style="overflow-y:hidden;"></iframe>');
+		$('body').css('overflow','hidden');
+		div.dialog({
+			modal: true,
+			width: $(window).width() - 32,
+			height: $(window).height() - 32,
+			title: title,
+			close: function (e, ui) { $(this).html(''); $('body').css('overflow','auto'); },
+			buttons: {
+				Exit: function(){
+					$(this).dialog('close');
+				}
+			}
+		});
+		$("#classroomMonitorDialog > #classroomMonitorIfrm").attr('src',path);
 	});
 	
 	// setup share project run dialog
@@ -462,16 +484,7 @@
 								               </c:when>
 								               <c:otherwise>
 											   <ul class="actionList">
-													<li><span style="font-weight:bold;"><spring:message code="teacher.management.projectruntabs.gradeByStep"/>:</span> <a class="grading" title="<spring:message code="teacher.management.projectruntabs.gradingFeedback"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=step&getRevisions=false&minified=true"><spring:message code="teacher.management.projectruntabs.latestWork"/></a>&nbsp;|&nbsp;<a class="grading" title="<spring:message code="teacher.management.projectruntabs.gradingFeedback"/> ${run.name} (<spring:message code="run_id"/>: ${run.id})" id="runId=${run.id}&gradingType=step&getRevisions=true&minified=true"><spring:message code="teacher.management.projectruntabs.allRevisions"/></a></li>
-							  	                    <li><span style="font-weight:bold;"><spring:message code="teacher.management.projectruntabs.gradeByTeam"/>:</span> <a class="grading" title="<spring:message code="teacher.management.projectruntabs.gradingFeedback"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=team&getRevisions=false&minified=true"><spring:message code="teacher.management.projectruntabs.latestWork"/></a>&nbsp;|&nbsp;<a class="grading" title="<spring:message code="teacher.management.projectruntabs.gradingFeedback"/> ${run.name} (<spring:message code="run_id"/>: ${run.id})" id="runId=${run.id}&gradingType=team&getRevisions=true&minified=true"><spring:message code="teacher.management.projectruntabs.allRevisions"/></a></li>
-		                    							<c:choose>
-		                    								<c:when test="${isXMPPEnabled && run.XMPPEnabled}">
-		                    									<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.monitor"/></span></a></li>
-		                    								</c:when>
-		                    								<c:otherwise>
-		                    									<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor" style="display:none"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.monitor"/></span></a></li>
-		                    								</c:otherwise>
-		                    							</c:choose>
+													<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
 								               </ul>
 								               <ul class="actionList">
 											        <li>
@@ -526,6 +539,7 @@
 </div>
 
 <div id="gradingDialog" class="dialog"></div>
+<div id="classroomMonitorDialog" class="dialog"></div>
 <div id="shareDialog" class="dialog"></div>
 <div id="editRunDialog" class="dialog"></div>
 <div id="manageStudentsDialog" style="overflow:hidden;" class="dialog"></div>
