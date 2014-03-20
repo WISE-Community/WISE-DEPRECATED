@@ -1,11 +1,9 @@
 <%@ include file="../../include.jsp"%>
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>  
-<!-- <link href="<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />  -->
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
@@ -38,6 +36,9 @@ $(document).ready(function() {
 <body>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<jsp:useBean id="now" class="java.util.Date"/>    
+<fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="today"/>
+
 <h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <c:choose>
@@ -48,7 +49,7 @@ $(document).ready(function() {
 	<c:forEach var="user" items="${loggedInTeacherUsernames}">
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
 		<c:choose>
-		<c:when test="${user.userDetails.numberOfLogins == 1}">
+		<c:when test="${user.userDetails.signupdate > today}">
 			<tr class="newTeacher">
 		</c:when>
 		<c:otherwise>
@@ -74,7 +75,7 @@ $(document).ready(function() {
 		<c:set var="user" value="${studentUserArray[0]}"></c:set>
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
 		<c:choose>
-		<c:when test="${user.userDetails.numberOfLogins == 1}">
+		<c:when test="${user.userDetails.signupdate > today}">
 			<tr class="newStudent">
 		</c:when>
 		<c:otherwise>
@@ -107,8 +108,8 @@ $(document).ready(function() {
 <table id="teachersTable" border="2">
 	<c:forEach var="user" items="${teachersWhoLoggedInSinceYesterday}">
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
-		<c:choose>
-		<c:when test="${user.userDetails.numberOfLogins == 1}">
+ 		<c:choose>
+		<c:when test="${user.userDetails.signupdate > today}">
 			<tr class="newTeacher">
 		</c:when>
 		<c:otherwise>
@@ -131,7 +132,7 @@ $(document).ready(function() {
 	<c:forEach var="user" items="${studentsWhoLoggedInSinceYesterday}">
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
 		<c:choose>
-		<c:when test="${user.userDetails.numberOfLogins == 1}">
+		<c:when test="${user.userDetails.signupdate > today}">
 			<tr class="newStudent">
 		</c:when>
 		<c:otherwise>
