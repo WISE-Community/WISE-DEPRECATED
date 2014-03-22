@@ -54,7 +54,10 @@ var nodeClasses = [
 	{nodeClass:'star-bronze', nodeClassText:'Bronze Star', icon:'node/epigame/icons/star-bronze.png'},
 	{nodeClass:'star-silver', nodeClassText:'Silver Star', icon:'node/epigame/icons/star-silver.png'},
 	{nodeClass:'star-gold', nodeClassText:'Gold Star', icon:'node/epigame/icons/star-gold.png'},
-	{nodeClass:'star-locked', nodeClassText:'Locked Star', icon:'node/epigame/icons/star-locked.png'}
+	{nodeClass:'star-locked', nodeClassText:'Locked Star', icon:'node/epigame/icons/star-locked.png'},
+	{nodeClass:'mission-yellow', nodeClassText:'Yellow Mission', icon:'node/epigame/icons/planet-yellow.png'},
+	{nodeClass:'mission-orange', nodeClassText:'Orange Mission', icon:'node/epigame/icons/planet-orange.png'},
+	{nodeClass:'mission-purple', nodeClassText:'Purple Mission', icon:'node/epigame/icons/planet-purple.png'}
 ];
 
 var nodeIconPath = 'node/epigame/icons/';
