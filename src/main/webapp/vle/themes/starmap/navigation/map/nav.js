@@ -433,6 +433,7 @@ NavigationPanel.prototype.render = function(forceReRender) {
 		view.addAvailableGlobalTagMap(PilotRatingGlobalTagMap);
 		view.addAvailableGlobalTagMap(WarpRatingGlobalTagMap);
 		view.addAvailableGlobalTagMap(AdvisorRatingGlobalTagMap);
+		view.addAvailableGlobalTagMap(IconGlobalTagMap);
 	}
 };
 
@@ -460,6 +461,19 @@ function PilotRatingGlobalTagMap(view, parameters) {
 	//get the possible scores
 	this.scores = parameters.scores;
 	
+	//get the position and size parameters
+	var x = parameters.x;
+	var y = parameters.y;
+	var width = parameters.width;
+	var height = parameters.height;
+	var label = parameters.label;
+	
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.label = label;
+	
 	//get the student's total score for all the steps
 	var totalScore = this.getTotalScore();
 	
@@ -480,11 +494,11 @@ function PilotRatingGlobalTagMap(view, parameters) {
 	var img = document.createElementNS('http://www.w3.org/2000/svg','image');
 	img.setAttributeNS(null, 'id', 'pilotRankIconId');
 	img.setAttributeNS(null, 'class', 'globalTagMap-item');
-	img.setAttributeNS(null, 'height', '100');
-	img.setAttributeNS(null, 'width', '200');
+	img.setAttributeNS(null, 'height', height);
+	img.setAttributeNS(null, 'width', width);
 	img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', icon);
-	img.setAttributeNS(null, 'x', '10');
-	img.setAttributeNS(null, 'y', '10');
+	img.setAttributeNS(null, 'x', x);
+	img.setAttributeNS(null, 'y', y);
 	img.setAttributeNS(null, 'visibility', 'visible');
 	
 	//add the img element to the starmap
@@ -493,8 +507,8 @@ function PilotRatingGlobalTagMap(view, parameters) {
 	//create the text element to display the pilot rank
 	var pilotRatingRankText = document.createElementNS('http://www.w3.org/2000/svg','text');
 	pilotRatingRankText.setAttributeNS(null, 'id', 'pilotRankTextId');
-	pilotRatingRankText.setAttributeNS(null, 'x', '10');
-	pilotRatingRankText.setAttributeNS(null, 'y', '20');
+	pilotRatingRankText.setAttributeNS(null, 'x', x);
+	pilotRatingRankText.setAttributeNS(null, 'y', y + 10);
 	pilotRatingRankText.setAttributeNS(null, 'font-size', '12');
 	pilotRatingRankText.setAttributeNS(null, 'fill', 'white');
 	
@@ -508,8 +522,8 @@ function PilotRatingGlobalTagMap(view, parameters) {
 	//create the text element to display the total score
 	var pilotRatingScoreText = document.createElementNS('http://www.w3.org/2000/svg','text');
 	pilotRatingScoreText.setAttributeNS(null, 'id', 'pilotRankScoreId');
-	pilotRatingScoreText.setAttributeNS(null, 'x', '10');
-	pilotRatingScoreText.setAttributeNS(null, 'y', '110');
+	pilotRatingScoreText.setAttributeNS(null, 'x', x);
+	pilotRatingScoreText.setAttributeNS(null, 'y', y + height);
 	pilotRatingScoreText.setAttributeNS(null, 'font-size', '12');
 	pilotRatingScoreText.setAttributeNS(null, 'fill', 'white');
 	
@@ -733,6 +747,19 @@ function WarpRatingGlobalTagMap(view, parameters) {
 	//get the possible scores
 	this.scores = parameters.scores;
 	
+	//get the position and size parameters
+	var x = parameters.x;
+	var y = parameters.y;
+	var width = parameters.width;
+	var height = parameters.height;
+	var label = parameters.label;
+	
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.label = label;
+	
 	//get all the step node ids for the steps that have the given tag
 	var nodeIds = view.getProject().getNodeIdsByTag(this.tagName);
 	
@@ -767,14 +794,8 @@ function WarpRatingGlobalTagMap(view, parameters) {
 	//get the icon to display based on the student's score
 	var icon = this.getIconFromScore(score);
 	
-	//get the y position where we will place the icon
-	var y = 10 + (100 * warpNumber);
-	
 	//get the rank
 	var rank = this.getRankFromScore(score);
-	
-	//get the color
-	var color = this.getWarpColorFromIcon(icon);
 	
 	//create the id for the icon element
 	var warpRankIconId = 'warpRankIconId' + warpNumber;
@@ -783,10 +804,10 @@ function WarpRatingGlobalTagMap(view, parameters) {
 	var img = document.createElementNS('http://www.w3.org/2000/svg','image');
 	img.setAttributeNS(null, 'id', warpRankIconId);
 	img.setAttributeNS(null, 'class', 'globalTagMap-item');
-	img.setAttributeNS(null, 'height', '100');
-	img.setAttributeNS(null, 'width', '200');
+	img.setAttributeNS(null, 'height', height);
+	img.setAttributeNS(null, 'width', width);
 	img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', icon);
-	img.setAttributeNS(null, 'x', '10');
+	img.setAttributeNS(null, 'x', x);
 	img.setAttributeNS(null, 'y', y);
 	img.setAttributeNS(null, 'visibility', 'visible');
 	
@@ -799,7 +820,7 @@ function WarpRatingGlobalTagMap(view, parameters) {
 	//create the text element to display the pilot rank
 	var warpRatingRankText = document.createElementNS('http://www.w3.org/2000/svg','text');
 	warpRatingRankText.setAttributeNS(null, 'id', warpRankTextId);
-	warpRatingRankText.setAttributeNS(null, 'x', '10');
+	warpRatingRankText.setAttributeNS(null, 'x', x);
 	warpRatingRankText.setAttributeNS(null, 'y', y + 10);
 	warpRatingRankText.setAttributeNS(null, 'font-size', '12');
 	warpRatingRankText.setAttributeNS(null, 'fill', 'white');
@@ -817,13 +838,13 @@ function WarpRatingGlobalTagMap(view, parameters) {
 	//create the text element to display the total score
 	var warpRatingScoreText = document.createElementNS('http://www.w3.org/2000/svg','text');
 	warpRatingScoreText.setAttributeNS(null, 'id', warpRankScoreId);
-	warpRatingScoreText.setAttributeNS(null, 'x', '10');
-	warpRatingScoreText.setAttributeNS(null, 'y', y + 100);
+	warpRatingScoreText.setAttributeNS(null, 'x', x);
+	warpRatingScoreText.setAttributeNS(null, 'y', y + height);
 	warpRatingScoreText.setAttributeNS(null, 'font-size', '12');
 	warpRatingScoreText.setAttributeNS(null, 'fill', 'white');
 	
 	//create the text that will be put in the text element
-	var warpRatingScoreTextNode = document.createTextNode(color + ' Warp Score: ' + score);
+	var warpRatingScoreTextNode = document.createTextNode(label + ' Score: ' + score);
 	warpRatingScoreText.appendChild(warpRatingScoreTextNode);
 	
 	//append the total score text element into the dom
@@ -903,20 +924,17 @@ WarpRatingGlobalTagMap.prototype.studentWorkUpdatedHandler = function(nodeId, no
 			//get the icon path
 			var icon = this.getIconFromScore(score);
 			
-			//get the color
-			var color = this.getWarpColorFromIcon(icon);
-			
 			//update the icon path for the warp rating
 			$('#warpRankIconId' + this.warpNumber).attr('href', icon);
 			
 			if(rank != null) {
-				//set the pilot rank e.g. 'Pilot Rank 1'
+				//set the warp rank e.g. 'Red Warp Rank 1'
 				$('#warpRankTextId' + this.warpNumber).text(rank);		
 			}
 			
 			if(score != null) {
 				//set the score e.g. 'Score: 550'
-				$('#warpRankScoreId' + this.warpNumber).text(color + ' Warp Score: ' + score);		
+				$('#warpRankScoreId' + this.warpNumber).text(this.label + ' Score: ' + score);		
 			}
 		}
 	}
@@ -1055,6 +1073,216 @@ WarpRatingGlobalTagMap.prototype.getIconFromScore = function(score) {
 };
 
 
+/**
+ * A global tag map that changes an icon based upon specified statuses
+ */
+IconGlobalTagMap.prototype = new GlobalTagMap();
+IconGlobalTagMap.prototype.constructor = IconGlobalTagMap;
+IconGlobalTagMap.prototype.parent = GlobalTagMap.prototype;
+IconGlobalTagMap.functionName = 'iconBasedOnStatus';
+
+/**
+ * The constructor for the WarpRatingGlobalTagMap. This global tag
+ * map will accumulate the score for all the steps with a specific
+ * tag and give the student a rank based upon that score.
+ * @param view the view
+ * @param parameters parameters for this global tag map
+ */
+function IconGlobalTagMap(view, parameters) {
+	this.view = view;
+	
+	//get the default icon to first show
+	var initialIcon = parameters.initialIcon;
+	
+	//get all the icons that the icon can change to
+	var icons = parameters.icons;
+	
+	//get the position and size of the icon
+	var x = parameters.x;
+	var y = parameters.y;
+	var width = parameters.width;
+	var height = parameters.height;
+
+	this.initialIcon = initialIcon;
+	this.icons = icons;
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	
+	//get the icon that we should show
+	var icon = this.getIconFromStatuses();
+
+	if(icon == null) {
+		//none of the statuses were satisfied so we will use the default icon
+		icon = initialIcon;		
+	}
+	
+	if(IconGlobalTagMap.iconCount == null) {
+		//a counter to use for the dom id for the icon
+		IconGlobalTagMap.iconCount = 0;
+	}
+	
+	//increment the icon count
+	IconGlobalTagMap.iconCount += 1;
+	
+	//set the icon number
+	var iconNumber = IconGlobalTagMap.iconCount;
+	this.iconNumber = iconNumber;
+	
+	//make the icon dom id
+	var iconId = 'iconId' + iconNumber;
+	
+	//create the img element to display the warp rating
+	var img = document.createElementNS('http://www.w3.org/2000/svg','image');
+	img.setAttributeNS(null, 'id', iconId);
+	img.setAttributeNS(null, 'class', 'globalTagMap-item');
+	img.setAttributeNS(null, 'height', height);
+	img.setAttributeNS(null, 'width', width);
+	img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', icon);
+	img.setAttributeNS(null, 'x', x);
+	img.setAttributeNS(null, 'y', y);
+	img.setAttributeNS(null, 'visibility', 'visible');
+	
+	//add the img element to the starmap
+	$('#wrap').append(img);
+	
+	/*
+	 * subscribe to the studentWorkUpdated event so this tag map
+	 * can perform any necessary changes when the student work
+	 * changes
+	 */
+	view.eventManager.subscribe('studentWorkUpdated', this.studentWorkUpdatedListener, this);
+};
+
+/**
+ * Get the icon to show based on the current statuses
+ */
+IconGlobalTagMap.prototype.getIconFromStatuses = function() {
+	var iconPath = null;
+	
+	/*
+	 * get the icons. each object in the icons array contains and icon path
+	 * and an array of statuses that need to be satisifed in order for us
+	 * to show the icon.
+	 */
+	var icons = this.icons;
+	
+	if(icons != null) {
+		//loop through all the icons
+		for(var x=0; x<icons.length; x++) {
+			//get an icon object
+			var icon = icons[x];
+			
+			if(icon != null) {
+				//get the icon path
+				var tempIconPath = icon.iconPath;
+				
+				//get the statuses that need to be satisfied
+				var tempStatuses = icon.statuses;
+				
+				//check if all the statuses are satisfied
+				if(this.isStatusesSatisfied(tempStatuses)) {
+					//the statuses were all satisfied so we will use this icon
+					iconPath = tempIconPath;
+					break;
+				}
+			}
+		}
+	}
+	
+	return iconPath;
+};
+
+/**
+ * Check if the statuses were satisfied
+ * @param statuses an array of statuses
+ * @return whether the statuses were satisfied
+ */
+IconGlobalTagMap.prototype.isStatusesSatisfied = function(statuses) {
+	var result = false;
+	
+	if(statuses != null) {
+		/*
+		 * boolean to keep track of whether we are currently 
+		 * looping on the first status in the array
+		 */
+		var firstStatus = true;
+		
+		//loop through all the statuses
+		for(var x=0; x<statuses.length; x++) {
+			//get a status
+			var status = statuses[x];
+			
+			//get the node id, status type and status value
+			var nodeId = status.nodeId;
+			var statusType = status.statusType;
+			var statusValue = status.statusValue;
+			
+			//get the node whose status we need to look at
+			var node = this.view.getProject().getNodeById(nodeId);
+			
+			//get the status value for the given status type
+			var nodeStatusValue = node.getStatus(statusType);
+			
+			var statusValueMatches = false;
+			
+			//check if the value matches the one we want
+			if(statusValue + '' == nodeStatusValue + '') {
+				statusValueMatches = true;
+			}
+			
+			if(firstStatus) {
+				//this is the first object in the loop so we will set the result
+				result = statusValueMatches;
+			} else {
+				/*
+				 * this is not the first object in the loop so we will && the
+				 * statusValueMatches with the result
+				 */ 
+				result = result && statusValueMatches;
+			}
+			
+			firstStatus = false;
+		}
+	}
+	
+	return result;
+};
+
+
+/**
+ * The listener for the studentWorkUpdated event
+ * @param type the event type studentWorkUpdated
+ * @param args the arguments passed in when the event is fired
+ * @param obj this warp rating global tag map object
+ */
+IconGlobalTagMap.prototype.studentWorkUpdatedListener = function(type, args, obj) {
+	var thisGlobalTagMap = obj;
+	
+	//get the node id and node visit from the args
+	var nodeId = args[0];
+	var nodeVisit = args[1];
+	
+	//call the handler
+	obj.studentWorkUpdatedHandler(nodeId, nodeVisit);
+};
+
+/**
+ * The handler for the studentWorkUpdated event
+ * @param nodeId the node id that the student work is for
+ * @param nodeVisit the node visit that was just submitted by the student
+ */
+IconGlobalTagMap.prototype.studentWorkUpdatedHandler = function(nodeId, nodeVisit) {
+	//get the icon that we should show for this IconGlobalTagMap
+	var iconPath = this.getIconFromStatuses();
+	
+	if(iconPath != null) {
+		//update the icon
+		$('#iconId' + this.iconNumber).attr('href', iconPath);
+	}
+};
+
 AdvisorRatingGlobalTagMap.prototype = new GlobalTagMap();
 AdvisorRatingGlobalTagMap.prototype.constructor = AdvisorRatingGlobalTagMap;
 AdvisorRatingGlobalTagMap.prototype.parent = GlobalTagMap.prototype;
@@ -1107,7 +1335,7 @@ function AdvisorRatingGlobalTagMap(view, parameters) {
 	img.setAttributeNS(null, 'id', 'advisorRating');
 	img.setAttributeNS(null, 'class', 'globalTagMap-item');
 	img.setAttributeNS(null, 'height', '100');
-	img.setAttributeNS(null, 'width', '200');
+	img.setAttributeNS(null, 'width', '100');
 	img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', icon);
 	img.setAttributeNS(null, 'x', '10');
 	img.setAttributeNS(null, 'y', y);

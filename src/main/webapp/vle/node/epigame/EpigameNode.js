@@ -309,6 +309,15 @@ EpigameNode.prototype.processStudentWork = function(nodeVisits) {
 							//the student has completed this step
 							this.setStatus('isCompleted', true);
 						}
+						
+						//set the epigameMedal status value
+						if(response.finalScore >= 80) {
+							this.setStatus('epigameMedal', 'gold');
+						} else if(response.finalScore >= 60) {
+							this.setStatus('epigameMedal', 'silver');
+						} else if(response.finalScore >= 40) {
+							this.setStatus('epigameMedal', 'bronze');
+						}
 					}
 				}
 			} else if(mode == 'adaptivePostQuiz') {
