@@ -954,9 +954,24 @@ IdeaBasket.prototype.addRow = function(target,idea,load){
 	
 	$('tr .header').removeClass('headerSortDown').removeClass('headerSortUp');
 	
+	//check if we should hide this idea because of a filter
+	if(this.checkIfNeedToHide(idea)) {
+		//we will hide this idea
+		$newTr.hide();
+	}
+};
+
+/**
+ * Check if we need to hide this idea due to a filter
+ * @param idea the idea object
+ * @return whether we need to hide the idea or not
+ */
+IdeaBasket.prototype.checkIfNeedToHide = function(idea) {
+	var result = false;
+	
 	/*
 	 * check if this idea basket is for a step such as IdeaBasketNode or ExplanationBuilderNode.
-	 * if this.node is null it means this is the global idea basket
+	 * if this.node is null it means this is the global idea basket which is never filtered.
 	 */
 	if(this.node != null) {
 		//get the node id of the node that this idea basket is for
@@ -993,11 +1008,13 @@ IdeaBasket.prototype.addRow = function(target,idea,load){
 				//check if the node id for this idea is in the array of node ids we want to show
 				if(nodeIdsToFilter.indexOf(nodeId) == -1) {
 					//the node id is not in the array so we will hide this idea
-					$newTr.hide();
+					result = true;
 				}
 			}
 		}
 	}
+	
+	return result;
 };
 
 IdeaBasket.prototype.openEditDialog = function(context,id,$clicked){
@@ -2362,6 +2379,13 @@ IdeaBasket.prototype.addPublicRow = function(publicIdea) {
 		 * will change the button from 'Copy' to 'Copied'
 		 */
 		$('#copyPublicIdeaButton_' + ideaId).val(thisView.getI18NString('ideaBasket_public_copiedIdea'));
+	}
+	
+	//check if we need to hide this idea because of a filter
+	if(this.checkIfNeedToHide(publicIdea)) {
+		//hide the idea because it should be filtered out
+		var idea = $('#' + currTable + publicIdea.id);
+		idea.hide();
 	}
 };
 
