@@ -716,7 +716,7 @@ public class AuthorProjectController extends AbstractController {
 		//get the context path e.g. /wise
 		String contextPath = request.getContextPath();
 		
-		String vleAuthorUrl = portalUrl + contextPath + "/vle/author.html";
+		String vleUrl = portalUrl + contextPath + "/vle/author.html";
 		String portalAuthorUrl = portalUrl + contextPath + "/author/authorproject.html";
 		String command = request.getParameter("param1");
 		
@@ -734,9 +734,9 @@ public class AuthorProjectController extends AbstractController {
 			project = null;
 		}
 		
-		ModelAndView mav = new ModelAndView();
+		ModelAndView mav = new ModelAndView("vle");
 		mav.addObject("portalAuthorUrl", portalAuthorUrl);
-		mav.addObject("vleAuthorUrl", vleAuthorUrl);
+		mav.addObject("vleurl", vleUrl);
 		
 		if(command != null && command != ""){
 			mav.addObject("command", command);

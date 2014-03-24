@@ -73,14 +73,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.previewProject();
 	} else if(type=='startPreview'){
 		obj.startPreview(args[0]);
-	} else if(type=='portalMode'){
-		var portalAuthorUrl = args[0];
-		var command = args[1];
-		var relativeProjectUrl = args[2];
-		var projectId = args[3];
-		var projectTitle = args[4];
-		var editPremadeComments = args[5];
-		obj.startPortalMode(portalAuthorUrl, command, relativeProjectUrl, projectId, projectTitle, editPremadeComments);
 	} else if(type=='whoIsEditing'){
 		obj.getEditors();
 	} else if(type=='editProjectSubmit'){
