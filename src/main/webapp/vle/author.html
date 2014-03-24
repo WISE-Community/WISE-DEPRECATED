@@ -31,6 +31,13 @@ function startWithParams(em){
  */
 function bootstrapListener(type,args,obj){
 	if(args[0]=='bootstrap'){
+		/* listens for when the components for this view have finished loading */
+		var loadListener = function(type,args,obj){
+			if (window.parent && window.parent.startAuthorMode) {
+				window.parent.startAuthorMode();
+			};
+		};
+		eventManager.subscribe('loadingViewComplete', loadListener);
 		createEnvironment('env', eventManager);
 		env.startView('authoring');
 	}

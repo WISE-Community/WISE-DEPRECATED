@@ -7,7 +7,7 @@
  * Sets variables so that the authoring tool is running in portal mode
  * and starts authoring tool in appropriate state.
  */
-View.prototype.startPortalMode = function(url, command, relativeProjectUrl, projectId, projectTitle, editPremadeComments){
+View.prototype.startAuthorMode = function(url, command, relativeProjectUrl, projectId, projectTitle, editPremadeComments){
 	this.portalUrl = url;
 	/*
 	 * this editingPollInterval is used to check who is also currently editing the
@@ -164,53 +164,6 @@ View.prototype.createPortalProject = function(path, name, parentProjectId){
 	};
 	
 	this.connectionManager.request('POST', 3, this.portalUrl, {command: 'createProject', projectName: name, projectPath:path, parentProjectId: parentProjectId}, handler, this);
-};
-
-/**
- * Retrieves and parses settings.xml file for project paths, primaryPath locations.
- * NOTE: I don't think this function is used anymore
- */
-View.prototype.getProjectPaths = function(){
-	var callback = function(text, xml, o){
-		var settingsJSON = $.parseJSON(text);
-		if(settingsJSON){
-			/* get the mode that the authoring tool is to run in (portal/standalone) */
-			if(settingsJSON.mode && settingsJSON.mode.portal && settingsJSON.mode.portalUrl) {
-				var rawLoc = window.location.toString();
-				
-				//get the context path e.g. /wise
-				var contextPath = o.getConfig().getConfigParam('contextPath');
-				
-				var loginUrl = rawLoc.substring(0,rawLoc.indexOf(contextPath + '/vle/author.html')) + settingsJSON.mode.portalUrl + '?redirect=/author/authorproject.html';
-				window.location = loginUrl;
-			}
-			
-			if(settingsJSON.projectPaths) {
-				for(var u=0;u<settingsJSON.projectPaths.length;u++){
-					if(settingsJSON.projectPaths[u]){
-						o.projectPaths += settingsJSON.projectPaths[u];
-						if(u!=settingsJSON.projectPaths.length-1){
-							o.projectPaths += '~';
-						}
-					}
-				}
-			}
-			
-			if(settingsJSON.primaryPath) {
-				o.primaryPath = settingsJSON.primaryPath;
-				o.projectPaths += '~' + settingsJSON.primaryPath;
-			} else {
-				o.notificationManager.notify("Error: Primary Path not specified in settings.json");
-			}
-			
-		} else {
-			o.notificationManager.notify("Error retrieving settings", 3);
-		}
-		
-		o.onAuthoringToolReady();
-	};
-
-	this.connectionManager.request('GET', 1, 'settings.json', null, callback, this);
 };
 
 /**

@@ -2629,10 +2629,9 @@ View.prototype.reloadProject = function() {
  */
 View.prototype.gotoDashboard = function() {
 	/*
-	 * click the link in the parent page that is outside of the authoring iframe
-	 * that will bring the teacher back to the portal
+	 * since the authoring tool is inside an iframe, we need to set the parent's location
 	 */
-	$('#hiddenLogoutLink', window.parent.document).click();
+	window.parent.location=this.config.getConfigParam("wiseBaseURL");
 };
 
 //used to notify scriptloader that this script has finished loading

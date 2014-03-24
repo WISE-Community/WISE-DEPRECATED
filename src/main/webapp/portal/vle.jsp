@@ -13,6 +13,16 @@ function notifyFatal(type,args,obj){
 	window.location = '${contextPath}/errors/outsideerror.html?msg=' + encodeURIComponent(args[0]);
 };
 
+function notifyCleaningComplete(type,args,obj){
+	window.parent.processCleaningResults(args[0]);
+};
+
+function startAuthorMode() {
+	window.frames['topifrm'].eventManager.subscribe('fatalError', notifyFatal);
+	window.frames['topifrm'].eventManager.subscribe('notifyCleaningComplete', notifyCleaningComplete);
+	window.frames['topifrm'].view.startAuthorMode("${portalAuthorUrl}", "${command}", "${relativeProjectUrl}", "${projectId}", "${projectTitle}", "${editPremadeComments}");
+};
+
 function startWithConfig() {
 	var vleConfigUrl = "${vleConfigUrl}";
 	window.frames['topifrm'].eventManager.subscribe('fatalError', notifyFatal);

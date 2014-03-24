@@ -357,7 +357,6 @@ var componentloader = function(em, sl){
 				'closeStep':[null,null], 
 				'previewProject':[null,null], 
 				'startPreview':[null,null], 
-				'portalMode':[null,null], 
 				'maxScoreUpdated':[null,null],
 				'postLevelChanged':[null,null], 
 				'setLastEdited':[null,null], 
@@ -463,7 +462,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('editProjectFile', view.authorDispatcher, view);
 					view.eventManager.subscribe('previewProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('startPreview', view.authorDispatcher, view);
-					view.eventManager.subscribe('portalMode', view.authorDispatcher, view);
 					view.eventManager.subscribe('whoIsEditing', view.authorDispatcher, view);
 					view.eventManager.subscribe('authorWindowScrolled', view.authorDispatcher, view);
 					view.eventManager.subscribe('previewFrameLoaded', view.authorDispatcher, view);
@@ -571,12 +569,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe("premadeCommentWindowLoaded", view.authoringToolPremadeCommentsDispatcher, view);
 					view.eventManager.subscribe("premadeCommentLabelClicked", view.authoringToolPremadeCommentsDispatcher, view);
 					view.eventManager.subscribe("gotoDashboard", view.authorDispatcher, view);
-					
-					if (window.parent && window.parent.portalAuthorUrl) {
-						window.parent.loaded();
-					} else {
-						view.getProjectPaths();
-					};
 					
 					view.initializeOpenProjectDialog();
 					view.initializeCreateProjectDialog();
