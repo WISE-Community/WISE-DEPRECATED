@@ -200,7 +200,7 @@ public class StudentVLEController extends AbstractController {
 		String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		String contentUrl = curriculumBaseWWW + rawProjectUrl;
 
-		ModelAndView modelAndView = new ModelAndView();
+		ModelAndView modelAndView = new ModelAndView("vle");
     	modelAndView.addObject("run", run);
     	modelAndView.addObject("vleurl",vleurl);
     	modelAndView.addObject("vleConfigUrl", vleConfigUrl);

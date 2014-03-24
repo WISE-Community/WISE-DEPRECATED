@@ -92,7 +92,7 @@ public class PreviewLDProjectController extends AbstractController {
 				
 				String vleurl = wiseBaseURL + "/vle/vle.html";
 		
-				ModelAndView modelAndView = new ModelAndView("preview/preview");
+				ModelAndView modelAndView = new ModelAndView("vle");
 		    	modelAndView.addObject("vleurl",vleurl);
 		    	modelAndView.addObject("vleConfigUrl", vleConfigUrl);
 		    	modelAndView.addObject("contentUrl", contentUrl);

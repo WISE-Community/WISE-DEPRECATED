@@ -1,4 +1,4 @@
-<%@ include file="../../include.jsp"%>
+<%@ include file="include.jsp"%>
 <!DOCTYPE html>
 <html style="height:100%">
 <head>
@@ -11,13 +11,13 @@ var contentUrl = "${contentUrl}";
 
 function notifyFatal(type,args,obj){
 	window.location = '${contextPath}/errors/outsideerror.html?msg=' + encodeURIComponent(args[0]);
-}
+};
 
 function startWithConfig() {
 	var vleConfigUrl = "${vleConfigUrl}";
 	window.frames['topifrm'].eventManager.subscribe('fatalError', notifyFatal);
 	window.frames['topifrm'].view.startVLEFromConfig(vleConfigUrl);
-}	
+};	
 </script>
 
 <!-- make ${vleurl}?loadScriptsIndividually=true if you want to force vle to load scripts individually instead of via the allScripts-min.js -->
