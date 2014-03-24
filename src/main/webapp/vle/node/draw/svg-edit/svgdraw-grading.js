@@ -11,6 +11,7 @@ function SVGDRAW() {
 	this.nodeData = null;
 	this.nodeTitle = '';
 	this.loadModules(this);
+	this.initTries = 0;
 };
 
 SVGDRAW.prototype.loadModules = function(context){
@@ -37,9 +38,26 @@ SVGDRAW.prototype.loadModules = function(context){
 
 //populate description/annotation text and snapshots
 SVGDRAW.prototype.init = function(context) {
-	if(svgEditor.ext_snapshots && svgEditor.ext_snapshots.isLoaded() && svgEditor.ext_prompt && svgEditor.ext_prompt.isLoaded() &&
-		svgEditor.ext_stamps && svgEditor.ext_stamps.isLoaded() && svgEditor.ext_description && svgEditor.ext_description.isLoaded()){
+	var ready = true,
+		wiseExtensions = ['ext-prompt.js', 'ext-stamps.js', 'ext-snapshots.js', 'ext-description.js', 'ext-wise.js'/*, 'ext-importstudentasset.js', 'ext-clearlayer.js'*/];
+	var e = wiseExtensions.length-1;
+	for(; e>-1; --e){
+		var ext = wiseExtensions[e],
+			prop = ext.replace(/\.js$/,'').replace(/^ext-/,'ext_');
+		if(svgEditor.hasOwnProperty(prop)){
+			if(!svgEditor[prop].isLoaded()){
+				ready = false;
+				console.log(prop + 'isn\'t ready');
+				break;
+			}
+		} else {
+			ready = false;
+			console.log('failed to load ' + prop);
+			break;
+		}
+	}
 	
+	if(ready){
 		var promptExt = svgEditor.ext_prompt,
 			descriptionExt = svgEditor.ext_description,
 			stampsExt = svgEditor.ext_stamps,
@@ -193,10 +211,14 @@ SVGDRAW.prototype.init = function(context) {
 			$('#loading_overlay').fadeOut();
 		},500);
 		
-	}
-	else {
+	} else {
 		setTimeout(function(){
-			context.init(context);
+			++context.initTries;
+			if(context.initTries<600){
+				context.init(context);
+			} else {
+				console.log("Error: Unable to start enlarged view because svg-edit extension(s) failed to load.");
+			}
 		},100);
 	}
 };

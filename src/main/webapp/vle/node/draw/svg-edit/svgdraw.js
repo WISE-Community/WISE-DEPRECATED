@@ -277,7 +277,7 @@ SVGDRAW.prototype.load = function() {
 SVGDRAW.prototype.initDisplay = function(data,context) {
 	var ready = true,
 		node = this.node,
-		wiseExtensions = ['ext-prompt.js', 'ext-stamps.js', 'ext-snapshots.js', 'ext-description.js', 'ext-importstudentasset.js', 'ext-wise4.js', 'ext-clearlayer.js'];
+		wiseExtensions = ['ext-prompt.js', 'ext-stamps.js', 'ext-snapshots.js', 'ext-description.js', 'ext-importstudentasset.js', 'ext-wise.js', 'ext-clearlayer.js'];
 	var e = node.extensions.length-1;
 	for(; e>-1; --e){
 		var ext = node.extensions[e];
@@ -523,8 +523,7 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 			$('#loading_overlay').fadeOut();
 			svgEditor.loadedWISE = true;
 		},500);
-	}
-	else {
+	} else {
 		setTimeout(function(){
 			++context.initTries;
 			if(context.initTries<600){
