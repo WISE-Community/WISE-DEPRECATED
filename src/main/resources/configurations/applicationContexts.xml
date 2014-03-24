@@ -978,8 +978,8 @@
 	<bean id="curnit" class="org.wise.portal.domain.module.impl.CurnitImpl"
 		scope="prototype" />
 
-<util:properties id="i18nProperties"
-		location="classpath:messages/i18n_en_US.properties" />
+	<util:properties id="i18nProperties"
+		location="classpath:i18n/i18n_en_US.properties" />
 
 	<util:properties id="wiseProperties" location="classpath:wise.properties" />
 
