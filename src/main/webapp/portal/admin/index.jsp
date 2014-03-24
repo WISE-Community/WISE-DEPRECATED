@@ -52,23 +52,25 @@
 						<div class="sectionContent">
 							<h5>
 								<spring:message code='admin.index.list' />
-								: <a href="account/manageusers.html?userType=teacher"><spring:message
+								<sec:authorize ifAnyGranted="ROLE_ADMINISTRATOR">
+ 								   <spring:message code='admin.index.allUsersWhoLoggedIn' /> 
+								   <a href="account/manageusers.html?onlyShowLoggedInUser=true"><spring:message code='now' /></a>
+								   <a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=today"><spring:message code='today' /></a> 
+								   <a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=thisWeek"><spring:message code='thisWeek' /></a> 
+								   <a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=thisMonth"><spring:message code='thisMonth' /></a> 
+								   <a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=thisYear"><spring:message code='thisYear' /></a> 
+								</sec:authorize>
+								</h5>
+								<h5>
+								<spring:message code='admin.index.list' /> <a href="account/manageusers.html?userType=teacher"><spring:message
 										code='admin.index.allTeachers' /></a> | <a
 									href="account/manageusers.html?userType=student"><spring:message
 										code='admin.index.allStudents' /></a>
-								<sec:authorize ifAnyGranted="ROLE_ADMINISTRATOR">
-								   |
-								  <a href="account/manageusers.html?onlyShowLoggedInUser=true"><spring:message
-											code='admin.index.allCurrentlyLoggedInUsers' /></a> |
-								  <a
-										href="account/manageusers.html?onlyShowUsersWhoLoggedInToday=true"><spring:message
-											code='admin.index.allUsersWhoLoggedInToday' /></a>
-								</sec:authorize>
 
 							</h5>
 							<h5>
 								<spring:message code='admin.index.find' />
-								: <a href="account/lookupteacher.html"><spring:message
+								<a href="account/lookupteacher.html"><spring:message
 										code='teacher_cap' /></a> | <a href="account/lookupstudent.html"><spring:message
 										code='student_cap' /></a>
 							</h5>

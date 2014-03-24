@@ -1,10 +1,10 @@
 eclipse.preferences.version=1
-encoding//src/main/resources/messages=UTF-8
-encoding//src/main/resources/messages/i18n_es.properties=UTF-8
-encoding//src/main/resources/messages/i18n_ja.properties=UTF-8
-encoding//src/main/resources/messages/i18n_nl.properties=UTF-8
-encoding//src/main/resources/messages/i18n_zh_CN.properties=UTF-8
-encoding//src/main/resources/messages/i18n_zh_TW.properties=UTF-8
+encoding//src/main/resources/i18n=UTF-8
+encoding//src/main/resources/i18n/i18n_es.properties=UTF-8
+encoding//src/main/resources/i18n/i18n_ja.properties=UTF-8
+encoding//src/main/resources/i18n/i18n_nl.properties=UTF-8
+encoding//src/main/resources/i18n/i18n_zh_CN.properties=UTF-8
+encoding//src/main/resources/i18n/i18n_zh_TW.properties=UTF-8
 encoding//src/main/webapp/vle/node/assessmentlist/i18n/i18n_es.json=UTF-8
 encoding//src/main/webapp/vle/node/explanationbuilder/i18n/i18n_es.json=UTF-8
 encoding//src/main/webapp/vle/node/matchsequence/i18n/i18n_es.json=UTF-8

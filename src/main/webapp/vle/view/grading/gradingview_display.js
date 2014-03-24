@@ -6500,7 +6500,7 @@ function enlargeDraw(divId){
 	//get the context path e.g. /wise
 	var contextPath = view.getConfig().getConfigParam('contextPath');
 	
-	var newwindow = window.open(contextPath + "/vle/node/draw/svg-edit/svg-editor-grading.html");
+	var newwindow = window.open(contextPath + "/vle/node/draw/svg-edit/svg-editor-grading.html?noDefaultExtensions=true");
 	newwindow.divId = divId;
 }
 

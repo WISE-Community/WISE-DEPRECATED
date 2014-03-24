@@ -629,7 +629,7 @@ View.prototype.onThemeLoad = function(){
 		
 		/* if (TODO: check for any constraints in project) {*/
 			// we are in preview mode (and the project contains constraints)
-			var path = contextPath + '/preview.html?projectId=' + this.getProjectMetadata().projectId;
+			var path = contextPath + '/previewproject.html?projectId=' + this.getProjectMetadata().projectId;
 			if(this.getConfig().getConfigParam("isConstraintsDisabled")){
 				// constraints are disabled, so show enable constraints link
 				//this.notificationManager.notify('Student navigation constraints are currently disabled. To preview project with all constraints, <a href="' + path + '">click here</a>.', 3, 'keepMsg');

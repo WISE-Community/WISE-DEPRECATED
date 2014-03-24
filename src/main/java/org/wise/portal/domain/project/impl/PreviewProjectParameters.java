@@ -25,6 +25,7 @@ package org.wise.portal.domain.project.impl;
 import javax.servlet.http.HttpServletRequest;
 
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.user.User;
 
 /**
  * Parameters required to preview a project
@@ -34,12 +35,19 @@ import org.wise.portal.domain.project.Project;
 public class PreviewProjectParameters {
 
 	private HttpServletRequest httpServletRequest;
-	
+
+	private User user;
+
 	private Project project;
 	
 	private String portalUrl;
 	
 	private String versionId;
+	
+	private String step;
+	
+	private boolean isConstraintsDisabled = false;
+	
 
 	/**
 	 * @return the httpServletRequest
@@ -53,6 +61,20 @@ public class PreviewProjectParameters {
 	 */
 	public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
 		this.httpServletRequest = httpServletRequest;
+	}
+
+	/**
+	 * @return the user
+	 */
+	public User getUser() {
+		return user;
+	}
+
+	/**
+	 * @param user the user to set
+	 */
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	/**
@@ -96,5 +118,32 @@ public class PreviewProjectParameters {
 	public void setVersionId(String versionId) {
 		this.versionId = versionId;
 	}
-	
+
+	/**
+	 * @return the step
+	 */
+	public String getStep() {
+		return step;
+	}
+
+	/**
+	 * @param step the step to set
+	 */
+	public void setStep(String step) {
+		this.step = step;
+	}
+
+	/**
+	 * @return the isConstraintsDisabled
+	 */
+	public boolean isConstraintsDisabled() {
+		return isConstraintsDisabled;
+	}
+
+	/**
+	 * @param isConstraintsDisabled the isConstraintsDisabled to set
+	 */
+	public void setConstraintsDisabled(boolean isConstraintsDisabled) {
+		this.isConstraintsDisabled = isConstraintsDisabled;
+	}
 }

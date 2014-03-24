@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -367,40 +368,55 @@ public class LdProjectServiceImpl implements ProjectService {
 	 */
 	@Transactional()
 	public ModelAndView previewProject(PreviewProjectParameters params) throws Exception {
+		
+		User user = params.getUser();
 		Project project = params.getProject();
+		Set<String> tagNames = new TreeSet<String>();
+		tagNames.add("library");
+		String step = params.getStep();
+		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 
-		ModelAndView mav = new ModelAndView(new RedirectView(generateStudentPreviewProjectUrlString(params.getHttpServletRequest(), 
-				project, params.getVersionId())));
-		return mav;
-	}
+		if(project != null){
+			if(project.hasTags(tagNames) || 
+					project.getFamilytag().equals(FamilyTag.TELS) || this.canReadProject(project, user)){
+				String vleConfigUrl = wiseBaseURL + "/request/info.html" + "?projectId=" + project.getId() + "&action=getVLEConfig&requester=portalpreview";
 
-	/**
-	 * Returns url string for previewing the run
-	 * @param request
-	 * @param run
-	 * @param workgroup
-	 * @return
-	 */
-	public String generateStudentPreviewProjectUrlString(HttpServletRequest request,
-			Project project, String versionId) {
-		String portalUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + 
-			request.getContextPath();
+				if(step != null) {
+					//this is set if the request is to preview the project and load a specific step such as 1.2
+					vleConfigUrl += "&step=" + step;
+				}
+				
+				if (params.isConstraintsDisabled()) {
+					vleConfigUrl += "&isConstraintsDisabled=true";
+				}
+
+				/* if preview request is coming from the run, we want to pass along the version id when we make a request to get the config */
+				String versionId = params.getVersionId();
+				if(versionId != null && !versionId.equals("")){
+					vleConfigUrl += "&versionId=" + versionId;
+				}
+				
+				//get the path to the project json file
+				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				String contentUrl = curriculumBaseWWW + rawProjectUrl;
+				
+				String vleurl = wiseBaseURL + "/vle/vle.html";
 		
-		String launchVLEUrl;
-		if(versionId != null && versionId != ""){
-			launchVLEUrl = "/preview.html?projectId=" + project.getId() + "&versionId=" + versionId;
-		} else {
-			launchVLEUrl = "/preview.html?projectId=" + project.getId();
+				ModelAndView modelAndView = new ModelAndView("vle");
+		    	modelAndView.addObject("vleurl",vleurl);
+		    	modelAndView.addObject("vleConfigUrl", vleConfigUrl);
+		    	modelAndView.addObject("contentUrl", contentUrl);
+		    	
+				return modelAndView;
+			} else {
+				return new ModelAndView(new RedirectView("../accessdenied.html"));
+			}
 		}
 		
-		String isConstraintsDisabledStr = request.getParameter("isConstraintsDisabled");
-		if (isConstraintsDisabledStr != null) {
-			launchVLEUrl += "&isConstraintsDisabled="+isConstraintsDisabledStr;
-		}
-		
-		return portalUrl + launchVLEUrl;
+		return null;
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#removeBookmarkerFromProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
 	 */
