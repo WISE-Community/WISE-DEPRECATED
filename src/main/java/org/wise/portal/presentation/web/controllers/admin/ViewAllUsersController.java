@@ -22,6 +22,7 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -90,7 +91,7 @@ public class ViewAllUsersController extends AbstractController{
 		ControllerUtil.addUserToModelAndView(servletRequest, modelAndView);
 
 		String onlyShowLoggedInUser = servletRequest.getParameter("onlyShowLoggedInUser");
-		String onlyShowUsersWhoLoggedInToday = servletRequest.getParameter("onlyShowUsersWhoLoggedInToday");
+		String onlyShowUsersWhoLoggedIn = servletRequest.getParameter("onlyShowUsersWhoLoggedIn");
 		if (onlyShowLoggedInUser != null && onlyShowLoggedInUser.equals("true")) {
 			// get logged in users from servlet context
 			HashMap<String, User> allLoggedInUsers = 
@@ -123,21 +124,48 @@ public class ViewAllUsersController extends AbstractController{
 			}
 			modelAndView.addObject(LOGGED_IN_STUDENT_USERNAMES, loggedInStudent);
 			modelAndView.addObject(LOGGED_IN_TEACHER_USERNAMES, loggedInTeacher);
-		} else if (onlyShowUsersWhoLoggedInToday != null && onlyShowUsersWhoLoggedInToday.equals("true")) {
+		} else if (onlyShowUsersWhoLoggedIn != null) {
 			AdminJob adminJob = (AdminJob) this.getApplicationContext().getBean("adminjob");
 			adminJob.setUserDao((UserDao<User>) this.getApplicationContext().getBean("userDao"));
-			Calendar todayCal = Calendar.getInstance();
-			Date today = new java.sql.Date(todayCal.getTimeInMillis());
-			todayCal.add(Calendar.DATE, -1);
-			Date yesterday = new java.sql.Date(todayCal.getTimeInMillis());
-			adminJob.setToday(today);
-			adminJob.setYesterday(yesterday);
+			Date dateMin = null, dateMax = null;
+			Calendar now = Calendar.getInstance();
 			
-			List<User> studentsWhoLoggedInSinceYesterday = adminJob.findUsersWhoLoggedInSinceYesterday("studentUserDetails");
-			modelAndView.addObject("studentsWhoLoggedInSinceYesterday", studentsWhoLoggedInSinceYesterday);
+			
+			if ("today".equals(onlyShowUsersWhoLoggedIn)) {
+				Calendar todayZeroHour = Calendar.getInstance();
+				todayZeroHour.set(Calendar.HOUR_OF_DAY, 0);            // set hour to midnight
+				todayZeroHour.set(Calendar.MINUTE, 0);                 // set minute in hour
+				todayZeroHour.set(Calendar.SECOND, 0);                 // set second in minute
+				todayZeroHour.set(Calendar.MILLISECOND, 0);            // set millis in second
+				dateMin = todayZeroHour.getTime();  
 
-			List<User> teachersWhoLoggedInSinceYesterday = adminJob.findUsersWhoLoggedInSinceYesterday("teacherUserDetails");
-			modelAndView.addObject("teachersWhoLoggedInSinceYesterday", teachersWhoLoggedInSinceYesterday);
+				dateMax = new java.util.Date(now.getTimeInMillis());
+			} else if ("thisWeek".equals(onlyShowUsersWhoLoggedIn)) {
+				dateMax = new java.util.Date(now.getTimeInMillis());
+				
+				now.set(Calendar.DAY_OF_WEEK, 1);
+				dateMin = now.getTime();    
+			} else if ("thisMonth".equals(onlyShowUsersWhoLoggedIn)) {
+				dateMax = new java.util.Date(now.getTimeInMillis());
+				
+				now.set(Calendar.DAY_OF_MONTH, 1);
+				dateMin = now.getTime();    
+			} else if ("thisYear".equals(onlyShowUsersWhoLoggedIn)) {
+				dateMax = new java.util.Date(now.getTimeInMillis());
+				
+				now.set(Calendar.DAY_OF_YEAR, 1);
+				dateMin = now.getTime();    
+			}
+			
+			
+			adminJob.setYesterday(dateMin);
+			adminJob.setToday(dateMax);
+			
+			List<User> studentsWhoLoggedInSince = adminJob.findUsersWhoLoggedInSinceYesterday("studentUserDetails");
+			modelAndView.addObject("studentsWhoLoggedInSince", studentsWhoLoggedInSince);
+
+			List<User> teachersWhoLoggedInSince = adminJob.findUsersWhoLoggedInSinceYesterday("teacherUserDetails");
+			modelAndView.addObject("teachersWhoLoggedInSince", teachersWhoLoggedInSince);
 		} else {
 			// result depends on passed-in userType parameter
 			String userType = servletRequest.getParameter(USER_TYPE);

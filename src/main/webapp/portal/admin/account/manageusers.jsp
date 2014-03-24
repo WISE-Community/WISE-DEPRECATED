@@ -103,10 +103,10 @@ $(document).ready(function() {
 <c:otherwise>
 
 <c:choose>
-<c:when test="${studentsWhoLoggedInSinceYesterday != null && teachersWhoLoggedInSinceYesterday != null}">
-<spring:message code="admin.account.manageusers.teachersWhoLoggedInToday" /> (${fn:length(teachersWhoLoggedInSinceYesterday)}). <spring:message code="admin.account.manageusers.newTeachersMsg" /> <span class='newTeacherTotal'></span>
+<c:when test="${studentsWhoLoggedInSince != null && teachersWhoLoggedInSince != null}">
+<spring:message code="admin.account.manageusers.teachersWhoLoggedIn" /> (${fn:length(teachersWhoLoggedInSince)}). <spring:message code="admin.account.manageusers.newTeachersMsg" /> <span class='newTeacherTotal'></span>
 <table id="teachersTable" border="2">
-	<c:forEach var="user" items="${teachersWhoLoggedInSinceYesterday}">
+	<c:forEach var="user" items="${teachersWhoLoggedInSince}">
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
  		<c:choose>
 		<c:when test="${user.userDetails.signupdate > today}">
@@ -127,9 +127,9 @@ $(document).ready(function() {
 	</c:forEach>
 </table>
 <br/><br/>
-<spring:message code="admin.account.manageusers.studentsWhoLoggedInToday" /> (${fn:length(studentsWhoLoggedInSinceYesterday)}). <spring:message code="admin.account.manageusers.newStudentsMsg" /> <span class='newStudentTotal'></span>
+<spring:message code="admin.account.manageusers.studentsWhoLoggedIn" /> (${fn:length(studentsWhoLoggedInSince)}). <spring:message code="admin.account.manageusers.newStudentsMsg" /> <span class='newStudentTotal'></span>
 <table id="teachersTable" border="2">
-	<c:forEach var="user" items="${studentsWhoLoggedInSinceYesterday}">
+	<c:forEach var="user" items="${studentsWhoLoggedInSince}">
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
 		<c:choose>
 		<c:when test="${user.userDetails.signupdate > today}">
