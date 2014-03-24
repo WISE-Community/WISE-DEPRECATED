@@ -359,7 +359,7 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 			$('#revert_confirm > .ui-button-text').html(this.view.getI18NString('OK','SVGDrawNode'));
 			$('#revert_cancel > .ui-button-text').html(this.view.getI18NString('Cancel','SVGDrawNode'));
 			$('#revert_dialog').attr('title', this.view.getI18NString('eraseDrawing_dialog_title','SVGDrawNode'));
-			$('#revert_warning').html(this.view.getI18NStringWithParams('eraseDrawing_dialog_warning','SVGDrawNode'));
+			$('#revert_warning').html(this.view.getI18NString('eraseDrawing_dialog_warning','SVGDrawNode'));
 			$('#revert_instructions').html(this.view.getI18NString('eraseDrawing_dialog_instructions','SVGDrawNode'));
 		}
 		
