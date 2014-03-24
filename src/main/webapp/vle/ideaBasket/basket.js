@@ -954,23 +954,48 @@ IdeaBasket.prototype.addRow = function(target,idea,load){
 	
 	$('tr .header').removeClass('headerSortDown').removeClass('headerSortUp');
 	
-	//check if we need to filter the ideas
-	if(this.content != null && this.content.filterIdeasByNodeIds) {
-		/*
-		 * we will filter the ideas and only show the ideas that were created
-		 * on the specified steps
-		 */
+	/*
+	 * check if this idea basket is for a step such as IdeaBasketNode or ExplanationBuilderNode.
+	 * if this.node is null it means this is the global idea basket
+	 */
+	if(this.node != null) {
+		//get the node id of the node that this idea basket is for
+		var thisNodeId = this.node.id;
 		
-		//get the node id for this idea
-		var nodeId = idea.nodeId;
+		//get the current node the student is on
+		var currentNode = this.view.getCurrentNode();
+		var currentNodeId = null;
 		
-		//get the node ids we want to show
-		var nodeIdsToFilter = this.content.nodeIdsToFilter;
+		if(currentNode != null) {
+			//get the node id of the current step the student is on
+			currentNodeId = currentNode.id;
+		}
 		
-		//check if the node id for this idea is in the array of node ids we want to show
-		if(nodeIdsToFilter.indexOf(nodeId) == -1) {
-			//the node id is not in the array so we will hide this idea
-			$newTr.hide();
+		if(currentNodeId == thisNodeId) {
+			/*
+			 * the current step the student is on is the same as the step for which
+			 * this idea basket is for
+			 */
+			
+			//check if we need to filter the ideas
+			if(this.content != null && this.content.filterIdeasByNodeIds) {
+				/*
+				 * we will filter the ideas and only show the ideas that were created
+				 * on the specified steps
+				 */
+				
+				//get the node id for this idea
+				var nodeId = idea.nodeId;
+				
+				//get the node ids we want to show
+				var nodeIdsToFilter = this.content.nodeIdsToFilter;
+				
+				//check if the node id for this idea is in the array of node ids we want to show
+				if(nodeIdsToFilter.indexOf(nodeId) == -1) {
+					//the node id is not in the array so we will hide this idea
+					$newTr.hide();
+				}
+			}
 		}
 	}
 };
