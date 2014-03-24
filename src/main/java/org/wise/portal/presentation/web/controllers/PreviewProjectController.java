@@ -37,7 +37,11 @@ public class PreviewProjectController extends AbstractController {
 	private static final String RUN_ID_PARAM_NAME = "runId";
 	
 	private static final String VERSION_ID = "versionId";
+
+	private static final String STEP = "step";
 	
+	private static final String IS_CONSTRAINTS_DISABLED = "isConstraintsDisabled";
+
 	private ProjectService projectService;
 	
 	private RunService runService;
@@ -60,7 +64,8 @@ public class PreviewProjectController extends AbstractController {
 		} else if (runIdStr != null) {
 			project = runService.retrieveById(Long.valueOf(runIdStr)).getProject();
 		} else {
-			throw new Exception("Please specify a Project to Preview");
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not determine project to preview.");
+			return null;
 		}
 		
 		Set<String> tagNames = new TreeSet<String>();
@@ -71,10 +76,18 @@ public class PreviewProjectController extends AbstractController {
 		if(project.hasTags(tagNames) || 
 				project.getFamilytag().equals(FamilyTag.TELS) || this.projectService.canReadProject(project, user)){
 			PreviewProjectParameters params = new PreviewProjectParameters();
+			params.setUser(user);
 			params.setProject(project);
 			params.setHttpServletRequest(request);
 			params.setPortalUrl(Util.getPortalUrl(request));
 			params.setVersionId(request.getParameter(VERSION_ID));
+			params.setStep(request.getParameter(STEP));
+
+			String isConstraintsDisabledStr = request.getParameter(IS_CONSTRAINTS_DISABLED);
+			if (isConstraintsDisabledStr != null) {
+				params.setConstraintsDisabled(Boolean.parseBoolean(isConstraintsDisabledStr));
+			}
+			
 			return (ModelAndView) projectService.previewProject(params);
 		} else {
 			//get the context path e.g. /wise

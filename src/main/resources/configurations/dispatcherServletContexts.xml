@@ -276,12 +276,6 @@
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
-	<bean id="previewLDProjectController"
-		class="org.wise.portal.presentation.web.controllers.PreviewLDProjectController">
-		<property name="projectService" ref="projectService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
 	<bean id="informationController"
 		class="org.wise.portal.presentation.web.controllers.InformationController">
 		<property name="userService" ref="userService" />
@@ -1178,7 +1172,6 @@
 				/errors/friendlyError.html=urlFilenameViewController
 				/accessdenied.html=accessDeniedController
 				/router.html=routerController
-				/preview.html=previewLDProjectController
 				/contact/contactwisegeneral.html=contactWiseController
 				/contact/contactwiseproject.html=contactWiseProjectController
 				/contact/checkforexistingaccount.html=checkForExistingAccountController
