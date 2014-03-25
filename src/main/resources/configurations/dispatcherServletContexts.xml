@@ -497,9 +497,6 @@
 	<bean id="studentArchivedProjectsController"
 		class="org.wise.portal.presentation.web.controllers.StudentArchivedProjectsController" />
 
-	<bean id="wiseOverviewController"
-		class="org.wise.portal.presentation.web.controllers.WiseOverviewController" />
-
 	<bean id="termsOfUseController"
 		class="org.wise.portal.presentation.web.controllers.TermsOfUseController" />
 
