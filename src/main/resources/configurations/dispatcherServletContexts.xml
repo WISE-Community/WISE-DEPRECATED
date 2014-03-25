@@ -26,7 +26,6 @@
 	<!-- Switch locales according to the user's browser -->
 	<bean id="localeResolver"
 		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-		<property name="defaultLocale" value="en" />
 	</bean>
 
 	<!-- Use a default fixed theme -->
