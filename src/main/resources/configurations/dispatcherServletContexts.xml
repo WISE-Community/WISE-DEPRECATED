@@ -608,15 +608,6 @@
 		<property name="projectService" ref="projectService" />
 	</bean>
 
-	<bean id="publishProjectController"
-		class="org.wise.portal.presentation.web.controllers.author.project.PublishProjectController">
-		<property name="commandName" value="projectParameters" />
-		<property name="formView" value="author/publishproject" />
-		<property name="successView" value="author/createprojectsuccess" />
-		<property name="curnitService" ref="curnitService" />
-		<property name="projectService" ref="projectService" />
-	</bean>
-
 	<bean id="projectParameters" class="org.wise.portal.domain.project.impl.ProjectParameters">
 	</bean>
 
