@@ -26,7 +26,6 @@
 	<!-- Switch locales according to the user's browser -->
 	<bean id="localeResolver"
 		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-		<property name="defaultLocale" value="en" />
 	</bean>
 
 	<!-- Use a default fixed theme -->
@@ -498,9 +497,6 @@
 	<bean id="studentArchivedProjectsController"
 		class="org.wise.portal.presentation.web.controllers.StudentArchivedProjectsController" />
 
-	<bean id="wiseOverviewController"
-		class="org.wise.portal.presentation.web.controllers.WiseOverviewController" />
-
 	<bean id="termsOfUseController"
 		class="org.wise.portal.presentation.web.controllers.TermsOfUseController" />
 
@@ -606,15 +602,6 @@
 
 	<bean id="unShareProjectController"
 		class="org.wise.portal.presentation.web.controllers.teacher.project.customized.UnShareProjectController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="publishProjectController"
-		class="org.wise.portal.presentation.web.controllers.author.project.PublishProjectController">
-		<property name="commandName" value="projectParameters" />
-		<property name="formView" value="author/publishproject" />
-		<property name="successView" value="author/createprojectsuccess" />
-		<property name="curnitService" ref="curnitService" />
 		<property name="projectService" ref="projectService" />
 	</bean>
 

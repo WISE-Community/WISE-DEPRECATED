@@ -1568,8 +1568,6 @@
 					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/teacher/**/*.html"
 					access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
-				<sec:intercept-url pattern="/wiseoverview.html"
-					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/forgotaccount/*.html"
 					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/forgotaccount/**/*.html"

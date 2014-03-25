@@ -472,12 +472,18 @@ View.prototype.showPeriodInGradeByStepDisplay = function(periodId) {
 View.prototype.fixClassroomMonitorDisplayHeight = function() {
 	//get the height of the classroomMonitorIfrm
 	var height = $('#classroomMonitorIfrm',window.parent.parent.document).height();
-	
-	/*
-	 * resize the height of the topifrm that contains the classroomMonitorIfrm
-	 * so that there will be no scroll bars
-	 */
-	$('#topifrm', parent.document).height(height);
+	if (height != null) {
+		/*
+		 * resize the height of the topifrm that contains the classroomMonitorIfrm
+		 * so that there will be no scroll bars
+		 * 
+		 * this block is only applicable when classroom monitor is launched in a 
+		 * floating window, not when launched in a new tab/window.
+		 */
+		$('#topifrm', parent.document).height(height);
+	} else {
+		$('#topifrm', parent.document).css("overflow-y", "auto");
+	}
 };
 
 /**
@@ -494,7 +500,7 @@ View.prototype.createPauseScreensDisplay = function() {
 	pauseScreensDisplay.hide();
 	
 	//create the span that will display the pause status
-	var pauseScreenStatus = $('<span>').attr({id:'pauseScreenStatus'});
+	var pauseScreenStatus = $('<span>').attr({id:'pauseScreenStatus'}).html("My students' screens are currently: ").css("display","block");
 	
 	//add the pause status span
 	$('#pauseScreensDisplay').append(pauseScreenStatus);
