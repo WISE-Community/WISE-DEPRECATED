@@ -331,7 +331,6 @@
 </div>
 
 <div id="gradingDialog" class="dialog"></div>
-<div id="classroomMonitorDialog" class="dialog"></div>
 <div id="shareDialog" class="dialog"></div>
 <div id="editRunDialog" class="dialog"></div>
 <div id="myNotesDialog" class="dialog"></div>
@@ -518,21 +517,7 @@
 		var settings = $(this).attr('id');
 		var title = $(this).attr('title');
 		var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor.html?" + settings;
-		var div = $('#classroomMonitorDialog').html('<iframe id="classroomMonitorIfrm" width="100%" height="100%" style="overflow-y:hidden;"></iframe>');
-		$('body').css('overflow','hidden');
-		div.dialog({
-			modal: true,
-			width: $(window).width() - 32,
-			height: $(window).height() - 32,
-			title: title,
-			close: function (e, ui) { $(this).html(''); $('body').css('overflow','auto'); },
-			buttons: {
-				Exit: function(){
-					$(this).dialog('close');
-				}
-			}
-		});
-		$("#classroomMonitorDialog > #classroomMonitorIfrm").attr('src',path);
+		window.open(path);
 	});
 	
 	// setup share project run dialog

@@ -43,11 +43,11 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 
 /**
- * A Controller for TELS's grade by step
+ * A Controller for Grading Student Work
  *
- * @author Anthony Perritano
  * @author Geoffrey Kwan
  * @author Patrick Lawler
+ * @author Anthony Perritano
  * 
  * @version $Id: $
  */
@@ -104,31 +104,24 @@ public class GradeWorkController extends AbstractController {
 					String getClassroomMonitorUrl = portalurl + contextPath + "/vle/classroomMonitor.html";
 					String getClassroomMonitorConfigUrl = portalurl + contextPath + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
 					
-					String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-					String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-					String contentUrl = curriculumBaseWWW + rawProjectUrl;
-					
-					ModelAndView modelAndView = new ModelAndView();
-					modelAndView.addObject(RUN_ID, runId);
-					modelAndView.addObject("run", run);
-					modelAndView.addObject("getGradeWorkUrl", getGradeWorkUrl);
-					modelAndView.addObject("getGradingConfigUrl", getGradingConfigUrl);
-					modelAndView.addObject("getClassroomMonitorUrl", getClassroomMonitorUrl);
-					modelAndView.addObject("getClassroomMonitorConfigUrl", getClassroomMonitorConfigUrl);
-					modelAndView.addObject("contentUrl", contentUrl);
-					
 					//set the permission variable so that we can access it in the .jsp
 					if(this.runService.hasRunPermission(run, user, BasePermission.WRITE)) {
-						modelAndView.addObject("permission", "write");						
+						getGradeWorkUrl += "?loadScriptsIndividually&permission=write";
+						getClassroomMonitorUrl += "?loadScriptsIndividually&permission=write";
 					} else if(this.runService.hasRunPermission(run, user, BasePermission.READ)) {
-						modelAndView.addObject("permission", "read");
+						getGradeWorkUrl += "?loadScriptsIndividually&permission=read";
+						getClassroomMonitorUrl += "?loadScriptsIndividually&permission=read";
 					}
 					
-					// if user requests minified/unminified, set it here. Otherwise, default to minified=false.
-					if (request.getParameter("minified") != null) {
-						modelAndView.addObject("minified", request.getParameter("minified"));
+					ModelAndView modelAndView = new ModelAndView("vle");
+					modelAndView.addObject(RUN_ID, runId);
+					modelAndView.addObject("run", run);
+					if ("monitor".equals(gradingType)) {
+						modelAndView.addObject("vleurl", getClassroomMonitorUrl);
+						modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
 					} else {
-						modelAndView.addObject("minified", "false");
+						modelAndView.addObject("vleurl", getGradeWorkUrl);
+						modelAndView.addObject("vleConfigUrl", getGradingConfigUrl);
 					}
 					
 					return modelAndView;
