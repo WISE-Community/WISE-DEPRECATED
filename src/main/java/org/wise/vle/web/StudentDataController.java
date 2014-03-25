@@ -520,7 +520,8 @@ public class StudentDataController extends AbstractController {
 						 * node states. 
 						 */
 						if (getAllWork || (nodeStates != null && nodeStates.length() > 0 || x == (stepWorkList.size() - 1)) ||
-								("HtmlNode".equals(nodeType) || "OutsideUrlNode".equals(nodeType) || "IdeaBasketNode".equals(nodeType))) {
+								("HtmlNode".equals(nodeType) || "OutsideUrlNode".equals(nodeType) || "IdeaBasketNode".equals(nodeType))
+								|| "FlashNode".equals(nodeType)) {
 							/* add the duplicateId if one is found for this stepWork */
 							if(stepWork.getDuplicateId() != null && !stepWork.getDuplicateId().equals("")){
 								nodeVisitJSON.put("duplicateId", stepWork.getDuplicateId());

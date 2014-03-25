@@ -229,10 +229,71 @@ EpigameNode.prototype.getHTMLContentTemplate = function() {
 EpigameNode.prototype.isCompleted = function(nodeVisits) {
 	var result = false;
 
-	var latestNodeState = this.view.getLatestNodeStateWithWorkFromNodeVisits(nodeVisits);
+	var content = this.content.getContentJSON();
 	
-	if(latestNodeState != null) {
-		result = true;
+	if(content != null) {
+		var mode = content.mode;
+		
+		if(mode == null) {
+			
+		} else if(mode == 'adaptiveQuiz') {
+			//get the latest node state
+			var nodeState = this.view.getLatestNodeStateWithWorkFromNodeVisits(nodeVisits);
+			
+			if(nodeState != null) {
+				if(nodeState.response != null) {
+					if(nodeState.response.success == 'finished') {
+						//the student has completed this step
+						result = true;
+					}
+				}
+			}
+		} else if(mode == 'tutorial') {
+			//get the latest node state
+			var nodeState = this.view.getLatestNodeStateWithWorkFromNodeVisits(nodeVisits);
+			
+			if(nodeState != null) {
+				//the student has completed this step
+				result = true;					
+			}
+		} else if(mode == 'mission') {
+			//get the highest mission score from the node visits
+			var score = this.getHighestMissionScore(nodeVisits);
+			
+			var statusValue = null;
+			
+			if(score == null) {
+				
+			} else if(score >= 350) {
+				statusValue = 'gold';
+			} else if(score >= 300) {
+				statusValue = 'silver';
+			} else if(score >= 200) {
+				statusValue = 'bronze';
+			}
+
+			if(statusValue != null) {
+				//the student has completed this step
+				result = true;
+			}
+		} else if(mode == 'adaptiveMission') {
+			//get the latest node state
+			var nodeState = this.view.getLatestNodeStateWithWorkFromNodeVisits(nodeVisits);
+			
+			if(nodeState != null) {
+				var response = nodeState.response;
+				
+				if(response != null && response != "") {
+					if(response.finalScore > 0) {
+						//the student has completed this step
+						result = true;
+					}
+				}
+			}
+		} else if(mode == 'adaptivePostQuiz') {
+			//the student has completed this step
+			result = true;
+		}
 	}
 
 	return result;
@@ -272,8 +333,13 @@ EpigameNode.prototype.processStudentWork = function(nodeVisits) {
 					}
 				}
 			} else if(mode == 'tutorial') {
-				//the student has completed this step
-				this.setStatus('isCompleted', true);
+				//get the latest node state
+				var nodeState = this.view.getLatestNodeStateWithWorkFromNodeVisits(nodeVisits);
+				
+				if(nodeState != null) {
+					//the student has completed this step
+					this.setStatus('isCompleted', true);					
+				}
 			} else if(mode == 'mission') {
 				//get the highest mission score from the node visits
 				var score = this.getHighestMissionScore(nodeVisits);

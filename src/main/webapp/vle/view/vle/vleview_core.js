@@ -24,10 +24,10 @@ View.prototype.vleDispatcher = function(type,args,obj){
 	} else if(type=='navigationLoadingCompleted'){
 		obj.populateNodeDependencies();
 		obj.setStatuses();
-		obj.addGlobalTagMapConstraints();
-		obj.updateActiveTagMapConstraints();
 		obj.updateSequenceStatuses();
 		obj.processStudentWork();
+		obj.addGlobalTagMapConstraints();
+		obj.updateActiveTagMapConstraints();
 		obj.loadGlobalTagMaps();
 	} else if(type=='renderNodeCompleted'){
 		if(args){
