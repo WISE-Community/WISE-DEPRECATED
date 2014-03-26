@@ -7,6 +7,7 @@ MultipleChoiceNode.prototype.constructor = MultipleChoiceNode;
 MultipleChoiceNode.prototype.parent = Node.prototype;
 MultipleChoiceNode.authoringToolName = "Multiple Choice";
 MultipleChoiceNode.authoringToolDescription = "Students answer a multiple choice question";
+MultipleChoiceNode.prototype.i18nType = "MultipleChoiceNode";
 MultipleChoiceNode.prototype.i18nEnabled = true;
 MultipleChoiceNode.prototype.i18nPath = "vle/node/multiplechoice/i18n/";
 MultipleChoiceNode.prototype.supportedLocales = {

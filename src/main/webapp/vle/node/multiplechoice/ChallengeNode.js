@@ -6,6 +6,15 @@ ChallengeNode.prototype.constructor = ChallengeNode;
 ChallengeNode.prototype.parent = MultipleChoiceNode.prototype;
 ChallengeNode.authoringToolName = "Challenge Question";
 ChallengeNode.authoringToolDescription = "Students answer a multiple choice question. If they get the answer wrong, they will need to revisit a previous step before trying again.";
+ChallengeNode.prototype.i18nEnabled = true;
+ChallengeNode.prototype.i18nPath = "vle/node/multiplechoice/i18n/";
+ChallengeNode.prototype.supportedLocales = {
+	"en_US":"en_US",
+	"es":"es",
+	"nl":"nl",
+	"nl_GE":"nl",
+	"nl_DE":"nl"	
+};
 
 /**
  * @constructor

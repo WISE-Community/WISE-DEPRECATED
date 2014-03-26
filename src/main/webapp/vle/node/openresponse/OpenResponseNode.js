@@ -9,6 +9,7 @@ OpenResponseNode.prototype.parent = Node.prototype;
 OpenResponseNode.authoringToolName = "Open Response";
 OpenResponseNode.authoringToolDescription = "Students write text to answer a question or explain their thoughts";
 OpenResponseNode.prototype.i18nEnabled = true;
+OpenResponseNode.prototype.i18nType = "OpenResponseNode";
 OpenResponseNode.prototype.i18nPath = "vle/node/openresponse/i18n/";
 OpenResponseNode.prototype.supportedLocales = {
 			"en_US":"en_US",

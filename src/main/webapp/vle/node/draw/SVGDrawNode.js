@@ -5,6 +5,7 @@ SVGDrawNode.prototype.parent = Node.prototype;
 SVGDrawNode.authoringToolName = "Draw";
 SVGDrawNode.authoringToolDescription = "Students draw using basic drawing tools, take snapshots and create flipbook animations";
 SVGDrawNode.prototype.i18nEnabled = true;
+SVGDrawNode.prototype.i18nType = "SVGDrawNode";
 SVGDrawNode.prototype.i18nPath = "vle/node/draw/i18n/";
 SVGDrawNode.prototype.supportedLocales = {
 	"en_US":"en_US",
