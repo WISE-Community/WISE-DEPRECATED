@@ -531,6 +531,10 @@
 		"value":"Explanation",
 		"description":"GradingTool: Text in the Explanation button"
 	},
+	"grading_button_teacher_run_notes":{
+		"value":"My Notes",
+		"description":"GradingTool: Text in the My Notes button to bring up teacher run notes"
+	},
 	"grading_button_check_for_new_student_work":{
 		"value":"Check for New Work",
 		"description":"GradingTool: Text in the Check for New Student Work button"

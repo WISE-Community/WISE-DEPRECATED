@@ -43,6 +43,27 @@ View.prototype.hidePersonalInfoOptionClickedEventListener = function() {
 	}
 };
 
+/**
+ * Opens teacher's notes for this run
+ */
+View.prototype.openTeacherRunNotes = function (runId) {
+	var path = this.config.getConfigParam("wiseBaseURL") + "/teacher/run/notes.html?runId=" + runId;
+	var myNotesDiv = $('<div>').attr('id', 'myNotesDialog').html('<iframe id="myNotesIfrm" width="100%" height="95%" src="'+path+'"></iframe>');
+	$("#gradeWorkDiv").append(myNotesDiv);
+	myNotesDiv.dialog({
+		modal: true,
+		width: '700',
+		height: '600',
+		title: this.getI18NString("grading_button_teacher_run_notes"),
+		close: function(){ $(this).html(''); },
+		buttons: {
+			Close: function(){
+				$(this).dialog('close');
+			}
+		}
+	});
+};
+
 
 /**
  * Displays the steps in the project and then gets the student work
@@ -679,6 +700,10 @@ View.prototype.getGradingHeaderTableHtml = function() {
 		}
 	}
 	
+	var runId = this.config.getConfigParam("runId");
+	if (runId != null) {
+		gradingHeaderHtml += "<a onClick=\"view.openTeacherRunNotes('"+runId+"')\">"+this.getI18NString('grading_button_teacher_run_notes')+"</a>";		
+	}
 	gradingHeaderHtml += "<a onClick=\"eventManager.fire('checkForNewWorkButtonClicked')\">"+this.getI18NString('grading_button_check_for_new_student_work')+"</a>";
 	gradingHeaderHtml += "<a class='saveButton' onClick=\"notificationManager.notify('Changes have been successfully saved.')\">"+this.getI18NString("grading_button_save_changes")+"</a>";
 	gradingHeaderHtml += "</div></div>";

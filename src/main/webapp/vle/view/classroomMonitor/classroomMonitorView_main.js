@@ -155,6 +155,26 @@ View.prototype.showGradeByStepDisplay = function() {
 	this.fixClassroomMonitorDisplayHeight();
 };
 
+/**
+ * Opens teacher's notes for this run
+ */
+View.prototype.openTeacherRunNotes = function (runId) {
+	var path = this.config.getConfigParam("wiseBaseURL") + "/teacher/run/notes.html?runId=" + runId;
+	var myNotesDiv = $('<div>').attr('id', 'myNotesDialog').html('<iframe id="myNotesIfrm" width="100%" height="95%" src="'+path+'"></iframe>');
+	$("#classroomMonitorMainDiv").append(myNotesDiv);
+	myNotesDiv.dialog({
+		modal: true,
+		width: '700',
+		height: '600',
+		title: 'My Notes',
+		close: function(){ $(this).html(''); },
+		buttons: {
+			Close: function(){
+				$(this).dialog('close');
+			}
+		}
+	});
+};
 
 /**
  * Create the classroom monitor buttons
@@ -181,6 +201,10 @@ View.prototype.createClassroomMonitorButtons = function() {
 	var stepProgressButton = $('<input/>').attr({id:'stepProgressButton', type:'button', name:'stepProgressButton', value:'Step Progress'});
 	stepProgressButton.addClass(chooseClassroomMonitorDisplayButtonClass);
 	
+	//create the my notes button
+	var myNotesButton = $('<input/>').attr({id:'myNotesButton', type:'button', name:'myNotesButton', value:'My Notes'});
+	myNotesButton.addClass(chooseClassroomMonitorDisplayButtonClass);
+
 	//set the click event for the pause all screens tool button
 	pauseScreensToolButton.click({thisView:this}, function(event) {
 		var thisView = event.data.thisView;
@@ -214,10 +238,21 @@ View.prototype.createClassroomMonitorButtons = function() {
 		thisView.showStepProgressDisplay();
 	});
 	
+	//set the click event for the my notes button
+	myNotesButton.click({thisView:this}, function(event) {
+		var thisView = event.data.thisView;
+		var runId = thisView.config.getConfigParam("runId");
+		if (runId != null) {
+			//open teacher run notes dialog
+			thisView.openTeacherRunNotes(runId);			
+		}
+	});
+	
 	//add the select display buttons
 	$('#selectDisplayButtonsDiv').append(pauseScreensToolButton);
 	$('#selectDisplayButtonsDiv').append(studentProgressButton);
 	$('#selectDisplayButtonsDiv').append(stepProgressButton);
+	$('#selectDisplayButtonsDiv').append(myNotesButton);
 	
 	//fix the height so scrollbars display correctly
 	this.fixClassroomMonitorDisplayHeight();
