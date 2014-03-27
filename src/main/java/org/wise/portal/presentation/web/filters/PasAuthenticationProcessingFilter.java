@@ -31,7 +31,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.listeners.PasSessionListener;
+import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.user.UserService;
 
 /**
@@ -83,7 +83,7 @@ public class PasAuthenticationProcessingFilter extends
 		HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) session.getServletContext().getAttribute("allLoggedInUsers");
 		if (allLoggedInUsers == null) {
 			allLoggedInUsers = new HashMap<String, User>();
-			session.getServletContext().setAttribute(PasSessionListener.ALL_LOGGED_IN_USERS, allLoggedInUsers);
+			session.getServletContext().setAttribute(WISESessionListener.ALL_LOGGED_IN_USERS, allLoggedInUsers);
 		}
 		allLoggedInUsers.put(sessionId, user);
         

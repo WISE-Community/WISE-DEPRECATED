@@ -44,7 +44,7 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.util.KeyGenerator;
 import org.wise.portal.presentation.util.http.Base64;
-import org.wise.portal.presentation.web.listeners.PasSessionListener;
+import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.project.ProjectService;
 
@@ -130,7 +130,7 @@ public final class CredentialManager extends AbstractController{
 						keyToSessionIds.remove(key);
 						
 						/* check all logged in users to see if that user is associated with that session id */
-						Map<String,User> sessionIdsToUsers = (Map<String,User>) request.getSession().getServletContext().getAttribute(PasSessionListener.ALL_LOGGED_IN_USERS);
+						Map<String,User> sessionIdsToUsers = (Map<String,User>) request.getSession().getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
 						if(sessionIdsToUsers != null && sessionIdsToUsers.containsKey(sId)){
 							User user = sessionIdsToUsers.get(sId);
 							/* check the user against the sessionId, also get the user from the session and check because

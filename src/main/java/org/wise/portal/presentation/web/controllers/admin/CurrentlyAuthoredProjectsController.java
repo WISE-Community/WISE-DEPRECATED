@@ -35,7 +35,7 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.listeners.PasSessionListener;
+import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.project.ProjectService;
 
 /**
@@ -68,7 +68,7 @@ public class CurrentlyAuthoredProjectsController extends AbstractController {
 		}
 		
 		HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) currentUserSession.getServletContext()
-				.getAttribute(PasSessionListener.ALL_LOGGED_IN_USERS);
+				.getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
 		
 		HashMap<String, Project> openedProjects = new HashMap<String, Project>();  // <projectId, Project> mapping.
 
