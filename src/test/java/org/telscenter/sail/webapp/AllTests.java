@@ -27,7 +27,7 @@ import org.junit.runners.Suite;
 
 /**
  * This is the all encompassing AllTests that includes all the other test suites
- * from every package. This file needs to be ÿkept up-to-date by hand every time
+ * from every package. This file needs to be kept up-to-date by hand every time
  * a new package of unit tests is added. This will test the entire application.
  * 
  * @author Cynick Young
@@ -45,7 +45,6 @@ import org.junit.runners.Suite;
 	   org.telscenter.sail.webapp.domain.impl.AllTests.class,
 	   org.telscenter.sail.webapp.domain.authentication.impl.AllTests.class,	   
 	   org.telscenter.sail.webapp.domain.run.AllTests.class,
-       org.telscenter.sail.webapp.presentation.util.AllTests.class,	   
        org.telscenter.sail.webapp.presentation.validators.AllTests.class,
 	   org.telscenter.sail.webapp.presentation.web.controllers.AllTests.class,
 	   org.telscenter.sail.webapp.service.impl.AllTests.class,

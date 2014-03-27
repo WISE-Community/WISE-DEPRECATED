@@ -16,7 +16,6 @@ import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.util.Util;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 
@@ -79,7 +78,6 @@ public class PreviewProjectController extends AbstractController {
 			params.setUser(user);
 			params.setProject(project);
 			params.setHttpServletRequest(request);
-			params.setPortalUrl(Util.getPortalUrl(request));
 			params.setVersionId(request.getParameter(VERSION_ID));
 			params.setStep(request.getParameter(STEP));
 

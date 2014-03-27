@@ -65,7 +65,6 @@ import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
 import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.util.Util;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.CredentialManager;
 import org.wise.portal.presentation.web.controllers.TaggerController;
@@ -678,7 +677,6 @@ public class AuthorProjectController extends AbstractController {
 			} else if(command.equals("preview")){
 				PreviewProjectParameters previewParams = new PreviewProjectParameters();
 				previewParams.setProject(project);
-				previewParams.setPortalUrl(Util.getPortalUrl(request));
 				previewParams.setHttpServletRequest(request);
 
 				return (ModelAndView) this.projectService.previewProject(previewParams);
