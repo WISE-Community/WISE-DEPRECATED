@@ -491,12 +491,6 @@
 		<property name="successView" value="forgotaccount/student/projectcoderesult" />
 	</bean>
 
-	<bean id="enterProjectCodeController"
-		class="org.wise.portal.presentation.web.controllers.EnterProjectCodeController" />
-
-	<bean id="studentArchivedProjectsController"
-		class="org.wise.portal.presentation.web.controllers.StudentArchivedProjectsController" />
-
 	<bean id="termsOfUseController"
 		class="org.wise.portal.presentation.web.controllers.TermsOfUseController" />
 
