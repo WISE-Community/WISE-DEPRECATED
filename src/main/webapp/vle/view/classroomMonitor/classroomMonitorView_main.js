@@ -734,7 +734,22 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		
 		//create the cell to display the project completion percentage for the workgroup
 		var completionPercentageTD = $('<td>').attr({id:'studentProgressTableDataCompletionPercentage_' + workgroupId});
-		completionPercentageTD.text(completionPercentage + '%');
+		
+		//get the student status for the workgroup id
+		var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
+		
+		if(studentStatus == null) {
+			/*
+			 * the student does not have a student status which can mean the 
+			 * student has never loaded the vle or the run occurred before
+			 * we implemented student statuses
+			 */ 
+			completionPercentageTD.text('N/A');
+			completionPercentageTD.attr('title', 'This value is N/A because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and will not display completion percentages due to technical reasons. You may still view student work if you click on the student row.');
+		} else {
+			//the student has a student status so we will display the percentage
+			completionPercentageTD.text(completionPercentage + '%');
+		}
 		
 		//add all the cells to the student row
 		studentTR.append(onlineTD);
@@ -1846,6 +1861,8 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
 	var stepTR = null;
 	
 	if(nodeId != null) {
+		var node = this.getProject().getNodeById(nodeId);
+		
 		//create the row
 		var stepTR = $('<tr>').attr({id:'stepProgressTableRow_' + nodeId});
 		
@@ -1865,15 +1882,26 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
 		//create the completion percentage cell
 		var completionPercentageTD = $('<td>').attr({id:'stepProgressTableDataCompletionPercentage_' + nodeId});
 		
-		if(completionPercentage == null) {
-			completionPercentage = '';
-		} else {
-			//append the % sign
-			completionPercentage += '%';
+		//only show percentage completion for steps
+		if(node != null && node.getType() != 'sequence') {
+			//get the student statuses
+			var studentStatuses = this.studentStatuses;
+			
+			//check if there are any student statuses in the array
+			if(studentStatuses != null && studentStatuses.length > 0) {
+				//there are student status objects so we will display the percentage
+				completionPercentageTD.text(completionPercentage + '%');
+			} else {
+				/*
+				 * there are no student status objects which can mean a
+				 * student has never loaded the vle or the run occurred before
+				 * we implemented student statuses
+				 */ 
+				completionPercentageTD.text('N/A');
+				completionPercentageTD.attr('title', 'This value is N/A because of one of these reasons:\n1. A student has never loaded the project.\n2. This is an old run and will not display completion percentages due to technical reasons. You may still view student work if you click on the step row.');
+			}			
 		}
 		
-		completionPercentageTD.text(completionPercentage);
-
 		//add the cells to the row
 		stepTR.append(stepTitleTD);
 		stepTR.append(numberStudentsOnStepTD);
