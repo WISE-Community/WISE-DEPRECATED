@@ -46,7 +46,7 @@ svgEditor.setConfig({
 var node = vle.getCurrentNode(),
 	content = node.content.getContentJSON(),
 	view = node.view,
-	extensions = ['ext-connector.js','ext-closepath.js','ext-arrows.js',/*'ext-panning.js',*/'ext-simple_color.js','ext-wise4.js','ext-clearlayer.js'];
+	extensions = ['ext-connector.js','ext-closepath.js','ext-arrows.js',/*'ext-panning.js',*/'ext-simple_color.js','ext-wise.js','ext-clearlayer.js'];
 
 if (content.description_active){
 	extensions.push('ext-description.js');

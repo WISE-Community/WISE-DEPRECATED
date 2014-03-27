@@ -491,12 +491,6 @@
 		<property name="successView" value="forgotaccount/student/projectcoderesult" />
 	</bean>
 
-	<bean id="enterProjectCodeController"
-		class="org.wise.portal.presentation.web.controllers.EnterProjectCodeController" />
-
-	<bean id="studentArchivedProjectsController"
-		class="org.wise.portal.presentation.web.controllers.StudentArchivedProjectsController" />
-
 	<bean id="termsOfUseController"
 		class="org.wise.portal.presentation.web.controllers.TermsOfUseController" />
 
@@ -1010,10 +1004,6 @@
 		<property name="projectService" ref="projectService" />
 	</bean>
 
-	<bean id="memoryMonitorController"
-		class="org.wise.portal.presentation.web.controllers.MemoryMonitorController">
-	</bean>
-
 	<bean id="projectMetadataController"
 		class="org.wise.portal.presentation.web.controllers.ProjectMetadataController">
 		<property name="projectService" ref="projectService" />
@@ -1250,6 +1240,7 @@
 				/admin/project/currentlyAuthoredProjects.html=currentlyAuthoredProjectsController
 				/admin/project/tagger.html=taggerController
 				/admin/portal/manageportal.html=managePortalController
+				/admin/memorymonitor.html=urlFilenameViewController
 				/newsarchive.html=listNewsItemsController
 				/teacher/management/changestudentperiod.html=changeStudentPeriodController
 				/teacher/run/announcement/manageannouncement.html=manageAnnouncementController
@@ -1278,7 +1269,6 @@
 				/authorize.html=credentialManager
 				/pages/statistics.html=statisticsController
 				/pages/check.html=compatibilityCheckController
-				/pages/memorymonitor.html=memoryMonitorController
 				/getExport.html=getExportController
 				/getSpecialExport.html=getSpecialExportController
 				/peerReview.html=peerReviewController

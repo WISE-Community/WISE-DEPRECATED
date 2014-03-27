@@ -101,7 +101,7 @@
 
 	<listener>
 		<listener-class>
-			org.wise.portal.presentation.web.listeners.PasSessionListener
+			org.wise.portal.presentation.web.listeners.WISESessionListener
 		</listener-class>
 	</listener>
 

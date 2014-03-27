@@ -36,7 +36,7 @@ import org.wise.portal.domain.user.User;
  * @author hirokiterashima
  * @version $Id:$
  */
-public class PasSessionListener implements HttpSessionListener {
+public class WISESessionListener implements HttpSessionListener {
 
 	public static final String ALL_LOGGED_IN_USERS = "allLoggedInUsers";
 	
@@ -55,18 +55,19 @@ public class PasSessionListener implements HttpSessionListener {
 		HttpSession session = event.getSession();
 		String sessionId = session.getId();
 		
+		// remove this user from allLoggedInUsers map
 		HashMap<String, User> allLoggedInUsers = ((HashMap<String, User>) session.getServletContext().getAttribute(ALL_LOGGED_IN_USERS));
 		if (allLoggedInUsers != null) {
 			allLoggedInUsers.remove(sessionId);
 		}
 		
+		// remove this user from any studentToRuns, if it's a student who was doing a run
 		HashMap<String, User> studentsToRuns = ((HashMap<String, User>) session.getServletContext().getAttribute("studentsToRuns"));
 		if (studentsToRuns != null) {
 			studentsToRuns.remove(sessionId);
 		}
 				
-		// also remove this user from any opened projects, if they opened
-		// any project using the authoring tool.
+		// remove this user from any opened projects, if they opened any project using the authoring tool
 		HashMap<String, ArrayList<String>> openedProjectToSessions = 
 			(HashMap<String, ArrayList<String>>) session.getServletContext()
 				.getAttribute("openedProjectsToSessions");
@@ -77,9 +78,6 @@ public class PasSessionListener implements HttpSessionListener {
 				sessionsForProject.remove(sessionId);
 			}
 		}
-		
-		// also remove this user from any studentToRuns, if it's a student who was doing a run
-		
 
 	}
 

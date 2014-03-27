@@ -41,7 +41,7 @@ import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.listeners.PasSessionListener;
+import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.user.UserService;
 
@@ -96,7 +96,7 @@ public class ViewAllUsersController extends AbstractController{
 			// get logged in users from servlet context
 			HashMap<String, User> allLoggedInUsers = 
 				(HashMap<String, User>) servletRequest.getSession()
-					.getServletContext().getAttribute(PasSessionListener.ALL_LOGGED_IN_USERS);
+					.getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
 
 			HashMap<String, Run> studentsToRuns = 
 				(HashMap<String, Run>) servletRequest.getSession()

@@ -40,8 +40,6 @@ public class PreviewProjectParameters {
 
 	private Project project;
 	
-	private String portalUrl;
-	
 	private String versionId;
 	
 	private String step;
@@ -89,20 +87,6 @@ public class PreviewProjectParameters {
 	 */
 	public void setProject(Project project) {
 		this.project = project;
-	}
-
-	/**
-	 * @return the portalUrl
-	 */
-	public String getPortalUrl() {
-		return portalUrl;
-	}
-
-	/**
-	 * @param portalUrl the portalUrl to set
-	 */
-	public void setPortalUrl(String portalUrl) {
-		this.portalUrl = portalUrl;
 	}
 
 	/**

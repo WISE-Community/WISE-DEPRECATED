@@ -65,13 +65,12 @@ import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
 import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.util.Util;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.CredentialManager;
 import org.wise.portal.presentation.web.controllers.TaggerController;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilter;
-import org.wise.portal.presentation.web.listeners.PasSessionListener;
+import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.module.CurnitService;
@@ -678,7 +677,6 @@ public class AuthorProjectController extends AbstractController {
 			} else if(command.equals("preview")){
 				PreviewProjectParameters previewParams = new PreviewProjectParameters();
 				previewParams.setProject(project);
-				previewParams.setPortalUrl(Util.getPortalUrl(request));
 				previewParams.setHttpServletRequest(request);
 
 				return (ModelAndView) this.projectService.previewProject(previewParams);
@@ -888,7 +886,7 @@ public class AuthorProjectController extends AbstractController {
 				sessions.add(currentUserSession.getId());
 			}
 			HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) currentUserSession.getServletContext()
-					.getAttribute(PasSessionListener.ALL_LOGGED_IN_USERS);
+					.getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
 
 			String otherUsersAlsoEditingProject = "";
 			for (String sessionId : sessions) {
@@ -972,7 +970,7 @@ public class AuthorProjectController extends AbstractController {
 			// if there are ppl editing projects, see if there are people editing the same project as logged in user.
 			ArrayList<String> sessions = openedProjectsToSessions.get(projectPath);
 			HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) currentUserSession.getServletContext()
-					.getAttribute(PasSessionListener.ALL_LOGGED_IN_USERS);
+					.getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
 
 			String otherUsersAlsoEditingProject = "";
 			if (sessions != null) {

@@ -80,6 +80,14 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 									view.i18n.supportedLocales[currNode.type] = nodePrototype.supportedLocales;
 									view.retrieveLocales(currNode.type,nodePrototype.i18nPath);								
 								} 
+								// if this node extends from another node (e.g. ChallengeQuestionNode, NoteNode, AnnotatorNode)
+								// also fetch i18n files of its parents.
+								if (nodePrototype.parent && nodePrototype.parent != Node.prototype && nodePrototype.parent.i18nType) {
+									if (!view.i18n.supportedLocales[nodePrototype.parent.i18nType]) {
+										view.i18n.supportedLocales[nodePrototype.parent.i18nType] = nodePrototype.parent.supportedLocales;
+										view.retrieveLocales(nodePrototype.parent.i18nType,nodePrototype.parent.i18nPath);								
+									} 
+								}
 							}							
 						}
 					}
