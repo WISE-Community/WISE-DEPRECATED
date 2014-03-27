@@ -1,5 +1,9 @@
+<%@ include file="../include.jsp"%>
+
 <%@ page import="java.lang.management.*" %>
 <%@ page import="java.util.*" %>
+
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <h1 style="text-decoration: underline;">JVM Memory Monitor</h1>
 

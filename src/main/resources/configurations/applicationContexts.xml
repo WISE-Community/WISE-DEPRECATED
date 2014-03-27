@@ -1590,8 +1590,6 @@
 					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/request/info.html"
 					access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/pages/memorymonitor.html"
-					access="ROLE_ADMINISTRATOR" />
 				<sec:intercept-url pattern="/pages/*.html"
 					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/pages/**/*.html"
