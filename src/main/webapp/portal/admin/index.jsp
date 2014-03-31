@@ -54,10 +54,10 @@
 								<spring:message code='admin.index.list' />
 								<sec:authorize ifAnyGranted="ROLE_ADMINISTRATOR">
  								   <spring:message code='admin.index.allUsersWhoLoggedIn' /> 
-								   <a href="account/manageusers.html?onlyShowLoggedInUser=true"><spring:message code='now' /></a>
-								   <a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=today"><spring:message code='today' /></a> 
-								   <a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=thisWeek"><spring:message code='thisWeek' /></a> 
-								   <a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=thisMonth"><spring:message code='thisMonth' /></a> 
+								   <a href="account/manageusers.html?onlyShowLoggedInUser=true"><spring:message code='now' /></a> | 
+								   <a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=today"><spring:message code='today' /></a> | 
+								   <a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=thisWeek"><spring:message code='thisWeek' /></a> | 
+								   <a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=thisMonth"><spring:message code='thisMonth' /></a> | 
 								   <a href="account/manageusers.html?onlyShowUsersWhoLoggedIn=thisYear"><spring:message code='thisYear' /></a> 
 								</sec:authorize>
 								</h5>

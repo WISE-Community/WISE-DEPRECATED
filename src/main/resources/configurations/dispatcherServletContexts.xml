@@ -1241,7 +1241,6 @@
 				/admin/project/tagger.html=taggerController
 				/admin/portal/manageportal.html=managePortalController
 				/admin/memorymonitor.html=urlFilenameViewController
-				/newsarchive.html=listNewsItemsController
 				/teacher/management/changestudentperiod.html=changeStudentPeriodController
 				/teacher/run/announcement/manageannouncement.html=manageAnnouncementController
 				/teacher/run/announcement/viewannouncement.html=viewAnnouncementController

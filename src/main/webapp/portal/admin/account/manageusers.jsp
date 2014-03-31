@@ -31,6 +31,26 @@ $(document).ready(function() {
 .newTeacher, .newStudent {
   background-color:pink;
 }
+
+table.userTable {
+  border: 1px solid #98BF21;
+  border-collapse:collapse;
+}
+
+table.userTable th {
+  border: 1px solid #98BF21;
+  background-color: #A7C942;
+  color: #FFFFFF;
+  font-size:1.2em;
+  padding:5px;
+}
+
+table.userTable td {
+  border: 1px solid #98BF21;
+  line-height:130%;
+  padding: 3px 7px 2px;
+}
+
 </style>
 </head>
 <body>
@@ -43,8 +63,8 @@ $(document).ready(function() {
 
 <c:choose>
 <c:when test="${fn:length(loggedInTeacherUsernames) > 0 || fn:length(loggedInStudentUsernames) > 0}">
-<div><spring:message code="admin.account.manageusers.currentlyLoggedInTeachers" /> (${fn:length(loggedInTeacherUsernames)}).  <spring:message code="admin.account.manageusers.newTeachersMsg" /> <span class='newTeacherTotal'></span></div>
-<table id="teachersTable" border="2">
+<h3><spring:message code="admin.account.manageusers.currentlyLoggedInTeachers" /> (${fn:length(loggedInTeacherUsernames)}).  <spring:message code="admin.account.manageusers.newTeachersMsg" /> <span class='newTeacherTotal'></span></h3>
+<table id="teachersTable" class='userTable' border="2">
     <tr><th><spring:message code="username" /></th><th colspan="4"><spring:message code="available_actions" /></th></tr>
 	<c:forEach var="user" items="${loggedInTeacherUsernames}">
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
@@ -65,8 +85,9 @@ $(document).ready(function() {
 	</c:forEach>
 </table>
 <br/>
-<div><spring:message code="admin.account.manageusers.currentlyLoggedInStudents" /> (${fn:length(loggedInStudentUsernames)}). <spring:message code="admin.account.manageusers.newStudentsMsg" /> <span class='newStudentTotal'></span></div>
-<table id="studentsTable" border="2">
+<hr/>
+<h3><spring:message code="admin.account.manageusers.currentlyLoggedInStudents" /> (${fn:length(loggedInStudentUsernames)}). <spring:message code="admin.account.manageusers.newStudentsMsg" /> <span class='newStudentTotal'></span></h3>
+<table id="studentsTable" class='userTable' border="2">
 <tr><th><spring:message code="username" /></th><th colspan="3"><spring:message code="available_actions" /></th><th><spring:message code="admin.account.manageusers.runInfoIfInProgress" /></th></tr>
 	<c:forEach var="studentUserArray" items="${loggedInStudentUsernames}">
 	<!--  user[0] = student username
@@ -104,8 +125,8 @@ $(document).ready(function() {
 
 <c:choose>
 <c:when test="${studentsWhoLoggedInSince != null && teachersWhoLoggedInSince != null}">
-<spring:message code="admin.account.manageusers.teachersWhoLoggedIn" /> (${fn:length(teachersWhoLoggedInSince)}). <spring:message code="admin.account.manageusers.newTeachersMsg" /> <span class='newTeacherTotal'></span>
-<table id="teachersTable" border="2">
+<h3><spring:message code="admin.account.manageusers.teachersWhoLoggedIn" /> (${fn:length(teachersWhoLoggedInSince)}). <spring:message code="admin.account.manageusers.newTeachersMsg" /> <span class='newTeacherTotal'></span></h3>
+<table id="teachersTable" class='userTable' border="2">
 	<c:forEach var="user" items="${teachersWhoLoggedInSince}">
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
  		<c:choose>
@@ -126,9 +147,10 @@ $(document).ready(function() {
 		</tr>
 	</c:forEach>
 </table>
-<br/><br/>
-<spring:message code="admin.account.manageusers.studentsWhoLoggedIn" /> (${fn:length(studentsWhoLoggedInSince)}). <spring:message code="admin.account.manageusers.newStudentsMsg" /> <span class='newStudentTotal'></span>
-<table id="teachersTable" border="2">
+<br/>
+<hr/>
+<h3><spring:message code="admin.account.manageusers.studentsWhoLoggedIn" /> (${fn:length(studentsWhoLoggedInSince)}). <spring:message code="admin.account.manageusers.newStudentsMsg" /> <span class='newStudentTotal'></span></h3>
+<table id="teachersTable" class='userTable' border="2">
 	<c:forEach var="user" items="${studentsWhoLoggedInSince}">
 		<c:set var="username" value="${user.userDetails.username}"></c:set>
 		<c:choose>
@@ -154,8 +176,8 @@ $(document).ready(function() {
 
 <c:choose>
 <c:when test="${fn:length(teachers) > 0}">
-<div><spring:message code="admin.account.manageusers.totalNumberOfTeachers" />: ${fn:length(teachers)}</div>
-<table id="teachersTable" border="2">
+<h3><spring:message code="admin.account.manageusers.totalNumberOfTeachers" />: ${fn:length(teachers)}</h3>
+<table id="teachersTable" class='userTable' border="2">
 	<c:forEach var="username" items="${teachers}">
 		<tr>
 			<td>${username}</td>
@@ -168,8 +190,8 @@ $(document).ready(function() {
 </table>
 </c:when>
 <c:otherwise>
-<div><spring:message code="admin.account.manageusers.totalNumberOfStudents" />: ${fn:length(students)}</div>
-<table id="teachersTable" border="2">
+<h3><spring:message code="admin.account.manageusers.totalNumberOfStudents" />: ${fn:length(students)}</h3>
+<table id="studentsTable" class='userTable' border="2">
 	<c:forEach var="username" items="${students}">
 		<tr>
 			<td>${username}</td>
@@ -189,8 +211,5 @@ $(document).ready(function() {
 </c:otherwise>
 
 </c:choose>
-<form style="visibility:hidden" id="findProjectRunsByIdForm" method="post" action="../run/findprojectrunsbyrunid.html">
-<input type="hidden" id="findProjectRunsFormRunId" name="runId" value=""></input>
-</form>
 </body>
 </html>

@@ -650,10 +650,7 @@ a.welcomeLink.active {
 	font-weight:normal;
 	padding-bottom:7px;
 }
-
-#newsArchive {
-	margin:8px auto;
-}*/
+*/
 
 /* TAGS FOR ANCILLARY LAYOUTS   */
 
@@ -711,34 +708,3 @@ a.welcomeLink.active {
 	margin:0px;
 	padding: 0 0 12px 0;
 }*/
-
-/* TAGS FOR NEWS ARCHIVE AREA   */	
-
-/*#archiveHeader {
-	font-size:1.2em;
-	font-weight:bold;
-	letter-spacing:1px;
-	margin:30px 0 20px 5px;
-}
-
-#newsArchivePage { 
-	border-collapse: collapse;
-	margin: 0px 0 30px 5px;	
-	width:100%;
-}
-
-#newsArchivePage th, #newsArchivePage td {
-	padding:4px;
-	border:1px solid #000000;
-	text-align:left;
-	font-size:.8em; 
-}
-
-#newsArchivePage th {
-	background-color:#666666;
-	color:#FFFFFF;
-}
-
-#newsArchivePage .col1 {width:30%;}
-#newsArchivePage .col2 {width:20%;}	
-#newsArchivePage .col3 {width:50%;}*/
