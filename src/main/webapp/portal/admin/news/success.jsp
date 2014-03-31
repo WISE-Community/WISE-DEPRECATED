@@ -13,9 +13,9 @@
 
 <body>
 
-<h2><spring:message code="success" /></h2>
+<h1><spring:message code="success" /></h1>
 
-<div><a href="#" onclick="window.opener.location.reload(); window.close()"><spring:message code="close" /></a></div>
+<div><a href="#" onclick="parent.location.reload(); window.close()"><spring:message code="close" /></a></div>
 
 </body>
 </html>

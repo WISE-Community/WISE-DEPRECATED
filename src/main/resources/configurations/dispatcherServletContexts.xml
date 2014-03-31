@@ -101,16 +101,11 @@
 		<property name="runService" ref="runService" />
 	</bean>
 
-	<bean id="newsItemParametersValidator"
-		class="org.wise.portal.presentation.validators.NewsItemParametersValidator" />
-
 	<bean id="lookupParametersValidator"
 		class="org.wise.portal.presentation.validators.LookupParametersValidator" />
 
 	<bean id="announcementParametersValidator"
 		class="org.wise.portal.presentation.validators.AnnouncementParametersValidator" />
-
-
 
 	<bean class="org.wise.portal.presentation.web.controllers.TestController" />
 
@@ -627,45 +622,11 @@
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
-	<bean id="addNewsItemController"
-		class="org.wise.portal.presentation.web.controllers.admin.AddNewsItemController">
-		<property name="newsItemService" ref="newsItemService" />
-		<property name="formView" value="/admin/news/addnewsitems" />
-		<property name="successView" value="/admin/news/success" />
-		<property name="commandName" value="newsItemParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.NewsItemParameters" />
-		<property name="validator" ref="newsItemParametersValidator" />
-	</bean>
-
-	<bean id="listNewsItemsController"
-		class="org.wise.portal.presentation.web.controllers.admin.ListNewsItemsController">
+    <bean id="newsItemController"
+		class="org.wise.portal.presentation.web.controllers.admin.NewsItemController">
 		<property name="newsItemService" ref="newsItemService" />
 	</bean>
-
-	<bean id="editNewsItemController"
-		class="org.wise.portal.presentation.web.controllers.admin.EditNewsItemController">
-		<property name="newsItemService" ref="newsItemService" />
-		<property name="formView" value="/admin/news/editnewsitem" />
-		<property name="successView" value="/admin/news/success" />
-		<property name="sessionForm" value="true" />
-		<property name="commandName" value="newsItemParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.NewsItemParameters" />
-		<property name="validator" ref="newsItemParametersValidator" />
-	</bean>
-
-	<bean id="removeNewsItemController"
-		class="org.wise.portal.presentation.web.controllers.admin.RemoveNewsItemController">
-		<property name="sessionForm" value="true" />
-		<property name="formView" value="/admin/news/removenewssuccess" />
-		<property name="newsItemService" ref="newsItemService" />
-	</bean>
-
-	<bean id="removeNewsConfirmController"
-		class="org.wise.portal.presentation.web.controllers.admin.RemoveNewsConfirmController">
-	</bean>
-
+	
 	<bean id="shareProjectRunController"
 		class="org.wise.portal.presentation.web.controllers.teacher.run.ShareProjectRunController">
 		<property name="runService" ref="runService" />
@@ -1232,11 +1193,9 @@
 				/admin/run/findprojectrunsbyteacher.html=findProjectRunsController
 				/admin/run/findprojectrunsbyrunid.html=findProjectRunsController
 				/admin/run/runstats.html=runStatisticsController
-				/admin/news/managenewsitems.html=listNewsItemsController
-				/admin/news/addnewsitems.html=addNewsItemController
-				/admin/news/editnewsitem.html=editNewsItemController
-				/admin/news/removenewssuccess.html=removeNewsItemController
-				/admin/news/removenewsconfirm.html=removeNewsConfirmController
+				/admin/news/managenewsitems.html=newsItemController
+				/admin/news/addnewsitems.html=newsItemController
+				/admin/news/editnewsitem.html=newsItemController
 				/admin/project/currentlyAuthoredProjects.html=currentlyAuthoredProjectsController
 				/admin/project/tagger.html=taggerController
 				/admin/portal/manageportal.html=managePortalController
