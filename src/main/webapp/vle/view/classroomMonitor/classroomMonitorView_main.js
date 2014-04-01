@@ -29,11 +29,21 @@ View.prototype.getClassroomMonitorConfig = function(classroomMonitorConfigUrl) {
  * Start the classroom monitor
  */
 View.prototype.startClassroomMonitor = function() {
+	//get the run name
+	var runName = this.config.getConfigParam("runName");
+	
+	//get the run id
+	var runId = this.config.getConfigParam("runId");
+	
 	//set the classroom monitor header
-	$('#classroomMonitorHeader').text('Classroom Monitor');
+	if(runName != null && runId != null) {
+		$('#classroomMonitorHeader').text(runName + ' (Run ID ' + runId + ')');
+	} else {
+		$('#classroomMonitorHeader').text('Classroom Monitor');		
+	}
 	
 	//display a loading message
-	$('#selectDisplayButtonsDiv').text('Loading...');
+	$('#selectDisplayButtonsDiv').html('<p style="display:inline;margin-left:5px">Loading...</p>');
 	
 	//initialize the session
 	this.initializeSession();
@@ -58,6 +68,7 @@ View.prototype.createClassroomMonitorDisplays = function() {
 	this.createStepProgressDisplay();
 	this.createGradeByStudentDisplay();
 	this.createGradeByStepDisplay();
+	this.createExportStudentWorkDisplay();
 };
 
 /**
@@ -69,6 +80,7 @@ View.prototype.hideAllDisplays = function() {
 	$('#gradeByStudentDisplay').hide();
 	$('#gradeByStepDisplay').hide();
 	$('#pauseScreensDisplay').hide();
+	$('#exportStudentWorkDisplay').hide();
 }
 
 /**
@@ -156,6 +168,20 @@ View.prototype.showGradeByStepDisplay = function() {
 };
 
 /**
+ * Show the export student work display
+ */
+View.prototype.showExportStudentWorkDisplay = function() {
+	//hide all the other display divs
+	this.hideAllDisplays();
+	
+	//show the grade by step div
+	$('#exportStudentWorkDisplay').show();
+	
+	//fix the height so scrollbars display correctly
+	this.fixClassroomMonitorDisplayHeight();
+};
+
+/**
  * Opens teacher's notes for this run
  */
 View.prototype.openTeacherRunNotes = function (runId) {
@@ -205,6 +231,10 @@ View.prototype.createClassroomMonitorButtons = function() {
 	var myNotesButton = $('<input/>').attr({id:'myNotesButton', type:'button', name:'myNotesButton', value:'My Notes'});
 	myNotesButton.addClass(chooseClassroomMonitorDisplayButtonClass);
 
+	//create the export student work button
+	var exportStudentWorkButton = $('<input/>').attr({id:'exportStudentWorkButton', type:'button', name:'exportStudentWorkButton', value:'Export Student Work'});
+	exportStudentWorkButton.addClass(chooseClassroomMonitorDisplayButtonClass);
+	
 	//set the click event for the pause all screens tool button
 	pauseScreensToolButton.click({thisView:this}, function(event) {
 		var thisView = event.data.thisView;
@@ -248,11 +278,23 @@ View.prototype.createClassroomMonitorButtons = function() {
 		}
 	});
 	
+	//set the click event for the export student work button
+	exportStudentWorkButton.click({thisView:this}, function(event) {
+		var thisView = event.data.thisView;
+		
+		//clear the background from the other display buttons and make this button background yellow
+		thisView.setActiveButtonBackgroundColor(this, chooseClassroomMonitorDisplayButtonClass);
+		
+		//show the step progress display
+		thisView.showExportStudentWorkDisplay();
+	});
+	
 	//add the select display buttons
 	$('#selectDisplayButtonsDiv').append(pauseScreensToolButton);
 	$('#selectDisplayButtonsDiv').append(studentProgressButton);
 	$('#selectDisplayButtonsDiv').append(stepProgressButton);
 	$('#selectDisplayButtonsDiv').append(myNotesButton);
+	$('#selectDisplayButtonsDiv').append(exportStudentWorkButton);
 	
 	//fix the height so scrollbars display correctly
 	this.fixClassroomMonitorDisplayHeight();
@@ -848,7 +890,7 @@ View.prototype.studentRowClickedHandler = function(workgroupId) {
 	this.hideAllDisplays();
 	
 	//display a loading message in the grade by student display
-	$('#gradeByStudentDisplay').html('Loading...');
+	$('#gradeByStudentDisplay').html('<p style="display:inline;margin-left:5px">Loading...</p>');
 	$('#gradeByStudentDisplay').show();
 	
 	//get the url for retrieving student data
@@ -942,9 +984,10 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	gradeByStudentHeaderTable.attr('id', 'gradeByStudentHeaderTable');
 	gradeByStudentHeaderTable.attr('width', '100%');
 	gradeByStudentHeaderTable.css('position', 'fixed');
-	gradeByStudentHeaderTable.css('top', '85px');
-	gradeByStudentHeaderTable.css('left', '5px');
+	gradeByStudentHeaderTable.css('top', '105px');
+	gradeByStudentHeaderTable.css('left', '10px');
 	gradeByStudentHeaderTable.css('background', 'white');
+	gradeByStudentHeaderTable.css('z-index', '1');
 	
 	//create the row that will display the user name, workgroup id, period name, navigation buttons, and save button
 	var gradeByStudentHeaderTR = $('<tr>');
@@ -2034,7 +2077,7 @@ View.prototype.stepRowClickedHandler = function(nodeId) {
 	this.hideAllDisplays();
 
 	//display a loading message in the grade by step display
-	$('#gradeByStepDisplay').html('Loading...');
+	$('#gradeByStepDisplay').html('<p style="display:inline;margin-left:5px">Loading...</p>');
 	$('#gradeByStepDisplay').show();
 	
 	//get the url for retrieving student data
@@ -2149,9 +2192,10 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			gradeByStepHeaderTable.attr('id', 'gradeByStepHeaderTable');
 			gradeByStepHeaderTable.attr('width', '100%');
 			gradeByStepHeaderTable.css('position', 'fixed');
-			gradeByStepHeaderTable.css('top', '85px');
-			gradeByStepHeaderTable.css('left', '5px');
+			gradeByStepHeaderTable.css('top', '105px');
+			gradeByStepHeaderTable.css('left', '10px');
 			gradeByStepHeaderTable.css('background', 'white');
+			gradeByStepHeaderTable.css('z-index', '1');
 			
 			//create the row that will contain the step title and the buttons
 			var gradeByStepHeaderTR = $('<tr>');
@@ -3654,6 +3698,795 @@ View.prototype.getIsOfflineHTML = function() {
 	var html = '<img src="images/redDot.png"/>';
 	
 	return html;
+};
+
+/**
+ * Create the export student work display
+ */
+View.prototype.createExportStudentWorkDisplay = function() {
+	//create the export student work div
+	var exportStudentWorkDisplay = $('<div></div>').attr({id:'exportStudentWorkDisplay'});
+	
+	//add the export student work div to the main div
+	$('#classroomMonitorMainDiv').append(exportStudentWorkDisplay);
+	
+	//hide the export student work div, we will show it later when necessary
+	exportStudentWorkDisplay.hide();
+	
+	//create the div that is shown when the user first clicks on the 'Export Student Work' button
+	var mainExportDiv = this.createMainExportDiv();
+	
+	//create the div that will show the custom export display
+	var customExportDiv = this.createCustomExportDiv();
+	
+	//create the div that will show the special export display
+	var specialExportDiv = this.createSpecialExportDiv();
+	
+	//create the hidden form that is used to generate the request to download the export file
+	var exportForm = this.createExportForm();
+	
+	//add the export student work table to the div
+	$('#exportStudentWorkDisplay').append(mainExportDiv);
+	$('#exportStudentWorkDisplay').append(customExportDiv);
+	$('#exportStudentWorkDisplay').append(specialExportDiv);
+	$('#exportStudentWorkDisplay').append(exportForm);
+	
+};
+
+/**
+ * Create the hidden form that is used to create the request to download the export file
+ */
+View.prototype.createExportForm = function() {
+	//create the form
+	var exportForm = $('<form>');
+	exportForm.attr('id', 'exportForm');
+	exportForm.css('display', 'none');
+	exportForm.attr('action', '');
+	exportForm.attr('method', 'GET');
+	
+	/*
+	 * add the fields in the form that will be passed to the 
+	 * server when the request for the export file is made
+	 */
+	exportForm.append('<input type="hidden" name="runId" id="runId" value=""/>');
+	exportForm.append('<input type="hidden" name="runName" id="runName" value=""/>');
+	exportForm.append('<input type="hidden" name="projectId" id="projectId" value=""/>');
+	exportForm.append('<input type="hidden" name="parentProjectId" id="parentProjectId" value=""/>');
+	exportForm.append('<input type="hidden" name="projectName" id="projectName" value=""/>');
+	exportForm.append('<input type="hidden" name="exportType" id="exportType" value=""/>');
+	exportForm.append('<input type="hidden" name="customStepsArray" id="customStepsArray" value=""/>');
+	exportForm.append('<input type="hidden" name="contentBaseUrl" id="contentBaseUrl" value=""/>');
+	exportForm.append('<input type="hidden" name="nodeId" id="nodeId" value=""/>');
+	exportForm.append('<input type="hidden" name="fileType" id="fileType" value=""/>');
+	
+	return exportForm;
+};
+
+/**
+ * Create the table row that contains the export name and the export type
+ * @param exportName the export name e.g. 'Export Latest Student Work' or 'Export All Student Work'
+ * @param exportType the export type that the server uses to determine what type
+ * of export to generate e.g. 'latestStudentWork' 'allStudentWork'
+ */
+View.prototype.createExportStudentWorkRow = function(exportName, exportType) {
+	//create the row
+	var exportStudentWorkRow = $('<tr>');
+	
+	//create the cell that will contain the export name
+	var exportStudentWorkCellLabel = $('<td>');
+	exportStudentWorkCellLabel.html(exportName);
+	
+	//create the cell that will contain the XLS button
+	var exportStudentWorkXLSButtonCell = $('<td>');
+	var exportStudentWorkXLSButton = $('<input>');
+	exportStudentWorkXLSButton.attr('type', 'button');
+	exportStudentWorkXLSButton.val('XLS');
+	exportStudentWorkXLSButtonCell.append(exportStudentWorkXLSButton);
+	exportStudentWorkXLSButton.click({thisView:this, exportType:exportType, fileType:'xls'}, function(event) {
+		var thisView = event.data.thisView;
+		var exportType = event.data.exportType;
+		var fileType = event.data.fileType;
+		
+		//generate the XLS file
+		thisView.exportStudentWorkButtonClicked(exportType, fileType);
+	});
+	
+	//create the cell that will contain the CSV button
+	var exportStudentWorkCSVButtonCell = $('<td>');
+	var exportStudentWorkCSVButton = $('<input>');
+	exportStudentWorkCSVButton.attr('type', 'button');
+	exportStudentWorkCSVButton.val('CSV');
+	exportStudentWorkCSVButtonCell.append(exportStudentWorkCSVButton);
+	exportStudentWorkCSVButton.click({thisView:this, exportType:exportType, fileType:'csv'}, function(event) {
+		var thisView = event.data.thisView;
+		var exportType = event.data.exportType;
+		var fileType = event.data.fileType;
+		
+		//generate the CSV file
+		thisView.exportStudentWorkButtonClicked(exportType, fileType);
+	});
+	
+	exportStudentWorkRow.append(exportStudentWorkCellLabel);
+	exportStudentWorkRow.append(exportStudentWorkXLSButtonCell);
+	exportStudentWorkRow.append(exportStudentWorkCSVButtonCell);
+	
+	return exportStudentWorkRow;
+};
+
+/**
+ * The button was clicked to download the export file
+ * @param exportType the export type that the server uses to determine what type
+ * of export to generate e.g. 'latestStudentWork' 'allStudentWork'
+ * @param fileType the file type for the export e.g. 'xls' or 'csv'
+ */
+View.prototype.exportStudentWorkButtonClicked = function(exportType, fileType) {
+	//get the parameters for the download export file request
+	var getXLSExportUrl = this.getConfig().getConfigParam('getXLSExportUrl');
+	var runId = this.getConfig().getConfigParam('runId');
+	var projectId = this.getConfig().getConfigParam('projectId');
+	var parentProjectId = this.getConfig().getConfigParam('parentProjectId');
+	var runName = this.getConfig().getConfigParam('runName');
+	var projectName = this.getProject().getTitle();
+	
+	//set the parameters into the form
+	$('#exportForm input[name=runId]').val(runId);
+	$('#exportForm input[name=runName]').val(runName);
+	$('#exportForm input[name=projectId]').val(projectId);
+	$('#exportForm input[name=parentProjectId]').val(parentProjectId);
+	$('#exportForm input[name=projectName]').val(projectName);
+	$('#exportForm input[name=exportType]').val(exportType);
+	$('#exportForm input[name=fileType]').val(fileType);
+	
+	if(exportType == 'customLatestStudentWork' || exportType == 'customAllStudentWork') {
+		//get all the node ids that were chosen for the custom export
+		var customStepsArrayJSONString = this.getCustomStepsArrayJSONString();
+		$('#exportForm input[name=customStepsArray]').val(customStepsArrayJSONString);
+	}
+	
+	//set the action url
+	$('#exportForm').attr('action', getXLSExportUrl);
+	
+	//submit the form to request the export file
+	$('#exportForm').submit();
+};
+
+/**
+ * The button was clicked to download the special export file
+ * @param nodeId the node id for the step that we want the special
+ * export for
+ */
+View.prototype.specialExportStepButtonClicked = function(nodeId) {
+	//get the parameters for the download export file request
+	var getXLSExportUrl = this.getConfig().getConfigParam('getSpecialExportUrl');
+	var runId = this.getConfig().getConfigParam('runId');
+	var projectId = this.getConfig().getConfigParam('projectId');
+	var parentProjectId = this.getConfig().getConfigParam('parentProjectId');
+	var runName = this.getConfig().getConfigParam('runName');
+	var projectName = this.getProject().getTitle();
+	
+	//set the parameters into the form
+	$('#exportForm input[name=runId]').val(runId);
+	$('#exportForm input[name=runName]').val(runName);
+	$('#exportForm input[name=projectId]').val(projectId);
+	$('#exportForm input[name=parentProjectId]').val(parentProjectId);
+	$('#exportForm input[name=projectName]').val(projectName);
+	$('#exportForm input[name=nodeId]').val(nodeId);
+	$('#exportForm input[name=exportType]').val('specialExport');
+	
+	//set the action url
+	$('#exportForm').attr('action', getXLSExportUrl);
+	
+	//submit the form to request the export file
+	$('#exportForm').submit();
+};
+
+/**
+ * Get the custom steps array JSON string
+ * @return a JSON string that contains all the custom node ids
+ */
+View.prototype.getCustomStepsArrayJSONString = function() {
+	var customStepsJSONString = "";
+	
+	//get the steps that were checked in the custom export screen
+	var customStepsArray = this.getCustomStepsArray();
+	
+	if(customStepsArray != null) {
+		//get the string format of the array
+		customStepsJSONString = JSON.stringify(customStepsArray);
+	}
+	
+	return customStepsJSONString;
+};
+
+/**
+ * Get the custom steps that were checked in the custom export screen
+ * @return and array of node id strings
+ */
+View.prototype.getCustomStepsArray = function() {
+	var customStepsArray = [];
+	
+	//get all the steps that were checked
+	var customSteps = $("input:checkbox[name='customExportStepCheckbox']:checked");
+	
+	//loop through all the steps
+	for(var x=0; x<customSteps.length; x++) {
+		var customStep = customSteps[x];
+		
+		if(customStep != null) {
+			//get the node id of the step
+			var nodeId = customStep.value;
+			
+			if(nodeId != null) {
+				//add the node id to our array
+				customStepsArray.push(nodeId);			
+			}			
+		}
+	}
+	
+	return customStepsArray;
+};
+
+/**
+ * Create the div that will display the main export screen
+ */
+View.prototype.createMainExportDiv = function() {
+	//create the div
+	var mainExportDiv = $('<div>');
+	mainExportDiv.attr('id', 'mainExportDiv');
+	
+	//create the table that will contain the export labels and buttons
+	var exportStudentWorkTable = $('<table>');
+	exportStudentWorkTable.attr('id', 'exportStudentWorkTable');
+	
+	//create the rows that will display the export labels and buttons
+	var exportLatestStudentWorkRow = this.createExportStudentWorkRow('Export Latest Student Work', 'latestStudentWork');
+	var exportAllStudentWorkRow = this.createExportStudentWorkRow('Export All Student Work', 'allStudentWork');
+	var exportIdeaBasketsRow = this.createExportStudentWorkRow('Export Idea Baskets', 'ideaBaskets');
+	var exportExplanationBuilderWorkRow = this.createExportStudentWorkRow('Export Explanation Builder Work', 'explanationBuilderWork');
+	var customExportStudentWorkRow = this.createCustomExportStudentWorkRow();
+	var specialExportStudentWorkRow = this.createSpecialExportStudentWorkRow();
+	
+	//add the rows to the table
+	exportStudentWorkTable.append(exportLatestStudentWorkRow);
+	exportStudentWorkTable.append(exportAllStudentWorkRow);
+	exportStudentWorkTable.append(exportIdeaBasketsRow);
+	exportStudentWorkTable.append(exportExplanationBuilderWorkRow);
+	exportStudentWorkTable.append(customExportStudentWorkRow);
+	exportStudentWorkTable.append(specialExportStudentWorkRow);
+	
+	//add the table to the main div
+	mainExportDiv.append(exportStudentWorkTable);
+	
+	return mainExportDiv;
+};
+
+/**
+ * Create the row that will display the custom export label and button
+ */
+View.prototype.createCustomExportStudentWorkRow = function() {
+	//create the row
+	var exportStudentWorkRow = $('<tr>');
+	
+	//create the cell that will display the export label
+	var exportStudentWorkCellLabel = $('<td>');
+	exportStudentWorkCellLabel.html('Export Custom Student Work');
+	
+	//create the cell that will contain the 'Choose Steps' button
+	var exportStudentWorkButtonCell = $('<td>');
+	exportStudentWorkButtonCell.attr('colspan', 2);
+	
+	//creat the 'Choose Steps' button
+	var exportStudentWorkButton = $('<input>');
+	exportStudentWorkButton.attr('type', 'button');
+	exportStudentWorkButton.val('Choose Steps');
+	exportStudentWorkButton.click({thisView:this}, function(event) {
+		var thisView = event.data.thisView;
+		
+		/*
+		 * the 'Choose Steps' button was clicked so we will display the
+		 * custom export screen where the user chooses which steps they
+		 * want to be exported
+		 */ 
+		thisView.customExportStudentWorkButtonClicked();
+	});
+	
+	//add the 'Choose Steps' button
+	exportStudentWorkButtonCell.append(exportStudentWorkButton);
+	
+	//add the label and the button to the row
+	exportStudentWorkRow.append(exportStudentWorkCellLabel);
+	exportStudentWorkRow.append(exportStudentWorkButtonCell);
+	
+	return exportStudentWorkRow;
+};
+
+/**
+ * The 'Choose Steps' button was clicked so we will display the custom
+ * export screen
+ */
+View.prototype.customExportStudentWorkButtonClicked = function() {
+	//show the custom export div
+	$('#mainExportDiv').hide();
+	$('#customExportDiv').show();
+	$('#specialExportDiv').hide();
+	
+	var customExportDiv = $('#customExportDiv');
+	
+	//populate the div if it hasn't already been populated
+	if(customExportDiv.html() == '') {
+		//create a table to contain the buttons and steps
+		var customExportTable = $('<table>');
+		
+		//create the button to go back to the main export screen
+		var backButtonRow = this.createExportBackButtonRow();
+		customExportTable.append(backButtonRow);
+		
+		//create the row that will display 'Custom Export'
+		var pageHeaderRow = $('<tr>');
+		var pageHeaderCell = $('<td>');
+		var pageHeader = $('<h3>');
+		pageHeader.css('display', 'inline');
+		pageHeader.html('Custom Export');
+		pageHeaderCell.append(pageHeader);
+		pageHeaderRow.append(pageHeaderCell);
+		customExportTable.append(pageHeaderRow);
+		
+		//create the row for the custom latest student work export
+		var exportCustomLatestStudentWorkRow = this.createExportStudentWorkRow('Export Custom Latest Student Work', 'customLatestStudentWork');
+		customExportTable.append(exportCustomLatestStudentWorkRow);
+		
+		//create the row for the custom all student work export
+		var exportCustomAllStudentWorkRow = this.createExportStudentWorkRow('Export Custom All Student Work', 'customAllStudentWork');
+		customExportTable.append(exportCustomAllStudentWorkRow);
+		
+		//create the row that will contain all the steps with check boxes
+		var selectStepsTableRow = $('<tr>');
+		
+		//create the table that will contain all the steps with check boxes
+		var selectStepsTable = this.createCustomExportSelectStepsTable();
+		
+		selectStepsTableRow.append(selectStepsTable);
+		customExportTable.append(selectStepsTableRow);
+
+		/*
+		 * create the row for the custom latest student work export 
+		 * that will show up at the bottom of the screen
+		 */
+		var exportCustomLatestStudentWorkRow2 = this.createExportStudentWorkRow('Export Custom Latest Student Work', 'customLatestStudentWork');
+		customExportTable.append(exportCustomLatestStudentWorkRow2);
+		
+		/*
+		 * create the row for the custom all student work export
+		 * that will show up at the bottom of the screen
+		 */
+		var exportCustomAllStudentWorkRow2 = this.createExportStudentWorkRow('Export Custom All Student Work', 'customAllStudentWork');
+		customExportTable.append(exportCustomAllStudentWorkRow2);
+		
+		/*
+		 * create the button to go back to the main export screen.
+		 * this back button will show up at the bottom of the screen.
+		 */ 
+		var backButtonRow = this.createExportBackButtonRow();
+		customExportTable.append(backButtonRow);
+		
+		customExportDiv.append(customExportTable);
+	}
+};
+
+/**
+ * Create the row that will contain the back button to go back
+ * to the main export screen
+ */
+View.prototype.createExportBackButtonRow = function() {
+	//create the button
+	var backButton = $('<input>');
+	backButton.attr('type', 'button');
+	backButton.val('Back');
+	backButton.click({}, function(event) {
+		$('#mainExportDiv').show();
+		$('#customExportDiv').hide();
+		$('#specialExportDiv').hide();
+	});
+	
+	//create the row
+	var backButtonRow = $('<tr>');
+	var backButtonCell = $('<td>');
+	backButtonCell.append(backButton);
+	backButtonRow.append(backButtonCell);
+	
+	return backButtonRow;
+};
+
+/**
+ * Create the table that will display the steps and check boxes
+ * for the custom export
+ */
+View.prototype.createCustomExportSelectStepsTable = function() {
+	//create the table
+	var table = $('<table>');
+	
+	//create the row for the 'Select All Steps' check boxes
+	var selectAllStepsRow = $('<tr>');
+	var selectAllStepsCell = $('<td>');
+	
+	//create the select all steps checkbox
+	var selectAllStepsCellInput = $('<input>');
+	selectAllStepsCellInput.attr('id', 'selectAllStepsCheckBox');
+	selectAllStepsCellInput.attr('type', 'checkbox');
+	selectAllStepsCellInput.click({thisView:this}, function(event) {
+		var thisView = event.data.thisView;
+		thisView.customExportSelectAllStepsCheckBoxClicked();
+	});
+	
+	//create the label for the 'Select All Steps'
+	selectAllStepsCellH4 = $('<h4>');
+	selectAllStepsCellH4.html('Select All Steps');
+	selectAllStepsCellH4.css('display', 'inline');
+	
+	//add the check box and label
+	selectAllStepsCell.append(selectAllStepsCellInput);
+	selectAllStepsCell.append(selectAllStepsCellH4);
+	
+	selectAllStepsRow.append(selectAllStepsCell);
+
+	//add the row to the table
+	table.append(selectAllStepsRow);
+	
+	//initialize the activity counter
+	this.activityNumber = 0;
+	
+	//add the steps in the project
+	this.createCustomExportSelectStepsTableHelper(table, this.getProject().getRootNode());
+	
+	return table;
+};
+
+/**
+ * Adds the activities and steps to the table for the custom export page.
+ * The activities and steps will have check boxes next to them. This is a recursive
+ * function that will traverse the project.
+ * @param table the table dome element to add step rows to
+ * @param node the current node we are on
+ */
+View.prototype.createCustomExportSelectStepsTableHelper = function(table, node) {
+	//get the current node id
+	var nodeId = node.id;
+	
+	if(node.isLeafNode()) {
+		//this node is a leaf/step
+
+		//create the row and cell
+		var row = $('<tr>');
+		var cell = $('<td>');
+		
+		//create the check box
+		var checkBox = $('<input>');
+		checkBox.attr('id', 'stepCheckBox_' + nodeId);
+		checkBox.addClass('activityStep_' + (this.activityNumber - 1));
+		checkBox.addClass('stepCheckBox');
+		checkBox.css('margin-left', '20px');
+		checkBox.attr('type', 'checkbox');
+		checkBox.attr('name', 'customExportStepCheckbox');
+		checkBox.val(nodeId);
+		
+		var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
+		var nodeType = node.getType();
+		
+		//create the step label
+		var p = $('<p>');
+		p.html(stepNumberAndTitle + ' (' + nodeType + ')');
+		p.css('display', 'inline');
+		
+		//add the check box and label
+		cell.append(checkBox);
+		cell.append(p);
+		
+		row.append(cell);
+		
+		table.append(row);
+	} else {
+		/*
+		 * we need to skip the first sequence because that is always the
+		 * master sequence. we will encounter the master sequence when 
+		 * this.activityNumber is 0, so all the subsequent activities will
+		 * start at 1.
+		 */
+		if(this.activityNumber != 0) {
+			//create the row and cell
+			var row = $('<tr>');
+			var cell = $('<td>');
+			
+			var activityCheckBoxId = 'activityCheckBox_' + this.activityNumber;
+
+			//create the check box
+			var checkBox = $('<input>');
+			checkBox.attr('id', activityCheckBoxId);
+			checkBox.addClass('activityCheckBox');
+			checkBox.attr('type', 'checkbox');
+			checkBox.attr('name', 'customExportActivityCheckbox');
+			checkBox.val(nodeId);
+			checkBox.click({thisView:this, activityCheckBoxId:activityCheckBoxId}, function(event) {
+				var thisView = event.data.thisView;
+				var activityCheckBoxId = event.data.activityCheckBoxId;
+				
+				thisView.customExportActivityCheckBoxClicked(activityCheckBoxId);
+			});
+			
+			var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
+			var title = node.getTitle();
+			
+			//create the activity label
+			var h4 = $('<h4>');
+			h4.html('Activity ' + stepNumberAndTitle);
+			h4.css('display', 'inline');
+			
+			//add the check box and label
+			cell.append(checkBox);
+			cell.append(h4);
+			
+			row.append(cell);
+			
+			table.append(row);
+		}
+
+		//increment the activity number
+		this.activityNumber++;
+		
+		//loop through all its children
+		for(var x=0; x<node.children.length; x++) {
+			//add the child
+			this.createCustomExportSelectStepsTableHelper(table, node.children[x]);
+		}
+	}
+};
+
+/**
+ * The select all steps check box in the custom export screen was clicked
+ */
+View.prototype.customExportSelectAllStepsCheckBoxClicked = function() {
+	//get whether the checkbox was checked or unchecked
+	var isSelectAllStepsChecked = $('#selectAllStepsCheckBox').attr('checked');
+	
+	if(isSelectAllStepsChecked == null) {
+		isSelectAllStepsChecked = false;
+	}
+	
+	//check or uncheck all the steps
+	$(".stepCheckBox").each(function(index, element) {$(element).attr('checked', isSelectAllStepsChecked);});
+	
+	//check or uncheck all the activities
+	$(".activityCheckBox").each(function(index, element) {$(element).attr('checked', isSelectAllStepsChecked);});
+};
+
+/**
+ * One of the activity check boxes in the custom export screen was clicked
+ * @param activityCheckBoxId the dom id of the activity checkbox
+ */
+View.prototype.customExportActivityCheckBoxClicked = function(activityCheckBoxId) {
+	//get the activity number
+	var activityNumber = activityCheckBoxId.replace("activityCheckBox_", "");
+	
+	//get whether the activity check box is checked or unchecked
+	var isActivityChecked = $('#' + activityCheckBoxId).attr('checked');
+	
+	if(isActivityChecked == null) {
+		isActivityChecked = false;
+	}
+	
+	//check or uncheck all the steps in this activity
+	$(".activityStep_" + activityNumber).each(function(index, element) {$(element).attr('checked', isActivityChecked);});
+}
+
+/**
+ * Create the custom export div
+ */
+View.prototype.createCustomExportDiv = function() {
+	var customExportDiv = $('<div>');
+	customExportDiv.attr('id', 'customExportDiv');
+	
+	return customExportDiv;
+};
+
+/**
+ * Create the row for the 'Special Export'
+ */
+View.prototype.createSpecialExportStudentWorkRow = function() {
+	//create the row
+	var exportStudentWorkRow = $('<tr>');
+	
+	//create the cell that will contain the label
+	var exportStudentWorkCellLabel = $('<td>');
+	exportStudentWorkCellLabel.html('Special Export');
+	
+	//create the cell that will contain the button
+	var exportStudentWorkButtonCell = $('<td>');
+	exportStudentWorkButtonCell.attr('colspan', 2);
+	
+	//create the button
+	var exportStudentWorkButton = $('<input>');
+	exportStudentWorkButton.attr('type', 'button');
+	exportStudentWorkButton.val('Choose Step');
+	exportStudentWorkButton.click({thisView:this}, function(event) {
+		var thisView = event.data.thisView;
+		
+		//open the display that will let the user choose the step they want to export
+		thisView.specialExportStudentWorkButtonClicked();
+	});
+	
+	exportStudentWorkButtonCell.append(exportStudentWorkButton);
+	
+	exportStudentWorkRow.append(exportStudentWorkCellLabel);
+	exportStudentWorkRow.append(exportStudentWorkButtonCell);
+	
+	return exportStudentWorkRow;
+};
+
+/**
+ * Display the special export screen where the user chooses
+ * which step to export
+ */
+View.prototype.specialExportStudentWorkButtonClicked = function() {
+	$('#mainExportDiv').hide();
+	$('#customExportDiv').hide();
+	$('#specialExportDiv').show();
+	
+	//get the special export div
+	var specialExportDiv = $('#specialExportDiv');
+	
+	//populate the div it is empty
+	if(specialExportDiv.html() == '') {
+		//create a table to display all the steps in the project
+		var specialExportTable = $('<table>');
+		
+		//create the back button row
+		var backButtonRow = this.createExportBackButtonRow();
+		specialExportTable.append(backButtonRow);
+		
+		//create the row that will display 'Special Export'
+		var pageHeaderRow = $('<tr>');
+		var pageHeaderCell = $('<td>');
+		var pageHeader = $('<h3>');
+		pageHeader.css('display', 'inline');
+		pageHeader.html('Special Export');
+		pageHeaderCell.append(pageHeader);
+		pageHeaderRow.append(pageHeaderCell);
+		specialExportTable.append(pageHeaderRow);
+		
+		//create a row to hold all the steps
+		var selectStepsTableRow = $('<tr>');
+		
+		//create the table that will contain all the steps
+		var selectStepsTable = this.createSpecialExportSelectStepsTable();
+		
+		selectStepsTableRow.append(selectStepsTable);
+		
+		specialExportTable.append(selectStepsTableRow);
+		
+		//create the back button row that will show at the bottom of the screen
+		var backButtonRow = this.createExportBackButtonRow();
+		specialExportTable.append(backButtonRow);
+		
+		specialExportDiv.append(specialExportTable);
+	}
+};
+
+/**
+ * Create the table of steps for the special export
+ */
+View.prototype.createSpecialExportSelectStepsTable = function() {
+	//create the table
+	var table = $('<table>');
+	
+	//initialize the activity counter
+	this.activityNumber = 0;
+	
+	//add the step rows to the table
+	this.createSpecialExportSelectStepsTableHelper(table, this.getProject().getRootNode());
+	
+	return table;
+};
+
+/**
+ * Populate the table with step rows. This is a recursive function
+ * that will traverse the activities and steps in the project.
+ * @param table the html table that will contain all the steps
+ * @param node the current node we are on
+ */
+View.prototype.createSpecialExportSelectStepsTableHelper = function(table, node) {
+	//get the current node id
+	var nodeId = node.id;
+	
+	if(node.isLeafNode()) {
+		//this node is a leaf/step
+
+		var row = $('<tr>');
+		var cell = $('<td>');
+		
+		//get the step number and title
+		var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
+		var nodeType = node.getType();
+
+		//check if this step can be special exported
+		if(node.canSpecialExport()) {
+			//this step type can be special exported so we will display a button
+
+			//create the button for the step
+			var stepButton = $('<input>');
+			stepButton.attr('type', 'button');
+			stepButton.attr('id', 'stepButton_' + nodeId);
+			stepButton.css('margin-left', '20px');
+			stepButton.val(stepNumberAndTitle + '(' + nodeType + ')');
+			stepButton.click({thisView:this, nodeId:nodeId}, function(event) {
+				var thisView = event.data.thisView;
+				var nodeId = event.data.nodeId;
+				
+				//make the request for the special export file
+				thisView.specialExportStepButtonClicked(nodeId);
+			});
+			
+			cell.append(stepButton);
+		} else {
+			//this step can't be special exported so we will just display the step name as text
+			
+			//create the step label
+			var stepP = $('<p>');
+			stepP.css('display', 'inline');
+			stepP.css('margin-left', '20px');
+			stepP.html(stepNumberAndTitle + '(' + nodeType + ')');
+			
+			cell.append(stepP);
+		}
+		
+		row.append(cell);
+		
+		table.append(row);
+	} else {
+		/*
+		 * we need to skip the first sequence because that is always the
+		 * master sequence. we will encounter the master sequence when 
+		 * this.activityNumber is 0, so all the subsequent activities will
+		 * start at 1.
+		 */
+		if(this.activityNumber != 0) {
+			//this node is a sequence so we will display a checkbox and label for the current activity
+			
+			var row = $('<tr>');
+			var cell = $('<td>');
+			
+			//get the activity number and title
+			var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
+			
+			//create the h4 to display the activity label
+			var activityH4 = $('<h4>');
+			activityH4.html('Activity ' + stepNumberAndTitle);
+			activityH4.css('display', 'inline');
+			
+			cell.append(activityH4);
+			
+			row.append(cell);
+			
+			table.append(row);
+		}
+
+		//increment the activity number
+		this.activityNumber++;
+		
+		//loop through all its children
+		for(var x=0; x<node.children.length; x++) {
+			//add the children
+			this.createSpecialExportSelectStepsTableHelper(table, node.children[x]);
+		}
+	}
+};
+
+/**
+ * Create the special export div
+ */
+View.prototype.createSpecialExportDiv = function() {
+	var specialExportDiv = $('<div>');
+	specialExportDiv.attr('id', 'specialExportDiv');
+	
+	return specialExportDiv;
 };
 
 /**
