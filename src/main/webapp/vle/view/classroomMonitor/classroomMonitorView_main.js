@@ -171,6 +171,10 @@ View.prototype.showGradeByStepDisplay = function() {
  * Show the export student work display
  */
 View.prototype.showExportStudentWorkDisplay = function() {
+	//clear any existing buttons in the upper right
+	this.clearDisplaySpecificButtonsDiv();
+	this.clearSaveButtonDiv();
+	
 	//hide all the other display divs
 	this.hideAllDisplays();
 	
