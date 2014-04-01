@@ -122,18 +122,12 @@
 		class="org.wise.portal.presentation.web.controllers.admin.AdminIndexController">
 	</bean>
 
-	<bean id="registerController"
-		class="org.wise.portal.presentation.web.controllers.RegisterController" />
-
 	<bean id="indexController"
 		class="org.wise.portal.presentation.web.controllers.IndexController">
 		<property name="newsItemService" ref="newsItemService" />
 		<property name="projectService" ref="projectService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
-
-	<bean id="creditsController"
-		class="org.wise.portal.presentation.web.controllers.CreditsController" />
 
 	<bean id="selectteamController"
 		class="org.wise.portal.presentation.web.controllers.student.SelectTeamController">
@@ -186,10 +180,6 @@
 		<property name="successView" value="student/teamsigninsuccess" />
 		<property name="studentAttendanceService" ref="studentAttendanceService" />
 		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="curriculumSubjectsController"
-		class="org.wise.portal.presentation.web.controllers.CurriculumSubjectsController">
 	</bean>
 
 	<bean id="gradeWorkController"
@@ -1127,7 +1117,6 @@
 				/teacher/index.html=teacherIndexController
 				/teacher/termsofuse.html=termsOfUseController
 				/teacher/registerteacher.html=registerteacherController
-				/teacher/curriculumsubjects.html=curriculumSubjectsController
 				/teacher/projects/languagetranslations.html=languageTranslationsController
 				/teacher/projects/projectinfo.html=projectInfoController
 				/teacher/projects/customized/shareproject.html=shareProjectController
@@ -1159,7 +1148,6 @@
 				/**/index.html=indexController
 				/previewproject.html=previewprojectController
 				/previewprojectlist.html=previewprojectlistController
-				/credits.html=creditsController
 				/forgotaccount/selectaccounttype.html=selectAccountTypeController
 				/forgotaccount/teacher/index.html=forgotAccountTeacherIndexController
 				/forgotaccount/teacher/success.html=forgotAccountTeacherSuccessController
