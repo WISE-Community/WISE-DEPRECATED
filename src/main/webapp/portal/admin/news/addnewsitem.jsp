@@ -10,33 +10,20 @@
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 
-    
 <title><spring:message code="wiseAdmin" /></title>
-
 </head>
 <body>
-<%@ include file="../../headermain.jsp"%>
+<h3><spring:message code="admin.news.addNewsItem" /></h3>
 
-<!-- Support for Spring errors object -->
-<spring:bind path="newsItemParameters.*">
-  <c:forEach var="error" items="${status.errorMessages}">
-    <b>
-      <br /><c:out value="${error}"/>
-    </b>
-  </c:forEach>
-</spring:bind>
-
-<br>
-<h5><spring:message code="admin.news.addNewsItem" /></h5>
-
-	<form:form method="post" action="addnewsitems.html" commandName="newsItemParameters" id="addnewsitems" autocomplete='off'>
+	<form:form method="post" action="addnewsitems.html" id="addnewsitems" autocomplete='off'>
 		<dl>
 		<dt><label for="titleField"><spring:message code="title" /></label></dt>
-		<dd><form:input path="title" size="50" id="titleField"/> </dd>
+		<dd><input name="title" size="75" id="titleField"></input> </dd>
 		<dt><label for="newsField"><spring:message code="message" /></label></dt>
-		<dd><form:textarea rows="10" cols="50" path="news" id="newsField"/></dd>
+		<dd><textarea rows="20" cols="100" name="news" id="newsField"></textarea></dd>
 		</dl>
-		 <input type="submit" id="save" value="<spring:message code="submit" />" />
+   	    <input type="submit" id="save" value="<spring:message code="submit" />" />
+	    <input type="hidden" id="action" name="action" value="add"></input>
 
 	</form:form>
 </body>

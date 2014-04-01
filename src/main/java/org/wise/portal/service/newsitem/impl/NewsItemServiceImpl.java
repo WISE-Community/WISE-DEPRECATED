@@ -22,17 +22,15 @@
  */
 package org.wise.portal.service.newsitem.impl;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
 
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.newsitem.NewsItemDao;
-import org.wise.portal.domain.impl.NewsItemParameters;
 import org.wise.portal.domain.newsitem.NewsItem;
 import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.service.newsitem.NewsItemService;
 
 /**
@@ -44,15 +42,44 @@ public class NewsItemServiceImpl implements NewsItemService{
 	private NewsItemDao<NewsItem> newsItemDao;
 	
 	@Transactional()
-	public NewsItem createNewsItem(NewsItemParameters params){
+	public NewsItem createNewsItem(Date date, User owner, String title, String news){
 		NewsItem newsItem = new NewsItemImpl();
-		newsItem.setDate(params.getDate());
-		newsItem.setNews(params.getNews());
-		newsItem.setOwner(params.getOwner());
-		newsItem.setTitle(params.getTitle());
+		newsItem.setDate(date);
+		newsItem.setOwner(owner);
+		newsItem.setTitle(title);
+		newsItem.setNews(news);
 		
 		newsItemDao.save(newsItem);
 		return newsItem;
+	}
+	
+	@Transactional(readOnly = true)
+	public List<NewsItem> retrieveAllNewsItem(){
+		return newsItemDao.getList();
+	}
+
+	@Transactional()
+	public NewsItem retrieveById(Long id) throws ObjectNotFoundException{
+		try{
+			return newsItemDao.getById(id);
+		} catch (ObjectNotFoundException e){
+			throw e;
+		}
+	}
+	
+	@Transactional()
+	public void updateNewsItem(Long id, Date date, User owner, String title, String news) 
+			throws ObjectNotFoundException {
+		try{
+			NewsItem newsItem = newsItemDao.getById(id);
+			newsItem.setDate(date);
+			newsItem.setOwner(owner);
+			newsItem.setTitle(title);
+			newsItem.setNews(news);
+			newsItemDao.save(newsItem);
+		} catch(ObjectNotFoundException e){
+			throw e;
+		}	
 	}
 	
 	@Transactional()
@@ -64,42 +91,11 @@ public class NewsItemServiceImpl implements NewsItemService{
 		}
 	}
 	
-	@Transactional(readOnly = true)
-	public List<NewsItem> retrieveAllNewsItem(){
-		return newsItemDao.getList();
-	}
-
-	@Transactional()
-	public NewsItem updateNewsItem(Long id, NewsItemParameters params)
-		throws ObjectNotFoundException{
-		try{
-			NewsItem newsItem = newsItemDao.getById(id);
-			newsItem.setDate(params.getDate());
-			newsItem.setOwner(params.getOwner());
-			newsItem.setNews(params.getNews());
-			newsItem.setTitle(params.getTitle());
-			newsItemDao.save(newsItem);
-			return newsItem;
-		} catch(ObjectNotFoundException e){
-			throw e;
-		}
-	}
-	
-	@Transactional()
-	public NewsItem retrieveById(Long id) throws ObjectNotFoundException{
-		try{
-			return newsItemDao.getById(id);
-		} catch (ObjectNotFoundException e){
-			throw e;
-		}
-	}
-	
 	/**
 	 * @param newsItemDao the newsItemDao to set
 	 */
 	public void setNewsItemDao(NewsItemDao<NewsItem> newsItemDao) {
 		this.newsItemDao = newsItemDao;
 	}
-	
 
 }

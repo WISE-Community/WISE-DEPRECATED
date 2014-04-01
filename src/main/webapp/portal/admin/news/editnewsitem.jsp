@@ -15,30 +15,19 @@
 
 </head>
 <body>
-<%@ include file="../../headermain.jsp"%>
+<h3><spring:message code="admin.news.editNewsItem" /></h3>
 
-<!-- Support for Spring errors object -->
-<spring:bind path="newsItemParameters.*">
-  <c:forEach var="error" items="${status.errorMessages}">
-    <b>
-      <br /><c:out value="${error}"/>
-    </b>
-  </c:forEach>
-</spring:bind>
-
-<br>
-<h5><spring:message code="admin.news.editNewsItem" /></h5>
-
-	<form:form method="post" action="editnewsitem.html" commandName="newsItemParameters" id="editnewsitem" autocomplete='off'>
+	<form method="post" action="editnewsitem.html" id="editnewsitem" autocomplete='off'>
 		<dl>
 		<dt><label for="titleField"><spring:message code="title" /></label></dt>
-		<dd><form:input path="title" size="50" id="titleField"/> </dd>
+		<dd><input size="75" id="title" name="title" value="${newsItem.title}"></input> </dd>
 		<dt><label for="newsField"><spring:message code="message" /></label></dt>
-		<dd><form:textarea rows="10" cols="50" path="news" id="newsField"/></dd>
+		<dd><textarea rows="20" cols="100" id="news" name="news">${newsItem.news}</textarea></dd>
 		</dl>
-
+	    <input type="hidden" id="newsItemId" name="newsItemId" value="${newsItem.id}"></input>
+	    <input type="hidden" id="action" name="action" value="edit"></input>
 		 <input type="submit" id="save" value="<spring:message code="submit" />" />
  	
-	</form:form>
+	</form>
 </body>
 </html>

@@ -22,14 +22,12 @@
  */
 package org.wise.portal.service.newsitem;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
-
 
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.impl.NewsItemParameters;
 import org.wise.portal.domain.newsitem.NewsItem;
+import org.wise.portal.domain.user.User;
 
 /**
  * A service for working with <code>NewsItem</code> objects.
@@ -40,44 +38,51 @@ import org.wise.portal.domain.newsitem.NewsItem;
 public interface NewsItemService {
 	
 	/**
-	 * creates a new NewsItem in the data store.
+	 * Creates a new NewsItem in the data store.
 	 * 
-	 * @param params <code>NewsItemParameters</code>
-	 * @return a NewsItem
+	 * @param date date news item was created
+	 * @param owner user who created this news item
+	 * @param title news item title 
+	 * @param news news item text
+	 * @return a NewsItem that was created
 	 */
-	public NewsItem createNewsItem(NewsItemParameters params);
+	public NewsItem createNewsItem(Date date, User owner, String title, String news);
 	
-	
+
 	/**
-	 * deletes a NewsItem from the data store.
-	 * 
-	 * @param newsItemId <code>Long</code>
-	 */
-	public void deleteNewsItem(Long newsItemId);
-	
-	/**
-	 * Updates a NewsItem in the data store.
-	 * 
-	 * @param newsItemParameters <code>NewsItemParameters</code>
-	 * @param id <code>Long</code>
-	 * @return an updated NewsItem
-	 * @throws ObjectNotFoundException 
-	 */
-	public NewsItem updateNewsItem(Long id, NewsItemParameters params) throws ObjectNotFoundException;
-	
-	/**
-	 * retrieves all NewsItem from the data store.
+	 * Retrieves all NewsItem from the data store.
 	 * 
 	 * @return a Set of NewsItem
 	 */
 	public List<NewsItem> retrieveAllNewsItem();
 	
 	/**
-	 * retrieves a NewsItem given an ID
+	 * Retrieves a NewsItem given an ID
 	 * 
 	 * @param newsItemId <code>Long</code>
 	 * @return NewsItem
 	 * @throws ObjectNotFoundException
 	 */
 	public NewsItem retrieveById(Long id) throws ObjectNotFoundException;
+	
+	/**
+	 * Updates a NewsItem in the data store.
+	 * 
+	 * @param id news item id
+	 * @param date date news item was created
+	 * @param owner user who created this news item
+	 * @param title news item title 
+	 * @param news news item text
+	 * @throws ObjectNotFoundException 
+	 */
+	public void updateNewsItem(Long id, Date date, User owner, String title,
+			String news) throws ObjectNotFoundException;
+	
+	/**
+	 * Deletes a NewsItem from the data store.
+	 * 
+	 * @param newsItemId <code>Long</code>
+	 */
+	public void deleteNewsItem(Long newsItemId);
+
 }
