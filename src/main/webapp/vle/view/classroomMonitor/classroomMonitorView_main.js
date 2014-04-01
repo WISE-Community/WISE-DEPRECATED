@@ -209,23 +209,23 @@ View.prototype.createClassroomMonitorButtons = function() {
 	//make the period button class
 	var chooseClassroomMonitorDisplayButtonClass = 'chooseClassroomMonitorDisplayButton';
 	
-	//create the pause all screens tool button
-	var pauseScreensToolButton = $('<input/>').attr({id:'pauseScreensButton', type:'button', name:'pauseScreensButton', value:'Pause Screens Tool'});
-	pauseScreensToolButton.addClass(chooseClassroomMonitorDisplayButtonClass);
+	//create the student progress button
+	var studentProgressButton = $('<input/>').attr({id:'studentProgressButton', type:'button', name:'studentProgressButton', value:'Student Progress'});
+	studentProgressButton.addClass(chooseClassroomMonitorDisplayButtonClass);
 	
 	/*
 	 * make the button yellow since the pause screens display is 
 	 * the display we show when the classroom monitor starts up
 	 */
-	this.setActiveButtonBackgroundColor(pauseScreensToolButton);
-	
-	//create the student progress button
-	var studentProgressButton = $('<input/>').attr({id:'studentProgressButton', type:'button', name:'studentProgressButton', value:'Student Progress'});
-	studentProgressButton.addClass(chooseClassroomMonitorDisplayButtonClass);
+	this.setActiveButtonBackgroundColor(studentProgressButton);
 	
 	//create the step progress button
 	var stepProgressButton = $('<input/>').attr({id:'stepProgressButton', type:'button', name:'stepProgressButton', value:'Step Progress'});
 	stepProgressButton.addClass(chooseClassroomMonitorDisplayButtonClass);
+	
+	//create the pause all screens tool button
+	var pauseScreensToolButton = $('<input/>').attr({id:'pauseScreensButton', type:'button', name:'pauseScreensButton', value:'Pause Screens Tool'});
+	pauseScreensToolButton.addClass(chooseClassroomMonitorDisplayButtonClass);
 	
 	//create the my notes button
 	var myNotesButton = $('<input/>').attr({id:'myNotesButton', type:'button', name:'myNotesButton', value:'My Notes'});
@@ -234,17 +234,6 @@ View.prototype.createClassroomMonitorButtons = function() {
 	//create the export student work button
 	var exportStudentWorkButton = $('<input/>').attr({id:'exportStudentWorkButton', type:'button', name:'exportStudentWorkButton', value:'Export Student Work'});
 	exportStudentWorkButton.addClass(chooseClassroomMonitorDisplayButtonClass);
-	
-	//set the click event for the pause all screens tool button
-	pauseScreensToolButton.click({thisView:this}, function(event) {
-		var thisView = event.data.thisView;
-		
-		//clear the background from the other display buttons and make this button background yellow
-		thisView.setActiveButtonBackgroundColor(this, chooseClassroomMonitorDisplayButtonClass);
-		
-		//show the pause all screens display
-		thisView.showPauseScreensDisplay();
-	});
 	
 	//set the click event for the student progress button
 	studentProgressButton.click({thisView:this}, function(event) {
@@ -266,6 +255,17 @@ View.prototype.createClassroomMonitorButtons = function() {
 		
 		//show the step progress display
 		thisView.showStepProgressDisplay();
+	});
+	
+	//set the click event for the pause all screens tool button
+	pauseScreensToolButton.click({thisView:this}, function(event) {
+		var thisView = event.data.thisView;
+		
+		//clear the background from the other display buttons and make this button background yellow
+		thisView.setActiveButtonBackgroundColor(this, chooseClassroomMonitorDisplayButtonClass);
+		
+		//show the pause all screens display
+		thisView.showPauseScreensDisplay();
 	});
 	
 	//set the click event for the my notes button
@@ -290,9 +290,9 @@ View.prototype.createClassroomMonitorButtons = function() {
 	});
 	
 	//add the select display buttons
-	$('#selectDisplayButtonsDiv').append(pauseScreensToolButton);
 	$('#selectDisplayButtonsDiv').append(studentProgressButton);
 	$('#selectDisplayButtonsDiv').append(stepProgressButton);
+	$('#selectDisplayButtonsDiv').append(pauseScreensToolButton);
 	$('#selectDisplayButtonsDiv').append(myNotesButton);
 	$('#selectDisplayButtonsDiv').append(exportStudentWorkButton);
 	
@@ -2722,10 +2722,10 @@ View.prototype.studentsOnlineListReceived = function(data) {
 	this.createClassroomMonitorDisplays();
 	
 	/*
-	 * show the pause all screens display as the default screen to show
+	 * show the student progress display as the default screen to show
 	 * when the classroom monitor initially loads
 	 */
-	this.showPauseScreensDisplay();
+	this.showStudentProgressDisplay();
 	
 	if(studentsOnlineList != null) {
 		//loop through all the students online
