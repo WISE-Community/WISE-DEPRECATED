@@ -837,13 +837,15 @@ var componentloader = function(em, sl){
 			variables:{},
 			events:{
 				'classroomMonitorConfigUrlReceived': [null, null],
-				'loadingProjectComplete': [null, null]
+				'loadingProjectComplete': [null, null],
+				'premadeCommentWindowLoaded': [null, null]
 			},
 			methods:{},
 			initialize:{
 				init:function(view){
 					eventManager.subscribe("classroomMonitorConfigUrlReceived", view.classroomMonitorDispatcher, view);
 					eventManager.subscribe("loadingProjectCompleted", view.classroomMonitorDispatcher, view);
+					eventManager.subscribe("premadeCommentWindowLoaded", view.classroomMonitorDispatcher, view);
 				}
 			}
 		}

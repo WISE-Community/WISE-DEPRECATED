@@ -3,6 +3,8 @@ View.prototype.classroomMonitorDispatcher = function(type, args, obj) {
 		obj.getClassroomMonitorConfig(args[0]);
 	} else if(type == 'loadingProjectCompleted') {
 		obj.getStudentStatuses();
+	} else if(type=='premadeCommentWindowLoaded') {
+		obj.premadeCommentWindowLoaded();
 	}
 };
 
@@ -37,9 +39,9 @@ View.prototype.startClassroomMonitor = function() {
 	
 	//set the classroom monitor header
 	if(runName != null && runId != null) {
-		$('#classroomMonitorHeader').text(runName + ' (Run ID ' + runId + ')');
+		$('#classroomMonitorHeader').text('WISE Grading Tool 2.0 Beta: ' + runName + ' (Run ID ' + runId + ')');
 	} else {
-		$('#classroomMonitorHeader').text('Classroom Monitor');		
+		$('#classroomMonitorHeader').text('WISE Grading Tool 2.0 Beta');
 	}
 	
 	//display a loading message
@@ -1379,6 +1381,7 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	var isWorkNewerThanComment = false;
 	var scorePostTime = null;
 	var commentPostTime = null;
+	var flagPostTime = null;
 	
 	//create the td that will contain everything
 	var stepCommentScoreTD = $('<td>');
@@ -1424,6 +1427,64 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	//set the event for when the input value is changed and then loses focus
 	scoreInput.on('change', {thisView:this, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId}, this.saveScore);
 	
+	//create the flag check box
+	var flagCheckBox = $('<input>');
+	flagCheckBox.attr('id', 'flagInput_' + stepWorkId);
+	flagCheckBox.attr('type', 'checkbox');
+	flagCheckBox.click({thisView:this, nodeId:nodeId, workgroupId:workgroupId, stepWorkId:stepWorkId}, function(event) {
+		var thisView = event.data.thisView;
+		var stepWorkId = event.data.stepWorkId;
+		var nodeId = event.data.nodeId;
+		var workgroupId = event.data.workgroupId;
+		
+		//the flag check box was clicked so we will save the flag annotation
+		thisView.flagCheckBoxClicked(nodeId, workgroupId, stepWorkId);
+	});
+	
+	//get the latest flag annotation for this step and student
+	var latestFlagAnnotation = this.getLatestAnnotation(nodeId, workgroupId, 'flag');
+	
+	if(latestFlagAnnotation != null) {
+		//get the score
+		var flag = latestFlagAnnotation.value;
+		
+		if(flag == 'flagged') {
+			//check the check box
+			flagCheckBox.attr('checked', true);
+		}
+		
+		//get the post time for the score
+		flagPostTime = latestFlagAnnotation.postTime;
+		
+		if(visitPostTime > flagPostTime) {
+			//the student work is newer than the score annotation
+			isWorkNewerThanFlag = true;
+		}
+	} else {
+		//the student work is new
+		isWorkNewerThanFlag = true;
+	}
+	
+	//create the open premade comments link
+	var premadeCommentsLink = $('<a>');
+	premadeCommentsLink.css('display', 'inline');
+	premadeCommentsLink.css('text-decoration', 'underline');
+	premadeCommentsLink.css('color', 'blue');
+	premadeCommentsLink.css('cursor', 'pointer');
+	premadeCommentsLink.text('Open Premade Comments');
+	premadeCommentsLink.click({thisView:this, stepWorkId:stepWorkId}, function(event) {
+		var thisView = event.data.thisView;
+		var stepWorkId = event.data.stepWorkId;
+		var commentBoxId = 'commentTextArea_' + stepWorkId;
+		var studentWorkColumnId = 'stepWorkTD_' + stepWorkId;
+		
+		/*
+		 * the open premade comments link was clicked so we will open up the
+		 * premade comments window
+		 */
+		thisView.openPremadeCommentsLinkClicked(commentBoxId, studentWorkColumnId);
+	});
+	
 	//create the comment textarea
 	var commentTextArea = $('<textarea>');
 	commentTextArea.attr('id', 'commentTextArea_' + stepWorkId);
@@ -1457,28 +1518,61 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	//set the event for when the textarea value is changed and then loses focus
 	commentTextArea.on('change', {thisView:this, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId}, this.saveComment);
 	
-	//add the score input
-	stepCommentScoreDiv.append('Score: ');
-	stepCommentScoreDiv.append(scoreInput);
-	stepCommentScoreDiv.append('<br>');
+	//create the table that will contain the score, flag, and comment input
+	var stepCommentScoreTable = $('<table>');
 	
-	//add the comment textarea
-	stepCommentScoreDiv.append('Comment: ');
-	stepCommentScoreDiv.append('<br>');
-	stepCommentScoreDiv.append(commentTextArea);
+	//create the row that will contain the score and flag
+	var scoreAndFlagRow = $('<tr>');
 	
-	stepCommentScoreDiv.append('<br>');
+	//create the score cell
+	var scoreCell = $('<td>');
+	scoreCell.attr('width', '50%');
+	var scoreP = $('<p>');
+	scoreP.css('display', 'inline');
+	scoreP.text('Score: ');
 	
-	//add the div to the td
-	stepCommentScoreTD.append(stepCommentScoreDiv);
+	scoreCell.append(scoreP);
+	scoreCell.append(scoreInput);
 
+	//create the flag cell
+	var flagCell = $('<td>');
+	flagCell.attr('width', '50%');
+	var flagP = $('<p>');
+	flagP.css('display', 'inline');
+	flagP.text('Flag: ');
+	
+	flagCell.append(flagP);
+	flagCell.append(flagCheckBox);
+	
+	scoreAndFlagRow.append(scoreCell);
+	scoreAndFlagRow.append(flagCell);
+	
+	//create the row that will contain the comment
+	var commentRow = $('<tr>');
+	var commentCell = $('<td>');
+	commentCell.attr('colspan', 2);
+	
+	var commentP = $('<p>');
+	commentP.text('Comment: ');
+	commentP.css('display', 'inline');
+	
+	commentCell.append(commentP);
+	commentCell.append(premadeCommentsLink);
+	commentCell.append(commentTextArea);
+	
+	commentRow.append(commentCell);
+	
+	//create the row that will contain the timestamp
+	var timestampRow = $('<tr>');
+	var timestampCell = $('<td>');
+	
 	//create the div to display the annotation timestamp
 	var annotationTimestampDiv = $('<div>');
 	annotationTimestampDiv.attr('id', 'annotationTimestamp_' + stepWorkId);
 	annotationTimestampDiv.css('font-size', '0.75em');
 	
 	//get the latest timestamp between the score and comment
-	var annotationPostTime = Math.max(scorePostTime, commentPostTime);
+	var annotationPostTime = Math.max(scorePostTime, commentPostTime, flagPostTime);
 	
 	if(annotationPostTime != 0) {
 		//create the annotation post time date
@@ -1491,10 +1585,101 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 		annotationTimestampDiv.html('Last Annotation: not available');
 	}
 	
-	//add the annotaiton timestamp div to the comment and score div
-	stepCommentScoreDiv.append(annotationTimestampDiv);
+	timestampCell.append(annotationTimestampDiv);
 	
+	timestampRow.append(timestampCell);
+	
+	//add the rows to the table
+	stepCommentScoreTable.append(scoreAndFlagRow);
+	stepCommentScoreTable.append(commentRow);
+	stepCommentScoreTable.append(timestampRow);
+	
+	//add the table to the div
+	stepCommentScoreDiv.append(stepCommentScoreTable);
+	
+	//add the div to the td
+	stepCommentScoreTD.append(stepCommentScoreDiv);
+
 	return stepCommentScoreTD;
+};
+
+/**
+ * The flag check box was clicked so we will save the flag annotation to the server
+ * @param nodeId the node id for the step
+ * @param workgroupId the student workgroup id
+ * @param stepWorkId the student work id
+ */
+View.prototype.flagCheckBoxClicked = function(nodeId, workgroupId, stepWorkId) {
+	//get the check box
+	var flagCheckBox = $('#flagInput_' + stepWorkId);
+	
+	//get whether it was checked or not
+	var checkBoxValue = flagCheckBox.attr('checked')
+	var isChecked = false;
+	
+	if(checkBoxValue == 'checked') {
+		//the check box was checked
+		isChecked = true;
+	}
+	
+	//get the url for saving the flag annotation
+	var postFlagsUrl = this.getConfig().getConfigParam('postFlagsUrl');
+	
+	var value = '';
+	
+	//check if we are flagging or unflagging the flag
+	if(isChecked) {
+		//we are flagging the flag
+		value = 'flagged';
+	} else {
+		//we are deleting/unflagging the flag
+		value = 'unflagged';		
+	}
+	
+	//get the parameters for posting the flag annotation
+	var runId = this.getConfig().getConfigParam('runId');
+	var toWorkgroup = workgroupId;
+	var fromWorkgroup = this.getUserAndClassInfo().getWorkgroupId();
+	var annotationType = 'flag';
+	
+	var postFlagArgs = {
+		runId:runId,
+		nodeId:nodeId,
+		toWorkgroup:toWorkgroup,
+		fromWorkgroup:fromWorkgroup,
+		stepWorkId:stepWorkId,
+		value:value,
+		annotationType:annotationType
+	};
+	
+	//make the call to post the annotation
+	this.connectionManager.request('POST', 1, postFlagsUrl, postFlagArgs, this.postFlagCallback, [this, nodeId, toWorkgroup, fromWorkgroup, runId, stepWorkId], this.postFlagCallbackFail);
+};
+
+/**
+ * The callback for posting flag annotations
+ */
+View.prototype.postFlagCallback = function() {
+	
+};
+
+/**
+ * The failure callback for posting flag annotations
+ */
+View.prototype.postFlagCallbackFail = function() {
+	
+};
+
+/**
+ * The open premade comments link was clicked so we will open the
+ * premade comments window
+ * @param commentBoxId the dom id of the comment textarea that we will
+ * be inserting the premade comment into
+ * @param studentWorkColumnid the dom id of the div that is displaying
+ * the specific student work in the grading tool
+ */
+View.prototype.openPremadeCommentsLinkClicked = function(commentBoxId, studentWorkColumnId) {
+	this.openPremadeComments(commentBoxId, studentWorkColumnId);
 };
 
 /**

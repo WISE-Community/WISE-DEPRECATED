@@ -616,11 +616,11 @@ View.prototype.submitPremadeComment = function() {
 	$(commentBoxId).attr('value', commentText);
 	$(commentBoxId).html(commentText);
 	
-	//give the comment box back in the original grading page focus
-	$(commentBoxId).focus();
-	
-	//remove the focus so that the textarea will save since it saves on blur
-	$(commentBoxId).blur();
+	/*
+	 * call the change function so that the change event occurs and
+	 * saves the comment to the server
+	 */
+	$(commentBoxId).change();
 	
 	//close the premade comment window
 	this.premadeCommentsWindow.close();

@@ -3405,7 +3405,7 @@ View.prototype.getScoringAndCommentingTdHtml = function(workgroupId, nodeId, tea
 	scoringAndCommentingTdHtml += "<table class='teacherAnnotationTable'>";
 	
 	//display the score box
-	scoringAndCommentingTdHtml += "<tr><td>"+this.getI18NString("score")+": <input type='text' id='annotationScoreTextArea_" + workgroupId + "_" + nodeId + "' value='" + annotationScoreValue + "' onblur=\"eventManager.fire('scoreUpdated', ['"+nodeId+"','"+workgroupId+"', '"+teacherId+"', '"+runId+"', '"+stepWorkId+"'])\" " + isGradingDisabled + "/> / " + maxScore + "</td></tr>";
+	scoringAndCommentingTdHtml += "<tr><td>"+this.getI18NString("score")+": <input type='text' id='annotationScoreTextArea_" + workgroupId + "_" + nodeId + "' value='" + annotationScoreValue + "' onchange=\"eventManager.fire('scoreUpdated', ['"+nodeId+"','"+workgroupId+"', '"+teacherId+"', '"+runId+"', '"+stepWorkId+"'])\" " + isGradingDisabled + "/> / " + maxScore + "</td></tr>";
 	
 	//used to score the auto graded score so we can place it in the studentWorkRowOrderObject
 	var autoGradedScore = null;
@@ -3469,7 +3469,7 @@ View.prototype.getScoringAndCommentingTdHtml = function(workgroupId, nodeId, tea
 	}
 	
 	//display the comment box
-	scoringAndCommentingTdHtml += "<tr><td>"+this.getI18NString("comment")+": " + openPremadeCommentsLink + "<br><textarea wrap='soft' cols='" + textAreaCols + "' rows='" + commentTextAreaRows + "' id='annotationCommentTextArea_" + workgroupId + "_" + nodeId + "' onblur=\"eventManager.fire('commentUpdated', ['"+nodeId+"','"+workgroupId+"', '"+teacherId+"', '"+runId+"', '"+stepWorkId+"', this])\"" + isGradingDisabled + ">" + annotationCommentValue + "</textarea></td></tr>";
+	scoringAndCommentingTdHtml += "<tr><td>"+this.getI18NString("comment")+": " + openPremadeCommentsLink + "<br><textarea wrap='soft' cols='" + textAreaCols + "' rows='" + commentTextAreaRows + "' id='annotationCommentTextArea_" + workgroupId + "_" + nodeId + "' onchange=\"eventManager.fire('commentUpdated', ['"+nodeId+"','"+workgroupId+"', '"+teacherId+"', '"+runId+"', '"+stepWorkId+"', this])\"" + isGradingDisabled + ">" + annotationCommentValue + "</textarea></td></tr>";
 	
 	//display the last annotation post time
 	scoringAndCommentingTdHtml += "<tr><td><p id='lastAnnotationPostTime_" + workgroupId + "_" + nodeId + "' class='lastAnnotationPostTime'>" + lastAnnotationMessage + "</p></td></tr>";
