@@ -173,12 +173,33 @@ View.prototype.startWebSocketConnection = function() {
 							view.lockScreen();
 						} else if(messageType == 'unPauseScreen') {
 							//unlock the student screen
-							view.unlockscreen();
+							view.unlockScreen();
+						} else if(messageType == 'teachersOnlineList') {
+							var unlockScreen = false;
+							
+							var teachersOnlineList = data.teachersOnlineList;
+							
+							/*
+							 * if there are no teachers online we will make sure the student
+							 * screen is unlocked
+							 */
+							if(teachersOnlineList == null || teachersOnlineList.length == 0) {
+								//there are no teachers online so we will unlock the screen
+								unlockScreen = true;
+							}
+							
+							if(unlockScreen) {
+								//unlock the student screen if it is locked since there are no teachers online
+								view.unlockScreen();
+							}
 						}
 					}
 				}
 			}
 		}
+	} else {
+		//unlock the student screen if it is locked since the student's browser does not support web sockets
+		view.unlockScreen();
 	}
 };
 
@@ -421,7 +442,7 @@ View.prototype.lockScreen = function() {
 /**
  * Unlock the student screen
  */
-View.prototype.unlockscreen = function() {
+View.prototype.unlockScreen = function() {
 	//create the lock screen dialog if it does not exist
 	if($('#lockscreen').size()==0){
 		this.renderLockDialog();

@@ -6,11 +6,14 @@ View.prototype.startWebSocketConnection = function() {
 	//get the run id
 	var runId = this.getConfig().getConfigParam('runId');
 	
+	//get the workgroup id
+	var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
+	
 	//get the web socket url
 	var webSocketUrl = this.getConfig().getConfigParam('webSocketUrl');
 	
 	//add the parameter to the websocket url
-	var host = webSocketUrl + '?runId=' + runId;
+	var host = webSocketUrl + '?runId=' + runId + '&workgroupId=' + workgroupId;
 	
 	this.socket = null;
 	

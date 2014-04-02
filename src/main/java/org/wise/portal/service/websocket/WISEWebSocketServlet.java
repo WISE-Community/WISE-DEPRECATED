@@ -864,9 +864,13 @@ public class WISEWebSocketServlet extends WebSocketServlet {
 				//get the user name
 				String userName = WISEWebSocketServlet.getUserName(user);
 				
+				//get the workgroup id
+				Long workgroupId = WISEWebSocketServlet.getWorkgroupId(request);
+				
 				//set the fields
 				setUser(user);
 				setRunId(runId);
+				setWorkgroupId(workgroupId);
 				setFirstName(firstName);
 				setLastName(lastName);
 				setUserName(userName);
@@ -983,6 +987,43 @@ public class WISEWebSocketServlet extends WebSocketServlet {
 		        	
 		        	//send the message that contains the list of connected students for the run
 		        	sendMessage(studentsConnectedMessage.toString());
+	        	} else if(!isTeacher()) {
+	        		/*
+	        		 * the user that has just connected is a student so we will
+	        		 * send them a list of teachers that are also currently connected
+	        		 */
+	        		
+		        	//create the message that will contain the list of connected teachers
+		        	JSONObject teachersConnectedMessage = new JSONObject();
+		        	
+		        	//set the message type
+		        	teachersConnectedMessage.put("messageType", "teachersOnlineList");
+		        	
+		        	/*
+		        	 * the array that will contain the workgroup ids of the teachers
+		        	 * that are currently connected for this run
+		        	 */
+		        	JSONArray teachersOnlineList = new JSONArray();
+		        	
+		        	Iterator<WISEMessageInbound> teacherConnectionIterator = teacherConnectionsForRun.iterator();
+		        	
+		        	//loop through all the teachers that are currently connected for this run
+		        	while(teacherConnectionIterator.hasNext()) {
+		        		//get a teacher connection
+		        		WISEMessageInbound teacherConnection = teacherConnectionIterator.next();
+		        		
+		        		//get the workgroup id
+		        		Long teacherConnectionWorkgroupId = teacherConnection.getWorkgroupId();
+		        		
+		        		//add the workgroup id to the array
+		        		teachersOnlineList.put(teacherConnectionWorkgroupId);
+		        	}
+		        	
+		        	//add the array of connected teachers to the message
+		        	teachersConnectedMessage.put("teachersOnlineList", teachersOnlineList);
+		        	
+		        	//send the message that contains the list of connected teachers for the run
+		        	sendMessage(teachersConnectedMessage.toString());
 	        	}
 			} catch (JSONException e) {
 				e.printStackTrace();
