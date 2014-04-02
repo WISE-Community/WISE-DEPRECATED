@@ -417,9 +417,9 @@ public class InformationController extends AbstractController{
 		String hostName = ControllerUtil.getHostNameFromUrl(portalurl);
 		
 		String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 		String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+    	String cRaterRequestUrl = wiseBaseURL + "/cRater.html?type=cRater";  // the url to make CRater requests
 		String infourl = wiseBaseURL + "/request/info.html";
 		
 		String excelExportRestriction = wiseProperties.getProperty("excelExportRestriction");
@@ -551,9 +551,6 @@ public class InformationController extends AbstractController{
 	    	
 	    	String getStudentListUrl = wiseBaseURL + "/teacher/management/studentlistexcel.html?runId=" + run.getId().toString();
 	    	
-	    	//get the url to make CRater requests
-	    	String cRaterRequestUrl = wiseBaseURL + "/cRater.html?type=cRater";
-	    	
 			/* Set the post level if specified in the run */
 			Integer postLevel = run.getPostLevel();
 
@@ -599,7 +596,6 @@ public class InformationController extends AbstractController{
 				config.put("runInfo", run.getInfo());
 				config.put("isXMPPEnabled", true);  // make this run-specific setting
 				config.put("hostName", hostName);
-				config.put("cRaterRequestUrl", cRaterRequestUrl);
 				config.put("webSocketUrl", webSocketUrl);
 				config.put("studentStatusUrl", studentStatusUrl);
 				config.put("runStatusUrl", runStatusUrl);
@@ -702,6 +698,7 @@ public class InformationController extends AbstractController{
 			config.put("getContentBaseUrl", getContentBaseUrl);
 			config.put("getStudentUploadsBaseUrl", studentUploadsBaseWWW);
 			config.put("theme", "WISE");
+			config.put("cRaterRequestUrl", cRaterRequestUrl);
 
 			User signedInUser = ControllerUtil.getSignedInUser();
 			

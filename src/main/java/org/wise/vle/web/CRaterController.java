@@ -1,15 +1,22 @@
 package org.wise.vle.web;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.vle.domain.annotation.Annotation;
+import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.webservice.crater.CRaterHttpClient;
 import org.wise.vle.utils.SecurityUtils;
 
@@ -35,11 +42,17 @@ public class CRaterController extends AbstractController {
 		
 		boolean allowedAccess = false;
 		
+		
 		/*
+		 * preview mode can make all CRater requests
 		 * teachers can make all CRater requests
 		 * students can only make CRater scoring requests
 		 */
-		if(SecurityUtils.isAdmin(signedInUser)) {
+		if ("portalpreview".equals(request.getParameter("wiseRunMode"))) {
+			allowedAccess = true;
+		} else if (signedInUser == null) {
+			allowedAccess = false;
+		} else if(SecurityUtils.isAdmin(signedInUser)) {
 			//the user is an admin so we will allow this request
 			allowedAccess = true;
 		} else if(SecurityUtils.isTeacher(signedInUser)) {
@@ -103,8 +116,24 @@ public class CRaterController extends AbstractController {
 		
 		if(responseString != null) {
 			try {
-				//write the response string to the response object
-				response.getWriter().write(responseString);
+				if ("portalpreview".equals(request.getParameter("wiseRunMode"))) {	
+					if(responseString != null) {
+						JSONObject studentNodeStateResponse = null;
+						Long nodeStateId = null;
+						
+						JSONObject cRaterResponseJSONObj = 
+								Annotation.createCRaterNodeStateAnnotation(
+										nodeStateId, 
+										CRaterHttpClient.getScore(responseString), 
+										CRaterHttpClient.getConcepts(responseString), 
+										studentNodeStateResponse, 
+										responseString);
+						response.getWriter().write(cRaterResponseJSONObj.toString());
+					}
+				} else {
+					//simply write the response string to the response object
+					response.getWriter().write(responseString);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -767,6 +767,40 @@ View.prototype.removeFromPOSTInProgressArray = function(nodeVisit) {
 };
 
 /**
+ * Invokes the CRater while the user is in preview mode
+ * 
+ * with a GET request and returns an Annotation with the CRater score/response.
+ * @param nodeId id of current step
+ * @param cRaterItemType [CRATER,HENRY]
+ * @param cRaterItemId [GREENROOF-II,SPOON,...]
+ * @param cRaterRequestType [scoring,verify]
+ * @param cRaterResponseId ID to keep track of this crater request
+ * @param successCallback
+ * @param failureCallback
+ */
+View.prototype.invokeCRaterInPreviewMode = function(nodeId,cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback) {
+	var cRaterRequestURL = this.getConfig().getConfigParam('cRaterRequestUrl');
+
+	var cRaterArgs = {
+			cRaterItemType:cRaterItemType,
+			itemId:cRaterItemId,
+			cRaterRequestType:cRaterRequestType,
+			responseId:cRaterResponseId,
+			studentData:studentData,
+			wiseRunMode:"portalpreview"
+	};
+	
+	var callbackData = {
+			view:this,
+			nodeId:nodeId,
+			cRaterItemType:cRaterItemType
+			};
+
+	//make the call to GET the annotation
+	this.connectionManager.request('GET', 1, cRaterRequestURL, cRaterArgs, successCallback, callbackData, failureCallback);
+};
+
+/**
  * Make a request to GET the CRater response. This invokes the VLEAnnotationController
  * with a GET request and returns an Annotation with the CRater score/response.
  * @param stepWorkId
