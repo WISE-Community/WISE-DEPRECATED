@@ -70,9 +70,8 @@
 							</h5>
 							<h5>
 								<spring:message code='admin.index.find' />
-								<a href="account/lookupteacher.html"><spring:message
-										code='teacher_cap' /></a> | <a href="account/lookupstudent.html"><spring:message
-										code='student_cap' /></a>
+								<a href="account/lookupuser.html?userType=teacher"><spring:message code='teacher_cap' /></a> | 
+								<a href="account/lookupuser.html?userType=student"><spring:message code='student_cap' /></a>
 							</h5>
 							<h5>
 								<a href="account/enabledisableuser.html"><spring:message

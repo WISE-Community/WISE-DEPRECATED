@@ -26,7 +26,7 @@ package org.wise.portal.domain.impl;
  * @author patrick lawler
  *
  */
-public class LookupParameters {
+public class LookupUserParameters {
 
 	private String lookupField;
 	

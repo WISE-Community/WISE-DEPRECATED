@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wise.portal.presentation.util.http.Connector;
 
 /**
  * @author patrick lawler

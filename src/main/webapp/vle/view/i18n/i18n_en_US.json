@@ -1,4 +1,8 @@
 {
+	"error_msg_with_reason":{
+		"value":"An error occurred. Please contact WISE Staff. Reason: {0}",
+		"description":"An error message a reason"
+	},  
 	"file_button_text":{
 		"value":"Files",
 		"description":"Text on the File Manager button for Student VLE"

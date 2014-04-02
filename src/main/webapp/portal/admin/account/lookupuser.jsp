@@ -34,23 +34,30 @@ function lookupFieldChanged() {
 
 <div id="page">
 <div id="pageContent">
-<h5 style="color:#0000CC;"><a href="${contextPath}/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 <br>
 
 <!-- Support for Spring errors object -->
 <div id="regErrorMessages">
-	<spring:bind path="lookupParameters.*">
+	<spring:bind path="lookupUserParameters.*">
 		<c:forEach var="error" items="${status.errorMessages}">
 			<b><br /><c:out value="${error}"/></b>
 		</c:forEach>
 	</spring:bind>
 </div>
 
-<form:form method="post" action="lookupstudent.html" commandName="lookupParameters" id="lookupStudent" autocomplete='off'>
-	<form:label path="lookupField"><spring:message code="admin.account.lookupteacher.searchForStudentsBy" />  </form:label>
+<form:form method="post" action="lookupuser.html" commandName="lookupUserParameters" id="lookupUser" autocomplete='off'>
+	<c:choose>
+		<c:when test="${userType == 'student'}">
+			<form:label path="lookupField"><spring:message code="admin.account.lookupteacher.searchForStudentsBy" /></form:label>
+		</c:when>
+		<c:otherwise>
+			<form:label path="lookupField"><spring:message code="admin.account.lookupteacher.searchForTeachersBy" /></form:label>
+		</c:otherwise>
+	</c:choose>
 	<form:select path="lookupField" id="lookupField" onchange="lookupFieldChanged()">
-		<c:forEach var="field" items="${fields }">
-			<form:option value="${field}">${field }</form:option>
+		<c:forEach var="field" items="${fields}">
+			<form:option value="${field}">${field}</form:option>
 		</c:forEach>
 	</form:select>
 	
@@ -62,6 +69,7 @@ function lookupFieldChanged() {
 	
 	<form:input path="lookupData" id="lookupData"/>
 	
+	<input type="hidden" name="userType" value="${userType}" />
 	<input type="submit" id="save" value="<spring:message code="submit" />" />
 </form:form>
 </div>

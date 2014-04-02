@@ -101,8 +101,8 @@
 		<property name="runService" ref="runService" />
 	</bean>
 
-	<bean id="lookupParametersValidator"
-		class="org.wise.portal.presentation.validators.LookupParametersValidator" />
+	<bean id="lookupUserParametersValidator"
+		class="org.wise.portal.presentation.validators.LookupUserParametersValidator" />
 
 	<bean id="announcementParametersValidator"
 		class="org.wise.portal.presentation.validators.AnnouncementParametersValidator" />
@@ -728,23 +728,15 @@
 		<property name="validator" ref="findProjectParametersValidator" />
 	</bean>
 
-	<bean id="lookupTeacherController"
-		class="org.wise.portal.presentation.web.controllers.admin.LookupTeacherController">
+	<bean id="lookupUserController"
+		class="org.wise.portal.presentation.web.controllers.admin.LookupUserController">
 		<property name="userService" ref="userService" />
-		<property name="commandName" value="lookupParameters" />
-		<property name="commandClass" value="org.wise.portal.domain.impl.LookupParameters" />
-		<property name="validator" ref="lookupParametersValidator" />
+		<property name="commandName" value="lookupUserParameters" />
+		<property name="commandClass" value="org.wise.portal.domain.impl.LookupUserParameters" />
+		<property name="validator" ref="lookupUserParametersValidator" />
 	</bean>
-
-	<bean id="lookupParameters" class="org.wise.portal.domain.impl.LookupParameters" />
-
-	<bean id="lookupStudentController"
-		class="org.wise.portal.presentation.web.controllers.admin.LookupStudentController">
-		<property name="userService" ref="userService" />
-		<property name="commandName" value="lookupParameters" />
-		<property name="commandClass" value="org.wise.portal.domain.impl.LookupParameters" />
-		<property name="validator" ref="lookupParametersValidator" />
-	</bean>
+	
+	<bean id="lookupUserParameters" class="org.wise.portal.domain.impl.LookupUserParameters" />
 
 	<bean id="manageUserRolesController"
 		class="org.wise.portal.presentation.web.controllers.admin.ManageUserRolesController">
@@ -1172,8 +1164,7 @@
 				/admin/project/uploadproject.html=uploadProjectController
 				/admin/account/manageusers.html=viewAllUsersController
 				/admin/account/enabledisableuser.html=enableDisableUserController
-				/admin/account/lookupteacher.html=lookupTeacherController
-				/admin/account/lookupstudent.html=lookupStudentController
+				/admin/account/lookupuser.html=lookupUserController
 				/admin/account/manageuserroles.html=manageUserRolesController
 				/admin/project/manageallprojects.html=manageAllProjectsController
 				/admin/run/manageallprojectruns.html=manageAllProjectRunsController

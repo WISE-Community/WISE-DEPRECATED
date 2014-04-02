@@ -25,20 +25,20 @@ package org.wise.portal.presentation.validators;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.wise.portal.domain.impl.LookupParameters;
+import org.wise.portal.domain.impl.LookupUserParameters;
 
 /**
  * @author patrick lawler
  *
  */
-public class LookupParametersValidator implements Validator {
+public class LookupUserParametersValidator implements Validator {
 
 	/**
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean supports(Class clazz) {
-		return LookupParameters.class.isAssignableFrom(clazz);
+		return LookupUserParameters.class.isAssignableFrom(clazz);
 	}
 	
 	/**

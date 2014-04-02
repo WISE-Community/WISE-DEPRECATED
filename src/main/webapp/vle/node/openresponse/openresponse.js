@@ -140,7 +140,7 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 	if (this.isSaveAvailable() || this.isSaveAndLockAvailable() || this.isCheckAnswerAvailable()) {
 		var response = "";
 		
-		/* set html to textarea if richtexteditor exists */
+		//get response appropriately (either from richtexteditor or plain textarea)
 		response = this.getResponse();
 		
 		//check if the student changed their response
@@ -159,7 +159,7 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 					 */
 					
 					/*
-					 * the messsage that says they have x chance(s) to receive feedback, 
+					 * make the messsage that says they have x chance(s) to receive feedback, 
 					 * are they sure they want to submit?
 					 */
 					var you_have = this.view.getI18NString('you_have', 'OpenResponseNode');
@@ -308,6 +308,115 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 					 * for the student to exit the step.
 					 */
 					this.node.save(orState);
+					
+					// If we're in preview mode, make a special case to invoke cRater.
+					// This will bypass the normal data-saving method when cRater is invoked in run mode.
+					// We won't save student response in the db, and we won't use annotations to represent&display crater results.
+					if (this.view.getConfig().getConfigParam('mode') == "portalpreview") {
+						var cRaterItemType = this.content.cRater.cRaterItemType;
+						var cRaterItemId = this.content.cRater.cRaterItemId;
+						var cRaterRequestType = "scoring";
+						var cRaterResponseId = new Date().getTime();
+						var studentData = response;
+						
+						var successCallback = function(responseText, responseJSON, successArgs) {
+							var view = successArgs.view;
+							var nodeId = successArgs.nodeId;
+							var currentNode = view.getProject().getNodeById(nodeId);  //get the node							
+							var cRaterItemType = successArgs.cRaterItemType; //get the crater item type e.g. 'CRATER' or 'HENRY'
+							if (responseJSON != null) {
+								try {
+									var cRaterAnnotationJSON = JSON.parse(responseJSON);
+									
+									// display feedback immediately, if specified in the content
+									// check the step content to see if we need to display the CRater feedback to the student.
+									var cRaterJSON = view.getProject().getNodeById(nodeId).content.getContentJSON().cRater;
+
+									var displayCRaterScoreToStudent = cRaterJSON.displayCRaterScoreToStudent;
+									var displayCRaterFeedbackToStudent = cRaterJSON.displayCRaterFeedbackToStudent;
+									
+									if (displayCRaterScoreToStudent || displayCRaterFeedbackToStudent) {
+										//we will display the score or feedback (or both) to the student
+
+										//get the score and concepts the student received
+										var score = cRaterAnnotationJSON.score;
+										var concepts = cRaterAnnotationJSON.concepts;
+
+										// now find the feedback that the student should see
+										var scoringRules = cRaterJSON.cRaterScoringRules;
+
+										//get the feedback for the given concepts the student satisfied
+										var feedbackTextObject = view.getCRaterFeedback(scoringRules, concepts, score, cRaterItemType);
+
+										//get the feedback text and feedback id
+										var feedbackText = feedbackTextObject.feedbackText;
+										var feedbackId = feedbackTextObject.feedbackId;
+
+										var cRaterFeedbackStringSoFar = "<span class='nodeAnnotationsCRater'>";
+
+										if(displayCRaterScoreToStudent) {
+											//display the score
+											cRaterFeedbackStringSoFar += view.getI18NString('you_got_a_score_of') + score + "<br/><br/>";
+										}
+
+										if(displayCRaterFeedbackToStudent) {
+											cRaterFeedbackStringSoFar += feedbackText + "<br/>";
+										}
+										
+										cRaterFeedbackStringSoFar += "</span>";
+
+										if(cRaterFeedbackStringSoFar != null && cRaterFeedbackStringSoFar != "") {
+											/*
+											 * unlock the screen since we previously locked it to make the student wait
+											 * for the feedback to be displayed
+											 */
+											eventManager.fire('unlockScreenEvent');
+
+											//check if the nodeAnnotationPanel exists
+											if($('#nodeAnnotationsPanel').size()==0){
+												//the show nodeAnnotationPanel does not exist so we will create it
+												$('<div id="nodeAnnotationsPanel" class="nodeAnnotationsPanel"></div>').dialog(
+														{	autoOpen:false,
+															closeText:'Close',
+															modal:false,
+															show:{effect:"fade",duration:200},
+															hide:{effect:"fade",duration:200},
+															title:view.getI18NString("node_annotations_title"),
+															zindex:9999,
+															width:450,
+															height:'auto',
+															position:["center","middle"],
+															resizable:true    					
+														});
+											};
+											// set the title of the dialog based on step title
+											$('#nodeAnnotationsPanel').dialog("option","title",view.getI18NString("node_annotations_title")+" "+view.getProject().getVLEPositionById(nodeId)+": "+currentNode.getTitle());
+											
+											//set the html into the div
+											$('#nodeAnnotationsPanel').html(cRaterFeedbackStringSoFar);
+											
+											// show the annotation panel
+											$('#nodeAnnotationsPanel').dialog('open');
+											
+										}
+									}
+								} catch(err) {
+									/*
+									 * failed to parse JSON. this can occur if the item id is invalid which
+									 * causes an error to be returned from the server instead of the JSON
+									 * that we expect.
+									 */
+								}
+							}
+						};
+						var failureCallback = function(failureType, failureArgs) {
+							// a boo-boo happened getting crater in preview mode.
+							alert(failureArgs.view.getI18NStringWithParams("error_msg_with_reason", ["CRATER SCORE PREVIEW"]));
+						}
+						
+						// invoke CRater in preview mode.
+						this.view.invokeCRaterInPreviewMode(this.node.id,cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback);
+					}					
 				}
 				
 				if((this.content.cRater != null && this.content.cRater.maxCheckAnswers != null && this.isCRaterMaxCheckAnswersUsedUp()) || this.isLocked()) {

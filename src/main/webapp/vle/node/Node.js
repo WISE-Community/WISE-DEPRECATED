@@ -385,6 +385,7 @@ Node.prototype.render = function(contentPanel, studentWork, disable) {
 				this.type == 'OpenResponseNode' || this.type == 'HtmlNode' ||
 				this.type == 'MWNode' || this.type == 'Box2dModelNode') {
 			this.contentPanel.vle = this.view;
+			this.contentPanel.view = this.view;  // TODO: refactor. We should be using view instead of vle in step files...or maybe WISE?
 		}
 	}
 
