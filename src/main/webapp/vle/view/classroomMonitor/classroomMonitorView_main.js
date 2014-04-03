@@ -922,6 +922,34 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		//create the cell to display the project completion percentage for the workgroup
 		var completionPercentageTD = $('<td>').attr({id:'studentProgressTableDataCompletionPercentage_' + workgroupId});
 		
+		//create the div that will contain the HR completion percentage bar
+		var percentageBarDiv = $('<div>');
+		percentageBarDiv.attr('id', 'studentProgressPercentageBarDiv_' + workgroupId);
+		percentageBarDiv.css('display', 'inline');
+		percentageBarDiv.css('width', '75%');
+		percentageBarDiv.css('float', 'left');
+		
+		//create the HR completion percentage bar
+		var percentageBarHR = $('<hr>');
+		percentageBarHR.attr('id', 'studentProgressPercentageBarHR_' + workgroupId);
+		percentageBarHR.attr('width', '0%');
+		percentageBarHR.attr('size', 5);
+		percentageBarHR.attr('color', 'black');
+		percentageBarHR.attr('align', 'left');
+		
+		percentageBarDiv.append(percentageBarHR);
+		
+		//create the div that will contain the completion percentage number
+		var percentageNumberDiv = $('<div>');
+		percentageNumberDiv.attr('id', 'studentProgressPercentageNumberDiv_' + workgroupId);
+		percentageNumberDiv.css('display', 'inline');
+		percentageNumberDiv.css('width', '25%');
+		percentageNumberDiv.css('float', 'right');
+		percentageNumberDiv.css('text-align', 'right');
+		
+		completionPercentageTD.append(percentageBarDiv);
+		completionPercentageTD.append(percentageNumberDiv);
+		
 		//get the student status for the workgroup id
 		var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
 		
@@ -931,11 +959,25 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 			 * student has never loaded the vle or the run occurred before
 			 * we implemented student statuses
 			 */ 
-			completionPercentageTD.text('N/A');
-			completionPercentageTD.attr('title', 'This value is N/A because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and will not display completion percentages due to technical reasons. You may still view student work if you click on the student row.');
+			percentageBarHR.css('display', 'none');
+			percentageNumberDiv.text('N/A');
+			percentageNumberDiv.attr('title', 'This value is N/A because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and will not display completion percentages due to technical reasons. You may still view student work if you click on the student row.');
 		} else {
 			//the student has a student status so we will display the percentage
-			completionPercentageTD.text(completionPercentage + '%');
+			percentageBarHR.attr('width', completionPercentage + '%');
+			percentageNumberDiv.text(completionPercentage + '%');
+			
+			if(completionPercentage > 0) {
+				//show the percentage HR
+				percentageBarHR.css('display', '');
+			} else {
+				/*
+				 * the percentage is 0 so we will not display the HR. we need to hide
+				 * the HR because even if the width is set to 0% it will still have a
+				 * visible width which is misleading.
+				 */
+				percentageBarHR.css('display', 'none');
+			}
 		}
 		
 		//add all the cells to the student row
@@ -1593,6 +1635,7 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	var commentTextArea = $('<textarea>');
 	commentTextArea.attr('id', 'commentTextArea_' + stepWorkId);
 	commentTextArea.attr('cols', 50);
+	commentTextArea.attr('rows', 5);
 	
 	//get the latest comment annotation for this step and student
 	var latestCommentAnnotation = this.getLatestAnnotation(nodeId, workgroupId, 'comment');
@@ -2253,6 +2296,34 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
 		//create the completion percentage cell
 		var completionPercentageTD = $('<td>').attr({id:'stepProgressTableDataCompletionPercentage_' + nodeId});
 		
+		//create the div that will contain the HR completion percentage bar
+		var percentageBarDiv = $('<div>');
+		percentageBarDiv.attr('id', 'stepProgressPercentageBarDiv_' + nodeId);
+		percentageBarDiv.css('display', 'inline');
+		percentageBarDiv.css('width', '75%');
+		percentageBarDiv.css('float', 'left');
+		
+		//create the HR completion percentage bar
+		var percentageBarHR = $('<hr>');
+		percentageBarHR.attr('id', 'stepProgressPercentageBarHR_' + nodeId);
+		percentageBarHR.attr('width', '0%');
+		percentageBarHR.attr('size', 5);
+		percentageBarHR.attr('color', 'black');
+		percentageBarHR.attr('align', 'left');
+		
+		percentageBarDiv.append(percentageBarHR);
+		
+		//create the div that will contain the completion percentage number
+		var percentageNumberDiv = $('<div>');
+		percentageNumberDiv.attr('id', 'stepProgressPercentageNumberDiv_' + nodeId);
+		percentageNumberDiv.css('display', 'inline');
+		percentageNumberDiv.css('width', '25%');
+		percentageNumberDiv.css('float', 'right');
+		percentageNumberDiv.css('text-align', 'right');
+		
+		completionPercentageTD.append(percentageBarDiv);
+		completionPercentageTD.append(percentageNumberDiv);
+
 		//only show percentage completion for steps
 		if(node != null && node.getType() != 'sequence') {
 			//get the student statuses
@@ -2261,16 +2332,33 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
 			//check if there are any student statuses in the array
 			if(studentStatuses != null && studentStatuses.length > 0) {
 				//there are student status objects so we will display the percentage
-				completionPercentageTD.text(completionPercentage + '%');
+				percentageBarHR.attr('width', completionPercentage + '%');
+				percentageNumberDiv.text(completionPercentage + '%');
+				
+				if(completionPercentage > 0) {
+					//show the percentage HR
+					percentageBarHR.css('display', '');
+				} else {
+					/*
+					 * the percentage is 0 so we will not display the HR. we need to hide
+					 * the HR because even if the width is set to 0% it will still have a
+					 * visible width which is misleading.
+					 */
+					percentageBarHR.css('display', 'none');
+				}
 			} else {
 				/*
 				 * there are no student status objects which can mean a
 				 * student has never loaded the vle or the run occurred before
 				 * we implemented student statuses
 				 */ 
-				completionPercentageTD.text('N/A');
-				completionPercentageTD.attr('title', 'This value is N/A because of one of these reasons:\n1. A student has never loaded the project.\n2. This is an old run and will not display completion percentages due to technical reasons. You may still view student work if you click on the step row.');
+				percentageBarHR.css('display', 'none');
+				percentageNumberDiv.text('N/A');
+				percentageNumberDiv.attr('title', 'This value is N/A because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and will not display completion percentages due to technical reasons. You may still view student work if you click on the student row.');
 			}			
+		} else {
+			//the node is an activity so we will not show the percentage bar HR
+			percentageBarHR.css('display', 'none');
 		}
 		
 		//add the cells to the row
@@ -3146,7 +3234,37 @@ View.prototype.updateStudentProgress = function(runId, periodId, workgroupId, cu
 
 	//set the student completion percentage
 	var completionPercentage = this.calculateStudentCompletionForWorkgroupId(workgroupId);
-	$('#studentProgressTableDataCompletionPercentage_' + workgroupId).text(completionPercentage + '%');
+
+	//update the percentage completion bar and number for a student
+	this.updateStudentPercentageCompletion(workgroupId, completionPercentage);
+};
+
+/**
+ * Update the percentage completion bar and number for a student
+ * @param workgroupId the workgroup id
+ * @param completionPercentage the completion percentage
+ */
+View.prototype.updateStudentPercentageCompletion = function(workgroupId, completionPercentage) {
+	if(workgroupId != null && completionPercentage != null) {
+		//update the percentage completion bar
+		$('#studentProgressPercentageBarHR_' + workgroupId).css('display', '');
+		$('#studentProgressPercentageBarHR_' + workgroupId).attr('width', completionPercentage + '%');
+		
+		if(completionPercentage > 0) {
+			//show the percentage HR
+			$('#studentProgressPercentageBarHR_' + workgroupId).css('display', '');
+		} else {
+			/*
+			 * the percentage is 0 so we will not display the HR. we need to hide
+			 * the HR because even if the width is set to 0% it will still have a
+			 * visible width which is misleading.
+			 */
+			$('#studentProgressPercentageBarHR_' + workgroupId).css('display', 'none');
+		}
+		
+		//update the percentage number value
+		$('#studentProgressPercentageNumberDiv_' + workgroupId).text(completionPercentage + '%');
+	}
 };
 
 /**
@@ -3266,19 +3384,43 @@ View.prototype.updateStepProgress = function(nodeId, numberOfStudentsOnStep, com
 	//set the new number of students on step value
 	$('#' + numberOfStudentsOnStepId).text(numberOfStudentsOnStep);
 	
-	//get the id of the completion percentage element
-	var completionPercentageId = this.escapeIdForJquery('stepProgressTableDataCompletionPercentage_' + nodeId);
-	
-	if(completionPercentage == null) {
-		//set this to '' if it is not provided, sequences will not provide this parameter
-		completionPercentage = '';
-	} else {
-		//append a % sign
-		completionPercentage += '%';
+	//update the completion percentage bar and number
+	this.updateStepCompletionPercentage(nodeId, completionPercentage);
+};
+
+/**
+ * Update the percentage completion bar and number for a step
+ * @param nodeId the node id
+ * @param completionPercentage the completion percentage
+ */
+View.prototype.updateStepCompletionPercentage = function(nodeId, completionPercentage) {
+	if(nodeId != null && completionPercentage != null) {
+		/*
+		 * get the ids for the elements we are going to modify. we need to escape
+		 * the id because the node id has a . in it
+		 */
+		var stepProgressPercentageBarHRId = this.escapeIdForJquery('stepProgressPercentageBarHR_' + nodeId);
+		var stepProgressPercentageNumberId = this.escapeIdForJquery('stepProgressPercentageNumberDiv_' + nodeId);
+		
+		//update the percentage completion bar
+		$('#' + stepProgressPercentageBarHRId).css('display', '');
+		$('#' + stepProgressPercentageBarHRId).attr('width', completionPercentage + '%');
+		
+		if(completionPercentage > 0) {
+			//show the percentage HR
+			$('#' + stepProgressPercentageBarHRId).css('display', '');
+		} else {
+			/*
+			 * the percentage is 0 so we will not display the HR. we need to hide
+			 * the HR because even if the width is set to 0% it will still have a
+			 * visible width which is misleading.
+			 */
+			$('#' + stepProgressPercentageBarHRId).css('display', 'none');
+		}
+		
+		//update the percentage number value
+		$('#' + stepProgressPercentageNumberId).text(completionPercentage + '%');
 	}
-	
-	//set the new completion percentage value
-	$('#' + completionPercentageId).text(completionPercentage);
 };
 
 /**
