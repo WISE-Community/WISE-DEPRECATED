@@ -96,6 +96,9 @@ View.prototype.showPauseScreensDisplay = function() {
 	//hide all the other display divs
 	this.hideAllDisplays();
 	
+	//hide the period buttons
+	this.hidePeriodButtonsDiv();
+	
 	//show the pause screens div
 	$('#pauseScreensDisplay').show();
 	
@@ -114,6 +117,9 @@ View.prototype.showStudentProgressDisplay = function() {
 	
 	//hide all the other display divs
 	this.hideAllDisplays();
+	
+	//show the period buttons
+	this.showPeriodButtonsDiv();
 	
 	//show the student progress div
 	$('#studentProgressDisplay').show();
@@ -134,6 +140,9 @@ View.prototype.showStepProgressDisplay = function() {
 	//hide all the other display divs
 	this.hideAllDisplays();
 	
+	//show the period buttons
+	this.showPeriodButtonsDiv();
+	
 	//show the step progress div
 	$('#stepProgressDisplay').show();
 	
@@ -148,6 +157,9 @@ View.prototype.showGradeByStudentDisplay = function() {
 	//hide all the other display divs
 	this.hideAllDisplays();
 	
+	//hide the period buttons
+	this.hidePeriodButtonsDiv();
+	
 	//show the grade by student div
 	$('#gradeByStudentDisplay').show();
 	
@@ -161,6 +173,9 @@ View.prototype.showGradeByStudentDisplay = function() {
 View.prototype.showGradeByStepDisplay = function() {
 	//hide all the other display divs
 	this.hideAllDisplays();
+	
+	//show the period buttons
+	this.showPeriodButtonsDiv();
 	
 	//show the grade by step div
 	$('#gradeByStepDisplay').show();
@@ -179,6 +194,9 @@ View.prototype.showExportStudentWorkDisplay = function() {
 	
 	//hide all the other display divs
 	this.hideAllDisplays();
+	
+	//hide the period buttons
+	this.hidePeriodButtonsDiv();
 	
 	//show the grade by step div
 	$('#exportStudentWorkDisplay').show();
@@ -417,6 +435,20 @@ View.prototype.createClassroomMonitorPeriods = function() {
 };
 
 /**
+ * Show the period buttons div
+ */
+View.prototype.showPeriodButtonsDiv = function() {
+	$('#selectPeriodButtonsDiv').show();
+};
+
+/**
+ * Hide the period buttons div
+ */
+View.prototype.hidePeriodButtonsDiv = function() {
+	$('#selectPeriodButtonsDiv').hide();
+};
+
+/**
  * A period button was clicked so we will perform any necessary
  * changes to the UI such as filtering only for that period
  * @param periodId the period id
@@ -430,9 +462,6 @@ View.prototype.periodButtonClicked = function(periodId) {
 		this.classroomMonitorPeriodIdSelected = periodId;
 	}
 	
-	//show the pause screens information for the period
-	this.showPeriodInPauseScreensDisplay(periodId);
-	
 	//update the student progress display to only show students in the period
 	this.showPeriodInStudentProgressDisplay(periodId);
 	
@@ -441,18 +470,6 @@ View.prototype.periodButtonClicked = function(periodId) {
 	
 	//update the grade by step display to only show students in the period
 	this.showPeriodInGradeByStepDisplay(periodId);
-};
-
-/**
- * Show the pause screens information for a period
- * @param periodId the period id
- */
-View.prototype.showPeriodInPauseScreensDisplay = function(periodId) {
-	//get whether the period is paused or not
-	var isPaused  = this.isPeriodPaused(periodId);
-	
-	//update the status text to show the teacher whether the period is paused or not
-	this.setActivePausedButton(isPaused);
 };
 
 /**
@@ -582,94 +599,181 @@ View.prototype.createPauseScreensDisplay = function() {
 	//hide the pause all screens div, we will show it later when necessary
 	pauseScreensDisplay.hide();
 	
-	//create the span that will display the pause status
-	var pauseScreenStatus = $('<span>').attr({id:'pauseScreenStatus'}).html("My students' screens are currently: ").css("display","block");
+	//get the run status
+	var runStatus = this.runStatus;
+	var allPeriodsPaused = false;
 	
-	//add the pause status span
-	$('#pauseScreensDisplay').append(pauseScreenStatus);
+	if(runStatus != null) {
+		//get whether all periods are paused
+		allPeriodsPaused = runStatus.allPeriodsPaused;
+	}
 	
-	//see if all periods have been paused
-	var isAllPeriodsPaused = this.isPeriodPaused();
+	//create the table that will display the paused and un-paused buttons
+	var pauseButtonsTable = $('<table>');
 	
-	//the class for the pause and unpause buttons
-	var pauseButtonsClass = 'pauseButtons';
+	//get the periods
+	var periods = this.getUserAndClassInfo().getPeriods();
 	
-	//create the pause button
-	var pauseButton = $('<input/>').attr({id:'pauseButton', type:'button', name:'pauseButton', value:'Paused'});
-	pauseButton.css('width', '300px');
-	pauseButton.css('height', '100px');
-	pauseButton.addClass(pauseButtonsClass);
-	
-	//set the click event for the pause button
-	pauseButton.click({thisView:this}, function(event) {
-		var thisView = event.data.thisView;
-		
-		//get the period id that was selected
-		var classroomMonitorPeriodIdSelected = thisView.classroomMonitorPeriodIdSelected;
-		
-		//pause the student screens for the selected period
-		thisView.pauseScreens(classroomMonitorPeriodIdSelected);
-		
-		//this is the pause button
-		var isPaused = true;
+	if(periods != null) {
+		//if there is more than one period we will display the 'All Periods' buttons
+		if(periods.length > 1) {
+			var allPeriodsRow = this.createPauseRow('All Periods', null, allPeriodsPaused);
+			pauseButtonsTable.append(allPeriodsRow);			
+		}
 
-		//make the pause button yellow		
-		thisView.setActivePausedButton(isPaused);
-	});
+		//loop through all the periods and create a row for each period
+		for(var x=0; x<periods.length; x++) {
+			var period = periods[x];
+			
+			if(period != null) {
+				var periodId = period.periodId;
+				var periodName = period.periodName;
+				var periodPaused = period.paused;
 
-	//create the un-pause button
-	var unPauseButton = $('<input/>').attr({id:'unPauseButton', type:'button', name:'unPauseButton', value:'Un-Paused'});
-	unPauseButton.css('width', '300px');
-	unPauseButton.css('height', '100px');
-	unPauseButton.addClass(pauseButtonsClass);
+				//create a row for the period that contains the period label, paused button, and un-paused button
+				var periodRow = this.createPauseRow('Period ' + periodName, periodId, periodPaused);
+				pauseButtonsTable.append(periodRow);
+			}
+		}
+	}
 	
-	//set the click event for the un-pause button
-	unPauseButton.click({thisView:this}, function(event) {
-		var thisView = event.data.thisView;
-		
-		//get the period id that was selected
-		var classroomMonitorPeriodIdSelected = thisView.classroomMonitorPeriodIdSelected;
-		
-		//un-pause the student screens for the selected period
-		thisView.unPauseScreens(classroomMonitorPeriodIdSelected);
-		
-		//this is the unpause button
-		var isPaused = false;
-
-		//make the unpause button yellow		
-		thisView.setActivePausedButton(isPaused);
-	});
-	
-	//add the pause and un-pause buttons
-	$('#pauseScreensDisplay').append(pauseButton);
-	$('#pauseScreensDisplay').append(unPauseButton);
-	
-	//make the appropriate paused or unpaused button yellow
-	this.setActivePausedButton(isAllPeriodsPaused);
+	//add the table to the pause screens display
+	pauseScreensDisplay.append(pauseButtonsTable);
 };
 
 /**
- * Set the appropriate paused/unpaused button to yellow show that
- * it is active
- * @param isPaused boolean value whether the student screens are
- * paused or not
+ * Create a row that contains the label, paused button, and un-paused button
+ * @param label the period label to display to the left of the buttons
+ * @param periodId the period id (optional) if not passed in we assume this is for all periods
+ * @param paused whether this period is paused
  */
-View.prototype.setActivePausedButton = function(isPaused) {
-	var button = null;
-	
-	if(isPaused) {
-		//get the paused button
-		button = $('#pauseButton');
-	} else {
-		//get the unpaused button
-		button = $('#unPauseButton');
+View.prototype.createPauseRow = function(label, periodId, paused) {
+	if(periodId == null) {
+		//if no period id is passed in we will assume this is for all periods
+		periodId = 'all';
 	}
 	
-	//get the class for the pause buttons
-	var classToRemoveBackgroundFrom = 'pauseButtons';
+	//create the row
+	var row = $('<tr>');
+	
+	//create the label cell
+	var labelCell = $('<td>');
+	labelCell.html(label);
+	
+	//create the paused button cell
+	var pausedButtonCell = $('<td>');
+	var pausedButton = $('<input>');
+	pausedButton.attr('id', 'pausedButton_' + periodId);
+	pausedButton.attr('type', 'button');
+	pausedButton.val('Paused');
+	pausedButton.addClass('pausedButton');
+	pausedButton.click({thisView:this, periodId:periodId}, function(event) {
+		var thisView = event.data.thisView;
+		var periodId = event.data.periodId;
+		
+		thisView.pausedButtonClicked(periodId);
+	});
+	pausedButtonCell.append(pausedButton);
+	
+	//create the un-paused button cell
+	var unPausedButtonCell = $('<td>');
+	var unPausedButton = $('<input>');
+	unPausedButton.attr('id', 'unPausedButton_' + periodId);
+	unPausedButton.attr('type', 'button');
+	unPausedButton.val('Un-Paused');
+	unPausedButton.addClass('unPausedButton');
+	unPausedButton.click({thisView:this, periodId:periodId}, function(event) {
+		var thisView = event.data.thisView;
+		var periodId = event.data.periodId;
+		
+		thisView.unPausedButtonClicked(periodId);
+	});
+	unPausedButtonCell.append(unPausedButton);
+	
+	//highlight the appropriate button depending on whether the period is paused or un-paused
+	if(paused) {
+		$(pausedButton).css('background', 'yellow');	
+	} else {
+		$(unPausedButton).css('background', 'yellow');
+	}
+	
+	//add the cells to the row
+	row.append(labelCell);
+	row.append(pausedButtonCell);
+	row.append(unPausedButtonCell);
+	
+	return row;
+};
 
-	//make the appropriate paused or unpaused button yellow
-	this.setActiveButtonBackgroundColor(button, classToRemoveBackgroundFrom);
+/**
+ * A paused button was clicked so we will pause the appropriate period
+ * and highlight the appropriate button
+ * @param periodId the period id
+ */
+View.prototype.pausedButtonClicked = function(periodId) {
+	//pause the screens in the period
+	this.pauseScreens(periodId);
+	
+	//highlight the paused button
+	this.highlightPausedButton(periodId);
+};
+
+/**
+ * Highlight the paused button
+ * @param periodId the period id
+ */
+View.prototype.highlightPausedButton = function(periodId) {
+	if(periodId == null || periodId == 'all') {
+		//highlight all the paused buttons
+		this.highlightAllPausedButtons();
+	} else {
+		//highlight the paused button for the period and unhighlight the un-paused button
+		$('#unPausedButton_' + periodId).css('background', '');
+		$('#pausedButton_' + periodId).css('background', 'yellow');
+	}
+};
+
+/**
+ * Highlight all the paused buttons and unhighlight all the un-paused buttons
+ */
+View.prototype.highlightAllPausedButtons = function() {
+	$('.unPausedButton').css('background', '');
+	$('.pausedButton').css('background', 'yellow');
+};
+
+/**
+ * An un-paused button was clicked so we will un-pause the appropriate period
+ * and highlight the appropriate button
+ */
+View.prototype.unPausedButtonClicked = function(periodId, button) {
+	//un-pause the screens in the period
+	this.unPauseScreens(periodId);
+	
+	//highlight the un-paused button
+	this.highlightUnPausedButton(periodId);
+};
+
+/**
+ * Highlight the un-paused button
+ * @param periodId the period id
+ */
+View.prototype.highlightUnPausedButton = function(periodId) {
+	if(periodId == null || periodId == 'all') {
+		//highlight all the un-paused buttons
+		this.highlightAllUnPausedButtons();
+	} else {
+		//highlight the un-paused button for the period and unhighlight the paused button
+		$('#pausedButton_' + periodId).css('background', '');
+		$('#unPausedButton_' + periodId).css('background', 'yellow');
+	}
+};
+
+/**
+ * Highlight all the un-paused buttons and unhighlight all the paused buttons
+ */
+View.prototype.highlightAllUnPausedButtons = function() {
+	$('.pausedButton').css('background', '');
+	$('.unPausedButton').css('background', 'yellow');
 };
 
 /**
@@ -3772,15 +3876,12 @@ View.prototype.pauseScreenReceived = function(data) {
 			//update the run status value for the period
 			this.updatePausedRunStatusValue(periodId, isPaused);
 			
-			if(this.classroomMonitorPeriodIdSelected == periodId) {
-				/*
-				 * if the period that the teacher has currently selected is
-				 * the period that is changing paused value we will update
-				 * the UI to reflect which button is active/yellow
-				 */
-
-				//make the appropriate paused or unpaused button yellow
-				this.setActivePausedButton(isPaused);
+			if(isPaused) {
+				//highlight the paused button
+				this.highlightPausedButton(periodId);
+			} else {
+				//highlight the un-paused button
+				this.highlightUnPausedButton(periodId);
 			}
 		}
 	}
