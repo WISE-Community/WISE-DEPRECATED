@@ -3159,7 +3159,8 @@ View.prototype.studentStatusReceived = function(data) {
 /**
  * Update our local copy of the student status object for the given workgroup id
  * @param studentStatusObject the student status object to replace our
- * old copy
+ * old copy. if we do not already have a student status object for the workgroup id,
+ * we will add this new student status object.
  */
 View.prototype.updateStudentStatusObject = function(studentStatusObject) {
 	//get the student statuses
@@ -3170,6 +3171,8 @@ View.prototype.updateStudentStatusObject = function(studentStatusObject) {
 		var workgroupId = studentStatusObject.workgroupId;
 		
 		if(studentStatuses != null) {
+			var foundWorkgroupId = false;
+			
 			//loop through all the student status objects
 			for(var x=0; x<studentStatuses.length; x++) {
 				//get a student status object
@@ -3187,7 +3190,22 @@ View.prototype.updateStudentStatusObject = function(studentStatusObject) {
 					
 					//replace the old student status object with this new one
 					studentStatuses.splice(x, 1, studentStatusObject);
+					
+					foundWorkgroupId = true;
 				}
+			}
+			
+			if(!foundWorkgroupId) {
+				/*
+				 * we do not already have the student status object for the workgroup id
+				 * so we will add this new student status object to the array
+				 */
+				
+				//insert the current timestamp into the object
+				this.insertTimestamp(studentStatusObject);
+				
+				//add the student status object to the array
+				studentStatuses.push(studentStatusObject);
 			}
 		}		
 	}
