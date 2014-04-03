@@ -476,9 +476,6 @@
 		<property name="successView" value="forgotaccount/student/projectcoderesult" />
 	</bean>
 
-	<bean id="termsOfUseController"
-		class="org.wise.portal.presentation.web.controllers.TermsOfUseController" />
-
 	<bean id="viewMyStudentsController"
 		class="org.wise.portal.presentation.web.controllers.teacher.management.ViewMyStudentsController">
 		<property name="runService" ref="runService" />
@@ -1107,7 +1104,7 @@
 				/student/changestudentpassword.html=changeUserPasswordController
 				/student/updatestudentaccount.html=studentUpdateMyAccountInfoController
 				/teacher/index.html=teacherIndexController
-				/teacher/termsofuse.html=termsOfUseController
+				/teacher/termsofuse.html=urlFilenameViewController
 				/teacher/registerteacher.html=registerteacherController
 				/teacher/projects/languagetranslations.html=languageTranslationsController
 				/teacher/projects/projectinfo.html=projectInfoController
