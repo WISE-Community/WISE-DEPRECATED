@@ -778,7 +778,7 @@ View.prototype.removeFromPOSTInProgressArray = function(nodeVisit) {
  * @param successCallback
  * @param failureCallback
  */
-View.prototype.invokeCRaterInPreviewMode = function(nodeId,cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback) {
+View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData) {
 	var cRaterRequestURL = this.getConfig().getConfigParam('cRaterRequestUrl');
 
 	var cRaterArgs = {
@@ -790,12 +790,6 @@ View.prototype.invokeCRaterInPreviewMode = function(nodeId,cRaterItemType,cRater
 			wiseRunMode:"portalpreview"
 	};
 	
-	var callbackData = {
-			view:this,
-			nodeId:nodeId,
-			cRaterItemType:cRaterItemType
-			};
-
 	//make the call to GET the annotation
 	this.connectionManager.request('GET', 1, cRaterRequestURL, cRaterArgs, successCallback, callbackData, failureCallback);
 };
