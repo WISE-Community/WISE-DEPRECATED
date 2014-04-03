@@ -3236,7 +3236,7 @@ View.prototype.updateStudentProgress = function(runId, periodId, workgroupId, cu
 	var completionPercentage = this.calculateStudentCompletionForWorkgroupId(workgroupId);
 
 	//update the percentage completion bar and number for a student
-	this.updateStudentPercentageCompletion(workgroupId, completionPercentage);
+	this.updateStudentCompletionPercentage(workgroupId, completionPercentage);
 };
 
 /**
@@ -3244,7 +3244,7 @@ View.prototype.updateStudentProgress = function(runId, periodId, workgroupId, cu
  * @param workgroupId the workgroup id
  * @param completionPercentage the completion percentage
  */
-View.prototype.updateStudentPercentageCompletion = function(workgroupId, completionPercentage) {
+View.prototype.updateStudentCompletionPercentage = function(workgroupId, completionPercentage) {
 	if(workgroupId != null && completionPercentage != null) {
 		//update the percentage completion bar
 		$('#studentProgressPercentageBarHR_' + workgroupId).css('display', '');
