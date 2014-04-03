@@ -322,11 +322,45 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 						var successCallback = function(responseText, responseJSON, successArgs) {
 							var view = successArgs.view;
 							var nodeId = successArgs.nodeId;
+							var or = successArgs.or;
+							var studentData = successArgs.studentData;
 							var currentNode = view.getProject().getNodeById(nodeId);  //get the node							
+							var cRaterItemId = successArgs.cRaterItemId;    //get the crater item id e.g. "SPOON", "GREENROOF-II"
 							var cRaterItemType = successArgs.cRaterItemType; //get the crater item type e.g. 'CRATER' or 'HENRY'
 							if (responseJSON != null) {
 								try {
 									var cRaterAnnotationJSON = JSON.parse(responseJSON);
+									
+									//var cRaterAnnotation = Annotation.prototype.parseDataJSONObj(annotationJSON);
+									var runId = "";
+									var toWorkgroup = null;
+									var fromWorkgroup = -1;
+									var type = "cRater";
+									var value = [
+									        {
+									        	"nodeStateId": null,
+									        	"studentResponse": {
+									        		"timestamp": null,
+									        		"response": studentData,
+									        		"isCRaterSubmit": true,
+									        		"cRaterItemType": cRaterItemType,
+									        		"cRaterItemId": cRaterItemId,
+									        		"type": "or"
+									        	},
+									        	"score": cRaterAnnotationJSON.score,
+									            "cRaterResponse": null,
+									            "concepts": cRaterAnnotationJSON.concepts
+									        }];
+									var postTime = null;
+									var stepWorkId = null;
+									debugger;
+									var cRaterAnnotation = new Annotation(runId, nodeId, toWorkgroup, fromWorkgroup, type, value, postTime, stepWorkId);
+									
+									//add the CRater annotation to our local collection of annotations
+									if (typeof view.getAnnotations() === 'undefined') {
+										view.setAnnotations(new Annotations());
+									}
+									view.getAnnotations().updateOrAddAnnotation(cRaterAnnotation);
 									
 									// display feedback immediately, if specified in the content
 									// check the step content to see if we need to display the CRater feedback to the student.
@@ -398,6 +432,32 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 											// show the annotation panel
 											$('#nodeAnnotationsPanel').dialog('open');
 											
+											// handle rewrite/revise
+											if(score != null) {
+												//get the student action for the given score
+												var studentAction = or.getStudentAction(score);
+												
+												if(studentAction == null) {
+													//do nothing
+												} else if(studentAction == 'rewrite') {
+													/*
+													 * move the current work to the previous work response box
+													 * because we want to display the previous work to the student
+													 * and have them re-write another response after they
+													 * receive the immediate CRater feedback
+													 */
+													or.showPreviousWorkThatHasAnnotation(studentData);
+													
+													//clear the response box so they will need to write a new response
+													$('#responseBox').val('');
+												} else if(studentAction == 'revise') {
+													/*
+													 * the student will need to revise their work so we will hide the
+													 * previous response display
+													 */
+													$('#previousResponseDisplayDiv').hide();
+												}
+											}
 										}
 									}
 								} catch(err) {
@@ -414,8 +474,16 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 							alert(failureArgs.view.getI18NStringWithParams("error_msg_with_reason", ["CRATER SCORE PREVIEW"]));
 						}
 						
+						var callbackData = {
+								view:this.view,
+								nodeId:this.node.id,
+								cRaterItemType:cRaterItemType,
+								studentData:studentData,
+								or:this
+								};
+						
 						// invoke CRater in preview mode.
-						this.view.invokeCRaterInPreviewMode(this.node.id,cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback);
+						this.view.invokeCRaterInPreviewMode(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData);
 					}					
 				}
 				
@@ -913,7 +981,9 @@ OPENRESPONSE.prototype.render = function() {
 		 * show the previous work that has a teacher comment annotation.
 		 * this is not available for note steps.
 		 */
-		this.showPreviousWorkThatHasAnnotation(null, 'comment');
+		if (this.view.config.getConfigParam("mode") != "portalpreview") {
+			this.showPreviousWorkThatHasAnnotation(null, 'comment');
+		}
 	}
 	
 	if(this.content.showPreviousWorkThatHasAnnotation && this.content.cRater &&
