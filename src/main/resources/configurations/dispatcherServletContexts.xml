@@ -107,8 +107,6 @@
 	<bean id="announcementParametersValidator"
 		class="org.wise.portal.presentation.validators.AnnouncementParametersValidator" />
 
-	<bean class="org.wise.portal.presentation.web.controllers.TestController" />
-
 	<bean id="teacherIndexController"
 		class="org.wise.portal.presentation.web.controllers.TeacherIndexController">
 		<property name="runService" ref="runService" />
