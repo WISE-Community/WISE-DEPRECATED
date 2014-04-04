@@ -267,7 +267,7 @@ var componentloader = function(em, sl){
 				portalProjectId:undefined, 
 				portalCurriculumBaseDir:undefined, 
 				excludedPrevWorkNodes:['HtmlNode', 'OutsideUrlNode', 'MySystemNode', 'SVGDrawNode', 'MWNode', 'DrawNode','DuplicateNode'], 
-				allowedAssetExtensions:['txt', 'jpg', 'jpeg', 'gif', 'png', 'swf', 'flv', 'bmp', 'tif', 'pdf', 'doc', 'docx', 'nlogo', 'nls', 'jar', 'cml', 'mml', 'otml', 'mov', 'mp4', 'mp3', 'wav', 'aac', 'avi', 'wmv', 'mpg', 'mpeg', 'ogg', 'css', 'json', "zip", "js", "html"],
+				allowedAssetExtensions:['txt', 'jpg', 'jpeg', 'gif', 'png', 'swf', 'flv', 'bmp', 'tif', 'pdf', 'doc', 'ppt', 'xls', 'docx', 'pptx', 'xlsx', 'nlogo', 'nls', 'jar', 'cml', 'mml', 'otml', 'mov', 'mp4', 'mp3', 'wav', 'aac', 'avi', 'wmv', 'mpg', 'mpeg', 'ogg', 'css', 'json', "zip", "js", "html"],
 				MAX_ASSET_SIZE:10485760, 
 				currentStepNum:undefined, 
 				activeNode:undefined, 
