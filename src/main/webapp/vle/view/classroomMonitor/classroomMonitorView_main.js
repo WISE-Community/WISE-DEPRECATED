@@ -528,13 +528,67 @@ View.prototype.showPeriodInStepProgressDisplay = function(periodId) {
 			//get the percentage of students in the period who have completed this step
 			var completionPercentage = this.calculateStepCompletionForNodeId(nodeId, periodId);
 			
+			//check if there is a student that is online in this period that is on the step
+			var isStudentOnStep = this.isStudentOnlineAndOnStep(nodeId, periodId);
+			
 			/*
 			 * update the number of students on the step and the 
 			 * number of students who have completed the step
 			 */
-			this.updateStepProgress(nodeId, numberOfStudentsOnStep, completionPercentage);
+			this.updateStepProgress(nodeId, numberOfStudentsOnStep, completionPercentage, isStudentOnStep);
 		}
 	}
+};
+
+/**
+ * Check if there are any students online that are on the step and in the period
+ * @param nodeId the node id
+ * @param periodId (optional) the period id. if this is not passed in we will use
+ * the period id that is currently selected in the UI
+ * @return whether there are any students online that are on the step and in the period
+ */
+View.prototype.isStudentOnlineAndOnStep = function(nodeId, periodId) {
+	var result = false;
+	
+	if(periodId == null) {
+		//get the period id that is currently selected in the UI
+		periodId = this.classroomMonitorPeriodIdSelected;
+	}
+	
+	var studentsOnline = this.studentsOnline;
+	
+	if(studentsOnline != null) {
+		//loop through all the students that are online
+		for(var x=0; x<studentsOnline.length; x++) {
+			//get the workgroup id of a student that is online
+			var workgroupId = studentsOnline[x];
+			
+			//get the student status
+			var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
+			
+			if(studentStatus != null) {
+				//get the period id the student is in and the current step the student is on
+				var studentPeriodId = studentStatus.periodId;
+				var currentNodeId = studentStatus.currentNodeId;
+				
+				/*
+				 * check if we are looking for all periods or if we are looking
+				 * for a specific period, we will check if the period id matches
+				 */
+				if(periodId == null || periodId == 'all' || periodId == studentPeriodId) {
+					//the student is in the period we want
+					
+					if(nodeId == currentNodeId) {
+						//the student is on the step
+						result = true;
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	return result;
 };
 
 /**
@@ -1007,10 +1061,10 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		studentTR.css('cursor', 'pointer');
 		
 		//set the mouse enter event to highlight the row on mouse over
-		studentTR.mouseenter({thisView:this}, this.mouseEnterTR);
+		studentTR.mouseenter({thisView:this}, this.mouseEnterStudentTR);
 		
 		//set the mouse leave event to remove the highlight when the mouse exits the row
-		studentTR.mouseleave({thisView:this, workgroupId:workgroupId}, this.mouseLeaveTR);
+		studentTR.mouseleave({thisView:this, workgroupId:workgroupId}, this.mouseLeaveStudentTR);
 	}
 	
 	//return the student row
@@ -2383,10 +2437,21 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
 			stepTR.css('cursor', 'pointer');
 			
 			//set the mouse enter event to highlight the row on mouse over
-			stepTR.mouseenter({thisView:this}, this.mouseEnterTR);
+			stepTR.mouseenter({thisView:this}, this.mouseEnterStepTR);
 			
 			//set the mouse leave event to remove the highlight when the mouse exits the row
-			stepTR.mouseleave({thisView:this}, this.mouseLeaveTR);
+			stepTR.mouseleave({thisView:this, nodeId:nodeId}, this.mouseLeaveStepTR);
+		}
+		
+		//get the period that is currently selected
+		var periodId = this.classroomMonitorPeriodIdSelected;
+		
+		//check if there are any students on the step
+		var isStudentOnStep = this.isStudentOnlineAndOnStep(nodeId, periodId);
+		
+		if(isStudentOnStep) {
+			//there is a student on the step so we will highlight the row green
+			stepTR.css('background', 'limegreen');
 		}
 	}
 	
@@ -2394,26 +2459,28 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
 };
 
 /**
- * The event that is fired when the mouse enters a row
+ * The event that is fired when the mouse enters a student row
  */
-View.prototype.mouseEnterTR = function(event) {
+View.prototype.mouseEnterStudentTR = function(event) {
 	//highlight the row yellow
 	$(this).css('background', 'yellow');
 };
 
 /**
- * The event that is fired when the mouse leaves a row
+ * The event that is fired when the mouse leaves a student row
  */
-View.prototype.mouseLeaveTR = function(event) {
+View.prototype.mouseLeaveStudentTR = function(event) {
 	var thisView = event.data.thisView;
 	var workgroupId = event.data.workgroupId;
-	thisView.mouseLeaveTRHandler($(this), workgroupId);
+	thisView.mouseLeaveStudentTRHandler($(this), workgroupId);
 };
 
 /**
- * The function that handles the logic when the mouse leaves a row
+ * The function that handles the logic when the mouse leaves a student row
+ * @param trElement the row dom element
+ * @param workgroupId the workgroup id
  */
-View.prototype.mouseLeaveTRHandler = function(trElement, workgroupId) {
+View.prototype.mouseLeaveStudentTRHandler = function(trElement, workgroupId) {
 	var studentOnline = false;
 	
 	if(workgroupId != null) {
@@ -2428,6 +2495,44 @@ View.prototype.mouseLeaveTRHandler = function(trElement, workgroupId) {
 		trElement.css('background', 'limegreen');
 	} else {
 		//the student is not online so we will not highlight the row
+		trElement.css('background', '');		
+	}
+};
+
+/**
+ * The event that is fired when the mouse enters a step row
+ */
+View.prototype.mouseEnterStepTR = function(event) {
+	//highlight the row yellow
+	$(this).css('background', 'yellow');
+};
+
+/**
+ * The event that is fired when the mouse leaves a step row
+ */
+View.prototype.mouseLeaveStepTR = function(event) {
+	var thisView = event.data.thisView;
+	var nodeId = event.data.nodeId;
+	thisView.mouseLeaveStepTRHandler($(this), nodeId);
+};
+
+/**
+ * The function that handles the logic when the mouse leaves a step row
+ * @param trElement the row dom element
+ * @param nodeId the step
+ */
+View.prototype.mouseLeaveStepTRHandler = function(trElement, nodeId) {
+	//get the period that is currently selected
+	var periodId = this.classroomMonitorPeriodIdSelected;
+	
+	//check if there are any students on the step
+	var isStudentOnStep = this.isStudentOnlineAndOnStep(nodeId, periodId);
+	
+	if(isStudentOnStep) {
+		//a student is on the step so we will highlight the row green
+		trElement.css('background', 'limegreen');
+	} else {
+		//a student is not on the step so we will not highlight the row
 		trElement.css('background', '');		
 	}
 };
@@ -3126,6 +3231,9 @@ View.prototype.studentsOnlineListReceived = function(data) {
 			 */
 			this.updateStudentProgressTimeSpent(workgroupId);
 		}
+		
+		//update the step progress display to highlight rows green if they have students on them
+		this.updateAllStepProgressHighlights();
 	}
 };
 
@@ -3389,7 +3497,7 @@ View.prototype.updateAllStepProgress = function() {
  * @param completionPercentage the new completion percentage value. this
  * will be an integer.
  */
-View.prototype.updateStepProgress = function(nodeId, numberOfStudentsOnStep, completionPercentage) {
+View.prototype.updateStepProgress = function(nodeId, numberOfStudentsOnStep, completionPercentage, isStudentOnStep) {
 
 	//get the id of the number of students on step element
 	var numberOfStudentsOnStepId = this.escapeIdForJquery('stepProgressTableDataNumberOfStudentsOnStep_' + nodeId);
@@ -3404,6 +3512,64 @@ View.prototype.updateStepProgress = function(nodeId, numberOfStudentsOnStep, com
 	
 	//update the completion percentage bar and number
 	this.updateStepCompletionPercentage(nodeId, completionPercentage);
+	
+	//get the id of the step progress row
+	var stepProgressTableRowId = this.escapeIdForJquery('stepProgressTableRow_' + nodeId);
+	
+	//if there is a student online and on the step, we will highlight the row green
+	if(isStudentOnStep) {
+		//there is a student on the step
+		$('#' + stepProgressTableRowId).css('background', 'limegreen');
+	} else {
+		//there are no students on the step
+		$('#' + stepProgressTableRowId).css('background', '');
+	}
+};
+
+/**
+ * Update all the step rows with necessary highlighting. We will highlight
+ * a step row green if there are any students on that step.
+ */
+View.prototype.updateAllStepProgressHighlights = function() {
+	//get all the step node ids in the project
+	var nodeIds = this.getProject().getNodeIds();
+	
+	if(nodeIds != null) {
+		//loop through all the steps
+		for(var x=0; x<nodeIds.length; x++) {
+			var nodeId = nodeIds[x];
+			
+			//highlight the row if necessary
+			this.updateStepProgressHighlight(nodeId);
+		}
+	}
+};
+
+/**
+ * Highlight the row if there are any students on the step
+ * @param nodeId the node id for the step
+ * @param periodId (optional) the period id that is currently selected
+ */
+View.prototype.updateStepProgressHighlight = function(nodeId, periodId) {
+	if(periodId == null) {
+		//get the currently selected period
+		periodId = this.classroomMonitorPeriodIdSelected;
+	}
+	
+	//check if there is a student that is online in this period that is on the step
+	var isStudentOnStep = this.isStudentOnlineAndOnStep(nodeId, periodId);
+	
+	//get the id of the step progress row
+	var stepProgressTableRowId = this.escapeIdForJquery('stepProgressTableRow_' + nodeId);
+	
+	//if there is a student online and on the step, we will highlight the row green
+	if(isStudentOnStep) {
+		//there is a student on the step
+		$('#' + stepProgressTableRowId).css('background', 'limegreen');
+	} else {
+		//there are no students on the step
+		$('#' + stepProgressTableRowId).css('background', '');
+	}
 };
 
 /**
@@ -3703,11 +3869,11 @@ View.prototype.studentConnected = function(data) {
 		var userName = data.userName;
 		var workgroupId = data.workgroupId;
 		
-		//update the UI to show the student is online
-		this.updateStudentOnline(workgroupId, true);
-		
 		//add the student to our list of online students
 		this.addStudentOnline(workgroupId);
+		
+		//update the UI to show the student is online
+		this.updateStudentOnline(workgroupId, true);
 	}
 };
 
@@ -3724,11 +3890,11 @@ View.prototype.studentDisconnected = function(data) {
 		var userName = data.userName;
 		var workgroupId = data.workgroupId;
 		
-		//update the UI to show the student is offline
-		this.updateStudentOnline(workgroupId, false);
-		
 		//remove the student from our list of online students
 		this.removeStudentOnline(workgroupId);
+		
+		//update the UI to show the student is offline
+		this.updateStudentOnline(workgroupId, false);
 		
 		//clear the time spent cell for the student
 		this.updateStudentProgressTimeSpent(workgroupId);
@@ -3811,6 +3977,9 @@ View.prototype.updateStudentOnline = function(workgroupId, isOnline) {
 				$('#isOnlineDiv_' + workgroupId).html(this.getIsOfflineHTML());
 			}
 		}
+		
+		//update all the step rows with any necessary highlighting
+		this.updateAllStepProgressHighlights();
 	}
 };
 
