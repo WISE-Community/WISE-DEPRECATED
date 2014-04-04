@@ -2263,6 +2263,9 @@ View.prototype.createStepProgressDisplay = function() {
 	//get all the node ids. this includes activity and step node ids.
 	var nodeIds = this.getProject().getAllNodeIds();
 	
+	//get the period that is currently selected
+	var periodId = this.classroomMonitorPeriodIdSelected;
+	
 	//loop through all the node ids
 	for(var x=0; x<nodeIds.length; x++) {
 		//get a node id
@@ -2331,6 +2334,9 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
 	if(nodeId != null) {
 		var node = this.getProject().getNodeById(nodeId);
 		
+		//get the period that is currently selected
+		var periodId = this.classroomMonitorPeriodIdSelected;
+		
 		//create the row
 		var stepTR = $('<tr>').attr({id:'stepProgressTableRow_' + nodeId});
 		
@@ -2345,7 +2351,15 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
 			numberOfStudentsOnStep = '';
 		}
 		
+		//get the text that displays which students are on the step
+		var studentsOnStepText = this.getStudentsOnStepText(nodeId, periodId);
+		
 		numberStudentsOnStepTD.text(numberOfStudentsOnStep);
+		
+		if(studentsOnStepText != null && studentsOnStepText != '') {
+			//set the mouse over text to display the students that are on the step
+			numberStudentsOnStepTD.attr('title', studentsOnStepText);
+		}
 		
 		//create the completion percentage cell
 		var completionPercentageTD = $('<td>').attr({id:'stepProgressTableDataCompletionPercentage_' + nodeId});
@@ -2443,9 +2457,6 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
 			stepTR.mouseleave({thisView:this, nodeId:nodeId}, this.mouseLeaveStepTR);
 		}
 		
-		//get the period that is currently selected
-		var periodId = this.classroomMonitorPeriodIdSelected;
-		
 		//check if there are any students on the step
 		var isStudentOnStep = this.isStudentOnlineAndOnStep(nodeId, periodId);
 		
@@ -2456,6 +2467,84 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
 	}
 	
 	return stepTR;
+};
+
+/**
+ * Get the text that will display the students that are on the step
+ * and which of those are online and offline
+ * @param nodeId the node id of the step
+ * @param periodId (optional) the period id
+ */
+View.prototype.getStudentsOnStepText = function(nodeId, periodId) {
+	var studentsOnStepText = '';
+	
+	if(periodId == null) {
+		/*
+		 * the period id was not passed in so we will use the period id
+		 * that is currently selected in the UI
+		 */
+		periodId = this.classroomMonitorPeriodIdSelected;
+	}
+	
+	//get the students that are on the step
+	var studentsOnStep = this.getStudentsOnStep(nodeId, periodId);
+	
+	if(studentsOnStep != null) {
+		//get the students that are on the step and online
+		var studentsOnline = studentsOnStep.studentsOnline;
+		
+		//get the students that are on the step and offline
+		var studentsOffline = studentsOnStep.studentsOffline;
+		
+		if(studentsOnline != null) {
+			
+			if(studentsOnline.length > 0) {
+				//there are students on the step and online
+				studentsOnStepText += '[Online]\n';
+			}
+			
+			//loop through all the students on the step and online
+			for(var x=0; x<studentsOnline.length; x++) {
+				var studentOnlineWorkgroupId = studentsOnline[x];
+				
+				//get the user name of the student
+				var userName = this.getUserAndClassInfo().getUserNameByUserId(studentOnlineWorkgroupId);
+				
+				if(userName != null) {
+					//add the user name to the online section
+					studentsOnStepText += userName + '\n';						
+				}
+			}
+		}
+		
+		if(studentsOffline != null) {
+			
+			if(studentsOffline.length > 0) {
+				//add a line break if there is already text
+				if(studentsOnStepText != '') {
+					studentsOnStepText += '\n';
+				}
+				
+				//there are students on the step and offline
+				studentsOnStepText += '[Offline]\n';
+			}
+			
+			//loop through all the students on the step and offline
+			for(var x=0; x<studentsOffline.length; x++) {
+				var studentOfflineWorkgroupId = studentsOffline[x];
+				
+				//get the user name of the student
+				var userName = this.getUserAndClassInfo().getUserNameByUserId(studentOfflineWorkgroupId);
+				
+				if(userName != null) {
+					//add the user name to the offline section
+					studentsOnStepText += userName + '\n';						
+				}
+			}
+		}
+	}
+	
+	return studentsOnStepText;
 };
 
 /**
@@ -3524,6 +3613,32 @@ View.prototype.updateStepProgress = function(nodeId, numberOfStudentsOnStep, com
 		//there are no students on the step
 		$('#' + stepProgressTableRowId).css('background', '');
 	}
+	
+	//update the text for the step that displays which students are on the step
+	this.updateStudentsOnStepText(nodeId);
+};
+
+/**
+ * Update the number of students on step text
+ * @param nodeId the node id for the step
+ */
+View.prototype.updateStudentsOnStepText = function(nodeId) {
+	//get the currently selected period
+	var periodId = this.classroomMonitorPeriodIdSelected;
+	
+	//get the text that will display which students are on this step and which are online and offline
+	var studentsOnStepText = this.getStudentsOnStepText(nodeId, periodId);
+	
+	if(studentsOnStepText != null && studentsOnStepText != '') {
+		//get the id for the td we will update
+		var numberStudentsOnStepTDId = this.escapeIdForJquery('stepProgressTableDataNumberOfStudentsOnStep_' + nodeId);
+		
+		//get the TD element
+		var numberStudentsOnStepTD = $('#' + numberStudentsOnStepTDId);
+		
+		//update the title text that will display which students are on this step
+		numberStudentsOnStepTD.attr('title', studentsOnStepText);
+	}
 };
 
 /**
@@ -3980,6 +4095,17 @@ View.prototype.updateStudentOnline = function(workgroupId, isOnline) {
 		
 		//update all the step rows with any necessary highlighting
 		this.updateAllStepProgressHighlights();
+		
+		//get the student status for this student
+		var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
+		
+		if(studentStatus != null) {
+			//get the step the student is on
+			var nodeId = studentStatus.currentNodeId;
+			
+			//update the students on step text
+			this.updateStudentsOnStepText(nodeId);
+		}
 	}
 };
 
@@ -5106,6 +5232,70 @@ View.prototype.createSpecialExportDiv = function() {
 	specialExportDiv.attr('id', 'specialExportDiv');
 	
 	return specialExportDiv;
+};
+
+/**
+ * Get the students on a step
+ * @param nodeId the node id for the step
+ * @param periodId (optional) the period we want students from
+ * @return an object that contains an array of students that
+ * are online and an array of students that are offline that  
+ * are on the step and in the period
+ */
+View.prototype.getStudentsOnStep = function(nodeId, periodId) {
+	if(periodId == null) {
+		/*
+		 * the period id was not passed in so we will use the period id
+		 * that is currently selected in the UI
+		 */
+		periodId = this.classroomMonitorPeriodIdSelected;
+	}
+	
+	var studentsOnline = [];
+	var studentsOffline = [];
+	
+	//get the workgroup ids in user name alphabetical order
+	var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIdsInAlphabeticalOrder();
+	
+	if(workgroupIds != null) {
+		//loop through the workgroup ids
+		for(var x=0; x<workgroupIds.length; x++) {
+			//get a workgroup id
+			var workgroupId = workgroupIds[x];
+			
+			//get the student status for the workgroup id
+			var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
+			
+			if(studentStatus != null) {
+				//get the values from the student status
+				var workgroupId = studentStatus.workgroupId;
+				var currentNodeId = studentStatus.currentNodeId;
+				var tempPeriodId = studentStatus.periodId;
+				
+				//check if the student is in the period we want
+				if(periodId == null || periodId == 'all' || periodId == tempPeriodId) {
+					//check if the student is on the step we want
+					if(nodeId == currentNodeId) {
+						//check if the student is online
+						if(this.isStudentOnline(workgroupId)) {
+							//the student is online
+							studentsOnline.push(workgroupId);
+						} else {
+							//the student is offline
+							studentsOffline.push(workgroupId);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	var result = {
+		studentsOnline:studentsOnline,
+		studentsOffline:studentsOffline
+	}
+	
+	return result;
 };
 
 /**
