@@ -3320,9 +3320,6 @@ View.prototype.studentsOnlineListReceived = function(data) {
 			 */
 			this.updateStudentProgressTimeSpent(workgroupId);
 		}
-		
-		//update the step progress display to highlight rows green if they have students on them
-		this.updateAllStepProgressHighlights();
 	}
 };
 
@@ -3629,16 +3626,18 @@ View.prototype.updateStudentsOnStepText = function(nodeId) {
 	//get the text that will display which students are on this step and which are online and offline
 	var studentsOnStepText = this.getStudentsOnStepText(nodeId, periodId);
 	
-	if(studentsOnStepText != null && studentsOnStepText != '') {
-		//get the id for the td we will update
-		var numberStudentsOnStepTDId = this.escapeIdForJquery('stepProgressTableDataNumberOfStudentsOnStep_' + nodeId);
-		
-		//get the TD element
-		var numberStudentsOnStepTD = $('#' + numberStudentsOnStepTDId);
-		
-		//update the title text that will display which students are on this step
-		numberStudentsOnStepTD.attr('title', studentsOnStepText);
+	if(studentsOnStepText == null) {
+		studentsOnStepText = '';
 	}
+	
+	//get the id for the td we will update
+	var numberStudentsOnStepTDId = this.escapeIdForJquery('stepProgressTableDataNumberOfStudentsOnStep_' + nodeId);
+	
+	//get the TD element
+	var numberStudentsOnStepTD = $('#' + numberStudentsOnStepTDId);
+	
+	//update the title text that will display which students are on this step
+	numberStudentsOnStepTD.attr('title', studentsOnStepText);
 };
 
 /**
@@ -4093,15 +4092,15 @@ View.prototype.updateStudentOnline = function(workgroupId, isOnline) {
 			}
 		}
 		
-		//update all the step rows with any necessary highlighting
-		this.updateAllStepProgressHighlights();
-		
 		//get the student status for this student
 		var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
 		
 		if(studentStatus != null) {
 			//get the step the student is on
 			var nodeId = studentStatus.currentNodeId;
+
+			//update the step row with any necessary highlighting
+			this.updateStepProgressHighlight(nodeId);
 			
 			//update the students on step text
 			this.updateStudentsOnStepText(nodeId);
