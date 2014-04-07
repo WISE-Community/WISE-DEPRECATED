@@ -401,9 +401,6 @@
 	<bean id="runParameters" class="org.wise.portal.domain.run.impl.RunParameters"
 		scope="prototype" />
 
-	<bean id="selectAccountTypeController"
-		class="org.wise.portal.presentation.web.controllers.forgotaccount.SelectAccountTypeController" />
-
 	<bean id="lostPasswordStudentMainController"
 		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentMainController" />
 
@@ -1118,7 +1115,7 @@
 				/**/index.html=indexController
 				/previewproject.html=previewprojectController
 				/previewprojectlist.html=previewprojectlistController
-				/forgotaccount/selectaccounttype.html=selectAccountTypeController
+				/forgotaccount/selectaccounttype.html=urlFilenameViewController
 				/forgotaccount/teacher/index.html=forgotAccountTeacherIndexController
 				/forgotaccount/teacher/success.html=urlFilenameViewController
 				/forgotaccount/teacher/error.html=urlFilenameViewController
