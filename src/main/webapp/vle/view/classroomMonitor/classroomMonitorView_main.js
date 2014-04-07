@@ -846,6 +846,8 @@ View.prototype.createStudentProgressDisplay = function() {
 	//create the table to display the students
 	var studentProgressDisplayTable = $('<table>').attr({id:'studentProgressDisplayTable'});
 	studentProgressDisplayTable.attr('border', '1px');
+	studentProgressDisplayTable.attr('cellpadding', '3px');
+	studentProgressDisplayTable.css('border-collapse', 'collapse');
 
 	//add the table to the student progress div
 	$('#studentProgressDisplay').append(studentProgressDisplayTable);
@@ -1378,6 +1380,8 @@ View.prototype.createGradeByStudentDisplayTableRow = function(nodeId, workgroupI
 		var nodeTable = $('<table>');
 		nodeTable.attr('id', 'nodeTable_' + nodeId);
 		nodeTable.attr('border', '1px');
+		nodeTable.attr('cellpadding', '3px');
+		nodeTable.css('border-collapse', 'collapse');
 		nodeTable.css('width', '100%');
 		
 		//get the node
@@ -1418,6 +1422,7 @@ View.prototype.createGradeByStudentDisplayTableRow = function(nodeId, workgroupI
 			var stepTitleTD = $('<td>');
 			stepTitleTD.html(stepTitle);
 			stepTitleTD.attr('colspan', 2);
+			stepTitleTD.css('font-weight', 'bold');
 			
 			//add the step title table data to the row
 			stepTitleTR.append(stepTitleTD);
@@ -2240,6 +2245,8 @@ View.prototype.createStepProgressDisplay = function() {
 	//create the table that will display all the steps
 	var stepProgressDisplayTable = $('<table>').attr({id:'stepProgressDisplayTable'});
 	stepProgressDisplayTable.attr('border', '1px');
+	stepProgressDisplayTable.attr('cellpadding', '3px');
+	stepProgressDisplayTable.css('border-collapse', 'collapse');
 	
 	//add the table to the step progress div
 	$('#stepProgressDisplay').append(stepProgressDisplayTable);
@@ -2934,6 +2941,8 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
 		var stepTable = $('<table>');
 		stepTable.attr('id', 'stepTable_' + nodeId);
 		stepTable.attr('border', '1px');
+		stepTable.attr('cellpadding', '3px');
+		stepTable.css('border-collapse', 'collapse');
 		stepTable.css('width', '100%');
 		
 		//create the row and td for the user name
@@ -2963,6 +2972,7 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
 		//create the div to show the user name
 		var userNameDiv = $('<div>');
 		userNameDiv.css('float', 'left');
+		userNameDiv.css('font-weight', 'bold');
 		userNameDiv.html(userNames + ' [Workgroup Id: ' + workgroupId + ']' + ' [Period ' + period + ']');
 		
 		userNameTR.append(isOnlineDiv);
