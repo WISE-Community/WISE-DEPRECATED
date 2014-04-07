@@ -306,10 +306,6 @@
 		<property name="projectService" ref="projectService" />
 	</bean>
 
-	<bean id="languageTranslationsController"
-		class="org.wise.portal.presentation.web.controllers.teacher.project.LanguageTranslationsController">
-	</bean>
-
 	<bean id="managementOverviewController"
 		class="org.wise.portal.presentation.web.controllers.teacher.management.ManagementOverviewController">
 	</bean>
@@ -1104,7 +1100,6 @@
 				/teacher/index.html=teacherIndexController
 				/teacher/termsofuse.html=urlFilenameViewController
 				/teacher/registerteacher.html=registerteacherController
-				/teacher/projects/languagetranslations.html=languageTranslationsController
 				/teacher/projects/projectinfo.html=projectInfoController
 				/teacher/projects/customized/shareproject.html=shareProjectController
 				/teacher/projects/customized/unshareproject.html=unShareProjectController
