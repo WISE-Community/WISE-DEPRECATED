@@ -330,6 +330,7 @@ public class CreateRunController extends AbstractWizardFormController {
 			model.put("implementedPostLevels", IMPLEMENTED_POST_LEVELS);
 			model.put("postLevelTextMap", postLevelTextMap);
 			model.put("minPostLevel", this.getMinPostLevel(project));
+			runParameters.setEnableRealTime(true);
 			break;
 		case 4:
 			try {

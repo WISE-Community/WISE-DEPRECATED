@@ -206,6 +206,9 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 			run.setPeriods(periods);
 		}
 		run.setPostLevel(runParameters.getPostLevel());
+		
+		Boolean enableRealTime = runParameters.getEnableRealTime();
+		run.setRealTimeEnabled(enableRealTime);
 
 		/* if this is an LD project take snapshot of project for run and set versionId 
 		if(run.getProject().getProjectType()==ProjectType.LD){

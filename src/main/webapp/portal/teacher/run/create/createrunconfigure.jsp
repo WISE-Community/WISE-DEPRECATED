@@ -84,6 +84,11 @@
 										</c:otherwise>
 									</c:choose>
 								</h5>
+								<h5 style="margin:.5em;">
+									<spring:message code="teacher.run.create.createrunconfigure.enableRealTimeStudentMonitoring"/><br/>
+									<form:radiobutton path="enableRealTime" value='true'/><spring:message code="teacher.run.create.createrunconfigure.enableRealTimeRadioButtonLabel"/><br/>
+									<form:radiobutton path="enableRealTime" value='false'/><spring:message code="teacher.run.create.createrunconfigure.disableRealTimeRadioButtonLabel"/>
+								</h5>
 							</div>
 						</div>
 						<div class="center">

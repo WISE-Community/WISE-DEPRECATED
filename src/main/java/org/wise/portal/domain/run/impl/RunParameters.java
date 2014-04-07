@@ -54,6 +54,8 @@ public class RunParameters extends OfferingParameters implements Serializable {
 	
 	private Locale locale;
 	
+	private Boolean enableRealTime = false;
+	
 	/**
 	 * @return <code>Integer</code> the maximum size of workgroup
 	 */
@@ -246,4 +248,11 @@ public class RunParameters extends OfferingParameters implements Serializable {
 		this.locale = locale;
 	}
 
+	public Boolean getEnableRealTime() {
+		return enableRealTime;
+	}
+
+	public void setEnableRealTime(Boolean enableRealTime) {
+		this.enableRealTime = enableRealTime;
+	}
 }
