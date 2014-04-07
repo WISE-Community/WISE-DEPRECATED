@@ -439,12 +439,6 @@
 		<property name="messageSource" ref="messageSource" />
 	</bean>
 
-	<bean id="forgotAccountTeacherSuccessController"
-		class="org.wise.portal.presentation.web.controllers.forgotaccount.teacher.SuccessController" />
-
-	<bean id="forgotAccountTeacherErrorController"
-		class="org.wise.portal.presentation.web.controllers.forgotaccount.teacher.ErrorController" />
-
 	<bean id="forgotAccountStudentPasswordReminderWizardController"
 		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController">
 		<property name="userService" ref="userService" />
@@ -1126,8 +1120,8 @@
 				/previewprojectlist.html=previewprojectlistController
 				/forgotaccount/selectaccounttype.html=selectAccountTypeController
 				/forgotaccount/teacher/index.html=forgotAccountTeacherIndexController
-				/forgotaccount/teacher/success.html=forgotAccountTeacherSuccessController
-				/forgotaccount/teacher/error.html=forgotAccountTeacherErrorController
+				/forgotaccount/teacher/success.html=urlFilenameViewController
+				/forgotaccount/teacher/error.html=urlFilenameViewController
 				/forgotaccount/student/passwordreminder*.html=forgotAccountStudentPasswordReminderWizardController
 				/forgotaccount/student/enterprojectcode.html=forgotAccountStudentCheckProjectCodeController
 				/forgotaccount/student/searchforstudentusername.html=searchForStudentUserNameController
