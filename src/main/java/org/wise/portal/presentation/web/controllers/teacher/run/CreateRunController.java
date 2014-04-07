@@ -429,13 +429,10 @@ public class CreateRunController extends AbstractWizardFormController {
 		//tries to retrieve the user from the session
 		User user = ControllerUtil.getSignedInUser();
 		Locale locale = request.getLocale();
-		String portalBaseUrlString = ControllerUtil.getBaseUrlString(request);
+		String fullWiseContextPath = ControllerUtil.getPortalUrlString(request);  // e.g. http://localhost:8080/wise
 		
-		//get the context path e.g. /wise
-		String contextPath = request.getContextPath();
-				
 		CreateRunEmailService emailService = 
-			new CreateRunEmailService(command, run, user, locale, contextPath + portalBaseUrlString);
+			new CreateRunEmailService(command, run, user, locale, fullWiseContextPath);
 		Thread thread = new Thread(emailService);
 		thread.start();
 		
@@ -448,15 +445,15 @@ public class CreateRunController extends AbstractWizardFormController {
 		private Run run;
 		private User user;
 		private Locale locale;
-		private String portalBaseUrlString;
+		private String fullWiseContextPath;
 		
 		public CreateRunEmailService(
-				Object command, Run run, User user, Locale locale, String portalBaseUrlString) {
+				Object command, Run run, User user, Locale locale, String fullWiseContextPath) {
 			this.command = command;
 			this.run = run;
 			this.user = user;
 			this.locale = locale;
-			this.portalBaseUrlString = portalBaseUrlString;
+			this.fullWiseContextPath = fullWiseContextPath;
 		}
 
 		public void run() {
@@ -514,10 +511,9 @@ public class CreateRunController extends AbstractWizardFormController {
 			projectID = runParameters.getProject().getId();
 			Long runID = run.getId();
 			
-    		String previewProjectUrl = portalBaseUrlString + "/previewproject.html?projectId="+run.getProject().getId();
+    		String previewProjectUrl = fullWiseContextPath + "/previewproject.html?projectId="+run.getProject().getId();
 
 			String[] recipients = wiseProperties.getProperty("project_setup").split(",");
-			
 			
 			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject", 
 						new Object[]{wiseProperties.getProperty("wise.name")}, Locale.US);
@@ -570,8 +566,46 @@ public class CreateRunController extends AbstractWizardFormController {
 				recipients[0] = DEBUG_EMAIL;
 			}
 			
-			//sends the email to the recipients
+			//sends the email to the admin
 			mailService.postMail(recipients, subject, message, fromEmail);
+			
+
+			//also send email to teacher	
+			String[] teacherRecipient = new String[]{teacherEmail};
+			
+			String defaultTeacherSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailSubject", 
+					new Object[]{run.getProject().getProjectInfo().getName()}, Locale.US);
+		
+			String teacherSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailSubject", 
+				new Object[]{run.getProject().getProjectInfo().getName()},defaultTeacherSubject, this.locale);
+
+			String defaultRunCodeDescription = messageSource.getMessage("teacher.run.create.createrunfinish.everyRunHasUniqueAccessCode", null, Locale.US);
+
+			String runCodeDescription = messageSource.getMessage("teacher.run.create.createrunfinish.everyRunHasUniqueAccessCode", null, defaultRunCodeDescription, this.locale);
+
+			String defaultTeacherMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailMessage", 
+					new Object[]{
+					teacherUserDetails.getUsername(),
+					run.getProject().getProjectInfo().getName(),
+					sdf.format(date),
+					runcode,
+					defaultRunCodeDescription
+					}, 
+					Locale.US);
+
+			String teacherMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailMessage", 
+					new Object[]{
+					teacherUserDetails.getUsername(),
+					run.getProject().getProjectInfo().getName(),
+					sdf.format(date),
+					runcode,
+					runCodeDescription
+					}, 
+					defaultTeacherMessage,
+					this.locale);
+			
+			//sends the email to the teacher
+			mailService.postMail(teacherRecipient, teacherSubject, teacherMessage, fromEmail);
 		}
 	}
 	
