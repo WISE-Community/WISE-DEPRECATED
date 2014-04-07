@@ -2889,8 +2889,13 @@ View.prototype.displayGradeByStep = function(nodeId) {
 				//add the row to the table
 				$('#gradeByStepDisplayTable').append(gradeByStepDisplayTableRow);
 				
+				//get the period id
+				var periodId = this.userAndClassInfo.getClassmatePeriodIdByWorkgroupId(workgroupId);
+				
 				//create a blank row for spacing
 				var blankTR = $('<tr>');
+				blankTR.addClass('gradeByStepRow');
+				blankTR.addClass('gradeByStepRowPeriodId_' + periodId);
 				var emptyTD = $('<td>');
 				emptyTD.html('&nbsp');
 				emptyTD.css('border', 'none');
