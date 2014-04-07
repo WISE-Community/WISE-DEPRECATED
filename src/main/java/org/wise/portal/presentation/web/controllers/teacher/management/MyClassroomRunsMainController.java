@@ -68,7 +68,7 @@ public class MyClassroomRunsMainController extends AbstractController {
 
 	private WorkgroupService workgroupService;
 
-	protected final static String IS_XMPP_ENABLED = "isXMPPEnabled";
+	protected final static String IS_REAL_TIME_ENABLED = "isRealTimeEnabled";
 
 	protected final static String HTTP_TRANSPORT_KEY = "http_transport";
 
@@ -99,11 +99,11 @@ public class MyClassroomRunsMainController extends AbstractController {
 			HttpServletRequest servletRequest,
 			HttpServletResponse servletResponse) throws Exception {
 
-		boolean isXMPPEnabled = false;
+		boolean isRealTimeEnabled = false;
 		
-	    String isXMPPEnabledStr = this.wiseProperties.getProperty("isXMPPEnabled");
-	    if (isXMPPEnabledStr != null) {
-	    	isXMPPEnabled = Boolean.valueOf(isXMPPEnabledStr);
+	    String isRealTimeEnabledStr = this.wiseProperties.getProperty("isRealTimeEnabled");
+	    if (isRealTimeEnabledStr != null) {
+	    	isRealTimeEnabled = Boolean.valueOf(isRealTimeEnabledStr);
 	    }
 
 		String gradingParam = servletRequest.getParameter(GRADING_ENABLED);
@@ -154,7 +154,7 @@ public class MyClassroomRunsMainController extends AbstractController {
     	//modelAndView.addObject(RUN_LIST, run_list);
     	
     	modelAndView.addObject(GRADING_PARAM, gradingParam);
-		modelAndView.addObject(IS_XMPP_ENABLED, isXMPPEnabled);
+		modelAndView.addObject(IS_REAL_TIME_ENABLED, isRealTimeEnabled);
 		modelAndView.addObject(CURRENT_RUN_LIST_KEY, current_run_list);
 		modelAndView.addObject(ENDED_RUN_LIST_KEY, ended_run_list);
 		modelAndView.addObject(WORKGROUP_MAP_KEY, workgroupMap);

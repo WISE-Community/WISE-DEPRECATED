@@ -1054,14 +1054,6 @@ View.prototype.displayStudentAssets = function() {
 };
 
 /**
- * Send a chat message to the chat room
- * @param chatMessage the message
- */
-View.prototype.sendChat = function (chatMessage) {
-	this.xmpp.sendStudentToChatRoomMessage(chatMessage);
-};
-
-/**
  * Display the Chat Room popup
  */
 View.prototype.displayChatRoom = function() {

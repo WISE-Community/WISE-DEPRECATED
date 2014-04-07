@@ -594,7 +594,7 @@ public class InformationController extends AbstractController{
 				config.put("studentAssetManagerUrl", studentAssetManagerUrl);
 				config.put("viewStudentAssetsUrl", viewStudentAssetsUrl);
 				config.put("runInfo", run.getInfo());
-				config.put("isXMPPEnabled", true);  // make this run-specific setting
+				config.put("isRealTimeEnabled", true);  // make this run-specific setting
 				config.put("hostName", hostName);
 				config.put("webSocketUrl", webSocketUrl);
 				config.put("studentStatusUrl", studentStatusUrl);

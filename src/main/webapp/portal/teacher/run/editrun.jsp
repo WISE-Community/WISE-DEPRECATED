@@ -84,11 +84,11 @@
 
 			$.ajax({type:'POST', url:'updaterun.html', data:'command='+infoOptionName+'&runId=' + runId + '&isEnabled=' + isEnabled, error:updateFailure, success:updateSuccess});
 			
-			if(infoOptionName == 'enableXMPP' && isEnabled == false) {
-				//hide the Classroom Monitor link because the teacher has enabled xmpp
+			if(infoOptionName == 'enableRealTime' && isEnabled == false) {
+				//hide the Classroom Monitor link because the teacher has enabled real time
 				$('#runId\\=' + runId + '\\&gradingType\\=monitor', window.parent.document).hide();
-			} else if(infoOptionName == 'enableXMPP' && isEnabled == true) {
-				//show the Classroom Monitor link because the teacher has disabled xmpp
+			} else if(infoOptionName == 'enableRealTime' && isEnabled == true) {
+				//show the Classroom Monitor link because the teacher has disabled real time
 				$('#runId\\=' + runId + '\\&gradingType\\=monitor', window.parent.document).show();
 			}
 		});
@@ -113,11 +113,11 @@
 		</c:choose>
 		<br/> -->
 		<c:choose>
-			<c:when test="${run.XMPPEnabled}">
-				<input id='enableXMPP' class='runInfoOption' type="checkbox" checked="checked"></input><spring:message code="teacher.run.editrun.enableClassroomMonitor"/>
+			<c:when test="${run.realTimeEnabled}">
+				<input id='enableRealTime' class='runInfoOption' type="checkbox" checked="checked"></input><spring:message code="teacher.run.editrun.enableClassroomMonitor"/>
 			</c:when>
 			<c:otherwise>
-				<input id='enableXMPP' class='runInfoOption' type="checkbox"></input><spring:message code="teacher.run.editrun.enableClassroomMonitor"/>
+				<input id='enableRealTime' class='runInfoOption' type="checkbox"></input><spring:message code="teacher.run.editrun.enableClassroomMonitor"/>
 			</c:otherwise>
 		</c:choose>
 	</div>

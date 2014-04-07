@@ -77,7 +77,7 @@ public class TeacherIndexController extends AbstractController {
 
 	private WorkgroupService workgroupService;
 
-	protected final static String IS_XMPP_ENABLED = "isXMPPEnabled";
+	protected final static String IS_REAL_TIME_ENABLED = "isRealTimeEnabled";
 
 	protected final static String CURRENT_RUN_LIST_KEY = "current_run_list";
 	
@@ -106,11 +106,11 @@ public class TeacherIndexController extends AbstractController {
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
-		boolean isXMPPEnabled = false;
+		boolean isRealTimeEnabled = false;
 		
-	    String isXMPPEnabledStr = this.wiseProperties.getProperty("isXMPPEnabled");
-	    if (isXMPPEnabledStr != null) {
-	    	isXMPPEnabled = Boolean.valueOf(isXMPPEnabledStr);
+	    String isRealTimeEnabledStr = this.wiseProperties.getProperty("isRealTimeEnabled");
+	    if (isRealTimeEnabledStr != null) {
+	    	isRealTimeEnabled = Boolean.valueOf(isRealTimeEnabledStr);
 	    }
 		
 		String gradingParam = request.getParameter(GRADING_ENABLED);
@@ -180,7 +180,7 @@ public class TeacherIndexController extends AbstractController {
 		modelAndView.addObject(CURRENT_RUN_LIST_KEY2, current_run_list1);
     	modelAndView.addObject(CURRENT_DATE, null);
     	modelAndView.addObject(GRADING_PARAM, gradingParam);
-		modelAndView.addObject(IS_XMPP_ENABLED, isXMPPEnabled);
+		modelAndView.addObject(IS_REAL_TIME_ENABLED, isRealTimeEnabled);
 		modelAndView.addObject(WORKGROUP_MAP_KEY, workgroupMap);
     	
     	// retrieve all unread messages

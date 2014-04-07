@@ -25,7 +25,6 @@ package org.wise.portal.service.offering;
 import java.util.List;
 import java.util.Set;
 
-
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
@@ -282,12 +281,12 @@ public interface RunService extends OfferingService {
     public void setStudentAssetUploaderEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
     
     /**
-     * Sets whether xmpp is enabled for this run
+     * Sets whether real time is enabled for this run
      * @param runId
      * @param isEnabled
      * @throws ObjectNotFoundException
      */
-    public void setXMPPEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
+    public void setRealTimeEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
 
     /**
      * Update public and private run notes for this run

@@ -232,35 +232,7 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 		args.vle.getCRaterResponse(id, nodeStateTimestamp, cRaterItemType);
 	}
 
-	if(args.vle.xmpp != null && args.vle.isXMPPEnabled != null) {
-		//real time monitor is enabled
-
-		/*
-		 * get the information to send to the student work stream for the
-		 * teacher to see
-		 */
-		var workgroupId = args.vle.userAndClassInfo.getWorkgroupId();
-		var nodeId = args.nodeVisit.nodeId;
-		var stepNumberAndTitle = args.vle.getProject().getStepNumberAndTitle(nodeId);
-		var type = "NodeVisit";
-		var nodeVisit = args.nodeVisit;
-
-		if (this.studentStatus == null) {
-			this.studentStatus = new StudentStatus();
-		}
-		var workgroupName = args.vle.userAndClassInfo.getUserName();
-		this.studentStatus.updateMaxAlertLevel();
-
-		//send the xmpp message
-		args.vle.xmpp.sendStudentToTeacherMessage({
-			workgroupId:workgroupId, 
-			workgroupName:workgroupName,
-			stepNumberAndTitle:stepNumberAndTitle, 
-			type:type,
-			nodeVisit:nodeVisit});
-	}
-	
-	if(args.vle.isXMPPEnabled) {
+	if(args.vle.isRealTimeEnabled) {
 		//we will send the student status to the teacher
 		args.vle.sendStudentStatusWebSocketMessage();
 	} else {
@@ -390,15 +362,6 @@ View.prototype.onWindowUnload = function(logout){
 
 	/* try to blip final message before going */
 	$('#onUnloadSaveDiv').html('SAVED!!');
-
-	/* tell xmpp server that student is disconnecting */
-	try {
-		if (this.xmpp && this.isXMPPEnabled) {
-			this.xmpp.disconnect();
-		}
-	} catch (e) {
-		// do nothing
-	}
 
 	/*
 	 * check if we need to log out the user, we need to use the === comparison

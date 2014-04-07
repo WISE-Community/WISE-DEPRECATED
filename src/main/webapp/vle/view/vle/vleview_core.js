@@ -13,11 +13,7 @@ View.prototype.vleDispatcher = function(type,args,obj){
 	} else if(type=='scriptsLoaded' && args[0]=='theme'){
 		obj.retrieveThemeLocales();
 	} else if(type=='getUserAndClassInfoCompleted'){
-		// start the xmpp if xmpp is enabled
-		if (obj.isXMPPEnabled) {
-			//obj.startXMPP();
-			//obj.getRunStatus();
-		}
+
 	} else if(type=='processLoadViewStateResponseCompleted'){
 		obj.getAnnotationsToCheckForNewTeacherAnnotations();
 		eventManager.fire('startVLECompleted');
@@ -61,7 +57,7 @@ View.prototype.vleDispatcher = function(type,args,obj){
 		
 	} else if (type == 'startVLECompleted') {
 		obj.renderStartNode();
-		if(obj.isXMPPEnabled) {
+		if(obj.isRealTimeEnabled) {
 			obj.sendStudentStatusWebSocketMessage();
 			obj.getRunStatus();
 		}
@@ -135,8 +131,8 @@ View.prototype.startVLE = function(){
 	/* load the project based on new config object parameters, lazy load */
 	this.loadProject(this.config.getConfigParam('getContentUrl'), this.config.getConfigParam('getContentBaseUrl'), true);
 	
-	/* check if xmpp is enabled */
-	this.checkXMPPEnabled();
+	//check if real time is enabled
+	this.isRealTimeEnabled = this.checkRealTimeEnabled();
 };
 
 /**
@@ -150,7 +146,6 @@ View.prototype.displayGlobalTools = function() {
 	$('#viewMyWork').html(myWorkLink);
 	
 	// Insert show flagged work link
-	// TODO: perhaps only show if 1 or more items have been flagged; check for flagged items on step navigation or use XMPP to show/hide?
 	var flaggedLink = "<a id='viewFlaggedLink' onclick='eventManager.fire(\"showFlaggedWork\")' title='"+this.getI18NString("flagged_button_title")+"'>"+this.getI18NString("flagged_button_text")+"</a>";
 	$('#viewFlagged').html(flaggedLink);
 	
@@ -223,19 +218,6 @@ View.prototype.showToolsBasedOnConfig = function(runInfo) {
 		$('#viewMyFiles').hide();
 	}
 	
-	if (runInfo.isXMPPEnabled != null && runInfo.isXMPPEnabled && 
-			runInfo.isChatRoomEnabled != null && runInfo.isChatRoomEnabled && false) {
-		/*
-		 * display chatroom link if run has chatroom enabled
-		 */
-		var displayChatRoomLink = "<a id='displayChatRoomLink' onclick='view.displayChatRoom()' title='Open Chat Room'>"+this.getI18NString("display_chat_room")+"</a>";
-		$('#viewChatRoom').html(displayChatRoomLink);
-		$('#viewChatRoom').show().css('display','inline');
-	} else {
-		$('#viewChatRoom').hide();
-	}
-	
-	
 	if (runInfo.isIdeaManagerEnabled != null && runInfo.isIdeaManagerEnabled) {
 		// display the idea basket links if the run/project has idea basket enabled
 		// if project is using IM version > 1, set custom link text based on IM settings
@@ -285,35 +267,6 @@ View.prototype.showToolsBasedOnConfigs = function(metadata, runInfo) {
 		$('#viewMyFiles').show().css('display','inline');
 	} else {
 		$('#viewMyFiles').hide();
-	}
-	
-	var isXMPPEnabled = false;
-	var isChatRoomEnabled = false;
-	
-	if(metadata != null) {
-		isXMPPEnabled = metadata.isXMPPEnabled;
-		isChatRoomEnabled = metadata.isChatRoomEnabled;
-	}
-	
-	if(runInfo != null) {
-		if(typeof runInfo.isXMPPEnabled != 'undefined') {
-			isXMPPEnabled = runInfo.isXMPPEnabled;			
-		}
-		
-		if(typeof runInfo.isChatRoomEnabled != 'undefined') {
-			isChatRoomEnabled = runInfo.isChatRoomEnabled;			
-		}
-	}
-	
-	if (isXMPPEnabled && isChatRoomEnabled && false) {
-		/*
-		 * display chatroom link if run has chatroom enabled
-		 */
-		var displayChatRoomLink = "<a id='displayChatRoomLink' onclick='view.displayChatRoom()' title='Open Chat Room'>"+this.getI18NString("display_chat_room")+"</a>";
-		$('#viewChatRoom').html(displayChatRoomLink);
-		$('#viewChatRoom').show().css('display','inline');
-	} else {
-		$('#viewChatRoom').hide();
 	}
 	
 	var isIdeaManagerEnabled = false;
@@ -846,26 +799,6 @@ View.prototype.renderNodeCompletedListener = function(position){
 	/* set title in nav bar */
     $('#stepTitle').html(this.currentNode.getTitle());
     
-	/* get project completion and send to teacher, if xmpp is enabled */
-	if (this.xmpp && this.isXMPPEnabled && false) {
-		var workgroupId = this.userAndClassInfo.getWorkgroupId();
-		var projectCompletionPercentage = this.getTeamProjectCompletionPercentage();
-		var nodeId = this.currentNode.id;
-		var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
-		var type = "studentProgress";
-		
-		if (this.studentStatus == null) {
-			this.studentStatus = new StudentStatus();
-		}
-		
-		this.studentStatus.updateMaxAlertLevel();
-		this.xmpp.sendStudentToTeacherMessage({workgroupId:workgroupId, 
-			projectCompletionPercentage:projectCompletionPercentage, 
-			stepNumberAndTitle:stepNumberAndTitle, 
-			type:type,
-			status:this.studentStatus});	
-	}
-	
 	this.displayHint();  // display hint for the current step, if any
 	
 	this.displayNodeAnnotation(this.currentNode.id);  // display annotation for the current step, if any

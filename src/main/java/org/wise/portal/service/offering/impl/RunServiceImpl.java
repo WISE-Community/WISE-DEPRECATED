@@ -600,12 +600,12 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @see org.wise.portal.service.offering.RunService#setXMPPEnabled(java.lang.Long, boolean)
+	 * @see org.wise.portal.service.offering.RunService#setRealTimeEnabled(java.lang.Long, boolean)
 	 */
 	@Transactional
-	public void setXMPPEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
+	public void setRealTimeEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
 		Run run = this.retrieveById(runId);
-		run.setXMPPEnabled(isEnabled);
+		run.setRealTimeEnabled(isEnabled);
 		this.runDao.save(run);
 	}
 	

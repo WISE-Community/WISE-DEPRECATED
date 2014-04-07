@@ -265,8 +265,6 @@ public class BridgeController extends AbstractController {
 				return true;
 			} else if(type.equals("studentAssetManager")) {
 				return true;
-			} else if(type.equals("xmppAuthenticate")) {
-				return true;
 			} else if (type.equals("rstat")) { // authorize requests to rapache
 			 	return true;
 			} else if (type.equals("rimage")) {

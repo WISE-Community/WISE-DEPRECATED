@@ -91,7 +91,6 @@
 		<mapping class="org.wise.vle.domain.peerreview.PeerReviewGate" />
 		<mapping class="org.wise.vle.domain.ideabasket.IdeaBasket" />
 		<mapping class="org.wise.vle.domain.statistics.VLEStatistics" />
-		<mapping class="org.wise.vle.domain.xmpp.ChatLog" />
 		<mapping class="org.wise.vle.domain.status.StudentStatus" />
 		<mapping class="org.wise.vle.domain.status.RunStatus" />
 	</session-factory>

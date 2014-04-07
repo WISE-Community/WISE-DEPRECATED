@@ -554,13 +554,13 @@ public class RunImpl extends OfferingImpl implements Run {
 		this.versionId = versionId;
 	}
 	
-	public boolean isXMPPEnabled() {
+	public boolean isRealTimeEnabled() {
 		String runInfoStr = this.getInfo();
 		if (runInfoStr != null && runInfoStr != null) {
 			try {
 				JSONObject runInfo = new JSONObject(runInfoStr);
-				if (runInfo.has("isXMPPEnabled")) {
-					return runInfo.getBoolean("isXMPPEnabled");
+				if (runInfo.has("isRealTimeEnabled")) {
+					return runInfo.getBoolean("isRealTimeEnabled");
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -570,7 +570,7 @@ public class RunImpl extends OfferingImpl implements Run {
 		return false;
 	}
 	
-	public void setXMPPEnabled(boolean isXMPPEnabled) {
+	public void setRealTimeEnabled(boolean isRealTimeEnabled) {
 		String runInfoStr = this.getInfo();
 		JSONObject runInfo = null;
 		try {
@@ -579,7 +579,7 @@ public class RunImpl extends OfferingImpl implements Run {
 			} else {
 				runInfo = new JSONObject();
 			}
-			runInfo.put("isXMPPEnabled", isXMPPEnabled);
+			runInfo.put("isRealTimeEnabled", isRealTimeEnabled);
 			this.setInfo(runInfo.toString());
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -12,9 +12,9 @@ var componentloader = function(em, sl){
 	
 	//place components in the order you want them to load
 	var views = {
-		student: ['topMenu','setup', 'core', 'keystroke', 'config', 'studentXMPP', 'user', 'session','studentwork','student','hint','navigation','annotations','uicontrol', 'wise', 'maxscores', 'peerreviewhelper', 'ideabasket', 'studentasset', 'studentWebSocket'],
-		grading: ['setup', 'core', 'config', 'teacherXMPP', 'studentwork', 'user', 'session', 'grading', 'annotations', 'maxscores', 'ideabasket'],
-		grading_min: ['setup', 'core_min', 'config', 'teacherXMPP_min', 'studentwork_min', 'user', 'session', 'grading_min', 'annotations_min', 'maxscores_min', 'ideabasket'],
+		student: ['topMenu','setup', 'core', 'keystroke', 'config', 'user', 'session','studentwork','student','hint','navigation','annotations','uicontrol', 'wise', 'maxscores', 'peerreviewhelper', 'ideabasket', 'studentasset', 'studentWebSocket'],
+		grading: ['setup', 'core', 'config', 'studentwork', 'user', 'session', 'grading', 'annotations', 'maxscores', 'ideabasket'],
+		grading_min: ['setup', 'core_min', 'config', 'studentwork_min', 'user', 'session', 'grading_min', 'annotations_min', 'maxscores_min', 'ideabasket'],
 		authoring: ['ddMenu', 'setup', 'core','keystroke','customcontextmenu', 'config', 'session','messagemanager','author','authoringcomponents', 'maxscores'],
 		summary: ['core'],
 		classroomMonitor: ['setup', 'core', 'config', 'studentwork', 'user', 'session', 'annotations', 'maxscores', 'teacherWebSocket']
@@ -102,18 +102,6 @@ var componentloader = function(em, sl){
 			}
 		},
 		setup: {
-			variables: {},
-			events: {},
-			methods: {},
-			initialize: {}
-		},
-		studentXMPP: {
-			variables: {},
-			events: {},
-			methods: {},
-			initialize: {}
-		},
-		teacherXMPP: {
 			variables: {},
 			events: {},
 			methods: {},
@@ -855,7 +843,6 @@ var componentloader = function(em, sl){
 	components.core_min = components.core;
 	components.studentwork_min = components.studentwork;
 	components.annotations_min = components.annotations;
-	components.teacherXMPP_min = components.teacherXMPP;
 	components.maxscores_min = components.maxscores;
 	
 	/**

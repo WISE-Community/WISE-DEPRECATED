@@ -322,13 +322,13 @@ public interface Run extends Offering {
 	 * 
 	 * @return
 	 */
-	public boolean isXMPPEnabled();
+	public boolean isRealTimeEnabled();
 	
 	/**
 	 * 
-	 * @param isXMPPEnabled
+	 * @param isRealTimeEnabled
 	 */
-	public void setXMPPEnabled(boolean isXMPPEnabled);
+	public void setRealTimeEnabled(boolean isRealTimeEnabled);
 
 	/**
 	 * sets student attendance for this run

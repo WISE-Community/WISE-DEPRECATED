@@ -29,9 +29,6 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
-
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
@@ -64,11 +61,11 @@ public class FindProjectRunsController extends SimpleFormController{
     protected ModelAndView onSubmit(HttpServletRequest request,
             HttpServletResponse response, Object command, BindException errors){
 
-		boolean isXMPPEnabled = false;
+		boolean isRealTimeEnabled = false;
 		
-	    String isXMPPEnabledStr = wiseProperties.getProperty("isXMPPEnabled");
-	    if (isXMPPEnabledStr != null) {
-	    	isXMPPEnabled = Boolean.valueOf(isXMPPEnabledStr);
+	    String isRealTimeEnabledStr = wiseProperties.getProperty("isRealTimeEnabled");
+	    if (isRealTimeEnabledStr != null) {
+	    	isRealTimeEnabled = Boolean.valueOf(isRealTimeEnabledStr);
 	    }
 
 		ModelAndView modelAndView = new ModelAndView();
@@ -93,7 +90,7 @@ public class FindProjectRunsController extends SimpleFormController{
 
 		modelAndView = new ModelAndView(VIEW);
 		modelAndView.addObject("runList", runList);
-		modelAndView.addObject("isXMPPEnabled", isXMPPEnabled);
+		modelAndView.addObject("isRealTimeEnabled", isRealTimeEnabled);
 		
 		return modelAndView;
     }

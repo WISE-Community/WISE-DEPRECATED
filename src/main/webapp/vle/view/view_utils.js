@@ -656,31 +656,24 @@ View.prototype.utils.fileFilter = function(extensions,name){
 	return extensions.indexOf(this.getExtension(name).toLowerCase()) != -1;
 };
 
-/**
- * Initialize XMPP service
- * @return
- */
-View.prototype.startXMPP = function() {
-	this.xmpp = WISE.init(this);
-};
+View.prototype.checkRealTimeEnabled = function() {
+	var isRealTimeEnabled = false;
 
-
-View.prototype.checkXMPPEnabled = function() {
-	
-	this.isXMPPEnabled = false;
-	if (this.config.getConfigParam("isXMPPEnabled") != null && this.config.getConfigParam("isXMPPEnabled")) {
+	if (this.config.getConfigParam("isRealTimeEnabled") != null && this.config.getConfigParam("isRealTimeEnabled")) {
 		var runInfo = this.config.getConfigParam("runInfo");
 		
 		if(runInfo != null && runInfo != "") {
 			var runInfoJSON = JSON.parse(runInfo);
 			
 			if(runInfoJSON != null) {
-				if(runInfoJSON.isXMPPEnabled != null) {
-					this.isXMPPEnabled = runInfoJSON.isXMPPEnabled;
+				if(runInfoJSON.isRealTimeEnabled != null) {
+					isRealTimeEnabled = runInfoJSON.isRealTimeEnabled;
 				}
 			}
 		}
 	}
+	
+	return isRealTimeEnabled;
 };
 
 /**
