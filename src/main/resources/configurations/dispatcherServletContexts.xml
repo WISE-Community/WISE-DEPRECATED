@@ -445,12 +445,6 @@
 	<bean id="forgotAccountTeacherErrorController"
 		class="org.wise.portal.presentation.web.controllers.forgotaccount.teacher.ErrorController" />
 
-	<bean id="forgotAccountStudentUsernameController"
-		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.UsernameController" />
-
-	<bean id="forgotAccountStudentPasswordController"
-		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.PasswordController" />
-
 	<bean id="forgotAccountStudentPasswordReminderWizardController"
 		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController">
 		<property name="userService" ref="userService" />
