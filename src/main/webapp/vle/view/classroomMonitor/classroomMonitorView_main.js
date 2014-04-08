@@ -2901,6 +2901,15 @@ View.prototype.displayGradeByStep = function(nodeId) {
 				emptyTD.css('border', 'none');
 				blankTR.append(emptyTD);
 				$('#gradeByStepDisplayTable').append(blankTR);
+				
+				if(this.classroomMonitorPeriodIdSelected != null && this.classroomMonitorPeriodIdSelected != 'all') {
+					//we are filtering for a period
+					
+					if(this.classroomMonitorPeriodIdSelected != periodId) {
+						//the period does not match the one that we want to show so we will hide this row
+						blankTR.hide();
+					}
+				}
 			}
 		}
 	}
