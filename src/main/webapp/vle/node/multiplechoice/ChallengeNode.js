@@ -134,11 +134,11 @@ ChallengeNode.prototype.showFeedbackDialog = function(feedback, isCorrect){
             		 */
             		if (!visited) {
             			view.goToNodePosition(toVisitPosition);
-            			$('.challenge-button > .ui-button-text').text(this.view.getI18NString('back_to_cq', 'MultipleChoiceNode'));
+            			$('.challenge-button > .ui-button-text').text(view.getI18NString('back_to_cq', 'MultipleChoiceNode'));
             			visited = true;
             		} else {
             			view.goToNodePosition(challengePosition);
-            			$('.challenge-button > .ui-button-text').text(this.view.getI18NString('take_me_there', 'MultipleChoiceNode'));
+            			$('.challenge-button > .ui-button-text').text(view.getI18NString('take_me_there', 'MultipleChoiceNode'));
             			visited = false;
             		}            		
             	}
