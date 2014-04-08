@@ -327,6 +327,8 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 							var currentNode = view.getProject().getNodeById(nodeId);  //get the node							
 							var cRaterItemId = successArgs.cRaterItemId;    //get the crater item id e.g. "SPOON", "GREENROOF-II"
 							var cRaterItemType = successArgs.cRaterItemType; //get the crater item type e.g. 'CRATER' or 'HENRY'
+							var orState = successArgs.orState;
+							
 							if (responseJSON != null) {
 								try {
 									var cRaterAnnotationJSON = JSON.parse(responseJSON);
@@ -353,7 +355,7 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 									        }];
 									var postTime = null;
 									var stepWorkId = null;
-									debugger;
+
 									var cRaterAnnotation = new Annotation(runId, nodeId, toWorkgroup, fromWorkgroup, type, value, postTime, stepWorkId);
 									
 									//add the CRater annotation to our local collection of annotations
@@ -386,77 +388,60 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 										var feedbackText = feedbackTextObject.feedbackText;
 										var feedbackId = feedbackTextObject.feedbackId;
 
+										//save the crater feedback and score into the node state
+										orState.cRaterFeedbackText = feedbackText;
+										orState.cRaterFeedbackId = feedbackId;
+										orState.cRaterScore = score;
+										
+										var hasScore = false;
+										var hasFeedback = false;
+										
 										var cRaterFeedbackStringSoFar = "<span class='nodeAnnotationsCRater'>";
 
 										if(displayCRaterScoreToStudent) {
-											//display the score
-											cRaterFeedbackStringSoFar += view.getI18NString('you_got_a_score_of') + score + "<br/><br/>";
+											if(score != null && score != "") {
+												hasScore = true;
+											}
 										}
 
 										if(displayCRaterFeedbackToStudent) {
-											cRaterFeedbackStringSoFar += feedbackText + "<br/>";
+											if(feedbackText != null && feedbackText != "") {
+												hasFeedback = true;
+											}
+										}
+
+										if(hasScore || hasFeedback) {
+											// display the feedback button
+											view.displayNodeAnnotation(nodeId);
+											
+											//popup the message to the student
+											eventManager.fire("showNodeAnnotations",[nodeId]);
 										}
 										
-										cRaterFeedbackStringSoFar += "</span>";
-
-										if(cRaterFeedbackStringSoFar != null && cRaterFeedbackStringSoFar != "") {
-											/*
-											 * unlock the screen since we previously locked it to make the student wait
-											 * for the feedback to be displayed
-											 */
-											eventManager.fire('unlockScreenEvent');
-
-											//check if the nodeAnnotationPanel exists
-											if($('#nodeAnnotationsPanel').size()==0){
-												//the show nodeAnnotationPanel does not exist so we will create it
-												$('<div id="nodeAnnotationsPanel" class="nodeAnnotationsPanel"></div>').dialog(
-														{	autoOpen:false,
-															closeText:'Close',
-															modal:false,
-															show:{effect:"fade",duration:200},
-															hide:{effect:"fade",duration:200},
-															title:view.getI18NString("node_annotations_title"),
-															zindex:9999,
-															width:450,
-															height:'auto',
-															position:["center","middle"],
-															resizable:true    					
-														});
-											};
-											// set the title of the dialog based on step title
-											$('#nodeAnnotationsPanel').dialog("option","title",view.getI18NString("node_annotations_title")+" "+view.getProject().getVLEPositionById(nodeId)+": "+currentNode.getTitle());
+										// handle rewrite/revise
+										if(score != null) {
+											//get the student action for the given score
+											var studentAction = or.getStudentAction(score);
 											
-											//set the html into the div
-											$('#nodeAnnotationsPanel').html(cRaterFeedbackStringSoFar);
-											
-											// show the annotation panel
-											$('#nodeAnnotationsPanel').dialog('open');
-											
-											// handle rewrite/revise
-											if(score != null) {
-												//get the student action for the given score
-												var studentAction = or.getStudentAction(score);
+											if(studentAction == null) {
+												//do nothing
+											} else if(studentAction == 'rewrite') {
+												/*
+												 * move the current work to the previous work response box
+												 * because we want to display the previous work to the student
+												 * and have them re-write another response after they
+												 * receive the immediate CRater feedback
+												 */
+												or.showPreviousWorkThatHasAnnotation(studentData);
 												
-												if(studentAction == null) {
-													//do nothing
-												} else if(studentAction == 'rewrite') {
-													/*
-													 * move the current work to the previous work response box
-													 * because we want to display the previous work to the student
-													 * and have them re-write another response after they
-													 * receive the immediate CRater feedback
-													 */
-													or.showPreviousWorkThatHasAnnotation(studentData);
-													
-													//clear the response box so they will need to write a new response
-													$('#responseBox').val('');
-												} else if(studentAction == 'revise') {
-													/*
-													 * the student will need to revise their work so we will hide the
-													 * previous response display
-													 */
-													$('#previousResponseDisplayDiv').hide();
-												}
+												//clear the response box so they will need to write a new response
+												$('#responseBox').val('');
+											} else if(studentAction == 'revise') {
+												/*
+												 * the student will need to revise their work so we will hide the
+												 * previous response display
+												 */
+												$('#previousResponseDisplayDiv').hide();
 											}
 										}
 									}
@@ -468,10 +453,22 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 									 */
 								}
 							}
+							
+							/*
+							 * unlock the screen since we previously locked it to make the student wait
+							 * for the feedback to be displayed
+							 */
+							eventManager.fire('unlockScreenEvent');
 						};
 						var failureCallback = function(failureType, failureArgs) {
 							// a boo-boo happened getting crater in preview mode.
 							alert(failureArgs.view.getI18NStringWithParams("error_msg_with_reason", ["CRATER SCORE PREVIEW"]));
+							
+							/*
+							 * unlock the screen since we previously locked it to make the student wait
+							 * for the feedback to be displayed
+							 */
+							eventManager.fire('unlockScreenEvent');
 						}
 						
 						var callbackData = {
@@ -479,7 +476,8 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 								nodeId:this.node.id,
 								cRaterItemType:cRaterItemType,
 								studentData:studentData,
-								or:this
+								or:this,
+								orState:orState
 								};
 						
 						// invoke CRater in preview mode.

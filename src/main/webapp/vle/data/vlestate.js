@@ -139,29 +139,29 @@ VLE_STATE.prototype.getLatestWorkByNodeId = function(nodeId) {
  * @return the latest non blank work or "" if none exists
  */
 VLE_STATE.prototype.getLatestCRaterFeedbackByNodeId = function(nodeId) {
-        //loop through the node visits from latest to earliest
+	//loop through the node visits from latest to earliest
 	for(var x=this.visitedNodes.length - 1; x >= 0; x--) {
-                //get a node visit
-                var nodeVisit = this.visitedNodes[x];
+		//get a node visit
+		var nodeVisit = this.visitedNodes[x];
 
-                //check if the nodeId matches
+		//check if the nodeId matches
 		if(nodeVisit.nodeId == nodeId) {
-                        //obtain the latest non blank work for the node visit
-                        // go thru all the nodeStates and look for cRaterFeedbackText
-                        var nodeStates = nodeVisit.nodeStates;
-                        for (var i=nodeStates.length; i >= 0; i--) {
-                                var nodeState = nodeStates[i];
-                                //check if there was any non blank work
-                                if(nodeState != null && nodeState.cRaterFeedbackText && nodeState.cRaterFeedbackText != "") {
-                                        //return the non blank work
+			//obtain the latest non blank work for the node visit
+			// go thru all the nodeStates and look for cRaterFeedbackText
+			var nodeStates = nodeVisit.nodeStates;
+			for (var i=nodeStates.length - 1; i >= 0; i--) {
+				var nodeState = nodeStates[i];
+				//check if there was any non blank work
+				if(nodeState != null && nodeState.cRaterFeedbackText && nodeState.cRaterFeedbackText != "") {
+					//return the non blank work
 					return nodeState.cRaterFeedbackText;
-                                }
+				}
 
 			}
-                }
-        }
+		}
+	}
 
-        return "";
+	return "";
 };
 
 /**

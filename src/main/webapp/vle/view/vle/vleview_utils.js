@@ -22,7 +22,8 @@ View.prototype.getAbsoluteRemoteStudentReferencedUploadsPath = function() {
  * Closes any currently-opened dialogs.
  */
 View.prototype.utils.closeDialogs = function(){
-	$(".ui-dialog-content").dialog("close");
+	//close all dialog popups except the annotation popup and the challenge question popup
+	$(".ui-dialog-content").not('#nodeAnnotationsPanel').not('#feedbackDialog').dialog("close");
 };
 
 /**
