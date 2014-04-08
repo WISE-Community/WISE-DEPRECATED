@@ -1420,9 +1420,34 @@ View.prototype.createGradeByStudentDisplayTableRow = function(nodeId, workgroupI
 			
 			//create the table data that will display the step title
 			var stepTitleTD = $('<td>');
-			stepTitleTD.html(stepTitle);
 			stepTitleTD.attr('colspan', 2);
-			stepTitleTD.css('font-weight', 'bold');
+			
+			//create the div to display the step title
+			var stepTitleDiv = $('<div>');
+			stepTitleDiv.html(stepTitle);
+			stepTitleDiv.css('float', 'left');
+			stepTitleDiv.css('font-weight', 'bold');
+			
+			if(nodeType != 'sequence') {
+				if(node != null && node.isLeafNode() && node.hasGradingView()) {
+					/*
+					 * this is a gradable step so we will make it clickable. clicking on the
+					 * step title will bring the use to the grade by step view for that step.
+					 */
+					
+					stepTitleDiv.css('cursor', 'pointer');
+					
+					var stepRowClickedParams = {
+						thisView:this,
+						nodeId:nodeId
+					}
+
+					//display the grade by step view for the step that was clicked
+					stepTitleDiv.click(stepRowClickedParams, this.stepRowClicked)
+				}
+			}
+			
+			stepTitleTD.append(stepTitleDiv);
 			
 			//add the step title table data to the row
 			stepTitleTR.append(stepTitleTD);
@@ -2988,9 +3013,22 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
 		userNameDiv.css('float', 'left');
 		userNameDiv.css('font-weight', 'bold');
 		userNameDiv.html(userNames + ' [Workgroup Id: ' + workgroupId + ']' + ' [Period ' + period + ']');
+		userNameDiv.css('cursor', 'pointer');
 		
-		userNameTR.append(isOnlineDiv);
-		userNameTR.append(userNameDiv);
+		//create the params to be used when this the teacher clicks the student name
+		var studentRowClickedParams = {
+			thisView:this,
+			workgroupId:workgroupId
+		}
+		
+		//load the student grade by step view for the student
+		userNameDiv.click(studentRowClickedParams, this.studentRowClicked);
+		
+		var userNameTD = $('<td>');
+		userNameTD.append(isOnlineDiv);
+		userNameTD.append(userNameDiv);
+		
+		userNameTR.append(userNameTD);
 		
 		//add the row to the table
 		stepTable.append(userNameTR);
