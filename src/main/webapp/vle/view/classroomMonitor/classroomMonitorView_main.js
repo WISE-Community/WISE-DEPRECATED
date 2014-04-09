@@ -1437,6 +1437,18 @@ View.prototype.createGradeByStudentDisplayTableRow = function(nodeId, workgroupI
 					
 					stepTitleDiv.css('cursor', 'pointer');
 					
+					//highlight the step title yellow on mouse over
+					stepTitleDiv.mouseenter({thisView:this}, function(event) {
+						var thisView = event.data.thisView;
+						thisView.highlightYellow(this);
+					});
+					
+					//remove the highlight from the step title when mouse exits
+					stepTitleDiv.mouseleave({thisView:this}, function(event) {
+						var thisView = event.data.thisView;
+						thisView.removeHighlight(this);
+					});
+					
 					var stepRowClickedParams = {
 						thisView:this,
 						nodeId:nodeId
@@ -3015,6 +3027,18 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
 		userNameDiv.css('font-weight', 'bold');
 		userNameDiv.html(userNames + ' [Workgroup Id: ' + workgroupId + ']' + ' [Period ' + period + ']');
 		userNameDiv.css('cursor', 'pointer');
+		
+		//highlight the user name yellow on mouse over
+		userNameDiv.mouseenter({thisView:this}, function(event) {
+			var thisView = event.data.thisView;
+			thisView.highlightYellow(this);
+		});
+		
+		//remove the highlight from the user name when mouse exits
+		userNameDiv.mouseleave({thisView:this}, function(event) {
+			var thisView = event.data.thisView;
+			thisView.removeHighlight(this);
+		});
 		
 		//create the params to be used when this the teacher clicks the student name
 		var studentRowClickedParams = {
@@ -5358,6 +5382,22 @@ View.prototype.getStudentsOnStep = function(nodeId, periodId) {
 	}
 	
 	return result;
+};
+
+/**
+ * Highlight the background of the element yellow
+ * @param element the element to highlight
+ */
+View.prototype.highlightYellow = function(element) {
+	$(element).css('background', 'yellow');
+};
+
+/**
+ * Remove the background highlight from the element
+ * @param element the element to remove the highlight from
+ */
+View.prototype.removeHighlight = function(element) {
+	$(element).css('background', '');
 };
 
 /**
