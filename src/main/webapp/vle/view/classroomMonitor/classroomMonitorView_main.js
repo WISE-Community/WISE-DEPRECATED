@@ -1789,6 +1789,7 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	
 	commentCell.append(commentP);
 	commentCell.append(premadeCommentsLink);
+	commentCell.append('<br/>');
 	commentCell.append(commentTextArea);
 	
 	commentRow.append(commentCell);
