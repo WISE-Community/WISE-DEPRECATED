@@ -1377,7 +1377,7 @@ Node.prototype.linkTo = function(key){
 		} else if(this.view.name != 'student'){
 			this.view.notificationManager.notify('The link works. The step ' + node.title + ' will be displayed when the project is run.',3);
 		} else {
-			this.view.renderNode(nodePosition);
+			this.view.goToNodePosition(nodePosition);
 		}
 	}
 };
