@@ -284,10 +284,6 @@
 		class="org.wise.portal.presentation.web.controllers.teacher.management.ManageStudentsController">
 	</bean>
 
-	<bean id="updateMyAccountController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.UpdateMyAccountController">
-	</bean>
-
 	<bean id="updateMyAccountInfoController"
 		class="org.wise.portal.presentation.web.controllers.teacher.management.UpdateMyAccountInfoController">
 		<property name="userService" ref="userService" />
@@ -1065,7 +1061,7 @@
 				/teacher/grading/premadeComments.html=premadeCommentsController
 				/teacher/classroomMonitor/classroomMonitor.html=gradeWorkController
 				/teacher/management/managemystudents.html=manageStudentsController
-				/teacher/management/updatemyaccount.html=updateMyAccountController
+				/teacher/management/updatemyaccount.html=urlFilenameViewController
 				/teacher/management/library.html=libraryController
 				/teacher/management/changeteacherpasswordsuccess.html=changeTeacherPasswordSuccessController
 				/teacher/management/classroomruns.html=myClassroomRunsMainController

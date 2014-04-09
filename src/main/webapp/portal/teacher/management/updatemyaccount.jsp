@@ -33,12 +33,6 @@
 						<h5><a href="updatemyaccountinfo.html"><spring:message code="teacher.management.updatemyaccount.editRegistration"/></a> - <spring:message code="teacher.management.updatemyaccount.editRegistrationInfo"/></h5>
 					</div>
 				</div>
-				<!-- <div class="panelContent">
-					<div class="sectionHead">Preferences</div>
-					<div class="sectionContent">
-						<h5><a href="#"><spring:message code="teacher.management.updatemyaccount.editPrefernces"/></a> - <spring:message code="teacher.management.updatemyaccount.editPreferncesInfo"/></h5>
-						<h5><a href="#"><spring:message code="teacher.management.updatemyaccount.editLanguage"/></a> - <spring:message code="teacher.management.updatemyaccount.editLanguageInfo"/></h5>
- 					</div> -->
 			</div>
 		</div>
 		<div style="clear: both;"></div>
