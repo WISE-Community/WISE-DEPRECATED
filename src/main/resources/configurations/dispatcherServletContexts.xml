@@ -579,15 +579,6 @@
 	<bean id="addSharedTeacherParameters" class="org.wise.portal.domain.impl.AddSharedTeacherParameters">
 	</bean>
 
-	<bean id="addSharedTeacherController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.AddSharedTeacherController">
-		<property name="runService" ref="runService" />
-		<property name="userService" ref="userService" />
-		<property name="commandName" value="addSharedTeacherParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.AddSharedTeacherParameters" />
-	</bean>
-
 	<bean id="manageAllProjectsController"
 		class="org.wise.portal.presentation.web.controllers.admin.ManageAllProjectsController">
 		<property name="projectService" ref="projectService" />
@@ -1070,7 +1061,6 @@
 				/studentinfo.html=infoController
 				/teacher/management/studentlist.html=studentListController
 				/teacher/management/studentlistexcel.html=listStudentNamesController
-				/teacher/management/addsharedteacher.html=addSharedTeacherController
 				/teacher/vle/vle.html=studentVLEController
 				/**/index.html=indexController
 				/previewproject.html=previewprojectController
