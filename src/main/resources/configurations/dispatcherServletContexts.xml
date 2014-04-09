@@ -98,9 +98,6 @@
 	<bean id="lookupUserParametersValidator"
 		class="org.wise.portal.presentation.validators.LookupUserParametersValidator" />
 
-	<bean id="announcementParametersValidator"
-		class="org.wise.portal.presentation.validators.AnnouncementParametersValidator" />
-
 	<bean id="teacherIndexController"
 		class="org.wise.portal.presentation.web.controllers.TeacherIndexController">
 		<property name="runService" ref="runService" />
@@ -671,40 +668,8 @@
 
 	<bean id="manageAnnouncementController"
 		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.ManageAnnouncementController">
-		<property name="runService" ref="runService" />
 		<property name="aclService" ref="aclServiceImpl" />
-	</bean>
-
-	<bean id="createAnnouncementController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.CreateAnnouncementController">
-		<property name="commandName" value="announcementParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.AnnouncementParameters" />
-		<property name="runService" ref="runService" />
-		<property name="announcementService" ref="announcementService" />
-		<property name="sessionForm" value="true" />
-		<property name="validator" ref="announcementParametersValidator" />
-	</bean>
-
-	<bean id="viewAnnouncementController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.ViewAnnouncementController">
-		<property name="announcementService" ref="announcementService" />
-	</bean>
-
-	<bean id="editAnnouncementController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.EditAnnouncementController">
-		<property name="commandName" value="announcementParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.AnnouncementParameters" />
-		<property name="runService" ref="runService" />
-		<property name="announcementService" ref="announcementService" />
-		<property name="sessionForm" value="true" />
-		<property name="validator" ref="announcementParametersValidator" />
-	</bean>
-
-	<bean id="removeAnnouncementController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.RemoveAnnouncementController">
-		<property name="runService" ref="runService" />
+	    <property name="runService" ref="runService" />
 		<property name="announcementService" ref="announcementService" />
 	</bean>
 
@@ -1100,11 +1065,7 @@
 				/admin/portal/manageportal.html=managePortalController
 				/admin/memorymonitor.html=urlFilenameViewController
 				/teacher/management/changestudentperiod.html=changeStudentPeriodController
-				/teacher/run/announcement/manageannouncement.html=manageAnnouncementController
-				/teacher/run/announcement/viewannouncement.html=viewAnnouncementController
-				/teacher/run/announcement/createannouncement.html=createAnnouncementController
-				/teacher/run/announcement/editannouncement.html=editAnnouncementController
-				/teacher/run/announcement/removeannouncement.html=removeAnnouncementController
+				/teacher/run/announcement/*.html=manageAnnouncementController
 				/teacher/projects/bookmark.html=bookmarkController
 				/teacher/projects/deleteproject.html=deleteProjectController
 				/teacher/projects/analyzeproject.html=analyzeProjectController
