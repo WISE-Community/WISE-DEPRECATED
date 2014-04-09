@@ -302,10 +302,6 @@
 		<property name="successView" value="student/updatestudentaccountsuccess" />
 	</bean>
 
-	<bean id="changeTeacherPasswordSuccessController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ChangeTeacherPasswordSuccessController">
-	</bean>
-
 	<bean id="contactWiseController"
 		class="org.wise.portal.presentation.web.controllers.ContactWiseController">
 		<property name="commandName" value="contactWISEGeneral" />
@@ -464,7 +460,7 @@
 	</bean>
 
 	<bean id="changeTeacherPasswordController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ChangeTeacherPasswordController">
+		class="org.wise.portal.presentation.web.controllers.teacher.management.ChangeUserPasswordController">
 		<property name="successView" value="teacher/management/changepasswordsuccess" />
 		<property name="userService" ref="userService" />
 		<property name="studentService" ref="studentService" />
@@ -1054,7 +1050,6 @@
 				/teacher/management/managemystudents.html=manageStudentsController
 				/teacher/management/updatemyaccount.html=urlFilenameViewController
 				/teacher/management/library.html=libraryController
-				/teacher/management/changeteacherpasswordsuccess.html=changeTeacherPasswordSuccessController
 				/teacher/management/classroomruns.html=myClassroomRunsMainController
 				/teacher/management/projectruntabs.html=myClassroomRunsController
 				/teacher/management/submitworkgroupchanges.html=submitWorkgroupChangesController
