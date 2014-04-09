@@ -1,6 +1,6 @@
 <%@ include file="../../../include.jsp"%>
 
-<!DOCTYPE html>l>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
@@ -17,28 +17,11 @@
 
 	<div class="sectionHead"><spring:message code="teacher.run.manage.startRun.restoreClassroomRun"/></div>
 
-	<form:form method="post" action="startRun.html" commandName="startRunParameters" id="startRun" autocomplete='off'>
-	  <div class="sectionContent">
-	  	<label for="runId"><spring:message code="teacher.run.manage.startRun.reActivateRunId"/></label>
-	    <form:input disabled="true" path="runId" id="runId"/>
-	    <form:errors path="runId" />
-	  </div>
-		
-		<!-- Support for Spring errors object -->
-		<div class="errorMsgNoBg">
-			<!-- Support for Spring errors object -->
-			<spring:bind path="startRunParameters.*">
-		  		<c:forEach var="error" items="${status.errorMessages}">
-		   			 <p><c:out value="${error}"/></p>
-		   		</c:forEach>
-			</spring:bind>
-		</div>
-
-		<div class="sectionContent">
-			<input type="submit" name="cancelarchive" value="<spring:message code="teacher.run.manage.startRun.reActivateRun"/>" />
-		</div>
-		
-	</form:form>
+	<form method="post" action="startRun.html" id="startRun" autocomplete='off'>
+	  <input type="hidden" name="runId" id="runId" value="${run.id}" ></input>
+	  <input type="hidden" name="command" id="command" value="unArchiveRun"></input>
+	  <input type="submit" name="cancelarchive" value="<spring:message code="teacher.run.manage.startRun.reActivateRun"/>" />
+	</form>
 </div>
 </body>
 </html>

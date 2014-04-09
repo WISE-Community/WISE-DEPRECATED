@@ -67,12 +67,6 @@
 	<bean id="addprojectparametersValidator"
 		class="org.wise.portal.presentation.validators.student.AddProjectParametersValidator" />
 
-	<bean id="endRunParametersValidator"
-		class="org.wise.portal.presentation.validators.teacher.EndRunParametersValidator" />
-
-	<bean id="startRunParametersValidator"
-		class="org.wise.portal.presentation.validators.teacher.StartRunParametersValidator" />
-
 	<bean id="removeStudentFromRunParametersValidator"
 		class="org.wise.portal.presentation.validators.teacher.management.RemoveStudentFromRunParametersValidator" />
 
@@ -203,31 +197,6 @@
 		<property name="validator" ref="addprojectparametersValidator" />
 		<property name="formView" value="student/addproject" />
 		<property name="successView" value="student/addprojectsuccess" />
-	</bean>
-
-	<bean id="endRunController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.manage.EndRunController">
-		<property name="runService" ref="runService" />
-		<property name="aclService" ref="aclServiceImpl" />
-		<property name="commandName" value="endRunParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.run.impl.EndRunParameters" />
-		<property name="sessionForm" value="true" />
-		<property name="validator" ref="endRunParametersValidator" />
-		<property name="formView" value="teacher/run/manage/archiveRun" />
-		<property name="successView" value="teacher/run/manage/endRunSuccess" />
-	</bean>
-
-	<bean id="startRunController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.manage.StartRunController">
-		<property name="runService" ref="runService" />
-		<property name="commandName" value="startRunParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.run.impl.StartRunParameters" />
-		<property name="sessionForm" value="true" />
-		<property name="validator" ref="startRunParametersValidator" />
-		<property name="formView" value="teacher/run/manage/startRun" />
-		<property name="successView" value="teacher/run/manage/startRunSuccess" />
 	</bean>
 
 	<bean id="removeStudentFromRunController"
@@ -1090,8 +1059,8 @@
 				/teacher/projects/customized/unshareproject.html=unShareProjectController
 				/teacher/run/shareprojectrun.html=shareProjectRunController
 				/teacher/run/unshareprojectrun.html=unShareProjectRunController
-				/teacher/run/manage/archiveRun.html=endRunController
-				/teacher/run/manage/startRun.html=startRunController
+				/teacher/run/manage/archiveRun.html=updateRunController
+				/teacher/run/manage/startRun.html=updateRunController
 				/teacher/run/createRun.html=createRunController
 				/teacher/run/updaterun.html=updateRunController
 				/teacher/run/editrun.html=updateRunController

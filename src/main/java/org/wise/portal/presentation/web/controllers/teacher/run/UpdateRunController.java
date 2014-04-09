@@ -27,6 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
 
 /**
@@ -45,43 +49,59 @@ public class UpdateRunController extends AbstractController {
 	 */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		User user = ControllerUtil.getSignedInUser();
 		String runId = request.getParameter("runId");
+		Run run = null;
+		if (runId != null) {
+			run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
+		}
 
 		if (request.getMethod() == METHOD_GET) {
 			ModelAndView mav = new ModelAndView();
-			mav.addObject("run", this.runService.retrieveById(Long.parseLong(request.getParameter("runId"))));
+			mav.addObject("run", run);
 			return mav;
 		}
 		
 		String command = request.getParameter("command");
 
-		if(command.equals("updateTitle")){
+		if("updateTitle".equals(command)){
 			String title = request.getParameter("title");
 			this.runService.updateRunName(Long.parseLong(runId), title);
 			response.getWriter().write("success");
-		} else if(command.equals("addPeriod")){
+		} else if("addPeriod".equals(command)){
 			String name = request.getParameter("name");
 			this.runService.addPeriodToRun(Long.parseLong(runId), name);
 			response.getWriter().write("success");
-		} else if (command.equals("enableIdeaManager")) {
+		} else if ("enableIdeaManager".equals(command)) {
 			boolean isEnabled = Boolean.parseBoolean(request.getParameter("isEnabled"));
 			this.runService.setIdeaManagerEnabled(Long.parseLong(runId), isEnabled);
 			response.getWriter().write("success");
-		} else if (command.equals("enableStudentAssetUploader")) {
+		} else if ("enableStudentAssetUploader".equals(command)) {
 			boolean isEnabled = Boolean.parseBoolean(request.getParameter("isEnabled"));
 			this.runService.setStudentAssetUploaderEnabled(Long.parseLong(runId), isEnabled);
 			response.getWriter().write("success");
-		} else if (command.equals("enableRealTime")) {
+		} else if ("enableRealTime".equals(command)) {
 			boolean isEnabled = Boolean.parseBoolean(request.getParameter("isEnabled"));
 			this.runService.setRealTimeEnabled(Long.parseLong(runId), isEnabled);
 			response.getWriter().write("success");
-		} else if (command.equals("saveNotes")) {
+		} else if ("saveNotes".equals(command)) {
 			String privateNotes = request.getParameter("privateNotes");
 			String publicNotes = request.getParameter("publicNotes");
 			this.runService.updateNotes(Long.parseLong(runId), privateNotes, publicNotes);
 			response.getWriter().write("success");
+		} else if ("archiveRun".equals(command)) {
+			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwners().contains(user)) {
+				runService.endRun(run);
+				ModelAndView endRunSuccessMAV = new ModelAndView("teacher/run/manage/endRunSuccess");
+				return endRunSuccessMAV;
+			} 			
+		} else if ("unArchiveRun".equals(command)) {
+			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwners().contains(user)) {
+				runService.startRun(run);
+				ModelAndView startRunSuccessMAV = new ModelAndView("teacher/run/manage/startRunSuccess");
+				return startRunSuccessMAV;
+			}
 		}
-		
 		return null;
 	}
 

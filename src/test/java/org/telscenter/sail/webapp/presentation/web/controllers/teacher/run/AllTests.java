@@ -31,8 +31,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.ShareProjectRunControllerTest.class,
-	org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.manage.AllTests.class
+	org.telscenter.sail.webapp.presentation.web.controllers.teacher.run.ShareProjectRunControllerTest.class
 })
 
 public class AllTests {
