@@ -55,7 +55,7 @@ var svgEditor = (function($, editor) {'use strict';
 	}
 
 	editor.readLang = function(langData) {
-		var more = editor.canvas.runExtensions("addlangData", lang_param, true);
+		var more = editor.canvas.runExtensions('addlangData', lang_param, true);
 		$.each(more, function(i, m) {
 			if (m.data) {
 				langData = $.merge(langData, m.data);
@@ -74,7 +74,7 @@ var svgEditor = (function($, editor) {'use strict';
 			ui = langData.ui;
 		
 		setStrings('content', {
-			copyrightLabel: misc.powered_by,
+			// copyrightLabel: misc.powered_by, // Currently commented out in svg-editor.html
 			curve_segments: properties.curve_segments,
 			fitToContent: tools.fitToContent,
 			fit_to_all: tools.fit_to_all,

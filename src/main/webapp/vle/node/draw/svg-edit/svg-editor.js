@@ -1,4 +1,4 @@
-/*globals svgEditor:true, globalStorage, widget, svgedit, canvg, jQuery, $, DOMParser, FileReader */
+/*globals saveAs:true, svgEditor:true, globalStorage, widget, svgedit, canvg, jsPDF, svgElementToPdf, jQuery, $, DOMParser, FileReader, URL */
 /*jslint vars: true, eqeq: true, todo: true, forin: true, continue: true, regexp: true */
 /*
  * svg-editor.js
@@ -19,7 +19,7 @@
 // 3) svgcanvas.js
 
 /*
-TO-DOS
+TODOS
 1. JSDoc
 */
 
@@ -41,6 +41,7 @@ TO-DOS
 		editor.storagePromptClosed = false; // For use with ext-storage.js
 
 		var svgCanvas, urldata,
+			Utils = svgedit.utilities,
 			isReady = false,
 			callbacks = [],
 			customHandlers = {},
@@ -68,7 +69,22 @@ TO-DOS
 			curConfig = {
 				// We do not put on defaultConfig to simplify object copying
 				//   procedures (we obtain instead from defaultExtensions)
-				extensions: []
+				extensions: [],
+				/**
+				* Can use window.location.origin to indicate the current
+				* origin. Can contain a '*' to allow all domains or 'null' (as
+				* a string) to support all file:// URLs. Cannot be set by
+				* URL for security reasons (not safe, at least for
+				* privacy or data integrity of SVG content).
+				* Might have been fairly safe to allow
+				*   `new URL(window.location.href).origin` by default but
+				*   avoiding it ensures some more security that even third
+				*   party apps on the same domain also cannot communicate
+				*   with this app by default.
+				* For use with ext-xdomain-messaging.js
+				* @todo We might instead make as a user-facing preference.
+				*/
+				allowedOrigins: []
 			},
 			defaultExtensions = [
 				'ext-overview_window.js',
@@ -98,7 +114,7 @@ TO-DOS
 					opacity: 1
 				},
 				initOpacity: 1,
-				colorPickerCSS: null,
+				colorPickerCSS: null, // Defaults to 'left' with a position equal to that of the fill_color or stroke_color element minus 140, and a 'bottom' equal to 40
 				initTool: 'select',
 				wireframe: false,
 				showlayers: false,
@@ -186,6 +202,20 @@ TO-DOS
 				});
 			}
 		}
+		
+		function checkCanvg (callCanvg) {
+			return function (win, data) {
+				if (window.canvg) {
+					callCanvg(win, data);
+				} else { // Might not be set up yet 
+					$.getScript('canvg/rgbcolor.js', function() {
+						$.getScript('canvg/canvg.js', function() {
+							callCanvg(win, data);
+						});
+					});
+				}
+			};
+		}
 
 		/**
 		* EXPORTS
@@ -214,6 +244,7 @@ TO-DOS
 		
 		/**
 		* EDITOR PUBLIC METHODS
+		* locale.js also adds "putLang" and "readLang" as editor methods
 		* @todo Sort these methods per invocation order, ideally with init at the end
 		* @todo Prevent execution until init executes if dependent on it?
 		*/
@@ -236,34 +267,23 @@ TO-DOS
 			}
 
 			// LOAD CONTENT
-			if ('localStorage' in window && // Cookies do not have enough available memory to hold large documents
+			if (editor.storage && // Cookies do not have enough available memory to hold large documents
 				(curConfig.forceStorage || (!curConfig.noStorageOnLoad && document.cookie.match(/(?:^|;\s*)store=prefsAndContent/)))
 			) {
 				var name = 'svgedit-' + curConfig.canvasName;
-				var cached = window.localStorage.getItem(name);
+				var cached = editor.storage.getItem(name);
 				if (cached) {
 					editor.loadFromString(cached);
 				}
 			}
 			
 			// LOAD PREFS
-			var key, storage = false;
-			// var host = location.hostname,
-			//	onWeb = host && host.indexOf('.') >= 0;
-
-			// Some FF versions throw security errors here
-			try {
-				if (window.localStorage) { // && onWeb removed so Webkit works locally
-					storage = localStorage;
-				}
-			} catch(err) {}
-			editor.storage = storage;
-
+			var key;
 			for (key in defaultPrefs) {
 				if (defaultPrefs.hasOwnProperty(key)) { // It's our own config, so we don't need to iterate up the prototype chain
 					var storeKey = 'svg-edit-' + key;
-					if (storage) {
-						var val = storage.getItem(storeKey);
+					if (editor.storage) {
+						var val = editor.storage.getItem(storeKey);
 						if (val) {
 							defaultPrefs[key] = String(val); // Convert to string for FF (.value fails in Webkit)
 						}
@@ -272,7 +292,7 @@ TO-DOS
 						defaultPrefs[key] = widget.preferenceForKey(storeKey);
 					}
 					else {
-						var result = document.cookie.match(new RegExp('(?:^|;\\s*)' + storeKey + '=([^;]+)'));
+						var result = document.cookie.match(new RegExp('(?:^|;\\s*)' + Utils.preg_quote(encodeURIComponent(storeKey)) + '=([^;]+)'));
 						defaultPrefs[key] = result ? decodeURIComponent(result[1]) : '';
 					}
 				}
@@ -325,13 +345,17 @@ TO-DOS
 							$.pref(key, val);
 						}
 					}
-					else if (key === 'extensions') {
+					else if (['extensions', 'allowedOrigins'].indexOf(key) > -1) {
 						if (cfgCfg.overwrite === false &&
-							(curConfig.preventAllURLConfig || curConfig.lockExtensions)
+							(
+								curConfig.preventAllURLConfig ||
+								key === 'allowedOrigins' ||
+								(key === 'extensions' && curConfig.lockExtensions)
+							)
 						) {
 							return;
 						}
-						curConfig.extensions = curConfig.extensions.concat(val); // We will handle any dupes later
+						curConfig[key] = curConfig[key].concat(val); // We will handle any dupes later
 					}
 					// Only allow other curConfig if defined in defaultConfig
 					else if (defaultConfig.hasOwnProperty(key)) {
@@ -382,7 +406,7 @@ TO-DOS
 		*	- inform user of any issues supplied via the "issues" property
 		*	- convert the "svg" property SVG string into an image for export;
 		*		utilize the properties "type" (currently 'PNG', 'JPEG', 'BMP',
-		*		'WEBP'), "mimeType", and "quality" (for 'JPEG' and 'WEBP'
+		*		'WEBP', 'PDF'), "mimeType", and "quality" (for 'JPEG' and 'WEBP'
 		*		types) to determine the proper output.
 		*/
 		editor.setCustomHandlers = function (opts) {
@@ -396,8 +420,8 @@ TO-DOS
 					editor.showSaveWarning = false;
 					svgCanvas.bind('saved', opts.save);
 				}
-				if (opts.exportImage || opts.pngsave) { // Deprecating pngsave
-					svgCanvas.bind('exported', opts.exportImage || opts.pngsave);
+				if (opts.exportImage) {
+					svgCanvas.bind('exported', checkCanvg(opts.exportImage));
 				}
 				customHandlers = opts;
 			});
@@ -408,6 +432,15 @@ TO-DOS
 		};
 
 		editor.init = function () {
+			// var host = location.hostname,
+			//	onWeb = host && host.indexOf('.') >= 0;
+			// Some FF versions throw security errors here when directly accessing
+			try {
+				if ('localStorage' in window) { // && onWeb removed so Webkit works locally
+					editor.storage = localStorage;
+				}
+			} catch(err) {}
+
 			// Todo: Avoid var-defined functions and group functions together, etc. where possible
 			var good_langs = [];
 			$('#lang_select option').each(function() {
@@ -422,13 +455,15 @@ TO-DOS
 			function setupCurConfig () {
 				curConfig = $.extend(true, {}, defaultConfig, curConfig); // Now safe to merge with priority for curConfig in the event any are already set
 				
-				// Now deal with extensions
+				// Now deal with extensions and other array config
 				if (!curConfig.noDefaultExtensions) {
 					curConfig.extensions = curConfig.extensions.concat(defaultExtensions);
 				}
 				// ...and remove any dupes
-				curConfig.extensions = $.grep(curConfig.extensions, function (n, i) {
-					return i === curConfig.extensions.indexOf(n);
+				$.each(['extensions', 'allowedOrigins'], function (i, cfg) {
+					curConfig[cfg] = $.grep(curConfig[cfg], function (n, i) {
+						return i === curConfig[cfg].indexOf(n);
+					});
 				});
 				// Export updated config
 				editor.curConfig = curConfig;
@@ -467,7 +502,7 @@ TO-DOS
 						}
 					);
 
-					editor.setConfig(urldata, {overwrite: false}); // Note: source, url, and paramurl (as with storagePrompt later) are not set on config but are used below
+					editor.setConfig(urldata, {overwrite: false}); // Note: source and url (as with storagePrompt later) are not set on config but are used below
 					
 					setupCurConfig();
 
@@ -481,17 +516,10 @@ TO-DOS
 						}
 						if (src) {
 							if (src.indexOf('data:') === 0) {
-								// plusses get replaced by spaces, so re-insert
-								src = src.replace(/ /g, '+');
 								editor.loadFromDataURI(src);
 							} else {
 								editor.loadFromString(src);
 							}
-							return;
-						}
-						if (qstr.indexOf('paramurl=') !== -1) {
-							// Get parameter URL (use full length of remaining location.href)
-							editor.loadFromURL(qstr.substr(9));
 							return;
 						}
 						if (urldata.url) {
@@ -538,6 +566,9 @@ TO-DOS
 			var extFunc = function() {
 				$.each(curConfig.extensions, function() {
 					var extname = this;
+					if (!extname.match(/^ext-.*\.js/)) { // Ensure URL cannot specify some other unintended file in the extPath
+						return;
+					}
 					$.getScript(curConfig.extPath + extname, function(d) {
 						// Fails locally in Chrome 5
 						if (!d) {
@@ -772,7 +803,6 @@ TO-DOS
 				modKey = (svgedit.browser.isMac() ? 'meta+' : 'ctrl+'), // ⌘
 				path = svgCanvas.pathActions,
 				undoMgr = svgCanvas.undoMgr,
-				Utils = svgedit.utilities,
 				defaultImageURL = curConfig.imgPath + 'logo.png',
 				workarea = $('#workarea'),
 				canv_menu = $('#cmenu_canvas'),
@@ -1057,18 +1087,66 @@ TO-DOS
 				}
 			};
 
+			// Export global for use by jsPDF
+			saveAs = function (blob, options) {
+				var blobUrl = URL.createObjectURL(blob);
+				try {
+					// This creates a bookmarkable data URL,
+					// but it doesn't currently work in
+					// Firefox, and although it works in Chrome,
+					// Chrome doesn't make the full "data:" URL
+					// visible unless you right-click to "Inspect
+					// element" and then right-click on the element
+					// to "Copy link address".
+					var xhr = new XMLHttpRequest();
+					xhr.responseType = 'blob';
+					xhr.onload = function() {
+						var recoveredBlob = xhr.response;
+						var reader = new FileReader();
+						reader.onload = function() {
+							var blobAsDataUrl = reader.result;
+							exportWindow.location.href = blobAsDataUrl;
+						};
+						reader.readAsDataURL(recoveredBlob);
+					};
+					xhr.open('GET', blobUrl);
+					xhr.send();
+				}
+				catch (e) {
+					exportWindow.location.href = blobUrl;
+				}
+			};
+
 			var exportHandler = function(win, data) {
 				var issues = data.issues,
 					type = data.type || 'PNG',
 					dataURLType = (type === 'ICO' ? 'BMP' : type).toLowerCase();
 
+				exportWindow = window.open('', data.exportWindowName); // A hack to get the window via JSON-able name without opening a new one
 				if (!$('#export_canvas').length) {
 					$('<canvas>', {id: 'export_canvas'}).hide().appendTo('body');
 				}
 				var c = $('#export_canvas')[0];
-
+				if (type === 'PDF') {
+					var res = svgCanvas.getResolution();
+					var orientation = res.w > res.h ? 'landscape' : 'portrait';
+					var units = 'pt'; // curConfig.baseUnit; // We could use baseUnit, but that is presumably not intended for export purposes
+					var doc = new jsPDF(orientation, units, [res.w, res.h]); // Todo: Give options to use predefined jsPDF formats like "a4", etc. from pull-down (with option to keep customizable)
+					var docTitle = svgCanvas.getDocumentTitle();
+					doc.setProperties({
+						title: docTitle/*,
+						subject: '',
+						author: '',
+						keywords: '',
+						creator: ''*/
+					});
+					svgElementToPdf(data.svg, doc, {});
+					doc.save(docTitle + '.pdf');
+					return;
+				}
 				c.width = svgCanvas.contentW;
 				c.height = svgCanvas.contentH;
+				
 				canvg(c, data.svg, {renderCallback: function() {
 					var datauri = data.quality ? c.toDataURL('image/' + dataURLType, data.quality) : c.toDataURL('image/' + dataURLType);
 					exportWindow.location.href = datauri;
@@ -1566,7 +1644,7 @@ TO-DOS
 							//}
 						//} /*else if (elname == 'text') {
 							// TODO: Do something here for new text
-						//}
+						//}*/
 					}
 
 					if (!is_node && currentMode != 'pathedit') {
@@ -2338,7 +2416,7 @@ TO-DOS
 
 				var rule_elem = $('#tool_size_rules');
 				if (!rule_elem.length) {
-					rule_elem = $('<style id="tool_size_rules"><\/style>').appendTo('head');
+					rule_elem = $('<style id="tool_size_rules"></style>').appendTo('head');
 				} else {
 					rule_elem.empty();
 				}
@@ -2499,10 +2577,10 @@ TO-DOS
 							html = '<label' + cont_id + '>'
 								+ '<select id="' + tool.id + '">';
 							$.each(tool.options, function(val, text) {
-								var sel = (val == tool.defval) ? " selected":"";
+								var sel = (val == tool.defval) ? ' selected' : '';
 								html += '<option value="'+val+'"' + sel + '>' + text + '</option>';
 							});
-							html += "</select></label>";
+							html += '</select></label>';
 							// Creates the tool, hides & adds it, returns the select element
 							var sel = $(html).appendTo(panel).find('select');
 
@@ -2537,7 +2615,7 @@ TO-DOS
 								+ '<span id="' + tool.id + '_label">'
 								+ tool.label + ':</span>'
 								+ '<input id="' + tool.id + '" title="' + tool.title
-								+ '" size="' + (tool.size || "4") + '" value="' + (tool.defval || "") + '" type="text"/></label>';
+								+ '" size="' + (tool.size || '4') + '" value="' + (tool.defval || '') + '" type="text"/></label>';
 
 							// Creates the tool, hides & adds it, returns the select element
 
@@ -2721,17 +2799,17 @@ TO-DOS
 							// TODO: Find way to set the current icon using the iconloader if this is not default
 
 							// Include data for extension button as well as ref button
-							cur_h = holders['#'+flyout_holder[0].id] = [{
-								sel: '#'+id,
+							cur_h = holders['#' + flyout_holder[0].id] = [{
+								sel: '#' + id,
 								fn: btn.events.click,
 								icon: btn.id,
 								key: btn.key,
-								isDefault: btn.includeWith?btn.includeWith.isDefault:0
+								isDefault: btn.includeWith ? btn.includeWith.isDefault : 0
 							}, ref_data];
 
 							// {sel:'#tool_rect', fn: clickRect, evt: 'mouseup', key: 4, parent: '#tools_rect', icon: 'rect'}
 
-							var pos  = ('position' in opts) ? opts.position : 'last';
+							var pos = ('position' in opts) ? opts.position : 'last';
 							var len = flyout_holder.children().length;
 
 							// Add at given position or end
@@ -2831,7 +2909,7 @@ TO-DOS
 			svgCanvas.bind('transition', elementTransition);
 			svgCanvas.bind('changed', elementChanged);
 			svgCanvas.bind('saved', saveHandler);
-			svgCanvas.bind('exported', exportHandler);
+			svgCanvas.bind('exported', checkCanvg(exportHandler));
 			svgCanvas.bind('zoomed', zoomChanged);
 			svgCanvas.bind('contextset', contextChanged);
 			svgCanvas.bind('extension_added', extAdded);
@@ -3265,7 +3343,7 @@ TO-DOS
 				if (val) {
 					zoomChanged(window, val);
 				} else {
-					changeZoom({value: parseInt(item.text(), 10)});
+					changeZoom({value: parseFloat(item.text())});
 				}
 			}, true);
 
@@ -3581,26 +3659,21 @@ TO-DOS
 					// See http://kangax.github.io/jstests/toDataUrl_mime_type_test/ for a useful list of MIME types and browser support
 					// 'ICO', // Todo: Find a way to preserve transparency in SVG-Edit if not working presently and do full packaging for x-icon; then switch back to position after 'PNG'
 					'PNG',
-					'JPEG', 'BMP', 'WEBP'
+					'JPEG', 'BMP', 'WEBP', 'PDF'
 				], function (imgType) { // todo: replace hard-coded msg with uiStrings.notification.
 					if (!imgType) {
 						return;
 					}
 					// Open placeholder window (prevents popup)
-					if (!customHandlers.exportImage && !customHandlers.pngsave) {
+					if (!customHandlers.exportImage) {
 						var str = uiStrings.notification.loadingImage;
-						exportWindow = window.open('data:text/html;charset=utf-8,<title>' + str + '<\/title><h1>' + str + '<\/h1>');
+						exportWindow = window.open(
+							'data:text/html;charset=utf-8,' + encodeURIComponent('<title>' + str + '</title><h1>' + str + '</h1>'),
+							'svg-edit-exportWindow'
+						);
 					}
 					var quality = parseInt($('#image-slider').val(), 10)/100;
-					if (window.canvg) {
-						svgCanvas.rasterExport(imgType, quality);
-					} else {
-						$.getScript('canvg/rgbcolor.js', function() {
-							$.getScript('canvg/canvg.js', function() {
-								svgCanvas.rasterExport(imgType, quality);
-							});
-						});
-					}
+					svgCanvas.rasterExport(imgType, quality, (exportWindow && exportWindow.name));
 				}, function () {
 					var sel = $(this);
 					if (sel.val() === 'JPEG' || sel.val() === 'WEBP') {
@@ -3665,7 +3738,7 @@ TO-DOS
 				if (supportsNonSS) {return;}
 				var wf_rules = $('#wireframe_rules');
 				if (!wf_rules.length) {
-					wf_rules = $('<style id="wireframe_rules"><\/style>').appendTo('head');
+					wf_rules = $('<style id="wireframe_rules"></style>').appendTo('head');
 				} else {
 					wf_rules.empty();
 				}
@@ -3957,11 +4030,8 @@ TO-DOS
 					var button = document.getElementById(shortcutButtons[i]);
 					if (button) {
 						var title = button.title;
-						//var index = title.indexOf('Ctrl+');
-						//button.title = [title.substr(0, index), 'Cmd+', title.substr(index + 5)].join('');
-						//wise4: Fix title replacements
-						title = title.replace("Ctrl+","Cmd+");
-						button.title = title;
+						var index = title.indexOf('Ctrl+');
+						button.title = [title.substr(0, index), 'Cmd+', title.substr(index + 5)].join('');
 					}
 				}
 			}
@@ -3977,7 +4047,7 @@ TO-DOS
 				var pos = elem.offset();
 				$('#color_picker')
 					.draggable({cancel: '.jGraduate_tabs, .jGraduate_colPick, .jGraduate_gradPick, .jPicker', containment: 'window'})
-					.css(curConfig.colorPickerCSS || {'left': pos.left-140, 'bottom': 40})
+					.css(curConfig.colorPickerCSS || {'left': pos.left - 140, 'bottom': 40})
 					.jGraduate(
 					{
 						paint: paint,
@@ -4956,7 +5026,7 @@ TO-DOS
 					editor.openPrep(function(ok) {
 						if (!ok) {return;}
 						svgCanvas.clear();
-						if (f.files.length==1) {
+						if (f.files.length === 1) {
 							$.process_cancel(uiStrings.notification.loadingImage);
 							var reader = new FileReader();
 							reader.onloadend = function(e) {
@@ -4977,33 +5047,9 @@ TO-DOS
 				updateCanvas(true);
 //			});
 
-		//	var revnums = "svg-editor.js ($Rev$) ";
-		//	revnums += svgCanvas.getVersion();
-		//	$('#copyright')[0].setAttribute('title', revnums);
-
-			// Callback handler for embedapi.js
-			try {
-				window.addEventListener('message', function(e) {
-					// We accept and post strings for the sake of IE9 support
-					if (typeof e.data !== 'string' || e.data.charAt() === '|') {
-						return;
-					}
-					var data = JSON.parse(e.data);
-					if (!data || typeof data !== 'object' || data.namespace !== 'svgCanvas') {
-						return;
-					}
-					var cbid = data.id,
-						name = data.name,
-						args = data.args;
-					try {
-						e.source.postMessage(JSON.stringify({namespace: 'svg-edit', id: cbid, result: svgCanvas[name].apply(svgCanvas, args)}), '*');
-					} catch(err) {
-						e.source.postMessage(JSON.stringify({namespace: 'svg-edit', id: cbid, error: err.message}), '*');
-					}
-				}, false);
-			} catch(err) {
-				window.embed_error = err;
-			}
+			//	var revnums = "svg-editor.js ($Rev$) ";
+			//	revnums += svgCanvas.getVersion();
+			//	$('#copyright')[0].setAttribute('title', revnums);
 
 			// For Compatibility with older extensions
 			$(function() {
@@ -5127,9 +5173,19 @@ TO-DOS
 
 		editor.loadFromDataURI = function(str) {
 			editor.ready(function() {
-				var pre = 'data:image/svg+xml;base64,';
-				var src = str.substring(pre.length);
-				loadSvgString(svgedit.utilities.decode64(src));
+				var base64 = false;
+				var pre = str.match(/^data:image\/svg\+xml;base64,/);
+				if (pre) {
+					base64 = true;
+				}
+				else {
+					pre = str.match(/^data:image\/svg\+xml(?:;(?:utf8)?)?,/);
+				}
+				if (pre) {
+					pre = pre[0];
+				}
+				var src = str.slice(pre.length);
+				loadSvgString(base64 ? Utils.decode64(src) : decodeURIComponent(src));
 			});
 		};
 
