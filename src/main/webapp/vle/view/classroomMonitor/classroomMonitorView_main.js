@@ -1383,6 +1383,9 @@ View.prototype.createGradeByStudentDisplayTableRow = function(nodeId, workgroupI
 		nodeTable.attr('cellpadding', '3px');
 		nodeTable.css('border-collapse', 'collapse');
 		nodeTable.css('width', '100%');
+		nodeTable.css('border-width', '2px');
+		nodeTable.css('border-style', 'solid');
+		nodeTable.css('border-color', 'black');
 		
 		//get the node
 		var node = this.getProject().getNodeById(nodeId);
@@ -1594,7 +1597,7 @@ View.prototype.createRowsForNodeVisits = function(nodeId, workgroupId, parentTab
 			if(visitPostTime != null) {
 				//set the timestamp for the student work
 				var visitPostTimeDate = new Date(visitPostTime);
-				stepWorkDiv.append('<br>Timestamp: ' + visitPostTimeDate);
+				stepWorkDiv.append('<br><hr width="50%" align="left">Timestamp: ' + visitPostTimeDate);
 			}
 			
 			/*
@@ -1809,6 +1812,7 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	//create the row that will contain the timestamp
 	var timestampRow = $('<tr>');
 	var timestampCell = $('<td>');
+	timestampCell.attr('colspan', 2);
 	
 	//create the div to display the annotation timestamp
 	var annotationTimestampDiv = $('<div>');
@@ -2996,6 +3000,9 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
 		stepTable.attr('cellpadding', '3px');
 		stepTable.css('border-collapse', 'collapse');
 		stepTable.css('width', '100%');
+		stepTable.css('border-width', '2px');
+		stepTable.css('border-style', 'solid');
+		stepTable.css('border-color', 'black');
 		
 		//create the row and td for the user name
 		var userNameTR = $('<tr>');
