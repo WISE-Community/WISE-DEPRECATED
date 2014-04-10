@@ -7,10 +7,23 @@
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title><spring:message code="teacher.run.announcement.manageannouncement.manageAnnouncements"/></title>
-
+<style>
+.aTitle {
+  font-weight:bold;
+}
+</style>
+<script type="text/javascript">
+function removeAnnouncement(runId, announcementId, announcementTitle) {
+	var doRemove = confirm("Remove \""+announcementTitle+"\"?");
+	if (doRemove) {
+		$("#removeAnnouncementForm_"+announcementId).submit();
+	}
+};
+</script>
 </head>
 
 <body style="background:#FFFFFF;">
@@ -23,20 +36,28 @@
 			<c:when test="${fn:length(run.announcements) > 0}">
 				<ul id="announcementList">
 					<c:forEach var="announcement" items="${run.announcements}">
-						<li>
+						<li id='announcement_'+${announcement.id}>
 							<span>
 								<c:choose>
 									<c:when test="${!empty announcement.title}">
-										${announcement.title}
+										<span class="aTitle">${announcement.title}</span>
 									</c:when>
 									<c:otherwise>
 										[<spring:message code="teacher.run.announcement.manageannouncement.noTitle"/>]
 									</c:otherwise>
 								</c:choose>
-							</span> <span class="aDate">(<fmt:formatDate value="${announcement.timestamp}" type="both" timeStyle="short" dateStyle="medium" />)</span>
-							<a href="viewannouncement.html?runId=${run.id}&announcementId=${announcement.id}"><spring:message code="teacher.run.announcement.manageannouncement.view"/></a>
+							</span> 
+							<span class="aDate">(<fmt:formatDate value="${announcement.timestamp}" type="both" timeStyle="short" dateStyle="medium" />)</span>
+							<div class="aBody">${announcement.announcement}</div>
 							<a href="editannouncement.html?runId=${run.id}&announcementId=${announcement.id}"><spring:message code="teacher.run.announcement.manageannouncement.edit"/></a>
-							<a href="removeannouncement.html?runId=${run.id}&announcementId=${announcement.id}"><spring:message code="teacher.run.announcement.manageannouncement.delete"/></a>
+							<a onclick="removeAnnouncement('${run.id}','${announcement.id}', '${announcement.title}');"><spring:message code="teacher.run.announcement.manageannouncement.delete"/></a>
+							<div style="display:hidden">
+								<form id="removeAnnouncementForm_${announcement.id}" method="POST" action="manageannouncement.html">
+									<input type="hidden" name="command" value="remove"></input>
+									<input type="hidden" name="runId" value="${run.id}"></input>
+									<input type="hidden" name="announcementId" value="${announcement.id}"></input>
+								</form>
+							</div>
 						</li>
 					</c:forEach>
 				</ul>
@@ -46,7 +67,7 @@
 			</c:otherwise>
 		</c:choose>
 	</div>
-	
+	<div class="sectionHead"></div>
 	<div class="dialogSection">
 		<input type="button" value="<spring:message code="teacher.run.announcement.manageannouncement.newAnnouncement"/>" onClick="window.location='createannouncement.html?runId=${run.id}'"/> 
 	</div>

@@ -596,8 +596,8 @@
 		var div = $('#editAnnouncementsDialog').html('<iframe id="announceIfrm" width="100%" height="100%"></iframe>');
 		div.dialog({
 			modal: true,
-			width: '600',
-			height: '400',
+			width: '700',
+			height: '600',
 			title: title,
 			close: function(){ $(this).html(''); },
 			buttons: {
