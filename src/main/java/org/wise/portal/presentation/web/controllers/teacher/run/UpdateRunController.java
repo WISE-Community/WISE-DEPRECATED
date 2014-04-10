@@ -101,6 +101,10 @@ public class UpdateRunController extends AbstractController {
 				ModelAndView startRunSuccessMAV = new ModelAndView("teacher/run/manage/startRunSuccess");
 				return startRunSuccessMAV;
 			}
+		} else if ("extendReminderTime".equals(command)) {
+			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwners().contains(user)) {
+				this.runService.extendArchiveReminderTime(Long.parseLong(request.getParameter("runId")));
+			}			
 		}
 		return null;
 	}

@@ -179,8 +179,9 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
     	var updatingText = $('<span style="color: #DDCDB5;"> ' + '<spring:message code="teacher.index.updating"/>' + '</span>');
     	link.parent().append(updatingText);
     	$.ajax({
-			type: 'post',
-			url: '${contextPath}/teacher/run/manage/extendremindertime.html?runId=' + id,
+			type:"post",
+			url: "${contextPath}/teacher/run/manage/updateRun.html",
+			data:{"command":"extendReminderTime","runId":id},
 			success: function(request){
 				updatingText.remove();
 				link.css('text-decoration','strike-through');
@@ -203,8 +204,9 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
         	var updatingText = $('<span style="color: #DDCDB5;"> ' + '<spring:message code="teacher.index.updating"/>' + '</span>');
         	link.parent().append(updatingText);
         	$.ajax({
-				type: 'post',
-				url: '${contextPath}/teacher/run/manage/extendremindertime.html?runId=' + id,
+				type:"post",
+				url:"${contextPath}/teacher/run/manage/archiveRun.html",
+				data: {"command":"archiveRun","runId":id},
 				success: function(request){
 					updatingText.remove();
 					link.css('text-decoration','strike-through');

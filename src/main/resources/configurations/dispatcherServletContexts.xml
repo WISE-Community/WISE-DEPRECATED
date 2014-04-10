@@ -718,22 +718,10 @@
 		<property name="userService" ref="userService" />
 	</bean>
 
-	<bean id="extendReminderTimeController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.manage.ExtendReminderTimeController">
-		<property name="runService" ref="runService" />
-	</bean>
-
 	<bean id="outsideErrorController"
 		class="org.wise.portal.presentation.web.controllers.OutsideErrorController">
 		<property name="exceptionResolver" ref="exceptionResolver" />
 	</bean>
-	<!-- <bean id="repositController" class="org.wise.portal.presentation.web.controllers.TestRepositController"> 
-		<property name="repositoryService" ref="repositoryService"/> </bean> <bean 
-		id="retrieveController" class="org.wise.portal.presentation.web.controllers.TestRetrieveController"> 
-		<property name="repositoryService" ref="repositoryService"/> </bean> <bean 
-		id="junkController" class="org.wise.portal.presentation.web.controllers.JunkController"> 
-		</bean> -->
-
 
 	<bean id="managePortalController"
 		class="org.wise.portal.presentation.web.controllers.admin.ManagePortalController">
@@ -1003,6 +991,7 @@
 				/teacher/projects/customized/unshareproject.html=unShareProjectController
 				/teacher/run/shareprojectrun.html=shareProjectRunController
 				/teacher/run/unshareprojectrun.html=unShareProjectRunController
+				/teacher/run/manage/updateRun.html=updateRunController
 				/teacher/run/manage/archiveRun.html=updateRunController
 				/teacher/run/manage/startRun.html=updateRunController
 				/teacher/run/createRun.html=createRunController
@@ -1070,7 +1059,6 @@
 				/teacher/projects/deleteproject.html=deleteProjectController
 				/teacher/projects/analyzeproject.html=analyzeProjectController
 				/teacher/projects/minifyproject.html=minifyProjectController
-				/teacher/run/manage/extendremindertime.html=extendReminderTimeController
 				/student/viewannouncements.html=viewAnnouncementsController
 				/createhierarchytype.html=createHierarchyTypeController
 				/createnode.html=createNodeController
