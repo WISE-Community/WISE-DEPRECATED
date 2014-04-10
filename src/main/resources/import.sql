@@ -61,7 +61,7 @@ INSERT INTO groups VALUES(1,'1',0,NULL);
 INSERT INTO groups VALUES(2,'2',0,NULL);
 INSERT INTO groups VALUES(3,'3',0,NULL);
 INSERT INTO offerings VALUES(1,0);
-INSERT INTO runs VALUES('2013-07-05 15:53:00.142000',NULL,NULL,'{"isXMPPEnabled":true}',NULL,NULL,3,'Plate Tectonics',5,'Snake223','2013-06-05 15:53:00.135000',NULL,NULL,1,3);
+INSERT INTO runs VALUES('2013-07-05 15:53:00.142000',NULL,NULL,'{"isRealTimeEnabled":true}',NULL,NULL,3,'Plate Tectonics',5,'Snake223','2013-06-05 15:53:00.135000',NULL,NULL,1,3);
 INSERT INTO acl_class VALUES(2,'org.wise.portal.domain.run.impl.RunImpl',NULL);
 INSERT INTO acl_object_identity VALUES(4,1,NULL,1,NULL,2,2,NULL);
 INSERT INTO acl_entry VALUES(4,0,0,0,1,16,NULL,2,4);
@@ -132,7 +132,7 @@ INSERT INTO projects_related_to_owners VALUES(5,2)
 INSERT INTO groups VALUES(5,'2',0,NULL)
 INSERT INTO groups VALUES(6,'4',0,NULL)
 INSERT INTO offerings VALUES(2,0)
-INSERT INTO runs VALUES('2014-03-27 15:41:43.205000',NULL,NULL,'{"isXMPPEnabled":true}',NULL,NULL,3,'Chemical Reactions: How Can We Slow Climate Change?',5,'Dodo968','2014-02-25 15:41:43.195000',NULL,NULL,2,5)
+INSERT INTO runs VALUES('2014-03-27 15:41:43.205000',NULL,NULL,'{"isRealTimeEnabled":true}',NULL,NULL,3,'Chemical Reactions: How Can We Slow Climate Change?',5,'Dodo968','2014-02-25 15:41:43.195000',NULL,NULL,2,5)
 INSERT INTO acl_entry VALUES(9,0,'0','0','1',16,NULL,2,9)
 INSERT INTO acl_object_identity VALUES(9,2,NULL,'1',NULL,2,2,NULL)
 INSERT INTO runs_related_to_owners VALUES(2,2)
