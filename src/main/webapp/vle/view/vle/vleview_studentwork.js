@@ -114,6 +114,30 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync) {
 					|| this.getConfig().getConfigParam('mode') == "standaloneauthorpreview"
 						|| this.getConfig().getConfigParam('isRunActive') === false) {
 		// no need to post data if we're in preview mode
+
+		/*
+		 * in preview mode we need to give node visits fake step work ids
+		 * so that show all work can function properly
+		 */
+		
+		//initialize the fake step work id counter if necessary
+		if(this.fakeStepWorkIdCounter == null) {
+			this.fakeStepWorkIdCounter = 1;
+		}
+		
+		//get the fake step work id to give the node visit
+		var fakeStepWorkId = this.fakeStepWorkIdCounter;
+		
+		//set the step work id
+		nodeVisit.id = fakeStepWorkId;
+		nodeVisit.stepWorkId = fakeStepWorkId;
+		
+		//set the post time
+		nodeVisit.visitPostTime = (new Date()).getTime();
+		
+		//increment the counter
+		this.fakeStepWorkIdCounter++;
+		
 		return;
 	}
 

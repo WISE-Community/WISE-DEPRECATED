@@ -1080,10 +1080,11 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 
 						commonFeedback += "</table></div></div>";
 					} else {
-						//note: I don't think this else branch is used anymore
-						var childHtmlSoFar = node.getShowAllWorkHtmlHelper(view);
-						htmlSoFar.newFeedback += childHtmlSoFar.newFeedback;
-						htmlSoFar.allFeedback += childHtmlSoFar.allFeedback;
+						/*
+						 * display the student work without any annotations.
+						 * this is used for show all work in preview.
+						 */
+						tempAllFeedback += "<div class='sectionContent'>" + node.getShowAllWorkHtml(view) + "</div></div>";
 					}
 
 					htmlSoFar.allFeedback += tempAllFeedback + commonFeedback;

@@ -56,6 +56,15 @@ ASSESSMENTLISTSTATE.prototype.getStudentWorkString = function(showAutoScoreResul
 	var autoScoreTotalScore = 0;   // total auto scored points the student earned
 	var autoScoreTotalMaxScore = 0;   // total auto scored points possible
 	
+	//get the view if it is undefined
+	if(typeof view == 'undefined') {
+		if(typeof window.view != 'undefined') {
+			view = window.view;
+		} else if(typeof parent.view != 'undefined') {
+			view = parent.view;
+		}
+	}
+	
 	//check if there were any responses
 	if(this.assessments) {
 		//loop through the array of assessments

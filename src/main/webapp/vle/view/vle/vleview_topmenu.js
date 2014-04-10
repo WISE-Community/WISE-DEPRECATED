@@ -315,10 +315,6 @@ View.prototype.displayFlaggedWorkForNodeId = function(nodeId) {
  * they can get grades and comments the teacher made immediately.
  */
 View.prototype.showAllWork = function(annotationsRetrieved, projectMetaDataRetrieved){
-	if (this.config.getConfigParam("mode") == "portalpreview") {
-		alert(this.getI18NString("mywork_preview_mode"));
-		return;
-	}
 	//clear out these values so that the respective data will be retrieved again
 	this.annotationsRetrieved = annotationsRetrieved;
 	this.projectMetaDataRetrieved = projectMetaDataRetrieved;
@@ -341,26 +337,37 @@ View.prototype.showAllWork = function(annotationsRetrieved, projectMetaDataRetri
  *
  */
 View.prototype.displayShowAllWork = function() {
-	//make sure annotations, project meta data, and run extras have been retrieved
-	if(this.annotationsRetrieved && this.projectMetaDataRetrieved) {
+	/*
+	 * make sure annotations and project meta data have been retrieved 
+	 * or the user is in preview which does not require annotations or
+	 * project meta data
+	 */
+	if(this.annotationsRetrieved && this.projectMetaDataRetrieved || this.config.getConfigParam("mode") == "portalpreview") {
 	    var allWorkHtml = "";
 	    
-	    var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
+	    var totalScoreForWorkgroup = 0;
 	    
-	    //get all the ids for teacher and shared teachers
-	    var teacherIds = this.getUserAndClassInfo().getAllTeacherWorkgroupIds();
-	    
-	    //get the scores given to the student by the teachers
-	    var totalScoreAndTotalPossible = this.getAnnotations().getTotalScoreAndTotalPossibleByToWorkgroupAndFromWorkgroups(workgroupId, teacherIds, this.maxScores);
-	    
-	    //get the total score for the workgroup
-	    var totalScoreForWorkgroup = totalScoreAndTotalPossible.totalScore;
-	    
-	    //get the max total score for the steps that were graded for this workgroup
-	    var totalPossibleForWorkgroup = totalScoreAndTotalPossible.totalPossible;
-	    
-	    //get the max total score for this project
-	    var totalPossibleForProject = this.getMaxScoreForProject();
+	    //do not retrieve annotations in preview
+	    if(this.config.getConfigParam("mode") != "portalpreview") {
+	    	//we are not in preview so we will obtain the annotations
+	    	
+		    var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
+		    
+		    //get all the ids for teacher and shared teachers
+		    var teacherIds = this.getUserAndClassInfo().getAllTeacherWorkgroupIds();
+		    
+		    //get the scores given to the student by the teachers
+		    var totalScoreAndTotalPossible = this.getAnnotations().getTotalScoreAndTotalPossibleByToWorkgroupAndFromWorkgroups(workgroupId, teacherIds, this.maxScores);
+		    
+		    //get the total score for the workgroup
+		    totalScoreForWorkgroup = totalScoreAndTotalPossible.totalScore;
+		    
+		    //get the max total score for the steps that were graded for this workgroup
+		    var totalPossibleForWorkgroup = totalScoreAndTotalPossible.totalPossible;
+		    
+		    //get the max total score for this project
+		    var totalPossibleForProject = this.getMaxScoreForProject();
+	    }
 	    
 	    var vleState = this.getState();
 	    
@@ -397,8 +404,15 @@ View.prototype.displayShowAllWork = function() {
 		scoreTable += "<tr><td class='scoreValue'>" + totalScoreForWorkgroup + "</td><td class='scoreValue'><div class='pValue'>" + teamPercentProjectCompleted + "</div><div id='teamProgress' class='progress'></div></td></tr>";
 		scoreTable += "</table>";
 		
+		var showGrades = true;
+		
+		if(this.config.getConfigParam("mode") == "portalpreview") {
+			//do not show annotations in preview
+			showGrades = false;
+		}
+		
 	    //create the div that will contain the score table as well as all the student work
-		allWorkHtml = "<div id='showWorkContainer' class='dialogContent'>" + scoreTable + this.getProject().getShowAllWorkHtml(this.getProject().getRootNode(), true) + "</div>";
+		allWorkHtml = "<div id='showWorkContainer' class='dialogContent'>" + scoreTable + this.getProject().getShowAllWorkHtml(this.getProject().getRootNode(), showGrades) + "</div>";
 		
 	    if($('#showallwork').size()==0){
 	    	$('<div id="showallwork"></div>').dialog({autoOpen:false,closeText:'',modal:true,show:{effect:"fade",duration:200},hide:{effect:"fade",duration:200},title:my_work_with_teacher_feedback_and_scores});
@@ -582,6 +596,12 @@ View.prototype.getShowFlaggedWorkData = function() {
  * Show All Work is displayed.
  */
 View.prototype.getShowAllWorkData = function() {
+	//do not retrieve annotations or metadata in preview
+	if(this.config.getConfigParam("mode") == "portalpreview") {
+		this.displayShowAllWork();
+		return;
+	}
+	
 	//make sure annotations are retrieved
 	if(this.annotationsRetrieved == null) {
 		this.retrieveAnnotations('displayShowAllWork');
