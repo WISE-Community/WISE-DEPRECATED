@@ -591,11 +591,11 @@ Node.prototype.nodeJSON = function(contentBase){
 };
 
 /**
- * This function is for displaying student work in the ticker.
+ * This function is for displaying student work.
  * All node types that don't implement this method will inherit
  * this function that just returns null. If null is returned from
- * this method, the ticker will just skip over the node when
- * displaying student data in the ticker.
+ * this method, the code will just skip over the node when
+ * displaying student data.
  */
 Node.prototype.getLatestWork = function(vle, dataId) {
 	return null;
