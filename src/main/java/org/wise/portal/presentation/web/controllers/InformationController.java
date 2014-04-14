@@ -113,21 +113,15 @@ public class InformationController extends AbstractController{
 	 * @throws NumberFormatException 
 	 */
 	private void handleGetUserInfo(HttpServletRequest request, HttpServletResponse response) throws IOException, NumberFormatException, ObjectNotFoundException{
-		JSONObject userInfo = new JSONObject();
-		
-		/* check if this is preview an write response now if it is */
-		String preview = request.getParameter("preview");
-		if(preview != null && preview.equals("true")){
-			response.getWriter().write(userInfo.toString());
-			return;
-		}
-
-		// otherwise, make sure that the user is logged in
+		// make sure that the user is logged in
 		// check if user is logged in
 		if (ControllerUtil.getSignedInUser() == null) {
 			response.sendRedirect("/login.html");
 			return;
 		}
+		
+		JSONObject userInfo = new JSONObject();
+
 		String runId = request.getParameter("runId");
 		Run run = this.runService.retrieveById(Long.parseLong(runId));
 		
@@ -140,7 +134,7 @@ public class InformationController extends AbstractController{
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				return;
 			}
-		} else { }
+		} 
 		
 		/*
 		 * the group id of the period, this is the id in the db which is not
@@ -647,11 +641,9 @@ public class InformationController extends AbstractController{
 		String getContentBaseUrl = getContentUrl.substring(0, lastIndexOfSlash) + "/";
 		
 		String getUserInfoUrl = infourl + "?action=getUserInfo";
-		if(requester != null && requester.equals("portalpreview")){
-			getUserInfoUrl += "&preview=true";
-		} else {
+		if(requester == null || !requester.equals("portalpreview")){
 			getUserInfoUrl += "&runId=" + runId;
-		}
+		} 
 		
 		try {
 			String parentProjectId = "";
@@ -693,7 +685,9 @@ public class InformationController extends AbstractController{
 			config.put("projectId", projectIdStr);
 			config.put("parentProjectId", parentProjectId);
 			config.put("projectMetaDataUrl", projectMetaDataUrl);
-			config.put("getUserInfoUrl", getUserInfoUrl);
+			if (!"portalpreview".equals(requester)) {
+				config.put("getUserInfoUrl", getUserInfoUrl);
+			}
 			config.put("getContentUrl", getContentUrl);
 			config.put("getContentBaseUrl", getContentBaseUrl);
 			config.put("getStudentUploadsBaseUrl", studentUploadsBaseWWW);

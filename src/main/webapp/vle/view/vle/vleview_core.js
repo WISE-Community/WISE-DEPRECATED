@@ -575,7 +575,7 @@ View.prototype.onThemeLoad = function(){
 		this.loadLearnerData(this.config.getConfigParam('getUserInfoUrl'));
 	} else if (this.config.getConfigParam('mode') == "portalpreview") {
 		//if preview mode, only get the user and class info and not learner data
-		this.loadUserAndClassInfo(createContent(this.config.getConfigParam('getUserInfoUrl')));
+		this.loadUserAndClassInfo(null);  // in preview mode, user and class info object is an empty object.
 		
 		//get the context path e.g. /wise
 		var contextPath = this.getConfig().getConfigParam('contextPath');

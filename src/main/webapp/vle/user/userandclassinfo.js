@@ -530,7 +530,12 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 };
 
 View.prototype.parseUserAndClassInfo = function(contentObject) {
-	var contentObjectJSON = contentObject.getContentJSON();
+	var contentObjectJSON = null;
+	if (contentObject != null) {
+		contentObjectJSON = contentObject.getContentJSON();
+	} else {
+		contentObjectJSON = {};
+	}
 	var classInfoJSON;
 	var myUserInfo;
 	var periods;
