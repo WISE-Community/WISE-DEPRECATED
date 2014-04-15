@@ -678,14 +678,18 @@ public class VLEIdeaBasketController extends AbstractController {
 				IdeaBasket ideaBasket = vleService.getIdeaBasketByRunIdWorkgroupId(runId, workgroupId);
 				
 				if(ideaBasket == null) {
-					//make the IdeaBasket if it does not exist
-					ideaBasket = new IdeaBasket(runId, periodId, projectId, workgroupId);
-					vleService.saveIdeaBasket(ideaBasket);
+					if(periodId != null && projectId != null) {
+						//make the IdeaBasket if it does not exist
+						ideaBasket = new IdeaBasket(runId, periodId, projectId, workgroupId);
+						vleService.saveIdeaBasket(ideaBasket);
+					}
 				}
 				
-				//get the IdeaBasket JSONString
-				String ideaBasketJSONString = ideaBasket.toJSONString();
-				response.getWriter().print(ideaBasketJSONString);
+				if(ideaBasket != null) {
+					//get the IdeaBasket JSONString
+					String ideaBasketJSONString = ideaBasket.toJSONString();
+					response.getWriter().print(ideaBasketJSONString);
+				}
 			}
 		} else if(action.equals("getAllIdeaBaskets")) {
 			if(isPrivileged) {

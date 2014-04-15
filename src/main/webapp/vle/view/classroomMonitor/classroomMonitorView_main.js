@@ -995,10 +995,12 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		
 		//create the cell to display the workgroup id
 		var workgroupIdTD = $('<td>').attr({id:'studentProgressTableDataWorkgroupId_' + workgroupId});
+		workgroupIdTD.css('text-align', 'right');
 		workgroupIdTD.text(workgroupId);
 		
 		//create the cell to display the period name
 		var periodTD = $('<td>').attr({id:'studentProgressTableDataPeriod_' + workgroupId});
+		periodTD.css('text-align', 'right');
 		periodTD.text(periodName);
 		
 		//create the cell to display the current step the workgroup is on
@@ -1007,6 +1009,7 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		
 		//create the cell to display the time spent on the current step
 		var timeSpentTD = $('<td>').attr({id:'studentProgressTableDataTimeSpent_' + workgroupId});
+		timeSpentTD.css('text-align', 'right');
 		timeSpentTD.html(timeSpent);
 		
 		//create the cell to display the project completion percentage for the workgroup
@@ -1042,6 +1045,7 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		
 		//the cell that will display the number of ideas a student has in their idea basket
 		var ideaBasketCountTD = $('<td>');
+		ideaBasketCountTD.attr('id', 'ideaBasketCount_' + workgroupId);
 		ideaBasketCountTD.css('text-align', 'right');
 		ideaBasketCountTD.click({thisView:this, workgroupId:workgroupId}, this.ideaBasketClicked);
 		
@@ -1054,9 +1058,16 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 			 * student has never loaded the vle or the run occurred before
 			 * we implemented student statuses
 			 */ 
+			
+			currentStepTD.text('?');
+			currentStepTD.attr('title', "This value is ? because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and we can't display the current step here due to technical reasons. You may still view this student's work if you click on this student row.");
+			
 			percentageBarHR.css('display', 'none');
-			percentageNumberDiv.text('N/A');
-			percentageNumberDiv.attr('title', 'This value is N/A because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and will not display completion percentages due to technical reasons. You may still view student work if you click on the student row.');
+			percentageNumberDiv.text('?');
+			completionPercentageTD.attr('title', "This value is ? because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and we can't display the completion percentage here due to technical reasons. You may still view this student's work if you click on this student row.");
+			
+			ideaBasketCountTD.text('?');
+			ideaBasketCountTD.attr('title', "This value is ? because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and we can't display the Idea Basket Count here due to technical reasons. You may still view this student's Idea Basket by clicking on this cell.");
 		} else {
 			//the student has a student status so we will display the percentage
 			percentageBarHR.attr('width', completionPercentage + '%');
@@ -1076,7 +1087,15 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 			
 			//get the number of ideas in the student idea basket
 			var ideaBasketIdeaCount = studentStatus.ideaBasketIdeaCount;
-			ideaBasketCountTD.text(ideaBasketIdeaCount);
+			
+			if(ideaBasketIdeaCount == null) {
+				//there is no idea basket count in the student status
+				ideaBasketCountTD.text('?');
+				ideaBasketCountTD.attr('title', "This value is ? because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and we can't display the Idea Basket Count here due to technical reasons. You may still view this student's Idea Basket by clicking on this cell.");
+			} else {
+				//set the idea basket count
+				ideaBasketCountTD.text(ideaBasketIdeaCount);
+			}
 		}
 		
 		//add all the cells to the student row
@@ -2857,8 +2876,15 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
 				 * we implemented student statuses
 				 */ 
 				percentageBarHR.css('display', 'none');
-				percentageNumberDiv.text('N/A');
-				percentageNumberDiv.attr('title', 'This value is N/A because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and will not display completion percentages due to technical reasons. You may still view student work if you click on the student row.');
+				percentageNumberDiv.text('?');
+				
+				if(node.hasGradingView()) {
+					//this step is gradable
+					completionPercentageTD.attr('title', "This value is ? because of one of these reasons:\n1. Students have never loaded the project.\n2. This is an old run and we can't display the student completion percentage here due to technical reasons. You may still view student work if you click on this step row.");					
+				} else {
+					//this step is not gradable
+					completionPercentageTD.attr('title', "This value is ? because of one of these reasons:\n1. Students have never loaded the project.\n2. This is an old run and we can't display the student completion percentage here due to technical reasons.");
+				}
 			}			
 		} else {
 			//the node is an activity so we will not show the percentage bar HR
@@ -3930,6 +3956,34 @@ View.prototype.updateStudentProgress = function(runId, periodId, workgroupId, cu
 
 	//update the percentage completion bar and number for a student
 	this.updateStudentCompletionPercentage(workgroupId, completionPercentage);
+	
+	//update the idea basket count
+	this.updateStudentIdeaBasketCount(workgroupId);
+};
+
+/**
+ * Update the idea basket count for a student
+ * @param workgroupId the workgroup id of the student
+ */
+View.prototype.updateStudentIdeaBasketCount = function(workgroupId) {
+	if(workgroupId != null) {
+		//get the student status object
+		var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
+		
+		if(studentStatus != null) {
+			//get the idea basket count from the student status
+			var ideaBasketIdeaCount = studentStatus.ideaBasketIdeaCount;
+			
+			if(ideaBasketIdeaCount == null) {
+				//there is no idea basket count in the student status
+				$('#ideaBasketCount_' + workgroupId).text('?');
+				$('#ideaBasketCount_' + workgroupId).attr('title', "This value is ? because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and we can't display the Idea Basket Count here due to technical reasons. You may still view this student's Idea Basket by clicking on this cell.");
+			} else {
+				//update the idea basket count
+				$('#ideaBasketCount_' + workgroupId).text(ideaBasketIdeaCount);				
+			}
+		}		
+	}
 };
 
 /**
