@@ -371,6 +371,9 @@ View.prototype.setActiveButtonBackgroundColor = function(button, classToRemoveBa
  * Create the period buttons for the teacher to filter by period
  */
 View.prototype.createClassroomMonitorPeriods = function() {
+	//hide the period buttons div, we will show it when we need to
+	this.hidePeriodButtonsDiv();
+	
 	//make the class to give to all period buttons
 	var periodButtonClass = 'periodButton';
 	
@@ -461,7 +464,27 @@ View.prototype.createClassroomMonitorPeriods = function() {
  * Show the period buttons div
  */
 View.prototype.showPeriodButtonsDiv = function() {
-	$('#selectPeriodButtonsDiv').show();
+	//get the user and class info
+	var userAndClassInfo = this.getUserAndClassInfo();
+	
+	if(userAndClassInfo != null) {
+		//get the periods
+		var periods = userAndClassInfo.getPeriods();
+		
+		if(periods != null) {
+			/*
+			 * show the period buttons div if there is more than one period.
+			 * if there is only one period we don't need to show the period
+			 * buttons div.
+			 */
+			if(periods.length > 1) {
+				$('#selectPeriodButtonsDiv').show();
+			}
+		} else {
+			//if for some reason periods is null, we will show the period buttons div by default
+			$('#selectPeriodButtonsDiv').show();
+		}
+	}
 };
 
 /**
@@ -706,9 +729,15 @@ View.prototype.createPauseScreensDisplay = function() {
 				var periodId = period.periodId;
 				var periodName = period.periodName;
 				var periodPaused = period.paused;
-
+				var periodLabel = 'Period ' + periodName;
+				
+				if(periods.length == 1) {
+					//if there is only one period we don't need to show the period label
+					periodLabel = '';
+				}
+				
 				//create a row for the period that contains the period label, paused button, and un-paused button
-				var periodRow = this.createPauseRow('Period ' + periodName, periodId, periodPaused);
+				var periodRow = this.createPauseRow(periodLabel, periodId, periodPaused);
 				pauseButtonsTable.append(periodRow);
 			}
 		}
@@ -1625,6 +1654,9 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	
 	//clear the grade by step display
 	$('#gradeByStepDisplay').html('');
+	
+	//hide the period buttons
+	this.hidePeriodButtonsDiv();
 	
 	//get the usernames for this workgroup
 	var userNames = this.userAndClassInfo.getUserNameByUserId(workgroupId);
@@ -3227,7 +3259,7 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			//create the table that will contain the step title and the buttons
 			var gradeByStepHeaderTable = $('<table>');
 			gradeByStepHeaderTable.attr('id', 'gradeByStepHeaderTable');
-			gradeByStepHeaderTable.attr('width', '100%');
+			gradeByStepHeaderTable.attr('width', '99%');
 			gradeByStepHeaderTable.css('position', 'fixed');
 			gradeByStepHeaderTable.css('top', '105px');
 			gradeByStepHeaderTable.css('left', '10px');
@@ -3239,13 +3271,8 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			
 			//create the td that will contain the step title
 			var gradeByStepHeaderStepTitleTD = $('<td>');
-			gradeByStepHeaderStepTitleTD.attr('width', '70%');
 			gradeByStepHeaderStepTitleTD.html(stepTitle);
 			gradeByStepHeaderStepTitleTD.css('background', 'yellow');
-			
-			//create the td that will display the buttons
-			var gradeByStepHeaderRefreshButtonTD = $('<td>');
-			gradeByStepHeaderRefreshButtonTD.attr('width', '30%');
 			
 			//create the refresh button
 			var refreshButton = $('<input>');
@@ -3304,9 +3331,8 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			$('#displaySpecificButtonsDiv').append(nextStepButton);
 			$('#saveButtonDiv').append(saveButton);
 			
-			//add the tds to the row
+			//add the td to the row
 			gradeByStepHeaderTR.append(gradeByStepHeaderStepTitleTD);
-			gradeByStepHeaderTR.append(gradeByStepHeaderRefreshButtonTD);
 			
 			//add the row to the table
 			gradeByStepHeaderTable.append(gradeByStepHeaderTR);
