@@ -5,6 +5,7 @@ function ClassroomMonitorModel() {
 	this.annotations = [];
 	this.workgroupIdToWork = {};
 	this.nodeIdToWork = {};
+	this.workgroupIdToIdeaBasket = {};
 }
 
 /**
@@ -186,6 +187,31 @@ ClassroomMonitorModel.prototype.getAnnotations = function() {
 ClassroomMonitorModel.prototype.setAnnotations = function(annotations) {
 	this.annotations = annotations;
 };
+
+/**
+ * Set the idea basket for a workgroup id
+ * @param workgroupId the student workgroup id
+ * @param ideaBasket the student idea basket
+ */
+ClassroomMonitorModel.prototype.setIdeaBasket = function(workgroupId, ideaBasket) {
+	if(workgroupId != null) {
+		this.workgroupIdToIdeaBasket[workgroupId] = ideaBasket;
+	}
+}
+
+/**
+ * Get the idea basket for a workgroup id
+ * @param workgroupId the student workgroup id
+ */
+ClassroomMonitorModel.prototype.getIdeaBasket = function(workgroupId) {
+	var ideaBasket = null;
+	
+	if(workgroupId != null) {
+		ideaBasket = this.workgroupIdToIdeaBasket[workgroupId];
+	}
+	
+	return ideaBasket;
+}
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){

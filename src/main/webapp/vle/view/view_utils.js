@@ -2039,6 +2039,26 @@ View.prototype.getActivityTermPlural = function(){
 	}
 };
 
+/**
+ * Get the number of ideas in the student idea basket
+ * @return the number of ideas in the student idea basket
+ */
+View.prototype.getIdeaBasketIdeaCount = function() {
+	var ideaBasketIdeaCount = null;
+
+	if(this.ideaBasket != null) {
+		//get the ideas
+		var ideas = this.ideaBasket.ideas;
+		
+		if(ideas != null) {
+			//get the number of ideas in the student basket
+			ideaBasketIdeaCount = ideas.length;
+		}
+	}
+	
+	return ideaBasketIdeaCount;
+};
+
 /* used to notify scriptloader that this script has finished loading */
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/view_utils.js');

@@ -277,6 +277,10 @@ View.prototype.sendStudentStatusWebSocketMessage = function() {
 	messageJSON.previousNodeVisit = previousNodeVisit;
 	messageJSON.nodeStatuses = nodeStatuses;
 	
+	//get the number if ideas in the student idea basket
+	var ideaBasketIdeaCount = this.getIdeaBasketIdeaCount();
+	messageJSON.ideaBasketIdeaCount = ideaBasketIdeaCount;
+	
 	//send the message to the web socket server to be forwarded to the teacher
 	var result = this.sendStudentWebSocketMessage(messageJSON);
 	
@@ -312,6 +316,10 @@ View.prototype.sendStudentStatusToServer = function() {
 	studentStatusJSON.currentNodeId = currentNodeId;
 	studentStatusJSON.previousNodeVisit = previousNodeVisit;
 	studentStatusJSON.nodeStatuses = nodeStatuses;
+	
+	//get the number if ideas in the student idea basket
+	var ideaBasketIdeaCount = this.getIdeaBasketIdeaCount();
+	studentStatusJSON.ideaBasketIdeaCount = ideaBasketIdeaCount;
 	
 	//get the student status as a string
 	var status = JSON.stringify(studentStatusJSON);

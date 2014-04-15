@@ -71,6 +71,7 @@ View.prototype.createClassroomMonitorDisplays = function() {
 	this.createGradeByStudentDisplay();
 	this.createGradeByStepDisplay();
 	this.createExportStudentWorkDisplay();
+	this.createIdeaBasketDisplay();
 };
 
 /**
@@ -83,6 +84,7 @@ View.prototype.hideAllDisplays = function() {
 	$('#gradeByStepDisplay').hide();
 	$('#pauseScreensDisplay').hide();
 	$('#exportStudentWorkDisplay').hide();
+	$('#ideaBasketDisplay').hide();
 }
 
 /**
@@ -198,8 +200,29 @@ View.prototype.showExportStudentWorkDisplay = function() {
 	//hide the period buttons
 	this.hidePeriodButtonsDiv();
 	
-	//show the grade by step div
+	//show the export student work div
 	$('#exportStudentWorkDisplay').show();
+	
+	//fix the height so scrollbars display correctly
+	this.fixClassroomMonitorDisplayHeight();
+};
+
+/**
+ * Show the idea basket display
+ */
+View.prototype.showIdeaBasketDisplay = function() {
+	//clear any existing buttons in the upper right
+	this.clearDisplaySpecificButtonsDiv();
+	this.clearSaveButtonDiv();
+	
+	//hide all the other display divs
+	this.hideAllDisplays();
+	
+	//hide the period buttons
+	this.hidePeriodButtonsDiv();
+	
+	//show the idea basket div
+	$('#ideaBasketDisplay').show();
 	
 	//fix the height so scrollbars display correctly
 	this.fixClassroomMonitorDisplayHeight();
@@ -864,6 +887,13 @@ View.prototype.createStudentProgressDisplay = function() {
 	var timeSpentTH = $('<th>').text('Time Spent On Current Step');
 	var projectCompletionTH = $('<th>').text('Project Completion %');
 	
+	var ideaBasketCountTH = null;
+	
+	if(this.isIdeaBasketEnabled()) {
+		//idea basket is enabled for this project so we will show the idea basket count column
+		ideaBasketCountTH = $('<th>').text('Idea Basket Count');	
+	}
+	
 	//add the column headers to the header row
 	headerTR.append(onlineTH);
 	headerTR.append(studentNameTH);
@@ -872,6 +902,10 @@ View.prototype.createStudentProgressDisplay = function() {
 	headerTR.append(currentStepTH);
 	headerTR.append(timeSpentTH);
 	headerTR.append(projectCompletionTH);
+	
+	if(ideaBasketCountTH != null) {
+		headerTR.append(ideaBasketCountTH);		
+	}
 	
 	//add the header row to the table
 	$('#studentProgressDisplayTable').append(headerTR);
@@ -1006,6 +1040,11 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		completionPercentageTD.append(percentageBarDiv);
 		completionPercentageTD.append(percentageNumberDiv);
 		
+		//the cell that will display the number of ideas a student has in their idea basket
+		var ideaBasketCountTD = $('<td>');
+		ideaBasketCountTD.css('text-align', 'right');
+		ideaBasketCountTD.click({thisView:this, workgroupId:workgroupId}, this.ideaBasketClicked);
+		
 		//get the student status for the workgroup id
 		var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
 		
@@ -1034,6 +1073,10 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 				 */
 				percentageBarHR.css('display', 'none');
 			}
+			
+			//get the number of ideas in the student idea basket
+			var ideaBasketIdeaCount = studentStatus.ideaBasketIdeaCount;
+			ideaBasketCountTD.text(ideaBasketIdeaCount);
 		}
 		
 		//add all the cells to the student row
@@ -1044,6 +1087,11 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		studentTR.append(currentStepTD);
 		studentTR.append(timeSpentTD);
 		studentTR.append(completionPercentageTD);
+		
+		if(this.isIdeaBasketEnabled()) {
+			//the idea basket is enabled for this project so we will show the cell
+			studentTR.append(ideaBasketCountTD);			
+		}
 		
 		//create the params to be used when this the teacher clicks this row
 		var studentRowClickedParams = {
@@ -1056,8 +1104,14 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 			studentTR.css('background', 'limegreen');
 		}
 		
-		//set the function to be called when the row is clicked 
-		studentTR.click(studentRowClickedParams, this.studentRowClicked);
+		//set the function to be called when the row is clicked
+		onlineTD.click(studentRowClickedParams, this.studentRowClicked);
+		userNameTD.click(studentRowClickedParams, this.studentRowClicked);
+		workgroupIdTD.click(studentRowClickedParams, this.studentRowClicked);
+		periodTD.click(studentRowClickedParams, this.studentRowClicked);
+		currentStepTD.click(studentRowClickedParams, this.studentRowClicked);
+		timeSpentTD.click(studentRowClickedParams, this.studentRowClicked);
+		completionPercentageTD.click(studentRowClickedParams, this.studentRowClicked);
 		
 		//make the cursor turn into a hand when the user mouseovers the row
 		studentTR.css('cursor', 'pointer');
@@ -1168,6 +1222,381 @@ View.prototype.getGradeByStudentWorkInClassroomMonitorCallbackFail = function(te
 };
 
 /**
+ * An idea basket cell was clicked so we will display the idea basket
+ * for the given student
+ */
+View.prototype.ideaBasketClicked = function(event) {
+	var thisView = event.data.thisView;
+	var workgroupId = event.data.workgroupId;
+	
+	//display the idea basket for the student
+	thisView.ideaBasketClickedHandler(workgroupId);
+};
+
+/**
+ * Display the idea basket for the student
+ * @param workgroupId the workgroup id for the student
+ */
+View.prototype.ideaBasketClickedHandler = function(workgroupId) {
+	var runId = this.getConfig().getConfigParam('runId');
+	
+	//get the url for requesting idea baskets
+	var getIdeaBasketUrl = this.getConfig().getConfigParam('getIdeaBasketUrl');
+	
+	//remove any GET parameters from the url since we will be using our own parameters
+	getIdeaBasketUrl = getIdeaBasketUrl.substring(0, getIdeaBasketUrl.indexOf('?'));
+	
+	var getIdeaBasketParams = {
+		action:'getIdeaBasket',
+		runId:runId,
+		workgroupId:workgroupId
+	}
+	
+	//retrieve the student idea basket
+	this.connectionManager.request('GET', 1, getIdeaBasketUrl, getIdeaBasketParams, this.getIdeaBasketCallback, [this, workgroupId], this.getIdeaBasketFailCallback);
+};
+
+/**
+ * Callback for retrieving an idea basket for a student
+ */
+View.prototype.getIdeaBasketCallback = function(text, xml, args) {
+	var thisView = args[0];
+	var workgroupId = args[1];
+	
+	//display the idea basket
+	thisView.getIdeaBasketCallbackHandler(workgroupId, text);
+};
+
+/**
+ * Save the idea basket and then display it
+ * @param the workgroup id this idea basket is for
+ * @param text the idea basket as a JSON string
+ */
+View.prototype.getIdeaBasketCallbackHandler = function(workgroupId, text) {
+	//parse the JSON string
+	var ideaBasketJSONObj = $.parseJSON(text); 
+	
+	//create an IdeaBasket object
+	var ideaBasket = new IdeaBasket(ideaBasketJSONObj);
+	
+	//save the idea basket
+	this.model.setIdeaBasket(workgroupId, ideaBasket);
+	
+	//display the idea basket
+	this.showIdeaBasket(workgroupId);
+};
+
+/**
+ * The failur callback for retrieving an idea basket
+ */
+View.prototype.getIdeaBasketFailCallback = function() {
+	
+};
+
+/**
+ * Display the idea basket
+ * @param workgroupId the workgroup id of the student to show the idea basket for
+ */
+View.prototype.showIdeaBasket = function(workgroupId) {
+	//retrieve the idea basket for the workgroup id
+	var ideaBasket = this.model.getIdeaBasket(workgroupId);
+	
+	if(ideaBasket != null) {
+		//clear out the idea basket display so we can re-populate it
+		$('#ideaBasketDisplay').html('');
+		
+		//get the usernames for this workgroup
+		var userNames = this.userAndClassInfo.getUserNameByUserId(workgroupId);
+		
+		//get the period name
+		var periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId);
+		
+		//create the table that will display the student user name
+		var gradeByStudentHeaderTable = this.createStudentHeaderTable(userNames, workgroupId, periodName);
+		
+		//add the header table to the display
+		$('#ideaBasketDisplay').append(gradeByStudentHeaderTable);
+		
+		//create an empty table for spacing purposes
+		var spacingTable = $('<table>');
+		var spacingTR = $('<tr>');
+		var spacingCell = $('<td>');
+		spacingCell.html('&nbsp');
+		
+		spacingTR.append(spacingCell);
+		spacingTable.append(spacingTR);
+		
+		$('#ideaBasketDisplay').append(spacingTable);
+		
+		//create the table that will display the text 'Idea Basket'
+		var titleTable = $('<table>');
+		titleTable.attr('width', '100%');
+		var titleTR = $('<tr>');
+		var titleCell = $('<td>');
+		
+		var titleH3 = $('<h3>');
+		titleH3.css('text-align', 'center');
+		titleH3.text('Idea Basket');
+		
+		titleCell.append(titleH3);
+		titleTR.append(titleCell);
+		titleTable.append(titleTR);
+		
+		$('#ideaBasketDisplay').append(titleTable);
+		
+		//create the table that will display the ideas in the idea basket
+		var ideaBasketTable = $('<table>');
+		ideaBasketTable.attr('border', '1px');
+		ideaBasketTable.attr('cellpadding', '3px');
+		ideaBasketTable.css('border-collapse', 'collapse');
+		ideaBasketTable.css('width', '100%');
+		ideaBasketTable.css('border-width', '2px');
+		ideaBasketTable.css('border-style', 'solid');
+		ideaBasketTable.css('border-color', 'black');
+		
+		//create the header row
+		var ideaBasketHeaderTR = $('<tr>');
+		
+		//create the header idea cell
+		var ideaBasketHeaderIdeaCell = $('<th>');
+		ideaBasketHeaderIdeaCell.text('Idea');
+		ideaBasketHeaderTR.append(ideaBasketHeaderIdeaCell);
+		
+		//get the project meta data
+		var projectMetaData = this.getProjectMetadata();
+		
+		var ideaAttributes = null;
+		
+		//get the idea basket attributes
+		if(projectMetaData != null) {
+			if(projectMetaData.hasOwnProperty('tools')) {
+				var tools = projectMetaData.tools;
+				
+				if(tools.hasOwnProperty('ideaManagerSettings')) {
+					var ideaManagerSettings = tools.ideaManagerSettings;
+					
+					if(ideaManagerSettings.hasOwnProperty('ideaAttributes')) {
+						ideaAttributes = ideaManagerSettings.ideaAttributes;
+					}
+				}
+			}
+		}
+		
+		if(ideaAttributes != null) {
+			//loop through all the idea basket attributes and create a header cell for each
+			for(var x=0; x<ideaAttributes.length; x++) {
+				//get an attribute
+				var ideaAttribute = ideaAttributes[x];
+				
+				if(ideaAttribute != null) {
+					//get the attribute name
+					var ideaAttributeName = ideaAttribute.name;
+					
+					//create a header cell for the attribute
+					var ideaBasketHeaderAttributeCell = $('<th>');
+					ideaBasketHeaderAttributeCell.attr('width', '15%');
+					ideaBasketHeaderAttributeCell.text(ideaAttributeName);
+					ideaBasketHeaderTR.append(ideaBasketHeaderAttributeCell);
+				}
+			}
+		}
+		
+		//set the width of the idea cell depending on how many attributes there are
+		if(ideaAttributes == null) {
+			ideaBasketHeaderIdeaCell.attr('width', '70%');
+		} else {
+			if(ideaAttributes.length == 0) {
+				ideaBasketHeaderIdeaCell.attr('width', '70%');
+			} else if(ideaAttributes.length == 1) {
+				ideaBasketHeaderIdeaCell.attr('width', '55%');
+			} else if(ideaAttributes.length == 2) {
+				ideaBasketHeaderIdeaCell.attr('width', '40%');
+			} else if(ideaAttributes.length == 3) {
+				ideaBasketHeaderIdeaCell.attr('width', '25%');
+			}
+		}
+		
+		//create the step created on header cell
+		var ideaBasketHeaderStepCreatedOnCell = $('<th>');
+		ideaBasketHeaderStepCreatedOnCell.attr('width', '15%');
+		ideaBasketHeaderStepCreatedOnCell.text('Step Created On');
+		ideaBasketHeaderTR.append(ideaBasketHeaderStepCreatedOnCell);
+		
+		//create the created timestamp header cell
+		var ideaBasketHeaderTimestampCell = $('<th>');
+		ideaBasketHeaderTimestampCell.attr('width', '15%');
+		ideaBasketHeaderTimestampCell.text('Created');
+		ideaBasketHeaderTR.append(ideaBasketHeaderTimestampCell);
+		ideaBasketTable.append(ideaBasketHeaderTR);
+		
+		//get the student ideas
+		var ideas = ideaBasket.ideas;
+		
+		if(ideas != null) {
+			//loop through the ideas newest to oldest
+			for(var x=ideas.length - 1; x>=0; x--) {
+				//get an idea
+				var idea = ideas[x];
+				
+				if(idea != null) {
+					var ideaText = idea.text;
+					var attributes = idea.attributes;
+					var nodeName = idea.nodeName;
+					var timeCreated = idea.timeCreated;
+					var timeLastEdited = idea.timeLastEdited;
+					
+					//create the row for the idea
+					var ideaTR = $('<tr>');
+					
+					//create the cell to display the text for the idea
+					var ideaTextCell = $('<td>');
+					ideaTextCell.text(ideaText);
+					ideaTR.append(ideaTextCell);
+					
+					if(ideaAttributes != null) {
+						//loop through all the idea attributes that are available in the basket
+						for(var y=0; y<ideaAttributes.length; y++) {
+							var ideaAttribute = ideaAttributes[y];
+							
+							if(ideaAttribute != null) {
+								//get an attribute id
+								var ideaAttributeId = ideaAttribute.id;
+								
+								//get the attribute value from the idea
+								var ideaAttributeValue = this.getIdeaAttributeValue(idea, ideaAttributeId);
+								
+								var ideaAttributeCell = $('<td>');
+								
+								if(ideaAttributeValue != null) {
+									//set the attribute value
+									ideaAttributeCell.text(ideaAttributeValue);									
+								}
+								
+								ideaTR.append(ideaAttributeCell);
+							}
+						}
+					}
+					
+					//set the step that the idea was created on
+					var ideaNodeNameCell = $('<td>');
+					ideaNodeNameCell.text(nodeName);
+					ideaTR.append(ideaNodeNameCell);
+
+					//set the created on timestamp
+					var timeCreatedDate = new Date(timeCreated);
+					var ideaTimeCreatedCell = $('<td>');
+					ideaTimeCreatedCell.text(timeCreatedDate);
+					ideaTR.append(ideaTimeCreatedCell);
+					
+					//add the idea row to the table
+					ideaBasketTable.append(ideaTR);					
+				}
+			}			
+		}
+		
+		//add the idea table to the display
+		$('#ideaBasketDisplay').append(ideaBasketTable);
+		
+		//show the idea basket div
+		this.showIdeaBasketDisplay();
+		
+		//create the refresh button
+		var refreshButton = $('<input>');
+		refreshButton.attr('id', 'refreshButton');
+		refreshButton.attr('type', 'button');
+		refreshButton.val('Check for New Work');
+		refreshButton.click({thisView:this, workgroupId:workgroupId}, this.ideaBasketClicked);
+		
+		var periodIdSelected = null;
+		
+		if(this.classroomMonitorPeriodIdSelected != null && this.classroomMonitorPeriodIdSelected != 'all') {
+			//there was a period id that was selected
+			periodIdSelected = this.classroomMonitorPeriodIdSelected;
+		}
+		
+		//get the previous and next workgroup ids
+		var previousAndNextWorkgroupIds = this.getUserAndClassInfo().getPreviousAndNextWorkgroupIdsInAlphabeticalOrder(workgroupId, periodIdSelected);
+		var previousWorkgroupId = previousAndNextWorkgroupIds.previousWorkgroupId;
+		var nextWorkgroupId = previousAndNextWorkgroupIds.nextWorkgroupId;
+
+		//make the button for the previous workgroup id
+		var previousWorkgroupIdButton = $('<input>');
+		previousWorkgroupIdButton.attr('id', 'previousWorkgroup');
+		previousWorkgroupIdButton.attr('type', 'button');
+		previousWorkgroupIdButton.val('Previous Workgroup');
+		
+		if(previousWorkgroupId == null) {
+			//there is no previous workgroup id so we will disable the button
+			previousWorkgroupIdButton.attr('disabled', true);
+		} else {
+			//set the click event for the previous workgroup id button
+			previousWorkgroupIdButton.click({thisView:this, workgroupId:previousWorkgroupId}, this.ideaBasketClicked);
+		}
+		
+		//make the button for the next workgroup id
+		var nextWorkgroupIdButton = $('<input>');
+		nextWorkgroupIdButton.attr('id', 'nextWorkgroup');
+		nextWorkgroupIdButton.attr('type', 'button');
+		nextWorkgroupIdButton.val('Next Workgroup');
+		
+		if(nextWorkgroupId == null) {
+			//there is no next workgroup id so we will disable the button
+			nextWorkgroupIdButton.attr('disabled', true);
+		} else {
+			//set the click event for the next workgroup id button
+			nextWorkgroupIdButton.click({thisView:this, workgroupId:nextWorkgroupId}, this.ideaBasketClicked);		
+		}
+		
+		//clear any existing buttons in the upper right
+		this.clearDisplaySpecificButtonsDiv();
+		this.clearSaveButtonDiv();
+
+		//add the buttons
+		$('#displaySpecificButtonsDiv').append(previousWorkgroupIdButton);
+		$('#displaySpecificButtonsDiv').append(refreshButton);
+		$('#displaySpecificButtonsDiv').append(nextWorkgroupIdButton);
+	}
+};
+
+/**
+ * Get the attribute value from the idea
+ * @param idea the idea to get the attribute value from
+ * @param attributeId the attribute id
+ * @return the attribute value
+ */
+View.prototype.getIdeaAttributeValue = function(idea, attributeId) {
+	var value = null;
+	
+	if(idea != null && attributeId != null) {
+		//get the attributes from the idea
+		var attributes = idea.attributes;
+		
+		//loop through all the attributes
+		for(var x=0; x<attributes.length; x++) {
+			//get an attribute
+			var attribute = attributes[x];
+			
+			if(attribute != null) {
+				//get an attribute id
+				var tempAttributeId = attribute.id;
+				
+				//check if this is the attribute id we want
+				if(attributeId == tempAttributeId) {
+					/*
+					 * we have found the attribute id we want so we will obtain the
+					 * attribute value
+					 */
+					value = attribute.value;
+					break;
+				}
+			}
+		}
+	}
+	
+	return value;
+};
+
+/**
  * Display the grade by student display
  * @param workgroupId the workgroup id to display the grade by student display for
  */
@@ -1190,7 +1619,7 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	//create the table that will display the user name, workgroup id, period name, navigation buttons, and save button
 	var gradeByStudentHeaderTable = $('<table>');
 	gradeByStudentHeaderTable.attr('id', 'gradeByStudentHeaderTable');
-	gradeByStudentHeaderTable.attr('width', '100%');
+	gradeByStudentHeaderTable.attr('width', '99%');
 	gradeByStudentHeaderTable.css('position', 'fixed');
 	gradeByStudentHeaderTable.css('top', '105px');
 	gradeByStudentHeaderTable.css('left', '10px');
@@ -1199,44 +1628,6 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	
 	//create the row that will display the user name, workgroup id, period name, navigation buttons, and save button
 	var gradeByStudentHeaderTR = $('<tr>');
-	
-	/*
-	 * create the div that will show the green or red dot to show whether
-	 * the student is online
-	 */
-	var isOnlineDiv = $('<div>');
-	isOnlineDiv.attr('id', 'isOnlineDiv_' + workgroupId);
-	isOnlineDiv.css('float', 'left');
-	isOnlineDiv.css('width', '20px');
-	isOnlineDiv.css('margin', '1px');
-	isOnlineDiv.css('text-align', 'center');
-	
-	var isOnline = this.isStudentOnline(workgroupId);
-	
-	if(isOnline) {
-		//the student is online
-		isOnlineDiv.html(this.getIsOnlineHTML());
-	} else {
-		//the student is offline
-		isOnlineDiv.html(this.getIsOfflineHTML());
-	}
-	
-	//create the table data that will display the user name, workgroup id, and period name
-	var gradeByStudentHeaderUserNameTD = $('<td>');
-	gradeByStudentHeaderUserNameTD.attr('width', '70%');
-	gradeByStudentHeaderUserNameTD.css('background', 'yellow');
-	
-	//create the div to show the user name
-	var userNameDiv = $('<div>');
-	userNameDiv.css('float', 'left');
-	userNameDiv.html(userNames + ' [Workgroup Id: ' + workgroupId + ']' + ' [Period ' + periodName + ']');
-	
-	gradeByStudentHeaderUserNameTD.append(isOnlineDiv);
-	gradeByStudentHeaderUserNameTD.append(userNameDiv);
-	
-	//create the table data that will contain the navigation buttons, and save button
-	var gradeByStudentHeaderRefreshButtonTD = $('<td>');
-	gradeByStudentHeaderRefreshButtonTD.attr('width', '30%');
 	
 	//create the refresh button
 	var refreshButton = $('<input>');
@@ -1301,13 +1692,9 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	$('#displaySpecificButtonsDiv').append(refreshButton);
 	$('#displaySpecificButtonsDiv').append(nextWorkgroupIdButton);
 	$('#saveButtonDiv').append(saveButton);
-	
-	//add the tds to the row
-	gradeByStudentHeaderTR.append(gradeByStudentHeaderUserNameTD);
-	gradeByStudentHeaderTR.append(gradeByStudentHeaderRefreshButtonTD);
-	
-	//add the row to the header table
-	gradeByStudentHeaderTable.append(gradeByStudentHeaderTR);
+
+	//create the table that will display the student user name
+	gradeByStudentHeaderTable = this.createStudentHeaderTable(userNames, workgroupId, periodName);
 	
 	//add the header table to the display
 	$('#gradeByStudentDisplay').append(gradeByStudentHeaderTable);
@@ -4572,6 +4959,20 @@ View.prototype.createExportStudentWorkDisplay = function() {
 };
 
 /**
+ * Create the div used to display an idea basket
+ */
+View.prototype.createIdeaBasketDisplay = function() {
+	//create the idea basket div
+	var ideaBasketDisplay = $('<div></div>').attr({id:'ideaBasketDisplay'});
+	
+	//add the idea basket div to the main div
+	$('#classroomMonitorMainDiv').append(ideaBasketDisplay);
+	
+	//hide the idea basket div, we will show it later when necessary
+	ideaBasketDisplay.hide();
+};
+
+/**
  * Create the hidden form that is used to create the request to download the export file
  */
 View.prototype.createExportForm = function() {
@@ -5417,6 +5818,97 @@ View.prototype.onWindowUnload = function() {
 	 * at the pause screen
 	 */
 	this.unPauseScreens();
+};
+
+/**
+ * Create the table that will display the student user name, workgroup id, and period
+ * @param userNames the student user names in the workgroup
+ * @param workgroupId the workgroup id
+ * @param periodName the name of the period
+ */
+View.prototype.createStudentHeaderTable = function(userNames, workgroupId, periodName) {
+	//create the table that will display the user name, workgroup id, period name, navigation buttons, and save button
+	var gradeByStudentHeaderTable = $('<table>');
+	gradeByStudentHeaderTable.attr('id', 'gradeByStudentHeaderTable');
+	gradeByStudentHeaderTable.attr('width', '99%');
+	gradeByStudentHeaderTable.css('position', 'fixed');
+	gradeByStudentHeaderTable.css('top', '105px');
+	gradeByStudentHeaderTable.css('left', '10px');
+	gradeByStudentHeaderTable.css('background', 'white');
+	gradeByStudentHeaderTable.css('z-index', '1');
+	
+	//create the row that will display the user name, workgroup id, period name, navigation buttons, and save button
+	var gradeByStudentHeaderTR = $('<tr>');
+	
+	/*
+	 * create the div that will show the green or red dot to show whether
+	 * the student is online
+	 */
+	var isOnlineDiv = $('<div>');
+	isOnlineDiv.attr('id', 'isOnlineDiv_' + workgroupId);
+	isOnlineDiv.css('float', 'left');
+	isOnlineDiv.css('width', '20px');
+	isOnlineDiv.css('margin', '1px');
+	isOnlineDiv.css('text-align', 'center');
+	
+	var isOnline = this.isStudentOnline(workgroupId);
+	
+	if(isOnline) {
+		//the student is online
+		isOnlineDiv.html(this.getIsOnlineHTML());
+	} else {
+		//the student is offline
+		isOnlineDiv.html(this.getIsOfflineHTML());
+	}
+	
+	//create the table data that will display the user name, workgroup id, and period name
+	var gradeByStudentHeaderUserNameTD = $('<td>');
+	gradeByStudentHeaderUserNameTD.css('background', 'yellow');
+	
+	//create the div to show the user name
+	var userNameDiv = $('<div>');
+	userNameDiv.css('float', 'left');
+	userNameDiv.html(userNames + ' [Workgroup Id: ' + workgroupId + ']' + ' [Period ' + periodName + ']');
+	
+	gradeByStudentHeaderUserNameTD.append(isOnlineDiv);
+	gradeByStudentHeaderUserNameTD.append(userNameDiv);
+	
+	//add the tds to the row
+	gradeByStudentHeaderTR.append(gradeByStudentHeaderUserNameTD);
+	
+	//add the row to the header table
+	gradeByStudentHeaderTable.append(gradeByStudentHeaderTR);
+	
+	return gradeByStudentHeaderTable;
+};
+
+/**
+ * Check if this project has the idea basket enabled
+ * @return a boolean value whether the idea basket is
+ * enabled or not
+ */
+View.prototype.isIdeaBasketEnabled = function() {
+	var result = false;
+	
+	//get the project meta data
+	var projectMetaData = this.getProjectMetadata();
+	
+	if(projectMetaData != null) {
+		if(projectMetaData.hasOwnProperty('tools')) {
+			//get the tools
+			var tools = projectMetaData.tools;
+			
+			if(tools.hasOwnProperty('isIdeaManagerEnabled')) {
+				
+				//check if the idea basket is enabled
+				if(tools.isIdeaManagerEnabled) {
+					result = true;					
+				}
+			}
+		}
+	}
+	
+	return result;
 };
 
 //used to notify scriptloader that this script has finished loading
