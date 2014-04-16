@@ -4455,31 +4455,46 @@ View.prototype.getNumberOfStudentsInPeriod = function(periodId) {
 View.prototype.getNumberOfStudentsInPeriodThatCompletedStep = function(periodId, nodeId) {
 	var numberOfStudentsInPeriodCompleted = 0;
 	
-	var studentStatuses = this.studentStatuses;
+	//get the user and class info
+	var userAndClassInfo = this.getUserAndClassInfo();
 	
-	if(studentStatuses != null) {
-		//loop through all the student statuses
-		for(var x=0; x<studentStatuses.length; x++) {
-			//get a student status
-			var studentStatus = studentStatuses[x];
-			
-			if(studentStatus != null) {
-				var tempPeriodId = studentStatus.periodId;
+	if(userAndClassInfo != null) {
+		//get the students in the run
+		var classmateUserInfos = userAndClassInfo.getClassmateUserInfos();
+		
+		if(classmateUserInfos != null) {
+			//loop through all the students in the run
+			for(var x=0; x<classmateUserInfos.length; x++) {
+				//get a student
+				var classmateUserInfo = classmateUserInfos[x];
 				
-				if(periodId == null || periodId == 'all' || periodId == tempPeriodId) {
-					/*
-					 * we are getting the number of students who have completed the step
-					 * for all periods or if we are looking for a specific period and
-					 * the student we are currently on is in that period
-					 */
+				if(classmateUserInfo != null) {
+					//get the student workgroup id
+					var workgroupId = classmateUserInfo.workgroupId;
 					
-					//get the node statuses for the student
-					var nodeStatuses = studentStatus.nodeStatuses;
+					//get the period id the student is in
+					var tempPeriodId = classmateUserInfo.periodId;
 					
-					//check if the student has completed the step
-					if(this.isNodeCompleted(nodeId, nodeStatuses)) {
-						//the student has completed the step so we will update the counter
-						numberOfStudentsInPeriodCompleted++;
+					if(periodId == null || periodId == 'all' || periodId == tempPeriodId) {
+						/*
+						 * we are getting the number of students who have completed the step
+						 * for all periods or if we are looking for a specific period and
+						 * the student we are currently on is in that period
+						 */
+						
+						//get the student status
+						var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
+						
+						if(studentStatus != null) {
+							//get the node statuses for the student
+							var nodeStatuses = studentStatus.nodeStatuses;
+							
+							//check if the student has completed the step
+							if(this.isNodeCompleted(nodeId, nodeStatuses)) {
+								//the student has completed the step so we will update the counter
+								numberOfStudentsInPeriodCompleted++;
+							}							
+						}
 					}
 				}
 			}
