@@ -339,13 +339,8 @@ VLE_STATE.prototype.getLastTimeVisited = function() {
 		//get the 2nd to last node visit
 		var previousVisit = this.visitedNodes[this.visitedNodes.length - 2];
 		
-		/*
-		 * get the start time. we need to get the start time because the end time
-		 * is overwritten with the current time when the student logs in since
-		 * it "ends" the previous node visit again when it "starts" the new node
-		 * visit that becomes the last node visit at the moment.
-		 */
-		lastTimeVisited = previousVisit.visitStartTime;
+		//get the post time from the last visit
+		lastTimeVisited = previousVisit.visitPostTime;
 	}
 	
 	return lastTimeVisited;
