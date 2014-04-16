@@ -1865,9 +1865,35 @@ View.prototype.createGradeByStudentDisplayTableRow = function(nodeId, workgroupI
 			
 			//create the div to display the step title
 			var stepTitleDiv = $('<div>');
-			stepTitleDiv.html(stepTitle);
 			stepTitleDiv.css('float', 'left');
 			stepTitleDiv.css('font-weight', 'bold');
+			
+			//create the p that will display the step title
+			var stepTitleP = $('<p>');
+			stepTitleP.css('display', 'inline');
+			stepTitleP.text(stepTitle + ' ');
+			stepTitleDiv.append(stepTitleP);
+			
+			if(nodeType != 'sequence') {
+				//create a show prompt link for steps
+				var showPromptLink = $('<a>');
+				showPromptLink.text('Show Prompt');
+				showPromptLink.attr('id', 'showPromptLink_' + nodeId);
+				showPromptLink.css('text-decoration', 'underline');
+				showPromptLink.css('color', 'blue');
+				showPromptLink.css('cursor', 'pointer');
+				showPromptLink.click({thisView:this, nodeId:nodeId}, this.showPromptClicked);
+				stepTitleDiv.append(showPromptLink);
+			}
+
+			//add the step title div to the step title cell
+			stepTitleTD.append(stepTitleDiv);
+			
+			//add the step title table data to the row
+			stepTitleTR.append(stepTitleTD);
+			
+			//add the row to the table
+			nodeTable.append(stepTitleTR);
 			
 			if(nodeType != 'sequence') {
 				if(node != null && node.isLeafNode() && node.hasGradingView()) {
@@ -1876,16 +1902,16 @@ View.prototype.createGradeByStudentDisplayTableRow = function(nodeId, workgroupI
 					 * step title will bring the use to the grade by step view for that step.
 					 */
 					
-					stepTitleDiv.css('cursor', 'pointer');
+					stepTitleP.css('cursor', 'pointer');
 					
 					//highlight the step title yellow on mouse over
-					stepTitleDiv.mouseenter({thisView:this}, function(event) {
+					stepTitleP.mouseenter({thisView:this}, function(event) {
 						var thisView = event.data.thisView;
 						thisView.highlightYellow(this);
 					});
 					
 					//remove the highlight from the step title when mouse exits
-					stepTitleDiv.mouseleave({thisView:this}, function(event) {
+					stepTitleP.mouseleave({thisView:this}, function(event) {
 						var thisView = event.data.thisView;
 						thisView.removeHighlight(this);
 					});
@@ -1896,20 +1922,31 @@ View.prototype.createGradeByStudentDisplayTableRow = function(nodeId, workgroupI
 					}
 
 					//display the grade by step view for the step that was clicked
-					stepTitleDiv.click(stepRowClickedParams, this.stepRowClicked)
+					stepTitleP.click(stepRowClickedParams, this.stepRowClicked);
 				}
 			}
 			
-			stepTitleTD.append(stepTitleDiv);
-			
-			//add the step title table data to the row
-			stepTitleTR.append(stepTitleTD);
-			
-			//add the row to the table
-			nodeTable.append(stepTitleTR);
-			
 			if(nodeType != 'sequence') {
 				//the node is a step
+				
+				//create the row that will display the step prompt
+				var gradeByStudentPromptTR = $('<tr>');
+				gradeByStudentPromptTR.attr('id', 'stepPromptTR_' + nodeId);
+				
+				//get the step prompt
+				var prompt = this.getProject().getNodeById(nodeId).getPrompt();
+				
+				//create the cell that will display the step prompt
+				var gradeByStudentPromptTD = $('<td>');
+				gradeByStudentPromptTD.attr('colspan', 2);
+				gradeByStudentPromptTD.html(prompt);
+				
+				//add the cell to the row and hide it for now
+				gradeByStudentPromptTR.append(gradeByStudentPromptTD);
+				gradeByStudentPromptTR.css('display', 'none');
+				
+				//add the row to the node table
+				nodeTable.append(gradeByStudentPromptTR);
 				
 				//create the grading header row which contains the "Student Work" and "Teacher Comment/Score" tds
 				var stepHeaderTR = this.createGradingHeaderRow();
@@ -3265,14 +3302,49 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			gradeByStepHeaderTable.css('left', '10px');
 			gradeByStepHeaderTable.css('background', 'white');
 			gradeByStepHeaderTable.css('z-index', '1');
+			gradeByStepHeaderTable.css('border-width', '2px');
+			gradeByStepHeaderTable.css('border-style', 'solid');
+			gradeByStepHeaderTable.css('border-color', 'black');
 			
 			//create the row that will contain the step title and the buttons
 			var gradeByStepHeaderTR = $('<tr>');
 			
 			//create the td that will contain the step title
 			var gradeByStepHeaderStepTitleTD = $('<td>');
-			gradeByStepHeaderStepTitleTD.html(stepTitle);
 			gradeByStepHeaderStepTitleTD.css('background', 'yellow');
+			
+			//create the p that will display the step title
+			var stepTitleP = $('<p>');
+			stepTitleP.css('display', 'inline');
+			stepTitleP.text(stepTitle + ' ');
+			
+			//create the link that will show and hide the step prompt
+			var showPromptLink = $('<a>');
+			showPromptLink.text('Show Prompt');
+			showPromptLink.attr('id', 'showPromptLink_' + nodeId);
+			showPromptLink.css('text-decoration', 'underline');
+			showPromptLink.css('color', 'blue');
+			showPromptLink.css('cursor', 'pointer');
+			showPromptLink.click({thisView:this, nodeId:nodeId}, this.showPromptClicked);
+			
+			//add the step title and show prompt link
+			gradeByStepHeaderStepTitleTD.append(stepTitleP);
+			gradeByStepHeaderStepTitleTD.append(showPromptLink);
+			
+			//create the row that will display the step prompt
+			var gradeByStepHeaderPromptTR = $('<tr>');
+			gradeByStepHeaderPromptTR.attr('id', 'stepPromptTR_' + nodeId);
+			
+			//get the step prompt
+			var prompt = this.getProject().getNodeById(nodeId).getPrompt();
+			
+			//create the cell that will display the step prompt
+			var gradeByStepHeaderPromptTD = $('<td>');
+			gradeByStepHeaderPromptTD.html(prompt);
+			
+			//add the cell to the row and hide it for now
+			gradeByStepHeaderPromptTR.append(gradeByStepHeaderPromptTD);
+			gradeByStepHeaderPromptTR.css('display', 'none');
 			
 			//create the refresh button
 			var refreshButton = $('<input>');
@@ -3334,8 +3406,11 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			//add the td to the row
 			gradeByStepHeaderTR.append(gradeByStepHeaderStepTitleTD);
 			
-			//add the row to the table
+			//add the header row to the table
 			gradeByStepHeaderTable.append(gradeByStepHeaderTR);
+			
+			//add the step prompt row
+			gradeByStepHeaderTable.append(gradeByStepHeaderPromptTR);
 			
 			//add the table to the div
 			$('#gradeByStepDisplay').append(gradeByStepHeaderTable);
@@ -3399,6 +3474,46 @@ View.prototype.displayGradeByStep = function(nodeId) {
 	this.showGradeByStepDisplay();
 	
 };
+
+/**
+ * The show prompt link was clicked
+ * @param event the jquery event
+ */
+View.prototype.showPromptClicked = function(event) {
+	var thisView = event.data.thisView;
+	var nodeId = event.data.nodeId;
+	thisView.showPromptClickedHandler(nodeId);
+};
+
+/**
+ * Handles the show prompt link being clicked
+ * @param nodeId the node id for the step prompt
+ */
+View.prototype.showPromptClickedHandler = function(nodeId) {
+	//get the dom element ids
+	var stepPromptTRId = this.escapeIdForJquery('stepPromptTR_' + nodeId);
+	var showPromptLinkId = this.escapeIdForJquery('showPromptLink_' + nodeId);
+	
+	//check whether the prompt row is currently displayed or not
+	var display = $('#' + stepPromptTRId).css('display');
+	
+	if(display == 'none') {
+		/*
+		 * the prompt row is not displayed so we will display it and 
+		 * change the link text
+		 */
+		$('#' + stepPromptTRId).show();
+		$('#' + showPromptLinkId).text('Hide Prompt');
+	} else {
+		/*
+		 * the prompt row is being displayed so we will hide it and
+		 * change the link text
+		 */
+		$('#' + stepPromptTRId).hide();
+		$('#' + showPromptLinkId).text('Show Prompt');
+	}
+};
+
 
 /**
  * Create the row to display work for a student
