@@ -310,8 +310,6 @@ function setup() {
  * and if so, try to find the periods for that run code.
  */
 function checkRunCode() {
-	isRunCodeValid = false;
-	
 	//get the run code the student has entered
 	var runCode = $('#runCode_part1').val();
 	
@@ -328,6 +326,8 @@ function checkRunCode() {
 	 */
 	if(runCode != previousRunCode) {
 		//run code has changed
+		isRunCodeValid = false;
+		
 		if(runCode.match(runCodePattern)) {
 			/*
 			 * run code matches the proper run code format so we will try
