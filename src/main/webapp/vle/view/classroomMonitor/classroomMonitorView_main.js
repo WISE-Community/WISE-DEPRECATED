@@ -773,6 +773,9 @@ View.prototype.createPauseRow = function(label, periodId, paused) {
 	pausedButton.attr('type', 'button');
 	pausedButton.val('Paused');
 	pausedButton.addClass('pausedButton');
+	pausedButton.css('width', '300px');
+	pausedButton.css('height', '100px');
+	pausedButton.css('font-size', '24px');
 	pausedButton.click({thisView:this, periodId:periodId}, function(event) {
 		var thisView = event.data.thisView;
 		var periodId = event.data.periodId;
@@ -788,6 +791,9 @@ View.prototype.createPauseRow = function(label, periodId, paused) {
 	unPausedButton.attr('type', 'button');
 	unPausedButton.val('Un-Paused');
 	unPausedButton.addClass('unPausedButton');
+	unPausedButton.css('width', '300px');
+	unPausedButton.css('height', '100px');
+	unPausedButton.css('font-size', '24px');
 	unPausedButton.click({thisView:this, periodId:periodId}, function(event) {
 		var thisView = event.data.thisView;
 		var periodId = event.data.periodId;
@@ -897,6 +903,7 @@ View.prototype.createStudentProgressDisplay = function() {
 	
 	//create the table to display the students
 	var studentProgressDisplayTable = $('<table>').attr({id:'studentProgressDisplayTable'});
+	studentProgressDisplayTable.attr('width', '100%');
 	studentProgressDisplayTable.attr('border', '1px');
 	studentProgressDisplayTable.attr('cellpadding', '3px');
 	studentProgressDisplayTable.css('border-collapse', 'collapse');
@@ -909,32 +916,26 @@ View.prototype.createStudentProgressDisplay = function() {
 	
 	//create the column headers
 	var onlineTH = $('<th>').text('Online');
+	onlineTH.attr('width', '5%');
+	
 	var studentNameTH = $('<th>').text('Student Name');
-	var workgroupIdTH = $('<th>').text('Workgroup Id');
-	var periodTH = $('<th>').text('Period');
+	studentNameTH.attr('width', '30%');
+
 	var currentStepTH = $('<th>').text('Current Step');
-	var timeSpentTH = $('<th>').text('Time Spent On Current Step');
+	currentStepTH.attr('width', '35%');
+	
+	var timeSpentTH = $('<th>').text('Time Spent');
+	timeSpentTH.attr('width', '10%');
+	
 	var projectCompletionTH = $('<th>').text('Project Completion %');
-	
-	var ideaBasketCountTH = null;
-	
-	if(this.isIdeaBasketEnabled()) {
-		//idea basket is enabled for this project so we will show the idea basket count column
-		ideaBasketCountTH = $('<th>').text('Idea Basket Count');	
-	}
-	
+	projectCompletionTH.attr('width', '20%');	
+
 	//add the column headers to the header row
 	headerTR.append(onlineTH);
 	headerTR.append(studentNameTH);
-	headerTR.append(workgroupIdTH);
-	headerTR.append(periodTH);
 	headerTR.append(currentStepTH);
 	headerTR.append(timeSpentTH);
 	headerTR.append(projectCompletionTH);
-	
-	if(ideaBasketCountTH != null) {
-		headerTR.append(ideaBasketCountTH);		
-	}
 	
 	//add the header row to the table
 	$('#studentProgressDisplayTable').append(headerTR);
@@ -954,8 +955,8 @@ View.prototype.createStudentProgressDisplay = function() {
 			//get the project completion for the student
 			var studentCompletion = this.calculateStudentCompletionForWorkgroupId(workgroupId);
 			
-			//get the usernames for this workgroup
-			var userNames = this.userAndClassInfo.getUserNameByUserId(workgroupId);
+			//get the student names for this workgroup
+			var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId);
 			
 			//get the period name the workgroup is in
 			var periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId);
@@ -973,7 +974,7 @@ View.prototype.createStudentProgressDisplay = function() {
 			var timeSpent = '&nbsp';
 			
 			//create the row for the student
-			var studentTR = this.createStudentProgressDisplayRow(studentOnline, userNames, workgroupId, periodId, periodName, currentStep, timeSpent, studentCompletion);
+			var studentTR = this.createStudentProgressDisplayRow(studentOnline, studentNames, workgroupId, periodId, periodName, currentStep, timeSpent, studentCompletion);
 			
 			if(studentTR != null) {
 				//add the the row for this student to the end of the table
@@ -989,7 +990,7 @@ View.prototype.createStudentProgressDisplay = function() {
 /**
  * Create the student progress TR for a workgroup
  * @param studentOnline whether the workgroup is online
- * @param userNames the usernames for the workgroup
+ * @param studentNames the student names for the workgroup
  * @param workgroupId the workgroup id
  * @param periodId the period id
  * @param periodName the period name
@@ -998,7 +999,7 @@ View.prototype.createStudentProgressDisplay = function() {
  * @param completionPercentage the project completion percentage for the workgroup
  * @return a TR element containing the student progress values
  */
-View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNames, workgroupId, periodId, periodName, currentStep, timeSpent, completionPercentage) {
+View.prototype.createStudentProgressDisplayRow = function(studentOnline, studentNames, workgroupId, periodId, periodName, currentStep, timeSpent, completionPercentage) {
 	var studentTR = null;
 	
 	if(workgroupId != null) {
@@ -1018,19 +1019,9 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		onlineTD.css('text-align', 'center');
 		onlineTD.html(this.getIsOfflineHTML());
 		
-		//create the cell to display the usernames for the workgroup
-		var userNameTD = $('<td>').attr({id:'studentProgressTableDataUserNames_' + workgroupId});
-		userNameTD.text(userNames);
-		
-		//create the cell to display the workgroup id
-		var workgroupIdTD = $('<td>').attr({id:'studentProgressTableDataWorkgroupId_' + workgroupId});
-		workgroupIdTD.css('text-align', 'right');
-		workgroupIdTD.text(workgroupId);
-		
-		//create the cell to display the period name
-		var periodTD = $('<td>').attr({id:'studentProgressTableDataPeriod_' + workgroupId});
-		periodTD.css('text-align', 'right');
-		periodTD.text(periodName);
+		//create the cell to display the student names for the workgroup
+		var studentNamesTD = $('<td>').attr({id:'studentProgressTableDataStudentNames_' + workgroupId});
+		studentNamesTD.html(studentNames.join('<br>'));
 		
 		//create the cell to display the current step the workgroup is on
 		var currentStepTD = $('<td>').attr({id:'studentProgressTableDataCurrentStep_' + workgroupId});
@@ -1129,17 +1120,10 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		
 		//add all the cells to the student row
 		studentTR.append(onlineTD);
-		studentTR.append(userNameTD);
-		studentTR.append(workgroupIdTD);
-		studentTR.append(periodTD);
+		studentTR.append(studentNamesTD);
 		studentTR.append(currentStepTD);
 		studentTR.append(timeSpentTD);
 		studentTR.append(completionPercentageTD);
-		
-		if(this.isIdeaBasketEnabled()) {
-			//the idea basket is enabled for this project so we will show the cell
-			studentTR.append(ideaBasketCountTD);			
-		}
 		
 		//create the params to be used when this the teacher clicks this row
 		var studentRowClickedParams = {
@@ -1153,13 +1137,7 @@ View.prototype.createStudentProgressDisplayRow = function(studentOnline, userNam
 		}
 		
 		//set the function to be called when the row is clicked
-		onlineTD.click(studentRowClickedParams, this.studentRowClicked);
-		userNameTD.click(studentRowClickedParams, this.studentRowClicked);
-		workgroupIdTD.click(studentRowClickedParams, this.studentRowClicked);
-		periodTD.click(studentRowClickedParams, this.studentRowClicked);
-		currentStepTD.click(studentRowClickedParams, this.studentRowClicked);
-		timeSpentTD.click(studentRowClickedParams, this.studentRowClicked);
-		completionPercentageTD.click(studentRowClickedParams, this.studentRowClicked);
+		studentTR.click(studentRowClickedParams, this.studentRowClicked);
 		
 		//make the cursor turn into a hand when the user mouseovers the row
 		studentTR.css('cursor', 'pointer');
@@ -1353,14 +1331,17 @@ View.prototype.showIdeaBasket = function(workgroupId) {
 		//clear out the idea basket display so we can re-populate it
 		$('#ideaBasketDisplay').html('');
 		
-		//get the usernames for this workgroup
-		var userNames = this.userAndClassInfo.getUserNameByUserId(workgroupId);
+		//get the student names for this workgroup
+		var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId);
 		
 		//get the period name
 		var periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId);
 		
-		//create the table that will display the student user name
-		var gradeByStudentHeaderTable = this.createStudentHeaderTable(userNames, workgroupId, periodName);
+		var showStudentWorkLink = true;
+		var showIdeaBasketLink = false;
+		
+		//create the table that will display the student names
+		var gradeByStudentHeaderTable = this.createStudentHeaderTable(studentNames, workgroupId, periodName, showStudentWorkLink, showIdeaBasketLink);
 		
 		//add the header table to the display
 		$('#ideaBasketDisplay').append(gradeByStudentHeaderTable);
@@ -1658,8 +1639,8 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	//hide the period buttons
 	this.hidePeriodButtonsDiv();
 	
-	//get the usernames for this workgroup
-	var userNames = this.userAndClassInfo.getUserNameByUserId(workgroupId);
+	//get the student names for this workgroup
+	var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId);
 	
 	//get the period name
 	var periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId);
@@ -1667,7 +1648,7 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	//get the period id
 	var periodId = this.userAndClassInfo.getClassmatePeriodIdByWorkgroupId(workgroupId);
 	
-	//create the table that will display the user name, workgroup id, period name, navigation buttons, and save button
+	//create the table that will display the student names
 	var gradeByStudentHeaderTable = $('<table>');
 	gradeByStudentHeaderTable.attr('id', 'gradeByStudentHeaderTable');
 	gradeByStudentHeaderTable.attr('width', '99%');
@@ -1677,7 +1658,7 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	gradeByStudentHeaderTable.css('background', 'white');
 	gradeByStudentHeaderTable.css('z-index', '1');
 	
-	//create the row that will display the user name, workgroup id, period name, navigation buttons, and save button
+	//create the row that will display the student names
 	var gradeByStudentHeaderTR = $('<tr>');
 	
 	//create the refresh button
@@ -1744,8 +1725,11 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	$('#displaySpecificButtonsDiv').append(nextWorkgroupIdButton);
 	$('#saveButtonDiv').append(saveButton);
 
-	//create the table that will display the student user name
-	gradeByStudentHeaderTable = this.createStudentHeaderTable(userNames, workgroupId, periodName);
+	var showStudentWorkLink = false;
+	var showIdeaBasketLink = true;
+	
+	//create the table that will display the student names
+	gradeByStudentHeaderTable = this.createStudentHeaderTable(studentNames, workgroupId, periodName, showStudentWorkLink, showIdeaBasketLink);
 	
 	//add the header table to the display
 	$('#gradeByStudentDisplay').append(gradeByStudentHeaderTable);
@@ -2761,6 +2745,7 @@ View.prototype.createStepProgressDisplay = function() {
 	
 	//create the table that will display all the steps
 	var stepProgressDisplayTable = $('<table>').attr({id:'stepProgressDisplayTable'});
+	stepProgressDisplayTable.attr('width', '100%');
 	stepProgressDisplayTable.attr('border', '1px');
 	stepProgressDisplayTable.attr('cellpadding', '3px');
 	stepProgressDisplayTable.css('border-collapse', 'collapse');
@@ -2773,8 +2758,13 @@ View.prototype.createStepProgressDisplay = function() {
 	
 	//create the header cells
 	var stepTitleTH = $('<th>').text('Step Title');
-	var numberOfStudentsOnStepTH = $('<th>').text('Number of Students on Step');
+	stepTitleTH.attr('width', '60%');
+	
+	var numberOfStudentsOnStepTH = $('<th>').text('Students on Step');
+	numberOfStudentsOnStepTH.attr('width', '20%');
+	
 	var stepCompletionTH = $('<th>').text('Step Completion %');
+	stepCompletionTH.attr('width', '20%');
 	
 	//add the header cells to the header row
 	headerTR.append(stepTitleTH);
@@ -3038,12 +3028,12 @@ View.prototype.getStudentsOnStepText = function(nodeId, periodId) {
 			for(var x=0; x<studentsOnline.length; x++) {
 				var studentOnlineWorkgroupId = studentsOnline[x];
 				
-				//get the user name of the student
-				var userName = this.getUserAndClassInfo().getUserNameByUserId(studentOnlineWorkgroupId);
+				//get the student names
+				var studentNames = this.getUserAndClassInfo().getStudentNamesByWorkgroupId(studentOnlineWorkgroupId);
 				
-				if(userName != null) {
-					//add the user name to the online section
-					studentsOnStepText += userName + '\n';						
+				if(studentNames != null) {
+					//add the student names to the online section
+					studentsOnStepText += studentNames.join(', ') + '\n';						
 				}
 			}
 		}
@@ -3064,12 +3054,12 @@ View.prototype.getStudentsOnStepText = function(nodeId, periodId) {
 			for(var x=0; x<studentsOffline.length; x++) {
 				var studentOfflineWorkgroupId = studentsOffline[x];
 				
-				//get the user name of the student
-				var userName = this.getUserAndClassInfo().getUserNameByUserId(studentOfflineWorkgroupId);
+				//get the student names
+				var studentNames = this.getUserAndClassInfo().getStudentNamesByWorkgroupId(studentOfflineWorkgroupId);
 				
-				if(userName != null) {
-					//add the user name to the offline section
-					studentsOnStepText += userName + '\n';						
+				if(studentNames != null) {
+					//add the student names to the offline section
+					studentsOnStepText += studentNames.join(', ') + '\n';						
 				}
 			}
 		}
@@ -3524,8 +3514,8 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
 	var gradeByStepDisplayTableRow = null;
 	
 	if(nodeId != null && workgroupId != null) {
-		//get the user names
-		var userNames = this.userAndClassInfo.getUserNameByUserId(workgroupId);
+		//get the student names
+		var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId);
 		
 		//get the period
 		var period = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId);
@@ -3558,8 +3548,8 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
 		stepTable.css('border-style', 'solid');
 		stepTable.css('border-color', 'black');
 		
-		//create the row and td for the user name
-		var userNameTR = $('<tr>');
+		//create the row and td for the student names
+		var studentNamesTR = $('<tr>');
 
 		/*
 		 * create the div that will show the green or red dot to show whether
@@ -3582,21 +3572,21 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
 			isOnlineDiv.html(this.getIsOfflineHTML());
 		}
 		
-		//create the div to show the user name
-		var userNameDiv = $('<div>');
-		userNameDiv.css('float', 'left');
-		userNameDiv.css('font-weight', 'bold');
-		userNameDiv.html(userNames + ' [Workgroup Id: ' + workgroupId + ']' + ' [Period ' + period + ']');
-		userNameDiv.css('cursor', 'pointer');
+		//create the div to show the student names
+		var studentNamesDiv = $('<div>');
+		studentNamesDiv.css('float', 'left');
+		studentNamesDiv.css('font-weight', 'bold');
+		studentNamesDiv.html(studentNames.join(', '));
+		studentNamesDiv.css('cursor', 'pointer');
 		
 		//highlight the user name yellow on mouse over
-		userNameDiv.mouseenter({thisView:this}, function(event) {
+		studentNamesDiv.mouseenter({thisView:this}, function(event) {
 			var thisView = event.data.thisView;
 			thisView.highlightYellow(this);
 		});
 		
 		//remove the highlight from the user name when mouse exits
-		userNameDiv.mouseleave({thisView:this}, function(event) {
+		studentNamesDiv.mouseleave({thisView:this}, function(event) {
 			var thisView = event.data.thisView;
 			thisView.removeHighlight(this);
 		});
@@ -3608,16 +3598,16 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
 		}
 		
 		//load the student grade by step view for the student
-		userNameDiv.click(studentRowClickedParams, this.studentRowClicked);
+		studentNamesDiv.click(studentRowClickedParams, this.studentRowClicked);
 		
-		var userNameTD = $('<td>');
-		userNameTD.append(isOnlineDiv);
-		userNameTD.append(userNameDiv);
+		var studentNamesTD = $('<td>');
+		studentNamesTD.append(isOnlineDiv);
+		studentNamesTD.append(studentNamesDiv);
 		
-		userNameTR.append(userNameTD);
+		studentNamesTR.append(studentNamesTD);
 		
 		//add the row to the table
-		stepTable.append(userNameTR);
+		stepTable.append(studentNamesTR);
 		
 		//create the grading header row that contains the text "Student Work" and "Teacher Comment/Score"
 		var headerTR = this.createGradingHeaderRow();
@@ -6032,11 +6022,13 @@ View.prototype.onWindowUnload = function() {
 
 /**
  * Create the table that will display the student user name, workgroup id, and period
- * @param userNames the student user names in the workgroup
+ * @param studentNames the student user names in the workgroup
  * @param workgroupId the workgroup id
+ * @param showStudentWorkLink boolean value that determines whether to show the student work link
+ * @param showIdeaBasketLink boolean value that determines whether to show the idea basket link
  * @param periodName the name of the period
  */
-View.prototype.createStudentHeaderTable = function(userNames, workgroupId, periodName) {
+View.prototype.createStudentHeaderTable = function(studentNames, workgroupId, periodName, showStudentWorkLink, showIdeaBasketLink) {
 	//create the table that will display the user name, workgroup id, period name, navigation buttons, and save button
 	var gradeByStudentHeaderTable = $('<table>');
 	gradeByStudentHeaderTable.attr('id', 'gradeByStudentHeaderTable');
@@ -6071,20 +6063,57 @@ View.prototype.createStudentHeaderTable = function(userNames, workgroupId, perio
 		isOnlineDiv.html(this.getIsOfflineHTML());
 	}
 	
-	//create the table data that will display the user name, workgroup id, and period name
-	var gradeByStudentHeaderUserNameTD = $('<td>');
-	gradeByStudentHeaderUserNameTD.css('background', 'yellow');
+	//create the table data that will display the student names
+	var gradeByStudentHeaderStudentNamesTD = $('<td>');
+	gradeByStudentHeaderStudentNamesTD.css('background', 'yellow');
 	
-	//create the div to show the user name
-	var userNameDiv = $('<div>');
-	userNameDiv.css('float', 'left');
-	userNameDiv.html(userNames + ' [Workgroup Id: ' + workgroupId + ']' + ' [Period ' + periodName + ']');
+	//create the div to show the student names
+	var studentNamesDiv = $('<div>');
+	studentNamesDiv.css('float', 'left');
 	
-	gradeByStudentHeaderUserNameTD.append(isOnlineDiv);
-	gradeByStudentHeaderUserNameTD.append(userNameDiv);
+	//create the p that will display the student names
+	var studentNamesP = $('<p>');
+	studentNamesP.css('display', 'inline');
+	studentNamesP.html(studentNames.join(', ') + ' ');
+	studentNamesDiv.append(studentNamesP);
+	
+	//create the link to show the student work
+	var studentWorkLink = $('<a>');
+	studentWorkLink.text('Show Student Work');
+	studentWorkLink.attr('id', 'showPromptLink_' + nodeId);
+	studentWorkLink.css('text-decoration', 'underline');
+	studentWorkLink.css('color', 'blue');
+	studentWorkLink.css('cursor', 'pointer');
+	studentWorkLink.click({thisView:this, workgroupId:workgroupId}, this.studentRowClicked);
+	
+	if(showStudentWorkLink) {
+		//show the student work link
+		studentNamesDiv.append(studentWorkLink);
+	}
+	
+	//create the link to show the idea basket
+	var ideaBasketLink = $('<a>');
+	ideaBasketLink.text('Show Idea Basket');
+	ideaBasketLink.attr('id', 'showPromptLink_' + nodeId);
+	ideaBasketLink.css('text-decoration', 'underline');
+	ideaBasketLink.css('color', 'blue');
+	ideaBasketLink.css('cursor', 'pointer');
+	ideaBasketLink.click({thisView:this, workgroupId:workgroupId}, this.ideaBasketClicked);
+	
+	/*
+	 * check if we need to show the idea basket link and that the project
+	 * has the idea basket enabled
+	 */
+	if(showIdeaBasketLink && this.isIdeaBasketEnabled()) {
+		//show the idea basket link
+		studentNamesDiv.append(ideaBasketLink);		
+	}
+	
+	gradeByStudentHeaderStudentNamesTD.append(isOnlineDiv);
+	gradeByStudentHeaderStudentNamesTD.append(studentNamesDiv);
 	
 	//add the tds to the row
-	gradeByStudentHeaderTR.append(gradeByStudentHeaderUserNameTD);
+	gradeByStudentHeaderTR.append(gradeByStudentHeaderStudentNamesTD);
 	
 	//add the row to the header table
 	gradeByStudentHeaderTable.append(gradeByStudentHeaderTR);
