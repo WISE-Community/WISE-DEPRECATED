@@ -214,6 +214,25 @@
 					</div>
 					
 				</div>
+				
+				<div class="sectionHead" id="realtime"><spring:message code="pages.teacherfaq.realTimeClassroomMonitor" /></div>
+				<div class="sectionContent">
+				
+					<div class="question"><spring:message code="pages.teacherfaq.whatIsRealTimeClassroomMonitorQuestion" /></div>
+					<div class="answer"><spring:message code="pages.teacherfaq.whatIsRealTimeClassroomMonitorAnswer" /></div>
+				
+					<div class="question"><spring:message code="pages.teacherfaq.whatAreTechnicalRequirementsForRealTimeClassroomMonitorQuestion" /></div>
+					<div class="answer"><spring:message code="pages.teacherfaq.whatAreTechnicalRequirementsForRealTimeClassroomMonitorAnswer" /></div>
+				
+					<div class="question"><spring:message code="pages.teacherfaq.howTurnOnOffRealTimeClassroomMonitorQuestion" /></div>
+					<div class="answer"><spring:message code="pages.teacherfaq.howTurnOnOffRealTimeClassroomMonitorAnswer" /></div>
+					
+					<div class="question"><spring:message code="pages.teacherfaq.doesRealTimeClassroomMonitorWorkOnTabletQuestion" /></div>
+					<div class="answer"><spring:message code="pages.teacherfaq.doesRealTimeClassroomMonitorWorkOnTabletAnswer" /></div>
+					
+					<div class="question"><spring:message code="pages.teacherfaq.canRealTimeClassroomMonitorPauseStudentScreensQuestion" /></div>
+					<div class="answer"><spring:message code="pages.teacherfaq.canRealTimeClassroomMonitorPauseStudentScreensAnswer" /></div>
+					</div>
 
 				</div>  <!--  end of panelContent -->
 			</div>  <!--  end of contentPanel -->
