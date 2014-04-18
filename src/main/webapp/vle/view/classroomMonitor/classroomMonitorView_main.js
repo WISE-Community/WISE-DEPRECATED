@@ -368,6 +368,18 @@ View.prototype.setActiveButtonBackgroundColor = function(button, classToRemoveBa
 };
 
 /**
+ * Remove the yellow background highlighting from all elements that have
+ * the given class
+ * @param classToRemoveBackgroundFrom the class to remove background highlighting from
+ */
+View.prototype.removeBackgroundColor = function(classToRemoveBackgroundFrom) {
+	if(classToRemoveBackgroundFrom != null) {
+		//remove the yellow background from the elements that have the class
+		$('.' + classToRemoveBackgroundFrom).css('background', '');
+	}
+};
+
+/**
  * Create the period buttons for the teacher to filter by period
  */
 View.prototype.createClassroomMonitorPeriods = function() {
@@ -1176,6 +1188,9 @@ View.prototype.studentRowClicked = function(event) {
 View.prototype.studentRowClickedHandler = function(workgroupId) {
 	//hide all the other displays
 	this.hideAllDisplays();
+	
+	//remove the yellow highlighting of the choose display buttons
+	this.removeBackgroundColor('chooseClassroomMonitorDisplayButton');
 	
 	//display a loading message in the grade by student display
 	$('#gradeByStudentDisplay').html('<p style="display:inline;margin-left:5px">Loading...</p>');
@@ -3171,6 +3186,9 @@ View.prototype.stepRowClicked = function(event) {
 View.prototype.stepRowClickedHandler = function(nodeId) {
 	//hide all the other displays
 	this.hideAllDisplays();
+	
+	//remove the yellow highlighting of the choose display buttons
+	this.removeBackgroundColor('chooseClassroomMonitorDisplayButton');
 
 	//display a loading message in the grade by step display
 	$('#gradeByStepDisplay').html('<p style="display:inline;margin-left:5px">Loading...</p>');
