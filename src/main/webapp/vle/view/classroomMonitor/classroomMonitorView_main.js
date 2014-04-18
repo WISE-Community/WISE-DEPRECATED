@@ -1512,9 +1512,9 @@ View.prototype.showIdeaBasket = function(workgroupId) {
 					ideaTR.append(ideaNodeNameCell);
 
 					//set the created on timestamp
-					var timeCreatedDate = new Date(timeCreated);
+					var timeCreatedFormatted = this.formatTimestamp(timeCreated);
 					var ideaTimeCreatedCell = $('<td>');
-					ideaTimeCreatedCell.text(timeCreatedDate);
+					ideaTimeCreatedCell.text(timeCreatedFormatted);
 					ideaTR.append(ideaTimeCreatedCell);
 					
 					//add the idea row to the table
@@ -2055,8 +2055,8 @@ View.prototype.createRowsForNodeVisits = function(nodeId, workgroupId, parentTab
 			
 			if(visitPostTime != null) {
 				//set the timestamp for the student work
-				var visitPostTimeDate = new Date(visitPostTime);
-				stepWorkDiv.append('<br><hr width="50%" align="left">Timestamp: ' + visitPostTimeDate);
+				var visitPostTimeFormatted = this.formatTimestamp(visitPostTime);
+				stepWorkDiv.append('<br><hr width="50%" align="left">Timestamp: ' + visitPostTimeFormatted);
 			}
 			
 			/*
@@ -2283,10 +2283,10 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	
 	if(annotationPostTime != 0) {
 		//create the annotation post time date
-		var annotationPostTimeDate = new Date(annotationPostTime);
+		var annotationPostTimeFormatted = this.formatTimestamp(annotationPostTime);
 		
 		//set the last annotation timestamp
-		annotationTimestampDiv.html('Last Annotation: ' + annotationPostTimeDate);
+		annotationTimestampDiv.html('Last Annotation: ' + annotationPostTimeFormatted);
 	} else {
 		//there has been no annotations
 		annotationTimestampDiv.html('Last Annotation: not available');
@@ -2569,10 +2569,10 @@ View.prototype.postAnnotationCallbackSuccessHandler = function(stepWorkId, times
 	
 	if(timestamp != null) {
 		//get the timestamp
-		var timestampDate = new Date(parseInt(timestamp));
+		var timestampFormatted = this.formatTimestamp(parseInt(timestamp));
 		
 		//update the timestamp in the display
-		$('#annotationTimestamp_' + stepWorkId).html('Last Annotation: ' + timestampDate);
+		$('#annotationTimestamp_' + stepWorkId).html('Last Annotation: ' + timestampFormatted);
 	}
 	
 	//disable the save button

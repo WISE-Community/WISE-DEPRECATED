@@ -2059,6 +2059,125 @@ View.prototype.getIdeaBasketIdeaCount = function() {
 	return ideaBasketIdeaCount;
 };
 
+/**
+ * Format the timestamp into a user friendly string
+ * @param milliseconds the timestamp in milliseconds
+ * @return a user friendly time string e.g.
+ * Wed, Apr 9, 2014 3:34 PM
+ */
+View.prototype.formatTimestamp = function(milliseconds) {
+	var formattedTimestamp = '';
+	
+	if(milliseconds != null) {
+		//get the date object
+		var date = new Date(milliseconds);
+		
+		//get the date values
+		var dayNumber = date.getDay();
+		var monthNumber = date.getMonth();
+		var dayOfMonth = date.getDate();
+		var year = date.getFullYear();
+		var hours = date.getHours();
+		var minutes = date.getMinutes();
+		
+		//get the day of the week e.g. 'Sun'
+		var dayOfWeek = this.getDayOfWeekFromInteger(dayNumber);
+		
+		//get the month e.g. 'April'
+		var month = this.getMonthFromInteger(monthNumber);
+		
+		var suffix = '';
+		
+		//get am or pm
+		if(hours < 12) {
+			suffix = 'AM';
+		} else {
+			suffix = 'PM';
+		}
+		
+		//remove the 24 hour if necessary
+		if(hours > 12) {
+			hours = hours - 12;
+		}
+		
+		//add a leading 0 if necessary
+		if(minutes < 10) {
+			minutes = '0' + minutes;
+		}
+		
+		//create the formatted string
+		formattedTimestamp = dayOfWeek + ', ' + month + ' ' + dayOfMonth + ', ' + year + ' ' + hours + ':' + minutes + ' ' + suffix;
+	}
+	
+	return formattedTimestamp;
+}
+
+/**
+ * Get the day of the week name from the integer
+ * @param dayNumber the day of the week as an integer with 0 being Sunday
+ * and 6 being Saturday
+ * @return the 3 letter abbreviation for the day of the week
+ */
+View.prototype.getDayOfWeekFromInteger = function(dayNumber) {
+	var day = '';
+	
+	if(dayNumber == 0) {
+		day = 'Sun';
+	} else if(dayNumber == 1) {
+		day = 'Mon';
+	} else if(dayNumber == 2) {
+		day = 'Tue';
+	} else if(dayNumber == 3) {
+		day = 'Wed';
+	} else if(dayNumber == 4) {
+		day = 'Thu';
+	} else if(dayNumber == 5) {
+		day = 'Fri';
+	} else if(dayNumber == 6) {
+		day = 'Sat';
+	}
+	
+	return day;
+};
+
+/**
+ * Get the month name from the integer
+ * @param monthNumber the month as an integer with 0 being January
+ * and 11 being December
+ * @return the 3 letter abbreviation for the month
+ */
+View.prototype.getMonthFromInteger = function(monthNumber) {
+	var month = '';
+	
+	if(monthNumber == 0) {
+		month = 'Jan';
+	} else if(monthNumber == 1) {
+		month = 'Feb';
+	} else if(monthNumber == 2) {
+		month = 'Mar';
+	} else if(monthNumber == 3) {
+		month = 'Apr';
+	} else if(monthNumber == 4) {
+		month = 'May';
+	} else if(monthNumber == 5) {
+		month = 'Jun';
+	} else if(monthNumber == 6) {
+		month = 'Jul';
+	} else if(monthNumber == 7) {
+		month = 'Aug';
+	} else if(monthNumber == 8) {
+		month = 'Sep';
+	} else if(monthNumber == 9) {
+		month = 'Oct';
+	} else if(monthNumber == 10) {
+		month = 'Nov';
+	} else if(monthNumber == 11) {
+		month = 'Dec';
+	}
+	
+	return month;
+};
+
 /* used to notify scriptloader that this script has finished loading */
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/view_utils.js');
