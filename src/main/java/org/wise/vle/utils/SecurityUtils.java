@@ -21,6 +21,7 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;
@@ -54,7 +55,7 @@ public final class SecurityUtils {
 	 */
 	public static boolean isValidReferrer(HttpServletRequest request){
 		String referer = request.getHeader("referer");
-		String domain =  "http://" + request.getServerName();
+		String domain = ControllerUtil.getBaseUrlString(request);
 		String domainWithPort = domain + ":" + request.getLocalPort();
 		
 		//get the context path e.g. /wise

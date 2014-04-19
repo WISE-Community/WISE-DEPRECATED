@@ -51,6 +51,7 @@ import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.StudentAccountForm;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
@@ -89,7 +90,7 @@ public class RegisterStudentController extends SimpleFormController {
 	protected synchronized ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors)
 	throws Exception {
-		String domain =  "http://" + request.getServerName();
+		String domain = ControllerUtil.getBaseUrlString(request);
 		String domainWithPort = domain + ":" + request.getLocalPort();
 		String referrer = request.getHeader("referer");
 

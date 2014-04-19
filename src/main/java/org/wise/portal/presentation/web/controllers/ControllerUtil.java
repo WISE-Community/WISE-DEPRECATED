@@ -95,26 +95,26 @@ public class ControllerUtil {
 	/**
 	 * Get the url without the port
 	 * @param url the url to remove the port from e.g.
-	 * http://wise4.berkeley.edu:5285
+	 * https://wise4.berkeley.edu:5285
 	 * @return the url without the port e.g.
-	 * http://wise4.berkeley.edu
+	 * https://wise4.berkeley.edu
 	 */
 	public static String getBaseUrlWithoutPort(String url) {
 		String baseUrlWithoutPort = "";
 		int endOfHttpColonSlashes = 0;
-		String http = "http://";
+		String http = "://";
 
 		if(url != null) {
-			if(url.indexOf("http://") != -1) {
-				//get the location of the end of the "http://"
+			if(url.indexOf("://") != -1) {
+				//get the location of the end of the "://"
 				endOfHttpColonSlashes = url.indexOf(http) + http.length();
 			}
 			
-			//get the location of the ":" after the "http://" which should be the ":" before the port if any
+			//get the location of the ":" after the "://" which should be the ":" before the port if any
 			int lastIndexOfColon = url.indexOf(":", endOfHttpColonSlashes);
 			
 			if(lastIndexOfColon != -1) {
-				//get the xmmpp server without the port e.g http://wise4.berkeley.edu
+				//get the xmmpp server without the port e.g https://wise4.berkeley.edu
 				baseUrlWithoutPort = url.substring(0, lastIndexOfColon);
 			} else {
 				//there is no port so we will just return the unmodified url
