@@ -355,9 +355,6 @@
 	<bean id="runParameters" class="org.wise.portal.domain.run.impl.RunParameters"
 		scope="prototype" />
 
-	<bean id="lostPasswordStudentMainController"
-		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentMainController" />
-
 	<bean id="lostPasswordStudentPasswordController"
 		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentPasswordController" />
 
