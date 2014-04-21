@@ -58,7 +58,6 @@ View.prototype.vleDispatcher = function(type,args,obj){
 	} else if (type == 'startVLECompleted') {
 		obj.renderStartNode();
 		if(obj.isRealTimeEnabled) {
-			obj.sendStudentStatusWebSocketMessage();
 			obj.getRunStatus();
 		}
 	} else if (type == 'assetUploaded') {

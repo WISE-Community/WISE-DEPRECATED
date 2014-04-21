@@ -3,6 +3,7 @@ package org.wise.vle.web;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -98,12 +99,26 @@ public class StudentStatusController extends AbstractController {
 			//get a student status
 			StudentStatus studentStatus = studentStatusesIterator.next();
 			
-			//get a status
+			//get the status
 			String status = studentStatus.getStatus();
 			
 			try {
 				//convert the status to a JSONObject
 				JSONObject statusJSON = new JSONObject(status);
+
+				//get the post timestamp
+				Timestamp postTimestamp = studentStatus.getTimestamp();
+				long postTimestampMilliseconds = postTimestamp.getTime();
+				
+				//add the post timestamp for when the student sent this student status to the server
+				statusJSON.put("postTimestamp", postTimestampMilliseconds);
+				
+				//get the current timestamp
+				Date currentTime = new Date();
+				long retrievalTimestampMilliseconds = currentTime.getTime();
+				
+				//add the retrieval timestamp for when this student status was requested
+				statusJSON.put("retrievalTimestamp", retrievalTimestampMilliseconds);
 				
 				//put the status JSONObject into our JSONArray that we will return to the teacher
 				studentStatusesJSONArray.put(statusJSON);

@@ -4210,19 +4210,62 @@ View.prototype.updateStudentProgressTimeSpent = function(workgroupId) {
 			var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
 			
 			if(studentStatus != null) {
-				//get the current timestamp
+				//get the timestamp for when the student posted the student status to the server (server time)
+				var postTimestamp = studentStatus.postTimestamp;
+				
+				//get the timestamp for when the teacher requested the student status from the server (server time)
+				var retrievalTimestamp = studentStatus.retrievalTimestamp;
+				
+				//get the timestamp for when the teacher received the student status (client time)
+				var studentTimestamp = studentStatus.timestamp;
+				
+				//get the current timestamp (client time)
 				var date = new Date();
 				var timestamp = date.getTime();
 				
-				//get the timestamp for when the student began working on the step
-				var studentTimestamp = studentStatus.timestamp;
+				var postRetrievalTimeDifference = 0;
+				
+				if(postTimestamp != null && retrievalTimestamp != null) {
+					/*
+					 * get the amount of time that passed between when the student
+					 * posted the student status and when the teacher requested the
+					 * student status using the server timestamps
+					 */
+					postRetrievalTimeDifference = retrievalTimestamp - postTimestamp;
+					postRetrievalTimeDifference = parseInt(postRetrievalTimeDifference / 1000);
+				}
 				
 				if(studentTimestamp != null) {
-					//get the time difference
+					/*
+					 * get the time difference between when the student status was received and
+					 * the current time using client timestamps
+					 */
 					var timeSpentMilliseconds = timestamp - studentTimestamp;
 					
 					//convert the time to seconds
 					var timeSpentSeconds = parseInt(timeSpentMilliseconds / 1000);
+					
+					/*
+					 * add the time difference between when the student posted the student 
+					 * status and when the teacher retrieved the student status. this value 
+					 * will usually be 0 except when the teacher opens the classroom monitor
+					 * after the student logs in.
+					 * 
+					 * case 1: student logs in while the teacher does not have the classroom monitor open.
+					 * for example, if the student posts a student status, and then the teacher opens the
+					 * classroom monitor 1 minute later, there will be a 60 second time difference
+					 * between when the student posted the student status and when the teacher retrieved
+					 * the student status. we will then add 60 seconds to the time spent because
+					 * the timestamp - studentTimestamp value only takes into consideration the time
+					 * the student has spent on the step after the teacher has opened the classroom monitor.
+					 * we need to use these two time differences (server side difference and client side
+					 * difference) because we can't assume server and client timestamps are synced.
+					 * 
+					 * case 2: student logs in while the teacher has the classroom monitor open.
+					 * in this case the student will post the student status and the teacher
+					 * will receive it immediately so there is essentially 0 time difference
+					 */
+					timeSpentSeconds += postRetrievalTimeDifference;
 					
 					//get the number of minutes
 					var minutes = Math.floor(timeSpentSeconds / 60);

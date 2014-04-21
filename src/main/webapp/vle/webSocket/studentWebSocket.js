@@ -78,6 +78,9 @@ View.prototype.getRunStatusCallback = function(responseText, responseXML, view) 
 	
 	//start the web socket connection
 	view.startWebSocketConnection();
+	
+	//send the student status to the server
+	view.sendStudentStatusWebSocketMessage();
 };
 
 /**
