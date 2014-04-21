@@ -107,7 +107,7 @@ MultipleChoiceNode.prototype.getStudentWorkHtmlView = function(work) {
 MultipleChoiceNode.prototype.getPrompt = function() {
 	var prompt = "";
 	
-	if(contentJSON != null) {
+	if(this.content != null) {
 		//get the content for the node
 		var contentJSON = this.content.getContentJSON();
 
