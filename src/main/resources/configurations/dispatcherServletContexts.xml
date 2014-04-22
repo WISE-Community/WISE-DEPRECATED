@@ -79,14 +79,8 @@
 	<bean id="lostTeacherValidator"
 		class="org.wise.portal.presentation.validators.LostTeacherValidator" />
 
-	<bean id="lostPasswordStudentUsernameValidator"
-		class="org.wise.portal.presentation.validators.LostPasswordStudentUsernameValidator" />
-
 	<bean id="lostPasswordStudentAccountQuestionValidator"
 		class="org.wise.portal.presentation.validators.LostPasswordStudentAccountQuestionValidator" />
-
-	<bean id="lostPasswordStudentProjectCodeValidator"
-		class="org.wise.portal.presentation.validators.LostPasswordStudentProjectCodeValidator" />
 
 	<bean id="findProjectParametersValidator"
 		class="org.wise.portal.presentation.validators.FindProjectParametersValidator">
@@ -354,12 +348,6 @@
 
 	<bean id="runParameters" class="org.wise.portal.domain.run.impl.RunParameters"
 		scope="prototype" />
-
-	<bean id="lostPasswordStudentPasswordController"
-		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentPasswordController" />
-
-	<bean id="lostPasswordStudentUsernameController"
-		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentUsernameController" />
 
 	<bean id="forgotAccountTeacherIndexController"
 		class="org.wise.portal.presentation.web.controllers.forgotaccount.teacher.ForgotAccountTeacherIndexController">
