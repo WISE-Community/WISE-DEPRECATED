@@ -682,28 +682,6 @@
 	</bean>
 
 
-	<bean id="createHierarchyTypeController"
-		class="org.wise.portal.presentation.web.controllers.CreateHierarchyTypeController">
-		<!-- <property name="nodeService" ref="nodeService"/> -->
-		<property name="userService" ref="userService" />
-	</bean>
-
-	<bean id="createNodeController"
-		class="org.wise.portal.presentation.web.controllers.CreateNodeController">
-		<!-- <property name="nodeService" ref="nodeService"/> -->
-	</bean>
-
-	<bean id="manageHierarchyTypesController"
-		class="org.wise.portal.presentation.web.controllers.ManageHierarchyTypesController">
-		<!-- <property name="nodeService" ref="nodeService"/> -->
-	</bean>
-
-	<bean id="manageHierarchyController"
-		class="org.wise.portal.presentation.web.controllers.ManageHierarchyController">
-		<!-- <property name="nodeService" ref="nodeService"/> -->
-		<property name="userService" ref="userService" />
-	</bean>
-
 	<bean id="outsideErrorController"
 		class="org.wise.portal.presentation.web.controllers.OutsideErrorController">
 		<property name="exceptionResolver" ref="exceptionResolver" />
@@ -1045,11 +1023,7 @@
 				/teacher/projects/analyzeproject.html=analyzeProjectController
 				/teacher/projects/minifyproject.html=minifyProjectController
 				/student/viewannouncements.html=viewAnnouncementsController
-				/createhierarchytype.html=createHierarchyTypeController
-				/createnode.html=createNodeController
 				/runinfo.html=runInfoController
-				/managehierarchytypes.html=manageHierarchyTypesController
-				/managehierarchy.html=manageHierarchyController
 				/message/message.html=messageController
 				/studentData.html=studentDataController
 				/annotation.html=annotationController
