@@ -395,17 +395,6 @@
 			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
 	</bean>
 
-	<bean id="forgotAccountStudentCheckProjectCodeController"
-		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.CheckProjectCodeController">
-		<property name="runService" ref="runService" />
-		<property name="commandName" value="passwordReminderParameters" />
-		<property name="validator" ref="lostPasswordStudentProjectCodeValidator" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
-		<property name="formView" value="forgotaccount/student/enterprojectcode" />
-		<property name="successView" value="forgotaccount/student/projectcoderesult" />
-	</bean>
-
 	<bean id="viewMyStudentsController"
 		class="org.wise.portal.presentation.web.controllers.teacher.management.ViewMyStudentsController">
 		<property name="runService" ref="runService" />
@@ -1016,7 +1005,6 @@
 				/forgotaccount/teacher/success.html=urlFilenameViewController
 				/forgotaccount/teacher/error.html=urlFilenameViewController
 				/forgotaccount/student/passwordreminder*.html=forgotAccountStudentPasswordReminderWizardController
-				/forgotaccount/student/enterprojectcode.html=forgotAccountStudentCheckProjectCodeController
 				/forgotaccount/student/searchforstudentusername.html=searchForStudentUserNameController
 				/forgotaccount/resetpassword.html=resetPasswordController
 				/**/changepassword.html=changeUserPasswordController
