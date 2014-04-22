@@ -95,7 +95,7 @@ View.prototype.sendTeacherWebSocketMessage = function(messageJSON) {
 /**
  * Send the web socket message to pause all the student screens
  */
-View.prototype.pauseScreens = function(periodId) {
+View.prototype.pauseScreens = function(periodId, pauseMessage) {
 	if(this.socket != null) {
 		//create the message object with the necessary parameters
 		var messageJSON = {};
@@ -112,6 +112,11 @@ View.prototype.pauseScreens = function(periodId) {
 			messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
 		}
 		
+		if(pauseMessage != null) {
+			//set the pause message
+			messageJSON.pauseMessage = pauseMessage;
+		}
+		
 		//send the message to pause the screens
 		this.sendTeacherWebSocketMessage(messageJSON);
 		
@@ -119,7 +124,7 @@ View.prototype.pauseScreens = function(periodId) {
 		this.updatePausedRunStatusValue(periodId, true);
 		
 		//send the run status to the server to be saved in the db
-		this.sendRunStatus();
+		this.sendRunStatus(pauseMessage);
 	}
 };
 
@@ -147,6 +152,9 @@ View.prototype.unPauseScreens = function(periodId) {
 		
 		//update our run status to reflect that the period is now not paused
 		this.updatePausedRunStatusValue(periodId, false);
+		
+		//clear the pause message
+		this.runStatus.pauseMessage = null;
 		
 		//send the run status to the server to be saved in the db
 		this.sendRunStatus();

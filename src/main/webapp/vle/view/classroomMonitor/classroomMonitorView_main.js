@@ -720,6 +720,20 @@ View.prototype.createPauseScreensDisplay = function() {
 		allPeriodsPaused = runStatus.allPeriodsPaused;
 	}
 	
+	//the label for the pause message text area
+	var pauseMessageLabel = $('<p>');
+	pauseMessageLabel.css('margin', '0px');
+	pauseMessageLabel.text('Message to display to students when paused:');
+	pauseScreensDisplay.append(pauseMessageLabel);
+	
+	//the pause message text area
+	var pauseMessageTextArea = $('<textarea>');
+	pauseMessageTextArea.attr('id', 'pauseMessageTextArea');
+	pauseMessageTextArea.css('width', '700px');
+	pauseMessageTextArea.css('height', '40px');
+	pauseMessageTextArea.attr('placeholder', 'Your teacher has paused your screen.');
+	pauseScreensDisplay.append(pauseMessageTextArea);
+	
 	//create the table that will display the paused and un-paused buttons
 	var pauseButtonsTable = $('<table>');
 	
@@ -835,8 +849,16 @@ View.prototype.createPauseRow = function(label, periodId, paused) {
  * @param periodId the period id
  */
 View.prototype.pausedButtonClicked = function(periodId) {
+	//get the pause message if any
+	var pauseMessage = $('#pauseMessageTextArea').val();
+	
+	if(pauseMessage == null || pauseMessage == '') {
+		//the teacher has not provided a pause message so we will use a default one
+		pauseMessage = 'Your teacher has paused your screen.';
+	}
+	
 	//pause the screens in the period
-	this.pauseScreens(periodId);
+	this.pauseScreens(periodId, pauseMessage);
 	
 	//highlight the paused button
 	this.highlightPausedButton(periodId);
@@ -4873,12 +4895,17 @@ View.prototype.isStudentOnline = function(workgroupId) {
 /**
  * Send the run status back to the server to be saved in the db
  */
-View.prototype.sendRunStatus = function() {
+View.prototype.sendRunStatus = function(pauseMessage) {
 	//get the run status url we will use to make the request
 	var runStatusUrl = this.getConfig().getConfigParam('runStatusUrl');
 	
 	//get the run id
 	var runId = this.getConfig().getConfigParam('runId');
+	
+	if(pauseMessage != null) {
+		//set the pause message if one was provided
+		this.runStatus.pauseMessage = pauseMessage;
+	}
 	
 	//get the run status as a string
 	var runStatus = JSON.stringify(this.runStatus);

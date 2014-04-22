@@ -39,7 +39,7 @@ View.prototype.getRunStatusCallback = function(responseText, responseXML, view) 
 		
 		if(allPeriodsPaused) {
 			//all periods are paused so we will lock the screen
-			view.lockScreen();
+			view.lockScreen(runStatus);
 		} else {
 			/*
 			 * all periods are not paused so we now need to check if our
@@ -68,7 +68,7 @@ View.prototype.getRunStatusCallback = function(responseText, responseXML, view) 
 						//check if the period is paused
 						if(isPaused) {
 							//the period is paused so we will lock the screen
-							view.lockScreen();
+							view.lockScreen(runStatus);
 						}
 					}
 				}
@@ -173,7 +173,7 @@ View.prototype.startWebSocketConnection = function() {
 							
 						} else if(messageType == 'pauseScreen') {
 							//lock the student screen
-							view.lockScreen();
+							view.lockScreen(data);
 						} else if(messageType == 'unPauseScreen') {
 							//unlock the student screen
 							view.unlockScreen();
@@ -434,15 +434,26 @@ View.prototype.getStudentNodeStatuses = function() {
 
 /**
  * Lock the student screen
+ * @param data the data from the websocket message
  */
-View.prototype.lockScreen = function() {
+View.prototype.lockScreen = function(data) {
 	//create the lock screen dialog if it does not exist
 	if($('#lockscreen').size()==0){
 		this.renderLockDialog();
 	}
 	
+	//the default pause message
+	var pauseMessage = "Your teacher has paused your screen.";
+	
+	if(data != null) {
+		if(data.pauseMessage != null && data.pauseMessage != "") {
+			//use the pause message from the teacher
+			pauseMessage = data.pauseMessage;
+		}
+	}
+	
 	//the message to display in the modal dialog that will lock the student screen
-	var message = "<table><tr align='center'>Your teacher has paused your screen.</tr><tr align='center'></tr><table><br/>";
+	var message = "<table><tr align='center'>" + pauseMessage + "</tr><tr align='center'></tr><table><br/>";
 
 	$('#lockscreen').html(message);
 	$('#lockscreen').dialog('option', 'width', 800);
