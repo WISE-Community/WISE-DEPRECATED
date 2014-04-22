@@ -30,6 +30,18 @@
 </c:forEach>
 </script>
 
+<style type="text/css">
+#adminManageProjectsTable > tbody > tr, #adminManageProjectsTable > tbody > tr > td, #adminManageProjectsTable > tbody > tr > th
+{
+	border: 1px solid black;
+}
+
+#adminManageProjectsTable > tbody > tr > th
+{
+    font-weight:bold;
+}
+
+</style>
 </head>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -68,21 +80,16 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 }
 </script>
 <body>
-
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
+<%@ include file="../../headermain.jsp"%>
 <div id="page">
 <div id="pageContent" class="contentPanel">
-
-<%@ include file="../../headermain.jsp"%>
 <%@page import="org.wise.portal.domain.project.impl.ProjectType" %>
 
 
 <h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <c:out value="${message}" />
-
-<h4>Internal Projects (Projects that can be run completely within the portal without the aid of outside portals)</h4>
+<br/>
 <table id="adminManageProjectsTable">
 	<tr>
 		<th> Project Id</th>
@@ -122,7 +129,7 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 				<div>Existing Tags</div>
 				<div id="existingTagsDiv_${project.id}">
 					<c:forEach var="tag" items="${project.tags}">
-						<table id="tagTable_${project.id}_${tag.id}">
+						<table class='existingTags' id="tagTable_${project.id}_${tag.id}">
 							<tbody>
 								<tr>
 									<td><input id="tagEdit_${project.id}_${tag.id}" type='text' value='${tag.name}'/></td>

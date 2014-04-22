@@ -5,6 +5,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+
 <script type="text/javascript" src="${contextPath}/portal/javascript/general.js"></script>
     
 <title>Upload Project Page</title>
@@ -12,19 +17,31 @@
 </head>
 <body>
 
+<%@ include file="../../headermain.jsp"%>
+<div id="page">
+<div id="pageContent" class="contentPanel">
 <h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+<br/>
 
-<span style="font-size:1.2em;font-weight:bold">
+<c:if test="${msg != null}">
+<span style="font-size:1.2em;font-weight:bold;border:2px solid lightgreen">
 <c:out value="${msg}" />
 </span>
+<br/>
+</c:if>
+<br/>
+<h3>Upload WISE Project</h3>
 
-<p>
+
+<br/>
+<div>
 NOTE:
 <ol>
-  <li>File must be a zip file, and must have a .zip extension</li>
-  <li>ZipFile name must be the same as the root folder inside it</li>
-  <li>File must contain a wise4.project.json file in the top/root level</li>
+  <li>1. File must be a zip file, and must have a .zip extension</li>
+  <li>2. ZipFile name must be the same as the root folder inside it</li>
+  <li>3. File must contain a wise4.project.json file in the top/root level</li>
 </ol>
+<br/>
 <pre>
 example.zip
 
@@ -38,8 +55,8 @@ unzipped:
     - intro.html
     ...    
 </pre>
-</p>
-
+</div>
+<br/><br/>
 <form:form method="post" action="uploadproject.html" 
 	commandName="projectZipFile" id="editproject" enctype="multipart/form-data" autocomplete='off'>
 
@@ -56,6 +73,7 @@ unzipped:
 </form:form>
 
 
-
+</div>
+</div>
 </body>
 </html>
