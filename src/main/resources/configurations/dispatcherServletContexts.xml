@@ -335,14 +335,6 @@
 		class="org.wise.portal.presentation.web.controllers.AccessDeniedController">
 	</bean>
 
-	<bean id="lostPasswordStudentReminderWizardController"
-		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentReminderWizardController">
-		<property name="userService" ref="userService" />
-		<property name="commandName" value="passwordReminderParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
-	</bean>
-
 	<bean id="passwordReminderParameters" class="org.wise.portal.domain.impl.PasswordReminderParameters"
 		scope="prototype" />
 
