@@ -361,17 +361,6 @@
 	<bean id="lostPasswordStudentUsernameController"
 		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentUsernameController" />
 
-	<bean id="lostPasswordStudentProjectCodeController"
-		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentProjectCodeController">
-		<property name="runService" ref="runService" />
-		<property name="commandName" value="passwordReminderParameters" />
-		<property name="validator" ref="lostPasswordStudentProjectCodeValidator" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
-		<property name="formView" value="lostpasswordstudentprojectcode" />
-		<property name="successView" value="lostpasswordstudentprojectcoderesult" />
-	</bean>
-
 	<bean id="forgotAccountTeacherIndexController"
 		class="org.wise.portal.presentation.web.controllers.forgotaccount.teacher.ForgotAccountTeacherIndexController">
 		<property name="userService" ref="userService" />
