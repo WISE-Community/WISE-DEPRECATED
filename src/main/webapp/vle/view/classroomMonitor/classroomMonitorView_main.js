@@ -3330,7 +3330,7 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			gradeByStepHeaderTable.css('position', 'fixed');
 			gradeByStepHeaderTable.css('top', '105px');
 			gradeByStepHeaderTable.css('left', '10px');
-			gradeByStepHeaderTable.css('background', 'white');
+			gradeByStepHeaderTable.css('background', 'yellow');
 			gradeByStepHeaderTable.css('z-index', '1');
 			gradeByStepHeaderTable.css('border-width', '2px');
 			gradeByStepHeaderTable.css('border-style', 'solid');
@@ -3341,12 +3341,6 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			
 			//create the td that will contain the step title
 			var gradeByStepHeaderStepTitleTD = $('<td>');
-			gradeByStepHeaderStepTitleTD.css('background', 'yellow');
-			
-			//create the p that will display the step title
-			var stepTitleP = $('<p>');
-			stepTitleP.css('display', 'inline');
-			stepTitleP.text(stepTitle + ' ');
 			
 			//create the link that will show and hide the step prompt
 			var showPromptLink = $('<a>');
@@ -3357,8 +3351,56 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			showPromptLink.css('cursor', 'pointer');
 			showPromptLink.click({thisView:this, nodeId:nodeId}, this.showPromptClicked);
 			
+			//get all the node ids for steps that have a grading view
+			var onlyGetNodesWithGradingView = true;
+			var nodeIds = this.getProject().getNodeIds(onlyGetNodesWithGradingView);
+			
+			//create the drop down
+			var stepSelect = $('<select>');
+			stepSelect.attr('id', 'stepDropDown');
+			
+			//loop through all the node ids
+			for(var x=0; x<nodeIds.length; x++) {
+				//get a node id
+				var tempNodeId = nodeIds[x];
+				
+				//get the node
+				var node = this.getProject().getNodeById(tempNodeId);
+				
+				var nodeType = '';
+				
+				if(node != null) {
+					//get the node type
+					nodeType = node.type;
+				}
+				
+				//get the step number and title
+				var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(tempNodeId);
+				
+				stepNumberAndTitle = 'Step ' + stepNumberAndTitle;
+				
+				if(nodeType != null) {
+					stepNumberAndTitle += ' (' + nodeType + ')';
+				}
+				
+				//create the option for the step
+				var stepOption = $('<option>');
+				stepOption.text(stepNumberAndTitle);
+				stepOption.val(tempNodeId);
+				
+				//add the option to the drop down
+				stepSelect.append(stepOption);
+			}
+			
+			//set the selected option
+			stepSelect.val(nodeId);
+			
+			//set the change event to display a different step
+			stepSelect.change({thisView:this}, this.stepDropDownChanged);
+			
 			//add the step title and show prompt link
-			gradeByStepHeaderStepTitleTD.append(stepTitleP);
+			gradeByStepHeaderStepTitleTD.append(stepSelect);
+			gradeByStepHeaderStepTitleTD.append(' ');
 			gradeByStepHeaderStepTitleTD.append(showPromptLink);
 			
 			//create the row that will display the step prompt
@@ -3502,7 +3544,26 @@ View.prototype.displayGradeByStep = function(nodeId) {
 	
 	//make the grade by step display visible
 	this.showGradeByStepDisplay();
+};
+
+/**
+ * The step drop down was changed
+ * @param event the jquery event
+ */
+View.prototype.stepDropDownChanged = function(event) {
+	var thisView = event.data.thisView;
+	thisView.stepDropDownChangedHandler();
+};
+
+/**
+ * Handles the step drop down changing
+ */
+View.prototype.stepDropDownChangedHandler = function() {
+	//get the selected value of the drop down
+	var nodeId = $('#stepDropDown').val();
 	
+	//display the step that was clicked
+	this.stepRowClickedHandler(nodeId);
 };
 
 /**
@@ -6124,7 +6185,7 @@ View.prototype.createStudentHeaderTable = function(studentNames, workgroupId, pe
 	gradeByStudentHeaderTable.css('position', 'fixed');
 	gradeByStudentHeaderTable.css('top', '105px');
 	gradeByStudentHeaderTable.css('left', '10px');
-	gradeByStudentHeaderTable.css('background', 'white');
+	gradeByStudentHeaderTable.css('background', 'yellow');
 	gradeByStudentHeaderTable.css('z-index', '1');
 	
 	//create the row that will display the user name, workgroup id, period name, navigation buttons, and save button
@@ -6159,16 +6220,43 @@ View.prototype.createStudentHeaderTable = function(studentNames, workgroupId, pe
 	var studentNamesDiv = $('<div>');
 	studentNamesDiv.css('float', 'left');
 	
-	//create the p that will display the student names
-	var studentNamesP = $('<p>');
-	studentNamesP.css('display', 'inline');
-	studentNamesP.html(studentNames.join(', ') + ' ');
-	studentNamesDiv.append(studentNamesP);
+	//create the drop down box to select the student
+	var studentSelect = $('<select>');
+	studentSelect.attr('id', 'studentDropDown');
+	
+	//get all the workgroup ids in the period
+	var classmateWorkgroupIdsInPeriod = this.getUserAndClassInfo().getClassmateWorkgroupIdsInAlphabeticalOrder(this.classroomMonitorPeriodIdSelected);
+	
+	//loop through all the workgroup ids in the period
+	for(var x=0; x<classmateWorkgroupIdsInPeriod.length; x++) {
+		//get a workgroup id
+		var classmateWorkgroupId = classmateWorkgroupIdsInPeriod[x];
+		
+		//get the classmate names for the workroup id
+		var classmateNames = this.getUserAndClassInfo().getStudentNamesByWorkgroupId(classmateWorkgroupId);
+		
+		//create the option for the classmates
+		var classmateOption = $('<option>');
+		classmateOption.val(classmateWorkgroupId);
+		classmateOption.text(classmateNames.join(', '));
+
+		//add the option to the drop down
+		studentSelect.append(classmateOption);
+	}
+
+	//select the workgroup that is currently being displayed
+	studentSelect.val(workgroupId);
+	
+	//set the change event to display a new student
+	studentSelect.change({thisView:this}, this.studentDropDownChanged);
+	
+	//add the student drop down
+	studentNamesDiv.append(studentSelect);
 	
 	//create the link to show the student work
 	var studentWorkLink = $('<a>');
 	studentWorkLink.text('Show Student Work');
-	studentWorkLink.attr('id', 'showPromptLink_' + nodeId);
+	studentWorkLink.attr('id', 'showStudentWorkLink_' + workgroupId);
 	studentWorkLink.css('text-decoration', 'underline');
 	studentWorkLink.css('color', 'blue');
 	studentWorkLink.css('cursor', 'pointer');
@@ -6176,13 +6264,14 @@ View.prototype.createStudentHeaderTable = function(studentNames, workgroupId, pe
 	
 	if(showStudentWorkLink) {
 		//show the student work link
+		studentNamesDiv.append(' ');
 		studentNamesDiv.append(studentWorkLink);
 	}
 	
 	//create the link to show the idea basket
 	var ideaBasketLink = $('<a>');
 	ideaBasketLink.text('Show Idea Basket');
-	ideaBasketLink.attr('id', 'showPromptLink_' + nodeId);
+	ideaBasketLink.attr('id', 'showIdeaBasketLink_' + workgroupId);
 	ideaBasketLink.css('text-decoration', 'underline');
 	ideaBasketLink.css('color', 'blue');
 	ideaBasketLink.css('cursor', 'pointer');
@@ -6194,7 +6283,8 @@ View.prototype.createStudentHeaderTable = function(studentNames, workgroupId, pe
 	 */
 	if(showIdeaBasketLink && this.isIdeaBasketEnabled()) {
 		//show the idea basket link
-		studentNamesDiv.append(ideaBasketLink);		
+		studentNamesDiv.append(' ');
+		studentNamesDiv.append(ideaBasketLink);
 	}
 	
 	gradeByStudentHeaderStudentNamesTD.append(isOnlineDiv);
@@ -6207,6 +6297,26 @@ View.prototype.createStudentHeaderTable = function(studentNames, workgroupId, pe
 	gradeByStudentHeaderTable.append(gradeByStudentHeaderTR);
 	
 	return gradeByStudentHeaderTable;
+};
+
+/**
+ * The student drop down was changed
+ * @param event the jquery event
+ */
+View.prototype.studentDropDownChanged = function(event) {
+	var thisView = event.data.thisView;
+	thisView.studentDropDownChangedHandler();
+};
+
+/**
+ * Handles the student drop down changing
+ */
+View.prototype.studentDropDownChangedHandler = function() {
+	//get the selected workgroup id
+	var workgroupId = $('#studentDropDown').val();
+	
+	//display the student that was clicked
+	this.studentRowClickedHandler(workgroupId);
 };
 
 /**

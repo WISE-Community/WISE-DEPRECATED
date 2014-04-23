@@ -387,7 +387,7 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 						var tempPeriodId = classmate.periodId;
 						
 						if(tempWorkgroupId != null) {
-							if(periodId == null) {
+							if(periodId == null || periodId == 'all') {
 								//period id was not passed in so we will add all classmates
 								workgroupIds.push(tempWorkgroupId);
 							} else if(periodId == tempPeriodId) {
