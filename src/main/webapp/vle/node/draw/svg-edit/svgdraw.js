@@ -216,7 +216,9 @@ SVGDRAW.prototype.saveToVLE = function() {
 			svgStringToSave = svgStringToSave.replace(this.teacherAnnotation, "");
 		}
 		this.studentData.svgString = svgCanvas.getSvgString();
-		this.studentData.description = svgEditor.ext_description.content();
+		if(svgEditor.ext_description){
+			this.studentData.description = svgEditor.ext_description.content();
+		}
 		if(svgEditor.ext_snapshots){
 			var snaps = svgEditor.ext_snapshots.content(),
 				snapDescriptions = this.snapDescriptions;
