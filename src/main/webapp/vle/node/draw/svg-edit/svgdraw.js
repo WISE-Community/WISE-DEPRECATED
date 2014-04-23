@@ -216,21 +216,25 @@ SVGDRAW.prototype.saveToVLE = function() {
 			svgStringToSave = svgStringToSave.replace(this.teacherAnnotation, "");
 		}
 		this.studentData.svgString = svgCanvas.getSvgString();
-		this.studentData.description = svgEditor.ext_description.content();
-		var snaps = svgEditor.ext_snapshots.content(),
-			snapDescriptions = this.snapDescriptions;
-		// add descriptions to each snapshot
-		for(var i=0; i<snaps.length; i++){
-			var description = '',
-				id = snaps[i].id;
-			if(snapDescriptions.hasOwnProperty(id)){
-				description = snapDescriptions[id];
-			}
-			snaps[i].description = description;
+		if(svgEditor.ext_description){
+			this.studentData.description = svgEditor.ext_description.content();
 		}
-		this.studentData.snapshots = snaps;
-		this.studentData.snapTotal = svgEditor.ext_snapshots.total();
-		this.studentData.selected = svgEditor.ext_snapshots.open();
+		if(svgEditor.ext_snapshots){
+			var snaps = svgEditor.ext_snapshots.content(),
+				snapDescriptions = this.snapDescriptions;
+			// add descriptions to each snapshot
+			for(var i=0; i<snaps.length; i++){
+				var description = '',
+					id = snaps[i].id;
+				if(snapDescriptions.hasOwnProperty(id)){
+					description = snapDescriptions[id];
+				}
+				snaps[i].description = description;
+			}
+			this.studentData.snapshots = snaps;
+			this.studentData.snapTotal = svgEditor.ext_snapshots.total();
+			this.studentData.selected = svgEditor.ext_snapshots.open();
+		}
 		svgEditor.loadedWISE = false;
 		this.save();
 	}

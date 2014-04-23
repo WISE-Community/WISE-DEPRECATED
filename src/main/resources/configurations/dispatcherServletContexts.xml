@@ -79,14 +79,8 @@
 	<bean id="lostTeacherValidator"
 		class="org.wise.portal.presentation.validators.LostTeacherValidator" />
 
-	<bean id="lostPasswordStudentUsernameValidator"
-		class="org.wise.portal.presentation.validators.LostPasswordStudentUsernameValidator" />
-
 	<bean id="lostPasswordStudentAccountQuestionValidator"
 		class="org.wise.portal.presentation.validators.LostPasswordStudentAccountQuestionValidator" />
-
-	<bean id="lostPasswordStudentProjectCodeValidator"
-		class="org.wise.portal.presentation.validators.LostPasswordStudentProjectCodeValidator" />
 
 	<bean id="findProjectParametersValidator"
 		class="org.wise.portal.presentation.validators.FindProjectParametersValidator">
@@ -341,36 +335,11 @@
 		class="org.wise.portal.presentation.web.controllers.AccessDeniedController">
 	</bean>
 
-	<bean id="lostPasswordStudentReminderWizardController"
-		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentReminderWizardController">
-		<property name="userService" ref="userService" />
-		<property name="commandName" value="passwordReminderParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
-	</bean>
-
 	<bean id="passwordReminderParameters" class="org.wise.portal.domain.impl.PasswordReminderParameters"
 		scope="prototype" />
 
 	<bean id="runParameters" class="org.wise.portal.domain.run.impl.RunParameters"
 		scope="prototype" />
-
-	<bean id="lostPasswordStudentPasswordController"
-		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentPasswordController" />
-
-	<bean id="lostPasswordStudentUsernameController"
-		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentUsernameController" />
-
-	<bean id="lostPasswordStudentProjectCodeController"
-		class="org.wise.portal.presentation.web.controllers.LostPasswordStudentProjectCodeController">
-		<property name="runService" ref="runService" />
-		<property name="commandName" value="passwordReminderParameters" />
-		<property name="validator" ref="lostPasswordStudentProjectCodeValidator" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
-		<property name="formView" value="lostpasswordstudentprojectcode" />
-		<property name="successView" value="lostpasswordstudentprojectcoderesult" />
-	</bean>
 
 	<bean id="forgotAccountTeacherIndexController"
 		class="org.wise.portal.presentation.web.controllers.forgotaccount.teacher.ForgotAccountTeacherIndexController">
@@ -681,28 +650,6 @@
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
-
-	<bean id="createHierarchyTypeController"
-		class="org.wise.portal.presentation.web.controllers.CreateHierarchyTypeController">
-		<!-- <property name="nodeService" ref="nodeService"/> -->
-		<property name="userService" ref="userService" />
-	</bean>
-
-	<bean id="createNodeController"
-		class="org.wise.portal.presentation.web.controllers.CreateNodeController">
-		<!-- <property name="nodeService" ref="nodeService"/> -->
-	</bean>
-
-	<bean id="manageHierarchyTypesController"
-		class="org.wise.portal.presentation.web.controllers.ManageHierarchyTypesController">
-		<!-- <property name="nodeService" ref="nodeService"/> -->
-	</bean>
-
-	<bean id="manageHierarchyController"
-		class="org.wise.portal.presentation.web.controllers.ManageHierarchyController">
-		<!-- <property name="nodeService" ref="nodeService"/> -->
-		<property name="userService" ref="userService" />
-	</bean>
 
 	<bean id="outsideErrorController"
 		class="org.wise.portal.presentation.web.controllers.OutsideErrorController">
@@ -1045,11 +992,7 @@
 				/teacher/projects/analyzeproject.html=analyzeProjectController
 				/teacher/projects/minifyproject.html=minifyProjectController
 				/student/viewannouncements.html=viewAnnouncementsController
-				/createhierarchytype.html=createHierarchyTypeController
-				/createnode.html=createNodeController
 				/runinfo.html=runInfoController
-				/managehierarchytypes.html=manageHierarchyTypesController
-				/managehierarchy.html=manageHierarchyController
 				/message/message.html=messageController
 				/studentData.html=studentDataController
 				/annotation.html=annotationController

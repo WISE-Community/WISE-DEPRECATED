@@ -213,7 +213,7 @@ public class UploadProjectController extends SimpleFormController {
 		Project project = projectService.createProject(pParams);
 
 		ModelAndView modelAndView = new ModelAndView(getSuccessView());		
-		modelAndView.addObject("msg", "Upload project complete, new projectId is: " + project.getId());
+		modelAndView.addObject("msg", "Upload project complete! New Project ID is: " + project.getId());
 		return modelAndView;
 	}
 

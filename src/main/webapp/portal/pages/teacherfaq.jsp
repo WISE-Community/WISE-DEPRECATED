@@ -9,6 +9,23 @@
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <title><spring:message code="pages.teacherfaq.wise4TeacherInformationSheet" /></title>
+
+<style type="text/css">
+#tableOfContents {
+  border:1px dotted;
+  padding:10px;
+  width:300px;
+  margin-bottom:10px;
+}
+
+#tableOfContents > ul > li {
+  padding: 5px 0px 0px 10px;
+}
+
+#tableOfContentsHeader {
+  font-weight:bold;
+}
+</style>
 </head>
 
 <body>
@@ -25,7 +42,18 @@
 			<div class="contentPanel">
 			<div class="panelHeader"><spring:message code="pages.teacherfaq.wiseTeacherFrequentlyAskedQuestions" /> <span style="float:right;"><a class="printLesson" onClick="window.print();return false"><spring:message code="print" /></a></span></div>
 			<div class="panelContent">
-				<div class="sectionHead"><spring:message code="pages.teacherfaq.studentManagement" /></div>
+				<div id="tableOfContents">
+					<span id="tableOfContentsHeader"><spring:message code="tableOfContents" /></span>
+					<ul>
+						<li><a href="#studentManagement"><spring:message code="pages.teacherfaq.studentManagement" /></a></li>
+						<li><a href="#projectManagement"><spring:message code="pages.teacherfaq.projectManagement" /></a></li>
+						<li><a href="#assessmentOfStudentWork"><spring:message code="pages.teacherfaq.assessmentOfStudentWork" /></a></li>
+						<li><a href="#realtime"><spring:message code="pages.teacherfaq.realTimeClassroomMonitor" /></a></li>
+						<li><a href="#technicalQuestions"><spring:message code="pages.teacherfaq.technicalQuestions" /></a></li>
+					</ul>
+				</div>
+			
+				<div class="sectionHead" id="studentManagement"><spring:message code="pages.teacherfaq.studentManagement" /></div>
 				<div class="sectionContent">
 					<div class="question"><spring:message code="pages.teacherfaq.shouldIRegisterStudentsQuestion" /></div>
 					<div class="answer">
@@ -84,7 +112,7 @@
 					</div>
 				</div>
 
-				<div class="sectionHead"><spring:message code="pages.teacherfaq.projectManagement" /></div>
+				<div class="sectionHead" id="projectManagement"><spring:message code="pages.teacherfaq.projectManagement" /></div>
 				<div class="sectionContent">
 					<div class="question"><spring:message code="pages.teacherfaq.whenShouldISetUpRunQuestion" /></div>
 					<div class="answer">
@@ -147,7 +175,7 @@
 
 				</div>
 				
-				<div class="sectionHead"><spring:message code="pages.teacherfaq.assessmentOfStudentWork" /></div>
+				<div class="sectionHead" id="assessmentOfStudentWork"><spring:message code="pages.teacherfaq.assessmentOfStudentWork" /></div>
 				<div class="sectionContent">
 					<div class="question"><spring:message code="pages.teacherfaq.whereFindStudentWorkQuestion" /></div>
 					<div class="answer">
@@ -175,7 +203,26 @@
 										
 				</div>
 
-				<div class="sectionHead"><spring:message code="pages.teacherfaq.technicalQuestions" /></div>
+				<div class="sectionHead" id="realtime"><spring:message code="pages.teacherfaq.realTimeClassroomMonitor" /></div>
+				<div class="sectionContent">
+				
+					<div class="question"><spring:message code="pages.teacherfaq.whatIsRealTimeClassroomMonitorQuestion" /></div>
+					<div class="answer"><spring:message code="pages.teacherfaq.whatIsRealTimeClassroomMonitorAnswer" /></div>
+				
+					<div class="question"><spring:message code="pages.teacherfaq.whatAreTechnicalRequirementsForRealTimeClassroomMonitorQuestion" /></div>
+					<div class="answer"><spring:message code="pages.teacherfaq.whatAreTechnicalRequirementsForRealTimeClassroomMonitorAnswer" /></div>
+				
+					<div class="question"><spring:message code="pages.teacherfaq.howTurnOnOffRealTimeClassroomMonitorQuestion" /></div>
+					<div class="answer"><spring:message code="pages.teacherfaq.howTurnOnOffRealTimeClassroomMonitorAnswer" /></div>
+					
+					<div class="question"><spring:message code="pages.teacherfaq.doesRealTimeClassroomMonitorWorkOnTabletQuestion" /></div>
+					<div class="answer"><spring:message code="pages.teacherfaq.doesRealTimeClassroomMonitorWorkOnTabletAnswer" /></div>
+					
+					<div class="question"><spring:message code="pages.teacherfaq.canRealTimeClassroomMonitorPauseStudentScreensQuestion" /></div>
+					<div class="answer"><spring:message code="pages.teacherfaq.canRealTimeClassroomMonitorPauseStudentScreensAnswer" /></div>
+				</div>
+
+				<div class="sectionHead" id="technicalQuestions"><spring:message code="pages.teacherfaq.technicalQuestions" /></div>
 				<div class="sectionContent">
 					<div class="question"><spring:message code="pages.teacherfaq.websiteWontLoadQuestion" /></div>
 					<div class="answer">
@@ -215,25 +262,6 @@
 					
 				</div>
 				
-				<div class="sectionHead" id="realtime"><spring:message code="pages.teacherfaq.realTimeClassroomMonitor" /></div>
-				<div class="sectionContent">
-				
-					<div class="question"><spring:message code="pages.teacherfaq.whatIsRealTimeClassroomMonitorQuestion" /></div>
-					<div class="answer"><spring:message code="pages.teacherfaq.whatIsRealTimeClassroomMonitorAnswer" /></div>
-				
-					<div class="question"><spring:message code="pages.teacherfaq.whatAreTechnicalRequirementsForRealTimeClassroomMonitorQuestion" /></div>
-					<div class="answer"><spring:message code="pages.teacherfaq.whatAreTechnicalRequirementsForRealTimeClassroomMonitorAnswer" /></div>
-				
-					<div class="question"><spring:message code="pages.teacherfaq.howTurnOnOffRealTimeClassroomMonitorQuestion" /></div>
-					<div class="answer"><spring:message code="pages.teacherfaq.howTurnOnOffRealTimeClassroomMonitorAnswer" /></div>
-					
-					<div class="question"><spring:message code="pages.teacherfaq.doesRealTimeClassroomMonitorWorkOnTabletQuestion" /></div>
-					<div class="answer"><spring:message code="pages.teacherfaq.doesRealTimeClassroomMonitorWorkOnTabletAnswer" /></div>
-					
-					<div class="question"><spring:message code="pages.teacherfaq.canRealTimeClassroomMonitorPauseStudentScreensQuestion" /></div>
-					<div class="answer"><spring:message code="pages.teacherfaq.canRealTimeClassroomMonitorPauseStudentScreensAnswer" /></div>
-					</div>
-
 				</div>  <!--  end of panelContent -->
 			</div>  <!--  end of contentPanel -->
 
