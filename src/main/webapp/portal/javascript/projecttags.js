@@ -78,8 +78,7 @@ function createTagSuccess(data, textStatus, request){
 	
 	/* add this to the existing tags list */
 	$('#existingTagsDiv_' + this.projectId).append('<table id="tagTable_' + this.projectId + '_' + id + '"><tbody><tr><td><input id="tagEdit_' + 
-			this.projectId + '_' + id + '" type="text" value="' + val + '"/></td><td><input id="updateTag_' + this.projectId + '_' + id + 
-			'" type="button" value="update" onclick="tagChanged($(this).attr(\'id\'))"/></br><input id="removeTag_' + this.projectId + '_' + 
+			this.projectId + '_' + id + '" type="text" value="' + val + '" onchange="tagChanged($(this).attr(\'id\'))"/></td><td><input id="removeTag_' + this.projectId + '_' + 
 			id + '" type="button" value="remove" onclick="removeTag($(this).attr(\'id\'))"/></td></tr></tbody></table>');
 	
 	/* add the newly created tag to the tag name map */

@@ -129,7 +129,7 @@
 											code='admin.index.manageAllProjects' /></a>
 								</h5>
 								<h5>
-									<a href="project/uploadproject.html"><spring:message
+									<a href="project/importproject.html"><spring:message
 											code='admin.index.importProject' /></a>
 								</h5>
 								<h5>

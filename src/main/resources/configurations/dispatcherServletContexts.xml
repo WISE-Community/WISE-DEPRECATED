@@ -580,16 +580,16 @@
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
-	<bean id="uploadProjectController"
-		class="org.wise.portal.presentation.web.controllers.admin.UploadProjectController">
+	<bean id="importProjectController"
+		class="org.wise.portal.presentation.web.controllers.admin.ImportProjectController">
 		<property name="projectService" ref="projectService" />
 		<property name="curnitService" ref="curnitService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="sessionForm" value="true" />
 		<property name="commandName" value="projectZipFile" />
 		<property name="commandClass" value="org.wise.portal.domain.project.ProjectUpload" />
-		<property name="successView" value="admin/project/uploadproject" />
-		<property name="formView" value="admin/project/uploadproject" />
+		<property name="successView" value="admin/project/importproject" />
+		<property name="formView" value="admin/project/importproject" />
 	</bean>
 
 	<bean id="findProjectRunsController"
@@ -967,7 +967,7 @@
 				/project/exportproject.html=exportProjectController
 				/project/importexternalproject.html=importExternalProjectController
 				/admin/index.html=adminIndexController
-				/admin/project/uploadproject.html=uploadProjectController
+				/admin/project/importproject.html=importProjectController
 				/admin/account/manageusers.html=viewAllUsersController
 				/admin/account/enabledisableuser.html=enableDisableUserController
 				/admin/account/lookupuser.html=lookupUserController

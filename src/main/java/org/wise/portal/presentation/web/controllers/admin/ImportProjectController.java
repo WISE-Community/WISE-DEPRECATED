@@ -66,7 +66,7 @@ import org.wise.portal.service.project.ProjectService;
  * @author hirokiterashima
  * @version $Id$
  */
-public class UploadProjectController extends SimpleFormController {
+public class ImportProjectController extends SimpleFormController {
 
 	private ProjectService projectService;
 	
@@ -94,7 +94,7 @@ public class UploadProjectController extends SimpleFormController {
 
 		File uploadDir = new File(curriculumBaseDir);
 		if (!uploadDir.exists()) {
-			throw new Exception("curriculum upload directory \""+curriculumBaseDir+"\" does not exist.");
+			throw new Exception("Curriculum upload directory \""+curriculumBaseDir+"\" does not exist. Please verify the path you specified for curriculum_base_dir in wise.properties.");
 		}
 
 		// save the upload zip file in the curriculum folder.
@@ -214,6 +214,7 @@ public class UploadProjectController extends SimpleFormController {
 
 		ModelAndView modelAndView = new ModelAndView(getSuccessView());		
 		modelAndView.addObject("msg", "Upload project complete! New Project ID is: " + project.getId());
+		modelAndView.addObject("newProjectId", project.getId());
 		return modelAndView;
 	}
 

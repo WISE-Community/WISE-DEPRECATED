@@ -24,13 +24,17 @@
 <br/>
 
 <c:if test="${msg != null}">
-<span style="font-size:1.2em;font-weight:bold;border:2px solid lightgreen">
-<c:out value="${msg}" />
-</span>
+	<center>
+	<div style="width:500px;text-align:center;font-size:1.2em;font-weight:bold;border:2px solid lightgreen">
+		${msg}
+		<br/><br/>
+		<a target=_blank href="${contextPath}/previewproject.html?projectId=${newProjectId}">Preview Project</a>
+	</div>
 <br/>
+</center>
 </c:if>
 <br/>
-<h3>Upload WISE Project</h3>
+<h3>Import WISE Project</h3>
 
 
 <br/>
@@ -57,7 +61,7 @@ unzipped:
 </pre>
 </div>
 <br/><br/>
-<form:form method="post" action="uploadproject.html" 
+<form:form method="post" action="importproject.html" 
 	commandName="projectZipFile" id="editproject" enctype="multipart/form-data" autocomplete='off'>
 
 	<label for="projectname">Project Name</label><br/>
