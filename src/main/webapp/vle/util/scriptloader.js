@@ -369,7 +369,7 @@ var scriptloader = function(){
 			      'vle/navigation/GlobalTagMap.js',
 	              'vle/swfobject/swfobject.js'],
         author: ['vle/util/icon.js',
-                 'vle/jquery/tinymce/jscripts/tiny_mce/jquery.tinymce.js',
+                 'vle/js/tinymce4/js/tinymce/tinymce.min.js',
                  'vle/jquery/miniTip/jquery.miniTip.min.js',
                  'vle/jquery/jquery-validation/jquery.validate.min.js',
                  'vle/view/authoring/authorview_dispatchers.js',

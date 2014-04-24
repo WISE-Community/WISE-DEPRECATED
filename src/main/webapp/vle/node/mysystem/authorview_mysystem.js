@@ -64,9 +64,10 @@ View.prototype.MySystemNode.populatePrompt = function() {
  */
 View.prototype.MySystemNode.updatePrompt = function(){
 	/* update content */
-	var content = '';
-	if(typeof tinymce != 'undefined' && $('#promptInput').tinymce()){
-		content = $('#promptInput').tinymce().getContent();
+	var content = '',
+		editor = tinymce.get('promptInput');
+	if(editor){
+		content = editor.getContent();
 	} else {
 		content = $('#promptInput').val();
 	}

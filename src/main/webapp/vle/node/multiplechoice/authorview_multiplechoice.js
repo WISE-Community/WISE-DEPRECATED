@@ -445,10 +445,11 @@ View.prototype.MultipleChoiceNode.populatePrompt = function() {
  * Called on several keyup events, regenerates necessary elements and fires source updated event
  */
 View.prototype.MultipleChoiceNode.updatePrompt = function(){
-	/* update prompt and answers */
-	var content = '';
-	if(typeof tinymce != 'undefined' && $('#promptInput').tinymce()){
-		content = $('#promptInput').tinymce().getContent();
+	/* update content */
+	var content = '',
+		editor = tinymce.get('promptInput');
+	if(editor){
+		content = editor.getContent();
 	} else {
 		content = $('#promptInput').val();
 	}

@@ -156,16 +156,16 @@ View.prototype.Mysystem2Node.populatePrompt = function() {
  * Updates the html with the user entered prompt
  */
 View.prototype.Mysystem2Node.updatePrompt = function(){
-  //get the prompt content
-  var promptContent = '';
-  if(typeof tinymce != 'undefined' && $('#promptInput').tinymce()){
-    promptContent = $('#promptInput').tinymce().getContent();
-  } else {
-    promptContent = $('#promptInput').val();
-  }
-
-  //set the prompt content
-  this.content.prompt = promptContent;
+	/* update content */
+	var content = '',
+		editor = tinymce.get('promptInput');
+	if(editor){
+		content = editor.getContent();
+	} else {
+		content = $('#promptInput').val();
+	}
+	
+	this.content.prompt = content;
 
   /* fire source updated event */
   this.view.eventManager.fire('sourceUpdated');

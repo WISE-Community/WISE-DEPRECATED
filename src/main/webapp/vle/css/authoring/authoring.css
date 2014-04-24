@@ -1740,6 +1740,10 @@ div#toolsAreaAuthor {
 	list-style:none;
 }
 
+.ui-dialog.ui-front {
+	z-index: 70000;
+}
+
 .ui-dialog .hd {
 	margin: 0.5em 0;
 }

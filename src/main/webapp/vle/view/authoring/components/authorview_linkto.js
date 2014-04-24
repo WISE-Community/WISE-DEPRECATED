@@ -39,9 +39,9 @@ View.prototype.linkManager.createLink = function(view){
 		alert('Could not find view which is needed to create the link, aborting.');
 		return;
 	}
-	
-	if(typeof tinymce != 'undefined' && $('#promptInput').tinymce() && !$('#promptInput').tinymce().isHidden()){
-		var selection = $('#promptInput').tinymce().selection.getContent();
+	var editor = tinymce.get('promptInput');
+	if(editor && !editor.isHidden()){
+		var selection = editor.selection.getContent();
 		if (selection == ''){
 			view.notificationManager.notify('Please select some text before attempting to create a link.',3);
 			return;
@@ -96,13 +96,14 @@ View.prototype.linkManager.nodeSelected = function(view){
 	}
 	
 	/* create link for node and set link tags in textarea */
-	var nodeIdentifier = select.options[ndx].id;
-	var color = colorSelect[colorNdx].value;
-	var link = this.createLinkForNode(view.activeNode, nodeIdentifier);
-	if(typeof tinymce != 'undefined' && $('#promptInput').tinymce() && !$('#promptInput').tinymce().isHidden()){
+	var nodeIdentifier = select.options[ndx].id,
+		color = colorSelect[colorNdx].value,
+		link = this.createLinkForNode(view.activeNode, nodeIdentifier),
+		editor = tinymce.get('promptInput');
+	if(editor && !editor.isHidden()){
 		var linkBefore = '<a style=\"color:' + color + '; cursor:pointer\" onclick=\"node.linkTo(\'' + link.key + '\')\">';
 		var linkAfter = '</a>';
-		$('#promptInput').tinymce().execCommand('mceReplaceContent',false,linkBefore + '{$selection}' + linkAfter);
+		editor.execCommand('mceReplaceContent',false,linkBefore + '{$selection}' + linkAfter);
 	} else {
 		var ta = document.getElementById('promptInput');
 		var text = ta.value.substring(this.currentStart, this.currentEnd);
@@ -260,9 +261,10 @@ View.prototype.linkManager.cleanNodePrompt = function(view, node){
  * Returns any links found in the currently authored prompt.
  */
 View.prototype.linkManager.getLinkStrings = function(){
-	var ta = '';
-	if(typeof tinymce != 'undefined' && $('#promptInput').tinymce() && !$('#promptInput').tinymce().isHidden()){
-		ta = $('#promptInput').tinymce().getContent();
+	var ta = '',
+		editor = tinymce.get('promptInput');
+	if(editor && !editor.isHidden()){
+		ta = editor.getContent();
 	} else {
 		ta = document.getElementById('promptInput').value;
 	}
@@ -351,10 +353,11 @@ View.prototype.linkManager.removeLinkTo = function(view, key){
 	if(linkStrings){
 		for(var g=0;g<linkStrings.length;g++){
 			if(linkStrings[g].indexOf(key)!=-1){
-				var words = linkStrings[g].substring(linkStrings[g].indexOf('>') + 1, linkStrings[g].indexOf('</a>'));
-				if(typeof tinymce != 'undefined' && $('#promptInput').tinymce() && !$('#promptInput').tinymce().isHidden()){
-					var newContent = $('#promptInput').tinymce().getContent().replace(linkStrings[g],words);
-					$('#promptInput').tinymce().setContent(newContent);
+				var words = linkStrings[g].substring(linkStrings[g].indexOf('>') + 1, linkStrings[g].indexOf('</a>')),
+					editor = tinymce.get('promptInput');
+				if(editor && !editor.isHidden()){
+					var newContent = editor.getContent().replace(linkStrings[g],words);
+					editor.setContent(newContent);
 					linkRemovedFromPrompt = true;
 				} else {
 					document.getElementById('promptInput').value = document.getElementById('promptInput').value.replace(linkStrings[g],words);

@@ -660,10 +660,11 @@ View.prototype.SVGDrawNode.populatePrompt = function() {
  * refreshes the preview.
  */
 View.prototype.SVGDrawNode.updatePrompt = function(){
-	var content = '';
-	/* update content object */
-	if(typeof tinymce != 'undefined' && $('#promptInput').tinymce()){
-		content = $('#promptInput').tinymce().getContent();
+	/* update content */
+	var content = '',
+		editor = tinymce.get('promptInput');
+	if(editor){
+		content = editor.getContent();
 	} else {
 		content = $('#promptInput').val();
 	}

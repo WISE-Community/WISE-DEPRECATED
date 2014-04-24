@@ -33,10 +33,11 @@ View.prototype.HtmlNode.getCommonComponents = function() {
  * Updates this content object when requested, usually when preview is to be refreshed
  */
 View.prototype.HtmlNode.updateContent = function(){
-	var content = '';
-	/* update content object */
-	if(typeof tinymce != 'undefined' && $('#promptInput').tinymce()){
-		content = $('#promptInput').tinymce().getContent();
+	/* update content */
+	var content = '',
+		editor = tinymce.get('promptInput');
+	if(editor){
+		content = editor.getContent();
 	} else {
 		content = $('#promptInput').val();
 	}

@@ -116,10 +116,10 @@ View.prototype.Box2dModelNode.populatePrompt = function() {
  */
 View.prototype.Box2dModelNode.updatePrompt = function(){
 	/* update content */
-	//this.content.prompt = $('#promptTextArea').val();
-	var content = '';
-	if(typeof tinymce != 'undefined' && $('#promptInput').tinymce()){
-		content = $('#promptInput').tinymce().getContent();
+	var content = '',
+		editor = tinymce.get('promptInput');
+	if(editor){
+		content = editor.getContent();
 	} else {
 		content = $('#promptInput').val();
 	}

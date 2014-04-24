@@ -213,13 +213,9 @@ View.prototype.closeOnStepSaved = function(success){
 		this.cleanupCommonComponents();
 		document.getElementById('dynamicPage').innerHTML = '';
 		// remove any tinyMCE instances
-		if(typeof tinymce != 'undefined'){
-			for(var i=0; i<tinymce.editors.length; i++){
-				tinymce.editors[i].remove();
-			}
+		for(var i=0; i<tinymce.editors.length; i++){
+			tinymce.editors[i].remove();
 		}
-		// remove any rich text toggles
-		$('.rtToggles').remove();
 		
 		this.hideAuthorStepDialog();
 		
@@ -300,9 +296,9 @@ View.prototype.saveHint = function(){
     var newHintsArr = [];
     for(var i=0; i<hintTextBoxes.length; i++) {
     	var id = $(hintTextBoxes[i]).attr('id');
-    	if(typeof tinymce != 'undefined' && $('#' + id).tinymce()){
+    	if(tinymce.get(id)){
     		// rich text editor is active on textarea, so get contents from editor
-    		newHintsArr.push($('#' + id).tinymce().getContent());
+    		newHintsArr.push(tinymce.get(id).getContent());
     	} else {
     		newHintsArr.push(hintTextBoxes[i].value);
     	}
@@ -395,16 +391,12 @@ View.prototype.editHints = function(tabIndex){
 	    });
     } else {
     	// remove any existing tinyMCE instances
-    	if(typeof tinymce != 'undefined'){
-    		$('.hintTextBox',$('#editHintsPanel')).each(function(){
-    			if($(this).tinymce()){
-    				$(this).tinymce().remove();
-    			}
-    		});
-    	}
-    	
-    	// remove any rich text toggles
-    	$('.rtToggles',$('#editHintsPanel')).remove();
+		$('.hintTextBox',$('#editHintsPanel')).each(function(){
+			var id = $(this).attr('id');
+			if(tinymce.get(id)){
+				tinymce.get(id).remove();
+			}
+		});
     }
     
     var hints = {"hintsArray":[],"forceShow":"never"};
@@ -787,175 +779,62 @@ View.prototype.cleanupStudentResponseBoxSize = function() {
 	this.studentResponseBoxSizeManager.cleanupStudentResponseBoxSize();
 };
 
-/*
- * RichTextEditor functions
- */
-
-View.prototype.insertRichTextEditorToggle = function() {
-	this.richTextEditorToggleManager.insertRichTextEditorToggle(this);
-};
-
-View.prototype.populateRichTextEditorToggle = function() {
-	if(this.easyMode && this[this.resolveType(this.activeNode.type)] && this[this.resolveType(this.activeNode.type)].populateRichTextEditorToggle){
-		this[this.resolveType(this.activeNode.type)].populateRichTextEditorToggle();
-	}
-};
-
-View.prototype.updateRichTextEditorToggle = function() {
-	if(this.easyMode && this[this.resolveType(this.activeNode.type)] && this[this.resolveType(this.activeNode.type)].updateRichTextEditorToggle){
-		this[this.resolveType(this.activeNode.type)].updateRichTextEditorToggle();
-	}
-};
-
-View.prototype.cleanupRichTextEditorToggle = function() {
-	this.richTextEditorToggleManager.cleanupRichTextEditorToggle();
-};
-
-/**
- * Adds links to show and hide a rich text editor for specified textarea and initializes
- * rich text editor on specified textarea
- * @param id The id of the textarea element on which to activate the rich text editor
- * @param update A callback function to run when the rich text editor content changes
- * @param disable A boolean to specify whether to disable the rich text editor by default (default is false)
- * @param fullpage A boolean to specify whether to allow full html page editing (default is false)
- */
-View.prototype.addRichTextAuthoring = function(id,update,disable,fullpage){
-	var view = this;
-	var target = $('#' + id); 
-	
-	// create rich text hide/show links div
-	var richtextToggleDiv = $(document.createElement('div')).addClass('rtToggles');
-	// create rich text hide and show links
-	var richtextShow = $('<input type="radio" value="showRichText" id="showRich_' + id + '" name="promptToggle_' + id + '" /><label for="showRich_' + id + '">Rich Text</label>');
-	var richtextHide = $('<input type="radio" value="hideRichText" id="hideRich_' + id + '" name="promptToggle_' + id + '" /><label for="hideRich_' + id + '">HTML</label>');
-	
-	richtextToggleDiv.append(richtextShow).append(richtextHide);
-	
-	// add rich text toggles to DOM
-	richtextToggleDiv.insertBefore(target);
-	
-	// bind show/hide rich text link clicks
-	$("input[name='promptToggle_" + id + "']").unbind('change');
-	$("input[name='promptToggle_" + id + "']").change(function(){
-		if ($("input[name='promptToggle_" + id + "']:checked").val()=='showRichText'){
-			view.enableRichTextAuthoring(id,update,fullpage);
-		} else if ($("input[name='promptToggle_" + id + "']:checked").val()=='hideRichText'){
-			if(typeof tinymce != 'undefined' && target.tinymce()){
-				target.tinymce().remove();
-			}
-		}
-	});
-	
-	if(disable == true){
-		// set "HTML" link as active
-		$('#hideRich_' + id).prop('checked',true);
-	} else {
-		// set "Rich Text" link as active
-		$('#showRich_' + id).prop('checked',true);
-		
-		// enable rich text editor for textarea
-		this.enableRichTextAuthoring(id,update,fullpage);
-	}
-	
-	// create jQuery UI buttonset on rich text toggle radios
-	richtextToggleDiv.buttonset();
-	richtextToggleDiv.buttonset('refresh');
-};
-
 /**
  * Enables rich text authoring for specified textarea
  * @param id The id of the textarea element on which to activate the rich text editor
- * @param update A function to run when the rich text editor content changes
+ * @param update A callback function to run when the rich text editor content changes
  * @param fullpage A boolean to specify whether to allow full html page editing (default is false)
  */
-View.prototype.enableRichTextAuthoring = function(id,update,fullpage) {
-	var target = $('#' + id);
-	var view = this;
-	var plugins = "";
+View.prototype.addRichTextAuthoring = function(id,update,fullpage){
+	var target = $('#' + id),
+		view = this,
+		plugins = "";
 	
 	//get the context path e.g. /wise
 	var contextPath = this.getConfig().getConfigParam('contextPath');
 	
-	if(fullpage == true){
+	if(fullpage){
 		// if full page editing is allowed, include fullpage plugin
-		plugins = "fullpage,preview,media,style,layer,table,advhr,advimage,advlist,advimagescale,loremipsum,image_tools,emotions,jqueryinlinepopups,tableextras,searchreplace,contextmenu,paste,directionality,fullscreen,visualchars,xhtmlxtras,template,wordcount";
+		plugins = "fullpage advlist autolink lists link image charmap preview hr anchor \
+	        searchreplace wordcount visualblocks visualchars code fullscreen \
+	        insertdatetime media table contextmenu directionality spellchecker \
+	        template paste textcolor";
 	} else {
-		plugins = "preview,media,style,layer,table,advhr,advimage,advlist,advimagescale,loremipsum,image_tools,emotions,jqueryinlinepopups,tableextras,searchreplace,contextmenu,paste,directionality,fullscreen,visualchars,xhtmlxtras,template,wordcount";
+		plugins = "advlist autolink lists link image charmap preview hr anchor \
+	        searchreplace wordcount visualblocks visualchars code fullscreen \
+	        insertdatetime media table contextmenu directionality spellchecker \
+	        template paste textcolor";
 	}
 	
-	// enable rich text editing on prompt textarea
-	target.tinymce({
-		// Location of TinyMCE script
-		script_url : contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/tiny_mce.js',
-
-		// General options
-		doctype : '<!DOCTYPE html>',
-		theme : "advanced",
-		plugins: plugins,
-		media_strict : false,
-		media_dialog_defaults: {bgcolor : "#000000", flash_wmode : "opaque", video_autoplay : false, flash_play : false, quicktime_autoplay : false, windowsmedia_autostart : false},
-		flash_video_player_absvideourl: false,
-		skin : "cirkuit",
-		//media_use_script : true,
-		//forced_root_block : false,
-		//force_p_newlines : true,
-		
-        // Theme options
-        theme_advanced_buttons1 : "undo,redo,|,forecolor,backcolor,bold,italic,underline,strikethrough,justifyleft,justifycenter,justifyright,justifyfull,bullist,numlist,outdent,indent",
-        theme_advanced_buttons2 : "formatselect,fontselect,fontsizeselect,|,sub,sup,|,charmap,loremipsum,emotions,advhr",
-        theme_advanced_buttons3 : "template,|,image,media,|,link,unlink,anchor,|,table,tablecontrols",
-        theme_advanced_buttons4 : "cite,abbr,acronym,|,pastetext,pasteword,|,attribs,visualchars|,ltr,rtl,|,cleanup,preview,removeformat,|,search,replace,|,fullscreen,styleprops",//code,
-        theme_advanced_toolbar_location : "top",
-		theme_advanced_toolbar_align : "left",
-		theme_advanced_statusbar_location : "bottom",
-		theme_advanced_resizing : true,
-
-		// Example content CSS (should be your site CSS)
-		// TODO: update this to use a WISE default
-		content_css : contextPath + "/vle/jquery/tinymce/examples/css/content.css",
-
-		// Drop lists for link/image/media/template dialogs
-		//template_external_list_url : "lists/template_list.js",
-		
-		document_base_url: view.getProjectFolderPath(),
-		
-		//add onchange listener
-		onchange_callback : function(ed){
-			update();
-		},
-		setup : function(ed){
-			/* add keyUp listener*/
-	        ed.onKeyUp.add(function(){
+	tinymce.init({
+	    selector: "#" + id,
+	    theme: "modern",
+	    skin: "wise",
+	    plugins: plugins,
+	    menu : {
+	        edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall'},
+	        insert : {title : 'Insert', items : 'image media link | charmap hr'},
+	        view   : {title : 'View'  , items : 'visualaid visualblocks | preview fullscreen'},
+	        format : {title : 'Format', items : 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
+	        table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
+	        tools  : {title : 'Tools' , items : 'code searchreplace'}
+	    },
+	    toolbar: "undo redo | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | code",
+	    image_advtab: true,
+	    templates: [],
+	    extended_valid_elements: "a[onclick]",
+	    document_base_url: view.getProjectFolderPath(),
+	    content_css : contextPath + "/vle/css/global.css",
+	    setup: function(ed){
+	    	// add keyUp listener
+	        ed.on('keyup change', function(e){
 	        	update();
 	        });
-	        //ed.onSetContent.add(function(){
-	        	//callback();
-	        //});
-		},
-		oninit: function(){
-			//view.refreshNow();
-		},
-		save_callback: function(element_id, html, body) {
-			// strip out any urls with the full project path (and replace with 'assets/file.jpg')
-			var assetPath = view.getProjectFolderPath() + 'assets/';
-			var assetPathExp = new RegExp(assetPath,"gi");
-			html.replace(assetPathExp,"assets/");
-			
-			return html;
-		},
-		urlconverter_callback : function(url, node, on_save){
-			if(on_save){
-				//get the context path without the slash e.g. wise
-				var contextPathWithoutSlash = contextPath.replace("/", "");
-				
-				var regex = new RegExp("/[..\/]+" + contextPathWithoutSlash + "/");
-				
-				// fix problem caused by automatic url processing of root path links (that begin wih '/wise') by tinymce
-				url = url.replace(regex, contextPath);
-			}
-			return url;
-		},
-		file_browser_callback : 'fileBrowser'
+	    },
+	    file_browser_callback : function(field_name, url, type, win) {
+	    	fileBrowser(field_name, url, type, win);
+	    }
+	    
 	});
 };
 
@@ -966,8 +845,8 @@ function fileBrowser(field_name, url, type, win){
 		// if we are in an image browser
         if (typeof(win.ImageDialog) != "undefined") {
             // we are, so update image dimensions and preview if necessary
-            if (win.ImageDialog.getImageData) win.ImageDialog.getImageData();
-            if (win.ImageDialog.showPreviewImage) win.ImageDialog.showPreviewImage(url);
+            //if (win.ImageDialog.getImageData) win.ImageDialog.getImageData();
+            //if (win.ImageDialog.showPreviewImage) win.ImageDialog.showPreviewImage(url);
         }
         // if we are in a media browser
         if (typeof(win.Media) != "undefined") {

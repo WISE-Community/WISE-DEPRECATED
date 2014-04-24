@@ -33,7 +33,7 @@ View.prototype.promptManager.insertPrompt = function(view) {
 		// if node type is HtmlNode, enable full page editing because the prompt is actually the full page content for html steps (TODO: specify this in the node type itself)
 		fullpage = true;
 	}
-	this.view.addRichTextAuthoring('promptInput',function() {eventManager.fire('stepPromptChanged');},false,fullpage);
+	this.view.addRichTextAuthoring('promptInput',function() {eventManager.fire('stepPromptChanged');},fullpage);
 };
 
 View.prototype.promptManager.cleanupPrompt = function() {

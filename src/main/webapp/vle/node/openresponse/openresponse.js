@@ -1368,19 +1368,19 @@ OPENRESPONSE.prototype.displayRegular = function() {
 		
 
 		tinymce.init({
-				    selector: "#responseBox",
-		 		    menubar:false,
-		 		    readonly:readOnly,
-		 		    statusbar: false,
-		 		    toolbar: "bold italic underline",
-		 		    setup : function(ed) {
-		 	 			// store editor as prototype variable
-		 	 			context.richTextEditor = ed;
-		 	 			
-		 		       ed.on('keyup', function(e) {
-		 		          context.responseEdited();
-		 		      });
-		 		    }		 		    
+		    selector: "#responseBox",
+		    menubar:false,
+		    readonly:readOnly,
+		    statusbar: false,
+		    toolbar: "bold italic underline",
+		    setup : function(ed) {
+	 			// store editor as prototype variable
+	 			context.richTextEditor = ed;
+	 			
+		       ed.on('keyup', function(e) {
+		          context.responseEdited();
+		      });
+		    }		 		    
 		});
 	}
 	

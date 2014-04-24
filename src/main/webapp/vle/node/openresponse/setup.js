@@ -27,7 +27,7 @@ var studentVLEScripts = [
 	'vle/grading/Annotation.js',
 	'vle/grading/Annotations.js',
 	'vle/data/nodevisit.js',
-	'vle/jquery/tinymce4/js/tinymce/tinymce.min.js'
+	'vle/js/tinymce4/js/tinymce/tinymce.min.js'
 ];
 
 var authorScripts = [
@@ -40,8 +40,7 @@ var gradingScripts = [
 
 var dependencies = [
 	{child:"vle/node/openresponse/OpenResponseNode.js", parent:["vle/node/Node.js"]},
-	{child:"vle/node/openresponse/NoteNode.js", parent:["vle/node/Node.js", "vle/node/openresponse/OpenResponseNode.js"]},
-	{child:"vle/jquery/tinymce4/js/tinymce/tinymce.min.js",parent:[scriptloader.jquerySrc]}
+	{child:"vle/node/openresponse/NoteNode.js", parent:["vle/node/Node.js", "vle/node/openresponse/OpenResponseNode.js"]}
 ];
 
 var css = [

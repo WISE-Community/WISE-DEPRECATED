@@ -162,12 +162,15 @@ View.prototype.NetlogoNode.populatePrompt = function() {
  */
 View.prototype.NetlogoNode.updatePrompt = function(){
 	/* update content */
-	if(typeof tinymce != 'undefined' && $('#promptTextArea').tinymce()){
-		// rich text editor is active on textarea, so get contents from editor
-		this.content.prompt = $('#promptTextArea').tinymce().getContent();
+	var content = '',
+		editor = tinymce.get('promptTextArea');
+	if(editor){
+		content = editor.getContent();
 	} else {
-		this.content.prompt = $('#promptTextArea').val();
+		content = $('#promptTextArea').val();
 	}
+	
+	this.content.prompt = content;
 	
 	/*
 	 * fire source updated event, this will update the preview
