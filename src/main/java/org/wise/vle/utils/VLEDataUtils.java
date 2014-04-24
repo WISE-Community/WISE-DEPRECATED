@@ -14,45 +14,6 @@ import org.json.JSONObject;
 public class VLEDataUtils {
 
     /**
-     * Obtains the value inbetween two xml tags
-     * @param nodeVisit the xml
-     * @param startTag the start tag
-     * @param endTag the end tag
-     * @return the value inbetween the start and end tag
-     */
-    public static String getValueInbetweenTag(String nodeVisit, String startTag, String endTag) {
-    	String value = "";
-    	
-    	//look for the start tag
-    	int startPos = nodeVisit.indexOf(startTag);
-    	if(startPos == -1) {
-    		//if start tag is not found, we will exit
-    		return null;
-    	}
-    	
-    	//look for the end tag
-    	int endPos = nodeVisit.indexOf(endTag);
-    	if(endPos == -1) {
-    		//if the end tag is not found, we will exit
-    		return null;
-    	}
-    	
-    	//obtain the value inbetween the tags
-    	value = nodeVisit.substring(startPos + startTag.length(), endPos);
-    	
-    	return value;
-    }
-    
-    /**
-     * Obtain the value between the type tags
-     * @param nodeVisit the xml
-     * @return the value inbetween the two tags
-     */
-    public static String getNodeType(String nodeVisit) {
-    	return getValueInbetweenTag(nodeVisit, "<type>", "</type>");
-    }
-    
-    /**
      * Returns the specified nodeVisit's node type
      * @param nodeVisitJSON
      * @return
@@ -62,15 +23,6 @@ public class VLEDataUtils {
 		return nodeVisitJSON.getString("nodeType");
 	}
 	
-	 /**
-     * Obtain the value between the id tags
-     * @param nodeVisit the xml
-     * @return the value inbetween the two tags
-     */
-    public static String getNodeId(String nodeVisit) {
-    	return VLEDataUtils.getValueInbetweenTag(nodeVisit, "<id>", "</id>");
-    }
-    
     /**
      * Returns the id of the nodeVisit given the nodeVisit JSON object
      * @param nodeVisitJSON
@@ -82,17 +34,6 @@ public class VLEDataUtils {
 	}
 
     /**
-     * Obtain the value between the visitStartTime tags without the time zone
-     * @param nodeVisit the xml
-     * @return the value inbetween the two tags
-     */
-    public static String getVisitStartTime(String nodeVisit) {
-    	String visitStartTime = VLEDataUtils.getValueInbetweenTag(nodeVisit, "<visitStartTime>", "</visitStartTime>");
-    	
-    	return visitStartTime;
-    }
-    
-    /**
      * Returns the node visit's start time given a JSON object
      * @param nodeVisitJSON
      * @return
@@ -103,17 +44,6 @@ public class VLEDataUtils {
 	}
 
     /**
-     * Obtain the value between the visitEndTime tags without the time zone
-     * @param nodeVisit the xml
-     * @return the value inbetween the two tags
-     */
-    public static String getVisitEndTime(String nodeVisit) {
-    	String visitEndTime = VLEDataUtils.getValueInbetweenTag(nodeVisit, "<visitEndTime>", "</visitEndTime>");
-    	
-    	return visitEndTime;
-    }
-    
-    /**
      * Returns the node visit's end time given the nodeVisit JSON object
      * @param nodeVisitJSON
      * @return
@@ -123,16 +53,6 @@ public class VLEDataUtils {
 		return nodeVisitJSON.getString("visitEndTime");
 	}
 
-    /**
-     * Obtain the value between the nodeStates tags. The nodeStates will
-     * be what we store in the data column of the vle_visits table.
-     * @param nodeVisit the xml
-     * @return the value inbetween the two tags
-     */
-    public static String getNodeStates(String nodeVisit) {
-    	return VLEDataUtils.getValueInbetweenTag(nodeVisit, "<nodeStates>", "</nodeStates>");
-    }
-    
     /**
      * Obtain the value in the nodeStates field
      * @param nodeVisit the node visit JSONObject
