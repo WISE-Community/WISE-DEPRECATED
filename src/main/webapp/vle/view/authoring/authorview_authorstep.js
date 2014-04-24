@@ -846,7 +846,7 @@ View.prototype.addRichTextAuthoring = function(id,update,fullpage){
 	    toolbar: "undo redo | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | code",
 	    image_advtab: true,
 	    templates: [],
-	    extended_valid_elements: "a[onclick]",
+	    extended_valid_elements: "a[href|target|title|onclick|name|id|class|style]",
 	    document_base_url: view.getProjectFolderPath(),
 	    content_css : contextPath + "/vle/css/global.css",
 	    setup: function(ed){
