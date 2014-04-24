@@ -856,17 +856,17 @@ View.prototype.viewAssets = function(params){
 					
 					//check for type parameter and only show files with matching extensions
 					if(view.assetEditorParams && view.assetEditorParams.type == "image"){
-						var extensions = ['jpg', 'jpeg', 'gif', 'png', 'bmp'];
+						var extensions = view.allowedAssetExtensionsByType.image;
 						if (!view.utils.fileFilter(extensions,fileName)){
 							continue;
 						}
 					} else if(view.assetEditorParams && view.assetEditorParams.type == "flash"){
-						var extensions = ['swf', 'flv'];
+						var extensions = view.allowedAssetExtensionsByType.flash.concat(view.allowedAssetExtensionsByType.flashvideo);
 						if (!view.utils.fileFilter(extensions,fileName)){
 							continue;
 						}
 					} else if(view.assetEditorParams && view.assetEditorParams.type == "media"){
-						var extensions = ['swf', 'flv', 'mov', 'mp4', 'avi', 'wmv', 'mpg', 'mpeg', 'ogg'];
+						var extensions = view.allowedAssetExtensionsByType.video.concat(view.allowedAssetExtensionsByType.audio).concat(view.allowedAssetExtensionsByType.flash);
 						if (!view.utils.fileFilter(extensions,fileName)){
 							continue;
 						}

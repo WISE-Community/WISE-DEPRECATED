@@ -257,7 +257,17 @@ var componentloader = function(em, sl){
 				excludedPrevWorkNodes:['HtmlNode', 'OutsideUrlNode', 'MySystemNode', 'SVGDrawNode', 'MWNode', 'DrawNode','DuplicateNode'], 
 				allowedAssetExtensions:['txt', 'jpg', 'jpeg', 'gif', 'png', 'swf', 'flv', 'bmp', 'tif', 'pdf', 'doc', 'ppt', 'xls', 'docx', 'pptx', 'xlsx', 
 				                        'odt', 'fodt', 'ods', 'fods', 'odp', 'fodp', 'odg', 'fodg', 'nlogo', 'nls', 'jar', 'cml', 'mml', 'otml', 'e2d',
-				                        'mov', 'mp4', 'mp3', 'wav', 'aac', 'avi', 'mpg', 'mpeg', 'webm', 'ogg', 'css', 'json', 'zip', 'js', 'html'],
+				                        'mov', 'mp4', 'mp3', 'm4a', 'm4v', 'wav', 'aac', 'avi', 'mpg', 'mpeg', 'webm', 'ogg', 'oga', 'ogv', 'css', 'json', 'zip', 'js', 'html'],
+		        allowedAssetExtensionsByType:{
+					image:['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tif'],
+					video:['mp4', 'webm', 'ogg', 'ogv', 'm4v', 'mpg', 'mpeg', 'mov', 'avi'],
+					audio:['mp4', 'mp3', 'wav', 'aac', 'mpg', 'mpeg', 'm4a', 'oga', 'ogg'],
+					flash:['swf'],
+					//flashvideo:['flv', 'f4v'],
+					java:['nlogo', 'nls', 'jar', 'cml', 'mml', 'otml', 'e2d'],
+					office:['pdf', 'doc', 'ppt', 'xls', 'docx', 'pptx', 'xlsx', 'odt', 'fodt', 'ods', 'fods', 'odp', 'fodp', 'odg', 'fodg'],
+					misc:['txt', 'pdf', 'css', 'json']
+				},
 				MAX_ASSET_SIZE:10485760, 
 				currentStepNum:undefined, 
 				activeNode:undefined, 
