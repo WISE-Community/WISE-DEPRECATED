@@ -66,28 +66,10 @@ View.prototype.WebAppNode.generatePage = function(view){
 	//create a new div that will contain the authroing components
 	var pageDiv = createElement(document, 'div', {id:'dynamicPage', style:'width:100%;height:100%'});
 	
-	//create the label for the textarea that the author will write the prompt in
-	var promptText = document.createTextNode("Prompt for Student:");
-	
-	/*
-	 * create the textarea that the author will write the prompt in
-	 * 
-	 * onkeyup will fire the 'webAppUpdatePrompt' event which will
-	 * be handled in the <new step type name>Events.js file
-	 * 
-	 * For example if you are creating a quiz step you would look in
-	 * your quizEvents.js file.
-	 * 
-	 * when you add new authoring components you will need to create
-	 * new events in the <new step type name>Events.js file and then
-	 * create new functions to handle the event
-	 */
-	var promptTextArea = createElement(document, 'textarea', {id: 'promptTextArea', rows:'20', cols:'85', onkeyup:"eventManager.fire('webAppUpdatePrompt')"});
+	var msg = document.createTextNode("Authoring WebAppNode can only be done through the Advanced Mode at this time.");
 	
 	//add the authoring components to the page
-	pageDiv.appendChild(promptText);
-	pageDiv.appendChild(createBreak());
-	pageDiv.appendChild(promptTextArea);
+	pageDiv.appendChild(msg);
 	pageDiv.appendChild(createBreak());
 
 	//add the page to the parent

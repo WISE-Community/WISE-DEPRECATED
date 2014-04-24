@@ -113,7 +113,9 @@ WebApp.prototype.render = function() {
 	$('#promptDiv').html(this.content.prompt);
 	
 	//NOTE: I do this last in proof of concept to detect if there were any surprise crashes in the above 
-	iframe.src = mypath + this.content.url;
+	if (this.content.url != null && this.content.url != "") {
+		iframe.src = mypath + this.content.url;
+	}
 };
 
 /**
