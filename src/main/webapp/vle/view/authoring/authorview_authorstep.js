@@ -779,6 +779,30 @@ View.prototype.cleanupStudentResponseBoxSize = function() {
 	this.studentResponseBoxSizeManager.cleanupStudentResponseBoxSize();
 };
 
+/*
+ * RichTextEditor functions
+ */
+
+View.prototype.insertRichTextEditorToggle = function() {
+	this.richTextEditorToggleManager.insertRichTextEditorToggle(this);
+};
+
+View.prototype.populateRichTextEditorToggle = function() {
+	if(this.easyMode && this[this.resolveType(this.activeNode.type)] && this[this.resolveType(this.activeNode.type)].populateRichTextEditorToggle){
+		this[this.resolveType(this.activeNode.type)].populateRichTextEditorToggle();
+	}
+};
+
+View.prototype.updateRichTextEditorToggle = function() {
+	if(this.easyMode && this[this.resolveType(this.activeNode.type)] && this[this.resolveType(this.activeNode.type)].updateRichTextEditorToggle){
+		this[this.resolveType(this.activeNode.type)].updateRichTextEditorToggle();
+	}
+};
+
+View.prototype.cleanupRichTextEditorToggle = function() {
+	this.richTextEditorToggleManager.cleanupRichTextEditorToggle();
+};
+
 /**
  * Enables rich text authoring for specified textarea
  * @param id The id of the textarea element on which to activate the rich text editor
