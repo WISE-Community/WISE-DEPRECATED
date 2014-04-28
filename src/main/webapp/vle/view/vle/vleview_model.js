@@ -121,6 +121,60 @@ StudentModel.prototype.pushStudentWorkToLatestNodeVisit = function(nodeId, nodeS
 };
 
 /**
+ * Overwrite the node states in the latest node visit if the node id matches
+ * the node id in the node visit
+ * @param nodeId the node id of the step that is overwriting the student work
+ * @param nodeStates the node states array
+ */
+StudentModel.prototype.overwriteNodeStatesInCurrentNodeVisit = function(nodeId, nodeStates) {
+	//get the current node visit
+	var nodeVisit = this.getState().getCurrentNodeVisit();
+	
+	if(nodeVisit != null) {
+		//get the node id from the node visit
+		var nodeVisitNodeId = nodeVisit.nodeId;
+		
+		//make sure the node id matches
+		if(nodeId == nodeVisitNodeId) {
+			
+			if(nodeStates != null) {
+				//make sure the node states array is really an array
+				if($.isArray(nodeStates)) {
+					//overwrite the node states array
+					nodeVisit.nodeStates = nodeStates;
+					
+					//get the node
+					var node = this.getProject().getNodeById(nodeId);
+					
+					//get all the node visits for the node
+					var nodeVisits = this.getState().getNodeVisitsByNodeId(nodeId);
+					
+					//process the student work in case we need to change the node's status
+					node.processStudentWork(nodeVisits);
+					
+					/*
+					 * fire the studentWorkUpdated event and pass in the node id and node visit
+					 * so listeners will know which step the student work was updated for
+					 */
+					eventManager.fire('studentWorkUpdated', [nodeId, nodeVisit]);					
+				} else {
+					//the nodeState is not an object so we will not save the nodeStatesArray
+					if(notificationManager != null) {
+						//display the error message that we failed to save the student work
+						notificationManager.notify("Error: Failed to save student work, node states is not an array", 3);						
+					}
+				}
+			}
+		} else {
+			//node state node id does not match the node visit node id
+			if(notificationManager != null) {
+				notificationManager.notify("Error: Failed to save student work, student work node id does not match node visit node id", 3);				
+			}
+		}
+	}
+};
+
+/**
  * Get the currentNodePosition
  * @return the currentNodePosition
  */
