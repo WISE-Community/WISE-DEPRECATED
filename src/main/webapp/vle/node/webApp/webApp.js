@@ -101,16 +101,8 @@ function WebApp(node) {
  * the .html file for this step (look at webApp.html).
  */
 WebApp.prototype.render = function() {
-	
-	
-	var iframe = document.getElementById("ouriframe");
-	console.log("SETTING THE HEIGHT TO " + this.content.height + " and the WIDTH to " + this.content.width);
-	iframe.width = this.content.width;
-	iframe.height = this.content.height;
+	var iframe = document.getElementById("webappiframe");
 	var mypath = this.view.config.getConfigParam("getContentBaseUrl") + "assets/";
-	
-	//display any prompts to the student
-	$('#promptDiv').html(this.content.prompt);
 	
 	//NOTE: I do this last in proof of concept to detect if there were any surprise crashes in the above 
 	if (this.content.url != null && this.content.url != "") {

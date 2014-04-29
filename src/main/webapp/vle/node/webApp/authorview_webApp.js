@@ -49,6 +49,7 @@ View.prototype.WebAppNode.commonComponents = [];
  */
 View.prototype.WebAppNode.generatePage = function(view){
 	this.view = view;
+	this.view.setRefreshAsTyping(false);
 	
 	//get the content of the step
 	this.content = this.view.activeContent.getContentJSON();

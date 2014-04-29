@@ -180,6 +180,15 @@ View.prototype.updateRefreshOption = function(){
 };
 
 /**
+ * Changes the boolean value of updateNow to that selected by the user in the document
+ */
+View.prototype.setRefreshAsTyping = function(doRefreshAsTyping){
+	console.log('setRefreshAsTyping');
+	document.getElementById('refreshCheck').checked = doRefreshAsTyping;
+	this.updateNow = doRefreshAsTyping;
+}
+
+/**
  * generates the text area to author content when in advanced authoring mode
  */
 View.prototype.generateAdvancedAuthoring = function(){
@@ -602,6 +611,9 @@ View.prototype.previewStep = function(){
 		
 		//set the updated html content back
 		this.activeNode.baseHtmlContent.setContent(htmlContent);
+	} else if (this.activeNode.type == 'WebAppNode') {
+		//these nodes do not support step preview at the moment
+		return;
 	}
 	
 	try{
