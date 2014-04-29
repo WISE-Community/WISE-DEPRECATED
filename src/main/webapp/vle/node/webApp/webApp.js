@@ -161,36 +161,7 @@ WebApp.prototype.getLatestState = function() {
  * the .html file for this step (look at webApp.html).
  */
 WebApp.prototype.save = function() {
-	console.log("DEBUG: entered function save() in testType.js");
-	//get the answer the student wrote
-	var response = document.getElementById('studentResponseTextArea').value;
-	
-	var stateGetter = document.getElementById("ouriframe").contentWindow.provideStateString;
-	var gradingHTMLGetter = document.getElementById("ouriframe").contentWindow.provideGradingViewHTML
-	
-	if ( stateGetter && gradingHTMLGetter ) {
-		var statestring = document.getElementById("ouriframe").contentWindow.provideStateString();
-		var gradingHTML = document.getElementById("ouriframe").contentWindow.provideGradingViewHTML();
-	
-		console.log("DEBUG:  grading view HTML=" + gradingHTML);
-		console.log("DEBUG:  State string data=" + statestring);
-		console.log("DEBUG:  response data = " + response);
-	
-	
-		var webAppState = new WebAppState(response, statestring, gradingHTML);
-		console.log(webAppState);
-		/*
-		 * fire the event to push this state to the global view.states object.
-		 * the student work is saved to the server once they move on to the
-		 * next step.
-		 */
-		this.view.pushStudentWork(this.node.id, webAppState);
-
-		//push the state object into this or object's own copy of states
-		this.states.push(webAppState);
-		console.log(this.states);
-		console.log("there are " + this.states.length + " states");
-	}
+	return;
 };
 
 //used to notify scriptloader that this script has finished loading

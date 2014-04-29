@@ -9,6 +9,16 @@ View.prototype.pushStudentWork = function(nodeId, nodeState){
 };
 
 /**
+ * Overwrites the node states array in the latest node visit
+ * @param nodeId the node id for the current step
+ * @param nodeStates the new node states array that we will
+ * use to overwrite the existing node states array
+ */
+View.prototype.overwriteNodeStatesInCurrentNodeVisit = function(nodeId, nodeStates){
+	this.model.overwriteNodeStatesInCurrentNodeVisit(nodeId, nodeStates);
+};
+
+/**
  * Given the type and optional arguments, creates a new 
  * state of the type, passing in the arguments.
  */

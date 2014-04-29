@@ -702,20 +702,12 @@ function starmap() {
 						.attr("x", 16)
 						.attr("y", -36)
 						.attr("class", "titleBg");
-					
-					forceSeqInfo.append("svg:image")
-						.attr("xlink:xlink:href","themes/starmap/navigation/map/images/menu-locked.png")
-						.attr("width", 24)
-						.attr("height", 16)
-						.attr("x", 168)
-						.attr("y", -52)
-						.attr("class", "locked");
 	
 					var forceSeqText = forceSeqInfo.append("svg:text")
 						.attr("x", 30)
 						.attr("y", -13)
 						.attr("class", "title");
-	
+					
 					forceSeqText.append("svg:tspan")
 						.text(function(d){ return "#" + (d.position+1) + ""; })
 						.attr("class", "pos");
@@ -724,7 +716,15 @@ function starmap() {
 						.text(function(d){ return  "" + (d.title) + ""; })
 						.attr("class", "name")
 						.attr("dx", 4);
-	
+					
+					forceSeqInfo.append("svg:image")
+						.attr("xlink:xlink:href","themes/starmap/navigation/map/images/menu-locked.png")
+						.attr("width", 24)
+						.attr("height", 16)
+						.attr("x", 168)
+						.attr("y", -52)
+						.attr("class", "locked");
+					
 					// Update the links
 					g.selectAll("path.link")
 						.data(force.links().filter(function(d){ return d.type; }))
