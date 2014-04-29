@@ -4889,6 +4889,11 @@ public class VLEGetXLS extends AbstractController {
 									//just return the JSON as a string
 									stepWorkResponse = (String) lastState.get("data");
 								}
+							} else if(nodeType.equals("AnnotatorNode")) {
+								if(lastState != null) {
+									//just return the JSON as a string
+									stepWorkResponse = (String) lastState.get("data");
+								}
 							} else if(nodeType.equals("Netlogo")) {
 								if(lastState != null) {
 									

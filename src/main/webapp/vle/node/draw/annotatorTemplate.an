@@ -1,0 +1,19 @@
+{
+   "prompt": "",
+   "enableStudentTextArea": false,
+   "textAreaInstructions": "",
+   "textAreaButtonText": "",
+   "isMustComplete": false,
+   "labels_max": 0,
+   "labels_min": 0,
+   "labels_default": [],
+   "backgroundImg": "",
+   "colorDefault": "ff0000",
+   "type": "Annotator",
+   "exportColumns": [
+      {
+         "columnName": "Data",
+         "field": "data"
+      }
+   ]
+}

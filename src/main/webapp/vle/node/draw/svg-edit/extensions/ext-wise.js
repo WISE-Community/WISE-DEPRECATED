@@ -5,22 +5,22 @@
  *
  * Copyright(c) 2013 Jonathan Lim-Breitbart
  *
- * Customizes the svg-edit user interface for use in the WISE4 learning environment
- * Adds check for drawing size limits and an svgEditor.changed variable for use when saving student data in WISE4
+ * Customizes the svg-edit user interface for use in the WISE learning environment
+ * Adds check for drawing size limits and an svgEditor.changed variable for use when saving student data in WISE
  * 
  * TODO: i18n
  */
  
 svgEditor.addExtension("WISE", function(S) {
 	/* Private variables */
-	//var svgcontent = S.svgcontent;
-	var lz77 = new LZ77(), // lz77 compression object
+	var canv = svgEditor.canvas,
+		lz77 = new LZ77(), // lz77 compression object
 		loaded = false, // Boolean to indicate whether extension has finished loading
 		changeNum = 0,
-		nodeType = null;
+		nodeType = 'draw';
 	
-	if(typeof node !== 'undefined') {
-		nodeType = (node.type === "AnnotatorNode") ? 'annotator' : 'draw';
+	if(typeof vle !== 'undefined' && vle.getCurrentNode().type === "AnnotatorNode") {
+		nodeType = 'annotator';
 	}
 		
 	svgEditor.changed = false; // boolean to specify whether data has changed, if no changes, do not post nodestate on exit
@@ -40,10 +40,18 @@ svgEditor.addExtension("WISE", function(S) {
 	
 	// fit drawing canvas to workarea (accessible vie svgEditor object)
 	svgEditor.resizeCanvas = function() {
-		$('#fit_to_canvas').mouseup();
+		if(nodeType === 'annotator'){
+			/*var success = canv.setResolution('fit');
+			if(!success){
+				$('#fit_to_canvas').mouseup();
+			}*/
+			$('#fit_to_all').mouseup();
+		} else {
+			$('#fit_to_canvas').mouseup();
+		}
 	};
 	
-	function setupWarnings(){
+	/*function setupWarnings(){
 		var sizeWarning = '<div id="drawlimit_dialog" title="Drawing is Too Big"><div class="ui-state-error">' +
 			'<span class="ui-icon ui-icon-alert" style="float:left"></span><span id="drawlimit_warning">Warning! Your current drawing is too large.' +
 			'</div><div class="ui-dialog-content-content" id="drawlimit_instructions">If you would like to save this drawing, please delete some of the items in the picture.  Thank you!' +
@@ -65,43 +73,43 @@ svgEditor.addExtension("WISE", function(S) {
 		});
 		
 		loaded = true;
-	}
+	}*/
 	
 	function updateDisplay(){
 		// remove unused elements in WISE
-		if(!nodeType || nodeType === "draw"){
-			$('#tool_wireframe').remove();
-			$('#tool_source').remove();
-			$('#tool_zoom').remove();
-			//$('#tool_fhrect').remove();
-			//$('#tool_fhellipse').remove();
-			$('.stroke_tool').remove();
-			$('#toggle_stroke_tools').remove();
-			$('#idLabel').remove();
-			$('#tool_blur').remove();
-			$('#line_panel').remove();
-			$('#circle_panel').remove();
-			$('#ellipse_panel').remove();
-			$('#rect_panel > .toolset').remove();
-			$('#xy_panel').remove();
-			$('#tool_font_family').remove();
-			$('#tool_node_x').remove();
-			$('#tool_node_y').remove();
-			$('#tool_topath').remove();
-			$('#tool_reorient').remove();
-			$('#tool_make_link').remove();
-			$('#tool_make_link_multi').remove();
-			$('#layerpanel, #sidepanel_handle').remove();
-			$('#overview_window_content_pane').hide();
-			$('#palette_holder').remove();
-			$('#main_button').remove();
-			$('#editor_panel > .tool_sep').remove();
-			$('#history_panel > .tool_sep').remove();
-			$('#tool_image').hide();
-			$('#image_panel > .toolset').remove();
-			$('#zoom_panel').hide();
-			
-			// move elements and adjust display in wise4
+		$('#tool_wireframe').remove();
+		$('#tool_source').remove();
+		$('#tool_zoom').remove();
+		//$('#tool_fhrect').remove();
+		//$('#tool_fhellipse').remove();
+		$('.stroke_tool').remove();
+		$('#toggle_stroke_tools').remove();
+		$('#idLabel').remove();
+		$('#tool_blur').remove();
+		$('#line_panel').remove();
+		$('#circle_panel').remove();
+		$('#ellipse_panel').remove();
+		$('#rect_panel > .toolset').remove();
+		$('#xy_panel').remove();
+		$('#tool_font_family').remove();
+		$('#tool_node_x').remove();
+		$('#tool_node_y').remove();
+		$('#tool_topath').remove();
+		$('#tool_reorient').remove();
+		$('#tool_make_link').remove();
+		$('#tool_make_link_multi').remove();
+		$('#layerpanel, #sidepanel_handle').remove();
+		$('#overview_window_content_pane').hide();
+		$('#palette_holder').remove();
+		$('#main_button').remove();
+		$('#editor_panel > .tool_sep').remove();
+		$('#history_panel > .tool_sep').remove();
+		$('#tool_image').hide();
+		$('#image_panel > .toolset').remove();
+		$('#zoom_panel').hide();
+		
+		if(nodeType === "draw"){
+			// move elements and adjust display in WISE
 			$('#tools_top').css({'left':'2px','height':'62px'});
 			$('#tools_bottom_2').css('width','280px');
 			$('#tool_stroke').css('width','auto');
@@ -136,8 +144,10 @@ svgEditor.addExtension("WISE", function(S) {
 			$('#sidepanels').css('border','none');
 			$('#zoom_panel').hide();
 			$('#sidepanels').css('min-height','402px');*/
-		} else if(node.type === 'annotator'){
-			
+		} else if(nodeType === 'annotator'){
+			$('#svg_editor').append($('#text'));
+			$('#canvasBackground > rect').attr('stroke', '#bbb');
+			// TODO: disable right click context menu
 		}
 		
 		svgCanvas.setFontFamily('sans-serif'); // set default font family
@@ -147,7 +157,8 @@ svgEditor.addExtension("WISE", function(S) {
 			svgEditor.resizeCanvas();
 		});
 		
-		setupWarnings();
+		//setupWarnings();
+		loaded = true;
 	}
 	
 	// whenever user has modified drawing canvas, check whether current drawing is too large (>20k)
@@ -159,7 +170,9 @@ svgEditor.addExtension("WISE", function(S) {
 		// if compressed svg string is larger than 20k (or 10k if maxSnaps > 10), alert user and undo latest change
 		if(compressed.length * 2 > svgEditor.maxDrawSize){
 			$('#tool_undo').click();
-			$('#drawlimit_dialog').dialog('open');
+			var msg = 'Warning! Your current drawing is too large.\n\nIf you would like to save this drawing, please delete some of the items in the picture. Thank you!';
+			$.alert(msg);
+			//$('#drawlimit_dialog').dialog('open');
 		}
 	}
 		

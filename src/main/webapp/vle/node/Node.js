@@ -381,7 +381,7 @@ Node.prototype.render = function(contentPanel, studentWork, disable) {
 		this.contentPanel.nodeId = this.id;
 		this.contentPanel.node = this;
 
-		if(this.type == 'MySystemNode' || this.type == 'SVGDrawNode' || 
+		if(this.type == 'MySystemNode' || this.type == 'SVGDrawNode' || this.type == 'AnnotatorNode' || 
 				this.type == 'OpenResponseNode' || this.type == 'HtmlNode' ||
 				this.type == 'MWNode' || this.type == 'Box2dModelNode') {
 			this.contentPanel.vle = this.view;
@@ -1303,7 +1303,11 @@ Node.prototype.getShowAllWorkHtml = function(vle, divIdPrefix){
 				divClass = "svgdraw";
 				//divStyle = "height:300px; width:375px; border:1px solid #aaa";
 				divStyle = "width:375px; border:1px solid #aaa";
-			} 
+			} else if (this.type == "AnnotatorNode") {
+				divClass = "annotator";
+				//divStyle = "height:300px; width:375px; border:1px solid #aaa";
+				divStyle = "width:375px; border:1px solid #aaa";
+			}
 			//create the div id for where we will display the student work
 			var divId = divIdPrefix + "latestWork_"+latestNodeVisitWithWork.id;
 			var contentBaseUrl = this.view.getConfig().getConfigParam('getContentBaseUrl');

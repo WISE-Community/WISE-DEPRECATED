@@ -470,6 +470,8 @@ public class FileManager {
 			return ".dg";
 		} else if(type.equals("SVGDrawNode")){
 			return ".sd";
+		} else if(type.equals("AnnotatorNode")){
+			return ".an";
 		} else if(type.equals("MWNode")){
 			return ".mw";
 		} else if(type.equals("AssessmentListNode")){

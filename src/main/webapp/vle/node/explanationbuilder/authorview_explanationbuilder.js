@@ -215,7 +215,7 @@ View.prototype.ExplanationBuilderNode.generatePage = function(view){
 	}
 	
 	//populate the require work checkbox
-	if("isMustComplete" in this.content && this.content.isMustComplete) {
+	if(this.content.isMustComplete) {
 		requireWorkToggle.checked = true;
 	}
 	

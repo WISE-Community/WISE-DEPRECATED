@@ -20,7 +20,8 @@ View.prototype.promptManager.insertPrompt = function(view) {
 			MatchSequenceNode:'10',
 			DataGraphNode:'7',
 			MySystemNode:'5',
-			SVGDrawNode:'10'
+			SVGDrawNode:'10',
+			AnnotatorNode:'10'
 	};
 	var nodeType = view.resolveType(view.activeNode.type);
 	$('#promptInput').attr('rows', nodeToPromptRowSize[nodeType]);

@@ -354,6 +354,8 @@ View.prototype.saveState = function(state, node) {
 		newState = new MYSYSTEMSTATE(state);
 	} else if (currentNode.type == "SVGDrawNode") {
 		newState = new SVGDRAWSTATE(state);
+	} else if (currentNode.type == "AnnotatorNode") {
+		newState = new ANNOTATORSTATE(state);
 	} else if (currentNode.type == "AssessmentListNode") {
 		newState = new ASSESSMENTLISTSTATE(state);
 	} else if (currentNode.type == "MWNode") {

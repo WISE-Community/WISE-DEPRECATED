@@ -286,7 +286,7 @@ $(function() {
 				for(var i = 0; i < len; i++) {
 					var elem = elems[i];
 					var id = elem.id;
-					if(id === 'svg_eof') break;
+					if(id === 'svg_eof' || id === '') break;
 					holder = $('#' + id);
 					var svg = elem.getElementsByTagNameNS(svgns, 'svg')[0];
 					var svgroot = document.createElementNS(svgns, "svg");

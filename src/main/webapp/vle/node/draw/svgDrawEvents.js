@@ -123,9 +123,9 @@ var events = [
  */
 for(var x=0; x<events.length; x++) {
 	componentloader.addEvent(events[x], 'svgdrawDispatcher');
-};
+}
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/node/draw/svgDrawEvents.js');
-};
+}

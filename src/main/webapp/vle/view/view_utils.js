@@ -305,6 +305,7 @@ View.prototype.getLatestStateForCurrentNode = function() {
 	if (currentNode.type != "HtmlNode" 
 			&& currentNode.type != "MySystemNode" 
 			&& currentNode.type != "SVGDrawNode"
+			&& currentNode.type != "AnnotatorNode"
 			&& currentNode.type != "MWNode") {
 		return;
 	} 

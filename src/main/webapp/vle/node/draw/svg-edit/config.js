@@ -23,7 +23,7 @@ svgEditor.setConfig({
 	// preventURLContentLoading: true,
 	/**
 	To override the ability for URLs to set other configuration (including
-	    extensions), uncomment the following:
+	    extension config), uncomment the following:
 	*/
 	// preventAllURLConfig: true,
 	/**
@@ -43,35 +43,42 @@ svgEditor.setConfig({
 }, {allowInitialUserOverride: true});
 
 // build extensions list based on current wise4 node's content JSON
-var node = vle.getCurrentNode(),
+if(typeof vle !== 'undefined'){
+	var node = vle.getCurrentNode();
+	var nodeType = node.type,
 	content = node.content.getContentJSON(),
 	view = node.view,
-	extensions = ['ext-connector.js','ext-closepath.js','ext-arrows.js',/*'ext-panning.js',*/'ext-simple_color.js','ext-wise.js','ext-clearlayer.js'];
-
-if (content.description_active){
-	extensions.push('ext-description.js');
+	extensions = ['ext-connector.js','ext-closepath.js',/*'ext-panning.js',*/'ext-wise.js'];
+	
+	if(nodeType === "AnnotatorNode"){
+		extensions = extensions.concat(['ext-panning.js','ext-labels.js']);
+	} else if (nodeType === "SvgDrawNode"){
+		extensions = extensions.concat(['ext-arrows.js','ext-simple_color.js','ext-clearlayer.js']);
+	}
+	
+	if (content.description_active){
+		extensions.push('ext-description.js');
+	}
+	if (content.stamps && content.stamps.length){
+		extensions.push('ext-stamps.js');
+	}
+	if (view.utils.isNonWSString(content.prompt)){
+		extensions.push('ext-prompt.js');
+	}
+	if (content.snapshots_active){
+		extensions.push('ext-snapshots.js');
+	}
+	if (content.toolbar_options && content.toolbar_options.importStudentAsset){
+		extensions.push('ext-importstudentasset.js');
+	}
+	node.extensions = extensions;
+} else {
+	extensions = ['ext-connector.js','ext-closepath.js','ext-wise.js','ext-panning.js','ext-clearlayer.js','ext-arrows.js','ext-simple_color.js','ext-description.js','ext-stamps.js','ext-prompt.js','ext-snapshots.js'];
 }
-if (content.stamps && content.stamps.length){
-	extensions.push('ext-stamps.js');
-}
-if (view.utils.isNonWSString(content.prompt)){
-	extensions.push('ext-prompt.js');
-}
-if (content.snapshots_active){
-	extensions.push('ext-snapshots.js');
-}
-if (content.toolbar_options && content.toolbar_options.importStudentAsset){
-	extensions.push('ext-importstudentasset.js');
-}
-
-node.extensions = extensions;
 
 // EXTENSION CONFIG
 svgEditor.setConfig({
-	extensions: extensions //[
-	    //'ext-connector.js', 'ext-closepath.js', 'ext-arrows.js', /*'ext-panning.js',*/ 'ext-simple_color.js','ext-wise4.js', 'ext-clearlayer.js', 'ext-stamps.js', 'ext-prompt.js', 'ext-description.js', 'ext-snapshots.js', 'ext-importstudentasset.js'
-		// 'ext-overview_window.js', 'ext-markers.js', 'ext-connector.js', 'ext-eyedropper.js', 'ext-shapes.js', 'ext-imagelib.js', 'ext-grid.js', 'ext-polygon.js', 'ext-star.js', 'ext-panning.js', 'ext-storage.js'
-	//]
+	extensions: extensions
 	, noDefaultExtensions: true // noDefaultExtensions can only be meaningfully used in config.js or in the URL
 });
 
@@ -113,6 +120,7 @@ svgEditor.setConfig({
 	noStorageOnLoad: true, // Some interaction with ext-storage.js; prevent even the loading of previously saved local storage
 	// forceStorage: false, // Some interaction with ext-storage.js; strongly discouraged from modification as it bypasses user privacy by preventing them from choosing whether to keep local storage or not
 	// emptyStorageOnDecline: true, // Used by ext-storage.js; empty any prior storage if the user declines to store
+	nodeType: nodeType // used by ext-wise.js to modify setup based on current WISE node type
 });
 
 // PREF CHANGES

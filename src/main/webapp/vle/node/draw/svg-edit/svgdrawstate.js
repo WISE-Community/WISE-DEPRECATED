@@ -8,7 +8,7 @@
  * @returns
  */
 function SVGDRAWSTATE(data, timestamp, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore) {
-	this.type = "html";
+	this.type = "sd";
 	this.data = data;
 	
 	if(timestamp == null) {

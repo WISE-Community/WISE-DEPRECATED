@@ -105,6 +105,8 @@ public final class Template {
 			return getMySystemTemplate();
 		} else if(type.equals("SVGDrawNode")){
 			return getSVGDrawTemplate();
+		} else if(type.equals("AnnotatorNode")){
+			return getAnnotatorTemplate();
 		} else if(type.equals("AssessmentListNode")){
 			return getAssessmentListTemplate();
 		} else if(type.equals("SensorNode")) {
@@ -379,6 +381,24 @@ public final class Template {
 		node.put("description_active", true);
 		node.put("description_default", "Enter description here.");
 		node.put("type","SVGDraw");
+		
+		return node;
+	}
+	
+	protected static JSONObject getAnnotatorTemplate() throws JSONException {
+		JSONObject node = new JSONObject();
+		
+		node.put("prompt", "");
+		node.put("enableStudentTextArea", true);
+		node.put("textAreaInstructions", "");
+		node.put("textAreaButtonText", true);
+		node.put("isMustComplete", true);
+		node.put("labels_max", 0);
+		node.put("labels_min", 0);
+		node.put("labels_default", new ArrayList<String>());
+		node.put("backgroundImg", "");
+		node.put("colorDefault", "");
+		node.put("type","Annotator");
 		
 		return node;
 	}

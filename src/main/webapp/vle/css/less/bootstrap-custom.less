@@ -1,0 +1,299 @@
+// NOTE: This file should be compiled to vle/css/bootstrap-custom.css
+
+@import "bootstrap/bootstrap.less";
+@import "../fonts/font-awesome/less/font-awesome.less";
+@import "variables.less";
+@import "mixins.less";
+
+/*--------------------------------------------------
+Default Bootstrap style overrides for the WISE VLE
+--------------------------------------------------*/
+
+
+h4, h5, h6, .h4, .h5, .h6 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
+
+a {
+	cursor: pointer;
+}
+
+// Forms
+// --------------------------------------------------
+
+
+
+// Panels
+// --------------------------------------------------
+.panel {
+	.box-shadow(1px 1px 2px rgba(0, 0, 0, 0.1));
+	//border-color: #bbb;
+	//border-color: rgba(0,0,0,.25);
+}
+
+.panel-heading {
+	font-size: 1.25em;
+	.h1, .h2, .h3, .h4, .h5, .h6 {
+		font-size: inherit;
+		line-height: inherit;
+	}
+	> * {
+		vertical-align: middle;
+	}
+}
+
+// Modals
+// --------------------------------------------------
+
+// Container that modals appear within
+.modal {
+  // When fading in the modal, animate it to scale/zoom in and out
+  &.fade .modal-dialog {
+    .translate(0, 0);
+    .scale(.5);
+    .transition-transform(~"0.2s");
+  }
+  &.in .modal-dialog { .translate(0, 0); .scale(1); }
+}
+
+.modal-content {
+	border-radius: @border-radius-base;
+}
+
+.modal-header {
+	background-color: #eee;
+	.border-top-radius(@border-radius-base);
+}
+
+.modal-title {
+	font-size: 16px;
+	line-height: 16px;
+	color: @brand-info;
+	font-family: @headings-font-family;
+}
+
+.modal-footer {
+	margin-top: 5px;
+	.border-bottom-radius(@border-radius-base);
+}
+
+// Modal background
+//.modal-backdrop {
+  //&.in { .opacity(.6); }
+//}
+
+// Close icons
+// --------------------------------------------------
+
+.close {
+	.opacity(.3);
+	
+	&:hover,
+	&:focus {
+		.opacity(.6);
+	}
+}
+
+// Font Awesome
+// --------------------------------------------------
+
+// Make Font-Awesome (FA) icons default to a larger size
+.fa {
+	font-size: (4em / 3.4);
+  	line-height: (3em / 4.5);
+  	vertical-align: -8%;
+}
+
+.fa-lg {
+  font-size: (4em / 3);
+  line-height: (3em / 4);
+  vertical-align: -15%;
+}
+
+.fa-fixed-width {
+	width: (18em / 16);
+}
+
+// Set FA dropdown and nav icons to always have fixed width
+.dropdown-menu, .nav {
+	li .fa {
+		.fa-fixed-width;
+		margin-right: 4px;
+		text-align: center;
+	}
+}
+
+// Fix stacked icons display
+.fa-stack {
+	width: 1em;
+	height: 1em;
+	line-height: 1em;
+	
+	.fa {
+		line-height: inherit;
+		vertical-align: inherit;
+	}
+}
+
+// Tooltips
+// --------------------------------------------------
+
+.tooltip {
+	//font-weight: bold;
+}
+
+/* Use Font Awesome (icon) replacements for radios and checkboxes with .fa-input class
+Requires wrapping in a label and adding an empty span after the input */
+
+input[type="radio"] + .fa-input,
+input[type="checkbox"] + .fa-input {
+  display:none;
+}
+
+input[type="radio"] + .fa-input + :before,
+input[type="checkbox"] + .fa-input + :before {
+  font-family: 'FontAwesome';
+  font-size: 1.1em;
+  font-weight: normal;
+  //vertical-align: middle;
+  display: inline-block;
+  width: 1.1em;
+  //color: @gray;
+}
+
+input[type="radio"] + .fa-input {
+	+ span:before {
+  		content: "\f10c"; /* circle-blank */
+  	}
+  	&:checked + span:before {
+  		content: "\f192"; /* circle dot */
+  	}
+}
+
+input[type="checkbox"] + .fa-input {
+	+ span:before {
+		//content: "\f0c8"; /* square */
+		content: "\f096"; /* square open */
+	}
+	&:checked + span:before {
+		//content: "\f14a"; /* check square */
+		content: "\f046"; /* check square open */
+	}
+}
+
+.fa-input-label {
+	margin: 1px 0 0;
+}
+
+/*.editable {
+	border-bottom: 1px dashed;
+	 &:hover {
+	 	text-decoration: none;
+	 }
+}
+*/
+
+// Buttons
+// --------------------------------------------------
+
+.btn {
+	&.disabled,
+	&[disabled],
+	fieldset[disabled] & {
+		.opacity(0.4);
+	}
+}
+
+.btn-sm {
+	border-radius: 3px;
+}
+
+.btn {
+	font-weight: bold;
+	//text-shadow: 0 0 1px rgba(0,0,0,.3);
+	text-shadow: none;
+	//border-bottom-width: 2px;
+	
+	&:focus {
+		outline: none;
+	}
+	
+	&.btn-default {
+		text-shadow: none;
+		//border-bottom-width: 1px;
+	}
+}
+
+.btn, .badge {
+	.fa {
+		margin-right: 5px;
+	}
+}
+
+.btn-default {
+	&:focus {
+		background-color: darken(@btn-default-bg, 3%);
+	}
+}
+
+.handle {
+	margin-right: 5px;
+	cursor: move;
+}
+
+.dropdown-menu {
+	form {
+		margin: 0 5px;
+		.form-group{
+			&:last-of-type {
+				margin-bottom: 0;
+			}
+		}
+	}
+	
+	a {
+		.transition(none);
+	}
+}
+
+// Navbars
+// --------------------------------------------------
+.navbar-default {
+	.navbar-nav {
+	    > li > a {
+	    	&:active {
+	    		color: @navbar-default-link-color;
+	    	}
+	    }
+    }
+}
+
+.navbar-inverse {
+	.navbar-nav {
+	    > li > a {
+	    	&:hover {
+	    		background-color: #1a1a1a;
+	    	}
+	    	&:active {
+	    		color: @navbar-inverse-link-color;
+	    	}
+	    }
+    }
+}
+
+/* Help/info elements */
+
+.help, .info {
+	cursor: pointer;
+	margin: 0 2px;
+	color: @brand-primary;
+	.fa-lg;
+}
+
+/* Bootbox dialogs */
+.bootbox-alert, .bootbox-confirm {
+	.bootbox-close-button {
+		display: none;
+	}
+}

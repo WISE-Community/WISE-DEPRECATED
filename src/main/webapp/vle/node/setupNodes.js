@@ -29,6 +29,10 @@ SetupNodes.setupFiles = [
 		nodeSetupPath:"vle/node/draw/setup.js"
 	},
 	{
+		nodeName:"AnnotatorNode",
+		nodeSetupPath:"vle/node/draw/annotatorSetup.js"
+	},
+	{
 		nodeName:"FillinNode",
 		nodeSetupPath:"vle/node/fillin/setup.js"
 	},

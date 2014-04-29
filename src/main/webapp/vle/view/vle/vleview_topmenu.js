@@ -230,7 +230,7 @@ View.prototype.displayFlaggedWorkForNodeId = function(nodeId) {
 				var contentBaseUrl = this.config.getConfigParam('getContentBaseUrl');
 				var divId = "mysystemDiagram_"+flaggedWorkPostTime;
 				flaggedWorkAnswers += "<div id='"+divId+"' contentBaseUrl='"+contentBaseUrl+"' class='mysystem showallLatestWork' style=\"height:350px;\">" + flaggedWork + "</div>";
-			} else if (node.type == "SVGDrawNode") {
+			} else if (node.type == "SVGDrawNode" || "AnnotatorNode") {
 				// TODO: remove (move to SVGDrawNode.js)
 	    		var contentBaseUrl = this.config.getConfigParam('getContentBaseUrl');
 				var divId = "svgDraw_"+flaggedWorkPostTime;

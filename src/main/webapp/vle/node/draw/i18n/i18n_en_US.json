@@ -194,5 +194,161 @@
 	"snapshots_snapDelete_title":{
 		"value":"Delete Frame",
 		"description":"Title/tooltip text for delete snapshot links"
+	},
+	"annotator_loading":{
+		"value":"Loading WISE Annotator",
+		"description":"Message to display when annotator is loading"
+	},
+	"annotator_newLabel":{
+		"value":"New Label",
+		"description":"Text for button to add a new label"
+	},
+	"annotator_newLabel_instructions":{
+		"value":"Select location on image or ",
+		"description":"Instructions text for how to create new label"
+	},
+	"annotator_editLabel_instructions":{
+		"value":"Click an existing label to edit or delete",
+		"description":"Instructions text for how to create new label (for non-touch screens)"
+	},
+	"annotator_editLabel_instructions_touch":{
+		"value":"Tap an existing label to edit or delete",
+		"description":"Instructions text for how to create new label (for touch screens)"
+	},
+	"annotator_deleteLabel":{
+		"value":"Delete",
+		"description":"Text for button to delete a label"
+	},
+	"annotator_deleteConfirm":{
+		"value":"Are you sure you want to permanently delete this label?",
+		"description":"Confirmation warning text for deleting a label"
+	},
+	"annotator_save":{
+		"value":"Save",
+		"description":"Text for save button"
+	},
+	"annotator_explain":{
+		"value":"Ready to Explain",
+		"description":"Default text for button to add explanation"
+	},
+	"annotator_explain_instructions":{
+		"value":"Explain your labels",
+		"description":"Default instructions for the explanation text input area"
+	},
+	"annotator_explain_placeholder":{
+		"value":"Enter your response",
+		"description":"Placeholder text for the explanation text input area"
+	},
+	"annotator_maxWarning":{
+		"value": "Sorry, you have reached the maximum number of labels ({0}). If you would like to add more, please delete some and try again.",
+		"description": "Alert text to show when user has reached maximum number of allowed labels."
+	},
+	"annotator_minWarning":{
+		"value": "Sorry, you cannot delete this label. You must have at least {0} active labels.",
+		"description": "Alert text to show when user tries to go below minimum number of allowed labels."
+	},
+	"annotator_editLabelText":{
+		"value":"Label Text:",
+		"description":"Label for the edit label text input field"
+	},
+	"annotator_edit_title":{
+		"value":"Edit Label",
+		"description":"Title for the edit label dialog"
+	},
+	"annotator_authoring_require":{
+		"value":"Require students to complete this step before moving on:",
+		"desription":"Label for checkbox specifying whether students need to complete the step before moving on in annotator step authoring"
+	},
+	"annotator_authoring_imageLabel":{
+		"value":"Image file to annotate:",
+		"description":"Label for control in authoring to select the image file to annotate in annotator step authoring"
+	},
+	"annotator_authoring_imageBrowse":{
+		"value":"Browse",
+		"description":"Label for button in authoring to select image file to annotate in annotator step authoring"
+	},
+	"annotator_authoring_maxLabel":{
+		"value":"Maximum number of labels allowed (0 means no limit): ",
+		"description":"Label for maximum number of allowed labels input in annotator step authoring"
+	},
+	"annotator_authoring_minLabel":{
+		"value":"Minimum number of required labels: ",
+		"description":"Label for minimum number of required labels input in annotator step authoring"
+	},
+	"annotator_authoring_promptLabel":{
+		"value":"General instructions (optional):",
+		"description":"Label for the prompt input in annotator step authoring"
+	},
+	"annotator_authoring_defaultColor_label":{
+		"value":"Default Label Color: ",
+		"description":"Label for the default label color select in annotator step authoring"
+	},
+	"annotator_authoring_responseLabel":{
+		"value":"Enable student response box:",
+		"description":"Label for the enable student response box checkbox in annotator step authoring"
+	},
+	"annotator_authoring_responseInstructionsLabel":{
+		"value":"Instructions for student response box:",
+		"description":"Label for the student response instructions input in annotator step authoring"
+	},
+	"annotator_authoring_responseInstructions":{
+		"value":"Explain your work:",
+		"description":"Default instructions for the student response box in an annotator step"
+	},
+	"annotator_authoring_responseButtonLabel":{
+		"value":"Text for student response button:",
+		"description":"Label for the text input for the student response button text in an annotator step"
+	},
+	"annotator_colors_black":{
+		"value":"Black",
+		"description":"Text for the color 'Black')"
+	},
+	"annotator_colors_blue":{
+		"value":"Blue",
+		"description":"Text for the color 'Blue')"
+	},
+	"annotator_colors_black":{
+		"value":"Black",
+		"description":"Text for the color 'Black')"
+	},
+	"annotator_colors_black":{
+		"value":"Black",
+		"description":"Text for the color 'Black')"
+	},
+	"annotator_colors_black":{
+		"value":"Black",
+		"description":"Text for the color 'Black')"
+	},
+	"annotator_colors_green":{
+		"value":"Green",
+		"description":"Text for the color 'Green')"
+	},
+	"annotator_colors_maroon":{
+		"value":"Maroon",
+		"description":"Text for the color 'Maroon')"
+	},
+	"annotator_colors_navy":{
+		"value":"Navy Blue",
+		"description":"Text for the color 'Navy Blue')"
+	},
+	"annotator_colors_orange":{
+		"value":"Orange",
+		"description":"Text for the color 'Orange')"
+	},
+	"annotator_colors_purple":{
+		"value":"Purple",
+		"description":"Text for the color 'Purple')"
+	},
+	"annotator_colors_red":{
+		"value":"Red",
+		"description":"Text for the color 'Red')"
+	},
+	"annotator_colors_teal":{
+		"value":"Teal",
+		"description":"Text for the color 'Teal')"
+	},
+	"annotator_colors_yellow":{
+		"value":"Yellow",
+		"description":"Text for the color 'Yellow')"
 	}
 }
