@@ -17,6 +17,18 @@
 
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
+<style>
+table th {
+  font-weight:bold;
+  border: 1px solid black;
+  padding:3px;
+}
+table, tr, td {
+  border: 1px solid black;
+  padding:3px;
+}
+
+</style>
 </head>
 <body>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -28,33 +40,28 @@
 
 <h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
+<br/>
 	<c:choose>
 		<c:when test="${fn:length(openedProjectIds) > 0}">
 			<table>
 				<tr>
-					<th>Project Id</th>
-					<th>Project Name</th>
+					<th>Project Name (ID)</th>
 					<th>Authors</th>
 				</tr>
 				<c:forEach var="openedProjectId" items="${openedProjectIds}">
 					<tr>
-						<td><c:out value="${openedProjectId}" /></td>
-						<td><c:out value="${openedProjects[openedProjectId].name}" /></td>
+						<td><a target=_blank href="../../previewproject.html?projectId=${openedProjectId}">${openedProjects[openedProjectId].name} (${openedProjectId})</a></td>
 						<td><c:forEach var="sessionOpeningThisProject"
 								items="${openedProjectsToSessions[openedProjectId]}">
-								<c:set var="username"
-									value="${loggedInTeachers[sessionOpeningThisProject].userDetails.username}"></c:set>
+								<c:set var="username" value="${loggedInTeachers[sessionOpeningThisProject].userDetails.username}"></c:set>
 								<c:out value="${username}" /> | 
-							<a href="../../j_acegi_switch_user?j_username=${username}">Log
-									in as this user</a> |
-							<a href="#"
-									onclick="javascript:popup640('../../teacherinfo.html?userName=${username}');">info</a>
-								<br />
-							</c:forEach></td>
+							<a href="../../j_acegi_switch_user?j_username=${username}">Log in as this user</a> |
+							<a href="#" onclick="javascript:popup640('../../teacherinfo.html?userName=${username}');">info</a>
+							</c:forEach>
+						</td>
 					</tr>
 				</c:forEach>
 			</table>
-
 		</c:when>
 		<c:otherwise>
 			<c:out value="Nobody is authoring at this time." />
