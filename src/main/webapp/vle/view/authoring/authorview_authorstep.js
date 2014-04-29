@@ -222,9 +222,7 @@ View.prototype.closeOnStepSaved = function(success){
 		this.cleanupCommonComponents();
 		document.getElementById('dynamicPage').innerHTML = '';
 		// remove any tinyMCE instances
-		for(var i=0; i<tinymce.editors.length; i++){
-			tinymce.editors[i].remove();
-		}
+		tinymce.remove();
 		
 		this.hideAuthorStepDialog();
 		
