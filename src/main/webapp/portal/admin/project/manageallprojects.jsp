@@ -98,16 +98,11 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 		<th> Max Assets Size (in bytes) <a onClick="alert('Empty=Use System Default Value, usually 10MB\n10MB=10485760 bytes\n15MB=15728640 bytes\n20MB=20971520 bytes\n100MB=104857600 bytes')">Help</a></th>
 		<th> Tags </th>
 		<th> Actions </th>
-		<!--
-		<th> Edit Project with Authoring tool</th>
-		<th> Edit Project Metadata</th>		
-		<th> Other Actions </th>				
-		-->
 	</tr>
 	<c:forEach var="project" items="${internal_project_list}">
 	<tr>
 		<td>${project.id}</td>
-		<td>${project.name}</td>
+		<td><a target=_blank href="${contextPath}/previewproject.html?projectId=${project.id}">${project.name}</a></td>
 	    <td>Is Current:
 	    	<select class="isCurrent_select" id="isCurrent_select_${project.id}">
 	    		<c:choose>
@@ -147,11 +142,9 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 			</div>
 		</td>
 		<td>
-		<a href="${contextPath}/author/authorproject.html?projectId=${project.id}">Edit Project (Authoring tool)</a>&nbsp;|&nbsp;
-<!-- 	<a href="editproject.html?projectId=${project.id}">Edit Project Metadata</a>&nbsp;|&nbsp;		 -->	
-		<a href="${contextPath}/previewproject.html?projectId=${project.id}">Preview</a>&nbsp;|&nbsp;
-		<a href="${contextPath}/teacher/projects/customized/shareproject.html?projectId=${project.id}">Manage Ownership/Shared Teachers</a>&nbsp;|&nbsp;
-		<a href="${contextPath}/project/exportproject.html?projectId=${project.id}">Export project as Zip</a>&nbsp;|&nbsp;
+		<a href="${contextPath}/author/authorproject.html?projectId=${project.id}">Edit Project</a><br/>
+		<a href="${contextPath}/teacher/projects/customized/shareproject.html?projectId=${project.id}">Manage Shared Teachers</a><br/>
+		<a href="${contextPath}/project/exportproject.html?projectId=${project.id}">Export project as Zip</a>
 		</td>		
 	</tr>
 	</c:forEach>
