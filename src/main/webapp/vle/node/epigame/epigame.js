@@ -579,27 +579,29 @@ Epigame.prototype.getCurrentPostQuizData = function() {
 //1 means find the next uncompleted mission that is more difficult than the players rating
 //@missionDifficulty: array of numbers representing missionList difficulty 
 //@return: an index into the mission list [0 to missionList.length-1]
-Epigame.prototype.findNextAvailableMission = function(playerRating,missionList,missionCompletedValue,missionDifficulty,comparisonCode) {
+Epigame.prototype.findNextAvailableMission = function (playerRating, missionList, missionCompletedValue, missionDifficulty, comparisonCode) {
+    console.log("FINDING NEXT AVAILABLE MISSION");
+    console.log(missionList);
+    if (comparisonCode >= 0) {
+        for (i = 0; i < missionList.length; i++) {
+            console.log(missionCompletedValue);
+            if (!missionCompletedValue[i] && (comparisonCode == 0 || (comparisonCode > 0 && playerRating < missionDifficulty[i]))) {
+                return i;
+            }
+        }
+    }
+    else {
+        var leastEasierMission = -1;
 
-	if(comparisonCode >=0 ) {	
-		for(i=0;i<missionList.length;i++) {
-			if(!missionCompletedValue[i] && (comparisonCode == 0 || (comparisonCode > 0 && playerRating < missionDifficulty[i]) ) ) {
-				return i;
-			}
-		}
-	}
-	else {
-		var leastEasierMission = -1;
-		
-		for(i=0;i<missionList.length;i++) {
-			if(!missionCompletedValue[i] && playerRating > missionDifficulty[i] && (leastEasierMission < 0 || missionDifficulty[i] > missionDifficulty[leastEasierMission]) ) {
-				leastEasierMission = i;
-			}
-		}
-		return leastEasierMission;
-	}
+        for (i = 0; i < missionList.length; i++) {
+            if (!missionCompletedValue[i] && playerRating > missionDifficulty[i] && (leastEasierMission < 0 || missionDifficulty[i] > missionDifficulty[leastEasierMission])) {
+                leastEasierMission = i;
+            }
+        }
+        return leastEasierMission;
+    }
 
-	return -1;
+    return -1;
 };
 
 //return a random index into the warp mission list
@@ -629,42 +631,127 @@ Epigame.prototype.randomMissionSelector = function(missionList,missionCompletedV
 
 //Determine the next Warp mission to be selected
 //@numMissionsCompleted: the number of warp missions the player has succesfully completed
-//@playerRating: the current player rating
-//@previousPlayerRating: the last recorded player rating
-//@missionList: the entire set of missions available to this player (already selected from groupID
+//@playerRating: the current player rating (warp score)
+//@previousPlayerRating: the last recorded player rating (prev warp score)
+//@missionList: the entire set of missions available to this player (already selected from groupID)
 //@missionCompletedValue: an array of booleans representing whether or not the mission in list has been completed or not 
 //@missionDifficulty: array of numbers representing missionList difficulty 
 //@return: an index into the mission list [0 to missionList.length-1]
-Epigame.prototype.adaptiveMissionSelector = function(numMissionsCompleted,playerRating,previousPlayerRating,missionList,missionCompletedValue,missionDifficulty) {
-	if(numMissionsCompleted < 5) {
-		//less that 5 missions completed, select the first available warp mission
-		if(this.findNextAvailableMission(playerRating,missionList,missionCompletedValue,missionDifficulty, 0) > -1) {
-			return this.findNextAvailableMission(playerRating,missionList,missionCompletedValue,missionDifficulty, 0);
-		}
-	}
-	else {
-		if(playerRating >= previousPlayerRating) {
-			//rating increased, choose next harder mission			
-			if(this.findNextAvailableMission(playerRating,missionList,missionCompletedValue,missionDifficulty, 1) > -1) {
-				return this.findNextAvailableMission(playerRating,missionList,missionCompletedValue,missionDifficulty, 1);
-			} 
-			else if (this.findNextAvailableMission(playerRating,missionList,missionCompletedValue,missionDifficulty, 0) > -1) {
-				return this.findNextAvailableMission(playerRating,missionList,missionCompletedValue,missionDifficulty, 0);
-			}
-		}
-		else {
-			//rating decreased, choose closest easier mission
-			if(this.findNextAvailableMission(playerRating,missionList,missionCompletedValue,missionDifficulty, -1) > -1) {
-				return this.findNextAvailableMission(playerRating,missionList,missionCompletedValue,missionDifficulty, -1);
-			}
-			else if (this.findNextAvailableMission(playerRating,missionList,missionCompletedValue,missionDifficulty, 0) > -1) {
-				return this.findNextAvailableMission(playerRating,missionList,missionCompletedValue,missionDifficulty, 0);
-			}			
-		}
-	}
-		
-	//if no other option was found, return the number of missions completed
-	return numMissionsCompleted;	
+Epigame.prototype.adaptiveMissionSelector = function (numMissionsCompleted, playerRating, previousPlayerRating, missionList, missionCompletedValue, missionDifficulty) {
+    if (numMissionsCompleted < 5) {
+        //less that 5 missions completed, select the first available warp mission
+        console.log("LESS THAN 5 MISSIONS COMPLETED");
+        if (this.findNextAvailableMission(playerRating, missionList, missionCompletedValue, missionDifficulty, 0) > -1) {
+            return this.findNextAvailableMission(playerRating, missionList, missionCompletedValue, missionDifficulty, 0);
+        }
+    }
+    else {
+        if (playerRating >= previousPlayerRating) {
+            //rating increased, choose next harder mission			
+            if (this.findNextAvailableMission(playerRating, missionList, missionCompletedValue, missionDifficulty, 1) > -1) {
+                return this.findNextAvailableMission(playerRating, missionList, missionCompletedValue, missionDifficulty, 1);
+            }
+            else if (this.findNextAvailableMission(playerRating, missionList, missionCompletedValue, missionDifficulty, 0) > -1) {
+                return this.findNextAvailableMission(playerRating, missionList, missionCompletedValue, missionDifficulty, 0);
+            }
+        }
+        else {
+            //rating decreased, choose closest easier mission
+            if (this.findNextAvailableMission(playerRating, missionList, missionCompletedValue, missionDifficulty, -1) > -1) {
+                return this.findNextAvailableMission(playerRating, missionList, missionCompletedValue, missionDifficulty, -1);
+            }
+            else if (this.findNextAvailableMission(playerRating, missionList, missionCompletedValue, missionDifficulty, 0) > -1) {
+                return this.findNextAvailableMission(playerRating, missionList, missionCompletedValue, missionDifficulty, 0);
+            }
+        }
+    }
+
+    //if no other option was found, return the number of missions completed
+    return numMissionsCompleted;
+};
+
+
+//Returns the mission with the closest difficulty rating higher than the current warpScore
+
+Epigame.prototype.getClosestDifficultMission = function (warpScore, missionList, missionCompletedList, missionDifficultyList) {
+    var bestMatch;
+    var matches = [];
+    console.log(missionDifficultyList);
+    for (var i = 0; i < missionList.length; i++) {
+        var difficulty = missionDifficultyList[i];
+        //only search those above my current score
+        if (difficulty >= warpScore) {
+            var diff = difficulty - warpScore;
+            if (bestMatch == undefined) {
+                bestMatch = diff;
+                matches.push(i);
+            }
+            else {
+                if (diff <= bestMatch) {
+                    bestMatch = diff;
+                    matches.push(i);
+                }
+            }
+        }
+    }
+
+    if (matches.length == 0) {
+        var maxDifficulty;
+        console.log("No missions found with greater difficulty than warp score.  Selecting hardest mission.");
+        for (var i = 0; i < missionList.length; i++) {
+            var difficulty = missionDifficultyList[i];
+            //only search those above my current score
+            if (maxDifficulty == undefined) {
+                maxDifficulty = difficulty;
+                matches.push(i);
+            }
+
+            else {
+                if (difficulty >= maxDifficulty) {
+                    matches.push(i);
+                    maxDifficulty = difficulty;
+
+                }
+            }
+        }
+        bestMatch =  maxDifficulty-warpScore;
+    }
+    
+
+    console.log("Best match " + bestMatch + " found " + matches.length + " times.");
+
+    var bestMatches = [];
+    var unseenMatches = [];
+    var unseenMission = false;
+    for (var i = 0; i < matches.length; i++) {
+        var difficulty = missionDifficultyList[matches[i]];
+        var diff = difficulty - warpScore;
+        if (diff == bestMatch) {
+            bestMatches.push(matches[i]);
+            if (!missionCompletedList[matches[i]]) {
+                console.log("Hasn't seen " + matches[i]);
+                unseenMission = true;
+                unseenMatches.push(matches[i]);
+            }
+        }
+    }
+    console.log("Has unseen mission? " + unseenMission);
+
+    if (unseenMission) {
+        console.log(unseenMatches.length);
+        var unseenIdx = Math.round(Math.random() * (unseenMatches.length - 1));
+        console.log(unseenIdx);
+        matchIdx = unseenMatches[unseenIdx];
+    }
+    else {
+        var seenIdx = Math.round(Math.random() * (bestMatches.length - 1));
+        matchIdx = bestMatches[seenIdx];
+    }
+
+    console.log("Match found at " + matchIdx);
+
+    return matchIdx;
+
 };
 
 Epigame.prototype.getCurrentAdaptiveMissionPlayed = function() {
@@ -758,142 +845,154 @@ Epigame.prototype.getPossibleMissionScores = function() {
 	return totalPossible;
 }
 
-Epigame.prototype.getCurrentAdaptiveMissionData = function(levelString) {
-	var warpData = this.node.getAdaptiveMissionData();
-	var missionTable = warpData.missions;
-	var missionLists = warpData.missionLists;
-	
-	console.log("missionScorePercent: " + this.getMissionScorePercentage());
-	
-	if(levelString.length > 0)
-		var missionList = missionLists[parseInt(levelString)][this.getCurrentBucketIndex()]; //in this case missionTable.length is 3, getCurrentAdaptiveIndex returns missionTable.length%3 basically	
-	else
-		var missionList = missionLists[0][this.getCurrentBucketIndex()]; //in this case missionTable.length is 3, getCurrentAdaptiveIndex returns missionTable.length%3 basically
-	
-	console.log("missionList: " + missionList);
+Epigame.prototype.getCurrentAdaptiveMissionData = function (levelString) {
+    var warpData = this.node.getAdaptiveMissionData();
+    var missionTable = warpData.missions;
+    var missionLists = warpData.missionLists;
 
-	var index = this.getNodeCompletionCount();
+    console.log("missionScorePercent: " + this.getMissionScorePercentage());
 
-	//array to store whether each mission has been completed or not
-	var missionCompleted = [];
-	var missionCompleteCount = [];
-	var missionDifficulty = [];
-	var maxCompleteCount = 0;
+    if (levelString.length > 0)
+        var missionList = missionLists[parseInt(levelString)][this.getCurrentBucketIndex()]; //in this case missionTable.length is 3, getCurrentAdaptiveIndex returns missionTable.length%3 basically	
+    else
+        var missionList = missionLists[0][this.getCurrentBucketIndex()]; //in this case missionTable.length is 3, getCurrentAdaptiveIndex returns missionTable.length%3 basically
 
-	for(i = 0;i<missionList.length;i++) {
-		missionCompleted.push(false);
-		missionCompleteCount.push(0);
-		missionDifficulty.push(0);
-	}
+    console.log("missionList: " + missionList);
 
-	if(this.states != null) {
-		for(i=0; i < this.states.length; i++) {
-			if(this.states[i].response && this.states[i].response.success) {
-				if(!isNaN(this.states[i].response.warpIndex)) {
-					missionCompleteCount[this.states[i].response.warpIndex]++;
-					maxCompleteCount = Math.max(maxCompleteCount,missionCompleteCount[this.states[i].response.warpIndex]);
-				}
-			}
-		}
-	}
-	
-	//what we're going to do here is count the number of each onek
-	//if the number is less than the maximum, then it hasn't been played yet
-	var numMissionsCompleted = 0; //store the number of unique succesful mission completions	
-	if(this.states != null) {
-		for(i=0; i < this.states.length; i++) {
-			if(this.states[i].response && this.states[i].response.success) {
-//				console.log("num states: " + this.states.length + " " + !isNaN(this.states[i].response.warpIndex) + " " + !isNaN(missionCompleteCount[this.states[i].response.warpIndex]));
-//				if(!isNaN(this.states[i].response.warpIndex) && !isNaN(missionCompleteCount[this.states[i].response.warpIndex]))
-//					console.log("missionCompleteCount[i]: " + missionCompleteCount[this.states[i].response.warpIndex]);
+    var index = this.getNodeCompletionCount();
 
-				if(!isNaN(this.states[i].response.warpIndex) && !isNaN(missionCompleteCount[this.states[i].response.warpIndex]) && missionCompleteCount[this.states[i].response.warpIndex] >= maxCompleteCount) {					
-					missionCompleted[this.states[i].response.warpIndex] = true;
-				}
-			}
-		}
-	}
+    //array to store whether each mission has been completed or not
+    var missionCompleted = [];
+    var missionCompleteCount = [];
+    var missionDifficulty = [];
+    var maxCompleteCount = 0;
 
-	for(i=0;i<missionCompleted.length;i++) {
-		if(missionCompleted[i])
-			numMissionsCompleted++;
-		var i1 = missionList[i].split("-")[0]-1;
-		var i2 = missionList[i].split("-")[1]-1;
-		console.log("i1: " + i1 + " i2: "+ i2);
-		missionDifficulty[i] = missionTable[i1][i2].difficulty;
-	}
+    for (i = 0; i < missionList.length; i++) {
+        missionCompleted.push(false);
+        missionCompleteCount.push(0);
+        missionDifficulty.push(0);
+    }
 
-	console.log("maxCompleteCount: " + maxCompleteCount);	
+    if (this.states != null) {
+        for (i = 0; i < this.states.length; i++) {
 
-	
-//	console.log("numMissionsCompleted: " + numMissionsCompleted);
-//	console.log("this.getCurrentWarpScore(): " + this.getCurrentWarpScore());
-//	console.log("this.getPreviousWarpScore(): " + this.getPreviousWarpScore());
-	console.log("missionCompleted: " + missionCompleted);	
-//	console.log("missionDifficulty: " + missionDifficulty);	
+            if (this.states[i].response) {
+                if (this.states[i].response.missionData) {
+                    var mData = this.states[i].response.missionData;
+                    if (mData.endState == 1 && mData.isExit) {
+                        if (!isNaN(this.states[i].response.warpIndex)) {
+                            missionCompleteCount[this.states[i].response.warpIndex]++;
+                            maxCompleteCount = Math.max(maxCompleteCount, missionCompleteCount[this.states[i].response.warpIndex]);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-	var bucket = this.getCurrentBucketIndex();
-	switch(bucket) {
-		case 0:
-//		index = this.adaptiveMissionSelector(numMissionsCompleted,this.getCurrentWarpScore(),this.getPreviousWarpScore(),missionList,missionCompleted,missionDifficulty);
-		index = this.randomMissionSelector(missionList,missionCompleted);
-		break;	
-		case 1:
-		index = this.randomMissionSelector(missionList,missionCompleted);
-		break;
-		case 2:
-		index = this.randomMissionSelector(missionList,missionCompleted);
-		break;
-		case 3:
-		index = this.randomMissionSelector(missionList,missionCompleted);
-		break;
-		case 4:
-		index = this.randomMissionSelector(missionList,missionCompleted);
-		break;
-		default:
-		index = this.randomMissionSelector(missionList,missionCompleted); //example of calling a random index
-	}
-			
-	//if we didn't finish the last warp attempt, go back
-	if(this.states != null && this.states.length > 0) {
-		console.log("looking for last mission: ");			
-		if(!this.states[this.states.length - 1].response.missionData.isExit) {
-			var lastWarpIndex = this.states[this.states.length - 1].response.warpIndex;
-			var successInWarpFound = false;
-			var successIndex = -1;
-			
-			for(var i=this.states.length - 1;i>=0;i--) {
-				if(this.states[i].response.warpIndex != lastWarpIndex) {
-					break;
-				}
-				
-				if(!this.states[i].response.success) {
-					successIndex = this.states[i].response.warpIndex;
-					console.log("mission found with index: " + index);
-				}
-				else {
-					successInWarpFound = true;
-					break;
-				}
-			}
-			
-			if(!successInWarpFound && successIndex >= -1) {
-				index = successIndex;
-			}			
-		}
-	}
+    //what we're going to do here is count the number of each onek
+    //if the number is less than the maximum, then it hasn't been played yet
+    var numMissionsCompleted = 0; //store the number of unique succesful mission completions	
+    if (this.states != null) {
+        for (i = 0; i < this.states.length; i++) {
+            if (this.states[i].response) {
+                if (this.states[i].response.missionData) {
+                    var mData = this.states[i].response.missionData;
+                    if (mData.endState == 1 && mData.isExit) {
+                        if (!isNaN(this.states[i].response.warpIndex) && !isNaN(missionCompleteCount[this.states[i].response.warpIndex]) && missionCompleteCount[this.states[i].response.warpIndex] >= maxCompleteCount) {
+                            missionCompleted[this.states[i].response.warpIndex] = true;
+                        }
+                    }
+                }
 
-	//check to make sure that the index
-	while (index >= missionList.length)
-		index -= missionList.length;
+            }
+        }
+    }
 
-	this.lastWarpIndex = index;
-	this.lastMissionDifficulty = missionDifficulty[index];
+    for (i = 0; i < missionCompleted.length; i++) {
+        if (missionCompleted[i])
+            numMissionsCompleted++;
+        var i1 = missionList[i].split("-")[0] - 1;
+        var i2 = missionList[i].split("-")[1] - 1;
+        console.log("i1: " + i1 + " i2: " + i2);
+        missionDifficulty[i] = missionTable[i1][i2].difficulty;
+    }
 
-	var missionIndex1 = missionList[index].split("-")[0];
-	var missionIndex2 = missionList[index].split("-")[1];
-	
-	return missionTable[missionIndex1-1][missionIndex2-1].string;
+    console.log("maxCompleteCount: " + maxCompleteCount);
+
+
+    //	console.log("numMissionsCompleted: " + numMissionsCompleted);
+    //	console.log("this.getCurrentWarpScore(): " + this.getCurrentWarpScore());
+    //	console.log("this.getPreviousWarpScore(): " + this.getPreviousWarpScore());
+    console.log("missionCompleted: " + missionCompleted);
+    //	console.log("missionDifficulty: " + missionDifficulty);	
+
+    var bucket = this.getCurrentBucketIndex();
+    switch (bucket) {
+        case 0:
+            index = this.getClosestDifficultMission(this.getCurrentWarpScore(), missionList, missionCompleted, missionDifficulty);
+            //index = this.adaptiveMissionSelector(numMissionsCompleted, this.getCurrentWarpScore(), this.getPreviousWarpScore(), missionList, missionCompleted, missionDifficulty);
+            break;
+        case 1:
+            index = this.getClosestDifficultMission(this.getCurrentWarpScore(), missionList, missionCompleted, missionDifficulty);
+            //index = this.adaptiveMissionSelector(numMissionsCompleted, this.getCurrentWarpScore(), this.getPreviousWarpScore(), missionList, missionCompleted, missionDifficulty);
+            break;
+        case 2:
+            index = this.getClosestDifficultMission(this.getCurrentWarpScore(), missionList, missionCompleted, missionDifficulty);
+            //index = this.adaptiveMissionSelector(numMissionsCompleted, this.getCurrentWarpScore(), this.getPreviousWarpScore(), missionList, missionCompleted, missionDifficulty);
+            break;
+        case 3:
+            index = this.getClosestDifficultMission(this.getCurrentWarpScore(), missionList, missionCompleted, missionDifficulty);
+            //index = this.adaptiveMissionSelector(numMissionsCompleted, this.getCurrentWarpScore(), this.getPreviousWarpScore(), missionList, missionCompleted, missionDifficulty);
+            break;
+        case 4:
+            index = this.getClosestDifficultMission(this.getCurrentWarpScore(), missionList, missionCompleted, missionDifficulty);
+            //index = this.adaptiveMissionSelector(numMissionsCompleted, this.getCurrentWarpScore(), this.getPreviousWarpScore(), missionList, missionCompleted, missionDifficulty);
+            break;
+        default:
+            index = this.randomMissionSelector(missionList, missionCompleted); //example of calling a random index		
+    }
+
+    //if we didn't finish the last warp attempt, go back
+    if (this.states != null && this.states.length > 0) {
+        console.log("looking for last mission: ");
+        if (!this.states[this.states.length - 1].response.missionData.isExit) {
+            var lastWarpIndex = this.states[this.states.length - 1].response.warpIndex;
+            var successInWarpFound = false;
+            var successIndex = -1;
+
+            for (var i = this.states.length - 1; i >= 0; i--) {
+                if (this.states[i].response.warpIndex != lastWarpIndex) {
+                    break;
+                }
+
+                if (!this.states[i].response.success) {
+                    successIndex = this.states[i].response.warpIndex;
+                    console.log("mission found with index: " + index);
+                }
+                else {
+                    successInWarpFound = true;
+                    break;
+                }
+            }
+
+            if (!successInWarpFound && successIndex >= -1) {
+                index = successIndex;
+            }
+        }
+    }
+
+    //check to make sure that the index
+    while (index >= missionList.length)
+        index -= missionList.length;
+
+    this.lastWarpIndex = index;
+    this.lastMissionDifficulty = missionDifficulty[index];
+
+    var missionIndex1 = missionList[index].split("-")[0];
+    var missionIndex2 = missionList[index].split("-")[1];
+
+    return missionTable[missionIndex1 - 1][missionIndex2 - 1].string;
 };
 
 Epigame.prototype.getLastWarpIndex = function() {
@@ -1273,24 +1372,23 @@ Epigame.prototype.getMissionData = function () {
       numSuccesses++;
       unsuccessfulTrialNum = 1;
     }
+	else if(this.states[i].response.missionData.missionPhase==4 && this.states[i].response.missionData.endState==1){
+		numAttempts++;
+		numSuccesses++;
+		unsuccessfulTrialNum=1;
+	}
 
     //Player has started a trial (not a question)
-    else if (this.states[i].response.missionData.timeIntroScreen > 0 || this.states[i].response.missionData.trackQuestion) {
+    else if ((this.states[i].response.missionData.timeIntroScreen > 0 || this.states[i].response.missionData.trackQuestion) && !this.states[i].response.missionData.isNodeExit) {
       numTrials++;
       unsuccessfulTrialNum++;
     }
+	
 
 
     if (this.states[i].response.missionData.isNodeExit) {
       dataLog.stepVisit++;
     }
-    /*
-    if (this.states[i].response.isExit && !this.states[i].response.missionData.isNodeExit) {
-    dataLog.stepVisit++;
-    }
-    else if (this.states[i].response.missionData.isExit && !this.states[i].response.missionData.isNodeExit){
-    dataLog.stepVisit++;
-    }*/
 
     if (this.states[i].response.missionData && this.states[i].response.missionData.totalTrials) {
       numTrials = this.states[i].response.missionData.totalTrials;

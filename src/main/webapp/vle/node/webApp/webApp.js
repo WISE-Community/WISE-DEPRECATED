@@ -56,15 +56,30 @@ function WebApp(node) {
 	this.api.triggerSaveState = function(  ) { save(); };
 	
 	//function that saves a new node state to the local array of node states and also to the database
-	this.api.save = function(response, successCallback, failureCallback, callbackData) { 
-		//create the new node state
-		var nodeState = new WebAppState(response);
-		
-		//add the new node state to this step's local copy of the node states
-		this.states.push(nodeState);
-		
-		//save the node state to the database
-		node.save(nodeState, successCallback, failureCallback, callbackData); 
+	this.api.save = function (response, successCallback, failureCallback, callbackData) {
+	    //create the new node state
+	    var nodeState = new WebAppState(response);
+
+	    //add the new node state to this step's local copy of the node states
+	    this.states.push(nodeState);
+
+	    //save the node state to the database
+	    node.save(nodeState, successCallback, failureCallback, callbackData);
+
+	};
+
+	this.api.onlySaveLatestState = function (response,successCallback,failureCallback,callbackData) {
+        //create the new node state
+	    var nodeState = new WebAppState(response);
+
+	    var states = [];
+	    states.push(nodeState);
+        node.view.overwriteNodeStatesInCurrentNodeVisit(node.id, states);
+
+
+	    //add the new node state to this step's local copy of the node states+
+	    //this.states.push(nodeState);
+	    this.states = states;
 	};
 	
 	this.api.getContentJSON = function() { 
@@ -101,7 +116,11 @@ function WebApp(node) {
  * the .html file for this step (look at webApp.html).
  */
 WebApp.prototype.render = function() {
-	var iframe = document.getElementById("webappiframe");
+    var iframe = document.getElementById("webappiframe");
+	console.log("SETTING THE HEIGHT TO " + this.content.height + " and the WIDTH to " + this.content.width);
+	iframe.width = "100%"; //this.content.width;
+	iframe.height = "100%";//this.content.height;
+	
 	var mypath = this.view.config.getConfigParam("getContentBaseUrl") + "assets/";
 	
 	//NOTE: I do this last in proof of concept to detect if there were any surprise crashes in the above 
