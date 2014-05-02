@@ -136,8 +136,6 @@ ANNOTATOR.prototype.loadModules = function(jsonfilename, context) {
 				}
 			}
 			
-			console.log('height: ' + height + ', width: ' + width);
-			
 			var h = context.height = height + 50,
 				w = context.width = width + 50,
 				rightX = w-width-1,
@@ -334,7 +332,9 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 			
 			// bind new label and cancel buttons click events
 			$('#newLabel').off('click').on('click', function(){
-				context.setLabelMode(true);
+				if(!labelsExt.maxReached(true)){
+					context.setLabelMode(true);
+				}
 			});
 			
 			$('#cancelNew').off('click').on('click', function(){
@@ -346,6 +346,11 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 				context.setLabelMode(false);
 				svgEditor.changed = true;
 				$('#save').prop('disabled', false);
+				if(labelsExt.maxReached()){
+					$('#newLabel').addClass('disabled').css('pointer-events', 'auto');
+				} else {
+					$('#newLabel').removeClass('disabled');
+				}
 				context.toggleInstructions();
 			}
 		}
@@ -447,8 +452,7 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 			if(context.initTries<300){
 				context.initDisplay(data,context);
 			} else {
-				var failed = [];
-				
+				//var failed = [];
 				context.view.notificationManager.notify("Error: Unable to start annotator because svg-edit extensions failed to load.",1);
 			}
 		},100);

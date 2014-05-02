@@ -1,5 +1,5 @@
 /*
- * ext-shapes.js
+ * ext-labels.js
  *
  * Licensed under the MIT License
  *
@@ -9,7 +9,7 @@
  * by a connector line) when user clicks on drawing canvas after activating the tool.
  * Label anchor (the circle) is placed at the location of the mouse click and text element
  * is offset to the top/right by default.
- * Uses portions of requires ext-connector.js to be enabled to create connector line.
+ * Uses portions of and requires ext-connector.js to be enabled to create connector line.
  * 
  * TODO: svg-edit i18n
  *
@@ -140,6 +140,27 @@ svgEditor.addExtension('labels', function() {'use strict';
 					textColor = val;
 				}
 				return this;
+			},
+			/** 
+			 * Checks whether the maximum number of labels has been reached
+			 * 
+			 * @param alert Boolean whether to alert user or not
+			 * @returns Boolean
+			 */
+			maxReached: function(alert){
+				// check for max existing labels
+				if(!loading && content.labels.length >= max){
+					if(alert){
+						//Sorry, you have reached the maximum number of lables (' + max + '). If you would like to add more, please delete some existing labels and try again.
+						var msg = '<p style="text-align: center;">' + view.getI18NStringWithParams('annotator_maxWarning', [max], 'SVGDrawNode') + '</p>'; // WISE
+						//$.alert(msg);
+						bootbox.alert(msg); // WISE
+					}
+					annotator.setLabelMode(false); // WISE
+					return true;
+				} else {
+					return false;
+				}
 			},
 			/** 
 			 * Gets whether extensions has completely loaded
@@ -427,13 +448,7 @@ svgEditor.addExtension('labels', function() {'use strict';
 	}
 	
 	function addLabel(ax, ay, labelText, labelColor, tColor, labelId, textx, texty){
-		// check for max existing labels
-		if(!loading && content.labels.length >= max){
-			//Sorry, you have reached the maximum number of lables (' + max + '). If you would like to add more, please delete some existing labels and try again.
-			var msg = '<p style="text-align: center;">' + view.getI18NStringWithParams('annotator_maxWarning', [max], 'SVGDrawNode') + '</p>'; // WISE
-			//$.alert(msg);
-			bootbox.alert(msg); // WISE
-			annotator.setLabelMode(false); // WISE
+		if(api.maxReached(true)){
 			return;
 		}
 		
