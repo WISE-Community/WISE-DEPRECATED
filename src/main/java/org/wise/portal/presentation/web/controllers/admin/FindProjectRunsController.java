@@ -104,6 +104,7 @@ public class FindProjectRunsController extends SimpleFormController{
      */
     private List<Run> getRunListByProjectId(Long projectId){
 		List<Run> runList = new ArrayList<Run>();
+		
     	List<Run> run_list = runService.getAllRunList();
     	List<Project> projectCopies = projectService.getProjectCopies(projectId);
 		for(Run run: run_list){
@@ -128,16 +129,8 @@ public class FindProjectRunsController extends SimpleFormController{
      * @return List<Run> - list of runs associated with username
      */
     private List<Run> getRunListByUsername(String username){
-    	List<Run> runList = new ArrayList<Run>();
-    	List<Run> run_list = runService.getAllRunList();
     	User user = userService.retrieveUserByUsername(username);
-    	for(Run run : run_list){
-    		if(run.getOwners().contains(user)){
-    			runList.add(run);
-    		}
-    	}
-    	
-    	return runList;
+    	return runService.getRunListByOwner(user);
     }
     
     /**
