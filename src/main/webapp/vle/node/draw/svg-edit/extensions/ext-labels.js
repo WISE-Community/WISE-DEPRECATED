@@ -43,8 +43,9 @@ svgEditor.addExtension('labels', function() {'use strict';
 		},
 		currentEl = [],
 		current = {}, // Object to hold Label currently being created
-		max = 0, // Integer indicating maximum allowed labels (0 [unlimited] is default; allowed values are integers >= 0)
-		min = 0; // Integer indicating minimum allowed labels (0 is default; allowed values are 0 to max value)
+		max = Infinity, // Integer indicating maximum allowed labels (Unlimited is default; allowed values are integers > 0)
+		min = 0, // Integer indicating minimum allowed labels (0 is default; allowed values are 0 to max value)
+		maxCheck = false; // Boolean indicating whether a check for max labels is necessary
 	
 	// Label class
 	function Label(text, id, location, textLocation, color){
@@ -61,10 +62,9 @@ svgEditor.addExtension('labels', function() {'use strict';
 			/** 
 			 * Gets or sets the stored label content and optionally updates the UI display
 			 * 
-			 * @param labels Array of Label objects
-			 * @param total Integer specifying total number of labels created (optional)
-			 * @param update Boolean specifying whether or not to create new label element on canvas for each stored Label (optional; default is true)
+			 * @param val Object content
 			 * @param callback Function to run when content has been set and snapshots have been created (optional)
+			 * @param noUpdate Boolean specifying whether or not to update the labels svg display
 			 * @returns Array of Label objects
 			 * @returns Object this
 			 */
@@ -76,6 +76,9 @@ svgEditor.addExtension('labels', function() {'use strict';
 				if (content.labels.length > max){
 					var overflow = content.labels.length-max;
 					content.labels.splice(-1*overflow, overflow);
+				}
+				if(!content.total || typeof content.total != 'number' || content.total < content.labels.length){
+					content.total = content.labels.length;
 				}
 				setContent(callback, noUpdate);
 				
@@ -91,8 +94,12 @@ svgEditor.addExtension('labels', function() {'use strict';
 			max: function(val) {
 				if(!arguments.length){ return max; } // no arguments, so return max value
 				
-				if(typeof val === 'number' && val > (min-1)){
-					max = val;
+				if(typeof val === 'number'){
+					if(val > 0 && val > (min-1)){
+						max = val;
+					} else if(val == 0){
+						max = Infinity;
+					}
 				}
 				return this;
 			},
@@ -106,7 +113,7 @@ svgEditor.addExtension('labels', function() {'use strict';
 			min: function(val) {
 				if(!arguments.length){ return min; } // no arguments, so return min value
 				
-				if(typeof val === 'number' && val < (max+1)){
+				if(typeof val === 'number' && val > -1 && val < (max+1)){
 					min = val;
 				}
 				return this;
@@ -320,9 +327,10 @@ svgEditor.addExtension('labels', function() {'use strict';
 			 * Deletes a label
 			 * 
 			 * @param labelId String label id
+			 * @param noConfirm Boolean whether to warn user before deleting
 			 */
-			deleteLabel: function(labelId){
-				deleteLabel(labelId);
+			deleteLabel: function(labelId, noConfirm){
+				deleteLabel(labelId, noConfirm);
 			},
 			/**
 			 * Sets svg-editor mode to 'ext-label' and updates mouse cursor
@@ -366,14 +374,6 @@ svgEditor.addExtension('labels', function() {'use strict';
 		loading = false;
 		onComplete(callback);
 	}
-	
-	/*function setMin(val){
-		
-	}
-	
-	function setMax(val){
-		
-	}*/
 	
 	// from ext-connector.js
 	function getBBintersect(x, y, bb, offset) {
@@ -718,7 +718,7 @@ svgEditor.addExtension('labels', function() {'use strict';
 		textBox.setAttribute('height', text_bb.height + (tOffset*2));
 	}
 	
-	function deleteLabel(id){
+	function deleteLabel(id, noConfirm){
 		// check for minimum number of labels
 		if(content.labels.length <= min){
 			//var msg = '<p style="text-align: center;">Sorry, you cannot delete this label. You must have at least ' + min + ' active labels.</p>';
@@ -730,35 +730,43 @@ svgEditor.addExtension('labels', function() {'use strict';
 		
 		var labels = content.labels;
 		if(labels.length > min){
-			/*$.confirm('Are you sure you want to permanently delete this label?'), function(ok){
-				if (ok) {
-					var i = labels.length;
-					while(i--){
-						if(labels[i].id === id){
-							labels.splice(i);
-							$('[data-labelid="' + id + '"]').remove();
-							api.changed();
-							break;
+			if(!noConfirm){
+				/*$.confirm('Are you sure you want to permanently delete this label?'), function(ok){
+					if (ok) {
+						var i = labels.length;
+						while(i--){
+							if(labels[i].id === id){
+								labels.splice(i);
+								$('[data-labelid="' + id + '"]').remove();
+								api.changed();
+								break;
+							}
 						}
 					}
-				}
-			});*/
-			// WISE: use Bootbox
-			bootbox.confirm(view.getI18NString('annotator_deleteConfirm','SVGDrawNode'), function(ok){
-				if(ok){
-					var i = labels.length;
-					while(i--){
-						if(labels[i].id === id){
-							labels.splice(i,1);
-							$('[data-labelid="' + id + '"]').remove();
-							api.changed();
-							break;
-						}
+				});*/
+				// WISE: use Bootbox
+				bootbox.confirm(view.getI18NString('annotator_deleteConfirm','SVGDrawNode'), function(ok){
+					if(ok){
+						removeLabel(id);
 					}
-				}
-				canv.leaveContext();
-				canv.clearSelection();
-			});
+					canv.leaveContext();
+					canv.clearSelection();
+				});
+			} else {
+				removeLabel(id);
+			}
+		}
+	}
+	
+	function removeLabel(id){
+		var labels = content.labels,
+			i = labels.length;
+		while(i--){
+			if(labels[i].id === id){
+				labels.splice(i,1);
+				$('[data-labelid="' + id + '"]').remove();
+				api.changed();
+			}
 		}
 	}
 	
@@ -785,10 +793,21 @@ svgEditor.addExtension('labels', function() {'use strict';
 			setContent(); // set initial labels
 		},
 		
-		selectedChanged: function(){},
+		selectedChanged: function(opts){},
 		
-		elementChanged: function(){
-			
+		elementChanged: function(opts){
+			if(svgCanvas.undoMgr.undoStack[svgCanvas.undoMgr.undoStackPointer-1].text === 'Delete Elements') {
+				var elems = opts.elems,
+					i = elems.length;
+				while(i--){
+					var elem = opts.elems[i];
+					if(elem.classList.contains('se_label')){
+						var labelId = elem.getAttribute('data-labelid')
+						api.deleteLabel(labelId, true);
+						break;
+					}
+				}
+			}
 		},
 		
 		mouseDown: function(opts){

@@ -35,7 +35,7 @@ function ANNOTATOR(node) {
 		"svgString": "",
 		"explanation": "",
 		"labels": [],
-		"labelTotal": 0
+		"total": 0
 	};
 	
 	svgEditor.changed = false, // boolean to specify whether student data has changed and should be saved on exit
@@ -200,7 +200,7 @@ ANNOTATOR.prototype.saveToVLE = function(isExit) {
 		this.studentData.svgString = svgCanvas.getSvgString();
 		this.studentData.explanation = $('#explanationInput').val();
 		this.studentData.labels = svgEditor.ext_labels.content().labels;
-		this.studentData.labelTotal = svgEditor.ext_labels.total();
+		this.studentData.total = svgEditor.ext_labels.total();
 		if(isExit){
 			svgEditor.loadedWISE = false;
 		} else {
