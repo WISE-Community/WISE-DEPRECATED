@@ -39,6 +39,9 @@ import org.junit.runners.Suite;
     org.wise.portal.presentation.web.controllers.teacher.management.AllTests.class,
     org.wise.portal.presentation.web.controllers.general.contactwise.AllTests.class,
     org.wise.portal.presentation.web.controllers.admin.AllTests.class,
+    IndexControllerTest.class,
+    LoginControllerTest.class,
+    ModelAndViewTests.class
 })
 
 public class AllTests {

@@ -44,6 +44,7 @@ import org.junit.runners.Suite;
 	   org.wise.portal.dao.premadecomment.impl.AllTests.class,
 	   org.wise.portal.domain.impl.AllTests.class,
 	   org.wise.portal.domain.authentication.impl.AllTests.class,	   
+	   org.wise.portal.domain.webservice.http.AllTests.class,
 	   org.wise.portal.domain.run.AllTests.class,
        org.wise.portal.presentation.validators.AllTests.class,
 	   org.wise.portal.presentation.web.controllers.AllTests.class,
@@ -55,7 +56,9 @@ import org.junit.runners.Suite;
 	   org.wise.portal.domain.premadecomment.impl.AllTests.class,
 	   org.wise.portal.dao.newsitem.impl.AllTests.class,
 	   org.wise.portal.domain.newsitem.impl.AllTests.class,
-	   org.wise.portal.service.newsitem.impl.AllTests.class
+	   org.wise.portal.service.newsitem.impl.AllTests.class,
+	   org.wise.portal.service.group.impl.GroupServiceImplTest.class,
+	   org.wise.portal.service.workgroup.impl.WorkgroupServiceImplTest.class
 })
 
 public class AllTests {

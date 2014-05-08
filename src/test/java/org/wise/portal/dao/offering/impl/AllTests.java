@@ -31,6 +31,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+	org.wise.portal.dao.offering.impl.HibernateOfferingDaoTest.class,
 	org.wise.portal.dao.offering.impl.HibernateRunDaoTest.class
 })
 

@@ -25,6 +25,8 @@ package org.wise.portal.presentation.validators;
 import java.util.Calendar;
 import java.util.Date;
 
+import junit.framework.TestCase;
+
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.wise.portal.domain.authentication.MutableUserDetails;
@@ -37,7 +39,7 @@ import org.wise.portal.presentation.validators.TeacherUserDetailsValidator;
  * @version $Id: $
  */
 public class UserDetailsValidatorTest extends
-		net.sf.sail.webapp.presentation.validators.UserDetailsValidatorTest {
+		TestCase {
 	
     protected static final String USERNAME = "NAME";
 
@@ -56,6 +58,8 @@ public class UserDetailsValidatorTest extends
     protected static final String SPACES = "    ";
 
 	protected static final String PASSWORD_TOO_LONG = "abcdefghijklmnopqrstuvwxyz";
+	
+    protected static final String ILLEGAL1 = "<a>";
     
     protected Validator userDetailsValidator;
     

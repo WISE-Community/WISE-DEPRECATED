@@ -17,9 +17,7 @@
  */
 package org.wise.portal.junit;
 
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
-import org.wise.portal.spring.SpringConfiguration;
-import org.wise.portal.spring.impl.SpringConfigurationImpl;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  * @author Cynick Young
@@ -27,16 +25,8 @@ import org.wise.portal.spring.impl.SpringConfigurationImpl;
  * @version $Id$
  * 
  */
-public abstract class AbstractSpringTests extends
-	AbstractDependencyInjectionSpringContextTests {
-
-    private static final SpringConfiguration SPRING_CONFIG = new SpringConfigurationImpl();
-
-    /**
-     * @see net.sf.sail.webapp.junit.AbstractSpringTests#getConfigLocations()
-     */
-    @Override
-    protected String[] getConfigLocations() {
-        return SPRING_CONFIG.getRootApplicationContextConfigLocations();
-    }
+public final class HibernateFlusher extends HibernateDaoSupport {
+  public void flush() {
+    this.getHibernateTemplate().flush();
+  }
 }

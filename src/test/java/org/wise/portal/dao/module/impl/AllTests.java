@@ -31,6 +31,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+	org.wise.portal.dao.module.impl.HibernateCurnitDaoTest.class
 })
 public class AllTests {
 

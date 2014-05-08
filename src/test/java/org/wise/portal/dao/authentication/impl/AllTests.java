@@ -33,6 +33,12 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+	org.wise.portal.dao.authentication.impl.HibernateAclEntryDaoTest.class,
+	org.wise.portal.dao.authentication.impl.HibernateAclSidDaoTest.class,
+	org.wise.portal.dao.authentication.impl.HibernateAclTargetObjectDaoTest.class,
+	org.wise.portal.dao.authentication.impl.HibernateAclTargetObjectIdentityDaoTest.class,
+	org.wise.portal.dao.authentication.impl.HibernateGrantedAuthorityDaoTest.class,
+	org.wise.portal.dao.authentication.impl.HibernateUserDetailsDaoTest.class,
 	org.wise.portal.dao.authentication.impl.HibernateStudentUserDetailsDaoTest.class,
 	org.wise.portal.dao.authentication.impl.HibernateTeacherUserDetailsDaoTest.class
 })

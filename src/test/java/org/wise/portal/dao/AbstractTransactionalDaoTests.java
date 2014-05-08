@@ -1,41 +1,129 @@
 /**
- * Copyright (c) 2008 Regents of the University of California (Regents). Created
- * by TELS, Graduate School of Education, University of California at Berkeley.
+ * Copyright (c) 2007 Encore Research Group, University of Toronto
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * This software is distributed under the GNU Lesser General Public License, v2.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * Permission is hereby granted, without written agreement and without license
- * or royalty fees, to use, copy, modify, and distribute this software and its
- * documentation for any purpose, provided that the above copyright notice and
- * the following two paragraphs appear in all copies of this software.
- *
- * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
- * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
- * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- *
- * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
- * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
- * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
- * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package org.wise.portal.dao;
 
+import java.util.List;
+
 import org.wise.portal.domain.Persistable;
+import org.wise.portal.junit.AbstractTransactionalDbTests;
 import org.wise.portal.spring.SpringConfiguration;
 import org.wise.portal.spring.impl.SpringConfigurationImpl;
 
 /**
- * @author Hiroki Terashima
- *
- * @version $Id$
+ * Performs basic implementation tests on the methods defined in SimpleDao using
+ * a real data store.
+ * 
+ * @author Cynick Young
+ * 
+ * @version $Id: AbstractTransactionalDaoTests.java 941 2007-08-16 14:03:11Z
+ *          laurel $
  */
 public abstract class AbstractTransactionalDaoTests<DAO extends SimpleDao<OBJECT>, OBJECT extends Persistable>
-        extends net.sf.sail.webapp.dao.AbstractTransactionalDaoTests<DAO, OBJECT> {
-	
+		extends AbstractTransactionalDbTests {
+
     private static final SpringConfiguration SPRING_CONFIG = new SpringConfigurationImpl();
 
+	protected DAO dao;
+
+	protected OBJECT dataObject;
+
+	private static final Long NON_EXISTENT_PK = new Long(666);
+
+	/**
+	 * Test method for
+	 * {@link org.wise.portal.dao.impl.AbstractHibernateDao#delete(java.lang.Object)}.
+	 */
+	public void testDelete() {
+		this.verifyDataStoreIsEmpty();
+
+		// save and delete the data object using dao
+		this.dao.save(this.dataObject);
+		this.dao.delete(this.dataObject);
+
+		// * NOTE * must flush to test delete
+		// see http://forum.springframework.org/showthread.php?t=18263 for
+		// explanation
+		this.toilet.flush();
+
+		this.verifyDataStoreIsEmpty();
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.wise.portal.dao.impl.AbstractHibernateDao#save(java.lang.Object)}.
+	 */
+	public abstract void testSave();
+
+	/**
+	 * Test method for
+	 * {@link org.wise.portal.dao.impl.AbstractHibernateDao#getList()}.
+	 */
+	public void testGetList() {
+		this.verifyDataStoreIsEmpty();
+		List<OBJECT> actualList = this.dao.getList();
+		assertTrue(actualList.isEmpty());
+
+		this.dao.save(this.dataObject);
+		List<?> expectedList = this.retrieveDataObjectListFromDb();
+		assertEquals(1, expectedList.size());
+
+		actualList = this.dao.getList();
+		assertEquals(1, actualList.size());
+		assertEquals(this.dataObject, actualList.get(0));
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.wise.portal.dao.impl.AbstractHibernateDao#getById(java.lang.Long)}.
+	 */
+	public void testGetById() throws Exception {
+		this.verifyDataStoreIsEmpty();
+		try {
+			this.dao.getById(NON_EXISTENT_PK);
+			fail("Expected ObjectNotFoundException");
+		} catch (ObjectNotFoundException e) {
+
+		}
+		this.dao.save(this.dataObject);
+		List<OBJECT> actualList = this.dao.getList();
+		OBJECT actualObject = actualList.get(0);
+
+		assertTrue(this.dataObject.getId() instanceof Long);
+		assertEquals(actualObject, this.dao.getById((Long) this.dataObject
+				.getId()));
+	}
+
+	protected final void verifyDataStoreIsEmpty() {
+		assertTrue(retrieveDataObjectListFromDb().isEmpty());
+	}
+
+	protected abstract List<?> retrieveDataObjectListFromDb();
+
+	/**
+	 * @see org.springframework.test.AbstractTransactionalSpringContextTests#onTearDownAfterTransaction()
+	 */
+	@Override
+	protected void onTearDownAfterTransaction() throws Exception {
+		super.onTearDownAfterTransaction();
+		this.dao = null;
+		this.dataObject = null;
+	}
+	
     /**
      * @see net.sf.sail.webapp.junit.AbstractTransactionalDbTests#getConfigLocations()
      */
@@ -43,6 +131,4 @@ public abstract class AbstractTransactionalDaoTests<DAO extends SimpleDao<OBJECT
     protected String[] getConfigLocations() {
         return SPRING_CONFIG.getRootApplicationContextConfigLocations();
     }
-
-
 }

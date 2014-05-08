@@ -31,7 +31,8 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
-	org.wise.portal.service.offering.impl.RunServiceImplTest.class
+	OfferingServiceImplTest.class,
+	RunServiceImplTest.class
 })
 
 public class AllTests {

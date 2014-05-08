@@ -15,28 +15,23 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.wise.portal.junit;
+package org.wise.portal.domain.webservice.http;
 
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
-import org.wise.portal.spring.SpringConfiguration;
-import org.wise.portal.spring.impl.SpringConfigurationImpl;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
  * @author Cynick Young
- * 
+ *
  * @version $Id$
- * 
+ *
  */
-public abstract class AbstractSpringTests extends
-	AbstractDependencyInjectionSpringContextTests {
 
-    private static final SpringConfiguration SPRING_CONFIG = new SpringConfigurationImpl();
+@RunWith(Suite.class)
+@Suite.SuiteClasses( { 
+	HttpPostRequestTest.class,
+	HttpGetRequestTest.class,
+})
 
-    /**
-     * @see net.sf.sail.webapp.junit.AbstractSpringTests#getConfigLocations()
-     */
-    @Override
-    protected String[] getConfigLocations() {
-        return SPRING_CONFIG.getRootApplicationContextConfigLocations();
-    }
+public class AllTests {
 }

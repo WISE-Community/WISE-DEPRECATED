@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008 Regents of the University of California (Regents). Created
+ * Copyright (c) 2007 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
@@ -20,20 +20,20 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.domain.authentication.impl;
+package org.wise.portal.dao.group.impl;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
  * @author Hiroki Terashima
+ * 
  * @version $Id$
  */
+
 @RunWith(Suite.class)
-@Suite.SuiteClasses({
-	org.wise.portal.domain.authentication.impl.PersistentSidTest.class,
-	org.wise.portal.domain.authentication.impl.PersistentAclTargetObjectIdentityTest.class,
-	org.wise.portal.domain.authentication.impl.TeacherUserDetailsTest.class
+@Suite.SuiteClasses( {
+	org.wise.portal.dao.group.impl.HibernateGroupDaoTest.class
 })
 
 public class AllTests {
