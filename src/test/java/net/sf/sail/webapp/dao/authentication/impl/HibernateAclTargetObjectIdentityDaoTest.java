@@ -21,18 +21,19 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.sail.webapp.dao.AbstractTransactionalDaoTests;
-import net.sf.sail.webapp.domain.authentication.MutableAclSid;
-import net.sf.sail.webapp.domain.authentication.MutableAclTargetObject;
-import net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentAclSid;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentAclTargetObject;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentAclTargetObjectIdentity;
-import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
 
 import org.easymock.EasyMock;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.acls.model.ObjectIdentity;
+import org.wise.portal.dao.authentication.impl.HibernateAclTargetObjectIdentityDao;
+import org.wise.portal.domain.authentication.MutableAclSid;
+import org.wise.portal.domain.authentication.MutableAclTargetObject;
+import org.wise.portal.domain.authentication.MutableAclTargetObjectIdentity;
+import org.wise.portal.domain.authentication.impl.PersistentAclSid;
+import org.wise.portal.domain.authentication.impl.PersistentAclTargetObject;
+import org.wise.portal.domain.authentication.impl.PersistentAclTargetObjectIdentity;
+import org.wise.portal.domain.group.impl.PersistentGroup;
 
 /**
  * @author Cynick Young

@@ -27,14 +27,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.sail.webapp.domain.Offering;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.domain.group.Group;
 import net.sf.sail.webapp.junit.AbstractTransactionalDbTests;
 
 import org.hibernate.Session;
+import org.wise.portal.dao.workgroup.impl.HibernateWorkgroupDao;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.run.Offering;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * Another test for HibernateWorkgroupDao

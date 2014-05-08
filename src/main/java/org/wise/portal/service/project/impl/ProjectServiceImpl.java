@@ -184,7 +184,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @override @see org.telscenter.sail.webapp.service.offering.RunService#addSharedTeacherToRun(org.telscenter.sail.webapp.domain.impl.AddSharedTeacherParameters)
+	 * @override @see org.wise.portal.service.offering.RunService#addSharedTeacherToRun(org.wise.portal.domain.impl.AddSharedTeacherParameters)
 	 */
 	public void addSharedTeacherToProject(
 			AddSharedTeacherParameters addSharedTeacherParameters) throws ObjectNotFoundException {

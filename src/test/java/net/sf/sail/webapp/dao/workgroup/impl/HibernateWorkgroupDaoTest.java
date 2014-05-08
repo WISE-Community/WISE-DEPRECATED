@@ -26,19 +26,20 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.sail.webapp.dao.AbstractTransactionalDaoTests;
-import net.sf.sail.webapp.domain.Offering;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
-import net.sf.sail.webapp.domain.impl.OfferingImpl;
-import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.domain.impl.WorkgroupImpl;
 
 import org.hibernate.Session;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.wise.portal.dao.workgroup.impl.HibernateWorkgroupDao;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.group.impl.PersistentGroup;
+import org.wise.portal.domain.run.Offering;
+import org.wise.portal.domain.run.impl.OfferingImpl;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 
 /**
  * Test for HibernateWorkgroupDao

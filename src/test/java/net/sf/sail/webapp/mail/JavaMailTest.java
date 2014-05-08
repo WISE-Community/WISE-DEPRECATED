@@ -33,6 +33,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.internal.runners.TestClassRunner;
 import org.junit.runner.RunWith;
+import org.wise.portal.service.mail.MailService;
 
 /**
  * FUNCTIONAL TEST
@@ -72,10 +73,10 @@ import org.junit.runner.RunWith;
 @RunWith(TestClassRunner.class)
 public class JavaMailTest extends AbstractSpringTests {
 
-	private JavaMailHelper mailHelper;
+	private MailService mailService;
 
-	private static final String RECEIVER = "test@test.ca";
-	private static final String RECEIVER2 = "test@test.com";
+	private static final String RECEIVER = "test@testabc.ca";
+	private static final String RECEIVER2 = "test@testdef.com";
 	private static final String MESSAGE = "test portal message";
 	private static final String SUBJECT = "test portal subject";
 	private static final String FROM = "test@test.ca";
@@ -96,8 +97,8 @@ public class JavaMailTest extends AbstractSpringTests {
 	 */
 	protected void onSetUp() throws Exception {
 		super.onSetUp();
-		mailHelper = (JavaMailHelper) this.applicationContext
-				.getBean("javaMail");
+		mailService = (MailService) this.applicationContext
+				.getBean("mailService");
 		recipients = new String[2];
 		recipients[0] = RECEIVER;
 	}
@@ -113,7 +114,7 @@ public class JavaMailTest extends AbstractSpringTests {
 	 */
 	protected void onTearDown() throws Exception {
 		super.onTearDown();
-		mailHelper = null;
+		mailService = null;
 		recipients = null;
 	}
 
@@ -126,7 +127,7 @@ public class JavaMailTest extends AbstractSpringTests {
 	@Ignore
 	public void testSendBasicMessage() throws Exception {
 		try {
-			mailHelper.postMail(recipients, SUBJECT, MESSAGE, FROM);
+			mailService.postMail(recipients, SUBJECT, MESSAGE, FROM);
 		} catch (MessagingException e) {
 			e.printStackTrace();
 			fail();
@@ -141,7 +142,7 @@ public class JavaMailTest extends AbstractSpringTests {
 	public void testSendMultiMessage() {
 		recipients[1] = RECEIVER2;
 		try {
-			mailHelper.postMail(recipients, SUBJECT, MESSAGE, FROM);
+			mailService.postMail(recipients, SUBJECT, MESSAGE, FROM);
 		} catch (MessagingException e) {
 			e.printStackTrace();
 			fail();

@@ -19,7 +19,10 @@ package net.sf.sail.webapp.dao;
 
 import java.util.List;
 
-import net.sf.sail.webapp.domain.Persistable;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.SimpleDao;
+import org.wise.portal.domain.Persistable;
+
 import net.sf.sail.webapp.junit.AbstractTransactionalDbTests;
 
 /**

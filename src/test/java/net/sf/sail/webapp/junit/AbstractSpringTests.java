@@ -17,10 +17,9 @@
  */
 package net.sf.sail.webapp.junit;
 
-import org.wise.portal.spring.SpringConfiguration;
-import net.sf.sail.webapp.spring.impl.SpringConfigurationImpl;
-
 import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.wise.portal.spring.SpringConfiguration;
+import org.wise.portal.spring.impl.SpringConfigurationImpl;
 
 /**
  * Allows testers to perform integration tests which require access to the

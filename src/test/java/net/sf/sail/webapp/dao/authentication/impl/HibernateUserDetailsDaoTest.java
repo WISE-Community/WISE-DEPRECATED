@@ -23,13 +23,15 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.sail.webapp.dao.AbstractTransactionalDaoTests;
-import net.sf.sail.webapp.domain.authentication.MutableGrantedAuthority;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentGrantedAuthority;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.wise.portal.dao.authentication.impl.HibernateGrantedAuthorityDao;
+import org.wise.portal.dao.authentication.impl.HibernateUserDetailsDao;
+import org.wise.portal.domain.authentication.MutableGrantedAuthority;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority;
+import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
 
 /**
  * @author Cynick Young

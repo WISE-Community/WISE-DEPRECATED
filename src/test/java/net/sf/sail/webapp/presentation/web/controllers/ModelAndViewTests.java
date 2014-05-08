@@ -2,13 +2,12 @@ package net.sf.sail.webapp.presentation.web.controllers;
 
 import javax.servlet.http.HttpSession;
 
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.impl.UserImpl;
-
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
 
 public abstract class ModelAndViewTests extends AbstractModelAndViewTests {
 

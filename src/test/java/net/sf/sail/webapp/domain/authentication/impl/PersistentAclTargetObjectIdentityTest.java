@@ -18,10 +18,11 @@
 package net.sf.sail.webapp.domain.authentication.impl;
 
 import junit.framework.TestCase;
-import net.sf.sail.webapp.domain.authentication.MutableAclTargetObject;
-import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
 
 import org.easymock.EasyMock;
+import org.wise.portal.domain.authentication.MutableAclTargetObject;
+import org.wise.portal.domain.authentication.impl.PersistentAclTargetObjectIdentity;
+import org.wise.portal.domain.group.impl.PersistentGroup;
 
 /**
  * @author Cynick Young

@@ -87,7 +87,8 @@ public class RegisterStudentController extends SimpleFormController {
 			DuplicateUsernameException.class, ObjectNotFoundException.class, 
 			PeriodNotFoundException.class, HibernateOptimisticLockingFailureException.class,
 			StaleObjectStateException.class})
-	protected synchronized ModelAndView onSubmit(HttpServletRequest request,
+	public
+	synchronized ModelAndView onSubmit(HttpServletRequest request,
 			HttpServletResponse response, Object command, BindException errors)
 	throws Exception {
 		String domain = ControllerUtil.getBaseUrlString(request);

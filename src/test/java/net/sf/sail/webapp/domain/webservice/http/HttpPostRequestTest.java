@@ -21,7 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
-import net.sf.sail.webapp.domain.webservice.BadHeaderException;
+
+import org.wise.vle.domain.webservice.BadHeaderException;
+import org.wise.vle.domain.webservice.http.HttpPostRequest;
 
 /**
  * @author Cynick Young

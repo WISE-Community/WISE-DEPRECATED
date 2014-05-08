@@ -18,12 +18,13 @@
 package net.sf.sail.webapp.presentation.validators;
 
 import junit.framework.TestCase;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
 
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
+import org.wise.portal.presentation.validators.UserDetailsValidator;
 
 /**
  * @author Laurel Williams
@@ -53,6 +54,8 @@ public class UserDetailsValidatorTest extends TestCase {
     private static final String ILLEGAL4 = ";";
 
     private static final String LONG = "abcdefghijhijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    private static final String LONG_USERNAME = "abcdefghijhijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private Validator userDetailsValidator;
 
@@ -172,7 +175,7 @@ public class UserDetailsValidatorTest extends TestCase {
     }
 
     public void testUsernameLongValidate() {
-        assertTrue(LONG.length() > UserDetailsValidator.MAX_USERNAME_LENGTH);
+        assertTrue(LONG_USERNAME.length() > UserDetailsValidator.MAX_USERNAME_LENGTH);
         userDetails.setUsername(LONG);
         userDetailsValidator.validate(userDetails, errors);
         assertTrue(errors.hasErrors());

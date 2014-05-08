@@ -74,14 +74,14 @@ public class WISEWorkgroupImpl extends org.wise.portal.domain.workgroup.impl.Wor
     private String workPDFUrl;
 	
 	/**
-	 * @see org.telscenter.sail.webapp.domain.workgroup.impl.Workgroup#getPeriod()
+	 * @see org.wise.portal.domain.workgroup.impl.Workgroup#getPeriod()
 	 */
 	public Group getPeriod() {
 		return period;
 	}
 
 	/**
-	 * @see org.telscenter.sail.webapp.domain.workgroup.impl.Workgroup#setPeriod(net.sf.sail.webapp.domain.group.Group)
+	 * @see org.wise.portal.domain.workgroup.impl.Workgroup#setPeriod(net.sf.sail.webapp.domain.group.Group)
 	 */
 	public void setPeriod(Group period) {
 		this.period = period;

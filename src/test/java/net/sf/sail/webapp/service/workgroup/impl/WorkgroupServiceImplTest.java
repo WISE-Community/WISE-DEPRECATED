@@ -23,22 +23,23 @@ import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
+
+import org.easymock.EasyMock;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.GroupDao;
 import org.wise.portal.dao.workgroup.WorkgroupDao;
-import net.sf.sail.webapp.domain.Offering;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.impl.OfferingImpl;
-import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.domain.impl.WorkgroupImpl;
-import net.sf.sail.webapp.domain.webservice.http.HttpStatusCodeException;
-import net.sf.sail.webapp.service.AclService;
-
-import org.easymock.EasyMock;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.run.Offering;
+import org.wise.portal.domain.run.impl.OfferingImpl;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
+import org.wise.portal.service.acl.AclService;
+import org.wise.portal.service.workgroup.impl.WorkgroupServiceImpl;
+import org.wise.vle.domain.webservice.HttpStatusCodeException;
 
 /**
  * @author Cynick Young

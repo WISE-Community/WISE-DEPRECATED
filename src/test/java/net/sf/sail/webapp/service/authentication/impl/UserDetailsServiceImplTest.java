@@ -17,17 +17,17 @@
  */
 package net.sf.sail.webapp.service.authentication.impl;
 
+import net.sf.sail.webapp.junit.AbstractTransactionalDbTests;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import org.wise.portal.dao.authentication.GrantedAuthorityDao;
 import org.wise.portal.dao.authentication.UserDetailsDao;
-import net.sf.sail.webapp.domain.authentication.MutableGrantedAuthority;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.junit.AbstractTransactionalDbTests;
-import net.sf.sail.webapp.service.authentication.DuplicateAuthorityException;
-import net.sf.sail.webapp.service.authentication.UserDetailsService;
+import org.wise.portal.domain.authentication.MutableGrantedAuthority;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.service.authentication.DuplicateAuthorityException;
+import org.wise.portal.service.authentication.UserDetailsService;
 
 /**
  * @author Cynick Young

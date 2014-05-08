@@ -27,12 +27,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.wise.portal.dao.ObjectNotFoundException;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
-import net.sf.sail.webapp.domain.impl.UserImpl;
+import org.wise.portal.dao.group.impl.HibernateGroupDao;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.group.impl.PersistentGroup;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
+
 import net.sf.sail.webapp.junit.AbstractTransactionalDbTests;
 
 import org.hibernate.Session;

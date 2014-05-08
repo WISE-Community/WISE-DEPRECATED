@@ -22,26 +22,32 @@
  */
 package net.sf.sail.webapp.service.group.impl;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.verify;
+
 import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.TestCase;
-import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.dao.group.GroupDao;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
-import net.sf.sail.webapp.domain.group.Group;
-import net.sf.sail.webapp.domain.group.impl.GroupParameters;
-import net.sf.sail.webapp.domain.group.impl.PersistentGroup;
-import net.sf.sail.webapp.domain.impl.UserImpl;
-import net.sf.sail.webapp.service.AclService;
-import net.sf.sail.webapp.service.group.CyclicalGroupException;
 
 import org.easymock.EasyMock;
 import org.springframework.security.acls.domain.BasePermission;
-
-import static org.easymock.EasyMock.*;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.group.GroupDao;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.group.impl.GroupParameters;
+import org.wise.portal.domain.group.impl.PersistentGroup;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.service.acl.AclService;
+import org.wise.portal.service.group.CyclicalGroupException;
+import org.wise.portal.service.group.impl.GroupServiceImpl;
 
 /**
  * @author Hiroki Terashima

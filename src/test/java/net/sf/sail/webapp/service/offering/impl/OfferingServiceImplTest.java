@@ -21,17 +21,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.TestCase;
+
+import org.easymock.EasyMock;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.module.CurnitDao;
 import org.wise.portal.dao.offering.OfferingDao;
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.Offering;
-import net.sf.sail.webapp.domain.impl.CurnitImpl;
-import net.sf.sail.webapp.domain.impl.OfferingImpl;
-import net.sf.sail.webapp.domain.impl.OfferingParameters;
-import net.sf.sail.webapp.service.AclService;
-
-import org.easymock.EasyMock;
+import org.wise.portal.domain.module.Curnit;
+import org.wise.portal.domain.module.impl.CurnitImpl;
+import org.wise.portal.domain.run.Offering;
+import org.wise.portal.domain.run.impl.OfferingImpl;
+import org.wise.portal.domain.run.impl.OfferingParameters;
+import org.wise.portal.service.acl.AclService;
+import org.wise.portal.service.offering.impl.OfferingServiceImpl;
 
 /**
  * @author Laurel Williams

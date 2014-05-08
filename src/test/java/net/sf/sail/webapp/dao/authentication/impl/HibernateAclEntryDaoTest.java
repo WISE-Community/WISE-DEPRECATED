@@ -23,14 +23,14 @@ import java.util.Map;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.acls.domain.BasePermission;
+import org.wise.portal.dao.authentication.impl.HibernateAclEntryDao;
+import org.wise.portal.domain.authentication.ImmutableAclEntry;
+import org.wise.portal.domain.authentication.MutableAclSid;
+import org.wise.portal.domain.authentication.MutableAclTargetObject;
+import org.wise.portal.domain.authentication.MutableAclTargetObjectIdentity;
+import org.wise.portal.domain.authentication.impl.PersistentAclEntry;
 
 import net.sf.sail.webapp.dao.AbstractTransactionalDaoTests;
-import net.sf.sail.webapp.domain.authentication.ImmutableAclEntry;
-import net.sf.sail.webapp.domain.authentication.MutableAclSid;
-import net.sf.sail.webapp.domain.authentication.MutableAclTargetObject;
-import net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentAclEntry;
-
 
 /**
  * @author Cynick Young

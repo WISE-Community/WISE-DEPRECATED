@@ -21,13 +21,14 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.sail.webapp.dao.AbstractTransactionalDaoTests;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentUserDetails;
-import net.sf.sail.webapp.domain.impl.UserImpl;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.wise.portal.dao.user.impl.HibernateUserDao;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
 
 /**
  * @author Cynick Young

@@ -20,9 +20,11 @@ package net.sf.sail.webapp.dao.curnit.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.wise.portal.dao.module.impl.HibernateCurnitDao;
+import org.wise.portal.domain.module.Curnit;
+import org.wise.portal.domain.module.impl.CurnitImpl;
+
 import net.sf.sail.webapp.dao.AbstractTransactionalDaoTests;
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.impl.CurnitImpl;
 
 /**
  * @author Cynick Young

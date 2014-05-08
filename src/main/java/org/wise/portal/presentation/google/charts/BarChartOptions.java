@@ -363,7 +363,7 @@ public interface BarChartOptions extends GoogleChartOptions{
 	 * Sets the width, in pixels, of the bars in the bar chart. As well, sets
 	 * the space between bars and the space between groups of bars (both in pixels).
 	 * The space between groups will only be valid if grouping for this chart is
-	 * also set. @see org.telscenter.sail.webapp.presentation.google.charts.BarChart#setGrouped(boolean)
+	 * also set. @see org.wise.portal.presentation.google.charts.BarChart#setGrouped(boolean)
 	 * 
 	 * @param <code>int</code> width
 	 * @param <code>int</code> barSpace

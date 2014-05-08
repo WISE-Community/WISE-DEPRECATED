@@ -25,11 +25,13 @@ package net.sf.sail.webapp.domain.webservice.http;
  */
 import junit.framework.TestCase;
 
-import net.sf.sail.webapp.domain.webservice.http.impl.AbstractHttpRestCommand;
-
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.easymock.EasyMock;
+import org.wise.vle.domain.webservice.HttpStatusCodeException;
+import org.wise.vle.domain.webservice.http.AbstractHttpRequest;
+import org.wise.vle.domain.webservice.http.AbstractHttpRestCommand;
+import org.wise.vle.domain.webservice.http.HttpGetRequest;
 
 public class HttpGetRequestTest extends TestCase {
 

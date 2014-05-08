@@ -18,8 +18,7 @@
 package net.sf.sail.webapp.junit;
 
 import org.wise.portal.spring.SpringConfiguration;
-import net.sf.sail.webapp.spring.impl.SpringConfigurationImpl;
-
+import org.wise.portal.spring.impl.SpringConfigurationImpl;
 import org.hibernate.SessionFactory;
 import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
 

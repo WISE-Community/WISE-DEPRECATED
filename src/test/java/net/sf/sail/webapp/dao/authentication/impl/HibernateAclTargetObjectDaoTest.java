@@ -20,9 +20,11 @@ package net.sf.sail.webapp.dao.authentication.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.wise.portal.dao.authentication.impl.HibernateAclTargetObjectDao;
+import org.wise.portal.domain.authentication.MutableAclTargetObject;
+import org.wise.portal.domain.authentication.impl.PersistentAclTargetObject;
+
 import net.sf.sail.webapp.dao.AbstractTransactionalDaoTests;
-import net.sf.sail.webapp.domain.authentication.MutableAclTargetObject;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentAclTargetObject;
 
 /**
  * @author Cynick Young

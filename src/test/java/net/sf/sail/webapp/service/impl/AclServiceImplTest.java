@@ -18,21 +18,22 @@
 package net.sf.sail.webapp.service.impl;
 
 import junit.framework.TestCase;
-import net.sf.sail.webapp.domain.group.Group;
 
 import org.easymock.EasyMock;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.model.MutableAcl;
 import org.springframework.security.acls.model.MutableAclService;
 import org.springframework.security.acls.model.NotFoundException;
-import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.ObjectIdentity;
-import org.springframework.security.acls.domain.ObjectIdentityImpl;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.service.acl.impl.AclServiceImpl;
 
 /**
  * @author Laurel Williams

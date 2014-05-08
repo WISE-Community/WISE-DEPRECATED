@@ -17,17 +17,24 @@
  */
 package net.sf.sail.webapp.service.curnit.impl;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.verify;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.TestCase;
+
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.module.CurnitDao;
-import net.sf.sail.webapp.domain.Curnit;
-import net.sf.sail.webapp.domain.impl.CurnitImpl;
-import net.sf.sail.webapp.domain.impl.CurnitParameters;
-
-import static org.easymock.EasyMock.*;
+import org.wise.portal.domain.module.Curnit;
+import org.wise.portal.domain.module.impl.CurnitImpl;
+import org.wise.portal.domain.module.impl.CurnitParameters;
+import org.wise.portal.service.module.impl.CurnitServiceImpl;
 
 /**
  * @author Laurel Williams

@@ -21,22 +21,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.wise.portal.dao.authentication.GrantedAuthorityDao;
-import org.wise.portal.dao.user.UserDao;
-import net.sf.sail.webapp.domain.User;
-import net.sf.sail.webapp.domain.authentication.MutableGrantedAuthority;
-import net.sf.sail.webapp.domain.authentication.MutableUserDetails;
-import net.sf.sail.webapp.domain.impl.UserImpl;
 import net.sf.sail.webapp.junit.AbstractTransactionalDbTests;
-import net.sf.sail.webapp.service.UserService;
-import net.sf.sail.webapp.service.authentication.DuplicateUsernameException;
-import net.sf.sail.webapp.service.authentication.UserDetailsService;
 
 import org.easymock.EasyMock;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.wise.portal.dao.authentication.GrantedAuthorityDao;
+import org.wise.portal.dao.user.UserDao;
+import org.wise.portal.domain.authentication.MutableGrantedAuthority;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.service.authentication.DuplicateUsernameException;
+import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.user.impl.UserServiceImpl;
 
 /**
  * @author Cynick Young

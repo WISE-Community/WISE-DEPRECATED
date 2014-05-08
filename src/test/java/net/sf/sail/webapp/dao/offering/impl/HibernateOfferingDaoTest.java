@@ -27,13 +27,14 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.sail.webapp.dao.AbstractTransactionalDaoTests;
-import net.sf.sail.webapp.domain.Offering;
-import net.sf.sail.webapp.domain.Workgroup;
-import net.sf.sail.webapp.domain.impl.OfferingImpl;
-import net.sf.sail.webapp.domain.impl.WorkgroupImpl;
 
 import org.hibernate.Session;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.wise.portal.dao.offering.impl.HibernateOfferingDao;
+import org.wise.portal.domain.run.Offering;
+import org.wise.portal.domain.run.impl.OfferingImpl;
+import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 
 /**
  * Test for HibernateOfferingDao

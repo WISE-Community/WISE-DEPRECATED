@@ -22,11 +22,11 @@
  */
 package net.sf.sail.webapp.presentation.validators;
 
-import net.sf.sail.webapp.domain.impl.ChangePasswordParameters;
+import org.wise.portal.domain.authentication.impl.ChangePasswordParameters;
 import org.wise.portal.presentation.validators.ChangePasswordParametersValidator;
-
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
+
 import junit.framework.TestCase;
 
 /**

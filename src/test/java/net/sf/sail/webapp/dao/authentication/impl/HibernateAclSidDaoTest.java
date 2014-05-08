@@ -21,10 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.wise.portal.dao.authentication.impl.HibernateAclSidDao;
+import org.wise.portal.domain.authentication.MutableAclSid;
+import org.wise.portal.domain.authentication.impl.PersistentAclSid;
 
 import net.sf.sail.webapp.dao.AbstractTransactionalDaoTests;
-import net.sf.sail.webapp.domain.authentication.MutableAclSid;
-import net.sf.sail.webapp.domain.authentication.impl.PersistentAclSid;
 
 
 /**

@@ -33,7 +33,6 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	CreateDefaultUsersTest.class,
 	net.sf.sail.webapp.dao.AllTests.class,
 	net.sf.sail.webapp.domain.AllTests.class,
 	net.sf.sail.webapp.mail.AllTests.class,
