@@ -10,7 +10,7 @@
  * 
  * TODO: i18n
  */
- 
+
 svgEditor.addExtension("WISE", function(S) {
 	/* Private variables */
 	var canv = svgEditor.canvas,
@@ -18,7 +18,7 @@ svgEditor.addExtension("WISE", function(S) {
 		loaded = false, // Boolean to indicate whether extension has finished loading
 		changeNum = 0,
 		nodeType = svgEditor.nodeType;
-		
+	
 	svgEditor.changed = false; // boolean to specify whether data has changed, if no changes, do not post nodestate on exit
 	svgEditor.initLoad = false; // boolean to specify whether svgeditor is populating canvas on node entry or on snapshot click
 	
@@ -43,10 +43,11 @@ svgEditor.addExtension("WISE", function(S) {
 		}
 	};
 	
-	/*function setupWarnings(){
+	// TODO: remove (convert to Bootbox)
+	function setupWarnings(){
 		var sizeWarning = '<div id="drawlimit_dialog" title="Drawing is Too Big"><div class="ui-state-error">' +
 			'<span class="ui-icon ui-icon-alert" style="float:left"></span><span id="drawlimit_warning">Warning! Your current drawing is too large.' +
-			'</div><div class="ui-dialog-content-content" id="drawlimit_instructions">If you would like to save this drawing, please delete some of the items in the picture.  Thank you!' +
+			'</div><div class="ui-dialog-content-content" id="drawlimit_instructions">If you would like to make any more changes, please delete some of the items in the picture.  Thank you!' +
 			'</div></div>';
 		$('#svg_editor').append(sizeWarning);
 		
@@ -65,7 +66,7 @@ svgEditor.addExtension("WISE", function(S) {
 		});
 		
 		loaded = true;
-	}*/
+	}
 	
 	function updateDisplay(){
 		// remove unused elements in WISE
@@ -109,33 +110,6 @@ svgEditor.addExtension("WISE", function(S) {
 			$('#tools_left').css('top','66px');
 			$('#workarea, #sidepanels').css('top','66px');
 			$('#sidepanels').css('border-width','0');
-			/*$('#tool_angle').insertAfter('#tool_reorient');
-			$('#tool_opacity').insertAfter('#tool_angle');
-			$('#tool_move_top').insertAfter('#tool_opacity');
-			$('#tool_move_bottom').insertAfter('#tool_move_top');
-			$('#tool_position').insertAfter('#tool_move_bottom');
-			$('#selected_panel > div.toolset:eq(0) > div.tool_sep:eq(2)').remove();
-			$('<div class="tool_sep"></div>').insertAfter('#tool_position');
-			$('#cur_position').css({'margin-top':'1px','padding-right':'0'});
-			$('#tool_position').css('margin-right','2px');
-			$('#tool_opacity').css({'background':'none','position':'inherit'});
-			$('#opacity_dropdown').removeClass('dropup');
-			$('#group_opacity').css({'padding':'2px 5px 2px 2px','margin-right':'2px'});
-			$('#group_opacityLabel').css('margin','0');
-			$('#angle').css('padding','2px 10px 2px 2px');
-			$('#font_size').css('padding','2px 10px 2px 2px');
-			$('#tool_angle').css('margin-left','0');
-			$('#cornerRadiusLabel').css('margin-left','0');
-			$('.tool_sep').css({'height':'28px','margin':'3px 3px'});
-			$('#workarea').css({'top':'60px','bottom':'36px','min-height':'400px','overflow':'visible','right':'5px'});
-			$('#sidepanels').css({'top':'60px','bottom':'36px','padding':'0'});
-			$('#tools_top').css({'left':'2px','height':'57px'});
-			$('#tools_left').css('top','60px');
-			$('#tools_bottom').css('height','32px');
-			$('#stroke_width').css('width','21px');
-			$('#sidepanels').css('border','none');
-			$('#zoom_panel').hide();
-			$('#sidepanels').css('min-height','402px');*/
 		} else if(nodeType === 'annotator'){
 			$('#svg_editor').append($('#text'));
 			$('#canvasBackground > rect').attr('stroke', '#bbb');
@@ -149,22 +123,26 @@ svgEditor.addExtension("WISE", function(S) {
 			svgEditor.resizeCanvas();
 		});
 		
-		//setupWarnings();
+		setupWarnings();
 		loaded = true;
 	}
 	
-	// whenever user has modified drawing canvas, check whether current drawing is too large (>20k)
+	// whenever user has modified canvas (for draw nodes), check whether current drawing is too large
 	// TODO: add text tool changes to this code (svg-edit bug)
-	function checkDrawSize(){
+	function drawTooLarge(){
 		var current = svgCanvas.getSvgString();
 		var compressed = lz77.compress(current);
-		//alert(current.length*2 + ' ' + compressed.length * 2);
-		// if compressed svg string is larger than 20k (or 10k if maxSnaps > 10), alert user and undo latest change
+		
+		// if compressed svg string is larger max, alert user and undo latest change
 		if(compressed.length * 2 > svgEditor.maxDrawSize){
 			$('#tool_undo').click();
-			var msg = 'Warning! Your current drawing is too large.\n\nIf you would like to save this drawing, please delete some of the items in the picture. Thank you!';
-			$.alert(msg);
-			//$('#drawlimit_dialog').dialog('open');
+			//var msg = 'Warning! Your current drawing is too large.\n\nIf you would like to save this drawing, please delete some of the items in the picture. Thank you!';
+			//$.alert(msg);
+			// TODO: i18n, convert to Bootbox
+			$('#drawlimit_dialog').dialog('open');
+			return true;
+		} else {
+			return false;
 		}
 	}
 		
@@ -175,7 +153,12 @@ svgEditor.addExtension("WISE", function(S) {
 		},
 		elementChanged: function(opts){
 			if(svgEditor.loadedWISE) { // check to see if this change is this initial drawing import
-				svgEditor.changed = true;
+				if(nodeType === 'draw' && drawTooLarge()){
+					return;
+				} else {
+					// TODO: figure out how to exclude a change that results from an undo for a drawing that is too big
+					svgEditor.changed = true;
+				}
 			}
 		}
 	};
