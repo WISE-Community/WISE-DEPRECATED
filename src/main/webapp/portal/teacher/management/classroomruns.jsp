@@ -33,8 +33,6 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 
 	<%@ include file="../headerteacher.jsp"%>
 		
-	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-	
 	<div id="page">
 			
 		<div id="pageContent">
