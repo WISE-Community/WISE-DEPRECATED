@@ -3,7 +3,7 @@
  *
  * Licensed under the MIT License
  *
- * Copyright(c) 2013 Jonathan Lim-Breitbart
+ * Copyright(c) 2014 Jonathan Lim-Breitbart
  *
  * Customizes the svg-edit user interface for use in the WISE learning environment
  * Adds check for drawing size limits and an svgEditor.changed variable for use when saving student data in WISE
@@ -17,11 +17,7 @@ svgEditor.addExtension("WISE", function(S) {
 		lz77 = new LZ77(), // lz77 compression object
 		loaded = false, // Boolean to indicate whether extension has finished loading
 		changeNum = 0,
-		nodeType = 'draw';
-	
-	if(typeof vle !== 'undefined' && vle.getCurrentNode().type === "AnnotatorNode") {
-		nodeType = 'annotator';
-	}
+		nodeType = svgEditor.nodeType;
 		
 	svgEditor.changed = false; // boolean to specify whether data has changed, if no changes, do not post nodestate on exit
 	svgEditor.initLoad = false; // boolean to specify whether svgeditor is populating canvas on node entry or on snapshot click
@@ -41,10 +37,6 @@ svgEditor.addExtension("WISE", function(S) {
 	// fit drawing canvas to workarea (accessible vie svgEditor object)
 	svgEditor.resizeCanvas = function() {
 		if(nodeType === 'annotator'){
-			/*var success = canv.setResolution('fit');
-			if(!success){
-				$('#fit_to_canvas').mouseup();
-			}*/
 			$('#fit_to_all').mouseup();
 		} else {
 			$('#fit_to_canvas').mouseup();

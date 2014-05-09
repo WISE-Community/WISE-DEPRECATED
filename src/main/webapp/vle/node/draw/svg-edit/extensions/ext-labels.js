@@ -703,7 +703,7 @@ svgEditor.addExtension('labels', function() {'use strict';
 			textBox = getElem(tbox_id),
 			text = getElem(text_id);
 		
-		// wrap text when it is wider than 100px
+		// wrap text when it is wider than max width
 		wrapText(text, lWidth);
 		
 		// Get center of source element (text)
@@ -713,8 +713,8 @@ svgEditor.addExtension('labels', function() {'use strict';
 		
 		// resize text box
 		textBox.setAttribute('x', text_x - tOffset);
-		textBox.setAttribute('y', text_y - tOffset - 1);
-		textBox.setAttribute('width', text_bb.width + (tOffset*2));
+		textBox.setAttribute('y', text_y - tOffset);
+		textBox.setAttribute('width', text_bb.width + (tOffset*2) + 1);
 		textBox.setAttribute('height', text_bb.height + (tOffset*2));
 	}
 	

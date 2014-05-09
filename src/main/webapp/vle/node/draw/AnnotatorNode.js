@@ -35,101 +35,65 @@ function AnnotatorNode(nodeType, view) {
 AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVisit, childDivIdPrefix, workgroupId) {
 
 	//get the node states
-	var nodeStates = nodeVisit.nodeStates;
+	var nodeStates = nodeVisit.nodeStates,
+		x = nodeStates.length;
 	
 	//loop through all the node states from newest to oldest
-	for(var x=nodeStates.length - 1; x>=0; x--) {
+	while(x--) {
 		//get a node state
-		var nodeState = nodeStates[x];
+		var nodeState = nodeStates[x],
+			studentWork = nodeState.data,
+			stepWorkId = nodeVisit.id,
+			timestamp = nodeState.timestamp,
+			autoScore = nodeState.autoScore,
+			autoFeedback = nodeState.autoFeedback,
+			autoFeedbackKey = nodeState.autoFeedbackKey,
+			checkWork = nodeState.checkWork;
 		
-		var studentWork = nodeState.data;
-		var stepWorkId = nodeVisit.id;
-		var timestamp = nodeState.timestamp;
-		var autoScore = nodeState.autoScore;
-		var autoFeedback = nodeState.autoFeedback;
-		var autoFeedbackKey = nodeState.autoFeedbackKey;
-		var checkWork = nodeState.checkWork;
-		
-		// if the work is for a SVGDrawNode, embed the svg
-		var innerDivId = "svgDraw_"+stepWorkId+"_"+timestamp;
-		var contentBaseUrl = this.view.config.getConfigParam('getContentBaseUrl');
+		// if the work is for a AnnotaotrNode, embed the svg
+		var innerDivId = "annotator_"+stepWorkId+"_"+timestamp,
+			contentBaseUrl = this.view.config.getConfigParam('getContentBaseUrl');
 		// if studentData has been compressed, decompress it and parse (for legacy compatibility)
-		if (typeof studentWork == "string") {
+		/*if (typeof studentWork == "string") {
 			if (studentWork.match(/^--lz77--/)) {
 				var lz77 = new LZ77();
 				studentWork = studentWork.replace(/^--lz77--/, "");
 				studentWork = lz77.decompress(studentWork);
 				studentWork = $.parseJSON(studentWork);
 			}
-		} 
-		var svgString = studentWork.svgString;
-		var description = studentWork.description;
-		var snaps = studentWork.snapshots;
-		var contentUrl = this.getContent().getContentUrl();
-		studentWork = "<div id='"+innerDivId+"_contentUrl' style='display:none;'>"+contentUrl+"</div>"+
-			"<a class='drawEnlarge' onclick='enlargeDraw(\""+innerDivId+"\");'>enlarge</a>";
-		// if the svg has been compressed, decompress it
+		}*/
+		var svgString = studentWork.svgString,
+			explanation = studentWork.explanation.replace(/\r?\n/g, '<br />'),
+			contentUrl = this.getContent().getContentUrl();
+		studentWork.svgString = "";
+		var studentDisplay = //"<div id='"+innerDivId+"_contentUrl' style='display:none;'>"+contentUrl+"</div>"+
+			//"<div id='"+innerDivId+"_contentBaseUrl' style='display:none;'>"+contentBaseUrl+"</div>"+
+			"<a id='"+innerDivId+"_enlarge' class='annotatorEnlarge'>enlarge</a>"+
+			"<div id='"+innerDivId+"_studentWork' style='display: none;'>" + JSON.stringify(studentWork) + "</div>";
+		
 		if (svgString != null){
-			if (svgString.match(/^--lz77--/)) {
+			/*if (svgString.match(/^--lz77--/)) {
 				var lz77 = new LZ77();
 				svgString = svgString.replace(/^--lz77--/, "");
 				svgString = lz77.decompress(svgString);
-			}
+			}*/
 			
-			//svgString = svgString.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
 			// only replace local hrefs. leave absolute hrefs alone!
 			svgString = svgString.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, function(m,key,value) {
-				  if (value.indexOf("http://") == -1) {
-				    return m.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
-				  }
-				  return m;
-				});
-			svgString = svgString.replace(/(marker.*=)"(url\()(.*)(#se_arrow_bk)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
-			svgString = svgString.replace(/(marker.*=)"(url\()(.*)(#se_arrow_fw)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
-			//svgString = svgString.replace('<svg width="600" height="450"', '<svg width="360" height="270"');
-			svgString = svgString.replace(/<g>/gmi,'<g transform="scale(0.6)">');
+				if (value.indexOf("http://") == -1) {
+					return m.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
+				}
+				return m;
+			});
+			//svgString = svgString.replace(/(marker.*=)"(url\()(.*)(#se_arrow_bk)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
+			//svgString = svgString.replace(/(marker.*=)"(url\()(.*)(#se_arrow_fw)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
+			svgString = svgString.replace(/<g>/gmi,'<g transform="scale(0.5)">');
 			svgString = Utils.encode64(svgString);
 		}
-		if(snaps != null && snaps.length>0){
-			var snapTxt = "<div id='"+innerDivId+"_snaps' class='snaps'>";
-			for(var i=0;i<snaps.length;i++){
-				var snapId = innerDivId+"_snap_"+i;
-				var currSnap = snaps[i].svg;
-				if (currSnap.match(/^--lz77--/)) {
-					var lz77 = new LZ77();
-					currSnap = currSnap.replace(/^--lz77--/, "");
-					currSnap = lz77.decompress(currSnap);
-				}
-				//currSnap = currSnap.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
-				// only replace local hrefs. leave absolute hrefs alone!
-				currSnap = currSnap.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, function(m,key,value) {
-					  if (value.indexOf("http://") == -1) {
-					    return m.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
-					  }
-					  return m;
-					});
-				
-				currSnap = currSnap.replace(/(marker.*=)"(url\()(.*)(#se_arrow_bk)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
-				currSnap = currSnap.replace(/(marker.*=)"(url\()(.*)(#se_arrow_fw)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
-				//currSnap = currSnap.replace('<svg width="600" height="450"', '<svg width="120" height="90"');
-				currSnap = currSnap.replace(/<g>/gmi,'<g transform="scale(0.6)">');
-				currSnap = Utils.encode64(currSnap);
-				snapTxt += "<div id="+snapId+" class='snapCell' onclick='enlargeDraw(\""+innerDivId+"\");'>"+currSnap+"</div>";
-				var currDescription = snaps[i].description;
-				snapTxt += "<div id='"+snapId+"_description' class='snapDescription' style='display:none;'>"+currDescription+"</div>";
-			}
-			
-			snapTxt += "</div>";
-			studentWork += snapTxt;
-			
-			if(description != null){
-				studentWork += "<span>Description: </span><div id='"+innerDivId+"_description' class='drawDescription'>"+description+"</div>";
-			}
-		} else {
-			studentWork += "<div id='"+innerDivId+"' class='svgdrawCell'>"+svgString+"</div>";
-			if(description != null){
-				studentWork += "<span>Description: </span><div id='"+innerDivId+"_description' class='drawDescription'>"+description+"</div>";
-			}
+		
+		studentDisplay += "<div id='"+innerDivId+"' class='annotatorCell'></div>";
+		if(explanation != null){
+			studentDisplay += "<p>Explanation: </p><p id='"+innerDivId+"_explanation' class='annotatorExplanation'>"+explanation+"</p>";
 		}
 		
 		if(displayStudentWorkDiv.html() != '') {
@@ -138,11 +102,20 @@ AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, node
 		}
 		
 		//insert the html into the div
-		displayStudentWorkDiv.append(studentWork);
+		displayStudentWorkDiv.append(studentDisplay);
+		
+		var promptText = view.getI18NString('prompt_link','SVGDrawNode'); 
+		
+		$('#' + innerDivId).data('node', this).data('contentUrl', contentUrl)
+			.data('contentBaseUrl', contentBaseUrl).data('promptText', promptText)
+			.data('headerText', view.getI18NStringWithParams('annotator_grading_header',[view.currentGradingDisplayParam[0]],'SVGDrawNode'));
+		
+		$('#' + innerDivId + '_enlarge').off('click').on('click', function(){
+			enlargeAnnotator(innerDivId);
+		});
 		
 		//perform post processing of the svg data so that the drawing is displayed
-		displayStudentWorkDiv.find(".svgdrawCell").each(this.showDrawNode);
-		displayStudentWorkDiv.find(".snapCell").each(this.showSnaps);
+		displayStudentWorkDiv.find(".annotatorCell").data('svg', svgString).each(this.showAnnotatorNode);
 		
 		var autoScoreText = '';
 		
@@ -194,15 +167,18 @@ AnnotatorNode.prototype.hasGradingView = function() {
 };
 
 /**
- * Shows the draw node that is in the element
- * @param currNode the svgdrawCell element
+ * Shows the annotator node that is in the element
+ * @param currNode the annotatorCell element
  */
-AnnotatorNode.prototype.showDrawNode = function(currNode) {
+AnnotatorNode.prototype.showAnnotatorNode = function(currNode) {
 	var svgString = String($(this).html());
+	var svgString = $(this).data('svg');
 	svgString = Utils.decode64(svgString);
 	var svgXml = Utils.text2xml(svgString);
 	$(this).html('');
 	$(this).append(document.importNode(svgXml.documentElement, true)); // add svg to cell
+	$(this).height($(this).find('svg').height()/2);
+	$(this).width($(this).find('svg').width()/2);
 };
 
 /**

@@ -1438,6 +1438,17 @@ function enlargeDraw(divId){
 };
 
 /**
+ * Used in Show My Work for annotator steps
+ */
+function enlargeAnnotator(divId){
+	//get the context path e.g. /wise
+	var contextPath = view.getConfig().getConfigParam('contextPath');
+	
+	var newwindow = window.open(contextPath + "/vle/node/draw/svg-edit/annotator-grading.html?noDefaultExtensions=true");
+	newwindow.divId = divId;
+};
+
+/**
  * Render all the student work for a given node. This is used
  * by gradeByStep.
  * @param node the node for the step we are displaying in the grade by step

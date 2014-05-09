@@ -350,5 +350,9 @@
 	"annotator_colors_yellow":{
 		"value":"Yellow",
 		"description":"Text for the color 'Yellow')"
+	},
+	"annotator_grading_header":{
+		"value":"Student Work for Step {0}: ",
+		"description":"Header text for the annotator grading view"
 	}
 }

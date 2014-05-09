@@ -42,28 +42,37 @@ svgEditor.setConfig({
 	*/
 }, {allowInitialUserOverride: true});
 
+var thisNode, extensions;
+
 // build extensions list based on current wise4 node's content JSON
 if(typeof vle !== 'undefined'){
-	var node = vle.getCurrentNode();
-	var nodeType = node.type,
-	content = node.content.getContentJSON(),
-	view = node.view,
+	thisNode = vle.getCurrentNode();
+} else {
+	// we might be in a grading enlarge view
+	thisNode = window.opener.$('#' + divId).data('node');	
+}
+svgEditor.nodeType = 'draw';
+if(thisNode){
 	extensions = ['ext-connector.js','ext-closepath.js',/*'ext-panning.js',*/'ext-wise.js'];
 	
+	var nodeType = thisNode.type,
+		content = thisNode.content.getContentJSON(),
+		view = thisNode.view;
 	if(nodeType === "AnnotatorNode"){
+		svgEditor.nodeType = 'annotator';
 		extensions = extensions.concat(['ext-panning.js','ext-labels.js']);
-	} else if (nodeType === "SvgDrawNode"){
+	} else if (nodeType === "SVGDrawNode"){
 		extensions = extensions.concat(['ext-arrows.js','ext-simple_color.js','ext-clearlayer.js']);
+		if (view.utils.isNonWSString(content.prompt)){
+			extensions.push('ext-prompt.js');
+		}
 	}
-	
+
 	if (content.description_active){
 		extensions.push('ext-description.js');
 	}
 	if (content.stamps && content.stamps.length){
 		extensions.push('ext-stamps.js');
-	}
-	if (view.utils.isNonWSString(content.prompt)){
-		extensions.push('ext-prompt.js');
 	}
 	if (content.snapshots_active){
 		extensions.push('ext-snapshots.js');
@@ -71,9 +80,9 @@ if(typeof vle !== 'undefined'){
 	if (content.toolbar_options && content.toolbar_options.importStudentAsset){
 		extensions.push('ext-importstudentasset.js');
 	}
-	node.extensions = extensions;
+	thisNode.extensions = extensions;
 } else {
-	extensions = ['ext-connector.js','ext-closepath.js','ext-wise.js','ext-panning.js','ext-clearlayer.js','ext-arrows.js','ext-simple_color.js','ext-description.js','ext-stamps.js','ext-prompt.js','ext-snapshots.js'];
+	extensions = ['ext-connector.js','ext-closepath.js','ext-wise.js','ext-panning.js','ext-clearlayer.js','ext-arrows.js','ext-simple_color.js','ext-description.js','ext-stamps.js','ext-prompt.js','ext-snapshots.js']
 }
 
 // EXTENSION CONFIG
