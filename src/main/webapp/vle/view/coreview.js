@@ -62,15 +62,8 @@ View.prototype.loadProject = function(url, contentBase, lazyLoading){
 			view.isLoadedProjectMinified = true;
 			eventManager.fire('loadingProjectCompleted');
 		} else {
-			var loadStepI18NFiles = true;
-			
-			if(view.name == 'grading') {
-				//do not load the step internationalization files for the grading tool
-				loadStepI18NFiles = false;
-			}
-			
 			eventManager.fire('loadingProjectStarted');
-			var project = createProject(createContent(url), contentBase, lazyLoading, view, null, loadStepI18NFiles);
+			var project = createProject(createContent(url), contentBase, lazyLoading, view, null, true);
 			view.setProject(project);
 			view.isLoadedProjectMinified = false;
 			$('#currentProjectContainer').show();
