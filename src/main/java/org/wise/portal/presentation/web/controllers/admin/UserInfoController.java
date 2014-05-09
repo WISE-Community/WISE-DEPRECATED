@@ -44,7 +44,7 @@ import org.wise.portal.service.user.UserService;
  * @author Sally Ahn
  * @version $Id: $
  */
-public class InfoController extends AbstractController{
+public class UserInfoController extends AbstractController{
 	
 	private UserService userService;
 	
@@ -92,6 +92,12 @@ public class InfoController extends AbstractController{
 				//the user we are looking up is a teacher
 				modelAndView.addObject("isStudent", false);
 				
+				//get all the runs that this teacher owns
+				List<Run> runListByOwner = runService.getRunListByOwner(infoUser);
+
+				//set the run list into the model
+				modelAndView.addObject("runList", runListByOwner);
+
 				modelAndView.setViewName("teacher/teacherinfo");
 			}
 			

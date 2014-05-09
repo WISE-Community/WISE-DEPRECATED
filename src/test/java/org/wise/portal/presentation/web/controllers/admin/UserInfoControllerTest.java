@@ -45,7 +45,7 @@ import org.wise.portal.service.user.UserService;
  * @author patrick lawler
  *
  */
-public class InfoControllerTest extends AbstractModelAndViewTests{
+public class UserInfoControllerTest extends AbstractModelAndViewTests{
 
 	private MockHttpServletRequest request;
 
@@ -53,7 +53,7 @@ public class InfoControllerTest extends AbstractModelAndViewTests{
 	
 	private UserService mockUserService;
 	
-	private InfoController controller;
+	private UserInfoController controller;
 	
 	private User user;
 	
@@ -94,7 +94,7 @@ public class InfoControllerTest extends AbstractModelAndViewTests{
 		this.request.setSession(mockSession);
 		this.mockUserService = EasyMock.createMock(UserService.class);
 		
-		this.controller = new InfoController();
+		this.controller = new UserInfoController();
 		this.controller.setUserService(this.mockUserService);
 		this.info = this.userDetails.getInfo();
 	}

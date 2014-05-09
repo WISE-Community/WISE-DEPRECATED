@@ -8,81 +8,119 @@
 
 <title>Teacher Information</title>
 
-<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 </head>
 
-<body>
+<body style="background: #FFFFFF;">
+	<div class="dialogContent">
+		<div class="sectionHead">
+			<spring:message code="teacher.teacherinfo.teacherInformation" />
+		</div>
+		<div class="dialogSection sectionContent">
 
-	<h3><spring:message code="teacher.teacherinfo.teacherInformation"/></h3>
+	<table style="margin: 0 auto;">
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.id" /></th>
+			<td><c:out value="${userInfoMap['ID']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.name" /></th>
+			<td><c:out value="${userInfoMap['First Name']}" />&nbsp;<c:out
+					value="${userInfoMap['Last Name']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.username" /></th>
+			<td><c:out value="${userInfoMap['Username']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.displayName" /></th>
+			<td><c:out value="${userInfoMap['Display Name']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.emailAddress" /></th>
+			<td><c:out value="${userInfoMap['Email']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.signupDate" /></th>
+			<td><fmt:formatDate value="${userInfoMap['Sign Up Date']}"
+					type="both" dateStyle="short" timeStyle="short" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.city" /></th>
+			<td><c:out value="${userInfoMap['City']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.state" /></th>
+			<td><c:out value="${userInfoMap['State']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.country" /></th>
+			<td><c:out value="${userInfoMap['Country']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.schoolName" /></th>
+			<td><c:out value="${userInfoMap['School Name']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.schoolLevel" /></th>
+			<td><span style="text-transform: lowercase;"><c:out
+						value="${userInfoMap['School Level']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message
+					code="teacher.teacherinfo.curriculumSubjects" /></th>
+			<td><span style="text-transform: lowercase;"><c:out
+						value="${userInfoMap['Curriculum Subjects']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.howDidYouHear" /></th>
+			<td><span style="text-transform: lowercase;"><c:out
+						value="${userInfoMap['How did you hear about us']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.numberOfLogins" /></th>
+			<td><c:out value="${userInfoMap['Number of Logins']}" /></td>
+		</tr>
+		<tr>
+			<th><spring:message code="teacher.teacherinfo.lastLogin" /></th>
+			<td><fmt:formatDate value="${userInfoMap['Last Login']}"
+					type="both" dateStyle="short" timeStyle="short" /></td>
+		</tr>
+	</table>
+	<br>
+	<table style="margin: 0 auto;">
+		<tr>
+			<th colspan="2"><u><spring:message
+						code="student.studentinfo.runList" /></u></th>
+		</tr>
 
-	<table id="teacherInfoTable" border="2" cellpadding="2" cellspacing="0" align="center">
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.id"/></th>
-		<td><c:out value="${userInfoMap['ID']}"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.name"/></th>
-		<td><c:out value="${userInfoMap['First Name']}"/>&nbsp;<c:out value="${userInfoMap['Last Name']}"/> </td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.username"/></th>
-		<td><c:out value="${userInfoMap['Username']}"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.displayName"/></th>
-		<td><c:out value="${userInfoMap['Display Name']}"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.emailAddress"/></th>
-		<td><c:out value="${userInfoMap['Email']}"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.signupDate"/></th>
-		<td><fmt:formatDate value="${userInfoMap['Sign Up Date']}" type="both" dateStyle="short" timeStyle="short"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.city"/></th>
-		<td><c:out value="${userInfoMap['City']}"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.state"/></th>
-		<td><c:out value="${userInfoMap['State']}"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.country"/></th>
-		<td><c:out value="${userInfoMap['Country']}"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.schoolName"/></th>
-		<td><c:out value="${userInfoMap['School Name']}"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.schoolLevel"/></th>
-		<td><span style="text-transform:lowercase;"><c:out value="${userInfoMap['School Level']}"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.curriculumSubjects"/></th>
-		<td><span style="text-transform:lowercase;"><c:out value="${userInfoMap['Curriculum Subjects']}"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.howDidYouHear"/></th>
-		<td><span style="text-transform:lowercase;"><c:out value="${userInfoMap['How did you hear about us']}"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.numberOfLogins"/></th>
-		<td><c:out value="${userInfoMap['Number of Logins']}"/></td>
-	</tr>
-	<tr>
-		<th><spring:message code="teacher.teacherinfo.lastLogin"/></th>
-		<td><fmt:formatDate value="${userInfoMap['Last Login']}" type="both" dateStyle="short" timeStyle="short"/></td>
-	</tr>
-</table>
-<br>
+		<c:forEach var="run" items="${runList}">
+			<tr>
+				<th><spring:message code="student.studentinfo.runId" /></th>
+				<td><c:out value="${run.id}"></c:out></td>
+			</tr>
 
-<a href="#" onclick="javascript:window.close()"><spring:message code="teacher.teacherinfo.closeThisWindow" /></a>
+			<tr>
+				<th><spring:message code="student.studentinfo.runName" /></th>
+				<td><c:out value="${run.name}"></c:out></td>
+			</tr>
+
+			<tr>
+				<th><spring:message code="student.studentinfo.runStartTime" /></th>
+				<td><c:out value="${run.starttime}"></c:out></td>
+			</tr>
+
+			<tr>
+				<th colspan="2"><hr></hr></th>
+			</tr>
+		</c:forEach>
+	</table>
+
+	</div>
 </body>
 </html>
