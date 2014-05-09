@@ -719,17 +719,9 @@ svgEditor.addExtension('labels', function() {'use strict';
 	}
 	
 	function deleteLabel(id, noConfirm){
-		// check for minimum number of labels
-		if(content.labels.length <= min){
-			//var msg = '<p style="text-align: center;">Sorry, you cannot delete this label. You must have at least ' + min + ' active labels.</p>';
-			var msg = '<p style="text-align: center;">' + view.getI18NStringWithParams('annotator_minWarning', [min], 'SVGDrawNode') + '</p>'; // WISE
-			//$.alert(msg);
-			bootbox.alert(msg); // WISE
-			return;
-		}
-		
 		var labels = content.labels;
-		if(labels.length > min){
+		// check for minimum number of labels (TODO: removed for now; just using minimum as check for step completion in WISE)
+		//if(labels.length > min){
 			if(!noConfirm){
 				/*$.confirm('Are you sure you want to permanently delete this label?'), function(ok){
 					if (ok) {
@@ -755,7 +747,13 @@ svgEditor.addExtension('labels', function() {'use strict';
 			} else {
 				removeLabel(id);
 			}
-		}
+		/*} else {
+			//var msg = '<p style="text-align: center;">Sorry, you cannot delete this label. You must have at least ' + min + ' active labels.</p>';
+			var msg = '<p style="text-align: center;">' + view.getI18NStringWithParams('annotator_minWarning', [min], 'SVGDrawNode') + '</p>'; // WISE
+			//$.alert(msg);
+			bootbox.alert(msg); // WISE
+			return;
+		}*/
 	}
 	
 	function removeLabel(id){
@@ -825,8 +823,7 @@ svgEditor.addExtension('labels', function() {'use strict';
 			addLabel(x-aRadius/2, y-aRadius/2, lText, color, textColor);
 		},
 		
-		mouseMove: function(opts){
-		},
+		mouseMove: function(opts){},
 		
 		mouseUp: function(opts){
 			var e = opts.event,

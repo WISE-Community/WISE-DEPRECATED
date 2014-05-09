@@ -280,6 +280,23 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 		
 		bootbox.hideAll(); // hide all dialogs
 		
+		function showPrompt(){
+			context.instructionsModal = bootbox.alert({
+				message: context.instructions,
+				title: view.getI18NString('prompt_link','SVGDrawNode')
+			});
+		}
+		
+		function checkMinLabels(){
+			if(labelsExt.content().labels.length >= labelsExt.min()){
+				$('#explain').prop('disabled', false);
+			} else {
+				$('#explain').prop('disabled', true);
+				$('#explanation').slideToggle('fast');
+				$('#explanationInput').blur();
+			}
+		}
+		
 		// insert i18n text elements
 		if(importExt){
 			$('#tool_import_student_asset').attr('title', view.getI18NString('importStudentAsset_button','SVGDrawNode'));
@@ -352,6 +369,7 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 					$('#newLabel').removeClass('disabled');
 				}
 				context.toggleInstructions();
+				checkMinLabels();
 			}
 		}
 		
@@ -397,6 +415,8 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 				$('#explain').prop('disabled', false);
 				$('#explanation').slideUp('fast');
 			});
+			
+			checkMinLabels();
 		} else {
 			$('#explain').hide();
 		}
@@ -404,23 +424,13 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 		// bind save click action
 		$('#save').off('click').on('click', function(e){
 			if(context.enableStudentTextArea) {
-				$('#explanation').slideUp('fast', function(){
-					//save to vle
-					context.saveToVLE();
-				});
-				$('#explain').prop('disabled', false);
+				$('#explanation').slideUp('fast');
 				$('#explanationInput').blur();
-			} else {
-				context.saveToVLE();
+				$('#explain').prop('disabled', false);
 			}
+			// save to VLE
+			context.saveToVLE();
 		});
-		
-		function showPrompt(){
-			context.instructionsModal = bootbox.alert({
-				message: context.instructions,
-				title: view.getI18NString('prompt_link','SVGDrawNode')
-			});
-		}
 		
 		// initiate prompt/instructions
 		if(view.utils.isNonWSString(context.instructions)){

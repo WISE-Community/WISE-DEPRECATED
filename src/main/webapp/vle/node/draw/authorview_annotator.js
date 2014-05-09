@@ -40,14 +40,14 @@ View.prototype.AnnotatorNode.generatePage = function(view){
 	var colorDiv = createElement(document, 'div', {id: 'colorDiv'});
 	
 	//get the existing max labels value
-	var maxLabels = this.content.maxLabels ? this.content.maxLabels : 0;
+	var maxLabels = this.content.labels_max > -1 ? this.content.labels_max : 0;
 	//the label for the maximum number of lables input
 	var maxLabelsLabel = document.createTextNode(view.getI18NString('annotator_authoring_maxLabel','SVGDrawNode'));
 	//the text input for the maximum number of labels allowed
 	var maxLabelsInput = createElement(document, 'input', {type: 'number', id: 'maxLabels', name: 'maxLabels', value: maxLabels, size:2, onchange: 'eventManager.fire("annotatorUpdateMaxLabels")'});
 	
 	//get the existing min labels value
-	var minLabels = this.content.maxLabels ? this.content.maxLabels : 1;
+	var minLabels = this.content.labels_min > -1 ? this.content.labels_min : 1;
 	//the label for the minimum number of lables input
 	var minLabelsLabel = document.createTextNode(view.getI18NString('annotator_authoring_minLabel','SVGDrawNode'));
 	//the text input for the minimum number of labels required
