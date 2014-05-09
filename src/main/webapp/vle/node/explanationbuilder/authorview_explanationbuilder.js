@@ -308,9 +308,9 @@ View.prototype.ExplanationBuilderNode.updateInstructions = function(){
  * Update whether to display the student text area or not
  */
 View.prototype.ExplanationBuilderNode.updateEnableStudentTextAreaCheckBox = function() {
-	var checked = $('#enableStudentTextAreaCheckBox').attr('checked');
+	var checked = $('#enableStudentTextAreaCheckBox').prop('checked');
 	//update the content
-	this.content.enableStudentTextArea = this.isChecked(checked);
+	this.content.enableStudentTextArea = checked;
 	
 	// show/hide the instructions prompt
 	if(checked){
@@ -330,7 +330,7 @@ View.prototype.ExplanationBuilderNode.updateEnableStudentTextAreaCheckBox = func
  */
 View.prototype.ExplanationBuilderNode.updateWorkRequired = function() {
 	//update the content
-	this.content.isMustComplete = this.isChecked($('#requireWorkToggle').attr('checked'));
+	this.content.isMustComplete = $('#requireWorkToggle').prop('checked');
 	
 	/*
 	 * fire source updated event, this will update the preview
