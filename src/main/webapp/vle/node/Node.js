@@ -1759,6 +1759,9 @@ Node.prototype.getWorkToImport = function(tagName, functionArgs) {
 					var nodeState = this.view.getState().getLatestWorkByNodeId(nodeId);
 
 					if(nodeState != null && nodeState != '') {
+						//add the node to the nodeState so it can be accessed easily
+						nodeState.node = node;
+						
 						//add the work to the array of work to import
 						workToImport.push(nodeState);
 					}

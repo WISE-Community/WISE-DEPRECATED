@@ -29,6 +29,7 @@ function Mysystem2Node(nodeType, view) {
 	this.view = view;
 	this.type = nodeType;
 	this.prevWorkNodeIds = [];
+	this.importableFromNodes = new Array("Mysystem2Node", "SVGDrawNode");
 }
 
 /**
