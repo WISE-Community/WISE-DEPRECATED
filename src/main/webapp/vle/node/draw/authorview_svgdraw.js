@@ -62,6 +62,12 @@ View.prototype.SVGDrawNode.generatePage = function(view){
 	this.generateStamps();
 	this.generateAutoScoringOptions();
 	this.generateAutoScoringFeedbackAuthoringDiv();
+	
+	// TODO: remove when visual authoring is implemented
+	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(createElement(document, 'div', {id: 'startingStateDiv'}));
+	pageDiv.appendChild(createBreak());
+	this.generateStartingState();
 };
 
 /**
@@ -301,6 +307,53 @@ View.prototype.SVGDrawNode.generateBackground = function(){
 	}
 };
 
+
+/**
+ * Generates the starting state prompt for this svg draw node
+ * TODO: remove when visual authoring is implemented
+ */
+View.prototype.SVGDrawNode.generateStartingState = function(){
+	var parent = document.getElementById('startingStateDiv'),
+		text = document.createTextNode('Default starting state (advanced): '),
+		startingStateInput = createElement(document, 'input', {type:'text', size:'50', id:'startingStateInput', onchange:'eventManager.fire("svgdrawStartingStateChanged")'});
+	
+	parent.appendChild(text);
+	parent.appendChild(startingStateInput);
+	
+	if(this.content.studentData_default){
+		try {
+			var s = JSON.stringify(this.content.studentData_default);
+			document.getElementById('startingStateInput').value = s;
+	    } catch (e) {}
+	}
+};
+
+/**
+ * Updates the snapshots_active value of the content to the user specified value
+ * and refreshes the preview.
+ * 
+ * TODO: remove when visual authoring is implemented
+ */
+View.prototype.SVGDrawNode.startingStateChanged = function(){
+	var state = document.getElementById('startingStateInput').value;
+	try {
+		var o = JSON.parse(state);
+
+        // Handle non-exception-throwing cases:
+        // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
+        // but... JSON.parse(null) returns 'null', and typeof null === "object", 
+        // so we must check for that, too.
+        if (o && typeof o === "object" && o !== null) {
+        	this.content.studentData_default = o;
+        	/* fire source updated event */
+    		this.view.eventManager.fire('sourceUpdated');
+        	return;
+        }
+    } catch (e) {}
+	
+    alert('Error: Invalid JSON string for default starting state. Please try again.');
+};
+	
 /**
  * Generates the stamps element for this svg draw node
  */

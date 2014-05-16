@@ -37,6 +37,9 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
 public class UserDetailsValidator implements Validator {
 
 	protected static final int MAX_PASSWORD_LENGTH = 20;
+	
+	public static final int MAX_USERNAME_LENGTH = 26;
+	
 
 	/**
 	 * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)

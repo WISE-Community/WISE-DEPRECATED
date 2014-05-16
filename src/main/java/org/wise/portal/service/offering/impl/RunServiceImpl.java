@@ -242,7 +242,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 
 	/**
-	 * @override @see org.telscenter.sail.webapp.service.offering.RunService#addSharedTeacherToRun(org.telscenter.sail.webapp.domain.impl.AddSharedTeacherParameters)
+	 * @override @see org.wise.portal.service.offering.RunService#addSharedTeacherToRun(org.wise.portal.domain.impl.AddSharedTeacherParameters)
 	 */
 	public void addSharedTeacherToRun(
 			AddSharedTeacherParameters addSharedTeacherParameters) {
@@ -354,7 +354,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 
 	// /**
 	// * @see
-	// org.telscenter.sail.webapp.service.offering.RunService#isRunCodeInDB(java.lang.String)
+	// org.wise.portal.service.offering.RunService#isRunCodeInDB(java.lang.String)
 	// */
 	// public boolean isRunCodeInDB(String runcode) {
 	// return runDao.hasRuncode(runcode);
@@ -409,7 +409,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 
 	/**
-	 * @override @see org.telscenter.sail.webapp.service.offering.RunService#getWorkgroups(java.lang.Long, net.sf.sail.webapp.domain.group.Group)
+	 * @override @see org.wise.portal.service.offering.RunService#getWorkgroups(java.lang.Long, net.sf.sail.webapp.domain.group.Group)
 	 */
 	public Set<Workgroup> getWorkgroups(Long runId, Long periodId)
 			throws ObjectNotFoundException {

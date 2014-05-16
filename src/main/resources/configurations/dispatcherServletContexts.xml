@@ -472,8 +472,8 @@
 	<bean id="projectParameters" class="org.wise.portal.domain.project.impl.ProjectParameters">
 	</bean>
 
-	<bean id="infoController"
-		class="org.wise.portal.presentation.web.controllers.admin.InfoController">
+	<bean id="userInfoController"
+		class="org.wise.portal.presentation.web.controllers.admin.UserInfoController">
 		<property name="userService" ref="userService" />
 		<property name="studentService" ref="studentService" />
 		<property name="runService" ref="runService" />
@@ -940,7 +940,7 @@
 				/teacher/management/classroomruns.html=myClassroomRunsMainController
 				/teacher/management/projectruntabs.html=myClassroomRunsController
 				/teacher/management/submitworkgroupchanges.html=submitWorkgroupChangesController
-				/studentinfo.html=infoController
+				/studentinfo.html=userInfoController
 				/teacher/management/studentlist.html=studentListController
 				/teacher/management/studentlistexcel.html=listStudentNamesController
 				/teacher/vle/vle.html=studentVLEController
@@ -962,7 +962,7 @@
 				/teacher/management/changeworkgroup.html=changeWorkgroupController
 				/teacher/management/removestudentfromrun.html=removeStudentFromRunController
 				/teacher/management/updatemyaccountinfo.html=updateMyAccountInfoController
-				/teacherinfo.html=infoController
+				/teacherinfo.html=userInfoController
 				/author/authorproject.html=authorProjectController
 				/project/exportproject.html=exportProjectController
 				/project/importexternalproject.html=importExternalProjectController

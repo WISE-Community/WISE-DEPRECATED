@@ -6182,6 +6182,13 @@ function enlargeDraw(divId){
 	newwindow.divId = divId;
 }
 
+function enlargeAnnotator(divId){
+	var contextPath = view.getConfig().getConfigParam('contextPath');
+	
+	var newwindow = window.open(contextPath + "/vle/node/draw/svg-edit/annotator-grading.html?noDefaultExtensions=true");
+	newwindow.divId = divId;
+}
+
 function enlargeMS(divId){
 
 	/*

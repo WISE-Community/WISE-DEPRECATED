@@ -54,8 +54,6 @@
 </head>
 
 <body style="background:#FFFFFF;">
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <div class="projectSummary">
 	<div class="projectInfoDisplay">
 		<div class="panelHeader">${project.name} (ID: ${project.id})

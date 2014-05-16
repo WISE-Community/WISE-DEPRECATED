@@ -66,6 +66,7 @@ SVGDRAW.prototype.init = function(context) {
 		context.nodeTitle = window.opener.$('.objectToGradeTd').text();
 		var drawObj = window.opener.$('#'+divId);
 		var snapObj = window.opener.$('#'+divId+'_snaps');
+		$('#tools_top').css('left', '5px');
 		
 		if(drawObj.length>0){
 			context.svgString = xml2Str(drawObj[0].childNodes[0]);

@@ -9,7 +9,6 @@
  * 
  * Dependencies:
  * - Accompanying css file ('ext-description.css' should be included svg-editor.html <head>)
- * - jQuery UI with dialogs and sliders plus accompanying css
  * 
  * TODO: i18n
  */

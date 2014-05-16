@@ -362,7 +362,7 @@ public class RunImpl extends OfferingImpl implements Run {
 	}
 
 	/**
-	 * @see org.telscenter.sail.webapp.domain.Run#setSharedOwners(Set<User>)
+	 * @see org.wise.portal.domain.Run#setSharedOwners(Set<User>)
 	 */
 	public void setSharedowners(Set<User> sharedOwners) {
 		this.sharedowners = sharedOwners;		

@@ -106,7 +106,7 @@ table.userTable td {
 			<td>${username}</td>
 			<td><a href="#" onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td> 
 			<td><a href="../j_acegi_switch_user?j_username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td> 
-			<td><a href="#" onclick="javascript:popup640('../../teacherinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
+			<td><a href="#" onclick="javascript:popup640('../../studentinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
 			<c:if test="${not empty studentUserArray[1]}">
 				<td>
 				<a style="color:blue;text-decoration:underline; cursor:pointer" onclick="findRunByRunId(${studentUserArray[1].id})">(<spring:message code="run_id" />: ${studentUserArray[1].id}) | <spring:message code="run_name" />: "${studentUserArray[1].name}"  
@@ -166,7 +166,7 @@ table.userTable td {
 				onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
 			<td><a href="../../j_acegi_switch_user?j_username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
 			<td><a href="#"
-				onclick="javascript:popup640('../../teacherinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
+				onclick="javascript:popup640('../../studentinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
 		</tr>
 	</c:forEach>
 </table>

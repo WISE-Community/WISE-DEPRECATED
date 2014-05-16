@@ -296,7 +296,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @override @see org.telscenter.sail.webapp.service.project.ProjectService#getProjectListByInfo(org.telscenter.sail.webapp.domain.project.impl.ProjectInfo)
+	 * @override @see org.wise.portal.service.project.ProjectService#getProjectListByInfo(org.wise.portal.domain.project.impl.ProjectInfo)
 	 */
 	public List<Project> getProjectListByInfo(ProjectInfo info)
 			throws ObjectNotFoundException {
@@ -305,7 +305,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @override @see org.telscenter.sail.webapp.service.project.ProjectService#getProjectListByTag(org.telscenter.sail.webapp.domain.project.impl.FamilyTag)
+	 * @override @see org.wise.portal.service.project.ProjectService#getProjectListByTag(org.wise.portal.domain.project.impl.FamilyTag)
 	 */
 	public List<Project> getProjectListByTag(FamilyTag familytag) throws ObjectNotFoundException {
     	List<Project> projectList = this.projectDao.retrieveListByTag(familytag);
