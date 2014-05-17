@@ -559,20 +559,12 @@
         "value": "ヘルプはここに表示されます。",
         "description": ""
     },
-	"constraint_must_complete_x_before": {
-		"value":"まず　{0} を終わらせてください",
-		"description":"The message shown to students telling them to complete work on a previous step before working on the current step"
-	},
-	"constraint_must_complete_these_before": {
-		"value":"まずこれらを終わらせてください",
-		"description":"The message shown to students telling them to complete work on multiple steps before working on the current step"
-	},
-	"constraint_must_complete_current_step": {
-		"value":"まずこのステップを終わらせてください。",
-		"description":"The message shown to students telling them to complete work on current step before moving on"
-	},
-	"constraint_must_have_status": {
-		"value":"まずこれらのステップの '{0}' で '{1}'を獲得してください。 \n\n{2}",
-		"description":"The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the current step"
-	}				
+    "show_previous_work_message": {
+        "value": "{0} ステップの答え: {1}",
+        "description": "The message that shows the step number and title and the work from a previous step."
+    },
+    "node_annotations_instructions": {
+        "value": "{0} をクリックするとフィードバックを表示することができます",
+        "description": "The message at the bottom of the feedback popup to tell the student they can always bring the popup back up"
+    }
 }
