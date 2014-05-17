@@ -231,6 +231,14 @@ Mysystem2Node.prototype.renderGradingView = function(displayStudentWorkDiv, node
     }
     
     displayStudentWorkDiv.html(divContent);
+    
+    //get the background image element
+    var backgroundImage = displayStudentWorkDiv.find('image').first();
+    
+    if(backgroundImage != null) {
+        //shift the background image down 120px
+        backgroundImage.attr('transform', 'translate(0,120)');
+    }
 };
 
 
