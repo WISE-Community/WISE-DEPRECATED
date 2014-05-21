@@ -1,7 +1,7 @@
 {
     "file_button_text": {
-        "value": "新的反馈被标示为 新.",
-        "description": "Text for second part of confirmation delete idea confirmation dialog"
+        "value": "文件",
+        "description": "Text on the File Manager button for Student VLE"
     },
     "ideas_button_text": {
         "value": "想法",
@@ -24,7 +24,7 @@
         "description": "Text for mouse hover title on the My Work button"
     },
     "flagged_button_text": {
-        "value": "标记",
+        "value": "已标记",
         "description": "Text on the Flagged button"
     },
     "flagged_button_title": {
@@ -32,7 +32,7 @@
         "description": "Text for mouse hover title on the Flagged button"
     },
     "journal_button_text": {
-        "value": "笔记",
+        "value": "日记",
         "description": "Text on the Journal button"
     },
     "toggle_nav_button_text": {
@@ -56,7 +56,7 @@
         "description": "Text on the Log out button"
     },
     "signout_button_title": {
-        "value": "保存&退出WISE",
+        "value": "保存并退出WISE",
         "description": "Text for mouse hover title on the Log out button"
     },
     "previous_step_text": {
@@ -80,7 +80,7 @@
         "description": "Text on the Home button"
     },
     "gohome_button_title": {
-        "value": "保存&退出学生主页",
+        "value": "保存并返回学生主页",
         "description": "Text for mouse hover title on the Home button"
     },
     "hint_title": {
@@ -934,5 +934,97 @@
     "constraint_must_have_status": {
         "value": "在开始{2},{3}前，以下步骤'{0}'必须设置为'{1}'",
         "description": "The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the current step"
+    },
+    "dumpTextarea": {
+        "value": "",
+        "description": ""
+    },
+    "show_previous_work_message": {
+        "value": "记住，你第{0}步的作业是{1}",
+        "description": "The message that shows the step number and title and the work from a previous step."
+    },
+    "idea_basket_private": {
+        "value": "私人想法库",
+        "description": "The text for the private idea basket"
+    },
+    "idea_basket_public": {
+        "value": "公共想法库",
+        "description": "The text for the public idea basket"
+    },
+    "grading_all_revisions": {
+        "value": "所有版次",
+        "description": "GradingTool: Text 'all revisions' to show all student revisions"
+    },
+    "grading_latest_work": {
+        "value": "最新作业",
+        "description": "GradingTool: Text 'latest work' to show only the latest student work"
+    },
+    "grading_current_step": {
+        "value": "当前步骤",
+        "description": "'Current Step' label in the grading tool that shows the title of the current step in the project"
+    },
+    "grading_sort_by": {
+        "value": "排序方式",
+        "description": "Label 'Sort By' to let user choose which column to sort the view by"
+    },
+    "constraint_dialog_title": {
+        "value": "步骤或活动已锁定",
+        "description": "Title text for dialog alerting users about locked steps or activities (unable to visit because of navigation constraints)"
+    },
+    "constraint_allItems": {
+        "value": "（所有步骤）",
+        "description": "Text to add after activity name when a constraint requires user to satisfy a requirement for all items in an activity"
+    },
+    "constraint_message_mustCompleteStepBeforeAdvancing": {
+        "value": "你必须完成当前的 {0} 才可以继续。",
+        "description": "The message shown to students telling them to complete work on the current step before moving on"
+    },
+    "constraint_message_mustCompleteActivityBeforeAdvancing": {
+        "value": "你必须完成当前所有的 {0} 才可以继续。",
+        "description": "The message shown to students telling them to complete work on the current activity before moving on"
+    },
+    "constraint_message_mustCompleteStepBeforeExiting": {
+        "value": "你必须完成当前的 {0} 才可以离开。",
+        "description": "The message shown to students telling them to complete work on the current step before exiting"
+    },
+    "constraint_message_mustCompleteActivityBeforeExiting": {
+        "value": "你必须完成当前所有的 {0} 才可以离开。",
+        "description": "The message shown to students telling them to complete work on the current activity before exiting"
+    },
+    "constraint_message_mustCompleteXBeforeVisiting": {
+        "value": "开始这个步骤或活动之前你必须完成：",
+        "description": "The message shown to students telling them to complete work on previous items before working on the selected step or activity"
+    },
+    "constraint_message_mustVisitXBeforeVisiting": {
+        "value": "开始这个步骤或活动之前你必须看过：",
+        "description": "The message shown to students telling them to visit items before working on the selected step or activity"
+    },
+    "constraint_message_mustUnlockXBeforeVisiting": {
+        "value": "开始这个步骤或活动之前你必须解锁：",
+        "description": "The message shown to students telling them to unlock (make visitable) previous items before working on the selected step or activity"
+    },
+    "constraint_message_xMustHaveStatusY": {
+        "value": "开始这个步骤之前你必须已经将下列步骤从 '{0}' 设置为 '{1}' ：",
+        "description": "The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the selected step"
+    },
+    "error_msg_with_reason": {
+        "value": "发生错误。请与WISE工作人员联系。原因：{0}",
+        "description": "An error message a reason"
+    },
+    "mywork_preview_mode": {
+        "value": "预览模式下无法显示［我的作业］。在教学中正式使用时，这里将显示你的工作和成绩。",
+        "description": "Text to display when user clicks on review work button in preview mode"
+    },
+    "flagged_preview_mode": {
+        "value": "预览模式下无法显示已标记的作业。在教学中正式使用时，这里将显示教师已经标记的的工作。",
+        "description": "Text to display when user clicks on flagged work button in preview mode"
+    },
+    "student_assets_preview_mode": {
+        "value": "预览模式下无法显示［学生的宝物］。在教学中正式使用时，学生可以在这里上载宝物（如图片），并在回答中使用他们的宝物。",
+        "description": "Message to show users when they click on student assets button in preview mode"
+    },
+    "grading_button_teacher_run_notes": {
+        "value": "我的笔记",
+        "description": "GradingTool: Text in the My Notes button to bring up teacher run notes"
     }
 }
