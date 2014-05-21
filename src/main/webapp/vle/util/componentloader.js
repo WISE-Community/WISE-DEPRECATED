@@ -602,7 +602,7 @@ var componentloader = function(em, sl){
 		student:{
 			variables:{
 				model:null,
-				allowedStudentAssetExtensions:['jpg', 'jpeg', 'gif', 'png', 'bmp', 'pdf', 'txt', 'doc'],
+				allowedStudentAssetExtensions:['jpg', 'jpeg', 'gif', 'png', 'bmp', 'pdf', 'txt', 'doc', 'csv'],
 				userAndClassInfoLoaded:false,
 				viewStateLoaded:false,
 				currentPosition:undefined, 

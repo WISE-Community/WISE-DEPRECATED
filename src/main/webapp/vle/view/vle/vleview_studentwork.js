@@ -416,6 +416,16 @@ View.prototype.onWindowUnload = function(logout){
 	$('#onUnloadSaveDiv').dialog('close');
 };
 
+View.prototype.getStudentAsset = function(assetURL, callbackFunc, callbackArgs) {
+	$.ajax({
+		url:assetURL,
+		type:"GET",
+		success:function(response) {
+			callbackFunc(callbackArgs, response);
+		}
+	});
+};
+
 /**
  * Display student assets
  * @param params Object (optional) specifying asset editor options (type, extensions to show, optional text for new button, callback function)
