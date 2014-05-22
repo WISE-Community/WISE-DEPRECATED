@@ -416,6 +416,12 @@ View.prototype.onWindowUnload = function(logout){
 	$('#onUnloadSaveDiv').dialog('close');
 };
 
+/**
+ * Given assetURL, fetches the student asset via GET request and returns the response to the callback
+ * @param assetURL absolute URL to student asset.
+ * @param callbackFunc callback upon request completion
+ * @param callbackArgs optional arguments to pass into the callback function 
+ */
 View.prototype.getStudentAsset = function(assetURL, callbackFunc, callbackArgs) {
 	$.ajax({
 		url:assetURL,
