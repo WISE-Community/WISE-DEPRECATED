@@ -112,6 +112,85 @@ function addToTable(mainTableData, newTableData) {
 }
 
 /**
+ * Saves uploaded data and shows the graph. Currently only supports CSV-formatted data
+ * @param data csv-formatted data string
+ */
+Table.prototype.handleUploadedData = function(data) {
+	var dataArray = this.view.utils.CSVToArray(data, ",");
+	// go through the dataArray and remove any empty rows
+	for (var row=0; row<dataArray.length; row++) {
+		var dataRow = dataArray[row];
+		if (dataRow.length != this.content.graphOptions.columnToAxisMappings.length) {
+			dataArray.splice(row,1);
+			row--;
+		}
+	}
+	this.displayUploadedData(dataArray);
+};
+
+/**
+ * Graphs data stored as 2D array
+ * @param dataArray 2D array of data, ex: [[time,temperature],[0,32],[0.5,32.1],...]
+ */
+Table.prototype.displayUploadedData = function(dataArray) {
+	var isRenderGradingView=false;
+	var isDataInGoogleFormat=true;
+	this.makeGraph($('#graphDiv'),dataArray,this.content.graphOptions,isRenderGradingView,isDataInGoogleFormat);
+	this.graphRendered = true;
+	
+	//make a table
+	var tableDisplay = document.createElement('table');
+	
+	//get the number of rows and columns from the content
+	this.numRows = dataArray.length;
+	this.numColumns = dataArray[0].length;
+
+	for (var row=0; row<dataArray.length; row++) {
+		var dataRow = dataArray[row];
+		var tr = document.createElement('tr');
+		for (var col=0; col<dataRow.length; col++) {
+			var dataText = dataArray[row][col];
+
+			//make a cell
+			var td = document.createElement('td');
+			
+			var cellText = dataText;
+			var cellSize = this.globalCellSize;;
+
+			/*
+			 * create the text input that will represent the cell and
+			 * where the student can edit the text in the cell
+			 */
+			var cellTextInput = document.createElement('input');
+			cellTextInput.id = 'tableCell_' + col + '-' + row;
+			cellTextInput.name = 'tableCell_' + col + '-' + row;
+			cellTextInput.value = cellText;
+			if (row == 0 && typeof this.content.graphOptions !== "undefined" && typeof this.content.graphOptions.autoResizeColumnTitles !== undefined && this.content.graphOptions.autoResizeColumnTitles){
+				cellTextInput.size = Math.max(cellText.length, cellSize);
+			} else {
+				cellTextInput.size = cellSize;
+			}
+			cellTextInput.disabled = true;
+			
+			//add the elements to the UI
+			td.appendChild(cellTextInput);
+			tr.appendChild(td);
+		}
+		
+		tableDisplay.appendChild(tr);
+	}
+	
+	//add the newly generated table
+	$('#tableDiv').html(tableDisplay);
+	
+	if (this.content.hideTable) {
+		$("#tableDiv").hide();
+	}
+		
+	$("#graphDiv").show();
+};
+
+/**
  * Populate the work from the previous step if a populatePreviousWorkNodeId has been set
  */
 Table.prototype.populatePreviousWork = function() {
@@ -145,19 +224,26 @@ Table.prototype.populatePreviousWork = function() {
 
 
 
+
+
 /**
  * This function renders everything the student sees when they visit the step.
  * This includes setting up the html ui elements as well as reloading any
  * previous work the student has submitted when they previously worked on this
  * step, if any.
- * 
- * TODO: rename TEMPLATE
- * 
- * note: you do not have to use 'promptDiv' or 'studentResponseTextArea', they
- * are just provided as examples. you may create your own html ui elements in
- * the .html file for this step (look at template.html).
  */
 Table.prototype.render = function() {
+	if (this.content.importData != null) {
+		$("#importDataDiv").show();
+		$("#buttonDiv").hide();
+		$("#graphButton").hide();
+		$("#graphMessageDiv").hide();
+	}
+	
+	if (this.content.hideTable) {
+		$("#tableDiv").hide();
+	}
+	
 	var workToImport = null;
 	
 	//process the tag maps if we are not in authoring mode
@@ -745,6 +831,11 @@ Table.prototype.getStudentTableData = function() {
 				
 				//update the cell in the table data
 				studentTableData[x][y].text = tableCellText;
+
+				if ($('#tableCell_' + x + '-' + y).prop("disabled")) {
+					//update the cell in the table data
+					studentTableData[x][y].uneditable = true;
+				}
 			}
 		}
 	}
@@ -1262,7 +1353,7 @@ Table.prototype.getColumnHeaderByIndex = function(index, tableData) {
  * will be passed in when called from the grading tool. the student vle
  * does not need to provide this argument.
  */
-Table.prototype.makeGraph = function(graphDiv, tableData, graphOptions, isRenderGradingView) {
+Table.prototype.makeGraph = function(graphDiv, tableData, graphOptions, isRenderGradingView,isDataInGoogleFormat) {
 	if(graphDiv == null) {
 		//the default div id to make the graph in
 		graphDiv = $('#graphDiv');
@@ -1303,7 +1394,13 @@ Table.prototype.makeGraph = function(graphDiv, tableData, graphOptions, isRender
 			 * we store it in Array[x][y] and google wants it in
 			 * Array[y][x].
 			 */
-			var dataInGoogleFormat = this.getDataInGoogleFormat(tableData, graphOptions);
+			var dataInGoogleFormat;
+			if (isDataInGoogleFormat) {
+				dataInGoogleFormat = tableData;
+			} else {
+				dataInGoogleFormat = this.getDataInGoogleFormat(tableData, graphOptions);
+
+			}
 			
 			//create the data
 			data = google.visualization.arrayToDataTable(dataInGoogleFormat);
@@ -1470,6 +1567,10 @@ Table.prototype.getOptions = function(tableData, graphOptions) {
 			if(columnAxis == 'x') {
 				//get the column header for the x axis
 				hTitle = this.getColumnHeaderByIndex(columnIndex, tableData);
+				if(graphOptions != null && graphOptions.hTitle != null) {
+					//get the hTitle from the graph options if specified
+					hTitle = graphOptions.hTitle;
+				}
 			} else if(columnAxis == 'y') {
 				/*
 				 * get the column header for the y axis, if there are
@@ -1480,6 +1581,10 @@ Table.prototype.getOptions = function(tableData, graphOptions) {
 					vTitle += ', ';
 				}
 				vTitle += this.getColumnHeaderByIndex(columnIndex, tableData);
+				if(graphOptions != null && graphOptions.vTitle != null) {
+					//get the vTitle from the graph options if specified
+					vTitle = graphOptions.vTitle;
+				}
 			} else if(columnAxis == 'c') {
 				//get the column header for the series to color by
 				cTitle = this.getColumnHeaderByIndex(columnIndex, tableData);

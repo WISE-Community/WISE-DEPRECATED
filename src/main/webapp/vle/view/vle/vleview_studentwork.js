@@ -417,6 +417,22 @@ View.prototype.onWindowUnload = function(logout){
 };
 
 /**
+ * Given assetURL, fetches the student asset via GET request and returns the response to the callback
+ * @param assetURL absolute URL to student asset.
+ * @param callbackFunc callback upon request completion
+ * @param callbackArgs optional arguments to pass into the callback function 
+ */
+View.prototype.getStudentAsset = function(assetURL, callbackFunc, callbackArgs) {
+	$.ajax({
+		url:assetURL,
+		type:"GET",
+		success:function(response) {
+			callbackFunc(callbackArgs, response);
+		}
+	});
+};
+
+/**
  * Display student assets
  * @param params Object (optional) specifying asset editor options (type, extensions to show, optional text for new button, callback function)
  */

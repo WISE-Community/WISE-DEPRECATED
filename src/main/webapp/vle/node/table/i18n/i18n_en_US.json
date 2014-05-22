@@ -1,4 +1,8 @@
 {
+	"import_data": {
+		"value":"Import Data",
+		"description":"The label for the import data button"
+	},
 	"reset_table": {
 		"value":"Reset Table",
 		"description":"The label for the reset table button"
