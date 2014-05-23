@@ -569,8 +569,12 @@ public class AuthorProjectController extends AbstractController {
 								MultipartFile oneFile = multiRequest.getFile(filename);
 								String contentType = oneFile.getContentType();
 								if (!allowedProjectAssetContentTypesStr.contains(contentType)) {
-									response.getWriter().write("Uploading this file type is not allowed. Operation aborted.");
-									return null;
+									if (contentType.equals("application/octet-stream") && (filename.endsWith(".mml") || filename.endsWith(".cml"))) {
+										// .mml and .cml files are acceptable. Their content-type is not well-known, so it will show up at application/octet-stream
+									} else { 
+										response.getWriter().write("Uploading this file type is not allowed. Operation aborted.");
+										return null;
+									}
 								}
 								fileMap.put(filename, oneFile);
 							}

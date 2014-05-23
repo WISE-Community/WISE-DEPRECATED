@@ -214,7 +214,7 @@ var componentloader = function(em, sl){
 				portalProjectId:undefined, 
 				portalCurriculumBaseDir:undefined, 
 				excludedPrevWorkNodes:['HtmlNode', 'OutsideUrlNode', 'MySystemNode', 'SVGDrawNode', 'MWNode', 'DrawNode','DuplicateNode'], 
-				allowedAssetExtensions:['txt', 'jpg', 'jpeg', 'gif', 'png', 'swf', 'flv', 'bmp', 'tif', 'pdf', 'doc', 'ppt', 'xls', 'docx', 'pptx', 'xlsx', 
+				allowedAssetExtensions:['txt', 'xml', 'jpg', 'jpeg', 'gif', 'png', 'swf', 'flv', 'bmp', 'tif', 'pdf', 'doc', 'ppt', 'xls', 'docx', 'pptx', 'xlsx', 
 				                        'odt', 'fodt', 'ods', 'fods', 'odp', 'fodp', 'odg', 'fodg', 'nlogo', 'nls', 'jar', 'cml', 'mml', 'otml', 'e2d',
 				                        'mov', 'mp4', 'mp3', 'm4a', 'm4v', 'wav', 'aac', 'avi', 'mpg', 'mpeg', 'webm', 'ogg', 'oga', 'ogv', 'css', 'json', 'zip', 'js', 'html'],
 		        allowedAssetExtensionsByType:{
