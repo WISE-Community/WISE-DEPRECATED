@@ -27,50 +27,6 @@
 	margin: 15px 0 5px 0px;
 	padding:0px;
 }
-
-#overview_choices_grading   {
-	padding:15px 0 25px 5px;
-}
-	
-#overview_choices_grading .link_grading  {
-	font-size:1.1em; 
-	font-weight:bold;
-	width:420px;
-	}
-
-#overview_choices_grading .description_grading  {
-	font-size:.9em;
-	margin:0px;
-	padding:2px;
-	vertical-align:middle;
-}
-
-#overview_choices_grading a:link, #overview_choices_grading a:visited   {
-	text-decoration:none;
-	display:block;
-	color:#0000CC;
-	padding:6px 12px 6px 12px;
-	background-image:url(../../images/Pixel_Grading_Highlight.png);
-	background-position:left top;
-	background-repeat:repeat;
-	border-top: 1px solid #999999;
-	border-right: 1px solid #000000;
-	border-bottom: 1px solid #000000;
-	border-left: 1px solid #999999;
-}
-
-#overview_choices_grading a:hover  {
-	display:block;
-	background-color:#FFFF33;
-	color:#0000CC;
-	padding:6px 12px 6px 12px;
-	background-image:none;
-	border-top: 1px solid #999999;
-	border-right: 1px solid #666666;
-	border-bottom: 1px solid #000000;
-	border-left: 1px solid #999999;
-		}
-		
 		
 /* CSS FOR GRADE BY STEP AND GRADE BY TEAM SELECTION LIST */ 
 

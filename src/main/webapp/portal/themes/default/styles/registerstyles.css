@@ -1,18 +1,5 @@
 		
 /* Teacher & Student Pages  */
-
-#registrationTitle {
-	width:60%;
-	font-size:2em;
-	text-align: center;
-	font-weight:bold;
-	border: 1px solid #333333;
-	background-color:#FFCE8E;
-	background-image: url(../images/Gradient_7a.png);
-    background-position: bottom;
-	margin: 20px auto 20px auto;
-	padding:10px;
-		}
 	
 #subtitleTeacherReg, #subtitleStudentReg {
 	text-align:center;
@@ -324,17 +311,6 @@
 	
 	
 /* New Account Picker Screen  (Setup.html) */
-		
-#boxNewAccountReg {
-	background-color:#f3c383;
-	background-image: url(../images/Gradient_7b.png);
-    background-position:top;
-	color:#003300;
-	border: 1px solid #006600;
-	width:60%;
-	margin:10px auto 10px auto;
-	padding:10px;
-	}
 		
 #questionPromptReg {
 	margin: 20px 0 30px 0;
