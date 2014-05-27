@@ -72,6 +72,15 @@ View.prototype.createClassroomMonitorDisplays = function() {
 	this.createGradeByStepDisplay();
 	this.createExportStudentWorkDisplay();
 	this.createIdeaBasketDisplay();
+	this.createPremadeCommentsDiv();
+};
+
+/**
+ * Clear the nodeIdClicked and workgroupIdClicked values
+ */
+View.prototype.clearNodeIdClickedAndWorkgroupIdClicked = function() {
+	this.nodeIdClicked = null;
+	this.workgroupIdClicked = null;
 };
 
 /**
@@ -85,7 +94,39 @@ View.prototype.hideAllDisplays = function() {
 	$('#pauseScreensDisplay').hide();
 	$('#exportStudentWorkDisplay').hide();
 	$('#ideaBasketDisplay').hide();
+	$('#premadeCommentsDiv').hide();
 }
+
+/**
+ * Show the premade comments div
+ * @param commentBoxId the comment textarea for a specific student work
+ * @param studentWorkColumnId the div that contains the student work that we will
+ * be giving a premade comment to
+ */
+View.prototype.showPremadeCommentsDiv = function(commentBoxId, studentWorkColumnId) {
+	//show the div
+	$('#premadeCommentsDiv').show();
+	
+	//remember the ids in the view so we can access it easily later
+	this.commentBoxId = commentBoxId;
+	this.studentWorkColumnId = studentWorkColumnId;
+	
+	//get the existing comment for the student work
+	var commentBoxValue = $('#' + commentBoxId).val();
+	
+	//populate the premade comments textarea with the existing comment
+	$('#premadeCommentsTextArea').val(commentBoxValue);
+	
+	//retrieve the premade comments from the server
+	this.retrievePremadeComments();
+};
+
+/**
+ * Hide the premade comments div
+ */
+View.prototype.hidePremadeCommentsDiv = function() {
+	$('#premadeCommentsDiv').hide();
+};
 
 /**
  * Show the pause all screens display
@@ -94,12 +135,16 @@ View.prototype.showPauseScreensDisplay = function() {
 	//clear any existing buttons in the upper right
 	this.clearDisplaySpecificButtonsDiv();
 	this.clearSaveButtonDiv();
+	this.clearNewWorkNotificationDiv();
 	
 	//hide all the other display divs
 	this.hideAllDisplays();
 	
 	//hide the period buttons
 	this.hidePeriodButtonsDiv();
+	
+	//clear the nodeIdClicked and workgroupIdClicked values
+	this.clearNodeIdClickedAndWorkgroupIdClicked();
 	
 	//show the pause screens div
 	$('#pauseScreensDisplay').show();
@@ -116,12 +161,16 @@ View.prototype.showStudentProgressDisplay = function() {
 	//clear any existing buttons in the upper right
 	this.clearDisplaySpecificButtonsDiv();
 	this.clearSaveButtonDiv();
+	this.clearNewWorkNotificationDiv();
 	
 	//hide all the other display divs
 	this.hideAllDisplays();
 	
 	//show the period buttons
 	this.showPeriodButtonsDiv();
+	
+	//clear the nodeIdClicked and workgroupIdClicked values
+	this.clearNodeIdClickedAndWorkgroupIdClicked();
 	
 	//show the student progress div
 	$('#studentProgressDisplay').show();
@@ -138,12 +187,16 @@ View.prototype.showStepProgressDisplay = function() {
 	//clear any existing buttons in the upper right
 	this.clearDisplaySpecificButtonsDiv();
 	this.clearSaveButtonDiv();
+	this.clearNewWorkNotificationDiv();
 	
 	//hide all the other display divs
 	this.hideAllDisplays();
 	
 	//show the period buttons
 	this.showPeriodButtonsDiv();
+	
+	//clear the nodeIdClicked and workgroupIdClicked values
+	this.clearNodeIdClickedAndWorkgroupIdClicked();
 	
 	//show the step progress div
 	$('#stepProgressDisplay').show();
@@ -193,12 +246,16 @@ View.prototype.showExportStudentWorkDisplay = function() {
 	//clear any existing buttons in the upper right
 	this.clearDisplaySpecificButtonsDiv();
 	this.clearSaveButtonDiv();
+	this.clearNewWorkNotificationDiv();
 	
 	//hide all the other display divs
 	this.hideAllDisplays();
 	
 	//hide the period buttons
 	this.hidePeriodButtonsDiv();
+	
+	//clear the nodeIdClicked and workgroupIdClicked values
+	this.clearNodeIdClickedAndWorkgroupIdClicked();
 	
 	//show the export student work div
 	$('#exportStudentWorkDisplay').show();
@@ -214,6 +271,7 @@ View.prototype.showIdeaBasketDisplay = function() {
 	//clear any existing buttons in the upper right
 	this.clearDisplaySpecificButtonsDiv();
 	this.clearSaveButtonDiv();
+	this.clearNewWorkNotificationDiv();
 	
 	//hide all the other display divs
 	this.hideAllDisplays();
@@ -1211,6 +1269,12 @@ View.prototype.studentRowClickedHandler = function(workgroupId) {
 	//hide all the other displays
 	this.hideAllDisplays();
 	
+	//clear the nodeIdClicked and workgroupIdClicked values
+	this.clearNodeIdClickedAndWorkgroupIdClicked();
+	
+	//remember the workgroup id the teacher is currently viewing
+	this.workgroupIdClicked = workgroupId;
+	
 	//remove the yellow highlighting of the choose display buttons
 	this.removeBackgroundColor('chooseClassroomMonitorDisplayButton');
 	
@@ -1616,6 +1680,7 @@ View.prototype.showIdeaBasket = function(workgroupId) {
 		//clear any existing buttons in the upper right
 		this.clearDisplaySpecificButtonsDiv();
 		this.clearSaveButtonDiv();
+		this.clearNewWorkNotificationDiv();
 
 		//add the buttons
 		$('#displaySpecificButtonsDiv').append(previousWorkgroupIdButton);
@@ -1755,6 +1820,7 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	//clear any existing buttons in the upper right
 	this.clearDisplaySpecificButtonsDiv();
 	this.clearSaveButtonDiv();
+	this.clearNewWorkNotificationDiv();
 
 	//add the buttons
 	$('#displaySpecificButtonsDiv').append(previousWorkgroupIdButton);
@@ -2423,7 +2489,7 @@ View.prototype.postFlagCallbackFail = function() {
  * the specific student work in the grading tool
  */
 View.prototype.openPremadeCommentsLinkClicked = function(commentBoxId, studentWorkColumnId) {
-	this.openPremadeComments(commentBoxId, studentWorkColumnId);
+	this.showPremadeCommentsDiv(commentBoxId, studentWorkColumnId);
 };
 
 /**
@@ -3209,6 +3275,12 @@ View.prototype.stepRowClickedHandler = function(nodeId) {
 	//hide all the other displays
 	this.hideAllDisplays();
 	
+	//clear the nodeIdClicked and workgroupIdClicked values
+	this.clearNodeIdClickedAndWorkgroupIdClicked();
+	
+	//remember the workgroup id the teacher is currently viewing
+	this.nodeIdClicked = nodeId;
+	
 	//remove the yellow highlighting of the choose display buttons
 	this.removeBackgroundColor('chooseClassroomMonitorDisplayButton');
 
@@ -3468,6 +3540,7 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			//clear any existing buttons in the upper right
 			this.clearDisplaySpecificButtonsDiv();
 			this.clearSaveButtonDiv();
+			this.clearNewWorkNotificationDiv();
 
 			//add the buttons
 			$('#displaySpecificButtonsDiv').append(previousStepButton);
@@ -4087,6 +4160,39 @@ View.prototype.studentStatusReceived = function(data) {
 	
 	//update the step progress for all steps
 	this.updateAllStepProgress();
+	
+	//check if we need to notify the teacher that there's new work for the screen they are viewing
+	this.checkIfNeedToDisplayNewWorkNotification(data);
+};
+
+/**
+ * Check if we need to notify the teacher if there's new work for the
+ * screen they are viewing
+ * @param studentStatus a student status object
+ */
+View.prototype.checkIfNeedToDisplayNewWorkNotification = function(studentStatus) {
+	//get the workgroup id
+	var workgroupId = studentStatus.workgroupId;
+	
+	//get the previous node visit
+	var previousNodeVisit = studentStatus.previousNodeVisit;
+	
+	if(previousNodeVisit != null) {
+		//check if the student submitted any new work
+		if(previousNodeVisit.nodeStates.length > 0) {
+			//get the node id the work is for
+			var nodeId = previousNodeVisit.nodeId;
+
+			//check if the workgroup id or node id matches the screen the teacher is viewing
+			if(this.workgroupIdClicked != null && this.workgroupIdClicked == workgroupId) {
+				//the teacher is viewing the same workgroup id
+				$('#newWorkNotificationDiv').text('New work is available, click "Check for New Work" to view');
+			} else if(this.nodeIdClicked != null && this.nodeIdClicked == nodeId) {
+				//the teacher is viewing the same node id
+				$('#newWorkNotificationDiv').text('New work is available, click "Check for New Work" to view');
+			}
+		}
+	}
 };
 
 /**
@@ -5257,6 +5363,13 @@ View.prototype.clearSaveButtonDiv = function() {
 };
 
 /**
+ * Remove everything in the new work notification div
+ */
+View.prototype.clearNewWorkNotificationDiv = function() {
+	$('#newWorkNotificationDiv').html('');
+};
+
+/**
  * Get the html that will display the green dot as an image
  */
 View.prototype.getIsOnlineHTML = function() {
@@ -6346,6 +6459,1382 @@ View.prototype.isIdeaBasketEnabled = function() {
 	}
 	
 	return result;
+};
+
+/**
+ * Create the premade comments div
+ */
+View.prototype.createPremadeCommentsDiv = function() {
+	//create the premade comments div
+	var premadeCommentsDiv = $('<div></div>').attr({id:'premadeCommentsDiv'});
+	
+	var premadeCommentsListsLabel = $('<p></p>');
+	premadeCommentsListsLabel.attr('id', 'premadeCommentsListsLabel');
+	premadeCommentsListsLabel.html('<u>Premade Comments</p>');
+	
+	var premadeCommentsListsDiv = $('<div></div>');
+	premadeCommentsListsDiv.attr('id', 'premadeCommentsListsDiv');
+	
+	var premadeCommentsTextArea = $('<textarea></textarea>');
+	premadeCommentsTextArea.attr('id', 'premadeCommentsTextArea');
+	premadeCommentsTextArea.css('width', '500px');
+	premadeCommentsTextArea.css('height', '100px');
+	
+	var premadeCommentsSubmitButton = $('<input></input>');
+	premadeCommentsSubmitButton.attr('id', 'premadeCommentsSubmitButton');
+	premadeCommentsSubmitButton.attr('type', 'button');
+	premadeCommentsSubmitButton.val('Submit');
+	premadeCommentsSubmitButton.click({thisView:this}, function(event) {
+		var thisView = event.data.thisView;
+		
+		var commentBoxId = thisView.commentBoxId;
+		
+		if(commentBoxId != null) {
+			var premadeCommentsText = $('#premadeCommentsTextArea').val();
+			$('#' + commentBoxId).val(premadeCommentsText);
+			$('#' + commentBoxId).change();
+		}
+		
+		$('#premadeCommentsTextArea').val('');
+		
+		thisView.hidePremadeCommentsDiv();
+	});
+	
+	premadeCommentsDiv.append(premadeCommentsListsLabel);
+	premadeCommentsDiv.append(premadeCommentsListsDiv);
+	premadeCommentsDiv.append(premadeCommentsTextArea);
+	premadeCommentsDiv.append('<br>');
+	premadeCommentsDiv.append(premadeCommentsSubmitButton);
+	
+	//add the premade comments div to the main div
+	$('#classroomMonitorMainDiv').append(premadeCommentsDiv);
+	
+	//hide the premade comments div, we will show it later when necessary
+	premadeCommentsDiv.hide();
+};
+
+/**
+ * Retrieves the premade comments if we haven't before and
+ * then renders the premade comments interface. If the
+ * user has opened the premade comments window before
+ * we should already have the premade comments from before
+ * so we don't need to retrieve them again.
+ */
+View.prototype.retrievePremadeComments = function() {
+	//check if we have retrieved premade comments before
+	if(this.premadeCommentLists == null) {
+		//we have not retrieved premade comments before so we need to retrieve them
+		
+		//get the url that will retrieve the premade comments
+		var getPremadeCommentsUrl = this.getConfig().getConfigParam('getPremadeCommentsUrl');
+		
+		//callback when we have received the premade comments from the server
+		var getPremadeCommentsCallback = function(text, xml, args) {
+			var thisView = args[0];
+
+			thisView.premadeCommentLists = $.parseJSON(text);
+			thisView.loadPremadeComments();
+		};
+		
+		//called when we fail to retrieve the premade comments from the server
+		var getPremadeCommentsCallbackFail = function(text, args) {
+			
+		};
+		
+		var getPremadeCommentsArgs = {};
+		
+		//make the request for the premade comments
+		this.connectionManager.request('GET', 1, getPremadeCommentsUrl, getPremadeCommentsArgs, getPremadeCommentsCallback, [this], getPremadeCommentsCallbackFail);
+	}
+};
+
+/**
+ * Load the premade comments into the UI
+ */
+View.prototype.loadPremadeComments = function() {
+	//get the user name from the userandclassinfo
+	var userLoginName = this.getUserAndClassInfo().getUserLoginName();
+	
+	//loop through all the premade comment lists
+	for(var x=0; x<this.premadeCommentLists.length; x++) {
+		//get a premade comment list
+		var premadeCommentList = this.premadeCommentLists[x];
+		
+		//check if the signed in user is the owner of this list
+		var signedInUserIsOwner = false;
+		if(userLoginName == premadeCommentList.owner) {
+			signedInUserIsOwner = true;
+		}
+		
+		//create the div that will contain one of the lists
+		var premadeCommentsListDiv = this.createPremadeCommentsListDiv(premadeCommentList, signedInUserIsOwner);
+		
+		//put this premadeCommentsListDiv in the premadeCommentsListsDiv to display it
+		$(premadeCommentsListsDiv).append(premadeCommentsListDiv);
+
+		//allow user to edit the premadecomment list label (the name of the list) in place
+		if(signedInUserIsOwner) {
+			//make the label editable in place if the user owns this list
+			this.makePremadeCommentListLabelEditable(premadeCommentList.id);
+			
+			//make the comments in the list editable in place
+			this.makePremadeCommentListEditable(premadeCommentList);
+		}
+	}
+	
+	//make the lists that this user owns sortable
+	this.makePremadeCommentListsSortable();
+	
+	//show a drop-down list of premade comment lists. order alphabetically by title.
+	this.premadeCommentLists.sort(this.sortPremadeCommentsListByLabelAlphabetical);
+	
+	//id of premadecommentsList to show at the beginning. See if last-shown list was stored in localstorage.
+	var premadeCommentsListIdToShow = this.premadeCommentLists[0].id;
+	
+	//get the drop down that is used to select the premade comment list
+	var premadeCommentsListLabelDD = $("<select>").attr("id","premadeCommentsListLabelDD");
+	
+	//loop through all premade comment lists
+	for (var i=0; i<this.premadeCommentLists.length; i++) {
+		//get a list
+		var premadeCommentLists = this.premadeCommentLists[i];
+		
+		//create a drop down option for the list
+		var premadeCommentsListLabelDDItem = $("<option>")
+		premadeCommentsListLabelDDItem.attr("id",'premadeCommentsListLabelDDItem_' + premadeCommentLists.id);
+		premadeCommentsListLabelDDItem.attr("value", premadeCommentLists.id);
+		premadeCommentsListLabelDDItem.text(premadeCommentLists.label);
+		
+		if (premadeCommentsListIdToShow == premadeCommentLists.id) {
+			//if this is the premadeCommentListId to show, select it in the select dropdown list
+			premadeCommentsListLabelDDItem.attr("selected","selected");
+		};
+		
+		//add the option to the drop down
+		premadeCommentsListLabelDD.append(premadeCommentsListLabelDDItem);
+	}
+	
+	var thisView = this;
+	
+	premadeCommentsListLabelDD.change({"thisView":thisView}, function() {
+		//the teacher has chosen another option in the drop down
+	
+		//get the value of the option chosen
+		var listIdChosen = $(this).val();
+		
+		//now hide all the lists except the last one that user had opened, or the first one if none exists.
+		$(premadeCommentsListsDiv).find(".premadeCommentsListDiv").hide();
+		
+		//show just the selected premadecommentslist div.
+		$(premadeCommentsListsDiv).find("#premadeCommentsListDiv_" + listIdChosen).show();		
+		
+		/*
+		 * save the current state of the premade comments so that it
+		 * can be restored the next time the user opens up the premade
+		 * comments again
+		 */
+		thisView.savePremadeCommentsState();
+	});
+	
+	//add the option to add a new list as the last option in the drop-down
+	var newPremadeCommentsListDDItem = $("<option>");
+	newPremadeCommentsListDDItem.attr("id","newPremadeCommentsListDDItem");
+	newPremadeCommentsListDDItem.attr("value","newPremadeCommentstList");
+	newPremadeCommentsListDDItem.text("Create New List...");
+	newPremadeCommentsListDDItem.click({"thisView":this},function(event) {
+		//the create new list option was chosen
+		
+		var thisView = event.data.thisView;
+		//arguments used in the server post
+		var premadeCommentAction = 'addCommentList';
+		var postPremadeCommentsCallback = thisView.newPremadeCommentListCallback;
+		var premadeCommentId = null;
+		var premadeComment = null;
+		var premadeCommentListId = null;
+		var premadeCommentListLabel = "My New List";
+		var isGlobal = null;
+		var premadeCommentListPositions = null;
+		var projectId = null;
+
+		//make the request to edit the premade comment on the server
+		thisView.postPremadeComments(premadeCommentAction, postPremadeCommentsCallback, premadeCommentListId, premadeCommentListLabel, premadeCommentId, premadeComment, isGlobal, premadeCommentListPositions, projectId);		
+	});
+	
+	//add the new list option
+	premadeCommentsListLabelDD.append(newPremadeCommentsListDDItem);
+	
+	//add the drop down to the div
+	$(premadeCommentsListsDiv).prepend(premadeCommentsListLabelDD);
+	
+	//now hide all the lists except the last one that user had opened, or the first one if none exists.
+	$(premadeCommentsListsDiv).find(".premadeCommentsListDiv").hide();
+	
+	//show just the selected premadecommentslist div.
+	$(premadeCommentsListsDiv).find("#premadeCommentsListDiv_"+premadeCommentsListIdToShow).show();
+	
+	//display the premade comment list that was last open and check the checkboxes there were previously checked
+	this.restorePremadeCommentsState();
+};
+
+/**
+ * Make the comments in the list editable in the DOM
+ * @param premadeCommentList the premade comment list
+ */
+View.prototype.makePremadeCommentListEditable = function(premadeCommentList) {
+	//loop through all the premade comments in the list
+	for(var y=0; y<premadeCommentList.premadeComments.length; y++) {
+		//get a premade comment
+		var premadeComment = premadeCommentList.premadeComments[y];
+		
+		//get the id of the premade comment
+		var premadeCommentId = premadeComment.id;
+		
+		//make the premade comment editable in place in the DOM
+		this.makePremadeCommentEditable(premadeCommentId);
+	}
+};
+
+/**
+ * The callback that is called after the server we receive the
+ * response from the editComment request
+ * @param text the JSON of the edited comment
+ * @param xml
+ * @param args
+ */
+View.prototype.newPremadeCommentListCallback = function(text, xml, args) {
+	//obtain the view
+	var thisView = args[0];
+	
+	//parse the premade comment
+	var premadeCommentList = $.parseJSON(text);
+	
+	//update the premade comment list locally
+	thisView.addPremadeCommentListLocally(premadeCommentList);
+	
+	var premadeCommentListId = premadeCommentList.id;
+
+	//create the option in the lists drop down
+	var premadeCommentsListLabelDDItem = $("<option>");
+	premadeCommentsListLabelDDItem.attr("id",'premadeCommentsListLabelDDItem_' + premadeCommentListId);
+	premadeCommentsListLabelDDItem.attr("selected","selected");
+	premadeCommentsListLabelDDItem.attr("value", premadeCommentListId);
+	premadeCommentsListLabelDDItem.text(premadeCommentList.label);
+	premadeCommentsListLabelDDItem.click({"thisView":thisView},function(event) {
+		var listIdChosen = this.value;
+		var thisView = event.data.thisView;
+		
+		//now hide all the lists
+		$("#premadeCommentsListsDiv").find(".premadeCommentsListDiv").hide();
+		
+		//show just the selected premadecommentslist div.
+		$("#premadeCommentsListsDiv").find("#premadeCommentsListDiv_" + listIdChosen).show();		
+		
+		/*
+		 * save the current state of the premade comments so that it
+		 * can be restored the next time the user opens up the premade
+		 * comments again
+		 */
+		thisView.savePremadeCommentsState();
+	});
+	
+	//append the list option to the select dropdown
+	$("#premadeCommentsListLabelDD").append(premadeCommentsListLabelDDItem);
+	
+	//now hide all the lists
+	$(".premadeCommentsListDiv").hide();
+
+	var signedInUserIsOwner = true;
+
+	//create the div for the new list
+	var premadeCommentsListDiv = thisView.createPremadeCommentsListDiv(premadeCommentList,signedInUserIsOwner);
+
+	//put this premadeCommentsListDiv in the premadeCommentsListsDiv to display it
+	$("#premadeCommentsListsDiv").append(premadeCommentsListDiv);
+
+	//make the label editable in place if the user owns this list
+	thisView.makePremadeCommentListLabelEditable(premadeCommentList.id);				
+
+	//make the comments within the list sortable
+	$("#premadeCommentsListDiv_" + premadeCommentListId + ' ul').sortable({handle:'.premadeCommentHandle', update:function(event, ui) {view.sortUpdate(event, ui, view);}});
+	
+	//show the new premadecommentslist
+	$("#premadeCommentsListDiv_" + premadeCommentListId).show();	
+	
+	/*
+	 * save the current state of the premade comments so that it
+	 * can be restored the next time the user opens up the premade
+	 * comments again
+	 */
+	thisView.savePremadeCommentsState();
+};
+
+/**
+ * Creates and returns a div for the specified premade comment list.
+ * @param premadeCommentList premade comment list
+ * @return div for the premade comment list
+ */
+View.prototype.createPremadeCommentsListDiv = function(premadeCommentList, signedInUserIsOwner) {
+	
+	//get the id of the list
+	var premadeCommentListId = premadeCommentList.id;
+	
+	//get the label of the list
+	var premadeCommentListLabel = premadeCommentList.label;
+	
+	//sort premade comment list by premade comment listposition
+	premadeCommentList.premadeComments = this.sortPremadeCommentList(premadeCommentList.premadeComments);
+	
+	//make a div for this premade comments list
+	var premadeCommentsListDiv = $("<div>");
+	premadeCommentsListDiv.attr("id", "premadeCommentsListDiv_" + premadeCommentListId);
+	premadeCommentsListDiv.addClass("premadeCommentsListDiv");
+	
+	//get the name of the premade comment list
+	var premadeCommentListLabelP = $("<p>");
+	premadeCommentListLabelP.attr("id","premadeCommentsListP_"+premadeCommentListId);
+	premadeCommentListLabelP.addClass("premadeCommentsListP");
+	premadeCommentListLabelP.css("display","inline");
+	premadeCommentListLabelP.html(premadeCommentListLabel);
+	
+	//add the premade comment list name to the div
+	premadeCommentsListDiv.append(premadeCommentListLabelP);
+	premadeCommentsListDiv.append("<br>");
+	
+	if(signedInUserIsOwner) {
+		//create the button that the user will use to add a new premade comment
+		var premadeCommentListAddCommentButton = $('<input></input>');
+		premadeCommentListAddCommentButton.attr('id', 'premadeCommentListAddCommentButton_' + premadeCommentListId);
+		premadeCommentListAddCommentButton.attr('type', 'button');
+		premadeCommentListAddCommentButton.addClass('premadeCommentListAddCommentButton');
+		premadeCommentListAddCommentButton.val('Add New Comment');
+		premadeCommentListAddCommentButton.click({thisView:this, premadeCommentListId:premadeCommentListId}, function(event) {
+			var thisView = event.data.thisView;
+			var premadeCommentListId = event.data.premadeCommentListId;
+			
+			thisView.addPremadeCommentClicked(premadeCommentListId);
+		});
+		
+		//add the premade comment add comment button to the div
+		premadeCommentsListDiv.append(premadeCommentListAddCommentButton);			
+		
+		//create the button that the user will use to delete this list
+		var premadeCommentListDeleteListButton = $('<input></input>');
+		premadeCommentListDeleteListButton.attr('id', 'premadeCommentListDeleteListButton_' + premadeCommentListId);
+		premadeCommentListDeleteListButton.attr('type', 'button');
+		premadeCommentListDeleteListButton.addClass('premadeCommentListDeleteListButton');
+		premadeCommentListDeleteListButton.val('Delete This List');
+		premadeCommentListDeleteListButton.click({thisView:this, premadeCommentListId:premadeCommentListId}, function(event) {
+			var thisView = event.data.thisView;
+			var premadeCommentListId = event.data.premadeCommentListId;
+			
+			thisView.deletePremadeCommentList(premadeCommentListId);
+		});
+		
+		//add the premade comment add comment button to the div
+		premadeCommentsListDiv.append(premadeCommentListDeleteListButton);
+	}
+	
+	/*
+	 * if the signed in user is the owner, we will give it the
+	 * 'myPremadeCommentList' class so that it will be sortable
+	 */
+	var premadeCommentListULClass = "";
+	if(signedInUserIsOwner) {
+		premadeCommentListULClass = 'myPremadeCommentList';
+	}
+	
+	//create the UL element that will hold all the premade comments in this list
+	var premadeCommentListUL = $('<ul></ul>');
+	premadeCommentListUL.attr('id', 'premadeCommentUL_' + premadeCommentListId);
+	premadeCommentListUL.css('margin-left', '0px');
+	premadeCommentListUL.css('padding-left', '0px');
+	if(premadeCommentListULClass != '') {
+		premadeCommentListUL.addClass(premadeCommentListULClass);		
+	}
+	
+	//put this UL into the premadeCommentsListDiv
+	premadeCommentsListDiv.append(premadeCommentListUL);
+	
+	//loop through all the premade comments in the list
+	for(var y=0; y<premadeCommentList.premadeComments.length; y++) {
+		//get a premade comment
+		var premadeComment = premadeCommentList.premadeComments[y];
+		
+		//get the id of the premade comment
+		var premadeCommentId = premadeComment.id;
+		
+		//get the comment
+		var comment = premadeComment.comment;
+		
+		//create the premade comment LI
+		var premadeCommentLI = this.createPremadeCommentLI(premadeCommentId, comment, premadeCommentListId, signedInUserIsOwner);
+		
+		//add the LI to the UL
+		premadeCommentListUL.append(premadeCommentLI);
+	}
+	
+	return premadeCommentsListDiv;
+};
+
+/**
+ * Posts premade comment data back to the server. This handles all premade comments
+ * posting. Some of the parameters are optional depending on what kind of post
+ * request we are making.
+ * e.g. if we are changing the premadeComment text, we do not need to pass
+ * in the premadeComentLabels
+ * @param premadeCommentAction the type of premade comment data we are sending
+ * back to the server such as
+ * 'addComment'
+ * 'editComment'
+ * 'deleteComment'
+ * 'reOrderCommentList'
+ * 
+ * @param postPremadeCommentsCallback the callback function that is called after
+ * the post has succeeded
+ * @param premadeCommentListId the id of the premade comment list
+ * @param premadeCommentListLabel the name of the premade comment list
+ * @param premadeCommentId the id of the premade comment
+ * @param premadeComment the comment string
+ * @param isGlobal whether we are dealing with a global element
+ * @param premadeCommentListPositions the positions of the premade comments within a list
+ * @param projectId the project id
+ */
+View.prototype.postPremadeComments = function(premadeCommentAction, postPremadeCommentsCallback, premadeCommentListId, premadeCommentListLabel, premadeCommentId, premadeComment, isGlobal, premadeCommentListPositions, projectId) {
+	//get the url that will post the premade comment to the server
+	var postPremadeCommentsUrl = this.getConfig().getConfigParam('postPremadeCommentsUrl');
+	
+	//called when we fail to send the premade comment data to the server
+	var postPremadeCommentsCallbackFail = function(text, args) {
+
+	};
+	
+	//the post parameters
+	var postPremadeCommentsArgs = {
+			premadeCommentAction:premadeCommentAction,
+			premadeCommentListId:premadeCommentListId,
+			premadeCommentListLabel:premadeCommentListLabel,
+			premadeCommentId:premadeCommentId,
+			premadeComment:premadeComment,
+			isGlobal:isGlobal,
+			projectId:projectId,
+			premadeCommentListPositions:premadeCommentListPositions
+	};
+	
+	//make the post to the server
+	this.connectionManager.request('POST', 1, postPremadeCommentsUrl, postPremadeCommentsArgs, postPremadeCommentsCallback, [this, postPremadeCommentsArgs], postPremadeCommentsCallbackFail);
+};
+
+/**
+ * Create the premade comment LI element
+ * @param premadeCommentId the id of the premade comment
+ * @param comment the comment text
+ * @param premadeCommentListId the id of the premade comment list
+ * @param signedInUserIsOwner boolean whether the signed in user is the owner of
+ * the list this premade comment is part of
+ * @return an LI element that contains a select button, the premade comment text,
+ * a drag handle, and a delete button
+ */
+View.prototype.createPremadeCommentLI = function(premadeCommentId, comment, premadeCommentListId, signedInUserIsOwner) {
+	//get the premade comment dom id for the element that will hold the comment text
+	var premadeCommentDOMId = this.getPremadeCommentDOMId(premadeCommentId);
+	
+	//create the LI element that will hold the button, the comment, and the handle
+	var premadeCommentLI = $('<li></li>');
+	premadeCommentLI.attr('id', 'premadeCommentLI_' + premadeCommentId);
+	premadeCommentLI.css('list-style-type', 'none');
+	premadeCommentLI.css('margin-left', '0px');
+	premadeCommentLI.css('padding-left', '0px');
+	premadeCommentLI.addClass('premadeCommentLI');
+	
+	/*
+	 * the input button the user will click to choose the comment.
+	 * this is not displayed in the authoring tool but is displayed
+	 * in the grading tool.
+	 */
+	var premadeCommentSelectButton = $('<input></input>');
+	premadeCommentSelectButton.attr('id', 'premadeCommentSelectButton_' + premadeCommentId);
+	premadeCommentSelectButton.attr('type', 'button');
+	premadeCommentSelectButton.val('Select');
+	premadeCommentSelectButton.click({thisView:this, premadeCommentDOMId:premadeCommentDOMId}, function(event) {
+		var thisView = event.data.thisView;
+		var premadeCommentDOMId = event.data.premadeCommentDOMId;
+		
+		thisView.selectPremadeComment(premadeCommentDOMId);
+	});
+	
+	premadeCommentLI.append(premadeCommentSelectButton);
+	
+	//create a space between the Select button and the comment text
+	var spacingP = $('<p></p>');
+	spacingP.css('display', 'inline');
+	spacingP.text(' ');
+	
+	//the p element that will display the comment
+	var premadeCommentP = $('<p></p>');
+	premadeCommentP.attr('id', premadeCommentDOMId);
+	premadeCommentP.css('display', 'inline');
+	premadeCommentP.text(comment);
+
+	//add the elements to the LI
+	premadeCommentLI.append(spacingP);
+	premadeCommentLI.append(premadeCommentP);
+
+	/*
+	 * check if the signed in user is the owner of the list so we can determine
+	 * if we want to display the '[Drag Me]' and Delete button UI elements
+	 */
+	if(signedInUserIsOwner) {
+		//the p element that will display the handle to use for re-ordering comments in the list
+		var premadeCommentDragHandle = $('<p></p>');
+		premadeCommentDragHandle.attr('id', 'premadeCommentHandle_' + premadeCommentId);
+		premadeCommentDragHandle.css('display', 'inline');
+		premadeCommentDragHandle.css('cursor', 'pointer');
+		premadeCommentDragHandle.addClass('premadeCommentHandle');
+		premadeCommentDragHandle.text('[Drag Me]');
+		
+		//the delete button to delete the premade comment
+		var premadeCommentDeleteButton = $('<input></input>');
+		premadeCommentDeleteButton.attr('id', 'premadeCommentDeleteButton_' + premadeCommentId);
+		premadeCommentDeleteButton.attr('type', 'button');
+		premadeCommentDeleteButton.val('Delete');
+		premadeCommentDeleteButton.click({thisView:this, premadeCommentId:premadeCommentId, premadeCommentListId:premadeCommentListId}, function(event) {
+			var thisView = event.data.thisView;
+			var premadeCommentId = event.data.premadeCommentId;
+			var premadeCommentListId = event.data.premadeCommentListId;
+			
+			thisView.deletePremadeComment(premadeCommentId, premadeCommentListId);
+		});
+		
+		//add the elements to the LI
+		premadeCommentLI.append(document.createTextNode(' '));
+		premadeCommentLI.append(premadeCommentDragHandle);
+		premadeCommentLI.append(document.createTextNode(' '));
+		premadeCommentLI.append(premadeCommentDeleteButton);
+	}
+	
+	return premadeCommentLI;
+};
+
+/**
+ * Called when the user chooses a premade comment to use
+ * @param premadeCommentDOMId the dom id of the element that contains
+ * the premade comment text
+ */
+View.prototype.selectPremadeComment = function(premadeCommentDOMId) {
+	//obtain the text already in the text area
+	var existingCommentText = $('#premadeCommentsTextArea').val();
+	
+	if(existingCommentText != '') {
+		//add a new line if text already exists in the textarea
+		existingCommentText = existingCommentText + '\n';
+	}
+	
+	//get the premade comment text
+	var premadeCommentText = $('#' + premadeCommentDOMId).text();
+	
+	/*
+	 * retrieve the premade comment text that was chosen and append it
+	 * into the text area at the bottom of the premade comments window
+	 * so the user can view it and modify it if they decide to do so
+	 */
+	$('#premadeCommentsTextArea').val(existingCommentText + premadeCommentText);
+};
+
+/**
+ * Create the call to delete a premade comment list
+ * @param premadeCommentListId the id of the premade comment list to delete
+ */
+View.prototype.deletePremadeCommentList = function(premadeCommentListId) {
+	//first confirm with user that they want to delete this list
+	var doDelete = confirm("Are you sure you want to delete this list? This action cannot be undone.");
+	if (doDelete) {
+		//arguments used in the server request to create a new comment
+		var premadeCommentAction = 'deleteCommentList';
+		var postPremadeCommentsCallback = this.deletePremadeCommentListCallback;
+		var premadeCommentListLabel = null;
+		var premadeCommentId = null;
+		var premadeComment = null;
+		var isGlobal = null;
+		var premadeCommentListPositions = null;
+		var projectId = null;
+		
+		//make the request to create a new comment
+		this.postPremadeComments(premadeCommentAction, postPremadeCommentsCallback, premadeCommentListId, premadeCommentListLabel, premadeCommentId, premadeComment, isGlobal, premadeCommentListPositions, projectId);		
+	};
+};
+
+/**
+ * Called after the server deletes a premade comment list
+ * @param text the JSON of the old premade comment list comment
+ * @param xml
+ * @param args
+ */
+View.prototype.deletePremadeCommentListCallback = function(text, xml, args) {
+	//obtain the view
+	var thisView = args[0];
+	
+	//parse the premade comment
+	var premadeCommentList = $.parseJSON(text);
+	
+	//obtain the premade comment list id
+	var premadeCommentListId = premadeCommentList.id;
+		
+	//remove premadecomment list item from dropdown
+	$("#premadeCommentsListLabelDDItem_" + premadeCommentListId).remove();
+	
+	//remove premadecomment list div
+	$("#premadeCommentsListDiv_" + premadeCommentListId).remove();
+	
+	//get premadecommentlist id of the newly-selected dropdown item after the deletion. selection happens automatically.
+	var newlySelectedPremadeCommentListId = $("#premadeCommentsListLabelDD").find(":selected").val();
+	
+	//show the newly-selected premadecommentlist
+	$("#premadeCommentsListDiv_" + newlySelectedPremadeCommentListId).show();
+	
+	/*
+	 * save the current state of the premade comments so that it
+	 * can be restored the next time the user opens up the premade
+	 * comments again
+	 */
+	thisView.savePremadeCommentsState();
+		
+	//delete the premade comment from our local array of premade comments
+	thisView.deletePremadeCommentListLocally(premadeCommentListId);
+};
+
+/**
+ * Delete the premade comment list from our local copy of the premade comment lists
+ * @param premadeCommentListId the id of the premade comment list to delete
+ */
+View.prototype.deletePremadeCommentListLocally = function(premadeCommentListId) {	
+	var indexOfPremadeCommentList = -1;
+	// loop thru the premadecommentslist and find index of premadeCommentList
+	for (var i=0; i<this.premadeCommentLists.length;i++) {
+		if (this.premadeCommentLists[i].id == premadeCommentListId) {
+			indexOfPremadeCommentList = i;
+		}	
+	};
+	if (indexOfPremadeCommentList > -1) {
+		// remove from list
+		this.premadeCommentLists.splice(indexOfPremadeCommentList,1);
+	}
+};
+
+/**
+ * Get the premade comment dom id of the element that holds the comment
+ * text
+ * @param premadeCommentId the id of the premade comment (an integer)
+ * @return a string containing the dom id
+ */
+View.prototype.getPremadeCommentDOMId = function(premadeCommentId) {
+	return 'premadeComment_' + premadeCommentId;
+};
+
+/**
+ * Sort the premade comment list by premade comment list positions
+ * in descending order (largest first, smallest last)
+ * @param an array of premade comments
+ */
+View.prototype.sortPremadeCommentList = function(premadeCommentList) {
+	premadeCommentList = premadeCommentList.sort(this.sortPremadeCommentListByListPositions);
+	
+	return premadeCommentList;
+};
+
+/**
+ * A sorting function used as an argument to array.sort() to sort premade
+ * comment list labels alphabetically
+ * @param a some premade comment list
+ * @param b some premade comment list
+ * @return
+ * true if b comes after a
+ * false if a comes after b
+ */
+View.prototype.sortPremadeCommentsListByLabelAlphabetical = function(a, b) {
+	var aListLabel = a.label.toLowerCase();
+	var bListLabel = b.label.toLowerCase();
+	return aListLabel > bListLabel;
+};
+
+/**
+ * A sorting function used as an argument to array.sort() to sort premade
+ * comments in a premade comment list in descending order (largest first,
+ * smallest last)
+ * @param a some premade comment
+ * @param b some premade comment
+ * @return
+ * true if b comes after a
+ * false if a comes after b
+ */
+View.prototype.sortPremadeCommentListByListPositions = function(a, b) {
+	var aListPosition = a.listPosition;
+	var bListPosition = b.listPosition;
+	
+	return aListPosition < bListPosition;
+};
+
+/**
+ * Save the current state of the premade comments which includes
+ * which premade comment list is being shown and which checkboxes
+ * are checked
+ */
+View.prototype.savePremadeCommentsState = function() {
+	//get the premade comment list option that is selected and being shown
+	var selectedPremadeCommentListOption = $('#premadeCommentsListLabelDD option:selected');
+	
+	if(selectedPremadeCommentListOption.length > 0) {
+		//get the DOM option element for the premade comment list
+		var selectedPremadeCommentList = selectedPremadeCommentListOption[0];
+		
+		//get the premade comment list id
+		var premadeCommentListIdSelected = parseInt(selectedPremadeCommentList.value);
+		
+		//create an object to contain the information we are saving
+		var wise4PremadeCommentsState = {
+			premadeCommentListIdSelected:premadeCommentListIdSelected
+		};
+		
+		/*
+		 * save the object to local storage so we can retrieve it the next
+		 * time the premade comments page is open
+		 */
+		this.setLocalStorageValue('wise4PremadeCommentsState', wise4PremadeCommentsState);
+	}
+};
+
+
+/**
+ * Restore the previous state of the premade comments which includes
+ * which premade comment list was being shown
+ */
+View.prototype.restorePremadeCommentsState = function() {
+	//get the local storage item we saved from the previous session
+	var wise4PremadeCommentsState = this.getLocalStorageValue('wise4PremadeCommentsState');
+	
+	if(wise4PremadeCommentsState != null) {
+		//create the JSON object
+		wise4PremadeCommentsState = JSON.parse(wise4PremadeCommentsState);
+		
+		if(wise4PremadeCommentsState != null) {
+			//get the premade comment list id that was previously shown
+			var premadeCommentListIdSelected = wise4PremadeCommentsState.premadeCommentListIdSelected;
+			
+			if(premadeCommentListIdSelected != null) {
+				/*
+				 * try to retrieve the list with the given list id to make sure
+				 * the id corresponds to one of our lists and not someone else's
+				 */
+				var premadeCommentList = this.getPremadeCommentListLocally(premadeCommentListIdSelected);
+				
+				if(premadeCommentList != null) {
+					//select the list in the drop down
+					$('#premadeCommentsListLabelDDItem_' + premadeCommentListIdSelected).attr('selected', 'selected');
+
+					//hide all the lists
+					$(".premadeCommentsListDiv").hide();
+					
+					//show just the selected premadecommentslist div
+					$("#premadeCommentsListDiv_" + premadeCommentListIdSelected).show();
+				}
+			}
+		}
+	}
+};
+
+/**
+ * Create the call to add a new premade comment to a list
+ * @param premadeCommentListId the id of the premade comment list
+ */
+View.prototype.addPremadeCommentClicked = function(premadeCommentListId) {
+	//arguments used in the server request to create a new comment
+	var premadeCommentAction = 'addComment';
+	var postPremadeCommentsCallback = this.addPremadeCommentCallback;
+	var premadeCommentListLabel = null;
+	var premadeCommentId = null;
+	var premadeComment = null;
+	var isGlobal = null;
+	var premadeCommentListPositions = null;
+	var projectId = null;
+	
+	//make the request to create a new comment
+	this.postPremadeComments(premadeCommentAction, postPremadeCommentsCallback, premadeCommentListId, premadeCommentListLabel, premadeCommentId, premadeComment, isGlobal, premadeCommentListPositions, projectId);
+};
+
+/**
+ * Called after the server creates a new comment
+ * @param text the JSON of the new comment
+ * @param xml
+ * @param args
+ */
+View.prototype.addPremadeCommentCallback = function(text, xml, args) {
+	//obtain the view
+	var thisView = args[0];
+	
+	//parse the premade comment
+	var premadeComment = $.parseJSON(text);
+	
+	//obtain the premade comment list id
+	var premadeCommentListId = premadeComment.premadeCommentListId;
+	
+	//obtain the premade comment id
+	var premadeCommentId = premadeComment.id;
+	
+	//this is a new comment so the comment will be empty
+	var premadeCommentMessage = premadeComment.comment;
+	
+	//create the LI element for the premade comment
+	var premadeCommentLI = thisView.createPremadeCommentLI(premadeCommentId, premadeCommentMessage, premadeCommentListId, true);
+	
+	//add the premade comment LI to the top of the premade comment list UL
+	$('#premadeCommentUL_' + premadeCommentListId).prepend(premadeCommentLI);
+	
+	//make the premade comment LI editable
+	thisView.makePremadeCommentEditable(premadeCommentId);
+	
+	//add the premade comment to our local array of premade comments
+	thisView.addPremadeCommentLocally(premadeCommentListId, premadeComment);
+};
+
+/**
+ * Add the premade comment to our local copy of the premade comment list
+ * @param premadeCommentListId the id of the premade comment list to add
+ * the new premade comment to
+ * @param premadeComment the new premade comment
+ */
+View.prototype.addPremadeCommentLocally = function(premadeCommentListId, premadeComment) {
+	//get the premade comment list
+	var premadeCommentList = this.getPremadeCommentListLocally(premadeCommentListId);
+	
+	/*
+	 * add the premade comment to the premade comments array in the
+	 * premade comment list object
+	 */ 
+	premadeCommentList.premadeComments.push(premadeComment);
+};
+
+/**
+ * Get a premade comment list given the premade comment list id
+ * @param premadeCommentListId the id of the premade comment list
+ * @return a premade comment list object
+ */
+View.prototype.getPremadeCommentListLocally = function(premadeCommentListId) {
+	//loop through all the premade comment lists
+	for(var x=0; x<this.premadeCommentLists.length; x++) {
+		//get a premade comment list
+		var currentPremadeCommentList = this.premadeCommentLists[x];
+		
+		//get the id of the premade comment list
+		var currentPremadeCommentListId = currentPremadeCommentList.id;
+		
+		//check if the id matches
+		if(currentPremadeCommentListId == premadeCommentListId) {
+			//the id matches so we will return the list
+			return currentPremadeCommentList;
+		}
+	}
+	
+	//the list was not found
+	return null;
+};
+
+/**
+ * Make a premade comment editable in place
+ * @param premadeCommentId the id of the premade comment
+ */
+View.prototype.makePremadeCommentEditable = function(premadeCommentId) {
+	//obtain the dom id of the element that holds the comment text
+	var premadeCommentDOMId = this.getPremadeCommentDOMId(premadeCommentId);
+	
+	//make the comment editable in place
+	$("#" + premadeCommentDOMId).editInPlace({callback:this.editPremadeComment, params:[this], text_size:60});
+	$("#" + premadeCommentDOMId).attr('maxlength', 10);
+};
+
+/**
+ * Called when the user finishes editing the comment in place
+ * @param idOfEditor the dom id of the element that contains the comment text
+ * @param enteredText the text that the user entered
+ * @param originalText the text that was there before the user edited
+ * @param args an array that holds extra args, in our case the view
+ * @return the entered text
+ */
+View.prototype.editPremadeComment = function(idOfEditor, enteredText, originalText, args) {
+	//get the view
+	var thisView = args[0];
+	
+	//arguments used in the server post
+	var premadeCommentAction = 'editComment';
+	var postPremadeCommentsCallback = thisView.editPremadeCommentCallback;
+	var premadeCommentListId = null;
+	var premadeCommentListLabel = null;
+	
+	//get the premade comment id (an integer)
+	var premadeCommentId = idOfEditor.replace('premadeComment_', '');
+	var premadeComment = enteredText;
+	var isGlobal = null;
+	var premadeCommentListPositions = null;
+	var projectId = null;
+	
+	//get the length of the premade comment
+	var premadeCommentLength = premadeComment.length;
+	
+	if(premadeCommentLength > 255) {
+		//the database column is varchar(255) so premade comments can only be a max of 255 chars
+		
+		//display the error message
+		alert("Error: Premade comment length must be 255 characters or less. Your premade comment is " + premadeCommentLength + " characters long. Your premade comment will be truncated.");
+		
+		//truncate the premade comment to 255 chars
+		premadeComment = premadeComment.substring(0, 255);
+	}
+	
+	//make the request to edit the premade comment on the server
+	thisView.postPremadeComments(premadeCommentAction, postPremadeCommentsCallback, premadeCommentListId, premadeCommentListLabel, premadeCommentId, premadeComment, isGlobal, premadeCommentListPositions, projectId);
+	
+	return premadeComment;
+};
+
+/**
+ * The callback that is called after the server we receive the
+ * response from the editComment request
+ * @param text the JSON of the edited comment
+ * @param xml
+ * @param args
+ */
+View.prototype.editPremadeCommentCallback = function(text, xml, args) {
+	//obtain the view
+	var thisView = args[0];
+	
+	//parse the premade comment
+	var premadeComment = $.parseJSON(text);
+
+	//update the premade comment locally
+	thisView.editPremadeCommentLocally(premadeComment);
+};
+
+/**
+ * Updates the the comment text in our local copy of the premade comments
+ * @param premadeComment the premade comment that was updated
+ */
+View.prototype.editPremadeCommentLocally = function(premadeComment) {
+	//loop through all the premade comment lists
+	for(var x=0; x<this.premadeCommentLists.length; x++) {
+		//get a premade comment list
+		var premadeCommentList = this.premadeCommentLists[x];
+		
+		//get the array of premade comments in the list
+		var premadeComments = premadeCommentList.premadeComments;
+		
+		//loop through all the premade comments
+		for(var y=0; y<premadeComments.length; y++) {
+			//get a premade comment
+			var currentPremadeComment = premadeComments[y];
+			
+			/*
+			 * check if the current premade comment has the same id
+			 * as the one we need to update
+			 */
+			if(currentPremadeComment.id == premadeComment.id) {
+				//update the comment text
+				currentPremadeComment.comment = premadeComment.comment;
+			}
+		}
+	}
+};
+
+/**
+ * Add the new premade comment list to our array of lists
+ * @param premadeCommentList the new premade comment list
+ */
+View.prototype.addPremadeCommentListLocally = function(premadeCommentList) {
+	//add the new premade comment list to our array of lists
+	this.premadeCommentLists.push(premadeCommentList);
+};
+
+/**
+ * Make a premade comment list label editable in place
+ * @param premadeCommentId the id of the premade comment list
+ */
+View.prototype.makePremadeCommentListLabelEditable = function(premadeCommentListId) {
+	//make the comment editable in place
+	$("#premadeCommentsListP_" + premadeCommentListId).editInPlace({callback:this.editPremadeCommentListLabel, params:[this], text_size:60});	
+};
+
+
+/**
+ * Called when the user finishes editing the comment list label in place
+ * @param idOfEditor the dom id of the element that contains the comment list label text
+ * @param enteredText the text that the user entered
+ * @param originalText the text that was there before the user edited
+ * @param args an array that holds extra args, in our case the view
+ * @return the entered text
+ */
+View.prototype.editPremadeCommentListLabel = function(idOfEditor, enteredText, originalText, args) {
+	//get the view
+	var thisView = args[0];
+	
+	//arguments used in the server post
+	var premadeCommentAction = 'editCommentListLabel';
+	var postPremadeCommentsCallback = thisView.editPremadeCommentListLabelCallback;
+	var premadeCommentId = null;
+	var premadeComment = null;
+	
+	//get the premade comment id (an integer)
+	var premadeCommentListId = idOfEditor.replace('premadeCommentsListP_', '');
+	var premadeCommentListLabel = enteredText;
+	var isGlobal = null;
+	var premadeCommentListPositions = null;
+	var projectId = null;
+	
+	//get the length of the premade comment
+	var premadeCommentLength = premadeCommentListLabel.length;
+	
+	if(premadeCommentLength > 255) {
+		//the database column is varchar(255) so premade comments can only be a max of 255 chars
+		
+		//display the error message
+		thisView.premadeCommentsWindow.alert("Error: Premade comment list label length must be 255 characters or less. Your label is " + premadeCommentLength + " characters long. Your label will be truncated.");
+		
+		//truncate the premade comment to 255 chars
+		premadeCommentListLabel = premadeCommentListLabel.substring(0, 255);
+	}
+	
+	//make the request to edit the premade comment on the server
+	thisView.postPremadeComments(premadeCommentAction, postPremadeCommentsCallback, premadeCommentListId, premadeCommentListLabel, premadeCommentId, premadeComment, isGlobal, premadeCommentListPositions, projectId);
+	
+	return premadeCommentListLabel;
+};
+
+/**
+ * The callback that is called after the server we receive the
+ * response from the editComment request
+ * @param text the JSON of the edited comment
+ * @param xml
+ * @param args
+ */
+View.prototype.editPremadeCommentListLabelCallback = function(text, xml, args) {
+	//obtain the view
+	var thisView = args[0];
+	
+	//parse the premade comment
+	var premadeCommentList = $.parseJSON(text);
+
+	//update the list label text on the select dropdown
+	$("#premadeCommentsListLabelDDItem_" + premadeCommentList.id).html(premadeCommentList.label);
+	
+	//update the premade comment list locally
+	thisView.editPremadeCommentListLabelLocally(premadeCommentList);
+};
+
+/**
+ * Updates the the comment text in our local copy of the premade comments
+ * @param premadeComment the premade comment that was updated
+ */
+View.prototype.editPremadeCommentListLabelLocally = function(premadeCommentListIn) {
+	//loop through all the premade comment lists
+	for(var x=0; x<this.premadeCommentLists.length; x++) {
+		//get a premade comment list
+		var premadeCommentList = this.premadeCommentLists[x];
+		
+		if (premadeCommentList.id == premadeCommentListIn.id) {
+			premadeCommentList.label = premadeCommentListIn.label;
+		};
+	};
+};
+
+
+/**
+ * Called when the user clicks on the delete button for a premade comment
+ * @param premadeCommentId the id of the premade comment
+ * @param premadeCommentListId the id of the premade comment list
+ */
+View.prototype.deletePremadeComment = function(premadeCommentId, premadeCommentListId) {
+	//arguments used in the server post
+	var premadeCommentAction = 'deleteComment';
+	var postPremadeCommentsCallback = this.deletePremadeCommentCallback;
+	var premadeCommentListLabel = null;
+	var premadeComment = null;
+	var isGlobal = null;
+	var premadeCommentListPositions = null;
+	var projectId = null;
+	
+	//make the request to delete the premade comment on the server
+	this.postPremadeComments(premadeCommentAction, postPremadeCommentsCallback, premadeCommentListId, premadeCommentListLabel, premadeCommentId, premadeComment, isGlobal, premadeCommentListPositions, projectId);
+};
+
+/**
+ * Callback called after the server deletes a premade comment
+ * @param text the JSON for the premade comment that was deleted
+ * @param xml
+ * @param args
+ */
+View.prototype.deletePremadeCommentCallback = function(text, xml, args) {
+	//obtain the view
+	var thisView = args[0];
+	
+	//get the post args
+	var postPremadeCommentsArgs = args[1];
+	
+	//get the premade comment list id
+	var premadeCommentListId = postPremadeCommentsArgs.premadeCommentListId;
+	
+	//parse the premade comment
+	var premadeComment = $.parseJSON(text);
+	
+	//obtain the premade comment id
+	var premadeCommentId = premadeComment.id;
+	
+	//remove the LI for the deleted premade comment
+	var premadeCommentLIId = 'premadeCommentLI_' + premadeCommentId;
+	
+	$("#" + premadeCommentLIId).remove();
+	
+	//delete the premade comment locally
+	thisView.deletePremadeCommentLocally(premadeComment);
+	
+	/*
+	 * save the current state of the premade comments which includes
+	 * which list id is being displayed
+	 */
+	thisView.savePremadeCommentsState();
+};
+
+/**
+ * Delete the premade comment locally
+ * @param premadeComment the premade comment to delete
+ */
+View.prototype.deletePremadeCommentLocally = function(premadeComment) {
+	//loop through all the premade comment lists
+	for(var x=0; x<this.premadeCommentLists.length; x++) {
+		//get a premade comment list
+		var premadeCommentList = this.premadeCommentLists[x];
+		
+		//get the array of premade comments
+		var premadeComments = premadeCommentList.premadeComments;
+		
+		//loop through all the premade comments
+		for(var y=0; y<premadeComments.length; y++) {
+			//get a premade comment
+			var currentPremadeComment = premadeComments[y];
+			
+			//compare the current premade comment id with the one we need to delete
+			if(currentPremadeComment.id == premadeComment.id) {
+				//the ids match so we will remove this premade comment from the array
+				premadeComments.splice(y, 1);
+				
+				return;
+			}
+		}
+	}
+};
+
+/**
+ * Make the premade comment lists sortable
+ */
+View.prototype.makePremadeCommentListsSortable = function() {
+	//make the lists that the user owns sortable
+	$('.myPremadeCommentList').sortable({handle:'.premadeCommentHandle', update:function(event, ui) {view.sortUpdate(event, ui, view);}});
+};
+
+
+/**
+ * This is used as the function call for when the sortable
+ * list fires the update event. This function creates an array
+ * that will contain the order of the premade comment ids.
+ * 
+ * e.g.
+ * premade comment 10 = "great job"
+ * premade comment 11 = "needs more facts"
+ * premade comment 12 = "incorrect"
+ * 
+ * are in a list and in the list they are sorted in the order
+ * 
+ * "needs more facts"
+ * "great job"
+ * "incorrect"
+ * 
+ * so the array will contain the premade comment ids in this order
+ * 
+ * 11, 10, 12
+ * 
+ * the index specifies the list position and the value is the premade comment id
+ * 
+ * index - premadeCommentId - listPosition
+ * [0] - 11 - 1
+ * [1] - 10 - 2
+ * [2] - 12 - 3
+ * 
+ * @param event
+ * @param ui
+ * @param thisView
+ */
+View.prototype.sortUpdate = function(event, ui, thisView) {
+	//the array we will store the premade comment ids in
+	var listPositions = [];
+	
+	//get the id of the UL that was updated
+	var ulElementId = $(event.target).attr('id');
+	
+	//get the list id
+	var listId = ulElementId.replace('premadeCommentUL_', '');
+	
+	//get all the LI elements in the UL
+	var liElementsInUL = $(event.target).find('li');
+	
+	//loop through all the LI elements
+	for(var x=0; x<liElementsInUL.length; x++) {
+		//get an LI element
+		var liElement = liElementsInUL[x];
+		
+		//get the premade comment id
+		var liElementId = liElement.id.replace('premadeCommentLI_', '');
+		
+		//put the premade comment id into the array
+		listPositions.push(parseInt(liElementId));
+	}
+	
+	/*
+	 * reverse the array so that the top of the list becomes the end of
+	 * the array. we want to do this because we want the top of the
+	 * list to have the highest index value since the newer premade
+	 * comments should have larger list positions. this is so that
+	 * when we add a new premade comment we just set the list position
+	 * as the next highest available position as opposed to setting it
+	 * to 1 and then having to shift all the other elements by 1.
+	 */
+	listPositions.reverse();
+
+	//arguments used in the server post
+	var premadeCommentAction = 'reOrderCommentList';
+	var postPremadeCommentsCallback = thisView.reOrderPremadeCommentCallback;
+	var premadeCommentListId = listId;
+	var premadeCommentListLabel = null;
+	
+	//get the premade comment id (an integer)
+	var premadeCommentId = null;
+	var premadeComment = null;
+	var isGlobal = null;
+	var premadeCommentListPositions = $.stringify(listPositions);
+	var projectId = null;
+	
+	thisView.postPremadeComments(premadeCommentAction, postPremadeCommentsCallback, premadeCommentListId, premadeCommentListLabel, premadeCommentId, premadeComment, isGlobal, premadeCommentListPositions, projectId);
+};
+
+/**
+ * Callback called after we receive the response from a
+ * reOrderCommentList request
+ * @param text a JSON object containing the list id and an array
+ * containing list positions
+ * @param xml
+ * @param args
+ */
+View.prototype.reOrderPremadeCommentCallback = function(text, xml, args) {
+	//obtain the view
+	var thisView = args[0];
+	
+	//parse the premade comment
+	var reOrderReturn = $.parseJSON(text);
+	
+	//get the premade comment list id
+	var premadeCommentListId = reOrderReturn.premadeCommentListId;
+	
+	//get the list positions
+	var listPositions = reOrderReturn.listPositions;
+	
+	//re-order the premade comments in the list in our local copy
+	thisView.reOrderPremadeCommentLocally(premadeCommentListId, listPositions);
+};
+
+/**
+ * Re-order a premade comment list locally
+ * @param premadeCommentListId the id of the premade comment list
+ * @param listPositions an array containing premade comment ids in the order
+ * that they should be positioned in the list
+ * 
+ * 
+ * e.g.
+ * premade comment 10 = "great job"
+ * premade comment 11 = "needs more facts"
+ * premade comment 12 = "incorrect"
+ * 
+ * are in a list and in the list they are sorted in the order
+ * 
+ * "needs more facts"
+ * "great job"
+ * "incorrect"
+ * 
+ * so the array will contain the premade comment ids in this order
+ * 
+ * 11, 10, 12
+ * 
+ * the index specifies the list position and the value is the premade comment id
+ * 
+ * index - premadeCommentId - listPosition
+ * [0] - 11 - 1
+ * [1] - 10 - 2
+ * [2] - 12 - 3
+ */
+View.prototype.reOrderPremadeCommentLocally = function(premadeCommentListId, listPositions) {
+	//get the premade comment list with the given id
+	var premadeCommentList = this.getPremadeCommentListLocally(premadeCommentListId);
+	
+	//get the array of premade comments from the list
+	var premadeComments = premadeCommentList.premadeComments;
+	
+	//loop through all the premade comments
+	for(var x=0; x<premadeComments.length; x++) {
+		//get a premade comment
+		var currentPremadeComment = premadeComments[x];
+		
+		//get the id of the premade comment
+		var currentPremadeCommentId = currentPremadeComment.id;
+		
+		//find the index of the premade comment id within the listPositions array
+		var listPositionIndex = listPositions.indexOf(currentPremadeCommentId);
+		
+		//update the listPosition of the premade comment
+		currentPremadeComment.listPosition = listPositionIndex + 1;
+	}
+};
+
+
+/**
+ * Set the key value pair into the localStorage if localStorage exists
+ * @param key the key as a string
+ * @param value the value as a string, number, or object
+ */
+View.prototype.setLocalStorageValue = function(key, value) {
+	if(localStorage) {
+		//localStorage is available on this browser
+		
+		if(value == null) {
+			localStorage.setItem(key, value);
+		} else if(typeof value == 'object') {
+			/*
+			 * the value is an object so we will turn it into a string
+			 * since values can only be numbers or strings
+			 */
+			localStorage.setItem(key, JSON.stringify(value));
+		} else if(typeof value == 'string') {
+			localStorage.setItem(key, value);
+		}
+	}
+};
+
+/**
+ * Get the key value from localStorage if localStorage exists
+ * @param key the key as a string
+ * @returns the value corresponding to the key, or null if
+ * localStorage is not available on this browser
+ */
+View.prototype.getLocalStorageValue = function(key) {
+	var value = null;
+	
+	if(localStorage) {
+		value = localStorage.getItem(key);
+	}
+	
+	return value;
 };
 
 //used to notify scriptloader that this script has finished loading

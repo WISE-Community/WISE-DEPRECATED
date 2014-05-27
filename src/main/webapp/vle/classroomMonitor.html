@@ -49,7 +49,7 @@ function bootstrapListener(type,args,obj){
 </script>
 
 </head>
-<body onload='loaded()' style='overflow-y:auto;'>
+<body onload='loaded()'>
 <div id='topNavigationDiv' style='position:fixed;z-index:2;background:white;width:100%;height:105px;top:0px;left:0px'>
 	<h3 id='classroomMonitorHeader' style='margin:0px;margin-top:10px;margin-left:10px'></h3>
 	<table id='navigationButtonsTable' style='margin-left:5px;width:100%'>
@@ -60,7 +60,7 @@ function bootstrapListener(type,args,obj){
 		</tr>
 		<tr>
 			<td style='width:60%'><div id='selectPeriodButtonsDiv'></div></td>
-			<td style='width:39%'><div id='saveButtonDiv' style="text-align:right"></div></td>
+			<td style='width:39%'><table style='width:100%'><tr><td id='newWorkNotificationDiv' style='text-align:left;color:green'></td><td id='saveButtonDiv' style='text-align:right'></td></tr></table></td>
 			<td style='width:1%'></td>
 		</tr>
 	</table>

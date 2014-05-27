@@ -416,7 +416,6 @@ var scriptloader = function(){
 	    teacherWebSocket: ['vle/webSocket/teacherWebSocket.js',
 	                       'vle/view/classroomMonitor/classroomMonitorView_model.js',
 	                       'vle/view/classroomMonitor/classroomMonitorView_main.js',
-	                       'vle/view/grading/gradingview_premadecomments.js',
 	                       'vle/jquery/js/jquery.editinplace.js'],
 	    grading_min: ['vle/minified/grading_min.js'],
 	    user: ['vle/user/userandclassinfo.js'],	    
