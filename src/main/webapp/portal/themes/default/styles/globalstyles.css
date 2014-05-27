@@ -873,23 +873,6 @@ form {margin:0px; padding:0px;}
     margin-bottom:1em;
 }
 
-.panelColor1 {
-	background-image:url(../images/Gradient_blue_320.png);
-}
-
-.panelColor2 {
-	background-image:url(../images/Gradient_blue_200.png);
-}
-	 		
-.panelColor3 {
-	background-image:url(../images/Gradient_blue_120.png);
-}
-	 		
-.panelColorNifty {
-	background-color:#0033FF;
-	color:#000;
-}
-
 .panel .header {
 	-moz-border-radius:5px 5px 0 0;
 	-webkit-border-radius:5px 5px 0 0;

@@ -1,18 +1,5 @@
 		
 /* Teacher & Student Pages  */
-
-#registrationTitle {
-	width:60%;
-	font-size:2em;
-	text-align: center;
-	font-weight:bold;
-	border: 1px solid #333333;
-	background-color:#FFCE8E;
-	background-image: url(../images/Gradient_7a.png);
-    background-position: bottom;
-	margin: 20px auto 20px auto;
-	padding:10px;
-		}
 	
 #subtitleTeacherReg, #subtitleStudentReg {
 	text-align:center;
@@ -158,31 +145,6 @@
 	color: #0000FF;
 	padding: 0 0 0 5px;
 	}
-	
-#usernameConfirm {
-	width:300px;
-	background-image:url(../images/Pixel_Gray.png);	
-	background-color:#CCCCC;
-	color: #0000FF;
-	font-weight:bold;
-	padding: 5px 40px;
-	margin:0 0 0 5px;
-	font-size:1.2em;
-	border: 1px solid #333333;
-
-	}
-	
-#userClassnameConfirm {
-	width:200px;
-	background-image:url(../images/Pixel_Gray.png);	
-	background-color:#CCCCC;
-	color: #0000FF;
-	font-weight:bold;
-	padding: 2px 2px 2px 5px;
-	margin:0 0 0 5px;
-	font-size:1em;
-	border: 1px solid #333333;
-	}
 
 #regErrorMessages {
 	text-align:center;
@@ -205,31 +167,6 @@
 	left: 270px;
 	font-size:1.0em;
 	}
-
-/* FOR CONFIRMATION PAGES  */
-
-#subtitleConfirm  {
-	position: relative;
-	text-align:left;
-	left: 230px;
-	width:670px;
-	margin-bottom:35px;
-}
-
-#subtitleConfirm ul {
-	font-size: .85em;
-	text-align:left;
-	list-style:none;
-	padding-left:0px;
-}
-
-#subtitleConfirm li {
-	background: transparent url(../images/ListBullet.gif) no-repeat left 4px;
-	padding: 0 0 0 25px;
-	line-height:150%;
-	padding-bottom: 8px;
-
-}
 
 .smallText {
 	font-size:.9em;
@@ -324,17 +261,6 @@
 	
 	
 /* New Account Picker Screen  (Setup.html) */
-		
-#boxNewAccountReg {
-	background-color:#f3c383;
-	background-image: url(../images/Gradient_7b.png);
-    background-position:top;
-	color:#003300;
-	border: 1px solid #006600;
-	width:60%;
-	margin:10px auto 10px auto;
-	padding:10px;
-	}
 		
 #questionPromptReg {
 	margin: 20px 0 30px 0;

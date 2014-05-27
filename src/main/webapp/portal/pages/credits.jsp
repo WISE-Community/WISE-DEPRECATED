@@ -189,12 +189,7 @@ Jinna Lei, Noah Paessel, Greg Pitter, Rokham Sadeghnezhadfard, Jeff Schoner, Nat
 	</tr>	
 	</table>
 
-</div>   <!--  end of boxNewAccountReg --> 
-
-<div style="text-align:center;"><a href="${contextPath}/index.html"> <img id="return"
-	src="${contextPath}/<spring:theme code="return_to_homepage" />"
-	onmouseover="swapImage('return', '${contextPath}/<spring:theme code="return_to_homepage_roll" />');"
-	onmouseout="swapImage('return', '${contextPath}/<spring:theme code="return_to_homepage" />');" /></a></div>
+</div>
 	
 </div>   <!-- end of centered div-->
    

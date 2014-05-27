@@ -20,6 +20,9 @@ View.prototype.getClassroomMonitorConfig = function(classroomMonitorConfigUrl) {
 	var classroomMonitorConfigContent = createContent(classroomMonitorConfigUrl);
 	this.config = this.createConfig(classroomMonitorConfigContent);
 	
+	//fetch i18n files
+	this.retrieveLocales("main");		
+	
 	//load the user and class info
 	this.loadUserAndClassInfo(createContent(this.config.getConfigParam('getUserInfoUrl')));
 	

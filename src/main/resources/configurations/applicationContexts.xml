@@ -979,7 +979,7 @@
 		scope="prototype" />
 
 	<util:properties id="i18nProperties"
-		location="classpath:i18n/i18n_en_US.properties" />
+		location="classpath:i18n/i18n.properties" />
 
 	<util:properties id="wiseProperties" location="classpath:wise.properties" />
 
