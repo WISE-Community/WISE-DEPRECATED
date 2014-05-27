@@ -169,17 +169,6 @@
 	border-collapse:collapse;
 }
 
-#currentStepLabel {
-	width:640px;
-	font-size:1.3em;
-	font-weight:bold;
-	border:1px solid #333333;
-	background-image:url(../../images/Pixel_Grading_Highlight.png);
-	background-position:left top;
-	background-repeat:repeat;
-	padding:3px 5px;
-}
-
 .currentStepNavLink {
 	text-align:center;
 	font-size:.8em;
