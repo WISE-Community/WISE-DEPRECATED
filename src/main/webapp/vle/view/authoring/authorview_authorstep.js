@@ -845,6 +845,7 @@ View.prototype.addRichTextAuthoring = function(id,update,fullpage){
 	    theme: "modern",
 	    skin: "wise",
 	    plugins: plugins,
+	    allow_script_urls: true,
 	    menu : {
 	        edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall'},
 	        insert : {title : 'Insert', items : 'image media link | charmap hr'},
