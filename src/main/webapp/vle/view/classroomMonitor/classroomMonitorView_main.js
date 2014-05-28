@@ -1744,6 +1744,9 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	//hide the period buttons
 	this.hidePeriodButtonsDiv();
 	
+	//clear the number of items to review because we will count them again for this student
+	this.numberOfItemsToReview = 0;
+	
 	//get the student names for this workgroup
 	var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId);
 	
@@ -1885,6 +1888,9 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 			}			
 		}
 	}
+	
+	//set the number of items to review value
+	$('#numberOfItemsToReviewSpan_' + workgroupId).text(this.numberOfItemsToReview);
 
 	//show the grade by student display
 	this.showGradeByStudentDisplay();
@@ -2143,6 +2149,9 @@ View.prototype.createRowsForNodeVisits = function(nodeId, workgroupId, parentTab
 				if(this.shouldWeHighlightRow(nodeId, workgroupId, nodeVisit)) {
 					//we will highlight the row since the student work is new
 					stepWorkTR.css('background', '#FFEFED');
+
+					//increment the number of items to review
+					this.numberOfItemsToReview++;
 				}
 			}
 			
@@ -3424,6 +3433,7 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			showPromptLink.css('text-decoration', 'underline');
 			showPromptLink.css('color', 'blue');
 			showPromptLink.css('cursor', 'pointer');
+			showPromptLink.css('margin-left', '20px');
 			showPromptLink.click({thisView:this, nodeId:nodeId}, this.showPromptClicked);
 			
 			//get all the node ids for steps that have a grading view
@@ -3473,10 +3483,24 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			//set the change event to display a different step
 			stepSelect.change({thisView:this}, this.stepDropDownChanged);
 			
+			//create the div to show the number of items to review
+			var numberOfItemsToReviewDiv = $('<div>');
+			numberOfItemsToReviewDiv.attr('id', 'numberOfItemsToReviewDiv_' + nodeId);
+			numberOfItemsToReviewDiv.css('display', 'inline');
+			numberOfItemsToReviewDiv.css('margin-left', '20px');
+			numberOfItemsToReviewDiv.text('Number of Items to Review: ');
+			
+			//create the span to display the number of items to review value
+			var numberOfItemsToReviewSpan = $('<span>');
+			numberOfItemsToReviewSpan.attr('id', 'numberOfItemsToReviewSpan_' + nodeId);
+			numberOfItemsToReviewSpan.text('Calculating...');
+
+			numberOfItemsToReviewDiv.append(numberOfItemsToReviewSpan);
+			
 			//add the step title and show prompt link
 			gradeByStepHeaderStepTitleTD.append(stepSelect);
-			gradeByStepHeaderStepTitleTD.append(' ');
 			gradeByStepHeaderStepTitleTD.append(showPromptLink);
+			gradeByStepHeaderStepTitleTD.append(numberOfItemsToReviewDiv);
 			
 			//create the row that will display the step prompt
 			var gradeByStepHeaderPromptTR = $('<tr>');
@@ -3579,6 +3603,9 @@ View.prototype.displayGradeByStep = function(nodeId) {
 			blankTR.append(emptyTD);
 			$('#gradeByStepDisplayTable').append(blankTR);
 			
+			//clear the number of items to review because we will count them again for this step
+			this.numberOfItemsToReview = 0;
+			
 			//get the workgroup ids in alphabetical order
 			var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIdsInAlphabeticalOrder();
 			
@@ -3615,6 +3642,12 @@ View.prototype.displayGradeByStep = function(nodeId) {
 					}
 				}
 			}
+			
+			//get the id for the number of items to review span
+			var numberOfItemsToReviewSpanId = this.escapeIdForJquery('numberOfItemsToReviewSpan_' + nodeId);
+			
+			//set the number of items to review value
+			$('#' + numberOfItemsToReviewSpanId).text(this.numberOfItemsToReview);
 		}
 	}
 	
@@ -6332,9 +6365,10 @@ View.prototype.createStudentHeaderTable = function(studentNames, workgroupId, pe
 	var gradeByStudentHeaderStudentNamesTD = $('<td>');
 	gradeByStudentHeaderStudentNamesTD.css('background', 'yellow');
 	
-	//create the div to show the student names
-	var studentNamesDiv = $('<div>');
-	studentNamesDiv.css('float', 'left');
+	//create the div to show the student name drop down
+	var studentNameDropDownDiv = $('<div>');
+	studentNameDropDownDiv.css('display', 'inline');
+	studentNameDropDownDiv.css('margin-left', '5px');
 	
 	//create the drop down box to select the student
 	var studentSelect = $('<select>');
@@ -6367,7 +6401,13 @@ View.prototype.createStudentHeaderTable = function(studentNames, workgroupId, pe
 	studentSelect.change({thisView:this}, this.studentDropDownChanged);
 	
 	//add the student drop down
-	studentNamesDiv.append(studentSelect);
+	studentNameDropDownDiv.append(studentSelect);
+	
+	//create the div to show the idea basket link or student work link
+	var toggleStudentWorkIdeaBasketDiv = $('<div>');
+	toggleStudentWorkIdeaBasketDiv.attr('id', 'toggleStudentWorkIdeaBasketDiv_' + workgroupId);
+	toggleStudentWorkIdeaBasketDiv.css('display', 'inline');
+	toggleStudentWorkIdeaBasketDiv.css('margin-left', '20px');
 	
 	//create the link to show the student work
 	var studentWorkLink = $('<a>');
@@ -6380,8 +6420,7 @@ View.prototype.createStudentHeaderTable = function(studentNames, workgroupId, pe
 	
 	if(showStudentWorkLink) {
 		//show the student work link
-		studentNamesDiv.append(' ');
-		studentNamesDiv.append(studentWorkLink);
+		toggleStudentWorkIdeaBasketDiv.append(studentWorkLink);
 	}
 	
 	//create the link to show the idea basket
@@ -6399,12 +6438,35 @@ View.prototype.createStudentHeaderTable = function(studentNames, workgroupId, pe
 	 */
 	if(showIdeaBasketLink && this.isIdeaBasketEnabled()) {
 		//show the idea basket link
-		studentNamesDiv.append(' ');
-		studentNamesDiv.append(ideaBasketLink);
+		toggleStudentWorkIdeaBasketDiv.append(ideaBasketLink);
+	}
+	
+	//create the div to show the number of items to review
+	var numberOfItemsToReviewDiv = $('<div>');
+	numberOfItemsToReviewDiv.attr('id', 'numberOfItemsToReviewDiv_' + workgroupId);
+	numberOfItemsToReviewDiv.css('display', 'inline');
+	numberOfItemsToReviewDiv.css('margin-left', '20px');
+	numberOfItemsToReviewDiv.text('Number of Items to Review: ');
+	
+	//create the span to display the number of items to review value
+	var numberOfItemsToReviewSpan = $('<span>');
+	numberOfItemsToReviewSpan.attr('id', 'numberOfItemsToReviewSpan_' + workgroupId);
+	numberOfItemsToReviewSpan.text('Calculating...');
+
+	numberOfItemsToReviewDiv.append(numberOfItemsToReviewSpan);
+	
+	if(showStudentWorkLink) {
+		/*
+		 * hide the number of items to review if we are showing the student 
+		 * work link which means we are displaying the student idea basket
+		 */
+		numberOfItemsToReviewDiv.css('display', 'none');
 	}
 	
 	gradeByStudentHeaderStudentNamesTD.append(isOnlineDiv);
-	gradeByStudentHeaderStudentNamesTD.append(studentNamesDiv);
+	gradeByStudentHeaderStudentNamesTD.append(studentNameDropDownDiv);
+	gradeByStudentHeaderStudentNamesTD.append(toggleStudentWorkIdeaBasketDiv);
+	gradeByStudentHeaderStudentNamesTD.append(numberOfItemsToReviewDiv);
 	
 	//add the tds to the row
 	gradeByStudentHeaderTR.append(gradeByStudentHeaderStudentNamesTD);
