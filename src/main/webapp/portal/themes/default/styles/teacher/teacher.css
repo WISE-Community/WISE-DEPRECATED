@@ -25,7 +25,6 @@
 .panelStyleStatus {
 	margin-top:0px;
 	min-height:72px; 
-	/* background-image:url(../../images/teacher/Gradient-Gray-to-White-120px.png);  */
 	background-position: top;
 	background-repeat:repeat-x;
 	border: 1px solid #999;  
@@ -38,7 +37,6 @@
 	position:relative;
 	padding-bottom:25px;
 	margin-top:15px;
-	/* background-image:url(../../images/teacher/Gradient-Gray-to-White-350px.png);  */
 	background-position: top;
 	background-repeat:repeat-x;
 	border: 1px solid #999;  
@@ -50,7 +48,6 @@
 
 .panelStyleCommunity{
 	margin-top:15px;
-	/* background-image:url(../../images/teacher/Gradient-Gray-to-White-200px.png);  */
 	background-position: top;
 	background-repeat:repeat-x;
 	border: 1px solid #999;  
