@@ -198,12 +198,14 @@ AnnotatorNode.prototype.canSpecialExport = function() {
 AnnotatorNode.prototype.getFeedback = function() {
 	var feedback = null;
 	
-	//check if this is an auto graded draw step
-	if(this.content.getContentJSON() != null &&
-			this.content.getContentJSON().autoScoring != null &&
-			this.content.getContentJSON().autoScoring.autoScoringCriteria != null &&
-			this.content.getContentJSON().autoScoring.autoScoringCriteria != "") {
-		//this step is an auto graded draw step
+	//get the step content
+	var contentJSON = this.content.getContentJSON();
+	
+	if(contentJSON != null && 
+			contentJSON.enableAutoScoring &&
+			contentJSON.autoScoring != null &&
+			(contentJSON.autoScoring.autoScoringDisplayScoreToStudent || contentJSON.autoScoring.autoScoringDisplayFeedbackToStudent)) {
+		//this step is an auto graded annotator step
 		
 		//get all the node states
 		var nodeStates = this.view.getStudentWorkForNodeId(this.id);
@@ -235,9 +237,24 @@ AnnotatorNode.prototype.getFeedback = function() {
 					
 					/*
 					 * this node state was work that was auto graded so we will
-					 * get the autoFeedback and display it
+					 * get the autoFeedback and autoScore and display it
 					 */
 					var autoFeedback = nodeState.autoFeedback;
+					var autoScore = nodeState.autoScore;
+					var maxScore = nodeState.maxAutoScore;
+					
+					//create the text that will display the score, max score, and feedback
+					var tempFeedback = '';
+					
+					if(contentJSON.autoScoring.autoScoringDisplayScoreToStudent) {
+						//display the score
+						tempFeedback += 'Score: ' + autoScore + '/' + maxScore + '<br/>';
+					}
+					
+					if(contentJSON.autoScoring.autoScoringDisplayFeedbackToStudent) {
+						//display the feedback
+						tempFeedback += 'Feedback:<br/>' + autoFeedback;
+					}
 					
 					if(feedback == null) {
 						//initialize the feedback to empty string
@@ -259,7 +276,7 @@ AnnotatorNode.prototype.getFeedback = function() {
 					 * remember the auto feedback from this student work so we can add
 					 * it to the overall feedback later
 					 */
-					previousFeedback = autoFeedback;
+					previousFeedback = tempFeedback;
 				}
 			}
 			
