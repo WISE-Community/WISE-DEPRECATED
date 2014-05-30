@@ -6,7 +6,7 @@
  * @param autoFeedback the auto graded feedback
  * @returns
  */
-function ANNOTATORSTATE(data, timestamp, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore) {
+function ANNOTATORSTATE(data, timestamp, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore, scoringCriteriaResults) {
 	this.type = "an";
 	this.data = data;
 	
@@ -40,6 +40,11 @@ function ANNOTATORSTATE(data, timestamp, autoScore, autoFeedback, autoFeedbackKe
 		//set the max auto graded score
 		this.maxAutoScore = maxAutoScore;
 	}
+	
+	if(scoringCriteriaResults != null) {
+		//set the scoring criteria results
+		this.scoringCriteriaResults = scoringCriteriaResults;
+	}
 };
 
 /**
@@ -59,6 +64,7 @@ ANNOTATORSTATE.prototype.parseDataJSONObj = function(stateJSONObj) {
 	state.autoFeedbackKey = stateJSONObj.autoFeedbackKey;
 	state.checkWork = stateJSONObj.checkWork;
 	state.maxAutoScore = stateJSONObj.maxAutoScore;
+	state.scoringCriteriaResults = statJSONObj.scoringCriteriaResults;
 	
 	//return the ANNOTATORSTATE object
 	return state;

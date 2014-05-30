@@ -106,16 +106,22 @@ AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, node
 		
 		var promptText = view.getI18NString('prompt_link','SVGDrawNode'); 
 		
-		$('#' + innerDivId).data('node', this).data('contentUrl', contentUrl)
+		$(displayStudentWorkDiv).find('#' + innerDivId).data('node', this).data('contentUrl', contentUrl)
 			.data('contentBaseUrl', contentBaseUrl).data('promptText', promptText)
-			.data('headerText', view.getI18NStringWithParams('annotator_grading_header',[view.currentGradingDisplayParam[0]],'SVGDrawNode'));
+			.data('headerText', view.getI18NStringWithParams('annotator_grading_header',['gradeByStep'],'SVGDrawNode'));
 		
-		$('#' + innerDivId + '_enlarge').off('click').on('click', function(){
+		$(displayStudentWorkDiv).find('#' + innerDivId + '_enlarge').off('click').on('click', function(){
 			enlargeAnnotator(innerDivId);
 		});
 		
 		//perform post processing of the svg data so that the drawing is displayed
 		displayStudentWorkDiv.find(".annotatorCell").data('svg', svgString).each(this.showAnnotatorNode);
+		
+		//get the height of the svg
+		var svgHeight = displayStudentWorkDiv.find(".annotatorCell").find("svg").attr('height');
+		
+		//set the div that contains the svg to the same height as the svg
+		displayStudentWorkDiv.find(".annotatorCell").css('height', svgHeight);
 		
 		var autoScoreText = '';
 		

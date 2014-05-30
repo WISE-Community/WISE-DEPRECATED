@@ -227,10 +227,11 @@ ANNOTATOR.prototype.save = function() {
 	var autoFeedback = this.autoFeedback;
 	var autoFeedbackKey = this.autoFeedbackKey;
 	var checkWork = this.checkWork;
+	var scoringCriteriaResults = this.scoringCriteriaResults;
 
 	//create a new annotatorstate
 	//var annotatorState = new ANNOTATORSTATE(compressedData, null, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore);
-	var annotatorState = new ANNOTATORSTATE(data, null, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore);
+	var annotatorState = new ANNOTATORSTATE(data, null, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore, scoringCriteriaResults);
 	
 	//fire the event to push this state to the global view.states object
 	this.view.pushStudentWork(this.node.id, annotatorState);
@@ -246,6 +247,7 @@ ANNOTATOR.prototype.save = function() {
 	this.autoFeedback = null;
 	this.autoFeedbackKey = null;
 	this.checkWork = null;
+	this.scoringCriteriaResults = null;
 	
 	svgEditor.changed = false;
 };
@@ -1052,13 +1054,16 @@ ANNOTATOR.prototype.checkScore = function() {
 		var mappingResults = this.calculateSatisfiedMappings(mappings, studentMappings);
 		
 		//calculate the score and feedback from the mapping results
-		var scoreResults = this.calculateScore(scoringCriteria, mappingResults);
+		var results = this.calculateScore(scoringCriteria, mappingResults);
 		
 		//get the score the student achieved
-		var score = scoreResults.score;
+		var score = results.score;
 		
 		//get the text feedback to show the student
-		var feedback = scoreResults.feedback;
+		var feedback = results.feedback;
+		
+		//get the array of scoring criteria results
+		var scoringCriteriaResults = results.scoringCriteriaResults;
 		
 		//get the max score
 		var maxScore = this.getMaxScore(scoringCriteria);
@@ -1069,6 +1074,7 @@ ANNOTATOR.prototype.checkScore = function() {
 		this.autoFeedback = feedback;
 		this.autoFeedbackKey = null;
 		this.checkWork = true;
+		this.scoringCriteriaResults = scoringCriteriaResults;
 		
 		//save the student work
 		this.saveToVLE();
@@ -1457,6 +1463,7 @@ ANNOTATOR.prototype.isMappingInStudentMappings = function(mapping, studentMappin
 ANNOTATOR.prototype.calculateScore = function(scoringCriteria, mappingResults) {
 	var score = 0;
 	var feedback = '';
+	var scoringCriteriaResults = [];
 	
 	if(scoringCriteria != null && mappingResults != null) {
 		//loop through all the scoring criteria objects
@@ -1490,13 +1497,16 @@ ANNOTATOR.prototype.calculateScore = function(scoringCriteria, mappingResults) {
 					feedback += tempFeedback;
 				}
 			}
+			
+			scoringCriteriaResults.push(scoringCriteriaResult);
 		}
 	}
 	
 	//create the object to hold the score and feedback
 	var results = {
 		score:score,
-		feedback:feedback
+		feedback:feedback,
+		scoringCriteriaResults:scoringCriteriaResults
 	}
 	
 	return results;
@@ -1511,6 +1521,8 @@ ANNOTATOR.prototype.calculateScore = function(scoringCriteria, mappingResults) {
  */
 ANNOTATOR.prototype.checkScoringCriteria = function(scoringCriteriaObject, mappingResults) {
 	var results = {
+		id:null,
+		isSatisfied:false,
 		score:null,
 		feedback:null
 	}
@@ -1529,12 +1541,17 @@ ANNOTATOR.prototype.checkScoringCriteria = function(scoringCriteriaObject, mappi
 		//evaluate the expression
 		var logicEvaluated = eval(logicReplaced);
 		
+		//set the scoring criteria id
+		results.id = scoringCriteriaObject.id;
+		
 		if(logicEvaluated) {
 			//the scoring criteria was satisfied
+			results.isSatisfied = true;
 			results.score = scoringCriteriaObject.score;
 			results.feedback = '<font color="green">' + scoringCriteriaObject.successFeedback + '</font>';
 		} else {
 			//the scoring criteria was not satisfied
+			results.isSatisfied = false;
 			results.score = 0;
 			results.feedback = '<font color="red">' + scoringCriteriaObject.failureFeedback + '</font>';
 		}
