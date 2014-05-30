@@ -28,6 +28,8 @@
 	<div style="width:500px;text-align:center;font-size:1.2em;font-weight:bold;border:2px solid lightgreen">
 		${msg}
 		<br/><br/>
+		<a href="${contextPath}/admin/project/manageallprojects.html?projectId=${newProjectId}">Manage Project</a>		
+		<br/><br/>
 		<a target=_blank href="${contextPath}/previewproject.html?projectId=${newProjectId}">Preview Project</a>
 	</div>
 <br/>
