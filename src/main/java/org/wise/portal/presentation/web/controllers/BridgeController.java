@@ -25,6 +25,7 @@ package org.wise.portal.presentation.web.controllers;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -62,8 +63,6 @@ import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * Controller to bridge GET/POST access to the vlewrapper webapp. Validates

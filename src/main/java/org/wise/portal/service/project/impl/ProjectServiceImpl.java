@@ -23,6 +23,7 @@
 package org.wise.portal.service.project.impl;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -44,8 +45,6 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.project.ProjectServiceFactory;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * TELS Portal can offer multiple types of projects, including:
