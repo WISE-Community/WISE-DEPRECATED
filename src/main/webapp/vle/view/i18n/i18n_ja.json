@@ -32,7 +32,7 @@
         "description": "Text on the Log out button"
     },
     "gohome_button_text": {
-        "value": "ホームページ",
+        "value": "ホームに戻る",
         "description": "Text on the Home button"
     },
     "hint_button_text": {
