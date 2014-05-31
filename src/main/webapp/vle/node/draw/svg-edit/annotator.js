@@ -194,8 +194,14 @@ ANNOTATOR.prototype.loadCallback = function(studentWorkJSON, context, noInit) {
 		context.initDisplay(studentWorkJSON,context); // initiate labels and description
 };
 
-ANNOTATOR.prototype.saveToVLE = function(isExit) {
-	if(svgEditor.changed){
+/**
+ * Save the student work
+ * @param isExit
+ * @param forceSave save even if the student has not changed their work. this is
+ * used when the student click 'Check Score'
+ */
+ANNOTATOR.prototype.saveToVLE = function(isExit, forceSave) {
+	if(svgEditor.changed || forceSave){
 		svgEditor.canvas.leaveContext();
 		svgEditor.canvas.clearSelection();
 		$('#workarea').css('opacity', 0);
@@ -999,12 +1005,14 @@ ANNOTATOR.prototype.checkScore = function() {
 	var maxCheckWorkChances = this.getMaxCheckWorkChances();
 	
 	var confirmMessage = '';
+	var numCheckWorkChancesLeft = null;
 	
 	if(maxCheckWorkChances == null || maxCheckWorkChances == '') {
 		//the student has unlimited check work chances
 		confirmMessage = 'Are you sure you want to check your work?';
 	} else {
-		var numCheckWorkChancesLeft = maxCheckWorkChances - checkWorkChancesUsed;
+		//the student has a limited number of check work chances
+		numCheckWorkChancesLeft = maxCheckWorkChances - checkWorkChancesUsed;
 		
 		if(numCheckWorkChancesLeft == 1) {
 			//the student has one check work chance left
@@ -1014,8 +1022,7 @@ ANNOTATOR.prototype.checkScore = function() {
 			confirmMessage = 'You have ' + numCheckWorkChancesLeft + ' more chances to check your work. Are you sure you want to check your work?';
 		} else {
 			//the student does not have any more check work chances
-			confirmMessage = 'You do not have any more chances to check your work.';
-			alert(confirmMessage);
+			alert(this.view.getI18NString('autoGrade_complete','SVGDrawNode'));
 			return;
 		}
 	}
@@ -1076,14 +1083,38 @@ ANNOTATOR.prototype.checkScore = function() {
 		this.checkWork = true;
 		this.scoringCriteriaResults = scoringCriteriaResults;
 		
-		//save the student work
-		this.saveToVLE();
+		var isExit = false;
+		var forceSave = true;
 		
-		//show the Feedback button at the top right of the vle next to the previous and next arrows
-		this.view.displayNodeAnnotation(this.node.id);
+		//save the student work with the score and feedback
+		this.saveToVLE(isExit, forceSave);
 		
-		//display the feedback in a popup dialog
-		eventManager.fire("showNodeAnnotations",[this.node.id]);
+		//get the auto scoring parameters
+		var autoScoringDoNotDisplayFeedbackToStudentOnLastChance = this.getAutoScoringField('autoScoringDoNotDisplayFeedbackToStudentOnLastChance');
+		var autoScoringDisplayScoreToStudent = this.getAutoScoringField('autoScoringDisplayScoreToStudent');
+		var autoScoringDisplayFeedbackToStudent = this.getAutoScoringField('autoScoringDisplayFeedbackToStudent');
+		
+		if(autoScoringDoNotDisplayFeedbackToStudentOnLastChance && numCheckWorkChancesLeft == 1) {
+			/*
+			 * the student has used their last check work chance and the step
+			 * has been authored to not show the feedback on the last attempt
+			 * so we will just display a generic message
+			 */
+			alert(this.view.getI18NString('autoGrade_complete','SVGDrawNode'));
+		} else {
+			if(autoScoringDisplayScoreToStudent || autoScoringDisplayFeedbackToStudent) {
+				//we need to show the score or text feedback to the student
+				
+				//show the Feedback button at the top right of the vle next to the previous and next arrows
+				this.view.displayNodeAnnotation(this.node.id);
+				
+				//display the feedback in a popup dialog
+				eventManager.fire("showNodeAnnotations",[this.node.id]);
+			} else {
+				//we are not going to show the score or the text feedback to the student
+				alert(this.view.getI18NString('autoGrade_submissionComplete', 'SVGDrawNode'));
+			}
+		}
 	}
 };
 

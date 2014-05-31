@@ -131,14 +131,339 @@ View.prototype.AnnotatorNode.generatePage = function(view){
 	instructionsTextAreaDiv.appendChild(textAreaButtonInput);
 	pageDiv.appendChild(createBreak());
 	
-	//pageDiv.appendChild(autoScoringOptionsDiv);
-	//pageDiv.appendChild(autoScoringFeedbackAuthoringDiv);
+	//create the label for enabling auto scoring
+	var enableAutoScoringLabel = $('<p>');
+	enableAutoScoringLabel.css('display', 'inline');
+	enableAutoScoringLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	enableAutoScoringLabel.css('font-size', '1em');
+	enableAutoScoringLabel.text('Enable Auto Scoring: ');
+	
+	//create the checkbox for enabling auto scoring
+	var enableAutoScoringCheckbox = $('<input>');
+	enableAutoScoringCheckbox.attr('id', 'enableAutoScoringCheckbox')
+	enableAutoScoringCheckbox.attr('type', 'checkbox');
+	enableAutoScoringCheckbox.click({thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.enableAutoScoringCheckboxClicked();
+	});
+	
+	//create the auto scoring div that contains the auto scoring authoring
+	var autoScoringDiv = this.createAutoScoringDiv();
+	
+	//add the auto scoring authoring elements
+	$(pageDiv).append(enableAutoScoringLabel);
+	$(pageDiv).append(enableAutoScoringCheckbox);
+	$(pageDiv).append(autoScoringDiv);
+	
+	if(this.content.enableAutoScoring) {
+		//auto scoring is enabled so we will check the box and display the div
+		enableAutoScoringCheckbox.prop('checked', true);
+		autoScoringDiv.show();
+	}
+	
+	//populate the auto scoring div values
+	this.populateAutoScoringDiv();
 	
 	this.generateColorOptions();
 	//this.generateLabelMinOptions();
 	//this.generateLabelMaxOptions();
 	//this.generateAutoScoringOptions();
 	//this.generateAutoScoringFeedbackAuthoringDiv();
+};
+
+/**
+ * Get the auto scoring value
+ * @param fieldName the name of the auto scoring field
+ * @return the field value or null if the field name does not exist
+ */
+View.prototype.AnnotatorNode.getAutoScoringFieldValue = function(fieldName) {
+	var fieldValue = null;
+	
+	if(fieldName != null && fieldName != '') {
+		//get the step content
+		var content = this.content;
+		
+		if(content != null) {
+			//get the auto scoring object in the content
+			var autoScoring = content.autoScoring;
+			
+			if(autoScoring != null) {
+				//get the value
+				fieldValue = autoScoring[fieldName];
+			}
+		}		
+	}
+	
+	return fieldValue;
+};
+
+/**
+ * Set the auto scoring value
+ * @param fieldName the name of the auto scoring field
+ * @param fieldValue the value of the auto scoring field
+ */
+View.prototype.AnnotatorNode.setAutoScoringFieldValue = function(fieldName, fieldValue) {
+	if(fieldName != null && fieldName != '' && fieldValue != null) {
+		//get the step content
+		var content = this.content;
+		
+		if(content != null) {
+			//get the auto scoring object in the content
+			var autoScoring = content.autoScoring;
+			
+			if(autoScoring != null) {
+				//set the field
+				autoScoring[fieldName] = fieldValue;
+				
+				//fire source updated event, which will update the preview
+				this.view.eventManager.fire('sourceUpdated');
+			}
+		}
+	}
+};
+
+/**
+ * Populate the auto scoring div elements
+ */
+View.prototype.AnnotatorNode.populateAutoScoringDiv = function() {
+	//get the step content
+	var content = this.content;
+	
+	if(content != null) {
+		//get the value for whether to display the score to the student
+		var autoScoringDisplayScoreToStudent = this.getAutoScoringFieldValue('autoScoringDisplayScoreToStudent');
+		if(autoScoringDisplayScoreToStudent) {
+			//check the box
+			$('#displayScoreToStudentCheckbox').prop('checked', true);
+		}
+		
+		//get the value for whether to display the feedback to the student
+		var autoScoringDisplayFeedbackToStudent = this.getAutoScoringFieldValue('autoScoringDisplayFeedbackToStudent');
+		if(autoScoringDisplayFeedbackToStudent) {
+			//check the box
+			$('#displayFeedbackToStudentCheckbox').prop('checked', true);
+		}
+		
+		//get the value for whether to display feedback on the last check work chance
+		var autoScoringDoNotDisplayFeedbackToStudentOnLastChance = this.getAutoScoringFieldValue('autoScoringDoNotDisplayFeedbackToStudentOnLastChance');
+		if(autoScoringDoNotDisplayFeedbackToStudentOnLastChance) {
+			//check the box
+			$('#displayNoFeedbackOnLastChanceCheckbox').prop('checked', true);
+		}
+		
+		//get the max number of check work chances
+		var autoScoringCheckWorkChances = this.getAutoScoringFieldValue('autoScoringCheckWorkChances');
+		if(autoScoringCheckWorkChances != null) {
+			//set the value
+			$('#checkWorkChancesInput').val(autoScoringCheckWorkChances);
+		}
+	}
+	
+};
+
+/**
+ * Create the auto scoring div
+ * @return the auto scoring div
+ */
+View.prototype.AnnotatorNode.createAutoScoringDiv = function() {
+	//create the div
+	var autoScoringDiv = $('<div>');
+	autoScoringDiv.attr('id', 'autoScoringDiv');
+	
+	//create the check box for displaying the score to the student
+	var displayScoreToStudentCheckbox = $('<input>');
+	displayScoreToStudentCheckbox.attr('id', 'displayScoreToStudentCheckbox');
+	displayScoreToStudentCheckbox.attr('type', 'checkbox');
+	displayScoreToStudentCheckbox.click({thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.displayScoreToStudentCheckboxClicked();
+	});
+	
+	//create the label for displaying the score to the student 
+	var displayScoreToStudentLabel = $('<p>');
+	displayScoreToStudentLabel.css('display', 'inline');
+	displayScoreToStudentLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	displayScoreToStudentLabel.css('font-size', '1em');
+	displayScoreToStudentLabel.text('Display Score to Student');
+	
+	//create the check box for displaying the feedback to the student
+	var displayFeedbackToStudentCheckbox = $('<input>');
+	displayFeedbackToStudentCheckbox.attr('id', 'displayFeedbackToStudentCheckbox');
+	displayFeedbackToStudentCheckbox.attr('type', 'checkbox');
+	displayFeedbackToStudentCheckbox.click({thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.displayFeedbackToStudentCheckboxClicked();
+	});
+	
+	//create the label for displaying the feedback to the student
+	var displayFeedbackToStudentLabel = $('<p>');
+	displayFeedbackToStudentLabel.css('display', 'inline');
+	displayFeedbackToStudentLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	displayFeedbackToStudentLabel.css('font-size', '1em');
+	displayFeedbackToStudentLabel.text('Display Feedback Text to Student');
+	
+	//create the check box for not displaying the feedback on the last check work chance
+	var displayNoFeedbackOnLastChanceCheckbox = $('<input>');
+	displayNoFeedbackOnLastChanceCheckbox.attr('id', 'displayNoFeedbackOnLastChanceCheckbox');
+	displayNoFeedbackOnLastChanceCheckbox.attr('type', 'checkbox');
+	displayNoFeedbackOnLastChanceCheckbox.click({thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.displayNoFeedbackOnLastChanceCheckboxClicked();
+	});
+	
+	//create the label for not displaying the feedback on the last check work chance
+	var displayNoFeedbackOnLastChanceLabel = $('<p>');
+	displayNoFeedbackOnLastChanceLabel.css('display', 'inline');
+	displayNoFeedbackOnLastChanceLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	displayNoFeedbackOnLastChanceLabel.css('font-size', '1em');
+	displayNoFeedbackOnLastChanceLabel.text('Do Not Display Feedback to Student on Last Chance');
+
+	//create the label for the check work chances
+	var checkWorkChancesLabel = $('<p>');
+	checkWorkChancesLabel.css('display', 'inline');
+	checkWorkChancesLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	checkWorkChancesLabel.css('font-size', '1em');
+	checkWorkChancesLabel.text('Check Work Chances (leave blank for unlimited tries)');
+	
+	//create the input for the check work chances
+	var checkWorkChancesInput = $('<input>');
+	checkWorkChancesInput.attr('id', 'checkWorkChancesInput');
+	checkWorkChancesInput.attr('type', 'text');
+	checkWorkChancesInput.attr('size', 3);
+	checkWorkChancesInput.on('input', {thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.checkWorkChancesInputChanged();
+	});
+	
+	//add all the elements to the auto scoring div
+	autoScoringDiv.append(displayScoreToStudentCheckbox);
+	autoScoringDiv.append(displayScoreToStudentLabel);
+	autoScoringDiv.append('<br>');
+	autoScoringDiv.append(displayFeedbackToStudentCheckbox);
+	autoScoringDiv.append(displayFeedbackToStudentLabel);
+	autoScoringDiv.append('<br>');
+	autoScoringDiv.append(displayNoFeedbackOnLastChanceCheckbox);
+	autoScoringDiv.append(displayNoFeedbackOnLastChanceLabel);
+	autoScoringDiv.append('<br>');
+	autoScoringDiv.append(checkWorkChancesLabel);
+	autoScoringDiv.append(checkWorkChancesInput);
+	
+	//hide the div for now, it will be shown later when necessary
+	autoScoringDiv.hide();
+	
+	return autoScoringDiv;
+};
+
+/**
+ * Called when the display score to student checkbox is clicked
+ */
+View.prototype.AnnotatorNode.displayScoreToStudentCheckboxClicked = function() {
+	//get the value and update the step content
+	var value = $('#displayScoreToStudentCheckbox').is(':checked');
+	this.setAutoScoringFieldValue('autoScoringDisplayScoreToStudent', value);
+};
+
+/**
+ * Called when the display feedback to student checkbox is clicked
+ */
+View.prototype.AnnotatorNode.displayFeedbackToStudentCheckboxClicked = function() {
+	//get the value and update the step content
+	var value = $('#displayFeedbackToStudentCheckbox').is(':checked');
+	this.setAutoScoringFieldValue('autoScoringDisplayFeedbackToStudent', value);
+};
+
+/**
+ * Called when the no feedback on last check work chance checkbox is clicked
+ */
+View.prototype.AnnotatorNode.displayNoFeedbackOnLastChanceCheckboxClicked = function() {
+	//get the value and update the step content
+	var value = $('#displayNoFeedbackOnLastChanceCheckbox').is(':checked');
+	this.setAutoScoringFieldValue('autoScoringDoNotDisplayFeedbackToStudentOnLastChance', value);
+};
+
+/**
+ * Called when the check work chances input is changed
+ */
+View.prototype.AnnotatorNode.checkWorkChancesInputChanged = function() {
+	//get the value and update the step content
+	var value = $('#checkWorkChancesInput').val();
+	this.setAutoScoringFieldValue('autoScoringCheckWorkChances', value);
+};
+
+/**
+ * Called when the enable auto scoring checkbox is clicked
+ */
+View.prototype.AnnotatorNode.enableAutoScoringCheckboxClicked = function() {
+	//get the value
+	var isChecked = $('#enableAutoScoringCheckbox').is(':checked');
+	
+	if(isChecked) {
+		//update the step content and show the auto scoring div
+		this.enableAutoScoring(true);
+		$('#autoScoringDiv').show();
+	} else {
+		//update the step content and hide the auto scoring div
+		this.enableAutoScoring(false);
+		$('#autoScoringDiv').hide();
+	}
+};
+
+/**
+ * Update the enableAutoScoring value in the step content
+ * @param enable whether to enable auto scoring
+ */
+View.prototype.AnnotatorNode.enableAutoScoring = function(enable) {
+	var content = this.content;
+	
+	if(content != null) {
+		if(enable) {
+			//auto scoring is enabled
+			
+			//update the step content
+			content.enableAutoScoring = true;
+			
+			//create the autoScoring object in the content if necessary
+			this.initializeAutoScoringContentIfNecessary();
+			
+			//set the auto graded export columns into the step content
+			this.setAutoGradedExportColumns();
+		} else {
+			//auto scoring is disabled
+			
+			//update the step content
+			content.enableAutoScoring = false;
+			
+			//set the regular export columns into the step content
+			this.setExportColumns();
+		}		
+	}
+	
+	//fire source updated event, which will update the preview
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Create the autoScoring object in the step content if it does not exist
+ */
+View.prototype.AnnotatorNode.initializeAutoScoringContentIfNecessary = function() {
+	//get the step content
+	var content = this.content;
+	
+	if(content != null) {
+		//get the autoScoring object
+		var autoScoring = content.autoScoring;
+		
+		if(autoScoring == null) {
+			//the autoScoring object does not exist so we will create it
+			autoScoring = {
+				autoScoringDisplayScoreToStudent:false,
+				autoScoringDisplayFeedbackToStudent:false,
+				autoScoringCheckWorkChances:'',
+				autoScoringDoNotDisplayFeedbackToStudentOnLastChance:false
+			};
+			content.autoScoring = autoScoring;
+		}
+	}
 };
 
 /**
@@ -792,6 +1117,21 @@ View.prototype.AnnotatorNode.setRegularExportColumns = function() {
 };
 
 /**
+ * Set the export columns
+ */
+View.prototype.AnnotatorNode.setExportColumns = function() {
+	this.content.exportColumns = [
+          {
+        	  "columnName": "Data",
+        	  "field": "data"
+          }
+  	];
+	
+	/* fire source updated event */
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
  * Set the export columns for auto graded draw steps
  */
 View.prototype.AnnotatorNode.setAutoGradedExportColumns = function() {
@@ -809,16 +1149,16 @@ View.prototype.AnnotatorNode.setAutoGradedExportColumns = function() {
         	  "field": "maxAutoScore"
           },
           {
-        	  "columnName": "Feedback Key",
-        	  "field": "autoFeedbackKey"
-          },
-          {
         	  "columnName": "Feedback",
         	  "field": "autoFeedback"
           },
           {
         	  "columnName": "Submit",
         	  "field": "checkWork"
+          },
+          {
+              "columnName": "Scoring Criteria Results",
+              "field": "scoringCriteriaResults"
           }
   	];
 	
