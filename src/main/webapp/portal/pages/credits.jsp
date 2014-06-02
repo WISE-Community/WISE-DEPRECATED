@@ -10,7 +10,7 @@
 <link href="${contextPath}/<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 
   
-<title><spring:message code="credits.1"/></title>
+<title>WISE 4.0 Credits Screen</title>
 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="utilssource"/>"></script> 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
@@ -21,20 +21,20 @@
 
 <div id="centeredDiv">
 
-<h1 id="previewProjectTitle" class="blueText"><spring:message code="credits.2"/></h1>
+<h1 id="previewProjectTitle" class="blueText">Credits</h1>
 
 <div id="boxPreviewProject">
 
-<div id="creditsIntroText"><spring:message code="credits.3"/></div>
+<div id="creditsIntroText">+credits.3=The open-source WISE 4.0 science education system -- in conjunction with the TELS, CLEAR, MODELS, LOOPS, and VISUAL research projects -- has reached fruition through the dedicated efforts of the individuals listed below.</div>
 
 <table border="0" cellpadding="4" id="creditsTeamTable">
 	<tr>  
 		<th colspan=2> 
-		<spring:message code="credits.4"/>&nbsp;<span style="font-size:.8em;font-weight:normal;">(alphabetical per section)</span>
+		contributors&nbsp;<span style="font-size:.8em;font-weight:normal;">(alphabetical per section)</span>
 		</th>  
 	</tr>
 	<tr>
-		<td class="creditCategory"><spring:message code="credits.6"/></td> 
+		<td class="creditCategory">Program Directors</td> 
 		<td>
 		<dl> 
 			<dt>Ken Bell</dt>
@@ -65,7 +65,7 @@
 		</td> 	
 	</tr> 
 	<tr>
-		<td class="creditCategory"><spring:message code="credits.7"/></td> 
+		<td class="creditCategory">Software Programming Team</td> 
 		<td>
 			<dl> 
 			<dt>Jon Breitbart</dt>
@@ -93,7 +93,7 @@ Jinna Lei, Noah Paessel, Greg Pitter, Rokham Sadeghnezhadfard, Jeff Schoner, Nat
 		</td> 
 	</tr>
 	<tr>
-		<td class="creditCategory"><spring:message code="credits.9"/></td> 
+		<td class="creditCategory">Project Manager</td> 
 		<td>
 			<dl>
 			<dt>Kathy Benneman</dt>
@@ -104,7 +104,7 @@ Jinna Lei, Noah Paessel, Greg Pitter, Rokham Sadeghnezhadfard, Jeff Schoner, Nat
 		</td>  
 	</tr>
 	<tr>
-		<td class="creditCategory"><spring:message code="credits.10"/></td> 
+		<td class="creditCategory">Classroom/Teacher Support</td> 
 		<td>
 			<dl>
 			<dt>Doug Kirkpatrick</dt>
@@ -126,7 +126,7 @@ Jinna Lei, Noah Paessel, Greg Pitter, Rokham Sadeghnezhadfard, Jeff Schoner, Nat
 		
 	</tr>
 	<tr>
-	<td class="creditCategory"><spring:message code="credits.12"/></td>  
+	<td class="creditCategory">WISE/TELS Research Team</td>  
 		<td>
 		<dl class="secondaryDL">
 			<dt>Hsin-Yi Chang</dt> <dd></dd>
@@ -179,7 +179,7 @@ Jinna Lei, Noah Paessel, Greg Pitter, Rokham Sadeghnezhadfard, Jeff Schoner, Nat
 		</td>  
 	</tr>
 	<tr>
-		<td class="creditCategory"><spring:message code="credits.14"/></td>  
+		<td class="creditCategory">Special Thanks To</td>  
 		<td>
 			<dl>
 			<dt>Amanda the Panda</dt>
