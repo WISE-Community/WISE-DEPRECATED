@@ -197,7 +197,7 @@ public class RegisterStudentController extends SimpleFormController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("genders", Gender.values());
 		model.put("accountQuestions",AccountQuestion.values());
-		model.put("languages", new String[]{"en", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
+		model.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
 		return model;
 	}
 	
