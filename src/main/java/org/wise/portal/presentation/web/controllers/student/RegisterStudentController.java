@@ -168,7 +168,14 @@ public class RegisterStudentController extends SimpleFormController {
 				StudentUserDetails studentUserDetails = (StudentUserDetails) user.getUserDetails();
 				studentUserDetails.setLanguage(userDetails.getLanguage());
 		        String userLanguage = userDetails.getLanguage();
-				Locale locale = new Locale(userLanguage);
+		        Locale locale = null;
+		        if (userLanguage.contains("_")) {
+	        		String language = userLanguage.substring(0, userLanguage.indexOf("_"));
+	        		String country = userLanguage.substring(userLanguage.indexOf("_")+1);
+	            	locale = new Locale(language, country); 	
+	        	} else {
+	        		locale = new Locale(userLanguage);
+	        	}
 		        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
 
 				userService.updateUser(user);
