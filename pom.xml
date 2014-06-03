@@ -400,6 +400,11 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-context-support</artifactId>
+    		<version>${org.springframework.version}</version>
+		</dependency>		
+		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-acl</artifactId>
 			<version>${org.springframework.security.version}</version>
@@ -530,8 +535,8 @@
 		</plugins>
 	</reporting>
 	<properties>
-		<org.springframework.version>3.2.6.RELEASE</org.springframework.version>
-		<org.springframework.security.version>3.2.1.RELEASE</org.springframework.security.version>
+		<org.springframework.version>3.2.8.RELEASE</org.springframework.version>
+		<org.springframework.security.version>3.2.4.RELEASE</org.springframework.security.version>
 		<startup.listeners>
 		</startup.listeners>
 	</properties>
