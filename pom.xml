@@ -335,11 +335,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>javanettasks</groupId>
-			<artifactId>httpunit</artifactId>
-			<version>1.7</version>
-		</dependency>
-		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 			<version>2.3.2</version>
@@ -368,11 +363,6 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.13</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
