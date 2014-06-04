@@ -59,8 +59,22 @@ public class PreviewProjectController extends AbstractController {
 		String runIdStr = request.getParameter(RUN_ID_PARAM_NAME);
 		Project project = null;
 		if (projectIdStr != null) {
+			// check to make sure project ID is valid long
+			try {
+				Long.valueOf(projectIdStr);
+			} catch (NumberFormatException nfe) {
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not determine project to preview.");
+				return null;
+			}
 			project = projectService.getById(projectIdStr);
 		} else if (runIdStr != null) {
+			// check to make sure run ID is valid long
+			try {
+				Long.valueOf(runIdStr);
+			} catch (NumberFormatException nfe) {
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not determine project to preview.");
+				return null;
+			}
 			project = runService.retrieveById(Long.valueOf(runIdStr)).getProject();
 		} else {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not determine project to preview.");

@@ -563,13 +563,7 @@ View.prototype.SensorNode.populatePrompt = function() {
  */
 View.prototype.SensorNode.updatePrompt = function(){
 	/* update content */
-	var content = '',
-		editor = tinymce.get('promptInput');
-	if(editor){
-		content = editor.getContent();
-	} else {
-		content = $('#promptInput').val();
-	}
+	var content = this.view.getRichTextContent('promptInput');
 	
 	this.content.prompt = prompt;
 	

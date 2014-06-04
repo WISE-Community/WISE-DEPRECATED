@@ -2190,6 +2190,30 @@ View.prototype.getMonthFromInteger = function(monthNumber) {
 	return month;
 };
 
+/**
+ * Gets rich text content from tinymce rich text editor area for specified element ID
+ * 
+ * Checks if tinymce editor exists on element and uses it to get content or gets value
+ * from input/textarea normally.
+ * 
+ * @param elemId String DOM element id
+ */
+View.prototype.getRichTextContent = function(elemId) {
+	var content = '',
+		editor = tinymce.get(elemId);
+	if(editor){
+		content = editor.getContent();
+		// strip out project folder path from asset/ src urls
+		var projectFolderPath = this.getProjectFolderPath().replace(window.location.origin, '');
+		projectFolderPath = projectFolderPath.replace(/\//g, '\/');
+		var re = new RegExp("(src|href|xlink:href|data\-.+)=(\"|\')" + projectFolderPath + "(assets\/)","gi");
+		content = content.replace(re, "$1=$2$3");
+	} else {
+		content = $('#' + elemId).val();
+	}
+	
+	return content;
+};
 /* used to notify scriptloader that this script has finished loading */
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/view_utils.js');

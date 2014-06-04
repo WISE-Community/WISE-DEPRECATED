@@ -298,14 +298,15 @@ View.prototype.getAuthoringHintsArray = function() {
  * saves hints to local var
  */
 View.prototype.saveHint = function(){
-    var hintTextBoxes = $('#hintsTabs').find("textarea");
+    var hintTextBoxes = $('#hintsTabs').find("textarea"),
+    	view = this;
     
     var newHintsArr = [];
     for(var i=0; i<hintTextBoxes.length; i++) {
     	var id = $(hintTextBoxes[i]).attr('id');
     	if(tinymce.get(id)){
     		// rich text editor is active on textarea, so get contents from editor
-    		newHintsArr.push(tinymce.get(id).getContent());
+    		newHintsArr.push(view.getRichTextContent(id));
     	} else {
     		newHintsArr.push(hintTextBoxes[i].value);
     	}
@@ -860,6 +861,7 @@ View.prototype.addRichTextAuthoring = function(id,update,fullpage){
 	    extended_valid_elements: "a[href|target|title|onclick|name|id|class|style]",
 	    document_base_url: view.getProjectFolderPath(),
 	    content_css : contextPath + "/vle/css/global.css",
+	    relative_urls: false,
 	    setup: function(ed){
 	    	// add keyUp listener
 	        ed.on('keyup change', function(e){

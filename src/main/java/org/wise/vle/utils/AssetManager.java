@@ -420,6 +420,10 @@ public class AssetManager extends AbstractController {
 									if (entry.isDirectory()) {
 										entryDestination.mkdirs();
 									} else {
+										File parent = entryDestination.getParentFile();										
+										if(!parent.exists() && !parent.mkdirs()){
+										    throw new IllegalStateException("Couldn't create dir: " + parent);
+										}
 										InputStream in = zipFile.getInputStream(entry);
 										OutputStream out = new FileOutputStream(entryDestination);
 										IOUtils.copy(in, out);
