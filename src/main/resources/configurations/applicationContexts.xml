@@ -1438,6 +1438,13 @@
         <property name="jdbcUrl" value="${hibernate.connection.url}"/>
         <property name="user" value="${hibernate.connection.username}"/>
         <property name="password" value="${hibernate.connection.password}"/>
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+        <property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+		<property name="maxStatements" value="${c3p0.maxStatements}" />
+		<property name="maxStatementsPerConnection" value="${c3p0.maxStatementsPerConnection}" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
     </bean>
 
 	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" />
