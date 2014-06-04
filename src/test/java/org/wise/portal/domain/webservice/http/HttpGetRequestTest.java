@@ -23,6 +23,8 @@ package org.wise.portal.domain.webservice.http;
  * @version $Id$
  * 
  */
+import java.util.HashMap;
+
 import junit.framework.TestCase;
 
 import org.apache.commons.httpclient.HttpMethod;
@@ -30,7 +32,6 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.easymock.EasyMock;
 import org.wise.vle.domain.webservice.HttpStatusCodeException;
 import org.wise.vle.domain.webservice.http.AbstractHttpRequest;
-import org.wise.vle.domain.webservice.http.AbstractHttpRestCommand;
 import org.wise.vle.domain.webservice.http.HttpGetRequest;
 
 public class HttpGetRequestTest extends TestCase {
@@ -45,8 +46,8 @@ public class HttpGetRequestTest extends TestCase {
 		super.setUp();
 		method = EasyMock.createMock(HttpMethod.class);
 		request = new HttpGetRequest(
-				AbstractHttpRestCommand.REQUEST_HEADERS_ACCEPT,
-				AbstractHttpRestCommand.EMPTY_STRING_MAP, URL, HttpStatus.SC_OK);
+				new HashMap<String, String>(1),
+				new HashMap<String, String>(1), URL, HttpStatus.SC_OK);
 	}
 
 	protected void tearDown() throws Exception {
