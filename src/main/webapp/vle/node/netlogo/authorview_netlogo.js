@@ -162,13 +162,7 @@ View.prototype.NetlogoNode.populatePrompt = function() {
  */
 View.prototype.NetlogoNode.updatePrompt = function(){
 	/* update content */
-	var content = '',
-		editor = tinymce.get('promptTextArea');
-	if(editor){
-		content = editor.getContent();
-	} else {
-		content = $('#promptTextArea').val();
-	}
+	var content = this.view.getRichTextContent('promptTextArea');
 	
 	this.content.prompt = content;
 	

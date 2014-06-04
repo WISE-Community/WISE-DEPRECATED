@@ -34,13 +34,7 @@ View.prototype.HtmlNode.getCommonComponents = function() {
  */
 View.prototype.HtmlNode.updateContent = function(){
 	/* update content */
-	var content = '',
-		editor = tinymce.get('promptInput');
-	if(editor){
-		content = editor.getContent();
-	} else {
-		content = $('#promptInput').val();
-	}
+	var content = this.view.getRichTextContent('promptInput');
 	
 	this.view.activeNode.baseHtmlContent.setContent(content);
 };
@@ -71,7 +65,7 @@ View.prototype.HtmlNode.save = function(close){
 
 	this.view.connectionManager.request('POST', 3, this.view.requestUrl, {forward:'filemanager', projectId:this.view.portalProjectId, command:'updateFile', fileName:this.view.activeNode.content.getFilename(this.view.getProject().getContentBase()), data:contentString}, success, this.view, failure);
 	if(tinymce.get('promptInput') && !tinymce.get('promptInput').isHidden()){
-		this.view.connectionManager.request('POST', 3, this.view.requestUrl, {forward:'filemanager', projectId:this.view.portalProjectId, command:'updateFile', fileName:this.view.activeNode.baseHtmlContent.getFilename(this.view.getProject().getContentBase()), data:encodeURIComponent(tinymce.get('promptInput').getContent())}, success, this.view, failure);
+		this.view.connectionManager.request('POST', 3, this.view.requestUrl, {forward:'filemanager', projectId:this.view.portalProjectId, command:'updateFile', fileName:this.view.activeNode.baseHtmlContent.getFilename(this.view.getProject().getContentBase()), data:encodeURIComponent(this.view.getRichTextContent('promptInput'))}, success, this.view, failure);
 	} else {
 		this.view.connectionManager.request('POST', 3, this.view.requestUrl, {forward:'filemanager', projectId:this.view.portalProjectId, command:'updateFile', fileName:this.view.activeNode.baseHtmlContent.getFilename(this.view.getProject().getContentBase()), data:encodeURIComponent(document.getElementById('promptInput').value)}, success, this.view, failure);
 	}
