@@ -50,6 +50,8 @@ AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, node
 			autoFeedbackKey = nodeState.autoFeedbackKey,
 			checkWork = nodeState.checkWork;
 		
+		var maxAutoScore = nodeState.maxAutoScore;
+		
 		// if the work is for a AnnotaotrNode, embed the svg
 		var innerDivId = "annotator_"+stepWorkId+"_"+timestamp,
 			contentBaseUrl = this.view.config.getConfigParam('getContentBaseUrl');
@@ -138,6 +140,11 @@ AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, node
 			}
 			
 			autoScoreText += 'Auto-Score: ' + autoScore;
+			
+			if(maxAutoScore != null) {
+				//display the max score as the denominator
+				autoScoreText += '/' + maxAutoScore;
+			}
 		}
 		
 		if(autoFeedback != null) {
@@ -148,7 +155,7 @@ AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, node
 			}
 			
 			autoFeedback = autoFeedback.replace(/\n/g, '<br>');
-			autoScoreText += 'Auto-Feedback: ' + autoFeedback;
+			autoScoreText += 'Auto-Feedback:</br>' + autoFeedback;
 		}
 		
 		if(autoScoreText != '') {
@@ -335,6 +342,53 @@ AnnotatorNode.prototype.getCriteriaValue = function() {
 		return null;
 	}
 
+};
+
+/**
+ * Get the feedback from the scoring criteria results
+ * @param scoringCriteriaResults an array of scoring results
+ * @return the feedback from the scoring criteria results
+ */
+AnnotatorNode.prototype.getFeedbackFromScoringCriteriaResults = function(scoringCriteriaResults) {
+	var feedback = '';
+	
+	if(scoringCriteriaResults != null) {
+		//loop through all the scoring criteria results
+		for(var y=0; y<scoringCriteriaResults.length; y++) {
+			//get a scoring criteria result
+			var scoringCriteriaResult = scoringCriteriaResults[y];
+			
+			if(scoringCriteriaResult != null) {
+				//get whether the student satisfied this criteria or not
+				var isSatisfied = scoringCriteriaResult.isSatisfied;
+				
+				//get the text feedback
+				var scoringCriteriaResultFeedback = scoringCriteriaResult.feedback;
+				
+				if(isSatisfied) {
+					//the student satisfied this criteria so we will show the feedback in green
+					scoringCriteriaResultFeedback = '<font color="green">' + scoringCriteriaResultFeedback + '</font>';
+				} else {
+					//the student did not satisfy this criteria so we will show the feedback in red
+					scoringCriteriaResultFeedback = '<font color="red">' + scoringCriteriaResultFeedback + '</font>';
+				}
+				
+				//append the feedback for the criteria
+				feedback += '<br/>' + scoringCriteriaResultFeedback;
+			}
+		}
+	}
+	
+	return feedback;
+};
+
+/**
+ * Parse the annotator node state
+ * @param stateJSONObj a node state JSON object
+ * @return an ANNOTATORSTATE object with its fields populated
+ */
+AnnotatorNode.prototype.parseDataJSONObj = function(stateJSONObj) {
+	return ANNOTATORSTATE.prototype.parseDataJSONObj(stateJSONObj);
 };
 
 NodeFactory.addNode('AnnotatorNode', AnnotatorNode);

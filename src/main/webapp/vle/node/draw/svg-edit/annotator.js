@@ -1509,6 +1509,7 @@ ANNOTATOR.prototype.calculateScore = function(scoringCriteria, mappingResults) {
 				//get the score and feedback
 				var tempScore = scoringCriteriaResult.score;
 				var tempFeedback = scoringCriteriaResult.feedback;
+				var tempIsSatisfied = scoringCriteriaResult.isSatisfied;
 				
 				if(tempScore != null) {
 					//check if the score is a valid number
@@ -1525,7 +1526,13 @@ ANNOTATOR.prototype.calculateScore = function(scoringCriteria, mappingResults) {
 					}
 					
 					//add the feedback
-					feedback += tempFeedback;
+					if(tempIsSatisfied) {
+						//the student satisfied this criteria so we will show the feedback in green
+						feedback += '<font color="green">' + tempFeedback + '</font>';
+					} else {
+						//the student did not satisfy this criteria so we will show the feedback in red
+						feedback += '<font color="red">' + tempFeedback + '</font>';
+					}
 				}
 			}
 			
@@ -1579,12 +1586,12 @@ ANNOTATOR.prototype.checkScoringCriteria = function(scoringCriteriaObject, mappi
 			//the scoring criteria was satisfied
 			results.isSatisfied = true;
 			results.score = scoringCriteriaObject.score;
-			results.feedback = '<font color="green">' + scoringCriteriaObject.successFeedback + '</font>';
+			results.feedback = scoringCriteriaObject.successFeedback;
 		} else {
 			//the scoring criteria was not satisfied
 			results.isSatisfied = false;
 			results.score = 0;
-			results.feedback = '<font color="red">' + scoringCriteriaObject.failureFeedback + '</font>';
+			results.feedback = scoringCriteriaObject.failureFeedback;
 		}
 	}
 	

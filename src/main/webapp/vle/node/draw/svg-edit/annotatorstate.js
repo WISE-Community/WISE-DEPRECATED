@@ -64,7 +64,7 @@ ANNOTATORSTATE.prototype.parseDataJSONObj = function(stateJSONObj) {
 	state.autoFeedbackKey = stateJSONObj.autoFeedbackKey;
 	state.checkWork = stateJSONObj.checkWork;
 	state.maxAutoScore = stateJSONObj.maxAutoScore;
-	state.scoringCriteriaResults = statJSONObj.scoringCriteriaResults;
+	state.scoringCriteriaResults = stateJSONObj.scoringCriteriaResults;
 	
 	//return the ANNOTATORSTATE object
 	return state;
