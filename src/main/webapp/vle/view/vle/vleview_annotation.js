@@ -56,7 +56,7 @@ View.prototype.showNodeAnnotations = function(nodeId) {
 			}
 		}
 		
-		var nodeAnnotationsString = "<div id='nodeAnnotations' style='line-height:150%'>";
+		var nodeAnnotationsString = "<div id='nodeAnnotations' style='line-height:150%;height:400px'>";
 
 		// if the node is cRater-enabled and there's feedback, show it instead of teacher feedback.
 	
