@@ -168,7 +168,7 @@ ANNOTATOR.prototype.setDataService = function(dataService) {
 ANNOTATOR.prototype.loadCallback = function(studentWorkJSON, context, noInit) {
 		var annotationValue;
 		// set default blank canvas
-		var defaultSvgString = '<svg width="' + this.width + '" height="' + this.height + '" xmlns="http://www.w3.org/2000/svg">' +
+		var defaultSvgString = '<svg width="' + context.width + '" height="' + context.height + '" xmlns="http://www.w3.org/2000/svg">' +
 			'<!-- Created with SVG-edit - http://svg-edit.googlecode.com/ --><g><title>student</title></g></svg>';
 		
 		// check for previous work and load it
@@ -1586,11 +1586,13 @@ ANNOTATOR.prototype.checkScoringCriteria = function(scoringCriteriaObject, mappi
 			//the scoring criteria was satisfied
 			results.isSatisfied = true;
 			results.score = scoringCriteriaObject.score;
+			results.maxScore = scoringCriteriaObject.score;
 			results.feedback = scoringCriteriaObject.successFeedback;
 		} else {
 			//the scoring criteria was not satisfied
 			results.isSatisfied = false;
 			results.score = 0;
+			results.maxScore = scoringCriteriaObject.score;
 			results.feedback = scoringCriteriaObject.failureFeedback;
 		}
 	}

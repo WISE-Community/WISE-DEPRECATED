@@ -220,10 +220,17 @@ View.prototype.generateAdvancedAuthoring = function(){
 View.prototype.closeOnStepSaved = function(success){
 	if(success || confirm('Save failed, do you still want to exit?')){
 		this.cleanupCommonComponents();
-		document.getElementById('dynamicPage').innerHTML = '';
-		// remove any tinyMCE instances
-		tinymce.remove();
+
+		try {
+			// remove any tinyMCE instances
+			tinymce.remove();			
+		} catch(e) {
+			
+		}
 		
+		//clear the authoring div
+		document.getElementById('dynamicPage').innerHTML = '';
+
 		this.hideAuthorStepDialog();
 		
 		/*
