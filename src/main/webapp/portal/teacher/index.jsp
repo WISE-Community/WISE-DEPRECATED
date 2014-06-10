@@ -59,6 +59,12 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 							<tr>
 								<td><a href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>
 							</tr>
+							<c:if test="${discourseSSOLoginURL != null}">
+							  <!-- we will style and internationalize this later -->
+							   <tr>
+							   	  <td><a target=_blank href="${discourseSSOLoginURL}">WISE Teacher Community</a></td>
+							   </tr>
+                 			</c:if>
 						</table>
 					</div>
 				</div>
@@ -152,9 +158,11 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 					<%@ include file="run/recentactivity.jsp"%>
 				</div>
 				
-				 <div class="panelFooter" style="text-align:center; padding:10px; color:#745A33">
-                    <span>Questions using WISE in your classroom? <a target=_blank href="http://wise4.org/community/teacher">Ask the WISE Teacher Community!</a></span>
+				<c:if test="${discourseSSOLoginURL != null}">
+				 <div id="discourseDiv" class="panelFooter" style="text-align:center; padding:10px; color:#745A33">
+                    <span>Questions using WISE in your classroom? <a target=_blank href="${discourseSSOLoginURL}">Ask the WISE Teacher Community!</a></span>
                  </div>
+                 </c:if>
 
 			</div>
 		</div>
@@ -248,16 +256,5 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 		});
     }
 </script>
-
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-

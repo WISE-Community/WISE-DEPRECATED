@@ -56,10 +56,11 @@ public class DiscourseSSOController extends AbstractController {
 			HttpServletResponse response) throws Exception {
 		// make sure this WISE instance supports discourse SSO.
 		String secretKey = wiseProperties.getProperty("discourse_sso_secret_key");
-		String discourseSSOLoginURL = wiseProperties.getProperty("discourse_sso_login_url");
-		if (secretKey == null || discourseSSOLoginURL == null) {
+		String discourseURL = wiseProperties.getProperty("discourse_url");
+		if (secretKey == null || secretKey.isEmpty() || discourseURL == null || discourseURL.isEmpty()) {
 			return null;
 		}
+		String discourseSSOLoginURL = discourseURL + "/session/sso_login";
 
 		String base64EncodedSSOParam = request.getParameter("sso");   // "sso" contains Base64-encoded query string, e.g. "nonce=ABCD"
 		String base64DecodedSSOParam = new String(Base64.decode(base64EncodedSSOParam), "UTF-8");

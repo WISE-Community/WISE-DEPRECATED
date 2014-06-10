@@ -187,6 +187,12 @@ public class TeacherIndexController extends AbstractController {
     	List<Message> unreadMessages = messageService.retrieveUnreadMessages(user);
     	modelAndView.addObject(UNREAD_MESSAGES, unreadMessages);
     	
+    	String discourseURL = wiseProperties.getProperty("discourse_url");
+    	if (discourseURL != null && !discourseURL.isEmpty()) {
+    		String discourseSSOLoginURL = discourseURL + "/session/sso";
+    		modelAndView.addObject("discourseSSOLoginURL", discourseSSOLoginURL);
+    	}
+    	
         return modelAndView;
 	}
 	/**
