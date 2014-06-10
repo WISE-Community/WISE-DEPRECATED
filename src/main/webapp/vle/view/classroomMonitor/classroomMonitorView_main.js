@@ -5680,6 +5680,8 @@ View.prototype.createMainExportDiv = function() {
 	var exportAllStudentWorkRow = this.createExportStudentWorkRow('Export All Student Work', 'allStudentWork');
 	var exportIdeaBasketsRow = this.createExportStudentWorkRow('Export Idea Baskets', 'ideaBaskets');
 	var exportExplanationBuilderWorkRow = this.createExportStudentWorkRow('Export Explanation Builder Work', 'explanationBuilderWork');
+	var exportAnnotatorWorkRow = this.createExportStudentWorkRow('Export Annotator Work', 'annotatorWork');
+	var exportFlashAnnotatorWorkRow = this.createExportStudentWorkRow('Export Flash Annotator Work', 'flashStudentWork');
 	var customExportStudentWorkRow = this.createCustomExportStudentWorkRow();
 	var specialExportStudentWorkRow = this.createSpecialExportStudentWorkRow();
 	
@@ -5688,6 +5690,8 @@ View.prototype.createMainExportDiv = function() {
 	exportStudentWorkTable.append(exportAllStudentWorkRow);
 	exportStudentWorkTable.append(exportIdeaBasketsRow);
 	exportStudentWorkTable.append(exportExplanationBuilderWorkRow);
+	exportStudentWorkTable.append(exportAnnotatorWorkRow);
+	exportStudentWorkTable.append(exportFlashAnnotatorWorkRow);
 	exportStudentWorkTable.append(customExportStudentWorkRow);
 	exportStudentWorkTable.append(specialExportStudentWorkRow);
 	

@@ -600,6 +600,9 @@ public class VLEGetXLS extends AbstractController {
 	    } else if(exportType.equals("explanationBuilderWork")) {
 	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-explanation-builder-work." + fileType + "\"");
 	    	wb = getExplanationBuilderWorkExcelExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
+	    } else if(exportType.equals("annotatorWork")) {
+	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-annotator-work." + fileType + "\"");
+	    	wb = getAnnotatorWorkExcelExport(nodeIdToNodeTitlesWithPosition, workgroupIds, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
 	    } else if(exportType.equals("customLatestStudentWork")) {
 	    	response.setHeader("Content-Disposition", "attachment; filename=\"" + runName + "-" + runId + "-custom-latest-student-work." + fileType + "\"");
 	    	wb = getLatestStudentWorkXLSExport(nodeIdToNodeTitlesWithPosition, workgroupIds, nodeIdList, runId, nodeIdToNode, nodeIdToNodeContent, workgroupIdToPeriodId, teacherWorkgroupIds);
@@ -6210,6 +6213,450 @@ public class VLEGetXLS extends AbstractController {
 	}
 	
 	/**
+	 * Get the annotator work excel export. We will generate a row 
+	 * for each label in an annotator step. The order of
+	 * the annotator steps will be chronological from oldest to newest.
+	 * 
+	 * @param nodeIdToNodeTitlesMap a mapping of node id to node title
+	 * @param workgroupIds a vector of workgroup ids
+	 * @param runId the run id
+	 * @param nodeIdToNode a mapping of node id to node
+	 * @param nodeIdToNodeContent a mapping of node id to node content
+	 * @param workgroupIdToPeriodId a mapping of workgroup id to period id
+	 * @param teacherWorkgroupIds a list of teacher workgroup ids
+	 * 
+	 * @return the excel workbook if we are generating an xls file
+	 */
+	private XSSFWorkbook getAnnotatorWorkExcelExport(HashMap<String, String> nodeIdToNodeTitlesMap,
+			Vector<String> workgroupIds, 
+			String runId,
+			HashMap<String, JSONObject> nodeIdToNode,
+			HashMap<String, JSONObject> nodeIdToNodeContent,
+			HashMap<Integer, Integer> workgroupIdToPeriodId,
+			List<String> teacherWorkgroupIds) {
+		
+		//the excel workbook
+		XSSFWorkbook wb = null;
+		
+		if(isFileTypeXLS(fileType)) {
+			//we are generating an xls file so we will create the workbook
+			wb = new XSSFWorkbook();
+		}
+		
+		//loop through all the workgroups
+		for(int x=0; x<workgroupIds.size(); x++) {
+			String workgroupId = workgroupIds.get(x);
+			UserInfo userInfo = vleService.getUserInfoByWorkgroupId(Long.parseLong(workgroupId));
+
+			//create a sheet for the workgroup
+			XSSFSheet userIdSheet = null;
+			
+			if(wb != null) {
+				userIdSheet = wb.createSheet(workgroupId);
+			}
+			
+			//counter for the rows
+			int rowCounter = 0;
+			
+			//counter for the header column cells
+			int headerColumn = 0;
+			
+			//map to keep track of how many revisions the student has submitted for a step
+			HashMap<String, Integer> nodeIdToStepRevisionCount = new HashMap<String, Integer>();
+			
+			//map to keep track of how many times the student has checked their score for a step
+			HashMap<String, Integer> nodeIdToCheckScoreAttemptCount = new HashMap<String, Integer>();
+			
+			//counter to keep track of the max number of scoring criteria out of all the steps
+			Integer maxScoringCriteriaCount = 0;
+			
+			//create the first row which will contain the headers
+			Row headerRow = createRow(userIdSheet, rowCounter++);
+	    	Vector<String> headerRowVector = createRowVector();
+	    	
+			/*
+			 * create the cells that will display the user data headers such as workgroup id,
+			 * student login, teacher login, period name, etc.
+			 */
+			headerColumn = createUserDataHeaderRow(headerColumn, headerRow, headerRowVector, true, true);
+			
+			//write the csv row if we are generating a csv file
+			writeCSV(headerRowVector);
+	    	
+	    	//vector that contains all the header column names
+	    	Vector<String> headerColumnNames = new Vector<String>();
+	    	headerColumnNames.add("Step Work Id");
+	    	headerColumnNames.add("Step Title");
+	    	headerColumnNames.add("Step Prompt");
+	    	headerColumnNames.add("Node Id");
+	    	headerColumnNames.add("Post Time (Server Clock)");
+	    	headerColumnNames.add("Start Time (Student Clock)");
+	    	headerColumnNames.add("End Time (Student Clock)");
+	    	headerColumnNames.add("Time Spent (in seconds)");
+	    	headerColumnNames.add("Step Revision Count");
+	    	headerColumnNames.add("Explanation");
+	    	headerColumnNames.add("Number of Labels");
+	    	headerColumnNames.add("Label Id");
+	    	headerColumnNames.add("Label Text");
+	    	headerColumnNames.add("Label Color");
+	    	headerColumnNames.add("Label Location X");
+	    	headerColumnNames.add("Label Location Y");
+	    	headerColumnNames.add("Text Color");
+	    	headerColumnNames.add("Text Location X");
+	    	headerColumnNames.add("Text Location Y");
+	    	headerColumnNames.add("Check Work");
+	    	headerColumnNames.add("Check Score Attempt Number");
+	    	headerColumnNames.add("Auto Score");
+	    	headerColumnNames.add("Max Auto Score");
+	    	
+	    	//add all the header column names to the row
+	    	for(int y=0; y<headerColumnNames.size(); y++) {
+		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, headerColumnNames.get(y));
+	    	}
+	    	
+	    	//write the csv row if we are generating a csv file
+	    	writeCSV(headerRowVector);
+	    	
+	    	//get all the work from the workgroup
+	    	List<StepWork> stepWorks = vleService.getStepWorksByUserInfo(userInfo);
+	    	
+	    	//loop through all the work
+	    	for(int z=0; z<stepWorks.size(); z++) {
+	    		StepWork stepWork = stepWorks.get(z);
+	    		
+	    		//get the node and node type
+	    		Node node = stepWork.getNode();
+	    		String nodeType = node.getNodeType();
+	    		
+	    		if(nodeType != null && nodeType.equals("AnnotatorNode")) {
+	    			//the work is for an annotator step
+	    			
+		    		//get the node id
+					String nodeId = node.getNodeId();
+					
+	    			//get the student work
+	    			String data = stepWork.getData();
+	    			
+	    			try {
+	    				//get the JSONObject representation of the student work
+						JSONObject dataJSONObject = new JSONObject(data);
+						
+						//get the node states from the student work
+						JSONArray nodeStates = dataJSONObject.optJSONArray("nodeStates");
+						
+						if(nodeStates != null && nodeStates.length() > 0) {
+							//loop through all the node states
+							for(int n=0; n<nodeStates.length(); n++) {
+								//get a node state
+								JSONObject nodeState = nodeStates.getJSONObject(n);
+								
+								//get the data from the node state
+								JSONObject nodeStateData = nodeState.optJSONObject("data");
+								
+								if(nodeStateData != null) {
+									//get the step revision count
+									Integer stepRevisionCount = nodeIdToStepRevisionCount.get(nodeId);
+									
+									if(stepRevisionCount == null) {
+										//this is the first revision so we will initialize the value
+										stepRevisionCount = 1;
+									}
+									
+									/*
+									 * increment the step revision count which will now contain the next 
+									 * revision number
+									 */
+									nodeIdToStepRevisionCount.put(nodeId, stepRevisionCount + 1);
+									
+									//get the student explanation
+									String explanation = nodeStateData.optString("explanation");
+									
+									//get the student labels
+									JSONArray labels = nodeStateData.optJSONArray("labels");
+									
+									//get the total number of labels the student has created including deleted ones
+									Long totalNumberOfLabelsCreated = nodeStateData.optLong("total");
+									
+									//get the auto scoring values
+									Long autoScore = nodeState.optLong("autoScore");
+									Long maxAutoScore = nodeState.optLong("maxAutoScore");
+									Boolean checkWork = nodeState.optBoolean("checkWork");
+									JSONArray scoringCriteriaResults = nodeState.optJSONArray("scoringCriteriaResults");
+									Integer checkScoreAttemptCount = null;
+									
+									if(scoringCriteriaResults != null) {
+										//the student checked this work
+										
+										//get the check score attempt count for the step
+										checkScoreAttemptCount = nodeIdToCheckScoreAttemptCount.get(nodeId);
+										
+										if(checkScoreAttemptCount == null) {
+											//this is the first check score attempt so we will initialize the value
+											checkScoreAttemptCount = 1;
+										}
+										
+										/*
+										 * increment the check score attempt count which will now contain the next 
+										 * check score attempt number
+										 */
+										nodeIdToCheckScoreAttemptCount.put(nodeId, checkScoreAttemptCount + 1);
+									}
+									
+									if(labels == null || labels.length() == 0) {
+										/*
+										 * there are no labels so we will display a row with the step visit data and
+										 * the student explanation if there is one
+										 */
+										
+										//create a row
+										Row row = createRow(userIdSheet, rowCounter++);
+						    			Vector<String> rowVector = createRowVector();
+						    			
+						    			//initialize the column counter
+						    			int columnCounter = 0;
+						    			
+						    			//get the number of labels
+						    			int labelCount = labels.length();
+						    			
+						    			//fill the common cells of the annotator row
+						    			columnCounter = fillCommonCellsOfAnnotatorRow(columnCounter, row, rowVector, stepWork, nodeIdToNodeTitlesMap, nodeId, workgroupId, stepRevisionCount, explanation, labelCount);
+									} else {
+										//there is at least one label
+										
+										//get the number of labels
+										int labelCount = labels.length();
+										
+										//loop through all the student labels
+										for(int labelCounter=0; labelCounter<labels.length(); labelCounter++) {
+											
+											//get a student label
+											JSONObject label = labels.optJSONObject(labelCounter);
+											
+											if(label != null) {
+												//get label values
+												String labelId = label.optString("id");
+												String labelTextColor = label.optString("textColor");
+												String labelText = label.optString("text");
+												String labelColor = label.optString("color");
+												Double labelLocationX = null;
+												Double labelLocationY = null;
+												Double labelTextLocationX = null;
+												Double labelTextLocationY = null;
+												
+												JSONObject location = label.optJSONObject("location");
+												if(location != null) {
+													labelLocationX = location.optDouble("x");
+													labelLocationY = location.optDouble("y");
+												}
+												
+												JSONObject textLocation = label.optJSONObject("textLocation");
+												if(textLocation != null) {
+													labelTextLocationX = textLocation.optDouble("x");
+													labelTextLocationY = textLocation.optDouble("y");
+												}
+												
+												//create a row for this label
+												Row row = createRow(userIdSheet, rowCounter++);
+								    			Vector<String> rowVector = createRowVector();
+								    			
+								    			//initialize the column counter
+								    			int columnCounter = 0;
+								    			
+												//fill the common cells of the annotator row
+								    			columnCounter = fillCommonCellsOfAnnotatorRow(columnCounter, row, rowVector, stepWork, nodeIdToNodeTitlesMap, nodeId, workgroupId, stepRevisionCount, explanation, labelCount);
+								    			
+								    			//fill the label values
+										    	columnCounter = setCellValue(row, rowVector, columnCounter, labelId);
+										    	columnCounter = setCellValue(row, rowVector, columnCounter, labelText);
+										    	columnCounter = setCellValue(row, rowVector, columnCounter, getColorNameFromColorHex(labelColor));
+										    	columnCounter = setCellValue(row, rowVector, columnCounter, labelLocationX);
+										    	columnCounter = setCellValue(row, rowVector, columnCounter, labelLocationY);
+										    	columnCounter = setCellValue(row, rowVector, columnCounter, getColorNameFromColorHex(labelTextColor));
+										    	columnCounter = setCellValue(row, rowVector, columnCounter, labelTextLocationX);
+										    	columnCounter = setCellValue(row, rowVector, columnCounter, labelTextLocationY);
+										    	columnCounter = setCellValue(row, rowVector, columnCounter, Boolean.toString(checkWork));
+										    	
+										    	//check if this student work was auto scored
+										    	if(scoringCriteriaResults != null) {
+													columnCounter = setCellValue(row, rowVector, columnCounter, checkScoreAttemptCount);
+											    	columnCounter = setCellValue(row, rowVector, columnCounter, autoScore);
+											    	columnCounter = setCellValue(row, rowVector, columnCounter, maxAutoScore);
+											    	
+										    		//loop through all the scoring criteria results
+										    		for(int scr=0; scr<scoringCriteriaResults.length(); scr++) {
+										    			//get a scoring criteria result
+										    			JSONObject scoringCriteriaResult = scoringCriteriaResults.optJSONObject(scr);
+										    			
+										    			//get the scoring criteria result values
+										    			Long scoringCriteriaId = scoringCriteriaResult.optLong("id");
+										    			Long scoringCriteriaScore = scoringCriteriaResult.optLong("score");
+										    			Long scoringCriteriaMaxScore = scoringCriteriaResult.optLong("maxScore");
+										    			Boolean isSatisfied = scoringCriteriaResult.optBoolean("isSatisfied");
+										    			String feedback = scoringCriteriaResult.optString("feedback");
+										    			
+										    			//populate the cells with the scoring criteria result values
+										    			columnCounter = setCellValue(row, rowVector, columnCounter, scoringCriteriaId);
+										    			columnCounter = setCellValue(row, rowVector, columnCounter, scoringCriteriaScore);
+										    			columnCounter = setCellValue(row, rowVector, columnCounter, scoringCriteriaMaxScore);
+										    			columnCounter = setCellValue(row, rowVector, columnCounter, Boolean.toString(isSatisfied));
+										    			columnCounter = setCellValue(row, rowVector, columnCounter, feedback);
+										    		}
+										    		
+										    		/*
+										    		 * remember the max number of scoring criteria results for all steps so we can
+										    		 * display the appropriate number of header cells 
+										    		 */
+										    		if(scoringCriteriaResults.length() > maxScoringCriteriaCount) {
+										    			maxScoringCriteriaCount = scoringCriteriaResults.length();
+										    		}
+										    	}
+										    	
+										    	//write the csv row if we are generating a csv file
+										    	writeCSV(rowVector);
+											}
+										}
+									}
+								}
+							}
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+	    		}
+	    	}
+	    	
+	    	//display the header cells for the scoring criteria
+	    	for(int m=0; m<maxScoringCriteriaCount; m++) {
+	    		//get the scoring criteria count
+	    		int scoringCriteriaCount = m + 1;
+		    	
+	    		//add additional header cells to the header column
+		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Scoring Criteria Id " + scoringCriteriaCount);
+		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Scoring Criteria Score " + scoringCriteriaCount);
+		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Scoring Criteria Max Score " + scoringCriteriaCount);
+		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Is Satisfied " + scoringCriteriaCount);
+		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Feedback " + scoringCriteriaCount);
+	    	}
+	    	
+	    	//create a blank row for spacing
+			Vector<String> emptyVector2 = createRowVector();
+			writeCSV(emptyVector2);
+		}
+		
+		return wb;
+	}
+	
+	/**
+	 * Fill the common cells of the annotator row such as workgroup id,
+	 * run information, step work id, prompt, step title, timestamps, etc.
+	 * @param columnCounter
+	 * @param row
+	 * @param rowVector
+	 * @param stepWork
+	 * @param nodeIdToNodeTitlesMap
+	 * @param nodeId
+	 * @param workgroupId
+	 * @param stepRevisionCount
+	 * @param explanation
+	 * @param totalNumberOfLabels
+	 * @return
+	 */
+	public int fillCommonCellsOfAnnotatorRow(int columnCounter,
+			Row row, 
+			Vector<String> rowVector, 
+			StepWork stepWork, 
+			HashMap<String, 
+			String> nodeIdToNodeTitlesMap, 
+			String nodeId, 
+			String workgroupId,
+			Integer stepRevisionCount,
+			String explanation,
+			int labelCount) {
+		
+		//get the step work id and node id
+		Long stepWorkId = stepWork.getId();
+		
+		//get the title of the step
+		String title = nodeIdToNodeTitlesMap.get(nodeId);
+		
+		//get the content for the step
+		JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
+		String prompt = ""; 
+		
+		try {
+			if(nodeContent != null) {
+				if(nodeContent.has("prompt")) {
+					//get the prompt
+					prompt = nodeContent.getString("prompt");
+				}
+			}	
+		} catch(JSONException e) {
+			e.printStackTrace();
+		}
+		
+		//get the start, end and post time for the student visit
+		Timestamp startTime = stepWork.getStartTime();
+		Timestamp endTime = stepWork.getEndTime();
+		Timestamp postTime = stepWork.getPostTime();
+
+    	long timeSpentOnStep = 0;
+    	
+    	//calculate the time the student spent on the step
+    	if(endTime == null || startTime == null) {
+    		//set to -1 if either start or end was null so we can set the cell to N/A later
+    		timeSpentOnStep = -1;
+    	} else {
+    		/*
+    		 * find the difference between start and end and divide by
+    		 * 1000 to obtain the value in seconds
+    		 */
+    		timeSpentOnStep = (endTime.getTime() - startTime.getTime()) / 1000;	
+    	}
+    	
+		/*
+		 * create the cells that will display the user data such as the actual values
+		 * for workgroup id, student login, teacher login, period name, etc.
+		 */
+    	columnCounter = createUserDataRow(columnCounter, row, rowVector, workgroupId, true, true, null);
+    	
+		columnCounter = setCellValue(row, rowVector, columnCounter, stepWorkId);
+		columnCounter = setCellValue(row, rowVector, columnCounter, title);
+		columnCounter = setCellValue(row, rowVector, columnCounter, prompt);
+		columnCounter = setCellValue(row, rowVector, columnCounter, nodeId);
+		
+		//set the post time
+		if(postTime != null) {
+			columnCounter = setCellValue(row, rowVector, columnCounter, timestampToFormattedString(postTime));
+		} else {
+			columnCounter = setCellValue(row, rowVector, columnCounter, "");
+		}
+		
+		//set the start time
+		columnCounter = setCellValue(row, rowVector, columnCounter, timestampToFormattedString(startTime));
+		
+		//set the end time
+		if(endTime != null) {
+			columnCounter = setCellValue(row, rowVector, columnCounter, timestampToFormattedString(endTime));
+		} else {
+			columnCounter = setCellValue(row, rowVector, columnCounter, "");
+		}
+		
+		//set the time spent on the step
+    	if(timeSpentOnStep == -1) {
+    		columnCounter = setCellValue(row, rowVector, columnCounter, "N/A");
+    	} else {
+    		columnCounter = setCellValue(row, rowVector, columnCounter, timeSpentOnStep);
+    	}
+    	
+    	//populate the cells with the label data
+    	columnCounter = setCellValue(row, rowVector, columnCounter, stepRevisionCount);
+    	columnCounter = setCellValue(row, rowVector, columnCounter, explanation);
+    	columnCounter = setCellValue(row, rowVector, columnCounter, labelCount);
+    	
+    	return columnCounter;
+	}
+	
+	/**
 	 * Get the flash work excel export. We will generate a row 
 	 * for each item used in a flash step. The order of
 	 * the flash steps will be chronological from oldest to newest.
@@ -6956,6 +7403,48 @@ public class VLEGetXLS extends AbstractController {
 			color = "purple";
 		} else if(rbgString.equals("rgb(153, 51, 51)")) {
 			color = "brown";
+		}
+		
+		return color;
+	}
+	
+	/**
+	 * Get the color name from the hex string
+	 * 
+	 * @param rbgString e.g. "000000"
+	 * 
+	 * @return a string with the color name
+	 */
+	private String getColorNameFromColorHex(String hex) {
+		String color = "";
+		
+		if(hex != null) {
+			//make all the letters uppercase
+			hex = hex.toUpperCase();
+			
+			if(hex.equals("000000")) {
+				color = "black";
+			} else if(hex.equals("FFFFFF")) {
+				color = "white";
+			} else if(hex.equals("0000FF")) {
+				color = "blue";
+			} else if(hex.equals("008000")) {
+				color = "green";
+			} else if(hex.equals("800000")) {
+				color = "maroon";
+			} else if(hex.equals("000080")) {
+				color = "navy";
+			} else if(hex.equals("FF8C00")) {
+				color = "orange";
+			} else if(hex.equals("800080")) {
+				color = "purple";
+			} else if(hex.equals("FF0000")) {
+				color = "red";
+			} else if(hex.equals("008080")) {
+				color = "teal";
+			} else if(hex.equals("FFFF00")) {
+				color = "yellow";
+			}
 		}
 		
 		return color;

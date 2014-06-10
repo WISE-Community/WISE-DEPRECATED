@@ -224,7 +224,11 @@ ANNOTATOR.prototype.saveToVLE = function(isExit, forceSave) {
  * Save the student work
  */
 ANNOTATOR.prototype.save = function() {
-	var data = this.studentData;
+	//make a copy of the student data object
+	var studentDataString = JSON.stringify(this.studentData);
+	var studentData = JSON.parse(studentDataString);
+	
+	var data = studentData;
 	
 	/* compress nodeState data */
 	//var compressedData = "--lz77--" + this.lz77.compress(JSON.stringify(data));
@@ -321,6 +325,18 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 				
 				//make the explanation textarea lose focus
 				$('#explanationInput').blur();
+			}
+			
+			if(context.enableAutoScoring) {
+				//auto scoring is enabled
+				
+				if(labelsExt.content().labels.length > 0) {
+					//the student has at least one label so we will enable the check score button
+					$('#check_score').prop('disabled', false);
+				} else {
+					//the student does not have any labels so we will disable the check score button
+					$('#check_score').prop('disabled', true);
+				}				
 			}
 		}
 		
