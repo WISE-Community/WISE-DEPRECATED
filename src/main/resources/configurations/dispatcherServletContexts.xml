@@ -891,6 +891,10 @@
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
+	
+	<bean id="discourseSSOController" class="org.wise.portal.presentation.web.controllers.DiscourseSSOController">
+		<property name="wiseProperties" ref="wiseProperties" />
+	</bean>
 
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="order" value="2"></property>
@@ -1009,6 +1013,7 @@
 				/peerReview.html=peerReviewController
 				/assetManager.html=assetManagerController
 				/cRater.html=cRaterController
+				/sso/discourse.html=discourseSSOController
 				/**/*.html=urlFilenameViewController
 			</value>
 		</property>

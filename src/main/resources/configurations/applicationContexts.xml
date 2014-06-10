@@ -1559,6 +1559,7 @@
 				<sec:intercept-url pattern="/vle/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/curriculum/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/cRater.html" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/sso/discourse.html" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/*.html" access="ROLE_USER" />
 				<sec:intercept-url pattern="/**/*.html" access="ROLE_USER" />
 			</sec:filter-security-metadata-source>
