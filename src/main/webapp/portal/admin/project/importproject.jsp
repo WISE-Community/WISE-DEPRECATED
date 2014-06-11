@@ -24,16 +24,25 @@
 <br/>
 
 <c:if test="${msg != null}">
-	<center>
-	<div style="width:500px;text-align:center;font-size:1.2em;font-weight:bold;border:2px solid lightgreen">
-		${msg}
+	<div style="width:500px;font-size:1.2em;font-weight:bold;border:2px solid lightgreen">
+		${msg}<br/><br/>
+		Project Name: ${newProject.name}<br/>
+		Project ID: ${newProject.id}<br/>
+		<c:if test="${newProject.metadata != null && newProject.metadata.author != null}">
+			Author: ${newProject.metadata.author}<br/>
+		</c:if>
+		<c:if test="${newProject.metadata != null && newProject.metadata.subject != null}">
+			Subject: ${newProject.metadata.subject}<br/>
+		</c:if>		
+		<c:if test="${newProject.metadata != null && newProject.metadata.keywords != null}">
+			Keywords: ${newProject.metadata.keywords}<br/>
+		</c:if>		
 		<br/><br/>
-		<a href="${contextPath}/admin/project/manageallprojects.html?projectId=${newProjectId}">Manage Project</a>		
+		<a href="${contextPath}/admin/project/manageallprojects.html?projectId=${newProject.id}">Manage Project</a>		
 		<br/><br/>
-		<a target=_blank href="${contextPath}/previewproject.html?projectId=${newProjectId}">Preview Project</a>
+		<a target=_blank href="${contextPath}/previewproject.html?projectId=${newProject.id}">Preview Project</a>
 	</div>
 <br/>
-</center>
 </c:if>
 <br/>
 <h3>Import WISE Project</h3>
@@ -66,16 +75,11 @@ unzipped:
 <form:form method="post" action="importproject.html" 
 	commandName="projectZipFile" id="editproject" enctype="multipart/form-data" autocomplete='off'>
 
-	<label for="projectname">Project Name</label><br/>
-	<input type="text" size="25" name="name" id="projectName"/>
-    <br/><br/>
-
 	<div>Project Zip File</div>
 	<input type="file" name="file" id="projectZipFile"/>
     <br/><br/>
     
-    <input type="submit" value="Save" />
-    <a href="manageallprojects.html"><input type="button" value="Cancel"></input></a>
+    <input type="submit" value="Import" />
 </form:form>
 
 

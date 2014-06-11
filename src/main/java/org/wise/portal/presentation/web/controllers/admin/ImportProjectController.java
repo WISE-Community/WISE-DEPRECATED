@@ -171,7 +171,21 @@ public class ImportProjectController extends SimpleFormController {
 		
 		// now create a project in the db with the new path
 		String path = sep +  newFilename + sep + "wise4.project.json";
-		String name = projectUpload.getName();
+		
+		String name = "";
+
+		// get the project name from zip file
+		try {
+			String projectJSONFilePath = newFileFullDir + sep + "wise4.project.json";
+			String projectJSONStr = FileUtils.readFileToString(new File(projectJSONFilePath));
+			JSONObject projectJSONObj = new JSONObject(projectJSONStr);
+			name = projectJSONObj.getString("title");
+		} catch (Exception e) {
+			// there was an error getting project title.
+			name = "Undefined";
+		}
+		
+		
 		User signedInUser = ControllerUtil.getSignedInUser();
 		Set<User> owners = new HashSet<User>();
 		owners.add(signedInUser);
@@ -213,8 +227,8 @@ public class ImportProjectController extends SimpleFormController {
 		Project project = projectService.createProject(pParams);
 
 		ModelAndView modelAndView = new ModelAndView(getSuccessView());		
-		modelAndView.addObject("msg", "Upload project complete! New Project ID is: " + project.getId());
-		modelAndView.addObject("newProjectId", project.getId());
+		modelAndView.addObject("msg", "Upload project complete!");
+		modelAndView.addObject("newProject", project);
 		return modelAndView;
 	}
 
