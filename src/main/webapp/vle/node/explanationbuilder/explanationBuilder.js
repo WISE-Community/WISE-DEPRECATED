@@ -1003,7 +1003,7 @@ ExplanationBuilder.prototype.getIdeaAttributes = function(mode){
 };
 
 ExplanationBuilder.prototype.edit = function(index,text,source,tags,flag,textChanged) {
-	var title = view.getI18NString('idea_title','ExplanationBuilderNode'),
+	var title = this.view.getI18NString('idea_title','ExplanationBuilderNode'),
 		id = -1,
 		idea = null;
 	for(var i=0; i<this.ideaBasket.ideas.length; i++){
