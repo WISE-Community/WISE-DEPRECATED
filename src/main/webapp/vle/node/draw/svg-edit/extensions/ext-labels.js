@@ -263,6 +263,21 @@ svgEditor.addExtension('labels', function() {'use strict';
 					editModal.modal('hide');
 					api.deleteLabel(labelId);
 				});
+				
+				//give the text input focus when the modal dialog appears
+				editModal.on('shown.bs.modal', function() {
+					//give the text input focus
+					$('#labelTextInput').focus();
+					
+					//get the value in the text input
+					var labelTextInputVal = $('#labelTextInput').val();
+					
+					//get the length of the text input value
+					var labelTextInputValLength = labelTextInputVal.length;
+					
+					//set the cursor to the end of the input text
+					$('#labelTextInput')[0].setSelectionRange(labelTextInputValLength, labelTextInputValLength);
+				});
 			},
 			/** 
 			 * Edits the label with the specified id with the specified attributes
