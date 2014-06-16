@@ -5919,9 +5919,10 @@ View.prototype.createGradeByStudentDisplay = function() {
  
             api.column(2).data().each( function ( group, i ) {
                 if ( last !== group ) {
+                	var nodeId = api.cell(i, 1).data();
                     $(rows).eq( i ).before(
                     	'<tr class="group-spacer"><td colspan="14"></td></tr>\
-                        <tr class="group" data-nodetitle="' + group + '"><td colspan="14">'+group+'</td></tr>'
+                        <tr class="group" data-nodetitle="' + group + '"><td colspan="14"><a href="javascript:void(0);" data-nodeid="' + nodeId + '">'+group+'</a></td></tr>'
                     );
                     last = group;
                 }
@@ -5931,6 +5932,10 @@ View.prototype.createGradeByStudentDisplay = function() {
             	i = 1000;
             
             $headers.each(function(){
+            	$('a', $(this)).off('click').on('click', function(){
+            		view.stepRowClickedHandler($(this).data('nodeid'));
+            	});
+            	
             	var total = 0,
             		nodeTitle = $(this).data('nodetitle'),
             		$header = $(this);
@@ -6095,9 +6100,10 @@ View.prototype.createGradeByStepDisplay = function() {
 	
 	        api.column(2).data().each( function ( group, i ) {
 	            if ( last !== group ) {
+	            	var workgroupId = api.cell(i, 1).data();
 	                $(rows).eq( i ).before(
 	                	'<tr class="group-spacer"><td colspan="14"></td></tr>\
-	                    <tr class="group" data-workgroup="' + group + '"><td colspan="14">'+group+'</td></tr>'
+	                    <tr class="group" data-workgroup="' + group + '"><td colspan="14"><a href="javascript:void(0);" data-workgroupid="' + workgroupId + '">'+group+'</a></td></tr>'
 	                );
 	                last = group;
 	            }
@@ -6107,6 +6113,10 @@ View.prototype.createGradeByStepDisplay = function() {
 	        	i = 1000;
 	        
 	        $headers.each(function(){
+	        	$('a', $(this)).off('click').on('click', function(){
+            		view.studentRowClickedHandler($(this).data('workgroupid'));
+            	});
+	        	
 	        	var total = 0,
 	        		workgroup = $(this).data('workgroup'),
 	        		$header = $(this);
