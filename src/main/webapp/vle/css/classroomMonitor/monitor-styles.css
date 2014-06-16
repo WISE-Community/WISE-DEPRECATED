@@ -8190,6 +8190,9 @@ table.dataTable.grading tbody .group > td .toggle-revisions:focus {
 table.dataTable.grading tbody .group > td .toggle-revisions .fa {
   font-size: 100%;
 }
+table.dataTable.grading tbody .group > td a {
+  color: #ffffff;
+}
 table.dataTable.grading tbody .group.new > td {
   background-color: #5cb87b;
 }
