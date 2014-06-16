@@ -522,7 +522,7 @@ var scriptloader = function(){
  		premadecomments:['vle/css/globalstyles.css',
  		                 'vle/css/premadecomments/premadecomments.css',
  		                jqueryUICss],
- 		teacherWebSocket:['vle/css/classroomMonitor/monitor-styles.css',
+ 		teacherWebSocket:[//'vle/css/classroomMonitor/monitor-styles.css',
  		                 'vle/js/DataTables/media/css/jquery.dataTables.css',
  		                 'vle/js/DataTables/media/css/dataTables.bootstrap.css',
  		                 'vle/css/bootstrap/bootstrap-switch.css',

@@ -303,6 +303,9 @@ View.prototype.showStudentProgressDisplay = function() {
 	// show step progress
 	$('#studentProgress').show();
 	
+	// hide loading message
+	$('#loading').hide();
+	
 	// redraw DataTable fixed headers
 	this.redrawFixedHeaders();
 	this.studentProgressTable.columns.adjust();
@@ -331,6 +334,9 @@ View.prototype.showStepProgressDisplay = function() {
 	
 	// show step progress
 	$('#stepProgress').show();
+	
+	// hide loading message
+	$('#loading').hide();
 	
 	// redraw DataTable fixed headers
 	this.redrawFixedHeaders();
@@ -926,7 +932,7 @@ View.prototype.createPauseScreensDisplay = function() {
 		includeSelectAllOption: selectAll,
 		selectAllText: view.getI18NString('classroomMonitor_allPeriods'),
 		selectAllValue: 'pause_all',
-		dropRight: true,
+		//dropRight: true,
 		maxHeight: 250,
 		onChange: function(){
 			view.updatePauseScreens();
@@ -1356,7 +1362,7 @@ View.prototype.studentRowClickedHandler = function(workgroupId) {
 	this.clearNodeIdClickedAndWorkgroupIdClicked(); // TODO: remove?
 	
 	// display a loading message
-	
+	$('#loading').show();
 	
 	//get the url for retrieving student data
 	var getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl'),
@@ -1877,7 +1883,7 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
 	this.numberOfItemsToReview > 0 ? $('#gradeByStudentItemsToReview').fadeIn() : $('#gradeByStudentItemsToReview').fadeOut();
 	
 	// hide loading message
-	
+	$('#loading').hide();
 	
 	// show grade by student section
 	this.showGradeByStudentDisplay();
@@ -3919,6 +3925,9 @@ View.prototype.stepRowClickedHandler = function(nodeId) {
 	//hide all the other displays
 	this.hideAllDisplays();
 	
+	// show loading message
+	$('#loading').show();
+	
 	//clear the nodeIdClicked and workgroupIdClicked values
 	this.clearNodeIdClickedAndWorkgroupIdClicked();
 	
@@ -4076,7 +4085,7 @@ View.prototype.displayGradeByStep = function(nodeId) {
 	this.numberOfItemsToReview > 0 ? $('#gradeByStepItemsToReview').fadeIn() : $('#gradeByStepItemsToReview').fadeOut();
 	
 	// hide loading message
-	
+	$('#loading').hide();
 	
 	//make the grade by step display visible
 	this.showGradeByStepDisplay();
@@ -4285,6 +4294,8 @@ View.prototype.getStudentStatuses = function() {
 		baseUrl = this.getConfig().getConfigParam('wiseBaseURL'),
 		previewUrl = baseUrl + '/previewproject.html?projectId=' + projectId;
 	$('#openProject').attr('href', previewUrl);
+	
+	$('#loading').css('z-index', '109');
 	
 	//create the params for the request
 	var studentStatusParams = {
