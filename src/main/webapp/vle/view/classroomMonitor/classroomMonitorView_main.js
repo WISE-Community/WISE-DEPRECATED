@@ -1246,7 +1246,7 @@ View.prototype.createStudentProgressDisplay = function() {
             { 'title': 'Period ID', 'data': 'period_id' },
             { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_workgroup'), 'data': 'student_names', 'class': 'gradable viewStudentWork' },
             { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_period'), 'data': 'period_name', 'class': 'center', 'width': '5%', 'orderData': [4, 3] },
-            { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_currentStep'), 'data': 'current_step', 'class': 'center', 'orderData': [5, 3] },
+            { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_currentStep'), 'data': 'current_step', 'orderData': [5, 3] },
             { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_timeSpent'), 'data': 'time_spent', 'class': 'center', 'orderData': [6, 3] },
             { 'title': 'Completion', 'data': 'complete' },
             { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_projectCompletion'), 'data': 'complete_html', 'class': 'center', 'orderData': [7, 3] },
