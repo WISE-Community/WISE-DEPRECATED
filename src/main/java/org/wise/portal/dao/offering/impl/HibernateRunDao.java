@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-
+import org.hibernate.FetchMode;
+import org.hibernate.classic.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.support.DataAccessUtils;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -122,7 +124,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
     @SuppressWarnings("unchecked")
 	public List<Run> getRunListByUserInPeriod(User user){
     	String q = "select run from RunImpl run inner join run.periods period inner " +
-    			"join period.members user where user.id='" + user.getId() + "' order by run.id desc";
+    			"join period.members user where user.id='" + user.getId() + "' order by run.id desc ";
     	return this.getHibernateTemplate().find(q);
     }
     
@@ -176,4 +178,28 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 		String q = "select run from RunImpl run where run.timesRun <> null order by run.timesRun desc";
 		return this.getHibernateTemplate().find(q);
 	}
+
+	@Override
+	public Run getById(Long runId, boolean doEagerFetch) {
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+
+        Run result = null;
+        if (doEagerFetch) {
+        	result = (Run) session.createCriteria(RunImpl.class)
+			.setFetchMode("project", FetchMode.EAGER)
+			.setFetchMode("periods", FetchMode.JOIN)
+			.setFetchMode("owners", FetchMode.EAGER)
+			.setFetchMode("sharedowners", FetchMode.EAGER)
+			.setFetchMode("announcements", FetchMode.EAGER)
+			.add( Restrictions.eq("id", runId))
+			.uniqueResult();
+        } else {
+        	result = (Run) session.createCriteria(RunImpl.class)
+        			.add( Restrictions.eq("id", runId))
+        			.uniqueResult();        	
+        }
+        session.getTransaction().commit();
+        return result;
+     }
 }

@@ -157,10 +157,8 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	@SuppressWarnings("unchecked")
 	public List<Project> getProjectListByTagNames(Set<String> tagNames) {
 		String tagString = "";
-		int counter = 0;
 		for(String name : tagNames){
 			tagString += "'" + name + "',";
-			counter ++;
 		}
 		tagString = tagString.substring(0, tagString.length() - 1);
 		

@@ -75,14 +75,14 @@ public class PremadeCommentListImpl implements PremadeCommentList, Comparable {
 
 	private static final String PREMADECOMMENTS_JOIN_COLUMN_NAME = "premadecomments_fk";
     
-    @ManyToMany(targetEntity = PremadeCommentImpl.class, fetch=FetchType.EAGER)
+    @ManyToMany(targetEntity = PremadeCommentImpl.class, fetch=FetchType.LAZY)
     @JoinTable(name = PREMADECOMMENTS_JOIN_TABLE, joinColumns = {@JoinColumn(name = PREMADECOMMENTSLIST_JOIN_COLUMN_NAME, nullable = false)}, inverseJoinColumns = @JoinColumn(name = PREMADECOMMENTS_JOIN_COLUMN_NAME, nullable=false))
     private Set<PremadeComment> list;
 
     @Column(name = PremadeCommentImpl.COLUMN_NAME_LABEL, nullable=false)
     private String label;
     
-    @OneToOne(targetEntity = UserImpl.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
     @JoinColumn(name = PremadeCommentImpl.COLUMN_NAME_OWNER, nullable = true)
     private User owner = null;
 

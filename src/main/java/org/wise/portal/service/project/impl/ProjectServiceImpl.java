@@ -385,9 +385,9 @@ public class ProjectServiceImpl implements ProjectService {
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#projectContainsTag(java.lang.Long, java.lang.String)
 	 */
-	public boolean projectContainsTag(Long projectId, String name) {
+	public boolean projectContainsTag(Project project, String name) {
 		ProjectService projectService = this.projectServiceFactory.getProjectService(ProjectType.LD);
-		return projectService.projectContainsTag(projectId, name);
+		return projectService.projectContainsTag(project, name);
 	}
 
 	/**

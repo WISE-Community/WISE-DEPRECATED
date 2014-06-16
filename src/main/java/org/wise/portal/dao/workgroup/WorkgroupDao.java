@@ -24,7 +24,6 @@ package org.wise.portal.dao.workgroup;
 
 import java.util.List;
 
-
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.run.Offering;
 import org.wise.portal.domain.user.User;
@@ -49,5 +48,13 @@ public interface WorkgroupDao<T extends Workgroup> extends SimpleDao<T> {
      * @return a <code>Workgroup</code> <code>List</code>
      */
     public List<T> getListByUser(User user);
+
+    /**
+     * Get specified workgroup id. Fetch all fields is specified
+     * @param workgroupId
+     * @param doEagerFetch true if we should fetch all fields eagerly
+     * @return
+     */
+	public Workgroup getById(Long workgroupId, boolean doEagerFetch);
 
 }

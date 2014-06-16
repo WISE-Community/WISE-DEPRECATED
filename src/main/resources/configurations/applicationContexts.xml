@@ -46,6 +46,7 @@
         class="org.springframework.security.web.FilterChainProxy">
         <sec:filter-chain-map path-type="ant">        
      		<sec:filter-chain pattern="/**" filters="
+     		    openSessionInViewFilter,
      			charsetFilter,
      			httpSessionContextIntegrationFilter,
      			logoutFilter,
@@ -53,19 +54,9 @@
      			anonymousProcessingFilter,
      			exceptionTranslationFilter,
      			filterInvocationInterceptor,
-     			switchUserProcessingFilter,
-     			openSessionInViewFilter" />
+     			switchUserProcessingFilter
+     			" />
   			</sec:filter-chain-map>
-  			
-  			<!--        
-        <property name="filterInvocationDefinitionSource">
-            <value>
-                CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
-                PATTERN_TYPE_APACHE_ANT
-                /**=charsetFilter,httpSessionContextIntegrationFilter,logoutFilter,authenticationProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor,switchUserProcessingFilter,openSessionInViewFilter
-            </value>
-        </property>
-        -->
     </bean>
 
     <bean id="openSessionInViewInterceptor"

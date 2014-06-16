@@ -50,7 +50,6 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.status.StudentStatus;
@@ -67,9 +66,6 @@ public class WISEWebSocketServlet extends WebSocketServlet {
     
     //the run service
     private static RunService runService = null;
-    
-    //the user service
-    private static UserService userService = null;
     
     //the workgroup service
     private static WorkgroupService workgroupService = null;
@@ -99,7 +95,6 @@ public class WISEWebSocketServlet extends WebSocketServlet {
     		
     		//get the services
     		runService = (RunService) ctx.getBean("runService");
-    		userService = (UserService) ctx.getBean("userService");
     		workgroupService = (WorkgroupService) ctx.getBean("wiseWorkgroupService");
     		vleService = (VLEService) ctx.getBean("vleService");
     		wiseProperties = (Properties) ctx.getBean("wiseProperties");
@@ -622,65 +617,24 @@ public class WISEWebSocketServlet extends WebSocketServlet {
 	 * and workgroup id
 	 */
 	private boolean validateStudent(User user, Long runId, Long periodId, Long workgroupId) {
-		boolean validated = false;
-		
+
 		if(user != null && runId != null && periodId != null && workgroupId != null) {
-			//get the list of runs this user is in
-			List<Run> runList = runService.getRunList(user);
-			
-			if(runList != null) {
-				Iterator<Run> runListIter = runList.iterator();
-				
-				//loop through all the runs this user is in
-				while(runListIter.hasNext()) {
-					//get a run
-					Run tempRun = runListIter.next();
-					
-					//get the run id
-					Long tempRunId = tempRun.getId();
-					
-					//check if the run id matches the one we are searching for
-					if(runId.equals(tempRunId)) {
-						//we have found the matching run id
-						
-						//get the period of the student for this run
-						Group periodOfStudent = tempRun.getPeriodOfStudent(user);
-						
-						//get the period id
-						Long tempPeriodId = periodOfStudent.getId();
-
-						//check if the period id matches the one we are searching for
-						if(periodId.equals(tempPeriodId)) {
-							//we have found the matching period id
-							
-							//get the workgroups the user is in for the run
-							List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(tempRun, user);
-							
-							if(workgroupListByOfferingAndUser != null) {
-								Iterator<Workgroup> workgroupsIter = workgroupListByOfferingAndUser.iterator();
-
-								//loop through all the workgroups the user is in for the run
-								while(workgroupsIter.hasNext()) {
-									//get a workgroup
-									Workgroup workgroup = workgroupsIter.next();
-									
-									//get the workgroup id
-									Long tempWorkgroupId = workgroup.getId();
-
-									//check if the workgroup id matches the one we are searching for
-									if(workgroupId.equals(tempWorkgroupId)) {
-										//we have found the matching workgroup id
-										return true;
-									}
-								}
-							}
-						}
-					}
+			try {
+				// Eager-fetch all fields of Run and Workgroup objects
+				// because Websocket is not part of HttpServlet and Hibernate's
+				// OpenSessionInViewFilter does not apply.
+				boolean doEagerFetch = true;   
+				Run run = runService.retrieveById(runId, doEagerFetch);
+				if (run.isStudentAssociatedToThisRun(user)) {
+					Workgroup workgroup = workgroupService.retrieveById(workgroupId, doEagerFetch);
+					return workgroup.getMembers().contains(user);
 				}
+			} catch (Exception e) {
+				return false;
 			}
 		}
 		
-		return validated;
+		return false;
 	}
 	
 	/**

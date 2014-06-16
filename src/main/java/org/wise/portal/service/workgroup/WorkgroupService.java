@@ -20,7 +20,6 @@ package org.wise.portal.service.workgroup;
 import java.util.List;
 import java.util.Set;
 
-
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.run.Offering;
@@ -156,7 +155,21 @@ public interface WorkgroupService {
      *     be used to find an existing workgroup
      */
     public Workgroup retrieveById(Long workgroupId) throws ObjectNotFoundException;
-
+    
+    /**
+     * Retrieves the Workgroup domain object using unique workgroupId
+     * 
+     * @param workgroupId
+     *     <code>Long</code> workgroupId to use for lookup
+     * @param doEagerFetch
+     *     <code>boolean</code> fetch all fields eagerly, same as EAGER-load
+     *     
+     * @return <code>Workgroup</code> 
+     *     the Workgroup object with the workgroupId
+     * @throws <code>ObjectNotFoundException</code> when workgroupId cannot
+     *     be used to find an existing workgroup
+     */
+    public Workgroup retrieveById(Long workgroupId, boolean doEagerFetch);
 
     /**
      * Updates the Workgroups by modifying its members
