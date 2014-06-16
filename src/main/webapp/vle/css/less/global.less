@@ -1,0 +1,347 @@
+// NOTE: This file should be compiled to vle/css/global.css
+
+// Import Bootstrap styles
+@import "bootstrap-custom.less";
+
+// Import header and footer styles
+@import "header.less";
+@import "footer.less";
+
+// TODO: make semantic :)
+
+/*--------------------------------------------------
+Global Styles for the WISE VLE
+--------------------------------------------------*/
+
+
+/* Content headers */
+
+.panel-header {
+	font-size: 1.25em;
+	margin: 0 0 0.5em;
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid #aaa;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+	color: @brand-danger;
+}
+
+
+/* Main content */
+
+.content {
+	padding: 15px;
+	width: 100%;
+}
+
+
+/* Layout & navigation elements */
+
+.top-nav {
+	border-bottom: 4px solid @brand-warning;
+	.navbar-brand {
+		background-image: url('../../images/logo/WISE-logo-icon-flat.svg');
+		background-repeat: no-repeat;
+		background-position: left center;
+		padding-left: 46px;
+		-webkit-background-size: 40px;
+		-o-background-size: 40px;
+		-moz-background-size: 40px;
+		background-size: 40px;
+		margin-left: 5px;
+		font-family: @headings-font-family;
+	}
+	
+	.navbar-right {
+		padding-right: 5px;
+	}
+	
+	.navbar-collapse {
+		&.in {
+			padding: 0;
+			.navbar-nav {
+				margin: 5.5px 0;
+			}
+		}
+	}
+}
+
+.navbar-toggle {
+	margin-right: 5px;
+}
+
+.navbar-collapse {
+	max-height: none;
+}
+
+.no-padding {
+	padding: 0;
+}
+
+.no-margin {
+	margin: 0;
+}
+
+/* Dividers */
+
+.divider, .dropdown-menu .divider {
+	height: 1px;
+	margin: 8px 0;
+	overflow: hidden;
+	background-color: #eee;
+	background-color: rgba(0,0,0,.1);
+}
+
+.sortable-placeholder {
+	background-color: #eee;
+	background-color: rgba(0,0,0,.1);
+}
+
+/* Links, buttons, & inputs */
+
+a {
+	cursor: pointer;
+	
+	.help, .info {
+		color: inherit;
+	}
+}
+
+a, button {
+	.transition(all 200ms ease-in-out);
+}
+
+button {
+	//.btn;
+	//.btn-default;
+	
+	&.multiselect {
+		overflow: hidden;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    //width: 100%;
+	}
+}
+
+/* Tables */
+
+.table > thead > tr > th {
+	vertical-align: middle;
+}
+
+/* Content elements */
+
+.menu {
+	&.panel-body {
+		padding: 5px;
+	}
+}
+
+.label {
+	padding-top: .3em;
+}
+
+.btn {
+	display: inline-block;
+	.fa {
+		padding: 0 5px;
+		text-align: center;
+	}
+	.btn-text {
+		display: none;
+	}
+}
+
+@media (min-width: @screen-sm-min) { // TODO: update to take sidebar width into account
+	.btn {
+		.fa {
+			padding: 0;
+			margin-right: 5px;
+		}
+		.btn-text {
+			display: inline-block;
+		}
+	}
+}
+
+.project-thumb {
+    height: 70px;
+    width: 70px;
+    border: 1px solid #ddd;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+	.small {
+		margin: 0 .5em;
+	}
+}
+
+.navbar-inverse {
+	.small {
+		color: #ccc;
+	}
+}
+
+/*.overlay {
+	.transition(all 250ms);
+	background-color: #000;
+	visibility: visible;
+	.opacity(.6);
+	
+	&.hidden {
+		.opacity(0);
+		visibility: hidden;
+	}
+}*/
+
+/* Modals */
+
+.bootbox {
+	&.modal-lg, &.modal-sm {
+		width: auto;
+	}
+}
+
+.modal-lg {
+	@media (min-width: @screen-md-min) {
+		.modal-dialog { width: @modal-lg; }
+	}
+}
+
+.modal-sm {
+	@media (min-width: @screen-sm-min) {
+		.modal-dialog { width: @modal-sm; }
+	}
+}
+
+.page-width {
+	.modal-dialog {
+		@media (min-width: @screen-sm-min) {
+			width: 90%;
+			max-width: @screen-md-min;
+		}
+	}
+}
+
+/* Forms */
+
+form {
+	// inspired by semantic-ui (http://semantic-ui.com/modules/form.html)
+	.two-fields {
+		.row;
+		.field {
+			.make-sm-column(6);
+		}
+	}
+}
+
+.dropdown-menu {
+	form {
+		padding: @padding-base-vertical;
+	}
+}
+
+//.form-group {
+	//&:last-child {
+		//margin-bottom: 0;
+	//}
+//}
+
+.form-inline {
+	.form-group {
+		//margin-right: 5px;
+		margin-bottom: 5px;
+		
+		/*select {
+			&.form-control {
+				margin-bottom: 5px;
+			}
+		}*/
+	}
+}
+
+.form-header {
+	border-bottom: 1px solid;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+}
+
+.panel-info {
+	.form-header {
+		color: @brand-info;
+	}
+}
+
+.panel-warning {
+	.form-header {
+		color: @brand-warning;
+	}
+}
+
+.panel-danger {
+	.form-header {
+		color: @brand-danger;
+	}
+}
+
+.panel-success {
+	.form-header {
+		color: @brand-success;
+	}
+}
+
+.panel-primary {
+	.form-header {
+		color: @brand-primary;
+	}
+}
+
+/* Callouts */
+
+.bs-callout-primary {
+    .bs-callout(@brand-primary, lighten(@brand-primary, 55%));
+}
+
+.bs-callout-danger {
+    .bs-callout(@brand-danger);
+}
+
+.bs-callout-warning {
+    .bs-callout(@brand-warning);
+}
+
+.bs-callout-info {
+    .bs-callout(@brand-info, lighten(@brand-info, 55%));
+}
+
+.bs-callout-success {
+    .bs-callout(@brand-success, lighten(@brand-success, 40%));
+}
+
+/* TinyMCE */
+
+div.mce-edit-area {
+	padding: 4px 6px;
+}
+
+/* DataTables */
+
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc,
+table.dataTable thead .sorting_asc_disabled,
+table.dataTable thead .sorting_desc_disabled {
+	cursor: pointer;
+	padding-left: 12px;
+	padding-right: 18px;
+	color: @brand-primary;
+}
+
+.dataTable {
+	td, th {
+		.progress {
+			margin-bottom: 0;
+			border: 1px solid @gray-lighter;
+		}
+	}
+}
