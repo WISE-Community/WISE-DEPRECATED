@@ -665,4 +665,18 @@ public class DailyAdminJob {
 	public void setcRaterRequestDao(CRaterRequestDao<CRaterRequest> cRaterRequestDao) {
 		this.cRaterRequestDao = cRaterRequestDao;
 	}
+	
+	/**
+	 * @param yesterday the yesterday to set
+	 */
+	public void setYesterday(Date yesterday) {
+		this.yesterday = yesterday;
+	}
+
+	/**
+	 * @param today the today to set
+	 */
+	public void setToday(Date today) {
+		this.today = today;
+	}
 }

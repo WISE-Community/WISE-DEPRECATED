@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.user.UserDao;
-import org.wise.portal.domain.admin.AdminJob;
+import org.wise.portal.domain.admin.DailyAdminJob;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.run.Run;
@@ -125,7 +125,7 @@ public class ViewAllUsersController extends AbstractController{
 			modelAndView.addObject(LOGGED_IN_STUDENT_USERNAMES, loggedInStudent);
 			modelAndView.addObject(LOGGED_IN_TEACHER_USERNAMES, loggedInTeacher);
 		} else if (onlyShowUsersWhoLoggedIn != null) {
-			AdminJob adminJob = (AdminJob) this.getApplicationContext().getBean("adminjob");
+			DailyAdminJob adminJob = (DailyAdminJob) this.getApplicationContext().getBean("dailyAdminJob");
 			adminJob.setUserDao((UserDao<User>) this.getApplicationContext().getBean("userDao"));
 			Date dateMin = null, dateMax = null;
 			Calendar now = Calendar.getInstance();
