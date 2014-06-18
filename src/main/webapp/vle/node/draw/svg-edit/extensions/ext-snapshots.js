@@ -14,9 +14,9 @@
  * Dependencies:
  * - Accompanying css file ('ext-snapshots.css' should be included in svg-editor.html <head>)
  * - jQuery Timers (http://plugins.jquery.com/project/timers) plugin (should be included in svg-editor.html <head>)
- * - jQuery UI with dialogs and sliders plus accompanying css
+ * - jQuery UI with sliders plus accompanying css
  * 
- * TODO: i18n; fix toggle link placement
+ * TODO: i18n; fix toggle link placement; add css and js automatically, convert to Bootbox for dialogs
  */
 
 svgEditor.addExtension("Snapshots", function(S) {
@@ -46,11 +46,11 @@ svgEditor.addExtension("Snapshots", function(S) {
 		/** 
 		 * Gets or sets the stored snapshots content and updates the UI display
 		 * 
-		 * @param val Array of snapshot objects
+		 * @param val Array of Snapshot objects
 		 * @param idToOpen Integer id of snapshot to open after snapshots have loaded (optional)
 		 * @param total Integer total number of snapshots created (optional)
 		 * @param callback Function to run when content has been set and snapshots have been created (optional)
-		 * @returns Array of snapshot objects
+		 * @returns Array of Snapshot objects
 		 * @returns Object this
 		 */
 		content: function(val, idToOpen, total, callback){
@@ -414,6 +414,8 @@ svgEditor.addExtension("Snapshots", function(S) {
 	
 	function checkMax() {
 		if(content.length >= max) {
+			//var maxText = 'Sorry! You are only allowed ' + max + ' frames.\n\nIf you want to create another one, please delete one of your current frames by clicking on the "X" in the upper right corner of the snapshot you want to delete. Thank you!';
+			//$.alert(maxText);
 			$('#snapnumber_dialog').dialog('open');
 			return;
 		}
@@ -521,6 +523,32 @@ svgEditor.addExtension("Snapshots", function(S) {
 		var i = $("#snap_images .snap_delete").index(item);
 		selected = i;
 		$("#deletesnap_dialog").dialog('open');
+		/*var deleteText = '*Warning! This operation is permanent.*\n\nAre you sure you want to delete this frame for good?';
+		$.confirm(deleteText, function(ok) {
+			if (!ok) {return;}
+			// process delete request
+    		var index = selected;
+    		if ($("#snap_images .snap:eq(" + selected + ")").hasClass("hover")) {
+				selected = -1;
+			}
+			content.splice(index,1);
+			$("#snap_images .snap:eq(" + index + ")").fadeOut(1000, function(){
+				$(this).remove();
+				snapCheck();
+				updateNumbers();
+				if (min > -1 && selected < 0 && content.length > 0){
+					if(content.length > 1){
+						var i = index > 0 ? index-1 : 0;
+						openSnapshot(i,false);
+					} else {
+						openSnapshot(0,false);
+					}
+				} else {
+					opened = -1;
+					api.changed(); // call content changed listener
+				}
+			});
+		});*/
 	}
 
 	function snapClick(item){

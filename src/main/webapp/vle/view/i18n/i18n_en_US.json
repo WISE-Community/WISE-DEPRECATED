@@ -51,6 +51,18 @@
 		"value":"Full Screen",
 		"description":"Text on the Toggle Navigation button when navigation UI is on (visible)"
 	},
+	"menu_teacherHome":{
+		"value":"Teacher Home",
+		"description":"Text for link teacher home page"
+	},
+	"menu_projectLibrary":{
+		"value":"Project Library",
+		"description":"Text for link to project library"
+	},
+	"menu_signOut":{
+		"value":"Sign Out",
+		"description":"Text for link to sign out"
+	},
 	"toggle_nav_button_title":{
 		"value":"Full Screen Mode (Hide Navigation Menu)",
 		"description":"Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
@@ -210,6 +222,22 @@
 	"ok":{
 		"value":"OK",
 		"description":"Text 'OK'"
+	},
+	"on":{
+		"value":"on",
+		"description":"Text for the word 'on' (uppercase)"
+	},
+	"off":{
+		"value":"off",
+		"description":"Text for the word 'off' (uppercase)"
+	},
+	"ON":{
+		"value":"ON",
+		"description":"Text for the word 'ON' (uppercase)"
+	},
+	"OFF":{
+		"value":"OFF",
+		"description":"Text for the word 'OFF' (uppercase)"
 	},
 	"done":{
 		"value":"Done",
@@ -990,5 +1018,333 @@
 	"constraint_message_xMustHaveStatusY": {
 		"value":"The following must have '{0}' set to '{1}' before you can view this item:",
 		"description":"The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the selected step"
+	},
+	"session_timeout_warning":{
+		"value":"You have been inactive for a long time. If you do not renew your session now, you will be logged out of WISE.",
+		"description":"Warning text to display to users in the session timeout alert."
+	},
+	"session_timeout_confirm":{
+		"value":"STAY LOGGED IN!",
+		"description":"Text to display on button in the session timeout alert that users can press to renew session."
+	},
+	"session_timeout_message":{
+		"value":"You have been inactive for too long and have been logged out. Please log back in to continue.",
+		"description":"Text to display to display to users when there session timed out and they have been logged out of WISE."
+	},
+	"session_timeout_title":{
+		"value":"Session Timeout",
+		"description":"Title text for the session timeout alert."
+	},
+	"classroomMonitor_title":{
+		"value":"Run Manager",
+		"description":"Title for the classroom monitor"
+	},
+	"classroomMonitor_run":{
+		"value":"Run: {0}",
+		"description":"Text displaying the ID of the current run in the classroom monitor ({0} will be replaced by ID number)"
+	},
+	"classroomMonitor_search":{
+		"value":"Search",
+		"description":"Placeholder text for search inputs in the classroom monitor"
+	},
+	"classroomMonitor_save":{
+		"value":"Save Changes",
+		"description":"Text for save button in classroom monitor"
+	},
+	"classroomMonitor_viewProject":{
+		"value":"View Project",
+		"description":"Text for link to preview project in classroom monitor"
+	},
+	"classroomMonitor_workgroupsOnline":{
+		"value":"Workgroups Online: {0}",
+		"description":"Text displaying number of workgroups currently online ({0} will be replaced with actual number)"
+	},
+	"classroomMonitor_progress":{
+		"value":"Progress",
+		"description":"Text for step progress link in classroom monitor"
+	},
+	"classroomMonitor_monitor":{
+		"value":"Monitor",
+		"description":"Text for student progress link in classroom monitor"
+	},
+	"classroomMonitor_studentProgress_title":{
+		"value":"Student Monitor",
+		"description":"Title text for student progress link and section in classroom monitor"
+	},
+	"classroomMonitor_stepProgress_title":{
+		"value":"Step Progress",
+		"description":"Title text for step progress link and section in classroom monitor"
+	},
+	"classroomMonitor_gradebook":{
+		"value":"Gradebook",
+		"description":"Text for grade book link in classroom monitor"
+	},
+	"classroomMonitor_gradebook_title":{
+		"value":"Student Grade Book",
+		"description":"Title text for grade book link in classroom monitor"
+	},
+	"classroomMonitor_manage":{
+		"value":"Manage",
+		"description":"Text for manage students link in classroom monitor"
+	},
+	"classroomMonitor_manage_title":{
+		"value":"Manage Students",
+		"description":"Title text for manage students link in classroom monitor"
+	},
+	"classroomMonitor_tools":{
+		"value":"Tools",
+		"description":"Text for tools button in classroom monitor"
+	},
+	"classroomMonitor_announcements":{
+		"value":"Announcements",
+		"description":"Text for announcements link in classroom monitor"
+	},
+	"classroomMonitor_notes":{
+		"value":"My Notes",
+		"description":"Text for run notes link in classroom monitor"
+	},
+	"classroomMonitor_exportWork":{
+		"value":"Export Work",
+		"description":"Text for export work link in classroom monitor"
+	},
+	"classroomMonitor_runSettings":{
+		"value":"Run Settings",
+		"description":"Text for run settings link in classroom monitor"
+	},
+	"classroomMonitor_allPeriods":{
+		"value":"All Periods",
+		"description":"Text for select all periods option in a period select dropdown in the classroom monitor"
+	},
+	"classroomMonitor_periodLabel":{
+		"value":"Period {0}",
+		"description":"Text for period options ({0} will be replaced by period name) in a select dropdown in the classroom monitor"
+	},
+	"classroomMonitor_pause":{
+		"value":"Screens",
+		"description":"Text for pause screens tool button in classroom monitor (will be preceded by 'pause' icon)"
+	},
+	"classroomMonitor_pause_on":{
+		"value":"Screens: ON",
+		"description":"Text for pause screens tool button (when pause is on) in classroom monitor (will be preceded by 'pause' icon)"
+	},
+	"classroomMonitor_pause_off":{
+		"value":"Screens: OFF",
+		"description":"Text for pause screens tool button (when pause is off) in classroom monitor (will be preceded by 'pause' icon)"
+	},
+	"classroomMonitor_pause_title":{
+		"value":"Pause Student Screens",
+		"description":"Title text for pause screens tool button in classroom monitor"
+	},
+	"classroomMonitor_pause_selectPeriods":{
+		"value":"Select Period(s)",
+		"description":"Label text for pause screens select period control in classroom monitor"
+	},
+	"classroomMonitor_pause_message_label":{
+		"value":"Message to display:",
+		"description":"Label text for pause screens message to show students input field in classroom monitor"
+	},
+	"classroomMonitor_pause_message_default":{
+		"value":"Your teacher has paused your screen.",
+		"description":"Default message to show students when teacher pauses their screens using the classroom monitor"
+	},
+	"classroomMonitor_pause_noneSelected":{
+		"value":"None Selected",
+		"description":"Text to show when no periods are selected in the pause screens tool the classroom monitor"
+	},
+	"classroomMonitor_pause_periods":{
+		"value":"periods",
+		"description":"Plural for the word 'periods' (will be preceded by number of select periods in the pause screens tool in the classroom monitor)"
+	},
+	"classroomMonitor_studentProgress_totalCompletion":{
+		"value":"Total Completion:",
+		"description":"Label text for the total student completion display in the classroom monitor"
+	},
+	"classroomMonitor_studentProgress_workgroupOnline":{
+		"value":"Workgroup is online",
+		"description":"Text indicating that workgroup is online in the classroom monitor (only shown to screen readers)"
+	},
+	"classroomMonitor_studentProgress_workgroupOffline":{
+		"value":"Workgroup is offline",
+		"description":"Text indicating that workgroup is offline in the classroom monitor (only shown to screen readers)"
+	},
+	"classroomMonitor_studentProgress_viewStudentWork":{
+		"value":"View Student Work",
+		"description":"Title text to show on links to view student work in the classroom monitor"
+	},
+	"classroomMonitor_studentProgress_headers_online":{
+		"value":"Online",
+		"description":"Header text for the table column showing whether workgroup is online in the student progress table of classroom monitor"
+	},
+	"classroomMonitor_studentProgress_headers_period":{
+		"value":"Period",
+		"description":"Header text for the period table column in the student progress table of classroom monitor"
+	},
+	"classroomMonitor_studentProgress_headers_workgroup":{
+		"value":"Workgroup",
+		"description":"Header text for the workgroup column in the student progress table of classroom monitor"
+	},
+	"classroomMonitor_studentProgress_headers_currentStep":{
+		"value":"Latest Step",
+		"description":"Header text for the column showing current step a workgroup is on in the student progress table of classroom monitor"
+	},
+	"classroomMonitor_studentProgress_headers_timeSpent":{
+		"value":"Time Spent",
+		"description":"Header text for the column showing time spent on the current step in the student progress table of classroom monitor"
+	},
+	"classroomMonitor_studentProgress_headers_projectCompletion":{
+		"value":"Project Completion",
+		"description":"Header text for the project completion column in the student progress table of classroom monitor"
+	},
+	"classroomMonitor_stepProgress_headers_nodeTitle":{
+		"value":"Title",
+		"description":"Header text for the step title column in the step progress table of classroom monitor"
+	},
+	"classroomMonitor_stepProgress_headers_studentsOnStep":{
+		"value":"On Step",
+		"description":"Header text for the column column showing current number of students in the step progress table of classroom monitor"
+	},
+	"classroomMonitor_stepProgress_headers_stepCompletion":{
+		"value":"Step Completion",
+		"description":"Header text for the step completion column in the step progress table of classroom monitor"
+	},
+	"classroomMonitor_stepProgress_title":{
+		"value":"Step Progress",
+		"description":"Title text for step progress link and section in classroom monitor"
+	},
+	"classroomMonitor_stepProgress_totalCompletion":{
+		"value":"Total Completion:",
+		"description":"Label text for the total step completion display in the classroom monitor"
+	},
+	"classroomMonitor_stepProgress_completionUnavaiable":{
+		"value":"<p><b>Step completion is unavailable because either:</b><ol><li>None of your students have run the project; or</li><li>This is a legacy run that was started before WISE enabled step progress monitoring</li></ol>",
+		"description":"Tooltip text to show when step completion percentage is not available for a step that can't be graded in the classroom monitor"
+	},
+	"classroomMonitor_stepProgress_completionUnavaiable_gradable":{
+		"value":"<p><b>Step completion is unavailable because either:</b><ol><li>None of your students have run the project; or</li><li>This is a legacy run that was started before WISE enabled step progress monitoring</li></ol>You can still view student work by selecting the step title.",
+		"description":"Tooltip text to show when step completion percentage is not available for a step that can be graded in the classroom monitor"
+	},
+	"classroomMonitor_stepProgress_viewStepWork":{
+		"value":"View Step Work",
+		"description":"Title text to show on links to view step work in the classroom monitor"
+	},
+	"classroomMonitor_tableInfoText":{
+		"value":"{0} entries",
+		"description":"Text for the information display at the bottom of classroom monitor tables ({0} will be replaced with number of items currently being shown)"
+	},
+	"classroomMonitor_grading_search":{
+		"value":"Search Student Work",
+		"description":"Placeholder text for the search input in grade by step and grade by student tables of classroom monitor"
+	},
+	"classroomMonitor_grading_noResponse":{
+		"value":"Team has not submitted any work for this step.",
+		"description":"Text to display when workgroup has not submitted any work for a step in the grading view of the classroom monitor"
+	},
+	"classroomMonitor_grading_latestWork":{
+		"value":"Latest Response:",
+		"description":"Header text for student work that is the most recent revision in the classroom monitor"
+	},
+	"classroomMonitor_grading_workRevision":{
+		"value":"Revision #{0}:",
+		"description":"Header text for student work that is not that most recent revision in the classroom monitor ({0} will be replaced with revision number)"
+	},
+	"classroomMonitor_grading_flag":{
+		"value":"Flag:",
+		"description":"Label for flag checkboxes in grading views of classroom monitor"
+	},
+	"classroomMonitor_grading_teacherComment":{
+		"value":"Comment:",
+		"description":"Label for teacher comment inputs in grading views of classroom monitor"
+	},
+	"classroomMonitor_grading_teacherScore":{
+		"value":"Score:",
+		"description":"Label for teacher score inputs in grading views of classroom monitor"
+	},
+	"classroomMonitor_grading_addPremadeComments":{
+		"value":"+ Premade Comments",
+		"description":"Text for link to add premade comments to teacher feedback inputs in grading views of classroom monitor"
+	},
+	"classroomMonitor_grading_revisionsCount":{
+		"value":"{0} revisions",
+		"description":"Text for the number of revisions in the grade by student and grade by step tables of classroom monitor ({0} will be replaced with number of student work submissions for a step)"
+	},
+	"classroomMonitor_grading_revisionDate":{
+		"value":"Submitted: {0}",
+		"description":"Text for student work timestamp displays in grading views of classroom monitor ({0} will be replaced by date/time)"
+	},
+	"classroomMonitor_grading_lastAnnotation":{
+		"value":"Last feedback: {0}",
+		"description":"Text for the latest teacher feedback (grade or comment) timestamp display in grading views of classroom monitor ({0} will be replaced by date/time)"
+	},
+	"classroomMonitor_grading_lastAnnotation_none":{
+		"value":"Last feedback: N/A",
+		"description":"Text for when there is no feedback (grade or comment) in grading views of classroom monitor"
+	},
+	"classroomMonitor_grading_flagOnly":{
+		"value":"Flagged Items Only",
+		"description":"Text for option to only display flagged items in grading views of classroom monitor"
+	},
+	"classroomMonitor_grading_itemsToReview":{
+		"value":"Items to review: {0}",
+		"description":"Text for display showing number of new student work items to review in grading views of classroom monitor ({0} will be replaced with number of new items)"
+	},
+	"classroomMonitor_grading_options_select":{
+		"value":"Select",
+		"description":"Text for grading display options dropdown when no options are selected in classroom monitor"
+	},
+	"classroomMonitor_grading_options_label":{
+		"value":"Display Options:",
+		"description":"Label text for grading display options dropdown in classroom monitor"
+	},
+	"classroomMonitor_grading_invalidScore":{
+		"value":"{0} is an invalid score.  Please try again.",
+		"description":"Text to display when user tries to enter an invalid score in grading views of the  classroom monitor ({0} will be replaced with the user's input)"
+	},
+	"classroomMonitor_gradeByStudent_title":{
+		"value":"Grade By Team",
+		"description":"Title text for grade by student section in classroom monitor"
+	},
+	"classroomMonitor_gradeByStudent_headers_studentWork":{
+		"value":"Step",
+		"description":"Header text for the student work column in the grade by student table of classroom monitor"
+	},
+	"classroomMonitor_gradeByStudent_headers_score":{
+		"value":"Score",
+		"description":"Header text for the score column in the grade by student table of classroom monitor"
+	},
+	"classroomMonitor_gradeByStudent_headers_feedback":{
+		"value":"Score & Feedback",
+		"description":"Header text for the teacher feedback column in the grade by student table of classroom monitor"
+	},
+	"classroomMonitor_gradeByStep_title":{
+		"value":"Grade By Step",
+		"description":"Title text for grade by step section in classroom monitor"
+	},
+	"classroomMonitor_gradeByStep_headers_studentWork":{
+		"value":"Team",
+		"description":"Header text for the student work column in the grade by step table of classroom monitor"
+	},
+	"classroomMonitor_gradeByStep_headers_score":{
+		"value":"Score",
+		"description":"Header text for the score column in the grade by step table of classroom monitor"
+	},
+	"classroomMonitor_gradeByStep_headers_feedback":{
+		"value":"Score & Feedback",
+		"description":"Header text for the teacher feedback column in the grade by step table of classroom monitor"
+	},
+	"classroomMonitor_hidePersonalInfo":{
+		"value":"Hide Personal Info",
+		"description":"Text for option to hide personal info in classroom monitor"
+	},
+	"classroomMonitor_newItemsOnly":{
+		"value":"New Work Only",
+		"description":"Text for option to only show new work in classroom monitor"
+	},
+	"classroomMonitor_saveConfirmation":{
+		"value":"Changes saved!",
+		"description":"Notification to display when teacher changes (scores, feedback, etc.) have been saved in the classroom monitor"
+	},
+	"classroomMonitor_saving":{
+		"value":"Saving changes...",
+		"description":"Notification to display when saving changes (scores, feedback, etc.) in the classroom monitor"
 	}
 }

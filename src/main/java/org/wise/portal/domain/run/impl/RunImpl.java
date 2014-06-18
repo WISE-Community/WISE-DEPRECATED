@@ -169,16 +169,16 @@ public class RunImpl extends OfferingImpl implements Run {
     @Column(name = RunImpl.COLUMN_NAME_ARCHIVE_REMINDER_TIME, nullable = false)
     private Date archiveReminderTime;
 
-	@OneToMany(targetEntity = PersistentGroup.class, fetch = FetchType.EAGER)
+	@OneToMany(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
     @JoinTable(name = PERIODS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = PERIODS_JOIN_COLUMN_NAME, nullable = false))
     @Sort(type = SortType.NATURAL)
     private Set<Group> periods = new TreeSet<Group>();
     
-    @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
     @JoinTable(name = OWNERS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name =  RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = OWNERS_JOIN_COLUMN_NAME, nullable = false))
     private Set<User> owners = new TreeSet<User>();
     
-    @ManyToOne(targetEntity = ProjectImpl.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = ProjectImpl.class, fetch = FetchType.LAZY)
     @JoinColumn(name = PROJECTS_JOIN_COLUMN_NAME, nullable = false, unique = false)
     private Project project;
     
@@ -362,7 +362,7 @@ public class RunImpl extends OfferingImpl implements Run {
 	}
 
 	/**
-	 * @see org.telscenter.sail.webapp.domain.Run#setSharedOwners(Set<User>)
+	 * @see org.wise.portal.domain.Run#setSharedOwners(Set<User>)
 	 */
 	public void setSharedowners(Set<User> sharedOwners) {
 		this.sharedowners = sharedOwners;		

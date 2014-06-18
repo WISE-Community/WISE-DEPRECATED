@@ -96,7 +96,7 @@
 		"description":"Feedback showing users the auto score resulting from their submission"
 	},
 	"autoGrade_complete": {
-		"value":"Good Job!\n\nYou have used up all your chances to submit.\n\nYou can continue to edit your drawing if you need to.",
+		"value":"Good Job!\n\nYou have used up all your chances to submit.\n\nYou can continue to edit your work if you need to.",
 		"description":"Confirmation message alerting users that they have used all of their auto score submissions"
 	},
 	"autoGrade_submissionComplete": {
@@ -350,5 +350,9 @@
 	"annotator_colors_yellow":{
 		"value":"Yellow",
 		"description":"Text for the color 'Yellow')"
+	},
+	"annotator_grading_header":{
+		"value":"Student Work for Step {0}: ",
+		"description":"Header text for the annotator grading view"
 	}
 }

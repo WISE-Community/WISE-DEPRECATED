@@ -29,12 +29,6 @@
 		<property name="hibernate.connection.release_mode">after_statement</property>
 		<property name="hibernate.auto_close_session">true</property>
 		<property name="hibernate.flush_before_completion">true</property>
-		<property name="hibernate.c3p0_acquire_increment">1</property>
-		<property name="hibernate.c3p0_idle_test_period">100</property>          <!-- seconds -->
-		<property name="hibernate.c3p0_max_size">100</property>
-		<property name="hibernate.c3p0_max_statements">0</property>
-		<property name="hibernate.c3p0_min_size">10</property>
-		<property name="hibernate.c3p0_timeout">100</property><!-- seconds -->
 		<property name="hibernate.hbm2ddl.auto">validate</property>
 
         <!-- Enable Hibernate's automatic session context management -->

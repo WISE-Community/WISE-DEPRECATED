@@ -88,7 +88,7 @@ public class RegisterTeacherController extends SimpleFormController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("schoollevels", Schoollevel.values());
 		model.put("curriculumsubjects",Curriculumsubjects.values());
-		model.put("languages", new String[]{"en", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
+		model.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
 		return model;
 	}
 	
@@ -138,6 +138,7 @@ public class RegisterTeacherController extends SimpleFormController {
 					return showForm(request, response, errors);
 				}
 			} else {
+				// we're updating an existing teacher's account
 				User user = userService.retrieveUserByUsername(userDetails.getUsername());
 				
 				TeacherUserDetails teacherUserDetails = (TeacherUserDetails) user.getUserDetails();
@@ -152,7 +153,14 @@ public class RegisterTeacherController extends SimpleFormController {
 				teacherUserDetails.setEmailValid(true);
 				teacherUserDetails.setLanguage(userDetails.getLanguage());
 		        String userLanguage = userDetails.getLanguage();
-				Locale locale = new Locale(userLanguage);
+		        Locale locale = null;
+		        if (userLanguage.contains("_")) {
+	        		String language = userLanguage.substring(0, userLanguage.indexOf("_"));
+	        		String country = userLanguage.substring(userLanguage.indexOf("_")+1);
+	            	locale = new Locale(language, country); 	
+	        	} else {
+	        		locale = new Locale(userLanguage);
+	        	}
 		        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
 
 	
@@ -230,6 +238,16 @@ public class RegisterTeacherController extends SimpleFormController {
 			String gettingStartedUrl = wiseBaseURL + "/pages/gettingstarted.html";
 			String defaultBody = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, Locale.US);
 			String message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, defaultBody, this.locale);
+
+			if (wiseProperties.containsKey("discourse_url")) {
+				String discourseURL = wiseProperties.getProperty("discourse_url");
+				if (discourseURL != null && !discourseURL.isEmpty()) {
+					// if this WISE instance uses discourse for teacher community, append link to it in the P.S. section of the email
+					String defaultPS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, Locale.US);
+					String pS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, defaultPS, this.locale);
+					message += "\n\n"+pS;
+				}
+			}
 			String fromEmail = wiseProperties.getProperty("portalemailaddress");
 
 			try {

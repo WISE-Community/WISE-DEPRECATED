@@ -498,6 +498,40 @@ SVGDrawNode.prototype.getCriteriaValue = function() {
 
 };
 
+/**
+ * Get the Base64 image string from the student work
+ * @param nodeState the student work
+ * @return the Base64 image string of the student work
+ */
+SVGDrawNode.prototype.getBase64Image = function(nodeState) {
+	//get the data from the student work
+	studentWork = nodeState.data;
+	
+	// if the student data has been compressed, decompress it
+	if(typeof studentWork == "string"){
+		if (studentWork.match(/^--lz77--/)) {
+			var lz77 = new LZ77();
+			studentWork = studentWork.replace(/^--lz77--/, "");
+			studentWork = $.parseJSON(lz77.decompress(studentWork));
+		}
+	}
+	
+	//get the svg string from the student work
+	var svgString = studentWork.svgString;
+	
+	// if the svg has been compressed, decompress it
+	if (svgString.match(/^--lz77--/)) {
+		var lz77 = new LZ77();
+		svgString = svgString.replace(/^--lz77--/, "");
+		svgString = lz77.decompress(svgString);
+	}
+	
+	//encode the svg string to Base64
+	var base64Image = 'data:image/svg+xml;base64,' + Utils.encode64(svgString);
+	
+	return base64Image;
+}
+
 NodeFactory.addNode('SVGDrawNode', SVGDrawNode);
 	
 //used to notify scriptloader that this script has finished loading

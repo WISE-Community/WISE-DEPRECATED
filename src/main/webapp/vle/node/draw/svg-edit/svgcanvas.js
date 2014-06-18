@@ -2494,7 +2494,7 @@ var getMouseTarget = this.getMouseTarget = function(evt) {
 	
 	 //TODO(rafaelcastrocouto): User preference for shift key and zoom factor
 	$(container).bind('mousewheel DOMMouseScroll', function(e){
-		if (!e.shiftKey) {return;} // wise4: require shift ket for mouse scroll zoom 
+		if (!e.shiftKey) {return;} // wise4: require shift key for mouse scroll zoom 
 		e.preventDefault();
 		var evt = e.originalEvent;
 

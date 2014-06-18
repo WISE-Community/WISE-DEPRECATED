@@ -163,7 +163,7 @@ public class StudentUserDetails extends PersistentUserDetails implements
 		this.birthday = birthday;
 	}
 	/**
-	 * @see org.telscenter.sail.webapp.domain.authenticationMutableUserDetails.getCoreUsername()
+	 * @see org.wise.portal.domain.authenticationMutableUserDetails.getCoreUsername()
 	 */
 	public String getCoreUsername() {
 		String firstname = getFirstname();
@@ -190,7 +190,7 @@ public class StudentUserDetails extends PersistentUserDetails implements
 		return username;
 	}
 	/**
-	 * @see org.telscenter.sail.webapp.domain.authenticationMutableUserDetails.getUsernameSuffixes()
+	 * @see org.wise.portal.domain.authenticationMutableUserDetails.getUsernameSuffixes()
 	 */
 	public String[] getUsernameSuffixes() {
 		return new String[] {"", "a", "b", "c", "d", "e", "f", "g", "h",
@@ -289,13 +289,13 @@ public class StudentUserDetails extends PersistentUserDetails implements
 		this.lastLoginTime = lastLoginTime;
 	}
 	/**
-	 * @override @see org.telscenter.sail.webapp.domain.authentication.MutableUserDetails#incrementNumberOfLogins()
+	 * @override @see org.wise.portal.domain.authentication.MutableUserDetails#incrementNumberOfLogins()
 	 */
 	public void incrementNumberOfLogins() {
 		this.numberOfLogins++;
 	}
 	/**
-	 * @override @see org.telscenter.sail.webapp.domain.authentication.MutableUserDetails#getInfo()
+	 * @override @see org.wise.portal.domain.authentication.MutableUserDetails#getInfo()
 	 */
 	public HashMap<String, Object> getInfo() {
 		HashMap<String, Object> infoMap = new HashMap<String, Object>();

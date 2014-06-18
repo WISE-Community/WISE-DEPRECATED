@@ -1,70 +1,272 @@
-<html>
-<head>
-<meta http-equiv="X-UA-Compatible" content="chrome=1" /> 
-<title>Classroom Monitor</title>
-<script type='text/javascript' src='events/eventmanager.js'></script>
-<script type="text/javascript" src="util/scriptloader.js"></script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Classroom Monitor</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="css/classroomMonitor/monitor-styles.css">
 
-<script type="text/javascript">
-
-//load the package to graph google charts
-google.load("visualization", "1", {packages:["corechart"]});
-
-function load(getClassroomMonitorConfigUrl) {
-	eventManager.fire('classroomMonitorConfigUrlReceived', [getClassroomMonitorConfigUrl]);
-}
-
-/**
- * Called when the user closes page
- */
-window.onunload=function(){
-	env.onWindowUnload();
-};
-
-/*
- * Loads scripts when body is loaded 
- */
-function loaded(){
-	scriptloader.bootstrap(this, bootstrapListener);
-};
-
-/*
- * Listener that is run when the bootstrap loading is complete.
- * Loads and starts the authoring view.
- */
-function bootstrapListener(type,args,obj){
-	if(args[0]=='bootstrap' || args[0]=='bootstrap_min'){
-		var classroomMonitorListener = function(type,args,obj){
-			//env.startGrading(gradingConfigUrl, runId);
-			window.parent.topiframeOnLoad();
-		};
-
-		eventManager.subscribe('loadingViewComplete', classroomMonitorListener);
-		createEnvironment('env', eventManager);
-		env.startView('classroomMonitor');
-	};
-};
-
-</script>
-
-</head>
-<body onload='loaded()' style='overflow-y:auto;'>
-<div id='topNavigationDiv' style='position:fixed;z-index:2;background:white;width:100%;height:105px;top:0px;left:0px'>
-	<h3 id='classroomMonitorHeader' style='margin:0px;margin-top:10px;margin-left:10px'></h3>
-	<table id='navigationButtonsTable' style='margin-left:5px;width:100%'>
-		<tr>
-			<td style='width:60%'><div id='selectDisplayButtonsDiv'></div></td>
-			<td style='width:39%'><div id='displaySpecificButtonsDiv' style="text-align:right"></div></td>
-			<td style='width:1%'></td>
-		</tr>
-		<tr>
-			<td style='width:60%'><div id='selectPeriodButtonsDiv'></div></td>
-			<td style='width:39%'><div id='saveButtonDiv' style="text-align:right"></div></td>
-			<td style='width:1%'></td>
-		</tr>
-	</table>
-</div>
-<div id='classroomMonitorMainDiv' style='position:relative;top:105px;z-index:1'></div>
-</body>
+        <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
+        
+        <script src="js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    </head>
+	<body>
+		<!--[if lt IE 8]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        
+        <nav id="monitorTopNav" class="top-nav navbar navbar-inverse navbar-fixed-top" role="navigation">
+       		<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<span class="navbar-brand"><span id="runTitle"></span><span id="runId" class="small"></span></span>
+			</div>
+			
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse navbar-right">
+				<ul class="nav navbar-nav">
+					<li><a id="openProject" target="_blank"><span class="fa fa-desktop"></span><span class="link-label" data-i18n="classroomMonitor_viewProject">View Project</span></a></li>
+					<li class="dropdown"><a id="exit" class="dropdown-toggle" data-toggle="dropdown">
+						<span class="fa fa-lg fa-sign-out"></span>
+							Exit <b class="caret"></b></a>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="exit">
+							<li><a id="exit-to-home" href="../teacher/index.html"><span class="fa fa-home"></span><span data-i18n="menu_teacherHome">Teacher Home</span></a></li>
+							<li><a id="exit-to-library" href="../teacher/management/library.html"><span class="fa fa-th-large"></span><span class="link-label" data-i18n="menu_projectLibrary">Project Library</span></a></li>
+							<li class="divider"></li>
+							<li><a id="exit-to-runs" href="../j_spring_security_logout"><span class="fa fa-power-off"></span><span class="link-label" data-i18n="menu_signOut">Sign Out</span></a></li>
+						</ul></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+			<!-- </div>  -->
+       	</nav>
+       	
+       	<menu id="monitorMenu" class="panel">
+       		<div class="panel-body menu">
+       			<div class="btn-toolbar pull-left" role="toolbar">
+		       		<div id="monitorView" class="btn-group btn-group-sm" data-toggle="buttons">
+						<label class="btn btn-default active" id="viewStudentProgress" data-i18n-title="classroomMonitor_studentProgress_title">
+							<input type="radio" name="monitorView" value="studentProgress"><span class="fa fa-user"></span><span class="btn-text" data-i18n="classroomMonitor_monitor">Monitor</span>
+						</label>
+						<label class="btn btn-default" id="viewStepProgress" data-i18n-title="classroomMonitor_stepProgress_title">
+							<input type="radio" name="monitorView" value="stepProgress"><span class="fa fa-sitemap"></span><span class="btn-text" data-i18n="classroomMonitor_progress">Progress</span>
+						</label>
+						<label class="btn btn-default disabled" id="viewGradebook" data-i18n-title="classroomMonitor_gradebook_title">
+							<input type="radio" name="monitorView" value="gradebook"><span class="fa fa-bar-chart-o"></span><span class="btn-text" data-i18n="classroomMonitor_gradebook">Gradebook</span>
+						</label>
+						<label class="btn btn-default disabled" id="viewManageStudents" data-i18n-title="classroomMonitor_manage_title">
+							<input type="radio" name="monitorView" value="manageStudents"><span class="fa fa-users"></span><span class="btn-text" data-i18n="classroomMonitor_manage">Manage</span>
+						</label>
+					</div>
+				</div>
+				
+				<div class="btn-toolbar pull-right" role="toolbar">
+					<div id="runTools" class="btn-group btn-group-sm">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					    	<span class="fa fa-gears"></span> <span class="btn-text" data-i18n="classroomMonitor_tools">Tools</span> <span class="caret"></span>
+					  	</button>
+					  	<ul class="dropdown-menu dropdown-menu-right" role="menu">
+					    	<li><a id="announcements" href="#"><span class="fa fa-bullhorn"></span><span data-i18n="classroomMonitor_announcements">Announcements</span></a></li>
+					    	<li><a id="manageStudents" href="#"><span class="fa fa-info-circle"></span><span data-i18n="classroomMonitor_notes">My Notes</span></a></li>
+					    	<li><a id="announcements" href="#"><span class="fa fa-file-excel-o"></span><span data-i18n="classroomMonitor_exportWork">Export Work</span></a></li>
+					    	<li><a id="runSettings" href="#"><span class="fa fa-gear"></span><span data-i18n="classroomMonitor_runSettings">Run Settings</span></a></li>
+					    </ul>
+					</div>
+					<div class="btn-group btn-group-sm">
+						<button id="pauseControls" type="button" class="btn btn-default dropdown-toggle" data-toggle="popover">
+							<span class="fa fa-pause"></span><span id="pauseState" class="btn-text" data-i18n="classroomMonitor_pause">Screens</span>
+							<span class="caret"></span>
+						    <span class="sr-only" data-i18n="classroomMonitor_pause_title"></span>
+						</button>
+					</div>
+					<div id="pauseScreensWrap">
+						<div id="pauseScreensContent">
+							<form role="form">
+								<div class="form-header text-primary" data-i18N="classroomMonitor_pause_title">Pause Student Screens</div>
+								<div class="form-group">
+									<label for="pauseSelectPeriods" data-i18N="classroomMonitor_pause_selectPeriods">Select period(s):</label>
+									<br />
+									<select id="pauseSelectPeriods" name="pauseSelectPeriods" multiple title="Period(s)"></select>
+								</div>
+								<div class="form-group">
+									  <label for="pauseMsg" data-i18N="classroomMonitor_pause_message_label">Message to display:</label>
+									  <textarea class="form-control" id="pauseMsg" name="pauseMsg" rows="4" data-i18n-placeholder="classroomMonitor_pause_message_default"></textarea>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+       	</menu>
+       	
+       	<div id="pageContent">
+       		<section id="studentProgress">
+       			<table id="studentProgressTable" class="table table-bordered" cellspacing="0" width="100%">
+			        <thead></thead>
+			        <tfoot>
+			        	<tr>
+			                <th colspan="8" style="text-align:right"  data-i18n="classroomMonitor_studentProgress_totalCompletion">Total Completion:</th>
+			                <th></th>
+			            </tr>
+			        </tfoot>
+			        <tbody></tbody>
+				</table>
+       		</section>
+       		<section id="stepProgress">
+       			<table id="stepProgressTable" class="table table-bordered" cellspacing="0" width="100%">
+			        <thead></thead>
+			        <tfoot>
+			        	<tr>
+			        		<th colspan="6" style="text-align:right"  data-i18n="classroomMonitor_stepProgress_totalCompletion">Total Completion:</th>
+			                <th></th>
+			        	</tr>
+			        </tfoot>
+			        <tbody></tbody>
+				</table>
+       		</section>
+       		<section id="gradeByStudent">
+       			<table id="gradeByStudentTable" class="table table-bordered grading" cellspacing="0" width="100%">
+			        <thead>
+			        	<tr>
+			        		<th>Node Position</th>
+			        		<th>Node Id</th>
+			        		<th>Node Title</th>
+			        		<th>Stepwork Id</th>
+			        		<th>Post Time</th>
+			        		<th>Revision Score</th>
+			        		<th>Max Score</th>
+			        		<th>Step Score</th>
+			        		<th data-i18n="classroomMonitor_gradeByStudent_headers_studentWork">Step</th>
+			        		<th data-i18n="classroomMonitor_gradeByStudent_headers_feedback">Score & Feedback</th>
+			        		<th>Flagged</th>
+			        		<th>Is Latest</th>
+			        		<th>Is New</th>
+			        	</tr>
+			        </thead>
+			        <tfoot></tfoot>
+			        <tbody></tbody>
+				</table>
+       		</section>
+       		<section id="gradeByStep">
+       			<table id="gradeByStepTable" class="table table-bordered grading" cellspacing="0" width="100%">
+			        <thead>
+			        	<tr>
+			        		<th>Workgroup Position</th>
+			        		<th>Workgroup Id</th>
+			        		<th>Workgroup Names</th>
+			        		<th>Stepwork Id</th>
+			        		<th>Post Time</th>
+			        		<th>Revision Score</th>
+			        		<th>Max Score</th>
+			        		<th>Workgroup Score</th>
+			        		<th data-i18n="classroomMonitor_gradeByStep_headers_studentWork">Workgroup</th>
+			        		<th data-i18n="classroomMonitor_gradeByStep_headers_feedback">Score & Feedback</th>
+			        		<th>Flagged</th>
+			        		<th>Is Latest</th>
+			        		<th>Is New</th>
+			        	</tr>
+			        </thead>
+			        <tfoot></tfoot>
+			        <tbody></tbody>
+				</table>
+       		</section>
+       		<section id="gradebook">
+       			<table id="gradebookTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+			        <thead>
+			            <tr></tr>
+			        </thead>
+			        <tfoot>
+			            <tr></tr>
+			        </tfoot>
+			        <tbody></tbody>
+				</table>
+       		</section>
+       		<section id="manageStudents"></section>
+       		<section id="exportWork"></section>
+       		<section id="ideaBaskets"></section>
+       		<!-- TODO: these may be modals, maybe not
+       		<section id="runSettings"></section>
+       		<section id="announcements"></section>
+       		<section id="notes"></section>
+       		-->
+       	</div>
+       	
+       	<!-- <button id="save" class="btn btn-sm btn-danger" data-i18n="classroomMonitor_grading_save">Save Changes</button> -->
+       	<a id="newWork" class="btn btn-danger"><span class="fa fa-bell"></span> New Work! Click to Update</a>
+       	
+       	</div>
+		
+		<footer class="panel panel-default" id="monitorFooter">
+			<div class="panel-body menu">
+				<div class="pull-left"><span id="studentsOnline" class="label label-default">Workgroups online: 0</span></div>
+			</div>
+		</footer>
+		
+		<div id="loading">
+			<div class="jumbotron">
+				<span class="fa fa-circle-o-notch fa-spin"></span>
+			</div>
+    	</div>
+		
+		
+		<script src='events/eventmanager.js'></script>
+		<script src="util/scriptloader.js"></script>
+		<script src="https://www.google.com/jsapi"></script>
+		
+		<script>
+			//load the package to graph google charts
+			google.load("visualization", "1", {packages:["corechart"]});
+			
+			function load(getClassroomMonitorConfigUrl) {
+				eventManager.fire('classroomMonitorConfigUrlReceived', [getClassroomMonitorConfigUrl]);
+			}
+			
+			/**
+			 * Called when the user closes page
+			 */
+			window.onunload=function(){
+				env.onWindowUnload();
+			};
+			
+			/*
+			 * Listener that is run when the bootstrap loading is complete.
+			 * Loads and starts the authoring view.
+			 */
+			function bootstrapListener(type,args,obj){
+				if(args[0]=='bootstrap' || args[0]=='bootstrap_min'){
+					var classroomMonitorListener = function(type,args,obj){
+						//env.startGrading(gradingConfigUrl, runId);
+						window.parent.topiframeOnLoad();
+					};
+			
+					eventManager.subscribe('loadingViewComplete', classroomMonitorListener);
+					createEnvironment('env', eventManager);
+					env.startView('classroomMonitor');
+				};
+			}
+			
+			/*
+			 * Loads scripts when body is loaded 
+			 */
+			window.onload = function(){
+				scriptloader.bootstrap(this, bootstrapListener);
+			};
+		</script>
+		
+		 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. 
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script> -->
+	</body>
 </html>

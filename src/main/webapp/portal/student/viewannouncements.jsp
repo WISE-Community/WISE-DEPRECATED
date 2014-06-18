@@ -22,8 +22,6 @@
 <body>
 
 <body style="background:#FFFFFF;">
-	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-	<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 	<% pageContext.setAttribute("newLineChar", "\n"); %>
 	<div class="dialogContent">
 

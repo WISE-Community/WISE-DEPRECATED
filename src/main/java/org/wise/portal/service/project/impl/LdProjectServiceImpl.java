@@ -86,30 +86,30 @@ public class LdProjectServiceImpl implements ProjectService {
 	protected static final String PREVIEW_RUN_NAME = "preview";
 
 	private static final String PREVIEW_PERIOD_NAME = "preview period";
-	
+
 	protected static Set<String> PREVIEW_PERIOD_NAMES;
-	
+
 	private Properties wiseProperties;
 
 	private CurnitService curnitService;
-	
+
 	private ProjectDao<Project> projectDao;
-	
+
 	private AclService<Project> aclService;
-	
+
 	private UserService userService;
-	
+
 	private RunService runService;
-	
+
 	private TagService tagService;
-	
+
 	private PremadeCommentService premadeCommentService;
-	
+
 	{
 		PREVIEW_PERIOD_NAMES = new HashSet<String>();
 		PREVIEW_PERIOD_NAMES.add(PREVIEW_PERIOD_NAME);
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#addBookmarkerToProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
 	 */
@@ -120,7 +120,7 @@ public class LdProjectServiceImpl implements ProjectService {
 
 	public void addSharedTeacherToProject(
 			AddSharedTeacherParameters addSharedTeacherParameters)
-			throws ObjectNotFoundException {
+					throws ObjectNotFoundException {
 		Project project = addSharedTeacherParameters.getProject();
 		String sharedOwnerUsername = addSharedTeacherParameters.getSharedOwnerUsername();
 		User user = userService.retrieveUserByUsername(sharedOwnerUsername);
@@ -142,13 +142,13 @@ public class LdProjectServiceImpl implements ProjectService {
 			this.aclService.addPermission(project, BasePermission.ADMINISTRATION, user);
 		}
 	}
-	
+
 	public void removeSharedTeacherFromProject(String username, Project project) throws ObjectNotFoundException {
 		User user = userService.retrieveUserByUsername(username);
 		if (project == null || user == null) {
 			return;
 		}
-		
+
 		if (project.getSharedowners().contains(user)) {
 			project.getSharedowners().remove(user);
 			this.projectDao.save(project);
@@ -167,7 +167,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	 * @see org.wise.portal.service.project.ProjectService#createProject(org.wise.portal.domain.impl.ProjectParameters)
 	 */
 	@Transactional(rollbackFor = { AlreadyExistsException.class,
-            NotFoundException.class, DataIntegrityViolationException.class
+			NotFoundException.class, DataIntegrityViolationException.class
 	})
 	public Project createProject(ProjectParameters projectParameters)
 			throws ObjectNotFoundException {
@@ -178,17 +178,17 @@ public class LdProjectServiceImpl implements ProjectService {
 		project.setOwners(projectParameters.getOwners());
 		project.setProjectType(projectParameters.getProjectType());
 		ProjectMetadata metadata = projectParameters.getMetadata();
-		
+
 		//get the parent project id if any
 		Long parentProjectId = projectParameters.getParentProjectId();
 		Project parentProject = null;
-		
+
 		if(parentProjectId != null) {
 			//get the parent project
 			parentProject = getById(parentProjectId);
 			project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
 		}
-		
+
 		// set original author (if not sent in as a parameter)
 		JSONObject metaJSON = new JSONObject(metadata);
 		if(metaJSON.has("author")){
@@ -196,7 +196,7 @@ public class LdProjectServiceImpl implements ProjectService {
 				String author = metaJSON.getString("author");
 				if(author == null || author.equals("null") || author.equals("")){
 					JSONObject authorJSON = new JSONObject();
-					
+
 					// set root id for project (if not already set)
 					Long rootId = project.getRootProjectId();
 					if(rootId == null){
@@ -233,7 +233,7 @@ public class LdProjectServiceImpl implements ProjectService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 		project.setMetadata(metadata);
 		//TODO -- isCurrent being set here may need to be removed
@@ -243,15 +243,15 @@ public class LdProjectServiceImpl implements ProjectService {
 		project.setDateCreated(new Date());
 		this.projectDao.save(project);
 		this.aclService.addPermission(project, BasePermission.ADMINISTRATION);	
-		
+
 		if(parentProjectId != null) {
 			Long newProjectId = (Long) project.getId();
 			User signedInUser = ControllerUtil.getSignedInUser();
-			
+
 			//copy any premade comment lists from the parent project into the new project
 			premadeCommentService.copyPremadeCommentsFromProject(parentProjectId, newProjectId, signedInUser);
 		}
-		
+
 		return project;
 	}
 
@@ -277,41 +277,41 @@ public class LdProjectServiceImpl implements ProjectService {
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#getProjectList()
 	 */
-    @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })    
-    @Transactional(readOnly = true)
+	@Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })    
+	@Transactional(readOnly = true)
 	public List<Project> getProjectList() {
-    	List<Project> projectList = this.projectDao.getList();
-    	for (Project project : projectList) {
-				project.populateProjectInfo();
-    	}	
+		List<Project> projectList = this.projectDao.getList();
+		for (Project project : projectList) {
+			project.populateProjectInfo();
+		}	
 		return projectList;
 	}
 
-    /**
-     * @see org.wise.portal.service.project.ProjectService#getProjectList(net.sf.sail.webapp.domain.User)
-     */
-    @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
+	/**
+	 * @see org.wise.portal.service.project.ProjectService#getProjectList(net.sf.sail.webapp.domain.User)
+	 */
+	@Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
 	public List<Project> getProjectList(User user) {
-    	return this.projectDao.getProjectListByUAR(user, "owner");
+		return this.projectDao.getProjectListByUAR(user, "owner");
 	}
 
 	/**
-	 * @override @see org.telscenter.sail.webapp.service.project.ProjectService#getProjectListByInfo(org.telscenter.sail.webapp.domain.project.impl.ProjectInfo)
+	 * @override @see org.wise.portal.service.project.ProjectService#getProjectListByInfo(org.wise.portal.domain.project.impl.ProjectInfo)
 	 */
 	public List<Project> getProjectListByInfo(ProjectInfo info)
 			throws ObjectNotFoundException {
-    	List<Project> projectList = this.projectDao.retrieveListByInfo(info);
+		List<Project> projectList = this.projectDao.retrieveListByInfo(info);
 		return projectList;		
 	}
 
 	/**
-	 * @override @see org.telscenter.sail.webapp.service.project.ProjectService#getProjectListByTag(org.telscenter.sail.webapp.domain.project.impl.FamilyTag)
+	 * @override @see org.wise.portal.service.project.ProjectService#getProjectListByTag(org.wise.portal.domain.project.impl.FamilyTag)
 	 */
 	public List<Project> getProjectListByTag(FamilyTag familytag) throws ObjectNotFoundException {
-    	List<Project> projectList = this.projectDao.retrieveListByTag(familytag);
-    	for (Project project : projectList) {
-    		project.populateProjectInfo();
-    	}
+		List<Project> projectList = this.projectDao.retrieveListByTag(familytag);
+		for (Project project : projectList) {
+			project.populateProjectInfo();
+		}
 		return projectList;
 	}
 
@@ -319,7 +319,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	 * @see org.wise.portal.service.project.ProjectService#getProjectListByTag(java.lang.String)
 	 */
 	public List<Project> getProjectListByTag(String projectinfotag) throws ObjectNotFoundException {
-    	List<Project> projectList = this.projectDao.retrieveListByTag(projectinfotag);
+		List<Project> projectList = this.projectDao.retrieveListByTag(projectinfotag);
 		return projectList;
 	}
 
@@ -356,7 +356,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	public List<Project> getAdminProjectList(){
 		return this.projectDao.getList();
 	}
-	
+
 	public ModelAndView launchProject(LaunchProjectParameters params)
 			throws Exception {
 		return new ModelAndView(new RedirectView(generateStudentStartProjectUrlString( params.getHttpServletRequest(), 
@@ -368,7 +368,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	 */
 	@Transactional()
 	public ModelAndView previewProject(PreviewProjectParameters params) throws Exception {
-		
+
 		User user = params.getUser();
 		Project project = params.getProject();
 		Set<String> tagNames = new TreeSet<String>();
@@ -385,7 +385,7 @@ public class LdProjectServiceImpl implements ProjectService {
 					//this is set if the request is to preview the project and load a specific step such as 1.2
 					vleConfigUrl += "&step=" + step;
 				}
-				
+
 				if (params.isConstraintsDisabled()) {
 					vleConfigUrl += "&isConstraintsDisabled=true";
 				}
@@ -395,25 +395,25 @@ public class LdProjectServiceImpl implements ProjectService {
 				if(versionId != null && !versionId.equals("")){
 					vleConfigUrl += "&versionId=" + versionId;
 				}
-				
+
 				//get the path to the project json file
 				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 				String contentUrl = curriculumBaseWWW + rawProjectUrl;
-				
+
 				String vleurl = wiseBaseURL + "/vle/vle.html";
-		
+
 				ModelAndView modelAndView = new ModelAndView("vle");
-		    	modelAndView.addObject("vleurl",vleurl);
-		    	modelAndView.addObject("vleConfigUrl", vleConfigUrl);
-		    	modelAndView.addObject("contentUrl", contentUrl);
-		    	
+				modelAndView.addObject("vleurl",vleurl);
+				modelAndView.addObject("vleConfigUrl", vleConfigUrl);
+				modelAndView.addObject("contentUrl", contentUrl);
+
 				return modelAndView;
 			} else {
 				return new ModelAndView(new RedirectView("../accessdenied.html"));
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -438,7 +438,7 @@ public class LdProjectServiceImpl implements ProjectService {
 			throw new NotAuthorizedException("You are not authorized to update this project");
 		}
 	}
-	
+
 	/**
 	 * Returns url string for actual run
 	 * @param request
@@ -449,7 +449,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	public String generateStudentStartProjectUrlString(HttpServletRequest request,
 			Run run, Workgroup workgroup) {
 		String portalUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + 
-			request.getContextPath();
+				request.getContextPath();
 		String launchVLE = "/student/vle/vle.html?runId=" + run.getId() + "&workgroupId=" + workgroup.getId();
 		return portalUrl + launchVLE;
 	}
@@ -508,7 +508,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	public void setRunService(RunService runService) {
 		this.runService = runService;
 	}
-	
+
 	/**
 	 * @param wiseProperties the portal properties to set
 	 */
@@ -522,23 +522,23 @@ public class LdProjectServiceImpl implements ProjectService {
 	@Transactional
 	public List<Project> getAllProjectsList() {
 		List<Project> projectList = this.projectDao.getList();
-    	for (Project project : projectList) {
-				project.populateProjectInfo();
-    	}	
+		for (Project project : projectList) {
+			project.populateProjectInfo();
+		}	
 		return projectList;
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#getProjectList(java.lang.String)
 	 */
 	@Transactional
 	public List<Project> getProjectList(String query){
 		List<Project> projectList = this.projectDao.getProjectList(query);
-		
+
 		for(Project project : projectList){
 			project.populateProjectInfo();
 		}
-		
+
 		return projectList;
 	}
 
@@ -550,11 +550,11 @@ public class LdProjectServiceImpl implements ProjectService {
 		String minifyUrl = this.wiseProperties.getProperty("wiseBaseURL") + "/util/minifier.html";
 		String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		String params = "command=minifyProject&path=" + curriculumBaseDir + "/" + projectUrl;
-		
+
 		if(projectUrl != null && projectUrl != ""){
 			try{
 				String response = Connector.request(minifyUrl, params);
-				
+
 				/* process the response text */
 				if(response.equals("success")){
 					return "Project has been successfully minified!";
@@ -575,7 +575,7 @@ public class LdProjectServiceImpl implements ProjectService {
 		}
 	}
 
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#canCreateRun(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
 	 * Project cannot have a "review" tag to it.
@@ -584,34 +584,34 @@ public class LdProjectServiceImpl implements ProjectService {
 		Set<String> unallowed_tagnames = new HashSet<String>();
 		unallowed_tagnames.add("review");
 		return 
-			!project.hasTags(unallowed_tagnames) &&
-			(FamilyTag.TELS.equals(project.getFamilytag()) || 
-			this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) || 
-			this.aclService.hasPermission(project, BasePermission.READ, user));
+				!project.hasTags(unallowed_tagnames) &&
+				(FamilyTag.TELS.equals(project.getFamilytag()) || 
+						this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) || 
+						this.aclService.hasPermission(project, BasePermission.READ, user));
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#canAuthorProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
 	 */
 	public boolean canAuthorProject(Project project, User user) {
 		return user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
-			this.aclService.hasPermission(project, BasePermission.WRITE, user);
+				this.aclService.hasPermission(project, BasePermission.WRITE, user);
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#canReadProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
 	 */
 	public boolean canReadProject(Project project, User user) {
 		return user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
-			this.aclService.hasPermission(project, BasePermission.WRITE, user) ||
-			this.aclService.hasPermission(project, BasePermission.READ, user);
+				this.aclService.hasPermission(project, BasePermission.WRITE, user) ||
+				this.aclService.hasPermission(project, BasePermission.READ, user);
 	}
 
 
 	public ProjectMetadata getMetadata(Long projectId) {
 		Project project = null;
 		ProjectMetadata metadata = null;
-		
+
 		try {
 			project = getById(projectId);
 			metadata = project.getMetadata();
@@ -627,33 +627,33 @@ public class LdProjectServiceImpl implements ProjectService {
 	 */
 	public void sortProjectsByDateCreated(List<Project> projectList) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(org.wise.portal.domain.project.Tag, org.wise.portal.domain.project.Project)
 	 */
 	@Transactional
 	public Long addTagToProject(Tag tag, Long projectId){
 		Project project = null;
-		
+
 		/* retrieve the project */
 		try{
 			project = this.projectDao.getById(projectId);
 		} catch(ObjectNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		/* if tag is not from database, we either want to retrieve one that
 		 * has the same name or create one */
 		if(!this.tagService.isFromDatabase(tag)){
 			tag = this.tagService.createOrGetTag(tag.getName());
 		}
-		
+
 		/* add the tag and save the project */
 		project.getTags().add(tag);
 		this.projectDao.save(project);
-		
+
 		return (Long) tag.getId();
 	}
 
@@ -663,7 +663,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	public Long addTagToProject(String tag, Long projectId) {
 		return this.addTagToProject(this.tagService.createOrGetTag(tag), projectId);
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#removeTagFromProject(java.lang.String, org.wise.portal.domain.project.Project)
 	 */
@@ -671,36 +671,36 @@ public class LdProjectServiceImpl implements ProjectService {
 	public void removeTagFromProject(Long tagId, Long projectId) {
 		Tag tag = this.tagService.getTagById(tagId);
 		Project project = null;
-		
+
 		try {
 			project = this.projectDao.getById(projectId);
 		} catch(ObjectNotFoundException e){
 			e.printStackTrace();
 		}
-		
+
 		if(tag != null && project != null){
 			project.getTags().remove(tag);
 			this.projectDao.save(project);
 			this.tagService.removeIfOrphaned((Long)tag.getId());
 		}
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#updateTag(java.lang.Long, java.lang.Long, java.lang.String)
 	 */
 	@Transactional
 	public Long updateTag(Long tagId, Long projectId, String name) {
 		Tag currentTag = this.tagService.getTagById(tagId);
-		
+
 		/* if the current tag's name is equivalent of the given name to change
 		 * to, then we do not need to do anything, so just return the currentTag's id */
 		if(currentTag.getName().toLowerCase().equals(name.toLowerCase())){
 			return (Long) currentTag.getId();
 		}
-		
+
 		/* remove the current tag */
 		this.removeTagFromProject(tagId, projectId);
-		
+
 		/* add a tag with the given name and return its id */
 		return this.addTagToProject(name, projectId);
 	}
@@ -712,28 +712,21 @@ public class LdProjectServiceImpl implements ProjectService {
 		if(name.toLowerCase().equals("library") && !user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE)){
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#projectContainsTag(java.lang.Long, java.lang.String)
 	 */
-	public boolean projectContainsTag(Long projectId, String name) {
-		Project project = null;
-		
-		try {
-			project = this.getById(projectId);
-			project.getTags().size();  // force-fetch project tags from db
-			for(Tag t : project.getTags()){
-				if(t.getName().toLowerCase().equals(name.toLowerCase())){
-					return true;
-				}
-			}
-		} catch(ObjectNotFoundException e){
-			e.printStackTrace();
-		}
+	public boolean projectContainsTag(Project project, String name) {
 
+		project.getTags().size();  // force-fetch project tags from db
+		for(Tag t : project.getTags()){
+			if(t.getName().toLowerCase().equals(name.toLowerCase())){
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -754,7 +747,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	public List<Project> getProjectListByTagNames(Set<String> tagNames) {
 		return this.projectDao.getProjectListByTagNames(tagNames);
 	}
-	
+
 	/**
 	 * @param tagService the tagService to set
 	 */
@@ -768,7 +761,7 @@ public class LdProjectServiceImpl implements ProjectService {
 	public List<Project> getProjectCopies(Long projectId) {
 		return this.projectDao.getProjectCopies(projectId);
 	}
-	
+
 	/**
 	 * @throws ObjectNotFoundException 
 	 * @see org.wise.portal.service.project.ProjectService#identifyRootProjectId(java.lang.Long)
@@ -778,11 +771,10 @@ public class LdProjectServiceImpl implements ProjectService {
 			return null;
 		} else {
 			Long parentProjectId = project.getParentProjectId();
-			if(parentProjectId == null || this.projectContainsTag((Long)project.getId(), "library")){
+			if(parentProjectId == null || this.projectContainsTag(project, "library")){
 				return (Long)project.getId();
 			} else {
-				Project parentProject = this.getById(parentProjectId);
-				return this.identifyRootProjectId(parentProject);
+				return this.identifyRootProjectId(this.getById(parentProjectId));
 			}
 		}
 	}
@@ -790,9 +782,9 @@ public class LdProjectServiceImpl implements ProjectService {
 	@Override
 	public void sortProjectsByLastEdited(List<Project> projectList) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public PremadeCommentService getPremadeCommentService() {
 		return premadeCommentService;
 	}

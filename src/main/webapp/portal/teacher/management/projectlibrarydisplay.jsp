@@ -1934,46 +1934,46 @@
 					{
 						"identifier": "subject", "label": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject"/>", "column": 3,
 						"options": [
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_genScience"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_genScience"/>"}, // TODO: modify FacetedFilter plugin to only require a query for each filter, use query as display if display option is not set
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_earthScience"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_earthScience"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_lifeScience"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_lifeScience"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_physicalScience"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_physicalScience"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_biology"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_biology"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_chemistry"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_chemistry"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_physics"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_physics"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_research"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_research"/>"}
+							{"query": "General Science", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_genScience"/>"}, // TODO: modify FacetedFilter plugin to only require a query for each filter, use query as display if display option is not set
+							{"query": "Earth Science", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_earthScience"/>"},
+							{"query": "Life Science", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_lifeScience"/>"},
+							{"query": "Physical Science", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_physicalScience"/>"},
+							{"query": "Biology", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_biology"/>"},
+							{"query": "Chemistry", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_chemistry"/>"},
+							{"query": "Physics", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_physics"/>"},
+							{"query": "WISE Research", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject_research"/>"}
 						]
 					},
 					{
 						"identifier": "grade", "label": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade"/>", "column": 4,
 						"options": [
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_3-5"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_3-5"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_6-8"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_6-8"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_6-12"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_6-12"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_9-12"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_9-12"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_12+"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_12+"/>"}
+							{"query": "3-5", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_3-5"/>"},
+							{"query": "6-8", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_6-8"/>"},
+							{"query": "6-12", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_6-12"/>"},
+							{"query": "9-12", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_9-12"/>"},
+							{"query": "12+", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_grade_12+"/>"}
 						]
 					},
 					{
 						"identifier": "duration", "label": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time"/>", "column": 5,
 						"options": [
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_2-3h"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_2-3h"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_4-5h"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_4-5h"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_6-7h"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_6-7h"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_8-9h"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_8-9h"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_10-11h"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_10-11h"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_12h+"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_12h+"/>"}
+							{"query": "2-3 Hours", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_2-3h"/>"},
+							{"query": "4-5 Hours", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_4-5h"/>"},
+							{"query": "6-7 Hours", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_6-7h"/>"},
+							{"query": "8-9 Hours", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_8-9h"/>"},
+							{"query": "10-11 Hours", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_10-11h"/>"},
+							{"query": "12+ Hours", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_12h+"/>"}
 						]
 					},
 					{
 						"identifier": "language", "label": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language"/>", "column": 7,
 						"options": [
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_chinese"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_chinese"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_dutch"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_dutch"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_english"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_english"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_hebrew"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_hebrew"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_japanese"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_japanese"/>"},
-							{"query": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_spanish"/>", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_spanish"/>"}
+							{"query": "chinese", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_chinese"/>"},
+							{"query": "dutch", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_dutch"/>"},
+							{"query": "english", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_english"/>"},
+							{"query": "hebrew", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_hebrew"/>"},
+							{"query": "japanese", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_japanese"/>"},
+							{"query": "spanish", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_spanish"/>"}
 						]
 					}
 				]

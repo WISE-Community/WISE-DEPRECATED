@@ -1181,6 +1181,8 @@ View.prototype.getAnnotationsByType = function(annotationType) {
 };
 
 /*
+ * TODO: REMOVE and replace with bsTooltip (see below) when we're using Bootstrap across the vle
+ * 
  * Finds any DOM elements with the 'tooltip' class and initializes the miniTip plugin on each.
  * 
  * @param options An object to specify default miniTip settings for all tooltips (Optional; 
@@ -1264,6 +1266,88 @@ View.prototype.insertTooltips = function(options){
 		// remove all tooltip attributes and class from DOM element (to clean up html and so item are not re-processed if insertTooltips is called again on same page)
 		$(this).removeAttr('tooltip-event').removeAttr('tooltip-anchor').removeAttr('tooltip-maxW').removeAttr('tooltip-content').removeAttr('tooltip-title').removeClass('tooltip');
 	});
+};
+
+/*
+ * Initializes Bootstrap tooltips on target DOM element(s).
+ * 
+ * @param target A jQuery DOM element on which to process (Optional; if null, will search page and initialize
+ * on any element with 'bs-tooltip' class)
+ * @param options An object to specify default tooltip settings (Optional; see 
+ * http://getbootstrap.com/javascript/#tooltips for allowable options)
+ * 
+ * Individual tooltip options also can be customized by adding jQuery data fields or HTML5 data-* attributes 
+ * to the DOM element, as specified in the Bootstrap documentation above
+ */
+View.prototype.bsTooltip = function(target,options){
+	function processElement(item,options){
+		var dtAttr = item.attr('data-toggle') + ' tooltip';
+		item.css('cursor','pointer').attr(dtAttr);
+
+		// WISE defaults
+		var settings = {
+			container: 'body',
+			trigger: 'hover click focus',
+			placement: 'top auto',
+			delay: { show: 200, hide: 100 }
+		};
+		
+		if(options !== null && typeof options === 'object'){
+			// tooltip options have been sent in as a parameter, so merge with defaults
+			$.extend(settings,options);
+		}
+		
+		// initialize tooltip on target and set click to toggle tooltip on/off
+		item.tooltip(settings);
+	}
+	
+	if(target){
+		processElement(target,options);
+	} else {
+		processElement($('.bs-tooltip'),options);
+	}
+};
+
+/*
+ * Initializes Bootstrap popovers on target DOM element(s).
+ * 
+ * @param target A jQuery DOM element on which to process (Optional; if null, will search page and initialize
+ * on any element with 'bs-popover' class)
+ * @param options An object to specify default popover settings (Optional; see 
+ * http://getbootstrap.com/javascript/#popovers for allowable options)
+ * 
+ * Individual popover options also can be customized by adding jQuery data fields or HTML5 data-* attributes 
+ * to the DOM element, as specified in the Bootstrap documentation above
+ */
+View.prototype.bsPopover = function(target,options){
+	function processElement(item,options){
+		var dtAttr = item.attr('data-toggle') + ' popover';
+		item.css('cursor','pointer').attr(dtAttr);
+
+		// WISE defaults
+		var settings = {
+			container: 'body',
+			placement: 'top auto',
+			viewport: {
+				selector: 'body',
+				padding: 5
+			}
+		};
+		
+		if(options !== null && typeof options === 'object'){
+			// popover options have been sent in as a parameter, so merge with defaults
+			$.extend(settings,options);
+		}
+		
+		// initialize popover on target
+		item.popover(settings);
+	}
+	
+	if(target){
+		processElement(target,options);
+	} else {
+		processElement($('.bs-popover'),options);
+	}
 };
 
 /**
@@ -1434,6 +1518,17 @@ function enlargeDraw(divId){
 	var contextPath = view.getConfig().getConfigParam('contextPath');
 	
 	var newwindow = window.open(contextPath + "/vle/node/draw/svg-edit/svg-editor-grading.html?noDefaultExtensions=true");
+	newwindow.divId = divId;
+};
+
+/**
+ * Used in Show My Work for annotator steps
+ */
+function enlargeAnnotator(divId){
+	//get the context path e.g. /wise
+	var contextPath = view.getConfig().getConfigParam('contextPath');
+	
+	var newwindow = window.open(contextPath + "/vle/node/draw/svg-edit/annotator-grading.html?noDefaultExtensions=true");
 	newwindow.divId = divId;
 };
 
@@ -2177,6 +2272,38 @@ View.prototype.getMonthFromInteger = function(monthNumber) {
 	}
 	
 	return month;
+};
+
+/**
+ * Gets rich text content from tinymce rich text editor area for specified element ID
+ * 
+ * Checks if tinymce editor exists on element and uses it to get content or gets value
+ * from input/textarea normally.
+ * 
+ * @param elemId String DOM element id
+ */
+View.prototype.getRichTextContent = function(elemId) {
+	var content = '',
+		editor = tinymce.get(elemId);
+	if(editor){
+		content = editor.getContent();
+		// strip out project folder path from asset/ src urls
+		var projectFolderPath = this.getProjectFolderPath().replace(window.location.origin, '');
+		projectFolderPath = projectFolderPath.replace(/\//g, '\/');
+		var re = new RegExp("(src|href|xlink:href|data\-.+)=(\"|\')" + projectFolderPath + "(assets\/)","gi");
+		content = content.replace(re, "$1=$2$3");
+	} else {
+		content = $('#' + elemId).val();
+	}
+	
+	return content;
+};
+
+// preserve carriage return values when retrieving value from textareas in jQuery (see http://api.jquery.com/val/)
+$.valHooks.textarea = {
+	get: function( elem ) {
+		return elem.value.replace( /\r?\n/g, "\r\n" );
+	}
 };
 
 /* used to notify scriptloader that this script has finished loading */

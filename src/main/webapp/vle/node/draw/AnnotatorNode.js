@@ -4,7 +4,7 @@
 AnnotatorNode.prototype = new SVGDrawNode();
 AnnotatorNode.prototype.constructor = AnnotatorNode;
 AnnotatorNode.prototype.parent = SVGDrawNode.prototype;
-AnnotatorNode.authoringToolName = "Image Annotator";
+AnnotatorNode.authoringToolName = "Annotator";
 AnnotatorNode.authoringToolDescription = "Students add labels to a background image or photo.";
 
 /**
@@ -35,101 +35,67 @@ function AnnotatorNode(nodeType, view) {
 AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVisit, childDivIdPrefix, workgroupId) {
 
 	//get the node states
-	var nodeStates = nodeVisit.nodeStates;
+	var nodeStates = nodeVisit.nodeStates,
+		x = nodeStates.length;
 	
 	//loop through all the node states from newest to oldest
-	for(var x=nodeStates.length - 1; x>=0; x--) {
+	while(x--) {
 		//get a node state
-		var nodeState = nodeStates[x];
+		var nodeState = nodeStates[x],
+			studentWork = nodeState.data,
+			stepWorkId = nodeVisit.id,
+			timestamp = nodeState.timestamp,
+			autoScore = nodeState.autoScore,
+			autoFeedback = nodeState.autoFeedback,
+			autoFeedbackKey = nodeState.autoFeedbackKey,
+			checkWork = nodeState.checkWork;
 		
-		var studentWork = nodeState.data;
-		var stepWorkId = nodeVisit.id;
-		var timestamp = nodeState.timestamp;
-		var autoScore = nodeState.autoScore;
-		var autoFeedback = nodeState.autoFeedback;
-		var autoFeedbackKey = nodeState.autoFeedbackKey;
-		var checkWork = nodeState.checkWork;
+		var maxAutoScore = nodeState.maxAutoScore;
 		
-		// if the work is for a SVGDrawNode, embed the svg
-		var innerDivId = "svgDraw_"+stepWorkId+"_"+timestamp;
-		var contentBaseUrl = this.view.config.getConfigParam('getContentBaseUrl');
+		// if the work is for a AnnotaotrNode, embed the svg
+		var innerDivId = "annotator_"+stepWorkId+"_"+timestamp,
+			contentBaseUrl = this.view.config.getConfigParam('getContentBaseUrl');
 		// if studentData has been compressed, decompress it and parse (for legacy compatibility)
-		if (typeof studentWork == "string") {
+		/*if (typeof studentWork == "string") {
 			if (studentWork.match(/^--lz77--/)) {
 				var lz77 = new LZ77();
 				studentWork = studentWork.replace(/^--lz77--/, "");
 				studentWork = lz77.decompress(studentWork);
 				studentWork = $.parseJSON(studentWork);
 			}
-		} 
-		var svgString = studentWork.svgString;
-		var description = studentWork.description;
-		var snaps = studentWork.snapshots;
-		var contentUrl = this.getContent().getContentUrl();
-		studentWork = "<div id='"+innerDivId+"_contentUrl' style='display:none;'>"+contentUrl+"</div>"+
-			"<a class='drawEnlarge' onclick='enlargeDraw(\""+innerDivId+"\");'>enlarge</a>";
-		// if the svg has been compressed, decompress it
+		}*/
+		var svgString = studentWork.svgString,
+			explanation = studentWork.explanation.replace(/\r?\n/g, '<br />'),
+			contentUrl = this.getContent().getContentUrl();
+		studentWork.svgString = "";
+		var studentDisplay = //"<div id='"+innerDivId+"_contentUrl' style='display:none;'>"+contentUrl+"</div>"+
+			//"<div id='"+innerDivId+"_contentBaseUrl' style='display:none;'>"+contentBaseUrl+"</div>"+
+			"<a id='"+innerDivId+"_enlarge' class='annotatorEnlarge'>enlarge</a>"+
+			"<div id='"+innerDivId+"_studentWork' style='display: none;'>" + JSON.stringify(studentWork) + "</div>";
+		
 		if (svgString != null){
-			if (svgString.match(/^--lz77--/)) {
+			/*if (svgString.match(/^--lz77--/)) {
 				var lz77 = new LZ77();
 				svgString = svgString.replace(/^--lz77--/, "");
 				svgString = lz77.decompress(svgString);
-			}
+			}*/
 			
-			//svgString = svgString.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
 			// only replace local hrefs. leave absolute hrefs alone!
 			svgString = svgString.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, function(m,key,value) {
-				  if (value.indexOf("http://") == -1) {
-				    return m.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
-				  }
-				  return m;
-				});
-			svgString = svgString.replace(/(marker.*=)"(url\()(.*)(#se_arrow_bk)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
-			svgString = svgString.replace(/(marker.*=)"(url\()(.*)(#se_arrow_fw)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
-			//svgString = svgString.replace('<svg width="600" height="450"', '<svg width="360" height="270"');
-			svgString = svgString.replace(/<g>/gmi,'<g transform="scale(0.6)">');
+				if (value.indexOf("http://") == -1) {
+					return m.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
+				}
+				return m;
+			});
+			//svgString = svgString.replace(/(marker.*=)"(url\()(.*)(#se_arrow_bk)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
+			//svgString = svgString.replace(/(marker.*=)"(url\()(.*)(#se_arrow_fw)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
+			svgString = svgString.replace(/<g>/gmi,'<g transform="scale(0.5)">');
 			svgString = Utils.encode64(svgString);
 		}
-		if(snaps != null && snaps.length>0){
-			var snapTxt = "<div id='"+innerDivId+"_snaps' class='snaps'>";
-			for(var i=0;i<snaps.length;i++){
-				var snapId = innerDivId+"_snap_"+i;
-				var currSnap = snaps[i].svg;
-				if (currSnap.match(/^--lz77--/)) {
-					var lz77 = new LZ77();
-					currSnap = currSnap.replace(/^--lz77--/, "");
-					currSnap = lz77.decompress(currSnap);
-				}
-				//currSnap = currSnap.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
-				// only replace local hrefs. leave absolute hrefs alone!
-				currSnap = currSnap.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, function(m,key,value) {
-					  if (value.indexOf("http://") == -1) {
-					    return m.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
-					  }
-					  return m;
-					});
-				
-				currSnap = currSnap.replace(/(marker.*=)"(url\()(.*)(#se_arrow_bk)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
-				currSnap = currSnap.replace(/(marker.*=)"(url\()(.*)(#se_arrow_fw)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
-				//currSnap = currSnap.replace('<svg width="600" height="450"', '<svg width="120" height="90"');
-				currSnap = currSnap.replace(/<g>/gmi,'<g transform="scale(0.6)">');
-				currSnap = Utils.encode64(currSnap);
-				snapTxt += "<div id="+snapId+" class='snapCell' onclick='enlargeDraw(\""+innerDivId+"\");'>"+currSnap+"</div>";
-				var currDescription = snaps[i].description;
-				snapTxt += "<div id='"+snapId+"_description' class='snapDescription' style='display:none;'>"+currDescription+"</div>";
-			}
-			
-			snapTxt += "</div>";
-			studentWork += snapTxt;
-			
-			if(description != null){
-				studentWork += "<span>Description: </span><div id='"+innerDivId+"_description' class='drawDescription'>"+description+"</div>";
-			}
-		} else {
-			studentWork += "<div id='"+innerDivId+"' class='svgdrawCell'>"+svgString+"</div>";
-			if(description != null){
-				studentWork += "<span>Description: </span><div id='"+innerDivId+"_description' class='drawDescription'>"+description+"</div>";
-			}
+		
+		studentDisplay += "<div id='"+innerDivId+"' class='annotatorCell'></div>";
+		if(explanation != null){
+			studentDisplay += "<p>Explanation: </p><p id='"+innerDivId+"_explanation' class='annotatorExplanation'>"+explanation+"</p>";
 		}
 		
 		if(displayStudentWorkDiv.html() != '') {
@@ -138,11 +104,26 @@ AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, node
 		}
 		
 		//insert the html into the div
-		displayStudentWorkDiv.append(studentWork);
+		displayStudentWorkDiv.append(studentDisplay);
+		
+		var promptText = view.getI18NString('prompt_link','SVGDrawNode'); 
+		
+		$(displayStudentWorkDiv).find('#' + innerDivId).data('node', this).data('contentUrl', contentUrl)
+			.data('contentBaseUrl', contentBaseUrl).data('promptText', promptText)
+			.data('headerText', view.getI18NStringWithParams('annotator_grading_header',['gradeByStep'],'SVGDrawNode'));
+		
+		$(displayStudentWorkDiv).find('#' + innerDivId + '_enlarge').off('click').on('click', function(){
+			enlargeAnnotator(innerDivId);
+		});
 		
 		//perform post processing of the svg data so that the drawing is displayed
-		displayStudentWorkDiv.find(".svgdrawCell").each(this.showDrawNode);
-		displayStudentWorkDiv.find(".snapCell").each(this.showSnaps);
+		displayStudentWorkDiv.find(".annotatorCell").data('svg', svgString).each(this.showAnnotatorNode);
+		
+		//get the height of the svg
+		var svgHeight = displayStudentWorkDiv.find(".annotatorCell").find("svg").attr('height');
+		
+		//set the div that contains the svg to the same height as the svg
+		displayStudentWorkDiv.find(".annotatorCell").css('height', svgHeight);
 		
 		var autoScoreText = '';
 		
@@ -159,6 +140,11 @@ AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, node
 			}
 			
 			autoScoreText += 'Auto-Score: ' + autoScore;
+			
+			if(maxAutoScore != null) {
+				//display the max score as the denominator
+				autoScoreText += '/' + maxAutoScore;
+			}
 		}
 		
 		if(autoFeedback != null) {
@@ -169,7 +155,7 @@ AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, node
 			}
 			
 			autoFeedback = autoFeedback.replace(/\n/g, '<br>');
-			autoScoreText += 'Auto-Feedback: ' + autoFeedback;
+			autoScoreText += 'Auto-Feedback:</br>' + autoFeedback;
 		}
 		
 		if(autoScoreText != '') {
@@ -194,15 +180,18 @@ AnnotatorNode.prototype.hasGradingView = function() {
 };
 
 /**
- * Shows the draw node that is in the element
- * @param currNode the svgdrawCell element
+ * Shows the annotator node that is in the element
+ * @param currNode the annotatorCell element
  */
-AnnotatorNode.prototype.showDrawNode = function(currNode) {
+AnnotatorNode.prototype.showAnnotatorNode = function(currNode) {
 	var svgString = String($(this).html());
+	var svgString = $(this).data('svg');
 	svgString = Utils.decode64(svgString);
 	var svgXml = Utils.text2xml(svgString);
 	$(this).html('');
 	$(this).append(document.importNode(svgXml.documentElement, true)); // add svg to cell
+	$(this).height($(this).find('svg').height()/2);
+	$(this).width($(this).find('svg').width()/2);
 };
 
 /**
@@ -222,12 +211,14 @@ AnnotatorNode.prototype.canSpecialExport = function() {
 AnnotatorNode.prototype.getFeedback = function() {
 	var feedback = null;
 	
-	//check if this is an auto graded draw step
-	if(this.content.getContentJSON() != null &&
-			this.content.getContentJSON().autoScoring != null &&
-			this.content.getContentJSON().autoScoring.autoScoringCriteria != null &&
-			this.content.getContentJSON().autoScoring.autoScoringCriteria != "") {
-		//this step is an auto graded draw step
+	//get the step content
+	var contentJSON = this.content.getContentJSON();
+	
+	if(contentJSON != null && 
+			contentJSON.enableAutoScoring &&
+			contentJSON.autoScoring != null &&
+			(contentJSON.autoScoring.autoScoringDisplayScoreToStudent || contentJSON.autoScoring.autoScoringDisplayFeedbackToStudent)) {
+		//this step is an auto graded annotator step
 		
 		//get all the node states
 		var nodeStates = this.view.getStudentWorkForNodeId(this.id);
@@ -259,9 +250,24 @@ AnnotatorNode.prototype.getFeedback = function() {
 					
 					/*
 					 * this node state was work that was auto graded so we will
-					 * get the autoFeedback and display it
+					 * get the autoFeedback and autoScore and display it
 					 */
 					var autoFeedback = nodeState.autoFeedback;
+					var autoScore = nodeState.autoScore;
+					var maxScore = nodeState.maxAutoScore;
+					
+					//create the text that will display the score, max score, and feedback
+					var tempFeedback = '';
+					
+					if(contentJSON.autoScoring.autoScoringDisplayScoreToStudent) {
+						//display the score
+						tempFeedback += 'Score: ' + autoScore + '/' + maxScore + '<br/>';
+					}
+					
+					if(contentJSON.autoScoring.autoScoringDisplayFeedbackToStudent) {
+						//display the feedback
+						tempFeedback += 'Feedback:<br/>' + autoFeedback;
+					}
 					
 					if(feedback == null) {
 						//initialize the feedback to empty string
@@ -283,7 +289,7 @@ AnnotatorNode.prototype.getFeedback = function() {
 					 * remember the auto feedback from this student work so we can add
 					 * it to the overall feedback later
 					 */
-					previousFeedback = autoFeedback;
+					previousFeedback = tempFeedback;
 				}
 			}
 			
@@ -336,6 +342,53 @@ AnnotatorNode.prototype.getCriteriaValue = function() {
 		return null;
 	}
 
+};
+
+/**
+ * Get the feedback from the scoring criteria results
+ * @param scoringCriteriaResults an array of scoring results
+ * @return the feedback from the scoring criteria results
+ */
+AnnotatorNode.prototype.getFeedbackFromScoringCriteriaResults = function(scoringCriteriaResults) {
+	var feedback = '';
+	
+	if(scoringCriteriaResults != null) {
+		//loop through all the scoring criteria results
+		for(var y=0; y<scoringCriteriaResults.length; y++) {
+			//get a scoring criteria result
+			var scoringCriteriaResult = scoringCriteriaResults[y];
+			
+			if(scoringCriteriaResult != null) {
+				//get whether the student satisfied this criteria or not
+				var isSatisfied = scoringCriteriaResult.isSatisfied;
+				
+				//get the text feedback
+				var scoringCriteriaResultFeedback = scoringCriteriaResult.feedback;
+				
+				if(isSatisfied) {
+					//the student satisfied this criteria so we will show the feedback in green
+					scoringCriteriaResultFeedback = '<font color="green">' + scoringCriteriaResultFeedback + '</font>';
+				} else {
+					//the student did not satisfy this criteria so we will show the feedback in red
+					scoringCriteriaResultFeedback = '<font color="red">' + scoringCriteriaResultFeedback + '</font>';
+				}
+				
+				//append the feedback for the criteria
+				feedback += '<br/>' + scoringCriteriaResultFeedback;
+			}
+		}
+	}
+	
+	return feedback;
+};
+
+/**
+ * Parse the annotator node state
+ * @param stateJSONObj a node state JSON object
+ * @return an ANNOTATORSTATE object with its fields populated
+ */
+AnnotatorNode.prototype.parseDataJSONObj = function(stateJSONObj) {
+	return ANNOTATORSTATE.prototype.parseDataJSONObj(stateJSONObj);
 };
 
 NodeFactory.addNode('AnnotatorNode', AnnotatorNode);

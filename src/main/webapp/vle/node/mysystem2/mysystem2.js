@@ -76,17 +76,41 @@ Mysystem2.prototype.render = function() {
     this.domIO.textContent = latestResponse;
   }
   if(workToImport.length > 0) {
-	  /*
-	   * the student has not done any work for this step and
-	   * there is work to import so we will use the work to import
-     * but lets filter it first, only including the Links and Nodes.
-	   */
-    initialDiagram = JSON.parse(workToImport[workToImport.length - 1].response);
-    initialDiagram = filterIntialDiagram(initialDiagram);
-    if (latestState == null) {
-	   latestResponse = JSON.stringify(initialDiagram);
-     this.domIO.textContent = latestResponse;
-    }
+	//get the student work
+	var studentWork = workToImport[workToImport.length - 1];
+	  
+	if(studentWork != null) {
+		//get the node we are importing from
+		var importFromNode = studentWork.node;
+
+		if(importFromNode != null) {
+			//check if we can import work from the other node type
+			if (this.node.canImportWork(importFromNode)) {
+
+				if (importFromNode.type == "SVGDrawNode") {
+					//the other node is a draw node
+
+					//get the base64 image string
+					var base64Image = importFromNode.getBase64Image(studentWork);
+
+					//set the base64 image into the background image element
+					$('.diagram-background svg image').first().attr({'href':base64Image, 'width':600, 'height':450});
+				} else {
+					/*
+					 * the student has not done any work for this step and
+					 * there is work to import so we will use the work to import
+					 * but lets filter it first, only including the Links and Nodes.
+					 */
+					initialDiagram = JSON.parse(studentWork.response);
+					initialDiagram = filterIntialDiagram(initialDiagram);
+					if (latestState == null) {
+						latestResponse = JSON.stringify(initialDiagram);
+						this.domIO.textContent = latestResponse;
+					}
+				}
+			}
+		}
+	}
   }
   
   // It turns out that sometimes when firebug is enabled and reloading

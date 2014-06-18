@@ -443,7 +443,6 @@
 	<bean id="libraryController"
 		class="org.wise.portal.presentation.web.controllers.teacher.management.LibraryController">
 		<property name="projectService" ref="projectService" />
-		<property name="userService" ref="userService" />
 		<property name="runService" ref="runService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
@@ -472,8 +471,8 @@
 	<bean id="projectParameters" class="org.wise.portal.domain.project.impl.ProjectParameters">
 	</bean>
 
-	<bean id="infoController"
-		class="org.wise.portal.presentation.web.controllers.admin.InfoController">
+	<bean id="userInfoController"
+		class="org.wise.portal.presentation.web.controllers.admin.UserInfoController">
 		<property name="userService" ref="userService" />
 		<property name="studentService" ref="studentService" />
 		<property name="runService" ref="runService" />
@@ -854,6 +853,7 @@
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basename" value="classpath:i18n/i18n" />
 		<property name="defaultEncoding" value="UTF-8" />
+		<property name="fallbackToSystemLocale" value="false"/>		
 	</bean>
 
 	<!-- allows user to change language via ?lang=XX url param -->
@@ -880,15 +880,14 @@
 		<property name="mailService" ref="mailService" />
 	</bean>
 
-	<bean id="openSessionInViewInterceptor"
-		class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
 	<bean id="securityUtils" class="org.wise.vle.utils.SecurityUtils">
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
+	</bean>
+	
+	<bean id="discourseSSOController" class="org.wise.portal.presentation.web.controllers.DiscourseSSOController">
+		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
@@ -940,7 +939,7 @@
 				/teacher/management/classroomruns.html=myClassroomRunsMainController
 				/teacher/management/projectruntabs.html=myClassroomRunsController
 				/teacher/management/submitworkgroupchanges.html=submitWorkgroupChangesController
-				/studentinfo.html=infoController
+				/studentinfo.html=userInfoController
 				/teacher/management/studentlist.html=studentListController
 				/teacher/management/studentlistexcel.html=listStudentNamesController
 				/teacher/vle/vle.html=studentVLEController
@@ -962,7 +961,7 @@
 				/teacher/management/changeworkgroup.html=changeWorkgroupController
 				/teacher/management/removestudentfromrun.html=removeStudentFromRunController
 				/teacher/management/updatemyaccountinfo.html=updateMyAccountInfoController
-				/teacherinfo.html=infoController
+				/teacherinfo.html=userInfoController
 				/author/authorproject.html=authorProjectController
 				/project/exportproject.html=exportProjectController
 				/project/importexternalproject.html=importExternalProjectController
@@ -1008,6 +1007,7 @@
 				/peerReview.html=peerReviewController
 				/assetManager.html=assetManagerController
 				/cRater.html=cRaterController
+				/sso/discourse.html=discourseSSOController
 				/**/*.html=urlFilenameViewController
 			</value>
 		</property>

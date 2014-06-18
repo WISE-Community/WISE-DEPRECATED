@@ -79,6 +79,10 @@ function validateLoginForm() {
 							<!--  
 				            <li><a href="#" style="color:#999;">Search the Help Guide</a></li>
 				            -->
+							<c:if test="${discourseSSOLoginURL != null}">
+							  <!-- we will style and internationalize this later -->
+							   <li><a target=_blank href="${discourseSSOLoginURL}">WISE Teacher Community</a></li>
+                 			</c:if>				            
 				            <li><a href="${contextPath}/contact/contactwisegeneral.html"><spring:message code="accountmenu.contact"/></a></li>
 						</ul>
 					</li>

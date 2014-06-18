@@ -191,18 +191,6 @@
 	margin: 1em;
 }
 
-#titleBarSetUpRun {
-	clear: both;
-	width: 958px;
-	text-align: center;
-	font-size: 1.4em;
-	border: 1px solid #666666;
-	background-color: #CCCCCC;
-	background-image: url(../images/Gradient_Blue-to-Gray.png);
-	margin: 20px auto 0 auto;
-	padding: 10 0px;
-}
-
 .setupProjectTitle {
 	font-size: 1.4em;
 	letter-spacing: 1px;
@@ -491,20 +479,6 @@ ol#addProjectInstructions li {
 }
 
 /* CONTACT WISE PAGES 
-#pageTitle {
-	clear: both;
-	text-align: center;
-	width: 810px;
-	margin: 15px auto;
-	border: 1px solid #333333;
-	background-image: url(../images/GradientFooter.png);
-	background-position: bottom;
-	padding: 10px 0;
-	color: #0000FF;
-	font-size: 1.7em;
-	font-weight: bold;
-}
-
 #pageSubtitle {
 	width: 810px;
 	text-align: center;
@@ -600,17 +574,6 @@ ol#addProjectInstructions li {
 }*/
 
 /* LOST USERNAME & PASSWORD PAGES  */
-#lostTitleBar {
-	clear: both;
-	width: 85%;
-	text-align: center;
-	border: 1px solid #333333;
-	background-image: url(../images/GradientFooter.png);
-	background-position: bottom;
-	margin: 30px auto 0 auto;
-	padding: 10px 0;
-}
-
 #lostSubHeader {
 	padding: 30px 0 20px 0;
 	letter-spacing: 1px;
@@ -879,31 +842,6 @@ ol#addProjectInstructions li {
 	border: 2px ridge #333333;
 }
 
-#sectionBoxHeader {
-	font-size: 1.2em;
-	font-weight: bold;
-	padding: 4px 10px;
-	background-color: #CCCCFF;
-	background-image: url(../images/Gradient-BlueWhite-5x65.png);
-	text-align: left;
-	border-bottom: 1px solid #333333;
-}
-
-#hideLink {
-	font-size: .7em;
-	font-variant: small-caps;
-	padding: 2px 2px 2px 17px;
-	margin-top: 1px;
-	float: right;
-	background-image: url(../images/Arrow_Down.png);
-	background-position: 0px 6px;
-	background-repeat: no-repeat;
-}
-
-#hideLink :hover {
-	background-color: #FFFF33;
-}
-
 #sectionBoxMain1 {
 	padding: 1px;
 	background-color: #CCCCCC;
@@ -1169,184 +1107,6 @@ background-color
 	border: 1px solid white;
 	background-color: #FFFFFF;
 	height: 5px;
-}
-
-#studentBottomBar {
-	position: fixed;
-	bottom: 7px;
-	width: 957px;
-	margin-left: -1px;
-	background-image: url(../images/GradientFooter.png);
-	border: 1px solid black;
-	border-top: 4px ridge black;
-}
-
-#studentBottomBar table {
-	margin: 6px 0 6px 20px;
-	font-size: .7em;
-	text-align: left;
-	vertical-align: top;
-}
-
-#studentBottomBar table .col1 {
-	width: 30%;
-}
-
-#studentBottomBar table .col2 {
-	padding-right: 5px;
-}
-
-#studentBottomBar table .col3 {
-	width: 23%;
-}
-
-#studentBottomBar table input {
-	color: #FFFFFF;
-	background-color: #0000FF;
-	border: 1px solid black;
-}
-
-#studentBottomBar table input:hover {
-	color: #0000FF;
-	background-color: #FFFF00;
-}
-
-#teacherBottomBar {
-	position: fixed;
-	bottom: 7px;
-	width: 935px;
-	margin-left: -1px;
-	background-image: url(../images/GradientFooter.png);
-	border: 1px solid black;
-	border-top: 4px ridge black;
-}
-
-#teacherBottomBar table {
-	margin: 6px 0 6px 20px;
-	font-size: .7em;
-	text-align: left;
-	vertical-align: top;
-}
-
-#teacherBottomBar table .col1 {
-	padding-right: 80px;
-}
-
-#teacherBottomBar table .col2 {
-	padding-right: 5px;
-}
-
-#teacherBottomBar table .col3 {
-	padding-right: 40px;
-}
-
-#teacherBottomBar table input {
-	color: #FFFFFF;
-	background-color: #0000FF;
-	border: 1px solid black;
-}
-
-#teacherBottomBar table input:hover {
-	color: #0000FF;
-	background-color: #FFFF00;
-}
-
-#teacherBottomBar dl {
-	width: 250px;
-	margin: 0px;
-}
-
-#teacherBottomBar dt {
-	float: left;
-	width: 120px;
-}
-
-/* Q&A Discussion Step: Create Response page */
-#createResponseWindow {
-	text-align: center;
-	border: 1px solid #333333;
-	margin: 10px;
-	padding: 0px;
-	background-color: #cccccc;
-	background-image: url(../images/Pixel_Gray.png);
-}
-
-#createResponseWindow #head {
-	font-size: 1.0em;
-	font-weight: bold;
-	letter-spacing: 3px;
-	text-align: center;
-	padding: 3px 10px;
-	background-color: #CCCCFF;
-	background-image: url(../images/Gradient-BlueWhite-5x65.png);
-	border-bottom: 1px solid #333333;
-}
-
-#createResponseWindow #owner {
-	font-style: italic;
-	font-weight: bold;
-	color: #000033;
-}
-
-#createResponseWindow #interior {
-	margin: 10px 25px;
-	text-align: left;
-}
-
-#createResponseWindow #interior #question,#createResponseWindow #interior #response {
-	margin-top: 10px;
-}
-
-#createResponseWindow #interior #responseText {
-	width: 100%;
-	margin-top: 5px;
-	padding: 5px;
-}
-
-#createResponseWindow #interior #selectPostType {
-	margin: 10px 0 5px 30px;
-	font-size: .8em;
-}
-
-#createResponseWindow #interior #inputButtons {
-	text-align: center;
-	margin-top: 25px;
-}
-
-#createResponseWindow #interior #inputButtons input {
-	font-size: .8em;
-	font-weight: bold;
-	background-color: #CCCCff;
-	padding: 3px;
-	margin-right: 10px;
-}
-
-#createResponseWindow #interior #inputButtons input:hover {
-	background-color: #FFFF00;
-}
-
-#createResponseWindow #postedDate {
-	margin-left: 25px;
-	font-size: .8em;
-	color: #666666;
-}
-
-#createResponseWindow #currentResponseBox {
-	margin-top: 5px;
-	padding: 5px;
-	border: 1px solid #999999;
-	background-color: #FFFFFF;
-	color: #000000;
-}
-
-#createResponseWindow #selectedResponseText {
-	border: 1px solid #999999;
-	padding: 5px;
-	margin-top: 4px;
-}
-
-#createResponseWindow #selectedResponseLabels {
-	font-size: .8em;
 }
 
 /* Q&A Discussion Step: TEACHER MANAGEMENT PAGE */

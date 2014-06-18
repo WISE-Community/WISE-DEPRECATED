@@ -24,10 +24,11 @@ package org.wise.portal.dao.workgroup.impl;
 
 import java.util.List;
 
-
+import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.workgroup.WorkgroupDao;
 import org.wise.portal.domain.run.Offering;
@@ -97,4 +98,25 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
     protected Class<WorkgroupImpl> getDataObjectClass() {
         return WorkgroupImpl.class;
     }
+
+	@Override
+	public Workgroup getById(Long workgroupId, boolean doEagerFetch) {
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+
+        Workgroup result = null;
+        if (doEagerFetch) {
+        	result = (Workgroup) session.createCriteria(WorkgroupImpl.class)
+			.add( Restrictions.eq("id", workgroupId))
+			.setFetchMode("offering", FetchMode.EAGER)
+			.setFetchMode("group", FetchMode.EAGER)
+			.uniqueResult();
+        } else {
+        	result = (Workgroup) session.createCriteria(WorkgroupImpl.class)
+        			.add( Restrictions.eq("id", workgroupId))
+        			.uniqueResult();        	
+        }
+        session.getTransaction().commit();
+        return result;
+	}
 }

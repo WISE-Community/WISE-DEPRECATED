@@ -242,7 +242,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 
 	/**
-	 * @override @see org.telscenter.sail.webapp.service.offering.RunService#addSharedTeacherToRun(org.telscenter.sail.webapp.domain.impl.AddSharedTeacherParameters)
+	 * @override @see org.wise.portal.service.offering.RunService#addSharedTeacherToRun(org.wise.portal.domain.impl.AddSharedTeacherParameters)
 	 */
 	public void addSharedTeacherToRun(
 			AddSharedTeacherParameters addSharedTeacherParameters) {
@@ -354,7 +354,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 
 	// /**
 	// * @see
-	// org.telscenter.sail.webapp.service.offering.RunService#isRunCodeInDB(java.lang.String)
+	// org.wise.portal.service.offering.RunService#isRunCodeInDB(java.lang.String)
 	// */
 	// public boolean isRunCodeInDB(String runcode) {
 	// return runDao.hasRuncode(runcode);
@@ -373,6 +373,13 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	 */
 	public Run retrieveById(Long runId) throws ObjectNotFoundException {
 		return runDao.getById(runId);
+	}
+	
+	/**
+	 * @see org.wise.portal.service.offering.RunService#retrieveById(java.lang.Long)
+	 */
+	public Run retrieveById(Long runId, boolean doEagerFetch) throws ObjectNotFoundException {
+		return runDao.getById(runId, doEagerFetch);
 	}
 
 	/**
@@ -409,7 +416,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 
 	/**
-	 * @override @see org.telscenter.sail.webapp.service.offering.RunService#getWorkgroups(java.lang.Long, net.sf.sail.webapp.domain.group.Group)
+	 * @override @see org.wise.portal.service.offering.RunService#getWorkgroups(java.lang.Long, net.sf.sail.webapp.domain.group.Group)
 	 */
 	public Set<Workgroup> getWorkgroups(Long runId, Long periodId)
 			throws ObjectNotFoundException {
@@ -488,8 +495,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	
 	@Transactional()
 	public List<Run> getProjectRuns(Long id){
-		List<Run> runList = this.runDao.getRunsOfProject(id);
-		return runList;
+		return this.runDao.getRunsOfProject(id);
 	}
 	
 	@Transactional()

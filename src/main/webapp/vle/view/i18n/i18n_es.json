@@ -1006,5 +1006,13 @@
     "show_previous_work_message": {
         "value": "Tu trabajo en el \"Paso {0}\" fue {1}",
         "description": "The message that shows the step number and title and the work from a previous step."
+    },
+    "idea_basket_private": {
+        "value": "Canasta de ideas privada",
+        "description": "The text for the private idea basket"
+    },
+    "idea_basket_public": {
+        "value": "Canasta de ideas pública",
+        "description": "The text for the public idea basket"
     }
 }

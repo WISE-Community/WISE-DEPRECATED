@@ -6,18 +6,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Vector;
+
+import javax.mail.MessagingException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.crater.CRaterRequestDao;
 import org.wise.portal.dao.offering.RunDao;
 import org.wise.portal.dao.portal.PortalStatisticsDao;
@@ -31,13 +34,16 @@ import org.wise.portal.domain.portal.impl.PortalStatisticsImpl;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.statistics.VLEStatistics;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.web.VLEAnnotationController;
 
-public class DailyAdminJob extends QuartzJobBean {
+public class DailyAdminJob {
+
+	private IMailFacade mailService = null;
 
 	private RunDao<Run> runDao;
 	
@@ -54,13 +60,20 @@ public class DailyAdminJob extends QuartzJobBean {
 	private CRaterRequestDao<CRaterRequest> cRaterRequestDao;
 	
 	private boolean DEBUG = false;
+
+	private Date yesterday = null;
 	
-	/**
-	 * 
-	 * @see org.springframework.scheduling.quartz.QuartzJobBean#executeInternal(org.quartz.JobExecutionContext)
-	 */
-	@Override
-	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+	private Date today = null;
+	
+	{
+		Calendar todayCal = Calendar.getInstance();
+		today = new java.sql.Date(todayCal.getTimeInMillis());
+		todayCal.add(Calendar.DATE, -1);
+		yesterday = new java.sql.Date(todayCal.getTimeInMillis());
+	}
+	
+	@Transactional
+	public void doJob() {
 		//query for the portal statistics and save a new row in the portalStatistics table
 		gatherPortalStatistics();
 		
@@ -69,6 +82,10 @@ public class DailyAdminJob extends QuartzJobBean {
 		
 		//try to score the CRater student work that previously failed to be scored
 		handleIncompleteCRaterRequests();
+		
+		//create and send a message to user_admin
+		String messageBody = getSummaryMessage();
+		sendEmail(messageBody);
 	}
 	
 	/**
@@ -149,7 +166,7 @@ public class DailyAdminJob extends QuartzJobBean {
 	 * @param context
 	 * @throws JobExecutionException
 	 */
-	public void gatherVLEStatistics() throws JobExecutionException {
+	public void gatherVLEStatistics() {
 		try {
 			//get the user name, password, and url for the db
 			String userName = this.wiseProperties.getProperty("hibernate.connection.username");
@@ -473,6 +490,110 @@ public class DailyAdminJob extends QuartzJobBean {
 		}
 	}
 	
+	public String getSummaryMessage() {
+		// do the actual work
+		String messageBody = "";
+		DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+
+		List<Run> runsCreatedSinceYesterday = findRunsCreatedSinceYesterday();
+		messageBody += "Number of Runs started between " 
+			+ df.format(yesterday) + " and " + df.format(today) + ": "
+			+ runsCreatedSinceYesterday.size() + "\n";
+		
+		// show info about the run
+		for (Run run : runsCreatedSinceYesterday) {
+			messageBody += "\tProject:" + run.getProject().getName();
+			Set<User> owners = run.getOwners();
+			User owner = owners.iterator().next();
+			TeacherUserDetails teacherUserDetails = (TeacherUserDetails) owner.getUserDetails();
+			String schoolName = teacherUserDetails.getSchoolname();
+			String schoolCity = teacherUserDetails.getCity();
+			String schoolState = teacherUserDetails.getState();
+			
+			messageBody += "\n\tTeacher Username:" + teacherUserDetails.getUsername();
+			messageBody += "\n\tTeacher School Info: " + schoolName + ", " + schoolCity + ", " + schoolState;
+			messageBody += "\n\n";
+		}
+		 
+		List<User> teachersJoinedSinceYesterday = findUsersJoinedSinceYesterday("teacherUserDetails");
+		messageBody += "\n\n";
+		messageBody += "Number of Teachers joined between " 
+			+ df.format(yesterday) + " and " + df.format(today) + ": "
+			+ teachersJoinedSinceYesterday.size();
+
+		List<User> studentsJoinedSinceYesterday = findUsersJoinedSinceYesterday("studentUserDetails");
+		messageBody += "\n\n";
+		messageBody += "Number of Students joined between " 
+			+ df.format(yesterday) + " and " + df.format(today) + ": "
+			+ studentsJoinedSinceYesterday.size();
+		
+		// Number of Users that logged in at least once in the last day
+		List<User> studentsWhoLoggedInSinceYesterday = findUsersWhoLoggedInSinceYesterday("studentUserDetails");
+		List<User> teachersWhoLoggedInSinceYesterday = findUsersWhoLoggedInSinceYesterday("teacherUserDetails");
+		int totalNumUsersLoggedInSinceYesterday = studentsWhoLoggedInSinceYesterday.size() + teachersWhoLoggedInSinceYesterday.size();
+		messageBody += "\n\n";
+		messageBody += "Number of users who logged in at least once between " 
+			+ df.format(yesterday) + " and " + df.format(today) + ": "
+			+ totalNumUsersLoggedInSinceYesterday;
+		return messageBody;
+	}
+
+
+	public List<User> findUsersJoinedSinceYesterday(String who) {
+		String field = "signupdate";
+		String type = ">";
+		Object term = yesterday;
+		String classVar = who;
+
+		List<User> usersJoinedSinceYesterday =
+			userDao.retrieveByField(field, type, term, classVar);
+		
+		return usersJoinedSinceYesterday;
+	}
+
+
+	/**
+	 * Finds number of runs that were created since yesterday
+	 */
+	public List<Run> findRunsCreatedSinceYesterday() {
+		String field = "starttime";
+		String type = ">";
+		Object term = yesterday;
+		List<Run> runsStartedSinceYesterday = 
+			runDao.retrieveByField(field, type, term);
+
+		return runsStartedSinceYesterday;
+	}
+
+	public List<User> findUsersWhoLoggedInSinceYesterday(String who) {
+		String field = "lastLoginTime";
+		String type = ">";
+		Object term = yesterday;
+		String classVar = who;
+
+		List<User> usersJoinedSinceYesterday =
+			userDao.retrieveByField(field, type, term, classVar);
+		
+		return usersJoinedSinceYesterday;		
+	}
+	
+	public void sendEmail(String message) {
+		String[] recipients = wiseProperties.getProperty("uber_admin").split(",");
+		
+		String subject = "Daily Admin Report on Portal: "
+		    + " (" + wiseProperties.getProperty("wise.name") + ")";		
+
+		String msg = message;
+		
+		String fromEmail = "wise_gateway@berkeley.edu";
+		
+		//sends the email to the recipients
+		try {
+			mailService.postMail(recipients, subject, msg, fromEmail);
+		} catch (MessagingException e) {
+		}
+	}
+	
 	/**
 	 * A function that outputs the string to System.out if DEBUG is true
 	 * @param output a String to output to System.out
@@ -483,6 +604,13 @@ public class DailyAdminJob extends QuartzJobBean {
 		}
 	}
 
+	/**
+	 * @param mailService the mailService to set
+	 */
+	public void setMailService(IMailFacade mailService) {
+		this.mailService = mailService;
+	}
+	
 	/**
 	 * @param runDao the runDao to set
 	 */

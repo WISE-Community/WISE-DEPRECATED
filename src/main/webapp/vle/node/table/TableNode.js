@@ -824,6 +824,20 @@ TableNode.prototype.canSpecialExport = function() {
 };
 
 /**
+ * Imports and inserts the specified file into current table step.
+ * Creates and populates table rows/columns, graphs data
+ * @param file to insert into current step
+ * @return true if import is successful
+ */
+TableNode.prototype.importFile = function(filename) {
+	this.view.getStudentAsset(filename, function(callbackArgs, response) {
+		callbackArgs.node.contentPanel.table.handleUploadedData(response);
+	}, {node:this});
+	return true;
+};
+
+
+/**
  * Check if the student has completed the step. We will just check
  * if there are any node states and if there are, the student
  * has completed the step.

@@ -8,6 +8,7 @@
    "svg_background": "",
    "img_background": "",
    "bg_position": "",
+   "studentData_default": "",
    "toolbar_options":{
 		"pencil":true,
 		"line":true,

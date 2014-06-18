@@ -82,6 +82,13 @@
 	        }
 
 	        /*
+	         * Called when the student clicks on the import data button below
+	         */
+	        function importData() {
+				eventManager.fire("viewStudentAssets", null); // TODO: customize to show only allowed file types	        	
+	        }
+	        
+	        /*
 	         * Called when the student clicks on the reset button below
 	         */
 	        function reset() {
@@ -154,6 +161,9 @@
 			 you may delete all of these divs and create the body however you like -->
 		<div id='previousWorkDiv'></div>
 		<div id='promptDiv'></div>
+		<div id='importDataDiv' style='display:none'>
+			<input id='importDataButton' type='button' value='Import Data' onclick='importData()' data-i18n='import_data'></input>
+		</div>
 		<div id='buttonDiv'>
 			<input id='resetButton' type='button' value='Reset Table' onclick='reset()' data-i18n="reset_table"></input>
 			<input id='addRowButton' type='button' value='Add Row' onclick='studentAddRow()' style='display:none' data-i18n="add_row"></input>

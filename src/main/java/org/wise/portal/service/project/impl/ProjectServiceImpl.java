@@ -23,6 +23,7 @@
 package org.wise.portal.service.project.impl;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -44,8 +45,6 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.project.ProjectServiceFactory;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * TELS Portal can offer multiple types of projects, including:
@@ -184,7 +183,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @override @see org.telscenter.sail.webapp.service.offering.RunService#addSharedTeacherToRun(org.telscenter.sail.webapp.domain.impl.AddSharedTeacherParameters)
+	 * @override @see org.wise.portal.service.offering.RunService#addSharedTeacherToRun(org.wise.portal.domain.impl.AddSharedTeacherParameters)
 	 */
 	public void addSharedTeacherToProject(
 			AddSharedTeacherParameters addSharedTeacherParameters) throws ObjectNotFoundException {
@@ -386,9 +385,9 @@ public class ProjectServiceImpl implements ProjectService {
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#projectContainsTag(java.lang.Long, java.lang.String)
 	 */
-	public boolean projectContainsTag(Long projectId, String name) {
+	public boolean projectContainsTag(Project project, String name) {
 		ProjectService projectService = this.projectServiceFactory.getProjectService(ProjectType.LD);
-		return projectService.projectContainsTag(projectId, name);
+		return projectService.projectContainsTag(project, name);
 	}
 
 	/**

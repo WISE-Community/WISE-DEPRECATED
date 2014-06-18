@@ -497,13 +497,7 @@ View.prototype.BrainstormNode.populatePrompt = function() {
  */
 View.prototype.BrainstormNode.updatePrompt = function(){
 	/* update content */
-	var content = '',
-		editor = tinymce.get('promptInput');
-	if(editor){
-		content = editor.getContent();
-	} else {
-		content = $('#promptInput').val();
-	}
+	var content = this.view.getRichTextContent('promptInput');
 	
 	this.content.assessmentItem.interaction.prompt = content;
 	

@@ -220,10 +220,17 @@ View.prototype.generateAdvancedAuthoring = function(){
 View.prototype.closeOnStepSaved = function(success){
 	if(success || confirm('Save failed, do you still want to exit?')){
 		this.cleanupCommonComponents();
-		document.getElementById('dynamicPage').innerHTML = '';
-		// remove any tinyMCE instances
-		tinymce.remove();
+
+		try {
+			// remove any tinyMCE instances
+			tinymce.remove();			
+		} catch(e) {
+			
+		}
 		
+		//clear the authoring div
+		document.getElementById('dynamicPage').innerHTML = '';
+
 		this.hideAuthorStepDialog();
 		
 		/*
@@ -298,14 +305,15 @@ View.prototype.getAuthoringHintsArray = function() {
  * saves hints to local var
  */
 View.prototype.saveHint = function(){
-    var hintTextBoxes = $('#hintsTabs').find("textarea");
+    var hintTextBoxes = $('#hintsTabs').find("textarea"),
+    	view = this;
     
     var newHintsArr = [];
     for(var i=0; i<hintTextBoxes.length; i++) {
     	var id = $(hintTextBoxes[i]).attr('id');
     	if(tinymce.get(id)){
     		// rich text editor is active on textarea, so get contents from editor
-    		newHintsArr.push(tinymce.get(id).getContent());
+    		newHintsArr.push(view.getRichTextContent(id));
     	} else {
     		newHintsArr.push(hintTextBoxes[i].value);
     	}
@@ -845,6 +853,7 @@ View.prototype.addRichTextAuthoring = function(id,update,fullpage){
 	    theme: "modern",
 	    skin: "wise",
 	    plugins: plugins,
+	    allow_script_urls: true,
 	    menu : {
 	        edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall'},
 	        insert : {title : 'Insert', items : 'image media link | charmap hr'},
@@ -859,6 +868,7 @@ View.prototype.addRichTextAuthoring = function(id,update,fullpage){
 	    extended_valid_elements: "a[href|target|title|onclick|name|id|class|style]",
 	    document_base_url: view.getProjectFolderPath(),
 	    content_css : contextPath + "/vle/css/global.css",
+	    relative_urls: false,
 	    setup: function(ed){
 	    	// add keyUp listener
 	        ed.on('keyup change', function(e){

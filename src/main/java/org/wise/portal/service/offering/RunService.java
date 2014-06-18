@@ -219,6 +219,20 @@ public interface RunService extends OfferingService {
     public Run retrieveById(Long runId) throws ObjectNotFoundException;
     
     /**
+     * Retrieves the Run domain object using a unique runId
+     * 
+     * @param runId 
+     *         <code>Long</code> runId to use for lookup
+     * @param doEagerFetch
+     * 		   <code>boolean</code> fetch all fields of the run eagerly, same as EAGER-fetch 
+     * @return <code>Run</code>
+     *          The Run object with the runId
+     * @throws <code>RunNotFoundException</code> when runId cannot be used 
+     *          to find an existing run   
+     */
+    public Run retrieveById(Long runId, boolean doEagerFetch) throws ObjectNotFoundException;
+    
+    /**
      * Gets all of the Workgroups that are associated with this run
      * @return set of Workgroups for that are in this run
      * @throws ObjectNotFoundException when runId cannot be used 

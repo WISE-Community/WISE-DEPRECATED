@@ -128,7 +128,13 @@ public class TelsAuthenticationSuccessHandler extends
         Locale locale = null;
         String userLanguage = userDetails.getLanguage();
         if (userLanguage != null) {
-        	locale = new Locale(userLanguage);
+        	if (userLanguage.contains("_")) {
+        		String language = userLanguage.substring(0, userLanguage.indexOf("_"));
+        		String country = userLanguage.substring(userLanguage.indexOf("_")+1);
+            	locale = new Locale(language, country); 	
+        	} else {
+        		locale = new Locale(userLanguage);
+        	}
         } else {
         	// user default browser locale setting if user hasn't specified locale
         	locale = request.getLocale();

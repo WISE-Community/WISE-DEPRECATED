@@ -40,14 +40,14 @@ View.prototype.AnnotatorNode.generatePage = function(view){
 	var colorDiv = createElement(document, 'div', {id: 'colorDiv'});
 	
 	//get the existing max labels value
-	var maxLabels = this.content.maxLabels ? this.content.maxLabels : 0;
+	var maxLabels = this.content.labels_max > -1 ? this.content.labels_max : 0;
 	//the label for the maximum number of lables input
 	var maxLabelsLabel = document.createTextNode(view.getI18NString('annotator_authoring_maxLabel','SVGDrawNode'));
 	//the text input for the maximum number of labels allowed
 	var maxLabelsInput = createElement(document, 'input', {type: 'number', id: 'maxLabels', name: 'maxLabels', value: maxLabels, size:2, onchange: 'eventManager.fire("annotatorUpdateMaxLabels")'});
 	
 	//get the existing min labels value
-	var minLabels = this.content.maxLabels ? this.content.maxLabels : 1;
+	var minLabels = this.content.labels_min > -1 ? this.content.labels_min : 1;
 	//the label for the minimum number of lables input
 	var minLabelsLabel = document.createTextNode(view.getI18NString('annotator_authoring_minLabel','SVGDrawNode'));
 	//the text input for the minimum number of labels required
@@ -131,14 +131,1821 @@ View.prototype.AnnotatorNode.generatePage = function(view){
 	instructionsTextAreaDiv.appendChild(textAreaButtonInput);
 	pageDiv.appendChild(createBreak());
 	
-	//pageDiv.appendChild(autoScoringOptionsDiv);
-	//pageDiv.appendChild(autoScoringFeedbackAuthoringDiv);
+	//create the label for enabling auto scoring
+	var enableAutoScoringLabel = $('<p>');
+	enableAutoScoringLabel.css('display', 'inline');
+	enableAutoScoringLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	enableAutoScoringLabel.css('font-size', '1em');
+	enableAutoScoringLabel.text('Enable Auto Scoring: ');
+	
+	//create the checkbox for enabling auto scoring
+	var enableAutoScoringCheckbox = $('<input>');
+	enableAutoScoringCheckbox.attr('id', 'enableAutoScoringCheckbox')
+	enableAutoScoringCheckbox.attr('type', 'checkbox');
+	enableAutoScoringCheckbox.click({thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.enableAutoScoringCheckboxClicked();
+	});
+	
+	//create the auto scoring div that contains the auto scoring authoring
+	var autoScoringDiv = this.createAutoScoringDiv();
+	
+	//add the auto scoring authoring elements
+	$(pageDiv).append(enableAutoScoringLabel);
+	$(pageDiv).append(enableAutoScoringCheckbox);
+	$(pageDiv).append(autoScoringDiv);
+	
+	if(this.content.enableAutoScoring) {
+		//auto scoring is enabled so we will check the box and display the div
+		enableAutoScoringCheckbox.prop('checked', true);
+		autoScoringDiv.show();
+	}
+	
+	//populate the auto scoring div values
+	this.populateAutoScoringDiv();
 	
 	this.generateColorOptions();
 	//this.generateLabelMinOptions();
 	//this.generateLabelMaxOptions();
 	//this.generateAutoScoringOptions();
 	//this.generateAutoScoringFeedbackAuthoringDiv();
+};
+
+/**
+ * Get the auto scoring value
+ * @param fieldName the name of the auto scoring field
+ * @return the field value or null if the field name does not exist
+ */
+View.prototype.AnnotatorNode.getAutoScoringFieldValue = function(fieldName) {
+	var fieldValue = null;
+	
+	if(fieldName != null && fieldName != '') {
+		//get the step content
+		var content = this.content;
+		
+		if(content != null) {
+			//get the auto scoring object in the content
+			var autoScoring = content.autoScoring;
+			
+			if(autoScoring != null) {
+				//get the value
+				fieldValue = autoScoring[fieldName];
+			}
+		}		
+	}
+	
+	return fieldValue;
+};
+
+/**
+ * Set the auto scoring value
+ * @param fieldName the name of the auto scoring field
+ * @param fieldValue the value of the auto scoring field
+ */
+View.prototype.AnnotatorNode.setAutoScoringFieldValue = function(fieldName, fieldValue) {
+	if(fieldName != null && fieldName != '' && fieldValue != null) {
+		//get the step content
+		var content = this.content;
+		
+		if(content != null) {
+			//get the auto scoring object in the content
+			var autoScoring = content.autoScoring;
+			
+			if(autoScoring != null) {
+				//set the field
+				autoScoring[fieldName] = fieldValue;
+				
+				//fire source updated event, which will update the preview
+				this.view.eventManager.fire('sourceUpdated');
+			}
+		}
+	}
+};
+
+/**
+ * Populate the auto scoring div elements
+ */
+View.prototype.AnnotatorNode.populateAutoScoringDiv = function() {
+	//get the step content
+	var content = this.content;
+	
+	if(content != null) {
+		//get the value for whether to display the score to the student
+		var autoScoringDisplayScoreToStudent = this.getAutoScoringFieldValue('autoScoringDisplayScoreToStudent');
+		if(autoScoringDisplayScoreToStudent) {
+			//check the box
+			$('#displayScoreToStudentCheckbox').prop('checked', true);
+		}
+		
+		//get the value for whether to display the feedback to the student
+		var autoScoringDisplayFeedbackToStudent = this.getAutoScoringFieldValue('autoScoringDisplayFeedbackToStudent');
+		if(autoScoringDisplayFeedbackToStudent) {
+			//check the box
+			$('#displayFeedbackToStudentCheckbox').prop('checked', true);
+		}
+		
+		//get the value for whether to display feedback on the last check work chance
+		var autoScoringDoNotDisplayFeedbackToStudentOnLastChance = this.getAutoScoringFieldValue('autoScoringDoNotDisplayFeedbackToStudentOnLastChance');
+		if(autoScoringDoNotDisplayFeedbackToStudentOnLastChance) {
+			//check the box
+			$('#displayNoFeedbackOnLastChanceCheckbox').prop('checked', true);
+		}
+		
+		//get the max number of check work chances
+		var autoScoringCheckWorkChances = this.getAutoScoringFieldValue('autoScoringCheckWorkChances');
+		if(autoScoringCheckWorkChances != null) {
+			//set the value
+			$('#checkWorkChancesInput').val(autoScoringCheckWorkChances);
+		}
+		
+		//get the regions
+		var regions = this.getAutoScoringFieldValue('regions');
+		if(regions != null) {
+			/*
+			 * loop through all the regions from last to first so that
+			 * the regions with the higher ids show up at the top
+			 */
+			for(var r=regions.length - 1; r>=0; r--) {
+				//get a region
+				var region = regions[r];
+				
+				if(region != null) {
+					//create the region list item
+					var regionLI = this.createRegionLI(region);
+					
+					if(regionLI != null) {
+						//add the region list item to the list of regions
+						$('#regionsUL').append(regionLI);
+					}
+				}
+			}
+		}
+		
+		//get the labels
+		var labels = this.getAutoScoringFieldValue('labels');
+		if(labels != null) {
+			/*
+			 * loop through all the labels from last to first so that
+			 * the labels with the higher ids show up at the top
+			 */
+			for(var l=labels.length - 1; l>=0; l--) {
+				//get a label
+				var label = labels[l];
+				
+				if(label != null) {
+					//create the label list item
+					var labelLI = this.createLabelLI(label);
+					
+					if(labelLI != null) {
+						//add the label list item to the list of labels
+						$('#labelsUL').append(labelLI);
+					}
+				}
+			}
+		}
+		
+		//get the mappings
+		var mappings = this.getAutoScoringFieldValue('mappings');
+		if(mappings != null) {
+			/*
+			 * loop through all the mappings from last to first so that
+			 * the mappings with the higher ids show up at the top
+			 */
+			for(var m=mappings.length - 1; m>=0; m--) {
+				//get a mapping
+				var mapping = mappings[m];
+				
+				if(mapping != null) {
+					//create a mapping list item
+					var mappingLI = this.createMappingLI(mapping);
+					
+					if(mappingLI != null) {
+						//add the mapping list item to the list of mappings
+						$('#mappingsUL').append(mappingLI);
+					}
+				}
+			}
+		}
+		
+		//get the scoring criteria
+		var scoringCriteria = this.getAutoScoringFieldValue('scoringCriteria');
+		if(scoringCriteria != null) {
+			/*
+			 * loop through all the scoring criteria from last to first so that
+			 * the scoring criteria with the higher ids show up at the top
+			 */
+			for(var s=scoringCriteria.length - 1; s>=0; s--) {
+				//get a scoring criteria
+				var scoringCriterion = scoringCriteria[s];
+				
+				if(scoringCriterion != null) {
+					//create a scoring criteria list item
+					var mappingLI = this.createScoringCriteriaLI(scoringCriterion);
+					
+					if(mappingLI != null) {
+						//add the scoring criteria list item to the list of scoring criteria
+						$('#scoringCriteriaUL').append(mappingLI);
+					}
+				}
+			}
+		}
+		
+	}
+	
+};
+
+/**
+ * Create a list item for a region
+ * @param region the region object from the step content
+ * @return the list item for the region
+ */
+View.prototype.AnnotatorNode.createRegionLI = function(region) {
+	var regionLI = null;
+	
+	if(region != null) {
+		//get the fields in the region
+		var id = region.id;
+		var name = region.name;
+		var shape = region.shape;
+
+		//create the list item
+		regionLI = $('<li>');
+		regionLI.attr('id', 'regionLI_' + id);
+		
+		//create the div that will contain the UI elements for this region
+		var div = $('<div>');
+		div.css('border', '1px solid');
+		div.css('padding', '5px 5px');
+		regionLI.append(div);
+		
+		//create the p that will display the region id
+		var idP = $('<p>');
+		idP.text('Id: ' + id + ' ');
+		idP.css('display', 'inline');
+		div.append(idP);
+		
+		//create the delete button to delete this region
+		var deleteButton = $('<input>');
+		deleteButton.attr('type', 'button');
+		deleteButton.val('Delete');
+		deleteButton.click({thisAnnotatorNode:this, id:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var id = event.data.id;
+			thisAnnotatorNode.deleteRegionClicked(id);
+		});
+		div.append(deleteButton);
+		
+		div.append('<br>');
+		
+		//create the p that will display the name label
+		var nameLabel = $('<p>');
+		nameLabel.text('Name: ');
+		nameLabel.css('display', 'inline');
+		div.append(nameLabel);
+		
+		//create the input for the region name
+		var nameInput = $('<input>');
+		nameInput.attr('id', 'regionNameInput_' + id);
+		nameInput.attr('type', 'text');
+		nameInput.val(name);
+		nameInput.on('input', {thisAnnotatorNode:this, regionId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var regionId = event.data.regionId;
+			thisAnnotatorNode.regionNameChanged(regionId);
+		});
+		div.append(nameInput);
+		
+		div.append('<br>');
+		
+		//get the parameters of the shape
+		var shapeType = shape.type;
+		var shapeX = shape.x;
+		var shapeY = shape.y;
+		
+		//create the p that will display the shape label
+		var shapeLabel = $('<p>');
+		shapeLabel.text('Shape');
+		shapeLabel.css('display', 'inline');
+		div.append(shapeLabel);
+		
+		div.append('<br>');
+		
+		//create the p that will display the shape type label
+		var shapeTypeLabel = $('<p>');
+		shapeTypeLabel.text('Type: ');
+		shapeTypeLabel.css('display', 'inline');
+		div.append(shapeTypeLabel);
+		
+		//create the rectangle radio button
+		var rectangleRadioButton = $('<input>');
+		rectangleRadioButton.val('rectangle');
+		rectangleRadioButton.attr('type', 'radio');
+		rectangleRadioButton.attr('name', 'shapeTypeRadioButton_' + id);
+		rectangleRadioButton.click({thisAnnotatorNode:this, regionId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var regionId = event.data.regionId;
+			thisAnnotatorNode.regionShapeTypeChanged(regionId);
+		});
+		div.append(rectangleRadioButton);
+		
+		//create the rectangle label
+		var rectangleLabel = $('<p>');
+		rectangleLabel.text('Rectangle');
+		rectangleLabel.css('display', 'inline');
+		div.append(rectangleLabel);
+		
+		//create the circle radio button
+		var circleRadioButton = $('<input>');
+		circleRadioButton.val('circle');
+		circleRadioButton.attr('type', 'radio');
+		circleRadioButton.attr('name', 'shapeTypeRadioButton_' + id);
+		circleRadioButton.click({thisAnnotatorNode:this, regionId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var regionId = event.data.regionId;
+			thisAnnotatorNode.regionShapeTypeChanged(regionId);
+		});
+		div.append(circleRadioButton);
+		
+		//create the circle label
+		var circleLabel = $('<p>');
+		circleLabel.text('Circle');
+		circleLabel.css('display', 'inline');
+		div.append(circleLabel);
+		
+		div.append('<br>');
+		
+		//create the x label
+		var xLabel = $('<p>');
+		xLabel.text('X: ');
+		xLabel.css('display', 'inline');
+		div.append(xLabel);
+		
+		//create the input for the x location
+		var xInput = $('<input>');
+		xInput.attr('id', 'regionXInput_' + id);
+		xInput.attr('type', 'text');
+		xInput.css('width', '40px');
+		xInput.val(shapeX);
+		xInput.on('input', {thisAnnotatorNode:this, regionId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var regionId = event.data.regionId;
+			thisAnnotatorNode.regionXInputChanged(regionId);
+		});
+		div.append(xInput);
+		
+		div.append('<br>');
+		
+		//create the y label
+		var yLabel = $('<p>');
+		yLabel.text('Y: ');
+		yLabel.css('display', 'inline');
+		div.append(yLabel);
+		
+		//create the input for the y location
+		var yInput = $('<input>');
+		yInput.attr('id', 'regionYInput_' + id);
+		yInput.attr('type', 'text');
+		yInput.css('width', '40px');
+		yInput.val(shapeY);
+		yInput.on('input', {thisAnnotatorNode:this, regionId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var regionId = event.data.regionId;
+			thisAnnotatorNode.regionYInputChanged(regionId);
+		});
+		div.append(yInput);
+		
+		div.append('<br>');
+		
+		//create the div that will display the rectangle parameters
+		var rectangleParametersDiv = $('<div>');
+		rectangleParametersDiv.attr('id', 'regionRectangleParametersDiv_' + id);
+		
+		var shapeWidth = shape.width;
+		var shapeHeight = shape.height;
+		
+		//create the width label
+		var widthLabel = $('<p>');
+		widthLabel.text('Width: ');
+		widthLabel.css('display', 'inline');
+		rectangleParametersDiv.append(widthLabel);
+		
+		//create the width input
+		var widthInput = $('<input>');
+		widthInput.attr('id', 'regionWidthInput_' + id);
+		widthInput.attr('type', 'text');
+		widthInput.css('width', '40px');
+		widthInput.on('input', {thisAnnotatorNode:this, regionId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var regionId = event.data.regionId;
+			thisAnnotatorNode.regionWidthInputChanged(regionId);
+		});
+		rectangleParametersDiv.append(widthInput);
+		if(shapeWidth != null) {
+			widthInput.val(shapeWidth);
+		}
+		
+		rectangleParametersDiv.append('<br>');
+		
+		//create the height label
+		var heightLabel = $('<p>');
+		heightLabel.text('Height: ');
+		heightLabel.css('display', 'inline');
+		rectangleParametersDiv.append(heightLabel);
+		
+		//create the height input
+		var heightInput = $('<input>');
+		heightInput.attr('id', 'regionHeightInput_' + id);
+		heightInput.attr('type', 'text');
+		heightInput.css('width', '40px');
+		heightInput.on('input', {thisAnnotatorNode:this, regionId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var regionId = event.data.regionId;
+			thisAnnotatorNode.regionHeightInputChanged(regionId);
+		});
+		rectangleParametersDiv.append(heightInput);
+		if(shapeHeight != null) {
+			heightInput.val(shapeHeight);
+		}
+		
+		div.append(rectangleParametersDiv);
+		
+		//create the div that will display the circle parameters
+		var circleParametersDiv = $('<div>');
+		circleParametersDiv.attr('id', 'regionCircleParametersDiv_' + id);
+		
+		var shapeRadius = shape.radius;
+		
+		//create the radius label
+		var radiusLabel = $('<p>');
+		radiusLabel.text('Radius: ');
+		radiusLabel.css('display', 'inline');
+		circleParametersDiv.append(radiusLabel);
+		
+		//create the radius input
+		var radiusInput = $('<input>');
+		radiusInput.attr('id', 'regionRadiusInput_' + id);
+		radiusInput.attr('type', 'text');
+		radiusInput.css('width', '40px');
+		radiusInput.on('input', {thisAnnotatorNode:this, regionId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var regionId = event.data.regionId;
+			thisAnnotatorNode.regionRadiusInputChanged(regionId);
+		});
+		circleParametersDiv.append(radiusInput);
+		if(shapeRadius != null) {
+			radiusInput.val(shapeRadius);
+		}
+		
+		div.append(circleParametersDiv);
+		
+		if(shapeType == 'rectangle') {
+			//the shape is a rectangle
+			rectangleRadioButton.prop('checked', true);
+			
+			//hide the circle parameters div
+			circleParametersDiv.hide();
+		} else if(shapeType == 'circle') {
+			//the shape is a circle
+			circleRadioButton.prop('checked', true);
+			
+			//hide the rectangle parameters div
+			rectangleParametersDiv.hide();
+		}
+	}
+	
+	return regionLI;
+};
+
+/**
+ * Get the shape field value from a region
+ * @param regionId the region id
+ * @param fieldName the field name
+ * @return the field value
+ */
+View.prototype.AnnotatorNode.getRegionShapeFieldValue = function(regionId, fieldName) {
+	var fieldValue = null;
+	
+	if(regionId != null && fieldName != null) {
+		//get the region
+		var region = this.getAutoScoringChildObject('regions', regionId);
+		
+		if(region != null) {
+			//get the shape
+			var shape = region.shape;
+			
+			if(shape != null) {
+				//get the field value
+				fieldValue = shape[fieldName];
+			}
+		}
+	}
+	
+	return fieldValue;
+};
+
+/**
+ * Update the region shape
+ * @param regionId the region id
+ * @param fieldName the name of the field we are going to update
+ * @param fieldValue the value that we will set to the field name
+ */
+View.prototype.AnnotatorNode.updateRegionShape = function(regionId, fieldName, fieldValue) {
+	if(regionId != null && fieldName != null) {
+		//get the region
+		var region = this.getAutoScoringChildObject('regions', regionId);
+		
+		if(region != null) {
+			//get the shape
+			var shape = region.shape;
+			
+			if(shape != null) {
+				//set the value
+				shape[fieldName] = fieldValue;
+			}
+		}
+	}
+	
+	/* fire source updated event */
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * The region name has been changed so we will update the step content
+ * @param regionId the region id
+ */
+View.prototype.AnnotatorNode.regionNameChanged = function(regionId) {
+	//get the name value
+	var name = $('#regionNameInput_' + regionId).val();
+	
+	//update the step content
+	this.updateAutoScoringChildObject('regions', regionId, 'name', name);
+};
+
+/**
+ * The region shape type has changed so we will update the step content
+ * @param regionId the region id
+ */
+View.prototype.AnnotatorNode.regionShapeTypeChanged = function(regionId) {
+	//get the shape type that is checked
+	var shapeType = $('input:radio[name="shapeTypeRadioButton_' + regionId + '"]:checked').val();
+	
+	if(shapeType == 'rectangle') {
+		//rectangle is checked
+		$('#regionCircleParametersDiv_' + regionId).hide();
+		$('#regionRectangleParametersDiv_' + regionId).show();
+	} else if(shapeType == 'circle') {
+		//circle is checked
+		$('#regionRectangleParametersDiv_' + regionId).hide();
+		$('#regionCircleParametersDiv_' + regionId).show();
+	}
+	
+	//update the step content
+	this.updateRegionShape(regionId, 'type', shapeType);
+};
+
+/**
+ * A region shape field has changed
+ * @param inputDOMId the dom id of the input element
+ * @param childId the id of the region object
+ * @param childField the field inside the region shape object to update
+ */
+View.prototype.AnnotatorNode.regionShapeInputChanged = function(inputDOMId, childId, childField) {
+	//get the value
+	var value = $('#' + inputDOMId).val();
+	
+	if(isNaN(value)) {
+		//the user has not entered a valid number
+		alert('Only integers are allowed');
+		
+		//revert the value back to the previous value from the step content
+		var previousValue = this.getRegionShapeFieldValue(childId, childField);
+		$('#' + inputDOMId).val(previousValue);
+	} else {
+		//convert the string to a number
+		value = +value;
+		
+		//check if the value is an integer
+		if(value !== parseInt(value)) {
+			//value is not an integer
+			alert('Only integers are allowed');
+			
+			//change the value to an integer
+			value = parseInt(value);
+			
+			//update the input value
+			$('#' + inputDOMId).val(value);
+		}
+		
+		//update the step content
+		this.updateRegionShape(childId, childField, value);
+	}
+};
+
+/**
+ * The region x location has changed
+ * @param regionId the region id
+ */
+View.prototype.AnnotatorNode.regionXInputChanged = function(regionId) {
+	var inputDOMId = 'regionXInput_' + regionId;
+	var childId = regionId;
+	var childField = 'x';
+	
+	//update the x value in the step content
+	this.regionShapeInputChanged(inputDOMId, childId, childField);
+};
+
+/**
+ * The region y location has changed
+ * @param regionId the region id
+ */
+View.prototype.AnnotatorNode.regionYInputChanged = function(regionId) {
+	var inputDOMId = 'regionYInput_' + regionId;
+	var childId = regionId;
+	var childField = 'y';
+	
+	//update the y value in the step content
+	this.regionShapeInputChanged(inputDOMId, childId, childField);
+};
+
+/**
+ * The region width has changed
+ * @param regionId the region id
+ */
+View.prototype.AnnotatorNode.regionWidthInputChanged = function(regionId) {
+	var inputDOMId = 'regionWidthInput_' + regionId;
+	var childId = regionId;
+	var childField = 'width';
+	
+	//update the width value in the step content
+	this.regionShapeInputChanged(inputDOMId, childId, childField);
+};
+
+/**
+ * The region height has changed
+ * @param regionId the region id
+ */
+View.prototype.AnnotatorNode.regionHeightInputChanged = function(regionId) {
+	var inputDOMId = 'regionHeightInput_' + regionId;
+	var childId = regionId;
+	var childField = 'height';
+	
+	//update the height value in the step content
+	this.regionShapeInputChanged(inputDOMId, childId, childField);
+};
+
+/**
+ * The radius has changed
+ * @param regionId the region id
+ */
+View.prototype.AnnotatorNode.regionRadiusInputChanged = function(regionId) {
+	var inputDOMId = 'regionRadiusInput_' + regionId;
+	var childId = regionId;
+	var childField = 'radius';
+	
+	//update the radius value in the step content
+	this.regionShapeInputChanged(inputDOMId, childId, childField);
+};
+
+/**
+ * Create the list item for a label
+ * @param label the label object from the step content
+ */
+View.prototype.AnnotatorNode.createLabelLI = function(label) {
+	var labelLI = null;
+	
+	if(label != null) {
+		//get the fields in the label
+		var id = label.id;
+		var type = label.type;
+		var value = label.value;
+		
+		//create the list item
+		labelLI = $('<li>');
+		labelLI.attr('id', 'labelLI_' + id);
+		
+		//create the div that will contain the UI elements for this label
+		var div = $('<div>');
+		div.css('border', '1px solid');
+		div.css('padding', '5px 5px');
+		labelLI.append(div);
+		
+		//the p that will display the id
+		var idP = $('<p>');
+		idP.text('Id: ' + id + ' ');
+		idP.css('display', 'inline');
+		div.append(idP);
+		
+		//the delete button to delete this label
+		var deleteButton = $('<input>');
+		deleteButton.attr('type', 'button');
+		deleteButton.val('Delete');
+		deleteButton.click({thisAnnotatorNode:this, id:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var id = event.data.id;
+			thisAnnotatorNode.deleteLabelClicked(id);
+		});
+		div.append(deleteButton);
+		
+		div.append('<br>');
+		
+		//the value label
+		var valueLabel = $('<p>');
+		valueLabel.text('Value: ');
+		valueLabel.css('display', 'inline');
+		div.append(valueLabel);
+		
+		//the value input
+		var valueInput = $('<input>');
+		valueInput.attr('id', 'labelValueInput_' + id);
+		valueInput.attr('type', 'text');
+		valueInput.css('width', '400px');
+		valueInput.val(value);
+		valueInput.on('input', {thisAnnotatorNode:this, labelId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var labelId = event.data.labelId;
+			thisAnnotatorNode.labelValueChanged(labelId);
+		});
+		div.append(valueInput);
+	}
+	
+	return labelLI;
+};
+
+/**
+ * The label value has changed
+ * @param labelId the label id
+ */
+View.prototype.AnnotatorNode.labelValueChanged = function(labelId) {
+	//get the label value
+	var labelValue = $('#labelValueInput_' + labelId).val();
+	
+	if(labelValue != null) {
+		//update the step content
+		this.updateAutoScoringChildObject('labels', labelId, 'value', labelValue);
+	}
+};
+
+/**
+ * Create the list item for a mapping
+ * @param mapping the mapping object from the step content
+ */
+View.prototype.AnnotatorNode.createMappingLI = function(mapping) {
+	var mappingLI = null;
+	
+	if(mapping != null) {
+		//get the fields in the mapping
+		var id = mapping.id;
+		var regionId = mapping.regionId;
+		var labelId = mapping.labelId;
+		
+		//create the list item
+		mappingLI = $('<li>');
+		mappingLI.attr('id', 'mappingLI_' + id);
+		
+		//create the div that will contain the UI elements for this mapping
+		var div = $('<div>');
+		div.css('border', '1px solid');
+		div.css('padding', '5px 5px');
+		mappingLI.append(div);
+		
+		//the p that will display the id
+		var idP = $('<p>');
+		idP.text('Id: ' + id + ' ');
+		idP.css('display', 'inline');
+		div.append(idP);
+		
+		//the delete button that will delete this mapping
+		var deleteButton = $('<input>');
+		deleteButton.attr('type', 'button');
+		deleteButton.val('Delete');
+		deleteButton.click({thisAnnotatorNode:this, id:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var id = event.data.id;
+			thisAnnotatorNode.deleteMappingClicked(id);
+		});
+		div.append(deleteButton);
+		
+		div.append('<br>');
+		
+		//the region id label
+		var regionIdLabel = $('<p>');
+		regionIdLabel.text('Region Id: ');
+		regionIdLabel.css('display', 'inline');
+		div.append(regionIdLabel);
+		
+		//the region id input
+		var regionIdInput = $('<input>');
+		regionIdInput.attr('id', 'mappingRegionIdInput_' + id);
+		regionIdInput.attr('type', 'text');
+		regionIdInput.css('width', '30px');
+		regionIdInput.val(regionId);
+		regionIdInput.on('input', {thisAnnotatorNode:this, mappingId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var mappingId = event.data.mappingId;
+			thisAnnotatorNode.mappingRegionIdInputChanged(mappingId);
+		});
+		
+		div.append(regionIdInput);
+		
+		div.append('<br>');
+		
+		//the label id label
+		var labelIdLabel = $('<p>');
+		labelIdLabel.text('Label Id: ');
+		labelIdLabel.css('display', 'inline');
+		div.append(labelIdLabel);
+		
+		//the label id input
+		var labelIdInput = $('<input>');
+		labelIdInput.attr('id', 'mappingLabelIdInput_' + id);
+		labelIdInput.attr('type', 'text');
+		labelIdInput.css('width', '30px');
+		labelIdInput.val(labelId);
+		labelIdInput.on('input', {thisAnnotatorNode:this, mappingId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var mappingId = event.data.mappingId;
+			thisAnnotatorNode.mappingLabelIdInputChanged(mappingId);
+		});
+		div.append(labelIdInput);
+		
+		mappingLI.append(div);
+	}
+	
+	return mappingLI;
+};
+
+/**
+ * The mapping region id has changed
+ * @param mappingId the mapping id
+ */
+View.prototype.AnnotatorNode.mappingRegionIdInputChanged = function(mappingId) {
+	var inputDOMId = 'mappingRegionIdInput_' + mappingId;
+	var autoScoringFieldName = 'mappings';
+	var childId = mappingId;
+	var childField = 'regionId';
+	
+	//update the scoring criteria score in the step content and the UI
+	this.autoScoringIntegerInputChanged(inputDOMId, autoScoringFieldName, childId, childField);
+};
+
+/**
+ * The mapping label id has changed
+ * @param mappingId the mapping id
+ */
+View.prototype.AnnotatorNode.mappingLabelIdInputChanged = function(mappingId) {
+	var inputDOMId = 'mappingLabelIdInput_' + mappingId;
+	var autoScoringFieldName = 'mappings';
+	var childId = mappingId;
+	var childField = 'labelId';
+	
+	//update the scoring criteria score in the step content and the UI
+	this.autoScoringIntegerInputChanged(inputDOMId, autoScoringFieldName, childId, childField);
+};
+
+/**
+ * Create the list item for the scoring criteria
+ * @param scoringCriteria a scoringCriteria object from the step content
+ */
+View.prototype.AnnotatorNode.createScoringCriteriaLI = function(scoringCriteria) {
+	var scoringCriteriaLI = null;
+	
+	if(scoringCriteria != null) {
+		//get the fields in the scoringCriteria
+		var id = scoringCriteria.id;
+		var logic = scoringCriteria.logic;
+		var score = scoringCriteria.score;
+		var successFeedback = scoringCriteria.successFeedback;
+		var failureFeedback = scoringCriteria.failureFeedback;
+
+		//create the list item
+		scoringCriteriaLI = $('<li>');
+		scoringCriteriaLI.attr('id', 'scoringCriteriaLI_' + id);
+		
+		//create the div that will contain the UI elements for this scoringCriteria 
+		var div = $('<div>');
+		div.css('border', '1px solid');
+		div.css('padding', '5px 5px');
+		scoringCriteriaLI.append(div);
+		
+		//the p that will display the id
+		var idP = $('<p>');
+		idP.text('Id: ' + id + ' ');
+		idP.css('display', 'inline');
+		div.append(idP);
+
+		//the delete button that will delete this scoringCriteria
+		var deleteButton = $('<input>');
+		deleteButton.attr('type', 'button');
+		deleteButton.val('Delete');
+		deleteButton.click({thisAnnotatorNode:this, id:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var id = event.data.id;
+			thisAnnotatorNode.deleteScoringCriteriaClicked(id);
+		});
+		div.append(deleteButton);
+		
+		div.append('<br>');
+		
+		//the logic label
+		var logicLabel = $('<p>');
+		logicLabel.text('Logic: ');
+		logicLabel.css('display', 'inline');
+		div.append(logicLabel);
+		
+		//the logic input
+		var logicInput = $('<input>');
+		logicInput.attr('id', 'scoringCriteriaLogicInput_' + id);
+		logicInput.attr('type', 'text');
+		logicInput.css('width', '300px');
+		logicInput.val(logic);
+		logicInput.on('input', {thisAnnotatorNode:this, scoringCriteriaId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var scoringCriteriaId = event.data.scoringCriteriaId;
+			thisAnnotatorNode.scoringCriteriaLogicInputChanged(scoringCriteriaId);
+		});
+		div.append(logicInput);
+		
+		scoringCriteriaLI.append(div);
+		
+		div.append('<br>');
+		
+		//the score label
+		var scoreLabel = $('<p>');
+		scoreLabel.text('Score: ');
+		scoreLabel.css('display', 'inline');
+		div.append(scoreLabel);
+		
+		//the score input
+		var scoreInput = $('<input>');
+		scoreInput.attr('id', 'scoringCriteriaScoreInput_' + id);
+		scoreInput.attr('type', 'text');
+		scoreInput.css('width', '35px');
+		scoreInput.val(score);
+		scoreInput.on('input', {thisAnnotatorNode:this, scoringCriteriaId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var scoringCriteriaId = event.data.scoringCriteriaId;
+			thisAnnotatorNode.scoringCriteriaScoreInputChanged(scoringCriteriaId);
+		});
+		div.append(scoreInput);
+		
+		scoringCriteriaLI.append(div);
+		
+		div.append('<br>');
+		
+		//the success feedback label
+		var successFeedbackLabel = $('<p>');
+		successFeedbackLabel.text('Success Feedback: ');
+		successFeedbackLabel.css('display', 'inline');
+		div.append(successFeedbackLabel);
+		
+		//the success feedback input
+		var successFeedbackInput = $('<input>');
+		successFeedbackInput.attr('id', 'scoringCriteriaSuccessFeedbackInput_' + id);
+		successFeedbackInput.attr('type', 'text');
+		successFeedbackInput.css('width', '500px');
+		successFeedbackInput.val(successFeedback);
+		successFeedbackInput.on('input', {thisAnnotatorNode:this, scoringCriteriaId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var scoringCriteriaId = event.data.scoringCriteriaId;
+			thisAnnotatorNode.scoringCriteriaSuccessFeedbackInputChanged(scoringCriteriaId);
+		});
+		div.append(successFeedbackInput);
+		
+		scoringCriteriaLI.append(div);
+		
+		div.append('<br>');
+		
+		//the failure feedback label
+		var failureFeedbackLabel = $('<p>');
+		failureFeedbackLabel.text('Failure Feedback: ');
+		failureFeedbackLabel.css('display', 'inline');
+		div.append(failureFeedbackLabel);
+		
+		//the failure feedback input
+		var failureFeedbackInput = $('<input>');
+		failureFeedbackInput.attr('id', 'scoringCriteriaFailureFeedbackInput_' + id);
+		failureFeedbackInput.attr('type', 'text');
+		failureFeedbackInput.css('width', '500px');
+		failureFeedbackInput.val(failureFeedback);
+		failureFeedbackInput.on('input', {thisAnnotatorNode:this, scoringCriteriaId:id}, function(event) {
+			var thisAnnotatorNode = event.data.thisAnnotatorNode;
+			var scoringCriteriaId = event.data.scoringCriteriaId;
+			thisAnnotatorNode.scoringCriteriaFailureFeedbackInputChanged(scoringCriteriaId);
+		});
+		div.append(failureFeedbackInput);
+		
+		scoringCriteriaLI.append(div);
+	}
+	
+	return scoringCriteriaLI;
+};
+
+/**
+ * The scoring criteria logic has changed
+ * @param scoringCriteriaId the scoring criteria id
+ */
+View.prototype.AnnotatorNode.scoringCriteriaLogicInputChanged = function(scoringCriteriaId) {
+	if(scoringCriteriaId != null) {
+		//get the logic value
+		var logic = $('#scoringCriteriaLogicInput_' + scoringCriteriaId).val();
+		
+		//update the step content
+		this.updateAutoScoringChildObject('scoringCriteria', scoringCriteriaId, 'logic', logic);
+	}
+};
+
+/**
+ * The scoring criteria score has changed
+ * @param scoringCriteriaId the scoring criteria id
+ */
+View.prototype.AnnotatorNode.scoringCriteriaScoreInputChanged = function(scoringCriteriaId) {
+	var inputDOMId = 'scoringCriteriaScoreInput_' + scoringCriteriaId;
+	var autoScoringFieldName = 'scoringCriteria';
+	var childId = scoringCriteriaId;
+	var childField = 'score';
+	
+	//update the scoring criteria score in the step content and the UI
+	this.autoScoringIntegerInputChanged(inputDOMId, autoScoringFieldName, childId, childField);
+};
+
+/**
+ * The scoring criteria success feedback has changed
+ * @param scoringCriteriaId the scoring criteria id
+ */
+View.prototype.AnnotatorNode.scoringCriteriaSuccessFeedbackInputChanged = function(scoringCriteriaId) {
+	if(scoringCriteriaId != null) {
+		//get the success feedback value
+		var successFeedback = $('#scoringCriteriaSuccessFeedbackInput_' + scoringCriteriaId).val();
+		
+		//update the step content
+		this.updateAutoScoringChildObject('scoringCriteria', scoringCriteriaId, 'successFeedback', successFeedback);
+	}
+};
+
+/**
+ * The scoring criteria failure feedback has changed
+ * @param scoringCriteriaId the scoring criteria id
+ */
+View.prototype.AnnotatorNode.scoringCriteriaFailureFeedbackInputChanged = function(scoringCriteriaId) {
+	if(scoringCriteriaId != null) {
+		//get the failure feedback value
+		var failureFeedback = $('#scoringCriteriaFailureFeedbackInput_' + scoringCriteriaId).val();
+		
+		//update the step content
+		this.updateAutoScoringChildObject('scoringCriteria', scoringCriteriaId, 'failureFeedback', failureFeedback);
+	}
+};
+
+/**
+ * The integer input has changed so we will make sure the value is an integer and update the step content
+ * @param inputDOMId the dom id of the input element
+ * @param autoScoringFieldName the auto scoring field name e.g. 'regions', 'labels', 'mappings', 'scoringCriteria'
+ * @param childId the id of the object
+ * @param childField the field inside the region, label, mapping, or scoringCriteria object to update
+ */
+View.prototype.AnnotatorNode.autoScoringIntegerInputChanged = function(inputDOMId, autoScoringFieldName, childId, childField) {
+	if(childId != null) {
+		//get the input value
+		var value = $('#' + inputDOMId).val();
+		
+		if(isNaN(value)) {
+			//the user has not entered a valid number
+			alert('Only integers are allowed');
+			
+			//revert the value back to the previous value from the step content
+			var oldValue = this.getAutoScoringChildObjectFieldValue(autoScoringFieldName, childId, childField);
+			$('#' + inputDOMId).val(oldValue);
+		} else {
+			//convert the string to a number
+			value = +value;
+			
+			if(value !== parseInt(value)) {
+				//the value is not an integer
+				alert('Only integers are allowed');
+				
+				//change the value to an integer
+				value = parseInt(value);
+				
+				//update the input value
+				$('#' + inputDOMId).val(value);
+			}
+			
+			//update the step content
+			this.updateAutoScoringChildObject(autoScoringFieldName, childId, childField, value);
+		}
+	}
+};
+
+/**
+ * Get the auto scoring child object. This will get the array with the given
+ * autoScoringFieldName and then get the element in the array with the given childId.
+ * 
+ * For example, if we had this as our autoScoring object
+ * 
+ * "autoScoring":{
+ *    "regions":{
+ *       {
+ *          "id":1,
+ *          "name":"house"
+ *       },
+ *       {
+ *          "id":2,
+ *          "name":"sky"
+ *       }
+ *    },
+ *    "labels":{
+ *       {
+ *          "id":1,
+ *          "name":"cat"
+ *       },
+ *       {
+ *          "id":2,
+ *          "name":"bird"
+ *       }
+ *    }
+ * }
+ * 
+ * and we wanted to get the region with id 2, we would call
+ * getAutoScoringChildObject('regions', 2);
+ * which would return
+ * 
+ * {
+ *    "id":2,
+ *    "name":"sky"
+ * }
+ * 
+ * @param autoScoringFieldName the auto scoring field name e.g. 'regions', 'labels', 'mappings', 'scoringCriteria'
+ * @param childId the id of the object
+ * @return the object from the auto scoring array with the given field name and with the given id
+ */
+View.prototype.AnnotatorNode.getAutoScoringChildObject = function(autoScoringFieldName, childId) {
+	var childObject = null;
+	
+	if(autoScoringFieldName != null && childId != null) {
+		//get the autoScoring field value. this will be an array.
+		var fieldValue = this.getAutoScoringFieldValue(autoScoringFieldName);
+		
+		//loop through all the elements
+		for(var x=0; x<fieldValue.length; x++) {
+			//get an element
+			var tempChildObject = fieldValue[x];
+			
+			if(tempChildObject != null) {
+				//get the id of the child object
+				var tempChildObjectId = tempChildObject.id;
+				
+				if(childId == tempChildObjectId) {
+					//the id matches the one we want
+					childObject = tempChildObject;
+					break;
+				}
+			}
+		}
+	}
+	
+	return childObject;
+};
+
+/**
+ * Update a field in the auto scoring child object
+ * @param autoScoringFieldName the auto scoring field name e.g. 'regions', 'labels', 'mappings', 'scoringCriteria'
+ * @param childId the id of the object
+ * @param fieldName the field name to set the field value into
+ * @param fieldValue the field value to save
+ */
+View.prototype.AnnotatorNode.updateAutoScoringChildObject = function(autoScoringFieldName, childId, fieldName, fieldValue) {
+	if(autoScoringFieldName != null && childId != null && fieldName != null) {
+		//get the object we want
+		var childObject = this.getAutoScoringChildObject(autoScoringFieldName, childId);
+		
+		if(childObject != null) {
+			//update the field name with the field value
+			childObject[fieldName] = fieldValue;
+		}
+	}
+	
+	/* fire source updated event */
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Get the field value of the given auto scoring child object
+ * @param autoScoringFieldName the auto scoring field name e.g. 'regions', 'labels', 'mappings', 'scoringCriteria'
+ * @param childId the id of the object
+ * @param fieldName the field name we want to get the value from
+ * @return the field value
+ */
+View.prototype.AnnotatorNode.getAutoScoringChildObjectFieldValue = function(autoScoringFieldName, childId, fieldName) {
+	var fieldValue = null;
+	
+	if(autoScoringFieldName != null && childId != null && fieldName != null) {
+		//get the object we want
+		var childObject = this.getAutoScoringChildObject(autoScoringFieldName, childId);
+		
+		if(childObject != null) {
+			//get the field value
+			fieldValue = childObject[fieldName];
+		}
+	}
+	
+	return fieldValue;
+};
+
+/**
+ * Create the auto scoring div
+ * @return the auto scoring div
+ */
+View.prototype.AnnotatorNode.createAutoScoringDiv = function() {
+	//create the div
+	var autoScoringDiv = $('<div>');
+	autoScoringDiv.attr('id', 'autoScoringDiv');
+	
+	//create the check box for displaying the score to the student
+	var displayScoreToStudentCheckbox = $('<input>');
+	displayScoreToStudentCheckbox.attr('id', 'displayScoreToStudentCheckbox');
+	displayScoreToStudentCheckbox.attr('type', 'checkbox');
+	displayScoreToStudentCheckbox.click({thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.displayScoreToStudentCheckboxClicked();
+	});
+	
+	//create the label for displaying the score to the student 
+	var displayScoreToStudentLabel = $('<p>');
+	displayScoreToStudentLabel.css('display', 'inline');
+	displayScoreToStudentLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	displayScoreToStudentLabel.css('font-size', '1em');
+	displayScoreToStudentLabel.text('Display Score to Student');
+	
+	//create the check box for displaying the feedback to the student
+	var displayFeedbackToStudentCheckbox = $('<input>');
+	displayFeedbackToStudentCheckbox.attr('id', 'displayFeedbackToStudentCheckbox');
+	displayFeedbackToStudentCheckbox.attr('type', 'checkbox');
+	displayFeedbackToStudentCheckbox.click({thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.displayFeedbackToStudentCheckboxClicked();
+	});
+	
+	//create the label for displaying the feedback to the student
+	var displayFeedbackToStudentLabel = $('<p>');
+	displayFeedbackToStudentLabel.css('display', 'inline');
+	displayFeedbackToStudentLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	displayFeedbackToStudentLabel.css('font-size', '1em');
+	displayFeedbackToStudentLabel.text('Display Feedback Text to Student');
+	
+	//create the check box for not displaying the feedback on the last check work chance
+	var displayNoFeedbackOnLastChanceCheckbox = $('<input>');
+	displayNoFeedbackOnLastChanceCheckbox.attr('id', 'displayNoFeedbackOnLastChanceCheckbox');
+	displayNoFeedbackOnLastChanceCheckbox.attr('type', 'checkbox');
+	displayNoFeedbackOnLastChanceCheckbox.click({thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.displayNoFeedbackOnLastChanceCheckboxClicked();
+	});
+	
+	//create the label for not displaying the feedback on the last check work chance
+	var displayNoFeedbackOnLastChanceLabel = $('<p>');
+	displayNoFeedbackOnLastChanceLabel.css('display', 'inline');
+	displayNoFeedbackOnLastChanceLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	displayNoFeedbackOnLastChanceLabel.css('font-size', '1em');
+	displayNoFeedbackOnLastChanceLabel.text('Do Not Display Feedback to Student on Last Chance');
+
+	//create the label for the check work chances
+	var checkWorkChancesLabel = $('<p>');
+	checkWorkChancesLabel.css('display', 'inline');
+	checkWorkChancesLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	checkWorkChancesLabel.css('font-size', '1em');
+	checkWorkChancesLabel.text('Check Work Chances (leave blank for unlimited tries)');
+	
+	//create the input for the check work chances
+	var checkWorkChancesInput = $('<input>');
+	checkWorkChancesInput.attr('id', 'checkWorkChancesInput');
+	checkWorkChancesInput.attr('type', 'text');
+	checkWorkChancesInput.attr('size', 3);
+	checkWorkChancesInput.on('input', {thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.checkWorkChancesInputChanged();
+	});
+	
+	//create the label for the regions
+	var regionsLabel = $('<p>');
+	regionsLabel.css('display', 'inline');
+	regionsLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	regionsLabel.css('font-size', '1em');
+	regionsLabel.text('Regions ');
+	
+	//create the button to add a region
+	var addRegionButton = $('<input>');
+	addRegionButton.attr('type', 'button');
+	addRegionButton.val('Add');
+	addRegionButton.click({thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.addRegionClicked();
+	});
+	
+	//create a list for the regions
+	var regionsUL = $('<ul>');
+	regionsUL.attr('id', 'regionsUL');
+	regionsUL.css('list-style', 'none');
+	regionsUL.css('padding', 0);
+	regionsUL.css('margin', 0);
+	
+	//create the label for the labels
+	var labelsLabel = $('<p>');
+	labelsLabel.css('display', 'inline');
+	labelsLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	labelsLabel.css('font-size', '1em');
+	labelsLabel.text('Labels ');
+	
+	//create the button to add a label
+	var addLabelButton = $('<input>');
+	addLabelButton.attr('type', 'button');
+	addLabelButton.val('Add');
+	addLabelButton.click({thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.addLabelClicked();
+	});
+	
+	//create a list for the labels
+	var labelsUL = $('<ul>');
+	labelsUL.attr('id', 'labelsUL');
+	labelsUL.css('list-style', 'none');
+	labelsUL.css('padding', 0);
+	labelsUL.css('margin', 0);
+	
+	//create the label for the mappings
+	var mappingsLabel = $('<p>');
+	mappingsLabel.css('display', 'inline');
+	mappingsLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	mappingsLabel.css('font-size', '1em');
+	mappingsLabel.text('Mappings ');
+	
+	//create the button for creating a mapping
+	var addMappingButton = $('<input>');
+	addMappingButton.attr('type', 'button');
+	addMappingButton.val('Add');
+	addMappingButton.click({thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.addMappingClicked();
+	});
+	
+	//create a list for the mappings
+	var mappingsUL = $('<ul>');
+	mappingsUL.attr('id', 'mappingsUL');
+	mappingsUL.css('list-style', 'none');
+	mappingsUL.css('padding', 0);
+	mappingsUL.css('margin', 0);
+	
+	//create the label for the scoring criteria
+	var scoringCriteriaLabel = $('<p>');
+	scoringCriteriaLabel.css('display', 'inline');
+	scoringCriteriaLabel.css('font-family', 'Gill Sans,Arial,Verdana,sans-serif');
+	scoringCriteriaLabel.css('font-size', '1em');
+	scoringCriteriaLabel.text('Scoring Criteria ');
+	
+	//create the button to create a scoring criteria
+	var addScoringCriteriaButton = $('<input>');
+	addScoringCriteriaButton.attr('type', 'button');
+	addScoringCriteriaButton.val('Add');
+	addScoringCriteriaButton.click({thisAnnotatorNode:this}, function(event) {
+		var thisAnnotatorNode = event.data.thisAnnotatorNode;
+		thisAnnotatorNode.addScoringCriteriaClicked();
+	});
+	
+	//create a list for the scoring criteria
+	var scoringCriteriaUL = $('<ul>');
+	scoringCriteriaUL.attr('id', 'scoringCriteriaUL');
+	scoringCriteriaUL.css('list-style', 'none');
+	scoringCriteriaUL.css('padding', 0);
+	scoringCriteriaUL.css('margin', 0);
+	
+	//add all the elements to the auto scoring div
+	autoScoringDiv.append(displayScoreToStudentCheckbox);
+	autoScoringDiv.append(displayScoreToStudentLabel);
+	autoScoringDiv.append('<br>');
+	autoScoringDiv.append(displayFeedbackToStudentCheckbox);
+	autoScoringDiv.append(displayFeedbackToStudentLabel);
+	autoScoringDiv.append('<br>');
+	autoScoringDiv.append(displayNoFeedbackOnLastChanceCheckbox);
+	autoScoringDiv.append(displayNoFeedbackOnLastChanceLabel);
+	autoScoringDiv.append('<br>');
+	autoScoringDiv.append(checkWorkChancesLabel);
+	autoScoringDiv.append(checkWorkChancesInput);
+	autoScoringDiv.append('<br>');
+	autoScoringDiv.append(regionsLabel);
+	autoScoringDiv.append(addRegionButton);
+	autoScoringDiv.append(regionsUL);
+	autoScoringDiv.append('<br>');
+	autoScoringDiv.append(labelsLabel);
+	autoScoringDiv.append(addLabelButton);
+	autoScoringDiv.append(labelsUL);
+	autoScoringDiv.append('<br>');
+	autoScoringDiv.append(mappingsLabel);
+	autoScoringDiv.append(addMappingButton);
+	autoScoringDiv.append(mappingsUL);
+	autoScoringDiv.append('<br>');
+	autoScoringDiv.append(scoringCriteriaLabel);
+	autoScoringDiv.append(addScoringCriteriaButton);
+	autoScoringDiv.append(scoringCriteriaUL);
+	
+	//hide the div for now, it will be shown later when necessary
+	autoScoringDiv.hide();
+	
+	return autoScoringDiv;
+};
+
+/**
+ * The add region button was clicked
+ */
+View.prototype.AnnotatorNode.addRegionClicked = function() {
+	//get the next available region id
+	var nextId = this.getNextId('regions');
+	
+	//create a new region
+	var newRegion = {
+		id:nextId,
+		name:'',
+		shape:{
+			type:'rectangle',
+			x:0,
+			y:0,
+			width:100,
+			height:100
+		}
+	}
+	
+	//get the regions from the step content
+	var regions = this.getAutoScoringField('regions');
+	
+	//add the new region to the array
+	regions.push(newRegion);
+	
+	/* fire source updated event */
+	this.view.eventManager.fire('sourceUpdated');
+	
+	//create a list item for the new region and add it to the list of regions in the UI
+	var newRegionLI = this.createRegionLI(newRegion);
+	$('#regionsUL').prepend(newRegionLI);
+};
+
+/**
+ * The delete region button was clicked
+ * @param regionId the region id
+ */
+View.prototype.AnnotatorNode.deleteRegionClicked = function(regionId) {
+	//get the list item dom id
+	var listItemDOMId = 'regionLI_' + regionId;
+	
+	//remove the mapping from the step content and the UI
+	this.deleteAutoScoringChildObject('regions', regionId, listItemDOMId);
+};
+
+/**
+ * The add label button was clicked
+ */
+View.prototype.AnnotatorNode.addLabelClicked = function() {
+	//get the next available label id
+	var nextId = this.getNextId('labels');
+	
+	//create a new label
+	var newLabel = {
+		id:nextId,
+		type:'string',
+		value:''
+	}
+	
+	//get the labels from the step content
+	var labels = this.getAutoScoringField('labels');
+	
+	//add the new label to the array
+	labels.push(newLabel);
+	
+	/* fire source updated event */
+	this.view.eventManager.fire('sourceUpdated');
+	
+	//create a list item for the label and add it to the list of labels in the UI
+	var newLabelLI = this.createLabelLI(newLabel);
+	$('#labelsUL').prepend(newLabelLI);
+};
+
+/**
+ * The delete label button was clicked
+ * @param labelId the label id
+ */
+View.prototype.AnnotatorNode.deleteLabelClicked = function(labelId) {
+	//get the list item dom id
+	var listItemDOMId = 'labelLI_' + labelId;
+	
+	//remove the mapping from the step content and the UI
+	this.deleteAutoScoringChildObject('labels', labelId, listItemDOMId);
+};
+
+/**
+ * The add mapping button was clicked
+ */
+View.prototype.AnnotatorNode.addMappingClicked = function() {
+	//get the next available mapping id
+	var nextId = this.getNextId('mappings');
+	
+	//create a new mapping
+	var newMapping = {
+		id:nextId,
+		regionId:'',
+		labelId:''
+	}
+	
+	//get the mappings from the step content
+	var mappings = this.getAutoScoringField('mappings');
+	
+	//add the new mapping to the array
+	mappings.push(newMapping);
+	
+	/* fire source updated event */
+	this.view.eventManager.fire('sourceUpdated');
+	
+	//create a list item for the mapping and add it to the list of mappings in the UI
+	var newMappingLI = this.createMappingLI(newMapping);
+	$('#mappingsUL').prepend(newMappingLI);
+};
+
+/**
+ * The delete mapping button was clicked
+ */
+View.prototype.AnnotatorNode.deleteMappingClicked = function(mappingId) {
+	//get the list item dom id
+	var listItemDOMId = 'mappingLI_' + mappingId;
+	
+	//remove the mapping from the step content and the UI
+	this.deleteAutoScoringChildObject('mappings', mappingId, listItemDOMId);
+};
+
+/**
+ * The add scoring criteria button was clicked
+ */
+View.prototype.AnnotatorNode.addScoringCriteriaClicked = function() {
+	//get the next available scoring criteria id
+	var nextId = this.getNextId('scoringCriteria');
+	
+	//create a new scoring criteria
+	var newScoringCriteria = {
+		id:nextId,
+		logic:'',
+		score:'',
+		successFeedback:'',
+		failureFeedback:''
+	}
+	
+	//get the scoring criteria from the step content
+	var scoringCriteria = this.getAutoScoringField('scoringCriteria');
+	
+	//add the new scoring critera to the array
+	scoringCriteria.push(newScoringCriteria);
+	
+	/* fire source updated event */
+	this.view.eventManager.fire('sourceUpdated');
+	
+	//create a list item for the scoring criteria and add it to the list of scoring criteria in the UI
+	var newScoringCriteriaLI = this.createScoringCriteriaLI(newScoringCriteria);
+	$('#scoringCriteriaUL').prepend(newScoringCriteriaLI);
+};
+
+/**
+ * The delete scoring criteria button was clicked
+ * @param scoringCritieriaId the scoring criteria id
+ */
+View.prototype.AnnotatorNode.deleteScoringCriteriaClicked = function(scoringCriteriaId) {
+	//get the list item dom id
+	var listItemDOMId = 'scoringCriteriaLI_' + scoringCriteriaId;
+	
+	//remove the scoring criteria from the step content and the UI
+	this.deleteAutoScoringChildObject('scoringCriteria', scoringCriteriaId, listItemDOMId);
+};
+
+/**
+ * Delete a child object from one of the auto scoring arrays
+ * @param autoScoringFieldName the name of auto scoring array
+ * e.g. 'regions', 'labels', 'mappings', 'scoringCriteria'
+ * @param childId the id of the element in the array
+ * @param listItemDOMId the id of the list item in the DOM
+ */
+View.prototype.AnnotatorNode.deleteAutoScoringChildObject = function(autoScoringFieldName, childId, listItemDOMId) {
+	//get the field from the step content
+	var field = this.getAutoScoringField(autoScoringFieldName);
+	
+	//loop through all the elements in the field
+	for(var x=0; x<field.length; x++) {
+		//get an element
+		var tempElement = field[x];
+		
+		if(tempElement != null) {
+			//get the element id
+			var tempElementId = tempElement.id;
+			
+			if(childId == tempElementId) {
+				//the element id matches the one we want so we will remove it
+				field.splice(x, 1);
+				
+				/*
+				 * set the counter back one so that we check every element in the array.
+				 * theoretically this is unnecessary since only one label can have
+				 * the given id.
+				 */
+				x--;
+			}
+		}
+	}
+	
+	/* fire source updated event */
+	this.view.eventManager.fire('sourceUpdated');
+	
+	//remove the scoring criteria from the list of scoring criteria in the UI 
+	$('#' + listItemDOMId).remove();
+};
+
+/**
+ * Get the next available id. This will find the current max id and then
+ * increment it by one to give us the next available id.
+ * 
+ * For example if we have
+ * 
+ * "autoScoring":{
+ *    "regions":{
+ *       {
+ *          "id":1,
+ *          "name":"house"
+ *       },
+ *       {
+ *          "id":3,
+ *          "name":"sky"
+ *       }
+ *    },
+ *    "labels":{
+ *       {
+ *          "id":1,
+ *          "name":"cat"
+ *       },
+ *       {
+ *          "id":2,
+ *          "name":"bird"
+ *       }
+ *    }
+ * }
+ * 
+ * and we want the next available "regions" id, we would call
+ * getNextId("regions")
+ * and it would return
+ * 4
+ * 
+ * @param fieldName the name of the object in the autoScoring object
+ * e.g. 'regions', 'labels', 'mappings', 'scoringCriteria'
+ * @return the next available id for the given field name
+ */
+View.prototype.AnnotatorNode.getNextId = function(fieldName) {
+	var nextId = null;
+	var maxId = 0;
+	var fieldValue = this.getAutoScoringFieldValue(fieldName);
+	
+	if(fieldValue != null) {
+		//check that the value is an array
+		if($.isArray(fieldValue)) {
+			//loop through all the elements in the array
+			for(var x=0; x<fieldValue.length; x++) {
+				//get an element
+				var arrayElement = fieldValue[x];
+				
+				if(arrayElement != null) {
+					//get the id of the element
+					var tempId = arrayElement.id;
+					
+					if(tempId > maxId) {
+						//remember the largest id we have found
+						maxId = tempId;
+					}
+				}
+			}
+		}
+	}
+	
+	if(maxId != null) {
+		//the next id will be the next number after the current max
+		nextId = maxId + 1;
+	}
+	
+	return nextId;
+};
+
+/**
+ * Called when the display score to student checkbox is clicked
+ */
+View.prototype.AnnotatorNode.displayScoreToStudentCheckboxClicked = function() {
+	//get the value and update the step content
+	var value = $('#displayScoreToStudentCheckbox').is(':checked');
+	this.setAutoScoringFieldValue('autoScoringDisplayScoreToStudent', value);
+};
+
+/**
+ * Called when the display feedback to student checkbox is clicked
+ */
+View.prototype.AnnotatorNode.displayFeedbackToStudentCheckboxClicked = function() {
+	//get the value and update the step content
+	var value = $('#displayFeedbackToStudentCheckbox').is(':checked');
+	this.setAutoScoringFieldValue('autoScoringDisplayFeedbackToStudent', value);
+};
+
+/**
+ * Called when the no feedback on last check work chance checkbox is clicked
+ */
+View.prototype.AnnotatorNode.displayNoFeedbackOnLastChanceCheckboxClicked = function() {
+	//get the value and update the step content
+	var value = $('#displayNoFeedbackOnLastChanceCheckbox').is(':checked');
+	this.setAutoScoringFieldValue('autoScoringDoNotDisplayFeedbackToStudentOnLastChance', value);
+};
+
+/**
+ * Called when the check work chances input is changed
+ */
+View.prototype.AnnotatorNode.checkWorkChancesInputChanged = function() {
+	//get the value and update the step content
+	var value = $('#checkWorkChancesInput').val();
+	this.setAutoScoringFieldValue('autoScoringCheckWorkChances', value);
+};
+
+/**
+ * Called when the enable auto scoring checkbox is clicked
+ */
+View.prototype.AnnotatorNode.enableAutoScoringCheckboxClicked = function() {
+	//get the value
+	var isChecked = $('#enableAutoScoringCheckbox').is(':checked');
+	
+	if(isChecked) {
+		//update the step content and show the auto scoring div
+		this.enableAutoScoring(true);
+		$('#autoScoringDiv').show();
+	} else {
+		//update the step content and hide the auto scoring div
+		this.enableAutoScoring(false);
+		$('#autoScoringDiv').hide();
+	}
+};
+
+/**
+ * Update the enableAutoScoring value in the step content
+ * @param enable whether to enable auto scoring
+ */
+View.prototype.AnnotatorNode.enableAutoScoring = function(enable) {
+	var content = this.content;
+	
+	if(content != null) {
+		if(enable) {
+			//auto scoring is enabled
+			
+			//update the step content
+			content.enableAutoScoring = true;
+			
+			//create the autoScoring object in the content if necessary
+			this.initializeAutoScoringContentIfNecessary();
+			
+			//set the auto graded export columns into the step content
+			this.setAutoGradedExportColumns();
+		} else {
+			//auto scoring is disabled
+			
+			//update the step content
+			content.enableAutoScoring = false;
+			
+			//set the regular export columns into the step content
+			this.setExportColumns();
+		}		
+	}
+	
+	//fire source updated event, which will update the preview
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Create the autoScoring object in the step content if it does not exist
+ */
+View.prototype.AnnotatorNode.initializeAutoScoringContentIfNecessary = function() {
+	//get the step content
+	var content = this.content;
+	
+	if(content != null) {
+		//get the autoScoring object
+		var autoScoring = content.autoScoring;
+		
+		if(autoScoring == null) {
+			//the autoScoring object does not exist so we will create it
+			autoScoring = {
+				autoScoringCheckWorkChances:'',
+				autoScoringDisplayScoreToStudent:true,
+				autoScoringDisplayFeedbackToStudent:true,
+				autoScoringDoNotDisplayFeedbackToStudentOnLastChance:false,
+				regions:[],
+				labels:[],
+				mappings:[],
+				scoringCriteria:[]
+			};
+			content.autoScoring = autoScoring;
+		}
+	}
 };
 
 /**
@@ -237,13 +2044,7 @@ View.prototype.AnnotatorNode.populatePrompt = function() {
  */
 View.prototype.AnnotatorNode.updatePrompt = function(){
 	/* update content */
-	var content = '',
-		editor = tinymce.get('promptInput');
-	if(editor){
-		content = editor.getContent();
-	} else {
-		content = $('#promptInput').val();
-	}
+	var content = this.view.getRichTextContent('promptInput');
 	
 	this.content.prompt = content;
 	
@@ -735,11 +2536,13 @@ View.prototype.AnnotatorNode.createAutoScoringObjectIfDoesNotExist = function() 
 	if(this.content.autoScoring == null) {
 		this.content.autoScoring = {
 			autoScoringCheckWorkChances:'',
-			autoScoringCriteria:'',
 			autoScoringDisplayScoreToStudent:true,
 			autoScoringDisplayFeedbackToStudent:true,
 			autoScoringDoNotDisplayFeedbackToStudentOnLastChance:false,
-			autoScoringFeedback:[]
+			regions:[],
+			labels:[],
+			mappings:[],
+			scoringCriteria:[]
 		};
 	}
 };
@@ -792,6 +2595,21 @@ View.prototype.AnnotatorNode.setRegularExportColumns = function() {
 };
 
 /**
+ * Set the export columns
+ */
+View.prototype.AnnotatorNode.setExportColumns = function() {
+	this.content.exportColumns = [
+          {
+        	  "columnName": "Data",
+        	  "field": "data"
+          }
+  	];
+	
+	/* fire source updated event */
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
  * Set the export columns for auto graded draw steps
  */
 View.prototype.AnnotatorNode.setAutoGradedExportColumns = function() {
@@ -809,16 +2627,16 @@ View.prototype.AnnotatorNode.setAutoGradedExportColumns = function() {
         	  "field": "maxAutoScore"
           },
           {
-        	  "columnName": "Feedback Key",
-        	  "field": "autoFeedbackKey"
-          },
-          {
         	  "columnName": "Feedback",
         	  "field": "autoFeedback"
           },
           {
         	  "columnName": "Submit",
         	  "field": "checkWork"
+          },
+          {
+              "columnName": "Scoring Criteria Results",
+              "field": "scoringCriteriaResults"
           }
   	];
 	

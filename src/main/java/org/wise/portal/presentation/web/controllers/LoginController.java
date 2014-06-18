@@ -41,7 +41,7 @@ public class LoginController extends AbstractController {
 	 *      javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	public ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		String failed = request.getParameter("failed");
 		String redirectUrl = request.getParameter("redirect");

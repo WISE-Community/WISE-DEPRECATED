@@ -75,9 +75,6 @@ ul.sf-menu li.align-right li.sfHover ul {
     font-weight: normal;
 }
 .sf-menu li {
-	/* background:		#BDD2FF;   */
-	/*	background:		#FFCC99;  */
-		/*background: url('../../images/teacher/teacherNavButton.png') repeat-x top;*/
 }
 
 .sf-menu {
@@ -179,12 +176,6 @@ li.sfHover > a > .sf-sub-indicator {
 
 /*** shadows for all but IE6 ***/
 .sf-shadow ul {
-	/*background:	url('../../images/teacher/shadow.png') no-repeat bottom right;
-	padding: 0 8px 9px 0;
-	-moz-border-radius-bottomleft: 17px;
-	-moz-border-radius-topright: 17px;
-	-webkit-border-top-right-radius: 17px;
-	-webkit-border-bottom-left-radius: 17px;*/
 }
 .sf-shadow ul.sf-shadow-off {
 	background: transparent;

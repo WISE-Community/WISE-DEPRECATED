@@ -160,7 +160,7 @@ public class ProjectImpl implements Project {
 	@Column(name = COLUMN_NAME_PROJECT_NAME)
 	protected String name;
 	
-	@OneToOne(targetEntity = ProjectMetadataImpl.class, fetch = FetchType.EAGER)
+	@OneToOne(targetEntity = ProjectMetadataImpl.class, fetch = FetchType.LAZY)
 	@Cascade( { org.hibernate.annotations.CascadeType.SAVE_UPDATE })
     @JoinColumn(name = COLUMN_NAME_METADATA_FK, nullable = true, unique = true)
     protected ProjectMetadata metadata = null;
@@ -218,7 +218,7 @@ public class ProjectImpl implements Project {
     @Column(name = ProjectImpl.COLUMN_NAME_DATE_CREATED, nullable=false)
     protected Date dateCreated;
     
-    @ManyToMany(targetEntity = TagImpl.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = TagImpl.class, fetch = FetchType.LAZY)
     @JoinTable(name = TAGS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = PROJECT_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = TAGS_JOIN_COLUMN_NAME, nullable = false))
     protected Set<Tag> tags = new TreeSet<Tag>();
     
@@ -394,6 +394,9 @@ public class ProjectImpl implements Project {
 	 * @return the name
 	 */
 	public String getName() {
+		if (name == null) {
+			return "";
+		}		
 		return name;
 	}
 

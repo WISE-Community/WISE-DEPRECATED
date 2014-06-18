@@ -598,6 +598,13 @@ input[type="text"]:focus {
 	overflow:hidden;
 }
 
+.annotatorCell {
+	padding: 10px;
+	background:#fff;
+	border:1px solid #aaa;
+	overflow:hidden;
+}
+
 .snaps {
 	width:370px;
 }

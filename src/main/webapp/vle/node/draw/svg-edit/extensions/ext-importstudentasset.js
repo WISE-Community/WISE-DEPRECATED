@@ -1,5 +1,5 @@
 /*
- * ext-importStudentAsset.js
+ * ext-importstudentasset.js
  * launches the student assets dialog
  * @author hirokiterashima
  */
@@ -36,6 +36,7 @@ svgEditor.addExtension("Import Student Asset", function() {
 		callback: function(){
 			// reset flyout positions
 			setTimeout(function(){
+				// TODO: figure out whether this is still necessary and remove if not
 				$('.tools_flyout').each(function() {
 					var shower = $('#' + this.id + '_show');
 					var pos = shower.offset();

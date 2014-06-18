@@ -627,19 +627,6 @@ a.welcomeLink.active {
 	padding-bottom:55px;
 }
 
-#newsContent {
-	position:relative; 
-	background-image: url("../images/Pixel_Pale_Green.png");
-    background-repeat: repeat;
-    border: 1px solid #99CC99;
-    color: #000000;
-    font-size: 0.75em;
-    height: 214px;
-    margin: 0 10px;
-    overflow: auto;
-    padding: 6px;
-}
-
 #newsContentHeader {
 	font-weight:bold;
 	padding-bottom:4px;

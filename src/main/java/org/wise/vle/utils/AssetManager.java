@@ -408,7 +408,9 @@ public class AssetManager extends AbstractController {
 								successMessage += asset.getName() + " was successfully uploaded! ";
 							}
 
-							if ("application/zip".equals(file.getContentType())) {
+							if ("application/zip".equals(file.getContentType()) ||
+								"application/x-zip".equals(file.getContentType()) ||
+								"application/x-zip-compressed".equals(file.getContentType())) {
 								// if user uploaded a zip file, unzip it
 								ZipFile zipFile = new ZipFile(asset);
 								Enumeration<? extends ZipEntry> entries = zipFile.entries();
@@ -418,6 +420,10 @@ public class AssetManager extends AbstractController {
 									if (entry.isDirectory()) {
 										entryDestination.mkdirs();
 									} else {
+										File parent = entryDestination.getParentFile();										
+										if(!parent.exists() && !parent.mkdirs()){
+										    throw new IllegalStateException("Couldn't create dir: " + parent);
+										}
 										InputStream in = zipFile.getInputStream(entry);
 										OutputStream out = new FileOutputStream(entryDestination);
 										IOUtils.copy(in, out);

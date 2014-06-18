@@ -57,47 +57,6 @@ var componentloader = function(em, sl){
 				connectionManager:function(){return new ConnectionManager(eventManager);},
 				init:function(view){
 					view.eventManager.subscribe('contentTimedOut', function(type,args,obj){obj.notificationManager.notify('Retrieval of content from url ' + args[0] + ' is taking a long time! The server may be slow or is not responding. If content does not load shortly, check with an administrator.', 3);}, view);
-					
-					/* set up the notePanel dialog in the view */
-					document.body.appendChild(createElement(document, 'div', {id:'notePanel'}));
-					document.body.appendChild(createElement(document, 'div', {id:'feedbackDialog'}));
-					
-					//define the width of the note dialog
-					var noteWidth = 650;
-					
-					var maxHeight = $(window).height() - 100;
-					
-					$('#notePanel').dialog({
-						autoOpen:false,
-						width:noteWidth,
-						title:'Reflection Note',
-						resizable:true,
-						show:{effect:"fade",duration:200},
-						hide:{effect:"fade",duration:200},
-						position: ['center','middle'],
-						closeOnEscape: false,
-						zIndex: '99999',
-						open: function(){
-							$(this).css({'max-height':maxHeight, 'overflow-y':'auto'});
-							
-							// add transparent overlay to step content to disable editing of previous step when note is opened
-							var contentOverlay = $(document.createElement('div')).attr('id','contentOverlay').css({'position':'fixed', 'left':0, 'width':'100%', 'top':0, 'height':'100%', 'z-index':99999 });
-							$('body',$('#ifrm')[0].contentWindow.document).append(contentOverlay);
-
-							// bind click event to X link in dialog that saves and closes note
-							$(this).parent().children().children("a.ui-dialog-titlebar-close").click(function(){
-								//save the note
-								if(view.activeNote){
-									view.activeNote.save();
-								}
-								
-								//close the note dialog
-								view.utils.closeDialog('notePanel');
-							});
-						}
-					});
-					
-					$('#feedbackDialog').dialog({autoOpen:false, dialogClass: 'dialogFeed', zIndex: '100009', buttons: [{text: "OK", click: function() {$(this).dialog('close');}}]});
 				}
 			}
 		},
@@ -255,7 +214,7 @@ var componentloader = function(em, sl){
 				portalProjectId:undefined, 
 				portalCurriculumBaseDir:undefined, 
 				excludedPrevWorkNodes:['HtmlNode', 'OutsideUrlNode', 'MySystemNode', 'SVGDrawNode', 'MWNode', 'DrawNode','DuplicateNode'], 
-				allowedAssetExtensions:['txt', 'jpg', 'jpeg', 'gif', 'png', 'swf', 'flv', 'bmp', 'tif', 'pdf', 'doc', 'ppt', 'xls', 'docx', 'pptx', 'xlsx', 
+				allowedAssetExtensions:['txt', 'xml', 'jpg', 'jpeg', 'gif', 'png', 'swf', 'flv', 'bmp', 'tif', 'pdf', 'doc', 'ppt', 'xls', 'docx', 'pptx', 'xlsx', 
 				                        'odt', 'fodt', 'ods', 'fods', 'odp', 'fodp', 'odg', 'fodg', 'nlogo', 'nls', 'jar', 'cml', 'mml', 'otml', 'e2d',
 				                        'mov', 'mp4', 'mp3', 'm4a', 'm4v', 'wav', 'aac', 'avi', 'mpg', 'mpeg', 'webm', 'ogg', 'oga', 'ogv', 'css', 'json', 'zip', 'js', 'html'],
 		        allowedAssetExtensionsByType:{
@@ -594,7 +553,8 @@ var componentloader = function(em, sl){
 					view.initializeImportViewDialog();
 					view.initializeIconsViewDialog();
 					view.initializeAnalyzeProjectDialog();
-										
+					
+					initializeNotePanelDialog(view);
 					window.onunload = env.onWindowUnload;
 				}
 			}
@@ -602,7 +562,7 @@ var componentloader = function(em, sl){
 		student:{
 			variables:{
 				model:null,
-				allowedStudentAssetExtensions:['jpg', 'jpeg', 'gif', 'png', 'bmp', 'pdf', 'txt', 'doc'],
+				allowedStudentAssetExtensions:['jpg', 'jpeg', 'gif', 'png', 'bmp', 'pdf', 'txt', 'doc', 'csv'],
 				userAndClassInfoLoaded:false,
 				viewStateLoaded:false,
 				currentPosition:undefined, 
@@ -659,6 +619,10 @@ var componentloader = function(em, sl){
 						view.eventManager.initializeLoading([['loadingProjectStarted','loadingProjectCompleted','Project'],
 						                                     ['getUserAndClassInfoStarted','getUserAndClassInfoCompleted', 'Learner Data'], 
 						                                     ['getUserAndClassInfoStarted', 'renderNodeCompleted', 'Learning Environment']]);
+						
+						initializeNotePanelDialog(view);
+						
+						$('#feedbackDialog').dialog({autoOpen:false, dialogClass: 'dialogFeed', zIndex: '100009', buttons: [{text: "OK", click: function() {$(this).dialog('close');}}]});
 						
 						/* set up saving dialog for when user exits */
 						$('body').append('<div id="onUnloadSaveDiv">Saving data...</div>');
@@ -951,6 +915,47 @@ var componentloader = function(em, sl){
 			};
 		};
 		eventManager.fire('componentInitializationComplete', [name]);
+	};
+	
+	var initializeNotePanelDialog = function(view){
+		/* set up the notePanel dialog in the view */
+		document.body.appendChild(createElement(document, 'div', {id:'notePanel'}));
+		document.body.appendChild(createElement(document, 'div', {id:'feedbackDialog'}));
+		
+		//define the width of the note dialog
+		var noteWidth = 650;
+		
+		var maxHeight = $(window).height() - 100;
+		
+		$('#notePanel').dialog({
+			autoOpen:false,
+			width:noteWidth,
+			title:'Reflection Note',
+			resizable:true,
+			show:{effect:"fade",duration:200},
+			hide:{effect:"fade",duration:200},
+			position: ['center','middle'],
+			closeOnEscape: false,
+			zIndex: '99999',
+			open: function(){
+				$(this).css({'max-height':maxHeight, 'overflow-y':'auto'});
+				
+				// add transparent overlay to step content to disable editing of previous step when note is opened
+				var contentOverlay = $(document.createElement('div')).attr('id','contentOverlay').css({'position':'fixed', 'left':0, 'width':'100%', 'top':0, 'height':'100%', 'z-index':99999 });
+				$('body',$('#ifrm')[0].contentWindow.document).append(contentOverlay);
+
+				// bind click event to X link in dialog that saves and closes note
+				$(this).parent().children().children("a.ui-dialog-titlebar-close").click(function(){
+					//save the note
+					if(view.activeNote){
+						view.activeNote.save();
+					}
+					
+					//close the note dialog
+					view.utils.closeDialog('notePanel');
+				});
+			}
+		});
 	};
 	
 	/**

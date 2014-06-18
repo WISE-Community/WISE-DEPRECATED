@@ -35,7 +35,7 @@ function ANNOTATOR(node) {
 		"svgString": "",
 		"explanation": "",
 		"labels": [],
-		"labelTotal": 0
+		"total": 0
 	};
 	
 	svgEditor.changed = false, // boolean to specify whether student data has changed and should be saved on exit
@@ -113,6 +113,9 @@ ANNOTATOR.prototype.loadModules = function(jsonfilename, context) {
 	if(data.textAreaButtonText){
 		context.textAreaButtonText = data.textAreaButtonText;
 	}
+	if(data.enableAutoScoring){
+		context.enableAutoScoring = data.enableAutoScoring;
+	}
 	
 	if(data.backgroundImg && view.utils.isNonWSString(data.backgroundImg)){
 		var bgUrl = data.backgroundImg;
@@ -135,8 +138,6 @@ ANNOTATOR.prototype.loadModules = function(jsonfilename, context) {
 					height = width*ratio;
 				}
 			}
-			
-			console.log('height: ' + height + ', width: ' + width);
 			
 			var h = context.height = height + 50,
 				w = context.width = width + 50,
@@ -167,7 +168,7 @@ ANNOTATOR.prototype.setDataService = function(dataService) {
 ANNOTATOR.prototype.loadCallback = function(studentWorkJSON, context, noInit) {
 		var annotationValue;
 		// set default blank canvas
-		var defaultSvgString = '<svg width="' + this.width + '" height="' + this.height + '" xmlns="http://www.w3.org/2000/svg">' +
+		var defaultSvgString = '<svg width="' + context.width + '" height="' + context.height + '" xmlns="http://www.w3.org/2000/svg">' +
 			'<!-- Created with SVG-edit - http://svg-edit.googlecode.com/ --><g><title>student</title></g></svg>';
 		
 		// check for previous work and load it
@@ -193,8 +194,14 @@ ANNOTATOR.prototype.loadCallback = function(studentWorkJSON, context, noInit) {
 		context.initDisplay(studentWorkJSON,context); // initiate labels and description
 };
 
-ANNOTATOR.prototype.saveToVLE = function(isExit) {
-	if(svgEditor.changed){
+/**
+ * Save the student work
+ * @param isExit
+ * @param forceSave save even if the student has not changed their work. this is
+ * used when the student click 'Check Score'
+ */
+ANNOTATOR.prototype.saveToVLE = function(isExit, forceSave) {
+	if(svgEditor.changed || forceSave){
 		svgEditor.canvas.leaveContext();
 		svgEditor.canvas.clearSelection();
 		$('#workarea').css('opacity', 0);
@@ -202,7 +209,7 @@ ANNOTATOR.prototype.saveToVLE = function(isExit) {
 		this.studentData.svgString = svgCanvas.getSvgString();
 		this.studentData.explanation = $('#explanationInput').val();
 		this.studentData.labels = svgEditor.ext_labels.content().labels;
-		this.studentData.labelTotal = svgEditor.ext_labels.total();
+		this.studentData.total = svgEditor.ext_labels.total();
 		if(isExit){
 			svgEditor.loadedWISE = false;
 		} else {
@@ -217,7 +224,11 @@ ANNOTATOR.prototype.saveToVLE = function(isExit) {
  * Save the student work
  */
 ANNOTATOR.prototype.save = function() {
-	var data = this.studentData;
+	//make a copy of the student data object
+	var studentDataString = JSON.stringify(this.studentData);
+	var studentData = JSON.parse(studentDataString);
+	
+	var data = studentData;
 	
 	/* compress nodeState data */
 	//var compressedData = "--lz77--" + this.lz77.compress(JSON.stringify(data));
@@ -226,10 +237,11 @@ ANNOTATOR.prototype.save = function() {
 	var autoFeedback = this.autoFeedback;
 	var autoFeedbackKey = this.autoFeedbackKey;
 	var checkWork = this.checkWork;
+	var scoringCriteriaResults = this.scoringCriteriaResults;
 
 	//create a new annotatorstate
 	//var annotatorState = new ANNOTATORSTATE(compressedData, null, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore);
-	var annotatorState = new ANNOTATORSTATE(data, null, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore);
+	var annotatorState = new ANNOTATORSTATE(data, null, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore, scoringCriteriaResults);
 	
 	//fire the event to push this state to the global view.states object
 	this.view.pushStudentWork(this.node.id, annotatorState);
@@ -245,6 +257,7 @@ ANNOTATOR.prototype.save = function() {
 	this.autoFeedback = null;
 	this.autoFeedbackKey = null;
 	this.checkWork = null;
+	this.scoringCriteriaResults = null;
 	
 	svgEditor.changed = false;
 };
@@ -281,6 +294,51 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 			importExt = svgEditor.ext_importstudentasset;
 		
 		bootbox.hideAll(); // hide all dialogs
+		
+		function showPrompt(){
+			context.instructionsModal = bootbox.alert({
+				message: context.instructions,
+				title: view.getI18NString('prompt_link','SVGDrawNode')
+			});
+		}
+		
+		function checkMinLabels(){
+			if(labelsExt.content().labels.length >= labelsExt.min()){
+				/*
+				 * the user has the required minimum number of labels so we will
+				 * allow them to open the explanation textarea
+				 */
+				
+				//enable the 'Ready to Explain' button
+				$('#explain').prop('disabled', false);
+			} else {
+				/*
+				 * the user does not have the required minimum number of labels 
+				 * so we will not show the explanation text area
+				 */
+				
+				//disable the 'Ready to Explain' button
+				$('#explain').prop('disabled', true);
+				
+				//hide the explanation area
+				$('#explanation').slideUp('fast');
+				
+				//make the explanation textarea lose focus
+				$('#explanationInput').blur();
+			}
+			
+			if(context.enableAutoScoring) {
+				//auto scoring is enabled
+				
+				if(labelsExt.content().labels.length > 0) {
+					//the student has at least one label so we will enable the check score button
+					$('#check_score').prop('disabled', false);
+				} else {
+					//the student does not have any labels so we will disable the check score button
+					$('#check_score').prop('disabled', true);
+				}				
+			}
+		}
 		
 		// insert i18n text elements
 		if(importExt){
@@ -334,7 +392,9 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 			
 			// bind new label and cancel buttons click events
 			$('#newLabel').off('click').on('click', function(){
-				context.setLabelMode(true);
+				if(!labelsExt.maxReached(true)){
+					context.setLabelMode(true);
+				}
 			});
 			
 			$('#cancelNew').off('click').on('click', function(){
@@ -346,7 +406,13 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 				context.setLabelMode(false);
 				svgEditor.changed = true;
 				$('#save').prop('disabled', false);
+				if(labelsExt.maxReached()){
+					$('#newLabel').addClass('disabled').css('pointer-events', 'auto');
+				} else {
+					$('#newLabel').removeClass('disabled');
+				}
 				context.toggleInstructions();
+				checkMinLabels();
 			}
 		}
 		
@@ -365,10 +431,9 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 			
 			// bind explain click action
 			$('#explain').off('click').on('click', function(e){
-				$('#explanation').slideDown('fast', function(){
+				$('#explanation').slideToggle('fast', function(){
 					$('#explanationInput').focus();
 				});
-				$(this).prop('disabled', true);
 			});
 			
 			$('#explanationInput').off('focus').on('focus', function(e){
@@ -392,30 +457,34 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 				$('#explain').prop('disabled', false);
 				$('#explanation').slideUp('fast');
 			});
+			
+			checkMinLabels();
 		} else {
 			$('#explain').hide();
+		}
+		
+		if(context.enableAutoScoring) {
+			//auto scoring is enabled so we will enable the 'Check Score' button
+			$('#check_score .button-text').text('Check Score');
+			$('#check_score').off('click').on('click', {thisAnnotator:this}, function(e) {
+				var thisAnnotator = e.data.thisAnnotator;
+				thisAnnotator.checkScore();
+			});
+		} else {
+			//auto scoring is not enabled so we will not show the 'Check Score' button
+			$('#check_score').hide();
 		}
 		
 		// bind save click action
 		$('#save').off('click').on('click', function(e){
 			if(context.enableStudentTextArea) {
-				$('#explanation').slideUp('fast', function(){
-					//save to vle
-					context.saveToVLE();
-				});
-				$('#explain').prop('disabled', false);
+				$('#explanation').slideUp('fast');
 				$('#explanationInput').blur();
-			} else {
-				context.saveToVLE();
+				$('#explain').prop('disabled', false);
 			}
+			// save to VLE
+			context.saveToVLE();
 		});
-		
-		function showPrompt(){
-			context.instructionsModal = bootbox.alert({
-				message: context.instructions,
-				title: view.getI18NString('prompt_link','SVGDrawNode')
-			});
-		}
 		
 		// initiate prompt/instructions
 		if(view.utils.isNonWSString(context.instructions)){
@@ -447,8 +516,7 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 			if(context.initTries<300){
 				context.initDisplay(data,context);
 			} else {
-				var failed = [];
-				
+				//var failed = [];
 				context.view.notificationManager.notify("Error: Unable to start annotator because svg-edit extensions failed to load.",1);
 			}
 		},100);
@@ -874,6 +942,804 @@ ANNOTATOR.prototype.processTagMaps = function() {
 	
 	return returnObject;
 };
+
+/**
+ * Get the authored regions from the step content
+ * @return an array of regions or null if it does not exist
+ * in the content
+ */
+ANNOTATOR.prototype.getRegions = function() {
+	var regions = this.getAutoScoringField('regions');
+	return regions;
+};
+
+/**
+ * Get the authored labels from the step content
+ * @return an array of labels or null if it does not exist
+ * in the content
+ */
+ANNOTATOR.prototype.getLabels = function() {
+	var labels = this.getAutoScoringField('labels');
+	return labels;
+};
+
+/**
+ * Get the authored mappings from the step content
+ * @return an array of mappings or null if it does not exist
+ * in the content
+ */
+ANNOTATOR.prototype.getMappings = function() {
+	var mappings = this.getAutoScoringField('mappings');
+	return mappings;
+};
+
+/**
+ * Get the authored scoring criteria from the step content
+ * @return an array of scoring criteria or null if it does not exist
+ * in the content
+ */
+ANNOTATOR.prototype.getScoringCriteria = function() {
+	var scoringCriteria = this.getAutoScoringField('scoringCriteria');
+	return scoringCriteria;
+};
+
+/**
+ * Get the authored auto scoring field value
+ * @param fieldName the field name inside the autoScoring object in the content
+ * @return the field value
+ */
+ANNOTATOR.prototype.getAutoScoringField = function(fieldName) {
+	var fieldValue = null;
+	
+	if(fieldName != null && fieldName != '') {
+		//get the step content
+		var content = this.content;
+		
+		if(content != null) {
+			//get the auto scoring object
+			var autoScoring = content.autoScoring;
+			
+			if(autoScoring != null) {
+				//get the auto scoring field
+				fieldValue = autoScoring[fieldName];
+			}
+		}
+	}
+	
+	return fieldValue;
+};
+
+
+/**
+ * Check the student work and give them a score and feedback
+ */
+ANNOTATOR.prototype.checkScore = function() {
+	//get the number of check work chances the student has already used
+	var checkWorkChancesUsed = this.getCheckWorkChancesUsed();
+	
+	//get the max number of check work chances the student is allowed to use
+	var maxCheckWorkChances = this.getMaxCheckWorkChances();
+	
+	var confirmMessage = '';
+	var numCheckWorkChancesLeft = null;
+	
+	if(maxCheckWorkChances == null || maxCheckWorkChances == '') {
+		//the student has unlimited check work chances
+		confirmMessage = 'Are you sure you want to check your work?';
+	} else {
+		//the student has a limited number of check work chances
+		numCheckWorkChancesLeft = maxCheckWorkChances - checkWorkChancesUsed;
+		
+		if(numCheckWorkChancesLeft == 1) {
+			//the student has one check work chance left
+			confirmMessage = 'You have ' + numCheckWorkChancesLeft + ' more chance to check your work. Are you sure you want to check your work?';
+		} else if(numCheckWorkChancesLeft > 1) {
+			//the student has multiple check work chances left
+			confirmMessage = 'You have ' + numCheckWorkChancesLeft + ' more chances to check your work. Are you sure you want to check your work?';
+		} else {
+			//the student does not have any more check work chances
+			alert(this.view.getI18NString('autoGrade_complete','SVGDrawNode'));
+			return;
+		}
+	}
+	
+	//ask the student if they are sure they want to check their work
+	var confirmResult = confirm(confirmMessage);
+	
+	if(confirmResult) {
+		//the student is sure they want to check their work
+		
+		//get the labels the student created
+		var studentLabels = svgEditor.ext_labels.content().labels;
+		
+		//get the authored values from the step content
+		var regions = this.getRegions();
+		var labels = this.getLabels();
+		var mappings = this.getMappings();
+		var scoringCriteria = this.getScoringCriteria();
+		
+		/*
+		 * determine which authored labels the student labels match.
+		 * the label ids will be injected into the student labels.
+		 */
+		this.matchStudentLabelsToAuthoredLabels(studentLabels, labels);
+		
+		/*
+		 * determine which regions the student labels are in.
+		 * the region ids will be injected into the student labels.
+		 */
+		this.matchStudentLabelsToRegions(studentLabels, regions);
+		
+		//generate the label to region mappings from the student work
+		var studentMappings = this.generateLabelToRegionMappings(studentLabels);
+		
+		//calculate which mappings were satisfied
+		var mappingResults = this.calculateSatisfiedMappings(mappings, studentMappings);
+		
+		//calculate the score and feedback from the mapping results
+		var results = this.calculateScore(scoringCriteria, mappingResults);
+		
+		//get the score the student achieved
+		var score = results.score;
+		
+		//get the text feedback to show the student
+		var feedback = results.feedback;
+		
+		//get the array of scoring criteria results
+		var scoringCriteriaResults = results.scoringCriteriaResults;
+		
+		//get the max score
+		var maxScore = this.getMaxScore(scoringCriteria);
+		
+		//save the results into global variables which are read when the student work is saved
+		this.autoScore = score;
+		this.maxAutoScore = maxScore;
+		this.autoFeedback = feedback;
+		this.autoFeedbackKey = null;
+		this.checkWork = true;
+		this.scoringCriteriaResults = scoringCriteriaResults;
+		
+		var isExit = false;
+		var forceSave = true;
+		
+		//save the student work with the score and feedback
+		this.saveToVLE(isExit, forceSave);
+		
+		//get the auto scoring parameters
+		var autoScoringDoNotDisplayFeedbackToStudentOnLastChance = this.getAutoScoringField('autoScoringDoNotDisplayFeedbackToStudentOnLastChance');
+		var autoScoringDisplayScoreToStudent = this.getAutoScoringField('autoScoringDisplayScoreToStudent');
+		var autoScoringDisplayFeedbackToStudent = this.getAutoScoringField('autoScoringDisplayFeedbackToStudent');
+		
+		if(autoScoringDoNotDisplayFeedbackToStudentOnLastChance && numCheckWorkChancesLeft == 1) {
+			/*
+			 * the student has used their last check work chance and the step
+			 * has been authored to not show the feedback on the last attempt
+			 * so we will just display a generic message
+			 */
+			alert(this.view.getI18NString('autoGrade_complete','SVGDrawNode'));
+		} else {
+			if(autoScoringDisplayScoreToStudent || autoScoringDisplayFeedbackToStudent) {
+				//we need to show the score or text feedback to the student
+				
+				//show the Feedback button at the top right of the vle next to the previous and next arrows
+				this.view.displayNodeAnnotation(this.node.id);
+				
+				//display the feedback in a popup dialog
+				eventManager.fire("showNodeAnnotations",[this.node.id]);
+			} else {
+				//we are not going to show the score or the text feedback to the student
+				alert(this.view.getI18NString('autoGrade_submissionComplete', 'SVGDrawNode'));
+			}
+		}
+	}
+};
+
+/**
+ * Compares the student labels with the authored labels and determines
+ * which student labels match the authored labels. For each student label,
+ * an array will be created in that student label object that will contain
+ * the authored label ids that match that student label.
+ * @param studentLabels the array of student label objects
+ * @param authoredLabels the array of authored label objects
+ */
+ANNOTATOR.prototype.matchStudentLabelsToAuthoredLabels = function(studentLabels, authoredLabels) {
+	if(studentLabels != null && authoredLabels != null) {
+		//loop through all the student labels
+		for(var x=0; x<studentLabels.length; x++) {
+			//get a student label
+			var studentLabel = studentLabels[x];
+			
+			/*
+			 * create an array to hold all the authored label ids that this
+			 * student label matches
+			 */
+			studentLabel.matchingLabels = [];
+			
+			//loop through all the authored labels
+			for(var y=0; y<authoredLabels.length; y++) {
+				//get an authored label
+				var authoredLabel = authoredLabels[y];
+				
+				//check if the student label matches the authored label
+				if(this.doesStudentLabelMatchAuthoredLabel(studentLabel, authoredLabel)) {
+					/*
+					 * the student label matches the authored label so we will put
+					 * the authored label id into the matching labels array for
+					 * the student label
+					 */
+					var authoredLabelId = authoredLabel.id;
+					studentLabel.matchingLabels.push(authoredLabelId);
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Check if the student label matches the authored label
+ * @param studentLabel the student label object
+ * @param authoredLabel the authored label object
+ * @returns whether the student label matches the authored label
+ */
+ANNOTATOR.prototype.doesStudentLabelMatchAuthoredLabel = function(studentLabel, authoredLabel) {
+	var result = false;
+	
+	if(studentLabel != null && authoredLabel != null) {
+		//get the text from the student label
+		var studentLabelValue = studentLabel.text;
+		
+		//get the regex string for the authored label
+		var authoredLabelValue = authoredLabel.value;
+		
+		//create the regex object
+		var regex = new RegExp(authoredLabelValue, 'i');
+		
+		//check if the student label value matches the authored label regex
+		if(regex.test(studentLabelValue)) {
+			result = true;
+		}
+	}
+	
+	return result;
+}
+
+/**
+ * Check if an x, y point is in a region
+ * @param x the x coordinate
+ * @param y the y coordinate
+ * @param region the region object
+ * @returns whether the point is in the region
+ */
+ANNOTATOR.prototype.isPointInRegion = function(x, y, region) {
+	var result = false;
+	
+	if(x != null && y != null && region != null) {
+		//get the shape object
+		var shape = region.shape;
+		
+		if(shape != null) {
+			//get the shape type e.g. 'rectangle' or 'circle'
+			var shapeType = shape.type;
+			
+			if(shapeType == null) {
+				
+			} else if(shapeType == 'rectangle') {
+				//get the x, y, width, and height of the rectangle
+				var rx = shape.x;
+				var ry = shape.y;
+				var rwidth = shape.width;
+				var rheight = shape.height;
+				
+				//check if the point is in the rectangle
+				result = this.isPointInRectangle(x, y, rx, ry, rwidth, rheight);
+			} else if(shapeType == 'circle') {
+				//get the x, y, and radius of the circle
+				var cx = shape.x;
+				var cy = shape.y;
+				var cradius = shape.radius;
+				
+				//check if the point is in the circle
+				result = this.isPointInCircle(x, y, cx, cy, cradius);
+			}
+		}
+	}
+	
+	return result;
+}
+
+/**
+ * Check if the point is in the rectangle
+ * @param x the x coordinate of the point
+ * @param y the y coordinate of the point
+ * @param rx the x coordinate of the upper left corner of the rectangle
+ * @param ry the y coordinate of the upper left corner of the rectangle
+ * @param rwidth the width of the rectangle
+ * @param rheight the height of the rectangle
+ * @returns whether the point is in the rectangle
+ */
+ANNOTATOR.prototype.isPointInRectangle = function(x, y, rx, ry, rwidth, rheight) {
+	var result = false;
+	
+	/*
+	 * check if the x coordinate of the point is within the x bounds of the rectangle
+	 * check if the y coordinate of the point is within the y bounds of the rectangle
+	 */
+	if(rx <= x && x <= (rx + rwidth) && ry <= y && y <= (ry + rheight)) {
+		result = true;
+	}
+	
+	return result;
+}
+
+/**
+ * Check if the point is in the circle
+ * @param x the x coordinate of the point
+ * @param y the y coordinate of the point
+ * @param cx the x coordinate of the circle
+ * @param cy the y coordinate of the circle
+ * @param cradius the radius of the circle
+ * @returns whether the point is in the circle
+ */
+ANNOTATOR.prototype.isPointInCircle = function(x, y, cx, cy, cradius) {
+	var result = false;
+	
+	//get the x distance from the point to the center of the circle
+	var xDiff = cx - x;
+	
+	//get the y distance from the point to the center of the circle
+	var yDiff = cy - y;
+	
+	//square the x difference, y difference, and radius
+	var xDiffSquared = Math.pow(xDiff, 2);
+	var yDiffSquared = Math.pow(yDiff, 2);
+	var radiusSquared = Math.pow(cradius, 2);
+	
+	/*
+	 * Use the circle radius equation to determine if the point is
+	 * within the circle or not
+	 * 
+	 * r = sqrt(x^2 + y^2)
+	 * r^2 = x^2 + y^2
+	 * 
+	 * if (x^2 + y^2) is less than r^2, that means the point is within
+	 * the circle
+	 */
+	if((xDiffSquared + yDiffSquared) <= radiusSquared) {
+		result = true;
+	}
+	
+	return result;
+}
+
+/**
+ * Compares the student labels with the regions and determines
+ * which student labels are in which regions. For each student label,
+ * an array will be created in that student label object that will contain
+ * the region ids that the student label is in.
+ * 
+ * @param studentLabels the array of student label objects
+ * @param regions an array of region objects
+ */
+ANNOTATOR.prototype.matchStudentLabelsToRegions = function(studentLabels, regions) {
+	
+	if(studentLabels != null && regions != null) {
+		//loop through all the student labels
+		for(var x=0; x<studentLabels.length; x++) {
+			//get a student label
+			var studentLabel = studentLabels[x];
+			
+			//get the x and y coordinates of the student label
+			var studentLabelX = studentLabel.location.x;
+			var studentLabelY = studentLabel.location.y;
+			
+			/*
+			 * create the array that will contain the region ids that this
+			 * student label is in
+			 */
+			studentLabel.occupiedRegions = [];
+			
+			//loop through all the regions
+			for(var y=0; y<regions.length; y++) {
+				//get a region
+				var region = regions[y];
+				var regionId = region.id;
+				
+				//check if the point is in the region
+				var isInRegion = this.isPointInRegion(studentLabelX, studentLabelY, region);
+				
+				if(isInRegion) {
+					//the point is in the region so we will add the region id to the array
+					studentLabel.occupiedRegions.push(regionId);
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Create an array of objects that contain the pairings of label ids
+ * and the region ids that they are in. The student labels must already
+ * contain matchingLabels and occupiedRegions. 
+ * matchStudentLabelsToAuthoredLabels() can be called to generate the matchingLabels
+ * matchStudentLabelsToRegions() can be called to generate the occupiedRegions.
+ * @param studentLabels the student labels
+ * @returns an array containing objects that contain all the region id and
+ * label id pairings based on the student labels. for example if 
+ * label1 is in region1 and region2
+ * label2 is in region2
+ * the array would look like
+ * [
+ *    {
+ *       "labelId":1,
+ *       "regionId":1
+ *    },
+ *    {
+ *       "labelId":1,
+ *       "regionId":2
+ *    },
+ *    {
+ *       "labelId":2,
+ *       "regionId":2
+ *    },
+ * ]
+ */
+ANNOTATOR.prototype.generateLabelToRegionMappings = function(studentLabels) {
+	var studentMappings = [];
+	
+	if(studentLabels != null) {
+		//loop through all the student labels
+		for(var x=0; x<studentLabels.length; x++) {
+			//get a student label
+			var studentLabel = studentLabels[x];
+			
+			if(studentLabel != null) {
+				//get the occupied regions for this student label
+				var occupiedRegions = studentLabel.occupiedRegions;
+				
+				//get the matching labels for this student label
+				var matchingLabels = studentLabel.matchingLabels;
+				
+				//loop through all the occupied regions
+				for(var r=0; r<occupiedRegions.length; r++) {
+					//get an occupied region
+					var regionId = occupiedRegions[r];
+					
+					//loop through all the matching labels
+					for(var l=0; l<matchingLabels.length; l++) {
+						//get a label
+						var labelId = matchingLabels[l];
+						
+						//create the mapping object with the label id and region id
+						var studentMapping = {
+							labelId: labelId,
+							regionId: regionId,
+							
+						}
+						
+						//add the object to our mappings array
+						studentMappings.push(studentMapping);
+					}
+				}
+			}
+		}
+	}
+	
+	return studentMappings;
+}
+
+/**
+ * Compare the authored mappings with the student mappings and determine
+ * which mappings have been satisfied
+ * @param mappings the authored mappings
+ * @param studentMappings the student mappings
+ * @returns an array containing objects that contain a mapping id and whether
+ * that mapping was satisifed
+ */
+ANNOTATOR.prototype.calculateSatisfiedMappings = function(mappings, studentMappings) {
+	var mappingResults = [];
+	
+	if(mappings != null && studentMappings != null) {
+		//loop through all the authored mappings
+		for(var x=0; x<mappings.length; x++) {
+			//get the mapping id
+			var mapping = mappings[x];
+			var mappingId = mapping.id;
+			
+			//check if the student has satisfied this mapping
+			var isMappingSatisfied = this.isMappingInStudentMappings(mapping, studentMappings);
+			
+			//create the object that will contain the mapping id and whether it was satisifed
+			var mappingResult = {
+				id:mappingId,
+				isSatisfied:isMappingSatisfied
+			}
+			
+			//add the object to the mapping results array
+			mappingResults.push(mappingResult);
+		}
+	}
+	
+	return mappingResults;
+}
+
+
+/**
+ * Check if the mapping has been satisfied by the student
+ * @param mapping the authored mapping
+ * @param studentMappings the student mappings
+ * @returns whether the mapping is in the student mappings
+ */
+ANNOTATOR.prototype.isMappingInStudentMappings = function(mapping, studentMappings) {
+	var result = false;
+	
+	if(mapping != null && studentMappings != null) {
+		//get the mapping id, region id, and label id
+		var mappingId = mapping.id;
+		var mappingRegionId = mapping.regionId;
+		var mappingLabelId = mapping.labelId;
+		
+		//loop through all the student mappings
+		for(var x=0; x<studentMappings.length; x++) {
+			//get a student mapping
+			var studentMapping = studentMappings[x];
+			
+			//get the region id and label id from the student mapping
+			var studentMappingRegionId = studentMapping.regionId;
+			var studentMappingLabelId = studentMapping.labelId;
+			
+			//check if the region id and label id match
+			if(mappingRegionId == studentMappingRegionId && mappingLabelId == studentMappingLabelId) {
+				//the region id and label id match so the student has satisfied this mapping
+				result = true;
+				break;
+			}
+		}
+		
+	}
+	
+	return result;
+}
+
+/**
+ * Calculate the score and feedback for the student work
+ * @param scoringCriteria an array containing all the scoring criterias
+ * @param mappingResults an array containing all region to label mappings
+ * and whether the student has satisfied each
+ * @returns an object containing the score and the feedback
+ */
+ANNOTATOR.prototype.calculateScore = function(scoringCriteria, mappingResults) {
+	var score = 0;
+	var feedback = '';
+	var scoringCriteriaResults = [];
+	
+	if(scoringCriteria != null && mappingResults != null) {
+		//loop through all the scoring criteria objects
+		for(var x=0; x<scoringCriteria.length; x++) {
+			//get a scoring criteria object
+			var scoringCriteriaObject = scoringCriteria[x];
+			
+			//check if the scoring criteria was satisfied
+			var scoringCriteriaResult = this.checkScoringCriteria(scoringCriteriaObject, mappingResults);
+			
+			if(scoringCriteriaResult != null) {
+				//get the score and feedback
+				var tempScore = scoringCriteriaResult.score;
+				var tempFeedback = scoringCriteriaResult.feedback;
+				var tempIsSatisfied = scoringCriteriaResult.isSatisfied;
+				
+				if(tempScore != null) {
+					//check if the score is a valid number
+					if(!isNaN(tempScore)) {
+						//accumulate the score
+						score += tempScore;						
+					}
+				}
+				
+				if(tempFeedback != null) {
+					if(feedback != '') {
+						//separate the feedback from the existing feedback with new lines
+						feedback += '<br/>';
+					}
+					
+					//add the feedback
+					if(tempIsSatisfied) {
+						//the student satisfied this criteria so we will show the feedback in green
+						feedback += '<font color="green">' + tempFeedback + '</font>';
+					} else {
+						//the student did not satisfy this criteria so we will show the feedback in red
+						feedback += '<font color="red">' + tempFeedback + '</font>';
+					}
+				}
+			}
+			
+			scoringCriteriaResults.push(scoringCriteriaResult);
+		}
+	}
+	
+	//create the object to hold the score and feedback
+	var results = {
+		score:score,
+		feedback:feedback,
+		scoringCriteriaResults:scoringCriteriaResults
+	}
+	
+	return results;
+}
+
+
+/**
+ * Check if the scoring criteria was satisfied
+ * @param scoringCriteriaObject a scoring criteria
+ * @param mappingResults the mapping results from the student work
+ * @returns an object containing the score and feedback for the scoring
+ */
+ANNOTATOR.prototype.checkScoringCriteria = function(scoringCriteriaObject, mappingResults) {
+	var results = {
+		id:null,
+		isSatisfied:false,
+		score:null,
+		feedback:null
+	}
+	
+	if(scoringCriteriaObject != null && mappingResults != null) {
+		//get the scoring logic e.g. 1&&2
+		var logic = scoringCriteriaObject.logic;
+		
+		/*
+		 * replace the mapping ids with the mapping boolean results
+		 * e.g.
+		 * 1&&2 will be turned into something like true&&false
+		 */
+		var logicReplaced = this.replaceMappingIdsWithValues(logic, mappingResults);
+		
+		//evaluate the expression
+		var logicEvaluated = eval(logicReplaced);
+		
+		//set the scoring criteria id
+		results.id = scoringCriteriaObject.id;
+		
+		if(logicEvaluated) {
+			//the scoring criteria was satisfied
+			results.isSatisfied = true;
+			results.score = scoringCriteriaObject.score;
+			results.maxScore = scoringCriteriaObject.score;
+			results.feedback = scoringCriteriaObject.successFeedback;
+		} else {
+			//the scoring criteria was not satisfied
+			results.isSatisfied = false;
+			results.score = 0;
+			results.maxScore = scoringCriteriaObject.score;
+			results.feedback = scoringCriteriaObject.failureFeedback;
+		}
+	}
+	
+	return results;
+}
+
+/**
+ * In the logic string, replace the mapping ids with the boolean
+ * values from the mapping results e.g.
+ * 1&&2 would be turned into something like true&&false
+ * @param logic the logic string that contains mapping ids e.g. 1&&2
+ * @param mappingResults an array of mapping result objects
+ * @returns a string containing the logic string with the mapping ids
+ * replaced with boolean values
+ */
+ANNOTATOR.prototype.replaceMappingIdsWithValues = function(logic, mappingResults) {
+	var result = logic;
+	
+	if(logic != null) {
+		
+		var mappingIdsUsed = logic.match(/\d+/g);
+		
+		
+		if(mappingIdsUsed != null) {
+			/*
+			 * sort the mapping ids from largest to smallest because we will
+			 * be replacing the mapping ids with boolean values and we want to
+			 * replace the larger numbers first. we must replace the larger numbers
+			 * first because if there are mappings with ids 11 and 1, we need to 
+			 * make sure "11" gets replaced with "true" and not "truetrue".
+			 */
+			mappingIdsUsed = mappingIdsUsed.sort(this.sortNumericallyDescending);
+			
+			//loop through all the mapping ids
+			for(var x=0; x<mappingIdsUsed.length; x++) {
+				//get a mapping id e.g. "5"
+				var mappingIdUsed = mappingIdsUsed[x];
+				
+				//check the mapping results to see if this mapping id was satisfied
+				var isSatisfied = this.isMappingSatisfied(mappingResults, mappingIdUsed);
+				
+				//create the regex that will match the mapping id
+				var regex = new RegExp(mappingIdUsed, 'g');
+				
+				//replace all instances of the mapping id with the boolean value
+				result = result.replace(regex, isSatisfied);
+			}
+		}
+	}
+	
+	return result;
+}
+
+/**
+ * A sorting function to sort an array containing numbers. This will sort
+ * the numbers from largest to smallest.
+ * @param a number
+ * @param a number
+ * @returns 
+ * a negative number which means a should come before b in the sorted array
+ * a positive number which means b should come before a in the sorted array
+ * zero which means a and b are the same number
+ */
+ANNOTATOR.prototype.sortNumericallyDescending = function(a, b) {
+	return (b - a);
+}
+
+/**
+ * Check if a mapping is satisfied
+ * @param mappingResults the mapping results calculated from the student work
+ * @param mappingId the mapping id
+ * @returns whether the mapping is satisfied
+ */
+ANNOTATOR.prototype.isMappingSatisfied = function(mappingResults, mappingId) {
+	var result = false;
+	
+	if(mappingResults != null && mappingId != null) {
+		//loop through all the mapping results
+		for(var x=0; x<mappingResults.length; x++) {
+			//get a mapping result
+			var mappingResult = mappingResults[x];
+			
+			//get the mapping id and whether it was satisfied
+			var mappingResultId = mappingResult.id;
+			var isSatisfied = mappingResult.isSatisfied;
+			
+			//check if the mapping id matches the one we are looking for
+			if(mappingId == mappingResultId) {
+				/*
+				 * the mapping id is the one we want so we will return
+				 * whether it was satisfied
+				 */ 
+				result = isSatisfied;
+				break;
+			}
+		}
+	}
+	
+	return result;
+}
+
+/**
+ * Get the max possible score the student can obtain
+ * @param scoringCriteria an array of scoring criteria objects
+ * @returns the max score for the step
+ */
+ANNOTATOR.prototype.getMaxScore = function(scoringCriteria) {
+	var maxScore = 0;
+	
+	if(scoringCriteria != null) {
+		//loop through all the scoring criteria objects
+		for(var x=0; x<scoringCriteria.length; x++) {
+			//get a scoring criteria object
+			var tempScoringCriteria = scoringCriteria[x];
+			
+			if(tempScoringCriteria != null) {
+				//get the score for this criteria
+				var score = tempScoringCriteria.score;
+				
+				if(score != null && !isNaN(score)) {
+					//accumulate the score
+					maxScore += score;
+				}
+			}
+		}
+	}
+	
+	return maxScore;
+}
+
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
