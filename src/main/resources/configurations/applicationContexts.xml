@@ -57,17 +57,11 @@
      			anonymousProcessingFilter,
      			exceptionTranslationFilter,
      			filterInvocationInterceptor,
-     			switchUserProcessingFilter
+     			switchUserProcessingFilter     		    
      			" />
   			</sec:filter-chain-map>
     </bean>
-
-    <bean id="openSessionInViewInterceptor"
-        class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
-        <property name="sessionFactory" ref="sessionFactory" />
-    </bean>
-
-
+    
     <!-- ======================== AUTHENTICATION ======================= -->
 
     <bean id="authenticationManager"
@@ -116,21 +110,6 @@
         class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
         <property name="key" value="fubar" />
     </bean>
-
-    <!--
-        For HTTP Basic Authentication, we don't have access to HttpSession
-        for use under the event notification system.
-        <bean id="basicProcessingFilter"
-        class="org.springframework.security.ui.basicauth.BasicAuthenticationFilter">
-        <property name="authenticationManager" ref="authenticationManager" />
-        <property name="authenticationEntryPoint" ref="basicAuthenticationEntryPoint" />
-        </bean>
-        
-        <bean id="basicAuthenticationEntryPoint"
-        class="org.springframework.security.ui.basicauth.BasicProcessingFilterEntryPoint">
-        <property name="realmName" value="Name Of Your Realm"/>
-        </bean>
-    -->
 
     <bean id="httpSessionContextIntegrationFilter"
         class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
