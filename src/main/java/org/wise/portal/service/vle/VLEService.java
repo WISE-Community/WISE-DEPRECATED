@@ -114,6 +114,10 @@ public interface VLEService {
 	
 	public Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo, UserInfo toUserInfo, StepWork stepWork, String type);
 	
+	public Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo, UserInfo toUserInfo, String nodeId, String type);
+	
+	public Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo, UserInfo toUserInfo, String type);
+	
 	public List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups, StepWork stepWork, String type);
 	
 	public List<Annotation> getAnnotationByStepWork(StepWork stepWork, Class<?> clazz);
@@ -137,6 +141,8 @@ public interface VLEService {
 	public Annotation getCRaterAnnotationByStepWork(StepWork stepWork);
 	
 	public List<Annotation> getAnnotationByStepWorkList(List<StepWork> stepWorkList);
+	
+	public List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers, UserInfo toUser, List<String> annotationTypes);
 	
 	public List<Annotation> getAnnotationList();
 	

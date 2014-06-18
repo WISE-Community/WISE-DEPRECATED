@@ -200,6 +200,11 @@ public class VLEServiceImpl implements VLEService {
 	public Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo, UserInfo toUserInfo, StepWork stepWork, String type) {
 		return annotationDao.getAnnotationByFromUserInfoToUserInfoStepWorkType(fromUserInfo, toUserInfo, stepWork, type);
 	}
+	
+	@Override
+	public Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo, UserInfo toUserInfo, String nodeId, String type) {
+		return annotationDao.getAnnotationByFromUserInfoToUserInfoNodeIdType(fromUserInfo, toUserInfo, nodeId, type);
+	}
 
 	@Override
 	public List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups, StepWork stepWork, String type) {
@@ -259,6 +264,15 @@ public class VLEServiceImpl implements VLEService {
 	@Override
 	public List<Annotation> getAnnotationByStepWorkList(List<StepWork> stepWorkList) {
 		return annotationDao.getAnnotationByStepWorkList(stepWorkList);
+	}
+	
+	@Override
+	public List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers, UserInfo toUser, List<String> annotationTypes) {
+		return annotationDao.getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(fromUsers, toUser, annotationTypes);
+	}
+	
+	public Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo, UserInfo toUserInfo, String type) {
+		return annotationDao.getAnnotationByFromUserInfoToUserInfoType(fromUserInfo, toUserInfo, type);
 	}
 	
 	@Override

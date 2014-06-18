@@ -5,6 +5,7 @@ package org.wise.vle.web;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -284,6 +285,13 @@ public class VLEAnnotationController extends AbstractController {
 				
 				// also get CRater annotations
 				annotationList.addAll(vleService.getAnnotationByToUserType(toWorkgroup, "cRater"));
+				
+				//get the score and comment annotations that do not have any student work associated with them
+				List<String> annotationTypes = new ArrayList<String>();
+				annotationTypes.add("score");
+				annotationTypes.add("comment");
+				List<Annotation> annotationByFromWorkgroupsToWorkgroupWithoutWork = vleService.getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(fromWorkgroups, toWorkgroup, annotationTypes);
+				annotationList.addAll(annotationByFromWorkgroupsToWorkgroupWithoutWork);
 			} else if (fromWorkgroupIdStr != null || toWorkgroupIdStr != null) {
 				UserInfo fromWorkgroup = null;
 				UserInfo toWorkgroup = null;
@@ -834,8 +842,19 @@ public class VLEAnnotationController extends AbstractController {
 			e.printStackTrace();
 		}
 		
-		Annotation annotation = vleService.getAnnotationByFromUserInfoToUserInfoStepWorkType(fromUserInfo, toUserInfo, stepWork, type);
-
+		Annotation annotation = null;
+		
+		if(stepWork != null) {
+			//there is student work associated with this annotation
+			annotation = vleService.getAnnotationByFromUserInfoToUserInfoStepWorkType(fromUserInfo, toUserInfo, stepWork, type);
+		} else if(nodeId != null) {
+			//there is a node id but no student work associated with this annotation
+			annotation = vleService.getAnnotationByFromUserInfoToUserInfoNodeIdType(fromUserInfo, toUserInfo, nodeId, type);
+		} else {
+			//there is no student work and no node id associated with this annotation
+			annotation = vleService.getAnnotationByFromUserInfoToUserInfoType(fromUserInfo, toUserInfo, type);
+		}
+		
 		if(annotation == null) {
 			//the annotation was not found so we will create it
 			annotation = new Annotation(type);

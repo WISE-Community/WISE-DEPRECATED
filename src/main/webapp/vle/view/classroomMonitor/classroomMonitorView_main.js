@@ -115,7 +115,7 @@ View.prototype.showPremadeCommentsDiv = function(commentBoxId, studentWorkColumn
 	this.studentWorkColumnId = studentWorkColumnId;
 	
 	//get the existing comment for the student work
-	var commentBoxValue = $('#' + commentBoxId).val();
+	var commentBoxValue = $('#' + this.escapeIdForJquery(commentBoxId)).val();
 	
 	//populate the premade comments textarea with the existing comment
 	$('#premadeCommentsTextArea').val(commentBoxValue);
@@ -2106,6 +2106,50 @@ View.prototype.createRowsForNodeVisits = function(nodeId, workgroupId, parentTab
 	 */
 	var isFirstRevision = true;
 	
+	//get the node
+	var node = this.getProject().getNodeById(nodeId);
+	
+	if(node != null && node.type != 'sequence' && node.hasGradingView() && nodeVisits.length == 0) {
+		//this is a gradable step but there is no student work
+		
+		//create the DOM ids
+		var stepWorkTRId = 'noStudentWorkStepWorkTR_' + nodeId + '_' + workgroupId;
+		var stepWorkTDId = 'noStudentWorkStepWorkTD_' + nodeId + '_' + workgroupId;
+		var stepWorkDivId = 'noStudentWorkStepWorkDiv_' + nodeId + '_' + workgroupId;
+		
+		//create the row
+		var stepWorkTR = $('<tr>');
+		stepWorkTR.attr('id', stepWorkTRId);
+		
+		//create the td that will contain the student work
+		var stepWorkTD = $('<td>');
+		stepWorkTD.attr('id', stepWorkTDId);
+		stepWorkTD.css('height', '100%');
+		
+		//create the div that will contain the student work
+		var stepWorkDiv = $('<div>');
+		stepWorkDiv.attr('id', stepWorkDivId);
+		stepWorkDiv.css('height', '100%');
+		stepWorkDiv.text('Student has not submitted any work');
+		
+		//add the div to the td
+		stepWorkTD.append(stepWorkDiv);
+		
+		//add the td to the row
+		stepWorkTR.append(stepWorkTD);
+		
+		if(isFirstRevision) {
+			//create the TD that contains the score and comment
+			var stepCommentScoreTD = this.createGradingTD(nodeId, workgroupId, nodeVisit);
+			
+			//add the score and comment td to the row
+			stepWorkTR.append(stepCommentScoreTD);
+		}
+		
+		//add the row to the table that contains all the revisions
+		parentTable.append(stepWorkTR);
+	}
+	
 	//loop through all the node visits from newest to oldest
 	for(var x=nodeVisits.length - 1; x>=0; x--) {
 		//get a node visit
@@ -2129,7 +2173,7 @@ View.prototype.createRowsForNodeVisits = function(nodeId, workgroupId, parentTab
 			
 			//create the div that will contain the student work
 			var stepWorkDiv = $('<div>');
-			stepWorkDiv.attr('id', 'stepWorkTD_' + stepWorkId);
+			stepWorkDiv.attr('id', 'stepWorkDiv_' + stepWorkId);
 			stepWorkDiv.css('height', '100%');
 			
 			//add the div to the td
@@ -2158,9 +2202,6 @@ View.prototype.createRowsForNodeVisits = function(nodeId, workgroupId, parentTab
 			//add the row to the table that contains all the revisions
 			parentTable.append(stepWorkTR);
 			
-			//get the node
-			var node = this.getProject().getNodeById(nodeId);
-			
 			try {
 				//render the student work into the div
 				node.renderGradingView(stepWorkDiv, nodeVisit, null, workgroupId);
@@ -2187,14 +2228,48 @@ View.prototype.createRowsForNodeVisits = function(nodeId, workgroupId, parentTab
  * Create the TD that will contain the grading input for score and comment
  * @param nodeId the node id
  * @param workgroupId the workgroup id
- * @param stepWorkId the step work id
+ * @param nodeVisit the node visit
  */
 View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	//get the step work id
-	var stepWorkId = nodeVisit.id;
+	var stepWorkId = null;
 	
 	//get the post time
-	var visitPostTime = nodeVisit.visitPostTime;
+	var visitPostTime = null;
+	
+	var stepCommentScoreTDId = '';
+	var stepCommentScoreDivId = '';
+	var scoreInputId = '';
+	var flagInputId = '';
+	var commentTextAreaId = '';
+	var studentWorkColumnId = '';
+	var annotationTimestampId = '';
+	
+	if(nodeVisit == null) {
+		//there is no student work
+		
+		//create the DOM ids for the elements
+		stepCommentScoreTDId = 'noStudentWorkStepCommentScoreTD_' + nodeId + '_' + workgroupId;
+		stepCommentScoreDivId = 'noStudentWorkStepCommentScoreDiv_' + nodeId + '_' + workgroupId;
+		scoreInputId = 'noStudentWorkScoreInput_' + nodeId + '_' + workgroupId;
+		flagInputId = 'noStudentWorkFlagInput_' + nodeId + '_' + workgroupId;
+		commentTextAreaId = 'noStudentWorkCommentTextArea_' + nodeId + '_' + workgroupId;
+		studentWorkColumnId = 'noStudentWorkStepWorkTD_' + nodeId + '_' + workgroupId;
+		annotationTimestampId = 'noStudentWorkAnnotationTimestamp_' + nodeId + '_' + workgroupId;
+	} else {
+		//there is student work
+		stepWorkId = nodeVisit.id;
+		visitPostTime = nodeVisit.visitPostTime;
+		
+		//create the DOM ids for the elements
+		stepCommentScoreTDId = 'stepCommentScoreTD_' + stepWorkId;
+		stepCommentScoreDivId = 'stepCommentScoreDiv_' + stepWorkId;
+		scoreInputId = 'scoreInput_' + stepWorkId;
+		flagInputId = 'flagInput_' + stepWorkId;
+		commentTextAreaId = 'commentTextArea_' + stepWorkId;
+		studentWorkColumnId = 'stepWorkTD_' + stepWorkId;
+		annotationTimestampId = 'annotationTimestamp_' + stepWorkId;
+	}
 	
 	var isWorkNewerThanScore = false;
 	var isWorkNewerThanComment = false;
@@ -2204,17 +2279,17 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	
 	//create the td that will contain everything
 	var stepCommentScoreTD = $('<td>');
-	stepCommentScoreTD.attr('id', 'stepCommentScoreTD_' + stepWorkId);
+	stepCommentScoreTD.attr('id', stepCommentScoreTDId);
 	stepCommentScoreTD.css('height', '100%');
 	
 	//create the div that will contain the score and comment inputs
 	var stepCommentScoreDiv = $('<div>');
-	stepCommentScoreDiv.attr('id', 'stepCommentScoreDiv_' + stepWorkId);
+	stepCommentScoreDiv.attr('id', stepCommentScoreDivId);
 	stepCommentScoreDiv.css('height', '100%');
 	
 	//create the score input
 	var scoreInput = $('<input>');
-	scoreInput.attr('id', 'scoreInput_' + stepWorkId);
+	scoreInput.attr('id', scoreInputId);
 	scoreInput.attr('maxlength', 10);
 	scoreInput.attr('size', 4);
 	
@@ -2248,7 +2323,7 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	
 	//create the flag check box
 	var flagCheckBox = $('<input>');
-	flagCheckBox.attr('id', 'flagInput_' + stepWorkId);
+	flagCheckBox.attr('id', flagInputId);
 	flagCheckBox.attr('type', 'checkbox');
 	flagCheckBox.click({thisView:this, nodeId:nodeId, workgroupId:workgroupId, stepWorkId:stepWorkId}, function(event) {
 		var thisView = event.data.thisView;
@@ -2291,11 +2366,12 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	premadeCommentsLink.css('color', 'blue');
 	premadeCommentsLink.css('cursor', 'pointer');
 	premadeCommentsLink.text('Open Premade Comments');
-	premadeCommentsLink.click({thisView:this, stepWorkId:stepWorkId}, function(event) {
+	premadeCommentsLink.click(
+			{thisView:this, stepWorkId:stepWorkId, commentTextAreaId:commentTextAreaId, studentWorkColumnId:studentWorkColumnId}, function(event) {
 		var thisView = event.data.thisView;
 		var stepWorkId = event.data.stepWorkId;
-		var commentBoxId = 'commentTextArea_' + stepWorkId;
-		var studentWorkColumnId = 'stepWorkTD_' + stepWorkId;
+		var commentBoxId = event.data.commentTextAreaId;
+		var studentWorkColumnId = event.data.studentWorkColumnId;
 		
 		/*
 		 * the open premade comments link was clicked so we will open up the
@@ -2306,7 +2382,7 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	
 	//create the comment textarea
 	var commentTextArea = $('<textarea>');
-	commentTextArea.attr('id', 'commentTextArea_' + stepWorkId);
+	commentTextArea.attr('id', commentTextAreaId);
 	commentTextArea.attr('cols', 50);
 	commentTextArea.attr('rows', 5);
 	
@@ -2361,8 +2437,11 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	flagP.css('display', 'inline');
 	flagP.text('Flag: ');
 	
-	flagCell.append(flagP);
-	flagCell.append(flagCheckBox);
+	//show the flag checkbox if there is student work
+	if(nodeVisit != null) {
+		flagCell.append(flagP);
+		flagCell.append(flagCheckBox);
+	}
 	
 	scoreAndFlagRow.append(scoreCell);
 	scoreAndFlagRow.append(flagCell);
@@ -2390,7 +2469,7 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
 	
 	//create the div to display the annotation timestamp
 	var annotationTimestampDiv = $('<div>');
-	annotationTimestampDiv.attr('id', 'annotationTimestamp_' + stepWorkId);
+	annotationTimestampDiv.attr('id', annotationTimestampId);
 	annotationTimestampDiv.css('font-size', '0.75em');
 	
 	//get the latest timestamp between the score and comment
@@ -2591,9 +2670,9 @@ View.prototype.saveScoreHandler = function(stepWorkId, nodeId, workgroupId) {
 	//check if the score has changed from the previous value
 	if(this.isScoreChanged(stepWorkId, nodeId, workgroupId)) {
 		//the score has changed so we will obtain the new value
-		var scoreValue = $('#scoreInput_' + stepWorkId).val();
+		var scoreValue = this.getScoreInputValue(stepWorkId, nodeId, workgroupId);
 		
-		if(this.isScoreValid(stepWorkId)) {
+		if(this.isScoreValid(scoreValue)) {
 			//the score is valid so we will save it to the server
 			this.postAnnotation(nodeId, workgroupId, fromWorkgroup, 'score', scoreValue, runId, stepWorkId);			
 		} else {
@@ -2605,6 +2684,33 @@ View.prototype.saveScoreHandler = function(stepWorkId, nodeId, workgroupId) {
 			this.revertScore(stepWorkId, nodeId, workgroupId);
 		}
 	}
+};
+
+/**
+ * Get the score input value
+ * @param stepWorkId the step work id
+ * @param nodeId the node id
+ * @param workgroupId the workgroup id
+ * @return the score input value
+ */
+View.prototype.getScoreInputValue = function(stepWorkId, nodeId, workgroupId) {
+	var scoreValue = null;
+	
+	//get the score input id
+	var scoreInputId = null;
+	
+	if(stepWorkId == null) {
+		//the student doesn't have any work for this step
+		scoreInputId = this.escapeIdForJquery('noStudentWorkScoreInput_' + nodeId + '_' + workgroupId);
+	} else {
+		//the student has work for this step
+		scoreInputId = 'scoreInput_' + stepWorkId;
+	}
+	
+	//get the new score input value
+	scoreValue = $('#' + scoreInputId).val();
+	
+	return scoreValue;
 };
 
 /**
@@ -2632,11 +2738,35 @@ View.prototype.saveCommentHandler = function(stepWorkId, nodeId, workgroupId) {
 	//check if the comment has changed from the previous value
 	if(this.isCommentChanged(stepWorkId, nodeId, workgroupId)) {
 		//the comment has changed so we will obtain the new value
-		var commentValue = $('#commentTextArea_' + stepWorkId).val();
+		var commentValue = this.getCommentTextAreaValue(stepWorkId, nodeId, workgroupId);
 		
 		//save the comment to the server
 		this.postAnnotation(nodeId, workgroupId, fromWorkgroup, 'comment', commentValue, runId, stepWorkId);
 	}
+};
+
+/**
+ * Get the comment text area value
+ * @param stepWorkId the step work id
+ * @param nodeId the node id
+ * @param workgroupId the workgroup id
+ * @return the comment text area value
+ */
+View.prototype.getCommentTextAreaValue = function(stepWorkId, nodeId, workgroupId) {
+	var commentTextAreaId = null;
+	
+	if(stepWorkId == null) {
+		//the student does not have any work for the step
+		commentTextAreaId = this.escapeIdForJquery('noStudentWorkCommentTextArea_' + nodeId + '_' + workgroupId);
+	} else {
+		//the student has work for the step
+		commentTextAreaId = 'commentTextArea_' + stepWorkId;
+	}
+	
+	//get the comment text area value
+	var commentValue = $('#' + commentTextAreaId).val();
+	
+	return commentValue;
 };
 
 /**
@@ -2658,11 +2788,14 @@ View.prototype.postAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, typ
 		fromWorkgroup:fromWorkgroup,
 		annotationType:type,
 		value:value,
-		nodeId:nodeId,
-		stepWorkId:stepWorkId
+		nodeId:nodeId
 	}
 	
-	this.connectionManager.request('POST', 1, postAnnotationsURL, postAnnotationParams, this.postAnnotationCallbackSuccess, [this, stepWorkId], this.postAnnotationCallbackFailure);
+	if(stepWorkId != null) {
+		postAnnotationParams.stepWorkId = stepWorkId;
+	}
+	
+	this.connectionManager.request('POST', 1, postAnnotationsURL, postAnnotationParams, this.postAnnotationCallbackSuccess, [this, stepWorkId, nodeId, toWorkgroup], this.postAnnotationCallbackFailure);
 };
 
 /**
@@ -2671,23 +2804,41 @@ View.prototype.postAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, typ
 View.prototype.postAnnotationCallbackSuccess = function(text, xml, args) {
 	var thisView = args[0];
 	var stepWorkId = args[1];
+	var nodeId = args[2];
+	var workgroupId = args[3];
 	
-	thisView.postAnnotationCallbackSuccessHandler(stepWorkId, text);
+	thisView.postAnnotationCallbackSuccessHandler(stepWorkId, nodeId, workgroupId, text);
 };
 
 /**
  * The function that actually handles the callback logic when posting annotations
+ * @param stepWorkId the step work id
+ * @param nodeId the node id
+ * @param workgroupId the workgroup id
+ * @param timestamp the post timestamp
  */
-View.prototype.postAnnotationCallbackSuccessHandler = function(stepWorkId, timestamp) {
-	//remove the background highlight color for the row
-	$('#stepWorkTR_' + stepWorkId).css('background', '');
+View.prototype.postAnnotationCallbackSuccessHandler = function(stepWorkId, nodeId, workgroupId, timestamp) {
+	if(stepWorkId != null) {
+		//remove the background highlight color for the row
+		$('#stepWorkTR_' + stepWorkId).css('background', '');
+	}
 	
 	if(timestamp != null) {
 		//get the timestamp
 		var timestampFormatted = this.formatTimestamp(parseInt(timestamp));
 		
+		var annotationTimestampId = null;
+		
+		if(stepWorkId == null) {
+			//the student does not have any work for the step
+			annotationTimestampId = this.escapeIdForJquery('noStudentWorkAnnotationTimestamp_' + nodeId + '_' + workgroupId);
+		} else {
+			//the student has work for the step
+			annotationTimestampId = 'annotationTimestamp_' + stepWorkId;
+		}
+
 		//update the timestamp in the display
-		$('#annotationTimestamp_' + stepWorkId).html('Last Annotation: ' + timestampFormatted);
+		$('#' + annotationTimestampId).html('Last Annotation: ' + timestampFormatted);
 	}
 	
 	//disable the save button
@@ -2703,13 +2854,11 @@ View.prototype.postAnnotationCallbackFailure = function() {
 
 /**
  * Check if the score is valid
- * @param stepWorkId the step work id for the row
+ * @param scoreValue the score value
+ * @return whether the score value is valid or not
  */
-View.prototype.isScoreValid = function(stepWorkId) {
+View.prototype.isScoreValid = function(scoreValue) {
 	var result = false;
-	
-	//get the score from the input
-	var scoreValue = $('#scoreInput_' + stepWorkId).val();
 	
 	//check if the score is a valid number
 	if(!isNaN(scoreValue)) {
@@ -2760,8 +2909,19 @@ View.prototype.isScoreChanged = function(stepWorkId, nodeId, workgroupId) {
 		previousScore = latestScoreAnnotation.value;
 	}
 	
+	//get the score input id
+	var scoreInputId = null;
+	
+	if(stepWorkId == null) {
+		//the student doesn't have any work for this step
+		scoreInputId = this.escapeIdForJquery('noStudentWorkScoreInput_' + nodeId + '_' + workgroupId);
+	} else {
+		//the student has work for this step
+		scoreInputId = 'scoreInput_' + stepWorkId;
+	}
+	
 	//get the new score input value
-	var scoreValue = $('#scoreInput_' + stepWorkId).val();
+	var scoreValue = $('#' + scoreInputId).val();
 	
 	if(previousScore != scoreValue) {
 		//the score has changed
@@ -6555,18 +6715,8 @@ View.prototype.createPremadeCommentsDiv = function() {
 	premadeCommentsSubmitButton.val('Submit');
 	premadeCommentsSubmitButton.click({thisView:this}, function(event) {
 		var thisView = event.data.thisView;
-		
 		var commentBoxId = thisView.commentBoxId;
-		
-		if(commentBoxId != null) {
-			var premadeCommentsText = $('#premadeCommentsTextArea').val();
-			$('#' + commentBoxId).val(premadeCommentsText);
-			$('#' + commentBoxId).change();
-		}
-		
-		$('#premadeCommentsTextArea').val('');
-		
-		thisView.hidePremadeCommentsDiv();
+		thisView.premadeCommentsSubmitButtonClicked(commentBoxId);
 	});
 	
 	premadeCommentsDiv.append(premadeCommentsListsLabel);
@@ -6580,6 +6730,24 @@ View.prototype.createPremadeCommentsDiv = function() {
 	
 	//hide the premade comments div, we will show it later when necessary
 	premadeCommentsDiv.hide();
+};
+
+/**
+ * The premade comments submit button was clicked
+ * @param commentBoxId the id of the textarea that we will insert the text into
+ */
+View.prototype.premadeCommentsSubmitButtonClicked = function(commentBoxId) {
+	if(commentBoxId != null) {
+		//update the associated comment textarea with the new value
+		var premadeCommentsText = $('#premadeCommentsTextArea').val();
+		$('#' + this.escapeIdForJquery(commentBoxId)).val(premadeCommentsText);
+		$('#' + this.escapeIdForJquery(commentBoxId)).change();
+	}
+	
+	//clear the global premade comments textarea
+	$('#premadeCommentsTextArea').val('');
+	
+	this.hidePremadeCommentsDiv();
 };
 
 /**

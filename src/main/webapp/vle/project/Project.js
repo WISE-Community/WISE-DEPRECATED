@@ -1013,7 +1013,7 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 						//get the latest score annotation
 						var annotationScore = view.getAnnotations().getLatestAnnotation(runId, nodeId, toWorkgroup, fromWorkgroups, 'score');
 
-						if(annotationScore && annotationScore.value != '') {
+						if(annotationScore != null && annotationScore.value !== '') {
 							var teacher_score = view.getI18NString('teacher_score');
 
 							//the p that displays the score

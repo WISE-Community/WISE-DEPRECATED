@@ -69,15 +69,29 @@ Branching.prototype.translateOperand = function(operand) {
  * @param annotationKey key in the run annotations e.g. "groups"
  */
 Branching.prototype.annotationLookup = function(annotationKey) {
-	var runAnnotations = this.node.view.getAnnotationsByType("run");
-
-	// lookup the annotationKey in the runAnnotations obj. runAnnotationsObj should be set by this point.
-	if (runAnnotations.getAnnotationsByType("run").length > 0) {
-		return runAnnotations.getAnnotationsByType("run")[0].value[annotationKey];
-	} else {
-		return [];
+	var annotationValue = null;
+	
+	//get the run annotations object
+	var runAnnotationsObj = this.node.view.getAnnotationsByType("run");
+	
+	if(runAnnotationsObj != null) {
+		//get the run annotations array
+		var runAnnotations = runAnnotationsObj.getAnnotationsByType("run");
+		
+		if(runAnnotations != null) {
+			if (runAnnotations.length > 0) {
+				//get the latest run annotation
+				runAnnotation = runAnnotations[runAnnotations.length - 1];
+				
+				if(runAnnotation != null && runAnnotation.value != null) {
+					//get the value from the annotation
+					annotationValue = runAnnotation.value[annotationKey];
+				}
+			}
+		}
 	}
-
+	
+	return annotationValue;
 };	
 
 /**
@@ -106,13 +120,16 @@ Branching.prototype.getPathToVisit = function() {
 			pathToVisit = this.content.paths[0];			
 		} else {
 			result = this.annotationLookup(branchingFunctionParams[0]);
-			for (var i=0; i<this.content.paths.length; i++) {
-				var path = this.content.paths[i];
-				if (result.indexOf(path.branchingFunctionExpectedResults) != -1) {
-					pathToVisit = path;
-					break;
+			
+			if(result != null) {
+				for (var i=0; i<this.content.paths.length; i++) {
+					var path = this.content.paths[i];
+					if (result.indexOf(path.branchingFunctionExpectedResults) != -1) {
+						pathToVisit = path;
+						break;
+					}
 				}
-			}			
+			}
 		}
 	} else if (branchingFunction == "criteriaMapping") {
 		var result;

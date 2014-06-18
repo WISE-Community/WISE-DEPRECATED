@@ -309,38 +309,32 @@ VLE_STATE.prototype.getLatestCompletedVisit = function() {
 };
 
 /**
- * Get the last time the student has visited. We will use the second
- * to last node visit because the last node visit is created
- * when the student logs back into the vle. Here's an example
- * 
- * e.g.
- * Student logs in the first time and completes work for a step
- * this becomes node visit 1.
- * Student then logs out.
- * The 2nd day the student logs in for the second time and at
- * that moment we have node visit 1 which he completed last time
- * and node visit 2 which is created when he has just logged
- * in on the 2nd day.
- * 
- * Therefore we need to look at the 2nd to last node visit and not
- * the last.
- * 
+ * Get the last time the student has visited.
  * @return the last time the student has visited
  */
 VLE_STATE.prototype.getLastTimeVisited = function() {
 	var lastTimeVisited = 0;
 	
-	/*
-	 * make sure there is more than one node visit. if there is only one node
-	 * visit it means the student has logged in for the very first time and
-	 * the one node visit was just created.
-	 */
-	if(this.visitedNodes.length > 1) {
-		//get the 2nd to last node visit
-		var previousVisit = this.visitedNodes[this.visitedNodes.length - 2];
-		
-		//get the post time from the last visit
-		lastTimeVisited = previousVisit.visitPostTime;
+	if(this.visitedNodes != null) {
+		//loop through the node visits from newest to oldest
+		for(var x=this.visitedNodes.length - 1; x>=0; x--) {
+			//get a node visit
+			var nodeVisit = this.visitedNodes[x];
+			
+			if(nodeVisit != null) {
+				//get the visit post time
+				var visitPostTime = nodeVisit.visitPostTime;
+				
+				if(visitPostTime != null) {
+					/*
+					 * we have found a non null visit post time which is the last
+					 * time the student visited
+					 */ 
+					lastTimeVisited = visitPostTime;
+					break;
+				}
+			}
+		}
 	}
 	
 	return lastTimeVisited;
