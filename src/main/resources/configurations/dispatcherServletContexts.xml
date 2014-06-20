@@ -894,9 +894,9 @@
 				/errors/friendlyError.html=urlFilenameViewController
 				/accessdenied.html=accessDeniedController
 				/router.html=routerController
+				/checkforexistingaccount.html=checkForExistingAccountController
 				/contact/contactwisegeneral.html=contactWiseController
 				/contact/contactwiseproject.html=contactWiseProjectController
-				/contact/checkforexistingaccount.html=checkForExistingAccountController
 				/student/index.html=studentIndexController
 				/student/vle/vle.html=studentVLEController
 				/student/selectteam.html=selectteamController
