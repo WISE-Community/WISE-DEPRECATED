@@ -1460,8 +1460,6 @@
 				<sec:intercept-url pattern="/pages/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/contact/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/checkforexistingaccount.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/getPortalStatistics.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/getVLEStatistics.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/previewprojectlist.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/previewproject.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/credits.html" access="ROLE_ANONYMOUS,ROLE_USER" />
