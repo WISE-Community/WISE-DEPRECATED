@@ -57,7 +57,7 @@ public class MessageRecipientImpl implements MessageRecipient{
 	@Transient
     public static final long serialVersionUID = 1L;
 	
-	@ManyToOne(targetEntity = UserImpl.class, fetch=FetchType.EAGER)
+	@ManyToOne(targetEntity = UserImpl.class, fetch=FetchType.LAZY)
 	@JoinColumn(name = RECIPIENT_FK_COLUMN_NAME, nullable=false)
 	private User recipient;
 	

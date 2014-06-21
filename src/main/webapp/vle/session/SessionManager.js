@@ -11,10 +11,11 @@
 function SessionManager(em, view) {
 	this.em = em;
 	this.view = view;
+	this.alert;
 
 	// session timeout limit, in milliseconds.
 	// (20 min = 20*60*1000 = 1200000 milliseconds)  (15 min = 15*60*1000 = 900000 milliseconds) (10 min = 10*60*1000 = 600000 milliseconds)	
-	this.sessionTimeoutInterval = 1200000;   
+	this.sessionTimeoutInterval = 1200000;
 	
 	// override sessionTimeoutInterval, if specified in the config.
 	if (view.config && view.config.getConfigParam("sessionTimeoutInterval")) {
@@ -30,7 +31,7 @@ function SessionManager(em, view) {
 	}
 	
 	// how many milliseconds to wait before warning the user about a session timeout.
-	this.sessionTimeoutWarning = this.sessionTimeoutInterval*.75;  
+	this.sessionTimeoutWarning = this.sessionTimeoutInterval*.75;
 	
 	// timestamp of last successful request to renew the session.
 	this.lastSuccessfulRequest = Date.parse(new Date());  
@@ -72,26 +73,28 @@ SessionManager.prototype.renewSession = function() {
  * time the session was renewed. Do nothing.
  */
 SessionManager.prototype.checkSession = function() {
-	if(this.view.config.getConfigParam("mode") == "portalpreview") {
+	var view = this.view;
+	if(view.config.getConfigParam("mode") == "portalpreview") {
 		// no session for preview
 		return;
 	}
 	
-	if(this.view.gradingType != null && this.view.gradingType == "monitor") {
+	/*if(this.view.gradingType != null && this.view.gradingType == "monitor") {
 		// classroom monitor should not log out indefinitely
 		this.renewSession();
 		return;
-	}
+	}*/
 	
 	if (this.lastSuccessfulRequest != null) {
 		if ((Date.parse(new Date()) - this.lastSuccessfulRequest) +this.sessionTimeoutCheckInterval*1.5 >= this.sessionTimeoutInterval) {
 			// "+this.sessionTimeoutCheckInterval*1.5" => force logout sooner than actual sessionTimeoutInterval to avoid data loss.
 			// this means that student has been idling too long and has been logged out of the session
 			// so we should take them back to the homepage.
+			var msg = view.getI18NString("session_timeout_message");
 			if(notificationManager){
-				notificationManager.notify("You have been inactive for too long and have been logged out. Please log back in to continue.",3);
+				notificationManager.notify(msg,3);
 			} else {
-				alert("You have been inactive for too long and have been logged out. Please log back in to continue.");
+				alert(msg);
 			}
 			this.view.onWindowUnload(true);
 		} else if ((Date.parse(new Date()) - this.lastSuccessfulRequest) > this.sessionTimeoutWarning) {
@@ -105,10 +108,32 @@ SessionManager.prototype.checkSession = function() {
 				// renewSession was requested
 				view.sessionManager.renewSession();
 			};
-			$('#sessionMessageDiv').html("You have been inactive for a long time. If you do not renew your session now, you will be logged out of WISE.");
-			$('#sessionMessageDiv').dialog(
-					{autoOpen:true, draggable:true, modal:true, title:'Session Timeout', width:400, position:['center','center'], zIndex:10000, buttons: {'STAY LOGGED IN!':renewSessionSubmit}, close:renewSessionClose}
-			);
+			var title = view.getI18NString("session_timeout_title"),
+				msg = view.getI18NString("session_timeout_warning"),
+				btn = view.getI18NString("session_timeout_confirm");
+			// TODO: switch to Bootbox modals permanently when we're using Bootstrap globally across views
+			if(bootbox && !this.alert){
+				this.alert = bootbox.dialog({
+					  message: msg,
+					  title: title,
+					  onEscape: renewSessionClose,
+					  buttons: {
+					    main: {
+					      label: btn,
+					      className: "btn-primary",
+					      callback: function(){
+					    	  view.alert = null;
+					    	  renewSessionClose();
+					      }
+					    }
+					  }
+					});
+			} else {
+				$('#sessionMessageDiv').html(msg);
+				$('#sessionMessageDiv').dialog(
+						{autoOpen:true, draggable:true, modal:true, title:title, width:400, position:['center','center'], zIndex:10000, buttons: {btn:renewSessionSubmit}, close:renewSessionClose}
+				);
+			}
 		} else {
 			// they're fine, within the timeout interval. no need to renew session or logout.
 		}

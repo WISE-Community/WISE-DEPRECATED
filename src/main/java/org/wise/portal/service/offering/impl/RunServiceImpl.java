@@ -374,6 +374,13 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	public Run retrieveById(Long runId) throws ObjectNotFoundException {
 		return runDao.getById(runId);
 	}
+	
+	/**
+	 * @see org.wise.portal.service.offering.RunService#retrieveById(java.lang.Long)
+	 */
+	public Run retrieveById(Long runId, boolean doEagerFetch) throws ObjectNotFoundException {
+		return runDao.getById(runId, doEagerFetch);
+	}
 
 	/**
 	 * @see org.wise.portal.service.offering.RunService#endRun(Run)
@@ -488,8 +495,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	
 	@Transactional()
 	public List<Run> getProjectRuns(Long id){
-		List<Run> runList = this.runDao.getRunsOfProject(id);
-		return runList;
+		return this.runDao.getRunsOfProject(id);
 	}
 	
 	@Transactional()

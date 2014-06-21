@@ -76,7 +76,7 @@ public class PremadeCommentImpl implements PremadeComment, Comparable<PremadeCom
     @Column(name = PremadeCommentImpl.COLUMN_NAME_COMMENT, nullable = false)
     private String comment;
     
-    @OneToOne(targetEntity = UserImpl.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
     @JoinColumn(name = PremadeCommentImpl.COLUMN_NAME_OWNER, nullable = true)
     private User owner = null;
     

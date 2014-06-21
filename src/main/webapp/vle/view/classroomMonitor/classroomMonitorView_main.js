@@ -21,7 +21,7 @@ View.prototype.getClassroomMonitorConfig = function(classroomMonitorConfigUrl) {
 	this.config = this.createConfig(classroomMonitorConfigContent);
 	
 	//fetch i18n files
-	this.retrieveLocales("main");		
+	this.retrieveLocales("main");
 	
 	//load the user and class info
 	this.loadUserAndClassInfo(createContent(this.config.getConfigParam('getUserInfoUrl')));
@@ -34,21 +34,58 @@ View.prototype.getClassroomMonitorConfig = function(classroomMonitorConfigUrl) {
  * Start the classroom monitor
  */
 View.prototype.startClassroomMonitor = function() {
-	//get the run name
-	var runName = this.config.getConfigParam("runName");
+	var view = this,
+		//get the run name
+		runName = this.config.getConfigParam('runName'),
+		//get the run id
+		runId = this.config.getConfigParam('runId');
+	//get startup view
+	this.currentMonitorView = 'studentProgress', // TODO: modify default based on url querystring
+	// initialize period, stepID, and workgroupId selected variables
+	this.classroomMonitorPeriodSelected = 'all';
+	this.classroomMonitorStepIdSelected = null;
+	this.classroomMonitorWorkgroupIdSelected = null;
 	
-	//get the run id
-	var runId = this.config.getConfigParam("runId");
+	this.fixedHeaders = [];
 	
-	//set the classroom monitor header
-	if(runName != null && runId != null) {
-		$('#classroomMonitorHeader').text('WISE Grading Tool 2.0 Beta: ' + runName + ' (Run ID ' + runId + ')');
-	} else {
-		$('#classroomMonitorHeader').text('WISE Grading Tool 2.0 Beta');
-	}
+	//set the classroom monitor header text
+	$('#runTitle').text(this.getI18NString('classroomMonitor_title') + ' - ' + runName).attr('title', runName);
+	$('#runId').text(this.getI18NStringWithParams('classroomMonitor_run', [runId]));
 	
-	//display a loading message
-	$('#selectDisplayButtonsDiv').html('<p style="display:inline;margin-left:5px">Loading...</p>');
+	// insert translations
+	this.insertTranslations("main", function(){ 
+		// initialize tooltips on monitor mode buttons
+		view.bsTooltip($('#monitorView > .btn'), {placement: 'bottom'});
+	});
+	
+	// TODO: move to load completed event?
+	$(window).on('resize.monitor', function(){
+		view.resizeClassroomMonitor();
+	});
+	this.resizeClassroomMonitor();
+	
+	// redraw fixed headers whenever a Bootstrap modal is closed (as scrollbar toggling can cause misalignment)
+	var _originalHide = $.fn.modal.Constructor.prototype.hide;
+	$.extend($.fn.modal.Constructor.prototype, {
+	    hide: function (_relatedTarget) {
+	      view.redrawFixedHeaders(true);
+	      return _originalHide.call(this, _relatedTarget);
+	    }
+	});
+	
+	// remove 'form-inline' class from DataTables wrappers
+	$.extend( $.fn.dataTableExt.oStdClasses, {
+		"sWrapper": "dataTables_wrapper"
+	} );
+	
+	// menu option change and click events
+	$('#monitorView .btn').button();
+	$('#monitorView input').on('change', function(){
+		view.setClassroomMonitorView($(this).val());
+	});
+	
+	//display a loading message; TODO: remove
+	//$('#selectDisplayButtonsDiv').html('<p style="display:inline;margin-left:5px">Loading...</p>');
 	
 	//initialize the session
 	this.initializeSession();
@@ -59,6 +96,89 @@ View.prototype.startClassroomMonitor = function() {
 	 * start the websocket connection 
 	 */
 	this.loadProject(this.config.getConfigParam('getContentUrl'), this.config.getConfigParam('getContentBaseUrl'), true);
+};
+
+/**
+ * Default multiselect buttonText
+ *
+ * TODO: figure out how to properly set this in an $.extend
+ */
+View.prototype.multiselectButtonText = function(options, select){
+	if (options.length === 0) {
+        return '<span>' + this.nonSelectedText + '</span> <b class="caret"></b>';
+    }
+    else {
+        if (options.length > this.numberDisplayed) {
+            return '<span>' + options.length + ' ' + this.nSelectedText + '</span> <b class="caret"></b>';
+        }
+        else {
+            var selected = '';
+            options.each(function() {
+                var label = ($(this).attr('label') !== undefined) ? $(this).attr('label') : $(this).html();
+
+                selected += label + ', ';
+            });
+            return '<span>' + selected.substr(0, selected.length - 2) + '</span> <b class="caret"></b>';
+        }
+    }
+};
+
+/**
+ * Make display adjustments upon window resize
+ */
+View.prototype.resizeClassroomMonitor = function(){
+	this.repositionPopovers();
+	
+	// adjust run title max width
+	$('#runTitle').css('max-width', function() {
+		var extra = $('#monitorTopNav .navbar-toggle').is(':visible') ? 0 : 50;
+		return $('#monitorTopNav').width() - $('#monitorTopNav .navbar-collapse').outerWidth() - 
+			$('#monitorTopNav .navbar-toggle').outerWidth() - $('#runId').outerWidth() - extra;
+	});
+	
+	this.redrawFixedHeaders();
+};
+
+/**
+ * re-position all bootstrap popovers
+ */
+View.prototype.repositionPopovers = function(){
+	$('[data-original-title]').each(function(){
+		try {
+			if($(this).data('bs.popover').$tip.is(':visible')){
+				$(this).popover('hide').popover('show');
+			}
+		} catch(e) {}
+	});
+};
+
+/**
+ * Redraws DataTables fixed headers
+ * 
+ * @param noTimeout Boolean specifying whether a timeout of .5 seconds should be added or not
+ */ 
+View.prototype.redrawFixedHeaders = function(noTimeout) {
+	var view = this,
+		timeout = noTimeout ? 0 : 500;
+	
+	if(!noTimeout){	$('.fixedHeader table.dataTable').hide(); }
+	
+	setTimeout( function(){
+		for (var i = 0; i < view.fixedHeaders.length; i++) {
+	        view.fixedHeaders[i]._fnUpdateClones(true); // force redraw
+	        view.fixedHeaders[i]._fnUpdatePositions();
+	    }
+		
+		// TODO: this is a hack; figure out why FixedHeaders are always calculated 2px too wide in Firefox
+		if(navigator.userAgent.indexOf("Firefox")!=-1){
+			$('.fixedHeader table.dataTable').each(function(){
+				var w = $(this).width();
+				$(this).width(w-2);
+			});
+		}
+		
+		if(!noTimeout){	$('.fixedHeader table.dataTable').show(); }
+	}, timeout);
 };
 
 
@@ -76,6 +196,32 @@ View.prototype.createClassroomMonitorDisplays = function() {
 	this.createExportStudentWorkDisplay();
 	this.createIdeaBasketDisplay();
 	this.createPremadeCommentsDiv();
+	// set the default view
+	this.setClassroomMonitorView(this.currentMonitorView);
+};
+
+/**
+ * Displays the specified classroom monitor view and hides all other views
+ * 
+ * @param monitorView String view mode
+ */
+View.prototype.setClassroomMonitorView = function(monitorView){
+	switch(monitorView) {
+		case 'stepProgress':
+			// student progress is the default view
+			this.showStepProgressDisplay();
+			break;
+		case 'exportWork':
+		case 'manageStudents':
+		case 'gradebook':
+		case 'announcements':
+		case 'notes':
+		case 'runSettings':
+		case 'studentprogress':
+		default:
+			// student progress is the default view
+			this.showStudentProgressDisplay();
+	}
 };
 
 /**
@@ -87,17 +233,20 @@ View.prototype.clearNodeIdClickedAndWorkgroupIdClicked = function() {
 };
 
 /**
- * Hide all the displays divs
+ * Hide all the monitor displays
  */
 View.prototype.hideAllDisplays = function() {
-	$('#studentProgressDisplay').hide();
+	/*$('#studentProgressDisplay').hide();
 	$('#stepProgressDisplay').hide();
 	$('#gradeByStudentDisplay').hide();
 	$('#gradeByStepDisplay').hide();
 	$('#pauseScreensDisplay').hide();
 	$('#exportStudentWorkDisplay').hide();
 	$('#ideaBasketDisplay').hide();
-	$('#premadeCommentsDiv').hide();
+	$('#premadeCommentsDiv').hide();*/
+	
+	// hide all sections
+	$('#pageContent > section').hide();
 }
 
 /**
@@ -132,54 +281,34 @@ View.prototype.hidePremadeCommentsDiv = function() {
 };
 
 /**
- * Show the pause all screens display
- */
-View.prototype.showPauseScreensDisplay = function() {
-	//clear any existing buttons in the upper right
-	this.clearDisplaySpecificButtonsDiv();
-	this.clearSaveButtonDiv();
-	this.clearNewWorkNotificationDiv();
-	
-	//hide all the other display divs
-	this.hideAllDisplays();
-	
-	//hide the period buttons
-	this.hidePeriodButtonsDiv();
-	
-	//clear the nodeIdClicked and workgroupIdClicked values
-	this.clearNodeIdClickedAndWorkgroupIdClicked();
-	
-	//show the pause screens div
-	$('#pauseScreensDisplay').show();
-	
-	//fix the height so scrollbars display correctly
-	this.fixClassroomMonitorDisplayHeight();
-};
-
-
-/**
- * Show the student progress display
+ * Show the student progress section
  */
 View.prototype.showStudentProgressDisplay = function() {
-	//clear any existing buttons in the upper right
-	this.clearDisplaySpecificButtonsDiv();
-	this.clearSaveButtonDiv();
-	this.clearNewWorkNotificationDiv();
-	
-	//hide all the other display divs
+	// hide all sections
 	this.hideAllDisplays();
 	
-	//show the period buttons
-	this.showPeriodButtonsDiv();
-	
-	//clear the nodeIdClicked and workgroupIdClicked values
+	// clear the nodeIdClicked and workgroupIdClicked values; TODO: remove/revise
 	this.clearNodeIdClickedAndWorkgroupIdClicked();
 	
-	//show the student progress div
-	$('#studentProgressDisplay').show();
+	// filter for currently selected period
+	if(this.classroomMonitorPeriodSelected !== null) {
+		var period = (this.classroomMonitorPeriodSelected === 'all') ? '' : this.classroomMonitorPeriodSelected;
+		$('#studentProgressTable_periodSelect').multiselect('select', period).multiselect('refresh');
+		this.studentProgressTable
+			.column( 4 )
+	        .search( period )
+	        .draw();
+	}
 	
-	//fix the height so scrollbars display correctly
-	this.fixClassroomMonitorDisplayHeight();
+	// show step progress
+	$('#studentProgress').show();
+	
+	// hide loading message
+	$('#loading').hide();
+	
+	// redraw DataTable fixed headers
+	this.redrawFixedHeaders();
+	this.studentProgressTable.columns.adjust();
 };
 
 
@@ -187,59 +316,55 @@ View.prototype.showStudentProgressDisplay = function() {
  * Show the step progress display
  */
 View.prototype.showStepProgressDisplay = function() {
-	//clear any existing buttons in the upper right
-	this.clearDisplaySpecificButtonsDiv();
-	this.clearSaveButtonDiv();
-	this.clearNewWorkNotificationDiv();
-	
-	//hide all the other display divs
+	// hide all sections
 	this.hideAllDisplays();
 	
-	//show the period buttons
-	this.showPeriodButtonsDiv();
-	
-	//clear the nodeIdClicked and workgroupIdClicked values
+	// clear the nodeIdClicked and workgroupIdClicked values; TODO: revise/remove
 	this.clearNodeIdClickedAndWorkgroupIdClicked();
 	
-	//show the step progress div
-	$('#stepProgressDisplay').show();
+	// filter for currently selected period
+	if(this.classroomMonitorPeriodSelected !== null) {
+		var period = (this.classroomMonitorPeriodSelected === 'all') ? view.getI18NString('classroomMonitor_allPeriods') : this.classroomMonitorPeriodSelected;
+		$('#stepProgressTable_periodSelect').multiselect('select', period).multiselect('refresh');
+		this.stepProgressTable
+			.column( 0 )
+	        .search( period )
+	        .draw();
+	}
 	
-	//fix the height so scrollbars display correctly
-	this.fixClassroomMonitorDisplayHeight();
+	// show step progress
+	$('#stepProgress').show();
+	
+	// hide loading message
+	$('#loading').hide();
+	
+	// redraw DataTable fixed headers
+	this.redrawFixedHeaders();
+	this.stepProgressTable.columns.adjust();
 };
 
 /**
  * Show the step progress display
  */
 View.prototype.showGradeByStudentDisplay = function() {
-	//hide all the other display divs
-	this.hideAllDisplays();
+	// show grade by student section
+	$('#gradeByStudent').show();
 	
-	//hide the period buttons
-	this.hidePeriodButtonsDiv();
-	
-	//show the grade by student div
-	$('#gradeByStudentDisplay').show();
-	
-	//fix the height so scrollbars display correctly
-	this.fixClassroomMonitorDisplayHeight();
+	// redraw DataTable fixed headers
+	this.redrawFixedHeaders();
+	this.gradeByStudentTable.columns.adjust();
 };
 
 /**
  * Show the step progress display
  */
 View.prototype.showGradeByStepDisplay = function() {
-	//hide all the other display divs
-	this.hideAllDisplays();
+	// show the grade by step section
+	$('#gradeByStep').show();
 	
-	//show the period buttons
-	this.showPeriodButtonsDiv();
-	
-	//show the grade by step div
-	$('#gradeByStepDisplay').show();
-	
-	//fix the height so scrollbars display correctly
-	this.fixClassroomMonitorDisplayHeight();
+	// redraw DataTable fixed headers
+	this.redrawFixedHeaders();
+	this.gradeByStepTable.columns.adjust();
 };
 
 /**
@@ -293,7 +418,7 @@ View.prototype.showIdeaBasketDisplay = function() {
  * Opens teacher's notes for this run
  */
 View.prototype.openTeacherRunNotes = function (runId) {
-	var path = this.config.getConfigParam("wiseBaseURL") + "/teacher/run/notes.html?runId=" + runId;
+	var path = this.config.getConfigParam('wiseBaseURL') + '/teacher/run/notes.html?runId=' + runId;
 	var myNotesDiv = $('<div>').attr('id', 'myNotesDialog').html('<iframe id="myNotesIfrm" width="100%" height="95%" src="'+path+'"></iframe>');
 	$("#classroomMonitorMainDiv").append(myNotesDiv);
 	myNotesDiv.dialog({
@@ -312,6 +437,7 @@ View.prototype.openTeacherRunNotes = function (runId) {
 
 /**
  * Create the classroom monitor buttons
+ * TODO: remove
  */
 View.prototype.createClassroomMonitorButtons = function() {
 	//make the period button class
@@ -763,277 +889,277 @@ View.prototype.fixClassroomMonitorDisplayHeight = function() {
  * Create the pause all screens display
  */
 View.prototype.createPauseScreensDisplay = function() {
-	//create the pause all screens div
-	var pauseScreensDisplay = $('<div></div>').attr({id:'pauseScreensDisplay'});
-	
-	//add the pause all screens div to the main div
-	$('#classroomMonitorMainDiv').append(pauseScreensDisplay);
-	
-	//hide the pause all screens div, we will show it later when necessary
-	pauseScreensDisplay.hide();
-	
 	//get the run status
-	var runStatus = this.runStatus;
-	var allPeriodsPaused = false;
+	var runStatus = this.runStatus,
+		allPeriodsPaused = false,
+		view = this;
 	
-	if(runStatus != null) {
+	if(runStatus !== null) {
 		//get whether all periods are paused
 		allPeriodsPaused = runStatus.allPeriodsPaused;
 	}
 	
-	//the label for the pause message text area
-	var pauseMessageLabel = $('<p>');
-	pauseMessageLabel.css('margin', '0px');
-	pauseMessageLabel.text('Message to display to students when paused:');
-	pauseScreensDisplay.append(pauseMessageLabel);
-	
-	//the pause message text area
-	var pauseMessageTextArea = $('<textarea>');
-	pauseMessageTextArea.attr('id', 'pauseMessageTextArea');
-	pauseMessageTextArea.css('width', '700px');
-	pauseMessageTextArea.css('height', '40px');
-	pauseMessageTextArea.attr('placeholder', 'Your teacher has paused your screen.');
-	pauseScreensDisplay.append(pauseMessageTextArea);
-	
-	//create the table that will display the paused and un-paused buttons
-	var pauseButtonsTable = $('<table>');
-	
 	//get the periods
-	var periods = this.getUserAndClassInfo().getPeriods();
+	var periods = this.getUserAndClassInfo().getPeriods(),
+		selectAll = false;
 	
-	if(periods != null) {
-		//if there is more than one period we will display the 'All Periods' buttons
+	if(periods !== null) {
+		//if there is more than one period we will display the 'All Periods' select option
 		if(periods.length > 1) {
-			var allPeriodsRow = this.createPauseRow('All Periods', null, allPeriodsPaused);
-			pauseButtonsTable.append(allPeriodsRow);			
+			selectAll = true;		
 		}
 
 		//loop through all the periods and create a row for each period
 		for(var x=0; x<periods.length; x++) {
 			var period = periods[x];
 			
-			if(period != null) {
-				var periodId = period.periodId;
+			if(period !== null) {
+				var periodId = 'pause_' + period.periodId;
 				var periodName = period.periodName;
 				var periodPaused = period.paused;
-				var periodLabel = 'Period ' + periodName;
+				var periodLabel = view.getI18NStringWithParams('classroomMonitor_periodLabel', [periodName]);
 				
-				if(periods.length == 1) {
-					//if there is only one period we don't need to show the period label
-					periodLabel = '';
-				}
-				
-				//create a row for the period that contains the period label, paused button, and un-paused button
-				var periodRow = this.createPauseRow(periodLabel, periodId, periodPaused);
-				pauseButtonsTable.append(periodRow);
+				$('#pauseSelectPeriods').append('<option id="' + periodId + '" value="' + periodId + '">' + periodLabel + '</option>');
 			}
 		}
 	}
 	
-	//add the table to the pause screens display
-	pauseScreensDisplay.append(pauseButtonsTable);
-};
-
-/**
- * Create a row that contains the label, paused button, and un-paused button
- * @param label the period label to display to the left of the buttons
- * @param periodId the period id (optional) if not passed in we assume this is for all periods
- * @param paused whether this period is paused
- */
-View.prototype.createPauseRow = function(label, periodId, paused) {
-	if(periodId == null) {
-		//if no period id is passed in we will assume this is for all periods
-		periodId = 'all';
-	}
-	
-	//create the row
-	var row = $('<tr>');
-	
-	//create the label cell
-	var labelCell = $('<td>');
-	labelCell.html(label);
-	
-	//create the paused button cell
-	var pausedButtonCell = $('<td>');
-	var pausedButton = $('<input>');
-	pausedButton.attr('id', 'pausedButton_' + periodId);
-	pausedButton.attr('type', 'button');
-	pausedButton.val('Paused');
-	pausedButton.addClass('pausedButton');
-	pausedButton.css('width', '300px');
-	pausedButton.css('height', '100px');
-	pausedButton.css('font-size', '24px');
-	pausedButton.click({thisView:this, periodId:periodId}, function(event) {
-		var thisView = event.data.thisView;
-		var periodId = event.data.periodId;
-		
-		thisView.pausedButtonClicked(periodId);
+	$('#pauseSelectPeriods').multiselect({
+		buttonText: view.multiselectButtonText,
+		nonSelectedText: view.getI18NString('classroomMonitor_pause_noneSelected'),
+		nSelectedText: view.getI18NString('classroomMonitor_pause_periods'),
+		numberDisplayed: 2,
+		includeSelectAllOption: selectAll,
+		selectAllText: view.getI18NString('classroomMonitor_allPeriods'),
+		selectAllValue: 'pause_all',
+		//dropRight: true,
+		maxHeight: 250,
+		onChange: function(){
+			view.updatePauseScreens();
+		}
 	});
-	pausedButtonCell.append(pausedButton);
 	
-	//create the un-paused button cell
-	var unPausedButtonCell = $('<td>');
-	var unPausedButton = $('<input>');
-	unPausedButton.attr('id', 'unPausedButton_' + periodId);
-	unPausedButton.attr('type', 'button');
-	unPausedButton.val('Un-Paused');
-	unPausedButton.addClass('unPausedButton');
-	unPausedButton.css('width', '300px');
-	unPausedButton.css('height', '100px');
-	unPausedButton.css('font-size', '24px');
-	unPausedButton.click({thisView:this, periodId:periodId}, function(event) {
-		var thisView = event.data.thisView;
-		var periodId = event.data.periodId;
-		
-		thisView.unPausedButtonClicked(periodId);
+	$('#pauseMsg').on('blur', function(){
+		view.updatePauseScreens();
 	});
-	unPausedButtonCell.append(unPausedButton);
 	
-	//highlight the appropriate button depending on whether the period is paused or un-paused
-	if(paused) {
-		$(pausedButton).css('background', 'yellow');	
-	} else {
-		$(unPausedButton).css('background', 'yellow');
+	// initialize pause screens UI
+	$('#pauseControls').popover({
+		animation: false,
+		html: true,
+		placement: 'bottom',
+		//container: 'body',
+		content: $('#pauseScreensContent'),
+		viewport: {
+			selector: 'body',
+			padding: 5
+		}
+	}).on('show.bs.popover', function () {
+		
+	}).on('hide.bs.popover', function () {
+		//$('#pauseSelectPeriods').multiselect('destroy');
+		$('#pauseScreensWrap').append($('#pauseScreensContent'));
+	});
+};
+
+/**
+ * Inserts period select dropdown, title, etc. to a classroom monitor section
+ * 
+ * @param $table jQuery DOM object of target table
+ * @param $wrapper jQuery DOM element of target table's wrapper
+ * @param headerText String for section header title
+ * @param options Object header settings (optional)
+ */
+View.prototype.addSectionHeader = function($table, $wrapper, headerText, options){
+	var settings = {
+		'view': 'progress', // progress monitor view ('progress', 'studentGrading', 'stepGrading', 'manageStudents', 'gradebook', 'announcements')
+		'allSelector': '', // value for the 'all periods' option in the period select element
+		'periodCol': 0 // column of the given DataTable to filter on for the period select (ignored if view is not set to 'progress', 'manageStudents', or 'announcements')
+	};
+	
+	if(options !== null && typeof options === 'object'){
+		// options have been sent in as a parameter, so merge with defaults
+		$.extend(settings,options);
 	}
 	
-	//add the cells to the row
-	row.append(labelCell);
-	row.append(pausedButtonCell);
-	row.append(unPausedButtonCell);
+	var $header = $('<div class="pull-left">'),
+		// initiate class period select
+		$periodFilter = $('<select id="' + $table.attr('id') + '_periodSelect"></select>'),
+		//get the periods
+		periods = this.getUserAndClassInfo().getPeriods();
 	
-	return row;
-};
+	if(periods !== null) {
+		//if there is more than one period we will display the 'All Periods' select option
+		if(periods.length > 1) {
+			$periodFilter.append('<option value="' + settings.allSelector + '" selected>' + view.getI18NString('classroomMonitor_allPeriods') + '</option>');	
+		} else {
+			view.classroomMonitorPeriodSelected = periods[0].periodName;
+		}
 
-/**
- * A paused button was clicked so we will pause the appropriate period
- * and highlight the appropriate button
- * @param periodId the period id
- */
-View.prototype.pausedButtonClicked = function(periodId) {
-	//get the pause message if any
-	var pauseMessage = $('#pauseMessageTextArea').val();
-	
-	if(pauseMessage == null || pauseMessage == '') {
-		//the teacher has not provided a pause message so we will use a default one
-		pauseMessage = 'Your teacher has paused your screen.';
+		//loop through all the periods and create an option for each period
+		for(var x=0; x<periods.length; x++) {
+			var period = periods[x];
+			
+			if(period !== null) {
+				var periodName = period.periodName;
+				$periodFilter.append('<option value="' + periodName + '">' + view.getI18NStringWithParams('classroomMonitor_periodLabel', [periodName]) + '</option>');
+			}
+		}
 	}
 	
-	//pause the screens in the period
-	this.pauseScreens(periodId, pauseMessage);
+	// insert period select into header tools
+	$header.prepend($periodFilter);
 	
-	//highlight the paused button
-	this.highlightPausedButton(periodId);
-};
-
-/**
- * Highlight the paused button
- * @param periodId the period id
- */
-View.prototype.highlightPausedButton = function(periodId) {
-	if(periodId == null || periodId == 'all') {
-		//highlight all the paused buttons
-		this.highlightAllPausedButtons();
-	} else {
-		//highlight the paused button for the period and unhighlight the un-paused button
-		$('#unPausedButton_' + periodId).css('background', '');
-		$('#pausedButton_' + periodId).css('background', 'yellow');
-	}
-};
-
-/**
- * Highlight all the paused buttons and unhighlight all the un-paused buttons
- */
-View.prototype.highlightAllPausedButtons = function() {
-	$('.unPausedButton').css('background', '');
-	$('.pausedButton').css('background', 'yellow');
-};
-
-/**
- * An un-paused button was clicked so we will un-pause the appropriate period
- * and highlight the appropriate button
- */
-View.prototype.unPausedButtonClicked = function(periodId, button) {
-	//un-pause the screens in the period
-	this.unPauseScreens(periodId);
+	var changePeriod = function(period){};
 	
-	//highlight the un-paused button
-	this.highlightUnPausedButton(periodId);
-};
-
-/**
- * Highlight the un-paused button
- * @param periodId the period id
- */
-View.prototype.highlightUnPausedButton = function(periodId) {
-	if(periodId == null || periodId == 'all') {
-		//highlight all the un-paused buttons
-		this.highlightAllUnPausedButtons();
-	} else {
-		//highlight the un-paused button for the period and unhighlight the paused button
-		$('#pausedButton_' + periodId).css('background', '');
-		$('#unPausedButton_' + periodId).css('background', 'yellow');
+	switch(settings.view) {
+		case 'studentGrading':
+			// initiate workgroup select
+			var $workgroupFilter = $('<select id="' + $table.attr('id') + '_workgroupSelect"></select>');
+			// insert workgroup select into DOM
+			$header.prepend($workgroupFilter);
+			// initialize Bootstrap Multiselect
+			$workgroupFilter
+				.multiselect({
+					buttonText: view.multiselectButtonText,
+					buttonClass: 'btn btn-default btn-sm',
+					enableCaseInsensitiveFiltering: true,
+					maxHeight: 250,
+					onChange: function(){
+						var id = $workgroupFilter.val();
+						view.studentRowClickedHandler(id);
+					}
+				});
+			
+			changePeriod = function(period){
+				if(period !== view.classroomMonitorPeriodSelected){
+					if(period === settings.allSelector){
+						// only need to rebuild workgroup select
+						view.populateWorkgroupSelect('all', $table.attr('id'), $workgroupFilter.val());
+						view.classroomMonitorPeriodSelected = 'all';
+					} else {
+						// need to rebuild workgroup select and switch grading view to first workgroup from chosen period
+						var id = '',
+							table = view.studentProgressTable;
+						table.rows().eq( 0 ).each( function (rowIdx) {
+						    if (table.cell( rowIdx, 9 ).data() === period && id === '') { // TODO: figure out why return false isn't breaking out of $.each
+						    	id = table.row( rowIdx ).data().workgroup_id;
+						    	return false;
+						    }
+						} );
+						view.classroomMonitorPeriodSelected = (period === settings.allSelector) ? 'all' : period;
+						view.studentRowClickedHandler(id);
+					}
+					
+				}
+			}
+			
+			break;
+		case 'stepGrading':
+			// initiate workgroup select
+			var $stepFilter = $('<select id="' + $table.attr('id') + '_stepSelect"></select>'),
+				
+				//get all the node ids for steps that have a grading view
+				nodeIds = this.getProject().getNodeIds(true);
+			
+			//loop through all the node ids
+			for(var x=0; x<nodeIds.length; x++) {
+				//get a node id
+				var tempNodeId = nodeIds[x],
+					//get the node
+					node = this.getProject().getNodeById(tempNodeId),
+					nodeType = '';
+				
+				if(node != null) {
+					//get the node type
+					nodeType = node.type;
+				}
+				
+				//get the step number and title
+				var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(tempNodeId);
+				
+				if(nodeType != null) {
+					// add step type
+					var nodeTypeReadable = ' (' + NodeFactory.nodeConstructors[nodeType].authoringToolName + ')';
+					stepNumberAndTitle += nodeTypeReadable;
+				}
+				
+				//create the option for the step
+				var stepOption = $('<option>');
+				stepOption.text(stepNumberAndTitle);
+				stepOption.val(tempNodeId);
+				
+				//add the option to step select
+				$stepFilter.append(stepOption);
+			}
+			
+			// insert step select into DOM
+			$header.prepend($stepFilter);
+			// initialize Bootstrap Multiselect
+			$stepFilter
+				.multiselect({
+					buttonText: view.multiselectButtonText,
+					buttonClass: 'btn btn-default btn-sm',
+					enableCaseInsensitiveFiltering: true,
+					maxHeight: 250,
+					onChange: function(){
+						var id = $stepFilter.val();
+						view.stepRowClickedHandler(id);
+					}
+				});
+			
+			changePeriod = function(period){
+				if(period !== view.classroomMonitorPeriodSelected){
+					if(period === settings.allSelector){
+						// only need to rebuild step select
+						view.classroomMonitorPeriodSelected = 'all';
+						view.stepRowClickedHandler(view.classroomMonitorStepIdSelected);
+					} else {
+						view.classroomMonitorPeriodSelected = period;
+						view.stepRowClickedHandler(view.classroomMonitorStepIdSelected);
+					}
+					
+				}
+			}
+			
+			break;
+		case 'progress':
+		default:
+			changePeriod = function(period){
+				view.classroomMonitorPeriodSelected = (period === settings.allSelector) ? 'all' : period;
+				// update DataTable filter
+				$table.DataTable()
+					.column( settings.periodCol )
+		            .search( period )
+		            .draw();
+			};
 	}
-};
-
-/**
- * Highlight all the un-paused buttons and unhighlight all the paused buttons
- */
-View.prototype.highlightAllUnPausedButtons = function() {
-	$('.pausedButton').css('background', '');
-	$('.unPausedButton').css('background', 'yellow');
-};
+	
+	// initialize Bootstrap Multiselect
+	$periodFilter
+		.multiselect({
+			buttonText: view.multiselectButtonText,
+			buttonClass: 'btn btn-default btn-sm',
+			onChange: function(){
+				var period = $periodFilter.val();
+				changePeriod(period);
+			}
+		});
+	
+	// insert section title
+	$header.prepend('<span class="panel-header">' + headerText + '</span>');
+	
+	// insert header tools into DOM
+	$('.dataTables_top', $wrapper).prepend($header);
+}
 
 /**
  * Create the student progress display
  */
 View.prototype.createStudentProgressDisplay = function() {
-	//create the student progress div
-	var studentProgressDisplay = $('<div></div>').attr({id:'studentProgressDisplay'});
-	
-	//add the student progress div to the main div
-	$('#classroomMonitorMainDiv').append(studentProgressDisplay);
-	
-	//hide the student progress div, we will show it later when necessary
-	studentProgressDisplay.hide();
-	
-	//create the table to display the students
-	var studentProgressDisplayTable = $('<table>').attr({id:'studentProgressDisplayTable'});
-	studentProgressDisplayTable.attr('width', '100%');
-	studentProgressDisplayTable.attr('border', '1px');
-	studentProgressDisplayTable.attr('cellpadding', '3px');
-	studentProgressDisplayTable.css('border-collapse', 'collapse');
-
-	//add the table to the student progress div
-	$('#studentProgressDisplay').append(studentProgressDisplayTable);
-	
-	//create the header row
-	var headerTR = $('<tr>');
-	
-	//create the column headers
-	var onlineTH = $('<th>').text('Online');
-	onlineTH.attr('width', '5%');
-	
-	var studentNameTH = $('<th>').text('Student Name');
-	studentNameTH.attr('width', '30%');
-
-	var currentStepTH = $('<th>').text('Current Step');
-	currentStepTH.attr('width', '35%');
-	
-	var timeSpentTH = $('<th>').text('Time Spent');
-	timeSpentTH.attr('width', '10%');
-	
-	var projectCompletionTH = $('<th>').text('Project Completion %');
-	projectCompletionTH.attr('width', '20%');	
-
-	//add the column headers to the header row
-	headerTR.append(onlineTH);
-	headerTR.append(studentNameTH);
-	headerTR.append(currentStepTH);
-	headerTR.append(timeSpentTH);
-	headerTR.append(projectCompletionTH);
-	
-	//add the header row to the table
-	$('#studentProgressDisplayTable').append(headerTR);
+	var view = this,
+		table = $('#studentProgressTable');
+	this.studentProgressData = [];
 	
 	//get all the workgroup ids in the class
 	var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIdsInAlphabeticalOrder();
@@ -1042,210 +1168,167 @@ View.prototype.createStudentProgressDisplay = function() {
 		//loop through all the workgroup ids
 		for(var x=0; x<workgroupIds.length; x++) {
 			//get a workgroup id
-			var workgroupId = workgroupIds[x];
+			var workgroupId = workgroupIds[x],
 			
-			//check if the student is online
-			var studentOnline = this.isStudentOnline(workgroupId);
+				//check if the student is online
+				online = this.isStudentOnline(workgroupId),
+				rowClass = online ? 'online' : 'offline',
+				onlineHtml = view.getStudentOnlineHtml(online),
+				
+				//get the project completion for the student
+				studentCompletion = this.calculateStudentCompletionForWorkgroupId(workgroupId),
+				// TODO: generalize to function
+				completionHtml = '<div class="progress" data-sort="' + studentCompletion + '">\
+					<div class="progress-bar"  role="progressbar" aria-valuenow="' + studentCompletion + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + studentCompletion + '%">\
+					<span class="sr-only">' + studentCompletion + '%</span></div></div>';
+				
+				//get the student names for this workgroup
+				students = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId),
+				studentNames = '';
 			
-			//get the project completion for the student
-			var studentCompletion = this.calculateStudentCompletionForWorkgroupId(workgroupId);
-			
-			//get the student names for this workgroup
-			var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId);
-			
+			for(var i=0; i<students.length; i++){
+				if(i>0){
+					studentNames += ', ';
+				}
+				studentNames += students[i];
+			}
+				
 			//get the period name the workgroup is in
-			var periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId);
+			var periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId),
+				
+				//get the period id the workgroup is in
+				periodId = this.userAndClassInfo.getClassmatePeriodIdByWorkgroupId(workgroupId),
+				
+				//get the current step the workgroup is on
+				currentStep = this.getStudentCurrentStepByWorkgroupId(workgroupId),
 			
-			//get the period id the workgroup is in
-			var periodId = this.userAndClassInfo.getClassmatePeriodIdByWorkgroupId(workgroupId);
+				// set the time spent to be blank because it will be updated later when updateStudentProgressTimeSpentInterval() is called
+				timeSpent = '';
 			
-			//get the current step the workgroup is on
-			var currentStep = this.getStudentCurrentStepByWorkgroupId(workgroupId);
-			
-			/*
-			 * set the time spent to be blank because it will be updated later when
-			 * updateStudentProgressTimeSpentInterval() is called
-			 */
-			var timeSpent = '&nbsp';
+			studentNames = '<a href="javascript:void(0);" class="grade-by-student" title="' + view.getI18NString('classroomMonitor_studentProgress_viewStudentWork') + '" data-workgroupid="' + workgroupId + '">' + studentNames + '<span class="fa fa-search-plus fa-flip-horizontal"></span> <span class="label label-default">' + view.getI18NStringWithParams('classroomMonitor_periodLabel', [periodName]) + '</span></a>';
 			
 			//create the row for the student
-			var studentTR = this.createStudentProgressDisplayRow(studentOnline, studentNames, workgroupId, periodId, periodName, currentStep, timeSpent, studentCompletion);
-			
-			if(studentTR != null) {
-				//add the the row for this student to the end of the table
-				$('#studentProgressDisplayTable tr:last').after(studentTR);				
-			}
+			view.studentProgressData.push(
+				{
+					"DT_RowId": 'studentProgress_' + workgroupId,
+					"DT_RowClass": rowClass,
+					"online": online,
+					"online_html": onlineHtml, 
+					"workgroup_id": workgroupId,
+					"period_id": periodId,
+					"period_name": periodName,
+					"student_names": studentNames,
+					"current_step": currentStep,
+					"time_spent": timeSpent,
+					"complete": studentCompletion,
+					"complete_html": completionHtml
+				});
 		}		
 	}
+	//var dataSet = $.map(view.studentProgressData, function(value, index) {
+	    //return [value];
+	//});
+	var dataSet = view.studentProgressData;
+	
+	// initialize dataTable
+	table.dataTable( {
+        'data': dataSet,
+        'paging': false,
+        'dom': '<"dataTables_top"lf><"clearfix">rt<"dataTables_bottom"ip><"clear">',
+        'language': {
+        	'search': '',
+	    	'info': view.getI18NStringWithParams('classroomMonitor_tableInfoText', ['_TOTAL_'])
+        },
+        'columns': [
+            { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_online'), 'data': 'online_html', 'class': 'center', 'sort': 'online', 'width': '5%' },
+            //{ 'title': 'Status' }, TODO: enable once we are tracking workgroup statuses & alerts
+            { 'title': 'Workgroup ID', 'data': 'workgroup_id' },
+            { 'title': 'Period ID', 'data': 'period_id' },
+            { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_workgroup'), 'data': 'student_names', 'class': 'gradable viewStudentWork' },
+            { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_period'), 'data': 'period_name', 'class': 'center', 'width': '5%', 'orderData': [4, 3] },
+            { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_currentStep'), 'data': 'current_step', 'orderData': [5, 3] },
+            { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_timeSpent'), 'data': 'time_spent', 'class': 'center', 'orderData': [6, 3] },
+            { 'title': 'Completion', 'data': 'complete' },
+            { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_projectCompletion'), 'data': 'complete_html', 'class': 'center', 'orderData': [7, 3] },
+            { 'title': 'Period Name', 'data': 'period_name' }
+            //{ 'title': 'Score' }
+        ],
+        'order': [[ 3, 'asc' ]],
+        'columnDefs': [
+			{
+				'targets': [ 1, 2, 4, 7, 9 ],
+				'visible': false
+			},
+			{
+				'targets': [ 1, 2, 7, 9 ],
+				'searchable': false
+			}
+		],
+		'footerCallback': function ( row, data, start, end, display ) {
+			var api = this.api(),
+	        	pageTotal = 0,
+	
+		        // Get total completion over current page
+	        	data = api
+		        	.column( 7, { page: 'current'} )
+		        	.data();
+	        
+	        if(data.length){
+	        	pageTotal = data.reduce( function (pVal, cVal) {
+	        		return pVal*1 + cVal*1;
+	        	} )
+	        }
+	        var numVals = api.column( 7, { page: 'current'} ).data().length;
+	        pageTotal = numVals ? pageTotal/numVals : 0;
+            
+            // Update footer
+            $( api.column( 8 ).footer() ).html(
+            	'<div class="progress">\
+				<div class="progress-bar"  role="progressbar" aria-valuenow="' + pageTotal + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + pageTotal + '%">\
+				<span class="sr-only">' + pageTotal + '% Complete</span></div></div>'
+            );
+        },
+        'initComplete': function( settings, json ) {
+        	$('.dataTables_filter input[type="search"]', $('#studentProgress')).attr('placeholder', view.getI18NString('classroomMonitor_search'));
+        },
+        'drawCallback': function( settings ) {
+        	view.redrawFixedHeaders(true);
+        	
+        	// bind click actions to workgroup links
+        	$('.grade-by-student', table).each(function(){
+        		$(this).off('click').on('click', {thisView:view, workgroupId:$(this).data('workgroupid')}, view.studentRowClicked);
+        	});
+        }
+    } );
+	
+	table.dataTable().fnFilterOnReturn();
+	
+	this.fixedHeaders.push(new $.fn.dataTable.FixedHeader( table.dataTable() , {
+        'offsetTop': 90
+    }));
+	view.redrawFixedHeaders();
+	
+	// create view object for future api access
+	this.studentProgressTable = table.DataTable();
+	
+	// add period filter and header text
+	this.addSectionHeader(table, $('#studentProgressTable_wrapper'), view.getI18NString('classroomMonitor_studentProgress_title'), { 'periodCol': 4 });
 	
 	//set the interval to update the time spent values every 10 seconds for students that are online 
 	setInterval(this.updateStudentProgressTimeSpentInterval, 10000);
 };
 
 /**
- * Create the student progress TR for a workgroup
- * @param studentOnline whether the workgroup is online
- * @param studentNames the student names for the workgroup
- * @param workgroupId the workgroup id
- * @param periodId the period id
- * @param periodName the period name
- * @param currentStep the current step the workgroup is on
- * @param timeSpent the time spent on the current step
- * @param completionPercentage the project completion percentage for the workgroup
- * @return a TR element containing the student progress values
+ * Gets student online HTML string for student progress display
+ * 
+ * @param isOnline Boolean whether workgroup is online or not
+ * @returns html online HTML string
  */
-View.prototype.createStudentProgressDisplayRow = function(studentOnline, studentNames, workgroupId, periodId, periodName, currentStep, timeSpent, completionPercentage) {
-	var studentTR = null;
-	
-	if(workgroupId != null) {
-		//create the student row
-		var studentTR = $('<tr>').attr({id:'studentProgressTableRow_' + workgroupId});
-
-		//set the student row class
-		var studentRowClass = 'studentProgressRow';
-		studentTR.addClass(studentRowClass);
-		
-		//create the period id class and add it to the student row
-		var periodIdClass = 'studentProgressPeriodId_' + periodId;
-		studentTR.addClass(periodIdClass);
-		
-		//create the cell to display whether the workgroup is online
-		var onlineTD = $('<td>').attr({id:'studentProgressTableDataOnline_' + workgroupId});
-		onlineTD.css('text-align', 'center');
-		onlineTD.html(this.getIsOfflineHTML());
-		
-		//create the cell to display the student names for the workgroup
-		var studentNamesTD = $('<td>').attr({id:'studentProgressTableDataStudentNames_' + workgroupId});
-		studentNamesTD.html(studentNames.join('<br>'));
-		
-		//create the cell to display the current step the workgroup is on
-		var currentStepTD = $('<td>').attr({id:'studentProgressTableDataCurrentStep_' + workgroupId});
-		currentStepTD.text(currentStep);
-		
-		//create the cell to display the time spent on the current step
-		var timeSpentTD = $('<td>').attr({id:'studentProgressTableDataTimeSpent_' + workgroupId});
-		timeSpentTD.css('text-align', 'right');
-		timeSpentTD.html(timeSpent);
-		
-		//create the cell to display the project completion percentage for the workgroup
-		var completionPercentageTD = $('<td>').attr({id:'studentProgressTableDataCompletionPercentage_' + workgroupId});
-		
-		//create the div that will contain the HR completion percentage bar
-		var percentageBarDiv = $('<div>');
-		percentageBarDiv.attr('id', 'studentProgressPercentageBarDiv_' + workgroupId);
-		percentageBarDiv.css('display', 'inline');
-		percentageBarDiv.css('width', '75%');
-		percentageBarDiv.css('float', 'left');
-		
-		//create the HR completion percentage bar
-		var percentageBarHR = $('<hr>');
-		percentageBarHR.attr('id', 'studentProgressPercentageBarHR_' + workgroupId);
-		percentageBarHR.attr('width', '0%');
-		percentageBarHR.attr('size', 5);
-		percentageBarHR.attr('color', 'black');
-		percentageBarHR.attr('align', 'left');
-		
-		percentageBarDiv.append(percentageBarHR);
-		
-		//create the div that will contain the completion percentage number
-		var percentageNumberDiv = $('<div>');
-		percentageNumberDiv.attr('id', 'studentProgressPercentageNumberDiv_' + workgroupId);
-		percentageNumberDiv.css('display', 'inline');
-		percentageNumberDiv.css('width', '25%');
-		percentageNumberDiv.css('float', 'right');
-		percentageNumberDiv.css('text-align', 'right');
-		
-		completionPercentageTD.append(percentageBarDiv);
-		completionPercentageTD.append(percentageNumberDiv);
-		
-		//the cell that will display the number of ideas a student has in their idea basket
-		var ideaBasketCountTD = $('<td>');
-		ideaBasketCountTD.attr('id', 'ideaBasketCount_' + workgroupId);
-		ideaBasketCountTD.css('text-align', 'right');
-		ideaBasketCountTD.click({thisView:this, workgroupId:workgroupId}, this.ideaBasketClicked);
-		
-		//get the student status for the workgroup id
-		var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
-		
-		if(studentStatus == null) {
-			/*
-			 * the student does not have a student status which can mean the 
-			 * student has never loaded the vle or the run occurred before
-			 * we implemented student statuses
-			 */ 
-			
-			currentStepTD.text('?');
-			currentStepTD.attr('title', "This value is ? because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and we can't display the current step here due to technical reasons. You may still view this student's work if you click on this student row.");
-			
-			percentageBarHR.css('display', 'none');
-			percentageNumberDiv.text('?');
-			completionPercentageTD.attr('title', "This value is ? because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and we can't display the completion percentage here due to technical reasons. You may still view this student's work if you click on this student row.");
-			
-			ideaBasketCountTD.text('?');
-			ideaBasketCountTD.attr('title', "This value is ? because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and we can't display the Idea Basket Count here due to technical reasons. You may still view this student's Idea Basket by clicking on this cell.");
-		} else {
-			//the student has a student status so we will display the percentage
-			percentageBarHR.attr('width', completionPercentage + '%');
-			percentageNumberDiv.text(completionPercentage + '%');
-			
-			if(completionPercentage > 0) {
-				//show the percentage HR
-				percentageBarHR.css('display', '');
-			} else {
-				/*
-				 * the percentage is 0 so we will not display the HR. we need to hide
-				 * the HR because even if the width is set to 0% it will still have a
-				 * visible width which is misleading.
-				 */
-				percentageBarHR.css('display', 'none');
-			}
-			
-			//get the number of ideas in the student idea basket
-			var ideaBasketIdeaCount = studentStatus.ideaBasketIdeaCount;
-			
-			if(ideaBasketIdeaCount == null) {
-				//there is no idea basket count in the student status
-				ideaBasketCountTD.text('?');
-				ideaBasketCountTD.attr('title', "This value is ? because of one of these reasons:\n1. The student has never loaded the project.\n2. This is an old run and we can't display the Idea Basket Count here due to technical reasons. You may still view this student's Idea Basket by clicking on this cell.");
-			} else {
-				//set the idea basket count
-				ideaBasketCountTD.text(ideaBasketIdeaCount);
-			}
-		}
-		
-		//add all the cells to the student row
-		studentTR.append(onlineTD);
-		studentTR.append(studentNamesTD);
-		studentTR.append(currentStepTD);
-		studentTR.append(timeSpentTD);
-		studentTR.append(completionPercentageTD);
-		
-		//create the params to be used when this the teacher clicks this row
-		var studentRowClickedParams = {
-			thisView:this,
-			workgroupId:workgroupId
-		}
-		
-		if(studentOnline) {
-			//the student is online so we will make the row green
-			studentTR.css('background', 'limegreen');
-		}
-		
-		//set the function to be called when the row is clicked
-		studentTR.click(studentRowClickedParams, this.studentRowClicked);
-		
-		//make the cursor turn into a hand when the user mouseovers the row
-		studentTR.css('cursor', 'pointer');
-		
-		//set the mouse enter event to highlight the row on mouse over
-		studentTR.mouseenter({thisView:this}, this.mouseEnterStudentTR);
-		
-		//set the mouse leave event to remove the highlight when the mouse exits the row
-		studentTR.mouseleave({thisView:this, workgroupId:workgroupId}, this.mouseLeaveStudentTR);
-	}
-	
-	//return the student row
-	return studentTR;
+View.prototype.getStudentOnlineHtml = function(isOnline){
+	var onlineClass = isOnline ? 'fa fa-circle text-success' : 'fa fa-circle',
+		onlineText = isOnline ? view.getI18NString('classroomMonitor_studentProgress_workgroupOnline') : view.getI18NString('classroomMonitor_studentProgress_workgroupOffline'),
+		onlineHtml = '<span class="' + onlineClass + '"></span><span class="sr-only">' + onlineText + '</span>';
+	return onlineHtml;
 };
 
 /**
@@ -1269,32 +1352,26 @@ View.prototype.studentRowClicked = function(event) {
  * @param workgroupId the workgroup id of the row that was clicked
  */
 View.prototype.studentRowClickedHandler = function(workgroupId) {
+	// clear monitor view selection
+	$('#monitorView > label').removeClass('active');
+	
 	//hide all the other displays
 	this.hideAllDisplays();
 	
 	//clear the nodeIdClicked and workgroupIdClicked values
-	this.clearNodeIdClickedAndWorkgroupIdClicked();
+	this.clearNodeIdClickedAndWorkgroupIdClicked(); // TODO: remove?
 	
-	//remember the workgroup id the teacher is currently viewing
-	this.workgroupIdClicked = workgroupId;
-	
-	//remove the yellow highlighting of the choose display buttons
-	this.removeBackgroundColor('chooseClassroomMonitorDisplayButton');
-	
-	//display a loading message in the grade by student display
-	$('#gradeByStudentDisplay').html('<p style="display:inline;margin-left:5px">Loading...</p>');
-	$('#gradeByStudentDisplay').show();
+	// display a loading message
+	$('#loading').show();
 	
 	//get the url for retrieving student data
-	var getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl');
+	var getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl'),
+		runId = this.getConfig().getConfigParam('runId'),
+		grading = true,
+		getRevisions = true,
 	
-	var runId = this.getConfig().getConfigParam('runId');
-	var grading = true;
-	var getRevisions = true;
-	
-	//get all the step node ids that are used in the project
-	var nodeIds = this.getProject().getNodeIds();
-	nodeIds = nodeIds.join(':');
+		//get all the step node ids that are used in the project
+		nodeIds = this.getProject().getNodeIds().join(':');
 	
 	var getStudentDataParams = {
 		userId:workgroupId,
@@ -1348,7 +1425,7 @@ View.prototype.getGradeByStudentWorkInClassroomMonitorCallbackHandler = function
  * The failure callback when trying to retrieve student work
  */
 View.prototype.getGradeByStudentWorkInClassroomMonitorCallbackFail = function(text, xml, args) {
-
+	// TODO: display error message
 };
 
 /**
@@ -1735,165 +1812,600 @@ View.prototype.getIdeaAttributeValue = function(idea, attributeId) {
  * @param workgroupId the workgroup id to display the grade by student display for
  */
 View.prototype.displayGradeByStudent = function(workgroupId) {
-	//clear the grade by student display
-	$('#gradeByStudentDisplay').html('');
+	var view = this;
 	
-	//clear the grade by step display
-	$('#gradeByStepDisplay').html('');
+	// remember the workgroup id the teacher is currently viewing
+	this.classroomMonitorWorkgroupIdSelected = workgroupId;
 	
-	//hide the period buttons
-	this.hidePeriodButtonsDiv();
+	// clear out selected step id
+	this.classroomMonitorStepIdSelected = null;
 	
-	//clear the number of items to review because we will count them again for this student
+	// clear the grade by step table
+	this.gradeByStepTable.clear();
+	
+	// clear the grade by student table
+	this.gradeByStudentTable.clear();
+	
+	//clear the number of items to review because we will count them again for this workgroup
 	this.numberOfItemsToReview = 0;
 	
 	//get the student names for this workgroup
-	var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId);
+	var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId),
 	
-	//get the period name
-	var periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId);
+		//get the period name
+		periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId),
+		
+		//get the period id
+		periodId = this.userAndClassInfo.getClassmatePeriodIdByWorkgroupId(workgroupId),
+		
+		// get the selected period
+		periodSelected = this.classroomMonitorPeriodSelected;
 	
-	//get the period id
-	var periodId = this.userAndClassInfo.getClassmatePeriodIdByWorkgroupId(workgroupId);
-	
-	//create the table that will display the student names
-	var gradeByStudentHeaderTable = $('<table>');
-	gradeByStudentHeaderTable.attr('id', 'gradeByStudentHeaderTable');
-	gradeByStudentHeaderTable.attr('width', '99%');
-	gradeByStudentHeaderTable.css('position', 'fixed');
-	gradeByStudentHeaderTable.css('top', '105px');
-	gradeByStudentHeaderTable.css('left', '10px');
-	gradeByStudentHeaderTable.css('background', 'white');
-	gradeByStudentHeaderTable.css('z-index', '1');
-	
-	//create the row that will display the student names
-	var gradeByStudentHeaderTR = $('<tr>');
-	
-	//create the refresh button
-	var refreshButton = $('<input>');
-	refreshButton.attr('id', 'refreshButton');
-	refreshButton.attr('type', 'button');
-	refreshButton.val('Check for New Work');
-	refreshButton.click({thisView:this, workgroupId:workgroupId}, this.studentRowClicked);
-	
-	//create the save button
-	var saveButton = $('<input>');
-	saveButton.attr('id', 'saveButton');
-	saveButton.attr('type', 'button');
-	saveButton.val('Save');
-	saveButton.attr('disabled', true);
-	
-	var periodIdSelected = null;
-	
-	if(this.classroomMonitorPeriodIdSelected != null && this.classroomMonitorPeriodIdSelected != 'all') {
-		//there was a period id that was selected
-		periodIdSelected = this.classroomMonitorPeriodIdSelected;
-	}
-	
-	//get the previous and next workgroup ids
-	var previousAndNextWorkgroupIds = this.getUserAndClassInfo().getPreviousAndNextWorkgroupIdsInAlphabeticalOrder(workgroupId, periodIdSelected);
-	var previousWorkgroupId = previousAndNextWorkgroupIds.previousWorkgroupId;
-	var nextWorkgroupId = previousAndNextWorkgroupIds.nextWorkgroupId;
-
-	//make the button for the previous workgroup id
-	var previousWorkgroupIdButton = $('<input>');
-	previousWorkgroupIdButton.attr('id', 'previousWorkgroup');
-	previousWorkgroupIdButton.attr('type', 'button');
-	previousWorkgroupIdButton.val('Previous Workgroup');
-	
-	if(previousWorkgroupId == null) {
-		//there is no previous workgroup id so we will disable the button
-		previousWorkgroupIdButton.attr('disabled', true);
+	// update selected period in grade by student section
+	if(periodSelected === 'all'){
+		$('#gradeByStudentTable_periodSelect').multiselect('select', '').multiselect('refresh');
 	} else {
-		//set the click event for the previous workgroup id button
-		previousWorkgroupIdButton.click({thisView:this, workgroupId:previousWorkgroupId}, this.studentRowClicked);
+		$('#gradeByStudentTable_periodSelect').multiselect('select', periodName).multiselect('refresh');
 	}
 	
-	//make the button for the next workgroup id
-	var nextWorkgroupIdButton = $('<input>');
-	nextWorkgroupIdButton.attr('id', 'nextWorkgroup');
-	nextWorkgroupIdButton.attr('type', 'button');
-	nextWorkgroupIdButton.val('Next Workgroup');
-	
-	if(nextWorkgroupId == null) {
-		//there is no next workgroup id so we will disable the button
-		nextWorkgroupIdButton.attr('disabled', true);
-	} else {
-		//set the click event for the next workgroup id button
-		nextWorkgroupIdButton.click({thisView:this, workgroupId:nextWorkgroupId}, this.studentRowClicked);		
-	}
-	
-	//clear any existing buttons in the upper right
-	this.clearDisplaySpecificButtonsDiv();
-	this.clearSaveButtonDiv();
-	this.clearNewWorkNotificationDiv();
+	// update workgroup select element with workgroups in selected period
+	this.populateWorkgroupSelect(periodSelected, 'gradeByStudentTable', workgroupId);
 
-	//add the buttons
-	$('#displaySpecificButtonsDiv').append(previousWorkgroupIdButton);
-	$('#displaySpecificButtonsDiv').append(refreshButton);
-	$('#displaySpecificButtonsDiv').append(nextWorkgroupIdButton);
-	$('#saveButtonDiv').append(saveButton);
-
-	var showStudentWorkLink = false;
-	var showIdeaBasketLink = true;
+	var showStudentWorkLink = false,
+		showIdeaBasketLink = true;
 	
-	//create the table that will display the student names
-	gradeByStudentHeaderTable = this.createStudentHeaderTable(studentNames, workgroupId, periodName, showStudentWorkLink, showIdeaBasketLink);
+	// get all the node ids. this includes activity and step node ids.
+	var nodeIds = this.getProject().getAllNodeIds(),
+		position = 0;
 	
-	//add the header table to the display
-	$('#gradeByStudentDisplay').append(gradeByStudentHeaderTable);
-	
-	//create the table to display the grading rows
-	var gradeByStudentDisplayTable = $('<table>').attr({id:'gradeByStudentDisplayTable'});
-	gradeByStudentDisplayTable.css('border', 'none');
-	gradeByStudentDisplayTable.css('width', '100%');
-
-	//add the table to the student progress div
-	$('#gradeByStudentDisplay').append(gradeByStudentDisplayTable);
-	
-	//get all the node ids. this includes activity and step node ids.
-	var nodeIds = this.getProject().getAllNodeIds();
-	
-	//create an empty row for spacing
-	var blankTR = $('<tr>');
-	var emptyTD = $('<td>');
-	emptyTD.html('&nbsp');
-	emptyTD.css('border', 'none');
-	blankTR.append(emptyTD);
-	$('#gradeByStudentDisplayTable').append(blankTR);
-	
-	//loop through all the node ids
+	// loop through all the node ids
 	for(var x=0; x<nodeIds.length; x++) {
 		//get a node id
 		var nodeId = nodeIds[x];
 		
 		//skip the master node
-		if(nodeId != 'master') {
-			if(nodeId != null) {
-				//create the grading row for the step for the student
-				var gradeByStudentDisplayTableRow = this.createGradeByStudentDisplayTableRow(nodeId, workgroupId);
+		if(nodeId !== 'master') {
+			if(nodeId !== null) {
+				// add the student work revisions for the current step to the dataset
+				view.insertNodeRevisions(nodeId, workgroupId, position, 'studentGrading');
+			}			
+		}
+		position++;
+	}
+	this.gradeByStudentTable.draw();
+	
+	// insert the workgroup names and id into grading header
+	$('#gradeByStudentNames').text(studentNames.join(', '));
+	$('#gradeByStudentWorkgroupId').text(' (' + workgroupId + ')');
+	
+	// set the number of items to review value
+	$('#gradeByStudentItemsToReview').text(view.getI18NStringWithParams('classroomMonitor_grading_itemsToReview',[this.numberOfItemsToReview]));
+	this.numberOfItemsToReview > 0 ? $('#gradeByStudentItemsToReview').fadeIn() : $('#gradeByStudentItemsToReview').fadeOut();
+	
+	// hide loading message
+	$('#loading').hide();
+	
+	// show grade by student section
+	this.showGradeByStudentDisplay();
+};
+
+/**
+ * Creates data entries (rows) for the given node ID and workgroup ID in the grade by student table.
+ * One entry for each work revision is created.
+ * 
+ * @param nodeId String the node id
+ * @param workgroupId String the workgroup id
+ * @param position Number node or step position (depending on mode)
+ * @param mode String specifying grading mode ('studentGrading' or 'stepGrading')
+ */
+View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mode){
+	var view = this;
+	
+	if(nodeId !== null && workgroupId !== null) {
+		// get the node
+		var node = this.getProject().getNodeById(nodeId);
+		
+		if(node !== null && node.isLeafNode() && node.hasGradingView()) {
+			// get the node type
+			var nodeType = node.type,
+				// get the step number and title
+				nodeTitle = view.getI18NString('stepTerm') + ' ' + this.getProject().getStepNumberAndTitle(nodeId),
+				vleState = null,
+				nodeVisits = [];
+			
+			if(mode === 'studentGrading'){
+				// get all the work for the student
+				vleState = this.model.getWorkByStudent(workgroupId);
+			} else if(mode === 'stepGrading'){
+				// get all the work for this step for this student
+				vleState = this.model.getWorkByStepAndWorkgroupId(nodeId, workgroupId);
+			}
+			
+			// get the student names for this workgroup
+			var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId);
+			studentNames = studentNames.join(', ');
+			studentNames += ' (' + workgroupId + ')';
+
+			if(vleState != null) {
+				// get all the node visits for this student for this step
+				var nodeVisits = vleState.getNodeVisitsWithWorkByNodeId(nodeId),
+					i = nodeVisits.length,
+					isLatest = true;
 				
-				if(gradeByStudentDisplayTableRow != null) {
-					//add the row to the grade by student table
-					$('#gradeByStudentDisplayTable').append(gradeByStudentDisplayTableRow);					
+				// create feedback cell and form
+				var $feedbackCell = $('<td>'),
+					$feedbackForm = $('<form role="form" class="feedback-form">');
+				$feedbackCell.append($feedbackForm);
+				
+				// create score group
+				var score = null,
+					// get the max score for the node
+					maxScore = view.getMaxScoreValueByNodeId(nodeId),
+					$scoreGroup = $('<div class="form-group">'),
+					$scoreLabel = $('<label>' + view.getI18NString('classroomMonitor_grading_teacherScore') + ' </label>'),
+					// create score input
+					$scoreInput = $('<input>').attr('type', 'text').attr('maxlength', 6).addClass('score form-control');
+				$scoreLabel.append($scoreInput);
+				$scoreLabel.append('<span class="max-score"> / ' + maxScore + '</span>');
+				$scoreGroup.append($('<div class="form-inline">').append($scoreLabel));
+				$feedbackForm.append($scoreGroup);
+				
+				// create the comment textarea
+				var $commentTextArea = $('<textarea>').addClass('form-control comment');
+				$commentTextArea.attr('rows', 3);
+				
+				// insert comment form group
+				var $commentGroup = $('<div class="form-group">'),
+					$commentLabel = $('<label>' + view.getI18NString('classroomMonitor_grading_teacherComment') + '</label>');
+				$commentGroup.append($commentLabel);
+				// insert premade comments link
+				var $premadeCommentsLink = $('<a class="open-comments pull-right" href="javascript:void(0);">' + view.getI18NString('classroomMonitor_grading_addPremadeComments') + ' <span class="fa fa-comments"></span></a>');
+				$commentGroup.append($premadeCommentsLink);
+				$commentGroup.append($commentTextArea);
+				$feedbackForm.append($commentGroup);
+				
+				// insert comment footer (timestamp)
+				var $feedbackTimestamp = $('<div class="timestamp"><span class="fa fa-clock-o"></span>&nbsp;</div>'),
+					$feedbackText = $('<span class="feedback-date">');
+				$feedbackText.text(view.getI18NString('classroomMonitor_grading_lastAnnotation_none'));
+				$feedbackTimestamp.append($feedbackText);
+				$feedbackCell.append($feedbackTimestamp);
+				
+				if(i===0){
+					// student has no submitted work for this step, so create a row with empty response
+					var $stepWork = $('<tr>').addClass('no-work');
+					
+					var rowId = '';
+					
+					if(mode === 'studentGrading') {
+						rowId = 'noStudentWorkStudentGradingRow_' + nodeId + '_' + workgroupId;
+					} else if(mode === 'stepGrading') {
+						rowId = 'noStudentWorkStepGradingRow_' + nodeId + '_' + workgroupId;
+					}
+					
+					$stepWork.attr('id', rowId);
+					$stepWork.append($('<td>').text(position));
+					if(mode === 'studentGrading'){
+						$stepWork.append($('<td>').text(nodeId));
+						$stepWork.append($('<td>').text(nodeTitle));
+					} else if(mode === 'stepGrading') {
+						$stepWork.append($('<td>').text(workgroupId));
+						$stepWork.append($('<td>').text(studentNames));
+					}
+					$stepWork.append('<td>');
+					$stepWork.append('<td>');
+					$stepWork.append('<td>');
+					$stepWork.append('<td>');
+					$stepWork.append('<td>');
+					$stepWork.append($('<td>').html('<div class="stepwork-empty">' + view.getI18NString('classroomMonitor_grading_noResponse') + '</div>'));
+					$stepWork.append($feedbackCell);
+					$stepWork.append($('<td>').text('false'));
+					$stepWork.append($('<td>').text('false'));
+					$stepWork.append($('<td>').text('false'));
+					
+					$thisFeedbackCell = $feedbackCell;
+					
+					//get the latest score annotation if any
+					var latestScoreAnnotation = this.getLatestAnnotation(nodeId, workgroupId, 'score');
+					var latestScore = null;
+					var scorePostTime = null;
+					
+					if(latestScoreAnnotation !== null) {
+						// get the latest score
+						latestScore = latestScoreAnnotation.value;
+						
+						// get the post time for the score
+						scorePostTime = latestScoreAnnotation.postTime;
+						
+						// set the latest score into the score input
+						$('input[type=text]', $thisFeedbackCell).val(latestScore);
+					}
+					
+					var scoreInputId = '';
+					
+					if(mode === 'studentGrading') {
+						scoreInputId = 'noStudentWorkStudentGradingScoreInput_' + nodeId + '_' + workgroupId;
+					} else if(mode === 'stepGrading') {
+						scoreInputId = 'noStudentWorkStepGradingScoreInput_' + nodeId + '_' + workgroupId;
+					}
+					
+					// set the events for when the score input value is updated
+					$('input[type=text]', $thisFeedbackCell).attr('id', scoreInputId);
+					$('input[type=text]', $thisFeedbackCell).on('input', {thisView:view, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId, mode:mode}, view.scoreChanged);
+					$('input[type=text]', $thisFeedbackCell).on('change', {thisView:view, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId, mode:mode}, view.saveScore);
+					$('input[type=text]', $thisFeedbackCell).on('keypress', function(e){
+						if(e.keyCode === 13){
+							e.preventDefault();
+							$(this).blur();
+						}
+					});
+					
+					//get the latest comment annotation if any
+					var latestCommentAnnotation = this.getLatestAnnotation(nodeId, workgroupId, 'comment');
+					var latestComment = null;
+					var commentPostTime = null;
+					
+					if(latestCommentAnnotation !== null) {
+						// get the latest comment
+						latestComment = latestCommentAnnotation.value;
+						
+						// get the post time for the comment
+						commentPostTime = latestCommentAnnotation.postTime;
+
+						// set the latest comment into the comment text area
+						if(latestComment !== null){
+							$('textarea', $thisFeedbackCell).val(latestComment);
+						}
+					}
+					
+					var commentTextAreaId = '';
+					
+					if(mode === 'studentGrading') {
+						commentTextAreaId = 'noStudentWorkStudentGradingCommentTextArea_' + nodeId + '_' + workgroupId;
+					} else if(mode === 'stepGrading') {
+						commentTextAreaId = 'noStudentWorkStepGradingCommentTextArea_' + nodeId + '_' + workgroupId;
+					}
+					
+					//set the event for when anything is changed in the comment textarea
+					$('textarea', $thisFeedbackCell).attr('id', commentTextAreaId);
+					$('textarea', $thisFeedbackCell).on('input', {thisView:view, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId, mode:mode}, view.commentChanged);
+					$('textarea', $thisFeedbackCell).on('change', {thisView:view, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId, mode:mode}, view.saveComment);
+					
+					// get the latest timestamp between the score and comment
+					var annotationPostTime = Math.max(scorePostTime, commentPostTime);
+					
+					if(annotationPostTime !== 0) {
+						// create the annotation post time
+						var annotationPostTimeFormatted = this.formatTimestamp(annotationPostTime);
+						$('.feedback-date', $thisFeedbackCell).text(view.getI18NStringWithParams('classroomMonitor_grading_lastAnnotation', [annotationPostTimeFormatted]));
+					}
+					
+					//show the premade comments link
+					$premadeCommentsLink.show();
+					
+					// bind premade comments link click
+					$premadeCommentsLink.on('click', {thisView:this, nodeId:nodeId, workgroupId:workgroupId}, function(event) {
+						var thisView = event.data.thisView;
+						var nodeId = event.data.nodeId;
+						var workgroupId = event.data.workgroupId;
+						var commentBoxId = 'noStudentWorkScoreInput_' + nodeId + '_' + workgroupId;
+						var studentWorkColumnId = 'noStudentWorkRow_' + nodeId + '_' + workgroupId;
+						
+						// the open premade comments link was clicked so we will open up the premade comments window
+						thisView.openPremadeCommentsLinkClicked(commentBoxId, studentWorkColumnId);
+					});
+					
+					// add row to DataTable
+					if(mode === 'studentGrading'){
+						this.gradeByStudentTable.row.add($stepWork[0]);
+					} else if(mode === 'stepGrading'){
+						this.gradeByStepTable.row.add($stepWork[0]);
+					}
 				}
 				
-				//create an empty row for spacing
-				var blankTR = $('<tr>');
-				var emptyTD = $('<td>');
-				emptyTD.html('&nbsp');
-				emptyTD.css('border', 'none');
-				blankTR.append(emptyTD);
-				$('#gradeByStudentDisplayTable').append(blankTR);
-			}			
+				//loop through all the node visits from newest to oldest
+				while(i--){
+					var nodeVisit = nodeVisits[i];
+					if(nodeVisit) {
+						// create row element
+						var $stepWork = $('<tr>'),
+							$thisFeedbackCell = $feedbackCell.clone();
+						
+						if(mode === 'studentGrading'){
+							$stepWork.attr('data-stepname', nodeTitle);
+						} else if(mode === 'stepGrading'){
+							$stepWork.attr('data-workgroup', studentNames);
+						}
+						
+						// get the step work id
+						var stepWorkId = nodeVisit.id;
+						var rowId = '';
+						
+						if(mode === 'studentGrading'){
+							rowId = 'studentGradingStepWork_' + stepWorkId;
+						} else if(mode === 'stepGrading'){
+							rowId = 'stepGradingStepWork_' + stepWorkId;
+						}
+						
+						$stepWork.attr('id', rowId)
+						// get the post time
+						visitPostTime = nodeVisit.visitPostTime,
+						isNew = false,
+						isFlagged = false;
+						
+						if(mode === 'studentGrading'){
+							$stepWork.append('<td>' + position + '</td><td>' + nodeId + '</td><td>' + nodeTitle + '</td>\
+									<td>' + stepWorkId + '</td><td>' + visitPostTime + '</td>');
+						} else if(mode === 'stepGrading'){
+							$stepWork.append('<td>' + position + '</td><td>' + workgroupId + '</td><td>' + studentNames + '</td>\
+									<td>' + stepWorkId + '</td><td>' + visitPostTime + '</td>');
+						}
+						
+						// get the score annotation for the step work
+						var scoreAnnotation = this.model.annotations.getAnnotationByStepWorkIdType(stepWorkId, 'score'),
+							latestScoreAnnotation = this.getLatestAnnotation(nodeId, workgroupId, 'score'),
+							needsReview = isLatest ? true : false,
+							latestScore = null,
+							scorePostTime = null;
+						
+						if(latestScoreAnnotation !== null) {
+							// get the latest score
+							latestScore = latestScoreAnnotation.value;
+						}
+						
+						if(scoreAnnotation !== null){
+							// get the score
+							score = scoreAnnotation.value;
+							// get the post time for the score
+							scorePostTime = scoreAnnotation.postTime;
+							if(score !== null){
+								// set the score into the score input
+								$('input[type=text]', $thisFeedbackCell).val(score);
+								needsReview = false;
+							}
+						} else if (isLatest && latestScore !== null) {	
+							// get the post time for the score
+							scorePostTime = latestScoreAnnotation.postTime;
+							// set the latest score into the score input
+							$('input[type=text]', $thisFeedbackCell).val(latestScore);
+						}
+						
+						var scoreInputId = '';
+						
+						if(mode === 'studentGrading') {
+							scoreInputId = 'studentGradingScoreInput_' + stepWorkId;
+						} else if(mode === 'stepGrading') {
+							scoreInputId = 'stepGradingScoreInput_' + stepWorkId;
+						}
+						
+						// set the events for when the score input value is updated
+						$('input[type=text]', $thisFeedbackCell).attr('id', scoreInputId);
+						$('input[type=text]', $thisFeedbackCell).on('input', {thisView:view, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId, mode:mode}, view.scoreChanged);
+						$('input[type=text]', $thisFeedbackCell).on('change', {thisView:view, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId, mode:mode}, view.saveScore);
+						$('input[type=text]', $thisFeedbackCell).on('keypress', function(e){
+							if(e.keyCode === 13){
+								e.preventDefault();
+								$(this).blur();
+							}
+						});
+						
+						// add max score, and step work score, and latest score to table
+						$stepWork.append('<td>' + score + '</td>');
+						$stepWork.append('<td>' + maxScore + '</td>');
+						$stepWork.append('<td>' + latestScore + '</td>');
+						
+						// create student work cell
+						var $studentWorkCell = $('<td class="container">'),
+							headerText = isLatest ? view.getI18NString('classroomMonitor_grading_latestWork') : view.getI18NStringWithParams('classroomMonitor_grading_workRevision', [i+1]);
+						
+						// add student work cell header
+						$studentWorkHeader = $('<div class="stepwork-header"><b class="text-danger">' + headerText + '</b></div>');
+						// create the flag check box
+						var $flagCheckBox = $('<input>').addClass('flag');
+						$flagCheckBox.attr('type', 'checkbox');
+						
+						// insert flag form group
+						var $flagGroup = $('<div class="pull-right text-info">'),
+							$flagLabel = $('<label for=""><span class="fa fa-flag"></span> ' + view.getI18NString('classroomMonitor_grading_flag') + '&nbsp;</label> ');
+						$flagGroup.append($flagLabel);
+						$flagGroup.append($flagCheckBox);
+						$studentWorkHeader.append($flagGroup);
+						
+						$flagCheckBox.attr('id', 'flagInput_' + stepWorkId);
+						$flagCheckBox.on('click', {thisView:view, nodeId:nodeId, workgroupId:workgroupId, stepWorkId:stepWorkId}, function(event) {
+							var thisView = event.data.thisView,
+								stepWorkId = event.data.stepWorkId,
+								nodeId = event.data.nodeId,
+								workgroupId = event.data.workgroupId;
+							
+							// the flag check box was clicked so we will save the flag annotation
+							thisView.flagCheckBoxClicked(nodeId, workgroupId, stepWorkId);
+						});
+						
+						// get the flag annotation for this step work
+						var flagAnnotation = this.model.annotations.getAnnotationByStepWorkIdType(stepWorkId, 'flag');
+						
+						if(flagAnnotation != null) {
+							// get the flag value
+							var flag = flagAnnotation.value;
+							
+							if(flag === 'flagged') {
+								isFlagged = true;
+								// check the check box
+								$flagCheckBox.prop('checked', true);
+							}
+						}
+						
+						// set flag label 'for' attribute
+						$flagLabel.attr('for', $flagCheckBox.attr('id'));
+						
+						$studentWorkCell.append($studentWorkHeader);
+						
+						// create student response container
+						var $studentWorkContainer = $('<div id="stepWork_' + stepWorkId + '" class="stepwork">');
+						try {
+							// render the student work into the response container
+							node.renderGradingView($studentWorkContainer, nodeVisit, null, workgroupId);
+						} catch(e) {
+							console.log(e);
+						}
+						$studentWorkCell.append($studentWorkContainer);
+						
+						// create student response cell footer (timestamp)
+						$workTimestamp = $('<div class="timestamp">').append('<span class="fa fa-clock-o"></span>');
+						
+						if(visitPostTime != null) {
+							// format the timestamp for the student work
+							var visitPostTimeFormatted = this.formatTimestamp(visitPostTime);
+							$workTimestamp.append(' ' + view.getI18NStringWithParams('classroomMonitor_grading_revisionDate', [visitPostTimeFormatted]));
+						}
+						$studentWorkCell.append($workTimestamp);
+						
+						// insert student response into table
+						$stepWork.append($studentWorkCell);
+						
+						// insert feedback cell into table
+						$stepWork.append($thisFeedbackCell);
+						
+						var commentTextAreaId = '';
+						
+						if(mode === 'studentGrading') {
+							commentTextAreaId = 'studentGradingCommentTextArea_' + stepWorkId;
+						} else if(mode === 'stepGrading') {
+							commentTextAreaId = 'stepGradingCommentTextArea_' + stepWorkId;
+						}
+						
+						// set comment textarea id
+						$('textarea', $thisFeedbackCell).attr('id', commentTextAreaId);
+						
+						// get the comment annotation for this student work
+						var commentAnnotation = this.model.annotations.getAnnotationByStepWorkIdType(stepWorkId, 'comment');
+							comment = null,
+							commentPostTime = null;
+						
+						if(commentAnnotation !== null) {
+							//get the comment
+							comment = commentAnnotation.value;
+							// get the post time for the comment
+							commentPostTime = commentAnnotation.postTime;
+							if(comment !== null){
+								needsReview = false;
+							}
+						} else {
+							if(isLatest){
+								var latestCommentAnnotation = this.getLatestAnnotation(nodeId, workgroupId, 'comment');
+								if(latestCommentAnnotation){
+									// get the post time for the comment
+									commentPostTime = latestCommentAnnotation.postTime;
+									comment = latestCommentAnnotation.value;
+								}
+							}
+						}
+						// set the comment into the textarea
+						if(comment !== null){
+							$('textarea', $thisFeedbackCell).val(comment);
+						}
+						
+						// set the event for when the textarea value is updated
+						//set the event for when anything is changed in the comment textarea
+						$('textarea', $thisFeedbackCell).on('input', {thisView:view, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId, mode:mode}, view.commentChanged);
+						$('textarea', $thisFeedbackCell).on('change', {thisView:view, stepWorkId:stepWorkId, nodeId:nodeId, workgroupId:workgroupId, mode:mode}, view.saveComment);
+						
+						// insert comment input 'for' attribute
+						$commentLabel.attr('for', $('textarea', $thisFeedbackCell).attr('id'));
+						
+						// bind premade comments link click
+						$('.open-comments', $thisFeedbackCell).on('click', {thisView:this, stepWorkId:stepWorkId}, function(event) {
+							var thisView = event.data.thisView;
+							var stepWorkId = event.data.stepWorkId;
+							var commentBoxId = 'commentTextArea_' + stepWorkId;
+							var studentWorkColumnId = 'stepWorkTD_' + stepWorkId;
+							
+							// the open premade comments link was clicked so we will open up the premade comments window
+							thisView.openPremadeCommentsLinkClicked(commentBoxId, studentWorkColumnId);
+						});
+						
+						// get the latest timestamp between the score and comment
+						var annotationPostTime = Math.max(scorePostTime, commentPostTime);
+						
+						if(annotationPostTime !== 0) {
+							// create the annotation post time
+							var annotationPostTimeFormatted = this.formatTimestamp(annotationPostTime);
+							$('.feedback-date', $thisFeedbackCell).text(view.getI18NStringWithParams('classroomMonitor_grading_lastAnnotation', [annotationPostTimeFormatted]));
+						}
+						
+						if(isLatest){
+							if(needsReview){
+								// add needs review class to row
+								$stepWork.addClass('new');
+								
+								// increment number of items to review
+								view.numberOfItemsToReview++;
+							}
+						} else {
+							// add revision class to row
+							$stepWork.addClass('revision');
+						}
+						
+						// insert flagged, latest and needs review cells
+						$stepWork.append('<td>' + isFlagged + '</td>');
+						$stepWork.append('<td>' + isLatest + '</td>');
+						$stepWork.append('<td>' + needsReview + '</td>');
+						
+						// add row to DataTable
+						if(mode === 'studentGrading'){
+							this.gradeByStudentTable.row.add($stepWork[0]);
+						} else if(mode === 'stepGrading'){
+							this.gradeByStepTable.row.add($stepWork[0]);
+						}
+						
+						// set latest to false for all but first item
+						isLatest = false;
+					}
+				}
+			}
+		}
+	}
+};
+
+/**
+ * Populates the workgroup select in the student grading view with workgroups in the specified period
+ * 
+ * @param period String period id
+ * @param tableId String id of the target table
+ * @param workgroupId String id of the workgroup to select (optional)
+ */
+View.prototype.populateWorkgroupSelect = function(period, tableId, workgroupId){
+	var workgroups = [],
+		periods = this.getUserAndClassInfo().getPeriods(),
+		periodId = period;
+	
+	var i = periods.length;
+	while(i--){
+		if(periods[i].periodName === period){
+			periodId = periods[i].periodId;
+			break;
 		}
 	}
 	
-	//set the number of items to review value
-	$('#numberOfItemsToReviewSpan_' + workgroupId).text(this.numberOfItemsToReview);
+	// get all the workgroup ids in the period
+	workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIdsInAlphabeticalOrder(periodId);
 
-	//show the grade by student display
-	this.showGradeByStudentDisplay();
+	// loop through all the workgroup ids in the period
+	for(var x=0; x<workgroupIds.length; x++) {
+		//get a workgroup id
+		var groupId = workgroupIds[x];
+		
+		//get the classmate names for the workroup id
+		var groupNames = this.getUserAndClassInfo().getStudentNamesByWorkgroupId(groupId).join(', ');
+		
+		workgroups.push({ label: groupNames, value: groupId });
+	}
+	$('#' + tableId + '_workgroupSelect').multiselect('dataprovider', workgroups).multiselect('rebuild');
+	
+	if(workgroupId !== null){
+		$('#' + tableId + '_workgroupSelect').multiselect('select', workgroupId).multiselect('rebuild');
+	}
 };
 
 /**
@@ -1902,6 +2414,8 @@ View.prototype.displayGradeByStudent = function(workgroupId) {
  * all the student revisions for the step.
  * @param nodeId the node id
  * @param workgroup id the workgroup id
+ * 
+ * TODO: remove
  */
 View.prototype.createGradeByStudentDisplayTableRow = function(nodeId, workgroupId) {
 	var gradeByStudentDisplayTableRow = null;
@@ -2553,22 +3067,29 @@ View.prototype.flagCheckBoxClicked = function(nodeId, workgroupId, stepWorkId) {
 		annotationType:annotationType
 	};
 	
+	// Show saving message
+	notificationManager.notify(view.getI18NString('classroomMonitor_saving'), 3);
 	//make the call to post the annotation
-	this.connectionManager.request('POST', 1, postFlagsUrl, postFlagArgs, this.postFlagCallback, [this, nodeId, toWorkgroup, fromWorkgroup, runId, stepWorkId], this.postFlagCallbackFail);
+	this.connectionManager.request('POST', 1, postFlagsUrl, postFlagArgs, this.postFlagCallbackSuccess, [this, nodeId, toWorkgroup, fromWorkgroup, runId, stepWorkId, value], this.postFlagCallbackFail);
 };
 
 /**
- * The callback for posting flag annotations
+ * The successcallback for posting flag annotations
  */
-View.prototype.postFlagCallback = function() {
+View.prototype.postFlagCallbackSuccess = function(text, xml, args) {
+	var thisView = args[0],
+		stepWorkId = args[5],
+		type = 'flag',
+		value = (args[6] === 'flagged') ? 'true' : 'false';
 	
+	thisView.postAnnotationCallbackSuccessHandler(stepWorkId, text, type, value);
 };
 
 /**
  * The failure callback for posting flag annotations
  */
 View.prototype.postFlagCallbackFail = function() {
-	
+	// TODO: revert and notify of failure
 };
 
 /**
@@ -2652,8 +3173,9 @@ View.prototype.saveScore = function(event) {
 	var stepWorkId = event.data.stepWorkId;
 	var nodeId = event.data.nodeId;
 	var workgroupId = event.data.workgroupId;
+	var mode = event.data.mode;
 	
-	thisView.saveScoreHandler(stepWorkId, nodeId, workgroupId);
+	thisView.saveScoreHandler(stepWorkId, nodeId, workgroupId, mode);
 };
 
 /**
@@ -2663,25 +3185,25 @@ View.prototype.saveScore = function(event) {
  * @param nodeId the node id
  * @param workgroupId the workgroup id
  */
-View.prototype.saveScoreHandler = function(stepWorkId, nodeId, workgroupId) {
+View.prototype.saveScoreHandler = function(stepWorkId, nodeId, workgroupId, mode) {
 	var fromWorkgroup = this.getUserAndClassInfo().getWorkgroupId();
 	var runId = this.getConfig().getConfigParam('runId');
 	
 	//check if the score has changed from the previous value
-	if(this.isScoreChanged(stepWorkId, nodeId, workgroupId)) {
+	if(this.isScoreChanged(stepWorkId, nodeId, workgroupId, mode)) {
 		//the score has changed so we will obtain the new value
-		var scoreValue = this.getScoreInputValue(stepWorkId, nodeId, workgroupId);
+		var scoreValue = this.getScoreInputValue(stepWorkId, nodeId, workgroupId, mode);
 		
 		if(this.isScoreValid(scoreValue)) {
 			//the score is valid so we will save it to the server
-			this.postAnnotation(nodeId, workgroupId, fromWorkgroup, 'score', scoreValue, runId, stepWorkId);			
+			this.postAnnotation(nodeId, workgroupId, fromWorkgroup, 'score', scoreValue, runId, stepWorkId, mode);			
 		} else {
 			/*
 			 * the score is invalid so we will display a message and revert it back
 			 * to the previous value
 			 */
-			alert(scoreValue + ' is an invalid score.');
-			this.revertScore(stepWorkId, nodeId, workgroupId);
+			alert(this.getI18NStringWithParams('classroomMonitor_grading_invalidScore', [scoreValue]));
+			this.revertScore(stepWorkId, nodeId, workgroupId, mode);
 		}
 	}
 };
@@ -2693,7 +3215,7 @@ View.prototype.saveScoreHandler = function(stepWorkId, nodeId, workgroupId) {
  * @param workgroupId the workgroup id
  * @return the score input value
  */
-View.prototype.getScoreInputValue = function(stepWorkId, nodeId, workgroupId) {
+View.prototype.getScoreInputValue = function(stepWorkId, nodeId, workgroupId, mode) {
 	var scoreValue = null;
 	
 	//get the score input id
@@ -2701,10 +3223,18 @@ View.prototype.getScoreInputValue = function(stepWorkId, nodeId, workgroupId) {
 	
 	if(stepWorkId == null) {
 		//the student doesn't have any work for this step
-		scoreInputId = this.escapeIdForJquery('noStudentWorkScoreInput_' + nodeId + '_' + workgroupId);
+		if(mode == 'studentGrading') {
+			scoreInputId = this.escapeIdForJquery('noStudentWorkStudentGradingScoreInput_' + nodeId + '_' + workgroupId);
+		} else if(mode == 'stepGrading') {
+			scoreInputId = this.escapeIdForJquery('noStudentWorkStepGradingScoreInput_' + nodeId + '_' + workgroupId);			
+		}
 	} else {
 		//the student has work for this step
-		scoreInputId = 'scoreInput_' + stepWorkId;
+		if(mode == 'studentGrading') {
+			scoreInputId = 'studentGradingScoreInput_' + stepWorkId;
+		} else if(mode == 'stepGrading') {
+			scoreInputId = 'stepGradingScoreInput_' + stepWorkId;
+		}
 	}
 	
 	//get the new score input value
@@ -2721,8 +3251,9 @@ View.prototype.saveComment = function(event) {
 	var stepWorkId = event.data.stepWorkId;
 	var nodeId = event.data.nodeId;
 	var workgroupId = event.data.workgroupId;
+	var mode = event.data.mode;
 	
-	thisView.saveCommentHandler(stepWorkId, nodeId, workgroupId);
+	thisView.saveCommentHandler(stepWorkId, nodeId, workgroupId, mode);
 };
 
 /**
@@ -2731,17 +3262,17 @@ View.prototype.saveComment = function(event) {
  * @param nodeId the node id
  * @param workgroupId the workgroup id
  */
-View.prototype.saveCommentHandler = function(stepWorkId, nodeId, workgroupId) {
+View.prototype.saveCommentHandler = function(stepWorkId, nodeId, workgroupId, mode) {
 	var fromWorkgroup = this.getUserAndClassInfo().getWorkgroupId();
 	var runId = this.getConfig().getConfigParam('runId');
 	
 	//check if the comment has changed from the previous value
-	if(this.isCommentChanged(stepWorkId, nodeId, workgroupId)) {
+	if(this.isCommentChanged(stepWorkId, nodeId, workgroupId, mode)) {
 		//the comment has changed so we will obtain the new value
-		var commentValue = this.getCommentTextAreaValue(stepWorkId, nodeId, workgroupId);
+		var commentValue = this.getCommentTextAreaValue(stepWorkId, nodeId, workgroupId, mode);
 		
 		//save the comment to the server
-		this.postAnnotation(nodeId, workgroupId, fromWorkgroup, 'comment', commentValue, runId, stepWorkId);
+		this.postAnnotation(nodeId, workgroupId, fromWorkgroup, 'comment', commentValue, runId, stepWorkId, mode);
 	}
 };
 
@@ -2752,15 +3283,23 @@ View.prototype.saveCommentHandler = function(stepWorkId, nodeId, workgroupId) {
  * @param workgroupId the workgroup id
  * @return the comment text area value
  */
-View.prototype.getCommentTextAreaValue = function(stepWorkId, nodeId, workgroupId) {
+View.prototype.getCommentTextAreaValue = function(stepWorkId, nodeId, workgroupId, mode) {
 	var commentTextAreaId = null;
 	
 	if(stepWorkId == null) {
 		//the student does not have any work for the step
-		commentTextAreaId = this.escapeIdForJquery('noStudentWorkCommentTextArea_' + nodeId + '_' + workgroupId);
+		if(mode == 'studentGrading') {
+			commentTextAreaId = this.escapeIdForJquery('noStudentWorkStudentGradingCommentTextArea_' + nodeId + '_' + workgroupId);
+		} else if(mode == 'stepGrading') {
+			commentTextAreaId = this.escapeIdForJquery('noStudentWorkStepGradingCommentTextArea_' + nodeId + '_' + workgroupId);			
+		}
 	} else {
 		//the student has work for the step
-		commentTextAreaId = 'commentTextArea_' + stepWorkId;
+		if(mode == 'studentGrading') {
+			commentTextAreaId = 'studentGradingCommentTextArea_' + stepWorkId;
+		} else if(mode == 'stepGrading') {
+			commentTextAreaId = 'stepGradingCommentTextArea_' + stepWorkId;			
+		}
 	}
 	
 	//get the comment text area value
@@ -2779,7 +3318,7 @@ View.prototype.getCommentTextAreaValue = function(stepWorkId, nodeId, workgroupI
  * @param runId the run id
  * @param stepWorkId the step work id
  */
-View.prototype.postAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, type, value, runId, stepWorkId) {
+View.prototype.postAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, type, value, runId, stepWorkId, mode) {
 	var postAnnotationsURL = this.getConfig().getConfigParam('postAnnotationsUrl');
 	
 	var postAnnotationParams = {
@@ -2795,7 +3334,9 @@ View.prototype.postAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, typ
 		postAnnotationParams.stepWorkId = stepWorkId;
 	}
 	
-	this.connectionManager.request('POST', 1, postAnnotationsURL, postAnnotationParams, this.postAnnotationCallbackSuccess, [this, stepWorkId, nodeId, toWorkgroup], this.postAnnotationCallbackFailure);
+	// Show saving message
+	notificationManager.notify(view.getI18NString('classroomMonitor_saving'), 3);
+	this.connectionManager.request('POST', 1, postAnnotationsURL, postAnnotationParams, this.postAnnotationCallbackSuccess, [this, stepWorkId, type, value, nodeId, toWorkgroup, mode], this.postAnnotationCallbackFailure);
 };
 
 /**
@@ -2804,10 +3345,13 @@ View.prototype.postAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, typ
 View.prototype.postAnnotationCallbackSuccess = function(text, xml, args) {
 	var thisView = args[0];
 	var stepWorkId = args[1];
-	var nodeId = args[2];
-	var workgroupId = args[3];
+	var type = args[2];
+	var value = args[3];
+	var nodeId = args[4];
+	var workgroupId = args[5];
+	var mode = args[6];
 	
-	thisView.postAnnotationCallbackSuccessHandler(stepWorkId, nodeId, workgroupId, text);
+	thisView.postAnnotationCallbackSuccessHandler(stepWorkId, type, value, nodeId, workgroupId, mode, text);
 };
 
 /**
@@ -2817,7 +3361,10 @@ View.prototype.postAnnotationCallbackSuccess = function(text, xml, args) {
  * @param workgroupId the workgroup id
  * @param timestamp the post timestamp
  */
-View.prototype.postAnnotationCallbackSuccessHandler = function(stepWorkId, nodeId, workgroupId, timestamp) {
+View.prototype.postAnnotationCallbackSuccessHandler = function(stepWorkId, type, value, nodeId, workgroupId, mode, timestamp) {
+	var view = this;
+	var timestampFormatted = null;
+	
 	if(stepWorkId != null) {
 		//remove the background highlight color for the row
 		$('#stepWorkTR_' + stepWorkId).css('background', '');
@@ -2825,31 +3372,115 @@ View.prototype.postAnnotationCallbackSuccessHandler = function(stepWorkId, nodeI
 	
 	if(timestamp != null) {
 		//get the timestamp
-		var timestampFormatted = this.formatTimestamp(parseInt(timestamp));
+		timestampFormatted = this.formatTimestamp(parseInt(timestamp));
 		
 		var annotationTimestampId = null;
 		
 		if(stepWorkId == null) {
 			//the student does not have any work for the step
-			annotationTimestampId = this.escapeIdForJquery('noStudentWorkAnnotationTimestamp_' + nodeId + '_' + workgroupId);
+			if(mode == 'studentGrading') {
+				annotationTimestampId = this.escapeIdForJquery('noStudentWorkStudentGradingAnnotationTimestamp_' + nodeId + '_' + workgroupId);
+			} else if(mode == 'stepGrading') {
+				annotationTimestampId = this.escapeIdForJquery('noStudentWorkStepGradingAnnotationTimestamp_' + nodeId + '_' + workgroupId);				
+			}
 		} else {
 			//the student has work for the step
-			annotationTimestampId = 'annotationTimestamp_' + stepWorkId;
+			if(mode == 'studentGrading') {
+				annotationTimestampId = 'studentGradingAnnotationTimestamp_' + stepWorkId;
+			} else if(mode == 'stepGrading') {
+				annotationTimestampId = 'stepGradingAnnotationTimestamp_' + stepWorkId;				
+			}
 		}
-
-		//update the timestamp in the display
-		$('#' + annotationTimestampId).html('Last Annotation: ' + timestampFormatted);
 	}
 	
-	//disable the save button
-	$('#saveButton').attr('disabled', true);
+	
+	var rowId = '';
+	
+	//get the row id
+	if(stepWorkId == null) {
+		if(mode == 'studentGrading') {
+			rowId = this.escapeIdForJquery('noStudentWorkStudentGradingRow_' + nodeId + '_' + workgroupId);
+		} else if(mode == 'stepGrading') {
+			rowId = this.escapeIdForJquery('noStudentWorkStepGradingRow_' + nodeId + '_' + workgroupId);			
+		}
+	} else {
+		if(mode == 'studentGrading') {
+			rowId = 'studentGradingStepWork_' + stepWorkId;
+		} else if(mode == 'stepGrading') {
+			rowId = 'stepGradingStepWork_' + stepWorkId;			
+		}
+	}
+	
+	var $row = $('#' + rowId);
+	var table = null;
+	var isNew = false;
+	
+	if(type !== 'flag'){
+		if ($row.hasClass('new')){
+			isNew = true;
+			this.numberOfItemsToReview--;
+			$row.removeClass('new');
+		}
+	}
+	
+	if (this.classroomMonitorWorkgroupIdSelected) {
+		if(isNew){
+			var stepname = $row.data('stepname');
+			$('tr.new').each(function(){
+				if($(this).data('stepname') === stepname){
+					$(this).removeClass('new');
+				}
+			});
+		}
+		table = this.gradeByStudentTable;
+		// set the number of items to review value
+		$('#gradeByStudentItemsToReview').text(view.getI18NStringWithParams('classroomMonitor_grading_itemsToReview',[this.numberOfItemsToReview]));
+		this.numberOfItemsToReview > 0 ? $('#gradeByStudentItemsToReview').fadeIn() : $('#gradeByStudentItemsToReview').fadeOut();
+	} else if(this.classroomMonitorStepIdSelected) {
+		if(isNew){
+			var workgroup = $row.data('workgroup');
+			$('tr.new').each(function(){
+				if($(this).data('workgroup') === workgroup){
+					$(this).removeClass('new');
+				}
+			});
+		}
+		table = this.gradeByStepTable;
+		// set the number of items to review value
+		$('#gradeByStepItemsToReview').text(view.getI18NStringWithParams('classroomMonitor_grading_itemsToReview',[this.numberOfItemsToReview]));
+		this.numberOfItemsToReview > 0 ? $('#gradeByStepItemsToReview').fadeIn() : $('#gradeByStepItemsToReview').fadeOut();
+	}
+	
+	if(table){
+		var rIdx = table.row( $row ).index();
+		switch(type) {
+			// update data for row
+			case 'score':
+			case 'comment':
+				//table.cell(rIdx, 5).data(value);
+				//table.cell(rIdx, 7).data(value);
+				//table.cell(rIdx, 12).data('false');
+				if(timestampFormatted) { $('.feedback-date', $row).text(view.getI18NStringWithParams('classroomMonitor_grading_lastAnnotation',[timestampFormatted])); }
+				break;
+			case 'flag':
+				//table.cell(rIdx, 10).data(value);
+		}
+		
+		// TODO: figure out how to redraw table without breaking event bindings in cell content!!
+	}
+	
+	// display save confirmation notification
+	notificationManager.notify(view.getI18NString('classroomMonitor_saveConfirmation'), 3);
+	
+	// disable the save button
+	//$('#saveButton').prop('disabled', true);
 };
 
 /**
  * Callback failure function for posting annotations
  */
-View.prototype.postAnnotationCallbackFailure = function() {
-	
+View.prototype.postAnnotationCallbackFailure = function(stepWorkId) {
+	// TODO: revert to previous annotation state
 };
 
 /**
@@ -2886,8 +3517,18 @@ View.prototype.revertScore = function(stepWorkId, nodeId, workgroupId) {
 		previousScore = latestScoreAnnotation.value;
 	}
 	
+	var scoreInputId = '';
+	
+	if(stepWorkId == null) {
+		//the student does not have any work
+		scoreInputId = this.escapeIdForJquery('noStudentWorkScoreInput_' + nodeId + '_' + workgroupId);
+	} else {
+		//the student has work
+		scoreInputId = 'scoreInput_' + stepWorkId;
+	}
+	
 	//set the score input to the previous value
-	$('#scoreInput_' + stepWorkId).val(previousScore);
+	$('#' + scoreInputId).val(previousScore);
 }
 
 /**
@@ -2895,8 +3536,9 @@ View.prototype.revertScore = function(stepWorkId, nodeId, workgroupId) {
  * @param stepWorkId the step work id
  * @param nodeId the node id
  * @param workgroupId the workgroup id
+ * @return whether the score has changed from the previous value
  */
-View.prototype.isScoreChanged = function(stepWorkId, nodeId, workgroupId) {
+View.prototype.isScoreChanged = function(stepWorkId, nodeId, workgroupId, mode) {
 	var result = false;
 	
 	//get the previous score annotation
@@ -2914,16 +3556,24 @@ View.prototype.isScoreChanged = function(stepWorkId, nodeId, workgroupId) {
 	
 	if(stepWorkId == null) {
 		//the student doesn't have any work for this step
-		scoreInputId = this.escapeIdForJquery('noStudentWorkScoreInput_' + nodeId + '_' + workgroupId);
+		if(mode == 'studentGrading') {
+			scoreInputId = this.escapeIdForJquery('noStudentWorkStudentGradingScoreInput_' + nodeId + '_' + workgroupId);			
+		} else if(mode == 'stepGrading') {
+			scoreInputId = this.escapeIdForJquery('noStudentWorkStepGradingScoreInput_' + nodeId + '_' + workgroupId);
+		}
 	} else {
 		//the student has work for this step
-		scoreInputId = 'scoreInput_' + stepWorkId;
+		if(mode == 'studentGrading') {
+			scoreInputId = 'studentGradingScoreInput_' + stepWorkId;
+		} else if(mode == 'stepGrading') {
+			scoreInputId = 'stepGradingScoreInput_' + stepWorkId;			
+		}
 	}
 	
 	//get the new score input value
 	var scoreValue = $('#' + scoreInputId).val();
 	
-	if(previousScore != scoreValue) {
+	if(previousScore !== scoreValue) {
 		//the score has changed
 		result = true;
 	}
@@ -2936,24 +3586,43 @@ View.prototype.isScoreChanged = function(stepWorkId, nodeId, workgroupId) {
  * @param stepWorkId the step work id
  * @param nodeId the node id
  * @param workgroupId the workgroup id
+ * @return whether the comment has changed from the previous value
  */
-View.prototype.isCommentChanged = function(stepWorkId, nodeId, workgroupId) {
+View.prototype.isCommentChanged = function(stepWorkId, nodeId, workgroupId, mode) {
 	var result = false;
 	
 	//get the previous comment annotation
 	var latestCommentAnnotation = this.getLatestAnnotation(nodeId, workgroupId, 'comment');
 	
-	var previousComment = '';
+	var previousCommentValue = '';
 	
 	if(latestCommentAnnotation != null) {
 		//get the previous comment
-		previousComment = latestCommentAnnotation.value;
+		previousCommentValue = latestCommentAnnotation.value;
+	}
+	
+	var commentTextAreaId = null;
+	
+	if(stepWorkId == null) {
+		//the student does not have any work for this step
+		if(mode == 'studentGrading') {
+			commentTextAreaId = this.escapeIdForJquery('noStudentWorkStudentGradingCommentTextArea_' + nodeId + '_' + workgroupId);
+		} else if(mode == 'stepGrading') {
+			commentTextAreaId = this.escapeIdForJquery('noStudentWorkStepGradingCommentTextArea_' + nodeId + '_' + workgroupId);			
+		}
+	} else {
+		//the student has work for this step
+		if(mode == 'studentGrading') {
+			commentTextAreaId = 'studentGradingCommentTextArea_' + stepWorkId;
+		} else if(mode == 'stepGrading') {
+			commentTextAreaId = 'stepGradingCommentTextArea_' + stepWorkId;			
+		}
 	}
 	
 	//get the new comment value
-	var commentValue = $('#commentTextArea_' + stepWorkId).val();
+	var newCommentValue = $('#' + commentTextAreaId).val();
 	
-	if(previousComment != commentValue) {
+	if(previousCommentValue !== newCommentValue) {
 		//the comment has changed
 		result = true;
 	}
@@ -2966,7 +3635,7 @@ View.prototype.isCommentChanged = function(stepWorkId, nodeId, workgroupId) {
  * @param event the jquery event object
  */
 View.prototype.scoreChanged = function(event) {
-	$('#saveButton').attr('disabled', false);
+	$('#save').fadeIn();
 };
 
 /**
@@ -2974,7 +3643,7 @@ View.prototype.scoreChanged = function(event) {
  * @param event the jquery event object
  */
 View.prototype.commentChanged = function(event) {
-	$('#saveButton').attr('disabled', false);
+	$('#save').fadeIn();
 };
 
 /**
@@ -3009,51 +3678,20 @@ View.prototype.getLatestAnnotation = function(nodeId, workgroupId, type) {
  * Create the step progress display
  */
 View.prototype.createStepProgressDisplay = function() {
-	//create the step progress div
-	var stepProgressDisplay = $('<div></div>').attr({id:'stepProgressDisplay'});
+	var view = this,
+		table = $('#stepProgressTable'),
+		allPeriodsLabel = view.getI18NString('classroomMonitor_allPeriods');
+	this.stepProgressData = [];
 	
-	//add the step progress display to the main div
-	$('#classroomMonitorMainDiv').append(stepProgressDisplay);
+	//get all the node ids and periods
+	var nodeIds = this.getProject().getAllNodeIds(),
+		periods = this.getUserAndClassInfo().getPeriods(),
+		position = 0;
 	
-	//hide the step progress div, we will show it later when necessary
-	stepProgressDisplay.hide();
-	
-	//create the table that will display all the steps
-	var stepProgressDisplayTable = $('<table>').attr({id:'stepProgressDisplayTable'});
-	stepProgressDisplayTable.attr('width', '100%');
-	stepProgressDisplayTable.attr('border', '1px');
-	stepProgressDisplayTable.attr('cellpadding', '3px');
-	stepProgressDisplayTable.css('border-collapse', 'collapse');
-	
-	//add the table to the step progress div
-	$('#stepProgressDisplay').append(stepProgressDisplayTable);
-	
-	//create the header row
-	var headerTR = $('<tr>');
-	
-	//create the header cells
-	var stepTitleTH = $('<th>').text('Step Title');
-	stepTitleTH.attr('width', '60%');
-	
-	var numberOfStudentsOnStepTH = $('<th>').text('Students on Step');
-	numberOfStudentsOnStepTH.attr('width', '20%');
-	
-	var stepCompletionTH = $('<th>').text('Step Completion %');
-	stepCompletionTH.attr('width', '20%');
-	
-	//add the header cells to the header row
-	headerTR.append(stepTitleTH);
-	headerTR.append(numberOfStudentsOnStepTH);
-	headerTR.append(stepCompletionTH);
-	
-	//add the header row to the table
-	$('#stepProgressDisplayTable').append(headerTR);
-	
-	//get all the node ids. this includes activity and step node ids.
-	var nodeIds = this.getProject().getAllNodeIds();
-	
-	//get the period that is currently selected
-	var periodId = this.classroomMonitorPeriodIdSelected;
+	if(periods.length > 1){
+		// if more than one period, add "all periods" entry
+		periods.push({'periodId': 'all', 'periodName': allPeriodsLabel});
+	}
 	
 	//loop through all the node ids
 	for(var x=0; x<nodeIds.length; x++) {
@@ -3062,49 +3700,256 @@ View.prototype.createStepProgressDisplay = function() {
 		
 		//skip the master node
 		if(nodeId != 'master') {
-			//get the step number and title
-			var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
-			
 			//get the node
 			var node = this.getProject().getNodeById(nodeId);
 			
 			if(node != null) {
-				//get the number of students on this step
-				var numberOfStudentsOnStep = this.getNumberOfStudentsOnStep(nodeId);
+				//get the node number and title
+				var numberAndTitle = this.getProject().getStepNumberAndTitle(nodeId),
+					
+					// initialize completion html and value
+					completionHtml = '',
+					stepCompletion = null,
 				
-				//get the percentage completion for this step
-				var completionPercentage = this.calculateStepCompletionForNodeId(nodeId);
+					//get the node type
+					nodeType = node.type,
+					
+					//initiate the node title
+					nodeTitle = '',
+					
+					// initiate students on step display
+					studentsOnStepHtml = null,
+					
+					// intiaite the row class
+					rowClass = '',
+					
+					// initiate gradable variable
+					gradable = false
 				
-				//get the node type
-				var nodeType = node.type;
-				
-				var tr = null;
-				
-				//we will not display number of students on step or completion percentage for sequences 
-				if(nodeType == 'sequence') {
-					numberOfStudentsOnStep= null;
-					completionPercentage = null;
-					nodeType = '';
+				// loop through periods
+				var i = periods.length;
+				while (i--){
+					// get period id
+					var periodId = periods[i].periodId,
+						periodName = periods[i].periodName,
+						nodeTypeReadable = '';
+						
+					if(nodeType === 'sequence') {
+						nodeTitle = view.getI18NString('activityTerm') + ' ' + numberAndTitle;
+						rowClass = ' activity';
+						
+						//we will not display number of students on step or completion percentage for sequences 
+						studentsOnStepHtml = null;
+						stepCompletion = null;
+					} else {
+						//get the number of students on this step in this period
+						var studentsOnStep = this.getStudentsOnStep(nodeId, periodId),
+						numberOfStudentsOnStep = studentsOnStep.total;
+						studentsOnStepHtml = this.getStudentsOnStepHtml(numberOfStudentsOnStep, studentsOnStep.workgroups),
+						
+						rowClass = (numberOfStudentsOnStep > 0) ? 'stepProgress_' + nodeId + ' online' : 'stepProgress_' + nodeId + ' offline',
+						
+						//get the percentage completion for this step in this period
+						stepCompletion = this.calculateStepCompletionForNodeId(nodeId, periodId);
+						
+						nodeTitle = view.getI18NString('stepTerm') + ' ' + numberAndTitle;
+						nodeTypeReadable = '<span class="label label-default">' + NodeFactory.nodeConstructors[nodeType].authoringToolName + '</span>';
+						
+						//check if there are any student statuses in the array
+						if(!this.studentStatuses || this.studentStatuses.length < 1) {
+							/*
+							 * there are no student status objects which can mean a
+							 * student has never loaded the vle or the run occurred before
+							 * we implemented student statuses
+							 */ 
+							stepCompletion = -1;
+							
+							if(node.hasGradingView()) {
+								gradable = true;
+								
+								//this step is gradable
+								completionHtml = '<a href="javascript:void(0);" class="bs-popover" data-content="' + view.getI18NString('classroomMonitor_stepProgress_completionUnavaiable_gradable') + '"><span class="fa fa-question-circle"></span></a>';
+							} else {
+								//this step is not gradable
+								completionHtml = '<a href="javascript:void(0);" class="bs-popover" data-content="' + view.getI18NString('classroomMonitor_stepProgress_completionUnavaiable') + '"><span class="fa fa-question-circle"></span></a>';
+							}
+						} else {
+							// get step completion html
+							completionHtml = view.getStepCompletionHtml(stepCompletion);
+						}
+						
+						if(node.hasGradingView()) { 
+							gradable = true;
+							rowClass += ' gradable';
+							nodeTitle = '<a href="javascript:void(0);" class="grade-by-step" title="' + view.getI18NString('classroomMonitor_stepProgress_viewStepWork') + '" data-nodeid="' + nodeId + '">' + nodeTitle + '<span class="fa fa-search-plus fa-flip-horizontal"></span> ' + nodeTypeReadable + '</a>';
+						} else {
+							nodeTitle +=  ' ' + nodeTypeReadable;
+						}
+					}
+					
+					var pId = (periodId === null) ? 'all' : periodId;
+					
+					//create the row for the step and period
+					view.stepProgressData.push(
+						{
+							"DT_RowId": 'stepProgress_' + nodeId + '_' + pId,
+							"DT_RowClass": rowClass,
+							"period_id": periodId,
+							"period_name": periodName,
+							"position": position,
+							"students_on_step": studentsOnStepHtml,
+							"node": numberAndTitle,
+							"node_id": nodeId,
+							"node_title": nodeTitle,
+							"complete": stepCompletion,
+							"complete_html": completionHtml,
+							"gradable": gradable
+						});
 				}
-				
-				var stepTitle = '';
-				
-				//create the step title
-				if(node.type == 'sequence') {
-					stepTitle = 'Activity ' + stepNumberAndTitle;
-				} else {
-					stepTitle = 'Step ' + stepNumberAndTitle + ' (' + nodeType + ')';
-				}
-				
-				//create the row element for this step
-				tr = this.createStepProgressDisplayRow(nodeId, stepTitle, numberOfStudentsOnStep, completionPercentage);
-				
-				if(tr != null) {
-					//add the row to the end of the table
-					$('#stepProgressDisplayTable tr:last').after(tr);
-				}
-			}			
+			}
 		}
+		
+		++position;
+	}
+	
+	var initialPeriod = allPeriodsLabel;
+	// if more than one period, remove entry we added above
+	if(periods.length > 1){
+		periods.pop();
+	} else {
+		initialPeriod = periods[0].periodName;
+	}
+	
+	/*var dataSet = $.map(view.stepProgressData, function(value, index) {
+	    return [value];
+	});*/
+	var dataSet = view.stepProgressData;
+	
+	// initialize dataTable
+	table.dataTable( {
+	    'data': dataSet,
+	    'paging': false,
+	    'dom': '<"dataTables_top"lf><"clearfix">rt<"dataTables_bottom"ip><"clear">',
+	    'language': {
+	    	'search': '',
+	    	'info': view.getI18NStringWithParams('classroomMonitor_tableInfoText', ['_TOTAL_']),
+	    	'infoFiltered': ''
+	    },
+	    'columns': [
+	        { 'title': 'Period Name', 'data': 'period_name' },
+	        { 'title': 'Position', 'data': 'position' },
+	        { 'title': 'Node', 'data': 'node' },
+	        { 'title': view.getI18NString('classroomMonitor_stepProgress_headers_nodeTitle'), 'data': 'node_title', 'class': 'viewStepWork', 'orderData': [1] },
+	        //{ 'title': 'Average Score' }, TODO: enable (and make point value editable)
+	        //{ 'title': 'Average Score %' }, TODO: enable and sort Average Score column by this
+	        { 'title': view.getI18NString('classroomMonitor_stepProgress_headers_studentsOnStep'), 'data': 'students_on_step', 'class': 'center', 'orderData': [4, 1], 'width': '10%' },
+	        { 'title': 'Complete', 'data': 'complete' },
+	        { 'title': view.getI18NString('classroomMonitor_stepProgress_headers_stepCompletion'), 'data': 'complete_html', 'class': 'center', 'orderData': [5, 1] }
+	    ],
+	    'order': [[ 3, 'asc' ]],
+	    'columnDefs': [
+			{
+				'targets': [ 1, 2, 5 ],
+				'searchable': false
+			},
+			{
+				'targets': [ 0, 1, 2, 5 ],
+				'visible': false,
+			},
+			{
+				"targets": [ 3 ],
+			    "createdCell": function (td, cellData, rowData, row, col) {
+			    	if(rowData.gradable){
+			    		$(td).addClass('gradable');
+			    	}
+			    }
+			}
+		],
+		"searchCols": [
+			{ "sSearch": initialPeriod }, null, null, null, null, null, null
+   		],
+		'footerCallback': function ( row, data, start, end, display ) {
+			var api = this.api(),
+	        	pageTotal = 0,
+	
+		        // Get total completion over current page
+	        	data = api
+		        	.column( 5, { page: 'current'} )
+		        	.data();
+	        
+	        if(data.length){
+	        	pageTotal = data.reduce( function (pVal, cVal) {
+	        		return pVal*1 + cVal*1;
+	        	} )
+	        }
+	        var numVals = api.column( 5, { page: 'current'} ).data().length;
+	        pageTotal = numVals ? pageTotal/numVals : 0;
+	        
+	        // Update footer
+	        $( api.column( 6 ).footer() ).html(
+	        	'<div class="progress">\
+				<div class="progress-bar"  role="progressbar" aria-valuenow="' + pageTotal + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + pageTotal + '%">\
+				<span class="sr-only">' + pageTotal + '% Complete</span></div></div>'
+	        );
+	    },
+	    'initComplete': function( settings, json ) {
+	    	$('.dataTables_filter input[type="search"]', $('#stepProgress')).attr('placeholder', view.getI18NString('classroomMonitor_search'));
+	    },
+	    'drawCallback': function( settings ) {
+	    	view.redrawFixedHeaders(true);
+	    	view.bsPopover($('.bs-popover', table), {trigger: 'hover click focus', html: true, placement: 'right auto'});
+	    	view.bsTooltip($('.workgroups-online', table), { html: true, placement: 'left' });
+	    	
+	    	// bind click actions to workgroup links
+        	$('.grade-by-step', table).each(function(){
+        		$(this).off('click').on('click', {thisView:view, nodeId:$(this).data('nodeid')}, view.stepRowClicked);
+        	});
+	    }
+	} );
+	
+	table.dataTable().fnFilterOnReturn();
+	
+	this.fixedHeaders.push(new $.fn.dataTable.FixedHeader( table.dataTable() , {
+	    'offsetTop': 90
+	}));
+	view.redrawFixedHeaders();
+	
+	// create view object for future api access
+	this.stepProgressTable = table.DataTable();
+	
+	// add period filter and header text
+	this.addSectionHeader(table, $('#stepProgressTable_wrapper'), view.getI18NString('classroomMonitor_stepProgress_title'), { 'periodCol': 0, 'allSelector': allPeriodsLabel });
+};
+
+/**
+ * Gets step completion HTML string for step progress display
+ * 
+ * @param stepCompletion Number step completion percentage
+ * @returns html step comletion HTML string
+ */
+View.prototype.getStepCompletionHtml = function(stepCompletion){
+	var html = '<div class="progress" data-sort="' + stepCompletion + '">\
+		<div class="progress-bar"  role="progressbar" aria-valuenow="' + stepCompletion + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + stepCompletion + '%">\
+		<span class="sr-only">' + stepCompletion + '%</span></div></div>';
+	return html;
+};
+
+/**
+ * Gets students on step HTML string for step progress display
+ * 
+ * @param studentsOnStep Number of students on the step
+ * @param workgroups Array of Strings of workgroups on the step
+ * @returns html step comletion HTML string
+ */
+View.prototype.getStudentsOnStepHtml = function(studentsOnStep, workgroups){
+	if(studentsOnStep > 0){
+		var workgroupsText = '';
+		if(workgroups && workgroups.length){
+			workgroupsText = ' title="<ul class=\'no-margin\' style=\'padding-left: 10px;\'><li>' + workgroups.join('</li><li>') + '</li></ul>"';
+		}
+		return '<b class="text-success workgroups-online"' + workgroupsText + '>' + studentsOnStep + ' <span class="fa fa-users"></span></b>';
+	} else {
+		return studentsOnStep;
 	}
 };
 
@@ -3273,6 +4118,10 @@ View.prototype.createStepProgressDisplayRow = function(nodeId, stepTitle, number
  */
 View.prototype.getStudentsOnStepText = function(nodeId, periodId) {
 	var studentsOnStepText = '';
+	
+	if(periodId === null || periodId === 'all'){
+		
+	}
 	
 	if(periodId == null) {
 		/*
@@ -3444,8 +4293,14 @@ View.prototype.stepRowClicked = function(event) {
  * @param nodeId the node id of the row that was clicked
  */
 View.prototype.stepRowClickedHandler = function(nodeId) {
+	// clear monitor view selection
+	$('#monitorView > label').removeClass('active');
+	
 	//hide all the other displays
 	this.hideAllDisplays();
+	
+	// show loading message
+	$('#loading').show();
 	
 	//clear the nodeIdClicked and workgroupIdClicked values
 	this.clearNodeIdClickedAndWorkgroupIdClicked();
@@ -3453,25 +4308,16 @@ View.prototype.stepRowClickedHandler = function(nodeId) {
 	//remember the workgroup id the teacher is currently viewing
 	this.nodeIdClicked = nodeId;
 	
-	//remove the yellow highlighting of the choose display buttons
-	this.removeBackgroundColor('chooseClassroomMonitorDisplayButton');
-
-	//display a loading message in the grade by step display
-	$('#gradeByStepDisplay').html('<p style="display:inline;margin-left:5px">Loading...</p>');
-	$('#gradeByStepDisplay').show();
-	
 	//get the url for retrieving student data
 	var getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl');
 	
-	var runId = this.getConfig().getConfigParam('runId');
-	var grading = true;
-	var getRevisions = true;
-	
-	//get the workgroup ids in the run
-	var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIds();
-	
-	//join the workgroup ids into a single string delimited by ':'
-	userIds = workgroupIds.join(':');
+	var runId = this.getConfig().getConfigParam('runId'),
+		grading = true,
+		getRevisions = true,
+		//get the workgroup ids in the run
+		workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIds(),
+		//join the workgroup ids into a single string delimited by ':'
+		userIds = workgroupIds.join(':');
 	
 	var getStudentDataParams = {
 		nodeIds:nodeId,
@@ -3529,287 +4375,91 @@ View.prototype.getGradeByStepWorkInClassroomMonitorCallbackFail = function(text,
  * @param nodeId the node id
  */
 View.prototype.displayGradeByStep = function(nodeId) {
-	//clear the grade by student display
-	$('#gradeByStudentDisplay').html('');
+	var view = this;
 	
-	//clear the grade by step display
-	$('#gradeByStepDisplay').html('');
+	// remember the step id the teacher is currently viewing
+	this.classroomMonitorStepIdSelected = nodeId;
 	
+	// clear out selected workgroup id
+	this.classroomMonitorWorkgroupIdSelected = null;
+	
+	// clear the grade by step table
+	this.gradeByStepTable.clear();
+	
+	// clear the grade by student table
+	this.gradeByStudentTable.clear();
+	
+	// clear the number of items to review because we will count them again for this workgroup
+	this.numberOfItemsToReview = 0;
+	
+	// get the selected period
+	periodSelected = this.classroomMonitorPeriodSelected;
+
+	// update selected period in grade by step section
+	if(periodSelected === 'all'){
+		$('#gradeByStepTable_periodSelect').multiselect('select', '').multiselect('refresh');
+	} else {
+		$('#gradeByStepTable_periodSelect').multiselect('select', periodSelected).multiselect('refresh');
+	}
+	
+	// update selected step
+	$('#gradeByStepTable_stepSelect').multiselect('select', nodeId).multiselect('refresh');
+	
+	var stepTitle = '';
 	if(nodeId != null) {
-		
-		//get the node
+		// get the node
 		var node = this.getProject().getNodeById(nodeId);
 		
 		if(node != null) {
-			//get the node type
-			var nodeType = node.type;
-			
-			//get the work for the step
-			var workForStep = this.model.getWorkByStep(nodeId);
-			
-			//get the step number and title
-			var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
-			
-			var stepTitle = '';
-			
-			//we will not display number of students on step or completion percentage for sequences 
-			if(nodeType == 'sequence') {
-				//the node is an activity
-				var nodePrefix = 'Activity';
-				
-				//create the step title
-				stepTitle = nodePrefix + ' ' + stepNumberAndTitle;
-			} else {
-				//the node is a step
-				var nodePrefix = 'Step';
-				
-				//create the step title
-				stepTitle = nodePrefix + ' ' + stepNumberAndTitle + ' (' + nodeType + ')';
-			}
-			
-			//create the table that will contain the step title and the buttons
-			var gradeByStepHeaderTable = $('<table>');
-			gradeByStepHeaderTable.attr('id', 'gradeByStepHeaderTable');
-			gradeByStepHeaderTable.attr('width', '99%');
-			gradeByStepHeaderTable.css('position', 'fixed');
-			gradeByStepHeaderTable.css('top', '105px');
-			gradeByStepHeaderTable.css('left', '10px');
-			gradeByStepHeaderTable.css('background', 'yellow');
-			gradeByStepHeaderTable.css('z-index', '1');
-			gradeByStepHeaderTable.css('border-width', '2px');
-			gradeByStepHeaderTable.css('border-style', 'solid');
-			gradeByStepHeaderTable.css('border-color', 'black');
-			
-			//create the row that will contain the step title and the buttons
-			var gradeByStepHeaderTR = $('<tr>');
-			
-			//create the td that will contain the step title
-			var gradeByStepHeaderStepTitleTD = $('<td>');
-			
-			//create the link that will show and hide the step prompt
-			var showPromptLink = $('<a>');
-			showPromptLink.text('Show Prompt');
-			showPromptLink.attr('id', 'showPromptLink_' + nodeId);
-			showPromptLink.css('text-decoration', 'underline');
-			showPromptLink.css('color', 'blue');
-			showPromptLink.css('cursor', 'pointer');
-			showPromptLink.css('margin-left', '20px');
-			showPromptLink.click({thisView:this, nodeId:nodeId}, this.showPromptClicked);
-			
-			//get all the node ids for steps that have a grading view
-			var onlyGetNodesWithGradingView = true;
-			var nodeIds = this.getProject().getNodeIds(onlyGetNodesWithGradingView);
-			
-			//create the drop down
-			var stepSelect = $('<select>');
-			stepSelect.attr('id', 'stepDropDown');
-			
-			//loop through all the node ids
-			for(var x=0; x<nodeIds.length; x++) {
-				//get a node id
-				var tempNodeId = nodeIds[x];
-				
-				//get the node
-				var node = this.getProject().getNodeById(tempNodeId);
-				
-				var nodeType = '';
-				
-				if(node != null) {
-					//get the node type
-					nodeType = node.type;
-				}
-				
-				//get the step number and title
-				var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(tempNodeId);
-				
-				stepNumberAndTitle = 'Step ' + stepNumberAndTitle;
-				
-				if(nodeType != null) {
-					stepNumberAndTitle += ' (' + nodeType + ')';
-				}
-				
-				//create the option for the step
-				var stepOption = $('<option>');
-				stepOption.text(stepNumberAndTitle);
-				stepOption.val(tempNodeId);
-				
-				//add the option to the drop down
-				stepSelect.append(stepOption);
-			}
-			
-			//set the selected option
-			stepSelect.val(nodeId);
-			
-			//set the change event to display a different step
-			stepSelect.change({thisView:this}, this.stepDropDownChanged);
-			
-			//create the div to show the number of items to review
-			var numberOfItemsToReviewDiv = $('<div>');
-			numberOfItemsToReviewDiv.attr('id', 'numberOfItemsToReviewDiv_' + nodeId);
-			numberOfItemsToReviewDiv.css('display', 'inline');
-			numberOfItemsToReviewDiv.css('margin-left', '20px');
-			numberOfItemsToReviewDiv.text('Number of Items to Review: ');
-			
-			//create the span to display the number of items to review value
-			var numberOfItemsToReviewSpan = $('<span>');
-			numberOfItemsToReviewSpan.attr('id', 'numberOfItemsToReviewSpan_' + nodeId);
-			numberOfItemsToReviewSpan.text('Calculating...');
-
-			numberOfItemsToReviewDiv.append(numberOfItemsToReviewSpan);
-			
-			//add the step title and show prompt link
-			gradeByStepHeaderStepTitleTD.append(stepSelect);
-			gradeByStepHeaderStepTitleTD.append(showPromptLink);
-			gradeByStepHeaderStepTitleTD.append(numberOfItemsToReviewDiv);
-			
-			//create the row that will display the step prompt
-			var gradeByStepHeaderPromptTR = $('<tr>');
-			gradeByStepHeaderPromptTR.attr('id', 'stepPromptTR_' + nodeId);
-			
-			//get the step prompt
-			var prompt = this.getProject().getNodeById(nodeId).getPrompt();
-			
-			//create the cell that will display the step prompt
-			var gradeByStepHeaderPromptTD = $('<td>');
-			gradeByStepHeaderPromptTD.html(prompt);
-			
-			//add the cell to the row and hide it for now
-			gradeByStepHeaderPromptTR.append(gradeByStepHeaderPromptTD);
-			gradeByStepHeaderPromptTR.css('display', 'none');
-			
-			//create the refresh button
-			var refreshButton = $('<input>');
-			refreshButton.attr('id', 'refreshButton');
-			refreshButton.attr('type', 'button');
-			refreshButton.val('Check for New Work');
-			refreshButton.click({thisView:this, nodeId:nodeId}, this.stepRowClicked);
-			
-			//create the save button
-			var saveButton = $('<input>');
-			saveButton.attr('id', 'saveButton');
-			saveButton.attr('type', 'button');
-			saveButton.val('Save');
-			saveButton.attr('disabled', true);
-			
-			//get the previous and next node ids
-			var previousAndNextNodeIds = this.getProject().getPreviousAndNextNodeIds(nodeId);
-			
-			//create the previous step button
-			var previousNodeId = previousAndNextNodeIds.previousNodeId;
-			var previousStepButton = $('<input>');
-			previousStepButton.attr('id', 'previousStepButton');
-			previousStepButton.attr('type', 'button');
-			previousStepButton.val('Previous Step');
-			
-			if(previousNodeId == null) {
-				//there is no previous step so we will disable the button
-				previousStepButton.attr('disabled', true);
-			} else {
-				//there is a previous step so we will set the click event
-				previousStepButton.click({thisView:this, nodeId:previousNodeId}, this.stepRowClicked);				
-			}
-			
-			//create the next step button
-			var nextNodeId = previousAndNextNodeIds.nextNodeId;
-			var nextStepButton = $('<input>');
-			nextStepButton.attr('id', 'nextStepButton');
-			nextStepButton.attr('type', 'button');
-			nextStepButton.val('Next Step');
-			
-			if(nextNodeId == null) {
-				//there is no next step so we will disable the button
-				nextStepButton.attr('disabled', true);
-			} else {
-				//there is a next step so we will set the click event
-				nextStepButton.click({thisView:this, nodeId:nextNodeId}, this.stepRowClicked);				
-			}
-			
-			//clear any existing buttons in the upper right
-			this.clearDisplaySpecificButtonsDiv();
-			this.clearSaveButtonDiv();
-			this.clearNewWorkNotificationDiv();
-
-			//add the buttons
-			$('#displaySpecificButtonsDiv').append(previousStepButton);
-			$('#displaySpecificButtonsDiv').append(refreshButton);
-			$('#displaySpecificButtonsDiv').append(nextStepButton);
-			$('#saveButtonDiv').append(saveButton);
-			
-			//add the td to the row
-			gradeByStepHeaderTR.append(gradeByStepHeaderStepTitleTD);
-			
-			//add the header row to the table
-			gradeByStepHeaderTable.append(gradeByStepHeaderTR);
-			
-			//add the step prompt row
-			gradeByStepHeaderTable.append(gradeByStepHeaderPromptTR);
-			
-			//add the table to the div
-			$('#gradeByStepDisplay').append(gradeByStepHeaderTable);
-			
-			//create the table that will contain the student work
-			var gradeByStepDisplayTable = $('<table>').attr({id:'gradeByStepDisplayTable'});
-			gradeByStepDisplayTable.css('border', 'none');
-			gradeByStepDisplayTable.css('width', '100%');
-
-			//add the table to the student progress div
-			$('#gradeByStepDisplay').append(gradeByStepDisplayTable);
-			
-			//create a blank row for spacing
-			var blankTR = $('<tr>');
-			var emptyTD = $('<td>');
-			emptyTD.html('&nbsp');
-			emptyTD.css('border', 'none');
-			blankTR.append(emptyTD);
-			$('#gradeByStepDisplayTable').append(blankTR);
-			
-			//clear the number of items to review because we will count them again for this step
-			this.numberOfItemsToReview = 0;
-			
-			//get the workgroup ids in alphabetical order
-			var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIdsInAlphabeticalOrder();
-			
-			//loop through all the workgroup ids
-			for(var x=0; x<workgroupIds.length; x++) {
-				//get a workgroup id
-				var workgroupId = workgroupIds[x];
-				
-				//create the row for this workgroup
-				var gradeByStepDisplayTableRow = this.createGradeByStepDisplayTableRow(nodeId, workgroupId);
-				
-				//add the row to the table
-				$('#gradeByStepDisplayTable').append(gradeByStepDisplayTableRow);
-				
-				//get the period id
-				var periodId = this.userAndClassInfo.getClassmatePeriodIdByWorkgroupId(workgroupId);
-				
-				//create a blank row for spacing
-				var blankTR = $('<tr>');
-				blankTR.addClass('gradeByStepRow');
-				blankTR.addClass('gradeByStepRowPeriodId_' + periodId);
-				var emptyTD = $('<td>');
-				emptyTD.html('&nbsp');
-				emptyTD.css('border', 'none');
-				blankTR.append(emptyTD);
-				$('#gradeByStepDisplayTable').append(blankTR);
-				
-				if(this.classroomMonitorPeriodIdSelected != null && this.classroomMonitorPeriodIdSelected != 'all') {
-					//we are filtering for a period
-					
-					if(this.classroomMonitorPeriodIdSelected != periodId) {
-						//the period does not match the one that we want to show so we will hide this row
-						blankTR.hide();
-					}
-				}
-			}
-			
-			//get the id for the number of items to review span
-			var numberOfItemsToReviewSpanId = this.escapeIdForJquery('numberOfItemsToReviewSpan_' + nodeId);
-			
-			//set the number of items to review value
-			$('#' + numberOfItemsToReviewSpanId).text(this.numberOfItemsToReview);
+			// get the node type
+			var nodeType = node.type,
+				// get the work for the step
+				workForStep = this.model.getWorkByStep(nodeId),
+				// get the step number and title
+				stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId),
+				stepTitle = view.getI18NString('stepTerm') + ' ' + stepNumberAndTitle,
+				stepType = NodeFactory.nodeConstructors[nodeType].authoringToolName;
 		}
 	}
+	
+	//get the step prompt
+	var prompt = this.getProject().getNodeById(nodeId).getPrompt();
+	
+	// TODO: insert prompt in header
+	
+	//clear the number of items to review because we will count them again for this step
+	this.numberOfItemsToReview = 0;
+	
+	//get the workgroup ids in alphabetical order
+	var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIdsInAlphabeticalOrder(),
+		position = 0;
+	
+	// loop through all the workgroup ids
+	for(var x=0; x<workgroupIds.length; x++) {
+		// get a workgroup id
+		var workgroupId = workgroupIds[x],
+			// get the period id
+			periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId);
+		
+		// check if workgroup is in selected period
+		if(periodSelected === 'all' || periodSelected === periodName){
+			// add the student work revisions for the current workgroup to the dataset
+			view.insertNodeRevisions(nodeId, workgroupId, position, 'stepGrading');
+		}
+		++position;
+	}
+	this.gradeByStepTable.draw();
+	
+	// insert the step name into grading header
+	$('#gradeByStepName').text(stepTitle);
+	$('#gradeByStepType').text('(' + stepType + ')');
+	
+	// set the number of items to review value
+	$('#gradeByStepItemsToReview').text(view.getI18NStringWithParams('classroomMonitor_grading_itemsToReview',[this.numberOfItemsToReview]));
+	this.numberOfItemsToReview > 0 ? $('#gradeByStepItemsToReview').fadeIn() : $('#gradeByStepItemsToReview').fadeOut();
+	
+	// hide loading message
+	$('#loading').hide();
 	
 	//make the grade by step display visible
 	this.showGradeByStepDisplay();
@@ -4012,6 +4662,14 @@ View.prototype.getStudentStatuses = function() {
 	
 	//get the run id
 	var runId = this.getConfig().getConfigParam('runId');
+	
+	//get the project id and set preview link
+	var projectId = this.getConfig().getConfigParam('projectId'),
+		baseUrl = this.getConfig().getConfigParam('wiseBaseURL'),
+		previewUrl = baseUrl + '/previewproject.html?projectId=' + projectId;
+	$('#openProject').attr('href', previewUrl);
+	
+	$('#loading').css('z-index', '109');
 	
 	//create the params for the request
 	var studentStatusParams = {
@@ -4308,7 +4966,7 @@ View.prototype.studentsOnlineListReceived = function(data) {
 	 * show the student progress display as the default screen to show
 	 * when the classroom monitor initially loads
 	 */
-	this.showStudentProgressDisplay();
+	//this.showStudentProgressDisplay();
 	
 	if(studentsOnlineList != null) {
 		//loop through all the students online
@@ -4338,24 +4996,24 @@ View.prototype.studentsOnlineListReceived = function(data) {
  * @param data the student status object
  */
 View.prototype.studentStatusReceived = function(data) {
-	var runId = data.runId;
-	var periodId = data.periodId;
-	var workgroupId = data.workgroupId;
-	var currentNodeId = data.currentNodeId;
-	var previousNodeVisit = data.previousNodeVisit;
-	var nodeStatuses = data.nodeStatuses;
+	var runId = data.runId,
+		periodId = data.periodId,
+		workgroupId = data.workgroupId,
+		currentNodeId = data.currentNodeId,
+		previousNodeVisit = data.previousNodeVisit,
+		nodeStatuses = data.nodeStatuses,
 	
-	//we will reset the time spent value to 0 since the student has just moved to a new step
-	var timeSpent = '0:00';
-
-	//update our local copy of the student status object for the workgroup id
-	var studentStatusObject = this.updateStudentStatusObject(data);
+		//we will reset the time spent value to 0 since the student has just moved to a new step
+		timeSpent = '0:00',
+	
+		//update our local copy of the student status object for the workgroup id
+		studentStatusObject = this.updateStudentStatusObject(data);
 	
 	//update the student progress row for the workgroup id
 	this.updateStudentProgress(runId, periodId, workgroupId, currentNodeId, previousNodeVisit, nodeStatuses, timeSpent);
 	
-	//update the step progress for all steps
-	this.updateAllStepProgress();
+	//update the step progress for all steps and periods
+	this.updateStepProgress();
 	
 	//check if we need to notify the teacher that there's new work for the screen they are viewing
 	this.checkIfNeedToDisplayNewWorkNotification(data);
@@ -4368,24 +5026,55 @@ View.prototype.studentStatusReceived = function(data) {
  */
 View.prototype.checkIfNeedToDisplayNewWorkNotification = function(studentStatus) {
 	//get the workgroup id
-	var workgroupId = studentStatus.workgroupId;
-	
-	//get the previous node visit
-	var previousNodeVisit = studentStatus.previousNodeVisit;
+	var workgroupId = studentStatus.workgroupId,
+		// get the previous node visit
+		previousNodeVisit = studentStatus.previousNodeVisit,
+		view = this,
+		$refreshButton = $('#newWork');
 	
 	if(previousNodeVisit != null) {
 		//check if the student submitted any new work
 		if(previousNodeVisit.nodeStates.length > 0) {
-			//get the node id the work is for
-			var nodeId = previousNodeVisit.nodeId;
+			// get the node id the work is for
+			var nodeId = previousNodeVisit.nodeId,
+				// get the period id
+				periodId = studentStatus.periodId,
+				periodName = '';
+			
+			//create the local run status object if necessary
+			if(this.runStatus == null) {
+				this.createRunStatus();
+			}
+			
+			//get the local run status object
+			var runStatus = this.runStatus,
+				// get all the periods
+				periods = runStatus.periods,
+				i = periods.length;
+			while(i--){
+				if(periods[i].periodId === periodId){
+					periodName = periods[i].periodName;
+					break;
+				}
+			}
 
 			//check if the workgroup id or node id matches the screen the teacher is viewing
-			if(this.workgroupIdClicked != null && this.workgroupIdClicked == workgroupId) {
-				//the teacher is viewing the same workgroup id
-				$('#newWorkNotificationDiv').text('New work is available, click "Check for New Work" to view');
-			} else if(this.nodeIdClicked != null && this.nodeIdClicked == nodeId) {
-				//the teacher is viewing the same node id
-				$('#newWorkNotificationDiv').text('New work is available, click "Check for New Work" to view');
+			if(this.classroomMonitorPeriodSelected === 'all' || periodName === this.classroomMonitorPeriodSelected){
+				if(this.classroomMonitorWorkgroupIdSelected !== null && this.classroomMonitorWorkgroupIdSelected === workgroupId) {
+					$refreshButton.show();
+					// reload grade by student display on refresh button press
+					$refreshButton.off('click').on('click', function(){
+						view.studentRowClickedHandler(view.classroomMonitorWorkgroupIdSelected);
+						$(this).fadeOut();
+					});
+				} else if(this.classroomMonitorStepIdSelected !== null && this.classroomMonitorStepIdSelected === nodeId) {
+					$refreshButton.show();
+					// reload grade by step display on refresh button press
+					$refreshButton.off('click').on('click', function(){
+						view.stepRowClickedHandler(view.classroomMonitorStepIdSelected);
+						$(this).fadeOut();
+					});
+				}
 			}
 		}
 	}
@@ -4456,8 +5145,8 @@ View.prototype.updateStudentStatusObject = function(studentStatusObject) {
 View.prototype.insertTimestamp = function(studentStatusObject) {
 	if(studentStatusObject != null) {
 		//get the current timestamp
-		var date = new Date();
-		var timestamp = date.getTime();
+		var date = new Date(),
+			timestamp = date.getTime();
 		
 		//set the timestamp into the object
 		studentStatusObject.timestamp = timestamp;
@@ -4478,21 +5167,20 @@ View.prototype.updateStudentProgress = function(runId, periodId, workgroupId, cu
 	//set the student to be online
 	this.updateStudentOnline(workgroupId, true);
 	
-	//set the current step
+	//get and update the current step
 	var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(currentNodeId);
-	$('#studentProgressTableDataCurrentStep_' + workgroupId).text(stepNumberAndTitle);
-	
-	//set the time spent on the current step
-	$('#studentProgressTableDataTimeSpent_' + workgroupId).html(timeSpent);
+	this.updateStudentCurrentStep(workgroupId, stepNumberAndTitle);
+	this.updateStudentProgressTimeSpent(workgroupId);
 
-	//set the student completion percentage
+	//get and update the student completion percentage
 	var completionPercentage = this.calculateStudentCompletionForWorkgroupId(workgroupId);
-
-	//update the percentage completion bar and number for a student
 	this.updateStudentCompletionPercentage(workgroupId, completionPercentage);
 	
 	//update the idea basket count
 	this.updateStudentIdeaBasketCount(workgroupId);
+	
+	// refresh DataTable
+	this.studentProgressTable.draw();
 };
 
 /**
@@ -4527,24 +5215,42 @@ View.prototype.updateStudentIdeaBasketCount = function(workgroupId) {
  */
 View.prototype.updateStudentCompletionPercentage = function(workgroupId, completionPercentage) {
 	if(workgroupId != null && completionPercentage != null) {
-		//update the percentage completion bar
-		$('#studentProgressPercentageBarHR_' + workgroupId).css('display', '');
-		$('#studentProgressPercentageBarHR_' + workgroupId).attr('width', completionPercentage + '%');
+		//get the project completion for the student
+		var completionHtml = '<div class="progress" data-sort="' + completionPercentage + '">\
+				<div class="progress-bar"  role="progressbar" aria-valuenow="' + completionPercentage + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + completionPercentage + '%">\
+				<span class="sr-only">' + completionPercentage + '%</span></div></div>';
 		
-		if(completionPercentage > 0) {
-			//show the percentage HR
-			$('#studentProgressPercentageBarHR_' + workgroupId).css('display', '');
-		} else {
-			/*
-			 * the percentage is 0 so we will not display the HR. we need to hide
-			 * the HR because even if the width is set to 0% it will still have a
-			 * visible width which is misleading.
-			 */
-			$('#studentProgressPercentageBarHR_' + workgroupId).css('display', 'none');
-		}
-		
-		//update the percentage number value
-		$('#studentProgressPercentageNumberDiv_' + workgroupId).text(completionPercentage + '%');
+		// get DataTable, row, row data for workgroup
+		var table = this.studentProgressTable,
+			row = $('#studentProgress_' + workgroupId),
+			data = table.row(row).data();
+		// update time spent
+		data.complete = completionPercentage;
+		data.complete_html = completionHtml;
+		// update DataTable
+		table
+	    	.row( row )
+	    	.data( data );
+	}
+};
+
+/**
+ * Update the current step workgroup is on
+ * @param workgroupId the workgroup id
+ * @param stepNumberAndTitle the step number and title
+ */
+View.prototype.updateStudentCurrentStep = function(workgroupId, stepNumberAndTitle) {
+	if(workgroupId != null && this.utils.isNonWSString(stepNumberAndTitle)) {
+		// get DataTable, row, row data for workgroup
+		var table = this.studentProgressTable,
+			row = $('#studentProgress_' + workgroupId),
+			data = table.row(row).data();
+		// update time spent
+		data.current_step = stepNumberAndTitle;
+		// update DataTable
+		table
+	    	.row( row )
+	    	.data( data );
 	}
 };
 
@@ -4577,7 +5283,10 @@ View.prototype.updateAllStudentProgressTimeSpent = function() {
 			//update the student progress time spent value if the student is online
 			this.updateStudentProgressTimeSpent(tempWorkgroupId);
 		}
-	}	
+	}
+	
+	// refresh DataTable
+	this.studentProgressTable.draw();
 };
 
 /**
@@ -4587,6 +5296,8 @@ View.prototype.updateAllStudentProgressTimeSpent = function() {
 View.prototype.updateStudentProgressTimeSpent = function(workgroupId) {
 	
 	if(workgroupId != null) {
+		var timeSpentDisplay = '';
+		
 		//check if the student is online
 		if(this.isStudentOnline(workgroupId)) {
 			//the student is online
@@ -4652,28 +5363,36 @@ View.prototype.updateStudentProgressTimeSpent = function(workgroupId) {
 					 */
 					timeSpentSeconds += postRetrievalTimeDifference;
 					
-					//get the number of minutes
-					var minutes = Math.floor(timeSpentSeconds / 60);
-					
-					//get the number of seconds
-					var seconds = timeSpentSeconds % 60;
+					//get the number of hours, minutes, and seconds
+					var seconds = timeSpentSeconds % 60,
+						minutes = Math.floor(timeSpentSeconds / 60) % 60,
+						hours = Math.floor(minutes / 60);
 
-					//prepent a '0' to the seconds if necessary
-					if(seconds < 10) {
-						seconds = '0' + seconds;
+					//prepent '0's if necessary
+					if(seconds < 10) { seconds = '0' + seconds }
+					if (minutes < 10) { minutes = '0' + minutes}
+					if(hours > 0) {
+						if (hours < 10) { hours = '0' + hours}
+					} else {
+						hours  = '';
 					}
 				
 					//create the time e.g. '1:32'
-					var timeSpentDisplay = minutes + ':' + seconds;
-					
-					//update the time spent in the UI for the workgroup
-					$('#studentProgressTableDataTimeSpent_' + workgroupId).text(timeSpentDisplay);
+					timeSpentDisplay = '<span class="fa fa-clock-o"></span> ' + minutes + ':' + seconds;
 				}
 			}
-		} else {
-			//the student is not online so we will clear the cell 
-			$('#studentProgressTableDataTimeSpent_' + workgroupId).html('&nbsp');
 		}
+		
+		// get DataTable, row, row data for workgroup
+		var table = this.studentProgressTable,
+			row = $('#studentProgress_' + workgroupId),
+			data = table.row(row).data();
+		// update time spent
+		data.time_spent = timeSpentDisplay;
+		// update DataTable
+		table
+	    	.row( row )
+	    	.data( data );
 	}
 };
 
@@ -4681,50 +5400,64 @@ View.prototype.updateStudentProgressTimeSpent = function(workgroupId) {
  * Update all the step progress rows
  */
 View.prototype.updateAllStepProgress = function() {
+	
 	//get the period that is currently selected
-	var periodId = this.classroomMonitorPeriodIdSelected;
+	//var periodId = this.classroomMonitorPeriodIdSelected;
 	
 	//recalculate the step progress for the period
-	this.showPeriodInStepProgressDisplay(periodId);
+	//this.showPeriodInStepProgressDisplay(periodId);
 };
 
 /**
- * Update the step progress row for a specific step
- * @param nodeId the node id
- * @param numberOfStudentsOnStep the new number of students on the step
- * @param completionPercentage the new completion percentage value. this
- * will be an integer.
+ * Updates the step progress displays
+ * @param nodes Array of node ids to update (optional)
+ * @param periods Array of node ids to update (optional)
  */
-View.prototype.updateStepProgress = function(nodeId, numberOfStudentsOnStep, completionPercentage, isStudentOnStep) {
-
-	//get the id of the number of students on step element
-	var numberOfStudentsOnStepId = this.escapeIdForJquery('stepProgressTableDataNumberOfStudentsOnStep_' + nodeId);
-
-	if(numberOfStudentsOnStep == null) {
-		//set this to '' if it is not provided, sequences will not provide this parameter
-		numberOfStudentsOnStep = '';
+View.prototype.updateStepProgress = function(nodes, periods){
+	var view = this,
+		// if no ids were passed in, update all nodes
+		nodeIds = (nodes && nodes.length) ? nodes : this.getProject().getNodeIds(),
+		i = nodeIds.length,
+		table = this.stepProgressTable;
+	
+	while(i--){
+		var nodeId = nodeIds[i],
+			rows = $('.stepProgress_' + view.escapeIdForJquery(nodeId));
+		rows.each(function(){
+			var row = this,
+				data = table.row(row).data(),
+				periodId = data.period_id;
+			
+			if(!periods || !periods.length || periods.indexOf(periodId) > -1){
+				// update students on step
+				//get the number of students on this step in this period
+				var studentsOnStep = view.getStudentsOnStep(nodeId, periodId),
+					numberOfStudentsOnStep = studentsOnStep.total,
+					studentsOnStepHtml = view.getStudentsOnStepHtml(numberOfStudentsOnStep, studentsOnStep.workgroups);
+				data.students_on_step  = studentsOnStepHtml;
+				if(numberOfStudentsOnStep > 0){
+					$(row).removeClass('offline').addClass('online');
+					data.DT_RowClass = $(row).attr('class');
+				} else {
+					$(row).removeClass('online').addClass('offline');
+					data.DT_RowClass = $(row).attr('class');
+				}
+				
+				// update step completion
+				var complete = view.calculateStepCompletionForNodeId(nodeId, periodId);
+				data.complete = complete;
+				data.complete_html = view.getStepCompletionHtml(complete);
+				
+				// update DataTable
+				table
+			    	.row( row )
+			    	.data( data );
+			}
+		});
 	}
 	
-	//set the new number of students on step value
-	$('#' + numberOfStudentsOnStepId).text(numberOfStudentsOnStep);
-	
-	//update the completion percentage bar and number
-	this.updateStepCompletionPercentage(nodeId, completionPercentage);
-	
-	//get the id of the step progress row
-	var stepProgressTableRowId = this.escapeIdForJquery('stepProgressTableRow_' + nodeId);
-	
-	//if there is a student online and on the step, we will highlight the row green
-	if(isStudentOnStep) {
-		//there is a student on the step
-		$('#' + stepProgressTableRowId).css('background', 'limegreen');
-	} else {
-		//there are no students on the step
-		$('#' + stepProgressTableRowId).css('background', '');
-	}
-	
-	//update the text for the step that displays which students are on the step
-	this.updateStudentsOnStepText(nodeId);
+	// redraw DataTable
+	table.draw();
 };
 
 /**
@@ -5056,24 +5789,28 @@ View.prototype.getNumberOfStudentsInPeriodThatCompletedStep = function(periodId,
 };
 
 /**
- * Get the number of students on the step
+ * Get the number of (online) workgroups on a step
+ * 
  * @param nodeId the node id of the step
  * @param period id the period id. if this is null or 'all' we will get all periods.
- * @return the number of students on the step
+ * @return Object with number of students on step (and online) and string array (of names in workgroups)
+ * 
+ * TODO: re-enable showing offline workgroups as well?
  */
-View.prototype.getNumberOfStudentsOnStep = function(nodeId, periodId) {
-	var numberOfStudentsOnStep = 0;
+View.prototype.getStudentsOnStep = function(nodeId, periodId) {
+	var numberOfStudentsOnStep = 0,
+		workgroups = [];
 	
 	//get the student statuses
 	var studentStatuses = this.studentStatuses;
 	
-	if(studentStatuses != null) {
+	if(studentStatuses !== null) {
 		//loop through all the student statuses
 		for(var x=0; x<studentStatuses.length; x++) {
 			//get a student status
 			var studentStatus = studentStatuses[x];
 			
-			if(studentStatus != null) {
+			if(studentStatus != null  && this.isStudentOnline(studentStatus.workgroupId)) {
 				//get the period id the student is in
 				var tempPeriodId = studentStatus.periodId;
 				
@@ -5081,20 +5818,31 @@ View.prototype.getNumberOfStudentsOnStep = function(nodeId, periodId) {
 				var currentNodeId = studentStatus.currentNodeId;
 				
 				//check if the student is in the period we want
-				if(periodId == null || periodId == 'all' || periodId == tempPeriodId) {
+				if(periodId === null || periodId === 'all' || periodId == tempPeriodId) {
 					//we want all periods or the student is in the period we want
 					
 					//check if the node id matches the one we want
 					if(nodeId == currentNodeId) {
 						//the node id matches so the student is on the step
 						numberOfStudentsOnStep++;
+						
+						//get the student names
+						var studentNames = view.getUserAndClassInfo().getStudentNamesByWorkgroupId(studentStatus.workgroupId);
+						
+						if(studentNames !== null) {
+							//add the student names to the workgroups array
+							workgroups.push(studentNames.join(', '));						
+						}
 					}
 				}
 			}
 		}
 	}
 	
-	return numberOfStudentsOnStep;
+	return {
+		'total': numberOfStudentsOnStep,
+		'workgroups': workgroups
+	};
 };
 
 /**
@@ -5136,9 +5884,6 @@ View.prototype.studentDisconnected = function(data) {
 		
 		//update the UI to show the student is offline
 		this.updateStudentOnline(workgroupId, false);
-		
-		//clear the time spent cell for the student
-		this.updateStudentProgressTimeSpent(workgroupId);
 	}
 };
 
@@ -5195,43 +5940,30 @@ View.prototype.removeStudentOnline = function(workgroupId) {
  */
 View.prototype.updateStudentOnline = function(workgroupId, isOnline) {
 	if(workgroupId != null) {
-		if(isOnline) {
-			//the student is online so we will make the row green
-			$('#studentProgressTableRow_' + workgroupId).css('background', 'limegreen');
-			
-			//set the green icon in the online column
-			$('#studentProgressTableDataOnline_' + workgroupId).html(this.getIsOnlineHTML());
-			
-			//check if the isOnlineDiv is currently being displayed
-			if($('#isOnlineDiv_' + workgroupId).length != 0){
-				$('#isOnlineDiv_' + workgroupId).html(this.getIsOnlineHTML());
-			}
-		} else {
-			//the student is not online so we will remove the color from the row
-			$('#studentProgressTableRow_' + workgroupId).css('background', '');
-			
-			//set the red icon in the online column
-			$('#studentProgressTableDataOnline_' + workgroupId).html(this.getIsOfflineHTML());
-			
-			//check if the isOnlineDiv is currently being displayed
-			if($('#isOnlineDiv_' + workgroupId).length != 0){
-				$('#isOnlineDiv_' + workgroupId).html(this.getIsOfflineHTML());
-			}
-		}
+		// get DataTable, row, row data for workgroup
+		var table = this.studentProgressTable,
+			row = $('#studentProgress_' + workgroupId),
+			data = table.row(row).data(),
+			rowClass = isOnline ? 'online' : 'offline',
+			periodId = data.period_id;
 		
-		//get the student status for this student
-		var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
+		data.online = isOnline;
+		data.online_html = this.getStudentOnlineHtml(isOnline);
+		data.DT_RowClass = rowClass;
 		
-		if(studentStatus != null) {
-			//get the step the student is on
-			var nodeId = studentStatus.currentNodeId;
-
-			//update the step row with any necessary highlighting
-			this.updateStepProgressHighlight(nodeId);
-			
-			//update the students on step text
-			this.updateStudentsOnStepText(nodeId);
-		}
+		// update DataTable
+		table
+		    .row( row )
+		    .data( data );
+		table.draw();
+		
+		// update number of online workgroups display
+		var $online = $('#studentsOnline');
+		$online.text(this.getI18NStringWithParams('classroomMonitor_workgroupsOnline', [this.studentsOnline.length]));
+		this.studentsOnline.length ? $online.addClass('label-success') : $online.removeClass('label-success');
+		
+		// update step progress display
+		this.updateStepProgress(null,[periodId]);
 	}
 };
 
@@ -5430,8 +6162,25 @@ View.prototype.isPeriodPaused = function(periodId) {
 };
 
 /**
- * We have received a pause screen websocket message from another teacher
- * so we will update our local run status object as well as our UI to
+ * Updates the pause screens status
+ */
+View.prototype.updatePauseScreens = function(){
+	var msg = $('#pauseMsg').val(),
+		selected = $('#pauseSelectPeriods').val(),
+		numSelected = selected ? selected.length : 0;
+	$('#pauseSelectPeriods > option').each(function(){
+		var periodId = $(this).val().replace(/^pause_/,''),
+			pauseMode = $(this).prop('selected');
+		if(periodId !== 'all'){
+			// pause or un-pause screens in the period
+			pauseMode ? view.pauseScreens(periodId, msg) : view.unPauseScreens(periodId);
+		}
+	});
+};
+
+/**
+ * We have received a pause screen websocket message so we will 
+ * update our local run status object as well as our UI to
  * reflect the period becoming paused or not
  */
 View.prototype.pauseScreenReceived = function(data) {
@@ -5463,42 +6212,389 @@ View.prototype.pauseScreenReceived = function(data) {
 			this.updatePausedRunStatusValue(periodId, isPaused);
 			
 			if(isPaused) {
-				//highlight the paused button
-				this.highlightPausedButton(periodId);
+				//set the period as paused
+				$('#pauseSelectPeriods').multiselect('select', 'pause_' + periodId);
+				$('#pauseMsg').val(data.pauseMessage);
 			} else {
-				//highlight the un-paused button
-				this.highlightUnPausedButton(periodId);
+				//set the period as un-paused
+				$('#pauseSelectPeriods').multiselect('deselect', 'pause_' + periodId);
+			}
+			
+			// refresh pause screens display
+			$('#pauseSelectPeriods').multiselect('refresh');
+			if($('#pauseSelectPeriods').val()){
+				$('#pauseControls').removeClass('btn-default').addClass('btn-danger');
+				//$('#pauseState').text(view.getI18NString('classroomMonitor_pause_on'));
+			} else {
+				$('#pauseControls').removeClass('btn-danger').addClass('btn-default');
+				//$('#pauseState').text(view.getI18NString('classroomMonitor_pause_off'));
 			}
 		}
 	}
 };
 
 /**
- * Create the student work display
+ * Create the grade by student display
  */
 View.prototype.createGradeByStudentDisplay = function() {
-	//create the student work display div
-	var gradeByStudentDisplay = $('<div></div>').attr({id:'gradeByStudentDisplay'});
+	var view = this,
+		table = $('#gradeByStudentTable');
 	
-	//add the student work display div to the main div
-	$('#classroomMonitorMainDiv').append(gradeByStudentDisplay);
+	// initialize dataTable
+	table.dataTable( {
+	    'paging': false,
+	    'dom': '<"dataTables_top"lf><"clearfix">rt<"dataTables_bottom"ip><"clear">',
+	    'language': {
+	    	'search': '',
+	    	'info': view.getI18NStringWithParams('classroomMonitor_tableInfoText', ['_TOTAL_']),
+	    	'infoFiltered': ''
+	    },
+	    'order': [ 8, 'asc' ],
+	    'columnDefs': [
+			{ 'orderSequence': [ 'desc' ], 'targets': [ 4, 7 ] },
+			{ 'orderData': [ 0 ], 'targets': [ 8 ] },
+			{ 'orderData': [ 7 ], 'targets': [ 9 ] },
+			{ 'searchable': false, 'targets': [ 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 12 ] },
+			{ 'visible': false, 'targets': [ 0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 12 ] }
+		],
+		'footerCallback': function ( row, data, start, end, display ) {
+			// show total student score
+			/*var api = this.api(),
+	        	pageTotal = 0,
 	
-	//hide the student work display div, we will show it later when necessary
-	gradeByStudentDisplay.hide();
+		        // Get total completion over current page
+	        	data = api
+		        	.column( 5, { page: 'current'} )
+		        	.data();
+	        
+	        if(data.length){
+	        	pageTotal = data.reduce( function (pVal, cVal) {
+	        		return pVal*1 + cVal*1;
+	        	} )
+	        }
+	        var numVals = api.column( 5, { page: 'current'} ).data().length;
+	        pageTotal = numVals ? pageTotal/numVals : 0;
+	        
+	        // Update footer
+	        $( api.column( 6 ).footer() ).html(
+	        	'<div class="progress">\
+				<div class="progress-bar"  role="progressbar" aria-valuenow="' + pageTotal + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + pageTotal + '%">\
+				<span class="sr-only">' + pageTotal + '% Complete</span></div></div>'
+	        );*/
+	    },
+	    'initComplete': function( settings, json ) {
+	    	$('.dataTables_filter input[type="search"]', $('#gradeByStudent')).attr('placeholder', view.getI18NString('classroomMonitor_grading_search'));
+	    },
+	    'drawCallback': function( settings ) {
+	    	// add headers for step groupings
+	    	var api = this.api(),
+	    		rows = api.rows().nodes(),
+	    		last = null;
+ 
+            api.column(2).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                	var nodeId = api.cell(i, 1).data();
+                    $(rows).eq( i ).before(
+                    	'<tr class="group-spacer"><td colspan="14"></td></tr>\
+                        <tr class="group" data-nodetitle="' + group + '"><td colspan="14"><a href="javascript:void(0);" data-nodeid="' + nodeId + '">'+group+'</a></td></tr>'
+                    );
+                    last = group;
+                }
+            } );
+            
+            var $headers = $('.group', table),
+            	i = 1000;
+            
+            $headers.each(function(){
+            	$('a', $(this)).off('click').on('click', function(){
+            		view.stepRowClickedHandler($(this).data('nodeid'));
+            	});
+            	
+            	var total = 0,
+            		nodeTitle = $(this).data('nodetitle'),
+            		$header = $(this);
+            	$header.data('zindex', i);
+            	api.column(2).data().each( function (val, i) {
+            		if (val === nodeTitle) { ++total; }
+            	});
+            	
+            	$('[data-stepname="' + nodeTitle + '"]', table).each(function(){
+    				if($(this).hasClass('new')){
+    					$header.addClass('new');
+    					return false;
+    				}
+    			});
+            	
+            	if(total > 1){
+            		var $toggleLink = $('<a class="toggle-revisions pull-right label">' + view.getI18NStringWithParams('classroomMonitor_grading_revisionsCount', [total]) + ' <span class="fa fa-plus-square-o"></span></a>');
+            		$('td', $(this)).append($toggleLink);
+            		$toggleLink.off('click').on('click', function(){
+            			var show = true;
+	        			if($(this).hasClass('visible')){
+	        				$(this).removeClass('visible');
+	        				$('.fa', $(this)).addClass('fa-plus-square-o');
+	        				$('.fa', $(this)).removeClass('fa-minus-square-o');
+	        				show = false;
+	        			} else {
+	        				$(this).addClass('visible');
+	        				$('.fa', $(this)).removeClass('fa-plus-square-o');
+	        				$('.fa', $(this)).addClass('fa-minus-square-o');
+	        			}
+	        			var $revisions = $('.revision[data-stepname="' + nodeTitle + '"]', table);
+	        			show ? $revisions.show() : $revisions.hide();
+	        			
+	        			if(show){
+		        			var top = $($revisions[0]).offset().top - 125;
+		        			$('body,html').animate({scrollTop: top}, '500');
+	        			}
+            		});
+            	}
+            	++i;
+            });
+            
+            // disable all input elements for non-gradable rows
+            //$('.revision, .no-work', table).find('.score, .comment').prop('disabled', true);
+	    	
+	    	view.redrawFixedHeaders(true);
+	    	//view.bsPopover($('.bs-popover', table), {trigger: 'hover click focus', html: true, placement: 'right auto'});
+	    	//view.bsTooltip($('.workgroups-online', table), { html: true, placement: 'left' });
+	    }
+	} );
+	
+	table.dataTable().fnFilterOnReturnGrading();
+	
+	this.fixedHeaders.push(new $.fn.dataTable.FixedHeader( table.dataTable() , {
+	    'offsetTop': 90
+	}));
+	view.redrawFixedHeaders();
+	
+	// create view object for future api access
+	this.gradeByStudentTable = table.DataTable();
+	
+	// add period filter and header text
+	var $wrapper = $('#gradeByStudentTable_wrapper');
+	this.addSectionHeader(table, $wrapper, view.getI18NString('classroomMonitor_gradeByStudent_title'), { 'view': 'studentGrading' });
+	
+	// add grade by student sub-header
+	$('.dataTables_top', $wrapper).append($('<div class="clearfix">'));
+	
+	// add workgroup details hedaer
+	$workgroupHeader = $('<div class="datatables-subheader">');
+	$('.dataTables_top', $wrapper).append($workgroupHeader);
+	$workgroupInfo = $('<div class="pull-left workgroup-info">');
+	$workgroupHeader.append($workgroupInfo);
+	
+	// add workgroup names holder
+	$workgroupInfo.append('<span id="gradeByStudentNames" class="workgroup-names"></span> <span id="gradeByStudentWorkgroupId" class="small"></span>');
+	// add items to review display
+	$workgroupInfo.append('<span id="gradeByStudentItemsToReview" class="review-items label label-success"></span>');
+	
+	$displayTools = $('<div class="pull-right">');
+	// add display options multiselect
+	var $displayOptions = $('<select id="gradeByStudentOptions" multiple="multiple">');
+	$displayOptions.append('<option name="gradeByStudentOptions" value="newOnly">' + view.getI18NString('classroomMonitor_newItemsOnly') + '</option>');
+	$displayOptions.append('<option name="gradeByStudentOptions" value="flagOnly">' + view.getI18NString('classroomMonitor_grading_flagOnly') + '</option>');
+	$displayOptions.append('<option name="gradeByStudentOptions" value="hidePersonal">' + view.getI18NString('classroomMonitor_hidePersonalInfo') + '</option>');
+	
+	$workgroupHeader.append($displayTools);
+	$displayTools.append('<label for="gradeByStudentOptions">' + view.getI18NString('classroomMonitor_grading_options_label') + '</label> ');
+	$displayTools.append($displayOptions);
+	
+	$displayOptions.multiselect({
+		buttonText: view.multiselectButtonText,
+		dropRight: true,
+		nonSelectedText: view.getI18NString('classroomMonitor_grading_options_select'),
+		buttonClass: 'btn btn-default btn-sm',
+		numberDisplayed: 1,
+		onChange: function(){
+			
+		}
+	});
+	
+	$('.dataTables_top', $wrapper).append($('<div class="clearfix">'));
 }
 
 /**
  * Create the step work display
  */
 View.prototype.createGradeByStepDisplay = function() {
-	//create the step work display div
-	var gradeByStepDisplay = $('<div></div>').attr({id:'gradeByStepDisplay'});
+	var view = this,
+		table = $('#gradeByStepTable');
 	
-	//add the step work display div to the main div
-	$('#classroomMonitorMainDiv').append(gradeByStepDisplay);
+	// initialize dataTable
+	table.dataTable( {
+	    'paging': false,
+	    'dom': '<"dataTables_top"lf><"clearfix">rt<"dataTables_bottom"ip><"clear">',
+	    'language': {
+	    	'search': '',
+	    	'info': view.getI18NStringWithParams('classroomMonitor_tableInfoText', ['_TOTAL_']),
+	    	'infoFiltered': ''
+	    },
+	    'order': [ 8, 'asc' ],
+	    'columnDefs': [
+			{ 'orderSequence': [ 'desc' ], 'targets': [ 4, 7 ] },
+			{ 'orderData': [ 0 ], 'targets': [ 8 ] },
+			{ 'orderData': [ 7 ], 'targets': [ 9 ] },
+			{ 'searchable': false, 'targets': [ 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 12 ] },
+			{ 'visible': false, 'targets': [ 0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 12 ] }
+		],
+		'footerCallback': function ( row, data, start, end, display ) {
+			// show total step score
+			/*var api = this.api(),
+	        	pageTotal = 0,
 	
-	//hide the step work display div, we will show it later when necessary
-	gradeByStepDisplay.hide();
+		        // Get total completion over current page
+	        	data = api
+		        	.column( 5, { page: 'current'} )
+		        	.data();
+	        
+	        if(data.length){
+	        	pageTotal = data.reduce( function (pVal, cVal) {
+	        		return pVal*1 + cVal*1;
+	        	} )
+	        }
+	        var numVals = api.column( 5, { page: 'current'} ).data().length;
+	        pageTotal = numVals ? pageTotal/numVals : 0;
+	        
+	        // Update footer
+	        $( api.column( 6 ).footer() ).html(
+	        	'<div class="progress">\
+				<div class="progress-bar"  role="progressbar" aria-valuenow="' + pageTotal + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + pageTotal + '%">\
+				<span class="sr-only">' + pageTotal + '% Complete</span></div></div>'
+	        );*/
+	    },
+	    'initComplete': function( settings, json ) {
+	    	$('.dataTables_filter input[type="search"]', $('#gradeByStep')).attr('placeholder', view.getI18NString('classroomMonitor_grading_search'));
+	    },
+	    'drawCallback': function( settings ) {
+	    	// add headers for step groupings
+	    	var api = this.api(),
+	    		rows = api.rows().nodes(),
+	    		last = null;
+	
+	        api.column(2).data().each( function ( group, i ) {
+	            if ( last !== group ) {
+	            	var workgroupId = api.cell(i, 1).data();
+	                $(rows).eq( i ).before(
+	                	'<tr class="group-spacer"><td colspan="14"></td></tr>\
+	                    <tr class="group" data-workgroup="' + group + '"><td colspan="14"><a href="javascript:void(0);" data-workgroupid="' + workgroupId + '">'+group+'</a></td></tr>'
+	                );
+	                last = group;
+	            }
+	        } );
+	        
+	        var $headers = $('.group', table),
+	        	i = 1000;
+	        
+	        $headers.each(function(){
+	        	$('a', $(this)).off('click').on('click', function(){
+            		view.studentRowClickedHandler($(this).data('workgroupid'));
+            	});
+	        	
+	        	var total = 0,
+	        		workgroup = $(this).data('workgroup'),
+	        		$header = $(this);
+	        	$header.data('zindex', i);
+	        	api.column(2).data().each( function (val, i) {
+	        		if (val === workgroup) { ++total; }
+	        	});
+	        	
+	        	$('[data-workgroup="' + workgroup + '"]', table).each(function(){
+					if($(this).hasClass('new')){
+						$header.addClass('new');
+						return false;
+					}
+				});
+	        	
+	        	if(total > 1){
+	        		var $toggleLink = $('<a class="toggle-revisions pull-right label">' + view.getI18NStringWithParams('classroomMonitor_grading_revisionsCount', [total]) + ' <span class="fa fa-plus-square-o"></span></a>');
+	        		$('td', $(this)).append($toggleLink);
+	        		$toggleLink.off('click').on('click', function(){
+	        			var show = true;
+	        			if($(this).hasClass('visible')){
+	        				$(this).removeClass('visible');
+	        				$('.fa', $(this)).addClass('fa-plus-square-o');
+	        				$('.fa', $(this)).removeClass('fa-minus-square-o');
+	        				show = false;
+	        			} else {
+	        				$(this).addClass('visible');
+	        				$('.fa', $(this)).removeClass('fa-plus-square-o');
+	        				$('.fa', $(this)).addClass('fa-minus-square-o');
+	        			}
+	        			var $revisions = $('.revision[data-workgroup="' + workgroup + '"]', table);
+	        			show ? $revisions.show() : $revisions.hide();
+	        			
+	        			if(show){
+		        			var top = $($revisions[0]).offset().top - 125;
+		        			$('body,html').animate({scrollTop: top}, '500');
+	        			}
+	        		});
+	        	}
+	        	++i;
+	        });
+	        
+	        // disable all input elements for non-gradable rows
+	        //$('.revision, .no-work', table).find('.score, .comment').prop('disabled', true);
+	    	
+	    	view.redrawFixedHeaders(true);
+	    	//view.bsPopover($('.bs-popover', table), {trigger: 'hover click focus', html: true, placement: 'right auto'});
+	    	//view.bsTooltip($('.workgroups-online', table), { html: true, placement: 'left' });
+	    }
+	} );
+	
+	table.dataTable().fnFilterOnReturnGrading();
+	
+	this.fixedHeaders.push(new $.fn.dataTable.FixedHeader( table.dataTable() , {
+	    'offsetTop': 90
+	}));
+	view.redrawFixedHeaders();
+	
+	// create view object for future api access
+	this.gradeByStepTable = table.DataTable();
+	
+	// add period filter and header text
+	var $wrapper = $('#gradeByStepTable_wrapper');
+	this.addSectionHeader(table, $wrapper, view.getI18NString('classroomMonitor_gradeByStep_title'), { 'view': 'stepGrading' });
+	
+	// add grade by step sub-header
+	$('.dataTables_top', $wrapper).append($('<div class="clearfix">'));
+	
+	// add step details hedaer
+	$stepHeader = $('<div class="datatables-subheader">');
+	$('.dataTables_top', $wrapper).append($stepHeader);
+	$stepInfo = $('<div class="pull-left step-info">');
+	$stepHeader.append($stepInfo);
+	
+	// add step name holder
+	$stepInfo.append('<span id="gradeByStepName" class="step-name"></span>');
+	// add step type holder
+	$stepInfo.append(' <span id="gradeByStepType" class="small"></span>');
+	// add items to review display
+	$stepInfo.append('<span id="gradeByStepItemsToReview" class="review-items label label-success"></span>');
+	
+	$displayTools = $('<div class="pull-right">');
+	// add display options multiselect
+	var $displayOptions = $('<select id="gradeByStudentOptions" multiple="multiple">');
+	$displayOptions.append('<option name="gradeByStudentOptions" value="newOnly">' + view.getI18NString('classroomMonitor_newItemsOnly') + '</option>');
+	$displayOptions.append('<option name="gradeByStudentOptions" value="flagOnly">' + view.getI18NString('classroomMonitor_grading_flagOnly') + '</option>');
+	$displayOptions.append('<option name="gradeByStudentOptions" value="hidePersonal">' + view.getI18NString('classroomMonitor_hidePersonalInfo') + '</option>');
+	
+	$stepHeader.append($displayTools);
+	$displayTools.append('<label for="gradeByStepOptions">' + view.getI18NString('classroomMonitor_grading_options_label') + '</label> ');
+	$displayTools.append($displayOptions);
+	
+	$displayOptions.multiselect({
+		buttonText: view.multiselectButtonText,
+		dropRight: true,
+		nonSelectedText: view.getI18NString('classroomMonitor_grading_options_select'),
+		buttonClass: 'btn btn-default btn-sm',
+		numberDisplayed: 1,
+		onChange: function(){
+			
+		}
+	});
+	
+	$('.dataTables_top', $wrapper).append($('<div class="clearfix">'));
 }
 
 /**
@@ -5563,24 +6659,6 @@ View.prototype.clearSaveButtonDiv = function() {
  */
 View.prototype.clearNewWorkNotificationDiv = function() {
 	$('#newWorkNotificationDiv').html('');
-};
-
-/**
- * Get the html that will display the green dot as an image
- */
-View.prototype.getIsOnlineHTML = function() {
-	var html = '<img src="images/greenDot.png"/>';
-	
-	return html;
-};
-
-/**
- * Get the html that will display the red dot as an image
- */
-View.prototype.getIsOfflineHTML = function() {
-	var html = '<img src="images/redDot.png"/>';
-	
-	return html;
 };
 
 /**
@@ -6398,13 +7476,13 @@ View.prototype.createSpecialExportDiv = function() {
  * are online and an array of students that are offline that  
  * are on the step and in the period
  */
-View.prototype.getStudentsOnStep = function(nodeId, periodId) {
-	if(periodId == null) {
+/*View.prototype.getStudentsOnStep = function(nodeId, periodId) {
+	if(periodId == null) {*/
 		/*
 		 * the period id was not passed in so we will use the period id
 		 * that is currently selected in the UI
 		 */
-		periodId = this.classroomMonitorPeriodIdSelected;
+		/*periodId = this.classroomMonitorPeriodIdSelected;
 	}
 	
 	var studentsOnline = [];
@@ -6452,7 +7530,7 @@ View.prototype.getStudentsOnStep = function(nodeId, periodId) {
 	}
 	
 	return result;
-};
+};*/
 
 /**
  * Highlight the background of the element yellow
@@ -6473,13 +7551,21 @@ View.prototype.removeHighlight = function(element) {
 /**
  * Called when the classroom monitor window closes
  */
-View.prototype.onWindowUnload = function() {
+View.prototype.onWindowUnload = function(logout) {
 	/*
 	 * the classroom monitor window is being closed so we will make sure
 	 * the student screens are unpaused so the students aren't stuck
 	 * at the pause screen
 	 */
 	this.unPauseScreens();
+	
+	if(logout === true) {
+		//get the context path e.g. /wise
+		var contextPath = this.getConfig().getConfigParam('contextPath');
+		
+		//log out the user
+		window.top.location = contextPath + "/j_spring_security_logout";		
+	}
 };
 
 /**
@@ -6792,6 +7878,9 @@ View.prototype.loadPremadeComments = function() {
 	//get the user name from the userandclassinfo
 	var userLoginName = this.getUserAndClassInfo().getUserLoginName();
 	
+	//get the div that contains all the premade comments lists
+	var premadeCommentsListsDiv = $('#premadeCommentsListsDiv');
+	
 	//loop through all the premade comment lists
 	for(var x=0; x<this.premadeCommentLists.length; x++) {
 		//get a premade comment list
@@ -6807,7 +7896,7 @@ View.prototype.loadPremadeComments = function() {
 		var premadeCommentsListDiv = this.createPremadeCommentsListDiv(premadeCommentList, signedInUserIsOwner);
 		
 		//put this premadeCommentsListDiv in the premadeCommentsListsDiv to display it
-		$(premadeCommentsListsDiv).append(premadeCommentsListDiv);
+		premadeCommentsListsDiv.append(premadeCommentsListDiv);
 
 		//allow user to edit the premadecomment list label (the name of the list) in place
 		if(signedInUserIsOwner) {
@@ -6860,10 +7949,10 @@ View.prototype.loadPremadeComments = function() {
 		var listIdChosen = $(this).val();
 		
 		//now hide all the lists except the last one that user had opened, or the first one if none exists.
-		$(premadeCommentsListsDiv).find(".premadeCommentsListDiv").hide();
+		premadeCommentsListsDiv.find(".premadeCommentsListDiv").hide();
 		
 		//show just the selected premadecommentslist div.
-		$(premadeCommentsListsDiv).find("#premadeCommentsListDiv_" + listIdChosen).show();		
+		premadeCommentsListsDiv.find("#premadeCommentsListDiv_" + listIdChosen).show();		
 		
 		/*
 		 * save the current state of the premade comments so that it
@@ -6901,13 +7990,13 @@ View.prototype.loadPremadeComments = function() {
 	premadeCommentsListLabelDD.append(newPremadeCommentsListDDItem);
 	
 	//add the drop down to the div
-	$(premadeCommentsListsDiv).prepend(premadeCommentsListLabelDD);
+	premadeCommentsListsDiv.prepend(premadeCommentsListLabelDD);
 	
 	//now hide all the lists except the last one that user had opened, or the first one if none exists.
-	$(premadeCommentsListsDiv).find(".premadeCommentsListDiv").hide();
+	premadeCommentsListsDiv.find(".premadeCommentsListDiv").hide();
 	
 	//show just the selected premadecommentslist div.
-	$(premadeCommentsListsDiv).find("#premadeCommentsListDiv_"+premadeCommentsListIdToShow).show();
+	premadeCommentsListsDiv.find("#premadeCommentsListDiv_"+premadeCommentsListIdToShow).show();
 	
 	//display the premade comment list that was last open and check the checkboxes there were previously checked
 	this.restorePremadeCommentsState();

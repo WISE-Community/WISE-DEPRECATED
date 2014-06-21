@@ -253,6 +253,16 @@ public class ShareProjectController extends SimpleFormController {
 			String message = messageSource.getMessage("presentation.web.controllers.teacher.project.customized.ShareProjectController.shareProjectConfirmationEmailBody", 
 					new Object[] {sharerName,project.getName(),project.getId(),shareeDetails.getUsername(),sdf.format(date), previewProjectUrl}, defaultMessage, this.locale);
 
+			if (wiseProperties.containsKey("discourse_url")) {
+				String discourseURL = wiseProperties.getProperty("discourse_url");
+				if (discourseURL != null && !discourseURL.isEmpty()) {
+					// if this WISE instance uses discourse for teacher community, append link to it in the P.S. section of the email
+					String defaultPS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, Locale.US);
+					String pS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, defaultPS, this.locale);
+					message += "\n\n"+pS;
+				}
+			}			
+			
     		String fromEmail = sharerEmailAddress;
 
     		//for testing out the email functionality without spamming the groups

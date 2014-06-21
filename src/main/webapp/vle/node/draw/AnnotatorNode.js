@@ -4,7 +4,7 @@
 AnnotatorNode.prototype = new SVGDrawNode();
 AnnotatorNode.prototype.constructor = AnnotatorNode;
 AnnotatorNode.prototype.parent = SVGDrawNode.prototype;
-AnnotatorNode.authoringToolName = "Image Annotator";
+AnnotatorNode.authoringToolName = "Annotator";
 AnnotatorNode.authoringToolDescription = "Students add labels to a background image or photo.";
 
 /**

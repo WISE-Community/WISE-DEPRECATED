@@ -51,6 +51,9 @@ var scriptloader = function(){
 	var jquerySrc = 'vle/jquery/js/jquery-1.11.0.min.js';
 	var jqueryUISrc = 'vle/jquery/js/jquery-ui-1.10.0.custom.min.js';
 	var jqueryUICss = 'vle/jquery/css/wise-theme/jquery-ui-1.10.0.custom.css';
+	var jqueryUISrc_interactions = 'vle/jquery/js/jquery-ui-1.10.4.interactions.min.js';
+	var bootstrapSrc = 'vle/js/bootstrap/bootstrap.min.js';
+	var bootstrapCss = 'vle/css/bootstrap/bootstrap-custom.css';
 	
 	/**
 	 * scriptLoader listener listens for all scriptLoaded events and
@@ -328,8 +331,8 @@ var scriptloader = function(){
 	var scripts = {
         bootstrap: ['vle/util/componentloader.js',
                   jquerySrc,
-    		      jqueryUISrc,
-    		      'vle/jquery/js/jquery.ui.touch-punch.min.js',
+    		      //jqueryUISrc,
+    		      //'vle/jquery/js/jquery.ui.touch-punch.min.js',
                   'vle/view/view.js',
                   'vle/node/nodefactory.js',
                   'vle/environment/environment.js',
@@ -360,7 +363,9 @@ var scriptloader = function(){
                'vle/hint/hintstate.js',
                'vle/data/StudentStatus.js'],
         core_min: ['vle/minified/core_min.js'],
-		student: ['vle/util/icon.js',
+		student: [jqueryUISrc,
+    		      'vle/jquery/js/jquery.ui.touch-punch.min.js',
+		          'vle/util/icon.js',
 			      'vle/jquery/jquery-validation/jquery.validate.min.js',
 			      'vle/view/vle/vleview_core.js',
 			      'vle/view/vle/vleview_utils.js',
@@ -369,7 +374,9 @@ var scriptloader = function(){
 			      'vle/view/vle/vleview_globaltagmaps.js',
 			      'vle/navigation/GlobalTagMap.js',
 	              'vle/swfobject/swfobject.js'],
-        author: ['vle/util/icon.js',
+        author: [jqueryUISrc,
+   		      	 'vle/jquery/js/jquery.ui.touch-punch.min.js',
+   		      	 'vle/util/icon.js',
                  'vle/js/tinymce4/js/tinymce/tinymce.min.js',
                  'vle/jquery/miniTip/jquery.miniTip.min.js',
                  'vle/jquery/jquery-validation/jquery.validate.min.js',
@@ -398,7 +405,9 @@ var scriptloader = function(){
 		         'vle/view/grading/gradingview_premadecomments.js',
 		         'vle/jquery/js/jquery.editinplace.js',
 		         'vle/view/authoring/authorview_model.js'],
-		grading: ['vle/view/grading/gradingview_annotations.js',
+		grading: [jqueryUISrc,
+    		      'vle/jquery/js/jquery.ui.touch-punch.min.js',
+    		      'vle/view/grading/gradingview_annotations.js',
 		          'vle/view/grading/gradingview_dispatcher.js',
 		          'vle/view/grading/gradingview_display.js',
 	              'vle/view/grading/gradingview_export.js',
@@ -412,11 +421,25 @@ var scriptloader = function(){
 	              'vle/jquery/js/jquery.editinplace.js',
 	              'vle/view/grading/gradingview_model.js',
 	              'vle/swfobject/swfobject.js'],
-	    studentWebSocket: ['vle/webSocket/studentWebSocket.js'],
-	    teacherWebSocket: ['vle/webSocket/teacherWebSocket.js',
+	    studentWebSocket: [jqueryUISrc,
+	         		      'vle/jquery/js/jquery.ui.touch-punch.min.js',
+	         		      'vle/webSocket/studentWebSocket.js'],
+	    teacherWebSocket: [jqueryUISrc_interactions,
+	         		       'vle/jquery/js/jquery.ui.touch-punch.min.js',
+	         		       bootstrapSrc, // TODO: move to vle bootstrap sources when using globally
+	                       //'vle/js/bootstrap/bootstrap-switch/dist/js/bootstrap-switch.min.js', // TODO: move to vle bootstrap sources when using globally
+	                       'vle/js/bootstrap/bootbox/bootbox.min.js',  // TODO: move to vle bootstrap sources when using globally
+	                       'vle/js/bootstrap/bootstrap-multiselect/js/bootstrap-multiselect.js',  // TODO: possibly move to vle bootstrap sources when using globally
+	                       'vle/webSocket/teacherWebSocket.js',
 	                       'vle/view/classroomMonitor/classroomMonitorView_model.js',
 	                       'vle/view/classroomMonitor/classroomMonitorView_main.js',
-	                       'vle/jquery/js/jquery.editinplace.js'],
+	                       'vle/jquery/js/jquery.editinplace.js',
+	                       'vle/js/DataTables/media/js/jquery.dataTables.js',
+	                       'vle/js/DataTables/media/js/dataTables.bootstrap.js',
+	                       //'vle/js/DataTables/extensions/ColVis/js/dataTables.colVis.min.js',
+	                       'vle/js/DataTables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js',
+	                       'vle/js/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js',
+	                       'vle/js/DataTables/plugins/fnFilterOnReturn.js'],
 	    grading_min: ['vle/minified/grading_min.js'],
 	    user: ['vle/user/userandclassinfo.js'],	    
 	    config: ['vle/config/config.js'],
@@ -472,8 +495,8 @@ var scriptloader = function(){
 	 * Css urls specified for all component css
 	 */
 	var css = {
-		bootstrap:["vle/css/globalstyles.css"],
-		bootstrap_min:["vle/css/globalstyles.css"],
+		bootstrap:[],
+		bootstrap_min:[],
 		core: [/*'vle/css/message.css'*/],
 		core_min: [/*'vle/css/message.css'*/],
 		author: ['vle/css/authoring/authoring.css',
@@ -481,42 +504,52 @@ var scriptloader = function(){
 		         'vle/jquery/miniTip/miniTip.css',
 		         jqueryUICss
 		         ],
+		student: ['vle/css/globalstyles.css'],
 		//wise: ["vle/css/wise/WISE_styles.css"],
 		//uccp: ["vle/css/uccp/UCCP_styles.css"],
 		vle: [/*"vle/css/niftycube.css"*/],
     	navigation:[/*"vle/css/navigation.css"*/],
     	menu:[/*"vle/css/sdmenu.css"*/],
- 		grading: ['vle/css/portal/teachergrading.css',
+ 		grading: ['vle/css/globalstyles.css',
+ 		         'vle/css/portal/teachergrading.css',
  		         'vle/jquery/jquery-dataTables/css/datatable.css',
  		         jqueryUICss],
  		grading_min: ['vle/css/portal/teachergrading.css',
  	 		         'vle/jquery/jquery-dataTables/css/datatable.css',
  	 		         jqueryUICss],
- 		ideabasket: ['vle/css/ideaManager/jquery-validate/cmxformTemplate.css'],
+ 		ideabasket: [//'vle/css/globalstyles.css',
+ 		             'vle/css/ideaManager/jquery-validate/cmxformTemplate.css'],
  		premadecomments:['vle/css/globalstyles.css',
  		                 'vle/css/premadecomments/premadecomments.css',
  		                jqueryUICss],
- 		teacherWebSocket:['vle/css/classroomMonitor/classroomMonitor.css',
- 		                 jqueryUICss]
-	
-    	         
+ 		teacherWebSocket:[//'vle/css/classroomMonitor/monitor-styles.css',
+ 		                 'vle/js/DataTables/media/css/jquery.dataTables.css',
+ 		                 'vle/js/DataTables/media/css/dataTables.bootstrap.css',
+ 		                 'vle/css/bootstrap/bootstrap-switch.css',
+ 		                 'vle/js/bootstrap/bootstrap-multiselect/css/bootstrap-multiselect.css',
+ 		                 //'vle/js/DataTables/extensions/ColVis/css/dataTables.colVis.min.css',
+ 		                 'vle/js/DataTables/extensions/FixedHeader/css/dataTables.fixedHeader.min.css',
+ 		                 'vle/js/DataTables/extensions/TableTools/css/dataTables.tableTools.min.css']
 	};
 	
 	/**
 	 * Known dependencies for a script
 	 */
 	var dependencies = {
-		"vle/node/setupNodes.js": ["vle/node/nodefactory.js"],
-		"vle/themes/setupThemes.js": ["vle/util/componentloader.js"],
-    	"vle/project/Project.js": ["vle/node/Node.js"],
+		'vle/node/setupNodes.js': ['vle/node/nodefactory.js'],
+		'vle/themes/setupThemes.js': ['vle/util/componentloader.js'],
+    	'vle/project/Project.js': ['vle/node/Node.js'],
     	'vle/node/NodeUtils.js': ['vle/node/Node.js'],
-    	"vle/node/DrawNode.js": ["vle/node/HtmlNode.js"],
-        "vle/node/CustomNode.js": ["vle/node/Node.js"],
-        "vle/node/BlueJNode.js": ["vle/node/Node.js"],
+    	'vle/node/DrawNode.js': ['vle/node/HtmlNode.js'],
+        'vle/node/CustomNode.js': ['vle/node/Node.js'],
+        'vle/node/BlueJNode.js': ['vle/node/Node.js'],
         //'vle/node/DuplicateNode.js': ['vle/node/Node.js', 'vle/node/nodefactory.js'],
         'vle/node/BranchNode.js':['vle/node/Node.js','vle/node/MultipleChoiceNode.js'],
-        "vle/ui/vleui.js": ["vle/VLE.js"],
-        "vle/util/projectutils.js": ["vle/project/Project.js"],
+        'vle/ui/vleui.js': ['vle/VLE.js'],
+        'vle/util/projectutils.js': ['vle/project/Project.js'],
+        'vle/js/bootstrap/bootstrap-switch/dist/js/bootstrap-switch.min.js':[bootstrapSrc],
+        'vle/js/bootstrap/bootbox/bootbox.min.js':[bootstrapSrc],
+        'vle/js/bootstrap/bootstrap-multiselect/js/bootstrap-multiselect.js':[bootstrapSrc],
         'vle/jquery/js/jsonplugin.js':[jquerySrc],
         'vle/jquery/js/jqueryhelper.js':[jquerySrc],
         'vle/jquery/js/jquery.form.js':[jquerySrc],
@@ -526,6 +559,12 @@ var scriptloader = function(){
         'vle/jquery/js/jquery.editinplace.js':[jquerySrc],
         'vle/jquery/js/jquery-migrate-1.2.1.min.js':[jquerySrc],
         'vle/jquery/js/jquery.ui.touch-punch.min.js':[jqueryUISrc],
+        'vle/js/DataTables/media/js/jquery.dataTables.js':[jquerySrc],
+        'vle/js/DataTables/media/js/dataTables.bootstrap.js':['vle/js/DataTables/media/js/jquery.dataTables.js', bootstrapSrc],
+        //'vle/js/DataTables/extensions/ColVis/js/dataTables.colVis.min.js':['vle/js/DataTables/media/js/jquery.dataTables.min.js'],
+        'vle/js/DataTables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js':['vle/js/DataTables/media/js/jquery.dataTables.js'],
+        'vle/js/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js':['vle/js/DataTables/media/js/jquery.dataTables.js'],
+        'vle/js/DataTables/plugins/fnFilterOnReturn.js':['vle/js/DataTables/media/js/jquery.dataTables.js'],
         'vle/navigation/constraints/nonvisitablexconstraint.js':['vle/navigation/constraints/constraint.js'],
         'vle/navigation/constraints/visitxafteryconstraint.js':['vle/navigation/constraints/constraint.js'],
         'vle/navigation/constraints/visitxbeforeyconstraint.js':['vle/navigation/constraints/constraint.js'],
@@ -543,11 +582,18 @@ var scriptloader = function(){
 	
 	// add jQuery UI/jQuery core dependency
 	dependencies[jqueryUISrc] = [jquerySrc];
+	dependencies[jqueryUISrc_interactions] = [jquerySrc];
+	
+	// add bootstrap/jQuery dependency
+	dependencies[bootstrapSrc] = [jquerySrc];
 	
 	return {
 		jquerySrc:jquerySrc,
 		jqueryUISrc:jqueryUISrc,
+		jqueryUISrc_interactions:jqueryUISrc_interactions,
 		jqueryUICss:jqueryUICss,
+		bootstrapSrc:bootstrapSrc,
+		bootstrapCss:bootstrapCss,
 		loadScripts:function(name, doc, cid, em){
 			loaded = [];
 			currentDoc = doc;

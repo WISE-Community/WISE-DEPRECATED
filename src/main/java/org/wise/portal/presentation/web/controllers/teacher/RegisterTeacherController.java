@@ -238,6 +238,16 @@ public class RegisterTeacherController extends SimpleFormController {
 			String gettingStartedUrl = wiseBaseURL + "/pages/gettingstarted.html";
 			String defaultBody = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, Locale.US);
 			String message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, defaultBody, this.locale);
+
+			if (wiseProperties.containsKey("discourse_url")) {
+				String discourseURL = wiseProperties.getProperty("discourse_url");
+				if (discourseURL != null && !discourseURL.isEmpty()) {
+					// if this WISE instance uses discourse for teacher community, append link to it in the P.S. section of the email
+					String defaultPS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, Locale.US);
+					String pS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, defaultPS, this.locale);
+					message += "\n\n"+pS;
+				}
+			}
 			String fromEmail = wiseProperties.getProperty("portalemailaddress");
 
 			try {

@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.transaction.annotation.Transactional;
@@ -256,6 +255,11 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     public Workgroup retrieveById(Long workgroupId) throws ObjectNotFoundException {
 		return workgroupDao.getById(workgroupId);
 	}
+    
+	@Override
+	public Workgroup retrieveById(Long workgroupId, boolean doEagerFetch) {
+		return workgroupDao.getById(workgroupId, doEagerFetch);
+	}
 
 
 	/**
@@ -278,6 +282,4 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
-
-    // TODO HT: create method for creating workgroupname
 }
