@@ -720,10 +720,6 @@
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
 
-	<bean id="vleGetStatisticsController" class="org.wise.vle.web.VLEGetStatisticsController">
-		<property name="vleService" ref="vleService" />
-	</bean>
-
 	<bean id="credentialManager"
 		class="org.wise.portal.presentation.web.controllers.CredentialManager">
 		<property name="projectService" ref="projectService" />
@@ -782,14 +778,11 @@
 	<bean id="searchForStudentUserNameValidator"
 		class="org.wise.portal.presentation.validators.SearchForStudentUserNameValidator" />
 
-	<bean id="portalStatisticsController"
-		class="org.wise.portal.presentation.web.controllers.PortalStatisticsController">
-		<property name="portalStatisticsService" ref="portalStatisticsService" />
-	</bean>
-
 	<bean id="statisticsController"
 		class="org.wise.portal.presentation.web.controllers.StatisticsController">
 		<property name="wiseProperties" ref="wiseProperties" />
+		<property name="portalStatisticsService" ref="portalStatisticsService" />
+		<property name="vleService" ref="vleService" />
 	</bean>
 
 	<bean id="resetPasswordController"
@@ -901,11 +894,9 @@
 				/errors/friendlyError.html=urlFilenameViewController
 				/accessdenied.html=accessDeniedController
 				/router.html=routerController
+				/checkforexistingaccount.html=checkForExistingAccountController
 				/contact/contactwisegeneral.html=contactWiseController
 				/contact/contactwiseproject.html=contactWiseProjectController
-				/contact/checkforexistingaccount.html=checkForExistingAccountController
-				/getPortalStatistics.html=portalStatisticsController
-				/getVLEStatistics.html=vleGetStatisticsController
 				/student/index.html=studentIndexController
 				/student/vle/vle.html=studentVLEController
 				/student/selectteam.html=selectteamController
