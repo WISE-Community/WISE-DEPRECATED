@@ -867,15 +867,14 @@ public class BridgeController extends AbstractController {
 				 * retrieve their workgroup id for the run
 				 */
 				
-				HashMap<String, Run> studentsToRuns = 
-						(HashMap<String, Run>) request.getSession()
-							.getServletContext().getAttribute("studentsToRuns");
+				HashMap<String, Long> studentsToRunIds = 
+						(HashMap<String, Long>) request.getSession()
+							.getServletContext().getAttribute("studentsToRunIds");
 				
 				String sessionId = request.getSession().getId();
 				
-				if (studentsToRuns != null && studentsToRuns.containsKey(sessionId)) {
-					Run sessionRun = studentsToRuns.get(sessionId);
-					Long sessionRunId = sessionRun.getId();
+				if (studentsToRunIds != null && studentsToRunIds.containsKey(sessionId)) {
+					Long sessionRunId = studentsToRunIds.get(sessionId);
 					
 					if(sessionRunId.equals(new Long(runId))) {
 						//get the workgroup id
