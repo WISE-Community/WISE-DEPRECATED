@@ -32,6 +32,7 @@ import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.service.project.ProjectService;
 
 /**
+ * Controller for Compatibility Check page
  * @author patrick lawler
  * @version $Id:$
  */
@@ -48,8 +49,6 @@ public class CompatibilityCheckController extends AbstractController {
     	
 		//get the projectId and versionId
 		String projectId = request.getParameter("projectId");
-		String versionId = request.getParameter("versionId");
-		
 		
 		if(projectId != null) {
 			//get the metadata for the project/version
@@ -70,11 +69,6 @@ public class CompatibilityCheckController extends AbstractController {
 		return modelAndView;
 	}
 	
-	
-	public ProjectService getProjectService() {
-		return projectService;
-	}
-
 	public void setProjectService(ProjectService projectService) {
 		this.projectService = projectService;
 	}
