@@ -2211,7 +2211,15 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
 						$flagGroup.append($flagCheckBox);
 						$studentWorkHeader.append($flagGroup);
 						
-						$flagCheckBox.attr('id', 'flagInput_' + stepWorkId);
+						var flagInputId = '';
+						
+						if(mode === 'studentGrading') {
+							flagInputId = 'studentGradingFlagInput_' + stepWorkId;
+						} else if(mode === 'stepGrading') {
+							flagInputId = 'stepGradingFlagInput_' + stepWorkId;
+						}
+						
+						$flagCheckBox.attr('id', flagInputId);
 						$flagCheckBox.on('click', {thisView:view, nodeId:nodeId, workgroupId:workgroupId, stepWorkId:stepWorkId}, function(event) {
 							var thisView = event.data.thisView,
 								stepWorkId = event.data.stepWorkId,
@@ -2219,7 +2227,7 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
 								workgroupId = event.data.workgroupId;
 							
 							// the flag check box was clicked so we will save the flag annotation
-							thisView.flagCheckBoxClicked(nodeId, workgroupId, stepWorkId);
+							thisView.flagCheckBoxClicked(nodeId, workgroupId, stepWorkId, mode);
 						});
 						
 						// get the flag annotation for this step work
@@ -3024,9 +3032,17 @@ View.prototype.createGradingTD = function(nodeId, workgroupId, nodeVisit) {
  * @param workgroupId the student workgroup id
  * @param stepWorkId the student work id
  */
-View.prototype.flagCheckBoxClicked = function(nodeId, workgroupId, stepWorkId) {
+View.prototype.flagCheckBoxClicked = function(nodeId, workgroupId, stepWorkId, mode) {
+	var flagInputId = '';
+	
+	if(mode === 'studentGrading') {
+		flagInputId = 'studentGradingFlagInput_' + stepWorkId;
+	} else if(mode === 'stepGrading') {
+		flagInputId = 'stepGradingFlagInput_' + stepWorkId;
+	}
+	
 	//get the check box
-	var flagCheckBox = $('#flagInput_' + stepWorkId);
+	var flagCheckBox = $('#' + flagInputId);
 	
 	//get whether it was checked or not
 	var checkBoxValue = flagCheckBox.attr('checked')
@@ -3070,19 +3086,22 @@ View.prototype.flagCheckBoxClicked = function(nodeId, workgroupId, stepWorkId) {
 	// Show saving message
 	notificationManager.notify(view.getI18NString('classroomMonitor_saving'), 3);
 	//make the call to post the annotation
-	this.connectionManager.request('POST', 1, postFlagsUrl, postFlagArgs, this.postFlagCallbackSuccess, [this, nodeId, toWorkgroup, fromWorkgroup, runId, stepWorkId, value], this.postFlagCallbackFail);
+	this.connectionManager.request('POST', 1, postFlagsUrl, postFlagArgs, this.postFlagCallbackSuccess, [this, stepWorkId, annotationType, isChecked, nodeId, toWorkgroup, mode], this.postFlagCallbackFail);
 };
 
 /**
  * The successcallback for posting flag annotations
  */
 View.prototype.postFlagCallbackSuccess = function(text, xml, args) {
-	var thisView = args[0],
-		stepWorkId = args[5],
-		type = 'flag',
-		value = (args[6] === 'flagged') ? 'true' : 'false';
+	var thisView = args[0];
+	var stepWorkId = args[1];
+	var type = args[2];
+	var value = args[3];
+	var nodeId = args[4];
+	var workgroupId = args[5];
+	var mode = args[6];
 	
-	thisView.postAnnotationCallbackSuccessHandler(stepWorkId, text, type, value);
+	thisView.postAnnotationCallbackSuccessHandler(stepWorkId, type, value, nodeId, workgroupId, mode, text);
 };
 
 /**
