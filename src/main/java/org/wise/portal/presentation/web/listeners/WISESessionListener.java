@@ -62,9 +62,9 @@ public class WISESessionListener implements HttpSessionListener {
 		}
 		
 		// remove this user from any studentToRuns, if it's a student who was doing a run
-		HashMap<String, User> studentsToRuns = ((HashMap<String, User>) session.getServletContext().getAttribute("studentsToRuns"));
-		if (studentsToRuns != null) {
-			studentsToRuns.remove(sessionId);
+		HashMap<String, Long> studentsToRunIds = ((HashMap<String, Long>) session.getServletContext().getAttribute("studentsToRunIds"));
+		if (studentsToRunIds != null) {
+			studentsToRunIds.remove(sessionId);
 		}
 				
 		// remove this user from any opened projects, if they opened any project using the authoring tool

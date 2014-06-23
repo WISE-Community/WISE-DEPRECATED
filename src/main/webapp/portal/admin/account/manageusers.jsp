@@ -105,11 +105,7 @@ table.userTable td {
 			<td><a href="#" onclick="javascript:popup640('../../studentinfo.html?userName=${username}');"><spring:message code="info" /></a></td>
 			<c:if test="${not empty studentUserArray[1]}">
 				<td>
-				"${studentUserArray[1].name}" (${studentUserArray[1].id})
-				<c:forEach var="owner" items="${studentUserArray[1].owners}">
-					| <a href="#" onclick="javascript:popup640('../../teacherinfo.html?userName=${owner.userDetails.username}');">${owner.userDetails.username}</a>
-					${owner.userDetails.schoolname}, ${owner.userDetails.city}, ${owner.userDetails.state},${owner.userDetails.country}
-				</c:forEach>
+				${studentUserArray[1]}
 				</td>
 			</c:if>
 		</tr>

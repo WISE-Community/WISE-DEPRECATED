@@ -98,9 +98,9 @@ public class ViewAllUsersController extends AbstractController{
 				(HashMap<String, User>) servletRequest.getSession()
 					.getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
 
-			HashMap<String, Run> studentsToRuns = 
-				(HashMap<String, Run>) servletRequest.getSession()
-					.getServletContext().getAttribute("studentsToRuns");
+			HashMap<String, Long> studentsToRunIds = 
+				(HashMap<String, Long>) servletRequest.getSession()
+					.getServletContext().getAttribute("studentsToRunIds");
 
 			ArrayList<Object> loggedInStudent = new ArrayList<Object>();
 			ArrayList<Object> loggedInTeacher = new ArrayList<Object>();
@@ -112,9 +112,9 @@ public class ViewAllUsersController extends AbstractController{
 						loggedInStudentArray[0] = loggedInUser;
 						// since this is a student, look in the studentToRuns session variable and see if this student is running
 						// any projects
-						if (studentsToRuns != null && studentsToRuns.containsKey(sessionId)) {
-							Run run = studentsToRuns.get(sessionId);
-							loggedInStudentArray[1] = run;		
+						if (studentsToRunIds != null && studentsToRunIds.containsKey(sessionId)) {
+							Long runId = studentsToRunIds.get(sessionId);
+							loggedInStudentArray[1] = runId;		
 						}
 						loggedInStudent.add(loggedInStudentArray);
 					} else {
