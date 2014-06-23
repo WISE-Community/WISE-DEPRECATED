@@ -3340,6 +3340,9 @@ View.prototype.getCommentTextAreaValue = function(stepWorkId, nodeId, workgroupI
 View.prototype.postAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, type, value, runId, stepWorkId, mode) {
 	var postAnnotationsURL = this.getConfig().getConfigParam('postAnnotationsUrl');
 	
+	//encode the value in case it contains special characters
+	value = encodeURIComponent(value);
+	
 	var postAnnotationParams = {
 		runId:runId,
 		toWorkgroup:toWorkgroup,
