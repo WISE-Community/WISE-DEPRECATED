@@ -67,7 +67,7 @@ AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, node
 		var svgString = studentWork.svgString,
 			explanation = studentWork.explanation.replace(/\r?\n/g, '<br />'),
 			contentUrl = this.getContent().getContentUrl();
-		studentWork.svgString = "";
+
 		var studentDisplay = //"<div id='"+innerDivId+"_contentUrl' style='display:none;'>"+contentUrl+"</div>"+
 			//"<div id='"+innerDivId+"_contentBaseUrl' style='display:none;'>"+contentBaseUrl+"</div>"+
 			"<a id='"+innerDivId+"_enlarge' class='annotatorEnlarge'>enlarge</a>"+
