@@ -1244,7 +1244,7 @@
 		"description":"Header text for student work that is the most recent revision in the classroom monitor"
 	},
 	"classroomMonitor_grading_workRevision":{
-		"value":"Revision #{0}:",
+		"value":"Response #{0}:",
 		"description":"Header text for student work that is not that most recent revision in the classroom monitor ({0} will be replaced with revision number)"
 	},
 	"classroomMonitor_grading_flag":{
@@ -1264,7 +1264,7 @@
 		"description":"Text for link to add premade comments to teacher feedback inputs in grading views of classroom monitor"
 	},
 	"classroomMonitor_grading_revisionsCount":{
-		"value":"{0} revisions",
+		"value":"{0} revision(s)",
 		"description":"Text for the number of revisions in the grade by student and grade by step tables of classroom monitor ({0} will be replaced with number of student work submissions for a step)"
 	},
 	"classroomMonitor_grading_revisionDate":{

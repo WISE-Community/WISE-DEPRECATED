@@ -247,6 +247,9 @@ View.prototype.hideAllDisplays = function() {
 	
 	// hide all sections
 	$('#pageContent > section').hide();
+	
+	// hide the new work notification
+	$('#newWork').hide();
 }
 
 /**
@@ -6349,7 +6352,7 @@ View.prototype.createGradeByStudentDisplay = function() {
     			});
             	
             	if(total > 1){
-            		var $toggleLink = $('<a class="toggle-revisions pull-right label">' + view.getI18NStringWithParams('classroomMonitor_grading_revisionsCount', [total]) + ' <span class="fa fa-plus-square-o"></span></a>');
+            		var $toggleLink = $('<a class="toggle-revisions pull-right label">' + view.getI18NStringWithParams('classroomMonitor_grading_revisionsCount', [total-1]) + ' <span class="fa fa-plus-square-o"></span></a>');
             		$('td', $(this)).append($toggleLink);
             		$toggleLink.off('click').on('click', function(){
             			var show = true;
@@ -6530,7 +6533,7 @@ View.prototype.createGradeByStepDisplay = function() {
 				});
 	        	
 	        	if(total > 1){
-	        		var $toggleLink = $('<a class="toggle-revisions pull-right label">' + view.getI18NStringWithParams('classroomMonitor_grading_revisionsCount', [total]) + ' <span class="fa fa-plus-square-o"></span></a>');
+	        		var $toggleLink = $('<a class="toggle-revisions pull-right label">' + view.getI18NStringWithParams('classroomMonitor_grading_revisionsCount', [total-1]) + ' <span class="fa fa-plus-square-o"></span></a>');
 	        		$('td', $(this)).append($toggleLink);
 	        		$toggleLink.off('click').on('click', function(){
 	        			var show = true;
