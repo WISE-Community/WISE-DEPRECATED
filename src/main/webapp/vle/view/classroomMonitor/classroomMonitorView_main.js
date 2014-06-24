@@ -3724,7 +3724,7 @@ View.prototype.createStepProgressDisplay = function() {
 		var nodeId = nodeIds[x];
 		
 		//skip the master node
-		if(nodeId != 'master') {
+		if(nodeId != 'master' && nodeId != 'startsequence') {
 			//get the node
 			var node = this.getProject().getNodeById(nodeId);
 			
