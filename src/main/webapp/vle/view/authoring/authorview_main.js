@@ -1007,7 +1007,7 @@ View.prototype.previewProject = function(){
 	if(this.getProject()){
 		if(this.getProject().getStartNodeId() || confirm('Could not find a start node for the project. You can add sequences and/or nodes to remedy this. Do you still wish to preview the project (you will not see any steps)?')){
 			if(this.portalProjectId){
-				window.open(this.requestUrl + '?command=preview&projectId=' + this.portalProjectId);
+				window.open(this.config.getConfigParam("previewProjectUrl")+"?projectId=" + this.portalProjectId);
 			} else {
 				window.open('vle.html', 'PreviewWindow', "toolbar=no,width=1024,height=768,menubar=no");
 			}

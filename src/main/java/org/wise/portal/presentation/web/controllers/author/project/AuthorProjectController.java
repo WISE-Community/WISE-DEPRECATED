@@ -1388,6 +1388,9 @@ public class AuthorProjectController extends AbstractController {
 		//get the portal url
 		String portalUrl = ControllerUtil.getBaseUrlString(request);
 		
+		//get the wise base url
+		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+		
 		//get the context path e.g. /wise
 		String contextPath = request.getContextPath();
 		
@@ -1399,6 +1402,9 @@ public class AuthorProjectController extends AbstractController {
 
 		//get the curriculum_base_www variable from the wise.properties file
 		String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
+
+		//get the url to preview project
+		String previewProjectUrl = wiseBaseURL + "/previewproject.html";
 
 		//get the url to make CRater requests
 		String deleteProjectUrl = portalUrl + contextPath + "/teacher/projects/deleteproject.html";
@@ -1412,9 +1418,6 @@ public class AuthorProjectController extends AbstractController {
 		//the post url for premade comments
 		String postPremadeCommentsUrl = portalUrl + contextPath + "/teacher/grading/premadeComments.html?action=postData";
 		
-		//get the wise base url
-		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-
 		//create a JSONObject to contain the config params
 		JSONObject config = new JSONObject();
 
@@ -1434,6 +1437,7 @@ public class AuthorProjectController extends AbstractController {
 			config.put("sessionTimeoutCheckInterval", sessionTimeoutCheckInterval); // how often session should be checked...check every minute (1 min=60sec=60000 milliseconds)
 			config.put("cRaterRequestUrl", cRaterRequestUrl);
 			config.put("locale", request.getLocale());
+			config.put("previewProjectUrl", previewProjectUrl);
 			config.put("deleteProjectUrl", deleteProjectUrl);
 			config.put("analyzeProjectUrl", analyzeProjectUrl);
 			config.put("getPremadeCommentsUrl", getPremadeCommentsUrl);
