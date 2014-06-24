@@ -68,9 +68,8 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
                         + "AND g_r_u.user_fk = :user_param "
                         + "AND w.offering_fk = :offering_param");
         sqlQuery.addEntity("workgroup", WorkgroupImpl.class);
-        sqlQuery.setParameter("offering_param", offering.getId(),
-                Hibernate.LONG);
-        sqlQuery.setParameter("user_param", user.getId(), Hibernate.LONG);
+        sqlQuery.setParameter("offering_param", offering.getId());
+        sqlQuery.setParameter("user_param", user.getId());
         return sqlQuery.list();
     }
 
@@ -87,7 +86,7 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
                         + "AND g_r_u.group_fk = w.group_fk "
                         + "AND g_r_u.user_fk = :user_param ");
         sqlQuery.addEntity("workgroup", WorkgroupImpl.class);
-        sqlQuery.setParameter("user_param", user.getId(), Hibernate.LONG);
+        sqlQuery.setParameter("user_param", user.getId());
         return sqlQuery.list();
     }
     
