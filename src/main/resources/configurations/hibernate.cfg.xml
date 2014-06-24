@@ -29,7 +29,6 @@
 		<property name="hibernate.connection.release_mode">after_statement</property>
 		<property name="hibernate.auto_close_session">true</property>
 		<property name="hibernate.flush_before_completion">true</property>
-		<property name="hibernate.hbm2ddl.auto">validate</property>
 
         <!-- Enable Hibernate's automatic session context management -->
         <property name="current_session_context_class">thread</property>

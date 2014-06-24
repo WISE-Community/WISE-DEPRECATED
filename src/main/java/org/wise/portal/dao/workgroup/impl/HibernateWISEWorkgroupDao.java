@@ -74,9 +74,8 @@ implements WorkgroupDao<WISEWorkgroup>{
 						+ "AND w.id = ww.id");
 
 		sqlQuery.addEntity("wiseworkgroup", WISEWorkgroupImpl.class);
-		sqlQuery.setParameter("offering_param", offering.getId(),
-				Hibernate.LONG);
-		sqlQuery.setParameter("user_param", user.getId(), Hibernate.LONG);
+		sqlQuery.setParameter("offering_param", offering.getId());
+		sqlQuery.setParameter("user_param", user.getId());
 		return sqlQuery.list();
 	}
 
@@ -94,7 +93,7 @@ implements WorkgroupDao<WISEWorkgroup>{
 						+ "AND g_r_u.user_fk = :user_param "
 						+ "AND w.id = ww.id");
 		sqlQuery.addEntity("wiseworkgroup", WISEWorkgroupImpl.class);
-		sqlQuery.setParameter("user_param", user.getId(), Hibernate.LONG);
+		sqlQuery.setParameter("user_param", user.getId());
 		return sqlQuery.list();
 	}
 

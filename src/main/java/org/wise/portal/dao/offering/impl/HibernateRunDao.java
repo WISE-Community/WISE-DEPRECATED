@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.hibernate.FetchMode;
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.support.DataAccessUtils;
 import org.wise.portal.dao.ObjectNotFoundException;
