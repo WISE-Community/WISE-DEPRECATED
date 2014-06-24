@@ -114,12 +114,6 @@
 		</listener-class>
 	</listener>
 
-	<!-- project specific startup listeners go here -->
-	<!-- you can add your own listeners by adding the property startup.listeners 
-		in your settings.xml -->
-	${startup.listeners}
-
-
 	<!-- Servlets -->
 	<!-- Using Spring's web MVC -->
 	<servlet>
@@ -150,16 +144,16 @@
 		<servlet-name>wiseWebSocket</servlet-name>
 		<url-pattern>/websocket.html</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>rApache</servlet-name>
 		<servlet-class>org.wise.vle.web.RApacheController
 		</servlet-class>
 	</servlet>
 	<servlet-mapping>
-   		<servlet-name>rApache</servlet-name>
-   		<url-pattern>/rapache.html</url-pattern>
- 	</servlet-mapping>
+		<servlet-name>rApache</servlet-name>
+		<url-pattern>/rapache.html</url-pattern>
+	</servlet-mapping>
 
 	<!-- Make it distributable for load balancing purposes. That means HttpSessions 
 		are serialized. Objects going into the session better be serializable! -->

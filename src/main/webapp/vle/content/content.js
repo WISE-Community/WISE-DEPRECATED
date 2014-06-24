@@ -72,6 +72,12 @@ function createContent(url, contentBaseUrlParam){
 			//make synchronous request
 			timer = setTimeout('eventManager.fire("contentTimedOut","' + url + '")',MAX_TIME);
 			var req = new XMLHttpRequest();
+			//if we're in preview mode, force-fetch all content-related files from server, not from cache
+			if (view != null && view.config != null && view.config.getConfigParam("mode") == "portalpreview") {
+				//append timestamp to end of content url to make a new unique url string so browser will fetch from server
+				var timestamp = new Date().getTime();
+				url += "?t="+timestamp;
+			}
 			req.open('GET', url, false);
 			req.send(null);
 			clearTimeout(timer);

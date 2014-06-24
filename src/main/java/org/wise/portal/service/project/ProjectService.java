@@ -362,15 +362,15 @@ public interface ProjectService {
 	public Long updateTag(Long tagId, Long projectId, String name);
 	
 	/**
-	 * Given a <code>Long</code> project id and a <code>String</code> tag
+	 * Given a Project and a <code>String</code> tag
 	 * name, returns <code>boolean</code> true if the project contains a 
 	 * tag with that name, false otherwise.
 	 * 
-	 * @param Long - projectId
+	 * @param Project - project
 	 * @param String - name
 	 * @return boolean
 	 */
-	public boolean projectContainsTag(Long projectId, String name);
+	public boolean projectContainsTag(Project project, String name);
 	
 	/**
 	 * Given a <code>User</code> user and a <code>String</code> tag name,

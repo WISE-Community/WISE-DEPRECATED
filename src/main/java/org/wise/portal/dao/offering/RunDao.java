@@ -25,7 +25,6 @@ package org.wise.portal.dao.offering;
 import java.util.List;
 import java.util.Set;
 
-
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -120,4 +119,12 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      * @return List<Run> - list of runs descending by activity
      */
     public List<Run> getRunsByActivity();
+
+    /**
+     * Retrieves run by id, and fetches all fields if specified.
+     * @param runId
+     * @param doEagerFetch true iff fetch all fields eagerly
+     * @return
+     */
+	public Run getById(Long runId, boolean doEagerFetch);
 }

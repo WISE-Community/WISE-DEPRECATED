@@ -269,18 +269,15 @@ public class ShareProjectRunController extends SimpleFormController {
 					new Object[] {sharerName, run.getName(), run.getId(), run.getProject().getName(), run.getProject().getId(), shareeDetails.getUsername(), sdf.format(date) },
 					defaultMessage, this.locale);
 			
-			/*
-			String subject = sharerName + " shared a project run with you on WISE4";	
-			String message = sharerName + " shared a project run with you on WISE4:\n\n" +
-				"Run Name: " + run.getName() + "\n" +
-				"Run ID: " + run.getId() + "\n" +
-				"Project Name: " + run.getProject().getName() + "\n" +
-				"Project ID: " + run.getProject().getId() + "\n" +
-				"Shared with username: " + shareeDetails.getUsername() + "\n" +
-				"Date this project was shared: " + sdf.format(date) + "\n\n\n" +
-				"Thanks,\n" +
-				"WISE4 Team";
-			*/
+			if (wiseProperties.containsKey("discourse_url")) {
+				String discourseURL = wiseProperties.getProperty("discourse_url");
+				if (discourseURL != null && !discourseURL.isEmpty()) {
+					// if this WISE instance uses discourse for teacher community, append link to it in the P.S. section of the email
+					String defaultPS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, Locale.US);
+					String pS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, defaultPS, this.locale);
+					message += "\n\n"+pS;
+				}
+			}
 			
 			String fromEmail = sharerEmailAddress;
 			

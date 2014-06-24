@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -74,7 +75,8 @@ public class AdminIndexController extends AbstractController {
 			client.executeMethod(method);
 			
 			// Read the response body.
-			responseBody = method.getResponseBody();
+			InputStream responseBodyAsStream = method.getResponseBodyAsStream();
+			responseBody = IOUtils.toByteArray(responseBodyAsStream);
 		} catch (HttpException e) {
 			System.err.println("Fatal protocol violation: " + e.getMessage());
 			e.printStackTrace();

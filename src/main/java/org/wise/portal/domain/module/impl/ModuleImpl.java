@@ -110,7 +110,7 @@ public class ModuleImpl extends CurnitImpl implements Module {
     @Column(name = ModuleImpl.COLUMN_NAME_AUTHORS)
     private String authors;
 	
-    @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
     @JoinTable(name = OWNERS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = PROJECTS_JOIN_COLUMN_NAME) }, inverseJoinColumns = @JoinColumn(name = OWNERS_JOIN_COLUMN_NAME))
 	private Set<User> owners;
 		

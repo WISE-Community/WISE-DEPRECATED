@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.user.UserDao;
-import org.wise.portal.domain.admin.AdminJob;
+import org.wise.portal.domain.admin.DailyAdminJob;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.run.Run;
@@ -98,9 +98,9 @@ public class ViewAllUsersController extends AbstractController{
 				(HashMap<String, User>) servletRequest.getSession()
 					.getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
 
-			HashMap<String, Run> studentsToRuns = 
-				(HashMap<String, Run>) servletRequest.getSession()
-					.getServletContext().getAttribute("studentsToRuns");
+			HashMap<String, Long> studentsToRunIds = 
+				(HashMap<String, Long>) servletRequest.getSession()
+					.getServletContext().getAttribute("studentsToRunIds");
 
 			ArrayList<Object> loggedInStudent = new ArrayList<Object>();
 			ArrayList<Object> loggedInTeacher = new ArrayList<Object>();
@@ -112,9 +112,9 @@ public class ViewAllUsersController extends AbstractController{
 						loggedInStudentArray[0] = loggedInUser;
 						// since this is a student, look in the studentToRuns session variable and see if this student is running
 						// any projects
-						if (studentsToRuns != null && studentsToRuns.containsKey(sessionId)) {
-							Run run = studentsToRuns.get(sessionId);
-							loggedInStudentArray[1] = run;		
+						if (studentsToRunIds != null && studentsToRunIds.containsKey(sessionId)) {
+							Long runId = studentsToRunIds.get(sessionId);
+							loggedInStudentArray[1] = runId;		
 						}
 						loggedInStudent.add(loggedInStudentArray);
 					} else {
@@ -125,7 +125,7 @@ public class ViewAllUsersController extends AbstractController{
 			modelAndView.addObject(LOGGED_IN_STUDENT_USERNAMES, loggedInStudent);
 			modelAndView.addObject(LOGGED_IN_TEACHER_USERNAMES, loggedInTeacher);
 		} else if (onlyShowUsersWhoLoggedIn != null) {
-			AdminJob adminJob = (AdminJob) this.getApplicationContext().getBean("adminjob");
+			DailyAdminJob adminJob = (DailyAdminJob) this.getApplicationContext().getBean("dailyAdminJob");
 			adminJob.setUserDao((UserDao<User>) this.getApplicationContext().getBean("userDao"));
 			Date dateMin = null, dateMax = null;
 			Calendar now = Calendar.getInstance();

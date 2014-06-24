@@ -87,7 +87,7 @@ public class PersistentGroup implements Group {
     @Column(name = PersistentGroup.COLUMN_NAME_NAME, nullable = false)
     private String name;
 
-    @ManyToOne(targetEntity = PersistentGroup.class, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Cascade( { org.hibernate.annotations.CascadeType.SAVE_UPDATE })
     @JoinColumn(name = COLUMN_NAME_PARENT_FK)
     private Group parent;

@@ -5140,8 +5140,7 @@ View.prototype.editGroups = function(workgroupId, nodeId) {
 	    });
     };
     
-    var editGroupsHtml = "";
-    editGroupsHtml += "<div>";
+    var editGroupsDiv = $('<div>');
 
     //get all the groups used in the project
     var allGroupsUsed = this.getProject().getManualGroupsUsed(nodeId);
@@ -5155,21 +5154,36 @@ View.prototype.editGroups = function(workgroupId, nodeId) {
     		var group = allGroupsUsed[x];
     		var checked = '';
     		
+    		//create the check box for the group
+    		var checkBox = $('<input>');
+    		checkBox.attr('type', 'checkbox');
+    		checkBox.attr('id', 'groupCheckBox_' + x);
+    		checkBox.attr('name', 'groupCheckBox');
+    		checkBox.attr('value', group);
+    		checkBox.click({thisView:this, workgroupId:workgroupId, nodeId:nodeId, group:group, x:x}, function(event) {
+    			var thisView = event.data.thisView;
+    			var workgroupId = event.data.workgroupId;
+    			var nodeId = event.data.nodeId;
+    			var group = event.data.group;
+    			var x = event.data.x;
+    			thisView.groupCheckBoxClicked(workgroupId, nodeId, group, x);
+    		});
+    		
     		if(groupsForWorkgroupId != null && groupsForWorkgroupId.indexOf(group) != -1) {
     			//this workgroup is in this group so we will check the checkbox
-    			checked = 'checked';
+    			checkBox.prop('checked', true);
     		}
     		
-    		//display a checkbox for this group
-    		editGroupsHtml += "<input type='checkbox' " + checked + " name='groupCheckBox' value='" + group + "' onclick='eventManager.fire(\"groupClicked\", [" + workgroupId + ", \"" + nodeId + "\"])'/>" + group;
-    		editGroupsHtml += "<br>";
+    		//add the check box and a text label for the group
+    		editGroupsDiv.append(checkBox);
+    		editGroupsDiv.append(group);
+    		editGroupsDiv.append('<br>');
     	}
     }
     
-    editGroupsHtml += "</div>";
-
     //set the html in the popup
-    $('#editGroupsPanel').html(editGroupsHtml);
+    $('#editGroupsPanel').empty();
+    $('#editGroupsPanel').append(editGroupsDiv);
     
     //open the popup
     $('#editGroupsPanel').dialog('open');
@@ -5177,25 +5191,24 @@ View.prototype.editGroups = function(workgroupId, nodeId) {
 
 /**
  * The teacher has clicked one of the group checkboxes in the edit groups popup
+ * @param workgroupId the workgroup id
+ * @param nodeId the node id
+ * @param group the group name
+ * @param x the index of the check box
  */
-View.prototype.groupClickedEventListener = function(workgroupId, nodeId) {
+View.prototype.groupCheckBoxClicked = function(workgroupId, nodeId, group, x) {
 	var groups = [];
 	
-	//get all the group checkboxes that are checked
-	var checkedGroups = $('input[name=groupCheckBox]:checked');
+	//get the checkbox that was clicked
+	var checkBox = $('#groupCheckBox_' + x);
 	
-	//loop through all the groups that are checked
-	for(var x=0; x<checkedGroups.length; x++) {
-		var checkedGroup = checkedGroups[x];
-		
-		if(checkedGroup != null) {
-			//add the group to our array
-			groups.push($(checkedGroup).val());			
-		}
-	}
+	//get whether the checkbox is checked or not
+	var checked = checkBox.prop('checked');
 	
 	//get the run annotation for this workgroup
 	var runAnnotation = this.getRunAnnotationByWorkgroupId(workgroupId);
+	
+	//initialize values if necessary
 	
 	if(runAnnotation == null) {
 		runAnnotation = {};
@@ -5208,8 +5221,38 @@ View.prototype.groupClickedEventListener = function(workgroupId, nodeId) {
 	//get the run annotation value
 	var runAnnotationValue = runAnnotation.value;
 	
-	//set the groups
-	runAnnotationValue.groups = groups;
+	if(runAnnotationValue.groups == null) {
+		runAnnotationValue.groups = [];
+	}
+	
+	//get the groups from the run annotation
+	var groups = runAnnotationValue.groups;
+	
+	if(checked) {
+		//the checkbox is checked so we will add the group
+		groups.push(group);
+	} else {
+		//the checkbox is not checked so we will remove the group
+		
+		if(groups != null) {
+			/*
+			 * search backwards through all the existing groups for this student
+			 * and remove the first instance of the group name that we find
+			 */
+			for(var x=groups.length - 1; x>=0; x--) {
+				//get a group
+				var tempGroup = groups[x];
+				
+				if(tempGroup != null) {
+					if(group == tempGroup) {
+						//the group name matches so we will remove it
+						groups.splice(x, 1);
+						break;
+					}
+				}
+			}			
+		}
+	}
 	
 	//var nodeId = null;
 	var toWorkgroupId = workgroupId;
@@ -5218,7 +5261,7 @@ View.prototype.groupClickedEventListener = function(workgroupId, nodeId) {
 	var stepWorkId = null;
 	
 	//save the annotation to the server
-	this.saveRunAnnotation(nodeId, toWorkgroupId, fromWorkgroupId, runId, stepWorkId, runAnnotation, true);
+	this.saveRunAnnotation(null, toWorkgroupId, fromWorkgroupId, runId, stepWorkId, runAnnotation, true);
 	
 	/*
 	 * get all the groups this workgroup is in. this includes automatic group
@@ -5254,6 +5297,35 @@ View.prototype.groupClickedEventListener = function(workgroupId, nodeId) {
 };
 
 /**
+ * Merge two arrays of strings without adding duplicates
+ * @param oldGroups an array containing group names as strings
+ * @param newGroups an array containing group names as strings
+ * @return an array containing all the groups without duplicates
+ */
+View.prototype.mergeGroups = function(oldGroups, newGroups) {
+	var mergedGroups = null;
+	
+	if(oldGroups != null) {
+		mergedGroups = oldGroups;
+		
+		if(newGroups != null) {
+			//loop through all the new groups
+			for(var x=0; x<newGroups.length; x++) {
+				//get a new group
+				var newGroup = newGroups[x];
+				
+				if(mergedGroups.indexOf(newGroup) == -1) {
+					//the new group is not in the merged groups so we will add it
+					mergedGroups.push(newGroup);
+				}
+			}		
+		}
+	}
+	
+	return mergedGroups;
+};
+
+/**
  * Get the run annotation by workgroup id
  * @param workgroupId the workgroup id
  * @returns the run annotation for the workgroup or null if it does not exist
@@ -5264,8 +5336,8 @@ View.prototype.getRunAnnotationByWorkgroupId = function(workgroupId) {
 	var runAnnotation = null;
 	
 	if(runAnnotations != null && runAnnotations.length > 0){
-		//there should only be one run annotation for a workgroup
-		runAnnotation = runAnnotations[0];
+		//get the latest run annotation
+		runAnnotation = runAnnotations[runAnnotations.length - 1];
 	}
 	
 	return runAnnotation;

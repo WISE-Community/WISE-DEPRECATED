@@ -79,7 +79,7 @@ public class ExportProjectController extends AbstractController {
 		boolean authorized = authorize(signedInUser, project);
 		if (authorized) {
 			// user is admin or is owner of project
-		} else if (projectService.projectContainsTag(new Long(projectId), "public")) {
+		} else if (projectService.projectContainsTag(project, "public")) {
 			// project is marked as being public
 		} else {
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this page");

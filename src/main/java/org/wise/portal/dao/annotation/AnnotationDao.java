@@ -2,7 +2,6 @@ package org.wise.portal.dao.annotation;
 
 import java.util.List;
 
-
 import org.wise.portal.dao.SimpleDao;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.user.UserInfo;
@@ -25,6 +24,10 @@ public interface AnnotationDao<T extends Annotation> extends SimpleDao<T> {
 	public Annotation getAnnotationByUserInfoAndStepWork(UserInfo userInfo, StepWork stepWork, String type);
 	
 	public Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo, UserInfo toUserInfo, StepWork stepWork, String type);
+	
+	public Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo, UserInfo toUserInfo, String nodeId, String type);
+	
+	public Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo, UserInfo toUserInfo, String type);
 	
 	public List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups, StepWork stepWork, String type);
 	
@@ -49,6 +52,8 @@ public interface AnnotationDao<T extends Annotation> extends SimpleDao<T> {
 	public Annotation getCRaterAnnotationByStepWork(StepWork stepWork);
 	
 	public List<Annotation> getAnnotationByStepWorkList(List<StepWork> stepWorkList);
+	
+	public List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers, UserInfo toUser, List<String> annotationTypes);
 	
 	public List<Annotation> getAnnotationList();
 }

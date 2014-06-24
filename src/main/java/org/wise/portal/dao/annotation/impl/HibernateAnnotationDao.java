@@ -186,16 +186,69 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
         
         result = (Annotation) criteria.uniqueResult();
         
-    	/*
-    	result = 
-    			(Annotation) session.createCriteria(Annotation.class)
-    			.add( Restrictions.eq("fromUser", fromUserInfo))
-    			.add( Restrictions.eq("toUser", toUserInfo))
-    			.add( Restrictions.eq("stepWork", stepWork))
-    			.add( Restrictions.eq("type", type))
-    			.uniqueResult();
-    	session.getTransaction().commit();  
-        */
+        return result;
+	}
+	
+	/**
+	 * Get the latest annotation from user and to user for the given node id and annotation type
+	 * @param fromUserInfo the user who created the annotation
+	 * @param toUserInfo the user that is receiving the annotation
+	 * @param nodeId the node id
+	 * @param type the annotation type
+	 * @see org.wise.portal.dao.annotation.AnnotationDao#getAnnotationByFromUserInfoToUserInfoNodeIdType(org.wise.vle.domain.user.UserInfo, org.wise.vle.domain.user.UserInfo, java.lang.String, java.lang.String)
+	 */
+	public Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo, UserInfo toUserInfo, String nodeId, String type) {
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+
+        Annotation result = null;
+        
+        Criteria criteria = session.createCriteria(Annotation.class)
+		.add( Restrictions.eq("fromUser", fromUserInfo))
+		.add( Restrictions.eq("toUser", toUserInfo))
+		.add( Restrictions.eq("type", type))
+		.add(Restrictions.like("data", "%\"nodeId\":\"" + nodeId + "\"%"))
+		.addOrder(Order.asc("postTime"));
+
+        List<Annotation> results = (List<Annotation>) criteria.list();
+        
+        session.getTransaction().commit();
+        
+        if(results != null && results.size() > 0) {
+        	//get the latest annotation
+        	result = results.get(results.size() - 1);
+        }
+        
+        return result;
+	}
+	
+	/**
+	 * Get the latest annotation from user and to user for the given annotation type
+	 * @param fromUserInfo the user who created the annotation
+	 * @param toUserInfo the user that is receiving the annotation
+	 * @param type the annotation type
+	 * @see org.wise.portal.dao.annotation.AnnotationDao#getAnnotationByFromUserInfoToUserInfoNodeIdType(org.wise.vle.domain.user.UserInfo, org.wise.vle.domain.user.UserInfo, java.lang.String, java.lang.String)
+	 */
+	public Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo, UserInfo toUserInfo, String type) {
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+
+        Annotation result = null;
+        
+        Criteria criteria = session.createCriteria(Annotation.class)
+		.add( Restrictions.eq("fromUser", fromUserInfo))
+		.add( Restrictions.eq("toUser", toUserInfo))
+		.add( Restrictions.eq("type", type))
+		.addOrder(Order.asc("postTime"));
+
+        List<Annotation> results = (List<Annotation>) criteria.list();
+        
+        session.getTransaction().commit();
+        
+        if(results != null && results.size() > 0) {
+        	//get the latest annotation
+        	result = results.get(results.size() - 1);
+        }
         
         return result;
 	}
@@ -481,6 +534,28 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 			session.getTransaction().commit();
 		}
 		return result;
+	}
+
+	/**
+	 * Get the annotations that are not associated with any student work and 
+	 * are for the specific annotation types
+	 * @param fromUsers the user(s) who created the annotation
+	 * @param toUser the user receiving the annotation
+	 * @param annotationTypes the annotation types to obtain
+	 * @see org.wise.portal.dao.annotation.AnnotationDao#getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(java.util.List, org.wise.vle.domain.user.UserInfo, java.util.List)
+	 */
+	public List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers, UserInfo toUser, List<String> annotationTypes) {
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+
+        List<Annotation> results = 
+        	(List<Annotation>) session.createCriteria(Annotation.class)
+        		.add( Restrictions.in("fromUser", fromUsers))
+        		.add( Restrictions.eq("toUser", toUser))
+        		.add( Restrictions.in("type", annotationTypes))
+        		.list();
+        session.getTransaction().commit();
+        return results;
 	}
 	
 	public List<Annotation> getAnnotationList() {

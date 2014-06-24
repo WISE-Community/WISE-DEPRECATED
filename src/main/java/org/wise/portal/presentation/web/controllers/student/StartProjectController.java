@@ -293,13 +293,13 @@ public class StartProjectController extends AbstractController {
 
 		// add new session in a allLoggedInUsers servletcontext HashMap variable
 		String sessionId = session.getId();
-		HashMap<String, Run> studentToRuns = (HashMap<String, Run>) session.getServletContext().getAttribute("studentsToRuns");
-		if (studentToRuns == null) {
-			studentToRuns = new HashMap<String, Run>();
-			session.getServletContext().setAttribute("studentsToRuns", studentToRuns);
+		HashMap<String, Long> studentToRunIds = (HashMap<String, Long>) session.getServletContext().getAttribute("studentsToRunIds");
+		if (studentToRunIds == null) {
+			studentToRunIds = new HashMap<String, Long>();
+			session.getServletContext().setAttribute("studentsToRunIds", studentToRunIds);
 		}
 		
-		studentToRuns.put(sessionId, run);
+		studentToRunIds.put(sessionId, run.getId());
 	}
 	
 	/**

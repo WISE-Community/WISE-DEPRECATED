@@ -252,8 +252,8 @@ function isLastEntryOfMonth(portalStatisticsEntry, nextPortalStatisticsEntry) {
 var wiseBaseURL = "${wiseBaseURL}";
 
 //get the pages to request statistics from the portal and vle
-var portalStatisticsPage = "/getPortalStatistics.html";
-var vleStatisticsPage = "/getVLEStatistics.html";
+var portalStatisticsPage = "/pages/statistics.html?type=portal";
+var vleStatisticsPage = "/pages/statistics.html?type=vle";
 
 //boolean for checking if we are done
 var doneParsingPortalStatistics = false;

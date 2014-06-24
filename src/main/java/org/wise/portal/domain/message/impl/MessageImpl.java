@@ -99,14 +99,14 @@ public class MessageImpl implements Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id = null;
     
-	@ManyToOne(targetEntity = MessageImpl.class, fetch=FetchType.EAGER)
+	@ManyToOne(targetEntity = MessageImpl.class, fetch=FetchType.LAZY)
 	@JoinColumn(name = MessageImpl.JOIN_COLUMN_NAME_ORIGINAL_MESSAGE, nullable=true, unique=false)
 	private Message originalMessage;
 	
 	@Column(name = MessageImpl.COLUMN_NAME_DATE, nullable=false)
 	private Date date;
 	    
-    @ManyToOne(targetEntity = UserImpl.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
     @JoinColumn(name = MessageImpl.JOIN_COLUMN_NAME_SENDER, nullable=false)
 	private User sender;
 
