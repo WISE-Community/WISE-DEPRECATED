@@ -30,8 +30,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
@@ -44,18 +47,20 @@ import org.wise.portal.service.project.ProjectService;
  * @author hirokiterashima
  * @version $Id:$
  */
-public class CurrentlyAuthoredProjectsController extends AbstractController {
+@Controller
+@RequestMapping("/admin/project/currentlyAuthoredProjects.html")
+public class CurrentlyAuthoredProjectsController {
 
+	@Autowired
 	private ProjectService projectService;
 	
 	/**
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	@SuppressWarnings("unchecked")
-	@Override
+	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		ModelAndView mav = new ModelAndView("admin/project/currentlyAuthoredProjects");
+		ModelAndView mav = new ModelAndView();
 		
 		HttpSession currentUserSession = request.getSession();
 		HashMap<String, ArrayList<String>> openedProjectsToSessions = 
@@ -106,12 +111,4 @@ public class CurrentlyAuthoredProjectsController extends AbstractController {
 		mav.addObject("openedProjectsToSessions", openedProjectsToSessionsCopy);
 		return mav;
 	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
 }

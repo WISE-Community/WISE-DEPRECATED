@@ -22,7 +22,6 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,25 +35,32 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 
 /**
+ * Controller for Admin Index page
  * @author Hiroki Terashima
  * @version $Id:$
  */
-public class AdminIndexController extends AbstractController {
+@Controller
+@RequestMapping("/admin/index.html")
+public class AdminIndexController {
 
-
-	private static final String VIEW_NAME = "admin/index";
-	
 	private static final String MASTER_GET_WISE_INFO_URL = "http://wise4.org/getWISEInfo.php";
 
 	private static final String WISE_UPDATE_URL = "http://wise4.org";
 
+	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
+		ModelAndView modelAndView = new ModelAndView();
+		
+		String thisWISEVersion = null;  // local WISE version  e.g. "4.8", "4.9.1", etc
+		String globalWISEVersion = null;  // master WISE version    e.g. "4.8", "4.9.1", etc
+
 		// get WISE version from src/main/resources/version.json
 		InputStream in = getClass().getResourceAsStream("/version.json");
 		BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8")); 
@@ -64,7 +70,19 @@ public class AdminIndexController extends AbstractController {
 		while ((inputStr = streamReader.readLine()) != null)
 			responseStrBuilder.append(inputStr);
 		
-		// get latest WISE info from master
+		try {
+			// now add local (this) WISE Version to ModelAndView
+			JSONObject thisWISEVersionJSON = new JSONObject(responseStrBuilder.toString());
+			String thisWISEMajorVersion = thisWISEVersionJSON.getString("major");
+			String thisWISEMinorVersion = thisWISEVersionJSON.getString("minor");
+		    thisWISEVersion = thisWISEMajorVersion + "." + thisWISEMinorVersion;
+			modelAndView.addObject("thisWISEVersion", thisWISEVersion);
+		} catch (Exception e) {
+			modelAndView.addObject("thisWISEVersion", "error retrieving current WISE version");
+			e.printStackTrace();
+		}		
+		
+		// get latest WISE info from master location
 		HttpClient client = new HttpClient();
 		GetMethod method = new GetMethod(MASTER_GET_WISE_INFO_URL);
 		
@@ -90,10 +108,8 @@ public class AdminIndexController extends AbstractController {
 		if (responseBody != null) {
 			responseString = new String(responseBody);
 		}
-		String thisWISEVersion = null;
-		String globalWISEVersion = null;
 		try {
-			// now parse global WISE version JSON and add to ModelAndView obj
+			// now parse global WISE version JSON and add to ModelAndView.
 			JSONObject globalWISEVersionJSON = new JSONObject(responseString);
 			String globalWISEMajorVersion = globalWISEVersionJSON.getString("major");
 			String globalWISEMinorVersion = globalWISEVersionJSON.getString("minor");
@@ -103,18 +119,6 @@ public class AdminIndexController extends AbstractController {
 			modelAndView.addObject("globalWISEVersion", "error retrieving latest WISE version");
 			e.printStackTrace();
 		}
-		
-		try {
-			// now add local (this) WISE Version to ModelAndView obj
-			JSONObject thisWISEVersionJSON = new JSONObject(responseStrBuilder.toString());
-			String thisWISEMajorVersion = thisWISEVersionJSON.getString("major");
-			String thisWISEMinorVersion = thisWISEVersionJSON.getString("minor");
-		    thisWISEVersion = thisWISEMajorVersion + "." + thisWISEMinorVersion;
-			modelAndView.addObject("thisWISEVersion", thisWISEVersion);
-		} catch (Exception e) {
-			modelAndView.addObject("thisWISEVersion", "error retrieving current WISE version");
-			e.printStackTrace();
-		}			
 		
 		try {
 			// now compare the two versions and add version notes to ModelAndView obj
@@ -131,5 +135,4 @@ public class AdminIndexController extends AbstractController {
 		}
 		return modelAndView;
 	}
-
 }
