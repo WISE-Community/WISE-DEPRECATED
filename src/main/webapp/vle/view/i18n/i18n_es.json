@@ -84,11 +84,11 @@
         "description": "Text for mouse hover title on the Home button"
     },
     "hint_title": {
-        "value": "Consejos",
+        "value": "Ayuda",
         "description": "Title of the hint dialog window and the text that shows up next to the Hint button"
     },
     "hint_button_text": {
-        "value": "Consejos",
+        "value": "Ayuda",
         "description": "Text that shows up next to the Hint button"
     },
     "hint_button_title": {
@@ -1014,5 +1014,25 @@
     "idea_basket_public": {
         "value": "Canasta de ideas pública",
         "description": "The text for the public idea basket"
+    },
+    "error_msg_with_reason": {
+        "value": "Ocurrió un error. Motivo:{0} ",
+        "description": "An error message a reason"
+    },
+    "mywork_preview_mode": {
+        "value": "Mi Trabajo no está disponible en el modo de previsualización.",
+        "description": "Text to display when user clicks on review work button in preview mode"
+    },
+    "flagged_preview_mode": {
+        "value": "Marcar no está disponible en el modo de previsualización.",
+        "description": "Text to display when user clicks on flagged work button in preview mode"
+    },
+    "student_assets_preview_mode": {
+        "value": "La evaluación de los estudiantes no está disponible en el modo de previsualización.",
+        "description": "Message to show users when they click on student assets button in preview mode"
+    },
+    "grading_button_teacher_run_notes": {
+        "value": "Mis Notas",
+        "description": "GradingTool: Text in the My Notes button to bring up teacher run notes"
     }
 }
