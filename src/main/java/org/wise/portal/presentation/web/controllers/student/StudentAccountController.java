@@ -25,9 +25,7 @@ package org.wise.portal.presentation.web.controllers.student;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,14 +33,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.StaleObjectStateException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
+import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindException;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.ServletRequestDataBinder;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.AccountQuestion;
 import org.wise.portal.domain.PeriodNotFoundException;
@@ -50,6 +55,7 @@ import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.validators.StudentAccountFormValidator;
 import org.wise.portal.presentation.web.StudentAccountForm;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
@@ -57,40 +63,59 @@ import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 
 /**
- * Signup controller for TELS student user
+ * Signup controller for WISE student user
  *
  * @author Hiroki Terashima
- * @version $Id: RegisterStudentController.java 955 2007-08-21 22:47:13Z hiroki $
+ * @version $Id: StudentAccountController.java 955 2007-08-21 22:47:13Z hiroki $
  */
-public class RegisterStudentController extends SimpleFormController {
+@Controller
+@SessionAttributes("studentAccountForm")
+public class StudentAccountController {
 	
-	private StudentService studentService;
+	@Autowired
+	protected StudentService studentService;
 
-	private UserService userService;
+	@Autowired
+	protected UserService userService;
+
+	@Autowired
+	private StudentAccountFormValidator studentAccountFormValidator;
 	
 	protected static final String USERNAME_KEY = "username";
-	
-	public RegisterStudentController() {
-		setValidateOnBinding(false);
-	}
 	
 	/**
 	 * On submission of the signup form, a user is created and saved to the data
 	 * store.
-	 * 
-	 * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse, java.lang.Object,
-	 *      org.springframework.validation.BindException)
 	 */
-	@Override
 	@Transactional(rollbackFor = { 
 			DuplicateUsernameException.class, ObjectNotFoundException.class, 
 			PeriodNotFoundException.class, HibernateOptimisticLockingFailureException.class,
 			StaleObjectStateException.class})
-	public
-	synchronized ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
+	@RequestMapping(value={"/student/registerstudent.html","/student/updatestudentaccount.html"}, method=RequestMethod.POST)
+	public synchronized String onSubmit(@ModelAttribute("studentAccountForm") StudentAccountForm accountForm, 
+			BindingResult result,
+			HttpServletRequest request,
+			HttpServletResponse response,
+			SessionStatus status,			
+			ModelMap modelMap)
 	throws Exception {
+		StudentUserDetails userDetails = (StudentUserDetails) accountForm.getUserDetails();
+		if (accountForm.isNewAccount()) {
+			userDetails.setSignupdate(Calendar.getInstance().getTime());
+			Calendar birthday       = Calendar.getInstance();
+			int birthmonth = Integer.parseInt(accountForm.getBirthmonth());
+			int birthdate = Integer.parseInt(accountForm.getBirthdate());
+			birthday.set(Calendar.MONTH, birthmonth-1);  // month is 0-based
+			birthday.set(Calendar.DATE, birthdate);
+			userDetails.setBirthday(birthday.getTime());
+		}
+		
+		studentAccountFormValidator.validate(accountForm, result);
+		if (result.hasErrors()) {
+			return "student/registerstudent";
+		}
+
+		
 		String domain = ControllerUtil.getBaseUrlString(request);
 		String domainWithPort = domain + ":" + request.getLocalPort();
 		String referrer = request.getHeader("referer");
@@ -106,8 +131,6 @@ public class RegisterStudentController extends SimpleFormController {
 				 referrer.contains(domainWithPort + registerUrl) ||
   				 referrer.contains(domain + updateAccountInfoUrl) ||
 				 referrer.contains(domainWithPort + updateAccountInfoUrl))){
-			StudentAccountForm accountForm = (StudentAccountForm) command;
-			StudentUserDetails userDetails = (StudentUserDetails) accountForm.getUserDetails();
 	
 			if (accountForm.isNewAccount()) {
 				try {
@@ -122,14 +145,14 @@ public class RegisterStudentController extends SimpleFormController {
 					
 					if(!firstNameMatcher.matches()) {
 						//first name contains non letter characters
-			    		errors.rejectValue("userDetails.firstname", "error.firstname-illegal-characters");
-			    		return showForm(request, response, errors);
+						result.rejectValue("userDetails.firstname", "error.firstname-illegal-characters");
+			    		return "student/registerstudent";
 					}
 					
 					if(!lastNameMatcher.matches()) {
 						//last name contains non letter characters
-						errors.rejectValue("userDetails.lastname", "error.lastname-illegal-characters");
-			    		return showForm(request, response, errors);						
+						result.rejectValue("userDetails.lastname", "error.lastname-illegal-characters");
+			    		return "student/registerstudent";
 					}
 					
 					User user = userService.createUser(userDetails);
@@ -153,15 +176,15 @@ public class RegisterStudentController extends SimpleFormController {
 						break;
 					}
 				} catch (DuplicateUsernameException e) {
-					errors.rejectValue("userDetails.username", "error.duplicate-username",
+					result.rejectValue("userDetails.username", "error.duplicate-username",
 							new Object[] { userDetails.getUsername() }, "Duplicate Username.");
-					return showForm(request, response, errors);
+		    		return "student/registerstudent";
 				} catch (ObjectNotFoundException e) {
-		    		errors.rejectValue("projectCode", "error.illegal-projectcode");
-		    		return showForm(request, response, errors);
+					result.rejectValue("projectCode", "error.illegal-projectcode");
+		    		return "student/registerstudent";
 		    	} catch (PeriodNotFoundException e) {
-		    		errors.rejectValue("projectCode", "error.illegal-projectcode");
-		    		return showForm(request, response, errors);
+		    		result.rejectValue("projectCode", "error.illegal-projectcode");
+		    		return "student/registerstudent";
 		    	}
 			} else {
 				User user = userService.retrieveUserByUsername(userDetails.getUsername());
@@ -182,68 +205,49 @@ public class RegisterStudentController extends SimpleFormController {
 				// update user in session
 				request.getSession().setAttribute(
 						User.CURRENT_USER_SESSION_KEY, user);
+				
+				//clear the command object from the session
+				status.setComplete(); 
+
+				return "student/updatestudentaccountsuccess";
 			}
+			
+			//clear the command object from the session
+			status.setComplete(); 
 	
-			ModelAndView modelAndView = new ModelAndView(getSuccessView());
-	
-			modelAndView.addObject(USERNAME_KEY, userDetails.getUsername());
-			return modelAndView;
+			modelMap.put(USERNAME_KEY, userDetails.getUsername());
+			return "student/registerstudentsuccess";
 		} else {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
 	}
 	
-	@Override
-	protected Object formBackingObject(HttpServletRequest request) throws Exception {
-		return new StudentAccountForm();
-	}
-	
-	@Override
-	protected Map<String, Object> referenceData(HttpServletRequest request) throws Exception {
-		Map<String, Object> model = new HashMap<String, Object>();
+    @RequestMapping(value={"/student/registerstudent.html"},method=RequestMethod.GET) 
+    public String initializeFormNewStudent(ModelMap model) { 
 		model.put("genders", Gender.values());
 		model.put("accountQuestions",AccountQuestion.values());
 		model.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
-		return model;
-	}
-	
-	@Override
-	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors) {
-
-		StudentAccountForm accountForm = (StudentAccountForm) command;
-		StudentUserDetails userDetails = (StudentUserDetails) accountForm.getUserDetails();
-		if (accountForm.isNewAccount()) {
-			userDetails.setSignupdate(Calendar.getInstance().getTime());
-			Calendar birthday       = Calendar.getInstance();
-			int birthmonth = Integer.parseInt(accountForm.getBirthmonth());
-			int birthdate = Integer.parseInt(accountForm.getBirthdate());
-			birthday.set(Calendar.MONTH, birthmonth-1);  // month is 0-based
-			birthday.set(Calendar.DATE, birthdate);
-			userDetails.setBirthday(birthday.getTime());
-		}
-
-		getValidator().validate(accountForm, errors);
-	}
-
-	@Override
+		model.addAttribute("studentAccountForm", new StudentAccountForm());
+        return "/student/registerstudent"; 
+    } 
+    
+    @RequestMapping(value={"/student/updatestudentaccount.html"},method=RequestMethod.GET) 
+    public String initializeFormExistingStudent(ModelMap model) { 
+		User user = ControllerUtil.getSignedInUser();
+		model.put("genders", Gender.values());
+		model.put("accountQuestions",AccountQuestion.values());
+		model.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
+		model.addAttribute("studentAccountForm",  new StudentAccountForm((StudentUserDetails) user.getUserDetails()));
+        return "/student/updatestudentaccount"; 
+    } 
+    
+	@InitBinder
 	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception
 	{
 	  binder.registerCustomEditor(Date.class,
 	    new CustomDateEditor(new SimpleDateFormat("MM/dd"), false)
 	  );
 	}
-
-	/**
-	 * @param studentService the studentService to set
-	 */
-	public void setStudentService(StudentService studentService) {
-		this.studentService = studentService;
-	}
-
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
 
 }

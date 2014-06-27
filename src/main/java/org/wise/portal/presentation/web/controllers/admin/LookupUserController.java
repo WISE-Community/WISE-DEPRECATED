@@ -23,24 +23,25 @@
 package org.wise.portal.presentation.web.controllers.admin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.validation.BindException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
-import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.domain.admin.StudentFields;
 import org.wise.portal.domain.admin.TeacherFields;
-import org.wise.portal.domain.authentication.Curriculumsubjects;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.impl.LookupUserParameters;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.validators.LookupUserParametersValidator;
 import org.wise.portal.service.user.UserService;
 
 /**
@@ -48,47 +49,40 @@ import org.wise.portal.service.user.UserService;
  * @author Hiroki Terashima
  * @version $Id:$
  */
-public class LookupUserController extends SimpleFormController {
+@Controller
+@RequestMapping("/admin/account/lookupuser.html")
+public class LookupUserController {
 	
+	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private LookupUserParametersValidator lookupUserParametersValidator;
 
-	@Override
-	protected Map<String, Object> referenceData(HttpServletRequest request) throws Exception {
-		Map<String, Object> model = new HashMap<String, Object>();
-		String userType = request.getParameter("userType");
-		model.put("userType", userType);
-		if ("teacher".equals(userType)) {
-			model.put("fields", TeacherFields.values());
-		} else {
-			model.put("fields", StudentFields.values());
+	@RequestMapping(method=RequestMethod.POST)
+	protected ModelAndView onSubmit(@ModelAttribute("lookupUserParameters")LookupUserParameters param, 
+			BindingResult result, HttpServletRequest request){
+		
+		lookupUserParametersValidator.validate(param, result);
+		if (result.hasErrors()) {
+			return null;
 		}
-		return model;
-	}
 
-	/**
-     * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
-     *      javax.servlet.http.HttpServletResponse, java.lang.Object,
-     *      org.springframework.validation.BindException)
-     */
-	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request,
-            HttpServletResponse response, Object command, BindException errors){
-		LookupUserParameters params = (LookupUserParameters) command;
 		Object term = new Object();
 		
 		// if searching for ID, make the term object in a Long.
-		if ("ID".equals(params.getLookupField())) {
-			term = Long.parseLong(params.getLookupData());
-		} else if(params.getLookupField().equals("GENDER")){
-			term = Gender.valueOf(params.getLookupData().toUpperCase());
-		} else if(params.getLookupCriteria().equals("like")){
-			term = "%" + params.getLookupData() + "%";
-		} else if(params.getLookupField().equals("SCHOOLLEVEL")){
-			term = getLevel(params.getLookupData());
-		} else if(params.getLookupCriteria().equals("like")) {
-			term = "%" + params.getLookupData() + "%";
+		if ("ID".equals(param.getLookupField())) {
+			term = Long.parseLong(param.getLookupData());
+		} else if(param.getLookupField().equals("GENDER")){
+			term = Gender.valueOf(param.getLookupData().toUpperCase());
+		} else if(param.getLookupCriteria().equals("like")){
+			term = "%" + param.getLookupData() + "%";
+		} else if(param.getLookupField().equals("SCHOOLLEVEL")){
+			term = getLevel(param.getLookupData());
+		} else if(param.getLookupCriteria().equals("like")) {
+			term = "%" + param.getLookupData() + "%";
 		} else {
-			term = params.getLookupData();
+			term = param.getLookupData();
 		}
 		
 		String userDetailsType = "teacherUserDetails";
@@ -96,8 +90,8 @@ public class LookupUserController extends SimpleFormController {
 			userDetailsType = "studentUserDetails";
 		}
 		
-		List<User> users = this.userService.retrieveByField(params.getLookupField()
-				.toLowerCase(),	params.getLookupCriteria(), term,
+		List<User> users = this.userService.retrieveByField(param.getLookupField()
+				.toLowerCase(),	param.getLookupCriteria(), term,
 				userDetailsType);
 		
 		ModelAndView modelAndView = new ModelAndView("admin/account/manageusers");
@@ -119,6 +113,22 @@ public class LookupUserController extends SimpleFormController {
 		
 		return modelAndView;
 	}
+	
+    @RequestMapping(method=RequestMethod.GET) 
+    public ModelAndView initializeForm(ModelMap model, HttpServletRequest request) { 
+    	ModelAndView mav = new ModelAndView();
+    	mav.addObject("lookupUserParameters", new LookupUserParameters());
+    	
+		String userType = request.getParameter("userType");
+		model.put("userType", userType);
+		if ("teacher".equals(userType)) {
+			model.put("fields", TeacherFields.values());
+		} else {
+			model.put("fields", StudentFields.values());
+		}
+    	
+        return mav; 
+    } 
 
 	private Schoollevel getLevel(String level){
 		for(Schoollevel schoolLevel : Schoollevel.values()){

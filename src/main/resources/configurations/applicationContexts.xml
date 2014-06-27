@@ -44,14 +44,6 @@
       http://www.springframework.org/schema/context/spring-context-3.0.xsd"  
       >
       
-    
-    <!--  Setting up the dispatcher for annotation support -->
-    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-     <property name="order" value="0" />
-	</bean>   
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
-
     <!-- ======================== FILTER CHAIN ======================= -->
 
     <!--  if you wish to use channel security, add "channelProcessingFilter," in front
@@ -906,10 +898,8 @@
         <!-- enable the @Required Spring annotation for marking required properties to be wired -->
     <bean
         class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
-
-    <!-- enable the @Controller Spring annotation for defining controllers using annotations -->
-	<context:component-scan base-package="org.wise.portal.presentation.web.controllers"/>
     
+
     <!-- enable the configuration of transactional behavior based on annotations -->
     <tx:annotation-driven />
 
@@ -1012,7 +1002,7 @@
 	<bean id="run" scope="prototype"
 		class="org.wise.portal.domain.run.impl.RunImpl">
 	</bean>
-
+	
 	<bean id="vleService"
 		class="org.wise.portal.service.vle.impl.VLEServiceImpl">
 		<property name="userInfoDao" ref="userInfoDao" />

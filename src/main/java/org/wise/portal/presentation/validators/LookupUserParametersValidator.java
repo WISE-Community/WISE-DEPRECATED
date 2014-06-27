@@ -48,12 +48,12 @@ public class LookupUserParametersValidator implements Validator {
 	public void validate(Object paramsIn, Errors errors) {
 		
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lookupData", 
-				"error.no-searchterm-entered");
+				"error.invalid-parameters");
 		
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lookupField", 
-				"error.no-searchfield-selected");
+				"error.invalid-parameters");
 		
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lookupCriteria", 
-				"error.no-searchcriteria-selected");
+				"error.invalid-parameters");
 	}
 }

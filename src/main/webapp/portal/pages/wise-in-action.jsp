@@ -84,7 +84,7 @@
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.wise-in-action.administrationPartnerships" /></div>
 							<p><spring:message code="pages.wise-in-action.administrationPartnershipsParagraph1" /></p>
-							<p><spring:message code="pages.wise-in-action.administrationPartnershipsParagraph2Part1" /> <a href="${contextPath}/contact/contactwisegeneral.html"><spring:message code="pages.wise-in-action.contactUs" /></a> <spring:message code="pages.wise-in-action.administrationPartnershipsParagraph2Part2" /></p>
+							<p><spring:message code="pages.wise-in-action.administrationPartnershipsParagraph2Part1" /> <a href="${contextPath}/contact/contactwise.html"><spring:message code="pages.wise-in-action.contactUs" /></a> <spring:message code="pages.wise-in-action.administrationPartnershipsParagraph2Part2" /></p>
 						</div>
 						<div style="clear:both;"></div>
 					</div>

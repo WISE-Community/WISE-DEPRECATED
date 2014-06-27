@@ -48,6 +48,7 @@
 						    </tr>
 						    </table>
 					<div>
+						<form:input path="newAccount" type="hidden" value="0" />
 						<input type="submit" value="<spring:message code='save' />" />
 					</div>
 				</form:form>

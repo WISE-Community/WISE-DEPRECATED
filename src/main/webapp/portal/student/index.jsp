@@ -32,7 +32,7 @@ $(document).ready(function() {
 	// create add project dialog
 	$("#addprojectLink").bind("click", function() {
 		var addProjectDialogHtml = '<div style="display:none; overflow-y:hidden;" id="addProjectDialog">'+
-		'<iframe id="addProjectFrame" src="addproject.html" width="100%" height="99%" frameborder="0" allowTransparency="false"> </iframe>'+			
+		'<iframe id="addProjectFrame" width="100%" height="99%" frameborder="0" allowTransparency="false"> </iframe>'+			
 		'</div>';
 		if ($("#addProjectDialog").length == 0) {
 			$("#page").append(addProjectDialogHtml);	
@@ -48,7 +48,7 @@ $(document).ready(function() {
 				Cancel: function(){ $(this).dialog('destroy'); }
 			}
 		});
-
+		$("#addProjectDialog > #addProjectFrame").attr('src','addproject.html');
 	});
 
 	// create change password dialog
@@ -75,7 +75,7 @@ $(document).ready(function() {
 	// create update userinfo dialog
 	$("#updateStudentAccountLink").bind("click", function() {
 		var updateStudentAccountDialogHtml = '<div style="display:none; overflow-y:hidden;" id="updateStudentAccountDialog">'+
-		'<iframe id="updateStudentAccountFrame" src="updatestudentaccount.html" width="100%" height="99%" frameborder="0" allowTransparency="false"> </iframe>'+			
+		'<iframe id="updateStudentAccountFrame" width="100%" height="99%" frameborder="0" allowTransparency="false"> </iframe>'+			
 		'</div>';
 		if ($("#updateStudentAccountDialog").length == 0) {
 			$("#page").append(updateStudentAccountDialogHtml);	
@@ -91,6 +91,7 @@ $(document).ready(function() {
 				Cancel: function(){ $(this).dialog('destroy'); }
 			}
 		});
+		$("#updateStudentAccountDialog > #updateStudentAccountFrame").attr("src", "updatestudentaccount.html");
 
 	});
 	
@@ -336,7 +337,7 @@ $(document).ready(function() {
 												</c:otherwise>
 											</c:choose>
 											<li class="announcements"><a id="viewAnnouncements_${studentRunInfo.run.id}" class="viewAnnouncements"><spring:message code="student.index.viewAnnouncements"/></a></li>
-											<li><a href="${contextPath}/contact/contactwiseproject.html?projectId=${studentRunInfo.run.project.id}&runId=${studentRunInfo.run.id}"><spring:message code="student.index.reportProblem"/></a></li>
+											<li><a href="${contextPath}/contact/contactwise.html?projectId=${studentRunInfo.run.project.id}&runId=${studentRunInfo.run.id}"><spring:message code="student.index.reportProblem"/></a></li>
 										</ul>
 								 	</td>
 								</tr>

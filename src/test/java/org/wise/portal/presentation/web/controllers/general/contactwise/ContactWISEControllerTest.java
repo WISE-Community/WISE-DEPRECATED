@@ -36,13 +36,13 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.general.contactwise.ContactWISE;
 import org.wise.portal.domain.general.contactwise.IssueType;
 import org.wise.portal.domain.general.contactwise.OperatingSystem;
 import org.wise.portal.domain.general.contactwise.WebBrowser;
-import org.wise.portal.domain.general.contactwise.impl.ContactWISEGeneral;
+import org.wise.portal.domain.general.contactwise.impl.ContactWISEForm;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.presentation.web.controllers.ContactWiseController;
@@ -80,11 +80,11 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 	private HttpServletResponse response;
 
-	private BindException errors;
+	private BindingResult errors;
 	
 	private ContactWiseController contactController; 
 	
-	private ContactWISE contactDetails;
+	private ContactWISEForm contactDetails;
 	
 	private IMailFacade mockMail;
 	
@@ -99,7 +99,7 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
 		
-		contactDetails = new ContactWISEGeneral();
+		contactDetails = new ContactWISEForm();
 		
 		errors = new BindException(contactDetails, "");
 		mockMail = createMock(IMailFacade.class);
@@ -142,14 +142,9 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 		contactDetails.setIssuetype(issueType);
 		contactDetails.setSummary(SUMMARY);
 		contactDetails.setDescription(DESCRIPTION);
-		contactDetails.setWiseProperties(wiseProperties);
 		contactDetails.setUsersystem("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11");
 		
 		contactController = new ContactWiseController();
-		contactController.setMailService(mockMail);
-		contactController.setWiseProperties(uiHTMLProperties);
-		contactController.setSuccessView(SUCCESS);
-		contactController.setFormView(FORM);
 	}
 	
 	public void testOnSubmit_success() throws Exception {
@@ -168,9 +163,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -190,9 +188,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -212,9 +213,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -234,9 +238,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -256,9 +263,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -278,9 +288,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -300,9 +313,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -322,9 +338,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -344,9 +363,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -366,9 +388,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -391,9 +416,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -416,9 +444,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -441,9 +472,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -466,9 +500,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -491,9 +528,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -516,9 +556,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -541,9 +584,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 	
@@ -569,9 +615,12 @@ public class ContactWISEControllerTest extends AbstractModelAndViewTests {
 
 		mockMail.postMail(aryEq(recipients), eq(subject), eq(message), eq(from), aryEq(cc));
 		replay(mockMail);
-		ModelAndView modelAndView = contactController.onSubmit(request,
-				response, contactDetails, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = contactController.onSubmit(
+				contactDetails,
+				errors,
+				request,
+				response);
+		assertEquals(SUCCESS, view);
 		verify(mockMail);
 	}
 }

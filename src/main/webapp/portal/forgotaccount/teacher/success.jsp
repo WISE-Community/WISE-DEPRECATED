@@ -29,7 +29,7 @@
 						<spring:message code="forgotaccount.teacher.success.anEmailHasBeenSent"/>
 					</div>
 					<div>
-						<spring:message code="forgotaccount.teacher.success.ifYouHaveAnyOtherProblemsOrQuestions"/> <a href="${contextPath}/contact/contactwisegeneral.html"> <spring:message code="forgotaccount.teacher.success.contactWISE"/></a>
+						<spring:message code="forgotaccount.teacher.success.ifYouHaveAnyOtherProblemsOrQuestions"/> <a href="${contextPath}/contact/contactwise.html"> <spring:message code="forgotaccount.teacher.success.contactWISE"/></a>
 					</div>
 				</div>
 				<a href="${contextPath}/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>

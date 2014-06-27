@@ -75,10 +75,6 @@ public class FindProjectRunsControllerTest extends AbstractModelAndViewTests  {
 		this.runList = new ArrayList<Run>();
 		this.findProjectParameters = new FindProjectParameters();
 		this.errors = new BindException(findProjectParameters, "");
-
-		this.controller.setRunService(this.runService);
-		this.controller.setApplicationContext(this.mockApplicationContext);
-		this.controller.setSuccessView(VIEW);
 	}
 	
 	@After
@@ -99,7 +95,7 @@ public class FindProjectRunsControllerTest extends AbstractModelAndViewTests  {
 		replay(runService);
 		ModelAndView modelAndView = null; 
 		try {
-			modelAndView = controller.onSubmit(request, response, findProjectParameters, errors);
+			modelAndView = controller.onSubmit(findProjectParameters, errors);
 		} catch (Exception e) {
 			fail("unexpected exception");
 		}

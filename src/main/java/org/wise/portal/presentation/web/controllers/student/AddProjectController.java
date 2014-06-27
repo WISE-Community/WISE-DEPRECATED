@@ -25,18 +25,23 @@ package org.wise.portal.presentation.web.controllers.student;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.hibernate.StaleObjectStateException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
-import org.springframework.validation.BindException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.project.impl.AddProjectParameters;
 import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.validators.student.AddProjectParametersValidator;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.student.StudentService;
 
@@ -46,27 +51,34 @@ import org.wise.portal.service.student.StudentService;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class AddProjectController extends SimpleFormController {
+@Controller
+@RequestMapping("/student/addproject.html")
+public class AddProjectController {
 
+	@Autowired
 	private StudentService studentService;
-
+	
+	@Autowired
+	private AddProjectParametersValidator addprojectparametersValidator;
+	
 	/**
      * On submission of the Add a Project form, the logged-in user is added to 
      * the project run.
-     * 
-     * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
-     *      javax.servlet.http.HttpServletResponse, java.lang.Object,
-     *      org.springframework.validation.BindException)
      */
-    @Override
-    protected synchronized ModelAndView onSubmit(HttpServletRequest request,
-            HttpServletResponse response, Object command, BindException errors)
+	@RequestMapping(method=RequestMethod.POST)
+    protected synchronized ModelAndView onSubmit(@ModelAttribute("addProjectParameters")AddProjectParameters params, 
+    		BindingResult result, HttpServletRequest request,
+            HttpServletResponse response)
             throws Exception {
+    	
+    	addprojectparametersValidator.validate(params, result);
+		if (result.hasErrors()) {
+			return null;
+		}
+		
 		User user = ControllerUtil.getSignedInUser();
-		// command contains a legally-formatted projectcode.
-    	AddProjectParameters params = (AddProjectParameters) command;
 
-    	ModelAndView modelAndView = null;
+    	ModelAndView modelAndView = new ModelAndView();
     	Projectcode projectcode = new Projectcode(params.getProjectcode());
     	try {
 			int maxLoop = 100;  // to ensure that the following while loop gets run at most this many times.
@@ -74,7 +86,7 @@ public class AddProjectController extends SimpleFormController {
 			while (currentLoopIndex < maxLoop) {
 				try {
 					studentService.addStudentToRun(user, projectcode);  // add student to period
-					modelAndView = new ModelAndView(getSuccessView());
+					modelAndView = new ModelAndView("student/addprojectsuccess");
 				} catch (HibernateOptimisticLockingFailureException holfe) {
 					// multiple students tried to create an account at the same time, resulting in this exception. try saving again.
 					currentLoopIndex++;
@@ -88,22 +100,22 @@ public class AddProjectController extends SimpleFormController {
 				break;
 			}
     	} catch (ObjectNotFoundException e) {
-    		errors.rejectValue("projectcode", "student.index.error.illegalRunCode");
-    		return showForm(request, response, errors);
+    		result.rejectValue("projectcode", "student.index.error.illegalRunCode");
+    		return modelAndView;
     	} catch (PeriodNotFoundException e) {
-    		errors.rejectValue("projectcode", "student.index.error.illegalRunCode");
-    		return showForm(request, response, errors);
+    		result.rejectValue("projectcode", "student.index.error.illegalRunCode");
+    		return modelAndView;
     	} catch (StudentUserAlreadyAssociatedWithRunException se) {
-    		errors.rejectValue("projectcode", "student.index.error.studentAlreadyAssociatedWithRun");
-    		return showForm(request, response, errors);
+    		result.rejectValue("projectcode", "student.index.error.studentAlreadyAssociatedWithRun");
+    		return modelAndView;
     	}
 		return modelAndView;
     }
-
-	/**
-	 * @param studentService the studentService to set
-	 */
-	public void setStudentService(StudentService studentService) {
-		this.studentService = studentService;
-	}
+    
+    @RequestMapping(method=RequestMethod.GET) 
+    public ModelAndView initializeForm(ModelMap model) { 
+    	ModelAndView mav = new ModelAndView();
+    	mav.addObject("addProjectParameters", new AddProjectParameters());
+        return mav; 
+    } 
 }
