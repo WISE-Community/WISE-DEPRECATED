@@ -17,60 +17,31 @@ Styles for the WISE Classroom Monitor, Grading, and Student Management Tools
 
 .progress-striped() {
 	#gradient > .striped();
-  	background-size: 40px 40px;
+  	background-size: ((40px / @font-size-root) + @font-unit) ((40px / @font-size-root) + @font-unit);
 }
 
 /* Links, Buttons, Forms, Controls */
 
-.dataTables_wrapper {
-	.multiselect-container > li {
-		.radio {
-			padding-left: 20px;
-		}
-	}
-}
 
-.multiselect {
-	> span {
-		//display: -webkit-box;
-		display: inline-flex;
-		display: -moz-box;
-		display: -ms-flexbox;
-		display: box;
-		margin-right: 2px;
-	    max-width: 150px;
-	    overflow: hidden;
-	    text-overflow: ellipsis;
-	    white-space: nowrap;
-	}
-}
-
-.multiselect-container {
-	.radio {
-		> input {
-			display: none;
-		}
-	}
-}
 
 /* Pulse animation	*/
 @-webkit-keyframes dangerPulse {
-	from { box-shadow: 0 0 2px #aaa; }
-	50% { box-shadow: 0 0 10px @brand-danger; }
-	to { box-shadow: 0 0 2px #aaa; }
+	from { box-shadow: 0 0 ((2px / @font-size-root) + @font-unit) #aaa; }
+	50% { box-shadow: 0 0 ((10px / @font-size-root) + @font-unit) @brand-danger; }
+	to { box-shadow: 0 0 ((2px / @font-size-root) + @font-unit) #aaa; }
 }
 
 @keyframes dangerPulse {
-	from { box-shadow: 0 0 2px #aaa; }
-	50% { box-shadow: 0 0 10px @brand-danger; }
-	to { box-shadow: 0 0 2px #aaa; }
+	from { box-shadow: 0 0 ((2px / @font-size-root) + @font-unit) #aaa; }
+	50% { box-shadow: 0 0 ((10px / @font-size-root) + @font-unit) @brand-danger; }
+	to { box-shadow: 0 0 ((2px / @font-size-root) + @font-unit) #aaa; }
 }
 
 //#save {
 #newWork {
 	position: fixed;
-	bottom: 41px;
-	right: 7px;
+	bottom: ((41px / @font-size-root) + @font-unit);
+	right: ((7px / @font-size-root) + @font-unit);
 	animation: dangerPulse 3s infinite;
 	-webkit-animation: dangerPulse 3s infinite;
 	display: none;
@@ -84,11 +55,11 @@ Styles for the WISE Classroom Monitor, Grading, and Student Management Tools
 /* Monitor Layout */
 
 html {
-	min-width: 550px;
+	//min-width: ((550px / @font-size-root) + @font-unit);
 }
 
 body {
-	margin: (93px + @padding-base-vertical) @padding-base-horizontal (36px + @padding-base-vertical);
+	margin: (((89px / @font-size-root) + @font-unit) + @padding-base-vertical) @padding-base-horizontal (((36px / @font-size-root) + @font-unit) + @padding-base-vertical);
 	background-color: #eee;
 	background-image: url("../../images/global/content_bg.png");
 }
@@ -110,7 +81,7 @@ body {
 	box-shadow: 1px -1px 2px rgba(0, 0, 0, 0.1);
 	
 	.panel-body {
-		padding: 7px;
+		padding: ((7px / @font-size-root) + @font-unit);
 	}
 	
 	.label {
@@ -126,17 +97,27 @@ body {
     vertical-align: bottom;
     white-space: nowrap;
     display: inline-block;
-    max-width: 125px;
+    max-width: ((125px / @font-size-root) + @font-unit);
 }
 
 #monitorTopNav {
 	.small {
-		margin: 0 5px;
+		margin: 0 ((5px / @font-size-root) + @font-unit);
+		font-weight: 300;
+		color: @brand-warning;
+	}
+	
+	#runTitle {
+		font-weight: 300;
+	}
+	
+	.run-name {
+		font-weight: normal;
 	}
 }
 
 #monitorMenu {
-	top: 44px;
+	top: ((40px / @font-size-root) + @font-unit);
 	border-bottom: 1px solid @content-border-color;
 	
 	@media (max-width: (@screen-sm-min - 1)) {
@@ -151,16 +132,16 @@ body {
 }
 
 #pauseMsg {
-	width: 280px;
+	width: ((280px / @font-size-root) + @font-unit);
 	
 	@media (min-width: @screen-sm-min) {
-		width: 300px;
+		width: ((300px / @font-size-root) + @font-unit);
 	}
 }
 
 #pauseScreensContent {
 	.multiselect-container {
-		max-width: 300px;
+		max-width: ((300px / @font-size-root) + @font-unit);
 		overflow-x: hidden;
 	}
 	
@@ -178,7 +159,7 @@ body {
 	border-color: @content-border-color;
 	min-height: 0;
 	margin: 0;
-	padding: 5px;
+	padding: ((5px / @font-size-root) + @font-unit);
 }
 
 /* Monitor Section Content */
@@ -198,8 +179,8 @@ table.dataTable {
 	}
 	
 	hr {
-		margin-bottom: 8px;
-		margin-top: 8px;
+		margin-bottom: ((8px / @font-size-root) + @font-unit);
+		margin-top: ((8px / @font-size-root) + @font-unit);
 	}
 	
 	thead {
@@ -276,12 +257,12 @@ table.dataTable {
 	}
 	
 	.activity, .group {
-		background-color: @gray-lighter;
 		font-weight: bold;
 		color: @text-color;
 	}
 	
 	.activity {
+		background-color: @gray-lighter;
 		td:not(last-child) {
 			border-right-width: 0;
 		}
@@ -308,7 +289,7 @@ table.dataTable {
 				}
 				
 				.form-group {
-					margin-bottom: 10px;
+					margin-bottom: ((10px / @font-size-root) + @font-unit);
 				}
 			}
 			
@@ -331,6 +312,7 @@ table.dataTable {
 					background-color: #777777;
 					color: #ffffff;
 					border: 0 none;
+					border-radius: @border-radius-base @border-radius-base 0px 0px;
 					
 					.toggle-revisions {
 						color: #777777;
@@ -411,41 +393,41 @@ table.dataTable {
 	a {
 		display: block;
 		font-weight: bold;
-		padding: 8px 10px;
+		padding: ((8px / @font-size-root) + @font-unit) ((10px / @font-size-root) + @font-unit);
 		
 		&:hover, &:active {
 			text-decoration: none;
 		}
 		
 		.fa {
-			margin-left: 5px;
+			margin-left: ((5px / @font-size-root) + @font-unit);
 		}
 	}
 	
 	.label {
 		@media (min-width: @screen-md-min) {
 			.pull-right;
-			margin-top: 2px;
+			margin-top: ((2px / @font-size-root) + @font-unit);
 		}
 		
-		margin-left: 2px;
+		margin-left: ((2px / @font-size-root) + @font-unit);
 	}
 }
 
 .stepwork {
-	min-height: 135px;
-	margin-bottom: 35px;
+	min-height: ((135px / @font-size-root) + @font-unit);
+	margin-bottom: ((35px / @font-size-root) + @font-unit);
 }
 
 .stepwork-empty {
-	min-height: 190px;
+	min-height: ((190px / @font-size-root) + @font-unit);
 }
 
 .stepwork-header {
 	background-color: #eee;
     border-bottom: 1px solid #ddd;
-    margin: -8px -10px 10px;
-    padding: 8px 10px;
+    margin: ((-8px / @font-size-root) + @font-unit) ((-10px / @font-size-root) + @font-unit) ((10px / @font-size-root) + @font-unit);
+    padding: ((8px / @font-size-root) + @font-unit) ((10px / @font-size-root) + @font-unit);
 }
 
 .timestamp {
@@ -453,10 +435,10 @@ table.dataTable {
 	font-size: @font-size-small;
 	position: absolute;
 	bottom: 0;
-	padding: 8px 0;
+	padding: ((8px / @font-size-root) + @font-unit) 0;
 	border-top: 1px solid @gray-lighter;
-	left: 10px;
-	right: 10px;
+	left: ((10px / @font-size-root) + @font-unit);
+	right: ((10px / @font-size-root) + @font-unit);
 }
 
 .flag {
@@ -464,20 +446,21 @@ table.dataTable {
 }
 
 .feedback-form {
-	min-width: 250px;
+	min-width: ((250px / @font-size-root) + @font-unit);
 	
 	@media(min-width: @screen-md-min) {
-		min-width: 300px;
+		min-width: ((300px / @font-size-root) + @font-unit);
 	}
 }
 
 .form-inline .form-control.score {
 	text-align: center;
 	padding: 2px;
-    width: 50px;
+    width: ((50px / @font-size-root) + @font-unit);
     font-weight: bold;
     font-size: @font-size-base*1.1;
     color: @brand-primary;
+    display: inline-block;
 }
 
 .max-score {
@@ -487,14 +470,14 @@ table.dataTable {
 }
 
 .dataTables_top {
-	.btn-group { margin-left: 5px; }
+	.btn-group { margin-left: ((5px / @font-size-root) + @font-unit); }
 }
 
 .datatables-subheader {
 	.workgroup-names, .step-name {
 		color: @brand-info;
 		font-size: @font-size-base*1.1;
-		margin: 0 2px;
+		margin: 0 ((2px / @font-size-root) + @font-unit);
 		display: inline-table;
 		font-weight: bold;
 	}
@@ -504,12 +487,12 @@ table.dataTable {
 	}
 	
 	.label {
-		margin: 0 10px;
+		margin: 0 ((10px / @font-size-root) + @font-unit);
 		font-size: @font-size-small;
 	}
 	
 	.workgroup-info, .step-info {
-		margin-top: 5px;
+		margin-top: ((5px / @font-size-root) + @font-unit);
 	}
 }
 
@@ -529,13 +512,13 @@ table.dataTable {
 	
 	.jumbotron {
 		background-color: rgba(0, 0, 0, 0.5);
-	    border-radius: 6px;
-	    box-shadow: 0 0 2px #666 inset;
+	    border-radius: ((6px / @font-size-root) + @font-unit);
+	    box-shadow: 0 0 ((2px / @font-size-root) + @font-unit) #666 inset;
 	    color: #fff;
-	    font-size: 25px;
-	    margin: 120px auto 0;
-	    padding: 10px;
-	    width: 100px;
+	    font-size: ((25px / @font-size-root) + @font-unit);
+	    margin: ((110px / @font-size-root) + @font-unit) auto 0;
+	    padding: ((10px / @font-size-root) + @font-unit);
+	    width: ((100px / @font-size-root) + @font-unit);
 	}
 }
 
@@ -543,9 +526,9 @@ table.dataTable {
 
 #vle_messages {
 	position: fixed;
-	top: 74px;
-	left: 30px;
-	right: 30px;
+	top: ((74px / @font-size-root) + @font-unit);
+	left: ((30px / @font-size-root) + @font-unit);
+	right: ((30px / @font-size-root) + @font-unit);
 	text-align: center;
 	z-index: 111;
 	

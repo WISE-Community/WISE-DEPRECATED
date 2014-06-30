@@ -1,11 +1,15 @@
 /*
 * pikock http://www.pikock.com/ , autreplanete http://www.autreplanete.com/ 
+* Use rem instead of pixels: https://gist.github.com/jasny/9731895
 *  
 **/
+/**
+ * Use em or rem font-size in Bootstrap 3
+ */
 .bootstrap-switch {
   display: inline-block;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 0.23076923076923078rem;
   border: 1px solid;
   border-color: #dddddd;
   position: relative;
@@ -19,6 +23,7 @@
   vertical-align: middle;
   min-width: 90px;
   -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 .bootstrap-switch.bootstrap-switch-mini {
@@ -56,21 +61,22 @@
 }
 .bootstrap-switch.bootstrap-switch-animate .bootstrap-switch-container {
   -webkit-transition: margin-left 0.5s;
+  -o-transition: margin-left 0.5s;
   transition: margin-left 0.5s;
 }
 .bootstrap-switch.bootstrap-switch-on .bootstrap-switch-container {
   margin-left: 0%;
 }
 .bootstrap-switch.bootstrap-switch-on .bootstrap-switch-label {
-  border-bottom-right-radius: 2px;
-  border-top-right-radius: 2px;
+  border-bottom-right-radius: -0.7692307692307692rem;
+  border-top-right-radius: -0.7692307692307692rem;
 }
 .bootstrap-switch.bootstrap-switch-off .bootstrap-switch-container {
   margin-left: -50%;
 }
 .bootstrap-switch.bootstrap-switch-off .bootstrap-switch-label {
-  border-bottom-left-radius: 2px;
-  border-top-left-radius: 2px;
+  border-bottom-left-radius: -0.7692307692307692rem;
+  border-top-left-radius: -0.7692307692307692rem;
 }
 .bootstrap-switch.bootstrap-switch-disabled,
 .bootstrap-switch.bootstrap-switch-readonly {
@@ -96,7 +102,7 @@
   display: inline-block;
   width: 150%;
   top: 0;
-  border-radius: 3px;
+  border-radius: 0.23076923076923078rem;
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
@@ -151,12 +157,12 @@
   background: #dddddd;
 }
 .bootstrap-switch .bootstrap-switch-handle-on {
-  border-bottom-left-radius: 2px;
-  border-top-left-radius: 2px;
+  border-bottom-left-radius: -0.7692307692307692rem;
+  border-top-left-radius: -0.7692307692307692rem;
 }
 .bootstrap-switch .bootstrap-switch-handle-off {
-  border-bottom-right-radius: 2px;
-  border-top-right-radius: 2px;
+  border-bottom-right-radius: -0.7692307692307692rem;
+  border-top-right-radius: -0.7692307692307692rem;
 }
 .bootstrap-switch .bootstrap-switch-label {
   text-align: center;
