@@ -232,7 +232,9 @@ ExplanationBuilderNode.prototype.renderGradingView = function(displayStudentWork
 	
 		// create the display container
 		$ideasWrapper = $('<div>').attr('id','explanationBuilderWrapper_' + stepWorkId).height(height).width(width);
-		$ideasContainer = $('<div>').attr('id','explanationBuilderContent_' + stepWorkId).height(height).width(width).css({'border':'1px solid #ddd', 'position':'relative', 'transform':'scale(0.6)', 'transform-origin': 'left top'}),
+		$ideasContainer = $('<div>').attr('id','explanationBuilderContent_' + stepWorkId).height(height).width(width).css({'border':'1px solid #ddd', 'position':'relative', 
+			'-moz-transform': 'scale(0.6)', '-ms-transform': 'scale(0.6)', '-o-transform': 'scale(0.6)', '-webkit-transform': 'scale(0.6)', 'transform': 'scale(0.6)',
+			'-moz-transform-origin': 'left top', '-ms-transform-origin': 'left top', '-o-transform-origin': 'left top', '-webkit-transform-origin': 'left top', 'transform-origin': 'left top'}),
 	
 		// create the enlarge button; TODO: style, i18n
 		$enlargeButton = $('<button/>', {id:'enlargeExplanationBuilderButton_' + stepWorkId, text:'Enlarge'}),
