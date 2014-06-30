@@ -190,6 +190,27 @@ ExplanationBuilderNode.prototype.renderGradingView = function(displayStudentWork
 	var explanationBuilder = new ExplanationBuilder(this, this.view);
 	explanationBuilder.prompt = explanationBuilder.content.prompt;
 	explanationBuilder.background = explanationBuilder.content.background;
+	var bgPosition = 'left top';
+	if(explanationBuilder.content.hasOwnProperty('bgPosition')){
+		var bgPos = explanationBuilder.content.bgPosition;
+		if(bgPos == 'left-middle'){
+			bgPosition = 'left middle';
+		} else if(bgPos == 'left-bottom'){
+			bgPosition = 'left bottom';
+		} else if(bgPos == 'center-top'){
+			bgPosition = 'center top';
+		} else if(bgPos == 'center-middle'){
+			bgPosition = 'center middle';
+		} else if(bgPos == 'center-bottom'){
+			bgPosition = 'center bottom';
+		}  else if(bgPos == 'right-top'){
+			bgPosition = 'right top';
+		} else if(bgPos == 'right-middle'){
+			bgPosition = 'right middle';
+		} else if(bgPos == 'right-bottom'){
+			bgPosition = 'right bottom';
+		}
+	}
 	
 	var backgroundPath = null;
 	
@@ -203,101 +224,62 @@ ExplanationBuilderNode.prototype.renderGradingView = function(displayStudentWork
 		}
 	}
 
-	/*
-	 * the default background width and height values. these
-	 * values will be overridden once the backgroundImage.onload
-	 * function gets called
-	 */
-	var backgroundWidth = 1000;
-	var backgroundHeight = 800;
+	// the default background width and height values
+	// TODO: make editable/defined by bg image like annotator?
+	// TODO: shrink to smaller size or scale to grading container
+	var width = 640,
+		height = 480,
 	
-	//create the div that will contain the ideas div
-	var explanationBuilderContainerDivId = childDivIdPrefix + 'explanationBuilderContainerDiv_' + stepWorkId;
-	var explanationBuilderContainerDiv = createElement(document, 'div', {id: explanationBuilderContainerDivId, style:'width:' + 490 + 'px;height:' + 300 + 'px;border: 1px solid;position:relative;overflow:auto'});
+		// create the display container
+		$ideasWrapper = $('<div>').attr('id','explanationBuilderWrapper_' + stepWorkId).height(height).width(width);
+		$ideasContainer = $('<div>').attr('id','explanationBuilderContent_' + stepWorkId).height(height).width(width).css({'border':'1px solid #ddd', 'position':'relative', 'transform':'scale(0.6)', 'transform-origin': 'left top'}),
 	
-	//create the div that will contain the ideas
-	var explanationBuilderIdeasDivId = childDivIdPrefix + 'explanationBuilderIdeasDiv_' + stepWorkId;
-	var explanationBuilderIdeasDiv = createElement(document, 'div', {id: explanationBuilderIdeasDivId, style:'width:' + backgroundWidth + 'px;height:' + backgroundHeight + 'px;border: 1px solid;position:relative'});
-	
-	/*
-	 * create an image object so we can obtain the width and height
-	 * of the background image
-	 */
-	var backgroundImage = new Image();
-	
-	/*
-	 * we can't immediately retrieve the width and height so
-	 * we must implement the onload function which gets called
-	 * when the image actually loads and only then can we
-	 * retrieve the width and height
-	 */ 
-	backgroundImage.onload = function() {
-		//set the dimensions of the div that contains the background image
-		$(explanationBuilderIdeasDiv).css('width', this.width);
-		$(explanationBuilderIdeasDiv).css('height', this.height);
-	};
-	
-	//set the path of the background image
-	backgroundImage.src = backgroundPath;
-
-	//create the enlarge button
-	var enlargeButton = $('<button/>', {id:'enlargeExplanationBuilderButton_' + stepWorkId, text:'Enlarge'});
-	
-	//create the function to call when the 'Enlarge' button is clicked
-	var enlargeFunction = function(view) {
-		//open the html page that will display the enlarged view of the student work
-	    var newWindow = window.open(view.config.getConfigParam("contextPath")+"/vle/node/explanationbuilder/enlargeExplanationBuilder.html");
+		// create the enlarge button; TODO: style, i18n
+		$enlargeButton = $('<button/>', {id:'enlargeExplanationBuilderButton_' + stepWorkId, text:'Enlarge'}),
 		
-		/*
-		 * send the necessary ids to the new window so we can reference 
-		 * and increase the dimension sizes of the necessary div and also
-		 * remove the 'Enlarge' button. the processing will only occur
-		 * on the html page that opens in the new tab, it will not change
-		 * any of the elements in the grading tool page.
-		 */
-		newWindow.explanationBuilderContainerDivId = $(explanationBuilderContainerDiv).attr('id');
-		newWindow.explanationBuilderIdeasDivId = $(explanationBuilderIdeasDiv).attr('id');
-		newWindow.enlargeButtonId = $(enlargeButton).attr('id');
+		//create the function to call when the 'Enlarge' button is clicked
+		enlargeFunction = function(view) {
+			//open the html page that will display the enlarged view of the student work
+		    var newWindow = window.open(view.config.getConfigParam("contextPath")+"/vle/node/explanationbuilder/enlargeExplanationBuilder.html");
+			
+			/*
+			 * send the necessary ids to the new window so we can reference 
+			 * and remove the 'Enlarge' button. the processing will only occur
+			 * on the html page that opens in the new tab, it will not change
+			 * any of the elements in the grading tool page.
+			 */
+			newWindow.enlargeButtonId = $enlargeButton.attr('id');
+			newWindow.wrapperId = 'explanationBuilderWrapper_' + stepWorkId;
+			newWindow.containerId = 'explanationBuilderContent_' + stepWorkId;
+			
+			// copy the html in the grading view so we can display it in the enlarged view
+			newWindow.html = displayStudentWorkDiv.html();
+		};
 		
-		//copy the html in the grading view so we can display it in the enlarged view
-		newWindow.html = $(displayStudentWorkDiv).html();
-	}
+	// bind the enlargeFunction to the click event
+	$enlargeButton.on('click', function(){enlargeFunction(view)});
 	
 	//add the 'Enlarge' button to the UI
-	displayStudentWorkDiv.append(enlargeButton);
+	displayStudentWorkDiv.append($enlargeButton);
 	
-	//bind the enlargeFunction to the click event
-	enlargeButton.click(function(){enlargeFunction(view)});
-	
-	//add the explanationBuilderContainerDiv to the grading div
-	displayStudentWorkDiv.append(explanationBuilderContainerDiv);
-	
-	//add the explanationBuilderIdeasDiv to the explanationBuilderContainerDiv
-	$(explanationBuilderContainerDiv).append(explanationBuilderIdeasDiv);
-
-	if(backgroundPath != null) {
-		//set the background attributes
-		$(explanationBuilderIdeasDiv).css('background-image','url(' + backgroundPath + ')');
-		$(explanationBuilderIdeasDiv).css('background-repeat','no-repeat');
-		$(explanationBuilderIdeasDiv).css('background-position','left top');		
+	if(backgroundPath){
+		// set the background attributes
+		$ideasContainer.css('background-image','url(' + backgroundPath + ')');
+		$ideasContainer.css('background-repeat','no-repeat');
+		$ideasContainer.css('background-position', bgPosition);
 	}
 	
 	//get the idea basket for this student
-	var ideaBasket = this.view.getIdeaBasketByWorkgroupId(workgroupId);
+	var ideaBasket = this.view.getIdeaBasketByWorkgroupId(workgroupId),
 	
-	/*
-	 * Get the latest student state object for this step
-	 * xTODO: rename templateState to reflect your new step type
-	 * 
-	 * e.g. if you are creating a quiz step you would change it to quizState
-	 */
-	var explanationBuilderState = nodeVisit.getLatestWork();
+		// get the latest student state object for this step
+		explanationBuilderState = nodeVisit.getLatestWork(),
 	
-	//get the explanation ideas the student used
-	var explanationIdeas = explanationBuilderState.explanationIdeas;
+		// get the explanation ideas the student used
+		explanationIdeas = explanationBuilderState.explanationIdeas,
 	
-	//get the student text answer
-	var answer = explanationBuilderState.answer;
+		// get the student text answer
+		answer = explanationBuilderState.answer;
 	
 	//loop through all the explanation ideas
 	for(var x=0; x<explanationIdeas.length; x++) {
@@ -313,29 +295,31 @@ ExplanationBuilderNode.prototype.renderGradingView = function(displayStudentWork
 		var text = "";
 		
 		if(ideaBasket != null) {
-			//get the idea from the basket
+			// get the idea from the basket
 			var idea = ideaBasket.getIdeaById(id);
 			
 			if(idea != null) {
-				//get the text for the idea
+				// get the text for the idea
 				text = idea.text;
 			}
 		} else {
 			text = explanationIdea.lastAcceptedText;
 		}
 		
-		//create a div for the idea that will be displayed as a rectangle
+		// create a div for the idea that will be displayed as a rectangle
 		var explanationIdeaHtml = '<div class="exIdea" class="selected" title="' + view.getI18NString('usedIdea_title','ExplanationBuilderNode') + '" id="' + childDivIdPrefix + 'explanationIdea' 
 			+ id + '_' + stepWorkId + '" style="position:absolute; left:' + left + 'px; top:' + top + 'px; background-color:' + currColor + '">' + text + '</div>';
 		
-		//add the idea div to the explanationBuilderIdeasDiv
-		$(explanationBuilderIdeasDiv).append(explanationIdeaHtml);
+		// add the idea div to the display container
+		$ideasContainer.append(explanationIdeaHtml);
 	}
 	
-	//create a div to display the student answer
-	var explanationBuilderAnswerDivId = childDivIdPrefix + 'explanationBuilderAnswerDiv_' + stepWorkId;
-	var answerDiv = createElement(document, 'div', {id: explanationBuilderAnswerDivId});
-	displayStudentWorkDiv.append(answerDiv);
+	$ideasWrapper.append($ideasContainer).css({'width': width*.6, 'height': height*.6});
+	// add the display container to the grading div
+	displayStudentWorkDiv.append($ideasWrapper);
+	
+	// create a div to display the student answer
+	var $answer = $('<div>').attr('id', childDivIdPrefix + 'explanationBuilderAnswerDiv_' + stepWorkId);
 
 	//replace \n with <br>
 	answer = this.view.replaceSlashNWithBR(answer);
@@ -344,9 +328,10 @@ ExplanationBuilderNode.prototype.renderGradingView = function(displayStudentWork
 	 * add a <br> before the answer so there will be a new 
 	 * line between the ideas and this text answer
 	 */
-	answer = "<br>" + answer;
+	answer = "<br />" + answer;
 	
-	$(answerDiv).html(answer);
+	$answer.html(answer);
+	displayStudentWorkDiv.append($answer);
 };
 
 /**
