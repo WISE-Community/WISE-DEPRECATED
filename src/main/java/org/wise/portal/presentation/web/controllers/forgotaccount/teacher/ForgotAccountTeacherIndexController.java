@@ -23,24 +23,25 @@
 package org.wise.portal.presentation.web.controllers.forgotaccount.teacher;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.validators.LostTeacherValidator;
 import org.wise.portal.service.mail.MailService;
 import org.wise.portal.service.user.UserService;
 
@@ -50,39 +51,63 @@ import org.wise.portal.service.user.UserService;
  * @author Anthony Perritano
  * @version
  */
-public class ForgotAccountTeacherIndexController extends SimpleFormController {
+@Controller
+@RequestMapping("/forgotaccount/teacher/index.html")
+public class ForgotAccountTeacherIndexController {
 
-	private static final String EMAIL = "email";
-	private static final String USERNAME = "username";
-	protected UserService userService = null;
-	protected MailService mailService = null;
+	@Autowired
+	protected UserService userService;
+	
+	@Autowired
+	protected MailService mailService;
+	
+	@Autowired
 	private Properties wiseProperties;
+	
+	@Autowired
 	private MessageSource messageSource;
 	
+	@Autowired
+	protected LostTeacherValidator lostTeacherValidator;
+	
+	//the path to this form view
+	private String formView = "forgotaccount/teacher/index";
+	
+	//the path to the success view
+	private String successView = "forgotaccount/teacher/success";
+	
+	//the path to the error view
 	private String errorView = "/forgotaccount/teacher/error";
+	
+	private static final String EMAIL = "email";
+	
+	private static final String USERNAME = "username";
 
+    /**
+     * Called before the page is loaded to initialize values
+     * @param model the model object that contains values for the page to use when rendering the view
+     * @return the path of the view to display
+     */
+    @RequestMapping(method=RequestMethod.GET)
+    public String initializeForm(ModelMap model) {
+    	//create the user details object for the page
+    	TeacherUserDetails userDetails = new TeacherUserDetails();
+    	model.addAttribute("userDetails", userDetails);
+    	
+    	return formView;
+    }
 
 	/**
-	 * helper for sending emails
-	 * 
-	 * @param mailService
+	 * Called when the user submits the forgot teacher account page.
+	 * Gets the information by username or email and sends an email to the user with the new password.
+	 * @param userDetails the object that is populated by the page form
+	 * @param model the object that contains values to be displayed on the page
+	 * @param request the http request
+	 * @return the path of the view to display
 	 */
-	public void setMailService(MailService mailService) {
-		this.mailService = mailService;
-	}
-
-	/**
-	 * gets the information by username or email and sends an email to the user with the new password.
-	 * 
-	 * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse, java.lang.Object,
-	 *      org.springframework.validation.BindException)
-	 */
-	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
-		MutableUserDetails userDetails = (MutableUserDetails) command;
+	@RequestMapping(method=RequestMethod.POST)
+	protected String onSubmit(@ModelAttribute("userDetails") TeacherUserDetails userDetails, Model model, HttpServletRequest request)
+		throws Exception {
 
 		String username = null;
 		String emailAddress = null;
@@ -102,10 +127,8 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 						.getUsername());
 				
 				if( user == null ) {
-					ModelAndView modelAndView = new ModelAndView(
-					getErrorView());
-					modelAndView.addObject(USERNAME, username);
-					return modelAndView;
+					model.addAttribute(USERNAME, username);
+					return errorView;
 				}
 				
 			} else if (emailAddress != null) {
@@ -116,10 +139,8 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 
 				
 				if (users.isEmpty()) {
-					ModelAndView modelAndView = new ModelAndView(
-							getErrorView());
-					modelAndView.addObject(EMAIL, emailAddress);
-					return modelAndView;
+					model.addAttribute(EMAIL, emailAddress);
+					return errorView;
 				} else {
 					user = users.get(0);
 					username = user.getUserDetails().getUsername();
@@ -176,74 +197,15 @@ public class ForgotAccountTeacherIndexController extends SimpleFormController {
 			
 			// send password in the email here
 			mailService.postMail(recipients, subject, body, userEmail);
-			
-			Map<String, String> model = new HashMap<String, String>();
-			model.put(EMAIL, userEmail);
-			model.put(USERNAME, username);
 
-			return new ModelAndView(getSuccessView(), model);
+			//add the email and username to the model so we can display them if we can't find the user account
+			model.addAttribute(EMAIL, userEmail);
+			model.addAttribute(USERNAME, username);
 
+			return successView;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return showForm(request, response, errors);
+			return formView;
 		}
 	}
-
-	/**
-	 * Sets the userDetailsService object.
-	 * 
-	 * @param userDetailsService
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * generate random password
-	 * 
-	 * @return
-	 */
-	public static String generateRandomPassword() {
-		// return RandomStringUtils.random(8);
-		Random rnd = new Random();
-		return Integer.toString(rnd.nextInt(), 27);
-	}
-
-	/**
-	 * Tests the password generation
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		System.out.println("New Password: " + generateRandomPassword());
-	}
-
-	/**
-	 * @return the errorView
-	 */
-	public String getErrorView() {
-		return errorView;
-	}
-
-	/**
-	 * @param errorView the errorView to set
-	 */
-	public void setErrorView(String errorView) {
-		this.errorView = errorView;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	/**
-	 * @param messageSource the messageSource to set
-	 */
-	public void setMessageSource(MessageSource messageSource) {
-		this.messageSource = messageSource;
-	}
-
 }

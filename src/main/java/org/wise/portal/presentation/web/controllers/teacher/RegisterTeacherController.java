@@ -23,25 +23,29 @@
 package org.wise.portal.presentation.web.controllers.teacher;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.domain.authentication.Curriculumsubjects;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.validators.TeacherAccountFormValidator;
 import org.wise.portal.presentation.web.TeacherAccountForm;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
@@ -54,56 +58,105 @@ import org.wise.portal.service.user.UserService;
  * @author Hiroki Terashima
  * @version $Id: RegisterTeacherController.java 1033 2007-09-08 00:05:01Z archana $
  */
-public class RegisterTeacherController extends SimpleFormController {
+@Controller
+@RequestMapping("/teacher/registerteacher.html")
+public class RegisterTeacherController {
 
+	@Autowired
+	protected IMailFacade mailService;
+
+	@Autowired
+	protected Properties wiseProperties;
+
+	@Autowired
+	protected MessageSource messageSource;
+
+	@Autowired
+	protected UserService userService;
+	
+	@Autowired
+	protected TeacherAccountFormValidator teacherAccountFormValidator;
+	
+	//the path to this form view
+	private String formView = "teacher/registerteacher";
+	
+	//the path to the success view
+	private String successView = "teacher/registerTeacherConfirm";
+	
 	protected static final String USERNAME_KEY = "username";
 	
 	protected static final String DISPLAYNAME_KEY = "displayname";
 
-	private IMailFacade mailService = null;
+    /**
+     * Called before the page is loaded to initialize values.
+	 * Adds the TeacherAccountForm object to the model. 
+	 * This object will be filled out and submitted for creating
+	 * the new teacher
+     * @param modelMap the model object that contains values for the page to use when rendering the view
+     * @return the path of the view to display
+     */
+    @RequestMapping(method=RequestMethod.GET)
+    public String initializeForm(ModelMap modelMap) throws Exception {
+    	//create the teacher account form object
+    	TeacherAccountForm teacherAccountForm = new TeacherAccountForm();
+    	
+    	//put the teacher account form object into the model
+    	modelMap.put("teacherAccountForm", teacherAccountForm);
 
-	private Properties wiseProperties;
+    	//populate the model with other objects the form requires
+    	populateModel(modelMap);
+    	
+    	//get the form view
+    	String view = getFormView();
+    	
+    	return view;
+    }
+    
+    /**
+     * Populate the model with objects the form requires
+     * @param modelMap the model to populate
+     * @return the model
+     */
+    protected Map<String, Object> populateModel(Map<String, Object> modelMap) {
+    	//add objects into the model that will be used by the form
+    	modelMap.put("schoollevels", Schoollevel.values());
+    	modelMap.put("curriculumsubjects",Curriculumsubjects.values());
+    	modelMap.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
+    	
+    	return modelMap;
+    }
+    
+    /**
+     * Populate the model with objects the form requires
+     * @param modelMap the model to populate
+     * @return the model
+     */
+    protected Model populateModel(Model model) {
+    	//get the model as a map so we can add objects to it
+    	Map<String, Object> asMap = model.asMap();
+    	try {
+    		//populate the model with objects the form requires 
+    		populateModel(asMap);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
 
-	private MessageSource messageSource;
-
-	private UserService userService;
-
-	public RegisterTeacherController() {
-		setValidateOnBinding(false);
-	}
+    	return model;
+    }
 	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractFormController#formBackingObject(javax.servlet.http.HttpServletRequest)
-	 */
-	@Override
-	protected Object formBackingObject(HttpServletRequest request) throws Exception {
-		return new TeacherAccountForm();
-	}
-	
-	/**
-	 * @see org.springframework.web.servlet.mvc.SimpleFormController#referenceData(javax.servlet.http.HttpServletRequest)
-	 */
-	@Override
-	protected Map<String, Object> referenceData(HttpServletRequest request) throws Exception {
-		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("schoollevels", Schoollevel.values());
-		model.put("curriculumsubjects",Curriculumsubjects.values());
-		model.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
-		return model;
-	}
-	
-	/**
+    /**
 	 * On submission of the signup form, a user is created and saved to the data
 	 * store.
-	 * 
-	 * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse, java.lang.Object,
-	 *      org.springframework.validation.BindException)
-	 */
-	@Override
-	protected synchronized ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-	throws Exception {
+     * @param accountForm the model object that contains values for the page to use when rendering the view
+     * @param bindingResult the object used for validation in which errors will be stored
+     * @param request the http request object
+     * @param model the object that contains values to be displayed on the page
+     * @return the path of the view to display
+     */
+	@RequestMapping(method=RequestMethod.POST)
+    protected String onSubmit(@ModelAttribute("teacherAccountForm") TeacherAccountForm accountForm, BindingResult bindingResult, HttpServletRequest request, Model model) {
+		String view = getFormView();
+		
 		String domain = ControllerUtil.getBaseUrlString(request);
 		String domainWithPort = domain + ":" + request.getLocalPort();
 		String referrer = request.getHeader("referer");
@@ -118,85 +171,80 @@ public class RegisterTeacherController extends SimpleFormController {
 				referrer.contains(domainWithPort + registerUrl) ||
 				referrer.contains(domain + updateAccountInfoUrl) ||
 				referrer.contains(domainWithPort + updateAccountInfoUrl)){
-			TeacherAccountForm accountForm = (TeacherAccountForm) command;
 			TeacherUserDetails userDetails = (TeacherUserDetails) accountForm.getUserDetails();
-	
-			if (accountForm.isNewAccount()) {
-				try {
-					userDetails.setDisplayname(userDetails.getFirstname() + " " + userDetails.getLastname());
-					userDetails.setEmailValid(true);
-					User createdUser = this.userService.createUser(userDetails);
-					// send email to new teacher if email server is configured properly
-					
-					NewAccountEmailService newAccountEmailService = new NewAccountEmailService(createdUser,request.getLocale());
-					Thread thread = new Thread(newAccountEmailService);
-					thread.start();
-				}
-				catch (DuplicateUsernameException e) {
-					errors.rejectValue("username", "error.duplicate-username",
-							new Object[] { userDetails.getUsername() }, "Duplicate Username.");
-					return showForm(request, response, errors);
-				}
-			} else {
-				// we're updating an existing teacher's account
-				User user = userService.retrieveUserByUsername(userDetails.getUsername());
-				
-				TeacherUserDetails teacherUserDetails = (TeacherUserDetails) user.getUserDetails();
-				teacherUserDetails.setCity(userDetails.getCity());
-				teacherUserDetails.setCountry(userDetails.getCountry());
-				teacherUserDetails.setCurriculumsubjects(userDetails.getCurriculumsubjects());
-				teacherUserDetails.setEmailAddress(userDetails.getEmailAddress());
-				teacherUserDetails.setSchoollevel(userDetails.getSchoollevel());
-				teacherUserDetails.setSchoolname(userDetails.getSchoolname());
-				teacherUserDetails.setState(userDetails.getState());
-				teacherUserDetails.setDisplayname(userDetails.getDisplayname());
-				teacherUserDetails.setEmailValid(true);
-				teacherUserDetails.setLanguage(userDetails.getLanguage());
-		        String userLanguage = userDetails.getLanguage();
-		        Locale locale = null;
-		        if (userLanguage.contains("_")) {
-	        		String language = userLanguage.substring(0, userLanguage.indexOf("_"));
-	        		String country = userLanguage.substring(userLanguage.indexOf("_")+1);
-	            	locale = new Locale(language, country); 	
-	        	} else {
-	        		locale = new Locale(userLanguage);
-	        	}
-		        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
-
-	
-				userService.updateUser(user);
-				// update user in session
-				request.getSession().setAttribute(
-						User.CURRENT_USER_SESSION_KEY, user);
-			}
 			
-			ModelAndView modelAndView = new ModelAndView(getSuccessView());
-	
-			modelAndView.addObject(USERNAME_KEY, userDetails.getUsername());
-			modelAndView.addObject(DISPLAYNAME_KEY, userDetails.getDisplayname());
-			return modelAndView;
-		} else {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
-	}
-	
-	/**
-	 * @see org.springframework.web.servlet.mvc.BaseCommandController#onBindAndValidate(javax.servlet.http.HttpServletRequest, java.lang.Object, org.springframework.validation.BindException)
-	 */
-	@Override
-	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors)
-	throws Exception {
-
-		TeacherAccountForm accountForm = (TeacherAccountForm) command;
-		
-		TeacherUserDetails userDetails = (TeacherUserDetails) accountForm.getUserDetails();
-		if (accountForm.isNewAccount()) {
+			//set the sign up date
 			userDetails.setSignupdate(Calendar.getInstance().getTime());
+	
+			//validate the form
+			teacherAccountFormValidator.validate(accountForm, bindingResult);
+			
+			if(bindingResult.hasErrors()) {
+				//there were errors
+				populateModel(model);
+				view = getFormView();
+			} else {
+				//there were no errors
+				if (accountForm.isNewAccount()) {
+					try {
+						userDetails.setDisplayname(userDetails.getFirstname() + " " + userDetails.getLastname());
+						userDetails.setEmailValid(true);
+						User createdUser = this.userService.createUser(userDetails);
+						// send email to new teacher if email server is configured properly
+						
+						NewAccountEmailService newAccountEmailService = new NewAccountEmailService(createdUser,request.getLocale());
+						Thread thread = new Thread(newAccountEmailService);
+						thread.start();
+					}
+					catch (DuplicateUsernameException e) {
+						bindingResult.rejectValue("username", "error.duplicate-username", new Object[] { userDetails.getUsername() }, "Duplicate Username.");
+						populateModel(model);
+						view = getFormView();
+					}
+				} else {
+					// we're updating an existing teacher's account
+					User user = userService.retrieveUserByUsername(userDetails.getUsername());
+					
+					TeacherUserDetails teacherUserDetails = (TeacherUserDetails) user.getUserDetails();
+					teacherUserDetails.setCity(userDetails.getCity());
+					teacherUserDetails.setCountry(userDetails.getCountry());
+					teacherUserDetails.setCurriculumsubjects(userDetails.getCurriculumsubjects());
+					teacherUserDetails.setEmailAddress(userDetails.getEmailAddress());
+					teacherUserDetails.setSchoollevel(userDetails.getSchoollevel());
+					teacherUserDetails.setSchoolname(userDetails.getSchoolname());
+					teacherUserDetails.setState(userDetails.getState());
+					teacherUserDetails.setDisplayname(userDetails.getDisplayname());
+					teacherUserDetails.setEmailValid(true);
+					teacherUserDetails.setLanguage(userDetails.getLanguage());
+			        String userLanguage = userDetails.getLanguage();
+			        Locale locale = null;
+			        if (userLanguage.contains("_")) {
+		        		String language = userLanguage.substring(0, userLanguage.indexOf("_"));
+		        		String country = userLanguage.substring(userLanguage.indexOf("_")+1);
+		            	locale = new Locale(language, country); 	
+		        	} else {
+		        		locale = new Locale(userLanguage);
+		        	}
+			        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
+
+		
+					userService.updateUser(user);
+					// update user in session
+					request.getSession().setAttribute(User.CURRENT_USER_SESSION_KEY, user);
+				}
+				
+				model.addAttribute(USERNAME_KEY, userDetails.getUsername());
+				model.addAttribute(DISPLAYNAME_KEY, userDetails.getDisplayname());
+				view = getSuccessView();
+			}
+		} else {
+			//the request is not coming from a valid domain address so we will not allow it
+			bindingResult.reject("Forbidden");
+			populateModel(model);
+			view = getFormView();
 		}
-
-		getValidator().validate(accountForm, errors);
-
+		
+		return view;
 	}
 	
 	// new thread that sends email to new teacher
@@ -260,29 +308,19 @@ public class RegisterTeacherController extends SimpleFormController {
 		}
 	}
 	
-	/**
-	 * @param mailService the mailService to set
-	 */
-	public void setMailService(IMailFacade mailService) {
-		this.mailService = mailService;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	/**
-	 * @param messageSource the messageSource to set
-	 */
-	public void setMessageSource(MessageSource messageSource) {
-		this.messageSource = messageSource;
-	}
-
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
+    /**
+     * Get the form view
+     * @return the form view
+     */
+    protected String getFormView() {
+    	return formView;
+    }
+    
+    /**
+     * Get the success view
+     * @return the success view
+     */
+    protected String getSuccessView() {
+    	return successView;
+    }
 }

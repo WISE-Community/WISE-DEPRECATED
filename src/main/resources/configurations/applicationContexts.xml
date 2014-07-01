@@ -24,7 +24,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:util="http://www.springframework.org/schema/util"
     xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:context="http://www.springframework.org/schema/context"
     xmlns:tx="http://www.springframework.org/schema/tx"  
 	xmlns:task="http://www.springframework.org/schema/task"    
     xsi:schemaLocation="
@@ -39,18 +38,8 @@
       http://www.springframework.org/schema/security
       http://www.springframework.org/schema/security/spring-security-3.2.xsd
 	  http://www.springframework.org/schema/aop 
-      http://www.springframework.org/schema/aop/spring-aop-3.0.xsd  
-      http://www.springframework.org/schema/context    
-      http://www.springframework.org/schema/context/spring-context-3.0.xsd"  
+      http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"      
       >
-      
-    
-    <!--  Setting up the dispatcher for annotation support -->
-    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-     <property name="order" value="0" />
-	</bean>   
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
     <!-- ======================== FILTER CHAIN ======================= -->
 
@@ -907,9 +896,6 @@
     <bean
         class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
 
-    <!-- enable the @Controller Spring annotation for defining controllers using annotations -->
-	<context:component-scan base-package="org.wise.portal.presentation.web.controllers"/>
-    
     <!-- enable the configuration of transactional behavior based on annotations -->
     <tx:annotation-driven />
 

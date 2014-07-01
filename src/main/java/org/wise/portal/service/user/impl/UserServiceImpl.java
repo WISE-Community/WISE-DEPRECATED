@@ -17,8 +17,8 @@
  */
 package org.wise.portal.service.user.impl;
 
+import java.util.Calendar;
 import java.util.List;
-
 
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -163,6 +163,9 @@ public class UserServiceImpl implements UserService {
 		String coreUsername = details.getCoreUsername();
 
 		details.setNumberOfLogins(0);
+		
+		//set the sign up date
+		details.setSignupdate(Calendar.getInstance().getTime());
 		
 		//the username suffix
 		String currentUsernameSuffix = null;

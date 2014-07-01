@@ -24,16 +24,21 @@ package org.wise.portal.presentation.web.controllers.teacher.management;
 
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.wise.portal.domain.impl.ChangePeriodParameters;
 import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.validators.teacher.ChangePeriodParametersValidator;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.student.StudentService;
@@ -42,13 +47,22 @@ import org.wise.portal.service.user.UserService;
  * @author patrick lawler
  *
  */
-public class ChangeStudentPeriodController extends SimpleFormController{
+@Controller
+@SessionAttributes("changePeriodParameters")
+@RequestMapping("/teacher/management/changestudentperiod.html")
+public class ChangeStudentPeriodController {
 
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private StudentService studentService;
 	
+	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	protected ChangePeriodParametersValidator changePeriodParametersValidator;
 	
 	protected final static String RUN_ID = "runId";
 	
@@ -56,62 +70,68 @@ public class ChangeStudentPeriodController extends SimpleFormController{
 	
 	protected final static String USER_ID = "userId";
 	
-	@Override
-	protected Object formBackingObject(HttpServletRequest request) throws Exception {
+	//the path to this form view
+	protected String formView = "/teacher/management/changestudentperiod";
+	
+	//the path to the success view
+	protected String successView = "teacher/management/changestudentperiodsuccess";
+	
+    /**
+     * Called before the page is loaded to initialize values
+     * @param model the model object that contains values for the page to use when rendering the view
+     * @param request the http request
+     * @return the path of the view to display
+     */
+    @RequestMapping(method=RequestMethod.GET)
+    public String initializeForm(ModelMap model, HttpServletRequest request) throws Exception {
 		ChangePeriodParameters params = new ChangePeriodParameters();
 		params.setStudent(userService.retrieveById(Long.parseLong(request.getParameter(USER_ID))));
 		params.setRun(runService.retrieveById(Long.parseLong(request.getParameter(RUN_ID))));
 		params.setProjectcode(request.getParameter(PROJECT_CODE));
+		model.addAttribute("changePeriodParameters", params);
 		
-		return params;
-	}
+    	return formView;
+    }
 	
-	@Override
-    protected ModelAndView onSubmit(HttpServletRequest request, 
-    		HttpServletResponse response, Object command, BindException errors){
-		User callingUser = ControllerUtil.getSignedInUser();
-		ChangePeriodParameters params = (ChangePeriodParameters) command;
+    /**
+     * Called when the user submits the form
+     * @param params the object that contains values from the form
+     * @param bindingResult the object used for validation in which errors will be stored
+     * @param sessionStatus the session status object
+     * @return the path of the view to display
+     */
+    @RequestMapping(method=RequestMethod.POST)
+    protected String onSubmit(@ModelAttribute("changePeriodParameters") ChangePeriodParameters params, BindingResult bindingResult, SessionStatus sessionStatus) {
+    	String view = "";
+    	
+    	//validate the parameters
+    	changePeriodParametersValidator.validate(params, bindingResult);
+    	
+    	if(bindingResult.hasErrors()) {
+    		//there were errors
+    		view = "redirect:/accessdenied.html";
+    	} else {
+    		//there were no errors
+        	User callingUser = ControllerUtil.getSignedInUser();
+    		
+    		if(this.runService.hasRunPermission(params.getRun(), callingUser, BasePermission.WRITE) ||
+    				this.runService.hasRunPermission(params.getRun(), callingUser, BasePermission.ADMINISTRATION)) {
+    			try {
+    				if(!params.getProjectcodeTo().equals(params.getProjectcode())){
+    					studentService.removeStudentFromRun(params.getStudent(), params.getRun());
+    					studentService.addStudentToRun(params.getStudent(), new Projectcode(params.getRun().getRuncode(), params.getProjectcodeTo()));
+    				}
+    			} catch (Exception e){
+    				
+    			}
+
+    			view = successView;
+    		} else {
+    			view = "redirect:/accessdenied.html";
+    		}
+    	}
 		
-		if(this.runService.hasRunPermission(params.getRun(), callingUser, BasePermission.WRITE) ||
-				this.runService.hasRunPermission(params.getRun(), callingUser, BasePermission.ADMINISTRATION)){
-			try{
-				if(!params.getProjectcodeTo().equals(params.getProjectcode())){
-					studentService.removeStudentFromRun(params.getStudent(), params.getRun());
-					studentService.addStudentToRun(params.getStudent(), new Projectcode(params.getRun().getRuncode(), params.getProjectcodeTo()));
-				}
-			} catch (Exception e){}
-	
-			
-			ModelAndView modelAndView = new ModelAndView(getSuccessView());
-			
-			return modelAndView;
-		} else {
-			//get the context path e.g. /wise
-			String contextPath = request.getContextPath();
-			
-			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
-		}
+    	sessionStatus.setComplete();
+		return view;
 	}
-	
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @param studentService the studentService to set
-	 */
-	public void setStudentService(StudentService studentService) {
-		this.studentService = studentService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-	
 }

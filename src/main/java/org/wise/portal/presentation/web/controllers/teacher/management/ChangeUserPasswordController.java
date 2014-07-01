@@ -2,13 +2,19 @@ package org.wise.portal.presentation.web.controllers.teacher.management;
 
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.wise.portal.domain.authentication.impl.ChangeStudentPasswordParameters;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.validators.ChangePasswordParametersValidator;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.student.StudentService;
@@ -19,41 +25,78 @@ import org.wise.portal.service.user.UserService;
  * @author hirokiterashima
  * $Id:$
  */
-public class ChangeUserPasswordController extends SimpleFormController {
+@Controller
+@SessionAttributes("changeStudentPasswordParameters")
+@RequestMapping(value={"/student/changestudentpassword.html",
+		"/**/changepassword.html",
+		"/teacher/management/changestudentpassword.html"})
+public class ChangeUserPasswordController {
 
+	@Autowired
 	private UserService userService;
 	
+	@Autowired
 	private StudentService studentService;
+	
+	@Autowired
+	protected ChangePasswordParametersValidator changePasswordParametersValidator;
 	
 	private final static String USER_NAME = "userName";
 	
-	/**
-	 * @see org.springframework.web.servlet.mvc.SimpleFormController#showForm(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, org.springframework.validation.BindException)
-	 */
-    @Override
-    protected ModelAndView showForm(HttpServletRequest request,
-            HttpServletResponse response,
-            BindException errors)
-     throws Exception {
-    	// first get the logged-in user and check that the user has permission to change the
-    	// specified user's password
-		User loggedInUser = ControllerUtil.getSignedInUser();
-    	String username = request.getParameter(USER_NAME);
+	//the path to this form view
+	protected String formView = "";
+	
+	//the path to the success view
+	protected String successView = "forgotaccount/changepasswordsuccess";
+	
+    /**
+     * Called before the page is loaded to initialize values
+     * @param model the model object that contains values for the page to use when rendering the view
+     * @param request the http request
+     * @return the path of the view to display
+     */
+    @RequestMapping(method=RequestMethod.GET)
+    public String initializeForm(ModelMap model, HttpServletRequest request) {
+    	//get the signed in user
+    	User signedInUser = ControllerUtil.getSignedInUser();
+    	
+    	//get the user name whose password we want to change
+    	String userName = request.getParameter(USER_NAME);
+    	
     	User userToChange = null;
-    	if (username != null) {
-    		userToChange = userService.retrieveUserByUsername(username);
+    	User teacherUser = null;
+    	
+    	String view = "";
+    	
+    	if (userName != null) {
+    		//the username is provided which means a teacher is changing the password for a student
+    		userToChange = userService.retrieveUserByUsername(userName);
+    		teacherUser = ControllerUtil.getSignedInUser();
     	} else {
     		// if username is not specified, assume that logged-in user wants to change his/her own password.
-    		userToChange = loggedInUser;
+    		userToChange = ControllerUtil.getSignedInUser();
     	}
-    	if (canChangePassword(loggedInUser, userToChange)) {
-			return super.showForm(request, response, errors);
-		} else {
-			// otherwise, the logged-in user does not have permission to change the password.
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}    
-	}
+    	
+    	//check if the signed in user can change the password for the specified user account
+    	if (canChangePassword(signedInUser, userToChange)) {
+    		//the signed in user can change the password for the specified user account
+    		
+    		//create the parameters for the page
+    		ChangeStudentPasswordParameters params = new ChangeStudentPasswordParameters();
+    		params.setUser(userToChange);
+    		params.setTeacherUser(teacherUser);
+    		model.addAttribute("changeStudentPasswordParameters", params);
+    		
+    		//get the servlet path e.g. /teacher/management/changestudentpassword
+    		String servletPath = getServletPath(request);
+    		view = servletPath;
+    	} else {
+    		//the signed in user is not allowed to change the password for the specified user account
+    		view = "redirect:/accessdenied.html";
+    	}
+    	
+		return view;
+    }
 
     /**
      * Returns true iff the loggedInUser has permission to change the password 
@@ -73,66 +116,62 @@ public class ChangeUserPasswordController extends SimpleFormController {
 				|| (userToChange.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)
 				   && studentService.isStudentAssociatedWithTeacher(userToChange, loggedInUser));
 	}
-
-	@Override
-    protected Object formBackingObject(HttpServletRequest request) throws Exception {
-    	String username = request.getParameter(USER_NAME);
-    	User userToChange = null;
-    	User teacherUser = null;
-    	if (username != null) {
-    		//the username is provided which means a teacher is changing the password for a student
-    		userToChange = userService.retrieveUserByUsername(username);
-    		teacherUser = ControllerUtil.getSignedInUser();
-    	} else {
-    		// if username is not specified, assume that logged-in user wants to change his/her own password.
-    		userToChange = ControllerUtil.getSignedInUser();
-    	}
-		ChangeStudentPasswordParameters params = new ChangeStudentPasswordParameters();
-		params.setUser(userToChange);
-		params.setTeacherUser(teacherUser);
-		return params;
-    }
 	
 	/**
      * On submission of the Change Student's Password form, the associated student's password
      * in the database gets changed to the submitted password
+     * @param params the object that contains values from the form
+     * @param bindingResult the object used for validation in which errors will be stored
+     * @param sessionStatus the session status object
+     * @return the path of the view to display
      * 
-     * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
-     *      javax.servlet.http.HttpServletResponse, java.lang.Object,
-     *      org.springframework.validation.BindException)
      */
-    @Override
-    protected ModelAndView onSubmit(HttpServletRequest request,
-            HttpServletResponse response, Object command, BindException errors){
-
-    	ChangeStudentPasswordParameters params = (ChangeStudentPasswordParameters) command;
-
-    	ModelAndView modelAndView = null;
-
-   		userService.updateUserPassword(params.getUser(), params.getPasswd1());
-    	modelAndView = new ModelAndView(getSuccessView());
-
-    	return modelAndView;
+    @RequestMapping(method=RequestMethod.POST)
+    protected String onSubmit(@ModelAttribute("changeStudentPasswordParameters") ChangeStudentPasswordParameters params, BindingResult bindingResult, SessionStatus sessionStatus) {
+    	String view = "";
+    	
+    	changePasswordParametersValidator.validate(params, bindingResult);
+    	
+    	if(bindingResult.hasErrors()) {
+    		//there were errors
+    		view = "redirect:/accessdenied.html";
+    	} else {
+    		//there were no errors
+    		
+        	//update the user's password
+       		userService.updateUserPassword(params.getUser(), params.getPasswd1());
+       		view = successView;
+       		sessionStatus.setComplete();
+    	}
+   		
+   		return view;
     }
     
-	/**
-	 * @param userService the userService to set
-	 */
-    public void setUserService(UserService userService) {
-    	this.userService = userService;
-    }
-    
-	/**
-	 * @param studentService the studentService to set
-	 */
-	public void setStudentService(StudentService studentService) {
-		this.studentService = studentService;
-	}
-
-	/**
-	 * @param userService the userService to get
-	 */
-    public UserService getUserService() {
-    	return this.userService;
+    /**
+     * Get the servlet path from the request
+     * @param request the http request
+     * @return the servlet path
+     * e.g.
+     * /teacher/management/changestudentpassword
+     */
+    protected String getServletPath(HttpServletRequest request) {
+    	String servletPath = "";
+    	
+    	if(request != null) {
+    		//get the servlet path e.g. /teacher/management/changestudentpassword.html
+    		servletPath = request.getServletPath();
+    		
+    		if(servletPath != null) {
+    			//get the index of the .html in the string
+    			int indexOfDotHTML = servletPath.indexOf(".html");
+    			
+    			if(indexOfDotHTML != -1) {
+        			//remove the .html e.g. /teacher/management/changestudentpassword
+    				servletPath = servletPath.substring(0, indexOfDotHTML);
+    			}
+    		}
+    	}
+    	
+    	return servletPath;
     }
 }

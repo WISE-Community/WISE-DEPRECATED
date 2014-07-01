@@ -22,6 +22,9 @@
  */
 package org.wise.portal.domain.run.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +49,7 @@ import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.announcement.impl.AnnouncementImpl;
 import org.wise.portal.domain.attendance.StudentAttendance;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.project.Project;
@@ -359,6 +363,25 @@ public class RunImpl extends OfferingImpl implements Run {
 	 */
 	public Set<User> getSharedowners() {
 		return sharedowners;
+	}
+	
+	/**
+	 * Get the shared owners in alphabetical order
+	 * @return the shared owners list in alphabetical order
+	 */
+	public List<User> getSharedOwnersOrderedAlphabetically() {
+		List<User> sharedOwnersList = new ArrayList<User>();
+		
+		//get the shared owners in a list
+		sharedOwnersList.addAll(sharedowners);
+		
+		//get the comparator that will order the list alphabetically
+		UserAlphabeticalComparator userAlphabeticalComparator = new UserAlphabeticalComparator();
+		
+		//sort the list alphabetically
+		Collections.sort(sharedOwnersList, userAlphabeticalComparator);
+		
+		return sharedOwnersList;
 	}
 
 	/**
@@ -676,5 +699,48 @@ public class RunImpl extends OfferingImpl implements Run {
 
 	public void setPublicNotes(String publicNotes) {
 		this.publicNotes = publicNotes;
+	}
+	
+	/**
+	 * Comparator used to order user names alphabetically
+	 */
+	public static class UserAlphabeticalComparator implements Comparator<User> {
+		
+		/**
+		 * Compares the user names of two User objects
+		 * @param user1 a user object
+		 * @param user2 a user object
+		 * @return
+		 * -1 if the user1 user names comes before the user2 user name
+		 * 0 if the user1 user name is the same as the user2 user name
+		 * 1 if the user1 user name comes after the user2 user name
+		 */
+		@Override
+		public int compare(User user1, User user2) {
+			int result = 0;
+			
+			if(user1 != null && user2 != null) {
+				//get the user details
+				MutableUserDetails userDetails1 = user1.getUserDetails();
+				MutableUserDetails userDetails2 = user2.getUserDetails();
+				
+				if(userDetails1 != null && userDetails2 != null) {
+					//get the user names
+					String userName1 = userDetails1.getUsername();
+					String userName2 = userDetails2.getUsername();
+					
+					if(userName1 != null && userName2 != null) {
+						//get the user names in lower case
+						String userName1LowerCase = userName1.toLowerCase();
+						String userName2LowerCase = userName2.toLowerCase();
+						
+						//compare the user names
+						result = userName1LowerCase.compareTo(userName2LowerCase);
+					}
+				}
+			}
+			
+			return result;
+		}
 	}
 }
