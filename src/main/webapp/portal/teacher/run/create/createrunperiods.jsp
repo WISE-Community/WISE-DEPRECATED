@@ -95,7 +95,8 @@ function checkIfTextAreaEmpty (form) {
 							</div>
 						</div> <!--end of SetUpRunBox -->
 						<div class="center">
-							<input type="submit" name="_target1" value="<spring:message code="teacher.run.create.createrunperiods.back"/>" />
+							<input id="goToPageInput" type="hidden" name="_page" value="3" />
+							<input id="goBackButton" type="submit" name="_back" value="<spring:message code="teacher.run.create.createrunperiods.back"/>"/>
 							<input type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunperiods.cancel"/>" />
 							<input type="submit" name="_target3" value="<spring:message code="teacher.run.create.createrunperiods.next"/>" />
 						</div>
@@ -108,13 +109,15 @@ function checkIfTextAreaEmpty (form) {
 
 	<%@ include file="../../../footer.jsp"%>
 </div>
-			
-
-
-
 
 
 <!--end of centered div-->
 </div>
+<script type="text/javascript">
+$("#goBackButton").click(function() {
+	$("#goToPageInput").val("1");	
+});
+</script>
+
 </body>
 </html>

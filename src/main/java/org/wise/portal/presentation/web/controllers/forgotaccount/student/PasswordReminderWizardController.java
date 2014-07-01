@@ -23,20 +23,21 @@
 
 package org.wise.portal.presentation.web.controllers.forgotaccount.student;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.ValidationUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractWizardFormController;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.impl.PasswordReminderParameters;
 import org.wise.portal.domain.user.User;
@@ -59,233 +60,154 @@ import org.wise.portal.service.user.UserService;
  * @version $Id$
  */
 
-
-public class PasswordReminderWizardController extends AbstractWizardFormController{
+@Controller
+@RequestMapping("/forgotaccount/student/passwordreminder.html")
+@SessionAttributes("passwordReminderParameters")
+public class PasswordReminderWizardController{
 
 	private static final String ACCOUNT_QUESTION = "accountQuestion";
 	private static final String USERNAME = "username";
-	protected UserService userService = null;
+
+	@Autowired
+	protected UserService userService;
 
 	/**
-	 * Constructor - Specify the pages in the wizard - Specify the command name
+	 * The default handler (page=0)
 	 */
-	public PasswordReminderWizardController() {
-		setBindOnNewForm(true);
-		setPages(new String[] { "forgotaccount/student/passwordreminder",
-								"forgotaccount/student/passwordreminder2",
-								"forgotaccount/student/passwordreminder3",
-								"forgotaccount/student/passwordreminder4"});
-		setSessionForm(true);
+	@RequestMapping
+	public String getInitialPage(final ModelMap modelMap) {
+		// put your initial command
+		modelMap.addAttribute("passwordReminderParameters", new PasswordReminderParameters());
+		// populate the model Map as needed
+		return "forgotaccount/student/passwordreminder";
 	}
 
 	/**
-	 * @see org.springframework.web.servlet.mvc.BaseCommandController#onBind(javax.servlet.http.HttpServletRequest,
-	 *      java.lang.Object, org.springframework.validation.BindException)
+	 * Maybe you want to be provided with the _page parameter (in order to map the same method for all), as you have in
+	 * AbstractWizardFormController.
 	 */
-	@Override
-	protected void onBind(HttpServletRequest request, Object command,
-			BindException errors) throws Exception {
-		// TODO AP: implement me
-		super.onBind(request, command, errors);
-	}
+	@RequestMapping(method = RequestMethod.POST)
+	public String processPage(@RequestParam("_page") final int currentPage,
+			final @ModelAttribute("passwordReminderParameters") PasswordReminderParameters passwordReminderParameters,
+			BindingResult result,
+			SessionStatus status,
+			ModelMap modelMap,
+			final HttpServletResponse response) {
 
-	/**
-	 * This method is called after the onBind and onBindAndValidate method. It
-	 * acts in the same way as the validator
-	 * 
-	 * @see org.springframework.web.servlet.mvc.AbstractWizardFormController#validatePage(java.lang.Object,
-	 *      org.springframework.validation.Errors, int)
-	 */
-	@Override
-	protected void validatePage(Object command, Errors errors, int page) {
-		
-		
-		PasswordReminderParameters passwordReminderParameters = (PasswordReminderParameters) command;
+		switch (currentPage) {
+		case 1:
+			// handle the submit username
 
-		switch (page) {
-		case 0:
-			ValidationUtils.rejectIfEmptyOrWhitespace(errors,
-					"username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorNoUsername");
-			
-			if(errors.getErrorCount() == 0){
-				try {
-					String username = passwordReminderParameters.getUsername();
-					
-					if(username == null){
-						errors.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorUsernameNotFound");
-						break;
-					} else {
-						username = StringUtils.trimToNull(username);
-						User user = userService.retrieveUserByUsername(username);
-						
-						/* check to see if user exists and ensure that user is a student */
-						if(user == null || !(user.getUserDetails() instanceof StudentUserDetails)){
-							errors.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorUsernameNotFound");
-						}
+			try {
+				String username = passwordReminderParameters.getUsername();
+
+				if(username == null){
+					result.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorNoUsername");
+				} else {
+					username = StringUtils.trimToNull(username);
+					User user = userService.retrieveUserByUsername(username);
+
+					/* check to see if user exists and ensure that user is a student */
+					if(user == null || !(user.getUserDetails() instanceof StudentUserDetails)){
+						result.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorUsernameNotFound");
 					}
-				} catch (EmptyResultDataAccessException e) {
-					//TODO: archana needs to update these
-					errors.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorUsernameNotFound");
 				}
+			} catch (EmptyResultDataAccessException e) {
+				result.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorUsernameNotFound");
+			}
+			if (result.hasErrors()) {
+				return "forgotaccount/student/passwordreminder";
 			}
 			
-			break;
-		case 1:
-			//TODO: archana needs to update these
-			ValidationUtils.rejectIfEmptyOrWhitespace(errors,
-					"submittedAccountAnswer", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorSubmittedAccountQuestion");
-			
-			String submittedAccountAnswer = passwordReminderParameters
-			.getSubmittedAccountAnswer();
-
-			String accountAnswer = passwordReminderParameters.getAccountAnswer();
-		
-			accountAnswer = StringUtils.lowerCase(accountAnswer);
-		
-			submittedAccountAnswer = StringUtils
-					.lowerCase(submittedAccountAnswer);
-		
-			if (!accountAnswer.equals(submittedAccountAnswer)) {
-				//TODO: archana needs to update these
-				errors.reject("presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorSubmittedAccountQuestion");
-			}
-			
-			
-			break;
-		case 2:
-			
-			//TODO: archana needs to update these
-			ValidationUtils.rejectIfEmptyOrWhitespace(errors,
-					"verifyPassword", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorVerifyNewPassword");
-		
-			//TODO: archana needs to update these
-			ValidationUtils.rejectIfEmptyOrWhitespace(errors,
-					"newPassword", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorVerifyNewPassword");
-			
-			if (errors.hasErrors()) {
-				break;
-			}
-			
-			String newPassword = passwordReminderParameters.getNewPassword();
-
-			String verifyPassword = passwordReminderParameters.getVerifyPassword();
-		
-			verifyPassword = StringUtils.lowerCase(verifyPassword);
-		
-			newPassword = StringUtils
-					.lowerCase(newPassword);
-		
-			verifyPassword = StringUtils.lowerCase(verifyPassword);
-			
-			if (!verifyPassword.equals(newPassword)) {
-				//TODO: archana needs to update these
-				errors.reject("presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorVerifyNewPassword");
-			}
-			break;
-		default:
-			break;
-		}
-	}
-
-
-	/**
-	 * This method is called right before the view is rendered to the user
-	 * 
-	 * @see org.springframework.web.servlet.mvc.AbstractWizardFormController#referenceData(javax.servlet.http.HttpServletRequest,
-	 *      int)
-	 */
-	@Override
-	protected Map<String, Object> referenceData(HttpServletRequest request,
-			Object command, Errors errors, int page) {
-
-		PasswordReminderParameters passwordReminderParameters = (PasswordReminderParameters) command;
-
-		Map<String, Object> model = new HashMap<String, Object>();
-		switch (page) {
-		case 0:
-			break;
-		case 1:
+			// passed validation, put username and account question into page
 			String username = passwordReminderParameters.getUsername();
-			
+
 			username = StringUtils.trimToNull(username);
 			User user = userService.retrieveUserByUsername(username);
 
-			StudentUserDetails userDetails = (StudentUserDetails) user
-			.getUserDetails();
+			StudentUserDetails userDetails = (StudentUserDetails) user.getUserDetails();
 
-			model.put(USERNAME, userDetails.getUsername());
-			model.put(ACCOUNT_QUESTION, userDetails
-					.getAccountQuestion());
+			modelMap.put(USERNAME, userDetails.getUsername());
+			modelMap.put(ACCOUNT_QUESTION, userDetails.getAccountQuestion());
 
-			passwordReminderParameters.setAccountQuestion(userDetails
-					.getAccountQuestion());
-			passwordReminderParameters.setAccountAnswer(userDetails
-					.getAccountAnswer());
-			break;
-		default:
-			break;
+			passwordReminderParameters.setAccountQuestion(userDetails.getAccountQuestion());
+			passwordReminderParameters.setAccountAnswer(userDetails.getAccountAnswer());
+			
+			return "forgotaccount/student/passwordreminder2"; 
+		case 2:
+			// handle the submit with account answer
+
+			ValidationUtils.rejectIfEmptyOrWhitespace(result,
+					"submittedAccountAnswer", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorSubmittedAccountQuestion");
+
+			String submittedAccountAnswer = passwordReminderParameters
+					.getSubmittedAccountAnswer();
+
+			String accountAnswer = passwordReminderParameters.getAccountAnswer();
+
+			accountAnswer = StringUtils.lowerCase(accountAnswer);
+
+			submittedAccountAnswer = StringUtils.lowerCase(submittedAccountAnswer);
+
+			if (!accountAnswer.equals(submittedAccountAnswer)) {
+				result.reject("presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorSubmittedAccountQuestion");
+			}
+			if (result.hasErrors()) {
+				modelMap.put(USERNAME, passwordReminderParameters.getUsername());
+				modelMap.put(ACCOUNT_QUESTION, passwordReminderParameters.getAccountQuestion());
+
+				return "forgotaccount/student/passwordreminder2";
+			}
+			
+			// passed validation, go to next page
+			return "forgotaccount/student/passwordreminder3";
+		case 3:
+			// handle the submit with new passwords
+			
+			ValidationUtils.rejectIfEmptyOrWhitespace(result,
+					"verifyPassword", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorVerifyNewPassword");
+
+			ValidationUtils.rejectIfEmptyOrWhitespace(result,
+					"newPassword", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorVerifyNewPassword");
+
+			if (result.hasErrors()) {
+				return "forgotaccount/student/passwordreminder3";
+			}
+
+			String newPassword = passwordReminderParameters.getNewPassword();
+
+			String verifyPassword = passwordReminderParameters.getVerifyPassword();
+
+			verifyPassword = StringUtils.lowerCase(verifyPassword);
+
+			newPassword = StringUtils.lowerCase(newPassword);
+
+			verifyPassword = StringUtils.lowerCase(verifyPassword);
+
+			if (!verifyPassword.equals(newPassword)) {
+				result.reject("presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorVerifyNewPassword");
+			}
+			if (result.hasErrors()) {
+				return "forgotaccount/student/passwordreminder3";
+			}
+
+			// passed validation, save new password
+			String usernameSubmitted = passwordReminderParameters.getUsername();
+
+			usernameSubmitted = StringUtils.trimToNull(usernameSubmitted);
+			User userSubmitted = userService.retrieveUserByUsername(usernameSubmitted);
+
+			if (newPassword != null) {
+				userService.updateUserPassword(userSubmitted, newPassword);
+			}
+			
+			//clear the command object from the session
+			status.setComplete(); 
+
+			modelMap.put("username", passwordReminderParameters.get(PasswordReminderParameters.USERNAME));
+			return "forgotaccount/student/passwordreminder4";
 		}
 
-		return model;
+		return null;
 	}
-
-	/**
-	 * changes the password
-	 * 
-	 * This method is called if there is a submit that validates and contains
-	 * the "_finish" request parameter.
-	 * 
-	 * @see org.springframework.web.servlet.mvc.AbstractWizardFormController#processFinish(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse, java.lang.Object,
-	 *      org.springframework.validation.BindException)
-	 */
-	@Override
-	protected ModelAndView processFinish(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
-
-		PasswordReminderParameters params = (PasswordReminderParameters) command;
-
-		String newPassword = params.getNewPassword();
-
-		String username = params.getUsername();
-		
-		username = StringUtils.trimToNull(username);
-		User user = userService.retrieveUserByUsername(username);
-
-		
-		if (newPassword != null) {
-			userService.updateUserPassword(user, newPassword);
-		}
-
-		ModelAndView modelAndView = new ModelAndView(
-				"forgotaccount/student/passwordreminder4");
-		modelAndView.addObject("username", params
-				.get(PasswordReminderParameters.USERNAME));
-		return modelAndView;
-	}
-
-	/**
-	 * This method is called if there is a submit that contains the "_cancel"
-	 * request parameter.
-	 * 
-	 * @see org.springframework.web.servlet.mvc.AbstractWizardFormController#processCancel(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse, java.lang.Object,
-	 *      org.springframework.validation.BindException)
-	 */
-	@Override
-	protected ModelAndView processCancel(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors) {
-		return new ModelAndView(new RedirectView("../../index.html"));
-	}
-
-	/**
-	 * Sets the userDetailsService object.
-	 * 
-	 * @param userDetailsService
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
 }

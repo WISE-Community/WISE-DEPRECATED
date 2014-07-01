@@ -38,6 +38,7 @@
 				 			<script type="text/javascript">document.getElementById('submittedAnswer').focus();
 				 			</script>
 						  	
+							<input type="hidden" name="_page" value="2" />							
 						  	<input style="margin-left:20px; text-align:center;width:55px;" type="submit" name="_target2" value="<spring:message code="forgotaccount.student.passwordreminder2.next" />">
 						</div>
 					</form>
@@ -51,6 +52,7 @@
 							</spring:bind>
 					</div>
 				</div>
+				<a href="${contextPath}/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

@@ -40,12 +40,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.validation.BindException;
-import org.springframework.validation.Errors;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractWizardFormController;
-import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -56,7 +61,6 @@ import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.offering.RunService;
@@ -81,24 +85,31 @@ import org.wise.portal.service.workgroup.WISEWorkgroupService;
  * @author Hiroki Terashima
  * @version $Id: CreateRunController.java 941 2007-08-16 14:03:11Z laurel $
  */
-public class CreateRunController extends AbstractWizardFormController {
-	
-	private RunService runService = null;
-	
-	private WISEWorkgroupService workgroupService = null;
+@Controller
+@RequestMapping("/teacher/run/createRun.html")
+@SessionAttributes("runParameters")
+public class CreateRunController {
 
+	@Autowired
+	private RunService runService;
+
+	@Autowired
+	private WISEWorkgroupService wiseWorkgroupService;
+
+	@Autowired
 	private ProjectService projectService = null;
-	
+
 	private static final String COMPLETE_VIEW_NAME = "teacher/run/create/createrunfinish";
-	
-	private static final String CANCEL_VIEW_NAME = "/teacher/management/library.html";
 
 	private static final String RUN_KEY = "run";
-	
+
+	@Autowired
 	private IMailFacade mailService = null;
-	
+
+	@Autowired
 	private MessageSource messageSource;
 
+	@Autowired
 	protected Properties wiseProperties;
 
 	private Map<Long,String> postLevelTextMap;
@@ -106,261 +117,248 @@ public class CreateRunController extends AbstractWizardFormController {
 	/* change this to true if you are testing and do not want to send mail to
 	   the actual groups */
 	private static final Boolean DEBUG = false;
-	
+
 	//set this to your email
 	private static final String DEBUG_EMAIL = "youremail@email.com";
-	
+
 	private static final Long[] IMPLEMENTED_POST_LEVELS = {5l,1l};
-	
+
 	/**
-	 * Constructor
-	 *  - Specify the pages in the wizard
-	 *  - Specify the command name
+	 * The default handler (page=0)
 	 */
-	public CreateRunController() {
-		setBindOnNewForm(true);
-		setPages(new String[]{"teacher/run/create/createrunconfirm", "teacher/run/create/createrunarchive", "teacher/run/create/createrunperiods", 
-				"teacher/run/create/createrunconfigure", "teacher/run/create/createrunreview"});
-		setSessionForm(true);
-	}
-	
-	/**
-	 * @see org.springframework.web.servlet.mvc.BaseCommandController#onBind(javax.servlet.http.HttpServletRequest, java.lang.Object, org.springframework.validation.BindException)
-	 */
-	@Override
-	protected void onBind(HttpServletRequest request,
-			Object command, BindException errors) throws Exception {
-		// TODO HT: implement me
-	    super.onBind(request, command, errors);
-	}
-	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractWizardFormController#onBindAndValidate(javax.servlet.http.HttpServletRequest, java.lang.Object, org.springframework.validation.BindException, int)
-	 */
-	@Override
-	protected void onBindAndValidate(HttpServletRequest request,
-            Object command,
-            BindException errors,
-            int page) throws Exception {
-		// TODO HT: implement me
-	    super.onBindAndValidate(request, command, errors, page);
-	}
-	
-	/**
-	 * This method is called after the onBind and onBindAndValidate method. It acts 
-	 * in the same way as the validator
-	 * 
-	 * @see org.springframework.web.servlet.mvc.AbstractWizardFormController#validatePage(java.lang.Object, org.springframework.validation.Errors, int)
-	 */
-	@Override
-	protected void validatePage(Object command, Errors errors, int page) {
-	    super.validatePage(command, errors, page);
-		RunParameters runParameters = (RunParameters) command;
-		
-	    switch (page) {
-	    case 0:
-			User user = ControllerUtil.getSignedInUser();
-			
-			if(!this.projectService.canCreateRun(runParameters.getProject(), user)){
-				errors.rejectValue("project", "not.authorized", "You are not authorized to set up a run with this project.");
-			}
-	    	break;
-	    case 1:
-	    	break;
-	    case 2:
-	    	if (runParameters.getPeriodNames() == null || 
-	    		runParameters.getPeriodNames().size() == 0) {
-	    		if (runParameters.getManuallyEnteredPeriods() == ""){
-	    			errors.rejectValue("periodNames", "setuprun.error.selectperiods", "You must select one or more periods or manually" +
-	    				" create your period names.");
-	    		} else {
-	    			// check if manually entered periods is an empty string or just "," If yes, throw error
-	    			if (runParameters.getManuallyEnteredPeriods() == null || 
-	    					StringUtils.trim(runParameters.getManuallyEnteredPeriods()).length() == 0 ||
-	    					StringUtils.trim(runParameters.getManuallyEnteredPeriods()).equals(",")) {
-		    			errors.rejectValue("periodNames", "setuprun.error.selectperiods", "You must select one or more periods or manually" +
-	    				" create your period names.");
-	    			} else {
-	    				String[] parsed = StringUtils.split(runParameters.getManuallyEnteredPeriods(), ",");
-	    				if (parsed.length == 0) {
-    						errors.rejectValue("periodNames", "setuprun.error.whitespaceornonalphanumeric", "Manually entered" +
-    						" periods cannot contain whitespace or non-alphanumeric characters.");
-    						break;
-	    				}
-	    				Set<String> parsedAndTrimmed = new TreeSet<String>();
-	    				for(String current : parsed){
-	    					String trimmed = StringUtils.trim(current);
-	    					if(trimmed.length() == 0 || StringUtils.contains(trimmed, " ") 
-	    							|| !StringUtils.isAlphanumeric(trimmed)
-	    							|| trimmed.equals(",")){
-	    						errors.rejectValue("periodNames", "setuprun.error.whitespaceornonalphanumeric", "Manually entered" +
-	    						" periods cannot contain whitespace or non-alphanumeric characters.");
-	    						break;
-	    					} else {
-	    						parsedAndTrimmed.add(trimmed);
-	    					}
-	    				}
-	    				runParameters.setPeriodNames(parsedAndTrimmed);
-	    				runParameters.setManuallyEnteredPeriods("");
-	    			}
-	    		} 
-	    	} else if (runParameters.getManuallyEnteredPeriods() != "") {
-    			errors.rejectValue("periodNames", "setuprun.error.notsupported", "Selecting both periods AND" +
-				" manually entering periods is not supported.");	    			
-    		}
-	    	break;
-	    case 3:
-	    	break;
-	    case 4:
-	    	break;
-	    default:
-	    	break;
-	    }
-	}
-	
-	/**
-	 * This method is called right before the view is rendered to the user
-	 * 
-	 * @see org.springframework.web.servlet.mvc.AbstractWizardFormController#referenceData(javax.servlet.http.HttpServletRequest, int)
-	 */
-	@Override
-	protected Map<String, Object> referenceData(HttpServletRequest request, 
-			Object command, Errors errors, int page) {
-		String projectId = request.getParameter("projectId");
-		RunParameters runParameters = (RunParameters) command;
-		Project project = null;
-		Map<String, Object> model = new HashMap<String, Object>();
+	@RequestMapping
+	public String getInitialPage(
+			@RequestParam("projectId") final String projectId,
+			final ModelMap modelMap) {
 		User user = ControllerUtil.getSignedInUser();
-		switch(page) {
-		case 0:
-			try {
-				project = (Project) this.projectService.getById(projectId);
-				project.getTags().size(); // fetch the tags
-			} catch (ObjectNotFoundException e) {
-				// TODO HT: what should happen when the project id is invalid?
-				e.printStackTrace();
-			}
-			model.put("project", project);
 
-			// add the current user as an owner of the run
-			Set<User> owners = new HashSet<User>();
-			owners.add(user);
-			runParameters.setOwners(owners);
-			runParameters.setProject(project);
-			runParameters.setName(project.getProjectInfo().getName());
-			
-			/* get the owners and add their usernames to the model */
-			String ownerUsernames = "";
-			Set<User> allOwners = project.getOwners();
-			allOwners.addAll(project.getSharedowners());
-			
-			for(User currentOwner : allOwners){
-				ownerUsernames += currentOwner.getUserDetails().getUsername() + ",";
+		Project project = null;
+		try {
+			project = (Project) this.projectService.getById(projectId);
+			if (!projectService.canCreateRun(project, user)) {
+				return "errors/accessdenied";
 			}
-			
-			model.put("projectOwners", ownerUsernames.substring(0, ownerUsernames.length() - 1));
-			
-			/* determine if the project has been cleaned since last edited
-			 * and that the results indicate that all critical problems
-			 * have been resolved. Add relevant data to the model. */
-			boolean forceCleaning = false;
-			boolean isAllowedToClean = (project.getOwners().contains(user) || project.getSharedowners().contains(user));
-			ProjectMetadata metadata = project.getMetadata();
+			project.getTags().size(); // fetch the tags
+		} catch (ObjectNotFoundException e) {
+			e.printStackTrace();
+		}
+		modelMap.put("project", project);
 
-			if(metadata != null){
-				Date lastCleaned = metadata.getLastCleaned();
-				//Long lcTime = lastCleaned.getLong("timestamp");
-				Date lastEdited = metadata.getLastEdited();
-				
-				/* if it has been edited since it was last cleaned, we need to force cleaning */
-				if(lastCleaned != null && lastEdited != null && lastCleaned.before(lastEdited)) {
-					forceCleaning = true;
-				}
+		// add the current user as an owner of the run
+		Set<User> owners = new HashSet<User>();
+		owners.add(user);
+		RunParameters runParameters = new RunParameters();
+		runParameters.setOwners(owners);
+		runParameters.setProject(project);
+		runParameters.setName(project.getProjectInfo().getName());
+
+		/* get the owners and add their usernames to the model */
+		String ownerUsernames = "";
+		Set<User> allOwners = project.getOwners();
+		allOwners.addAll(project.getSharedowners());
+
+		for(User currentOwner : allOwners){
+			ownerUsernames += currentOwner.getUserDetails().getUsername() + ",";
+		}
+
+		modelMap.put("projectOwners", ownerUsernames.substring(0, ownerUsernames.length() - 1));
+
+		/* determine if the project has been cleaned since last edited
+		 * and that the results indicate that all critical problems
+		 * have been resolved. Add relevant data to the model. */
+		boolean forceCleaning = false;
+		boolean isAllowedToClean = (project.getOwners().contains(user) || project.getSharedowners().contains(user));
+		ProjectMetadata metadata = project.getMetadata();
+
+		if(metadata != null){
+			Date lastCleaned = metadata.getLastCleaned();
+			//Long lcTime = lastCleaned.getLong("timestamp");
+			Date lastEdited = metadata.getLastEdited();
+
+			/* if it has been edited since it was last cleaned, we need to force cleaning */
+			if(lastCleaned != null && lastEdited != null && lastCleaned.before(lastEdited)) {
+				forceCleaning = true;
 			}
-			
-			forceCleaning = false;  //TODO: Jon remove when cleaning is stable
-			
-			model.put("currentUsername", user.getUserDetails().getUsername());
-			model.put("forceCleaning", forceCleaning);
-			model.put("isAllowedToClean", isAllowedToClean);
-			break;
-		case 1:
-			// for page 2 of the wizard, display existing runs for this user
-			List<Run> allRuns = runService.getRunListByOwner(user);
-			
-			// this is a temporary solution to filtering out runs that the logged-in user owns.
-			// when the ACL entry permissions is figured out, we shouldn't have to do this filtering
-			// start temporary code
-			List<Run> currentRuns = new ArrayList<Run>();
-			for (Run run : allRuns) {
-				if (run.getOwners().contains(user) &&
-						!run.isEnded()) {
-					currentRuns.add(run);
-				}
+		}
+
+		forceCleaning = false;  //TODO: Jon remove when cleaning is stable
+
+		modelMap.put("user", user);
+		modelMap.put("currentUsername", user.getUserDetails().getUsername());
+		modelMap.put("forceCleaning", forceCleaning);
+		modelMap.put("isAllowedToClean", isAllowedToClean);
+
+		modelMap.addAttribute("runParameters", runParameters);
+		// populate the model Map as needed
+		return "teacher/run/create/createrunconfirm";
+	}
+
+	@RequestMapping(params = "_cancel")
+	public String processCancel(final HttpServletRequest request,
+			final HttpServletResponse response,
+			final SessionStatus status) {
+		status.setComplete();
+		return "redirect:/teacher/index.html";
+	}
+
+	/**
+	 * For page 1, show list of existing runs for this user and lets them select
+	 * which ones to archive
+	 */
+	@RequestMapping(params = "_page=1")
+	public String processFirstPage(
+			final @ModelAttribute("runParameters") RunParameters runParameters,
+			final BindingResult result,
+			final ModelMap modelMap) {
+		
+		User user = ControllerUtil.getSignedInUser();
+		
+		// for page 2 of the wizard, display existing runs for this user
+		List<Run> allRuns = runService.getRunListByOwner(user);
+
+		// this is a temporary solution to filtering out runs that the logged-in user owns.
+		// when the ACL entry permissions is figured out, we shouldn't have to do this filtering
+		// start temporary code
+		List<Run> currentRuns = new ArrayList<Run>();
+		for (Run run : allRuns) {
+			if (run.getOwners().contains(user) &&
+					!run.isEnded()) {
+				currentRuns.add(run);
 			}
-			// end temporary code
-			model.put("existingRunList", currentRuns);
-			break;
-		case 2:
-			// for page 3 of the wizard, display available period names to the user
-			model.put("periodNames", DefaultPeriodNames.values());
-			break;
-		case 3:
-			postLevelTextMap = new HashMap<Long,String>();
-			String defaultPostLevelHighMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.postLevelHighMessage", 
-					null, Locale.US);
-			String postLevelHighMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.postLevelHighMessage", 
+		}
+		// end temporary code
+		modelMap.put("existingRunList", currentRuns);
+
+		return "teacher/run/create/createrunarchive";
+	}
+
+	/**
+	 * Second page handler. Allow user to specify periods that they will use
+	 * the run for
+	 */
+	@RequestMapping(params = "_page=2")
+	public String processSecondPage(
+			final @ModelAttribute("runParameters") RunParameters runParameters,
+			final BindingResult result,
+			final ModelMap modelMap) {
+
+		modelMap.put("periodNames", DefaultPeriodNames.values());
+
+		return "teacher/run/create/createrunperiods";
+	}
+
+	/**
+	 * Third page handler. This is where user selects postLevel and real time settings
+	 */
+	@RequestMapping(params = "_page=3")
+	public String processThirdPage(
+			final @ModelAttribute("runParameters") RunParameters runParameters,
+			final BindingResult result,
+			final ModelMap modelMap,
+			final HttpServletRequest request) {
+		modelMap.put("periodNames", DefaultPeriodNames.values());
+		
+		if (runParameters.getPeriodNames() == null || 
+		runParameters.getPeriodNames().size() == 0) {
+			if (runParameters.getManuallyEnteredPeriods() == ""){
+				result.rejectValue("periodNames", "setuprun.error.selectperiods", "You must select one or more periods or manually" +
+						" create your period names.");
+			} else {
+				// check if manually entered periods is an empty string or just "," If yes, throw error
+				if (runParameters.getManuallyEnteredPeriods() == null || 
+						StringUtils.trim(runParameters.getManuallyEnteredPeriods()).length() == 0 ||
+						StringUtils.trim(runParameters.getManuallyEnteredPeriods()).equals(",")) {
+					result.rejectValue("periodNames", "setuprun.error.selectperiods", "You must select one or more periods or manually" +
+							" create your period names.");
+				} else {
+					String[] parsed = StringUtils.split(runParameters.getManuallyEnteredPeriods(), ",");
+					if (parsed.length == 0) {
+						result.rejectValue("periodNames", "setuprun.error.whitespaceornonalphanumeric", "Manually entered" +
+								" periods cannot contain whitespace or non-alphanumeric characters.");
+						return "teacher/run/create/createrunperiods";
+					}
+					Set<String> parsedAndTrimmed = new TreeSet<String>();
+					for(String current : parsed){
+						String trimmed = StringUtils.trim(current);
+						if(trimmed.length() == 0 || StringUtils.contains(trimmed, " ") 
+								|| !StringUtils.isAlphanumeric(trimmed)
+								|| trimmed.equals(",")){
+							result.rejectValue("periodNames", "setuprun.error.whitespaceornonalphanumeric", "Manually entered" +
+									" periods cannot contain whitespace or non-alphanumeric characters.");
+							break;
+						} else {
+							parsedAndTrimmed.add(trimmed);
+						}
+					}
+					runParameters.setPeriodNames(parsedAndTrimmed);
+					runParameters.setManuallyEnteredPeriods("");
+				}
+			} 
+		} else if (runParameters.getManuallyEnteredPeriods() != "") {
+			result.rejectValue("periodNames", "setuprun.error.notsupported", "Selecting both periods AND" +
+					" manually entering periods is not supported.");	    			
+		}
+		if (result.hasErrors()) {
+			return "teacher/run/create/createrunperiods";
+		}
+		
+		
+
+		postLevelTextMap = new HashMap<Long,String>();
+		String defaultPostLevelHighMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.postLevelHighMessage", 
+				null, Locale.US);
+		String postLevelHighMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.postLevelHighMessage", 
 				null,defaultPostLevelHighMessage, request.getLocale());
-			String defaultPostLevelLowMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.postLevelLowMessage", 
-					null, Locale.US);
-			String postLevelLowMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.postLevelLowMessage", 
+		String defaultPostLevelLowMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.postLevelLowMessage", 
+				null, Locale.US);
+		String postLevelLowMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.postLevelLowMessage", 
 				null,defaultPostLevelLowMessage, request.getLocale());
 
-			postLevelTextMap.put(5l, postLevelHighMessage);
-			postLevelTextMap.put(1l, postLevelLowMessage);
+		postLevelTextMap.put(5l, postLevelHighMessage);
+		postLevelTextMap.put(1l, postLevelLowMessage);
 
-			try {
-				project = (Project) this.projectService.getById(projectId);
-			} catch (ObjectNotFoundException e) {
-				e.printStackTrace();
-			}
-			String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
-			int maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
-			runParameters.setMaxWorkgroupSize(maxWorkgroupSize);
-			model.put("maxWorkgroupSize", maxWorkgroupSize);
-			model.put("implementedPostLevels", IMPLEMENTED_POST_LEVELS);
-			model.put("postLevelTextMap", postLevelTextMap);
-			model.put("minPostLevel", this.getMinPostLevel(project));
-			runParameters.setEnableRealTime(true);
-			break;
-		case 4:
-			try {
-				project = (Project) this.projectService.getById(projectId);
-			} catch (ObjectNotFoundException e) {
-				e.printStackTrace();
-			}
-			String relativeProjectFilePath = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());  // looks like this: "/109/new.project.json"
-			int ndx = relativeProjectFilePath.lastIndexOf("/");
-			String projectJSONFilename = relativeProjectFilePath.substring(ndx + 1, relativeProjectFilePath.length());  // looks like this: "new.project.json"
-			
-			//get the project name
-			String projectName = project.getName();
-			
-			//replace ' with \' so when the project name is displayed on the jsp page, it won't short circuit the string
-			projectName = projectName.replaceAll("\\'", "\\\\'");
-			
-			model.put("projectId", projectId);
-			model.put("projectType", project.getProjectType());
-			model.put("projectName", projectName);
-			model.put("projectJSONFilename", projectJSONFilename);
-			break;
-		default:
-			break;
-		}
-		return model;
+		Project project = runParameters.getProject();
+		String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
+		int maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
+		runParameters.setMaxWorkgroupSize(maxWorkgroupSize);
+		modelMap.put("maxWorkgroupSize", maxWorkgroupSize);
+		modelMap.put("implementedPostLevels", IMPLEMENTED_POST_LEVELS);
+		modelMap.put("postLevelTextMap", postLevelTextMap);
+		modelMap.put("minPostLevel", this.getMinPostLevel(project));
+		runParameters.setEnableRealTime(true);		
+		return "teacher/run/create/createrunconfigure";
 	}
-	
-	
+
+
+	/**
+	 * Fourth step handler
+	 */
+	@RequestMapping(params = "_page=4")
+	public String processFourthPage(
+			final @ModelAttribute("runParameters") RunParameters runParameters,
+			final BindingResult result,
+			final ModelMap modelMap) {
+		
+		Project project = runParameters.getProject();
+		String relativeProjectFilePath = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());  // looks like this: "/109/new.project.json"
+		int ndx = relativeProjectFilePath.lastIndexOf("/");
+		String projectJSONFilename = relativeProjectFilePath.substring(ndx + 1, relativeProjectFilePath.length());  // looks like this: "new.project.json"
+
+		//get the project name
+		String projectName = project.getName();
+
+		//replace ' with \' so when the project name is displayed on the jsp page, it won't short circuit the string
+		projectName = projectName.replaceAll("\\'", "\\\\'");
+
+		modelMap.put("projectId", project.getId());
+		modelMap.put("projectType", project.getProjectType());
+		modelMap.put("projectName", projectName);
+		modelMap.put("projectJSONFilename", projectJSONFilename);
+
+		return "teacher/run/create/createrunreview";
+	}
+
+
 	/**
 	 * Retrieves the post level from the project metadata if it exists and determines
 	 * the minimum post level that the user can set for the run.
@@ -370,16 +368,16 @@ public class CreateRunController extends AbstractWizardFormController {
 	 */
 	private Long getMinPostLevel(Project project){
 		Long level = 1l;
-		
+
 		ProjectMetadata metadata = project.getMetadata();
-		
+
 		if(metadata != null && metadata.getPostLevel() != null) {
 			level = metadata.getPostLevel();
 		}
-				
+
 		return level;
 	}
-	
+
 	/**
 	 * Creates a run.
 	 * 
@@ -388,33 +386,34 @@ public class CreateRunController extends AbstractWizardFormController {
 	 * 
 	 * @see org.springframework.web.servlet.mvc.AbstractWizardFormController#processFinish(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.validation.BindException)
 	 */
-	@Override
-	protected ModelAndView processFinish(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
-		RunParameters runParameters = (RunParameters) command;
+	@RequestMapping(params = "_finish")
+	protected ModelAndView processFinish(
+			final @ModelAttribute("runParameters") RunParameters runParameters,
+			final BindingResult result,
+			final ModelMap modelMap,
+			final HttpServletRequest request,
+			final SessionStatus status)
+					throws Exception {
 
-    	// TODO: LAW or HT: shouldn't createOffering throw exception?
-    	// e.g. CurnitNotFoundException and JNLPNotFoundException
-    	// answer: yes
 		Run run = null;
-    	try {
-    		// get newProjectId from request and use that to set up the run
-    		String newProjectId = request.getParameter("newProjectId");
-    		Project newProject = projectService.getById(new Long(newProjectId));
-    		runParameters.setProject(newProject);
-    		Locale userLocale = request.getLocale();
-    		runParameters.setLocale(userLocale);
+		try {
+			// get newProjectId from request and use that to set up the run
+			String newProjectId = request.getParameter("newProjectId");
+			Project newProject = projectService.getById(new Long(newProjectId));
+			runParameters.setProject(newProject);
+			Locale userLocale = request.getLocale();
+			runParameters.setLocale(userLocale);
 			run = this.runService.createRun(runParameters);
-			
+
 			// create a workgroup for the owners of the run (teacher)
-			WISEWorkgroup teacherWISEWorkgroup = workgroupService.createWISEWorkgroup("teacher", runParameters.getOwners(), run, null);
-			
+			wiseWorkgroupService.createWISEWorkgroup("teacher", runParameters.getOwners(), run, null);
+
 		} catch (ObjectNotFoundException e) {
-			errors.rejectValue("curnitId", "error.curnit-not_found",
+			result.rejectValue("curnitId", "error.curnit-not_found",
 					new Object[] { runParameters.getCurnitId() }, 
 					"Curnit Not Found.");
-			return showForm(request, response, errors);
+			//return showForm(request, response, errors);
+			return null;
 		}
 		ModelAndView modelAndView = new ModelAndView(COMPLETE_VIEW_NAME);
 		modelAndView.addObject(RUN_KEY, run);
@@ -426,21 +425,24 @@ public class CreateRunController extends AbstractWizardFormController {
 				runService.endRun(runToArchive);
 			}
 		}
-		
+
 		// send email to the recipients in new thread
 		//tries to retrieve the user from the session
 		User user = ControllerUtil.getSignedInUser();
 		Locale locale = request.getLocale();
 		String fullWiseContextPath = ControllerUtil.getPortalUrlString(request);  // e.g. http://localhost:8080/wise
-		
+
 		CreateRunEmailService emailService = 
-			new CreateRunEmailService(command, run, user, locale, fullWiseContextPath);
+				new CreateRunEmailService(runParameters, run, user, locale, fullWiseContextPath);
 		Thread thread = new Thread(emailService);
 		thread.start();
 		
-    	return modelAndView;
+		status.setComplete();
+
+		return modelAndView;
 	}
 	
+
 	class CreateRunEmailService implements Runnable {
 
 		private Object command;
@@ -448,7 +450,7 @@ public class CreateRunController extends AbstractWizardFormController {
 		private User user;
 		private Locale locale;
 		private String fullWiseContextPath;
-		
+
 		public CreateRunEmailService(
 				Object command, Run run, User user, Locale locale, String fullWiseContextPath) {
 			this.command = command;
@@ -465,7 +467,7 @@ public class CreateRunController extends AbstractWizardFormController {
 				if (!sendEmailEnabled) {
 					return;
 				}
-				
+
 				sendEmail();
 			} catch (MessagingException e) {
 				// what if there was an error sending email?
@@ -473,7 +475,7 @@ public class CreateRunController extends AbstractWizardFormController {
 				e.printStackTrace();
 			}
 		}
-		
+
 		/**
 		 * sends an email to individuals to notify them of a new project run
 		 * having been set up by a teacher
@@ -491,8 +493,8 @@ public class CreateRunController extends AbstractWizardFormController {
 			SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMMMM d, yyyy");
 
 			TeacherUserDetails teacherUserDetails = 
-				(TeacherUserDetails) user.getUserDetails();
-				
+					(TeacherUserDetails) user.getUserDetails();
+
 			teacherName = teacherUserDetails.getFirstname() + " " + 
 					teacherUserDetails.getLastname();
 			teacherEmail = teacherUserDetails.getEmailAddress();
@@ -500,8 +502,8 @@ public class CreateRunController extends AbstractWizardFormController {
 			schoolName = teacherUserDetails.getSchoolname();
 			schoolCity = teacherUserDetails.getCity();
 			schoolState = teacherUserDetails.getState();
-			
-			
+
+
 			schoolPeriods = runParameters.printAllPeriods();
 			Set<String> projectcodes = new TreeSet<String>();
 			String runcode = run.getRuncode();
@@ -509,20 +511,20 @@ public class CreateRunController extends AbstractWizardFormController {
 			for (Group period : periods) {
 				projectcodes.add(runcode + "-" + period.getName());
 			}
-			
+
 			projectID = runParameters.getProject().getId();
 			Long runID = run.getId();
-			
-    		String previewProjectUrl = fullWiseContextPath + "/previewproject.html?projectId="+run.getProject().getId();
+
+			String previewProjectUrl = fullWiseContextPath + "/previewproject.html?projectId="+run.getProject().getId();
 
 			String[] recipients = wiseProperties.getProperty("project_setup").split(",");
-			
+
 			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject", 
-						new Object[]{wiseProperties.getProperty("wise.name")}, Locale.US);
-			
+					new Object[]{wiseProperties.getProperty("wise.name")}, Locale.US);
+
 			String subject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailSubject", 
 					new Object[]{wiseProperties.getProperty("wise.name")},defaultSubject, this.locale);
-			
+
 
 			String defaultMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailMessage", 
 					new Object[]{
@@ -539,8 +541,8 @@ public class CreateRunController extends AbstractWizardFormController {
 					runID,
 					sdf.format(date),
 					previewProjectUrl
-					}, 
-					Locale.US);
+			}, 
+			Locale.US);
 
 			String message = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationEmailMessage", 
 					new Object[]{
@@ -557,29 +559,29 @@ public class CreateRunController extends AbstractWizardFormController {
 					runID,
 					sdf.format(date),
 					previewProjectUrl
-					}, 
-					defaultMessage,
-					this.locale);
+			}, 
+			defaultMessage,
+			this.locale);
 
 			String fromEmail = wiseProperties.getProperty("portalemailaddress");
-			
+
 			//for testing out the email functionality without spamming the groups
 			if(DEBUG) {
 				recipients[0] = DEBUG_EMAIL;
 			}
-			
+
 			//sends the email to the admin
 			mailService.postMail(recipients, subject, message, fromEmail);
-			
+
 
 			//also send email to teacher	
 			String[] teacherRecipient = new String[]{teacherEmail};
-			
+
 			String defaultTeacherSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailSubject", 
 					new Object[]{run.getProject().getProjectInfo().getName()}, Locale.US);
-		
+
 			String teacherSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailSubject", 
-				new Object[]{run.getProject().getProjectInfo().getName()},defaultTeacherSubject, this.locale);
+					new Object[]{run.getProject().getProjectInfo().getName()},defaultTeacherSubject, this.locale);
 
 			String defaultRunCodeDescription = messageSource.getMessage("teacher.run.create.createrunfinish.everyRunHasUniqueAccessCode", null, Locale.US);
 
@@ -592,8 +594,8 @@ public class CreateRunController extends AbstractWizardFormController {
 					sdf.format(date),
 					runcode,
 					defaultRunCodeDescription
-					}, 
-					Locale.US);
+			}, 
+			Locale.US);
 
 			String teacherMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.CreateRunController.setupRunConfirmationTeacherEmailMessage", 
 					new Object[]{
@@ -602,10 +604,10 @@ public class CreateRunController extends AbstractWizardFormController {
 					sdf.format(date),
 					runcode,
 					runCodeDescription
-					}, 
-					defaultTeacherMessage,
-					this.locale);
-			
+			}, 
+			defaultTeacherMessage,
+			this.locale);
+
 			if (wiseProperties.containsKey("discourse_url")) {
 				String discourseURL = wiseProperties.getProperty("discourse_url");
 				if (discourseURL != null && !discourseURL.isEmpty()) {
@@ -619,62 +621,5 @@ public class CreateRunController extends AbstractWizardFormController {
 			//sends the email to the teacher
 			mailService.postMail(teacherRecipient, teacherSubject, teacherMessage, fromEmail);
 		}
-	}
-	
-	/**
-	 * This method is called if there is a submit that contains the "_cancel"
-	 * request parameter.
-	 * 
-	 * @see org.springframework.web.servlet.mvc.AbstractWizardFormController#processCancel(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.validation.BindException)
-	 */
-	@Override
-	protected ModelAndView processCancel(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors) {
-		//get the context path e.g. /wise
-		String contextPath = request.getContextPath();
-		
-		return new ModelAndView(new RedirectView(contextPath + CANCEL_VIEW_NAME));
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @param mailService the mailService to set
-	 */
-	public void setMailService(IMailFacade mailService) {
-		this.mailService = mailService;
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	/**
-	 * @param messageSource the messageSource to set
-	 */
-	public void setMessageSource(MessageSource messageSource) {
-		this.messageSource = messageSource;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	public void setWorkgroupService(WISEWorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
 	}
 }

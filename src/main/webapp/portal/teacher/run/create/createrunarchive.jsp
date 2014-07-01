@@ -18,6 +18,7 @@
 
 <title><spring:message code="teacher.run.create.createrunarchive.settingUpAProjectRunStep2" /></title>
 
+
 </head>
 
 <body>
@@ -38,8 +39,10 @@
 					<span class="pageTitle"><spring:message code="teacher.run.create.createrunarchive.management"/></span>
 				</div>
 				<form:form method="post" commandName="runParameters" autocomplete='off'>
-					<div class="panelContent">
-						<div id="setUpRunBox">
+				
+				<div class="panelContent">
+				
+				<div id="setUpRunBox">
 							<div id="stepNumber" class="sectionHead"><spring:message code="teacher.run.create.createrunarchive.step2Of5"/>&nbsp;<spring:message code="teacher.run.create.createrunarchive.archiveExistingProjectRuns"/></div>
 							<div class="sectionContent">
 	
@@ -89,13 +92,17 @@
 							
 							</div>
 						</div> <!-- /* End setUpRunBox */-->
-						<div class="center">
-							<input type="submit" name="_target0" value="<spring:message code="teacher.run.create.createrunarchive.back" />" />
+											<div class="center">
+					
+						    <input id="goToPageInput" type="hidden" name="_page" value="2" />
+	   						<input id="goBackButton" type="submit" name="_back" value="<spring:message code="teacher.run.create.createrunperiods.back"/>"/>
 							<input type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunarchive.cancel" />" />
 							<input type="submit" name="_target2" value="<spring:message code="teacher.run.create.createrunarchive.next" />" />
-						</div>
+							</div>
+						
 					</div>
 				</form:form>
+				
 			</div>
 		</div>
 		<div style="clear: both;"></div>
@@ -103,6 +110,10 @@
 
 	<%@ include file="../../../footer.jsp"%>
 </div>
-
+<script type="text/javascript">
+$("#goBackButton").click(function() {
+	$("#goToPageInput").val("0");	
+});
+</script>
 </body>
 </html>

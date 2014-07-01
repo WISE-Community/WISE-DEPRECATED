@@ -172,19 +172,6 @@
 		<property name="runService" ref="runService" />
 	</bean>
 
-	<bean id="createRunController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.CreateRunController">
-		<property name="runService" ref="runService" />
-		<property name="projectService" ref="projectService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="commandName" value="runParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.run.impl.RunParameters" />
-		<property name="mailService" ref="mailService" />
-		<property name="messageSource" ref="messageSource" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-	
 	<bean id="myClassroomRunsMainController"
 		class="org.wise.portal.presentation.web.controllers.teacher.management.MyClassroomRunsMainController">
 		<property name="runService" ref="runService" />
@@ -294,14 +281,6 @@
 		<property name="messageSource" ref="messageSource" />
 	</bean>
 
-	<bean id="forgotAccountStudentPasswordReminderWizardController"
-		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController">
-		<property name="userService" ref="userService" />
-		<property name="commandName" value="passwordReminderParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
-	</bean>
-	
 	<bean id="viewMyStudentsController"
 		class="org.wise.portal.presentation.web.controllers.teacher.management.ViewMyStudentsController">
 		<property name="runService" ref="runService" />
@@ -776,7 +755,6 @@
 				/teacher/run/manage/updateRun.html=updateRunController
 				/teacher/run/manage/archiveRun.html=updateRunController
 				/teacher/run/manage/startRun.html=updateRunController
-				/teacher/run/createRun.html=createRunController
 				/teacher/run/updaterun.html=updateRunController
 				/teacher/run/editrun.html=updateRunController
 				/teacher/run/notes.html=updateRunController
@@ -800,7 +778,6 @@
 				/forgotaccount/teacher/index.html=forgotAccountTeacherIndexController
 				/forgotaccount/teacher/success.html=urlFilenameViewController
 				/forgotaccount/teacher/error.html=urlFilenameViewController
-				/forgotaccount/student/passwordreminder*.html=forgotAccountStudentPasswordReminderWizardController
 				/forgotaccount/student/searchforstudentusername.html=searchForStudentUserNameController
 				/forgotaccount/resetpassword.html=resetPasswordController
 				/**/changepassword.html=changeUserPasswordController

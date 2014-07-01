@@ -92,12 +92,19 @@
 							</div>
 						</div>
 						<div class="center">
-							<input type="submit" name="_target2" value="<spring:message code="teacher.run.create.createrunconfigure.back"/>" />
+							<input id="goToPageInput" type="hidden" name="_page" value="4" />
+							<input id="goBackButton" type="submit" name="_back" value="<spring:message code="teacher.run.create.createrunperiods.back"/>"/>
 							<input type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunconfigure.cancel"/>" />
 							<input type="submit" name="_target4" value="<spring:message code="teacher.run.create.createrunconfigure.next"/>" />
 						</div>
 					</div>
 				</form:form>
+				<form:form method="post" commandName="runParameters" autocomplete='off'>
+				    <input id=goToPageField" type="hidden" name="_page" value="2" />
+				</form:form>
+				
+											
+				
 			</div>
 		</div>
 		<div style="clear: both;"></div>
@@ -105,5 +112,11 @@
 
 	<%@ include file="../../../footer.jsp"%>
 </div>
+<script type="text/javascript">
+$("#goBackButton").click(function() {
+	$("#goToPageInput").val("2");	
+});
+</script>
+
 </body>
 </html>

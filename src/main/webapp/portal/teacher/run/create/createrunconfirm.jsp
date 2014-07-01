@@ -45,7 +45,6 @@
 
 		/* show the centered div, next and cancel buttons */
 		document.getElementById('setUpRunBox').style.display = 'block';
-		document.getElementById('prevButt').style.display = 'inline';
 		document.getElementById('nextButt').style.display = 'inline';
 	};
 
@@ -230,7 +229,7 @@
 					
 					<div style="text-align:center;">
 						<form method="post">
-							<input type="submit" name="_target0" class="disabled" disabled value="<spring:message code="teacher.run.create.createrunconfirm.back" /> " style="display:none;" id='prevButt'/>
+							<input type="hidden" name="_page" value="1" />
 							<input type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunconfirm.cancel" />" />
 							<input type="submit" name="_target1" value="<spring:message code="teacher.run.create.createrunconfirm.next" />" style="display:none;" id='nextButt'/>
 						</form>
