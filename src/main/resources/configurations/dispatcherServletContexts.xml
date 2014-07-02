@@ -17,6 +17,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"  
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
     http://www.springframework.org/schema/util 
@@ -25,19 +26,18 @@
  	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
     http://www.springframework.org/schema/context    
     http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
  	">
  	
-    <!--  Setting up the dispatcher for annotation support -->
-    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-     <property name="order" value="0" />
-	</bean>   
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
-    
+    <!-- registers the DefaultAnnotationHandlerMapping and AnnotationMethodHandlerAdapter beans 
+    	that are required for Spring MVC to dispatch requests to @Controllers.
+      http://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-annotation-driven  -->
+	<mvc:annotation-driven />
+	    
     <!-- enable the @Controller Spring annotation for defining controllers using annotations -->
-	<context:component-scan base-package="org.wise.portal.presentation.web.controllers"/>
+	<context:component-scan base-package="org.wise"/>
     
-
 	<!-- Switch locales according to the user's browser -->
 	<bean id="localeResolver"
 		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
@@ -355,13 +355,6 @@
 		<property name="userService" ref="userService" />
 		<property name="successView" value="/teacher/management/changeworkgroupsuccess" />
 		<property name="formView" value="/teacher/management/changeworkgroup" />
-	</bean>
-
-	<bean id="libraryController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.LibraryController">
-		<property name="projectService" ref="projectService" />
-		<property name="runService" ref="runService" />
-		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="shareProjectController"
@@ -763,7 +756,6 @@
 				/teacher/classroomMonitor/classroomMonitor.html=gradeWorkController
 				/teacher/management/managemystudents.html=manageStudentsController
 				/teacher/management/updatemyaccount.html=urlFilenameViewController
-				/teacher/management/library.html=libraryController
 				/teacher/management/classroomruns.html=myClassroomRunsMainController
 				/teacher/management/projectruntabs.html=myClassroomRunsController
 				/teacher/management/submitworkgroupchanges.html=submitWorkgroupChangesController

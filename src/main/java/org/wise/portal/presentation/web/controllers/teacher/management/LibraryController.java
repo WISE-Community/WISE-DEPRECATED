@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.wise.portal.presentation.web.controllers.teacher.management;
 
 import java.util.ArrayList;
@@ -15,8 +12,11 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
@@ -30,22 +30,26 @@ import org.wise.portal.service.project.ProjectService;
  * @author Hiroki Terashima
  * @author Jonathan Lim-Breitbart
  */
-public class LibraryController extends AbstractController {
+@Controller
+@RequestMapping("/teacher/management/library.html")
+public class LibraryController {
 	
 	// path to project thumb image relative to project folder
 	private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 	
+	@Autowired
 	private ProjectService projectService;
 
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private Properties wiseProperties;
 
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping(method = RequestMethod.GET)
+	protected String handleRequestInternal(
+			ModelMap modelMap,
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
 		User user = ControllerUtil.getSignedInUser();
@@ -179,47 +183,24 @@ public class LibraryController extends AbstractController {
 		}
 		
 		// send in owned, shared, library, bookmarked projects, and list of project ids
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("bookmarkedProjectsList", this.projectService.getBookmarkerProjectList(user));
-		modelAndView.addObject("ownedProjectsList", ownedProjectsList);
-		modelAndView.addObject("sharedProjectsList", sharedProjectsList);
-		modelAndView.addObject("libraryProjectsList", libraryProjectsList);
-		modelAndView.addObject("projectIds", projectIds);
-		modelAndView.addObject("sharedRemove", sharedRemove);
-		modelAndView.addObject("ownedRemove", ownedRemove);
-		modelAndView.addObject("totalActiveProjects", totalActiveProjects);
-		modelAndView.addObject("totalArchivedProjects", totalArchivedProjects);
+		modelMap.put("bookmarkedProjectsList", this.projectService.getBookmarkerProjectList(user));
+		modelMap.put("ownedProjectsList", ownedProjectsList);
+		modelMap.put("sharedProjectsList", sharedProjectsList);
+		modelMap.put("libraryProjectsList", libraryProjectsList);
+		modelMap.put("projectIds", projectIds);
+		modelMap.put("sharedRemove", sharedRemove);
+		modelMap.put("ownedRemove", ownedRemove);
+		modelMap.put("totalActiveProjects", totalActiveProjects);
+		modelMap.put("totalArchivedProjects", totalArchivedProjects);
     	
-		modelAndView.addObject("urlMap", urlMap);
-		modelAndView.addObject("projectThumbMap", projectThumbMap);
-		modelAndView.addObject("filenameMap", filenameMap);
-		modelAndView.addObject("projectNameMap", projectNameMap);
-		modelAndView.addObject("projectNameEscapedMap", projectNameEscapedMap);
-		modelAndView.addObject("projectRunDateMap", projectRunDateMap);
-		modelAndView.addObject("projectRunIdMap", projectRunIdMap);
-		modelAndView.addObject("user", user);
-		return modelAndView;
+		modelMap.put("urlMap", urlMap);
+		modelMap.put("projectThumbMap", projectThumbMap);
+		modelMap.put("filenameMap", filenameMap);
+		modelMap.put("projectNameMap", projectNameMap);
+		modelMap.put("projectNameEscapedMap", projectNameEscapedMap);
+		modelMap.put("projectRunDateMap", projectRunDateMap);
+		modelMap.put("projectRunIdMap", projectRunIdMap);
+		modelMap.put("user", user);
+		return "teacher/management/library";
 	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-	
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-	
 }
