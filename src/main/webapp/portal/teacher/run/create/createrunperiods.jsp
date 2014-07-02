@@ -80,7 +80,7 @@ function checkIfTextAreaEmpty (form) {
 							          <div id="periodBoxes">
 							          	<c:forEach items="${periodNames}" var="periodName">
 							            <div>
-							            	<form:checkbox path="periodNames" value="${periodName}" id="${periodName}"/>
+							            	<form:checkbox path="periodNames" value="${periodName.toString()}" id="${periodName}"/>
 							            	<label for="${periodName}"><spring:message code="teacher.run.create.createrunperiods.${periodName}" /></label>
 							            </div>
 							          	</c:forEach>
