@@ -35,6 +35,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.impl.ChangePeriodParameters;
 import org.wise.portal.domain.run.Run;
@@ -70,7 +73,9 @@ public class ChangeStudentPeriodControllerTest extends AbstractModelAndViewTests
 	
 	private HttpSession mockSession;
 	
-	private BindException errors;
+	private BindingResult errors;
+	
+	private SessionStatus status;
 	
 	private final static User STUDENT = new UserImpl();
 	
@@ -106,11 +111,6 @@ public class ChangeStudentPeriodControllerTest extends AbstractModelAndViewTests
 		studentService = createMock(StudentService.class);
 		runService = createMock(RunService.class);
 		controller = new ChangeStudentPeriodController();
-		controller.setApplicationContext(mockApplicationContext);
-		controller.setUserService(userService);
-		controller.setStudentService(studentService);
-		controller.setRunService(runService);
-		controller.setSuccessView(SUCCESS);
 	}
 	
 	@Override
@@ -126,30 +126,10 @@ public class ChangeStudentPeriodControllerTest extends AbstractModelAndViewTests
 		controller = null;
 	}
 	
-	public void testFormBackingObject() throws Exception{
-		request.setParameter("runId", RUNID);
-		request.setParameter("userId", USERID);
-		request.setParameter("projectCode", PROJECTCODE);
-				
-		expect(userService.retrieveById(Long.parseLong(USERID))).andReturn(STUDENT);
-		replay(userService);
-		expect(runService.retrieveById(Long.parseLong(RUNID))).andReturn(RUN);
-		replay(runService);
-		
-		Object returnParams = controller.formBackingObject(request);
-		assertTrue(returnParams instanceof ChangePeriodParameters);
-		ChangePeriodParameters fParam = (ChangePeriodParameters) returnParams;
-		assertEquals(fParam.getStudent(), STUDENT);
-		assertEquals(fParam.getRun(), RUN);
-
-		verify(userService);
-		verify(runService);
-	}
-	
 	public void testOnSubmit() throws Exception{
 		
-		ModelAndView mav = controller.onSubmit(request, response, params, errors);
-		assertEquals(mav.getViewName(), SUCCESS);
+		String view = controller.onSubmit(params, errors, status);
+		assertEquals(view, SUCCESS);
 		assertTrue(!errors.hasErrors());
 	}
 }

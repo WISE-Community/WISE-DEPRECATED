@@ -28,13 +28,17 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 import static org.easymock.EasyMock.verify;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.AbstractModelAndViewTests;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
@@ -71,7 +75,9 @@ public class RegisterTeacherControllerTest extends AbstractModelAndViewTests {
 
 	HttpServletResponse response;
 
-	BindException errors;
+	BindingResult errors;
+	
+	Model model;
 	
 	TeacherUserDetails teacherUserDetails;
 	
@@ -110,15 +116,10 @@ public class RegisterTeacherControllerTest extends AbstractModelAndViewTests {
 
 		teacherAccountForm.setUserDetails(teacherUserDetails);
 		RegisterTeacherController signupController = new RegisterTeacherController();
-		signupController.setApplicationContext(mockApplicationContext);
-		signupController.setUserService(mockUserService);
-		signupController.setSuccessView(SUCCESS);
-		ModelAndView modelAndView = signupController.onSubmit(request,
-				response, teacherAccountForm, errors);
+		
+		String view = signupController.onSubmit(teacherAccountForm, errors, request, model);
 
-		assertEquals(SUCCESS, modelAndView.getViewName());
-		assertModelAttributeValue(modelAndView, RegisterTeacherController.USERNAME_KEY, USERNAME);
-		assertModelAttributeValue(modelAndView, RegisterTeacherController.DISPLAYNAME_KEY, DISPLAYNAME);
+		assertEquals(SUCCESS, view);
 		verify(mockUserService);
 
 		// test submission of form with same firstname, lastname and birthday info which
@@ -128,11 +129,9 @@ public class RegisterTeacherControllerTest extends AbstractModelAndViewTests {
 				new DuplicateUsernameException(teacherUserDetails.getUsername()));
 		replay(mockUserService);
 
-		signupController.setFormView(FORM);
-		modelAndView = signupController.onSubmit(request, response,
-				teacherAccountForm, errors);
+		view = signupController.onSubmit(teacherAccountForm, errors, request, model);
 
-		assertViewName(modelAndView, FORM);
+		assertEquals(FORM, view);
 		assertEquals(1, errors.getErrorCount());
 		assertEquals(1, errors.getFieldErrorCount("username"));
 		verify(mockUserService);
@@ -143,9 +142,8 @@ public class RegisterTeacherControllerTest extends AbstractModelAndViewTests {
 		expect(mockUserService.createUser(teacherUserDetails)).andThrow(
 				new RuntimeException());
 		replay(mockUserService);
-		signupController.setFormView(FORM);
 		try {
-			signupController.onSubmit(request, response, teacherAccountForm, errors);
+			signupController.onSubmit(teacherAccountForm, errors, request, model);
 			fail("Expected RuntimeException but it never happened.");
 		} catch (RuntimeException expected) {
 		}

@@ -35,6 +35,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.authentication.impl.ChangeStudentPasswordParameters;
 import org.wise.portal.domain.user.User;
@@ -69,7 +72,9 @@ public class ChangeStudentPasswordControllerTest extends AbstractModelAndViewTes
 	
 	private HttpSession mockSession;
 	
-	private BindException errors;
+	private BindingResult errors;
+	
+	private SessionStatus status;
 	
 	private User user;
 	
@@ -100,22 +105,6 @@ public class ChangeStudentPasswordControllerTest extends AbstractModelAndViewTes
 		
 		this.mockUserService = createMock(UserService.class);
 		changeStudentPasswordController = new ChangeUserPasswordController();
-		changeStudentPasswordController.setApplicationContext(mockApplicationContext);
-		changeStudentPasswordController.setUserService(mockUserService);
-		changeStudentPasswordController.setSuccessView(SUCCESS);
-		changeStudentPasswordController.setFormView(FORM);
-	}
-	
-	
-	public void testFormbackingObject_success() throws Exception{
-		request.setParameter("userName", STUDENT_NAME);
-		expect(mockUserService.retrieveUserByUsername(STUDENT_NAME)).andReturn(user);
-		replay(mockUserService);
-		Object returnParams = changeStudentPasswordController.formBackingObject(request);
-		assertTrue(returnParams instanceof ChangeStudentPasswordParameters);
-		ChangeStudentPasswordParameters params = (ChangeStudentPasswordParameters)returnParams;
-		verify(mockUserService);
-		assertEquals(params.getUser(), user);
 	}
 	
 	public void testOnSubmit_success() throws Exception {
@@ -124,8 +113,9 @@ public class ChangeStudentPasswordControllerTest extends AbstractModelAndViewTes
 
 		expect(mockUserService.updateUserPassword(studentUser, PASSWORD)).andReturn(user);
 		replay(mockUserService);
-		ModelAndView modelAndView = changeStudentPasswordController.onSubmit(request, response, changeStudentPasswordParameters, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		
+		String view = changeStudentPasswordController.onSubmit(changeStudentPasswordParameters, errors, status);
+		assertEquals(SUCCESS, view);
 		assertTrue(!errors.hasErrors());
 		verify(mockUserService);
 	}

@@ -24,7 +24,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:util="http://www.springframework.org/schema/util"
     xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:context="http://www.springframework.org/schema/context"
     xmlns:tx="http://www.springframework.org/schema/tx"  
 	xmlns:task="http://www.springframework.org/schema/task"    
     xsi:schemaLocation="
@@ -39,11 +38,9 @@
       http://www.springframework.org/schema/security
       http://www.springframework.org/schema/security/spring-security-3.2.xsd
 	  http://www.springframework.org/schema/aop 
-      http://www.springframework.org/schema/aop/spring-aop-3.0.xsd  
-      http://www.springframework.org/schema/context    
-      http://www.springframework.org/schema/context/spring-context-3.0.xsd"  
+      http://www.springframework.org/schema/aop/spring-aop-3.0.xsd"      
       >
-      
+
     <!-- ======================== FILTER CHAIN ======================= -->
 
     <!--  if you wish to use channel security, add "channelProcessingFilter," in front
@@ -898,7 +895,6 @@
         <!-- enable the @Required Spring annotation for marking required properties to be wired -->
     <bean
         class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
-    
 
     <!-- enable the configuration of transactional behavior based on annotations -->
     <tx:annotation-driven />
@@ -1002,7 +998,7 @@
 	<bean id="run" scope="prototype"
 		class="org.wise.portal.domain.run.impl.RunImpl">
 	</bean>
-	
+
 	<bean id="vleService"
 		class="org.wise.portal.service.vle.impl.VLEServiceImpl">
 		<property name="userInfoDao" ref="userInfoDao" />

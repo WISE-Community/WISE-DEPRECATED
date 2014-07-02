@@ -25,18 +25,23 @@ package org.wise.portal.presentation.web.controllers.teacher.management;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.BatchStudentChangePasswordParameters;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.validators.ChangePasswordParametersValidator;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.acl.AclService;
@@ -48,20 +53,43 @@ import org.wise.portal.service.user.UserService;
  * @author Sally Ahn
  * @version $Id: $
  */
-public class BatchStudentChangePasswordController extends SimpleFormController {
+@Controller
+@SessionAttributes("batchStudentChangePasswordParameters")
+@RequestMapping("/teacher/management/batchstudentchangepassword.html")
+public class BatchStudentChangePasswordController {
 	
+	@Autowired
 	private GroupService groupService;
 	
+	@Autowired
 	private UserService userService;
 	
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private AclService<Run> aclService;
+	
+	@Autowired
+	protected ChangePasswordParametersValidator changePasswordParametersValidator;
+	
+	//the path to this form view
+	private String formView = "/teacher/management/batchstudentchangepassword";
+	
+	//the path to the success view
+	private String successView = "/teacher/management/batchstudentchangepasswordsuccess";
 	
 	private static final String GROUPID_PARAM_NAME = "groupId";
 	
-	@Override
-	protected Object formBackingObject(HttpServletRequest request) throws Exception {
+	/**
+	 * Called before the page is loaded to initialize values
+	 * @param model the model object that contains values for the page to use when rendering the view
+	 * @param request the http request object
+	 * @return the path of the view to display
+	 * @throws Exception
+	 */
+	@RequestMapping(method=RequestMethod.GET)
+    public String initializeForm(ModelMap model, HttpServletRequest request) throws Exception {
 		User user = ControllerUtil.getSignedInUser();
 		Run run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
 		
@@ -71,75 +99,54 @@ public class BatchStudentChangePasswordController extends SimpleFormController {
 			BatchStudentChangePasswordParameters params = new BatchStudentChangePasswordParameters();
 			params.setGroupId(Long.parseLong(request.getParameter(GROUPID_PARAM_NAME)));
 			params.setTeacherUser(user);
-			return params;
+			
+			model.addAttribute("batchStudentChangePasswordParameters", params);
 		} else {
 			throw new NotAuthorizedException("You are not authorized to change these passwords.");
 		}
+		
+		return formView;
 	}
 	
 	/**
      * On submission of the change student passwords (batch) form,
      * all the students' passwords of the selected group (period)
      * are changed to the new password.
-     * 
-     * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
-     *      javax.servlet.http.HttpServletResponse, java.lang.Object,
-     *      org.springframework.validation.BindException)
+     * @param batchStudentChangePasswordParameters the object that contains the values from the form
+     * @param bindingResult the object used for validation in which errors will be stored
+     * @param sessionStatus the session status object
      */
-    @Override
-    protected ModelAndView onSubmit(HttpServletRequest request,
-            HttpServletResponse response, Object command, BindException errors) {
-    	BatchStudentChangePasswordParameters params = (BatchStudentChangePasswordParameters) command;
-    	Long groupId = params.getGroupId();
-
-    	ModelAndView modelAndView = null;
-    	Group group = null;
+	@RequestMapping(method=RequestMethod.POST)
+	protected String onSubmit(
+			@ModelAttribute("batchStudentChangePasswordParameters") BatchStudentChangePasswordParameters batchStudentChangePasswordParameters, 
+			BindingResult bindingResult, 
+			SessionStatus sessionStatus) {
+    	String view = "";
+    	
     	try {
-			group = groupService.retrieveById(groupId);
-//			if (!(group.getMembers().isEmpty())) {
-				Iterator<User> membersIter = group.getMembers().iterator();
-				while(membersIter.hasNext()) {
-					userService.updateUserPassword(membersIter.next(), params.getPasswd1());
-				}
-	        	modelAndView = new ModelAndView(getSuccessView());
-//			} else {
-//				modelAndView = new ModelAndView(getFormView());
-//			}
+    		//validate the parameters
+    		changePasswordParametersValidator.validate(batchStudentChangePasswordParameters, bindingResult);
+    		
+    		if(bindingResult.hasErrors()) {
+    			//there were errors
+    			view = formView;
+    		} else {
+    			//there were no errors
+        		Long groupId = batchStudentChangePasswordParameters.getGroupId();
+        		Group group = groupService.retrieveById(groupId);
+    			Iterator<User> membersIter = group.getMembers().iterator();
+    			while(membersIter.hasNext()) {
+    				userService.updateUserPassword(membersIter.next(), batchStudentChangePasswordParameters.getPasswd1());
+    			}
+    			view = successView;
+    			sessionStatus.setComplete();
+    		}
 		} catch (ObjectNotFoundException e) {
-			errors.rejectValue("groupId", "error.illegal-groupId"); // add to error list if not there
-			modelAndView = new ModelAndView(getFormView());
+			bindingResult.rejectValue("groupId", "error.illegal-groupId"); // add to error list if not there
+			view = formView;
 		}
-    	return modelAndView;
+    	
+    	return view;
     }
-	
-	/**
-	 * @param groupService the groupService to set
-	 */
-	public void setGroupService(GroupService groupService) {
-		this.groupService = groupService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @param aclService the aclService to set
-	 */
-	public void setAclService(AclService<Run> aclService) {
-		this.aclService = aclService;
-	}
-	
-	
 
 }
