@@ -20,7 +20,6 @@ package org.wise.portal.dao.user.impl;
 import java.util.List;
 import java.util.Vector;
 
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
@@ -75,7 +74,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements
 	 */
 	@SuppressWarnings("unchecked")
 	public List<String> retrieveAll(String selectClause) {
-		return this.getHibernateTemplate().find("select " + selectClause + " from UserImpl");
+		return (List<String>) this.getHibernateTemplate().find("select " + selectClause + " from UserImpl");
 	}
 
     /**
@@ -95,7 +94,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements
      */
     @SuppressWarnings("unchecked")
 	public List<User> retrieveByEmailAddress(String emailAddress) {
-        return this
+        return (List<User>) this
         .getHibernateTemplate()
         .findByNamedParam(
                 "from UserImpl as user where user.userDetails.emailAddress = :emailAddress",
@@ -107,7 +106,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements
      */
     @SuppressWarnings("unchecked")
 	public List<User> retrieveDisabledUsers() {
-        return this
+        return (List<User>) this
         .getHibernateTemplate()
         .findByNamedParam(
                 "from UserImpl as user where user.userDetails.enabled = :enabled",
@@ -120,11 +119,11 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements
     @SuppressWarnings("unchecked")
     public List<User> retrieveByField(String field, String type, Object term, String classVar){
     	if (field == null && type == null && term == null) {
-    		return this.getHibernateTemplate().find(
+    		return (List<User>) this.getHibernateTemplate().find(
     				"select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
     				classVar +	" where user.userDetails.id = " + classVar + ".id");
     	} else {
-    		return this.getHibernateTemplate().findByNamedParam(
+    		return (List<User>) this.getHibernateTemplate().findByNamedParam(
     				"select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
     				classVar +	" where user.userDetails.id = " + classVar + ".id and " +
     				classVar + "."	+ field + " " +	type + " :term", "term", term);
@@ -195,7 +194,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements
     	}
     	
     	//run the query and return the results
-    	return this.getHibernateTemplate().find(query.toString(), objectValues.toArray());
+    	return (List<User>) this.getHibernateTemplate().find(query.toString(), objectValues.toArray());
     }
 
     /**

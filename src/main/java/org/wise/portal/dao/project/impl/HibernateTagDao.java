@@ -54,7 +54,7 @@ public class HibernateTagDao extends AbstractHibernateDao<Tag> implements TagDao
 	 */
 	@SuppressWarnings("unchecked")
 	public Tag getTagByName(String name){
-		List<Tag> tags = this.getHibernateTemplate().find("select tag from TagImpl tag where tag.name='" + name + "'");
+		List<Tag> tags = (List<Tag>) this.getHibernateTemplate().find("select tag from TagImpl tag where tag.name='" + name + "'");
 		
 		if(tags.size() == 0){
 			return null;
@@ -69,7 +69,7 @@ public class HibernateTagDao extends AbstractHibernateDao<Tag> implements TagDao
 	 */
 	@SuppressWarnings("unchecked")
 	public void removeIfOrphaned(Long tagId){
-		List<Tag> projects = this.getHibernateTemplate().find("select project from ProjectImpl project inner join project.tags tag where tag.id=" + tagId);
+		List<Tag> projects = (List<Tag>) this.getHibernateTemplate().find("select project from ProjectImpl project inner join project.tags tag where tag.id=" + tagId);
 		
 		if(projects.size() == 0){
 			try{

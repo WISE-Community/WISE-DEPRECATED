@@ -63,7 +63,7 @@ public class HibernateOfferingDao extends AbstractHibernateDao<Offering>
 	 */
 	@SuppressWarnings("unchecked")
 	public Set<Workgroup> getWorkgroupsForOffering(Long offeringId) {
-		List<Workgroup> workgroupList =  this.getHibernateTemplate()
+		List<Workgroup> workgroupList =  (List<Workgroup>) this.getHibernateTemplate()
 		    .findByNamedParam(
 		    		"from WorkgroupImpl as workgroup where workgroup.offering.id = :offeringId", 
 		    		"offeringId", offeringId);

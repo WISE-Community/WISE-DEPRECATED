@@ -520,7 +520,7 @@
 		</plugins>
 	</reporting>
 	<properties>
-		<org.springframework.version>3.2.9.RELEASE</org.springframework.version>
+		<org.springframework.version>4.0.5.RELEASE</org.springframework.version>
 		<org.springframework.security.version>3.2.4.RELEASE</org.springframework.security.version>
 		<startup.listeners>
 		</startup.listeners>

@@ -17,8 +17,19 @@
  */
 package org.wise.portal.spring.impl;
 
-import org.springframework.web.context.ContextLoader;
+import java.security.InvalidParameterException;
+
+import javax.servlet.ServletContext;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.WebApplicationContext;
+import org.wise.portal.spring.SpringConfiguration;
 
 /**
  * Custom implementation for creating and returning our
@@ -31,11 +42,63 @@ import org.springframework.web.context.ContextLoaderListener;
  */
 public class CustomContextLoaderListener extends ContextLoaderListener {
 
+	private static final Log LOGGER = LogFactory
+            .getLog(CustomContextLoader.class);
+
     /**
-     * @see org.springframework.web.context.ContextLoaderListener#createContextLoader()
+     * Name of servlet context parameter that specifies the implementation class
+     * which holds all the config locations. Use "contextConfigClass".
+     */
+    public static final String CONFIG_CLASS_PARAM = "contextConfigClass";
+
+    /**
+     * The behaviour of this method is the same as the superclass except for
+     * setting of the config locations.
+     * 
+     * @throws ClassNotFoundException
+     * 
+     * @see org.springframework.web.context.ContextLoader#createWebApplicationContext(javax.servlet.ServletContext,
+     *      org.springframework.context.ApplicationContext)
      */
     @Override
-    protected ContextLoader createContextLoader() {
-        return new CustomContextLoader();
+    protected WebApplicationContext createWebApplicationContext(
+            ServletContext servletContext)
+            throws BeansException {
+
+        Class<?> contextClass = determineContextClass(servletContext);
+        if (!ConfigurableWebApplicationContext.class
+                .isAssignableFrom(contextClass)) {
+            throw new ApplicationContextException("Custom context class ["
+                    + contextClass.getName()
+                    + "] is not of type ConfigurableWebApplicationContext");
+        }
+
+        ConfigurableWebApplicationContext webApplicationContext = (ConfigurableWebApplicationContext) BeanUtils
+                .instantiateClass(contextClass);
+        webApplicationContext.setServletContext(servletContext);
+
+        String configClass = servletContext
+                .getInitParameter(CONFIG_CLASS_PARAM);
+        if (configClass != null) {
+            try {
+                SpringConfiguration springConfig = (SpringConfiguration) BeanUtils
+                        .instantiateClass(Class.forName(configClass));
+                webApplicationContext.setConfigLocations(springConfig
+                        .getRootApplicationContextConfigLocations());
+            } catch (ClassNotFoundException e) {
+                if (LOGGER.isErrorEnabled()) {
+                    LOGGER.error(CONFIG_CLASS_PARAM + " <" + configClass
+                            + "> not found.", e);
+                }
+                throw new InvalidParameterException("ClassNotFoundException: "
+                        + configClass);
+            }
+        } else {
+            throw new InvalidParameterException(
+                    "No value defined for the required: " + CONFIG_CLASS_PARAM);
+        }
+
+        webApplicationContext.refresh();
+        return webApplicationContext;
     }
 }

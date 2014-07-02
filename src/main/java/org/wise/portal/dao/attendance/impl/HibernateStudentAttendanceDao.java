@@ -39,7 +39,7 @@ public class HibernateStudentAttendanceDao extends AbstractHibernateDao<StudentA
 	public List<StudentAttendance> getStudentAttendanceByRunIdAndPeriod(
 			Long runId, int lookBackNumDays) {
 		
-			return this.getHibernateTemplate().find("select attendance from StudentAttendanceImpl attendance where"
+			return (List<StudentAttendance>) this.getHibernateTemplate().find("select attendance from StudentAttendanceImpl attendance where"
 					+ " datediff(curdate(), attendance.loginTimestamp) <=" + lookBackNumDays
 					+ " and attendance.runId = " + runId);
 	}

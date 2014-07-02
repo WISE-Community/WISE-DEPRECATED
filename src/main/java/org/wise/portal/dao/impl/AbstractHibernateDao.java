@@ -53,7 +53,7 @@ public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
 	 */
 	@SuppressWarnings("unchecked")
 	public List<T> getList() {
-		return this.getHibernateTemplate().find(this.getFindAllQuery());
+		return (List<T>) this.getHibernateTemplate().find(this.getFindAllQuery());
 	}
 
 	/**

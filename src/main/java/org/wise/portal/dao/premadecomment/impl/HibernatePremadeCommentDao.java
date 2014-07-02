@@ -53,7 +53,7 @@ public class HibernatePremadeCommentDao extends AbstractHibernateDao<PremadeComm
 	 */
 	public List<PremadeComment> getPremadeCommentsByUser(User owner){
 		String q = "select comment from PremadeCommentImpl comment where comment.owner.id='" + owner.getId() + "'";
-		return this.getHibernateTemplate().find(q);
+		return (List<PremadeComment>) this.getHibernateTemplate().find(q);
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public class HibernatePremadeCommentDao extends AbstractHibernateDao<PremadeComm
 	 */
 	public List<PremadeComment> getPremadeCommentsByRun(Run run){
 		String q = "select comment from PremadeCommentImpl comment where comment.run.id='" + run.getId() + "'";
-		return this.getHibernateTemplate().find(q);
+		return (List<PremadeComment>) this.getHibernateTemplate().find(q);
 	}
 	
 	/**

@@ -53,7 +53,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Project> retrieveListByTag(FamilyTag familytag) throws ObjectNotFoundException {
-		List<Project> projects = this
+		List<Project> projects = (List<Project>) this
 						.getHibernateTemplate()
 						.findByNamedParam(
 								"from ProjectImpl as project where project.familytag = :familytag",
@@ -69,7 +69,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Project> retrieveListByTag(String projectinfotag) throws ObjectNotFoundException {
-		List<Project> projects = this
+		List<Project> projects = (List<Project>) this
 		.getHibernateTemplate()
 		.findByNamedParam(
 				"from ProjectImpl as project where upper(project.projectinfotag) = :projectinfotag",
@@ -112,14 +112,14 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	public List<Project> getProjectListByUAR(User user, String role){
 		String q = "select project from ProjectImpl project inner join project." +
 			role + "s " + role + " where " + role + ".id='" + user.getId() + "'";
-		return this.getHibernateTemplate().find(q);
+		return (List<Project>) this.getHibernateTemplate().find(q);
 	}
 	
 	/**
 	 * @see org.wise.portal.dao.project.ProjectDao#getProjectList(java.lang.String)
 	 */
 	public List<Project> getProjectList(String query){
-		return this.getHibernateTemplate().find(query);
+		return (List<Project>) this.getHibernateTemplate().find(query);
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Project> getList() {
-		return this.getHibernateTemplate().find(this.getFindAllQuery());
+		return (List<Project>) this.getHibernateTemplate().find(this.getFindAllQuery());
 	}
 	
 	/**
@@ -164,7 +164,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 		
 		String q = "select distinct project from ProjectImpl project inner join project.tags tag with tag.name in (" + tagString + ") ";			
 		
-		List<Project> projects = this.getHibernateTemplate().find(q);
+		List<Project> projects = (List<Project>) this.getHibernateTemplate().find(q);
 		List<Project> result = new ArrayList<Project>();
 		for (Project project : projects) {
 			int numMatches = 0;
@@ -195,7 +195,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	 * @see org.wise.portal.dao.project.ProjectDao#getProjectCopies(java.lang.Long)
 	 */
 	public List<Project> getProjectCopies(Long projectId) {
-		List<Project> projects = this
+		List<Project> projects = (List<Project>) this
 		.getHibernateTemplate()
 		.findByNamedParam(
 				"from ProjectImpl as project where project.parentProjectId = :parentProjectId",

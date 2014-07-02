@@ -14,7 +14,7 @@ public class HibernatePortalStatisticsDao extends AbstractHibernateDao<PortalSta
 	 */
 	public List<PortalStatistics> getAllPortalStatistics() {
     	String query = "select portalStatistics from PortalStatisticsImpl portalStatistics order by timestamp asc";
-    	return this.getHibernateTemplate().find(query);
+    	return (List<PortalStatistics>) this.getHibernateTemplate().find(query);
 	}
 	
 	@Override
