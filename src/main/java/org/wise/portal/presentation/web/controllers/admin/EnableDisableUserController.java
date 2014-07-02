@@ -27,6 +27,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.user.User;
@@ -39,59 +44,65 @@ import org.wise.portal.service.user.UserService;
  * @author hirokiterashima
  * @version $Id:$
  */
-public class EnableDisableUserController extends AbstractController {
+@Controller
+@RequestMapping("/admin/account/enabledisableuser.html")
+public class EnableDisableUserController {
 
+	@Autowired
 	private UserService userService;
 
 	/**
 	 * Check to see if the user to enable/disable has already been enabled/disabled. If yes, return such message.
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// Check to see that user making the request is an admin user.
-		User signedInUser = ControllerUtil.getSignedInUser();
-		if (signedInUser.isAdmin()) {
-			if (request.getMethod().equals(METHOD_GET)) {
-				// retrieve a list of already-disabled user accounts.
-				ModelAndView mav = new ModelAndView();
-				List<User> disabledUsers = userService.retrieveDisabledUsers();
-				mav.addObject("disabledUsers", disabledUsers);
-				return mav;
-			} else if (request.getMethod().equals(METHOD_POST)) {
-				// enable/disable user accounts
-				String doEnable = request.getParameter("doEnable");
-				String username = request.getParameter("username");
-				User user = userService.retrieveUserByUsername(username);
-				// check to see if user exists in the system.
-				if (user != null) {  
-					if (Boolean.parseBoolean(doEnable)) {
-						// enable the account
-						if (!user.getUserDetails().isEnabled()) {
-							user.getUserDetails().setEnabled(true);
-							userService.updateUser(user);
-							response.getWriter().write("success");
-						} else {
-							response.getWriter().write("User '"+username+"' is already enabled.");
-						}
-					} else {
-						// disable the account
-						if (user.getUserDetails().isEnabled()) {
-							user.getUserDetails().setEnabled(false);
-							userService.updateUser(user);
-							response.getWriter().write("success");
-						} else {
-							response.getWriter().write("User '"+username+"' is already disabled.");
-						}
-					}
+	@RequestMapping(method = RequestMethod.GET)	
+	protected String handleGET(
+			HttpServletRequest request, 
+			HttpServletResponse response,
+			ModelMap modelMap) throws Exception {
+		// retrieve a list of already-disabled user accounts.
+		List<User> disabledUsers = userService.retrieveDisabledUsers();
+		modelMap.put("disabledUsers", disabledUsers);
+		return "/admin/account/enabledisableuser";
+	}
+
+	@RequestMapping(method = RequestMethod.POST)	
+	protected String handlePOST(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
+		// enable/disable user accounts
+		String doEnable = request.getParameter("doEnable");
+		String username = request.getParameter("username");
+		User user = userService.retrieveUserByUsername(username);
+		// check to see if user exists in the system.
+		if (user != null) {  
+			if (Boolean.parseBoolean(doEnable)) {
+				// enable the account
+				if (!user.getUserDetails().isEnabled()) {
+					user.getUserDetails().setEnabled(true);
+					userService.updateUser(user);
+					response.getWriter().write("success");
 				} else {
-					// user does not exist in the system.
-					response.getWriter().write("User '" + username + "' was not found in the system. Please check the spelling and try again.");
+					response.getWriter().write("User '"+username+"' is already enabled.");
+				}
+			} else {
+				// disable the account
+				if (user.getUserDetails().isEnabled()) {
+					user.getUserDetails().setEnabled(false);
+					userService.updateUser(user);
+					response.getWriter().write("success");
+				} else {
+					response.getWriter().write("User '"+username+"' is already disabled.");
 				}
 			}
+		} else {
+			// user does not exist in the system.
+			response.getWriter().write("User '" + username + "' was not found in the system. Please check the spelling and try again.");
 		}
 		return null;
 	}
+
+
 
 	/**
 	 * @param userService the userService to set

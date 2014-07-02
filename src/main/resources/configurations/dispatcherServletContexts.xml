@@ -279,27 +279,11 @@
 		<property name="runService" ref="runService" />
 	</bean>
 
-	<bean id="viewAllUsersController"
-		class="org.wise.portal.presentation.web.controllers.admin.ViewAllUsersController">
-		<property name="userService" ref="userService" />
-		<property name="userDetailsService" ref="userDetailsService" />
-	</bean>
-
-	<bean id="enableDisableUserController"
-		class="org.wise.portal.presentation.web.controllers.admin.EnableDisableUserController">
-		<property name="userService" ref="userService" />
-	</bean>
-
 	<bean id="projectInfoController"
 		class="org.wise.portal.presentation.web.controllers.teacher.project.ProjectInfoController">
 		<property name="projectService" ref="projectService" />
 		<property name="runService" ref="runService" />
 		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-    <bean id="newsItemController"
-		class="org.wise.portal.presentation.web.controllers.admin.NewsItemController">
-		<property name="newsItemService" ref="newsItemService" />
 	</bean>
 
 	<bean id="unShareProjectRunController"
@@ -336,13 +320,6 @@
 		<property name="projectService" ref="projectService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
-
-	<bean id="manageUserRolesController"
-		class="org.wise.portal.presentation.web.controllers.admin.ManageUserRolesController">
-		<property name="userService" ref="userService" />
-		<property name="userDetailsService" ref="userDetailsService" />
-	</bean>
-
 
 	<bean id="manageAnnouncementController"
 		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.ManageAnnouncementController">
@@ -593,16 +570,9 @@
 				/author/authorproject.html=authorProjectController
 				/project/exportproject.html=exportProjectController
 				/project/importexternalproject.html=importExternalProjectController
-				/admin/account/manageusers.html=viewAllUsersController
-				/admin/account/enabledisableuser.html=enableDisableUserController
-				/admin/account/manageuserroles.html=manageUserRolesController
 				/admin/project/manageallprojects.html=manageAllProjectsController
-				/admin/news/managenewsitems.html=newsItemController
-				/admin/news/addnewsitems.html=newsItemController
-				/admin/news/editnewsitem.html=newsItemController
 				/admin/project/tagger.html=taggerController
 				/admin/portal/manageportal.html=managePortalController
-				/admin/memorymonitor.html=urlFilenameViewController
 				/teacher/run/announcement/*.html=manageAnnouncementController
 				/teacher/projects/bookmark.html=bookmarkController
 				/teacher/projects/deleteproject.html=deleteProjectController
