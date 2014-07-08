@@ -59,7 +59,7 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
      */
     @SuppressWarnings("unchecked")
     public List<Workgroup> getListByOfferingAndUser(Offering offering, User user) {
-        Session session = this.getSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         SQLQuery sqlQuery = session
                 .createSQLQuery("SELECT w.*, g.* FROM workgroups as w, groups as g, "
                 		+ "groups_related_to_users as g_r_u "
@@ -78,7 +78,7 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
      */
     @SuppressWarnings("unchecked")
     public List<Workgroup> getListByUser(User user) {
-        Session session = this.getSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         SQLQuery sqlQuery = session
                 .createSQLQuery("SELECT w.*, g.* FROM workgroups as w, groups as g, "
                 		+ "groups_related_to_users as g_r_u "

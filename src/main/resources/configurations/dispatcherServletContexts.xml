@@ -39,7 +39,9 @@
 	<mvc:annotation-driven />
 	    
     <!-- enable the @Controller Spring annotation for defining controllers using annotations -->
-	<context:component-scan base-package="org.wise"/>
+	<context:component-scan base-package="org.wise.portal.presentation.web.controllers">
+    	<context:exclude-filter type="regex" expression=".*?Test.*?"/>
+	</context:component-scan>
 
 	<!-- Switch locales according to the user's browser -->
 	<bean id="localeResolver"
@@ -447,11 +449,6 @@
 		<property name="projectService" ref="projectService" />
 	</bean>
 
-	<bean id="checkForExistingAccountController"
-		class="org.wise.portal.presentation.web.controllers.CheckForExistingAccountController">
-		<property name="userService" ref="userService" />
-	</bean>
-
 	<bean id="searchForStudentUserNameValidator"
 		class="org.wise.portal.presentation.validators.SearchForStudentUserNameValidator" />
 
@@ -519,6 +516,10 @@
 	<bean id="discourseSSOController" class="org.wise.portal.presentation.web.controllers.DiscourseSSOController">
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
+	
+	<!-- these are resources that do not need to be backed by controllers and should be handled before looking through the SimpleUrlHandlerMapping mappings -->
+	<mvc:resources mapping="/vle/**" location="/vle/" order="1" />
+	<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
 
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="order" value="2"></property>
@@ -603,9 +604,5 @@
 			</list>
 		</property>
 	</bean>
-
-	<mvc:resources mapping="/vle/**" location="/vle/" order="1" />
-
-	<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
 
 </beans>

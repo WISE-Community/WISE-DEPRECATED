@@ -34,7 +34,7 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -71,6 +71,7 @@ public class IndexController extends AbstractController {
 			HttpServletResponse arg1) throws Exception {
 		
 		List<NewsItem> newsItems = newsItemService.retrieveAllNewsItem();
+		
 		if (newsItems.size() == 0) {
 			NewsItem newsItem = new NewsItemImpl();
 			newsItem.setDate(Calendar.getInstance().getTime());
@@ -83,11 +84,15 @@ public class IndexController extends AbstractController {
 		
 		Map<Long,String> projectThumbMap = new TreeMap<Long,String>();  // maps projectId to url where its thumbnail can be found
 		
+		List<NewsItem> newsItems2 = newsItemService.retrieveAllNewsItem();
+		
 		// get library projects
 		Set<String> tagNames = new TreeSet<String>();
 		tagNames.add("library");
 		tagNames.add("public");
-		List<Project> libraryProjectsList = this.projectService.getProjectListByTagNames(tagNames);
+		
+		//List<Project> libraryProjectsList = this.projectService.getProjectListByTagNames(tagNames);
+		List<Project> libraryProjectsList = new ArrayList<Project>();
 		
 		// divide library projects by subject area
 		List<Project> esProjects = new ArrayList<Project>();

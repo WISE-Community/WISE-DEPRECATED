@@ -260,7 +260,6 @@ public class UserServiceImpl implements UserService {
 		return this.userDao.getById(userId);
 	}
 
-	@Transactional()
 	public void updateUser(User user) {
 		this.userDao.save(user);
 	}
@@ -290,7 +289,6 @@ public class UserServiceImpl implements UserService {
      * @param classVar 'studentUserDetails' or 'teacherUserDetails'
      * @return a list of Users that have matching values for the given fields
      */
-	@Transactional()
 	public List<User> retrieveByFields(String[] fields, String[] types, String classVar){
 		return this.userDao.retrieveByFields(fields, types, classVar);
 	}
@@ -299,7 +297,6 @@ public class UserServiceImpl implements UserService {
 	 * @see net.sf.sail.webapp.service.UserService#retrieveUserByUsername(java.lang.String)
 	 */
 	@Override
-	@Transactional(readOnly = true)
 	public User retrieveUserByUsername(String username) {
 		if (username == null || username.isEmpty()) {
 			return null;

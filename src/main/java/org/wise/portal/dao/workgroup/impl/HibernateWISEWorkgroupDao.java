@@ -63,7 +63,7 @@ implements WorkgroupDao<WISEWorkgroup>{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<WISEWorkgroup> getListByOfferingAndUser(Offering offering, User user) {
-		Session session = this.getSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 		SQLQuery sqlQuery = session
 				.createSQLQuery("SELECT w.*, g.*, ww.* FROM workgroups as w, groups as g, "
 						+ "groups_related_to_users as g_r_u, wiseworkgroups as ww "
@@ -84,7 +84,7 @@ implements WorkgroupDao<WISEWorkgroup>{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<WISEWorkgroup> getListByUser(User user) {
-		Session session = this.getSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 		SQLQuery sqlQuery = session
 				.createSQLQuery("SELECT w.*, g.*, ww.* FROM workgroups as w, groups as g, "
 						+ "groups_related_to_users as g_r_u, wiseworkgroups as ww  "

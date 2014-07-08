@@ -57,7 +57,7 @@
      			anonymousProcessingFilter,
      			exceptionTranslationFilter,
      			filterInvocationInterceptor,
-     			switchUserProcessingFilter     		    
+     			switchUserProcessingFilter
      			" />
   			</sec:filter-chain-map>
     </bean>
@@ -120,7 +120,7 @@
     </bean>
 
     <bean id="openSessionInViewFilter" 
-        class="org.springframework.orm.hibernate3.support.OpenSessionInViewFilter"/>
+        class="org.springframework.orm.hibernate4.support.OpenSessionInViewFilter"/>
 
     <bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
         <constructor-arg value="/index.html" />
@@ -868,11 +868,6 @@
     <bean id="mutableAclTargetObjectIdentity"
         class="org.wise.portal.domain.authentication.impl.PersistentAclTargetObjectIdentity"
         scope="prototype" />
-
-    <bean id="transactionManager"
-        class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-        <property name="sessionFactory" ref="sessionFactory" />
-    </bean>
     
      <bean id="userDetailsDao"
         class="org.wise.portal.dao.authentication.impl.HibernateUserDetailsDao">
@@ -896,9 +891,15 @@
     <bean
         class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
 
-    <!-- enable the configuration of transactional behavior based on annotations -->
-    <tx:annotation-driven />
-
+        <!-- enable the configuration of transactional behavior based on annotations -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+    <bean id="transactionManager"
+        class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    
     <!-- Add File Uploading capabilities -->
     <bean id="multipartResolver"
     	class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -1425,6 +1426,7 @@
 
 	<bean id="authFailureHandler"
 		class="org.wise.portal.presentation.web.filters.TelsAuthenticationFailureHandler">
+		<property name="userService" ref="userService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="authenticationFailureUrl" value="/login.html?failed=true" />
 	</bean>
@@ -1451,6 +1453,8 @@
 		<property name="accessDecisionManager" ref="urlAccessDecisionManager" />
 		<property name="securityMetadataSource">
 			<sec:filter-security-metadata-source>
+				<sec:intercept-url pattern="/portal/javascript/**" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/portal/themes/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/index.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 			    <sec:intercept-url pattern="/vle/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/student/registerstudent.html" access="ROLE_ANONYMOUS,ROLE_USER" />

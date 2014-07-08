@@ -37,6 +37,7 @@ import org.wise.portal.service.newsitem.NewsItemService;
  * @author patrick lawler
  *
  */
+@Transactional(readOnly = true)
 public class NewsItemServiceImpl implements NewsItemService{
 
 	private NewsItemDao<NewsItem> newsItemDao;
@@ -53,12 +54,10 @@ public class NewsItemServiceImpl implements NewsItemService{
 		return newsItem;
 	}
 	
-	@Transactional(readOnly = true)
 	public List<NewsItem> retrieveAllNewsItem(){
 		return newsItemDao.getList();
 	}
 
-	@Transactional()
 	public NewsItem retrieveById(Long id) throws ObjectNotFoundException{
 		try{
 			return newsItemDao.getById(id);

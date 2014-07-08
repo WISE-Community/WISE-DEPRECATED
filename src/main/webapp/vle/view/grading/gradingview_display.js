@@ -2775,7 +2775,7 @@ View.prototype.getStudentWorkTdHtml = function(studentWork, node, stepWorkId, st
         studentWorkFixedLink = studentWorkFixedLink.replace(/images\//gmi, contentBaseUrl+'\/images\/');
         studentWorkFixedLink = studentWorkFixedLink.replace(/\.\/assets\//gmi, 'assets\/');
         studentWorkFixedLink = studentWorkFixedLink.replace(/assets\//gmi, contentBaseUrl+'\/assets\/');
-                        	
+        
         var contentUrl = node.getContent().getContentUrl();
         
 		//commented the line below because my system grading is broken at the moment

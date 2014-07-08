@@ -35,7 +35,7 @@ import javax.servlet.http.HttpSession;
 
 import org.hibernate.StaleObjectStateException;
 import org.json.JSONArray;
-import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
+import org.springframework.orm.hibernate4.HibernateOptimisticLockingFailureException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.group.Group;
