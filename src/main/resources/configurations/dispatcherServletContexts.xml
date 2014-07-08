@@ -79,13 +79,6 @@
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
-	<bean id="indexController"
-		class="org.wise.portal.presentation.web.controllers.IndexController">
-		<property name="newsItemService" ref="newsItemService" />
-		<property name="projectService" ref="projectService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
 	<bean id="selectteamController"
 		class="org.wise.portal.presentation.web.controllers.student.SelectTeamController">
 		<property name="runService" ref="runService" />
@@ -97,18 +90,6 @@
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="projectService" ref="projectService" />
 		<property name="studentAttendanceService" ref="studentAttendanceService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="previewprojectController"
-		class="org.wise.portal.presentation.web.controllers.PreviewProjectController">
-		<property name="runService" ref="runService" />
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="previewprojectlistController"
-		class="org.wise.portal.presentation.web.controllers.PreviewProjectListController">
-		<property name="projectService" ref="projectService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
@@ -317,12 +298,6 @@
 		<property name="runService" ref="runService" />
 	</bean>
 
-	<bean id="exportProjectController"
-		class="org.wise.portal.presentation.web.controllers.project.ExportProjectController">
-		<property name="projectService" ref="projectService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
 	<bean id="manageAnnouncementController"
 		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.ManageAnnouncementController">
 		<property name="aclService" ref="aclServiceImpl" />
@@ -452,11 +427,6 @@
 	<bean id="searchForStudentUserNameValidator"
 		class="org.wise.portal.presentation.validators.SearchForStudentUserNameValidator" />
 
-	<bean id="loginController"
-		class="org.wise.portal.presentation.web.controllers.LoginController">
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
 	<bean id="cRaterController" class="org.wise.vle.web.CRaterController">
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
@@ -527,8 +497,6 @@
 			<value>
 				/request/info.html=informationController
 				/metadata.html=projectMetadataController
-				/index.html=indexController
-				/login.html=loginController
 				/errors/friendlyError.html=urlFilenameViewController
 				/accessdenied.html=accessDeniedController
 				/router.html=routerController
@@ -560,16 +528,12 @@
 				/teacher/management/studentlist.html=studentListController
 				/teacher/management/studentlistexcel.html=listStudentNamesController
 				/teacher/vle/vle.html=studentVLEController
-				/**/index.html=indexController
-				/previewproject.html=previewprojectController
-				/previewprojectlist.html=previewprojectlistController
 				/forgotaccount/selectaccounttype.html=urlFilenameViewController
 				/forgotaccount/teacher/success.html=urlFilenameViewController
 				/forgotaccount/teacher/error.html=urlFilenameViewController
 				/teacher/management/viewmystudents.html=viewMyStudentsController
 				/teacherinfo.html=userInfoController
 				/author/authorproject.html=authorProjectController
-				/project/exportproject.html=exportProjectController
 				/project/importexternalproject.html=importExternalProjectController
 				/admin/project/manageallprojects.html=manageAllProjectsController
 				/admin/project/tagger.html=taggerController

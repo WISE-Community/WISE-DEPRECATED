@@ -9,8 +9,11 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
@@ -27,7 +30,9 @@ import org.wise.portal.service.project.ProjectService;
  * @author Hiroki Terashima
  * @version $Id:$
  */
-public class PreviewProjectController extends AbstractController {
+@Controller
+@RequestMapping("/previewproject.html")
+public class PreviewProjectController {
 	
 	private static final String PROJECT_ID_PARAM_NAME = "projectId";
 	
@@ -41,14 +46,13 @@ public class PreviewProjectController extends AbstractController {
 	
 	private static final String IS_CONSTRAINTS_DISABLED = "isConstraintsDisabled";
 
+	@Autowired
 	private ProjectService projectService;
 	
+	@Autowired
 	private RunService runService;
 
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
+	@RequestMapping(method=RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
@@ -108,16 +112,4 @@ public class PreviewProjectController extends AbstractController {
 			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
 		}
     }
-	
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-	
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
 }
