@@ -44,44 +44,41 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 		save(peerReviewWork);
 	}
 
+	@Transactional(readOnly=true)
 	public List<PeerReviewWork> getPeerReviewWorkByRun(Long runId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).list();
-        session.getTransaction().commit();
         return result;
 	}
 	
+	@Transactional(readOnly=true)
 	public List<PeerReviewWork> getPeerReviewWorkByRunPeriodNode(Long runId, Long periodId, Node node) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).add(
         				Restrictions.eq("periodId", periodId)).add(
         						Restrictions.eq("node", node)).add(
         								Restrictions.isNotNull("stepWork")).list();
-        session.getTransaction().commit();
         return result;
 	}
 	
+	@Transactional(readOnly=true)
 	public List<PeerReviewWork> getUnassignedPeerReviewWorkList(Long runId, Long periodId, Node node) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).add(
         				Restrictions.eq("periodId", periodId)).add(
         						Restrictions.eq("node", node)).add(
         								Restrictions.isNull("reviewerUserInfo")).add(
                 								Restrictions.isNotNull("stepWork")).list();
-        session.getTransaction().commit();
         return result;
 	}
 	
+	@Transactional(readOnly=true)
 	public PeerReviewWork getPeerReviewWorkByRunPeriodNodeStepWorkReviewer(
 			Long runId, Long periodId, Node node, StepWork stepWork, UserInfo reviewer) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).add(
         				Restrictions.eq("periodId", periodId)).add(
@@ -89,7 +86,6 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
         								Restrictions.eq("stepWork", stepWork)).add(
         										Restrictions.eq("reviewerUserInfo", reviewer)).add(
         		        								Restrictions.isNotNull("stepWork")).list();
-        session.getTransaction().commit();
         PeerReviewWork peerReviewWork = null;
         if(result.size() > 0) {
         	peerReviewWork = result.get(0);
@@ -107,15 +103,14 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 	}
 
 
+	@Transactional(readOnly=true)
 	public PeerReviewWork getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(Long runId, Long periodId, Node node, UserInfo reviewerUserInfo) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-		session.beginTransaction();
 		List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
 				Restrictions.eq("runId", runId)).add(
 						Restrictions.eq("periodId", periodId)).add(
 								Restrictions.eq("node", node)).add(
 										Restrictions.eq("reviewerUserInfo", reviewerUserInfo)).list();
-		session.getTransaction().commit();
 		PeerReviewWork peerReviewWork = null;
 		if(result.size() > 0) {
 			peerReviewWork = result.get(0);
@@ -123,15 +118,14 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 		return peerReviewWork;
 	}
 
+	@Transactional(readOnly=true)
 	public PeerReviewWork getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(Long runId, Long periodId, Node node, UserInfo worker) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).add(
         				Restrictions.eq("periodId", periodId)).add(
         						Restrictions.eq("node", node)).add(
         								Restrictions.eq("userInfo", worker)).list();
-        session.getTransaction().commit();
         PeerReviewWork peerReviewWork = null;
         if(result.size() > 0) {
         	peerReviewWork = result.get(0);
@@ -139,17 +133,16 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
         return peerReviewWork;
 	}
 	
+	@Transactional(readOnly=true)
 	public PeerReviewWork getPeerReviewWorkByRunPeriodNodeWorkerUserInfoReviewerUserInfo(
 			Long runId, Long periodId, Node node, UserInfo workerUserInfo, UserInfo reviewerUserInfo) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-		session.beginTransaction();
 		List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
 				Restrictions.eq("runId", runId)).add(
 						Restrictions.eq("periodId", periodId)).add(
 								Restrictions.eq("node", node)).add(
 										Restrictions.eq("userInfo", workerUserInfo)).add(
 												Restrictions.eq("reviewerUserInfo", reviewerUserInfo)).list();
-		session.getTransaction().commit();
 		PeerReviewWork peerReviewWork = null;
 		if(result.size() > 0) {
 			peerReviewWork = result.get(0);
@@ -194,11 +187,10 @@ public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewW
 	 * Get the author UserInfo which has a workgroupId of -2
 	 * @return the author UserInfo
 	 */
+	@Transactional(readOnly=true)
 	public UserInfo getAuthorUserInfo() {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-		session.beginTransaction();
 		UserInfo authorUserInfo = (UserInfo) session.createCriteria(UserInfo.class).add(Restrictions.eq("workgroupId", PeerReviewWork.getAuthorWorkgroupId())).uniqueResult();
-		session.getTransaction().commit();
 		return authorUserInfo;
 	}
 	

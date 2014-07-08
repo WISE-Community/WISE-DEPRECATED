@@ -29,6 +29,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.workgroup.WorkgroupDao;
 import org.wise.portal.domain.run.Offering;
@@ -106,9 +107,9 @@ implements WorkgroupDao<WISEWorkgroup>{
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public WISEWorkgroupImpl getById(Long workgroupId, boolean doEagerFetch) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-		session.beginTransaction();
 
 		WISEWorkgroupImpl result = null;
 		if (doEagerFetch) {
@@ -123,7 +124,6 @@ implements WorkgroupDao<WISEWorkgroup>{
 					.add( Restrictions.eq("id", workgroupId))
 					.uniqueResult();        	
 		}
-		session.getTransaction().commit();
 		return result;	
 	}
 

@@ -52,7 +52,6 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
 		
 		try {
 			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-			session.beginTransaction();
 			
 			/*
 			 * get all the student status rows with the given workgroup id.
@@ -66,8 +65,6 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
 				//get the first element in the list if the list contains more than one element
 				result = list.get(0);
 			}
-			
-			session.getTransaction().commit();
 		} catch (NonUniqueResultException e) {
 			throw e;
 		}
@@ -80,13 +77,11 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
 	 * @param periodId the period id
 	 * @return a list of StudentStatus objects
 	 */
+	@Transactional
 	public List<StudentStatus> getStudentStatusesByPeriodId(Long periodId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         
         List<StudentStatus> studentStatuses = session.createCriteria(StudentStatus.class).add(Restrictions.eq("periodId", periodId)).list();
-        
-        session.getTransaction().commit();
         
         return studentStatuses;
 	}
@@ -96,13 +91,11 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
 	 * @param runId the run id
 	 * @return a list of StudentStatus objects
 	 */
+	@Transactional
 	public List<StudentStatus> getStudentStatusesByRunId(Long runId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         
         List<StudentStatus> studentStatuses = session.createCriteria(StudentStatus.class).add(Restrictions.eq("runId", runId)).list();
-        
-        session.getTransaction().commit();
         
         return studentStatuses;
 	}

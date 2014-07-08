@@ -48,16 +48,15 @@ public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterReques
 	 * @param nodeStateId
 	 * @return
 	 */
+	@Transactional(readOnly=true)
 	public CRaterRequest getCRaterRequestByStepWorkIdNodeStateId(StepWork stepWork, Long nodeStateId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         CRaterRequest result = 
         	(CRaterRequest) session.createCriteria(CRaterRequest.class)
         		.add( Restrictions.eq("stepWork", stepWork))
         		.add( Restrictions.eq("nodeStateId", nodeStateId))
         		.uniqueResult();
-        session.getTransaction().commit();
         return result;		
 	}
 	
@@ -66,13 +65,12 @@ public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterReques
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<CRaterRequest> getIncompleteCRaterRequests() {
 		
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<CRaterRequest> result = (List<CRaterRequest>) session.createCriteria(CRaterRequest.class)
         	.add(Restrictions.isNull("timeCompleted")).list();
-        session.getTransaction().commit();
         return result;
 	}
 }

@@ -54,11 +54,10 @@ public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> impleme
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<StepWork> getStepWorksByUserInfo(UserInfo userInfo) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<StepWork> result =  session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).addOrder(Order.asc("endTime")).list();
-        session.getTransaction().commit();
         return result;
 	}
 
@@ -71,15 +70,14 @@ public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> impleme
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public StepWork getLatestStepWorkByUserInfo(UserInfo userInfo) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<StepWork> list = session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).addOrder(Order.desc("endTime")).list();
         StepWork result = null;
         if (list.size() > 0) {
         	result = list.get(0);
         }
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -92,16 +90,15 @@ public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> impleme
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public StepWork getLatestStepWorkByUserInfoAndNode(UserInfo userInfo,Node node) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<StepWork> list = session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo))
         	.add(Restrictions.eq("node",node)).addOrder(Order.desc("endTime")).list();
         StepWork result = null;
         if (list.size() > 0) {
         	result = list.get(0);
         }
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -113,13 +110,12 @@ public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> impleme
 	 * @return a list of StepWork for the user and node
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<StepWork> getStepWorksByUserInfoAndNode(UserInfo userInfo,Node node) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<StepWork> result = session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo))
         	.add(Restrictions.eq("node",node)).addOrder(Order.desc("endTime")).list();
 
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -132,11 +128,10 @@ public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> impleme
 	 * @return a list of StepWork objects
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<StepWork> getStepWorksByUserInfoAndNodeList(UserInfo userInfo, List<Node> nodeList) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<StepWork> result =  session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).add(createNodeOrCriterion(nodeList, 0)).addOrder(Order.asc("endTime")).list();
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -171,11 +166,10 @@ public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> impleme
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<StepWork> getStepWorksByUserInfosAndNode(List<UserInfo> userInfos, Node node) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<StepWork> result =  session.createCriteria(StepWork.class).add(createUserInfoOrCriterion(userInfos, 0)).add(Restrictions.eq("node", node)).addOrder(Order.asc("endTime")).list();
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -233,11 +227,10 @@ public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> impleme
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<StepWork> getStepWorksByNode(Node node) {
     	Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<StepWork> result =  session.createCriteria(StepWork.class).add(Restrictions.eq("node", node)).addOrder(Order.asc("endTime")).list();
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -246,11 +239,10 @@ public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> impleme
 	 * @param id
 	 * @return the StepWork object with the specified id
 	 */
+	@Transactional(readOnly=true)
 	public StepWork getStepWorkByStepWorkId(Long id) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         StepWork result =  (StepWork) session.createCriteria(StepWork.class).add(Restrictions.eq("id", id)).uniqueResult();
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -260,11 +252,10 @@ public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> impleme
 	 * @param data String data to check for
 	 * @return the StepWork object with the specified userInfo and data or null if DNE.
 	 */
+	@Transactional(readOnly=true)
 	public StepWork getStepWorkByUserIdAndData(UserInfo userInfo,String data) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         StepWork result =  (StepWork) session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).add(Restrictions.eq("data",data)).uniqueResult();
-        session.getTransaction().commit();
         return result;
 	}
 

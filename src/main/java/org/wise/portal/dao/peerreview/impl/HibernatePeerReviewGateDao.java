@@ -43,12 +43,11 @@ public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewG
 		save(peerReviewGate);
 	}
 	
+	@Transactional(readOnly=true)
 	public PeerReviewGate getPeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node) {
 		try {
 			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-			session.beginTransaction();
 			PeerReviewGate result = (PeerReviewGate) session.createCriteria(PeerReviewGate.class).add(Restrictions.eq("runId", runId)).add(Restrictions.eq("periodId", periodId)).add(Restrictions.eq("node", node)).uniqueResult();
-			session.getTransaction().commit();
 			return result;
 		} catch (NonUniqueResultException e) {
 			//System.err.println("workgroupId: " + id);
@@ -125,15 +124,14 @@ public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewG
 		}
 	}
 	
+	@Transactional(readOnly=true)
 	private List<PeerReviewWork> getPeerReviewWorkByRunPeriodNode(Long runId, Long periodId, Node node) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).add(
         				Restrictions.eq("periodId", periodId)).add(
         						Restrictions.eq("node", node)).add(
         								Restrictions.isNotNull("stepWork")).list();
-        session.getTransaction().commit();
         return result;
 	}
 }

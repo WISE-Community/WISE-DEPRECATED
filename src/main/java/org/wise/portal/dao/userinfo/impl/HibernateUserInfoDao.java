@@ -73,10 +73,9 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 		save(userInfo);
 	}
 	
-	@Override
+	@Transactional
 	public UserInfo getUserInfoByWorkgroupId(Long workgroupId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-		session.beginTransaction();
 		List<UserInfo> list = session.createCriteria(UserInfo.class).add(Restrictions.eq("workgroupId", workgroupId)).list();
 		
 		UserInfo userInfo = null;
@@ -84,8 +83,6 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 		if(list != null && list.size() > 0) {
 			userInfo = list.get(0);
 		}
-		
-		session.getTransaction().commit();
 		return userInfo;
 	}
 
@@ -96,7 +93,7 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 	 * @param id
 	 * @return
 	 */
-	@Transactional(readOnly=false)
+	@Transactional
 	public synchronized UserInfo getUserInfoOrCreateByWorkgroupId(Long workgroupId) {
 		UserInfo userInfo = getUserInfoByWorkgroupId(workgroupId);
 		if (userInfo == null) {
@@ -174,6 +171,7 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 	 * @return a list of UserInfo objects that have been filtered and only
 	 * contain the UserInfos that have performed any work today
 	 */
+	@Transactional(readOnly=true)
 	public List<UserInfo> getUserInfosThatHaveWorkedToday(List<UserInfo> userInfos) {
 		List<UserInfo> userInfosThatHaveWorkedToday = new Vector<UserInfo>();
 		
@@ -189,7 +187,6 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 		//loop through all the UserInfos
         for(UserInfo userInfo : userInfos) {
         	Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-            session.beginTransaction();
             
             //get all the work for a user
         	List<StepWork> list = session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).addOrder(Order.desc("postTime")).list();
@@ -207,7 +204,6 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
                 }
             }
             
-            session.getTransaction().commit();
         }
         
         //return the list of UserInfos that have done work today
