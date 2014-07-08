@@ -44,9 +44,7 @@
 	</context:component-scan>
 
 	<!-- Switch locales according to the user's browser -->
-	<bean id="localeResolver"
-		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-	</bean>
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
 
 	<!-- Use a default fixed theme -->
 	<bean id="themeResolver"
@@ -55,13 +53,10 @@
 	</bean>
 
 	<!-- this bean with the well known name generates view names for us -->
-	<bean id="viewNameTranslator"
-		class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator" />
-
+	<bean id="viewNameTranslator" class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator" />
 
 	<!-- maps request URLs to view file names -->
-	<bean id="urlFilenameViewController"
-		class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
+	<bean id="urlFilenameViewController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
 
 	<bean id="controllerUtil"
 		class="org.wise.portal.presentation.web.controllers.ControllerUtil">
