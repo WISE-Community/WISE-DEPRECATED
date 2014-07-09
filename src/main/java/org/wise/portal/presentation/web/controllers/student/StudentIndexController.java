@@ -29,9 +29,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.run.Run;
@@ -49,10 +51,14 @@ import com.ibm.icu.util.Calendar;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class StudentIndexController extends AbstractController {
+@Controller
+@RequestMapping("/student/index.html")
+public class StudentIndexController {
 
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private StudentService studentService;
 	
 	protected final static String CURRENT_STUDENTRUNINFO_LIST_KEY = "current_run_list";
@@ -75,12 +81,9 @@ public class StudentIndexController extends AbstractController {
 	
 	private static final String LAST_LOGIN = "lastLoginTime";
 
-	/** 
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping(method=RequestMethod.GET)
+	protected ModelAndView handleGET(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
     	ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
@@ -149,18 +152,6 @@ public class StudentIndexController extends AbstractController {
 		String announcementRunIds = "none";
 		if (isShowNewAnnouncements && hasNewAnnouncements) {
 			announcementRunIds = "";
-			//modelAndView.setView(new RedirectView("viewannouncements.html"));
-			//String runIds = "";
-			//for (int i=0; i < joinedRunInfo.size(); i ++) {
-				//StudentRunInfo runInfo = joinedRunInfo.get(i);
-				//Long id = runInfo.getRun().getId();
-				//String idString = id.toString();
-				//if (i == joinedRunInfo.size() - 1) {
-					//runIds = runIds + idString;					
-				//} else {
-					//runIds = runIds + idString + ",";
-				//}
-			//}
 			for (int i=0; i < announcementRuns.size(); i ++) {
 				if (i == announcementRuns.size() - 1) {
 					announcementRunIds = announcementRunIds + (announcementRuns.get(i).toString());
@@ -168,12 +159,8 @@ public class StudentIndexController extends AbstractController {
 					announcementRunIds = announcementRunIds + (announcementRuns.get(i).toString()) + ",";
 				}
 			}	
-			//modelAndView.getModelMap().remove("user");
-	        //return modelAndView;
 		}
 		
-		//Collections.sort(current_run_list);
-		//Collections.sort(ended_run_list);
 		Integer newAnnouncements = announcementRuns.size();
 		
 		modelAndView.addObject(PREVIOUS_LOGIN_STRING, pLT);
@@ -185,21 +172,5 @@ public class StudentIndexController extends AbstractController {
 		modelAndView.addObject(CURRENT_DATE, null);
 
         return modelAndView;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	@Required
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @param studentService the studentService to set
-	 */
-	@Required
-	public void setStudentService(StudentService studentService) {
-		this.studentService = studentService;
 	}
 }

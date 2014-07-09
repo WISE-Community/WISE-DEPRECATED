@@ -260,6 +260,7 @@ public class UserServiceImpl implements UserService {
 		return this.userDao.getById(userId);
 	}
 
+	@Transactional
 	public void updateUser(User user) {
 		this.userDao.save(user);
 	}

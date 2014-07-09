@@ -186,7 +186,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
     	link.parent().append(updatingText);
     	$.ajax({
 			type:"post",
-			url: "${contextPath}/teacher/run/manage/updateRun.html",
+			url: "${contextPath}/teacher/run/updateRun.html",
 			data:{"command":"extendReminderTime","runId":id},
 			success: function(request){
 				updatingText.remove();

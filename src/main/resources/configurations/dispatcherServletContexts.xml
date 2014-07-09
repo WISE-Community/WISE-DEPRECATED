@@ -40,6 +40,7 @@
 	    
     <!-- enable the @Controller Spring annotation for defining controllers using annotations -->
 	<context:component-scan base-package="org.wise.portal.presentation.web.controllers">
+	    <!-- exclude unit test annotations -->
     	<context:exclude-filter type="regex" expression=".*?Test.*?"/>
 	</context:component-scan>
 
@@ -64,15 +65,6 @@
 	</bean>
 
 	<!-- Custom controllers -->
-
-	<bean id="teacherIndexController"
-		class="org.wise.portal.presentation.web.controllers.TeacherIndexController">
-		<property name="runService" ref="runService" />
-		<property name="messageService" ref="messageService" />
-		<property name="projectService" ref="projectService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
 
 	<bean id="selectteamController"
 		class="org.wise.portal.presentation.web.controllers.student.SelectTeamController">
@@ -109,12 +101,6 @@
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="groupService" ref="groupService" />
-	</bean>
-
-	<bean id="studentIndexController"
-		class="org.wise.portal.presentation.web.controllers.student.StudentIndexController">
-		<property name="runService" ref="runService" />
-		<property name="studentService" ref="studentService" />
 	</bean>
 
 	<bean id="studentVLEController"
@@ -272,11 +258,6 @@
 	<bean id="addSharedTeacherParameters" class="org.wise.portal.domain.impl.AddSharedTeacherParameters">
 	</bean>
 
-	<bean id="manageAllProjectsController"
-		class="org.wise.portal.presentation.web.controllers.admin.ManageAllProjectsController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
 	<bean id="importExternalProjectController"
 		class="org.wise.portal.presentation.web.controllers.project.ImportExternalProjectController">
 		<property name="wiseUpService" ref="wiseUpService" />
@@ -326,11 +307,6 @@
 	<bean id="outsideErrorController"
 		class="org.wise.portal.presentation.web.controllers.OutsideErrorController">
 		<property name="exceptionResolver" ref="exceptionResolver" />
-	</bean>
-
-	<bean id="managePortalController"
-		class="org.wise.portal.presentation.web.controllers.admin.ManagePortalController">
-		<property name="portalService" ref="portalService" />
 	</bean>
 
 	<bean id="messageController"
@@ -402,11 +378,6 @@
 	<bean id="routerController"
 		class="org.wise.portal.presentation.web.controllers.RouterController">
 		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="updateRunController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.UpdateRunController">
-		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="taggerController"
@@ -496,21 +467,13 @@
 				/accessdenied.html=accessDeniedController
 				/router.html=routerController
 				/checkforexistingaccount.html=checkForExistingAccountController
-				/student/index.html=studentIndexController
 				/student/vle/vle.html=studentVLEController
 				/student/selectteam.html=selectteamController
 				/student/startproject.html=startProjectController
-				/teacher/index.html=teacherIndexController
 				/teacher/termsofuse.html=urlFilenameViewController
 				/teacher/projects/projectinfo.html=projectInfoController
 				/teacher/projects/customized/unshareproject.html=unShareProjectController
 				/teacher/run/unshareprojectrun.html=unShareProjectRunController
-				/teacher/run/manage/updateRun.html=updateRunController
-				/teacher/run/manage/archiveRun.html=updateRunController
-				/teacher/run/manage/startRun.html=updateRunController
-				/teacher/run/updaterun.html=updateRunController
-				/teacher/run/editrun.html=updateRunController
-				/teacher/run/notes.html=updateRunController
 				/teacher/grading/gradework.html=gradeWorkController
 				/teacher/grading/premadeComments.html=premadeCommentsController
 				/teacher/classroomMonitor/classroomMonitor.html=gradeWorkController
@@ -530,9 +493,7 @@
 				/teacherinfo.html=userInfoController
 				/author/authorproject.html=authorProjectController
 				/project/importexternalproject.html=importExternalProjectController
-				/admin/project/manageallprojects.html=manageAllProjectsController
 				/admin/project/tagger.html=taggerController
-				/admin/portal/manageportal.html=managePortalController
 				/teacher/run/announcement/*.html=manageAnnouncementController
 				/teacher/projects/bookmark.html=bookmarkController
 				/teacher/projects/deleteproject.html=deleteProjectController
