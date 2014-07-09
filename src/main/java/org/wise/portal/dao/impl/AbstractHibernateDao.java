@@ -20,8 +20,8 @@ package org.wise.portal.dao.impl;
 import java.io.Serializable;
 import java.util.List;
 
-
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.SimpleDao;
 
@@ -37,6 +37,7 @@ public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
 	/**
 	 * @see org.wise.portal.dao.SimpleDao#delete(java.lang.Object)
 	 */
+	@Transactional
 	public void delete(T object) {
 		this.getHibernateTemplate().delete(object);
 	}
@@ -44,6 +45,7 @@ public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
 	/**
 	 * @see org.wise.portal.dao.SimpleDao#save(java.lang.Object)
 	 */
+	@Transactional
 	public void save(T object) {
 		this.getHibernateTemplate().saveOrUpdate(object);
 	}

@@ -25,6 +25,8 @@ package org.wise.portal.service.newsitem.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.newsitem.NewsItemDao;
@@ -37,12 +39,13 @@ import org.wise.portal.service.newsitem.NewsItemService;
  * @author patrick lawler
  *
  */
-@Transactional(readOnly = true)
+@Service
 public class NewsItemServiceImpl implements NewsItemService{
 
+	@Autowired
 	private NewsItemDao<NewsItem> newsItemDao;
 	
-	@Transactional()
+	@Transactional
 	public NewsItem createNewsItem(Date date, User owner, String title, String news){
 		NewsItem newsItem = new NewsItemImpl();
 		newsItem.setDate(date);
@@ -66,7 +69,7 @@ public class NewsItemServiceImpl implements NewsItemService{
 		}
 	}
 	
-	@Transactional()
+	@Transactional
 	public void updateNewsItem(Long id, Date date, User owner, String title, String news) 
 			throws ObjectNotFoundException {
 		try{
@@ -81,7 +84,7 @@ public class NewsItemServiceImpl implements NewsItemService{
 		}	
 	}
 	
-	@Transactional()
+	@Transactional
 	public void deleteNewsItem(Long newsItemId){
 		try{
 			NewsItem newsItem = newsItemDao.getById(newsItemId);
@@ -89,12 +92,4 @@ public class NewsItemServiceImpl implements NewsItemService{
 		}catch(ObjectNotFoundException e){
 		}
 	}
-	
-	/**
-	 * @param newsItemDao the newsItemDao to set
-	 */
-	public void setNewsItemDao(NewsItemDao<NewsItem> newsItemDao) {
-		this.newsItemDao = newsItemDao;
-	}
-
 }

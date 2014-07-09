@@ -2,12 +2,16 @@ package org.wise.portal.service.portal.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.wise.portal.dao.portal.PortalStatisticsDao;
 import org.wise.portal.domain.portal.PortalStatistics;
 import org.wise.portal.service.portal.PortalStatisticsService;
 
+@Service
 public class PortalStatisticsServiceImpl implements PortalStatisticsService {
 	
+	@Autowired
 	private PortalStatisticsDao<PortalStatistics> portalStatisticsDao;
 
 	/**
@@ -18,13 +22,4 @@ public class PortalStatisticsServiceImpl implements PortalStatisticsService {
 		
 		return portalStatisticsList;
 	}
-	
-	public PortalStatisticsDao<PortalStatistics> getPortalStatisticsDao() {
-		return portalStatisticsDao;
-	}
-
-	public void setPortalStatisticsDao(PortalStatisticsDao<PortalStatistics> portalStatisticsDao) {
-		this.portalStatisticsDao = portalStatisticsDao;
-	}
-	
 }

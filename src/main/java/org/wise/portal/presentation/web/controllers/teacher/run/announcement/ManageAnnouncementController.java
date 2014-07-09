@@ -27,6 +27,7 @@ import java.util.Calendar;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -50,6 +51,7 @@ public class ManageAnnouncementController extends AbstractController{
 
 	private AclService<Run> aclService;
 
+	@Autowired
 	private AnnouncementService announcementService;
 
 	protected final static String ANNOUNCEMENTID = "announcementId";
@@ -147,11 +149,4 @@ public class ManageAnnouncementController extends AbstractController{
 	public void setAclService(AclService<Run> aclService) {
 		this.aclService = aclService;
 	}	
-
-	/**
-	 * @param announcementService the announcementService to set
-	 */
-	public void setAnnouncementService(AnnouncementService announcementService) {
-		this.announcementService = announcementService;
-	}
 }

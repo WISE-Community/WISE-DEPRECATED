@@ -39,7 +39,7 @@
 	<mvc:annotation-driven />
 	    
     <!-- enable the @Controller Spring annotation for defining controllers using annotations -->
-	<context:component-scan base-package="org.wise.portal.presentation.web.controllers">
+	<context:component-scan base-package="org.wise.portal.presentation.web">
 	    <!-- exclude unit test annotations -->
     	<context:exclude-filter type="regex" expression=".*?Test.*?"/>
 	</context:component-scan>
@@ -76,7 +76,6 @@
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="projectService" ref="projectService" />
-		<property name="studentAttendanceService" ref="studentAttendanceService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
@@ -258,11 +257,6 @@
 	<bean id="addSharedTeacherParameters" class="org.wise.portal.domain.impl.AddSharedTeacherParameters">
 	</bean>
 
-	<bean id="importExternalProjectController"
-		class="org.wise.portal.presentation.web.controllers.project.ImportExternalProjectController">
-		<property name="wiseUpService" ref="wiseUpService" />
-	</bean>
-
 	<bean id="projectInfoParameters"
 		class="org.wise.portal.domain.project.impl.ProjectInfoParameters" />
 
@@ -278,7 +272,6 @@
 		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.ManageAnnouncementController">
 		<property name="aclService" ref="aclServiceImpl" />
 	    <property name="runService" ref="runService" />
-		<property name="announcementService" ref="announcementService" />
 	</bean>
 
 	<bean id="viewAnnouncementsController"
@@ -307,12 +300,6 @@
 	<bean id="outsideErrorController"
 		class="org.wise.portal.presentation.web.controllers.OutsideErrorController">
 		<property name="exceptionResolver" ref="exceptionResolver" />
-	</bean>
-
-	<bean id="messageController"
-		class="org.wise.portal.presentation.web.controllers.MessageController">
-		<property name="messageService" ref="messageService" />
-		<property name="userService" ref="userService" />
 	</bean>
 
 	<bean id="studentDataController" class="org.wise.vle.web.StudentDataController">
@@ -344,7 +331,6 @@
 
 	<bean id="getExportController" class="org.wise.vle.web.VLEGetXLS">
 		<property name="vleService" ref="vleService" />
-		<property name="studentAttendanceService" ref="studentAttendanceService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
@@ -352,7 +338,6 @@
 
 	<bean id="getSpecialExportController" class="org.wise.vle.web.VLEGetSpecialExport">
 		<property name="vleService" ref="vleService" />
-		<property name="studentAttendanceService" ref="studentAttendanceService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
@@ -492,7 +477,6 @@
 				/teacher/management/viewmystudents.html=viewMyStudentsController
 				/teacherinfo.html=userInfoController
 				/author/authorproject.html=authorProjectController
-				/project/importexternalproject.html=importExternalProjectController
 				/admin/project/tagger.html=taggerController
 				/teacher/run/announcement/*.html=manageAnnouncementController
 				/teacher/projects/bookmark.html=bookmarkController
@@ -501,7 +485,6 @@
 				/teacher/projects/minifyproject.html=minifyProjectController
 				/student/viewannouncements.html=viewAnnouncementsController
 				/runinfo.html=runInfoController
-				/message/message.html=messageController
 				/studentData.html=studentDataController
 				/annotation.html=annotationController
 				/studentStatus.html=studentStatusController

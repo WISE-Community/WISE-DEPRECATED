@@ -27,6 +27,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.announcement.AnnouncementDao;
@@ -39,8 +43,10 @@ import org.wise.portal.service.announcement.AnnouncementService;
  * @author patrick lawler
  * @version $Id:$
  */
+@Service
 public class AnnouncementServiceImpl implements AnnouncementService{
 
+	@Autowired
 	private AnnouncementDao<Announcement> announcementDao;
 	
 	/**
@@ -121,12 +127,5 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 		} else {
 			return announcements.iterator().next();
 		}
-	}
-
-	/**
-	 * @param announcementDao the announcementDao to set
-	 */
-	public void setAnnouncementDao(AnnouncementDao<Announcement> announcementDao) {
-		this.announcementDao = announcementDao;
 	}
 }

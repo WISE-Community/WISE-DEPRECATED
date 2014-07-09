@@ -17,6 +17,7 @@
 	xmlns:sec="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
       http://www.springframework.org/schema/beans 
       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
@@ -26,6 +27,8 @@
       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
       http://www.springframework.org/schema/task
       http://www.springframework.org/schema/task/spring-task-3.0.xsd 
+      http://www.springframework.org/schema/context    
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd
       http://www.springframework.org/schema/security
       http://www.springframework.org/schema/security/spring-security-3.2.xsd
 	  http://www.springframework.org/schema/aop 
@@ -859,8 +862,13 @@
 		class="org.wise.portal.domain.authentication.impl.PersistentUserDetails"
 		scope="prototype" />
 
-	<!-- enable the @Required Spring annotation for marking required properties 
-		to be wired -->
+	<!-- enable the @Service Spring annotation for defining controllers using annotations -->
+	<context:component-scan base-package="org.wise.portal.service">
+	    <!-- exclude unit test annotations -->
+    	<context:exclude-filter type="regex" expression=".*?Test.*?"/>
+	</context:component-scan>
+	
+	<!-- enable the @Required Spring annotation for marking required properties to be wired -->
 	<bean
 		class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
 
@@ -1143,13 +1151,6 @@
 		<property name="premadeCommentService" ref="premadeCommentService" />
 	</bean>
 
-	<bean id="wiseUpService" class="org.wise.portal.service.wiseup.impl.WiseUpServiceImpl">
-		<property name="projectService" ref="projectService" />
-		<property name="curnitService" ref="curnitService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="wiseUpHubUrl" value="http://166.78.236.95/wiseup" />
-	</bean>
-
 	<bean id="portalDao" class="org.wise.portal.dao.portal.impl.HibernatePortalDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
@@ -1157,15 +1158,6 @@
 	<bean id="portalStatisticsDao"
 		class="org.wise.portal.dao.portal.impl.HibernatePortalStatisticsDao">
 		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
-	<bean id="portalStatisticsService"
-		class="org.wise.portal.service.portal.impl.PortalStatisticsServiceImpl">
-		<property name="portalStatisticsDao" ref="portalStatisticsDao" />
-	</bean>
-
-	<bean id="portalService" class="org.wise.portal.service.portal.impl.PortalServiceImpl">
-		<property name="portalDao" ref="portalDao" />
 	</bean>
 
 	<bean id="curnitService" class="org.wise.portal.service.module.impl.ModuleServiceImpl">
@@ -1247,11 +1239,6 @@
 		class="org.wise.portal.domain.newsitem.impl.NewsItemImpl">
 	</bean>
 
-	<bean id="newsItemService"
-		class="org.wise.portal.service.newsitem.impl.NewsItemServiceImpl">
-		<property name="newsItemDao" ref="newsItemDao" />
-	</bean>
-
 
 	<bean id="announcementDao"
 		class="org.wise.portal.dao.announcement.impl.HibernateAnnouncementDao">
@@ -1260,11 +1247,6 @@
 
 	<bean id="announcement" scope="prototype"
 		class="org.wise.portal.domain.announcement.impl.AnnouncementImpl">
-	</bean>
-
-	<bean id="announcementService"
-		class="org.wise.portal.service.announcement.impl.AnnouncementServiceImpl">
-		<property name="announcementDao" ref="announcementDao" />
 	</bean>
 
 	<bean id="messageDao" class="org.wise.portal.dao.message.impl.HibernateMessageDao">
@@ -1277,12 +1259,6 @@
 
 	<bean id="recipients" scope="prototype"
 		class="org.wise.portal.domain.message.impl.MessageRecipientImpl">
-	</bean>
-
-	<bean id="messageService" class="org.wise.portal.service.message.impl.MessageServiceImpl">
-		<property name="messageDao" ref="messageDao" />
-		<property name="mailService" ref="mailService" />
-		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="tag" scope="prototype" class="org.wise.portal.domain.project.impl.TagImpl">
@@ -1300,11 +1276,6 @@
 	<bean id="studentAttendanceDao" scope="prototype"
 		class="org.wise.portal.dao.attendance.impl.HibernateStudentAttendanceDao">
 		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
-	<bean id="studentAttendanceService"
-		class="org.wise.portal.service.attendance.impl.StudentAttendanceServiceImpl">
-		<property name="studentAttendanceDao" ref="studentAttendanceDao" />
 	</bean>
 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
@@ -1412,7 +1383,6 @@
 		class="org.wise.portal.presentation.web.filters.TelsAuthenticationSuccessHandler">
 		<property name="defaultTargetUrl" value="/student/index.html" /> <!-- which is the default value -->
 		<property name="userDetailsService" ref="userDetailsService" />
-		<property name="portalService" ref="portalService" />
 	</bean>
 
 	<bean id="authFailureHandler"

@@ -29,16 +29,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-import org.springframework.web.servlet.support.RequestContextUtils;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
@@ -57,6 +55,7 @@ public class TelsAuthenticationSuccessHandler extends
 	
 	private UserDetailsService userDetailsService;
 	
+	@Autowired
 	private PortalService portalService;
 	
 	@Override
@@ -171,11 +170,4 @@ public class TelsAuthenticationSuccessHandler extends
 	public void setUserDetailsService(UserDetailsService userDetailsService) {
 		this.userDetailsService = userDetailsService;
 	}
-
-	/**
-	 * @param portalService the portalService to set
-	 */
-	public void setPortalService(PortalService portalService) {
-		this.portalService = portalService;
-	}		
 }

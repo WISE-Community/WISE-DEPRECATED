@@ -26,6 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -58,6 +59,7 @@ public class VLEGetSpecialExport extends AbstractController {
 	
 	private WorkgroupService workgroupService;
 	
+	@Autowired
 	private StudentAttendanceService studentAttendanceService;
 	
 	//the max number of step work columns we need, only used for "allStudentWork"
@@ -294,7 +296,7 @@ public class VLEGetSpecialExport extends AbstractController {
 		JSONObject runInfoJSONObject = RunUtil.getRunInfo(run);
 		
 		//get all the student attendance entries for this run
-		List<StudentAttendance> studentAttendanceList = getStudentAttendanceService().getStudentAttendanceByRunId(run.getId());
+		List<StudentAttendance> studentAttendanceList = studentAttendanceService.getStudentAttendanceByRunId(run.getId());
 		JSONArray studentAttendanceJSONArray = new JSONArray();
 
 		/*
@@ -1147,14 +1149,6 @@ public class VLEGetSpecialExport extends AbstractController {
 
 	public void setWorkgroupService(WorkgroupService workgroupService) {
 		this.workgroupService = workgroupService;
-	}
-
-	public StudentAttendanceService getStudentAttendanceService() {
-		return studentAttendanceService;
-	}
-
-	public void setStudentAttendanceService(StudentAttendanceService studentAttendanceService) {
-		this.studentAttendanceService = studentAttendanceService;
 	}
 
 	public Properties getWiseProperties() {

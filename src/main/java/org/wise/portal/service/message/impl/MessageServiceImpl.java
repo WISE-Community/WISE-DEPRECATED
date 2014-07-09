@@ -31,6 +31,8 @@ import java.util.Set;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.message.MessageDao;
@@ -46,12 +48,16 @@ import org.wise.portal.service.message.MessageService;
  * @author hirokiterashima
  * @version $Id:$
  */
+@Service
 public class MessageServiceImpl implements MessageService {
 
+	@Autowired
 	private MessageDao<Message> messageDao;
 	
+	@Autowired
 	private IMailFacade mailService = null;
 	
+	@Autowired
 	private Properties wiseProperties = null;
 	
 	/**
@@ -109,13 +115,6 @@ public class MessageServiceImpl implements MessageService {
 	public Message saveMessage(Message message) {
 		messageDao.save(message);
 		return message;
-	}
-
-	/**
-	 * @param messageDao the messageDao to set
-	 */
-	public void setMessageDao(MessageDao<Message> messageDao) {
-		this.messageDao = messageDao;
 	}
 
 	/**
@@ -210,19 +209,4 @@ public class MessageServiceImpl implements MessageService {
 		}
 		
 	}
-
-	/**
-	 * @param mailService the mailService to set
-	 */
-	public void setMailService(IMailFacade mailService) {
-		this.mailService = mailService;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
 }

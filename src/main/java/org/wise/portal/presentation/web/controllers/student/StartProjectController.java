@@ -35,6 +35,7 @@ import javax.servlet.http.HttpSession;
 
 import org.hibernate.StaleObjectStateException;
 import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateOptimisticLockingFailureException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -72,6 +73,7 @@ public class StartProjectController extends AbstractController {
 
 	private ProjectService projectService;
 	
+	@Autowired
 	private StudentAttendanceService studentAttendanceService;
 	
 	protected Properties wiseProperties;
@@ -338,23 +340,6 @@ public class StartProjectController extends AbstractController {
 		this.projectService = projectService;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public StudentAttendanceService getStudentAttendanceService() {
-		return studentAttendanceService;
-	}
-
-	/**
-	 * 
-	 * @param studentAttendanceService
-	 */
-	public void setStudentAttendanceService(
-			StudentAttendanceService studentAttendanceService) {
-		this.studentAttendanceService = studentAttendanceService;
-	}
-
 	/**
 	 * @return the wiseProperties
 	 */
