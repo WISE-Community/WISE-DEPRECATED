@@ -29,8 +29,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
@@ -41,7 +44,12 @@ import com.ibm.icu.util.Calendar;
  * @author patrick lawler
  * @version $Id:$
  */
-public class ViewAnnouncementsController extends AbstractController{
+@Controller
+@RequestMapping("/student/viewannouncements.html")
+public class ViewAnnouncementsController {
+
+	@Autowired
+	private RunService runService;
 
 	protected final static String RUNID = "runId";
 	
@@ -49,10 +57,9 @@ public class ViewAnnouncementsController extends AbstractController{
 	
 	private static final String PREVIOUS_LOGIN = "previousLoginTime";
 	
-	private RunService runService;
-	
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping(method=RequestMethod.GET)
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		String runIdsStr = request.getParameter(RUNID);
 		String [] runIds = runIdsStr.split(",");
@@ -79,12 +86,5 @@ public class ViewAnnouncementsController extends AbstractController{
 		modelAndView.addObject(PREVIOUS_LOGIN, previousLoginTime);
 		modelAndView.addObject(RUNS, runs);
 		return modelAndView;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
 	}
 }

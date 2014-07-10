@@ -25,23 +25,26 @@ package org.wise.portal.presentation.web.controllers.teacher.project.bookmarked;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.user.UserService;
 
 /**
+ * Controller for (un)bookmarking projects.
+ * 
  * @author patrick lawler
  * @version $Id:$
  */
-public class BookmarkController extends AbstractController{
+@Controller
+public class BookmarkController {
 
+	@Autowired
 	private ProjectService projectService;
-
-	private UserService userService;
 
 	private final static String PROJECTID = "projectId";
 	
@@ -49,10 +52,7 @@ public class BookmarkController extends AbstractController{
 	
 	private final static String RESPONSE = "response";
 	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
+	@RequestMapping("/teacher/projects/bookmark.html")
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
@@ -73,19 +73,4 @@ public class BookmarkController extends AbstractController{
 		modelAndView.addObject(RESPONSE, outResponse);
 		return modelAndView;
 	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-	
 }

@@ -2340,7 +2340,7 @@
 					$('button',$(this).parent()).hide().unbind();
 					//make the request to archive or restore the project
 					$.ajax({
-						url:"../../deleteproject.html",
+						url:"${contextPath}/teacher/projects/deleteproject.html",
 						data:{projectId:projectId,revive:revive},
 						success: function(data, text, xml){
 							var success = false;
