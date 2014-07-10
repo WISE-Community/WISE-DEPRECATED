@@ -33,10 +33,12 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
@@ -48,23 +50,25 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.workgroup.WorkgroupService;
 
 
 /**
+ * Controller for displaying students in the run
+ * 
  * @author patricklawler
  * @author Hiroki Terashima
  * @version $Id:$
  */
-public class ViewMyStudentsController extends AbstractController{
+@Controller
+public class ViewMyStudentsController {
 
-	protected static final String FALSE = "FALSE";
-
+	@Autowired
 	private RunService runService;
 
-	private WorkgroupService workgroupService;
-	
+	@Autowired
 	private AclService<Run> aclService;
+
+	protected static final String FALSE = "FALSE";
 
 	protected final static String HTTP_TRANSPORT_KEY = "http_transport";
 
@@ -92,13 +96,9 @@ public class ViewMyStudentsController extends AbstractController{
 	
 	protected static final String RUN_KEY = "run";
 
-
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
+	@RequestMapping("/teacher/management/viewmystudents.html")
 	protected ModelAndView handleRequestInternal(
+			@RequestParam("runId") String runIdStr,
 			HttpServletRequest servletRequest,
 			HttpServletResponse servletResponse) throws Exception {
 		
@@ -110,7 +110,6 @@ public class ViewMyStudentsController extends AbstractController{
 		Map<Group, List<Workgroup>> workgroupMap = new HashMap<Group, List<Workgroup>>();
 		
 		List<Run> current_run_list = new ArrayList<Run>();
-		String runIdStr = servletRequest.getParameter("runId");
 		Long runId = Long.valueOf(runIdStr);
 		Run run = runService.retrieveById(runId);
 
@@ -185,30 +184,4 @@ public class ViewMyStudentsController extends AbstractController{
 			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
 		}
 	}
-
-	/**
-	 * @param workgroupService
-	 *            the workgroupService to set
-	 */
-	@Required
-	public void setWorkgroupService(WorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
-	/**
-	 * @param offeringService
-	 *            the offeringService to set
-	 */
-	@Required
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-	
-	/**
-	 * @param aclService the aclService to set
-	 */
-	public void setAclService(AclService<Run> aclService) {
-		this.aclService = aclService;
-	}
-
 }

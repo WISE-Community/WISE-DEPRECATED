@@ -20,7 +20,7 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.presentation.web.controllers.student;
+package org.wise.portal.presentation.web.controllers;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -28,13 +28,13 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 
 /**
@@ -44,10 +44,13 @@ import org.wise.portal.service.offering.RunService;
  * @author hirokiterashima
  * @version $Id$
  */
-public class StudentVLEController extends AbstractController {
+@Controller
+public class VLEController {
 
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	Properties wiseProperties;
 	
 	protected final static String CURRENT_STUDENTRUNINFO_LIST_KEY = "current_run_list";
@@ -62,10 +65,7 @@ public class StudentVLEController extends AbstractController {
 
 	private static final String RUNID = "runId";
 
-	/** 
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
+	@RequestMapping(value={"/student/vle/vle.html","/teacher/vle/vle.html"})
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
@@ -206,20 +206,5 @@ public class StudentVLEController extends AbstractController {
     	modelAndView.addObject("vleConfigUrl", vleConfigUrl);
     	modelAndView.addObject("contentUrl", contentUrl);
 		return modelAndView;
-	}
-	
-	/**
-	 * @param runService the runService to set
-	 */
-	@Required
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-	
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
 	}
 }

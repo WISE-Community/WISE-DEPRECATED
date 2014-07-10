@@ -73,14 +73,6 @@
 		<property name="runService" ref="runService" />
 	</bean>
 
-	<bean id="startProjectController"
-		class="org.wise.portal.presentation.web.controllers.student.StartProjectController">
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="projectService" ref="projectService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
 	<bean id="authorProjectController"
 		class="org.wise.portal.presentation.web.controllers.author.project.AuthorProjectController">
 		<property name="projectService" ref="projectService" />
@@ -102,12 +94,6 @@
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="groupService" ref="groupService" />
-	</bean>
-
-	<bean id="studentVLEController"
-		class="org.wise.portal.presentation.web.controllers.student.StudentVLEController">
-		<property name="runService" ref="runService" />
-		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
 	<bean id="informationController"
@@ -209,19 +195,6 @@
 	<bean id="runParameters" class="org.wise.portal.domain.run.impl.RunParameters"
 		scope="prototype" />
 
-	<bean id="viewMyStudentsController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ViewMyStudentsController">
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="aclService" ref="aclServiceImpl" />
-	</bean>
-
-	<bean id="listStudentNamesController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ListStudentNamesController">
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-	</bean>
-
 	<bean id="changePasswordParametersValidator"
 		class="org.wise.portal.presentation.validators.ChangePasswordParametersValidator">
 		<property name="systemSaltSource" ref="systemSaltSource" />
@@ -257,11 +230,6 @@
 
 	<bean id="changePeriodParametersValidator"
 		class="org.wise.portal.presentation.validators.teacher.ChangePeriodParametersValidator" />
-
-	<bean id="studentListController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.StudentListController">
-		<property name="runService" ref="runService" />
-	</bean>
 
 	<bean id="manageAnnouncementController"
 		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.ManageAnnouncementController">
@@ -436,10 +404,7 @@
 				/errors/friendlyError.html=urlFilenameViewController
 				/accessdenied.html=accessDeniedController
 				/router.html=routerController
-				/checkforexistingaccount.html=checkForExistingAccountController
-				/student/vle/vle.html=studentVLEController
 				/student/selectteam.html=selectteamController
-				/student/startproject.html=startProjectController
 				/teacher/termsofuse.html=urlFilenameViewController
 				/teacher/projects/customized/unshareproject.html=unShareProjectController
 				/teacher/run/unshareprojectrun.html=unShareProjectRunController
@@ -452,13 +417,9 @@
 				/teacher/management/projectruntabs.html=myClassroomRunsController
 				/teacher/management/submitworkgroupchanges.html=submitWorkgroupChangesController
 				/studentinfo.html=userInfoController
-				/teacher/management/studentlist.html=studentListController
-				/teacher/management/studentlistexcel.html=listStudentNamesController
-				/teacher/vle/vle.html=studentVLEController
 				/forgotaccount/selectaccounttype.html=urlFilenameViewController
 				/forgotaccount/teacher/success.html=urlFilenameViewController
 				/forgotaccount/teacher/error.html=urlFilenameViewController
-				/teacher/management/viewmystudents.html=viewMyStudentsController
 				/teacherinfo.html=userInfoController
 				/author/authorproject.html=authorProjectController
 				/admin/project/tagger.html=taggerController

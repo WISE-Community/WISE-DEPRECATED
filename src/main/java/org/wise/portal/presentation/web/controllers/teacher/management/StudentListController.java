@@ -28,9 +28,12 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
@@ -47,7 +50,11 @@ import org.wise.portal.service.offering.RunService;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class StudentListController extends AbstractController {
+@Controller
+public class StudentListController {
+
+	@Autowired
+	private RunService runService;
 
 	protected static final String RUNID_PARAM_KEY = "runId";
 
@@ -55,16 +62,12 @@ public class StudentListController extends AbstractController {
 
 	protected static final String PERIODS = "periods";
 
-	private RunService runService;
-
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping("/teacher/management/studentlist.html")
+	protected ModelAndView handleRequestInternal(
+			@RequestParam("runId") String runId,
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		User user = ControllerUtil.getSignedInUser();
-		String runId = request.getParameter(RUNID_PARAM_KEY);
 		
 		Run run = runService.retrieveById(Long.valueOf(runId));
 
@@ -88,13 +91,4 @@ public class StudentListController extends AbstractController {
 			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
 		}
 	}
-
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
 }
