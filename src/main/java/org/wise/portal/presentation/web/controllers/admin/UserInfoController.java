@@ -28,8 +28,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.run.Run;
@@ -41,24 +43,27 @@ import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 
 /**
+ * Controller for displaying user information
  * @author Sally Ahn
  * @version $Id: $
  */
-public class UserInfoController extends AbstractController{
+@Controller
+public class UserInfoController {
 	
+	@Autowired
 	private UserService userService;
 	
+	@Autowired
 	private StudentService studentService;
 	
+	@Autowired
 	private RunService runService;
 
 	protected final static String USER_INFO_MAP = "userInfoMap";
 	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest servletRequest,
+	@RequestMapping(value={"/studentinfo.html", "/teacherinfo.html"})
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest servletRequest,
 			HttpServletResponse servletResponse) throws Exception {
 		User signedInUser = ControllerUtil.getSignedInUser();
 		String userName = (String) servletRequest.getParameter("userName");
@@ -108,26 +113,4 @@ public class UserInfoController extends AbstractController{
 			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
 		}
     }
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * @param studentService the studentService to set
-	 */
-	public void setStudentService(StudentService studentService) {
-		this.studentService = studentService;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
 }

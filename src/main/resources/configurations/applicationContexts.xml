@@ -1429,8 +1429,6 @@
 					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/teacher/registerteacher.html"
 					access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/teacher/termsofuse.html"
-					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/teacher/projects/projectinfo.html"
 					access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/teacher/**/*.html"

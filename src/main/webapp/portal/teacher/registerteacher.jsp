@@ -184,7 +184,7 @@ $(document).ready(function(){
 	 */
 	$('#terms').click(function(){
 		var termsdiv = $('<div id="termsDialog"></div>');
-		termsdiv.load('termsofuse.html').dialog({
+		termsdiv.load('${contextPath}/pages/termsofuse.html').dialog({
 			modal:true,
 			resizeable:false,
 			title:'<spring:message code="teacher.registerteacher.termsOfUse" />',

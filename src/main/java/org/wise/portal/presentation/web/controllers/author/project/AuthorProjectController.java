@@ -46,11 +46,13 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.Curnit;
@@ -59,7 +61,6 @@ import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
-import org.wise.portal.domain.project.impl.AuthorProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
 import org.wise.portal.domain.project.impl.ProjectParameters;
@@ -83,9 +84,12 @@ import org.wise.vle.utils.SecurityUtils;
  * Controller for users with author privileges to author projects
  * 
  * @author Hiroki Terashima
+ * @author Geoffrey Kwan
+ * @author Patrick Lawler
  * @version $Id$
  */
-public class AuthorProjectController extends AbstractController {
+@Controller
+public class AuthorProjectController {
 
 	private static final String PROJECT_ID_PARAM_NAME = "projectId";
 
@@ -93,15 +97,23 @@ public class AuthorProjectController extends AbstractController {
 
 	private static final String COMMAND = "command";
 
+	@Autowired 
 	private ProjectService projectService;
 
+	@Autowired 
 	private Properties wiseProperties = null;
 
+	@Autowired 
 	private CurnitService curnitService;
 
-	private TaggerController tagger;
+	@Autowired 
+	private TaggerController taggerController;
 	
+	@Autowired 
 	private AclService<Project> aclService;
+	
+	@Autowired 
+	private ServletContext servletContext;
 
 	private final static List<String> filemanagerProjectlessRequests;
 
@@ -114,11 +126,9 @@ public class AuthorProjectController extends AbstractController {
 		minifierProjectlessRequests.add("getTimestamp");
 	}
 
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping("/author/authorproject.html")
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		User user = ControllerUtil.getSignedInUser();
 
@@ -358,9 +368,7 @@ public class AuthorProjectController extends AbstractController {
 							} else if(command.equals("getScripts")){
 								String data = request.getParameter("param1");
 								
-								ServletContext context = this.getServletContext();
-								
-								String result = FileManager.getScripts(context, data);
+								String result = FileManager.getScripts(servletContext, data);
 								
 								response.getWriter().write(result);
 							} else if(command.equals("copyProject")){
@@ -646,7 +654,7 @@ public class AuthorProjectController extends AbstractController {
 			} else if(forward.equals("minifier")){
 				if(this.isProjectlessRequest(request, forward) || this.projectService.canAuthorProject(project, user)){
 					CredentialManager.setRequestCredentials(request, user);
-					 this.getServletContext().getRequestDispatcher("/util/" + forward + ".html").forward(request, response);
+					 servletContext.getRequestDispatcher("/util/" + forward + ".html").forward(request, response);
 					return null;
 				}
 			}
@@ -686,7 +694,7 @@ public class AuthorProjectController extends AbstractController {
 				return (ModelAndView) this.projectService.previewProject(previewParams);
 			} else if(command.equals("createTag") || command.equals("updateTag") || 
 					command.equals("removeTag") || command.equals("retrieveProjectTags")){
-				return this.tagger.handleRequest(request, response);
+				return this.taggerController.handleRequest(request, response);
 			} else if(command.equals("getMetadata")) {
 				request.setAttribute("project", project);
 				return handleGetMetadata(request, response);
@@ -756,8 +764,8 @@ public class AuthorProjectController extends AbstractController {
 		mav.addObject("editPremadeComments", editPremadeComments);
 		
 		if(project != null){
-			if(author.isAdmin() || this.getAclService().hasPermission(project, BasePermission.WRITE, author) ||
-					this.getAclService().hasPermission(project, BasePermission.ADMINISTRATION, author)){
+			if(author.isAdmin() || aclService.hasPermission(project, BasePermission.WRITE, author) ||
+					aclService.hasPermission(project, BasePermission.ADMINISTRATION, author)){
 				String title = null;
 				if(project.getMetadata() != null && project.getMetadata().getTitle() != null && !project.getMetadata().getTitle().equals("")){
 					title = project.getMetadata().getTitle();
@@ -875,11 +883,11 @@ public class AuthorProjectController extends AbstractController {
 
 			HttpSession currentUserSession = request.getSession();
 			HashMap<String, ArrayList<String>> openedProjectsToSessions = 
-					(HashMap<String, ArrayList<String>>) currentUserSession.getServletContext().getAttribute("openedProjectsToSessions");
+					(HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
 
 			if (openedProjectsToSessions == null) {
 				openedProjectsToSessions = new HashMap<String, ArrayList<String>>(); 
-				currentUserSession.getServletContext().setAttribute("openedProjectsToSessions", openedProjectsToSessions);
+				servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
 			}
 
 			if (openedProjectsToSessions.get(projectId) == null) {
@@ -889,7 +897,7 @@ public class AuthorProjectController extends AbstractController {
 			if (!sessions.contains(currentUserSession.getId())) {
 				sessions.add(currentUserSession.getId());
 			}
-			HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) currentUserSession.getServletContext()
+			HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
 					.getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
 
 			String otherUsersAlsoEditingProject = "";
@@ -929,7 +937,7 @@ public class AuthorProjectController extends AbstractController {
 			String projectId = request.getParameter("projectId");
 			HttpSession currentSession = request.getSession();
 
-			Map<String, ArrayList<String>> openedProjectsToSessions = (Map<String, ArrayList<String>>) currentSession.getServletContext().getAttribute("openedProjectsToSessions");
+			Map<String, ArrayList<String>> openedProjectsToSessions = (Map<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
 
 			if(openedProjectsToSessions == null || openedProjectsToSessions.get(projectId) == null){
 				return null;
@@ -968,12 +976,12 @@ public class AuthorProjectController extends AbstractController {
 
 		// get all sessions of people editing a project.
 		HashMap<String, ArrayList<String>> openedProjectsToSessions = 
-				(HashMap<String, ArrayList<String>>) currentUserSession.getServletContext().getAttribute("openedProjectsToSessions");
+				(HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
 
 		if(openedProjectsToSessions != null){
 			// if there are ppl editing projects, see if there are people editing the same project as logged in user.
 			ArrayList<String> sessions = openedProjectsToSessions.get(projectPath);
-			HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) currentUserSession.getServletContext()
+			HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
 					.getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
 
 			String otherUsersAlsoEditingProject = "";
@@ -1583,8 +1591,6 @@ public class AuthorProjectController extends AbstractController {
 			//make sure the signed in user has write access
 			if(this.projectService.canAuthorProject(project, user)) {
 				//get the wise context e.g. /wise
-				String contextPath = request.getContextPath();
-				ServletContext servletContext = this.getServletContext().getContext(contextPath);
 				CredentialManager.setRequestCredentials(request, user);
 
 				//forward the request to the appropriate controller
@@ -1599,41 +1605,5 @@ public class AuthorProjectController extends AbstractController {
 		}
 
 		return null;
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	/**
-	 * @param curnitService the curnitService to set
-	 */
-	public void setCurnitService(CurnitService curnitService) {
-		this.curnitService = curnitService;
-	}
-
-	/**
-	 * @param tagger the tagger to set
-	 */
-	public void setTagger(TaggerController tagger) {
-		this.tagger = tagger;
-	}
-
-	public AclService<Project> getAclService() {
-		return aclService;
-	}
-
-	public void setAclService(AclService<Project> aclService) {
-		this.aclService = aclService;
 	}
 }

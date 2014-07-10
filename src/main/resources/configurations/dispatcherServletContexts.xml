@@ -68,20 +68,6 @@
 
 	<!-- Custom controllers -->
 
-	<bean id="selectteamController"
-		class="org.wise.portal.presentation.web.controllers.student.SelectTeamController">
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="authorProjectController"
-		class="org.wise.portal.presentation.web.controllers.author.project.AuthorProjectController">
-		<property name="projectService" ref="projectService" />
-		<property name="curnitService" ref="curnitService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="tagger" ref="taggerController" />
-		<property name="aclService" ref="aclServiceImpl" />
-	</bean>
-
 	<bean id="gradeWorkController"
 		class="org.wise.portal.presentation.web.controllers.teacher.grading.GradeWorkController">
 		<property name="runService" ref="runService" />
@@ -210,13 +196,6 @@
 
 	<bean id="projectParameters" class="org.wise.portal.domain.project.impl.ProjectParameters" />
 
-	<bean id="userInfoController"
-		class="org.wise.portal.presentation.web.controllers.admin.UserInfoController">
-		<property name="userService" ref="userService" />
-		<property name="studentService" ref="studentService" />
-		<property name="runService" ref="runService" />
-	</bean>
-
 	<bean id="unShareProjectRunController"
 		class="org.wise.portal.presentation.web.controllers.teacher.run.UnShareProjectRunController">
 		<property name="runService" ref="runService" />
@@ -230,12 +209,6 @@
 
 	<bean id="changePeriodParametersValidator"
 		class="org.wise.portal.presentation.validators.teacher.ChangePeriodParametersValidator" />
-
-	<bean id="manageAnnouncementController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.ManageAnnouncementController">
-		<property name="aclService" ref="aclServiceImpl" />
-		<property name="runService" ref="runService" />
-	</bean>
 
 	<bean id="analyzeProjectController"
 		class="org.wise.portal.presentation.web.controllers.teacher.project.AnalyzeProjectController">
@@ -317,11 +290,6 @@
 		<property name="projectService" ref="projectService" />
 	</bean>
 
-	<bean id="projectMetadataController"
-		class="org.wise.portal.presentation.web.controllers.ProjectMetadataController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
 	<bean id="searchForStudentUserNameValidator"
 		class="org.wise.portal.presentation.validators.SearchForStudentUserNameValidator" />
 
@@ -384,8 +352,7 @@
 	<!-- these are resources that do not need to be backed by controllers and 
 		should be handled before looking through the SimpleUrlHandlerMapping mappings -->
 	<mvc:resources mapping="/vle/**" location="/vle/" order="1" />
-	<mvc:resources mapping="/curriculum/**" location="/curriculum/"
-		order="1" />
+	<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
 
 	<!-- right now we need to register this twice: one for annotated controllers, and once for simpleurlhandlermapping.
 	  In the future, when we no longer need SimpleUrlHanderMapping, we can remove one -->
@@ -400,12 +367,9 @@
 		<property name="mappings">
 			<value>
 				/request/info.html=informationController
-				/metadata.html=projectMetadataController
 				/errors/friendlyError.html=urlFilenameViewController
 				/accessdenied.html=accessDeniedController
 				/router.html=routerController
-				/student/selectteam.html=selectteamController
-				/teacher/termsofuse.html=urlFilenameViewController
 				/teacher/projects/customized/unshareproject.html=unShareProjectController
 				/teacher/run/unshareprojectrun.html=unShareProjectRunController
 				/teacher/grading/gradework.html=gradeWorkController
@@ -416,14 +380,10 @@
 				/teacher/management/classroomruns.html=myClassroomRunsMainController
 				/teacher/management/projectruntabs.html=myClassroomRunsController
 				/teacher/management/submitworkgroupchanges.html=submitWorkgroupChangesController
-				/studentinfo.html=userInfoController
 				/forgotaccount/selectaccounttype.html=urlFilenameViewController
 				/forgotaccount/teacher/success.html=urlFilenameViewController
 				/forgotaccount/teacher/error.html=urlFilenameViewController
-				/teacherinfo.html=userInfoController
-				/author/authorproject.html=authorProjectController
 				/admin/project/tagger.html=taggerController
-				/teacher/run/announcement/*.html=manageAnnouncementController
 				/teacher/projects/analyzeproject.html=analyzeProjectController
 				/teacher/projects/minifyproject.html=minifyProjectController
 				/runinfo.html=runInfoController
