@@ -55,7 +55,16 @@ function WebApp(node) {
 	
 	this.api.triggerSaveState = function(  ) { save(); };
 	
-	//function that saves a new node state to the local array of node states and also to the database
+	/**
+	 * Creates a new node state and appends it to the local node states as well as the 
+	 * node states in the current node visit. The current node visit is then saved to the server.
+	 * @param response the student data to be saved in the node state
+	 * @param successCallback a function that is called after the current node visit 
+	 * is successfully saved to the server
+	 * @param failureCallback a function that is called when the current node visit
+	 * fails to be saved to the server 
+	 * @param callbackData data that is made available to the successCallback function
+	 */
 	this.api.save = function (response, successCallback, failureCallback, callbackData) {
 	    //create the new node state
 	    var nodeState = new WebAppState(response);
@@ -63,24 +72,74 @@ function WebApp(node) {
 	    //add the new node state to this step's local copy of the node states
 	    this.states.push(nodeState);
 
-	    //save the node state to the database
+	    /*
+	     * append the new node state to the node states in the current node visit and save the current
+	     * node visit to the server
+	     */
 	    node.save(nodeState, successCallback, failureCallback, callbackData);
-
 	};
 
-	this.api.onlySaveLatestState = function (response,successCallback,failureCallback,callbackData) {
+	/**
+	 * Removes all existing node states in the local node states and node states in the 
+	 * current node visit. Then creates a new node state and inserts it into the local node 
+	 * states as well as the node states in the current node visit. The current node visit  
+	 * is then saved to the server.
+	 * @param response the student data to be saved in the node state
+	 * @param successCallback a function that is called after the current node visit 
+	 * is successfully saved to the server
+	 * @param failureCallback a function that is called after the current node visit
+	 * fails to be saved to the server 
+	 * @param callbackData data that is made available to the successCallback function
+	 */
+	this.api.onlySaveLatestState = function (response, successCallback, failureCallback, callbackData) {
         //create the new node state
 	    var nodeState = new WebAppState(response);
 
+	    //add the new node state to this step's local copy of the node states+
+        var localStates = [];
+        localStates.push(nodeState);
+	    this.states = localStates;
+	    
+	    //overwrite the node states in the current node visit and save the current node visit to the server
 	    var states = [];
 	    states.push(nodeState);
-        node.view.overwriteNodeStatesInCurrentNodeVisit(node.id, states);
-
-
-	    //add the new node state to this step's local copy of the node states+
-	    //this.states.push(nodeState);
-	    this.states = states;
+        node.view.overwriteNodeStatesInCurrentNodeVisit(node.id, states, successCallback, failureCallback, callbackData);
 	};
+	
+	/**
+	 * Overwrites the latest node state in the local node states and the latest node state in
+	 * the node states in the current node visit. If the node states array is empty, we will just
+	 * append the new node state into the node states. The current node visit is then saved to the server.
+	 * @param response the student data to be saved in the node state
+	 * @param successCallback a function that is called after the current node visit 
+	 * is successfully saved to the server
+	 * @param failureCallback a function that is called when the current node visit
+	 * fails to be saved to the server 
+	 * @param callbackData data that is made available to the successCallback function
+	 */
+	this.api.overwriteLatestState = function(response, successCallback, failureCallback, callbackData) {
+		//create the new node state
+	    var nodeState = new WebAppState(response);
+	    
+	    //overwrite the latest node state in the local copy of node states
+	    if(this.states == null) {
+	    	//the node states is null so we will create an array and put the node state into it
+	    	this.states = [nodeState];
+	    } else {
+	    	//the node states is not null
+	    	
+	    	if(this.states.length == 0) {
+	    		//the node states array is empty so we will just add the node state to it
+	    		this.states.push(nodeState);
+	    	} else if(this.states.length > 0) {
+	    		//the node states array contains node states so we will overwrite the latest node state
+	    		this.states[this.states.length - 1] = nodeState;
+	    	}
+	    }
+
+	    //overwrite the node state in the current node visit and save the current node visit to the server
+	    node.view.overwriteLatestNodeStateInCurrentNodeVisit(node.id, nodeState, successCallback, failureCallback, callbackData);
+	}
 	
 	this.api.getContentJSON = function() { 
 		return this.content;
