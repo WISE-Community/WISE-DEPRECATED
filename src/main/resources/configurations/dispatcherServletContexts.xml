@@ -75,11 +75,6 @@
 
 	<!-- Custom controllers -->
 
-	<bean id="minifyProjectController"
-		class="org.wise.portal.presentation.web.controllers.teacher.project.MinifyProjectController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
 	<bean id="studentUserDetailsValidator"
 		class="org.wise.portal.presentation.validators.StudentUserDetailsValidator" />
 
@@ -150,79 +145,8 @@
 	<bean id="changePeriodParametersValidator"
 		class="org.wise.portal.presentation.validators.teacher.ChangePeriodParametersValidator" />
 
-	<bean id="analyzeProjectController"
-		class="org.wise.portal.presentation.web.controllers.teacher.project.AnalyzeProjectController">
-		<property name="projectService" ref="projectService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="studentDataController" class="org.wise.vle.web.StudentDataController">
-		<property name="vleService" ref="vleService" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="studentStatusController" class="org.wise.vle.web.StudentStatusController">
-		<property name="vleService" ref="vleService" />
-	</bean>
-
-	<bean id="runStatusController" class="org.wise.vle.web.RunStatusController">
-		<property name="vleService" ref="vleService" />
-	</bean>
-
-	<bean id="ideaBasketController" class="org.wise.vle.web.VLEIdeaBasketController">
-		<property name="vleService" ref="vleService" />
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="getExportController" class="org.wise.vle.web.VLEGetXLS">
-		<property name="vleService" ref="vleService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-	</bean>
-
-	<bean id="getSpecialExportController" class="org.wise.vle.web.VLEGetSpecialExport">
-		<property name="vleService" ref="vleService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-	</bean>
-
-	<bean id="peerReviewController" class="org.wise.vle.web.VLEPeerReviewController">
-		<property name="vleService" ref="vleService" />
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="assetManagerController" class="org.wise.vle.utils.AssetManager">
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-	</bean>
-
-	<bean id="credentialManager"
-		class="org.wise.portal.presentation.web.controllers.CredentialManager">
-		<property name="projectService" ref="projectService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="routerController"
-		class="org.wise.portal.presentation.web.controllers.RouterController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="taggerController"
-		class="org.wise.portal.presentation.web.controllers.TaggerController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
 	<bean id="searchForStudentUserNameValidator"
 		class="org.wise.portal.presentation.validators.SearchForStudentUserNameValidator" />
-
-	<bean id="cRaterController" class="org.wise.vle.web.CRaterController">
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
 
 	<!-- Specifies where theme properties are located -->
 	<bean id="themeSource"
@@ -289,24 +213,14 @@
 		</bean>
 	</mvc:interceptors>
 
+	<!-- all of the urls have been mapped using @Controller annotation,
+		 except for files like /teacher/termsofuse.jsp, /pages/*
+		 These will be caught last and will be handled by urlFilenameViewController.
+	-->
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="order" value="2"></property>
 		<property name="mappings">
 			<value>
-				/router.html=routerController
-				/admin/project/tagger.html=taggerController
-				/teacher/projects/analyzeproject.html=analyzeProjectController
-				/teacher/projects/minifyproject.html=minifyProjectController
-				/studentData.html=studentDataController
-				/studentStatus.html=studentStatusController
-				/runStatus.html=runStatusController
-				/ideaBasket.html=ideaBasketController
-				/authorize.html=credentialManager
-				/getExport.html=getExportController
-				/getSpecialExport.html=getSpecialExportController
-				/peerReview.html=peerReviewController
-				/assetManager.html=assetManagerController
-				/cRater.html=cRaterController
 				/**/*.html=urlFilenameViewController
 			</value>
 		</property>

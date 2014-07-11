@@ -14,21 +14,26 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.service.project.ProjectService;
 
-public class AnalyzeProjectController extends AbstractController {
+@Controller
+public class AnalyzeProjectController {
 
+	@Autowired
 	private ProjectService projectService;
+	
+	@Autowired
 	private Properties wiseProperties;
 
 	//mapping between node id and step content as a string
@@ -69,12 +74,10 @@ public class AnalyzeProjectController extends AbstractController {
 		inactiveNodeIds = new Vector<String>();
 	}
 	
-	/**
-	 * Handle requests to this controller
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping("/teacher/projects/analyzeproject.html")
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		String results = "";
 
 		//get the analyze type e.g. "findBrokenLinks" or "findUnusedAssets"
@@ -1226,28 +1229,5 @@ public class AnalyzeProjectController extends AbstractController {
 		link = "<a href='" + href + "' target='_blank'>" + text + "</a>";
 		
 		return link;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public ProjectService getProjectService() {
-		return projectService;
-	}
-
-	/**
-	 * 
-	 * @param projectService
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
 	}
 }

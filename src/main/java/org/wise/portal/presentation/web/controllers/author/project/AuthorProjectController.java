@@ -76,9 +76,9 @@ import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
-import org.wise.vle.utils.AssetManager;
 import org.wise.vle.utils.FileManager;
 import org.wise.vle.utils.SecurityUtils;
+import org.wise.vle.web.AssetManager;
 
 /**
  * Controller for users with author privileges to author projects
@@ -694,7 +694,7 @@ public class AuthorProjectController {
 				return (ModelAndView) this.projectService.previewProject(previewParams);
 			} else if(command.equals("createTag") || command.equals("updateTag") || 
 					command.equals("removeTag") || command.equals("retrieveProjectTags")){
-				return this.taggerController.handleRequest(request, response);
+				return this.taggerController.handleRequestInternal(request, response);
 			} else if(command.equals("getMetadata")) {
 				request.setAttribute("project", project);
 				return handleGetMetadata(request, response);

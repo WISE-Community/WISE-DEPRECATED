@@ -25,22 +25,30 @@ package org.wise.portal.presentation.web.controllers;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.service.project.ProjectService;
 
 /**
+ * Controller to add/remove tags from projects
+ * 
  * @author patrick lawler
  * @version $Id:$
  */
-public class TaggerController extends AbstractController {
+@Controller
+public class TaggerController {
 
+	@Autowired
 	private ProjectService projectService;
 
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping("/admin/project/tagger.html")
+	public ModelAndView handleRequestInternal(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		String command = request.getParameter("command");
 		
 		if(command.equals("createTag")){
@@ -109,12 +117,5 @@ public class TaggerController extends AbstractController {
 		}
 		
 		return null;
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
 	}
 }
