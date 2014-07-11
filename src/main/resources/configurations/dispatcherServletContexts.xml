@@ -14,8 +14,10 @@
 <!-- $Id$ -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
 	http://www.springframework.org/schema/beans 
@@ -35,9 +37,14 @@
 		http://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-annotation-driven -->
 	<mvc:annotation-driven />
 
-	<!-- enable the @Controller Spring annotation for defining controllers using 
-		annotations -->
+	<!-- enable the @Controller Spring annotation for defining controllers using annotations -->
 	<context:component-scan base-package="org.wise.portal.presentation.web">
+		<!-- exclude unit test annotations -->
+		<context:exclude-filter type="regex"
+			expression=".*?Test.*?" />
+	</context:component-scan>
+	
+		<context:component-scan base-package="org.wise.vle.web">
 		<!-- exclude unit test annotations -->
 		<context:exclude-filter type="regex"
 			expression=".*?Test.*?" />
@@ -68,47 +75,9 @@
 
 	<!-- Custom controllers -->
 
-	<bean id="submitWorkgroupChangesController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.SubmitWorkgroupChangesController">
-		<property name="userService" ref="userService" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="groupService" ref="groupService" />
-	</bean>
-
-	<bean id="informationController"
-		class="org.wise.portal.presentation.web.controllers.InformationController">
-		<property name="userService" ref="userService" />
-		<property name="runService" ref="runService" />
-		<property name="projectService" ref="projectService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="myClassroomRunsMainController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.MyClassroomRunsMainController">
-		<property name="runService" ref="runService" />
-		<property name="projectService" ref="projectService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="myClassroomRunsController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ClassroomRunListController">
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="runService" ref="runService" />
-		<property name="projectService" ref="projectService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-	</bean>
-
 	<bean id="minifyProjectController"
 		class="org.wise.portal.presentation.web.controllers.teacher.project.MinifyProjectController">
 		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="premadeCommentsController"
-		class="org.wise.portal.presentation.web.controllers.teacher.grading.PremadeCommentsController">
-		<property name="premadeCommentService" ref="premadeCommentService" />
 	</bean>
 
 	<bean id="studentUserDetailsValidator"
@@ -187,24 +156,11 @@
 		<property name="wiseProperties" ref="wiseProperties" />
 	</bean>
 
-
-	<bean id="outsideErrorController"
-		class="org.wise.portal.presentation.web.controllers.OutsideErrorController">
-		<property name="exceptionResolver" ref="exceptionResolver" />
-	</bean>
-
 	<bean id="studentDataController" class="org.wise.vle.web.StudentDataController">
 		<property name="vleService" ref="vleService" />
 		<property name="runService" ref="runService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="annotationController" class="org.wise.vle.web.VLEAnnotationController">
-		<property name="vleService" ref="vleService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="studentStatusController" class="org.wise.vle.web.StudentStatusController">
@@ -337,26 +293,14 @@
 		<property name="order" value="2"></property>
 		<property name="mappings">
 			<value>
-				/request/info.html=informationController
-				/errors/friendlyError.html=urlFilenameViewController
 				/router.html=routerController
-				/teacher/grading/premadeComments.html=premadeCommentsController
-				/teacher/management/updatemyaccount.html=urlFilenameViewController
-				/teacher/management/classroomruns.html=myClassroomRunsMainController
-				/teacher/management/projectruntabs.html=myClassroomRunsController
-				/teacher/management/submitworkgroupchanges.html=submitWorkgroupChangesController
-				/forgotaccount/selectaccounttype.html=urlFilenameViewController
-				/forgotaccount/teacher/success.html=urlFilenameViewController
-				/forgotaccount/teacher/error.html=urlFilenameViewController
 				/admin/project/tagger.html=taggerController
 				/teacher/projects/analyzeproject.html=analyzeProjectController
 				/teacher/projects/minifyproject.html=minifyProjectController
 				/studentData.html=studentDataController
-				/annotation.html=annotationController
 				/studentStatus.html=studentStatusController
 				/runStatus.html=runStatusController
 				/ideaBasket.html=ideaBasketController
-				/errors/outsideerror.html=outsideErrorController
 				/authorize.html=credentialManager
 				/getExport.html=getExportController
 				/getSpecialExport.html=getSpecialExportController

@@ -31,12 +31,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+
+
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.premadecomment.PremadeComment;
@@ -49,23 +54,21 @@ import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.premadecomment.PremadeCommentService;
 
 /**
- * TODO: PUT COMMENTS HERE
+ * Controller for creating/editing/deleting premade comments
  * 
- * @author Geoff
+ * @author Geoffrey Kwan
+ * @author Patrick Lawler
  * @version $Id:$
  */
-public class PremadeCommentsController extends AbstractController {
+@Controller
+public class PremadeCommentsController {
 
+	@Autowired
 	private PremadeCommentService premadeCommentService;
 
-	private static final String PREMADE_COMMENTS_LISTS = "premadeCommentLists";
-	private static final String COMMENT_BOX = "commentBox";
-
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping("/teacher/grading/premadeComments.html")
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
 		String action = request.getParameter("action");
@@ -758,19 +761,5 @@ public class PremadeCommentsController extends AbstractController {
 				e.printStackTrace();
 			}		
 		}
-	}
-
-	/**
-	 * @return the premadeCommentService
-	 */
-	public PremadeCommentService getPremadeCommentService() {
-		return premadeCommentService;
-	}
-
-	/**
-	 * @param premadeCommentService the premadeCommentService to set
-	 */
-	public void setPremadeCommentService(PremadeCommentService premadeCommentService) {
-		this.premadeCommentService = premadeCommentService;
 	}
 }

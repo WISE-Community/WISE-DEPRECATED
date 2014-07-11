@@ -153,8 +153,6 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 				</div>
 				
 				<div class="panelContent">
-					<!-- <iframe id="dynamicFrame" name="dynamicFrame" src="run/projectruntabs.html"	style="overflow: auto; width: 100%; 
-					display: none; margin-top: 5px;"></iframe> -->
 					<%@ include file="run/recentactivity.jsp"%>
 				</div>
 				

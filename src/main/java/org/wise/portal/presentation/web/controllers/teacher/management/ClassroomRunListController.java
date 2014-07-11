@@ -23,6 +23,8 @@
 package org.wise.portal.presentation.web.controllers.teacher.management;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +33,10 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
 import org.wise.portal.domain.run.Run;
@@ -42,7 +45,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.portal.service.workgroup.WISEWorkgroupService;
 
 /**
  * Puts run details into the model to be retrieved and displayed on
@@ -51,19 +54,24 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  * @author Hiroki Terashima
  * @version $Id: RunListController.java 3192 2011-07-06 21:25:50Z honchikun@gmail.com $
  */
-public class ClassroomRunListController extends AbstractController {
+@Controller
+public class ClassroomRunListController {
+
+	@Autowired
+	private RunService runService;
+
+	@Autowired
+	private Properties wiseProperties;
 	
+	@Autowired
+	private ProjectService projectService;
+
+	@Autowired
+	private WISEWorkgroupService wiseWorkgroupService;
+
 	protected static final String FALSE = "FALSE";
 
 	protected static final String GRADING_ENABLED = "GRADING_ENABLED";
-
-	private Properties wiseProperties;
-	
-	private RunService runService;
-
-	private ProjectService projectService;
-
-	private WorkgroupService workgroupService;
 
 	protected final static String IS_REAL_TIME_ENABLED = "isRealTimeEnabled";
 
@@ -79,14 +87,14 @@ public class ClassroomRunListController extends AbstractController {
 
 	static final String DEFAULT_PREVIEW_WORKGROUP_NAME = "Preview";
 	
-	private static final String VIEW_NAME = "teacher/management/projectruntabs";
+	static final Comparator<Run> CREATED_ORDER =
+	new Comparator<Run>() {
+		public int compare(Run o1, Run o2) {
+			return o2.getStarttime().compareTo(o1.getStarttime());
+        }
+	};
 
-
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
+	@RequestMapping(value={"/teacher/management/classroomruns.html"})
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest servletRequest,
 			HttpServletResponse servletResponse) throws Exception {
@@ -104,11 +112,10 @@ public class ClassroomRunListController extends AbstractController {
 		if( gradingParam == null )
 			gradingParam = FALSE;
 		
-    	ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
+    	ModelAndView modelAndView = new ModelAndView();
     	ControllerUtil.addUserToModelAndView(servletRequest, modelAndView);
  
 		User user = ControllerUtil.getSignedInUser();
-		//List<Run> runList = this.runService.getRunList();
 		
 		List<Run> runList = this.runService.getRunListByOwner(user);
 		runList.addAll(this.runService.getRunListBySharedOwner(user));
@@ -127,7 +134,7 @@ public class ClassroomRunListController extends AbstractController {
 		List<Run> ended_run_list = new ArrayList<Run>();
 		Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
 		for (Run run : runList2) {
-			List<Workgroup> workgroupList = this.workgroupService
+			List<Workgroup> workgroupList = wiseWorkgroupService
 					.getWorkgroupListByOfferingAndUser(run, user);
 
 			workgroupMap.put(run, workgroupList);
@@ -141,6 +148,9 @@ public class ClassroomRunListController extends AbstractController {
 			ProjectTypeVisitor typeVisitor = new ProjectTypeVisitor();
 			String result = (String) project.accept(typeVisitor);
 		}
+		
+		Collections.sort(current_run_list, CREATED_ORDER);
+		Collections.sort(ended_run_list, CREATED_ORDER);
 
 		modelAndView.addObject(GRADING_PARAM, gradingParam);
 		modelAndView.addObject(IS_REAL_TIME_ENABLED, isRealTimeEnabled);
@@ -149,37 +159,4 @@ public class ClassroomRunListController extends AbstractController {
 		modelAndView.addObject(WORKGROUP_MAP_KEY, workgroupMap);
 		return modelAndView;
 	}
-
-	/**
-	 * @param workgroupService
-	 *            the workgroupService to set
-	 */
-	@Required
-	public void setWorkgroupService(WorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	/**
-	 * @param offeringService
-	 *            the offeringService to set
-	 */
-	@Required
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
 }
