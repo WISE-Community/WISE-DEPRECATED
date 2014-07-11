@@ -25,43 +25,41 @@ package org.wise.portal.presentation.web.controllers.teacher.run;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 
 /**
+ * Controller for removing self (teacher user) from a project run's shared teacher list.
+ * 
  * @author hirokiterashima
  * @version $Id:$
  */
-public class UnShareProjectRunController extends AbstractController {
+@Controller
+@RequestMapping("/teacher/run/unshareprojectrun.html")
+public class UnShareProjectRunController {
 
+	@Autowired
 	private RunService runService;
-	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+
+	@RequestMapping(method=RequestMethod.POST)
+	protected ModelAndView handleRequestInternal(
+			@RequestParam("runId") String runId,
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		if (request.getMethod().equals("POST")) {
-			Long runIdToRemove = new Long(request.getParameter("runId"));
-			String usernameToRemove = request.getParameter("username");
-			if (usernameToRemove == null) {
-				// assume logged in user if user to remove is not specified
-				usernameToRemove = ControllerUtil.getSignedInUser().getUserDetails().getUsername();
-			}
-			runService.removeSharedTeacherFromRun(usernameToRemove, runIdToRemove);			
-			response.getWriter().write("success");
+		Long runIdToRemove = new Long(runId);
+		String usernameToRemove = request.getParameter("username");
+		if (usernameToRemove == null) {
+			// assume logged in user if user to remove is not specified
+			usernameToRemove = ControllerUtil.getSignedInUser().getUserDetails().getUsername();
 		}
+		runService.removeSharedTeacherFromRun(usernameToRemove, runIdToRemove);			
+		response.getWriter().write("success");
 		return null;
 	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
 }

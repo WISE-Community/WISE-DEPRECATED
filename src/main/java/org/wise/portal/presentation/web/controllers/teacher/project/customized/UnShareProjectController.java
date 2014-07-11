@@ -25,45 +25,43 @@ package org.wise.portal.presentation.web.controllers.teacher.project.customized;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ProjectService;
 
 /**
+ * Controller for removing self (teacher user) from a project's shared teacher list.
+ * 
  * @author hirokiterashima
  * @version $Id:$
  */
-public class UnShareProjectController extends AbstractController {
+@Controller
+@RequestMapping("/teacher/projects/customized/unshareproject.html")
+public class UnShareProjectController {
 
+	@Autowired
 	private ProjectService projectService;
-	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+
+	@RequestMapping(method=RequestMethod.POST)
+	protected ModelAndView handleRequestInternal(
+			@RequestParam("projectId") String projectIdStr,
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		if (request.getMethod().equals("POST")) {
-			Long projectId = new Long(request.getParameter("projectId"));
-			Project project = projectService.getById(projectId);
-			String usernameToRemove = request.getParameter("username");
-			if (usernameToRemove == null) {
-				// assume logged in user if user to remove is not specified
-				usernameToRemove = ControllerUtil.getSignedInUser().getUserDetails().getUsername();
-			}
-			projectService.removeSharedTeacherFromProject(usernameToRemove, project);			
-			response.getWriter().write("success");
+		Long projectId = new Long(projectIdStr);
+		Project project = projectService.getById(projectId);
+		String usernameToRemove = request.getParameter("username");
+		if (usernameToRemove == null) {
+			// assume logged in user if user to remove is not specified
+			usernameToRemove = ControllerUtil.getSignedInUser().getUserDetails().getUsername();
 		}
+		projectService.removeSharedTeacherFromProject(usernameToRemove, project);			
+		response.getWriter().write("success");
 		return null;
 	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
 }

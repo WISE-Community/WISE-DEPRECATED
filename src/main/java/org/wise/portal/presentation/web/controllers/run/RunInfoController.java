@@ -27,10 +27,11 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
@@ -42,23 +43,20 @@ import org.wise.portal.service.offering.RunService;
  * @author hirokiterashima
  * @version $Id$
  */
-public class RunInfoController extends AbstractController {
+@Controller
+public class RunInfoController {
 
+	@Autowired
 	private RunService runService;
-	
-	private static final String RUNCODE = "runcode";
 
-	/** 
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping("/runinfo.html")
+	protected ModelAndView handleRequestInternal(
+			@RequestParam("runcode") String runcode,
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
     	ModelAndView modelAndView = null;
     	
-    	String runcode = request.getParameter(RUNCODE);
     	try {
     		Run run = runService.retrieveRunByRuncode(runcode);
 
@@ -75,13 +73,5 @@ public class RunInfoController extends AbstractController {
     		response.getWriter().print("not found");
     	}
         return modelAndView;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	@Required
-	public void setRunService(RunService runService) {
-		this.runService = runService;
 	}
 }

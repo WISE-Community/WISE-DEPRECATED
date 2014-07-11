@@ -68,12 +68,6 @@
 
 	<!-- Custom controllers -->
 
-	<bean id="gradeWorkController"
-		class="org.wise.portal.presentation.web.controllers.teacher.grading.GradeWorkController">
-		<property name="runService" ref="runService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
 	<bean id="submitWorkgroupChangesController"
 		class="org.wise.portal.presentation.web.controllers.teacher.management.SubmitWorkgroupChangesController">
 		<property name="userService" ref="userService" />
@@ -89,11 +83,6 @@
 		<property name="projectService" ref="projectService" />
 		<property name="workgroupService" ref="wiseWorkgroupService" />
 		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="runInfoController"
-		class="org.wise.portal.presentation.web.controllers.run.RunInfoController">
-		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="myClassroomRunsMainController"
@@ -120,10 +109,6 @@
 	<bean id="premadeCommentsController"
 		class="org.wise.portal.presentation.web.controllers.teacher.grading.PremadeCommentsController">
 		<property name="premadeCommentService" ref="premadeCommentService" />
-	</bean>
-
-	<bean id="manageStudentsController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ManageStudentsController">
 	</bean>
 
 	<bean id="studentUserDetailsValidator"
@@ -171,10 +156,6 @@
 	<bean id="contactWISEValidator"
 		class="org.wise.portal.presentation.validators.general.contactwise.ContactWISEValidator" />
 
-	<bean id="accessDeniedController"
-		class="org.wise.portal.presentation.web.controllers.AccessDeniedController">
-	</bean>
-
 	<bean id="passwordReminderParameters" class="org.wise.portal.domain.impl.PasswordReminderParameters"
 		scope="prototype" />
 
@@ -189,17 +170,7 @@
 	<bean id="changeWorkgroupParametersValidator"
 		class="org.wise.portal.presentation.validators.teacher.ChangeWorkgroupParametersValidator" />
 
-	<bean id="unShareProjectController"
-		class="org.wise.portal.presentation.web.controllers.teacher.project.customized.UnShareProjectController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
 	<bean id="projectParameters" class="org.wise.portal.domain.project.impl.ProjectParameters" />
-
-	<bean id="unShareProjectRunController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.UnShareProjectRunController">
-		<property name="runService" ref="runService" />
-	</bean>
 
 	<bean id="addSharedTeacherParameters" class="org.wise.portal.domain.impl.AddSharedTeacherParameters">
 	</bean>
@@ -368,14 +339,8 @@
 			<value>
 				/request/info.html=informationController
 				/errors/friendlyError.html=urlFilenameViewController
-				/accessdenied.html=accessDeniedController
 				/router.html=routerController
-				/teacher/projects/customized/unshareproject.html=unShareProjectController
-				/teacher/run/unshareprojectrun.html=unShareProjectRunController
-				/teacher/grading/gradework.html=gradeWorkController
 				/teacher/grading/premadeComments.html=premadeCommentsController
-				/teacher/classroomMonitor/classroomMonitor.html=gradeWorkController
-				/teacher/management/managemystudents.html=manageStudentsController
 				/teacher/management/updatemyaccount.html=urlFilenameViewController
 				/teacher/management/classroomruns.html=myClassroomRunsMainController
 				/teacher/management/projectruntabs.html=myClassroomRunsController
@@ -386,7 +351,6 @@
 				/admin/project/tagger.html=taggerController
 				/teacher/projects/analyzeproject.html=analyzeProjectController
 				/teacher/projects/minifyproject.html=minifyProjectController
-				/runinfo.html=runInfoController
 				/studentData.html=studentDataController
 				/annotation.html=annotationController
 				/studentStatus.html=studentStatusController
