@@ -23,6 +23,7 @@ View.prototype.i18n.supportedLocales = {
 			"es":"es",
 			"it":"it",
 			"ja":"ja",
+			"ko":"ko",
 			"nl":"nl",
 			"nl_NL":"nl",
 			"nl_BG":"nl",
