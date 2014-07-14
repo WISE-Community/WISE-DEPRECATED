@@ -22,6 +22,8 @@
  */
 package org.wise.portal.service.tag.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.TagDao;
@@ -34,8 +36,10 @@ import org.wise.portal.service.tag.TagService;
  * @author patrick lawler
  * @version $Id:$
  */
+@Service
 public class TagServiceImpl implements TagService {
 
+	@Autowired
 	private TagDao<Tag> tagDao;
 	
 	/**

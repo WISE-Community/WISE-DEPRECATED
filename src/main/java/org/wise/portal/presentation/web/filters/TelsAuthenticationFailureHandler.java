@@ -38,6 +38,7 @@ import javax.servlet.http.HttpSession;
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -55,6 +56,7 @@ public class TelsAuthenticationFailureHandler extends
 
 	private Properties wiseProperties;
 	
+	@Autowired
 	private UserService userService;
 	
 	public static final Integer recentFailedLoginTimeLimit = 15;

@@ -942,7 +942,6 @@
 	</bean>
 
 	<bean id="dailyAdminJob" class="org.wise.portal.domain.admin.DailyAdminJob">
-		<property name="mailService" ref="mailService" />
 		<property name="runDao" ref="runDao" />
 		<property name="userDao" ref="userDao" />
 		<property name="projectDao" ref="projectDao" />
@@ -1145,10 +1144,7 @@
 		<property name="projectDao" ref="projectDao" />
 		<property name="aclService" ref="aclServiceImpl" />
 		<property name="runService" ref="runService" />
-		<property name="userService" ref="userService" />
 		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="tagService" ref="tagService" />
-		<property name="premadeCommentService" ref="premadeCommentService" />
 	</bean>
 
 	<bean id="portalDao" class="org.wise.portal.dao.portal.impl.HibernatePortalDao">
@@ -1163,14 +1159,6 @@
 	<bean id="curnitService" class="org.wise.portal.service.module.impl.ModuleServiceImpl">
 		<property name="curnitDao" ref="curnitDao" />
 		<property name="moduleDao" ref="moduleDao" />
-	</bean>
-
-	<bean id="studentService" class="org.wise.portal.service.student.impl.StudentServiceImpl">
-		<property name="aclService" ref="aclServiceImpl" />
-		<property name="groupService" ref="groupService" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="userService" ref="userService" />
 	</bean>
 
 	<bean id="wiseWorkgroupService" class="org.springframework.aop.framework.ProxyFactoryBean">
@@ -1202,15 +1190,6 @@
 		<property name="offeringService" ref="runService" />
 		<property name="groupService" ref="groupService" />
 		<property name="groupDao" ref="groupDao" />
-		<property name="userService" ref="userService" />
-	</bean>
-
-	<bean id="premadeCommentService"
-		class="org.wise.portal.service.premadecomment.impl.PremadeCommentServiceImpl">
-		<property name="premadeCommentDao" ref="premadeCommentDao" />
-		<property name="premadeCommentListDao" ref="premadeCommentListDao" />
-		<property name="projectService" ref="projectService" />
-		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="premadeCommentDao"
@@ -1269,10 +1248,6 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="tagService" class="org.wise.portal.service.tag.impl.TagServiceImpl">
-		<property name="tagDao" ref="tagDao" />
-	</bean>
-
 	<bean id="studentAttendanceDao" scope="prototype"
 		class="org.wise.portal.dao.attendance.impl.HibernateStudentAttendanceDao">
 		<property name="sessionFactory" ref="sessionFactory" />
@@ -1294,19 +1269,6 @@
 	</bean>
 
 	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" />
-
-	<bean id="mailService" class="org.wise.portal.service.mail.MailService">
-		<property name="properties" ref="wiseProperties" />
-		<property name="sender" ref="javaMailSender" />
-	</bean>
-
-	<bean id="userService" class="org.wise.portal.service.user.impl.UserServiceImpl">
-		<property name="userDetailsDao" ref="userDetailsDao" />
-		<property name="grantedAuthorityDao" ref="grantedAuthorityDao" />
-		<property name="userDao" ref="userDao" />
-		<property name="passwordEncoder" ref="passwordEncoder" />
-		<property name="saltSource" ref="systemSaltSource" />
-	</bean>
 
 	<bean id="curnitParameters" class="org.wise.portal.domain.module.impl.ModuleParameters"
 		scope="prototype" />
@@ -1387,7 +1349,6 @@
 
 	<bean id="authFailureHandler"
 		class="org.wise.portal.presentation.web.filters.TelsAuthenticationFailureHandler">
-		<property name="userService" ref="userService" />
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="authenticationFailureUrl" value="/login.html?failed=true" />
 	</bean>

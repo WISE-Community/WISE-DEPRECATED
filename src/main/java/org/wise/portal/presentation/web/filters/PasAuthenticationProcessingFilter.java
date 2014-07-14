@@ -25,11 +25,10 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.user.UserService;
@@ -46,6 +45,10 @@ import org.wise.portal.service.user.UserService;
  */
 public class PasAuthenticationProcessingFilter extends
 	UsernamePasswordAuthenticationFilter {
+	
+	@Autowired
+	protected UserService userService;
+
 
 	private static final Log LOGGER = LogFactory
             .getLog(PasAuthenticationProcessingFilter.class);
@@ -71,10 +74,6 @@ public class PasAuthenticationProcessingFilter extends
         }
         
         HttpSession session = request.getSession();
-        ApplicationContext springContext = WebApplicationContextUtils
-                .getWebApplicationContext(session.getServletContext());
-        UserService userService = (UserService) springContext
-                .getBean("userService");
         User user = userService.retrieveUser(userDetails);
         session.setAttribute(User.CURRENT_USER_SESSION_KEY, user);
 

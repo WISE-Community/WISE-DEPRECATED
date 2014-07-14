@@ -27,9 +27,10 @@ import java.util.Properties;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
 
 /**
  * Helps easily construct an email message using the JavaMail Framework
@@ -38,11 +39,14 @@ import org.springframework.mail.javamail.MimeMessageHelper;
  * 
  * @version $Id$
  */
+@Service
 public class MailService implements IMailFacade {
 
-	private Properties properties;
+	@Autowired
+	private Properties wiseProperties;
 
-	private JavaMailSenderImpl sender;
+	@Autowired
+	private JavaMailSenderImpl javaMailSender;
 
 	/**
 	 * @see net.sf.sail.webapp.mail.IMailFacade#postMail(java.lang.String[],
@@ -56,14 +60,14 @@ public class MailService implements IMailFacade {
 	
 	public void postMail(String[] recipients, String subject, String message,
 			String from, String[] cc) throws MessagingException {
-		sender.setUsername((String) properties.getProperty("mail.user"));
-		sender.setPassword((String) properties.getProperty("mail.password"));
-		sender.setHost((String) properties.getProperty("mail.smtp.host"));
-		String portString = (String) properties.getProperty("mail.smtp.port");
-		sender.setPort(Integer.valueOf(portString));
-		sender.setProtocol((String) properties.getProperty("mail.transport.protocol"));
-		sender.setJavaMailProperties(properties);
-		MimeMessage mimeMessage = sender.createMimeMessage();
+		javaMailSender.setUsername((String) wiseProperties.getProperty("mail.user"));
+		javaMailSender.setPassword((String) wiseProperties.getProperty("mail.password"));
+		javaMailSender.setHost((String) wiseProperties.getProperty("mail.smtp.host"));
+		String portString = (String) wiseProperties.getProperty("mail.smtp.port");
+		javaMailSender.setPort(Integer.valueOf(portString));
+		javaMailSender.setProtocol((String) wiseProperties.getProperty("mail.transport.protocol"));
+		javaMailSender.setJavaMailProperties(wiseProperties);
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 		helper.setFrom(from);
 		helper.setText(message);
@@ -76,28 +80,8 @@ public class MailService implements IMailFacade {
 		for (String receiver : recipients) {
 			if (receiver != null) {
 				helper.setTo(receiver);
-				sender.send(mimeMessage);
+				javaMailSender.send(mimeMessage);
 			}
 		}
 	}
-
-	/**
-	 * Sets the email server properties (generally from a properties file).
-	 * 
-	 * @param properties
-	 */
-	@Required
-	public void setProperties(Properties properties) {
-		this.properties = properties;
-	}
-
-	/**
-	 * @param sender
-	 *            the sender to set
-	 */
-	@Required
-	public void setSender(JavaMailSenderImpl sender) {
-		this.sender = sender;
-	}
-
 }

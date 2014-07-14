@@ -44,7 +44,7 @@
 			expression=".*?Test.*?" />
 	</context:component-scan>
 	
-		<context:component-scan base-package="org.wise.vle.web">
+	<context:component-scan base-package="org.wise.vle.web">
 		<!-- exclude unit test annotations -->
 		<context:exclude-filter type="regex"
 			expression=".*?Test.*?" />
@@ -70,7 +70,6 @@
 
 	<bean id="controllerUtil"
 		class="org.wise.portal.presentation.web.controllers.ControllerUtil">
-		<property name="userService" ref="userService" />
 	</bean>
 
 	<!-- Custom controllers -->
@@ -99,7 +98,6 @@
 	<bean id="findProjectParametersValidator"
 		class="org.wise.portal.presentation.validators.FindProjectParametersValidator">
 		<property name="projectService" ref="projectService" />
-		<property name="userService" ref="userService" />
 		<property name="runService" ref="runService" />
 	</bean>
 
@@ -113,7 +111,6 @@
 
 	<bean id="teamSignInFormValidator"
 		class="org.wise.portal.presentation.validators.student.TeamSignInFormValidator">
-		<property name="userService" ref="userService" />
 		<property name="systemSaltSource" ref="systemSaltSource" />
 	</bean>
 

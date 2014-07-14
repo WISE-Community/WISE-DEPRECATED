@@ -24,6 +24,7 @@ package org.wise.portal.presentation.validators;
 
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -42,6 +43,7 @@ public class FindProjectParametersValidator implements Validator{
 	
 	private ProjectService projectService;
 	
+	@Autowired
 	private UserService userService;
 
 	private RunService runService;

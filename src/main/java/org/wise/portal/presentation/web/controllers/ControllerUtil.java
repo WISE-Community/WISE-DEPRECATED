@@ -19,6 +19,7 @@ package org.wise.portal.presentation.web.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,10 +39,12 @@ public class ControllerUtil {
 
 	public final static String USER_KEY = "user";
 	
+	@Autowired
 	private static UserService userService;
 
-	public void setUserService(UserService userService) {
-		this.userService = userService;
+	@Autowired
+	public void setUserService(UserService userService){
+		ControllerUtil.userService = userService;
 	}
 
 	public static void addUserToModelAndView(HttpServletRequest request,

@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.crater.CRaterRequestDao;
 import org.wise.portal.dao.offering.RunDao;
@@ -43,7 +44,8 @@ import org.wise.vle.web.VLEAnnotationController;
 
 public class DailyAdminJob {
 
-	private IMailFacade mailService = null;
+	@Autowired
+	private IMailFacade mailService;
 
 	private RunDao<Run> runDao;
 	
@@ -604,13 +606,6 @@ public class DailyAdminJob {
 		}
 	}
 
-	/**
-	 * @param mailService the mailService to set
-	 */
-	public void setMailService(IMailFacade mailService) {
-		this.mailService = mailService;
-	}
-	
 	/**
 	 * @param runDao the runDao to set
 	 */
