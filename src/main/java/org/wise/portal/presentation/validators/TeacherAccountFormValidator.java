@@ -24,6 +24,7 @@ package org.wise.portal.presentation.validators;
 
 import java.util.regex.Pattern;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
@@ -34,6 +35,7 @@ import org.wise.portal.presentation.web.TeacherAccountForm;
  * @author Patrick Lawler
  * @version $Id$
  */
+@Component
 public class TeacherAccountFormValidator extends UserAccountFormValidator {
 	
 	private static final String EMAIL_REGEXP =

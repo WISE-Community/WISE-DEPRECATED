@@ -38,7 +38,7 @@
 	<mvc:annotation-driven />
 
 	<!-- enable the @Controller Spring annotation for defining controllers using annotations -->
-	<context:component-scan base-package="org.wise.portal.presentation.web">
+	<context:component-scan base-package="org.wise.portal.presentation">
 		<!-- exclude unit test annotations -->
 		<context:exclude-filter type="regex"
 			expression=".*?Test.*?" />
@@ -68,29 +68,10 @@
 	<bean id="urlFilenameViewController"
 		class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
 
-	<bean id="controllerUtil"
-		class="org.wise.portal.presentation.web.controllers.ControllerUtil">
-	</bean>
-
 	<!-- Custom controllers -->
-
-	<bean id="studentUserDetailsValidator"
-		class="org.wise.portal.presentation.validators.StudentUserDetailsValidator" />
-
-	<bean id="teacherUserDetailsValidator"
-		class="org.wise.portal.presentation.validators.TeacherUserDetailsValidator" />
-
-	<bean id="teacherAccountFormValidator"
-		class="org.wise.portal.presentation.validators.TeacherAccountFormValidator" />
 
 	<bean id="removeStudentFromRunParametersValidator"
 		class="org.wise.portal.presentation.validators.teacher.management.RemoveStudentFromRunParametersValidator" />
-
-	<bean id="lostTeacherValidator"
-		class="org.wise.portal.presentation.validators.LostTeacherValidator" />
-
-	<bean id="lostPasswordStudentAccountQuestionValidator"
-		class="org.wise.portal.presentation.validators.LostPasswordStudentAccountQuestionValidator" />
 
 	<bean id="addprojectparametersValidator"
 		class="org.wise.portal.presentation.validators.student.AddProjectParametersValidator" />
@@ -100,9 +81,6 @@
 		<property name="projectService" ref="projectService" />
 		<property name="runService" ref="runService" />
 	</bean>
-
-	<bean id="lookupUserParametersValidator"
-		class="org.wise.portal.presentation.validators.LookupUserParametersValidator" />
 
 	<bean id="studentAccountFormValidator"
 		class="org.wise.portal.presentation.validators.StudentAccountFormValidator">
@@ -114,13 +92,7 @@
 		<property name="systemSaltSource" ref="systemSaltSource" />
 	</bean>
 
-	<bean id="contactWISEValidator"
-		class="org.wise.portal.presentation.validators.general.contactwise.ContactWISEValidator" />
-
 	<bean id="passwordReminderParameters" class="org.wise.portal.domain.impl.PasswordReminderParameters"
-		scope="prototype" />
-
-	<bean id="runParameters" class="org.wise.portal.domain.run.impl.RunParameters"
 		scope="prototype" />
 
 	<bean id="changePasswordParametersValidator"
@@ -131,19 +103,8 @@
 	<bean id="changeWorkgroupParametersValidator"
 		class="org.wise.portal.presentation.validators.teacher.ChangeWorkgroupParametersValidator" />
 
-	<bean id="projectParameters" class="org.wise.portal.domain.project.impl.ProjectParameters" />
-
-	<bean id="addSharedTeacherParameters" class="org.wise.portal.domain.impl.AddSharedTeacherParameters">
-	</bean>
-
-	<bean id="projectInfoParameters"
-		class="org.wise.portal.domain.project.impl.ProjectInfoParameters" />
-
 	<bean id="changePeriodParametersValidator"
 		class="org.wise.portal.presentation.validators.teacher.ChangePeriodParametersValidator" />
-
-	<bean id="searchForStudentUserNameValidator"
-		class="org.wise.portal.presentation.validators.SearchForStudentUserNameValidator" />
 
 	<!-- Specifies where theme properties are located -->
 	<bean id="themeSource"

@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.user.UserService;
@@ -35,6 +36,7 @@ import org.wise.portal.service.user.UserService;
  * A utility class for use by all controllers.
  * 
  */
+@Component
 public class ControllerUtil {
 
 	public final static String USER_KEY = "user";

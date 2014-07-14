@@ -24,6 +24,7 @@ package org.wise.portal.presentation.validators.general.contactwise;
 
 import java.util.regex.Pattern;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -37,6 +38,7 @@ import org.wise.portal.domain.general.contactwise.impl.ContactWISEForm;
  *
  * @version $Id$
  */
+@Component
 public class ContactWISEValidator implements Validator {
 
 	private static final String EMAIL_REGEXP =

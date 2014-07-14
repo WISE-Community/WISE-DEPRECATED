@@ -28,9 +28,6 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	org.wise.portal.presentation.validators.StudentUserDetailsValidatorTest.class,
-	org.wise.portal.presentation.validators.UserDetailsValidatorTest.class,
-	org.wise.portal.presentation.validators.TeacherUserDetailsValidatorTest.class,
 	org.wise.portal.presentation.validators.LostPasswordDetailsValidatorTest.class,
 	org.wise.portal.presentation.validators.teacher.AllTests.class,
 	org.wise.portal.presentation.validators.student.AllTests.class,

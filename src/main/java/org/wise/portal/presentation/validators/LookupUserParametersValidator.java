@@ -22,6 +22,7 @@
  */
 package org.wise.portal.presentation.validators;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -31,6 +32,7 @@ import org.wise.portal.domain.impl.LookupUserParameters;
  * @author patrick lawler
  *
  */
+@Component
 public class LookupUserParametersValidator implements Validator {
 
 	/**
