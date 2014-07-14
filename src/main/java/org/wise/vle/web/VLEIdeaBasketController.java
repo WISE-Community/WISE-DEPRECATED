@@ -25,7 +25,6 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
-import org.wise.vle.utils.SecurityUtils;
 
 @Controller
 @RequestMapping("/ideaBasket.html")

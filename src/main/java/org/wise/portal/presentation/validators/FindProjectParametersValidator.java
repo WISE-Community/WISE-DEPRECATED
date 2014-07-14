@@ -25,6 +25,7 @@ package org.wise.portal.presentation.validators;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -39,13 +40,16 @@ import org.wise.portal.service.user.UserService;
  * @author patrick lawler
  *
  */
+@Controller
 public class FindProjectParametersValidator implements Validator{
 	
+	@Autowired
 	private ProjectService projectService;
 	
 	@Autowired
 	private UserService userService;
 
+	@Autowired
 	private RunService runService;
 	
 	/**
@@ -127,27 +131,5 @@ public class FindProjectParametersValidator implements Validator{
 		if(numWithData != 1){
 			errors.reject("error.invalid-parameters", "Parameters passed to controller are invalid.");
 		}
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-	
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
 	}
 }

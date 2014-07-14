@@ -22,6 +22,7 @@
  */
 package org.wise.portal.presentation.validators.teacher;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -33,7 +34,8 @@ import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
  * @author Sally Ahn
  * @version $Id: $
  */
-public class ChangeWorkgroupParametersValidator implements Validator{
+@Component
+public class ChangeWorkgroupParametersValidator implements Validator {
 
 	/**
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
@@ -81,16 +83,6 @@ public class ChangeWorkgroupParametersValidator implements Validator{
 		if (errors.getErrorCount() != 0) {
 			return;
 		}
-		
-		// move to service layer
-//		User student = params.getStudent();
-//		Workgroup workgroupFrom = params.getWorkgroupFrom();
-//		
-//		if (!workgroupFrom.getMembers().contains(student)) {
-//			errors.rejectValue("student", "error.student-not-found");
-//		}
-
-
 	}
 	
 	

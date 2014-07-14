@@ -22,7 +22,6 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.status.StudentStatus;
-import org.wise.vle.utils.SecurityUtils;
 
 @Controller
 @RequestMapping("/studentStatus.html")

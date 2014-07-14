@@ -77,8 +77,8 @@ import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.vle.utils.FileManager;
-import org.wise.vle.utils.SecurityUtils;
 import org.wise.vle.web.AssetManager;
+import org.wise.vle.web.SecurityUtils;
 
 /**
  * Controller for users with author privileges to author projects

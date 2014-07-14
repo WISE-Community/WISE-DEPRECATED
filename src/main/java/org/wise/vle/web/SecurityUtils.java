@@ -2,19 +2,20 @@
  * A utility class that assists with servlet security and authentication
  * when run with the portal.
  */
-package org.wise.vle.utils;
+package org.wise.vle.web;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -27,24 +28,33 @@ import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;
 
 /**
+ * Utility class mostly for checking permissions (authorization) to access certain resources
+ * 
  * @author patrick lawler
- *
  */
+@Component
 public final class SecurityUtils {
 
-	private static List<String> ALLOWED_REFERRERS;
-
-	private static Properties wiseProperties;
-	private static WISEWorkgroupService workgroupService;
+	@Autowired
+	private static WISEWorkgroupService wiseWorkgroupService;
+	
+	@Autowired
 	private static RunService runService;
 
-	private final static String AUTHENTICATION_URL = "authorize.html";
-
-	private final static String MODEMASTER_URL = "modemaster.html";
-
-	private static boolean retrievedPortalMode = false;
-
 	private static boolean isPortalMode = true;
+
+	private static List<String> ALLOWED_REFERRERS;
+	
+	@Autowired
+	public void setRunService(RunService runService){
+		SecurityUtils.runService = runService;
+	}
+	
+	@Autowired
+	public void setWISEWorkgroupService(WISEWorkgroupService wiseWorkgroupService){
+		SecurityUtils.wiseWorkgroupService = wiseWorkgroupService;
+	}
+
 
 	/**
 	 * Checks the list of allowed referrers and returns <code>boolean</code> true if
@@ -263,7 +273,7 @@ public final class SecurityUtils {
 		if(user != null && runId != null) {
 			try {
 				//get the run
-				Run run = getRunService().retrieveById(runId);
+				Run run = SecurityUtils.runService.retrieveById(runId);
 				
 				if(run != null) {
 					//get the owners and shared owners
@@ -294,7 +304,7 @@ public final class SecurityUtils {
 		
 		if(user != null && runId != null) {
 			//get the list of runs this user is in
-			List<Run> runList = getRunService().getRunList(user);
+			List<Run> runList =  SecurityUtils.runService.getRunList(user);
 			
 			Iterator<Run> runListIterator = runList.iterator();
 			
@@ -333,7 +343,7 @@ public final class SecurityUtils {
 		if(user != null && runId != null && periodId != null) {
 			try {
 				//get the run
-				Run run = getRunService().retrieveById(runId);
+				Run run =  SecurityUtils.runService.retrieveById(runId);
 				
 				//get the period the student is in for the run
 				Group periodOfStudent = run.getPeriodOfStudent(user);
@@ -366,7 +376,7 @@ public final class SecurityUtils {
 		
 		if(user != null && workgroupId != null) {
 			//get all the workgroups this user is in
-			List<Workgroup> workgroupsForUser = getWorkgroupService().getWorkgroupsForUser(user);
+			List<Workgroup> workgroupsForUser = SecurityUtils.wiseWorkgroupService.getWorkgroupsForUser(user);
 			
 			Iterator<Workgroup> workgroupsForUserIterator = workgroupsForUser.iterator();
 			
@@ -441,29 +451,5 @@ public final class SecurityUtils {
 	 */
 	public static boolean isPortalMode(HttpServletRequest request){
 		return isPortalMode;
-	}
-
-	public static Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-	public static void setWiseProperties(Properties wiseProperties) {
-		SecurityUtils.wiseProperties = wiseProperties;
-	}
-
-	public static WISEWorkgroupService getWorkgroupService() {
-		return workgroupService;
-	}
-
-	public static void setWorkgroupService(WISEWorkgroupService workgroupService) {
-		SecurityUtils.workgroupService = workgroupService;
-	}
-
-	public static RunService getRunService() {
-		return runService;
-	}
-
-	public static void setRunService(RunService runService) {
-		SecurityUtils.runService = runService;
 	}
 }

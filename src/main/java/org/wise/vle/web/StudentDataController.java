@@ -39,7 +39,6 @@ import org.wise.vle.domain.project.Project;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.domain.work.StepWorkCache;
-import org.wise.vle.utils.SecurityUtils;
 import org.wise.vle.utils.VLEDataUtils;
 
 @Controller

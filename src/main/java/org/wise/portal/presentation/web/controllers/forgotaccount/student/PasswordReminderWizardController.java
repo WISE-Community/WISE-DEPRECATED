@@ -66,6 +66,7 @@ import org.wise.portal.service.user.UserService;
 public class PasswordReminderWizardController{
 
 	private static final String ACCOUNT_QUESTION = "accountQuestion";
+	
 	private static final String USERNAME = "username";
 
 	@Autowired
