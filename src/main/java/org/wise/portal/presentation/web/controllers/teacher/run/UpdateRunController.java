@@ -25,8 +25,11 @@ package org.wise.portal.presentation.web.controllers.teacher.run;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
@@ -36,19 +39,31 @@ import org.wise.portal.service.offering.RunService;
 /**
  * Controller for updating run settings, like add period, 
  * enable/disable idea manager and student file uploader.
+ * 
  * @author patrick lawler
  * @version $Id:$
  */
-public class UpdateRunController extends AbstractController {
-	
+@Controller
+@RequestMapping(value={"/teacher/run/manage/*.html","/teacher/run/updaterun.html", "/teacher/run/editrun.html", "/teacher/run/notes.html"})
+public class UpdateRunController {
+
+	@Autowired
 	private RunService runService;
 
-	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping(method=RequestMethod.GET)
+	protected ModelAndView handleGET(HttpServletRequest request) throws Exception {
+		String runId = request.getParameter("runId");
+		Run run = null;
+		if (runId != null) {
+			run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
+		}
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("run", run);
+		return mav;
+	}
+
+	@RequestMapping(method=RequestMethod.POST)
+	protected ModelAndView handlePOST(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		User user = ControllerUtil.getSignedInUser();
 		String runId = request.getParameter("runId");
 		Run run = null;
@@ -56,12 +71,6 @@ public class UpdateRunController extends AbstractController {
 			run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
 		}
 
-		if (request.getMethod() == METHOD_GET) {
-			ModelAndView mav = new ModelAndView();
-			mav.addObject("run", run);
-			return mav;
-		}
-		
 		String command = request.getParameter("command");
 
 		if("updateTitle".equals(command)){
@@ -107,12 +116,5 @@ public class UpdateRunController extends AbstractController {
 			}			
 		}
 		return null;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
 	}
 }

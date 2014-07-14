@@ -22,27 +22,31 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
+ * Controller that backs /login.html, for when user fails to log in.
+ * 
  * @author Cynick Young
- * 
- * @version $Id$
- * 
+ * @author Geoffrey Kwan
  */
-public class LoginController extends AbstractController {
+@Controller
+@RequestMapping("/login.html")
+public class LoginController {
 
+	@Autowired
 	private Properties wiseProperties;
-
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	public ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	
+	@RequestMapping(method=RequestMethod.GET)
+	public String handleGET(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			ModelMap modelMap) throws Exception {
 		String failed = request.getParameter("failed");
 		String redirectUrl = request.getParameter("redirect");
 		String requireCaptcha = request.getParameter("requireCaptcha");
@@ -54,18 +58,17 @@ public class LoginController extends AbstractController {
 		String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
 		String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
 
-		ModelAndView modelAndView = new ModelAndView();
 		if (StringUtils.hasText(failed)) {
-			modelAndView.addObject("failed", Boolean.TRUE);
+			modelMap.put("failed", Boolean.TRUE);
 		}
 
 		if(StringUtils.hasText(redirectUrl)){
-			modelAndView.addObject("redirect",redirectUrl);
+			modelMap.put("redirect",redirectUrl);
 		}
 
 		if(userName != null) {
 			//make the userName available to the jsp page
-			modelAndView.addObject("userName", userName);
+			modelMap.put("userName", userName);
 		}
 
 		/*
@@ -74,20 +77,12 @@ public class LoginController extends AbstractController {
 		if(requireCaptcha != null && reCaptchaPublicKey != null && reCaptchaPrivateKey != null) {
 			if (StringUtils.hasText(requireCaptcha)) {
 				//make the page require captcha
-				modelAndView.addObject("requireCaptcha", Boolean.TRUE);
-				modelAndView.addObject("reCaptchaPublicKey", reCaptchaPublicKey);
-				modelAndView.addObject("reCaptchaPrivateKey", reCaptchaPrivateKey);
+				modelMap.put("requireCaptcha", Boolean.TRUE);
+				modelMap.put("reCaptchaPublicKey", reCaptchaPublicKey);
+				modelMap.put("reCaptchaPrivateKey", reCaptchaPrivateKey);
 			}
 		}
 
-		return modelAndView;
-	}
-
-	public Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
+		return "login";
+	}	
 }

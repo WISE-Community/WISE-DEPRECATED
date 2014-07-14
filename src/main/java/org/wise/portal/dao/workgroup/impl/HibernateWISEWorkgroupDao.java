@@ -29,6 +29,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.workgroup.WorkgroupDao;
 import org.wise.portal.domain.run.Offering;
@@ -63,7 +64,7 @@ implements WorkgroupDao<WISEWorkgroup>{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<WISEWorkgroup> getListByOfferingAndUser(Offering offering, User user) {
-		Session session = this.getSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 		SQLQuery sqlQuery = session
 				.createSQLQuery("SELECT w.*, g.*, ww.* FROM workgroups as w, groups as g, "
 						+ "groups_related_to_users as g_r_u, wiseworkgroups as ww "
@@ -84,7 +85,7 @@ implements WorkgroupDao<WISEWorkgroup>{
 	 */
 	@SuppressWarnings("unchecked")
 	public List<WISEWorkgroup> getListByUser(User user) {
-		Session session = this.getSession();
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 		SQLQuery sqlQuery = session
 				.createSQLQuery("SELECT w.*, g.*, ww.* FROM workgroups as w, groups as g, "
 						+ "groups_related_to_users as g_r_u, wiseworkgroups as ww  "
@@ -106,9 +107,9 @@ implements WorkgroupDao<WISEWorkgroup>{
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public WISEWorkgroupImpl getById(Long workgroupId, boolean doEagerFetch) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-		session.beginTransaction();
 
 		WISEWorkgroupImpl result = null;
 		if (doEagerFetch) {
@@ -123,7 +124,6 @@ implements WorkgroupDao<WISEWorkgroup>{
 					.add( Restrictions.eq("id", workgroupId))
 					.uniqueResult();        	
 		}
-		session.getTransaction().commit();
 		return result;	
 	}
 

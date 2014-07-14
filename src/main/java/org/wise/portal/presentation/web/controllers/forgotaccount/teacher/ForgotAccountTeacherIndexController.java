@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.validators.LostTeacherValidator;
 import org.wise.portal.service.mail.MailService;
 import org.wise.portal.service.user.UserService;
 
@@ -66,9 +65,6 @@ public class ForgotAccountTeacherIndexController {
 	
 	@Autowired
 	private MessageSource messageSource;
-	
-	@Autowired
-	protected LostTeacherValidator lostTeacherValidator;
 	
 	//the path to this form view
 	private String formView = "forgotaccount/teacher/index";

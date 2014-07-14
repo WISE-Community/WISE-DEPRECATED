@@ -25,25 +25,27 @@ package org.wise.portal.presentation.web.controllers.teacher.project;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.service.project.ProjectService;
 
 /**
+ * Minifies javascript of project
  * @author patrick lawler
  * @version $Id:$
  */
-public class MinifyProjectController extends AbstractController{
+@Controller
+public class MinifyProjectController {
 	
+	@Autowired
 	private ProjectService projectService;
 	
 	private static final String PROJECTID = "projectId";
 	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
+	@RequestMapping("/teacher/projects/minifyproject.html")
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		String id = request.getParameter(PROJECTID);
@@ -57,12 +59,4 @@ public class MinifyProjectController extends AbstractController{
 		
 		return null;
 	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
 }

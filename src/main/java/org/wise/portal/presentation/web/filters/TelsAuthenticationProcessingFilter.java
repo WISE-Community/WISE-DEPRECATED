@@ -43,11 +43,10 @@ import net.tanesha.recaptcha.ReCaptchaFactory;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
 
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.user.UserService;
@@ -74,7 +73,7 @@ PasAuthenticationProcessingFilter {
 	public static final Integer recentFailedLoginAttemptsLimit = 5;
 
 	private Properties wiseProperties;
-
+	
 	/**
 	 * Check to make sure the public key is valid. We can only check if the public
 	 * key is valid. If the private key is invalid the admin will have to realize that.
@@ -159,8 +158,6 @@ PasAuthenticationProcessingFilter {
 			HttpServletResponse response, Authentication authentication)
 					throws IOException, ServletException {
 		HttpSession session = request.getSession();
-		ApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
-		UserService userService = (UserService) springContext.getBean("userService");
 
 		//get the user
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();

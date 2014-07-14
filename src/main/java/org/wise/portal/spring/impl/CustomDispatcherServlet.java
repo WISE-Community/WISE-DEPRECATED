@@ -63,10 +63,6 @@ public class CustomDispatcherServlet extends DispatcherServlet {
         this.contextConfigClass = contextConfigClass;
     }
 
-    private String getContextConfigClass() {
-        return this.contextConfigClass;
-    }
-
     /**
      * @see org.springframework.web.servlet.FrameworkServlet#createWebApplicationContext(org.springframework.web.context.WebApplicationContext)
      */
@@ -75,21 +71,17 @@ public class CustomDispatcherServlet extends DispatcherServlet {
             WebApplicationContext parent) throws BeansException {
         try {
             SpringConfiguration springConfig = (SpringConfiguration) BeanUtils
-                    .instantiateClass(Class.forName(this
-                            .getContextConfigClass()));
-            this
-                    .setContextConfigLocation(StringUtils
+                    .instantiateClass(Class.forName(this.contextConfigClass));
+            
+            this.setContextConfigLocation(StringUtils
                             .arrayToDelimitedString(
-                                    springConfig
-                                            .getDispatcherServletContextConfigLocations(),
+                                    springConfig.getDispatcherServletContextConfigLocations(),
                                     ConfigurableWebApplicationContext.CONFIG_LOCATION_DELIMITERS));
         } catch (ClassNotFoundException e) {
             if (this.logger.isErrorEnabled()) {
-                this.logger.error(CONFIG_CLASS_PARAM + " <"
-                        + this.getContextConfigClass() + "> not found.", e);
+                this.logger.error(CONFIG_CLASS_PARAM + " <"  + this.contextConfigClass + "> not found.", e);
             }
-            throw new InvalidParameterException("ClassNotFoundException: "
-                    + this.getContextConfigClass());
+            throw new InvalidParameterException("ClassNotFoundException: " + this.contextConfigClass);
         }
         return super.createWebApplicationContext(parent);
     }

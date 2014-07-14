@@ -45,16 +45,15 @@ public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus> imple
 	 * @param runId the run id
 	 * @return the RunStatus with the given run id or null if none is found
 	 */
+	@Transactional
 	public RunStatus getRunStatusByRunId(Long runId) {
 		RunStatus result = null;
 		
 		try {
 			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-			session.beginTransaction();
 			
 			result = (RunStatus) session.createCriteria(RunStatus.class).add(Restrictions.eq("runId", runId)).uniqueResult();
 			
-			session.getTransaction().commit();
 		} catch (NonUniqueResultException e) {
 			throw e;
 		}

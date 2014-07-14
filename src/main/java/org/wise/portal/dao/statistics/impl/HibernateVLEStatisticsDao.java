@@ -45,14 +45,13 @@ public class HibernateVLEStatisticsDao extends AbstractHibernateDao<VLEStatistic
 	 * Get all the vle statistics rows ordered from oldest to newest
 	 * @return a list of all the vle statistics
 	 */
+	@Transactional
 	public List<VLEStatistics> getVLEStatistics() {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         
         //get the vle statistics from oldest to newest
         List<VLEStatistics> result =  session.createCriteria(VLEStatistics.class).addOrder(Order.asc("timestamp")).list();
         
-        session.getTransaction().commit();
         return result;
 	}
 }

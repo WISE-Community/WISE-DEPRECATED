@@ -37,9 +37,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
@@ -50,24 +53,27 @@ import org.wise.portal.service.project.ProjectService;
 
 /**
  * Exports Project as zip.
+ * 
  * @author hirokiterashima
  * @version $Id:$
  */
-public class ExportProjectController extends AbstractController {
+@Controller
+@RequestMapping("/project/exportproject.html")
+public class ExportProjectController {
 
+	@Autowired
 	private ProjectService projectService;
 	
-	private String projectJSONFilename;
-
+	@Autowired
 	private Properties wiseProperties;
+
+	private String projectJSONFilename;
 
 	static final int BUFFER = 2048;
 
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping(method=RequestMethod.GET)
+	protected ModelAndView handleExportProject(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -202,19 +208,4 @@ public class ExportProjectController extends AbstractController {
 		} 
 		return oldFilename;
 	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
 }

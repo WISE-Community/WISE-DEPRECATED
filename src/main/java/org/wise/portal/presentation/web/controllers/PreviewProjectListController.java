@@ -33,8 +33,11 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.service.project.ProjectService;
@@ -46,27 +49,29 @@ import org.wise.portal.service.project.ProjectService;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class PreviewProjectListController extends AbstractController {
+@Controller
+@RequestMapping("/previewprojectlist.html")
+public class PreviewProjectListController {
 
+	@Autowired
 	private ProjectService projectService;
 	
-	// path to project thumb image relative to project folder
-	private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
-	
+	@Autowired
 	private Properties wiseProperties;
 
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	// path to project thumb image relative to project folder
+	private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
+
+	@RequestMapping(method=RequestMethod.GET)
+	protected String handleGET(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			ModelMap modelMap) throws Exception {
 		 Set<String> tagNames = new TreeSet<String>();
 		 tagNames.add("library");
 		 tagNames.add("public");
 		 List<Project> projectList = this.projectService.getProjectListByTagNames(tagNames);
 
-		 // List<Project> projectList = this.projectService.getProjectListByTag(FamilyTag.TELS);
 		 List<Project> currentProjectList = new ArrayList<Project>();
 		 for (Project p: projectList) {
 			 if (p.isCurrent())
@@ -95,23 +100,8 @@ public class PreviewProjectListController extends AbstractController {
 				}
 			}
 			
-		 ModelAndView modelAndView = new ModelAndView("preview/previewprojectlist");
-	     modelAndView.addObject("projectList", currentProjectList);
-	     modelAndView.addObject("projectThumbMap", projectThumbMap);
-		 return modelAndView;
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-	
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
+		 modelMap.put("projectList", currentProjectList);
+	     modelMap.put("projectThumbMap", projectThumbMap);
+		 return "preview/previewprojectlist";
 	}
 }

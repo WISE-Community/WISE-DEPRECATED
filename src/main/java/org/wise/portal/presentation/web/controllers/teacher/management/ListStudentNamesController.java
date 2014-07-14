@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
@@ -23,20 +25,24 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.portal.service.workgroup.WISEWorkgroupService;
 
-public class ListStudentNamesController extends AbstractController {
+@Controller
+public class ListStudentNamesController {
 
+	@Autowired
 	private RunService runService;
 
-	private WorkgroupService workgroupService;
+	@Autowired
+	private WISEWorkgroupService wiseWorkgroupService;
 	
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping("/teacher/management/studentlistexcel.html")
+	protected ModelAndView handleRequestInternal(
+			@RequestParam("runId") String runIdStr,
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
 		//get the run
-		String runIdStr = request.getParameter("runId");
 		Long runId = Long.valueOf(runIdStr);
 		Run run = runService.retrieveById(runId);
 		
@@ -54,7 +60,7 @@ public class ListStudentNamesController extends AbstractController {
 			User owner = ownersIterator.next();
 			
 			//get the workgroups
-			List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, owner);
+			List<Workgroup> teacherWorkgroups = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, owner);
 			
 			//there should only be one workgroup for the owner
 			Workgroup teacherWorkgroup = teacherWorkgroups.get(0);
@@ -156,7 +162,7 @@ public class ListStudentNamesController extends AbstractController {
 				User user = periodMembersIterator.next();
 				
 				//get the workgroup the student is in
-				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByOfferingAndUser = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				//get the workgroup id and wise id
 				Long workgroupId = null;
 				if (workgroupListByOfferingAndUser.size() > 0) {
@@ -259,23 +265,5 @@ public class ListStudentNamesController extends AbstractController {
 		}
 		
 		return timestampString;
-	}
-	
-	/**
-	 * @param workgroupService
-	 *            the workgroupService to set
-	 */
-	@Required
-	public void setWorkgroupService(WorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
-	/**
-	 * @param offeringService
-	 *            the offeringService to set
-	 */
-	@Required
-	public void setRunService(RunService runService) {
-		this.runService = runService;
 	}
 }

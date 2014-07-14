@@ -7,9 +7,11 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
@@ -17,24 +19,28 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.project.ProjectService;
 
-public class DeleteProjectController extends AbstractController {
+@Controller
+public class DeleteProjectController {
 
+	@Autowired
 	private ProjectService projectService;
 	
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	/**
+	 * @param projectIdStr
+	 * @param revive if deleting the project, the value should be null or anything besides the string "true"
+	 *               if reviving the project, the value should be the string "true"
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/teacher/projects/deleteproject.html")
+	protected ModelAndView handleRequestInternal(
+			@RequestParam("projectId") String projectIdStr,
+			@RequestParam("revive") String revive,
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		//get the project id
-		String projectIdStr = request.getParameter("projectId");
-		
-		/*
-		 * get whether to revive the project
-		 * if deleting the project, the value should be null or anything besides the string "true"
-		 * if reviving the project, the value should be the string "true"
-		 */
-		String revive = request.getParameter("revive");
-		
 		//set the default response string
 		String responseString = "failure";
 		
@@ -112,12 +118,5 @@ public class DeleteProjectController extends AbstractController {
 		response.getWriter().write(responseString);
 		
 		return null;
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
 	}
 }

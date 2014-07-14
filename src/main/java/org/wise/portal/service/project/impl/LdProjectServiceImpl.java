@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.AlreadyExistsException;
@@ -97,12 +98,15 @@ public class LdProjectServiceImpl implements ProjectService {
 
 	private AclService<Project> aclService;
 
+	@Autowired
 	private UserService userService;
 
 	private RunService runService;
 
+	@Autowired
 	private TagService tagService;
 
+	@Autowired
 	private PremadeCommentService premadeCommentService;
 
 	{

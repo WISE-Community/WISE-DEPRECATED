@@ -35,11 +35,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
@@ -56,23 +58,29 @@ import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.portal.service.workgroup.WISEWorkgroupService;
 
 /**
  * @author patrick lawler
  * @version $Id:$
  */
-public class InformationController extends AbstractController{
+@Controller
+public class InformationController {
 
+	@Autowired
 	Properties wiseProperties;
 	
+	@Autowired
 	ProjectService projectService;
 	
+	@Autowired
 	RunService runService;
 	
+	@Autowired
 	UserService userService;
 	
-	WorkgroupService workgroupService;
+	@Autowired
+	WISEWorkgroupService wiseWorkgroupService;
 	
 	/* how long the VLE should wait between each getRunInfo request, 
 	 * in milliseconds 10000=10 seconds, -1=never */
@@ -82,11 +90,10 @@ public class InformationController extends AbstractController{
 	
 	private static final String PREVIEW = "preview";
 	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping("/request/info.html")
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		String action = request.getParameter("action");
 		
 		if(action.equals("getVLEConfig")){
@@ -128,7 +135,7 @@ public class InformationController extends AbstractController{
 		Workgroup workgroup = getWorkgroup(request, run);
 		String workgroupIdStr = request.getParameter(WORKGROUP_ID_PARAM);
 		if (workgroupIdStr != null && workgroupIdStr != "") {
-			workgroup = workgroupService.retrieveById(new Long(workgroupIdStr));
+			workgroup = wiseWorkgroupService.retrieveById(new Long(workgroupIdStr));
 			// if a workgroup was specified that was not for this run, return BAD_REQUEST
 			if (workgroup.getOffering().getId() != run.getId()) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -312,7 +319,7 @@ public class InformationController extends AbstractController{
 		
 		try {
 			//get the workgroup for the owner in the run
-			List<Workgroup> workgroupsForRunOwner = workgroupService.getWorkgroupListByOfferingAndUser(run, runOwner);
+			List<Workgroup> workgroupsForRunOwner = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, runOwner);
 			
 			//get the workgroup since the owner should only have one workgroup in the run
 			Workgroup runOwnerWorkgroup = workgroupsForRunOwner.get(0);
@@ -336,7 +343,7 @@ public class InformationController extends AbstractController{
 			User sharedOwner = sharedOwnersIterator.next();
 			
 			//get the workgroups
-			List<Workgroup> sharedTeacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, sharedOwner);
+			List<Workgroup> sharedTeacherWorkgroups = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, sharedOwner);
 			
 			//there should only be one workgroup for the shared owner
 			Workgroup sharedTeacherWorkgroup = sharedTeacherWorkgroups.get(0);
@@ -806,7 +813,7 @@ public class InformationController extends AbstractController{
 			User user = userService.retrieveUser(userDetails);
 			
 			List<Workgroup> workgroupListByOfferingAndUser 
-			= workgroupService.getWorkgroupListByOfferingAndUser(run, user);
+			= wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user);
 
 			if (workgroupListByOfferingAndUser.size() == 1) {
 				//this user is in one workgroup
@@ -824,10 +831,10 @@ public class InformationController extends AbstractController{
 					String workgroupIdStr = request
 							.getParameter(WORKGROUP_ID_PARAM);
 					if (workgroupIdStr != null) {
-						workgroup = workgroupService.retrieveById(Long
+						workgroup = wiseWorkgroupService.retrieveById(Long
 								.parseLong(workgroupIdStr));
 					} else {
-						workgroup = workgroupService
+						workgroup = wiseWorkgroupService
 								.getPreviewWorkgroupForRooloOffering(run, user);
 					}
 				}
@@ -954,40 +961,4 @@ public class InformationController extends AbstractController{
 		
 		return classmateUserInfo;
 	}
-	
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	public void setWorkgroupService(WorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
 }

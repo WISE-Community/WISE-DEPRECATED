@@ -31,8 +31,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.run.Run;
@@ -44,25 +46,27 @@ import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;
 
 /**
+ * Controller for making changes to student workgroups
  * @author Hiroki Terashima
  */
-public class SubmitWorkgroupChangesController extends AbstractController {
+@Controller
+public class SubmitWorkgroupChangesController {
 
-	private static final String TAB_INDEX = "tabIndex";
-
-	private WISEWorkgroupService workgroupService;
+	@Autowired
+	private WISEWorkgroupService wiseWorkgroupService;
 	
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private UserService userService;
 	
+	@Autowired
 	private GroupService groupService;
 	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping("/teacher/management/submitworkgroupchanges.html")
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		// scenarios
 		// 0) workgroupFrom and workgroupTo are equal. -> do nothing
@@ -91,7 +95,7 @@ public class SubmitWorkgroupChangesController extends AbstractController {
 			params.setPeriodId(Long.valueOf(periodId));
 			params.setStudent(userService.retrieveById(Long.valueOf(userId)));
 			if (!workgroupFromId.equals("groupless")) {
-				params.setWorkgroupFrom(workgroupService.retrieveById(Long.valueOf(workgroupFromId)));
+				params.setWorkgroupFrom(wiseWorkgroupService.retrieveById(Long.valueOf(workgroupFromId)));
 			}
 			if (!workgroupToId.equals("groupless")) {
 				Long workgroupToIdLong = Long.valueOf(workgroupToId);
@@ -106,11 +110,11 @@ public class SubmitWorkgroupChangesController extends AbstractController {
 					newWorkgroupMap.put(workgroupToIdLong, newWGParams);
 					continue;
 				}
-				params.setWorkgroupTo(workgroupService.retrieveById(workgroupToIdLong));
+				params.setWorkgroupTo(wiseWorkgroupService.retrieveById(workgroupToIdLong));
 				params.setWorkgroupToId(Long.valueOf(workgroupToId));
 			}
 			try {
-				workgroupService.updateWorkgroupMembership(params);
+				wiseWorkgroupService.updateWorkgroupMembership(params);
 			} catch (Exception e) {
 				throw e;
 			}
@@ -128,43 +132,15 @@ public class SubmitWorkgroupChangesController extends AbstractController {
 			Group period = groupService.retrieveById(params.getPeriodId());
 			params.setWorkgroupToId(new Long(-1));  // to indicate that we want to create a new workgroup
 			WISEWorkgroup newWorkgroup = (WISEWorkgroup) 
-				workgroupService.updateWorkgroupMembership(params);
+				wiseWorkgroupService.updateWorkgroupMembership(params);
 			for (int j=1; j<newWGList.size();j++) {
 				params = newWGList.get(j);
 				params.setWorkgroupTo(newWorkgroup);
 				params.setWorkgroupToId(newWorkgroup.getId());
-				workgroupService.updateWorkgroupMembership(params);
+				wiseWorkgroupService.updateWorkgroupMembership(params);
 			}
 		}
-		//ModelAndView modelAndView = new ModelAndView("/teacher/management/viewmystudents.html?runId="+runId);
-		//modelAndView.addObject(TAB_INDEX, tabIndex);
 		response.getWriter().print(tabIndex);
 		return null;
 	}
-	
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	public void setWorkgroupService(WISEWorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-	
-	public void setRunService(RunService runService){
-		this.runService = runService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * @param groupService the groupService to set
-	 */
-	public void setGroupService(GroupService groupService) {
-		this.groupService = groupService;
-	}
-
 }

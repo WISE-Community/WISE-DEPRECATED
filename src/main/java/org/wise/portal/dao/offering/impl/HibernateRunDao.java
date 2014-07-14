@@ -31,6 +31,7 @@ import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.offering.RunDao;
@@ -180,9 +181,9 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public Run getById(Long runId, boolean doEagerFetch) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         Run result = null;
         if (doEagerFetch) {
@@ -199,7 +200,6 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
         			.add( Restrictions.eq("id", runId))
         			.uniqueResult();        	
         }
-        session.getTransaction().commit();
         return result;
      }
 }

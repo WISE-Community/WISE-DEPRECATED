@@ -35,9 +35,12 @@ import javax.servlet.http.HttpSession;
 
 import org.hibernate.StaleObjectStateException;
 import org.json.JSONArray;
-import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate4.HibernateOptimisticLockingFailureException;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.run.Run;
@@ -60,32 +63,36 @@ import org.wise.portal.service.workgroup.WISEWorkgroupService;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class StartProjectController extends AbstractController {
+@Controller
+public class StartProjectController {
+
+	@Autowired
+	private RunService runService;
+
+	@Autowired
+	private WISEWorkgroupService wiseWorkgroupService;
+
+	@Autowired
+	private ProjectService projectService;
+	
+	@Autowired
+	private StudentAttendanceService studentAttendanceService;
+	
+	@Autowired
+	protected Properties wiseProperties;
 
 	private static final String SELECT_TEAM_URL = "student/selectteam";
 
 	private static final String TEAM_SIGN_IN_URL = "student/teamsignin";
 
-	private RunService runService;
-
-	private WISEWorkgroupService workgroupService;
-
-	private ProjectService projectService;
-	
-	private StudentAttendanceService studentAttendanceService;
-	
-	protected Properties wiseProperties;
-
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected synchronized ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping("/student/startproject.html")
+	protected synchronized ModelAndView handleRequestInternal(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		 User user = ControllerUtil.getSignedInUser();
 
-		String runIdStr = request.getParameter("runId");
 		String projectIdStr = request.getParameter("projectId");
+		String runIdStr = request.getParameter("runId");
 		Long runId = null;
 		if (runIdStr != null) {
 			runId = Long.valueOf(runIdStr);
@@ -120,7 +127,7 @@ public class StartProjectController extends AbstractController {
 
 		Group period = run.getPeriodOfStudent(user);
 		
-		List<Workgroup> workgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
+		List<Workgroup> workgroups = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user);
 		assert(workgroups.size() <= 1);
 		
 		WISEWorkgroup workgroup = null;
@@ -131,7 +138,7 @@ public class StartProjectController extends AbstractController {
 				String name = "Workgroup for user: " + user.getUserDetails().getUsername();
 				Set<User> members = new HashSet<User>();
 				members.add(user);
-				workgroup = workgroupService.createWISEWorkgroup(name, members, run, period);
+				workgroup = wiseWorkgroupService.createWISEWorkgroup(name, members, run, period);
 				
 				/* update run statistics */
 				int maxLoop = 30;  // to ensure that the following while loop gets run at most this many times.
@@ -315,57 +322,5 @@ public class StartProjectController extends AbstractController {
 	    
 		//add a student attendance entry
 		this.studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp, presentUserIds.toString(), absentUserIds.toString());
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-	
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	public void setWorkgroupService(WISEWorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public StudentAttendanceService getStudentAttendanceService() {
-		return studentAttendanceService;
-	}
-
-	/**
-	 * 
-	 * @param studentAttendanceService
-	 */
-	public void setStudentAttendanceService(
-			StudentAttendanceService studentAttendanceService) {
-		this.studentAttendanceService = studentAttendanceService;
-	}
-
-	/**
-	 * @return the wiseProperties
-	 */
-	public Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
 	}
 }

@@ -31,11 +31,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -51,22 +53,21 @@ import org.wise.portal.service.offering.RunService;
  * 
  * @version $Id: $
  */
-public class GradeWorkController extends AbstractController {
+@Controller
+public class GradeWorkController {
 
-	public static final String RUN_ID = "runId";
-	
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	Properties wiseProperties;
-	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+
+	@RequestMapping(value={"/teacher/grading/gradework.html","/teacher/classroomMonitor/classroomMonitor.html"})
+	protected ModelAndView handleRequestInternal(
+			@RequestParam("runId") String runId,
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		String runId = request.getParameter(RUN_ID);
 		Run run = runService.retrieveById(new Long(runId));
 		
 		//get the grading type (step or team)
@@ -114,7 +115,7 @@ public class GradeWorkController extends AbstractController {
 					}
 					
 					ModelAndView modelAndView = new ModelAndView("vle");
-					modelAndView.addObject(RUN_ID, runId);
+					modelAndView.addObject("runId", runId);
 					modelAndView.addObject("run", run);
 					if ("monitor".equals(gradingType)) {
 						modelAndView.addObject("vleurl", getClassroomMonitorUrl);
@@ -130,7 +131,7 @@ public class GradeWorkController extends AbstractController {
 				}
 			} else if( runId != null ) {
 				ModelAndView modelAndView = new ModelAndView();
-				modelAndView.addObject(RUN_ID, runId);
+				modelAndView.addObject("runId", runId);
 				
 				return modelAndView;
 			} else {
@@ -259,19 +260,5 @@ public class GradeWorkController extends AbstractController {
 		}
 		
 		return null;
-	}
-	
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-	
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
 	}
 }

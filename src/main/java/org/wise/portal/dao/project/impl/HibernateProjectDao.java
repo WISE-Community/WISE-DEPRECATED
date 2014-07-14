@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.project.ProjectDao;
@@ -155,6 +155,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	 * @see org.wise.portal.dao.project.ProjectDao#getProjectListByTags(java.util.Set)
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional
 	public List<Project> getProjectListByTagNames(Set<String> tagNames) {
 		String tagString = "";
 		for(String name : tagNames){
@@ -163,7 +164,6 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 		tagString = tagString.substring(0, tagString.length() - 1);
 		
 		String q = "select distinct project from ProjectImpl project inner join project.tags tag with tag.name in (" + tagString + ") ";			
-		
 		List<Project> projects = (List<Project>) this.getHibernateTemplate().find(q);
 		List<Project> result = new ArrayList<Project>();
 		for (Project project : projects) {

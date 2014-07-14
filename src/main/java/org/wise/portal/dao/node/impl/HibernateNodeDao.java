@@ -48,14 +48,13 @@ public class HibernateNodeDao extends AbstractHibernateDao<Node> implements Node
 	 * @param runId
 	 * @return node
 	 */
+	@Transactional(readOnly=true)
 	public Node getNodeByNodeIdAndRunId(String nodeId, String runId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         PersistableDomain result = (PersistableDomain) session.createCriteria(Node.class)
         	.add( Restrictions.eq("nodeId", nodeId))
         	.add( Restrictions.eq("runId", runId)).uniqueResult();
         
-        session.getTransaction().commit();
         return (Node) result;
 	}
 	
@@ -84,11 +83,10 @@ public class HibernateNodeDao extends AbstractHibernateDao<Node> implements Node
 	 * @param runId the run id as a string
 	 * @return a List of Node objects
 	 */
+	@Transactional(readOnly=true)
 	public List<Node> getNodesByNodeIdsAndRunId(List<String> nodeIds, String runId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<Node> result =  session.createCriteria(Node.class).add(Restrictions.eq("runId", runId)).add(createNodeOrCriterion(nodeIds, 0)).list();
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -120,13 +118,12 @@ public class HibernateNodeDao extends AbstractHibernateDao<Node> implements Node
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<Node> getNodesByRunId(String runId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<Node> result = session.createCriteria(Node.class)
         	.add( Restrictions.eq("runId", runId)).list();
         
-        session.getTransaction().commit();
         return result;
 	}
 }

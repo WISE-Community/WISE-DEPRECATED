@@ -25,8 +25,10 @@ package org.wise.portal.presentation.web.controllers.project;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.wiseup.WiseUpService;
@@ -36,19 +38,18 @@ import org.wise.portal.service.wiseup.WiseUpService;
  * @author hirokiterashima
  * @version $Id$
  */
-public class ImportExternalProjectController extends AbstractController {
+@Controller
+@RequestMapping("/project/importexternalproject.html")
+public class ImportExternalProjectController {
 
 	private static final String PROJECT_COMMUNICATOR_ID_PARAM = "projectCommunicatorId";
 
 	private static final String EXTERNAL_ID_PARAM = "externalId";
 	
+	@Autowired
 	private WiseUpService wiseUpService;
 
 
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
@@ -66,9 +67,4 @@ public class ImportExternalProjectController extends AbstractController {
 		//projectService.importProject(Long.valueOf(externalId), projectCommunicatorId);
 		return null;
 	}
-
-	public void setWiseUpService(WiseUpService wiseUpService) {
-		this.wiseUpService = wiseUpService;
-	}
-
 }

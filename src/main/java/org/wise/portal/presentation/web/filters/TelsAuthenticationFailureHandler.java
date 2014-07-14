@@ -38,11 +38,11 @@ import javax.servlet.http.HttpSession;
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaFactory;
 
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.user.UserService;
@@ -56,6 +56,9 @@ public class TelsAuthenticationFailureHandler extends
 
 	private Properties wiseProperties;
 	
+	@Autowired
+	private UserService userService;
+	
 	public static final Integer recentFailedLoginTimeLimit = 15;
 	
 	public static final Integer recentFailedLoginAttemptsLimit = 5;
@@ -65,6 +68,7 @@ public class TelsAuthenticationFailureHandler extends
 
 
 	@Override
+	@Transactional
 	public void onAuthenticationFailure(javax.servlet.http.HttpServletRequest request,
             javax.servlet.http.HttpServletResponse response,
             AuthenticationException exception)
@@ -91,10 +95,6 @@ public class TelsAuthenticationFailureHandler extends
 				userName = extraInformationUserDetails.getUsername();
 			}
 		}
-
-		HttpSession session = request.getSession();
-		ApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
-		UserService userService = (UserService) springContext.getBean("userService");
 
 		//get the user
 		User user = userService.retrieveUserByUsername(userName);
@@ -191,10 +191,6 @@ public class TelsAuthenticationFailureHandler extends
 					userName = extraInformationUserDetails.getUsername();    			
 				}
 			}
-
-			HttpSession session = request.getSession();
-			ApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
-			UserService userService = (UserService) springContext.getBean("userService");
 
 			//get the user
 			User user = userService.retrieveUserByUsername(userName);
@@ -306,6 +302,13 @@ public class TelsAuthenticationFailureHandler extends
 	 */
 	public void setWiseProperties(Properties wiseProperties) {
 		this.wiseProperties = wiseProperties;
+	}
+
+	/**
+	 * @param userService the userService to set
+	 */
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
 
 	/**

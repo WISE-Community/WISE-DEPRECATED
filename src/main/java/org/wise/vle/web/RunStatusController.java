@@ -9,35 +9,30 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.status.RunStatus;
 import org.wise.vle.utils.SecurityUtils;
 
-public class RunStatusController extends AbstractController {
-	private static final long serialVersionUID = 1L;
+@Controller
+@RequestMapping("/runStatus.html")
+public class RunStatusController {
 	
+	@Autowired
 	private VLEService vleService;
-	
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		if (request.getMethod() == AbstractController.METHOD_GET) {
-			return doGet(request, response);
-		} else if (request.getMethod() == AbstractController.METHOD_POST) {
-			return doPost(request, response);
-		}
-		return null;
-	}
 	
 	/**
 	 * Handle the GET requests
 	 * @param request
 	 * @param response
 	 */
+	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -123,6 +118,7 @@ public class RunStatusController extends AbstractController {
 	 * @param request
 	 * @param response
 	 */
+	@RequestMapping(method=RequestMethod.POST)
 	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -179,13 +175,4 @@ public class RunStatusController extends AbstractController {
 		
 		return null;
 	}
-
-	public VLEService getVleService() {
-		return vleService;
-	}
-
-	public void setVleService(VLEService vleService) {
-		this.vleService = vleService;
-	}
-
 }

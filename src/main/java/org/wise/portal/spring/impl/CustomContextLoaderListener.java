@@ -33,7 +33,7 @@ import org.wise.portal.spring.SpringConfiguration;
 
 /**
  * Custom implementation for creating and returning our
- * <code>CustomContextLoader</code>.
+ * <code>WebApplicationContext</code>.
  * 
  * @author Cynick Young
  * 
@@ -43,7 +43,7 @@ import org.wise.portal.spring.SpringConfiguration;
 public class CustomContextLoaderListener extends ContextLoaderListener {
 
 	private static final Log LOGGER = LogFactory
-            .getLog(CustomContextLoader.class);
+            .getLog(CustomContextLoaderListener.class);
 
     /**
      * Name of servlet context parameter that specifies the implementation class
@@ -77,8 +77,7 @@ public class CustomContextLoaderListener extends ContextLoaderListener {
                 .instantiateClass(contextClass);
         webApplicationContext.setServletContext(servletContext);
 
-        String configClass = servletContext
-                .getInitParameter(CONFIG_CLASS_PARAM);
+        String configClass = servletContext.getInitParameter(CONFIG_CLASS_PARAM);
         if (configClass != null) {
             try {
                 SpringConfiguration springConfig = (SpringConfiguration) BeanUtils

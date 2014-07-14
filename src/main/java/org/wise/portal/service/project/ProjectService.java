@@ -316,7 +316,6 @@ public interface ProjectService {
 	 * @param Set<String> - set of tagNames
 	 * @return List<Project> - list of projects
 	 */
-	@Transactional
 	public List<Project> getProjectListByTagNames(Set<String> tagNames);
 	
 	/**

@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +55,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     
     protected AclService<Workgroup> aclService;
     
+    @Autowired
     protected UserService userService;
 
     /**

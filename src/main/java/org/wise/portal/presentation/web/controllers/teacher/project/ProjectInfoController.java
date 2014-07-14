@@ -29,8 +29,11 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.service.offering.RunService;
@@ -42,43 +45,34 @@ import org.wise.portal.service.project.ProjectService;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class ProjectInfoController extends AbstractController {
+@Controller
+public class ProjectInfoController {
 
-	protected static final String PROJECTID_PARAM_NAME = "projectId";
+	@Autowired
+	private ProjectService projectService;
+	
+	@Autowired
+	private RunService runService;
+	
+	@Autowired
+	private Properties wiseProperties;
 
-	protected static final String PROJECT_PARAM_NAME = "project";
-	
-	protected static final String USAGE = "usage";
-	
 	// path to project thumb image relative to project folder
 	private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
-	private ProjectService projectService;
-	
-	private RunService runService;
-	
-	private Properties wiseProperties;
-	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping("/teacher/projects/projectinfo.html")
+	protected ModelAndView handleRequestInternal(
+			@RequestParam("projectId") String projectIdStr,
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		String projectIdStr = request.getParameter(PROJECTID_PARAM_NAME);
+		
 		Project project = projectService.getById(projectIdStr);
-		//User user = ControllerUtil.getSignedInUser();
-		Set<String> telslibrary = new TreeSet<String>();
-		telslibrary.add("library");
 
 		if(project != null){
-			//if(this.projectService.canReadProject(project, user)
-				//|| this.projectService.canAuthorProject(project, user)
-				//||	project.hasTags(telslibrary)){
 				ModelAndView modelAndView = new ModelAndView();
-				modelAndView.addObject(PROJECT_PARAM_NAME, project);
+				modelAndView.addObject("project", project);
 				Integer usage = this.runService.getProjectUsage((Long)project.getId());
-				modelAndView.addObject(USAGE, usage);
+				modelAndView.addObject("usage", usage);
 				
 				//get the command
 				String command = request.getParameter("command");
@@ -105,33 +99,9 @@ public class ProjectInfoController extends AbstractController {
 				}
 				
 				return modelAndView;
-			//} else {
-				//return new ModelAndView(new RedirectView("../../accessdenied.html"));
-			//}
 		} else {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Cannot determine project to retrieve info for.");
 			return null;
 		}
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
 	}
 }

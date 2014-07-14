@@ -33,7 +33,6 @@ import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.offering.RunService;
 
@@ -104,19 +103,4 @@ public interface StudentService {
 	 * @param run <code>Run</code> run to lookup
 	 */
 	public StudentRunInfo getStudentRunInfo(User studentUser, Run run);
-	
-	/**
-	 * @param runService <code>RunService</code> to set
-	 */
-	public void setRunService(RunService runService);
-
-	/**
-	 * @param groupService <code>GroupService</code> to set
-	 */
-	public void setGroupService(GroupService groupService);
-	
-	/**
-	 * @param aclService <code>AclService</code> to set
-	 */
-	public void setAclService(AclService<Run> aclService);
 }

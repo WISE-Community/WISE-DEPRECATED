@@ -20,7 +20,7 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.presentation.web.controllers;
+package org.wise.portal.presentation.web.controllers.teacher;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,19 +33,22 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.message.Message;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.message.MessageService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.portal.service.workgroup.WISEWorkgroupService;
 
 /**
  * Controller for TELS teacher's index page
@@ -53,11 +56,27 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class TeacherIndexController extends AbstractController {
+@Controller
+@RequestMapping("/teacher/index.html")
+public class TeacherIndexController {
+	
+	@Autowired
+	private RunService runService;
+
+	@Autowired
+	private MessageService messageService;
+
+	@Autowired
+	private Properties wiseProperties;
+
+	@Autowired
+	private ProjectService projectService;
+
+	@Autowired
+	private WISEWorkgroupService wiseWorkgroupService;
+
 	
 	private final static String CURRENT_DATE = "current_date";
-	
-	private final static String VIEW_NAME = "teacher/index";
 	
 	protected final static String RUN_LIST = "run_list";
 
@@ -67,16 +86,6 @@ public class TeacherIndexController extends AbstractController {
 
 	protected static final String GRADING_ENABLED = "GRADING_ENABLED";
 	
-	private RunService runService;
-
-	private MessageService messageService;
-
-	private Properties wiseProperties;
-
-	private ProjectService projectService;
-
-	private WorkgroupService workgroupService;
-
 	protected final static String IS_REAL_TIME_ENABLED = "isRealTimeEnabled";
 
 	protected final static String CURRENT_RUN_LIST_KEY = "current_run_list";
@@ -98,13 +107,12 @@ public class TeacherIndexController extends AbstractController {
         }
 	};
 	
-	/** 
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
 	@SuppressWarnings("unchecked")
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	@RequestMapping(method=RequestMethod.GET)
+	protected String handleGET(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			ModelMap modelMap) throws Exception {
 		
 		boolean isRealTimeEnabled = false;
 		
@@ -118,18 +126,9 @@ public class TeacherIndexController extends AbstractController {
 		if( gradingParam == null )
 			gradingParam = FALSE;
 
-        ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
-    	ControllerUtil.addUserToModelAndView(request, modelAndView);
-    	
 		User user = ControllerUtil.getSignedInUser();
-    	//List<Run> runList = runService.getRunList();
-    	//List<Run> run_list = new ArrayList<Run>();
-    	
-    	//for(Run run : runList) {
-    		//if(!run.isEnded() && run.getOwners().contains(user)) {
-    		//	run_list.add(run);
-    		//}
-    	//}
+
+		modelMap.put("user", user);
 		
 		List<Run> runList = this.runService.getRunListByOwner(user);
 		runList.addAll(this.runService.getRunListBySharedOwner(user));
@@ -145,20 +144,14 @@ public class TeacherIndexController extends AbstractController {
 		}
 		// end temporary code
 		List<Run> current_run_list1 = new ArrayList<Run>();
-		//List<Run> ended_run_list = new ArrayList<Run>();
 		Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
 		Integer count = 0;
 		for (Run run : runList2) {
 			
-			List<Workgroup> workgroupList = this.workgroupService
+			List<Workgroup> workgroupList = this.wiseWorkgroupService
 					.getWorkgroupListByOfferingAndUser(run, user);
 	
 			workgroupMap.put(run, workgroupList);
-			/*if (run.isEnded()) {
-				ended_run_list.add(run);
-			} else {
-				current_run_list.add(run);
-			}*/
 			if (!run.isEnded()) {
 				current_run_list1.add(run);
 				Project project = projectService.getById(run.getProject().getId());
@@ -174,61 +167,26 @@ public class TeacherIndexController extends AbstractController {
 		} else {
 			current_run_list = current_run_list1;
 		}
-		//Collections.sort(ended_run_list, CREATED_ORDER);
     	
-		modelAndView.addObject(CURRENT_RUN_LIST_KEY, current_run_list);
-		modelAndView.addObject(CURRENT_RUN_LIST_KEY2, current_run_list1);
-    	modelAndView.addObject(CURRENT_DATE, null);
-    	modelAndView.addObject(GRADING_PARAM, gradingParam);
-		modelAndView.addObject(IS_REAL_TIME_ENABLED, isRealTimeEnabled);
-		modelAndView.addObject(WORKGROUP_MAP_KEY, workgroupMap);
+		modelMap.put(CURRENT_RUN_LIST_KEY, current_run_list);
+		modelMap.put(CURRENT_RUN_LIST_KEY2, current_run_list1);
+    	modelMap.put(CURRENT_DATE, null);
+    	modelMap.put(GRADING_PARAM, gradingParam);
+		modelMap.put(IS_REAL_TIME_ENABLED, isRealTimeEnabled);
+		modelMap.put(WORKGROUP_MAP_KEY, workgroupMap);
     	
     	// retrieve all unread messages
     	List<Message> unreadMessages = messageService.retrieveUnreadMessages(user);
-    	modelAndView.addObject(UNREAD_MESSAGES, unreadMessages);
+    	modelMap.put(UNREAD_MESSAGES, unreadMessages);
     	
+    	// if discourse is enabled for this WISE instance, add the link to the model
+    	// so the view can display it
     	String discourseURL = wiseProperties.getProperty("discourse_url");
     	if (discourseURL != null && !discourseURL.isEmpty()) {
     		String discourseSSOLoginURL = discourseURL + "/session/sso";
-    		modelAndView.addObject("discourseSSOLoginURL", discourseSSOLoginURL);
+    		modelMap.put("discourseSSOLoginURL", discourseSSOLoginURL);
     	}
     	
-        return modelAndView;
+        return "teacher/index";
 	}
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-	
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-	/**
-	 * @param messageService the messageService to set
-	 */
-	public void setMessageService(MessageService messageService) {
-		this.messageService = messageService;
-	}
-	
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-	
-	/**
-	 * @param workgroupService
-	 *            the workgroupService to set
-	 */
-	@Required
-	public void setWorkgroupService(WorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-	
 }

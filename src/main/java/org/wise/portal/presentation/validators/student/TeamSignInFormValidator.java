@@ -23,6 +23,7 @@
 package org.wise.portal.presentation.validators.student;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.SystemWideSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -43,7 +44,9 @@ import org.wise.portal.service.user.UserService;
  */
 public class TeamSignInFormValidator implements Validator {
 
+	@Autowired
 	private UserService userService;
+	
 	private SystemWideSaltSource systemSaltSource;
 	
 	/**

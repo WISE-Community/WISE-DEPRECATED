@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.servlet.ModelAndView;
@@ -77,6 +78,8 @@ public class BridgeController extends AbstractController {
 	private WISEWorkgroupService workgroupService;
 	private RunService runService;
 	private Properties wiseProperties;
+	
+	@Autowired
 	private StudentAttendanceService studentAttendanceService;
 
 	/**

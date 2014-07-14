@@ -25,40 +25,29 @@ package org.wise.portal.presentation.web.controllers;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.spring.impl.TelsSimpleMappingExceptionResolver;
 
 /**
  * @author patrick lawler
  * @version $Id:$
  */
-public class OutsideErrorController extends AbstractController{
+@Controller
+public class OutsideErrorController {
 
+	@Autowired
 	private TelsSimpleMappingExceptionResolver exceptionResolver;
 	
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping("/errors/outsideerror.html")
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		String msg = request.getParameter("msg");
 		Exception ex = new Exception(msg);
 		
 		return exceptionResolver.resolveException(request, response, null, ex);
 	}
-
-	/**
-	 * @return the exceptionResolver
-	 */
-	public TelsSimpleMappingExceptionResolver getExceptionResolver() {
-		return exceptionResolver;
-	}
-
-	/**
-	 * @param exceptionResolver the exceptionResolver to set
-	 */
-	public void setExceptionResolver(
-			TelsSimpleMappingExceptionResolver exceptionResolver) {
-		this.exceptionResolver = exceptionResolver;
-	}
-
 }

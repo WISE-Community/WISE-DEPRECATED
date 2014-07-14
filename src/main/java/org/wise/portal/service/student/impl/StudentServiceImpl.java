@@ -27,7 +27,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
@@ -38,30 +39,27 @@ import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.student.StudentService;
-import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;
-import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * @author Hiroki Terashima
  * @version $Id$
  */
+@Service
 public class StudentServiceImpl implements StudentService {
 
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private GroupService groupService;
 	
-	private WorkgroupService workgroupService;
+	@Autowired
+	private WISEWorkgroupService wiseWorkgroupService;
 	
-    private AclService<Run> aclService;
-    
-    private UserService userService;
-
 	/**
 	 * @see org.wise.portal.service.student.StudentService#addStudentToRun(net.sf.sail.webapp.domain.User, org.wise.portal.domain.impl.Projectcode)
 	 */
@@ -75,7 +73,6 @@ public class StudentServiceImpl implements StudentService {
 
 		Run run = this.runService.retrieveRunByRuncode(runcode);
 		if (!run.isStudentAssociatedToThisRun(studentUser)) {
-			// this.aclService.addPermission(run, BasePermission.READ); TODO HT: uncomment when this is figured out
 			Group period = run.getPeriodByName(periodName);
 			Long groupId = period.getId();
 			this.groupService.addMember(groupId, studentUser);
@@ -85,7 +82,7 @@ public class StudentServiceImpl implements StudentService {
 				String name = "Workgroup for user: " + studentUser.getUserDetails().getUsername();
 				Set<User> members = new HashSet<User>();
 				members.add(studentUser);
-				WISEWorkgroup workgroup = ((WISEWorkgroupService)workgroupService).createWISEWorkgroup(name, members, run, period);
+				WISEWorkgroup workgroup = ((WISEWorkgroupService)wiseWorkgroupService).createWISEWorkgroup(name, members, run, period);
 			}
 		} else {
 			throw new StudentUserAlreadyAssociatedWithRunException(studentUser, run);
@@ -133,7 +130,7 @@ public class StudentServiceImpl implements StudentService {
         	if (workgroup != null) {
         		Set<User> membersToRemoveFromWorkgroup = new HashSet<User>();
         		membersToRemoveFromWorkgroup.add(studentUser);
-        		workgroupService.removeMembers(workgroup, membersToRemoveFromWorkgroup);
+        		wiseWorkgroupService.removeMembers(workgroup, membersToRemoveFromWorkgroup);
         	}
 		}
 	}
@@ -148,47 +145,12 @@ public class StudentServiceImpl implements StudentService {
 		studentRunInfo.setGroup(run.getPeriodOfStudent(studentUser));
 		
 		List<Workgroup> workgroupsForThisRun = 
-			workgroupService.getWorkgroupListByOfferingAndUser(run, studentUser);
+			wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, studentUser);
 		if (workgroupsForThisRun.size() > 0) {
 			WISEWorkgroup workgroupForThisRun = (WISEWorkgroup) workgroupsForThisRun.get(0);			
 			studentRunInfo.setWorkgroup(workgroupForThisRun);
 		} 
 		
 		return studentRunInfo;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @param groupService the groupService to set
-	 */
-	public void setGroupService(GroupService groupService) {
-		this.groupService = groupService;
-	}
-	
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	public void setWorkgroupService(WorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
-	/**
-	 * @param aclService the aclService to set
-	 */
-	public void setAclService(AclService<Run> aclService) {
-		this.aclService = aclService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
 	}
 }
