@@ -137,16 +137,6 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>wiseWebSocket</servlet-name>
-		<servlet-class>org.wise.portal.service.websocket.WISEWebSocketServlet
-		</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>wiseWebSocket</servlet-name>
-		<url-pattern>/websocket.html</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
 		<servlet-name>rApache</servlet-name>
 		<servlet-class>org.wise.vle.web.RApacheController
 		</servlet-class>
