@@ -95,7 +95,7 @@ public class WISEWebSocketServlet extends WebSocketServlet {
     		
     		//get the services
     		runService = (RunService) ctx.getBean("runService");
-    		workgroupService = (WorkgroupService) ctx.getBean("wiseWorkgroupService");
+    		workgroupService = (WorkgroupService) ctx.getBean("workgroupService");
     		vleService = (VLEService) ctx.getBean("vleService");
     		wiseProperties = (Properties) ctx.getBean("wiseProperties");
     		

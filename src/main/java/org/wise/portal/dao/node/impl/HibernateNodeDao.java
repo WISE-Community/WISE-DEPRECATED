@@ -2,10 +2,10 @@ package org.wise.portal.dao.node.impl;
 
 import java.util.List;
 
-
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -13,7 +13,7 @@ import org.wise.portal.dao.node.NodeDao;
 import org.wise.vle.domain.PersistableDomain;
 import org.wise.vle.domain.node.Node;
 
-
+@Repository
 public class HibernateNodeDao extends AbstractHibernateDao<Node> implements NodeDao<Node> {
 
 	@Override

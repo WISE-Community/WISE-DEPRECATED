@@ -21,9 +21,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.run.Offering;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
@@ -186,4 +189,17 @@ public interface WorkgroupService {
      * 
      */
     public Workgroup updateWorkgroupMembership(ChangeWorkgroupParameters params)throws Exception;
+    
+	/**
+	 * Creates a <code>WISEWorkgroup</code> with given parameters
+	 * 
+	 * @param name
+	 * @param members
+	 * @param run
+	 * @param period
+	 * @return the created <code>WISEWorkgroup</code>
+	 * @throws ObjectNotFoundException when the curnitmap could not be
+	 *     retrieved for the <code>Run</code>
+	 */
+	public WISEWorkgroup createWISEWorkgroup(String name, Set<User> members, Run run, Group period) throws ObjectNotFoundException;
 }

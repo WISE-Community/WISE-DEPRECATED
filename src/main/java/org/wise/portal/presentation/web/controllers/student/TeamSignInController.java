@@ -63,7 +63,7 @@ import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller for handling team sign-ins before students start the project. The first user
@@ -84,7 +84,7 @@ public class TeamSignInController {
 	private UserService userService;
 	
 	@Autowired
-	private WISEWorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 	
 	@Autowired
 	private RunService runService;
@@ -157,7 +157,7 @@ public class TeamSignInController {
 		 * get the workgroups for this run for user1, they should
 		 * usually only be in 1 workgroup
 		 */
-		List<Workgroup> workgroups = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user1);
+		List<Workgroup> workgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, user1);
 
 		//get the members in the workgroup
 		Set<User> membersInWorkgroup = new HashSet<User>();
@@ -181,7 +181,7 @@ public class TeamSignInController {
 				membersLoggedIn.add(user);
 				
 				workgroupname += user.getUserDetails().getUsername();
-				workgroups.addAll(wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user));
+				workgroups.addAll(workgroupService.getWorkgroupListByOfferingAndUser(run, user));
 				
 				//add user3 to the users that are present
 				presentUserIds.put(user.getId());
@@ -191,16 +191,16 @@ public class TeamSignInController {
 		Workgroup workgroup = null;
 		Group period = run.getPeriodOfStudent(user1);
 		if (workgroups.size() == 0) {
-			workgroup = wiseWorkgroupService.createWISEWorkgroup(workgroupname, membersLoggedIn, run, period);
+			workgroup = workgroupService.createWISEWorkgroup(workgroupname, membersLoggedIn, run, period);
 		} else if (workgroups.size() == 1) {
 			workgroup = workgroups.get(0);
-			wiseWorkgroupService.addMembers(workgroup, membersLoggedIn);
+			workgroupService.addMembers(workgroup, membersLoggedIn);
 		} else {
 			// more than one user has created a workgroup for this run.
 			// TODO HT gather requirements and find out what should be done in this case
 			// for now, just choose one
 			workgroup = workgroups.get(0);
-			wiseWorkgroupService.addMembers(workgroup, membersLoggedIn);
+			workgroupService.addMembers(workgroup, membersLoggedIn);
 		}
 		
 		/*

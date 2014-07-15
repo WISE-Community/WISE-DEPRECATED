@@ -20,8 +20,6 @@ package org.wise.portal.dao.impl;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -38,6 +36,11 @@ import org.wise.portal.dao.SimpleDao;
 public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
 		implements SimpleDao<T> {
 
+	@Autowired
+	public void init(SessionFactory factory) {
+	    setSessionFactory(factory);
+	}
+	
 	/**
 	 * @see org.wise.portal.dao.SimpleDao#delete(java.lang.Object)
 	 */

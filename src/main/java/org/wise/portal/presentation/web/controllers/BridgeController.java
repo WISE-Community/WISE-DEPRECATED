@@ -63,7 +63,7 @@ import org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilt
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller to bridge GET/POST access to the vlewrapper webapp. Validates
@@ -75,7 +75,9 @@ import org.wise.portal.service.workgroup.WISEWorkgroupService;
  */
 public class BridgeController extends AbstractController {
 
-	private WISEWorkgroupService workgroupService;
+	@Autowired
+	private WorkgroupService workgroupService;
+	
 	private RunService runService;
 	private Properties wiseProperties;
 	
@@ -1096,20 +1098,6 @@ public class BridgeController extends AbstractController {
 		String projectMetaDataJSONString = metadata.toJSONString();
 		
 		request.setAttribute("projectMetaData", projectMetaDataJSONString);
-	}
-	
-	/**
-	 * @return the workgroupService
-	 */
-	public WISEWorkgroupService getWorkgroupService() {
-		return workgroupService;
-	}
-
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	public void setWorkgroupService(WISEWorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
 	}
 	
 	public RunService getRunService() {

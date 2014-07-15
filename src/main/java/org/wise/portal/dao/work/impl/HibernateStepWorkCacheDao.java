@@ -3,6 +3,7 @@ package org.wise.portal.dao.work.impl;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -10,7 +11,7 @@ import org.wise.portal.dao.work.StepWorkCacheDao;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWorkCache;
 
-
+@Repository
 public class HibernateStepWorkCacheDao extends AbstractHibernateDao<StepWorkCache> implements StepWorkCacheDao<StepWorkCache> {
 
 	@Override

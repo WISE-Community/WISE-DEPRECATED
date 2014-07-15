@@ -48,7 +48,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.message.MessageService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller for TELS teacher's index page
@@ -73,7 +73,7 @@ public class TeacherIndexController {
 	private ProjectService projectService;
 
 	@Autowired
-	private WISEWorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 
 	
 	private final static String CURRENT_DATE = "current_date";
@@ -148,7 +148,7 @@ public class TeacherIndexController {
 		Integer count = 0;
 		for (Run run : runList2) {
 			
-			List<Workgroup> workgroupList = this.wiseWorkgroupService
+			List<Workgroup> workgroupList = this.workgroupService
 					.getWorkgroupListByOfferingAndUser(run, user);
 	
 			workgroupMap.put(run, workgroupList);

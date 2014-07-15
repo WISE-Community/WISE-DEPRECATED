@@ -20,6 +20,7 @@ package org.wise.portal.dao.authentication.impl;
 
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.security.acls.model.ObjectIdentity;
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.authentication.AclTargetObjectIdentityDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.authentication.MutableAclTargetObjectIdentity;

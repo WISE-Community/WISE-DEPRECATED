@@ -69,9 +69,6 @@ public class RemoveStudentFromRunController {
 	private UserService userService;
 	
 	@Autowired
-	private WorkgroupService wiseWorkgroupService;
-	
-	@Autowired
 	protected RemoveStudentFromRunParametersValidator removeStudentFromRunParametersValidator;
 	
 	//the path to this form view

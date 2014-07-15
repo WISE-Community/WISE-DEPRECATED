@@ -24,18 +24,6 @@ package org.wise.portal.service.vle;
 
 import java.util.List;
 
-import org.wise.portal.dao.annotation.AnnotationDao;
-import org.wise.portal.dao.crater.CRaterRequestDao;
-import org.wise.portal.dao.ideabasket.IdeaBasketDao;
-import org.wise.portal.dao.node.NodeDao;
-import org.wise.portal.dao.peerreview.PeerReviewGateDao;
-import org.wise.portal.dao.peerreview.PeerReviewWorkDao;
-import org.wise.portal.dao.statistics.VLEStatisticsDao;
-import org.wise.portal.dao.status.RunStatusDao;
-import org.wise.portal.dao.status.StudentStatusDao;
-import org.wise.portal.dao.userinfo.UserInfoDao;
-import org.wise.portal.dao.work.StepWorkCacheDao;
-import org.wise.portal.dao.work.StepWorkDao;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
@@ -56,32 +44,6 @@ import org.wise.vle.domain.work.StepWorkCache;
  */
 public interface VLEService {
 
-	//setters
-	
-	public void setUserInfoDao(UserInfoDao<UserInfo> userInfoDao);
-	
-	public void setAnnotationDao(AnnotationDao<Annotation> annotationDao);
-	
-	public void setPeerReviewWorkDao(PeerReviewWorkDao<PeerReviewWork> peerReviewWorkDao);
-	
-	public void setPeerReviewGateDao(PeerReviewGateDao<PeerReviewGate> peerReviewGateDao);
-
-	public void setNodeDao(NodeDao<Node> nodeDao);
-	
-	public void setStepWorkDao(StepWorkDao<StepWork> stepWorkDao);
-	
-	public void setStepWorkCacheDao(StepWorkCacheDao<StepWorkCache> stepWorkCacheDao);
-	
-	public void setVleStatisticsDao(VLEStatisticsDao<VLEStatistics> vleStatisticsDao);
-	
-	public void setStudentStatusDao(StudentStatusDao<StudentStatus> studentStatusDao);
-	
-	public void setRunStatusDao(RunStatusDao<RunStatus> runStatusDao);
-	
-	public void setIdeaBasketDao(IdeaBasketDao<IdeaBasket> ideaBasketDao);
-	
-	public void setCRaterRequestDao(CRaterRequestDao<CRaterRequest> cRaterRequestDao);
-	
 	//UserInfo functions
 	
 	public UserInfo getUserInfoById(Long id);

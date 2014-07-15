@@ -24,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.user.User;
@@ -36,6 +37,7 @@ import org.wise.portal.domain.user.impl.UserImpl;
  * @version $Id$
  * 
  */
+@Repository
 public class HibernateUserDao extends AbstractHibernateDao<User> implements
         UserDao<User> {
 

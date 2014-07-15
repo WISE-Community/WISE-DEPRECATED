@@ -43,7 +43,7 @@ import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller for making changes to student workgroups
@@ -53,7 +53,7 @@ import org.wise.portal.service.workgroup.WISEWorkgroupService;
 public class SubmitWorkgroupChangesController {
 
 	@Autowired
-	private WISEWorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 	
 	@Autowired
 	private RunService runService;
@@ -95,7 +95,7 @@ public class SubmitWorkgroupChangesController {
 			params.setPeriodId(Long.valueOf(periodId));
 			params.setStudent(userService.retrieveById(Long.valueOf(userId)));
 			if (!workgroupFromId.equals("groupless")) {
-				params.setWorkgroupFrom(wiseWorkgroupService.retrieveById(Long.valueOf(workgroupFromId)));
+				params.setWorkgroupFrom(workgroupService.retrieveById(Long.valueOf(workgroupFromId)));
 			}
 			if (!workgroupToId.equals("groupless")) {
 				Long workgroupToIdLong = Long.valueOf(workgroupToId);
@@ -110,11 +110,11 @@ public class SubmitWorkgroupChangesController {
 					newWorkgroupMap.put(workgroupToIdLong, newWGParams);
 					continue;
 				}
-				params.setWorkgroupTo(wiseWorkgroupService.retrieveById(workgroupToIdLong));
+				params.setWorkgroupTo(workgroupService.retrieveById(workgroupToIdLong));
 				params.setWorkgroupToId(Long.valueOf(workgroupToId));
 			}
 			try {
-				wiseWorkgroupService.updateWorkgroupMembership(params);
+				workgroupService.updateWorkgroupMembership(params);
 			} catch (Exception e) {
 				throw e;
 			}
@@ -132,12 +132,12 @@ public class SubmitWorkgroupChangesController {
 			Group period = groupService.retrieveById(params.getPeriodId());
 			params.setWorkgroupToId(new Long(-1));  // to indicate that we want to create a new workgroup
 			WISEWorkgroup newWorkgroup = (WISEWorkgroup) 
-				wiseWorkgroupService.updateWorkgroupMembership(params);
+				workgroupService.updateWorkgroupMembership(params);
 			for (int j=1; j<newWGList.size();j++) {
 				params = newWGList.get(j);
 				params.setWorkgroupTo(newWorkgroup);
 				params.setWorkgroupToId(newWorkgroup.getId());
-				wiseWorkgroupService.updateWorkgroupMembership(params);
+				workgroupService.updateWorkgroupMembership(params);
 			}
 		}
 		response.getWriter().print(tabIndex);

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -43,6 +44,7 @@ import org.wise.portal.domain.user.User;
  *
  * @version $Id$
  */
+@Repository
 public class HibernateProjectDao extends AbstractHibernateDao<Project> implements
 		ProjectDao<Project> {
 	

@@ -5,12 +5,13 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.attendance.StudentAttendanceDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.attendance.StudentAttendance;
 
-
+@Repository
 public class HibernateStudentAttendanceDao extends AbstractHibernateDao<StudentAttendance> implements StudentAttendanceDao<StudentAttendance> {
 
 	/**

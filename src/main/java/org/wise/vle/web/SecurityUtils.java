@@ -25,7 +25,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Utility class mostly for checking permissions (authorization) to access certain resources
@@ -36,7 +36,7 @@ import org.wise.portal.service.workgroup.WISEWorkgroupService;
 public final class SecurityUtils {
 
 	@Autowired
-	private static WISEWorkgroupService wiseWorkgroupService;
+	private static WorkgroupService workgroupService;
 	
 	@Autowired
 	private static RunService runService;
@@ -51,8 +51,8 @@ public final class SecurityUtils {
 	}
 	
 	@Autowired
-	public void setWISEWorkgroupService(WISEWorkgroupService wiseWorkgroupService){
-		SecurityUtils.wiseWorkgroupService = wiseWorkgroupService;
+	public void setWorkgroupService(WorkgroupService workgroupService){
+		SecurityUtils.workgroupService = workgroupService;
 	}
 
 
@@ -376,7 +376,7 @@ public final class SecurityUtils {
 		
 		if(user != null && workgroupId != null) {
 			//get all the workgroups this user is in
-			List<Workgroup> workgroupsForUser = SecurityUtils.wiseWorkgroupService.getWorkgroupsForUser(user);
+			List<Workgroup> workgroupsForUser = SecurityUtils.workgroupService.getWorkgroupsForUser(user);
 			
 			Iterator<Workgroup> workgroupsForUserIterator = workgroupsForUser.iterator();
 			

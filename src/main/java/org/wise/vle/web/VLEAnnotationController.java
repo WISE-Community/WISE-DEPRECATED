@@ -33,7 +33,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.run.RunUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
@@ -60,7 +60,7 @@ public class VLEAnnotationController {
 	private RunService runService;
 	
 	@Autowired
-	private WISEWorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 	
 	/**
 	 * Handle GETing of Annotations.
@@ -215,7 +215,7 @@ public class VLEAnnotationController {
 				}
 				
 				//get the classmate user infos
-				JSONArray classmateUserInfos = RunUtil.getClassmateUserInfos(run, wiseWorkgroupService, runService);
+				JSONArray classmateUserInfos = RunUtil.getClassmateUserInfos(run, workgroupService, runService);
 				
 				//loop through all the classmate user infos
 				for(int x=0; x<classmateUserInfos.length(); x++) {

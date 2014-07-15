@@ -4,13 +4,14 @@ package org.wise.portal.dao.status.impl;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.status.RunStatusDao;
 import org.wise.vle.domain.status.RunStatus;
 
-
+@Repository
 public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus> implements RunStatusDao<RunStatus> {
 
 	@Override

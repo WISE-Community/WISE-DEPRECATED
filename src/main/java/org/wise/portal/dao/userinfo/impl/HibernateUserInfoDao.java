@@ -32,6 +32,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -39,11 +40,11 @@ import org.wise.portal.dao.userinfo.UserInfoDao;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 
-
 /**
  * @author h
  * @version $Id:$
  */
+@Repository
 public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> implements UserInfoDao<UserInfo>{
 
 	@Override

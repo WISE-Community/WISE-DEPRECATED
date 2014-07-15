@@ -62,7 +62,7 @@ import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller for handling requests to grant/modify permissions on
@@ -82,7 +82,7 @@ public class ShareProjectRunController {
 	private RunService runService;
 	
 	@Autowired
-	private WISEWorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 
 	@Autowired
 	private UserService userService;
@@ -284,7 +284,7 @@ public class ShareProjectRunController {
 					User sharedOwner = userService.retrieveUserByUsername(sharedOwnerUsername);
 					Set<User> sharedOwners = new HashSet<User>();
 					sharedOwners.add(sharedOwner);
-					wiseWorkgroupService.createWISEWorkgroup("teacher", sharedOwners, run, null);			
+					workgroupService.createWISEWorkgroup("teacher", sharedOwners, run, null);			
 					// only send email if this is a new shared owner
 					if (newSharedOwner) {
 						Locale locale = request.getLocale();

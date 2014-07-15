@@ -20,6 +20,7 @@ package org.wise.portal.dao.authentication.impl;
 import java.util.List;
 
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.authentication.UserDetailsDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.authentication.MutableUserDetails;
@@ -34,6 +35,7 @@ import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
  * @version $Id$
  * 
  */
+@Repository
 public class HibernateUserDetailsDao extends
         AbstractHibernateDao<MutableUserDetails> implements
         UserDetailsDao<MutableUserDetails> {

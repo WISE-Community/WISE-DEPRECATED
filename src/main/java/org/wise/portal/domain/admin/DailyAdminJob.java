@@ -49,16 +49,22 @@ public class DailyAdminJob {
 
 	private RunDao<Run> runDao;
 	
+	@Autowired
 	private UserDao<User> userDao;
 	
+	@Autowired
 	private ProjectDao<Project> projectDao;
 	
+	@Autowired
 	private PortalStatisticsDao<PortalStatistics> portalStatisticsDao;
 	
+	@Autowired
 	private VLEService vleService;
 	
+	@Autowired
 	private Properties wiseProperties;
 	
+	@Autowired
 	private CRaterRequestDao<CRaterRequest> cRaterRequestDao;
 	
 	private boolean DEBUG = false;
@@ -612,55 +618,7 @@ public class DailyAdminJob {
 	public void setRunDao(RunDao<Run> runDao) {
 		this.runDao = runDao;
 	}
-	
-	/**
-	 * @param userDao the userDao to set
-	 */
-	public void setUserDao(UserDao<User> userDao) {
-		this.userDao = userDao;
-	}
-	
-	/**
-	 * 
-	 * @param projectDao the projectDao to set
-	 */
-	public void setProjectDao(ProjectDao<Project> projectDao) {
-		this.projectDao = projectDao;
-	}
-	
-	/**
-	 * 
-	 * @param portalStatisticsDao
-	 */
-	public void setPortalStatisticsDao(
-			PortalStatisticsDao<PortalStatistics> portalStatisticsDao) {
-		this.portalStatisticsDao = portalStatisticsDao;
-	}
 
-	public VLEService getVleService() {
-		return vleService;
-	}
-
-	public void setVleService(VLEService vleService) {
-		this.vleService = vleService;
-	}
-
-	public Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	public CRaterRequestDao<CRaterRequest> getcRaterRequestDao() {
-		return cRaterRequestDao;
-	}
-
-	public void setcRaterRequestDao(CRaterRequestDao<CRaterRequest> cRaterRequestDao) {
-		this.cRaterRequestDao = cRaterRequestDao;
-	}
-	
 	/**
 	 * @param yesterday the yesterday to set
 	 */

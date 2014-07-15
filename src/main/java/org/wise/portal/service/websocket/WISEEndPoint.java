@@ -53,7 +53,7 @@ public class WISEEndPoint extends Endpoint {
     
     //the workgroup service
 	@Autowired
-    private WorkgroupService wiseWorkgroupService;
+    private WorkgroupService workgroupService;
     
     //the vle service
 	@Autowired
@@ -886,7 +886,7 @@ public class WISEEndPoint extends Endpoint {
     		
     		try {
     			//get the workgroup
-    			Workgroup workgroup = wiseWorkgroupService.retrieveById(workgroupId);
+    			Workgroup workgroup = workgroupService.retrieveById(workgroupId);
     			
     			//get the members in the workgroup
     			Set<User> members = workgroup.getMembers();
@@ -1059,7 +1059,7 @@ public class WISEEndPoint extends Endpoint {
 				//check if the user is in the run
 				if (run.isStudentAssociatedToThisRun(user)) {
 					//get the workgroup
-					Workgroup workgroup = wiseWorkgroupService.retrieveById(workgroupId);
+					Workgroup workgroup = workgroupService.retrieveById(workgroupId);
 					
 					//check if the user is in the workgroup
 					if(workgroup.getMembers().contains(user)) {

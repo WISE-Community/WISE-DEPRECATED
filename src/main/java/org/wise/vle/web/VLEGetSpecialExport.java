@@ -42,7 +42,7 @@ import org.wise.portal.presentation.web.controllers.run.RunUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.utils.FileManager;
@@ -60,7 +60,7 @@ public class VLEGetSpecialExport {
 	private RunService runService;
 	
 	@Autowired
-	private WISEWorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 	
 	@Autowired
 	private StudentAttendanceService studentAttendanceService;
@@ -284,13 +284,13 @@ public class VLEGetSpecialExport {
 		String projectPath = curriculumBaseDir + rawProjectUrl;
 		
 		//get the classmate user infos
-		JSONArray classmateUserInfosJSONArray = RunUtil.getClassmateUserInfos(run, wiseWorkgroupService, runService);
+		JSONArray classmateUserInfosJSONArray = RunUtil.getClassmateUserInfos(run, workgroupService, runService);
 		
 		//get the teacher info
-		teacherUserInfoJSONObject = RunUtil.getTeacherUserInfo(run, wiseWorkgroupService);
+		teacherUserInfoJSONObject = RunUtil.getTeacherUserInfo(run, workgroupService);
 		
 		//get the shared teacher infos
-		JSONArray sharedTeacherUserInfosJSONArray = RunUtil.getSharedTeacherUserInfos(run, wiseWorkgroupService);
+		JSONArray sharedTeacherUserInfosJSONArray = RunUtil.getSharedTeacherUserInfos(run, workgroupService);
 		
 		//get the run info
 		JSONObject runInfoJSONObject = RunUtil.getRunInfo(run);

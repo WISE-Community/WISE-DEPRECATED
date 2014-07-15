@@ -42,7 +42,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.student.StudentService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * @author Hiroki Terashima
@@ -58,7 +58,7 @@ public class StudentServiceImpl implements StudentService {
 	private GroupService groupService;
 	
 	@Autowired
-	private WISEWorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 	
 	/**
 	 * @see org.wise.portal.service.student.StudentService#addStudentToRun(net.sf.sail.webapp.domain.User, org.wise.portal.domain.impl.Projectcode)
@@ -82,7 +82,7 @@ public class StudentServiceImpl implements StudentService {
 				String name = "Workgroup for user: " + studentUser.getUserDetails().getUsername();
 				Set<User> members = new HashSet<User>();
 				members.add(studentUser);
-				WISEWorkgroup workgroup = ((WISEWorkgroupService)wiseWorkgroupService).createWISEWorkgroup(name, members, run, period);
+				WISEWorkgroup workgroup = workgroupService.createWISEWorkgroup(name, members, run, period);
 			}
 		} else {
 			throw new StudentUserAlreadyAssociatedWithRunException(studentUser, run);
@@ -130,7 +130,7 @@ public class StudentServiceImpl implements StudentService {
         	if (workgroup != null) {
         		Set<User> membersToRemoveFromWorkgroup = new HashSet<User>();
         		membersToRemoveFromWorkgroup.add(studentUser);
-        		wiseWorkgroupService.removeMembers(workgroup, membersToRemoveFromWorkgroup);
+        		workgroupService.removeMembers(workgroup, membersToRemoveFromWorkgroup);
         	}
 		}
 	}
@@ -145,7 +145,7 @@ public class StudentServiceImpl implements StudentService {
 		studentRunInfo.setGroup(run.getPeriodOfStudent(studentUser));
 		
 		List<Workgroup> workgroupsForThisRun = 
-			wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, studentUser);
+			workgroupService.getWorkgroupListByOfferingAndUser(run, studentUser);
 		if (workgroupsForThisRun.size() > 0) {
 			WISEWorkgroup workgroupForThisRun = (WISEWorkgroup) workgroupsForThisRun.get(0);			
 			studentRunInfo.setWorkgroup(workgroupForThisRun);

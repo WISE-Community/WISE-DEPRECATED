@@ -45,7 +45,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Servlet implementation class AssetManager
@@ -64,7 +64,7 @@ public class AssetManager {
 	private RunService runService;
 
 	@Autowired
-	private WISEWorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 
 	private final static String PATH = "path";
 
@@ -111,7 +111,7 @@ public class AssetManager {
 				}
 
 				//get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
@@ -139,7 +139,7 @@ public class AssetManager {
 				}
 
 				//get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
@@ -186,7 +186,7 @@ public class AssetManager {
 				}
 
 				//get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
@@ -218,7 +218,7 @@ public class AssetManager {
 				}
 
 				//get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
@@ -264,7 +264,7 @@ public class AssetManager {
 				}
 
 				//get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 

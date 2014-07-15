@@ -44,7 +44,7 @@ import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 
 /**
@@ -57,7 +57,7 @@ public class ChangeWorkgroupControllerTest extends AbstractModelAndViewTests {
 	
 	private ChangeWorkgroupParameters changeWorkgroupParameters;
 	
-	private WISEWorkgroupService mockWorkgroupService;
+	private WorkgroupService mockWorkgroupService;
 	
 	private UserService mockUserService;
 	
@@ -107,7 +107,7 @@ public class ChangeWorkgroupControllerTest extends AbstractModelAndViewTests {
 		mockSession.setAttribute(User.CURRENT_USER_SESSION_KEY, user);
 		request.setSession(mockSession);
 		
-		mockWorkgroupService = EasyMock.createMock(WISEWorkgroupService.class);
+		mockWorkgroupService = EasyMock.createMock(WorkgroupService.class);
 		mockUserService = EasyMock.createMock(UserService.class);
 		
 		student = new UserImpl();

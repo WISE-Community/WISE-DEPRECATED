@@ -2,11 +2,12 @@ package org.wise.portal.dao.portal.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.portal.PortalStatisticsDao;
 import org.wise.portal.domain.portal.PortalStatistics;
 
-
+@Repository
 public class HibernatePortalStatisticsDao extends AbstractHibernateDao<PortalStatistics> implements PortalStatisticsDao<PortalStatistics> {
 
 	/**

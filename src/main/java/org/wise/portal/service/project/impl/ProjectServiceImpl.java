@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2008 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
+ * Copyright (c) 2008 Regents of the University of California (Regents). Created
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
  *
@@ -22,15 +22,36 @@
  */
 package org.wise.portal.service.project.impl;
 
+import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Comparator;
+import java.net.MalformedURLException;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
+import java.util.TreeSet;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.acls.model.AlreadyExistsException;
+import org.springframework.security.acls.model.NotFoundException;
+import org.springframework.security.acls.model.Permission;
+import org.springframework.security.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.project.ProjectDao;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
+import org.wise.portal.domain.module.Curnit;
+import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectInfo;
@@ -38,356 +59,652 @@ import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
-import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.domain.project.impl.ProjectParameters;
-import org.wise.portal.domain.project.impl.ProjectType;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.util.http.Connector;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.service.acl.AclService;
+import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.module.ModuleService;
+import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.premadecomment.PremadeCommentService;
 import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.project.ProjectServiceFactory;
+import org.wise.portal.service.tag.TagService;
+import org.wise.portal.service.user.UserService;
 
 /**
- * TELS Portal can offer multiple types of projects, including:
- *  Learning-Design-inspired LD Projects
- *  POD Projects (no longer supported)
- *  POTrunk Projects (no longer supported)
- *  OTrunk Projects (no longer supported)
- *  
- * There is a service for handling each type of project. ProjectServiceImpl
- * uses a factory pattern to determine which projectservice to use at runtime.
- * 
- * @author Hiroki Terashima
- * @version $Id$
+ * @author patrick lawler
+ * @version $Id:$
  */
 public class ProjectServiceImpl implements ProjectService {
 
-	private ProjectServiceFactory projectServiceFactory;
-	
+	protected static final String PREVIEW_RUN_NAME = "preview";
+
+	private static final String PREVIEW_PERIOD_NAME = "preview period";
+
+	protected static Set<String> PREVIEW_PERIOD_NAMES;
+
+	@Autowired
+	private Properties wiseProperties;
+
+	@Autowired
+	private ModuleService moduleService;
+
+	@Autowired
+	private ProjectDao<Project> projectDao;
+
+	private AclService<Project> aclService;
+
+	@Autowired
+	private UserService userService;
+
+	private RunService runService;
+
+	@Autowired
+	private TagService tagService;
+
+	@Autowired
+	private PremadeCommentService premadeCommentService;
+
+	{
+		PREVIEW_PERIOD_NAMES = new HashSet<String>();
+		PREVIEW_PERIOD_NAMES.add(PREVIEW_PERIOD_NAME);
+	}
+
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getAllProjectsList()
+	 * @see org.wise.portal.service.project.ProjectService#addBookmarkerToProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
 	 */
-	public List<Project> getAllProjectsList(){
-		ProjectService projectService = projectServiceFactory.getProjectService(new ProjectImpl());
-		return projectService.getAllProjectsList();
+	public void addBookmarkerToProject(Project project, User bookmarker){
+		project.getBookmarkers().add(bookmarker);
+		this.projectDao.save(project);
+	}
+
+	public void addSharedTeacherToProject(
+			AddSharedTeacherParameters addSharedTeacherParameters)
+					throws ObjectNotFoundException {
+		Project project = addSharedTeacherParameters.getProject();
+		String sharedOwnerUsername = addSharedTeacherParameters.getSharedOwnerUsername();
+		User user = userService.retrieveUserByUsername(sharedOwnerUsername);
+		project.getSharedowners().add(user);
+		this.projectDao.save(project);
+
+		String permission = addSharedTeacherParameters.getPermission();
+		if (permission.equals(UserDetailsService.PROJECT_WRITE_ROLE)) {
+			this.aclService.removePermission(project, BasePermission.ADMINISTRATION, user);
+			this.aclService.removePermission(project, BasePermission.READ, user);
+			this.aclService.addPermission(project, BasePermission.WRITE, user);	
+		} else if (permission.equals(UserDetailsService.PROJECT_READ_ROLE)) {
+			this.aclService.removePermission(project, BasePermission.ADMINISTRATION, user);
+			this.aclService.removePermission(project, BasePermission.WRITE, user);
+			this.aclService.addPermission(project, BasePermission.READ, user);
+		} else if (permission.equals(UserDetailsService.PROJECT_SHARE_ROLE)) {
+			this.aclService.removePermission(project, BasePermission.READ, user);
+			this.aclService.removePermission(project, BasePermission.WRITE, user);
+			this.aclService.addPermission(project, BasePermission.ADMINISTRATION, user);
+		}
+	}
+
+	public void removeSharedTeacherFromProject(String username, Project project) throws ObjectNotFoundException {
+		User user = userService.retrieveUserByUsername(username);
+		if (project == null || user == null) {
+			return;
+		}
+
+		if (project.getSharedowners().contains(user)) {
+			project.getSharedowners().remove(user);
+			this.projectDao.save(project);
+			try {
+				List<Permission> permissions = this.aclService.getPermissions(project, user);
+				for (Permission permission : permissions) {
+					this.aclService.removePermission(project, permission, user);
+				}
+			} catch (Exception e) {
+				// do nothing. permissions might get be deleted if user requesting the deletion is not the owner of the project.
+			}
+		}
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#createProject(org.wise.portal.domain.impl.ProjectParameters)
 	 */
+	@Transactional(rollbackFor = { AlreadyExistsException.class,
+			NotFoundException.class, DataIntegrityViolationException.class
+	})
 	public Project createProject(ProjectParameters projectParameters)
 			throws ObjectNotFoundException {
-		ProjectService projectService = projectServiceFactory.getProjectService(projectParameters.getProjectType());
-		return projectService.createProject(projectParameters);
+		Curnit curnit = this.moduleService.getById(projectParameters.getCurnitId());
+		Project project = this.projectDao.createEmptyProject();
+		project.setCurnit(curnit);
+		project.setName(projectParameters.getProjectname());
+		project.setOwners(projectParameters.getOwners());
+		project.setProjectType(projectParameters.getProjectType());
+		ProjectMetadata metadata = projectParameters.getMetadata();
+
+		//get the parent project id if any
+		Long parentProjectId = projectParameters.getParentProjectId();
+		Project parentProject = null;
+
+		if(parentProjectId != null) {
+			//get the parent project
+			parentProject = getById(parentProjectId);
+			project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
+		}
+
+		// set original author (if not sent in as a parameter)
+		JSONObject metaJSON = new JSONObject(metadata);
+		if(metaJSON.has("author")){
+			try {
+				String author = metaJSON.getString("author");
+				if(author == null || author.equals("null") || author.equals("")){
+					JSONObject authorJSON = new JSONObject();
+
+					// set root id for project (if not already set)
+					Long rootId = project.getRootProjectId();
+					if(rootId == null){
+						try {
+							rootId = this.identifyRootProjectId(parentProject);
+							project.setRootProjectId(rootId);
+						} catch (ObjectNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					try {
+						if(rootId != null) {
+							Project rootP = this.getById(rootId);
+							Set<User> owners = rootP.getOwners();
+							for(User owner : owners){
+								MutableUserDetails ownerDetails = (MutableUserDetails)owner.getUserDetails();
+								try {
+									authorJSON.put("username", ownerDetails.getUsername());
+									authorJSON.put("fullname", ownerDetails.getFirstname() + " " + ownerDetails.getLastname());
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+							metadata.setAuthor(authorJSON.toString());
+						}
+					} catch (ObjectNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		project.setMetadata(metadata);
+		//TODO -- isCurrent being set here may need to be removed
+		project.setFamilytag(FamilyTag.TELS);
+		project.setCurrent(true);
+		project.setParentProjectId(projectParameters.getParentProjectId());
+		project.setDateCreated(new Date());
+		this.projectDao.save(project);
+		this.aclService.addPermission(project, BasePermission.ADMINISTRATION);	
+
+		if(parentProjectId != null) {
+			Long newProjectId = (Long) project.getId();
+			User signedInUser = ControllerUtil.getSignedInUser();
+
+			//copy any premade comment lists from the parent project into the new project
+			premadeCommentService.copyPremadeCommentsFromProject(parentProjectId, newProjectId, signedInUser);
+		}
+
+		return project;
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getById(java.lang.Long)
+	 * @see org.wise.portal.service.project.ProjectService#getBookmarkerProjectList(net.sf.sail.webapp.domain.User)
 	 */
-    @Transactional(readOnly = true)
-	public Project getById(Serializable projectId) throws ObjectNotFoundException {
-		ProjectService projectService = projectServiceFactory.getProjectService(new ProjectImpl());
-		return projectService.getById(projectId);
+	public List<Project> getBookmarkerProjectList(User bookmarker)
+			throws ObjectNotFoundException {
+		return this.projectDao.getProjectListByUAR(bookmarker, "bookmarker");
+	}
+
+	/**
+	 * @see org.wise.portal.service.project.ProjectService#getById(java.io.Serializable)
+	 */
+	@Transactional(readOnly = true)
+	public Project getById(Serializable projectId)
+			throws ObjectNotFoundException {
+		Project project = this.projectDao.getById(projectId);
+		project.populateProjectInfo();
+		return project;
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#getProjectList()
 	 */
+	@Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })    
+	@Transactional(readOnly = true)
 	public List<Project> getProjectList() {
-		ProjectService projectService = projectServiceFactory.getProjectService(new ProjectImpl());
-		return projectService.getProjectList();
+		List<Project> projectList = this.projectDao.getList();
+		for (Project project : projectList) {
+			project.populateProjectInfo();
+		}	
+		return projectList;
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#getProjectList(net.sf.sail.webapp.domain.User)
 	 */
+	@Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
 	public List<Project> getProjectList(User user) {
-		ProjectService projectService = projectServiceFactory.getProjectService(new ProjectImpl());
-		return projectService.getProjectList(user);
+		return this.projectDao.getProjectListByUAR(user, "owner");
+	}
+
+	/**
+	 * @override @see org.wise.portal.service.project.ProjectService#getProjectListByInfo(org.wise.portal.domain.project.impl.ProjectInfo)
+	 */
+	public List<Project> getProjectListByInfo(ProjectInfo info)
+			throws ObjectNotFoundException {
+		List<Project> projectList = this.projectDao.retrieveListByInfo(info);
+		return projectList;		
+	}
+
+	/**
+	 * @override @see org.wise.portal.service.project.ProjectService#getProjectListByTag(org.wise.portal.domain.project.impl.FamilyTag)
+	 */
+	public List<Project> getProjectListByTag(FamilyTag familytag) throws ObjectNotFoundException {
+		List<Project> projectList = this.projectDao.retrieveListByTag(familytag);
+		for (Project project : projectList) {
+			project.populateProjectInfo();
+		}
+		return projectList;
+	}
+
+	/**
+	 * @see org.wise.portal.service.project.ProjectService#getProjectListByTag(java.lang.String)
+	 */
+	public List<Project> getProjectListByTag(String projectinfotag) throws ObjectNotFoundException {
+		List<Project> projectList = this.projectDao.retrieveListByTag(projectinfotag);
+		return projectList;
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#getSharedProjectList(net.sf.sail.webapp.domain.User)
 	 */
 	public List<Project> getSharedProjectList(User user) {
-		ProjectService projectService = projectServiceFactory.getProjectService(new ProjectImpl());
-		return projectService.getSharedProjectList(user);
-	}
-	
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#getBookmarkerProjectList(net.sf.sail.webapp.domain.User)
-	 */
-	public List<Project> getBookmarkerProjectList(User user) throws ObjectNotFoundException{
-		ProjectService projectService = projectServiceFactory.getProjectService(new ProjectImpl());
-		return projectService.getBookmarkerProjectList(user);
+		return this.projectDao.getProjectListByUAR(user, "sharedowner");
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getProjectListByInfo(org.wise.portal.domain.project.ProjectInfo)
+	 * @see org.wise.portal.service.project.ProjectService#getSharedTeacherRole(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
 	 */
-	public List<Project> getProjectListByInfo(ProjectInfo info)
-			throws ObjectNotFoundException {
-		ProjectService projectService = projectServiceFactory.getProjectService(new ProjectImpl());
-		return projectService.getProjectListByInfo(info);
+	public String getSharedTeacherRole(Project project, User user) {
+		List<Permission> permissions = this.aclService.getPermissions(project, user);
+		// for projects, a user can have at most one permission per project
+		if (!permissions.isEmpty()) {
+			if (permissions.contains(BasePermission.ADMINISTRATION)) {
+				return UserDetailsService.PROJECT_SHARE_ROLE;
+			}
+			Permission permission = permissions.get(0);
+			if (permission.equals(BasePermission.READ)) {
+				return UserDetailsService.PROJECT_READ_ROLE;
+			} else if (permission.equals(BasePermission.WRITE)) {
+				return UserDetailsService.PROJECT_WRITE_ROLE;
+			}
+		}
+		return null;
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getProjectListByTag(org.wise.portal.domain.project.FamilyTag)
+	 * @see org.wise.portal.service.project.ProjectService#getAdminProjectList()
 	 */
-	public List<Project> getProjectListByTag(FamilyTag tag)
-			throws ObjectNotFoundException {
-		ProjectService projectService = projectServiceFactory.getProjectService(new ProjectImpl());
-		return projectService.getProjectListByTag(tag);
+	public List<Project> getAdminProjectList(){
+		return this.projectDao.getList();
 	}
 
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#getProjectListByTag(java.lang.String)
-	 */
-	public List<Project> getProjectListByTag(String tag)
-			throws ObjectNotFoundException {
-		ProjectService projectService = projectServiceFactory.getProjectService(new ProjectImpl());
-		return projectService.getProjectListByTag(tag);
-	}
-
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#launchProject(org.wise.portal.domain.project.impl.LaunchProjectParameters)
-	 */
-	public Object launchProject(LaunchProjectParameters launchProjectParameters)
+	public ModelAndView launchProject(LaunchProjectParameters params)
 			throws Exception {
-		ProjectService projectService = projectServiceFactory.getProjectService(launchProjectParameters.getRun().getProject());
-		return projectService.launchProject(launchProjectParameters);
+		return new ModelAndView(new RedirectView(generateStudentStartProjectUrlString( params.getHttpServletRequest(), 
+				params.getRun(), params.getWorkgroup())));
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#previewProject(org.wise.portal.domain.project.impl.PreviewProjectParameters)
 	 */
-	public Object previewProject(
-			PreviewProjectParameters previewProjectParameters) throws Exception {
-		ProjectService projectService = projectServiceFactory.getProjectService(previewProjectParameters.getProject());
-		return projectService.previewProject(previewProjectParameters);
+	@Transactional()
+	public ModelAndView previewProject(PreviewProjectParameters params) throws Exception {
+
+		User user = params.getUser();
+		Project project = params.getProject();
+		Set<String> tagNames = new TreeSet<String>();
+		tagNames.add("library");
+		String step = params.getStep();
+		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+
+		if(project != null){
+			if(project.hasTags(tagNames) || 
+					project.getFamilytag().equals(FamilyTag.TELS) || this.canReadProject(project, user)){
+				String vleConfigUrl = wiseBaseURL + "/request/info.html" + "?projectId=" + project.getId() + "&action=getVLEConfig&requester=portalpreview";
+
+				if(step != null) {
+					//this is set if the request is to preview the project and load a specific step such as 1.2
+					vleConfigUrl += "&step=" + step;
+				}
+
+				if (params.isConstraintsDisabled()) {
+					vleConfigUrl += "&isConstraintsDisabled=true";
+				}
+
+				/* if preview request is coming from the run, we want to pass along the version id when we make a request to get the config */
+				String versionId = params.getVersionId();
+				if(versionId != null && !versionId.equals("")){
+					vleConfigUrl += "&versionId=" + versionId;
+				}
+
+				//get the path to the project json file
+				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				String contentUrl = curriculumBaseWWW + rawProjectUrl;
+
+				String vleurl = wiseBaseURL + "/vle/vle.html";
+
+				ModelAndView modelAndView = new ModelAndView("vle");
+				modelAndView.addObject("vleurl",vleurl);
+				modelAndView.addObject("vleConfigUrl", vleConfigUrl);
+				modelAndView.addObject("contentUrl", contentUrl);
+
+				return modelAndView;
+			} else {
+				return new ModelAndView(new RedirectView("../accessdenied.html"));
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @see org.wise.portal.service.project.ProjectService#removeBookmarkerFromProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 */
+	@Transactional()
+	public void removeBookmarkerFromProject(Project project, User bookmarker){
+		project.getBookmarkers().remove(bookmarker);
+		this.projectDao.save(project);
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#updateProject(org.wise.portal.domain.project.Project)
 	 */
+	@Transactional()
 	public void updateProject(Project project, User user) throws NotAuthorizedException{
-		ProjectService projectService = projectServiceFactory.getProjectService(project);
-		projectService.updateProject(project, user);
+		if(user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
+				this.aclService.hasPermission(project, BasePermission.WRITE, user)){
+			this.projectDao.save(project);
+		} else {
+			throw new NotAuthorizedException("You are not authorized to update this project");
+		}
 	}
 
 	/**
-	 * @param projectServiceFactory the projectServiceFactory to set
+	 * Returns url string for actual run
+	 * @param request
+	 * @param run
+	 * @param workgroup
+	 * @return
 	 */
-	public void setProjectServiceFactory(ProjectServiceFactory projectServiceFactory) {
-		this.projectServiceFactory = projectServiceFactory;
+	public String generateStudentStartProjectUrlString(HttpServletRequest request,
+			Run run, Workgroup workgroup) {
+		String portalUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + 
+				request.getContextPath();
+		String launchVLE = "/student/vle/vle.html?runId=" + run.getId() + "&workgroupId=" + workgroup.getId();
+		return portalUrl + launchVLE;
 	}
 
 	/**
+	 * Creates a PreviewRun for this project and
+	 * set it in this project
+	 * @param project
 	 * @throws ObjectNotFoundException 
-	 * @override @see org.wise.portal.service.offering.RunService#addSharedTeacherToRun(org.wise.portal.domain.impl.AddSharedTeacherParameters)
 	 */
-	public void addSharedTeacherToProject(
-			AddSharedTeacherParameters addSharedTeacherParameters) throws ObjectNotFoundException {
-		ProjectService projectService = projectServiceFactory.getProjectService(addSharedTeacherParameters.getProject());
-		projectService.addSharedTeacherToProject(addSharedTeacherParameters);
-	}
-	
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#removeSharedTeacherFromProject(java.lang.String, java.lang.Long)
-	 */
-	public void removeSharedTeacherFromProject(String username, Project project) throws ObjectNotFoundException {
-		ProjectService projectService = projectServiceFactory.getProjectService(project);
-		projectService.removeSharedTeacherFromProject(username, project);
-
+	@Transactional
+	protected void createPreviewRun(Project project) throws ObjectNotFoundException {
+		RunParameters runParameters = new RunParameters();
+		runParameters.setCurnitId(project.getCurnit().getId());
+		runParameters.setJnlpId(null);
+		runParameters.setName(PREVIEW_RUN_NAME);
+		runParameters.setOwners(null);
+		runParameters.setPeriodNames(PREVIEW_PERIOD_NAMES);
+		runParameters.setProject(project);
+		Run previewRun = this.runService.createRun(runParameters);
+		project.setPreviewRun(previewRun);
+		this.projectDao.save(project);
 	}
 
-	
-	public String getSharedTeacherRole(Project project, User user) {
-		ProjectService projectService = projectServiceFactory.getProjectService(project);
-		return projectService.getSharedTeacherRole(project, user);
-	}
-	
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#addBookmarkerToProject(net.sf.sail.webapp.domain.User)
+	 * @param aclService the aclService to set
 	 */
-	public void addBookmarkerToProject(Project project, User user) throws ObjectNotFoundException{
-		ProjectService projectService = projectServiceFactory.getProjectService(project);
-		projectService.addBookmarkerToProject(project, user);
+	public void setAclService(AclService<Project> aclService) {
+		this.aclService = aclService;
 	}
-	
+
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#removeBookmarkerFromProject(net.sf.sail.webapp.domain.User)
+	 * @param runService the runService to set
 	 */
-	public void removeBookmarkerFromProject(Project project, User user) throws ObjectNotFoundException{
-		ProjectService projectService = projectServiceFactory.getProjectService(project);
-		projectService.removeBookmarkerFromProject(project, user);
+	public void setRunService(RunService runService) {
+		this.runService = runService;
 	}
-	
+
+	/**
+	 * @see org.wise.portal.service.project.ProjectService#getAllProjectsList()
+	 */
+	@Transactional
+	public List<Project> getAllProjectsList() {
+		List<Project> projectList = this.projectDao.getList();
+		for (Project project : projectList) {
+			project.populateProjectInfo();
+		}	
+		return projectList;
+	}
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#getProjectList(java.lang.String)
 	 */
+	@Transactional
 	public List<Project> getProjectList(String query){
-		ProjectService projectService = projectServiceFactory.getProjectService(new ProjectImpl());
-		return projectService.getProjectList(query);
+		List<Project> projectList = this.projectDao.getProjectList(query);
+
+		for(Project project : projectList){
+			project.populateProjectInfo();
+		}
+
+		return projectList;
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#minifyProject(org.wise.portal.domain.project.Project)
 	 */
-	public String minifyProject(Project project){
-		ProjectService projectService = projectServiceFactory.getProjectService(project);
-		return projectService.minifyProject(project);
+	public String minifyProject(Project project) {
+		String curriculumBaseDir = this.wiseProperties.getProperty("curriculum_base_dir");
+		String minifyUrl = this.wiseProperties.getProperty("wiseBaseURL") + "/util/minifier.html";
+		String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+		String params = "command=minifyProject&path=" + curriculumBaseDir + "/" + projectUrl;
+
+		if(projectUrl != null && projectUrl != ""){
+			try{
+				String response = Connector.request(minifyUrl, params);
+
+				/* process the response text */
+				if(response.equals("success")){
+					return "Project has been successfully minified!";
+				} else if(response.equals("current")){
+					return "Project minification is current, no need to minify";
+				} else {
+					return response + " was returned from the minifier, check error and retry if necessary.";
+				}
+			} catch (MalformedURLException e){
+				e.printStackTrace();
+				return "The url to the minifier is invalid, cannot minify the project.";
+			} catch (IOException e){
+				e.printStackTrace();
+				return "Connection to the minifier failed, cannot minify the project.";
+			}
+		} else {
+			return "Unable to retrieve the url of the project, cannot minify the project.";
+		}
 	}
-	
+
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#canCreateRun(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * Project cannot have a "review" tag to it.
 	 */
-	public boolean canCreateRun(Project project, User user){
-		ProjectService projectService = projectServiceFactory.getProjectService(project);
-		return projectService.canCreateRun(project, user);
+	public boolean canCreateRun(Project project, User user) {
+		Set<String> unallowed_tagnames = new HashSet<String>();
+		unallowed_tagnames.add("review");
+		return 
+				!project.hasTags(unallowed_tagnames) &&
+				(FamilyTag.TELS.equals(project.getFamilytag()) || 
+						this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) || 
+						this.aclService.hasPermission(project, BasePermission.READ, user));
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#canAuthorProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
 	 */
 	public boolean canAuthorProject(Project project, User user) {
-		if(project == null){
-			return false;
-		} else {
-			ProjectService projectService = projectServiceFactory.getProjectService(project);
-			return projectService.canAuthorProject(project, user);
-		}
+		return user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
+				this.aclService.hasPermission(project, BasePermission.WRITE, user);
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#canReadProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
 	 */
-	public boolean canReadProject(Project project, User user){
-		if(project == null){
-			return false;
-		} else {
-			ProjectService projectService = projectServiceFactory.getProjectService(project);
-			return projectService.canReadProject(project, user);
-		}
+	public boolean canReadProject(Project project, User user) {
+		return user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
+				this.aclService.hasPermission(project, BasePermission.WRITE, user) ||
+				this.aclService.hasPermission(project, BasePermission.READ, user);
 	}
-	
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#getAdminProjectList()
-	 */
-	public List<Project> getAdminProjectList(){
-		return projectServiceFactory.getProjectService(new ProjectImpl()).getAdminProjectList();
-	}
-	
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#getMetadata(java.lang.Long, java.lang.String)
-	 */
-	@Transactional
-	public ProjectMetadata getMetadata(Long projectId){
-		Project project;
-		try{
-			project = this.getById(projectId);
-		} catch (ObjectNotFoundException e){
+
+
+	public ProjectMetadata getMetadata(Long projectId) {
+		Project project = null;
+		ProjectMetadata metadata = null;
+
+		try {
+			project = getById(projectId);
+			metadata = project.getMetadata();
+		} catch (ObjectNotFoundException e) {
 			e.printStackTrace();
-			return null;
 		}
-		ProjectService projectService = projectServiceFactory.getProjectService(project);
-		return projectService.getMetadata(projectId);
+
+		return metadata;
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#sortProjectsByDateCreated(java.util.List)
 	 */
-	public void sortProjectsByDateCreated(List<Project> projectList){
-		Collections.sort(projectList, new ProjectComparatorByEarliestDate());
-	}
-	
-	/**
-	 * Helper class for sorting projects by date created.
-	 * 
-	 * @author patrick lawler
-	 * @version $Id$
-	 */
-	private class ProjectComparatorByEarliestDate implements Comparator<Project> {
+	public void sortProjectsByDateCreated(List<Project> projectList) {
+		// TODO Auto-generated method stub
 
-		public int compare(Project p1, Project p2) {
-			return p2.getDateCreated().compareTo(p1.getDateCreated());
-		}
-		
-	}
-	
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#sortProjectsByLastEdited(java.util.List)
-	 */
-	public void sortProjectsByLastEdited(List<Project> projectList){
-		Collections.sort(projectList, new ProjectComparatorByLastEdited());
-	}
-	
-	/**
-	 * Helper class for sorting projects by last edited.
-	 * 
-	 * @author jonathan lim-breitbart
-	 * @version $Id$
-	 */
-	private class ProjectComparatorByLastEdited implements Comparator<Project> {
-
-		public int compare(Project p1, Project p2) {
-			if (p1.getMetadata().getLastEdited() == null || p2.getMetadata().getLastEdited() == null)
-		        return 0;
-			return -p1.getMetadata().getLastEdited().compareTo(p2.getMetadata().getLastEdited());
-		}
-	}
-
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(java.lang.String, org.wise.portal.domain.project.Project)
-	 */
-	@Transactional
-	public Long addTagToProject(String tag, Long projectId) {
-		ProjectService projectService = projectServiceFactory.getProjectService(ProjectType.LD);
-		return projectService.addTagToProject(tag, projectId);
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(org.wise.portal.domain.project.Tag, org.wise.portal.domain.project.Project)
 	 */
 	@Transactional
-	public Long addTagToProject(Tag tag, Long projectId) {
-		ProjectService projectService = projectServiceFactory.getProjectService(ProjectType.LD);
-		return projectService.addTagToProject(tag, projectId);
+	public Long addTagToProject(Tag tag, Long projectId){
+		Project project = null;
+
+		/* retrieve the project */
+		try{
+			project = this.projectDao.getById(projectId);
+		} catch(ObjectNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		/* if tag is not from database, we either want to retrieve one that
+		 * has the same name or create one */
+		if(!this.tagService.isFromDatabase(tag)){
+			tag = this.tagService.createOrGetTag(tag.getName());
+		}
+
+		/* add the tag and save the project */
+		project.getTags().add(tag);
+		this.projectDao.save(project);
+
+		return (Long) tag.getId();
 	}
 
-
+	/**
+	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(java.lang.String, org.wise.portal.domain.project.Project)
+	 */
+	public Long addTagToProject(String tag, Long projectId) {
+		return this.addTagToProject(this.tagService.createOrGetTag(tag), projectId);
+	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#removeTagFromProject(org.wise.portal.domain.project.Tag, org.wise.portal.domain.project.Project)
+	 * @see org.wise.portal.service.project.ProjectService#removeTagFromProject(java.lang.String, org.wise.portal.domain.project.Project)
 	 */
 	@Transactional
 	public void removeTagFromProject(Long tagId, Long projectId) {
-		ProjectService projectService = projectServiceFactory.getProjectService(ProjectType.LD);
-		projectService.removeTagFromProject(tagId, projectId);
+		Tag tag = this.tagService.getTagById(tagId);
+		Project project = null;
+
+		try {
+			project = this.projectDao.getById(projectId);
+		} catch(ObjectNotFoundException e){
+			e.printStackTrace();
+		}
+
+		if(tag != null && project != null){
+			project.getTags().remove(tag);
+			this.projectDao.save(project);
+			this.tagService.removeIfOrphaned((Long)tag.getId());
+		}
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#updateTag(java.lang.Long, java.lang.Long, java.lang.String)
 	 */
 	@Transactional
 	public Long updateTag(Long tagId, Long projectId, String name) {
-		ProjectService projectService = this.projectServiceFactory.getProjectService(ProjectType.LD);
-		return projectService.updateTag(tagId, projectId, name);
+		Tag currentTag = this.tagService.getTagById(tagId);
+
+		/* if the current tag's name is equivalent of the given name to change
+		 * to, then we do not need to do anything, so just return the currentTag's id */
+		if(currentTag.getName().toLowerCase().equals(name.toLowerCase())){
+			return (Long) currentTag.getId();
+		}
+
+		/* remove the current tag */
+		this.removeTagFromProject(tagId, projectId);
+
+		/* add a tag with the given name and return its id */
+		return this.addTagToProject(name, projectId);
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#isAuthorizedToCreateTag(net.sf.sail.webapp.domain.User, java.lang.String)
 	 */
 	public boolean isAuthorizedToCreateTag(User user, String name) {
-		ProjectService projectService = this.projectServiceFactory.getProjectService(ProjectType.LD);
-		return projectService.isAuthorizedToCreateTag(user, name);
+		if(name.toLowerCase().equals("library") && !user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE)){
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#projectContainsTag(java.lang.Long, java.lang.String)
 	 */
 	public boolean projectContainsTag(Project project, String name) {
-		ProjectService projectService = this.projectServiceFactory.getProjectService(ProjectType.LD);
-		return projectService.projectContainsTag(project, name);
+
+		project.getTags().size();  // force-fetch project tags from db
+		for(Tag t : project.getTags()){
+			if(t.getName().toLowerCase().equals(name.toLowerCase())){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -395,8 +712,9 @@ public class ProjectServiceImpl implements ProjectService {
 	 */
 	@Transactional
 	public List<Project> getProjectListByTagName(String tagName) {
-		ProjectService projectService = this.projectServiceFactory.getProjectService(ProjectType.LD);
-		return projectService.getProjectListByTagName(tagName);
+		Set<String> tagNames = new TreeSet<String>();
+		tagNames.add(tagName);
+		return this.getProjectListByTagNames(tagNames);
 	}
 
 	/**
@@ -404,26 +722,35 @@ public class ProjectServiceImpl implements ProjectService {
 	 */
 	@Transactional
 	public List<Project> getProjectListByTagNames(Set<String> tagNames) {
-		ProjectService projectService = this.projectServiceFactory.getProjectService(ProjectType.LD);
-		return projectService.getProjectListByTagNames(tagNames);
+		return this.projectDao.getProjectListByTagNames(tagNames);
 	}
-	
+
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getProjectCopies(java.util.Set)
+	 * @see org.wise.portal.service.project.ProjectService#getProjectCopies(java.lang.Long)
 	 */
-	@Transactional
 	public List<Project> getProjectCopies(Long projectId) {
-		ProjectService projectService = this.projectServiceFactory.getProjectService(ProjectType.LD);
-		return projectService.getProjectCopies(projectId);
+		return this.projectDao.getProjectCopies(projectId);
 	}
-	
+
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @see org.wise.portal.service.project.ProjectService#identifyRootProjectId(java.util.Set)
+	 * @see org.wise.portal.service.project.ProjectService#identifyRootProjectId(java.lang.Long)
 	 */
-	@Transactional
 	public Long identifyRootProjectId(Project project) throws ObjectNotFoundException {
-		ProjectService projectService = this.projectServiceFactory.getProjectService(ProjectType.LD);
-		return projectService.identifyRootProjectId(project);
+		if(project == null) {
+			return null;
+		} else {
+			Long parentProjectId = project.getParentProjectId();
+			if(parentProjectId == null || this.projectContainsTag(project, "library")){
+				return (Long)project.getId();
+			} else {
+				return this.identifyRootProjectId(this.getById(parentProjectId));
+			}
+		}
+	}
+
+	@Override
+	public void sortProjectsByLastEdited(List<Project> projectList) {
+		// TODO Auto-generated method stub
 	}
 }

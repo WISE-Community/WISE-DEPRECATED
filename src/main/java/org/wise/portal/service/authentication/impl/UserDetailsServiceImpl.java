@@ -24,7 +24,7 @@ package org.wise.portal.service.authentication.impl;
 
 import java.util.List;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,20 +46,12 @@ import org.wise.portal.service.authentication.UserDetailsService;
 public class UserDetailsServiceImpl
 		implements UserDetailsService {
 	
+	@Autowired
 	protected UserDetailsDao<MutableUserDetails> userDetailsDao;
 
+	@Autowired
     private GrantedAuthorityDao<MutableGrantedAuthority> grantedAuthorityDao;
     
-    /**
-     * @param grantedAuthorityDao
-     *            The granted authority to set.
-     */
-    @Required
-    public void setGrantedAuthorityDao(
-            GrantedAuthorityDao<MutableGrantedAuthority> grantedAuthorityDao) {
-        this.grantedAuthorityDao = grantedAuthorityDao;
-    }
-
     /**
      * @see org.acegisecurity.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
      */
@@ -72,16 +64,6 @@ public class UserDetailsServiceImpl
                     + " not found.");
         }
         return userDetails;
-    }
-
-    /**
-     * @param userDetailsDao
-     *            The userDetailsDao to set.
-     */
-    @Required
-    public void setUserDetailsDao(
-            UserDetailsDao<MutableUserDetails> userDetailsDao) {
-        this.userDetailsDao = userDetailsDao;
     }
 
     /**

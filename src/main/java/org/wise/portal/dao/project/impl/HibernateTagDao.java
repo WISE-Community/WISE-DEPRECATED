@@ -24,7 +24,7 @@ package org.wise.portal.dao.project.impl;
 
 import java.util.List;
 
-
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.project.TagDao;
@@ -35,6 +35,7 @@ import org.wise.portal.domain.project.impl.TagImpl;
  * @author patrick lawler
  * @version $Id:$
  */
+@Repository
 public class HibernateTagDao extends AbstractHibernateDao<Tag> implements TagDao<Tag>{
 	
 	private static final String FIND_ALL_QUERY = "from TagImpl";

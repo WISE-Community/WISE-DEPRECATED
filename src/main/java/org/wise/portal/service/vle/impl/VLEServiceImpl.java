@@ -24,6 +24,8 @@ package org.wise.portal.service.vle.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.annotation.AnnotationDao;
 import org.wise.portal.dao.crater.CRaterRequestDao;
@@ -56,81 +58,45 @@ import org.wise.vle.domain.work.StepWorkCache;
  * @author h
  * @version $Id:$
  */
+@Service
 public class VLEServiceImpl implements VLEService {
 
+	@Autowired
 	private UserInfoDao<UserInfo> userInfoDao;
+	
+	@Autowired
 	private AnnotationDao<Annotation> annotationDao;
+	
+	@Autowired
 	private PeerReviewWorkDao<PeerReviewWork> peerReviewWorkDao;
+	
+	@Autowired
 	private PeerReviewGateDao<PeerReviewGate> peerReviewGateDao;
+	
+	@Autowired
 	private NodeDao<Node> nodeDao;
+	
+	@Autowired
 	private StepWorkDao<StepWork> stepWorkDao;
+	
+	@Autowired
 	private StepWorkCacheDao<StepWorkCache> stepWorkCacheDao;
+	
+	@Autowired
 	private VLEStatisticsDao<VLEStatistics> vleStatisticsDao;
+	
+	@Autowired
 	private StudentStatusDao<StudentStatus> studentStatusDao;
+	
+	@Autowired
 	private RunStatusDao<RunStatus> runStatusDao;
+	
+	@Autowired
 	private IdeaBasketDao<IdeaBasket> ideaBasketDao;
+	
+	@Autowired
 	private CRaterRequestDao<CRaterRequest> cRaterRequestDao;
 
-	@Override
-	public void setUserInfoDao(UserInfoDao<UserInfo> userInfoDao) {
-		this.userInfoDao = userInfoDao;
-	}
-	
-	@Override
-	public void setAnnotationDao(AnnotationDao<Annotation> annotationDao) {
-		this.annotationDao = annotationDao;
-	}
-	
-	@Override
-	public void setPeerReviewWorkDao(PeerReviewWorkDao<PeerReviewWork> peerReviewWorkDao) {
-		this.peerReviewWorkDao = peerReviewWorkDao;
-	}
-	
-	@Override
-	public void setPeerReviewGateDao(PeerReviewGateDao<PeerReviewGate> peerReviewGateDao) {
-		this.peerReviewGateDao = peerReviewGateDao;
-	}
-
-	@Override
-	public void setNodeDao(NodeDao<Node> nodeDao) {
-		this.nodeDao = nodeDao;
-	}
-
-	@Override
-	public void setStepWorkDao(StepWorkDao<StepWork> stepWorkDao) {
-		this.stepWorkDao = stepWorkDao;
-	}
-
-	@Override
-	public void setStepWorkCacheDao(StepWorkCacheDao<StepWorkCache> stepWorkCacheDao) {
-		this.stepWorkCacheDao = stepWorkCacheDao;
-	}
-
-	@Override
-	public void setVleStatisticsDao(VLEStatisticsDao<VLEStatistics> vleStatisticsDao) {
-		this.vleStatisticsDao = vleStatisticsDao;
-	}
-
-	@Override
-	public void setStudentStatusDao(StudentStatusDao<StudentStatus> studentStatusDao) {
-		this.studentStatusDao = studentStatusDao;
-	}
-
-	@Override
-	public void setRunStatusDao(RunStatusDao<RunStatus> runStatusDao) {
-		this.runStatusDao = runStatusDao;
-	}
-
-	@Override
-	public void setIdeaBasketDao(IdeaBasketDao<IdeaBasket> ideaBasketDao) {
-		this.ideaBasketDao = ideaBasketDao;
-	}
-
-	@Override
-	public void setCRaterRequestDao(CRaterRequestDao<CRaterRequest> cRaterRequestDao) {
-		this.cRaterRequestDao = cRaterRequestDao;
-	}
-	
 	@Override
 	public UserInfo getUserInfoById(Long id) {
 		return userInfoDao.getUserInfoById(id);

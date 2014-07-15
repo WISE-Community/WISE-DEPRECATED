@@ -32,7 +32,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.portal.service.websocket.WISEEndPoint;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
@@ -53,7 +53,7 @@ public class StudentDataController {
 	private RunService runService;
 	
 	@Autowired
-	private static WISEWorkgroupService wiseWorkgroupService;
+	private static WorkgroupService workgroupService;
 	
 	@Autowired
 	private Properties wiseProperties;

@@ -53,7 +53,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 public class ChangeWorkgroupController {
 
 	@Autowired
-	private WorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 	
 	@Autowired
 	private RunService runService;
@@ -97,7 +97,7 @@ public class ChangeWorkgroupController {
 		if (workgroupFromId == null) {
 			params.setWorkgroupFrom(null);
 		} else {
-		  params.setWorkgroupFrom(wiseWorkgroupService.retrieveById(Long.parseLong(workgroupFromId)));
+		  params.setWorkgroupFrom(workgroupService.retrieveById(Long.parseLong(workgroupFromId)));
 		}
 		
 		model.addAttribute("changeWorkgroupParameters", params);
@@ -136,7 +136,7 @@ public class ChangeWorkgroupController {
         	
         	try {
         		//set the workgroup id
-    			params.setWorkgroupTo(wiseWorkgroupService.retrieveById(workgroupToId));
+    			params.setWorkgroupTo(workgroupService.retrieveById(workgroupToId));
     		} catch (ObjectNotFoundException e1) {
     			params.setWorkgroupTo(null);
     			view = formView;
@@ -144,7 +144,7 @@ public class ChangeWorkgroupController {
         	
         	try {
         		//update the workgroup by modifying its members
-        		wiseWorkgroupService.updateWorkgroupMembership(params);
+        		workgroupService.updateWorkgroupMembership(params);
             	view = successView;
             	sessionStatus.setComplete();
         	} catch (Exception e){

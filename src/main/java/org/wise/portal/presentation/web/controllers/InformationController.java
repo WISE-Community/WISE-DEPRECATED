@@ -58,7 +58,7 @@ import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * @author patrick lawler
@@ -80,7 +80,7 @@ public class InformationController {
 	UserService userService;
 	
 	@Autowired
-	WISEWorkgroupService wiseWorkgroupService;
+	WorkgroupService workgroupService;
 	
 	/* how long the VLE should wait between each getRunInfo request, 
 	 * in milliseconds 10000=10 seconds, -1=never */
@@ -135,7 +135,7 @@ public class InformationController {
 		Workgroup workgroup = getWorkgroup(request, run);
 		String workgroupIdStr = request.getParameter(WORKGROUP_ID_PARAM);
 		if (workgroupIdStr != null && workgroupIdStr != "") {
-			workgroup = wiseWorkgroupService.retrieveById(new Long(workgroupIdStr));
+			workgroup = workgroupService.retrieveById(new Long(workgroupIdStr));
 			// if a workgroup was specified that was not for this run, return BAD_REQUEST
 			if (workgroup.getOffering().getId() != run.getId()) {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -319,7 +319,7 @@ public class InformationController {
 		
 		try {
 			//get the workgroup for the owner in the run
-			List<Workgroup> workgroupsForRunOwner = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, runOwner);
+			List<Workgroup> workgroupsForRunOwner = workgroupService.getWorkgroupListByOfferingAndUser(run, runOwner);
 			
 			//get the workgroup since the owner should only have one workgroup in the run
 			Workgroup runOwnerWorkgroup = workgroupsForRunOwner.get(0);
@@ -343,7 +343,7 @@ public class InformationController {
 			User sharedOwner = sharedOwnersIterator.next();
 			
 			//get the workgroups
-			List<Workgroup> sharedTeacherWorkgroups = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, sharedOwner);
+			List<Workgroup> sharedTeacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, sharedOwner);
 			
 			//there should only be one workgroup for the shared owner
 			Workgroup sharedTeacherWorkgroup = sharedTeacherWorkgroups.get(0);
@@ -813,7 +813,7 @@ public class InformationController {
 			User user = userService.retrieveUser(userDetails);
 			
 			List<Workgroup> workgroupListByOfferingAndUser 
-			= wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user);
+			= workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 
 			if (workgroupListByOfferingAndUser.size() == 1) {
 				//this user is in one workgroup
@@ -831,10 +831,10 @@ public class InformationController {
 					String workgroupIdStr = request
 							.getParameter(WORKGROUP_ID_PARAM);
 					if (workgroupIdStr != null) {
-						workgroup = wiseWorkgroupService.retrieveById(Long
+						workgroup = workgroupService.retrieveById(Long
 								.parseLong(workgroupIdStr));
 					} else {
-						workgroup = wiseWorkgroupService
+						workgroup = workgroupService
 								.getPreviewWorkgroupForRooloOffering(run, user);
 					}
 				}

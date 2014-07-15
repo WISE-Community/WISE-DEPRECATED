@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -14,7 +15,7 @@ import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 
-
+@Repository
 public class HibernatePeerReviewWorkDao extends AbstractHibernateDao<PeerReviewWork> implements PeerReviewWorkDao<PeerReviewWork> {
 
 	@Override

@@ -51,7 +51,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller to allow students to launch the VLE using the project.
@@ -70,7 +70,7 @@ public class StartProjectController {
 	private RunService runService;
 
 	@Autowired
-	private WISEWorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 
 	@Autowired
 	private ProjectService projectService;
@@ -127,7 +127,7 @@ public class StartProjectController {
 
 		Group period = run.getPeriodOfStudent(user);
 		
-		List<Workgroup> workgroups = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user);
+		List<Workgroup> workgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 		assert(workgroups.size() <= 1);
 		
 		WISEWorkgroup workgroup = null;
@@ -138,7 +138,7 @@ public class StartProjectController {
 				String name = "Workgroup for user: " + user.getUserDetails().getUsername();
 				Set<User> members = new HashSet<User>();
 				members.add(user);
-				workgroup = wiseWorkgroupService.createWISEWorkgroup(name, members, run, period);
+				workgroup = workgroupService.createWISEWorkgroup(name, members, run, period);
 				
 				/* update run statistics */
 				int maxLoop = 30;  // to ensure that the following while loop gets run at most this many times.

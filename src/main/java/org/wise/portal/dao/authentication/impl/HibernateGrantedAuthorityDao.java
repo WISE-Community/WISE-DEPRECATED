@@ -19,6 +19,7 @@ package org.wise.portal.dao.authentication.impl;
 
 
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.authentication.GrantedAuthorityDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.authentication.MutableGrantedAuthority;
@@ -34,6 +35,7 @@ import org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority;
  *          cynick $
  * 
  */
+@Repository
 public class HibernateGrantedAuthorityDao extends
         AbstractHibernateDao<MutableGrantedAuthority> implements
         GrantedAuthorityDao<MutableGrantedAuthority> {

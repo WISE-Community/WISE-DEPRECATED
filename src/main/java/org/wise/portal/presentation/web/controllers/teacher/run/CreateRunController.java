@@ -65,7 +65,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller for the wizard to "create a run"
@@ -94,7 +94,7 @@ public class CreateRunController {
 	private RunService runService;
 
 	@Autowired
-	private WISEWorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 
 	@Autowired
 	private ProjectService projectService = null;
@@ -406,7 +406,7 @@ public class CreateRunController {
 			run = this.runService.createRun(runParameters);
 
 			// create a workgroup for the owners of the run (teacher)
-			wiseWorkgroupService.createWISEWorkgroup("teacher", runParameters.getOwners(), run, null);
+			workgroupService.createWISEWorkgroup("teacher", runParameters.getOwners(), run, null);
 
 		} catch (ObjectNotFoundException e) {
 			result.rejectValue("curnitId", "error.curnit-not_found",

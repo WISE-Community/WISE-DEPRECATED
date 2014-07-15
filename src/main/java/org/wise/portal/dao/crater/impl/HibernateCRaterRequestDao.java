@@ -2,9 +2,9 @@ package org.wise.portal.dao.crater.impl;
 
 import java.util.List;
 
-
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.crater.CRaterRequestDao;
@@ -12,7 +12,7 @@ import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.work.StepWork;
 
-
+@Repository
 public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterRequest> implements CRaterRequestDao<CRaterRequest> {
 
 	@Override

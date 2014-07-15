@@ -23,8 +23,7 @@
 package org.wise.portal.dao.premadecomment.impl;
 
 import java.util.List;
-
-
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.premadecomment.PremadeCommentDao;
 import org.wise.portal.domain.premadecomment.PremadeComment;
@@ -36,6 +35,7 @@ import org.wise.portal.domain.user.User;
  * @author patrick lawler
  *
  */
+@Repository
 public class HibernatePremadeCommentDao extends AbstractHibernateDao<PremadeComment> implements PremadeCommentDao<PremadeComment>{
 	
 	private static final String FIND_ALL_QUERY = "from PremadeCommentImpl";

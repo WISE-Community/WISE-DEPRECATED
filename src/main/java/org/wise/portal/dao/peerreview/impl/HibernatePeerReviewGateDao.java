@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -13,7 +14,7 @@ import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewGate;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
 
-
+@Repository
 public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewGate> implements PeerReviewGateDao<PeerReviewGate> {
 
 	@Override

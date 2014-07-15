@@ -25,7 +25,6 @@ package org.wise.portal.dao.workgroup.impl;
 import java.util.List;
 
 import org.hibernate.FetchMode;
-import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
@@ -35,9 +34,7 @@ import org.wise.portal.dao.workgroup.WorkgroupDao;
 import org.wise.portal.domain.run.Offering;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
-import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
-import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 
 /**
  * DAO for <code>WISEWorkgroup</code>

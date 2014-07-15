@@ -45,7 +45,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Puts run details into the model to be retrieved and displayed on
@@ -67,7 +67,7 @@ public class ClassroomRunListController {
 	private ProjectService projectService;
 
 	@Autowired
-	private WISEWorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 
 	protected static final String FALSE = "FALSE";
 
@@ -134,7 +134,7 @@ public class ClassroomRunListController {
 		List<Run> ended_run_list = new ArrayList<Run>();
 		Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
 		for (Run run : runList2) {
-			List<Workgroup> workgroupList = wiseWorkgroupService
+			List<Workgroup> workgroupList = workgroupService
 					.getWorkgroupListByOfferingAndUser(run, user);
 
 			workgroupMap.put(run, workgroupList);

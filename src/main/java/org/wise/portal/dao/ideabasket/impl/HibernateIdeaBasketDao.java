@@ -3,20 +3,20 @@ package org.wise.portal.dao.ideabasket.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.ideabasket.IdeaBasketDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
 
-
+@Repository
 public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> implements IdeaBasketDao<IdeaBasket> {
 
 	@Override

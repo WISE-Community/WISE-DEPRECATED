@@ -25,7 +25,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 @Controller
 public class ListStudentNamesController {
@@ -34,7 +34,7 @@ public class ListStudentNamesController {
 	private RunService runService;
 
 	@Autowired
-	private WISEWorkgroupService wiseWorkgroupService;
+	private WorkgroupService workgroupService;
 	
 	@RequestMapping("/teacher/management/studentlistexcel.html")
 	protected ModelAndView handleRequestInternal(
@@ -60,7 +60,7 @@ public class ListStudentNamesController {
 			User owner = ownersIterator.next();
 			
 			//get the workgroups
-			List<Workgroup> teacherWorkgroups = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, owner);
+			List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, owner);
 			
 			//there should only be one workgroup for the owner
 			Workgroup teacherWorkgroup = teacherWorkgroups.get(0);
@@ -162,7 +162,7 @@ public class ListStudentNamesController {
 				User user = periodMembersIterator.next();
 				
 				//get the workgroup the student is in
-				List<Workgroup> workgroupListByOfferingAndUser = wiseWorkgroupService.getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				//get the workgroup id and wise id
 				Long workgroupId = null;
 				if (workgroupListByOfferingAndUser.size() > 0) {

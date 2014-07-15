@@ -23,6 +23,7 @@
 package org.wise.portal.dao.newsitem.impl;
 
 
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.newsitem.NewsItemDao;
 import org.wise.portal.domain.newsitem.NewsItem;
@@ -32,6 +33,7 @@ import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
  * @author patrick lawler
  *
  */
+@Repository
 public class HibernateNewsItemDao extends AbstractHibernateDao<NewsItem> implements NewsItemDao<NewsItem>{
 	
 	private static final String FIND_ALL_QUERY = "from NewsItemImpl order by id desc";
