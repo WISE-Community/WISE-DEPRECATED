@@ -31,6 +31,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
+import org.wise.portal.service.websocket.WISEEndPoint;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
@@ -57,6 +58,9 @@ public class StudentDataController {
 	
 	@Autowired
 	private Properties wiseProperties;
+	
+	@Autowired
+	private WISEEndPoint wiseEndPoint;
 
 	private static boolean DEBUG = false;
 
@@ -875,6 +879,12 @@ public class StudentDataController {
 				}
 				//send back the json string with step work id and post time
 				response.getWriter().print(jsonResponse.toString());
+				
+				//check if this node visit should be sent to other users using websockets
+				if(isSendToWebSockets(nodeVisitJSON)) {
+					//send this message to websockets
+					wiseEndPoint.handleMessage(signedInUser, nodeVisitJSON.toString());					
+				}
 			} else {
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Error saving: " + nodeVisitJSON.toString());
 			}
@@ -886,6 +896,33 @@ public class StudentDataController {
 		return null;
 	}
 
+	/**
+	 * Check if the node visit should be sent to websockets
+	 * @param nodeVisit the node visit JSON object
+	 * @return whether we should send the node visit to websockets
+	 */
+	private boolean isSendToWebSockets(JSONObject nodeVisit) {
+		boolean result = false;
+		
+		if(nodeVisit != null) {
+			//check if there is a messageType field
+			String messageType = nodeVisit.optString("messageType");
+			
+			//check if there is a messageParticipants field
+			String messageParticipants = nodeVisit.optString("messageParticipants");
+			
+			if(messageType != null && messageParticipants != null) {
+				/*
+				 * the node visit has a messageType and messageParticipants so we will
+				 * send it to websockets
+				 */
+				result = true;
+			}
+		}
+		
+		return result;
+	}
+	
 	/**
 	 * Synchronized node creation/retrieval
 	 * @param runId

@@ -796,7 +796,14 @@ var componentloader = function(em, sl){
 				}
 			}
 		},
-		studentWebSocket:{},
+		studentWebSocket:{
+			variables:{},
+			events:{
+				'classmateWebSocketMessageReceived': [null, null]
+			},
+			methods:{},
+			initialize:{}
+		},
 		teacherWebSocket:{
 			variables:{},
 			events:{

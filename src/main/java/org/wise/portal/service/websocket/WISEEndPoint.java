@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.w3c.dom.Element;
@@ -42,6 +43,7 @@ import org.wise.portal.service.vle.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.status.StudentStatus;
 
+@Service("wiseEndPoint")
 @ServerEndpoint(value = "/websocket.html", configurator = WISEConfigurator.class)
 public class WISEEndPoint extends Endpoint {
 
@@ -67,8 +69,11 @@ public class WISEEndPoint extends Endpoint {
     //the hashtable that stores run id to set of teacher connections
     private static Hashtable<Long, Set<WISEWebSocketSession>> runToTeacherConnections = new Hashtable<Long,Set<WISEWebSocketSession>>();
 	
-    //the hashtable that stores mapping between Session objects and WISEWebSocketSession objects 
+    //the hashtable that stores mappings between Session objects and WISEWebSocketSession objects 
     private static Hashtable<Session, WISEWebSocketSession> sessionToWISEWebSocketSession = new Hashtable<Session, WISEEndPoint.WISEWebSocketSession>();
+    
+    //the hashtable that stores mappings between User objects and WISEWebSocketSession objects
+    private static Hashtable<User, WISEWebSocketSession> userToWISEWebSocketSession = new Hashtable<User, WISEEndPoint.WISEWebSocketSession>();
     
     /**
      * Called when a websocket connection is opened
@@ -360,6 +365,12 @@ public class WISEEndPoint extends Endpoint {
 				
 				//add the mapping from session to wiseWebSocketSession
 				sessionToWISEWebSocketSession.put(session, wiseWebSocketSession);
+				
+				//get the user
+				User user = wiseWebSocketSession.getUser();
+				
+				//add the mapping from user to wiseWebSocketSession
+				userToWISEWebSocketSession.put(user, wiseWebSocketSession);
 			}
 		}
 	}
@@ -373,6 +384,9 @@ public class WISEEndPoint extends Endpoint {
 		if(wiseWebSocketSession != null) {
 			//get the session
 	        Session session = wiseWebSocketSession.getSession();
+	        
+	        //get the user
+	        User user = wiseWebSocketSession.getUser();
 	        
 	        if(session != null) {
 	        	//get the run id
@@ -397,6 +411,7 @@ public class WISEEndPoint extends Endpoint {
 	        	}
 	        	
 	        	sessionToWISEWebSocketSession.remove(session);
+	        	userToWISEWebSocketSession.remove(user);
 	        }
 		}
 	}
@@ -548,6 +563,30 @@ public class WISEEndPoint extends Endpoint {
 	}
 	
 	/**
+	 * Handle the message sent by the user. This function can be called from anywhere as
+	 * long as a handle to this WISEEndPoint bean is obtained.
+	 * @param user the signed in user
+	 * @param message the message to send
+	 */
+	public void handleMessage(User user, String message) {
+		//get the wiseWebSocketSession for the given user
+		WISEWebSocketSession wiseWebSocketSession = userToWISEWebSocketSession.get(user);
+		
+		if(wiseWebSocketSession != null) {
+			//get the session object
+			Session session = wiseWebSocketSession.getSession();
+			
+			if(session != null) {
+				/*
+				 * handle the message and perform any necessary processing and broadcasting
+				 * of the message
+				 */
+				handleMessage(session, message);				
+			}
+		}
+	}
+	
+	/**
 	 * A user has sent a websocket message so we will perform any necessary
 	 * processing and send out a websocket message to other users if necessary
 	 * @param session the session
@@ -587,6 +626,9 @@ public class WISEEndPoint extends Endpoint {
 				} else if(messageParticipants.equals("teacherToStudentsInRun")) {
 					//the teacher is sending a message to the students in a run
 					sendTeacherToStudentsInRunMessage(session, messageJSON);
+				} else if(messageParticipants.equals("studentToClassmatesInPeriod")) {
+					//the student is sending a message to the classmates in a period
+					sendStudentToClassmatesInPeriodMessage(session, messageJSON);
 				} else {
 					//TODO
 				}
@@ -736,7 +778,7 @@ public class WISEEndPoint extends Endpoint {
         		
         		//the user is a teacher
         		setTeacher(true);
-        	} else if(WISEEndPoint.isTeacher(signedInUser)) {
+        	} else if(WISEEndPoint.isStudent(signedInUser)) {
         		//the user is a student so we will get the user names of everyone in their workgroup
         		userName = getWorkgroupUserNames(workgroupId);
         		
@@ -1269,6 +1311,45 @@ public class WISEEndPoint extends Endpoint {
 	        	//send the message to all the currently connected students for the period
 	        	sendMessageToConnections(message, connections);
         	}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    /**
+     * Handle the message that a student is sending to their classmates in a period
+     * @param session the session object
+     * @param messageJSON the message JSON object
+     */
+    private void sendStudentToClassmatesInPeriodMessage(Session session, JSONObject messageJSON) {
+    	try {
+    		if(session != null) {
+        		//get the wiseWebSocketSession related to the given session
+        		WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
+        		
+        		if(wiseWebSocketSession != null) {
+            		Long runId = wiseWebSocketSession.getRunId();
+            		Long periodId = wiseWebSocketSession.getPeriodId();
+            		
+            		//add the run id into the message
+                	messageJSON.put("runId", runId);
+                	
+    	        	//get the message as a string
+    	        	String message = messageJSON.toString();
+    	        	
+    	        	//get all the currently connected students in the period
+    	        	Set<WISEWebSocketSession> studentConnectionsForRun = getStudentConnectionsForPeriod(runId, periodId);
+    	        	
+    	        	/*
+    	        	 * remove the student that is sending the message since they don't need
+    	        	 * to receive their own message
+    	        	 */
+    	        	studentConnectionsForRun.remove(wiseWebSocketSession);
+    	        	
+    	        	//send the message to all the currently connected students in the period
+    	        	sendMessageToConnections(message, studentConnectionsForRun);
+        		}
+    		}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

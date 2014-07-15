@@ -26,6 +26,19 @@ function BRAINSTORM(node){
 	$('#brain_instructions').html(this.view.getI18NStringWithParams('instructions',[this.view.getI18NString('save','BrainstormNode')],'BrainstormNode'));
 
 	this.contextPath = this.view.getConfig().getConfigParam('contextPath');
+	
+	//check if this step has already subscribed to the 'classmateWebSocketMessageReceived' event
+	if(!this.node.subscribedToClassmateWebSocketMessageReceived) {
+		//this step has not already subscribed so we will now
+		eventManager.subscribe('classmateWebSocketMessageReceived', this.classmateWebSocketMessageReceived, this);
+		
+		/*
+		 * set a boolean value to denote that this step has subscribed to the
+		 * 'classmateWebSocketMessageReceived' event so that it doesn't subscribe
+		 * to it again the next time this step is rendered
+		 */ 
+		this.node.subscribedToClassmateWebSocketMessageReceived = true;
+	}
 };
 
 /**
@@ -642,6 +655,18 @@ BRAINSTORM.prototype.savePost = function(frameDoc){
 			}
 
 			this.showClassmateResponses(frameDoc);
+			
+			//get the current node visit
+			var currentNodeVisit = this.view.getState().getCurrentNodeVisit();
+			
+			/*
+			 * set the messageType and messageParticipants into the current node visit
+			 * which will specify that when the node visit is sent to the server, the
+			 * server should also send it to websockets
+			 */
+			currentNodeVisit.messageType = 'messageFromClassmate';
+			currentNodeVisit.messageParticipants = 'studentToClassmatesInPeriod';
+			
 			/*
 			 * post the current node visit to the db immediately without waiting
 			 * for the student to exit the step.
@@ -999,6 +1024,76 @@ BRAINSTORM.prototype.processPostFailResponse = function(responseText, args){
 	// this is a callback for a failed save.
 	var bs = args.additionalData.bs;
 	bs.node.view.notificationManager.notify(this.view.getI18NString('save_fail'), 5);	
+};
+
+/**
+ * Called when the 'classmateWebSocketMessageReceived' event is fired
+ * @param type the event name 'classmateWebSocketMessageReceived'
+ * @param args the arguments passed in when the event is fired
+ * @param obj this brainstorm object
+ */
+BRAINSTORM.prototype.classmateWebSocketMessageReceived = function(type, args, obj) {
+	//get this brainstorm object
+	var thisBrainstorm = obj;
+	
+	//get the websocket data that the classmate has sent us which is a node visit
+	var data = args[0];
+	
+	if(data != null) {
+		//get the node id of the classmate work
+		var nodeId = data.nodeId;
+
+		if(thisBrainstorm != null) {
+			
+			//make sure the classmate work is for this step
+			if(thisBrainstorm.node.id == nodeId) {
+				
+				//get the current step this student is on
+				var currentNode = thisBrainstorm.view.getCurrentNode();
+				
+				//make sure the classmate work is for the current step we are on
+				if(currentNode.id == nodeId) {
+					
+					//process the classmate websocket message
+					thisBrainstorm.classmateWebSocketMessageReceivedHandler(data);
+				}
+			}			
+		}
+	}
+};
+
+/**
+ * Handle the classmate websocket message
+ * @param data the websocket message from the classmate
+ */
+BRAINSTORM.prototype.classmateWebSocketMessageReceivedHandler = function(data) {
+	//the classmate websocket message is a nodevisit for this step
+	var nodeVisit = data;
+	
+	//get the step content
+	var content = this.content;
+	
+	//get the view
+	var view = this.view;
+	
+	if(nodeVisit != null) {
+		//get the node states in the node visit
+		var nodeStates = nodeVisit.nodeStates;
+		
+		//get the node visit id
+		var nodeVisitId = nodeVisit.id;
+		
+		if(nodeStates != null && nodeStates.length > 0) {
+			//get the latest node state
+			var nodeState = nodeStates[nodeStates.length - 1];
+			
+			//inject the node visit id into the node state
+			nodeState.id = nodeVisitId;
+			
+			//display the classmate response
+			this.addStudentResponse(nodeState, view, content);
+		}
+	}
 };
 
 //used to notify scriptloader that this script has finished loading

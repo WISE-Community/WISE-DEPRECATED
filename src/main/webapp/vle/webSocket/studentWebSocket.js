@@ -195,6 +195,12 @@ View.prototype.startWebSocketConnection = function() {
 								//unlock the student screen if it is locked since there are no teachers online
 								view.unlockScreen();
 							}
+						} else if(messageType == 'messageFromClassmate') {
+							/*
+							 * fire the 'classmateWebSocketMessageReceived' event so that listeners can process
+							 * the classmate websocket data
+							 */
+							eventManager.fire('classmateWebSocketMessageReceived', data);
 						}
 					}
 				}
