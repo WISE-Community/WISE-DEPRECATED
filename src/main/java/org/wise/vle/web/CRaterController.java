@@ -15,7 +15,6 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.webservice.crater.CRaterHttpClient;
-import org.wise.vle.utils.SecurityUtils;
 
 @Controller
 public class CRaterController {

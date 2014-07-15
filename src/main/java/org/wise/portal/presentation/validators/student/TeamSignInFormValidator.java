@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.SystemWideSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -42,11 +43,13 @@ import org.wise.portal.service.user.UserService;
  * @author Hiroki Terashima
  * @version $Id$
  */
+@Component
 public class TeamSignInFormValidator implements Validator {
 
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
 	private SystemWideSaltSource systemSaltSource;
 	
 	/**
@@ -311,35 +314,5 @@ public class TeamSignInFormValidator implements Validator {
 				}
 			}
 		}
-	}
-
-	/**
-	 * @return the userService
-	 */
-	public UserService getUserService() {
-		return userService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public SystemWideSaltSource getSystemSaltSource() {
-		return systemSaltSource;
-	}
-
-	/**
-	 * 
-	 * @param systemSaltSource
-	 */
-	public void setSystemSaltSource(SystemWideSaltSource systemSaltSource) {
-		this.systemSaltSource = systemSaltSource;
 	}
 }

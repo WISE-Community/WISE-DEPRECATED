@@ -46,7 +46,6 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.workgroup.WISEWorkgroupService;
-import org.wise.vle.utils.SecurityUtils;
 
 /**
  * Servlet implementation class AssetManager

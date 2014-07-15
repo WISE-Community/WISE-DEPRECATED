@@ -23,9 +23,11 @@
 package org.wise.portal.presentation.validators;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.SystemWideSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -40,9 +42,12 @@ import org.wise.portal.domain.user.User;
  * @author Sally Ahn 
  * @version $Id:$
  */
+@Component
 public class ChangePasswordParametersValidator implements Validator {
 
 	protected static final int MAX_PASSWORD_LENGTH = 20;
+	
+	@Autowired
 	private SystemWideSaltSource systemSaltSource;
 
 	/**
@@ -259,12 +264,4 @@ public class ChangePasswordParametersValidator implements Validator {
 //
 //		return message;
 //	}
-
-	public SystemWideSaltSource getSystemSaltSource() {
-		return systemSaltSource;
-	}
-
-	public void setSystemSaltSource(SystemWideSaltSource systemSaltSource) {
-		this.systemSaltSource = systemSaltSource;
-	}
 }

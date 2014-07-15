@@ -46,7 +46,6 @@ import org.wise.portal.service.workgroup.WISEWorkgroupService;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.utils.FileManager;
-import org.wise.vle.utils.SecurityUtils;
 
 @Controller
 public class VLEGetSpecialExport {

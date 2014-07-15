@@ -22,6 +22,7 @@
  */
 package org.wise.portal.presentation.validators.teacher.management;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -33,6 +34,7 @@ import org.wise.portal.domain.teacher.management.RemoveStudentFromRunParameters;
  * @author Hiroki Terashima
  * @version $Id$
  */
+@Component
 public class RemoveStudentFromRunParametersValidator implements Validator {
 
 	/**

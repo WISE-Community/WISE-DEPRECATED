@@ -68,44 +68,6 @@
 	<bean id="urlFilenameViewController"
 		class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
 
-	<!-- Custom controllers -->
-
-	<bean id="removeStudentFromRunParametersValidator"
-		class="org.wise.portal.presentation.validators.teacher.management.RemoveStudentFromRunParametersValidator" />
-
-	<bean id="addprojectparametersValidator"
-		class="org.wise.portal.presentation.validators.student.AddProjectParametersValidator" />
-
-	<bean id="findProjectParametersValidator"
-		class="org.wise.portal.presentation.validators.FindProjectParametersValidator">
-		<property name="projectService" ref="projectService" />
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="studentAccountFormValidator"
-		class="org.wise.portal.presentation.validators.StudentAccountFormValidator">
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="teamSignInFormValidator"
-		class="org.wise.portal.presentation.validators.student.TeamSignInFormValidator">
-		<property name="systemSaltSource" ref="systemSaltSource" />
-	</bean>
-
-	<bean id="passwordReminderParameters" class="org.wise.portal.domain.impl.PasswordReminderParameters"
-		scope="prototype" />
-
-	<bean id="changePasswordParametersValidator"
-		class="org.wise.portal.presentation.validators.ChangePasswordParametersValidator">
-		<property name="systemSaltSource" ref="systemSaltSource" />
-	</bean>
-
-	<bean id="changeWorkgroupParametersValidator"
-		class="org.wise.portal.presentation.validators.teacher.ChangeWorkgroupParametersValidator" />
-
-	<bean id="changePeriodParametersValidator"
-		class="org.wise.portal.presentation.validators.teacher.ChangePeriodParametersValidator" />
-
 	<!-- Specifies where theme properties are located -->
 	<bean id="themeSource"
 		class="org.springframework.ui.context.support.ResourceBundleThemeSource">
@@ -128,12 +90,6 @@
 		<property name="fallbackToSystemLocale" value="false" />
 	</bean>
 
-	<!-- allows user to change language via ?lang=XX url param -->
-	<bean id="localeChangeInterceptor"
-		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-		<property name="paramName" value="lang" />
-	</bean>
-
 	<!-- The real exceptions are logged to the tomcat/logs/catalina.out file. 
 		Look there if you've got a problem. -->
 	<bean id="exceptionResolver"
@@ -151,24 +107,20 @@
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="mailService" ref="mailService" />
 	</bean>
-
-	<bean id="securityUtils" class="org.wise.vle.utils.SecurityUtils">
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
+	
+	<!-- allows user to change language via ?lang=XX url param -->
+	<bean id="localeChangeInterceptor"
+		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="lang" />
 	</bean>
 
 	<!-- these are resources that do not need to be backed by controllers and 
 		should be handled before looking through the SimpleUrlHandlerMapping mappings -->
 	<mvc:resources mapping="/vle/**" location="/vle/" order="1" />
 	<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
-
-	<!-- right now we need to register this twice: one for annotated controllers, and once for simpleurlhandlermapping.
-	  In the future, when we no longer need SimpleUrlHanderMapping, we can remove one -->
+	
 	<mvc:interceptors>
-		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-			<property name="paramName" value="lang"></property>
-		</bean>
+	    <ref bean="localeChangeInterceptor"/>
 	</mvc:interceptors>
 
 	<!-- all of the urls have been mapped using @Controller annotation,
