@@ -861,7 +861,7 @@
 	<!-- Add File Uploading capabilities -->
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<property name="maxUploadSize" value="#{wiseProperties['maxFileUploadSize']}" />
+		<property name="maxUploadSize" value="${maxFileUploadSize}" />
 	</bean>
 
 	<bean id="workgroupDao"
@@ -898,7 +898,7 @@
 
 	<task:scheduled-tasks>
 		<task:scheduled ref="dailyAdminJob" method="doJob"
-			cron="#{wiseProperties['cronJobExpression']}"></task:scheduled>
+			cron="${cronJobExpression}"></task:scheduled>
 	</task:scheduled-tasks>
 
 	<bean id="userDetailsService" scope="prototype"
