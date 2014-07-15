@@ -90,12 +90,6 @@
 		<property name="fallbackToSystemLocale" value="false" />
 	</bean>
 
-	<!-- allows user to change language via ?lang=XX url param -->
-	<bean id="localeChangeInterceptor"
-		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-		<property name="paramName" value="lang" />
-	</bean>
-
 	<!-- The real exceptions are logged to the tomcat/logs/catalina.out file. 
 		Look there if you've got a problem. -->
 	<bean id="exceptionResolver"
@@ -113,18 +107,20 @@
 		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="mailService" ref="mailService" />
 	</bean>
+	
+	<!-- allows user to change language via ?lang=XX url param -->
+	<bean id="localeChangeInterceptor"
+		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="lang" />
+	</bean>
 
 	<!-- these are resources that do not need to be backed by controllers and 
 		should be handled before looking through the SimpleUrlHandlerMapping mappings -->
 	<mvc:resources mapping="/vle/**" location="/vle/" order="1" />
 	<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
-
-	<!-- right now we need to register this twice: one for annotated controllers, and once for simpleurlhandlermapping.
-	  In the future, when we no longer need SimpleUrlHanderMapping, we can remove one -->
+	
 	<mvc:interceptors>
-		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-			<property name="paramName" value="lang"></property>
-		</bean>
+	    <ref bean="localeChangeInterceptor"/>
 	</mvc:interceptors>
 
 	<!-- all of the urls have been mapped using @Controller annotation,
