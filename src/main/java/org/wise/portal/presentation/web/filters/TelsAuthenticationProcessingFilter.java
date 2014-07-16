@@ -72,6 +72,7 @@ PasAuthenticationProcessingFilter {
 	public static final Integer recentFailedLoginTimeLimit = 15;
 	public static final Integer recentFailedLoginAttemptsLimit = 5;
 
+	@Autowired
 	private Properties wiseProperties;
 	
 	/**

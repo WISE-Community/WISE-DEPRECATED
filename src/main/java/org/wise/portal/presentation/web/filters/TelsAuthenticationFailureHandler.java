@@ -33,8 +33,6 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpSession;
-
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaFactory;
 
@@ -54,6 +52,7 @@ import org.wise.portal.service.user.UserService;
 public class TelsAuthenticationFailureHandler extends
 		SimpleUrlAuthenticationFailureHandler {
 
+	@Autowired
 	private Properties wiseProperties;
 	
 	@Autowired

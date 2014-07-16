@@ -746,7 +746,7 @@
 		<!-- exclude unit test annotations -->
 		<context:exclude-filter type="regex" expression=".*?Test.*?" />
 	</context:component-scan>
-	
+
 	<!-- enable the @Required Spring annotation for marking required properties to be wired -->
 	<bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
 
@@ -891,51 +891,35 @@
 		<property name="annotatedClasses">
 			<list>
 				<!-- portal mappings -->
-				<value>org.wise.portal.domain.authentication.impl.PersistentAclEntry
-				</value>
-				<value>org.wise.portal.domain.authentication.impl.PersistentAclSid
-				</value>
-				<value>org.wise.portal.domain.authentication.impl.PersistentAclTargetObject
-				</value>
-				<value>org.wise.portal.domain.authentication.impl.PersistentAclTargetObjectIdentity
-				</value>
-				<value>org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority
-				</value>
-				<value>org.wise.portal.domain.authentication.impl.PersistentUserDetails
-				</value>
+				<value>org.wise.portal.domain.authentication.impl.PersistentAclEntry</value>
+				<value>org.wise.portal.domain.authentication.impl.PersistentAclSid</value>
+				<value>org.wise.portal.domain.authentication.impl.PersistentAclTargetObject</value>
+				<value>org.wise.portal.domain.authentication.impl.PersistentAclTargetObjectIdentity</value>
+				<value>org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority</value>
+				<value>org.wise.portal.domain.authentication.impl.PersistentUserDetails</value>
 				<value>org.wise.portal.domain.module.impl.CurnitImpl</value>
 				<value>org.wise.portal.domain.run.impl.OfferingImpl</value>
 				<value>org.wise.portal.domain.workgroup.impl.WorkgroupImpl</value>
 				<value>org.wise.portal.domain.user.impl.UserImpl</value>
 				<value>org.wise.portal.domain.group.impl.PersistentGroup</value>
-				<value>org.wise.portal.domain.authentication.impl.StudentUserDetails
-				</value>
-				<value>org.wise.portal.domain.authentication.impl.TeacherUserDetails
-				</value>
+				<value>org.wise.portal.domain.authentication.impl.StudentUserDetails</value>
+				<value>org.wise.portal.domain.authentication.impl.TeacherUserDetails</value>
 				<value>org.wise.portal.domain.run.impl.RunImpl</value>
-				<value>org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl
-				</value>
+				<value>org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl</value>
 				<value>org.wise.portal.domain.module.impl.ModuleImpl</value>
 				<value>org.wise.portal.domain.module.impl.UrlModuleImpl</value>
 				<value>org.wise.portal.domain.project.impl.ProjectImpl</value>
 				<value>org.wise.portal.domain.portal.impl.PortalImpl</value>
-				<value>org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl
-				</value>
-				<value>org.wise.portal.domain.premadecomment.impl.PremadeCommentListImpl
-				</value>
+				<value>org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl</value>
+				<value>org.wise.portal.domain.premadecomment.impl.PremadeCommentListImpl</value>
 				<value>org.wise.portal.domain.newsitem.impl.NewsItemImpl</value>
-				<value>org.wise.portal.domain.announcement.impl.AnnouncementImpl
-				</value>
-				<value>org.wise.portal.domain.project.impl.ProjectMetadataImpl
-				</value>
+				<value>org.wise.portal.domain.announcement.impl.AnnouncementImpl</value>
+				<value>org.wise.portal.domain.project.impl.ProjectMetadataImpl</value>
 				<value>org.wise.portal.domain.message.impl.MessageImpl</value>
-				<value>org.wise.portal.domain.message.impl.MessageRecipientImpl
-				</value>
+				<value>org.wise.portal.domain.message.impl.MessageRecipientImpl</value>
 				<value>org.wise.portal.domain.project.impl.TagImpl</value>
-				<value>org.wise.portal.domain.portal.impl.PortalStatisticsImpl
-				</value>
-				<value>org.wise.portal.domain.attendance.impl.StudentAttendanceImpl
-				</value>
+				<value>org.wise.portal.domain.portal.impl.PortalStatisticsImpl</value>
+				<value>org.wise.portal.domain.attendance.impl.StudentAttendanceImpl</value>
 				<!-- vle mappings -->
 				<value>org.wise.vle.domain.user.UserInfo</value>
 				<value>org.wise.vle.domain.node.Node</value>
@@ -959,7 +943,6 @@
 	</bean>
 
 	<bean id="authFailureHandler" class="org.wise.portal.presentation.web.filters.TelsAuthenticationFailureHandler">
-		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="authenticationFailureUrl" value="/login.html?failed=true" />
 	</bean>
 
@@ -967,7 +950,6 @@
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="authenticationSuccessHandler" ref="authSuccessHandler" />
 		<property name="authenticationFailureHandler" ref="authFailureHandler" />
-		<property name="wiseProperties" ref="wiseProperties" />
 		<property name="filterProcessesUrl" value="/j_acegi_security_check" />
 	</bean>
 
