@@ -36,6 +36,7 @@ import org.wise.portal.domain.authentication.impl.PersistentAclTargetObjectIdent
  * @version $Id: HibernateAclTargetObjectIdentityDao.java 592 2007-07-05
  *          15:54:23Z cynick $
  */
+@Repository
 public class HibernateAclTargetObjectIdentityDao extends
         AbstractHibernateDao<MutableAclTargetObjectIdentity> implements
         AclTargetObjectIdentityDao<MutableAclTargetObjectIdentity> {

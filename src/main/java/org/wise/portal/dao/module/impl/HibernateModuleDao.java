@@ -23,6 +23,7 @@
 package org.wise.portal.dao.module.impl;
 
 
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.module.ModuleDao;
 import org.wise.portal.domain.module.Module;
@@ -33,6 +34,7 @@ import org.wise.portal.domain.module.impl.ModuleImpl;
  *
  * @version $Id$
  */
+@Repository
 public class HibernateModuleDao extends AbstractHibernateDao<Module> implements
 		ModuleDao<Module> {
 

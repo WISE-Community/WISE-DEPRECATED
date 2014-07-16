@@ -31,7 +31,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +64,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 
 	private static final int MAX_RUNCODE_DIGIT = 1000;
 
+	@Autowired
 	private RunDao<Run> runDao;
 
 	@Autowired
@@ -587,12 +587,5 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		run.setPrivateNotes(privateNotes);
 		run.setPublicNotes(publicNotes);
 		this.runDao.save(run);
-	}
-
-	/**
-	 * @param runDao the runDao to set
-	 */
-	public void setRunDao(RunDao<Run> runDao) {
-		this.runDao = runDao;
 	}
 }

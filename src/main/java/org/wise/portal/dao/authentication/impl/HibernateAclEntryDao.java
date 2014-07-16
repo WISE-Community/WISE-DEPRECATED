@@ -18,6 +18,7 @@
 package org.wise.portal.dao.authentication.impl;
 
 
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.authentication.AclEntryDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.authentication.ImmutableAclEntry;
@@ -34,6 +35,7 @@ import org.wise.portal.domain.authentication.impl.PersistentAclEntry;
  *
  * @version $Id$
  */
+@Repository
 public class HibernateAclEntryDao extends AbstractHibernateDao<ImmutableAclEntry> implements
         AclEntryDao<ImmutableAclEntry> {
     

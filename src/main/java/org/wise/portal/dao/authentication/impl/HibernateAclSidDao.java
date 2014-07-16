@@ -19,6 +19,7 @@ package org.wise.portal.dao.authentication.impl;
 
 
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.authentication.AclSidDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.authentication.MutableAclSid;
@@ -33,6 +34,7 @@ import org.wise.portal.domain.authentication.impl.PersistentAclSid;
  * 
  * @version $Id$
  */
+@Repository
 public class HibernateAclSidDao extends AbstractHibernateDao<MutableAclSid>
         implements AclSidDao<MutableAclSid> {
 

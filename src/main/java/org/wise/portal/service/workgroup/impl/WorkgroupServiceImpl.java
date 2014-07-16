@@ -53,6 +53,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  */
 public class WorkgroupServiceImpl implements WorkgroupService {
 
+	@Autowired 
     protected WorkgroupDao<Workgroup> workgroupDao;
     
     @Autowired
@@ -74,15 +75,6 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	public void setAclService(AclService<Workgroup> aclService) {
 		this.aclService = aclService;
 	}
-
-    /**
-     * @param workgroupDao
-     *            the workgroupDao to set
-     */
-    @Required
-    public void setWorkgroupDao(WorkgroupDao<Workgroup> workgroupDao) {
-        this.workgroupDao = workgroupDao;
-    }  
 
     /**
      * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#createWorkgroup(net.sf.sail.webapp.domain.Workgroup, net.sf.sail.webapp.domain.Offering)
@@ -161,14 +153,6 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 		return workgroup;
 	}
 	
-    /**
-     * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#getWorkgroupIterator()
-     */
-    @Transactional(readOnly = true)
-    public List<Workgroup> getWorkgroupList() {
-        return this.workgroupDao.getList();
-    }
-
     /**
      * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#getWorkgroupListByOfferingAndUser(net.sf.sail.webapp.domain.Offering,
      *      net.sf.sail.webapp.domain.User)
@@ -330,20 +314,6 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 		this.offeringService = offeringService;
 	}
 
-	/**
-	 * @param groupDao the groupDao to set
-	 */
-	public void setGroupDao(GroupDao<Group> groupDao) {
-		this.groupDao = groupDao;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-	
 	/**
 	 * @param groupService the groupService to set
 	 */
