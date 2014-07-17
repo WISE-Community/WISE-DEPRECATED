@@ -41,7 +41,6 @@ public class ControllerUtil {
 
 	public final static String USER_KEY = "user";
 	
-	@Autowired
 	private static UserService userService;
 
 	@Autowired

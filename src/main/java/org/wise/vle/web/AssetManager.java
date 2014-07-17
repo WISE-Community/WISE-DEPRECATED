@@ -57,7 +57,6 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 @RequestMapping("/assetManager.html")
 public class AssetManager {
 	
-	@Autowired
 	private static Properties wiseProperties;
 
 	@Autowired

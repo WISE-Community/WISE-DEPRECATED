@@ -36,7 +36,7 @@
 	<!-- if you wish to use channel security, add "channelProcessingFilter," in front of "httpSessionContextIntegrationFilter" 
 		in the list below -->
 	<bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
-		<sec:filter-chain-map path-type="ant">
+		<sec:filter-chain-map request-matcher="ant">
 			<sec:filter-chain pattern="/**"
 				filters="
      		    openSessionInViewFilter,
