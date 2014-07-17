@@ -25,8 +25,8 @@ package org.wise.portal.service.offering;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
-import org.springframework.security.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.announcement.Announcement;

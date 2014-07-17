@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.security.annotation.Secured;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
