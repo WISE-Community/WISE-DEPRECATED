@@ -49,7 +49,7 @@ import org.wise.portal.service.user.UserService;
  * @author hirokiterashima
  * @version $Id:$
  */
-public class TelsAuthenticationFailureHandler extends
+public class WISEAuthenticationFailureHandler extends
 		SimpleUrlAuthenticationFailureHandler {
 
 	@Autowired
@@ -63,8 +63,6 @@ public class TelsAuthenticationFailureHandler extends
 	public static final Integer recentFailedLoginAttemptsLimit = 5;
 	
 	private String authenticationFailureUrl;
-
-
 
 	@Override
 	@Transactional

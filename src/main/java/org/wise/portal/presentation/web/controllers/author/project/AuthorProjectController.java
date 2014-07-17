@@ -70,7 +70,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.CredentialManager;
 import org.wise.portal.presentation.web.controllers.TaggerController;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
-import org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilter;
+import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
@@ -1434,7 +1434,7 @@ public class AuthorProjectController {
 			config.put("username", username);
 			config.put("projectMetaDataUrl", projectMetaDataUrl);
 			config.put("curriculumBaseUrl", curriculumBaseUrl);
-			config.put("indexUrl", ControllerUtil.getPortalUrlString(request) + TelsAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+			config.put("indexUrl", ControllerUtil.getPortalUrlString(request) + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 			int maxInactiveInterval = request.getSession().getMaxInactiveInterval() * 1000;
 			config.put("sessionTimeoutInterval", maxInactiveInterval);			// add sessiontimeout interval, in milleseconds
 			int sessionTimeoutCheckInterval = maxInactiveInterval / 20;         // check 20 times during the session.

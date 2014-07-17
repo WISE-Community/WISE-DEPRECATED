@@ -59,7 +59,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.run.RunUtil;
-import org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilter;
+import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
@@ -107,10 +107,10 @@ public class BridgeController extends AbstractController {
 			if (request.getRequestURI().equals(contextPath + "/bridge/postdata.html")) {
 				User signedInUser = ControllerUtil.getSignedInUser();
 				if (signedInUser.getUserDetails() instanceof TeacherUserDetails) {
-					response.sendRedirect(contextPath + TelsAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+					response.sendRedirect(contextPath + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 					return null;
 				} else if (signedInUser.getUserDetails() instanceof StudentUserDetails) {
-					response.sendRedirect(contextPath + TelsAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
+					response.sendRedirect(contextPath + WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
 					return null;
 				} else {
 					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this page");

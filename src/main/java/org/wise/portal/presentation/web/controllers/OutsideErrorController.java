@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.wise.portal.spring.impl.TelsSimpleMappingExceptionResolver;
+import org.wise.portal.spring.impl.WISESimpleMappingExceptionResolver;
 
 /**
  * @author patrick lawler
@@ -39,7 +39,7 @@ import org.wise.portal.spring.impl.TelsSimpleMappingExceptionResolver;
 public class OutsideErrorController {
 
 	@Autowired
-	private TelsSimpleMappingExceptionResolver exceptionResolver;
+	private WISESimpleMappingExceptionResolver exceptionResolver;
 	
 	@RequestMapping("/errors/outsideerror.html")
 	protected ModelAndView handleRequestInternal(

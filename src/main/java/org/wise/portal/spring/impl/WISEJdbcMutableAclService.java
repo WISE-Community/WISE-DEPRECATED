@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013 Regents of the University of California (Regents). Created
+ * Copyright (c) 2008 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
@@ -25,25 +25,37 @@ package org.wise.portal.spring.impl;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import javax.sql.DataSource;
+
+import org.springframework.security.acls.jdbc.JdbcMutableAclService;
+import org.springframework.security.acls.jdbc.LookupStrategy;
+import org.springframework.security.acls.model.AclCache;
 
 /**
- * Overrides default behavior to account for loading in properties via wise.properties file
+ * Extends JdbcMutableAclService to handle different database types
  * @author Hiroki Terashima
  * @version $Id:$
  */
-public class TelsAnnotationSessionFactoryBean extends LocalSessionFactoryBean {
-	
-	protected void postProcessAnnotationConfiguration(AnnotationConfiguration config) {
+public class WISEJdbcMutableAclService extends JdbcMutableAclService {
+
+	public WISEJdbcMutableAclService(DataSource dataSource,
+			LookupStrategy lookupStrategy, AclCache aclCache) {
+		super(dataSource, lookupStrategy, aclCache);
 		Properties wiseProperties = new Properties();
     	try {
-    		wiseProperties.load(TelsAnnotationSessionFactoryBean.class.getClassLoader().getResourceAsStream("wise.properties"));
+    		wiseProperties.load(WISESessionFactoryBean.class.getClassLoader().getResourceAsStream("wise.properties"));
+    		if (wiseProperties.containsKey("hibernate.connection.driver_class")) {
+    			String driverClass = (String) wiseProperties.get("hibernate.connection.driver_class");
+    			if ("com.mysql.jdbc.Driver".equals(driverClass)) {
+    				this.setClassIdentityQuery("SELECT @@IDENTITY");
+    				this.setSidIdentityQuery("SELECT @@IDENTITY");
+    			}
+    		}
 		} catch (IOException e) {
 			// pretend like nothing happened.
 			e.printStackTrace();
 		}
-    	config.addProperties(wiseProperties);  // add extra property overrides (like url,username,password) in wise.properties
+
 	}
 
 }
