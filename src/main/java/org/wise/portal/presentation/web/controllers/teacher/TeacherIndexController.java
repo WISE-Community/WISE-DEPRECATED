@@ -145,7 +145,6 @@ public class TeacherIndexController {
 		// end temporary code
 		List<Run> current_run_list1 = new ArrayList<Run>();
 		Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
-		Integer count = 0;
 		for (Run run : runList2) {
 			
 			List<Workgroup> workgroupList = this.workgroupService
@@ -154,9 +153,6 @@ public class TeacherIndexController {
 			workgroupMap.put(run, workgroupList);
 			if (!run.isEnded()) {
 				current_run_list1.add(run);
-				Project project = projectService.getById(run.getProject().getId());
-				ProjectTypeVisitor typeVisitor = new ProjectTypeVisitor();
-				String result = (String) project.accept(typeVisitor);
 			}
 		}
 		

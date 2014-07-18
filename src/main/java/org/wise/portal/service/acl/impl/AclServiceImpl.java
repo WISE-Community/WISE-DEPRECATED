@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.proxy.HibernateProxyHelper;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
@@ -145,7 +146,7 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
 		List<Permission> permissions = new ArrayList<Permission>();
 		if (object != null) {	
 			MutableAcl acl = null;
-			ObjectIdentity objectIdentity = new ObjectIdentityImpl(object.getClass(), object
+			ObjectIdentity objectIdentity = new ObjectIdentityImpl(HibernateProxyHelper.getClassWithoutInitializingProxy(object), object
 					.getId());
 			List<Sid> sid = new ArrayList<Sid>();
 			sid.add(new PrincipalSid(user.getUserDetails().getUsername()));
@@ -172,7 +173,8 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
 		List<Permission> permissions = new ArrayList<Permission>();
 		if (object != null) {	
 			MutableAcl acl = null;
-			ObjectIdentity objectIdentity = new ObjectIdentityImpl(object.getClass(), object
+			
+			ObjectIdentity objectIdentity = new ObjectIdentityImpl(HibernateProxyHelper.getClassWithoutInitializingProxy(object), object
 					.getId());
 			List<Sid> sid = new ArrayList<Sid>();
 			sid.add(new PrincipalSid(userDetails.getUsername()));

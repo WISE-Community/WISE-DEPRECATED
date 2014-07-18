@@ -188,6 +188,22 @@
 					</packagingExcludes>
 				</configuration>
 			</plugin>
+			<!--  used to run mvn tomcat7:run, which runs WISE without IDE -->
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<!-- http port -->
+					<port>8080</port>
+					<!-- application path always starts with / -->
+					<path>/${project.build.finalName}</path>
+					<systemProperties>
+						<JAVA_OPTS>-Xms512m -Xmx1024m -XX:MaxPermSize=512m</JAVA_OPTS>
+					</systemProperties>
+					<useTestClasspath>false</useTestClasspath>
+				</configuration>
+			</plugin>				
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
