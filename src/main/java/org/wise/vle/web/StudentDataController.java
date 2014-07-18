@@ -881,6 +881,9 @@ public class StudentDataController {
 				
 				//check if this node visit should be sent to other users using websockets
 				if(isSendToWebSockets(nodeVisitJSON)) {
+					//inject the step work id into the node visit JSON
+					nodeVisitJSON.put("id", newStepWorkId);
+					
 					//send this message to websockets
 					wiseEndPoint.handleMessage(signedInUser, nodeVisitJSON.toString());					
 				}

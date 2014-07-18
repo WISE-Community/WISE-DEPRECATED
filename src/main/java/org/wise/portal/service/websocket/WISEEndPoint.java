@@ -1344,7 +1344,7 @@ public class WISEEndPoint extends Endpoint {
     	        	 * remove the student that is sending the message since they don't need
     	        	 * to receive their own message
     	        	 */
-    	        	studentConnectionsForRun.remove(wiseWebSocketSession);
+    	        	//studentConnectionsForRun.remove(wiseWebSocketSession);
     	        	
     	        	//send the message to all the currently connected students in the period
     	        	sendMessageToConnections(message, studentConnectionsForRun);

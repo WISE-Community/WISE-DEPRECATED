@@ -292,6 +292,12 @@ function getClassmateResponsesCallback(responseText, responseXML, handlerArgs) {
 		var frameDoc = handlerArgs.frameDoc;
 		var responsesParent = frameDoc.getElementById('responses');
 
+		//remove all the responses because we will be displaying them all again
+		$('#responses').empty();
+		
+		//show the canned responses
+		bs.showCannedResponses(frameDoc);
+		
 		/*
 		 * the array that holds objects that represent a response. the
 		 * object contains a userId, responseText, timestamp 
@@ -430,6 +436,9 @@ function getClassmateResponsesCallback(responseText, responseXML, handlerArgs) {
 
 	// get inappropriate flags for this brainstorm and hide them from student view
 	BRAINSTORM.prototype.filterInappropriatePosts(handlerArgs.vle);
+	
+	//set the boolean to denote that we have retrieved the classmate responses
+	bs.retrievedClassmateResponses = true;
 };
 
 /**
@@ -457,6 +466,8 @@ BRAINSTORM.prototype.saveReply = function(replyText, replyToNodeVisitId, replyTo
 		this.states.push(currentState);
 
 		this.recentResponses.push(replyText);
+		
+		var frameDoc = document;
 
 		//check if we are using a server backend
 		if(this.content.useServer) {
@@ -472,9 +483,21 @@ BRAINSTORM.prototype.saveReply = function(replyText, replyToNodeVisitId, replyTo
 					"replyState":currentState,
 					"replyToNodeVisitId":replyToNodeVisitId,
 					"replyToNodeStateTimestamp":replyToNodeStateTimestamp,
-					"bs":this
+					"bs":this,
+					"frameDoc":frameDoc
 			}
 
+			//get the current node visit
+			var currentNodeVisit = this.view.getState().getCurrentNodeVisit();
+			
+			/*
+			 * set the messageType and messageParticipants into the current node visit
+			 * which will specify that when the node visit is sent to the server, the
+			 * server should also send it to websockets
+			 */
+			currentNodeVisit.messageType = 'messageFromClassmate';
+			currentNodeVisit.messageParticipants = 'studentToClassmatesInPeriod';
+			
 			/*
 			 * post the current node visit to the db immediately without waiting
 			 * for the student to exit the step.
@@ -541,11 +564,6 @@ BRAINSTORM.prototype.filterInappropriatePosts = function(vle){
 BRAINSTORM.prototype.showCannedResponses = function(frameDoc){
 	/* get parent */
 	var responsesParent = frameDoc.getElementById('responses');
-
-	/* remove any old children */
-	while(responsesParent.firstChild){
-		responsesParent.removeChild(responsesParent.firstChild);
-	};
 
 	if (this.content.cannedResponses) {
 		/* create new response elements for each response in canned responses and append to parent */
@@ -617,15 +635,6 @@ BRAINSTORM.prototype.savePost = function(frameDoc){
 	//obtain the dom object that holds all the responses
 	var responsesParent = frameDoc.getElementById('responses');
 
-	/*
-	 * clear out all the responses from the last time we loaded
-	 * them so we do not have any duplicates. down below, we will 
-	 * re-load all of the responses again including any new responses.
-	 */
-	while(responsesParent.firstChild){
-		responsesParent.removeChild(responsesParent.firstChild);
-	};
-
 	if(response && response!=""){
 		var postType = "new";
 		var currentState = new BRAINSTORMSTATE(response, postType);
@@ -635,9 +644,6 @@ BRAINSTORM.prototype.savePost = function(frameDoc){
 		frameDoc.getElementById('saveMsg').innerHTML = "<font color='8B0000'>" + this.view.getI18NString('save_success','BrainstormNode') + "</font>";
 
 		this.recentResponses.push(response);
-
-		//display the canned responses
-		this.showCannedResponses(frameDoc);
 
 		//check if we are using a server backend
 		if(this.content.useServer) {
@@ -651,10 +657,9 @@ BRAINSTORM.prototype.savePost = function(frameDoc){
 			var additionalCallbackData = {
 					"isNewPost":true,
 					"replyState":currentState,
-					"bs":this
+					"bs":this,
+					"frameDoc":frameDoc
 			}
-
-			this.showClassmateResponses(frameDoc);
 			
 			//get the current node visit
 			var currentNodeVisit = this.view.getState().getCurrentNodeVisit();
@@ -723,7 +728,26 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 				var bsNodeVisitId = $(this).attr("bsnodevisitid");
 				var bsNodeStateTimestamp = $(this).attr("bsnodestatetimestamp");
 				if ($("#replyDiv_"+bsNodeVisitId+"_"+bsNodeStateTimestamp).length != 0) {
-					// a reply box already exists, don't show another one.
+					/*
+					 * a reply box already exists, so we will remove it. this acts
+					 * as a toggle for the reply box.
+					 */
+					
+					//get the reply div
+					var replyDiv = $(".replyDiv[bsnodevisitid='"+bsNodeVisitId+"'][bsnodestatetimestamp='"+bsNodeStateTimestamp+"']");
+					
+					if(replyDiv != null) {
+						/*
+						 * remove the tinymce from the reply textarea otherwise the next time we try
+						 * to open the reply textarea for the same exact post, the tinymce won't
+						 * load
+						 */
+						tinymce.remove(tinymce.get(replyDiv.find('textarea').attr('id')));
+						
+						// remove replyDiv with textarea from dom
+						replyDiv.remove();
+					}
+					
 					return;
 				}
 
@@ -752,8 +776,8 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 				// add the "Post Reply" button after the reply text area, at the bottom of the replyDiv
 				replyDiv.append(replySaveButton);
 
-				// add the reply div to the end of the div that contains the post/reply that we're replying to.
-				$(this).parents("[bsNodeVisitId='"+bsNodeVisitId+"'][bsNodeStateTimestamp='"+bsNodeStateTimestamp+"']").append(replyDiv);	
+				//add the reply div below the post we are replying to
+				$($(this).parent().siblings()[0]).after(replyDiv);
 
 				// make the reply textareas into a rich text editor
 				if(content.isRichTextEditorAllowed){
@@ -780,14 +804,16 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 		var replyToNodeStateTimestamp = state.bsReplyToNodeStateTimestamp;
 
 		// get the div that contains the original post that this reply is for
-		var replyToDiv = $("div[bsnodevisitid='"+replyToNodeVisitId+"'][bsnodestatetimestamp='"+replyToNodeStateTimestamp+"']");
+		var replyToDiv = $("div[bsnodevisitid='"+replyToNodeVisitId+"'][bsnodestatetimestamp='"+replyToNodeStateTimestamp+"'].responseMainDiv");
 
 		$(responseMainDiv).addClass("reply");
+		
+		//add the new post to the end of the div we are replying to
 		replyToDiv.append(responseMainDiv);
 	} else {
 		// this is an original post. show it in the top level 'responses' div.
 		$(responseMainDiv).addClass("response");
-		responsesParent.append(responseMainDiv);	
+		responsesParent.append(responseMainDiv);
 	}
 
 };
@@ -998,12 +1024,47 @@ BRAINSTORM.prototype.processPostSuccessResponse = function(responseText, respons
 		var replyToNodeStateTimestamp = args.additionalData.replyToNodeStateTimestamp;
 		var bs = args.additionalData.bs;
 		var content = bs.content;
+		var frameDoc = args.additionalData.frameDoc;
 
-		// remove replyDiv with textarea from dom
-		$(".replyDiv[bsnodevisitid='"+replyToNodeVisitId+"'][bsnodestatetimestamp='"+replyToNodeStateTimestamp+"']").remove();
+		/*
+		 * if the student replied to another post, get the div that contains the textarea 
+		 * that was used to type the reply
+		 */
+		var replyDiv = $(".replyDiv[bsnodevisitid='"+replyToNodeVisitId+"'][bsnodestatetimestamp='"+replyToNodeStateTimestamp+"']");
+		
+		if(replyDiv != null && replyDiv.length != 0) {
+			/*
+			 * remove the tinymce from the reply textarea otherwise the next time we try
+			 * to open the reply textarea for the same exact post, the tinymce won't
+			 * load
+			 */
+			tinymce.remove(tinymce.get(replyDiv.find('textarea').attr('id')));
+			
+			// remove replyDiv with textarea from dom
+			replyDiv.remove();
+		}
+		
 
-		// also show this reply on the forum immediately so student doesn't have to refresh.
-		bs.addStudentResponse(replyState, this.vle, content);		
+		//get the div for the new post
+		var newNodeVisitId = replyState.nodeVisitId;
+		var newTimestamp = replyState.timestamp;
+		var newDiv = $("div[bsnodevisitid='"+newNodeVisitId+"'][bsnodestatetimestamp='"+newTimestamp+"']");
+		
+		if(newDiv != null && newDiv.length > 0) {
+			//scroll the screen to display the new post at the top of the screen
+			newDiv[0].scrollIntoView(true);
+		}
+		
+		if(!bs.retrievedClassmateResponses || this.vle.socket == null || this.vle.socket.readyState != 1) {
+			/*
+			 * we have not retrieved the classmate responses yet so we will now.
+			 * if websockets is not enabled or not open, we will also retrieve the classmate 
+			 * responses since we won't be receiving them from websockets. this means if
+			 * websockets are not enabled, we will retrieve the classmate responses
+			 * every time this student submits a post.
+			 */
+			bs.showClassmateResponses(frameDoc);
+		}
 	} else if (args.additionalData.isNewPost) {
 		// this is a callback for a new post that was saved successfully. Diplay the new post in the UI
 		var bs = args.additionalData.bs;
@@ -1088,10 +1149,18 @@ BRAINSTORM.prototype.classmateWebSocketMessageReceivedHandler = function(data) {
 			var nodeState = nodeStates[nodeStates.length - 1];
 			
 			//inject the node visit id into the node state
-			nodeState.id = nodeVisitId;
+			nodeState.nodeVisitId = nodeVisitId;
 			
-			//display the classmate response
-			this.addStudentResponse(nodeState, view, content);
+			if((this.states != null && this.states.length > 0) || !this.content.isGated) {
+				/*
+				 * the student has already submitted a post or the step is not gated
+				 * so we can show the student their classmate's new post received from
+				 * websockets
+				 */
+				
+				//display the classmate response
+				this.addStudentResponse(nodeState, view, content);
+			}
 		}
 	}
 };
