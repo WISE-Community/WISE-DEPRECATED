@@ -25,8 +25,7 @@ package org.wise.portal.service.group;
 import java.util.List;
 import java.util.Set;
 
-
-import org.springframework.security.annotation.Secured;
+import org.springframework.security.access.annotation.Secured;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.GroupParameters;

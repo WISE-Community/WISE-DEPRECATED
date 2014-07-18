@@ -18,6 +18,7 @@
 package org.wise.portal.dao.module.impl;
 
 
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.module.CurnitDao;
 import org.wise.portal.domain.module.Curnit;
@@ -29,6 +30,7 @@ import org.wise.portal.domain.module.impl.CurnitImpl;
  * @version $Id$
  * 
  */
+@Repository
 public class HibernateCurnitDao extends AbstractHibernateDao<Curnit> implements
         CurnitDao<Curnit> {
 

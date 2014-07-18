@@ -102,14 +102,6 @@ public interface WorkgroupService {
             User user);
 
     /**
-     * Gets a <code>List</code> of workgroups available.
-     * 
-     * @return a <code>Workgroup</code> <code>List</code>.
-     */
-//  @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
-    public List<Workgroup> getWorkgroupList();
-   
-    /**
      * Creates a new <code>Workgroup</code> object in the local data store, and then associates
      * that workgroup to an offering. 
      * 

@@ -23,6 +23,7 @@
 package org.wise.portal.presentation.web.controllers;
 
 import java.util.Date;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -45,8 +46,12 @@ import org.wise.portal.service.project.ProjectService;
 @Controller
 public class RouterController {
 
-	@Autowired
 	private static ProjectService projectService;
+	
+	@Autowired
+	public void setProjectService(ProjectService projectService){
+		RouterController.projectService = projectService;
+	}
 	
 	@Autowired
 	private ServletContext servletContext;

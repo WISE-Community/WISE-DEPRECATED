@@ -47,6 +47,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
  * @author Hiroki Terashima
  * @version $Id$
  */
+@Repository
 public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 		RunDao<Run> {
 

@@ -50,7 +50,7 @@ import org.wise.portal.service.portal.PortalService;
  * @author hirokiterashima
  * @version $Id:$
  */
-public class TelsAuthenticationSuccessHandler extends
+public class WISEAuthenticationSuccessHandler extends
 		SavedRequestAwareAuthenticationSuccessHandler {
 	
 	private UserDetailsService userDetailsService;
@@ -73,10 +73,10 @@ public class TelsAuthenticationSuccessHandler extends
         	if (lastLoginTime != null) {
         		pLT = lastLoginTime.getTime();
         	}        
-        	this.setDefaultTargetUrl(TelsAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH + "?pLT=" + pLT); 			        			
+        	this.setDefaultTargetUrl(WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH + "?pLT=" + pLT); 			        			
         }
         else if (userDetails instanceof TeacherUserDetails) {
-	   		this.setDefaultTargetUrl(TelsAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+	   		this.setDefaultTargetUrl(WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 
         	GrantedAuthority researcherAuth = null;
         	try {
@@ -88,7 +88,7 @@ public class TelsAuthenticationSuccessHandler extends
 			Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
 			for (GrantedAuthority authority : authorities) {
         		if (researcherAuth.equals(authority)) {
-        			this.setDefaultTargetUrl(TelsAuthenticationProcessingFilter.RESEARCHER_DEFAULT_TARGET_PATH);
+        			this.setDefaultTargetUrl(WISEAuthenticationProcessingFilter.RESEARCHER_DEFAULT_TARGET_PATH);
         		}
 			}
 	   		
@@ -101,7 +101,7 @@ public class TelsAuthenticationSuccessHandler extends
 			}
 			for (GrantedAuthority authority : authorities) {
         		if (adminAuth.equals(authority)) {
-        			this.setDefaultTargetUrl(TelsAuthenticationProcessingFilter.ADMIN_DEFAULT_TARGET_PATH);
+        			this.setDefaultTargetUrl(WISEAuthenticationProcessingFilter.ADMIN_DEFAULT_TARGET_PATH);
         			userIsAdmin = true;
         		}
 			}
@@ -114,7 +114,7 @@ public class TelsAuthenticationSuccessHandler extends
 				//get the context path e.g. /wise
 				String contextPath = request.getContextPath();
 				
-		        	response.sendRedirect(contextPath + TelsAuthenticationProcessingFilter.LOGOUT_PATH);
+		        	response.sendRedirect(contextPath + WISEAuthenticationProcessingFilter.LOGOUT_PATH);
 		        	return;
 		    }
         } catch (ObjectNotFoundException e) {

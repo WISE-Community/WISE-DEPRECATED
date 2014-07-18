@@ -33,7 +33,7 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.validators.general.contactwise.ContactWISEValidator;
-import org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilter;
+import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
@@ -328,7 +328,7 @@ public class ContactWiseController {
 			String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
 
 			//check if the public key is valid in case the admin entered it wrong
-			boolean reCaptchaKeyValid = TelsAuthenticationProcessingFilter.isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
+			boolean reCaptchaKeyValid = WISEAuthenticationProcessingFilter.isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
 
 			if(reCaptchaPrivateKey != null && reCaptchaPublicKey != null && reCaptchaKeyValid) {
 				//get the reCaptcha challenge

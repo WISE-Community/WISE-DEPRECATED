@@ -53,7 +53,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilter;
+import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
@@ -756,11 +756,11 @@ public class InformationController {
 		        UserDetails userDetails = (UserDetails) signedInUser.getUserDetails();
 		        if (userDetails instanceof StudentUserDetails) {
 		        	config.put("userType", "student");
-					config.put("indexUrl", ControllerUtil.getPortalUrlString(request) + TelsAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
+					config.put("indexUrl", ControllerUtil.getPortalUrlString(request) + WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
 		        	
 		        } else if (userDetails instanceof TeacherUserDetails) {
 		        	config.put("userType", "teacher");
-					config.put("indexUrl", ControllerUtil.getPortalUrlString(request) + TelsAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+					config.put("indexUrl", ControllerUtil.getPortalUrlString(request) + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 		        }
 			} else {
 	        	config.put("userType", "none");

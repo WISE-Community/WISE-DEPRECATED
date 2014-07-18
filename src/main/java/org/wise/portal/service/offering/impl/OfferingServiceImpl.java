@@ -20,7 +20,7 @@ package org.wise.portal.service.offering.impl;
 import java.util.List;
 import java.util.Set;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,29 +42,13 @@ import org.wise.portal.service.offering.OfferingService;
  */
 public class OfferingServiceImpl implements OfferingService {
 
+	@Autowired
 	private OfferingDao<Offering> offeringDao;
 
+	@Autowired
 	protected CurnitDao<Curnit> curnitDao;
 
 	protected AclService<Offering> aclService;
-
-	/**
-	 * @param offeringDao
-	 *            the offeringDao to set
-	 */
-	@Required
-	public void setOfferingDao(OfferingDao<Offering> offeringDao) {
-		this.offeringDao = offeringDao;
-	}
-
-	/**
-	 * @param curnitDao
-	 *            the curnitDao to set
-	 */
-	@Required
-	public void setCurnitDao(CurnitDao<Curnit> curnitDao) {
-		this.curnitDao = curnitDao;
-	}
 
 	/**
 	 * @param offeringAclService

@@ -50,7 +50,7 @@ import org.wise.portal.service.mail.IMailFacade;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class TelsSimpleMappingExceptionResolver extends
+public class WISESimpleMappingExceptionResolver extends
 	SimpleMappingExceptionResolver {
 	
 	protected IMailFacade mailService;

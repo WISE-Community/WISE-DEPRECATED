@@ -35,10 +35,8 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 @Component
 public final class SecurityUtils {
 
-	@Autowired
 	private static WorkgroupService workgroupService;
 	
-	@Autowired
 	private static RunService runService;
 
 	private static boolean isPortalMode = true;

@@ -50,7 +50,7 @@
 			<email>honchikun@gmail.com</email>
 			<organization>TELS</organization>
 			<organizationUrl>
-				http://www.telscenter.org/
+				http://telscenter.org/
 			</organizationUrl>
 			<roles>
 				<role>developer</role>
@@ -63,7 +63,7 @@
 			<email>geoffreykwan@gmail.com</email>
 			<organization>TELS</organization>
 			<organizationUrl>
-				http://www.telscenter.org/
+				http://telscenter.org/
 			</organizationUrl>
 			<roles>
 				<role>developer</role>
@@ -76,7 +76,7 @@
 			<email>breity10@gmail.com</email>
 			<organization>TELS</organization>
 			<organizationUrl>
-				http://www.telscenter.org/
+				http://telscenter.org/
 			</organizationUrl>
 			<roles>
 				<role>developer</role>
@@ -283,14 +283,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.4</version>
-			<scope>provided</scope>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<version>1.0</version>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -310,6 +309,12 @@
 			<artifactId>easymock</artifactId>
 			<version>2.2</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -357,12 +362,6 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 			<version>${org.springframework.version}</version>
@@ -381,11 +380,6 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
 			<version>${org.springframework.security.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core-tiger</artifactId>
-			<version>2.0.7.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -421,16 +415,6 @@
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.18.2-GA</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>taglibs</groupId>
-			<artifactId>standard</artifactId>
-			<version>1.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-httpclient</groupId>

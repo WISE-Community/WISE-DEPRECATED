@@ -33,8 +33,6 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpSession;
-
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaFactory;
 
@@ -51,9 +49,10 @@ import org.wise.portal.service.user.UserService;
  * @author hirokiterashima
  * @version $Id:$
  */
-public class TelsAuthenticationFailureHandler extends
+public class WISEAuthenticationFailureHandler extends
 		SimpleUrlAuthenticationFailureHandler {
 
+	@Autowired
 	private Properties wiseProperties;
 	
 	@Autowired
@@ -64,8 +63,6 @@ public class TelsAuthenticationFailureHandler extends
 	public static final Integer recentFailedLoginAttemptsLimit = 5;
 	
 	private String authenticationFailureUrl;
-
-
 
 	@Override
 	@Transactional

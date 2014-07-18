@@ -62,10 +62,8 @@ import org.wise.portal.service.project.ProjectService;
 @Controller
 public final class CredentialManager {
 
-	@Autowired
 	private static ProjectService projectService;
 
-	@Autowired
 	private static Properties wiseProperties;
 
 	@Autowired

@@ -47,6 +47,7 @@ public class DailyAdminJob {
 	@Autowired
 	private IMailFacade mailService;
 
+	@Autowired
 	private RunDao<Run> runDao;
 	
 	@Autowired
@@ -610,13 +611,6 @@ public class DailyAdminJob {
 		if(DEBUG) {
 			System.out.println(output);
 		}
-	}
-
-	/**
-	 * @param runDao the runDao to set
-	 */
-	public void setRunDao(RunDao<Run> runDao) {
-		this.runDao = runDao;
 	}
 
 	/**
