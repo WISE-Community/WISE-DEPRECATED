@@ -26,5 +26,57 @@
     "error_msg_with_reason": {
         "value": "에러입니다. WISE 스텝에게 문의하세요. 에러 이유:{0}",
         "description": "An error message a reason"
+    },
+    "signout_button_text": {
+        "value": "로그 아웃",
+        "description": "Text on the Log out button"
+    },
+    "cancel": {
+        "value": "취소",
+        "description": "Text 'Cancel'"
+    },
+    "ok": {
+        "value": "확인",
+        "description": "Text 'OK'"
+    },
+    "done": {
+        "value": "완료",
+        "description": "Text 'Done', to mean completed"
+    },
+    "idea": {
+        "value": "생각",
+        "description": "The default text for an 'idea' in the Idea Manager tool."
+    },
+    "idea_plural": {
+        "value": "생각",
+        "description": "The default text for 'ideas' in the Idea Manager tool."
+    },
+    "idea_basket": {
+        "value": "생각",
+        "description": "The text 'Idea Basket' in the Idea Manager"
+    },
+    "score": {
+        "value": "점수",
+        "description": "The column header for the score in Show My Work"
+    },
+    "comment": {
+        "value": "논평",
+        "description": "Comment"
+    },
+    "team": {
+        "value": "팀",
+        "description": "The label for the team"
+    },
+    "team_caps": {
+        "value": "팀",
+        "description": "TEAM"
+    },
+    "period": {
+        "value": "기간",
+        "description": "Period"
+    },
+    "welcome": {
+        "value": "기간",
+        "description": "Text for 'Welcome'"
     }
 }
