@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
@@ -186,16 +185,6 @@ public interface ProjectService {
 	public String minifyProject(Project project);
 	
 	/**
-	 * Given a <code>Long</code> projectId returns the
-	 * <code>ProjectMetadata</code> that is associated with that projectId and versionId, if
-	 * one exists, returns null otherwise.
-	 * 
-	 * @param projectId
-	 * @return
-	 */
-	public ProjectMetadata getMetadata(Long projectId);
-	
-	/**
 	 * Given a <code>Project</code> project and <code>User</code> user, returns
 	 * <code>boolean</code> true if the user is allowed to create a run from that
 	 * project (ie, project is TELS, owner, sharedOwner), returns false otherwise.
@@ -234,16 +223,6 @@ public interface ProjectService {
 	 * @return List<Project> projects
 	 */
 	public List<Project> getAdminProjectList();
-	
-	/**
-	 * Given a <code>String</code> tag name, returns a <code>List<Project></code>
-	 * list of projects with that tag.
-	 * 
-	 * @param String - tagName
-	 * @return List<Project> - list of projects
-	 */
-	@Transactional
-	public List<Project> getProjectListByTagName(String tagName);
 	
 	/**
 	 * Given a <code>Set<String></code> set of tag names, returns a

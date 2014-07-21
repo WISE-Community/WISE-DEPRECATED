@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -1127,7 +1128,10 @@ public class AuthorProjectController {
 	 * @return the JSONArray of library projects
 	 */
 	private JSONArray getLibraryProjects(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		List<Project> libraryProjects = projectService.getProjectListByTagName("library");
+		Set<String> tagNames = new TreeSet<String>();
+		tagNames.add("library");
+
+		List<Project> libraryProjects = projectService.getProjectListByTagNames(tagNames);
 
 		//an array to hold the information for the projects
 		JSONArray libraryProjectArray = new JSONArray();

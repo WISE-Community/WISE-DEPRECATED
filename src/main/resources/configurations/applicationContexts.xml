@@ -823,7 +823,6 @@
 
 	<bean id="projectServiceTarget" class="org.wise.portal.service.project.impl.ProjectServiceImpl">
 		<property name="aclService" ref="aclServiceImpl" />
-		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="workgroupService" class="org.springframework.aop.framework.ProxyFactoryBean">

@@ -485,21 +485,6 @@ public class ProjectServiceImpl implements ProjectService {
 				this.aclService.hasPermission(project, BasePermission.READ, user);
 	}
 
-
-	public ProjectMetadata getMetadata(Long projectId) {
-		Project project = null;
-		ProjectMetadata metadata = null;
-
-		try {
-			project = getById(projectId);
-			metadata = project.getMetadata();
-		} catch (ObjectNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		return metadata;
-	}
-
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(org.wise.portal.domain.project.Tag, org.wise.portal.domain.project.Project)
 	 */
@@ -598,16 +583,6 @@ public class ProjectServiceImpl implements ProjectService {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#getProjectListByTagName(java.lang.String)
-	 */
-	@Transactional
-	public List<Project> getProjectListByTagName(String tagName) {
-		Set<String> tagNames = new TreeSet<String>();
-		tagNames.add(tagName);
-		return this.getProjectListByTagNames(tagNames);
 	}
 
 	/**
