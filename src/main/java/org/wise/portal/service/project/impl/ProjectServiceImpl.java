@@ -54,14 +54,12 @@ import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.ProjectInfo;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.util.http.Connector;
@@ -70,7 +68,6 @@ import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.module.ModuleService;
-import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.premadecomment.PremadeCommentService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.tag.TagService;
@@ -101,8 +98,6 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Autowired
 	private UserService userService;
-
-	private RunService runService;
 
 	@Autowired
 	private TagService tagService;
@@ -280,52 +275,11 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getProjectList()
-	 */
-	@Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })    
-	@Transactional(readOnly = true)
-	public List<Project> getProjectList() {
-		List<Project> projectList = this.projectDao.getList();
-		for (Project project : projectList) {
-			project.populateProjectInfo();
-		}	
-		return projectList;
-	}
-
-	/**
 	 * @see org.wise.portal.service.project.ProjectService#getProjectList(net.sf.sail.webapp.domain.User)
 	 */
 	@Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
 	public List<Project> getProjectList(User user) {
 		return this.projectDao.getProjectListByUAR(user, "owner");
-	}
-
-	/**
-	 * @override @see org.wise.portal.service.project.ProjectService#getProjectListByInfo(org.wise.portal.domain.project.impl.ProjectInfo)
-	 */
-	public List<Project> getProjectListByInfo(ProjectInfo info)
-			throws ObjectNotFoundException {
-		List<Project> projectList = this.projectDao.retrieveListByInfo(info);
-		return projectList;		
-	}
-
-	/**
-	 * @override @see org.wise.portal.service.project.ProjectService#getProjectListByTag(org.wise.portal.domain.project.impl.FamilyTag)
-	 */
-	public List<Project> getProjectListByTag(FamilyTag familytag) throws ObjectNotFoundException {
-		List<Project> projectList = this.projectDao.retrieveListByTag(familytag);
-		for (Project project : projectList) {
-			project.populateProjectInfo();
-		}
-		return projectList;
-	}
-
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#getProjectListByTag(java.lang.String)
-	 */
-	public List<Project> getProjectListByTag(String projectinfotag) throws ObjectNotFoundException {
-		List<Project> projectList = this.projectDao.retrieveListByTag(projectinfotag);
-		return projectList;
 	}
 
 	/**
@@ -460,63 +414,10 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * Creates a PreviewRun for this project and
-	 * set it in this project
-	 * @param project
-	 * @throws ObjectNotFoundException 
-	 */
-	@Transactional
-	protected void createPreviewRun(Project project) throws ObjectNotFoundException {
-		RunParameters runParameters = new RunParameters();
-		runParameters.setCurnitId(project.getCurnit().getId());
-		runParameters.setJnlpId(null);
-		runParameters.setName(PREVIEW_RUN_NAME);
-		runParameters.setOwners(null);
-		runParameters.setPeriodNames(PREVIEW_PERIOD_NAMES);
-		runParameters.setProject(project);
-		Run previewRun = this.runService.createRun(runParameters);
-		project.setPreviewRun(previewRun);
-		this.projectDao.save(project);
-	}
-
-	/**
 	 * @param aclService the aclService to set
 	 */
 	public void setAclService(AclService<Project> aclService) {
 		this.aclService = aclService;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#getAllProjectsList()
-	 */
-	@Transactional
-	public List<Project> getAllProjectsList() {
-		List<Project> projectList = this.projectDao.getList();
-		for (Project project : projectList) {
-			project.populateProjectInfo();
-		}	
-		return projectList;
-	}
-
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#getProjectList(java.lang.String)
-	 */
-	@Transactional
-	public List<Project> getProjectList(String query){
-		List<Project> projectList = this.projectDao.getProjectList(query);
-
-		for(Project project : projectList){
-			project.populateProjectInfo();
-		}
-
-		return projectList;
 	}
 
 	/**
@@ -597,14 +498,6 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 
 		return metadata;
-	}
-
-	/**
-	 * @see org.wise.portal.service.project.ProjectService#sortProjectsByDateCreated(java.util.List)
-	 */
-	public void sortProjectsByDateCreated(List<Project> projectList) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -747,10 +640,5 @@ public class ProjectServiceImpl implements ProjectService {
 				return this.identifyRootProjectId(this.getById(parentProjectId));
 			}
 		}
-	}
-
-	@Override
-	public void sortProjectsByLastEdited(List<Project> projectList) {
-		// TODO Auto-generated method stub
 	}
 }
