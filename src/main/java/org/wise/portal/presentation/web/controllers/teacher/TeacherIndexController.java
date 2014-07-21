@@ -38,9 +38,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.wise.portal.domain.message.Message;
-import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
@@ -75,16 +72,9 @@ public class TeacherIndexController {
 	@Autowired
 	private WorkgroupService workgroupService;
 
-	
-	private final static String CURRENT_DATE = "current_date";
-	
 	protected final static String RUN_LIST = "run_list";
 
 	private static final String UNREAD_MESSAGES = "unreadMessages";
-	
-	protected static final String FALSE = "FALSE";
-
-	protected static final String GRADING_ENABLED = "GRADING_ENABLED";
 	
 	protected final static String IS_REAL_TIME_ENABLED = "isRealTimeEnabled";
 
@@ -92,13 +82,7 @@ public class TeacherIndexController {
 	
 	protected final static String CURRENT_RUN_LIST_KEY2 = "current_run_list1";
 
-	protected final static String ENDED_RUN_LIST_KEY = "ended_run_list";
-
 	protected final static String WORKGROUP_MAP_KEY = "workgroup_map";
-	
-	protected final static String GRADING_PARAM = "gradingParam";
-
-	static final String DEFAULT_PREVIEW_WORKGROUP_NAME = "Preview";
 	
 	static final Comparator<Run> CREATED_ORDER =
 	new Comparator<Run>() {
@@ -121,14 +105,7 @@ public class TeacherIndexController {
 	    	isRealTimeEnabled = Boolean.valueOf(isRealTimeEnabledStr);
 	    }
 		
-		String gradingParam = request.getParameter(GRADING_ENABLED);
-		
-		if( gradingParam == null )
-			gradingParam = FALSE;
-
 		User user = ControllerUtil.getSignedInUser();
-
-		modelMap.put("user", user);
 		
 		List<Run> runList = this.runService.getRunListByOwner(user);
 		runList.addAll(this.runService.getRunListBySharedOwner(user));
@@ -164,16 +141,14 @@ public class TeacherIndexController {
 			current_run_list = current_run_list1;
 		}
     	
+		modelMap.put("user", user);
 		modelMap.put(CURRENT_RUN_LIST_KEY, current_run_list);
 		modelMap.put(CURRENT_RUN_LIST_KEY2, current_run_list1);
-    	modelMap.put(CURRENT_DATE, null);
-    	modelMap.put(GRADING_PARAM, gradingParam);
 		modelMap.put(IS_REAL_TIME_ENABLED, isRealTimeEnabled);
 		modelMap.put(WORKGROUP_MAP_KEY, workgroupMap);
     	
     	// retrieve all unread messages
-    	List<Message> unreadMessages = messageService.retrieveUnreadMessages(user);
-    	modelMap.put(UNREAD_MESSAGES, unreadMessages);
+    	modelMap.put(UNREAD_MESSAGES, messageService.retrieveUnreadMessages(user));
     	
     	// if discourse is enabled for this WISE instance, add the link to the model
     	// so the view can display it
