@@ -39,6 +39,9 @@
 					<h4><spring:message code="contact.contactwisegeneral.pleaseDescribeYourIssue"/></h4>
 					<div class="instructions"><spring:message code="contact.contactwisegeneral.ifEncounteringErrorPleaseIncludeText"/>&nbsp;<spring:message code="contact.contactwisegeneral.detailedDescription"/>&nbsp;<spring:message code="contact.contactwisegeneral.boxBelow"/></div>
 					<div class="instructions"><spring:message code="contact.contactwisegeneral.pleaseIndicateURLAddressForProblem"/></div>
+					<c:if test="${discourseSSOLoginURL != null}">
+						<div class="instructions"><a target=_blank href="${discourseSSOLoginURL}"><spring:message code="contact.contactwisegeneral.wiseTeacherCommunity"/></a></div>
+                 	</c:if>
 
 					<!-- Support for Spring errors object -->
 					<div class="errorMsgNoBg">
