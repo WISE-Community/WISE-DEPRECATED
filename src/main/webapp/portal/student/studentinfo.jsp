@@ -56,6 +56,11 @@
 							value="${userInfoMap['Birthday']}" pattern="MM/dd" />)</td>
 				</tr>
 				<tr>
+					<th><spring:message code="teacher.registerteacher.language" /></th>
+					<td><span style="text-transform: lowercase;">
+						<c:out value="${userInfoMap['Language']}" /></td>
+				</tr>
+				<tr>
 					<th><spring:message code="student.studentinfo.numberOfLogins" /></th>
 					<td><c:out value="${userInfoMap['Number of Logins']}" /></td>
 				</tr>
@@ -95,6 +100,7 @@
 									code="student.studentinfo.runTeacherEmail" /></th>
 							<td><c:out value="${owner.userDetails.emailAddress}"></c:out></td>
 						</tr>
+
 					</c:forEach>
 
 					<tr>
