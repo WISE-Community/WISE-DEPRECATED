@@ -25,7 +25,7 @@
 
 
 $(document).ready(function() {
-	var table = $('#example').dataTable( {
+	window.table = $('#example').DataTable( {
 		dom: 'Rlfrtip',
 		scrollX: true,
 		scrollCollapse: true,
@@ -40,17 +40,7 @@ $(document).ready(function() {
 		}
 	} );
 
-	// Show an index column at the start and end of the table
-	table.on( 'order.dt search.dt', function () {
-		table
-			.column([0,-1], {search:'applied', order:'applied'})
-			.nodes()
-			.each( function (cell, i) {
-				cell.innerHTML = i+1;
-			} );
-	} ).draw();
-
-	new $.fn.dataTable.fixedColumns( table, {
+	window.fc = new $.fn.dataTable.FixedColumns( table, {
 		leftColumns: 1,
 		rightColumns: 1
 	} );
@@ -78,7 +68,7 @@ $(document).ready(function() {
 				which allows you disallow reordering of the fixed columns (which is required).</p>
 			</div>
 
-			<table id="example" class="display" cellspacing="0" width="100%">
+			<table id="example" class="display nowrap" cellspacing="0" width="100%">
 				<thead>
 					<tr>
 						<th>First name</th>
@@ -736,7 +726,7 @@ $(document).ready(function() {
 				<div class="js">
 					<p>The Javascript shown below is used to initialise the table shown in this
 					example:</p><code class="multiline brush: js;">$(document).ready(function() {
-	var table = $('#example').dataTable( {
+	window.table = $('#example').DataTable( {
 		dom: 'Rlfrtip',
 		scrollX: true,
 		scrollCollapse: true,
@@ -751,17 +741,7 @@ $(document).ready(function() {
 		}
 	} );
 
-	// Show an index column at the start and end of the table
-	table.on( 'order.dt search.dt', function () {
-		table
-			.column([0,-1], {search:'applied', order:'applied'})
-			.nodes()
-			.each( function (cell, i) {
-				cell.innerHTML = i+1;
-			} );
-	} ).draw();
-
-	new $.fn.dataTable.fixedColumns( table, {
+	window.fc = new $.fn.dataTable.FixedColumns( table, {
 		leftColumns: 1,
 		rightColumns: 1
 	} );

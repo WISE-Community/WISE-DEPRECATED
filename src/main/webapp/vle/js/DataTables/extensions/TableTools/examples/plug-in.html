@@ -26,12 +26,11 @@ $.fn.dataTable.TableTools.buttons.copy_to_div = $.extend(
 	true,
 	$.fn.dataTable.TableTools.buttonBase,
 	{
-		"sNewLine": "<br>",
+		"sNewLine":    "<br>",
 		"sButtonText": "Copy to element",
-		"sDiv": "",
-		"fnClick": function( nButton, oConfig ) {
-			document.getElementById(oConfig.sDiv).innerHTML = 
-				this.fnGetTableData(oConfig);
+		"target":      "",
+		"fnClick": function( button, conf ) {
+			$(conf.target).html( this.fnGetTableData(conf) );
 		}
 	}
 );
@@ -43,7 +42,7 @@ $(document).ready(function() {
 			"aButtons": [ {
 				"sExtends":    "copy_to_div",
 				"sButtonText": "Copy to div",
-				"sDiv":        "copy"
+				"target":      "#copy"
 			} ]
 		}
 	} );
@@ -59,9 +58,15 @@ $(document).ready(function() {
 			<h1>TableTools example <span>Plug-in button types</span></h1>
 
 			<div class="info">
-				<p>This example shows how you can add a message to the saved PDF using the <code>sPdfMessage</code>
-				parameter. It also shows that the orientation of the output PDF can be changed to landscape which is
-				useful if you have a lot of columns.</p>
+				<p>This example shows now a plug-in button type can be created for TableTools. Button types are
+				attached to the <code>$.fn.dataTable.TableTools.buttons</code> object and extend
+				<code>$.fn.dataTable.TableTools.buttonBase</code>. All of the <a href=
+				"//datatables.net/extensions/tabletools/button_options">button options defined in the documentation</a>
+				are available and can be overridden as required. Finally to use the button simply include its name in
+				the <code>aButtons</code> array or use it as a button extender (<code>sExtends</code>).</p>
+
+				<p>This example shows a button which will simply get the data contents of a table and set that as the
+				contents of another element.</p>
 			</div>
 
 			<div id="copy" class="box" style="height: 100px; overflow: auto">
@@ -566,12 +571,11 @@ $(document).ready(function() {
 	true,
 	$.fn.dataTable.TableTools.buttonBase,
 	{
-		&quot;sNewLine&quot;: &quot;&lt;br&gt;&quot;,
+		&quot;sNewLine&quot;:    &quot;&lt;br&gt;&quot;,
 		&quot;sButtonText&quot;: &quot;Copy to element&quot;,
-		&quot;sDiv&quot;: &quot;&quot;,
-		&quot;fnClick&quot;: function( nButton, oConfig ) {
-			document.getElementById(oConfig.sDiv).innerHTML = 
-				this.fnGetTableData(oConfig);
+		&quot;target&quot;:      &quot;&quot;,
+		&quot;fnClick&quot;: function( button, conf ) {
+			$(conf.target).html( this.fnGetTableData(conf) );
 		}
 	}
 );
@@ -583,7 +587,7 @@ $(document).ready(function() {
 			&quot;aButtons&quot;: [ {
 				&quot;sExtends&quot;:    &quot;copy_to_div&quot;,
 				&quot;sButtonText&quot;: &quot;Copy to div&quot;,
-				&quot;sDiv&quot;:        &quot;copy&quot;
+				&quot;target&quot;:      &quot;#copy&quot;
 			} ]
 		}
 	} );
@@ -648,22 +652,24 @@ $(document).ready(function() {
 					<div class="toc-group">
 						<h3><a href="./index.html">Examples</a></h3>
 						<ul class="toc active">
-							<li><a href="./defaults.html">Defaults</a></li>
-							<li><a href="./button_text.html">Custom button text</a></li>
+							<li><a href="./simple.html">Basic initialisation</a></li>
+							<li class="active"><a href="./plug-in.html">Plug-in button types</a></li>
 							<li><a href="./bootstrap.html">Bootstrap styling</a></li>
+							<li><a href="./swf_path.html">Setting the SWF path</a></li>
+							<li><a href="./new_init.html">Initialisation with `new`</a></li>
+							<li><a href="./defaults.html">Defaults</a></li>
+							<li><a href="./select_single.html">Row selection - single row select</a></li>
+							<li><a href="./select_multi.html">Row selection - multi-row select</a></li>
+							<li><a href="./select_os.html">Row selection - operating system style</a></li>
+							<li><a href="./select_column.html">Row selection - row selector on specific cells</a></li>
 							<li><a href="./multiple_tables.html">Multiple tables</a></li>
-							<li><a href="./alter_buttons.html">Button arrangement</a></li>
 							<li><a href="./multi_instance.html">Multiple toolbars</a></li>
 							<li><a href="./collection.html">Button collections</a></li>
-							<li><a href="./new_init.html">Initialisation with `new`</a></li>
-							<li><a href="./select_os.html">Row selection - operating system style</a></li>
-							<li class="active"><a href="./plug-in.html">Plug-in button types</a></li>
-							<li><a href="./select_column.html">Row selection - row selector on specific cells</a></li>
-							<li><a href="./select_single.html">Row selection - single row select</a></li>
-							<li><a href="./swf_path.html">Setting the SWF path</a></li>
+							<li><a href="./button_text.html">Custom button text</a></li>
+							<li><a href="./alter_buttons.html">Button arrangement</a></li>
+							<li><a href="./ajax.html">Ajax loaded data</a></li>
 							<li><a href="./pdf_message.html">PDF message</a></li>
-							<li><a href="./simple.html">Basic initialisation</a></li>
-							<li><a href="./select_multi.html">Row selection - multi-row select</a></li>
+							<li><a href="./jqueryui.html">jQuery UI styling</a></li>
 						</ul>
 					</div>
 				</div>

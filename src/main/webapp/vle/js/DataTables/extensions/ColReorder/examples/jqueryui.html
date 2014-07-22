@@ -7,8 +7,7 @@
 
 	<title>ColReorder example - jQuery UI styling</title>
 	<link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
-	<link rel="stylesheet" type="text/css" href=
-	"//cdn.datatables.net/plug-ins/505bef35b56/integration/jqueryui/dataTables.jqueryui.css">
+	<link rel="stylesheet" type="text/css" href="../../Plugins/integration/jqueryui/dataTables.jqueryui.css">
 	<link rel="stylesheet" type="text/css" href="../css/dataTables.colReorder.css">
 	<link rel="stylesheet" type="text/css" href="../../../examples/resources/syntax/shCore.css">
 	<link rel="stylesheet" type="text/css" href="../../../examples/resources/demo.css">
@@ -18,7 +17,7 @@
 	<script type="text/javascript" language="javascript" src="../../../media/js/jquery.js"></script>
 	<script type="text/javascript" language="javascript" src="../../../media/js/jquery.dataTables.js"></script>
 	<script type="text/javascript" language="javascript" src=
-	"//cdn.datatables.net/plug-ins/505bef35b56/integration/jqueryui/dataTables.jqueryui.js"></script>
+	"../../Plugins/integration/jqueryui/dataTables.jqueryui.js"></script>
 	<script type="text/javascript" language="javascript" src="../js/dataTables.colReorder.js"></script>
 	<script type="text/javascript" language="javascript" src="../../../examples/resources/syntax/shCore.js"></script>
 	<script type="text/javascript" language="javascript" src="../../../examples/resources/demo.js"></script>
@@ -29,7 +28,7 @@
 $(document).ready(function() {
 	var table = $('#example').dataTable();
 
-	new $.fn.dataTable.colReorder( table );
+	new $.fn.dataTable.ColReorder( table );
 } );
 
 
@@ -47,7 +46,7 @@ $(document).ready(function() {
 				ColReorder.</p>
 
 				<p>The important thing to note here is that it is easier to use <code>new
-				$.fn.dataTable.colReorder()</code> to add ColReorder to the table rather than <a href=
+				$.fn.dataTable.ColReorder()</code> to add ColReorder to the table rather than <a href=
 				"//datatables.net/reference/option/dom"><code class="option" title=
 				"DataTables initialisation option">dom<span>DT</span></code></a> as the jQuery UI integration uses a
 				complex expression for <a href="//datatables.net/reference/option/dom"><code class="option" title=
@@ -551,7 +550,7 @@ $(document).ready(function() {
 					example:</p><code class="multiline brush: js;">$(document).ready(function() {
 	var table = $('#example').dataTable();
 
-	new $.fn.dataTable.colReorder( table );
+	new $.fn.dataTable.ColReorder( table );
 } );</code>
 
 					<p>In addition to the above code, the following Javascript library files are loaded for use in this
@@ -562,7 +561,7 @@ $(document).ready(function() {
 						<li><a href=
 						"../../../media/js/jquery.dataTables.js">../../../media/js/jquery.dataTables.js</a></li>
 						<li><a href=
-						"//cdn.datatables.net/plug-ins/505bef35b56/integration/jqueryui/dataTables.jqueryui.js">//cdn.datatables.net/plug-ins/505bef35b56/integration/jqueryui/dataTables.jqueryui.js</a></li>
+						"../../Plugins/integration/jqueryui/dataTables.jqueryui.js">../../Plugins/integration/jqueryui/dataTables.jqueryui.js</a></li>
 						<li><a href="../js/dataTables.colReorder.js">../js/dataTables.colReorder.js</a></li>
 					</ul>
 				</div>
@@ -586,7 +585,7 @@ $(document).ready(function() {
 						<li><a href=
 						"//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css</a></li>
 						<li><a href=
-						"//cdn.datatables.net/plug-ins/505bef35b56/integration/jqueryui/dataTables.jqueryui.css">//cdn.datatables.net/plug-ins/505bef35b56/integration/jqueryui/dataTables.jqueryui.css</a></li>
+						"../../Plugins/integration/jqueryui/dataTables.jqueryui.css">../../Plugins/integration/jqueryui/dataTables.jqueryui.css</a></li>
 						<li><a href="../css/dataTables.colReorder.css">../css/dataTables.colReorder.css</a></li>
 					</ul>
 				</div>

@@ -329,6 +329,7 @@ table.dataTable thead > tr > th {
 div.FixedHeader_Cloned table {
 	border-color: #999999;
 	border-bottom-width: 0;
+	box-shadow: 0 0 2px #aaaaaa;
 }
 
 /*div.FixedHeader_Cloned table {
