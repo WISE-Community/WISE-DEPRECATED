@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectParameters;
@@ -225,6 +224,26 @@ public interface ProjectService {
 	public List<Project> getAdminProjectList();
 	
 	/**
+	 * Returns a
+	 * <code>List<Project></code> list of public library projects
+	 * Library projects show up in "Browse Library" page but not on the homepage.
+	 * Public Library projects show up in both "Browse Library" page and in the homepage.
+	 * 
+	 * @return List<Project> - list of public library projects
+	 */
+	public List<Project> getPublicLibraryProjectList();
+	
+	/**
+	 * Returns a
+	 * <code>List<Project></code> list of library projects.
+	 * Library projects show up in "Browse Library" page but not on the homepage.
+	 * Public Library projects show up in both "Browse Library" page and in the homepage.
+	 * 
+	 * @return List<Project> - list of library projects
+	 */
+	public List<Project> getLibraryProjectList();
+
+	/**
 	 * Given a <code>Set<String></code> set of tag names, returns a
 	 * <code>List<Project></code> list of projects with all of the tag names.
 	 * 
@@ -232,17 +251,7 @@ public interface ProjectService {
 	 * @return List<Project> - list of projects
 	 */
 	public List<Project> getProjectListByTagNames(Set<String> tagNames);
-	
-	/**
-	 * Given a <code>Tag</code> tag and a <code>Long</code> project id
-	 * adds the given tag to the project.
-	 * 
-	 * @param Tag - tag
-	 * @param Project - project
-	 */
-	@Transactional
-	public Long addTagToProject(Tag tag, Long projectId);
-	
+
 	/**
 	 * Given a <code>String</code> and a <code>Project</code> adds the
 	 * tag to the project.

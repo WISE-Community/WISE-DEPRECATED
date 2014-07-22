@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -44,19 +46,8 @@ public class NewsItemServiceImpl implements NewsItemService{
 
 	@Autowired
 	private NewsItemDao<NewsItem> newsItemDao;
-	
-	@Transactional
-	public NewsItem createNewsItem(Date date, User owner, String title, String news){
-		NewsItem newsItem = new NewsItemImpl();
-		newsItem.setDate(date);
-		newsItem.setOwner(owner);
-		newsItem.setTitle(title);
-		newsItem.setNews(news);
-		
-		newsItemDao.save(newsItem);
-		return newsItem;
-	}
-	
+
+	@Cacheable(value="news")
 	public List<NewsItem> retrieveAllNewsItem(){
 		return newsItemDao.getList();
 	}
@@ -69,6 +60,20 @@ public class NewsItemServiceImpl implements NewsItemService{
 		}
 	}
 	
+	@CacheEvict(value="news", allEntries=true)
+	@Transactional
+	public NewsItem createNewsItem(Date date, User owner, String title, String news){
+		NewsItem newsItem = new NewsItemImpl();
+		newsItem.setDate(date);
+		newsItem.setOwner(owner);
+		newsItem.setTitle(title);
+		newsItem.setNews(news);
+		
+		newsItemDao.save(newsItem);
+		return newsItem;
+	}
+	
+	@CacheEvict(value="news", allEntries=true)
 	@Transactional
 	public void updateNewsItem(Long id, Date date, User owner, String title, String news) 
 			throws ObjectNotFoundException {
@@ -84,6 +89,7 @@ public class NewsItemServiceImpl implements NewsItemService{
 		}	
 	}
 	
+	@CacheEvict(value="news", allEntries=true)
 	@Transactional
 	public void deleteNewsItem(Long newsItemId){
 		try{

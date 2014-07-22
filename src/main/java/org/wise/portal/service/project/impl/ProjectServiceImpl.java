@@ -37,6 +37,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.domain.BasePermission;
@@ -486,10 +488,13 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(org.wise.portal.domain.project.Tag, org.wise.portal.domain.project.Project)
+	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(java.lang.String, org.wise.portal.domain.project.Project)
 	 */
-	@Transactional
-	public Long addTagToProject(Tag tag, Long projectId){
+	@CacheEvict(value="project", allEntries=true)
+	public Long addTagToProject(String tagString, Long projectId) {
+		
+		Tag tag = this.tagService.createOrGetTag(tagString);
+		
 		Project project = null;
 
 		/* retrieve the project */
@@ -513,15 +518,9 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(java.lang.String, org.wise.portal.domain.project.Project)
-	 */
-	public Long addTagToProject(String tag, Long projectId) {
-		return this.addTagToProject(this.tagService.createOrGetTag(tag), projectId);
-	}
-
-	/**
 	 * @see org.wise.portal.service.project.ProjectService#removeTagFromProject(java.lang.String, org.wise.portal.domain.project.Project)
 	 */
+	@CacheEvict(value="project", allEntries=true)
 	@Transactional
 	public void removeTagFromProject(Long tagId, Long projectId) {
 		Tag tag = this.tagService.getTagById(tagId);
@@ -585,10 +584,32 @@ public class ProjectServiceImpl implements ProjectService {
 		return false;
 	}
 
+	
+	/**
+	 * @see org.wise.portal.service.project.ProjectService#getLibraryProjectList()
+	 */
+	@Transactional
+	public List<Project> getLibraryProjectList() {
+		Set<String> tagNames = new TreeSet<String>();
+		tagNames.add("library");
+		return getProjectListByTagNames(tagNames);
+	}
+
+	/**
+	 * @see org.wise.portal.service.project.ProjectService#getPublicLibraryProjectList()
+	 */
+	@Cacheable(value="project")
+	@Transactional
+	public List<Project> getPublicLibraryProjectList() {
+		Set<String> tagNames = new TreeSet<String>();
+		tagNames.add("library");
+		tagNames.add("public");
+		return getProjectListByTagNames(tagNames);
+	}
+	
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#getProjectListByTagNames(java.util.Set)
 	 */
-	@Transactional
 	public List<Project> getProjectListByTagNames(Set<String> tagNames) {
 		return this.projectDao.getProjectListByTagNames(tagNames);
 	}

@@ -26,9 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,10 +65,7 @@ public class PreviewProjectListController {
 			HttpServletRequest request,
 			HttpServletResponse response,
 			ModelMap modelMap) throws Exception {
-		 Set<String> tagNames = new TreeSet<String>();
-		 tagNames.add("library");
-		 tagNames.add("public");
-		 List<Project> projectList = this.projectService.getProjectListByTagNames(tagNames);
+		 List<Project> projectList = this.projectService.getPublicLibraryProjectList();
 
 		 List<Project> currentProjectList = new ArrayList<Project>();
 		 for (Project p: projectList) {

@@ -55,9 +55,7 @@ public class LibraryController {
 		User user = ControllerUtil.getSignedInUser();
 		
 		// get library projects
-		Set<String> tagNames = new HashSet<String>();
-		tagNames.add("library");
-		List<Project> libraryProjectsList = this.projectService.getProjectListByTagNames(tagNames);
+		List<Project> libraryProjectsList = this.projectService.getLibraryProjectList();
 		
 		// get user's owned projects
 		List<Project> ownedProjectsList = this.projectService.getProjectList(user);
@@ -68,7 +66,10 @@ public class LibraryController {
 		
 		// a set to hold the list of project ids in user's library
 		Set<Long> projectIds = new HashSet<Long>();
-		
+
+		Set<String> tagNames = new HashSet<String>();
+		tagNames.add("library");
+
 		// set root project ids, remove duplicates
 		List<Project> ownedRemove = new ArrayList<Project>();
 		for (int i = 0; i < ownedProjectsList.size(); i++) {

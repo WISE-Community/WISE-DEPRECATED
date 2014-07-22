@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -571,7 +570,7 @@ public class AuthorProjectController {
 							Map<String,MultipartFile> fileMap = new TreeMap<String,MultipartFile>();
 							
 							//get all the file names and files to be uploaded
-							Iterator iter = multiRequest.getFileNames();
+							Iterator<String> iter = multiRequest.getFileNames();
 							while(iter.hasNext()){
 								String filename = (String)iter.next();
 								fileNames.add(filename);
@@ -1128,10 +1127,8 @@ public class AuthorProjectController {
 	 * @return the JSONArray of library projects
 	 */
 	private JSONArray getLibraryProjects(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		Set<String> tagNames = new TreeSet<String>();
-		tagNames.add("library");
 
-		List<Project> libraryProjects = projectService.getProjectListByTagNames(tagNames);
+		List<Project> libraryProjects = projectService.getLibraryProjectList();
 
 		//an array to hold the information for the projects
 		JSONArray libraryProjectArray = new JSONArray();

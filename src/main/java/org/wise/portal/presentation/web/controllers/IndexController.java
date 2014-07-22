@@ -27,9 +27,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,7 +69,6 @@ public class IndexController {
 	/** 
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(method=RequestMethod.GET)
 	protected String handleGET(
 			HttpServletRequest request,
@@ -93,11 +90,7 @@ public class IndexController {
 		Map<Long,String> projectThumbMap = new TreeMap<Long,String>();  // maps projectId to url where its thumbnail can be found
 		
 		// get library projects
-		Set<String> tagNames = new TreeSet<String>();
-		tagNames.add("library");
-		tagNames.add("public");
-		
-		List<Project> libraryProjectsList = this.projectService.getProjectListByTagNames(tagNames);
+		List<Project> libraryProjectsList = this.projectService.getPublicLibraryProjectList();
 		
 		// divide library projects by subject area
 		List<Project> esProjects = new ArrayList<Project>();
