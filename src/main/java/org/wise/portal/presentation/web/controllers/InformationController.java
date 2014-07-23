@@ -778,21 +778,6 @@ public class InformationController {
 	}
 	
 	/**
-	 * Given a <code>String</code> projectFilename, returns the <code>String</code.
-	 * associated project metadata filename.
-	 * 
-	 * @param projectFilename
-	 * @return String - project metadata filename
-	 */
-	private String resolveMetadataFilename(String projectFilename){
-		if(projectFilename.contains(".project.json")){
-			return projectFilename.replace(".project.json", ".project-meta.json");
-		} else {
-			return projectFilename.replaceFirst(".project(.v[0-9]+.json)", ".project-meta$1");
-		}
-	}
-
-	/**
 	 * Gets the workgroup for the currently-logged in user so that she may
 	 * view the VLE.
 	 * @param request
