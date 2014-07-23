@@ -63,7 +63,7 @@ View.prototype.loadProject = function(url, contentBase, lazyLoading){
 			eventManager.fire('loadingProjectCompleted');
 		} else {
 			eventManager.fire('loadingProjectStarted');
-			var project = createProject(createContent(url), contentBase, lazyLoading, view, null, true);
+			var project = createProject(createContent(url), contentBase, lazyLoading, view, null, false);
 			view.setProject(project);
 			view.isLoadedProjectMinified = false;
 			$('#currentProjectContainer').show();
