@@ -100,12 +100,9 @@
 				<prop key="org.acegisecurity.AccessDeniedException">
 					errors/securityFriendlyError
 				</prop>
-				<prop
-					key="org.wise.portal.presentation.web.exception.NotAuthorizedException">accessdenied</prop>
+				<prop key="org.wise.portal.presentation.web.exception.NotAuthorizedException">accessdenied</prop>
 			</props>
 		</property>
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="mailService" ref="mailService" />
 	</bean>
 	
 	<!-- allows user to change language via ?lang=XX url param -->
