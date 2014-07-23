@@ -107,7 +107,7 @@
 					<div class="featuresShowcase">
 						<div class="featureContent">
 							<div class="featureContentHeader"><spring:message code="pages.research-tech.collaboration" /></div>
-							<p><spring:message code="pages.research-tech.collaboration_content" /></p>
+							<p><spring:message code="pages.research-tech.collaboration_content" arguments="${contextPath}" htmlEscape="false" /></p>
 						</div>
 						<div style="clear:both;"></div>
 					</div>
