@@ -7,6 +7,11 @@
     	eternal="true" 
     	maxElementsInMemory="100" 
     	overflowToDisk="false" />
+    <cache name="portal"
+       statistics="true"
+       maxElementsInMemory="5" 
+       eternal="true" 
+       overflowToDisk="false" />
     <cache name="news"
        maxElementsInMemory="200"
        eternal="true" 
