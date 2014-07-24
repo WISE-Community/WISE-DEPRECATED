@@ -1,36 +1,27 @@
 package org.wise.portal.service.websocket;
 
 import java.io.IOException;
+import java.net.URI;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.Executor;
 
-import javax.websocket.EndpointConfig;
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.server.ServerEndpoint;
-import javax.xml.transform.Source;
-import javax.xml.ws.Binding;
-import javax.xml.ws.Endpoint;
-import javax.xml.ws.EndpointReference;
+import javax.transaction.Transactional;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-import org.w3c.dom.Element;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
@@ -43,9 +34,7 @@ import org.wise.portal.service.vle.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.status.StudentStatus;
 
-@Service("wiseEndPoint")
-@ServerEndpoint(value = "/websocket.html", configurator = WISEConfigurator.class)
-public class WISEEndPoint extends Endpoint {
+public class WISETextWebSocketHandler extends TextWebSocketHandler implements WISEWebSocketHandler {
 
     //the run service
 	@Autowired
@@ -69,32 +58,74 @@ public class WISEEndPoint extends Endpoint {
     //the hashtable that stores run id to set of teacher connections
     private static Hashtable<Long, Set<WISEWebSocketSession>> runToTeacherConnections = new Hashtable<Long,Set<WISEWebSocketSession>>();
 	
-    //the hashtable that stores mappings between Session objects and WISEWebSocketSession objects 
-    private static Hashtable<Session, WISEWebSocketSession> sessionToWISEWebSocketSession = new Hashtable<Session, WISEEndPoint.WISEWebSocketSession>();
+    //the hashtable that stores mappings between WebSocketSession objects and WISEWebSocketSession objects 
+    private static Hashtable<WebSocketSession, WISEWebSocketSession> sessionToWISEWebSocketSession = new Hashtable<WebSocketSession, WISEWebSocketSession>();
     
     //the hashtable that stores mappings between User objects and WISEWebSocketSession objects
-    private static Hashtable<User, WISEWebSocketSession> userToWISEWebSocketSession = new Hashtable<User, WISEEndPoint.WISEWebSocketSession>();
+    private static Hashtable<User, WISEWebSocketSession> userToWISEWebSocketSession = new Hashtable<User, WISEWebSocketSession>();
     
     /**
+     * Called when a connection is opened
+     * @param session the websocket session
+     */
+	@Override
+	@Transactional
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		//handle the new websocket session
+		onOpen(session);
+	}
+	
+	/**
+	 * Called when a message is received
+	 * @param session the websocket session
+	 * @param the message object
+	 */
+	@Override
+	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+		//get the message and process it
+		Object payload = message.getPayload();
+		handleMessage(session, payload.toString());
+	}
+	
+	/**
+	 * Called when a text message is received
+	 * @param session the websocket session
+	 * @param the text message object
+	 */
+	@Override
+	public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+		//get the message and process it
+		Object payload = message.getPayload();
+		handleMessage(session, payload.toString());
+	}
+	
+	/**
+	 * Called when a connection is closed
+	 * @param session the websocket session
+	 * @param status the session status
+	 */
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		//handle the closing of the websocket session
+		onClose(session);
+	}
+	
+    /**
      * Called when a websocket connection is opened
-     * @param session the session object
-     * @param config object used to obtain the signed in user
+     * @param session the websocket session object
      * @throws IOException
      */
-	@OnOpen
-	@Transactional
-    public void onOpen(Session session, EndpointConfig config) throws IOException {
-		//inject autowired properties
-        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext (this);
-        
+    public void onOpen(WebSocketSession session) throws IOException {
         if(session != null) {
-        	//set the max message size
-        	session.setMaxTextMessageBufferSize(32768);
-        	session.setMaxBinaryMessageBufferSize(32768);
+        	//get the signed in user object from the session attributes
+        	Map<String, Object> attributes = session.getAttributes();
+        	Object signedInUserObject = attributes.get("signedInUser");
         	
-        	//get the signed in user from the user properties
-        	Map<String, Object> userProperties = config.getUserProperties();
-        	User signedInUser = (User) userProperties.get("signedInUser");
+        	User signedInUser = null;
+        	
+        	if(signedInUserObject != null) {
+        		signedInUser = (User) signedInUserObject;
+        	}
 
         	//validate the user to make sure they are who they say they are
         	validateUser(signedInUser, session);
@@ -148,7 +179,7 @@ public class WISEEndPoint extends Endpoint {
     		
     		String userName = wiseWebSocketSession.getUserName();
     		Long runId = wiseWebSocketSession.getRunId();
-    		Session session = wiseWebSocketSession.getSession();
+    		WebSocketSession session = wiseWebSocketSession.getSession();
     		
     		//add the user name and run id
     		messageJSON.put("userName", userName);
@@ -248,11 +279,10 @@ public class WISEEndPoint extends Endpoint {
 	
 	/**
 	 * Called when a websocket connection is closed
-	 * @param session
+	 * @param session the websocket session that has closed
 	 * @throws IOException
 	 */
-	@OnClose
-	public void onClose(Session session) throws IOException {
+	public void onClose(WebSocketSession session) throws IOException {
 		//get the WISEWebSocketSession for the session
 		WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
 		
@@ -361,7 +391,7 @@ public class WISEEndPoint extends Endpoint {
 				connectionsForRun.add(wiseWebSocketSession);
 				
 				//get the session object from the wiseWebSocketSession
-				Session session = wiseWebSocketSession.getSession();
+				WebSocketSession session = wiseWebSocketSession.getSession();
 				
 				//add the mapping from session to wiseWebSocketSession
 				sessionToWISEWebSocketSession.put(session, wiseWebSocketSession);
@@ -383,7 +413,7 @@ public class WISEEndPoint extends Endpoint {
 		
 		if(wiseWebSocketSession != null) {
 			//get the session
-	        Session session = wiseWebSocketSession.getSession();
+	        WebSocketSession session = wiseWebSocketSession.getSession();
 	        
 	        //get the user
 	        User user = wiseWebSocketSession.getUser();
@@ -532,28 +562,83 @@ public class WISEEndPoint extends Endpoint {
     
     /**
      * Get a value from the session
-     * @param session the session
+     * @param session the websocket session
      * @param key the key for the value we want
+     * e.g. runId
      * @return the value from the key
+     * e.g. 1
      */
-	private Long getValueFromSession(Session session, String key) {
+	private Long getValueFromSession(WebSocketSession session, String key) {
 		Long value = null;
 		
 		if(session != null && key != null) {
-			//get the session parameters
-			Map<String, List<String>> requestParameterMap = session.getRequestParameterMap();
+			//get the URI from the session
+			URI uri = session.getUri();
 			
-			if(requestParameterMap != null && requestParameterMap.containsKey(key)) {
-				//get the list of values with the given key
-				List<String> valueList = requestParameterMap.get(key);
+			//get the value
+			value = getLongValueFromURI(uri, key);
+		}
+		
+		return value;
+	}
+	
+	/**
+	 * Get the long value of a key from the URI for
+	 * @param uri the uri path
+	 * e.g. /wise/websocket.html?runId=1&periodId=1&workgroupId=2
+	 * @param key the key
+	 * e.g. runId
+	 * @return the value associated with the key
+	 * e.g. 1
+	 */
+	private Long getLongValueFromURI(URI uri, String key) {
+		Long value = null;
+
+		if(uri != null) {
+			
+			//get the query e.g. runId=1&periodId=1&workgroupId=2
+			String query = uri.getQuery();
+			
+			/*
+			 * split the query by '&' so that we obtain something like
+			 * [
+			 * "runId=1",
+			 * "periodId=1",
+			 * "workgroupId=2",
+			 * ]
+			 */
+			String[] querySplit = query.split("&");
+			
+			//loop through all the elements
+			for(int x=0; x<querySplit.length; x++) {
 				
-				if(valueList != null && valueList.size() > 0) {
-					//get the first value in the list
-					String valueString = valueList.get(0);
+				//get one of the elements
+				String parameter = querySplit[x];
+				
+				if(parameter != null) {
+					/*
+					 * split the string by '=' so we obtain something like
+					 * [
+					 * "runId",
+					 * "1"
+					 * ]
+					 */
+					String[] parameterSplit = parameter.split("=");
 					
-					if(valueString != null) {
-						//get the value as a long
-						value = Long.parseLong(valueString);
+					if(parameterSplit != null && parameterSplit.length >= 2) {
+						//get the individual elements which will be the key and value
+						String parameterName = parameterSplit[0];
+						String parameterValue = parameterSplit[1];
+						
+						//check if the key matches the one we want
+						if(key.equals(parameterName)) {
+							try {
+								//get the value
+								value = Long.parseLong(parameterValue);	
+							} catch(NumberFormatException e) {
+								
+							}
+						}
 					}
 				}
 			}
@@ -564,7 +649,7 @@ public class WISEEndPoint extends Endpoint {
 	
 	/**
 	 * Handle the message sent by the user. This function can be called from anywhere as
-	 * long as a handle to this WISEEndPoint bean is obtained.
+	 * long as a handle to this WISETextWebSocketHandler bean is obtained.
 	 * @param user the signed in user
 	 * @param message the message to send
 	 */
@@ -574,7 +659,7 @@ public class WISEEndPoint extends Endpoint {
 		
 		if(wiseWebSocketSession != null) {
 			//get the session object
-			Session session = wiseWebSocketSession.getSession();
+			WebSocketSession session = wiseWebSocketSession.getSession();
 			
 			if(session != null) {
 				/*
@@ -589,11 +674,10 @@ public class WISEEndPoint extends Endpoint {
 	/**
 	 * A user has sent a websocket message so we will perform any necessary
 	 * processing and send out a websocket message to other users if necessary
-	 * @param session the session
+	 * @param session the websocket session
 	 * @param message the text message the user has sent
 	 */
-	@OnMessage
-	public void handleMessage(Session session, String message) {
+	public void handleMessage(WebSocketSession session, String message) {
     	//get the message as a string
     	String messageString = message.toString();
     	
@@ -647,98 +731,14 @@ public class WISEEndPoint extends Endpoint {
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
-	public Binding getBinding() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public EndpointReference getEndpointReference(Element... arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <T extends EndpointReference> T getEndpointReference(Class<T> arg0,
-			Element... arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Executor getExecutor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object getImplementor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Source> getMetadata() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<String, Object> getProperties() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isPublished() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void publish(String arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void publish(Object arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setExecutor(Executor arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setMetadata(List<Source> arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void setProperties(Map<String, Object> arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void stop() {
-		// TODO Auto-generated method stub
-
-	}
 
 	/**
 	 * An object that contains a session object as well as other user related
 	 * variables
 	 */
 	private final class WISEWebSocketSession {
-		Session session;
+		WebSocketSession session;
     	private User user = null;
         private String userName = null;
         private String firstName = null;
@@ -750,10 +750,10 @@ public class WISEEndPoint extends Endpoint {
 
         /**
          * The contstructor for WISEWebSocketSession
-         * @param session a session object
+         * @param session a websocket session object
          * @param signedInUser the signed in user object
          */
-        public WISEWebSocketSession(Session session, User signedInUser) {
+        public WISEWebSocketSession(WebSocketSession session, User signedInUser) {
         	//get the workgroup id and run id from the session
         	Long workgroupId = getValueFromSession(session, "workgroupId");
         	Long runId = getValueFromSession(session, "runId");
@@ -772,13 +772,13 @@ public class WISEEndPoint extends Endpoint {
         	setLastName(lastName);
         	
         	
-        	if(WISEEndPoint.isTeacher(signedInUser)) {
+        	if(WISETextWebSocketHandler.isTeacher(signedInUser)) {
         		//get the user name
         		userName = getUserName(user);
         		
         		//the user is a teacher
         		setTeacher(true);
-        	} else if(WISEEndPoint.isStudent(signedInUser)) {
+        	} else if(WISETextWebSocketHandler.isStudent(signedInUser)) {
         		//the user is a student so we will get the user names of everyone in their workgroup
         		userName = getWorkgroupUserNames(workgroupId);
         		
@@ -927,11 +927,11 @@ public class WISEEndPoint extends Endpoint {
     		return workgroupUserNames.toString();
     	}
         
-		public Session getSession() {
+		public WebSocketSession getSession() {
 			return session;
 		}
 
-		public void setSession(Session session) {
+		public void setSession(WebSocketSession session) {
 			this.session = session;
 		}
 		
@@ -1010,7 +1010,7 @@ public class WISEEndPoint extends Endpoint {
 	 * @param session the session
 	 * @return whether the user has been validated
 	 */
-	private boolean validateUser(User user, Session session) {
+	private boolean validateUser(User user, WebSocketSession session) {
 		boolean validated = false;
 		
 		if(user != null) {
@@ -1160,7 +1160,7 @@ public class WISEEndPoint extends Endpoint {
      * @param session the websocket session
      * @param messageJSON the student status JSON
      */
-    private void saveStudentStatusToDatabase(Session session, JSONObject messageJSON) {
+    private void saveStudentStatusToDatabase(WebSocketSession session, JSONObject messageJSON) {
     	//get the wiseWebSocketSession related to the given session
 		WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
 		
@@ -1207,7 +1207,7 @@ public class WISEEndPoint extends Endpoint {
      * @param session the websocket session
      * @param messageJSON the message to send
      */
-    private void sendStudentToTeachersMessage(Session session, JSONObject messageJSON) {
+    private void sendStudentToTeachersMessage(WebSocketSession session, JSONObject messageJSON) {
     	try {
     		//get the wiseWebSocketSession related to the given session
     		WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
@@ -1240,7 +1240,7 @@ public class WISEEndPoint extends Endpoint {
      * @param session the websocket session
      * @param messageJSON the message to send
      */
-    private void sendTeacherToStudentsInRunMessage(Session session, JSONObject messageJSON) {
+    private void sendTeacherToStudentsInRunMessage(WebSocketSession session, JSONObject messageJSON) {
     	try {
     		//get the wiseWebSocketSession related to the given session
     		WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
@@ -1278,7 +1278,7 @@ public class WISEEndPoint extends Endpoint {
      * @param session the websocket session
      * @param messageJSON the message to send
      */
-    private void sendTeacherToStudentsInPeriodMessage(Session session, JSONObject messageJSON) {
+    private void sendTeacherToStudentsInPeriodMessage(WebSocketSession session, JSONObject messageJSON) {
     	try {
     		//get the wiseWebSocketSession related to the given session
     		WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
@@ -1318,10 +1318,10 @@ public class WISEEndPoint extends Endpoint {
     
     /**
      * Handle the message that a student is sending to their classmates in a period
-     * @param session the session object
+     * @param session the websocket session object
      * @param messageJSON the message JSON object
      */
-    private void sendStudentToClassmatesInPeriodMessage(Session session, JSONObject messageJSON) {
+    private void sendStudentToClassmatesInPeriodMessage(WebSocketSession session, JSONObject messageJSON) {
     	try {
     		if(session != null) {
         		//get the wiseWebSocketSession related to the given session
@@ -1365,10 +1365,11 @@ public class WISEEndPoint extends Endpoint {
         for (WISEWebSocketSession connection : connections) {
             try {
             	//get a session
-            	Session session = connection.getSession();
+            	WebSocketSession session = connection.getSession();
             	
             	//send the message to the session
-            	session.getBasicRemote().sendText(message);
+            	TextMessage textMessage = new TextMessage(message);
+        		session.sendMessage(textMessage);
             } catch (IOException ignore) {
                 //ignore
             }
@@ -1380,14 +1381,16 @@ public class WISEEndPoint extends Endpoint {
      * @param session the websocket session to send the message to
      * @param message the message to send
      */
-    private void sendMessage(Session session, String message) {
+    private void sendMessage(WebSocketSession session, String message) {
     	if(session != null) {
         	try {
         		//send the message to this session
-        		session.getBasicRemote().sendText(message);
+        		TextMessage textMessage = new TextMessage(message);
+        		session.sendMessage(textMessage);
             } catch (IOException ignore) {
                 //ignore
             }
     	}
     }
+
 }
