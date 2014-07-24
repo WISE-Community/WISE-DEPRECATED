@@ -162,7 +162,7 @@ public class ProjectImpl implements Project {
 	@Transient
 	public ProjectInfo projectinfo = new ProjectInfoImpl();
 	
-	@Column(name = COLUMN_NAME_PROJECT_NAME)
+	@Column(name = COLUMN_NAME_PROJECT_NAME, nullable = false)
 	protected String name;
 	
 	@OneToOne(targetEntity = ProjectMetadataImpl.class, fetch = FetchType.LAZY)

@@ -110,7 +110,7 @@ public final class CredentialManager {
 				List<String> filenames = new ArrayList<String>();
 				Map<String,byte[]> fileMap = new TreeMap<String,byte[]>();
 
-				Iterator iter = multiRequest.getFileNames();
+				Iterator<String> iter = multiRequest.getFileNames();
 				while(iter.hasNext()){
 					String filename = (String)iter.next();
 					filenames.add(filename);

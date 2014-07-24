@@ -570,7 +570,7 @@ public class AuthorProjectController {
 							Map<String,MultipartFile> fileMap = new TreeMap<String,MultipartFile>();
 							
 							//get all the file names and files to be uploaded
-							Iterator iter = multiRequest.getFileNames();
+							Iterator<String> iter = multiRequest.getFileNames();
 							while(iter.hasNext()){
 								String filename = (String)iter.next();
 								fileNames.add(filename);
@@ -1127,7 +1127,8 @@ public class AuthorProjectController {
 	 * @return the JSONArray of library projects
 	 */
 	private JSONArray getLibraryProjects(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		List<Project> libraryProjects = projectService.getProjectListByTagName("library");
+
+		List<Project> libraryProjects = projectService.getLibraryProjectList();
 
 		//an array to hold the information for the projects
 		JSONArray libraryProjectArray = new JSONArray();

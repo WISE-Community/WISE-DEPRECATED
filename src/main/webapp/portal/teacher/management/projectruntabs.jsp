@@ -193,7 +193,7 @@
 			</c:when>
 		<c:otherwise>
 			<p class="info">
-				<spring:message code="teacher.management.projectruntabs.active_introEmpty" htmlEscape="false"/>
+				<spring:message code="teacher.management.projectruntabs.active_introEmpty" arguments="${contextPath}" htmlEscape="false"/>
 			</p>
 		</c:otherwise>
 	</c:choose>

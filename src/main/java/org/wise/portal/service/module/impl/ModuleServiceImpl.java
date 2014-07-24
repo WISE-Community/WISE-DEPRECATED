@@ -90,8 +90,7 @@ public class ModuleServiceImpl extends CurnitServiceImpl implements
 	 */
 	@Override
 	public Module getById(Long moduleId) throws ObjectNotFoundException {
-		Module module = moduleDao.getById(moduleId);
-		return module;
+		return moduleDao.getById(moduleId);
 	}
 	
 	/**

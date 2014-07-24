@@ -10,6 +10,7 @@
 <!-- $Id$ -->
 
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:cache="http://www.springframework.org/schema/cache"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:context="http://www.springframework.org/schema/context"
@@ -26,10 +27,12 @@
       http://www.springframework.org/schema/context/spring-context-4.0.xsd
 	  http://www.springframework.org/schema/aop 
       http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+      http://www.springframework.org/schema/cache
+      http://www.springframework.org/schema/cache/spring-cache-4.0.xsd
       http://www.springframework.org/schema/security
       http://www.springframework.org/schema/security/spring-security-3.2.xsd      
       ">
-
+      
 	<!-- ======================== FILTER CHAIN ======================= -->
 
 	<!-- if you wish to use channel security, add "channelProcessingFilter," in front of "httpSessionContextIntegrationFilter" 
@@ -613,12 +616,7 @@
 	<bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
 		<constructor-arg>
 			<bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-				<property name="cacheManager">
-					<bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" />
-				</property>
-				<property name="cacheName">
-					<value>aclCache</value>
-				</property>
+				<property name="cacheManager" ref="ehcache" />
 			</bean>
 		</constructor-arg>
 	</bean>
@@ -823,7 +821,6 @@
 
 	<bean id="projectServiceTarget" class="org.wise.portal.service.project.impl.ProjectServiceImpl">
 		<property name="aclService" ref="aclServiceImpl" />
-		<property name="runService" ref="runService" />
 	</bean>
 
 	<bean id="workgroupService" class="org.springframework.aop.framework.ProxyFactoryBean">
@@ -992,5 +989,15 @@
 
 	<!-- wise property file -->
 	<util:properties id="wiseProperties" location="classpath:wise.properties" />
+	
+	<cache:annotation-driven />
+	
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehcache"/>
+	</bean>
+	
+	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:ehcache.xml" />
+	</bean>
 
 </beans>
