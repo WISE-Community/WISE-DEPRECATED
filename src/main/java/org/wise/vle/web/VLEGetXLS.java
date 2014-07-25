@@ -982,6 +982,8 @@ public class VLEGetXLS extends AbstractController {
 			customNodes = vleService.getNodesByNodeIdsAndRunId(customSteps, runId);
 		}
 		
+		boolean isCSVHeaderRowWritten = false;
+		
 		//loop through all the workgroup ids
 		for(int x=0; x<workgroupIds.size(); x++) {
 			//get a workgroup id
@@ -1098,8 +1100,18 @@ public class VLEGetXLS extends AbstractController {
 		    	//header student work column
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Student Work");
 
-		    	//write the csv row if we are generating a csv file
-		    	writeCSV(headerRowVector);
+		    	if(!isCSVHeaderRowWritten) {
+		    		//we have not written the csv header row yet
+		    		
+			    	//write the csv row if we are generating a csv file
+			    	writeCSV(headerRowVector);
+			    	
+			    	/*
+			    	 * set this flag to true so we don't write the header row into the csv again.
+			    	 * this means we will only output the header row once at the very top of the csv file.
+			    	 */
+			    	isCSVHeaderRowWritten = true;
+		    	}
 		    	
 				//get all the work for a workgroup id
 				List<StepWork> stepWorksForWorkgroupId = vleService.getStepWorksByUserInfo(userInfo);
@@ -6013,6 +6025,8 @@ public class VLEGetXLS extends AbstractController {
 			wb = new XSSFWorkbook();
 		}
 		
+		boolean isCSVHeaderRowWritten = false;
+		
 		//loop through all the workgroups
 		for(int x=0; x<workgroupIds.size(); x++) {
 			String workgroupId = workgroupIds.get(x);
@@ -6040,9 +6054,6 @@ public class VLEGetXLS extends AbstractController {
 			 */
 			headerColumn = createUserDataHeaderRow(headerColumn, headerRow, headerRowVector, true, true);
 			
-			//write the csv row if we are generating a csv file
-			writeCSV(headerRowVector);
-	    	
 	    	//vector that contains all the header column names
 	    	Vector<String> headerColumnNames = new Vector<String>();
 	    	headerColumnNames.add("Step Work Id");
@@ -6065,8 +6076,18 @@ public class VLEGetXLS extends AbstractController {
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, headerColumnNames.get(y));
 	    	}
 	    	
-	    	//write the csv row if we are generating a csv file
-	    	writeCSV(headerRowVector);
+			if(!isCSVHeaderRowWritten) {
+	    		//we have not written the csv header row yet
+	    		
+		    	//write the csv row if we are generating a csv file
+		    	writeCSV(headerRowVector);
+		    	
+		    	/*
+		    	 * set this flag to true so we don't write the header row into the csv again.
+		    	 * this means we will only output the header row once at the very top of the csv file.
+		    	 */
+		    	isCSVHeaderRowWritten = true;
+	    	}
 	    	
 	    	//get all the work from the workgroup
 	    	List<StepWork> stepWorks = vleService.getStepWorksByUserInfo(userInfo);
@@ -6203,10 +6224,6 @@ public class VLEGetXLS extends AbstractController {
 					}
 	    		}
 	    	}
-	    	
-	    	//create a blank row for spacing
-			Vector<String> emptyVector2 = createRowVector();
-			writeCSV(emptyVector2);
 		}
 		
 		return wb;
