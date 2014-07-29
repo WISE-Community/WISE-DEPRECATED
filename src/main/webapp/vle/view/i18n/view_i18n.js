@@ -27,6 +27,7 @@ View.prototype.i18n.supportedLocales = {
 			"nl":"nl",
 			"nl_NL":"nl",
 			"nl_BG":"nl",
+			"th":"th",
 			"tr":"tr",
 			"zh_CN":"zh_CN",
 			"zh_TW":"zh_TW"
@@ -34,10 +35,16 @@ View.prototype.i18n.supportedLocales = {
 		theme: {
 			"en_US":"en_US",
 			"es":"es",
-			"ja":"ja",			
+			"it":"it",
+			"ja":"ja",
+			"ko":"ko",
 			"nl":"nl",
 			"nl_NL":"nl",
-			"nl_BG":"nl"
+			"nl_BG":"nl",
+			"th":"th",
+			"tr":"tr",
+			"zh_CN":"zh_CN",
+			"zh_TW":"zh_TW"
 		}
 };
 
