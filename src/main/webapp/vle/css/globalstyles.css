@@ -409,6 +409,11 @@ img.tooltip {
 
 
 /** HINTS DISPLAY **/
+.hintText {
+	height:300px;
+	overflow:scroll;
+}
+
 .hintText p {
 	margin: 0 0 0.5em;
 }
