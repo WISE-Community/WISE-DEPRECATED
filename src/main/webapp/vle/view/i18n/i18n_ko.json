@@ -78,5 +78,57 @@
     "welcome": {
         "value": "기간",
         "description": "Text for 'Welcome'"
+    },
+    "display_chat_room": {
+        "value": "대화창 열기",
+        "description": "Text on the Chat Room button for Student VLE"
+    },
+    "mywork_preview_mode": {
+        "value": "내 작업을 미리보기에서 볼 수 없습니다. 교실에서 실행할 때는 제대로 보일 것입니다.",
+        "description": "Text to display when user clicks on review work button in preview mode"
+    },
+    "toggle_nav_button_text": {
+        "value": "전체화면",
+        "description": "Text on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "toggle_nav_button_title": {
+        "value": "전체화면(네비게이션 메뉴 숨김)",
+        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "toggle_nav_button_text_off": {
+        "value": "메뉴 보기",
+        "description": "Text on the Toggle Navigation button when navigation UI is off (hidden)"
+    },
+    "toggle_nav_button_title_off": {
+        "value": "네비게이션 메뉴 보기",
+        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "signout_button_title": {
+        "value": "WISE 저장하고 나가기",
+        "description": "Text for mouse hover title on the Log out button"
+    },
+    "previous_step_text": {
+        "value": "<이전",
+        "description": "Text on button in the project vle that will show the previous step in the project"
+    },
+    "previous_step_title": {
+        "value": "전 단계",
+        "description": "Text for mouse hover title on button in the project vle that will show the previous step in the project"
+    },
+    "next_step_text": {
+        "value": "다음>",
+        "description": "Text on button in the project vle that will show the next step in the project"
+    },
+    "next_step_title": {
+        "value": "다음 단계",
+        "description": "Text for mouse hover title on button in the project vle that will show the next step in the project"
+    },
+    "gohome_button_text": {
+        "value": "홈",
+        "description": "Text on the Home button"
+    },
+    "gohome_button_title": {
+        "value": "저장하고",
+        "description": "Text for mouse hover title on the Home button"
     }
 }
