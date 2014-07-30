@@ -1,46 +1,28 @@
 <html>
 <head>
-<script type="text/javascript" src="../../jquery/js/jquery-1.11.0.min.js"></script>
-<script type="text/javascript" src="../../node/nodefactory.js"></script>
-<script type="text/javascript" src="../../node/Node.js"></script>
-<script type="text/javascript" src="../../node/explanationbuilder/ExplanationBuilderNode.js"></script>
+<script type="text/javascript" src="../../jquery/js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../../jquery/js/jquery-ui-1.10.4.interactions.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../../node/explanationbuilder/explanation.css">
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif; min-width: 0; font-size: 14px;">
+<div id="content" style="padding: 10px;"></div>
 
 <script>
-//write the html to this page
-document.write(html);
-
-//remove the 'Enlarge' button
-$('#' + enlargeButtonId).remove();
-
-//get the width and height of the ideas div e.g. '600px'
-var width = $('#' + explanationBuilderIdeasDivId).css('width');
-var height = $('#' + explanationBuilderIdeasDivId).css('height');
-
-//remove the 'px'
-var widthNum = width.replace('px', '');
-var heightNum = height.replace('px', '');
-
-/*
- * add two to the numbers to get the dimension values for the container div that
- * will prevent the scrollbars from showing up. we need to add 2 to each dimension 
- * because there is a border of 1px all around.
- */
-var newWidth = parseInt(widthNum) + 2;
-var newHeight = parseInt(heightNum) + 2;
-
-/*
- * if we are in Chrome we need to add 16 more px to the height to prevent
- * the scrollbar from showing up.
- */
-if(navigator.userAgent.indexOf('Chrome') != -1) {
-	newHeight += 16;
-}
-
-//set the new width and height of the container div
-$('#' + explanationBuilderContainerDivId).css('width', newWidth);
-$('#' + explanationBuilderContainerDivId).css('height', newHeight);
+	// write the html to this page
+	$('#content').html(html);
+	
+	// re-scale to actual size
+	var $wrapper = $('#' + wrapperId),
+		h = $wrapper.height()/.6,
+		w = $wrapper.width()/.6;
+	$wrapper.height(h).width(w);
+	
+	$('#' + containerId).css({'-moz-transform': 'scale(1)', '-ms-transform': 'scale(1)', '-o-transform': 'scale(1)', '-webkit-transform': 'scale(1)', 'transform': 'scale(1)'});
+	
+	// remove the 'Enlarge' button
+	$('#' + enlargeButtonId).remove();
+	// make ideas draggable by teacher
+	$('.exIdea').draggable();
 </script>
-</head>
-<body></body>
+</body>
 </html>

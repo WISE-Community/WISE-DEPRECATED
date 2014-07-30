@@ -9,13 +9,41 @@ View.prototype.pushStudentWork = function(nodeId, nodeState){
 };
 
 /**
- * Overwrites the node states array in the latest node visit
+ * Overwrites the node states array in the latest node visit and saves the node visit
+ * to the server
  * @param nodeId the node id for the current step
- * @param nodeStates the new node states array that we will
- * use to overwrite the existing node states array
+ * @param nodeStates the new node states array that we will use to overwrite the existing node states array
+ * @param successCallback the function that is called after the current node visit is successfully
+ * saved to the server
+ * @param failureCallback the function that is called after the current node visit fails to save
+ * to the server 
+ * @param callbackData data that is made available to the successCallback function
  */
-View.prototype.overwriteNodeStatesInCurrentNodeVisit = function(nodeId, nodeStates){
+View.prototype.overwriteNodeStatesInCurrentNodeVisit = function(nodeId, nodeStates, successCallback, failureCallback, callbackData) {
+	//overwrite the node states in the current node visit
 	this.model.overwriteNodeStatesInCurrentNodeVisit(nodeId, nodeStates);
+	
+	//save the current node visit to the server
+	this.postCurrentNodeVisit(successCallback, failureCallback, callbackData);
+};
+
+/**
+ * Overwrites the latest node state in the current node visit and saves
+ * the node visit to the server
+ * @param nodeId the node id for the current step
+ * @param nodeState the new node state
+ * @param successCallback the function that is called after the current node visit is successfully
+ * saved to the server
+ * @param failureCallback the function that is called after the current node visit fails to save
+ * to the server 
+ * @param callbackData data that is made available to the successCallback function
+ */
+View.prototype.overwriteLatestNodeStateInCurrentNodeVisit = function(nodeId, nodeState, successCallback, failureCallback, callbackData) {
+	//overwrite the latest node state in the current node visit
+	this.model.overwriteLatestNodeStateInCurrentNodeVisit(nodeId, nodeState);
+	
+	//save the current node visit to the server
+	this.postCurrentNodeVisit(successCallback, failureCallback, callbackData);
 };
 
 /**

@@ -1040,7 +1040,7 @@
 		"description":"Title for the classroom monitor"
 	},
 	"classroomMonitor_run":{
-		"value":"Run: {0}",
+		"value":"#{0}",
 		"description":"Text displaying the ID of the current run in the classroom monitor ({0} will be replaced by ID number)"
 	},
 	"classroomMonitor_search":{
@@ -1060,11 +1060,11 @@
 		"description":"Text displaying number of workgroups currently online ({0} will be replaced with actual number)"
 	},
 	"classroomMonitor_progress":{
-		"value":"Progress",
+		"value":"Project",
 		"description":"Text for step progress link in classroom monitor"
 	},
 	"classroomMonitor_monitor":{
-		"value":"Monitor",
+		"value":"Students",
 		"description":"Text for student progress link in classroom monitor"
 	},
 	"classroomMonitor_studentProgress_title":{
@@ -1160,11 +1160,11 @@
 		"description":"Label text for the total student completion display in the classroom monitor"
 	},
 	"classroomMonitor_studentProgress_workgroupOnline":{
-		"value":"Workgroup is online",
+		"value":"Team is online",
 		"description":"Text indicating that workgroup is online in the classroom monitor (only shown to screen readers)"
 	},
 	"classroomMonitor_studentProgress_workgroupOffline":{
-		"value":"Workgroup is offline",
+		"value":"Team is offline",
 		"description":"Text indicating that workgroup is offline in the classroom monitor (only shown to screen readers)"
 	},
 	"classroomMonitor_studentProgress_viewStudentWork":{
@@ -1180,7 +1180,7 @@
 		"description":"Header text for the period table column in the student progress table of classroom monitor"
 	},
 	"classroomMonitor_studentProgress_headers_workgroup":{
-		"value":"Workgroup",
+		"value":"Team",
 		"description":"Header text for the workgroup column in the student progress table of classroom monitor"
 	},
 	"classroomMonitor_studentProgress_headers_currentStep":{
@@ -1240,11 +1240,11 @@
 		"description":"Text to display when workgroup has not submitted any work for a step in the grading view of the classroom monitor"
 	},
 	"classroomMonitor_grading_latestWork":{
-		"value":"Latest Response:",
+		"value":"Latest Response",
 		"description":"Header text for student work that is the most recent revision in the classroom monitor"
 	},
 	"classroomMonitor_grading_workRevision":{
-		"value":"Response #{0}:",
+		"value":"Response #{0}",
 		"description":"Header text for student work that is not that most recent revision in the classroom monitor ({0} will be replaced with revision number)"
 	},
 	"classroomMonitor_grading_flag":{

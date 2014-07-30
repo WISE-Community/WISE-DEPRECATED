@@ -1776,7 +1776,7 @@ form {
 /* Settings Panels */
 
 .featureSettings {
-	font-size:.9em;
+	/*font-size:.9em;*/
 	border:1px solid #cccccc;
 	background-color:#f5f5f5;
 	margin:.25em;
@@ -1934,7 +1934,8 @@ table#ideaAttributes {
 #ideaAttributes .attribute input[type='text'].option {
 	margin: 3px 0;
     padding: 1px 16px 1px 12px;
-    width: 100%;
+    /*width: 100%;*/
+    min-width: 144px;
 }
 
 #ideaAttributes .attribute input[type='text'].fieldName {

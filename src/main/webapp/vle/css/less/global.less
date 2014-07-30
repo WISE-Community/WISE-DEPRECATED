@@ -9,6 +9,66 @@
 
 // TODO: make semantic :)
 
+// Use rem instead of pixels: https://gist.github.com/jasny/9731895
+
+// Set root font size
+
+html {
+    font-size: @font-size-root;
+}
+
+
+// Change styling for elements that mix pixels and ems
+
+.navbar-toggle {
+	margin-top: @navbar-padding-vertical/8;
+	margin-bottom: @navbar-padding-vertical/8;
+}
+
+pre {
+  font-size: ( @font-size-base - (1 / @font-size-root) );
+}
+
+.form-control-feedback {
+  width: calc(@input-height-base ~" + 2px");
+  height: calc(@input-height-base ~" + 2px");
+}
+.input-lg + .form-control-feedback {
+  width: calc(@input-height-large ~" + 2px");
+  height: calc(@input-height-large ~" + 2px");
+}
+.input-sm + .form-control-feedback {
+  width: calc(@input-height-small ~" + 2px");
+  height: calc(@input-height-small ~" + 2px");
+}
+
+.form-control {
+    height: calc(@input-height-base ~" + 2px");
+}
+
+.form-horizontal {
+    .radio, .checkbox, .radio-inline, .checkbox-inline {
+        padding: @padding-base-vertical;
+        border: 1px solid transparent;
+    }
+    .radio, .checkbox {
+        min-height: calc((@line-height-computed + @padding-base-vertical) ~"+ 1px");
+    }
+    .form-control-static {
+        padding-top: @padding-base-vertical;
+        border-top: 1px solid transparent;
+        padding-bottom: @padding-base-vertical;
+        border-bottom: 1px solid transparent;
+    }
+
+    @media (min-width: @screen-sm-min) {
+        .control-label {
+            padding-top: @padding-base-vertical;
+            border-top: 1px solid transparent;
+        }
+    }
+}
+
 /*--------------------------------------------------
 Global Styles for the WISE VLE
 --------------------------------------------------*/
@@ -17,9 +77,9 @@ Global Styles for the WISE VLE
 /* Content headers */
 
 .panel-header {
-	font-size: 1.25em;
-	margin: 0 0 0.5em;
-	padding-bottom: 0.5em;
+	font-size: 1.25 + @font-unit;
+	margin: 0 0 (0.5  + @font-unit);
+	padding-bottom: (0.5  + @font-unit);
 	border-bottom: 1px solid #aaa;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 	color: @brand-danger;
@@ -37,36 +97,36 @@ Global Styles for the WISE VLE
 /* Layout & navigation elements */
 
 .top-nav {
-	border-bottom: 4px solid @brand-warning;
+	//border-bottom: 4px solid @brand-warning;
 	.navbar-brand {
 		background-image: url('../../images/logo/WISE-logo-icon-flat.svg');
 		background-repeat: no-repeat;
 		background-position: left center;
-		padding-left: 46px;
-		-webkit-background-size: 40px;
-		-o-background-size: 40px;
-		-moz-background-size: 40px;
-		background-size: 40px;
-		margin-left: 5px;
+		padding-left: ((46px / @font-size-root) + @font-unit);
+		-webkit-background-size: ((40px / @font-size-root) + @font-unit);
+		-o-background-size: ((40px / @font-size-root) + @font-unit);
+		-moz-background-size: ((40px / @font-size-root) + @font-unit);
+		background-size: ((40px / @font-size-root) + @font-unit);
+		margin-left: ((5px / @font-size-root) + @font-unit);
 		font-family: @headings-font-family;
 	}
 	
 	.navbar-right {
-		padding-right: 5px;
+		padding-right: ((5px / @font-size-root) + @font-unit);
 	}
 	
 	.navbar-collapse {
 		&.in {
 			padding: 0;
 			.navbar-nav {
-				margin: 5.5px 0;
+				margin: ((5.5px / @font-size-root) + @font-unit) 0;
 			}
 		}
 	}
 }
 
 .navbar-toggle {
-	margin-right: 5px;
+	margin-right: ((5px / @font-size-root) + @font-unit);
 }
 
 .navbar-collapse {
@@ -85,7 +145,7 @@ Global Styles for the WISE VLE
 
 .divider, .dropdown-menu .divider {
 	height: 1px;
-	margin: 8px 0;
+	margin: ((8px / @font-size-root) + @font-unit) 0;
 	overflow: hidden;
 	background-color: #eee;
 	background-color: rgba(0,0,0,.1);
@@ -132,18 +192,18 @@ button {
 
 .menu {
 	&.panel-body {
-		padding: 5px;
+		padding: ((5px / @font-size-root) + @font-unit);
 	}
 }
 
 .label {
-	padding-top: .3em;
+	padding-top: .3 + @font-unit;
 }
 
 .btn {
 	display: inline-block;
 	.fa {
-		padding: 0 5px;
+		padding: 0 ((5px / @font-size-root) + @font-unit);
 		text-align: center;
 	}
 	.btn-text {
@@ -155,7 +215,7 @@ button {
 	.btn {
 		.fa {
 			padding: 0;
-			margin-right: 5px;
+			margin-right: ((5px / @font-size-root) + @font-unit);
 		}
 		.btn-text {
 			display: inline-block;
@@ -164,14 +224,14 @@ button {
 }
 
 .project-thumb {
-    height: 70px;
-    width: 70px;
+    height: ((70px / @font-size-root) + @font-unit);
+    width: ((70px / @font-size-root) + @font-unit);
     border: 1px solid #ddd;
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	.small {
-		margin: 0 .5em;
+		margin: 0 (.5 + @font-unit);
 	}
 }
 
@@ -238,6 +298,11 @@ form {
 	form {
 		padding: @padding-base-vertical;
 	}
+	
+	> li > a {
+		padding-top: ((6px / @font-size-root) + @font-unit);
+		padding-bottom: ((6px / @font-size-root) + @font-unit);
+	}
 }
 
 //.form-group {
@@ -248,22 +313,15 @@ form {
 
 .form-inline {
 	.form-group {
-		//margin-right: 5px;
-		margin-bottom: 5px;
-		
-		/*select {
-			&.form-control {
-				margin-bottom: 5px;
-			}
-		}*/
+		margin-bottom: ((5px / @font-size-root) + @font-unit);
 	}
 }
 
 .form-header {
 	border-bottom: 1px solid;
     font-weight: bold;
-    margin-bottom: 15px;
-    padding-bottom: 5px;
+    margin-bottom: ((15px / @font-size-root) + @font-unit);
+    padding-bottom: ((5px / @font-size-root) + @font-unit);
 }
 
 .panel-info {
@@ -321,7 +379,7 @@ form {
 /* TinyMCE */
 
 div.mce-edit-area {
-	padding: 4px 6px;
+	padding: ((4px / @font-size-root) + @font-unit) ((6px / @font-size-root) + @font-unit);
 }
 
 /* DataTables */
@@ -332,8 +390,8 @@ table.dataTable thead .sorting_desc,
 table.dataTable thead .sorting_asc_disabled,
 table.dataTable thead .sorting_desc_disabled {
 	cursor: pointer;
-	padding-left: 12px;
-	padding-right: 18px;
+	padding-left: ((12px / @font-size-root) + @font-unit);
+	padding-right: ((18px / @font-size-root) + @font-unit);
 	color: @brand-primary;
 }
 
@@ -344,4 +402,40 @@ table.dataTable thead .sorting_desc_disabled {
 			border: 1px solid @gray-lighter;
 		}
 	}
+}
+
+/* Bootstrap Multiselect */
+
+.multiselect {
+	> span {
+		display: inline-flex;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: box;
+		//display: -webkit-box;
+		margin-right: ((2px / @font-size-root) + @font-unit);
+	    max-width: ((150px / @font-size-root) + @font-unit);
+	    overflow: hidden;
+	    white-space: nowrap;
+	    text-overflow: ellipsis;
+	}
+}
+
+.multiselect-container {
+	.radio {
+		padding-left: ((20px / @font-size-root) + @font-unit);
+	
+		> input {
+			display: none;
+		}
+	}
+	
+	> li > a > label {
+		padding-top: ((6px / @font-size-root) + @font-unit) !important;
+		padding-bottom: ((6px / @font-size-root) + @font-unit) !important;
+		
+		> input[type="checkbox"] {
+ 			margin-top: ((2px / @font-size-root) + @font-unit);
+ 		}
+ 	}
 }

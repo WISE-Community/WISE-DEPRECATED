@@ -80,9 +80,6 @@ public class VLEGetXLS {
 	@Autowired
 	private StudentAttendanceService studentAttendanceService;
 	
-	//the max number of step work columns we need, only used for "allStudentWork"
-	private int maxNumberOfStepWorkParts = 1;
-	
 	private HashMap<String, JSONObject> nodeIdToNodeContent = new HashMap<String, JSONObject>();
 	
 	private HashMap<String, JSONObject> nodeIdToNode = new HashMap<String, JSONObject>();
@@ -152,8 +149,6 @@ public class VLEGetXLS {
 	 * is ever created
 	 */
 	private void clearVariables() {
-		//the max number of step work columns we need, only used for "allStudentWork"
-		maxNumberOfStepWorkParts = 1;
 		
 		//mappings for the project and user
 		nodeIdToNodeContent = new HashMap<String, JSONObject>();
@@ -982,6 +977,8 @@ public class VLEGetXLS {
 			customNodes = vleService.getNodesByNodeIdsAndRunId(customSteps, runId);
 		}
 		
+		boolean isCSVHeaderRowWritten = false;
+		
 		//loop through all the workgroup ids
 		for(int x=0; x<workgroupIds.size(); x++) {
 			//get a workgroup id
@@ -1098,8 +1095,18 @@ public class VLEGetXLS {
 		    	//header student work column
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Student Work");
 
-		    	//write the csv row if we are generating a csv file
-		    	writeCSV(headerRowVector);
+		    	if(!isCSVHeaderRowWritten) {
+		    		//we have not written the csv header row yet
+		    		
+			    	//write the csv row if we are generating a csv file
+			    	writeCSV(headerRowVector);
+			    	
+			    	/*
+			    	 * set this flag to true so we don't write the header row into the csv again.
+			    	 * this means we will only output the header row once at the very top of the csv file.
+			    	 */
+			    	isCSVHeaderRowWritten = true;
+		    	}
 		    	
 				//get all the work for a workgroup id
 				List<StepWork> stepWorksForWorkgroupId = vleService.getStepWorksByUserInfo(userInfo);
@@ -1513,33 +1520,6 @@ public class VLEGetXLS {
 						Long choiceScore = null;
 						Long maxScore = null;
 
-						if(nodeStateAssessmentPart != null) {
-							//check if the response is null
-							if(!nodeStateAssessmentPart.isNull("response")) {
-								//get the response object
-								JSONObject responseObject = nodeStateAssessmentPart.optJSONObject("response");
-								
-								if(responseObject != null) {
-									//get the response text
-									String responseText = responseObject.optString("text");
-
-									if(responseText != null) {
-										response = responseText;
-									}
-									
-									//try to get the auto score result object
-									JSONObject autoScoreResult = responseObject.optJSONObject("autoScoreResult");
-									
-									if(autoScoreResult != null) {
-										//get the auto score values
-										isCorrect = autoScoreResult.optBoolean("isCorrect");
-										choiceScore = autoScoreResult.optLong("choiceScore");
-										maxScore = autoScoreResult.optLong("maxScore");
-									}
-								}
-							}
-						}
-						
 						//get the assessment part from the step content
 						JSONObject nodeContentAssessmentPart = getStepContentAssessmentByAssessmentId(nodeId, nodeStateAssessmentPartId);
 						
@@ -1548,11 +1528,85 @@ public class VLEGetXLS {
 							isAutoScoreEnabled = true;
 						}
 						
-						//set the response
-						if(response == null) {
-							row.add("");
-						} else {
-							row.add(response);
+						boolean responseAdded = false;
+						
+						if(nodeContentAssessmentPart != null) {
+							//get the part type
+							String type = nodeContentAssessmentPart.optString("type");
+							
+							if(type != null && type.equals("checkbox")) {
+								//this part is a checkbox type
+								
+								JSONArray responseJSONArray = null;
+								
+								//get the available choices for the checkboxes
+								JSONArray choices = nodeContentAssessmentPart.optJSONArray("choices");
+								
+								if(nodeStateAssessmentPart != null) {
+									//get the choices the student chose
+									responseJSONArray = nodeStateAssessmentPart.optJSONArray("response");
+								}
+								
+								if(choices != null) {
+									
+									for(int y=0; y<choices.length(); y++) {
+										//loop through all the available choices
+										JSONObject choice = choices.getJSONObject(y);
+										
+										//check if the student checked this choice
+										if(isChoiceInResponse(choice, responseJSONArray)) {
+											//the student checked this choice
+											
+											//add the choice text
+											String choiceText = choice.optString("text");
+											row.add(choiceText);
+										} else {
+											//the student did not check this choice
+											row.add("");
+										}
+										
+										responseAdded = true;
+									}
+								}
+							} else {
+								//the part is not a checkbox type
+								
+								if(nodeStateAssessmentPart != null) {
+									//check if the response is null
+									if(!nodeStateAssessmentPart.isNull("response")) {
+										//get the response object
+										JSONObject responseObject = nodeStateAssessmentPart.optJSONObject("response");
+										
+										if(responseObject != null) {
+											//get the response text
+											String responseText = responseObject.optString("text");
+
+											if(responseText != null) {
+												response = responseText;
+											}
+											
+											//try to get the auto score result object
+											JSONObject autoScoreResult = responseObject.optJSONObject("autoScoreResult");
+											
+											if(autoScoreResult != null) {
+												//get the auto score values
+												isCorrect = autoScoreResult.optBoolean("isCorrect");
+												choiceScore = autoScoreResult.optLong("choiceScore");
+												maxScore = autoScoreResult.optLong("maxScore");
+											}
+										}
+									}
+								}
+							}
+						}
+						
+						if(!responseAdded) {
+							//set the response
+							if(response == null) {
+								row.add("");
+							} else {
+								row.add(response);
+							}
 						}
 						
 						if(isAutoScoreEnabled) {
@@ -1614,6 +1668,46 @@ public class VLEGetXLS {
 	}
 	
 	/**
+	 * Check if the choice is in the array of responses from the student.
+	 * This is used for Questionnaire/Assessmentlist steps in determining
+	 * which choices the student chose in a checkbox part.
+	 * @param choice the choice object containing id and text
+	 * @param responseJSONArray an array of responses from a student
+	 * @return whether the choice is in the array of responses
+	 */
+	private boolean isChoiceInResponse(JSONObject choice, JSONArray responseJSONArray) {
+		boolean result = false;
+		
+		if(responseJSONArray != null && choice != null) {
+			//get the id and text of the choice
+			String answerId = choice.optString("id");
+			String answerText = choice.optString("text");
+			
+			//loop through all the objects in the student response
+			for(int x=0; x<responseJSONArray.length(); x++) {
+				//get a student response object
+				JSONObject responseJSONObject = responseJSONArray.optJSONObject(x);
+				
+				if(responseJSONObject != null) {
+					//get the id and text of the student response object
+					String id = responseJSONObject.optString("id");
+					String text = responseJSONObject.optString("text");
+					
+					if(id != null && text != null && answerId != null && answerText != null) {
+						//check if the ids and text match
+						if(id.equals(answerId) && text.equals(answerText)) {
+							//the ids and text match so the student did choose the choice
+							result = true;
+						}
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * Get the default column names for the step
 	 * @param nodeId the id for the node
 	 * @param nodeType the node type
@@ -1649,20 +1743,65 @@ public class VLEGetXLS {
 					//get an assessment part from the step content
 					JSONObject nodeContentAssessment = nodeContentAssessments.optJSONObject(x);
 					
+					String type = "";
+					
 					if(nodeContentAssessment != null) {
 						//get the prompt for the part
 						prompt = nodeContentAssessment.optString("prompt");
+						
+						//get the type for the part
+						type = nodeContentAssessment.optString("type");
 						
 						//get whether auto scoring is enabled for the part
 						isAutoScoreEnabled = nodeContentAssessment.optBoolean("isAutoScoreEnabled");
 					}
 					
-					if(prompt == null) {
-						//there is no prompt
-						columnNames.add(partLabel + ": ");
+					if(type.equals("checkbox")) {
+						/*
+						 * the assessment part is a checkbox type. we will display the choice text
+						 * instead of the part prompt for these checkbox type cells.
+						 * e.g.
+						 * 
+						 * 2. Where do plants use to grow?
+						 * [] Sunlight
+						 * [] Animals
+						 * [] Water
+						 */
+						try {
+							//get the available checkbox choices
+							JSONArray choices = nodeContentAssessment.optJSONArray("choices");
+							
+							if(choices != null) {
+								
+								//loop through all the available checkbox choices
+								for(int y=0; y<choices.length(); y++) {
+									//get a choice
+									JSONObject choice = choices.getJSONObject(y);
+									
+									if(choice != null) {
+										//get the choice text
+										String text = choice.optString("text");
+										
+										/*
+										 * add the choice text to the column names
+										 * e.g.
+										 * Part 2: Sunlight
+										 */
+										columnNames.add(partLabel + ": " + text);
+									}
+								}								
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
 					} else {
-						//there is a prompt for this part so we will add it to the column names e.g. Part 1: How do plants obtain energy?
-						columnNames.add(partLabel + ": " + prompt);
+						if(prompt == null) {
+							//there is no prompt
+							columnNames.add(partLabel + ": ");
+						} else {
+							//there is a prompt for this part so we will add it to the column names e.g. Part 1: How do plants obtain energy?
+							columnNames.add(partLabel + ": " + prompt);
+						}						
 					}
 					
 					if(isAutoScoreEnabled) {
@@ -3336,8 +3475,8 @@ public class VLEGetXLS {
 		Row stepExtraRow = createRow(mainSheet, rowCounter++);
 		Vector<String> stepExtraRowVector = createRowVector();
 
-		//create 5 empty columns in each of the rows because the first 5 columns are for the user data columns
-		for(int x=0; x<5; x++) {
+		//create 13 empty columns in each of the rows because the first 13 columns are for the user data columns
+		for(int x=0; x<13; x++) {
 			setCellValue(stepTitleRow, stepTitleRowVector, x, "");
 			setCellValue(stepTypeRow, stepTypeRowVector, x, "");
 			setCellValue(stepPromptRow, stepPromptRowVector, x, "");
@@ -3921,29 +4060,77 @@ public class VLEGetXLS {
 		
 		String stepExtra = "";
 		
+		//the counter for the assessment parts
+		int partCounter = 1;
+		
 		//loop through each part in the assessment
 		for(int x=0; x<assessmentParts.length(); x++) {
 			try {
 				stepExtra = "";
 				
 				//get an assessment part
-				JSONObject assessmentPart = assessmentParts.getJSONObject(x);
+				JSONObject assessmentPart = assessmentParts.optJSONObject(x);
 				
 				if(assessmentPart != null) {
-					//get the prompt for the part
-					String partPrompt = assessmentPart.getString("prompt");
+					//the label for the assessment part e.g. Part 1
+					String partLabel = "Part " + partCounter;
 					
-					stepExtra = partPrompt;
+					//get the type for the part
+					String type = assessmentPart.optString("type");
 					
-					//set the header cells for the column
-					columnCounter = setGetLatestStepWorkHeaderCells(columnCounter, 
-							stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
-							stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
-							nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
+					if(type != null && type.equals("checkbox")) {
+						//this is a checkbox part
+						
+						//get the available choices for the checkbox part
+						JSONArray choices = assessmentPart.optJSONArray("choices");
+						
+						if(choices != null) {
+							
+							//loop through all the choices in the checkbox part
+							for(int y=0; y<choices.length(); y++) {
+								//get a choice object
+								JSONObject choice = choices.optJSONObject(y);
+								
+								if(choice != null) {
+									//get the choice text
+									String text = choice.getString("text");
+									
+									/*
+									 * set the choice text as the step extra
+									 * e.g.
+									 * Part 2: Sunlight
+									 */
+									stepExtra = partLabel + ": " + text;
+									
+									//set the header cells for the column
+									columnCounter = setGetLatestStepWorkHeaderCells(columnCounter, 
+											stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
+											stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
+											nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
+								}
+							}
+						}
+					} else {
+						//this is not a checkbox part
+						
+						//get the prompt for the part
+						String partPrompt = assessmentPart.getString("prompt");
+						
+						stepExtra = partLabel + ": " + partPrompt;
+						
+						//set the header cells for the column
+						columnCounter = setGetLatestStepWorkHeaderCells(columnCounter, 
+								stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
+								stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
+								nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
+					}
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+			
+			//increment the part counter
+			partCounter++;
 		}
 		
 		if(nodeContent != null && nodeContent.has("isLockAfterSubmit")) {
@@ -4319,33 +4506,22 @@ public class VLEGetXLS {
 							//error, this should never happen
 						} else if(nodeType.equals("AssessmentListNode")) {
 							
-							//get the assessments array that contains the students answers for each part
-							JSONArray assessments = lastState.getJSONArray("assessments");
-							
-							/*
-							 * loop through each part but only look up to the number of fields that
-							 * are in the step currently. for example this is in case the step originally
-							 * had 3 parts when the student answered it, and after that the author
-							 * changed the step to only have 2 parts. then in that case we only want
-							 * to display the student work for those 2 parts.
-							 */
-							for(int x=0; x<assessments.length() && x<numberOfAnswerFields; x++) {
-								//get a part
-								JSONObject assessmentPart = assessments.getJSONObject(x);
-
-								//check if the response is null
-								if(!assessmentPart.isNull("response")) {
-									//get the response
-									JSONObject responseObject = assessmentPart.getJSONObject("response");
+							if(nodeContent != null) {
+								//get all the assessment parts from the step content
+								JSONArray assessments = nodeContent.optJSONArray("assessments");
+								
+								if(assessments != null) {
 									
-									//get the response text
-									String responseText = responseObject.getString("text");
-									
-									//set the response text into the cell and increment the counter
-									columnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, columnCounter, responseText);
-								} else {
-									columnCounter++;
-									addEmptyElementsToVector(rowForWorkgroupIdVector, 1);
+									//loop through all the assessment parts from the step content
+									for(int x=0; x<assessments.length(); x++) {
+										//get an assessment part from the step content
+										JSONObject assessmentPart = assessments.optJSONObject(x);
+										
+										if(assessmentPart != null) {
+											//insert the work for this part into the row. this may insert work into multiple columns.
+											columnCounter = insertWorkForAssessmentPart(rowForWorkgroupId, rowForWorkgroupIdVector, assessmentPart, lastState, columnCounter);
+										}
+									}
 								}
 							}
 							
@@ -4360,11 +4536,6 @@ public class VLEGetXLS {
 									//set whether the student work was a submit
 									columnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, columnCounter, "false");
 								}
-							}
-							
-							//set the max number of step work parts if necessary
-							if(assessments.length() > maxNumberOfStepWorkParts) {
-								maxNumberOfStepWorkParts = assessments.length();
 							}
 						}
 					}
@@ -4409,6 +4580,114 @@ public class VLEGetXLS {
 		
 		//return the updated position
 		return columnCounter;
+	}
+	
+	/**
+	 * Insert the work for an assessmentlist part
+	 * @param rowForWorkgroupId the row for the workgroup id
+	 * @param rowForWorkgroupIdVector the csv row for the workgroup id
+	 * @param stepContentAssessmentPart the step content assessment part
+	 * @param nodeState the student work node state
+	 * @param columnCounter the updated column counter value
+	 */
+	private int insertWorkForAssessmentPart(Row rowForWorkgroupId, Vector<String> rowForWorkgroupIdVector, JSONObject stepContentAssessmentPart, JSONObject nodeState, int columnCounter) {
+		
+		String partId = "";
+		int numberOfColumnsInPart = 0;
+		int initialColumnCounter = columnCounter;
+		
+		if(stepContentAssessmentPart != null) {
+			//get the assessment part id
+			partId = stepContentAssessmentPart.optString("id");
+			
+			//get the assessment part type
+			String type = stepContentAssessmentPart.optString("type");
+			
+			if(type != null && type.equals("checkbox")) {
+				//this is a checkbox assessment part type
+				JSONArray choices = stepContentAssessmentPart.optJSONArray("choices");
+				
+				if(choices != null) {
+					//get the number of columns this part will use
+					numberOfColumnsInPart = choices.length();
+				}
+			} else {
+				//this is not a checkbox assessment part type so it will only use one column
+				numberOfColumnsInPart = 1;
+			}
+		}
+		
+		if(nodeState != null) {
+			try {
+				//get all the assessment parts from the student work
+				JSONArray studentAssessments = nodeState.getJSONArray("assessments");
+				
+				//loop through all the assessment parts from the student work
+				for(int x=0; x<studentAssessments.length(); x++) {
+					//get an assessment part from the student work
+					JSONObject studentAssessment = studentAssessments.optJSONObject(x);
+					
+					if(studentAssessment != null) {
+						//get the part id and part type from the student work
+						String studentPartId = studentAssessment.optString("id");
+						String studentPartType = studentAssessment.optString("type");
+						
+						//check if the part id matches the part we want to insert work for
+						if(studentPartId != null && studentPartId.equals(partId)) {
+							
+							if(studentPartType != null && studentPartType.equals("checkbox")) {
+								//this part is a checkbox type
+								
+								//get all the available choices from the step content
+								JSONArray choices = stepContentAssessmentPart.optJSONArray("choices");
+								
+								//get all the choices the student chose
+								JSONArray responseJSONArray = studentAssessment.optJSONArray("response");
+								
+								//loop through all the available checkbox choices
+								for(int y=0; y<choices.length(); y++) {
+									//get an available checkbox choice
+									JSONObject choice = choices.optJSONObject(y);
+									
+									String choiceText = "";
+									
+									if(isChoiceInResponse(choice, responseJSONArray)) {
+										//the student checked this choice
+										
+										//get the choice text
+										choiceText = choice.optString("text");
+									} else {
+										//the student did not check this choice
+										choiceText = "";
+									}
+									
+									//add the text to the current column and increment the counter
+									columnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, columnCounter, choiceText);
+								}
+							} else {
+								//this part is not a checkbox type
+								JSONObject response = studentAssessment.optJSONObject("response");
+								
+								String responseText = "";
+								
+								if(response != null) {
+									//get the response text
+									responseText = response.optString("text");
+								}
+								
+								//set the response text into the cell and increment the counter
+								columnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, columnCounter, responseText);
+							}
+						}
+					}
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		//return the new column position
+		return initialColumnCounter + numberOfColumnsInPart;
 	}
 	
 	/**
@@ -4489,11 +4768,45 @@ public class VLEGetXLS {
 				if(nodeType == null) {
 					
 				} else if(nodeType.equals("AssessmentList")) {
-					//get the number of assessments
-					JSONArray assessmentParts = nodeContent.getJSONArray("assessments");
+					//the step is a Questionnaire/Assessmentlist
 					
-					//the number of assessments will be the same as the number of answers
-					numAnswerFields = assessmentParts.length();
+					//get the assessment parts
+					JSONArray assessmentParts = nodeContent.optJSONArray("assessments");
+					
+					int partCounter = 0;
+					
+					if(assessmentParts != null) {
+						//loop through all the assessment parts 
+						for(int x=0; x<assessmentParts.length(); x++) {
+							//get an assessment part
+							JSONObject assessmentPart = assessmentParts.optJSONObject(x);
+							
+							if(assessmentPart != null) {
+								//get the assessment part type
+								String type = assessmentPart.optString("type");
+								
+								if(type != null && type.equals("checkbox")) {
+									//the assessment part type is checkbox
+									
+									//get all the available choices
+									JSONArray choices = assessmentPart.optJSONArray("choices");
+									
+									if(choices != null) {
+										//the number of columns used is equal to the number of choices
+										partCounter += choices.length();										
+									}
+								} else {
+									//all other assessment part types only use one column
+									partCounter++;
+								}
+							}
+						}
+					}
+					
+					if(partCounter > 0) {
+						//set the number of answer fields
+						numAnswerFields = partCounter;
+					}
 					
 					boolean isLockAfterSubmit = false;
 					
@@ -4844,11 +5157,41 @@ public class VLEGetXLS {
 										
 										//check if the response is null
 										if(!assessment.isNull("response")) {
-											//get the assessment response
-											JSONObject assessmentResponse = assessment.getJSONObject("response");
+											//get the assessment response which may either be an object or array
+											JSONObject assessmentResponseJSONObject = assessment.optJSONObject("response");
+											JSONArray assessmentResponseJSONArray = assessment.optJSONArray("response");
 											
-											//get the assessment response text
-											String responseText = assessmentResponse.getString("text");
+											String responseText = "";
+											
+											if(assessmentResponseJSONObject != null) {
+												//the response is an object
+												
+												//get the assessment response text
+												responseText = assessmentResponseJSONObject.getString("text");
+											} else if(assessmentResponseJSONArray != null) {
+												//the response is an array
+												
+												//loop through all the elements in the response array
+												for(int assessmentResponsesCounter=0; assessmentResponsesCounter<assessmentResponseJSONArray.length(); assessmentResponsesCounter++) {
+													//get an element from the response array
+													JSONObject tempAssessmentResponseJSONObject = assessmentResponseJSONArray.optJSONObject(assessmentResponsesCounter);
+													
+													if(tempAssessmentResponseJSONObject != null) {
+														//get the text for this element
+														String tempResponseText = tempAssessmentResponseJSONObject.optString("text");
+														
+														if(tempResponseText != null) {
+															//separate the response text with ,
+															if(responseText.length() != 0) {
+																responseText += ", ";
+															}
+															
+															//add the response text
+															responseText += tempResponseText;
+														}
+													}
+												}
+											}
 											
 											//separate the assessment response texts with ,
 											if(tempResponses.length() != 0) {
@@ -6013,6 +6356,8 @@ public class VLEGetXLS {
 			wb = new XSSFWorkbook();
 		}
 		
+		boolean isCSVHeaderRowWritten = false;
+		
 		//loop through all the workgroups
 		for(int x=0; x<workgroupIds.size(); x++) {
 			String workgroupId = workgroupIds.get(x);
@@ -6040,9 +6385,6 @@ public class VLEGetXLS {
 			 */
 			headerColumn = createUserDataHeaderRow(headerColumn, headerRow, headerRowVector, true, true);
 			
-			//write the csv row if we are generating a csv file
-			writeCSV(headerRowVector);
-	    	
 	    	//vector that contains all the header column names
 	    	Vector<String> headerColumnNames = new Vector<String>();
 	    	headerColumnNames.add("Step Work Id");
@@ -6065,8 +6407,18 @@ public class VLEGetXLS {
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, headerColumnNames.get(y));
 	    	}
 	    	
-	    	//write the csv row if we are generating a csv file
-	    	writeCSV(headerRowVector);
+			if(!isCSVHeaderRowWritten) {
+	    		//we have not written the csv header row yet
+	    		
+		    	//write the csv row if we are generating a csv file
+		    	writeCSV(headerRowVector);
+		    	
+		    	/*
+		    	 * set this flag to true so we don't write the header row into the csv again.
+		    	 * this means we will only output the header row once at the very top of the csv file.
+		    	 */
+		    	isCSVHeaderRowWritten = true;
+	    	}
 	    	
 	    	//get all the work from the workgroup
 	    	List<StepWork> stepWorks = vleService.getStepWorksByUserInfo(userInfo);
@@ -6203,10 +6555,6 @@ public class VLEGetXLS {
 					}
 	    		}
 	    	}
-	    	
-	    	//create a blank row for spacing
-			Vector<String> emptyVector2 = createRowVector();
-			writeCSV(emptyVector2);
 		}
 		
 		return wb;
