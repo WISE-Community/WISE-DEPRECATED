@@ -76,7 +76,7 @@
         "description": "Period"
     },
     "welcome": {
-        "value": "환영",
+        "value": "어서오세요",
         "description": "Text for 'Welcome'"
     },
     "display_chat_room": {
@@ -484,7 +484,7 @@
         "description": "GradingTool: Text in the grade-by-team button"
     },
     "grading_all_revisions": {
-        "value": "모두 재개정",
+        "value": "모든 공부",
         "description": "GradingTool: Text 'all revisions' to show all student revisions"
     },
     "grading_latest_work": {
@@ -568,7 +568,7 @@
         "description": "GradingTool: Text in the Save Changes button"
     },
     "grading_grade_by_step_header": {
-        "value": "점수를 주려면 아래 한 단계를 선택하시오(점수는 편집 가능하다)",
+        "value": "점수를 주려면 아래 한 단계를 선택하시오(점수는 편집 가능)",
         "description": "GradingTool: grade by step page header, tell teacher to select a step below"
     },
     "grading_grade_by_step_point_value": {
@@ -592,7 +592,7 @@
         "description": "GradingTool: grade by step scored items only table column"
     },
     "grading_grade_by_step_percent_completed_step": {
-        "value": "% 완성된 단계",
+        "value": "끝낸 단계 비율(%)",
         "description": "GradingTool: grade by step % of Students Who Have Completed This Step table column"
     },
     "grading_grade_by_step_all_periods": {
@@ -608,7 +608,7 @@
         "description": "GradingTool: grade by team teacher-graded score"
     },
     "grading_grade_by_team_percentage_project_completed": {
-        "value": "% 완성된 프로젝트",
+        "value": "프로젝트 완성 비율(%)",
         "description": "GradingTool: grade by team % of project completed table column"
     },
     "grading_question": {
@@ -706,5 +706,277 @@
     "grading_show_flagged_items_only": {
         "value": "깃발 표시된 문항",
         "description": "text to show next to the 'Show Flagged Items Only' checkbox in the grading tool"
+    },
+    "insertImage": {
+        "value": "그림 삽입",
+        "description": "Text 'Insert Image', to use for file upload"
+    },
+    "grading_enlarge_student_work_text": {
+        "value": "학생 작업 펼치기",
+        "description": "text to show next to the 'Enlarge Student Work Text' checkbox in the grading tool"
+    },
+    "grading_only_show_new_student_work": {
+        "value": "새작업만 보기",
+        "description": "text to show next to the 'Only Show New Work' checkbox in the grading tool"
+    },
+    "grading_show_all_revisions": {
+        "value": "모든 학습 보기",
+        "description": "text to show next to the 'Show All Revisions' checkbox in the grading tool"
+    },
+    "grading_sort_by_auto_graded_score_checkbox": {
+        "value": "부여된 점수로 정렬하기",
+        "description": "text to show next to the 'Sort By Auto Graded Score' checkbox in the grading tool"
+    },
+    "grading_hide_show_revisions": {
+        "value": "학습(들)",
+        "description": "text to show in the 'Hide/Show Revisions' link in the grading tool that toggles revisions visibility"
+    },
+    "grading_change_team": {
+        "value": "모둠 변경",
+        "description": "text to show in the 'Change Team' button in the grading tool that brings up the grade-by-team page"
+    },
+    "welcome_users_default": {
+        "value": "미리보기에 오신것을 환영합니다.",
+        "description": "Text to display in VLE for user name in preview mode"
+    },
+    "note_title": {
+        "value": "반성적 노트",
+        "description": "Text to display in the title bar of a note dialog window"
+    },
+    "authoring_confirm_switch_authoring_mode": {
+        "value": "당신은 저장하지 않고 편집모드로 변경하려고 하는 중입니다. 그대로 진행하면 변경사항을 저장하지 못합니다. 계속 진행하겠습니까?",
+        "description": "Message displayed in the Authoring Tool to authors when trying to switch between simple/advanced modes but their changes have not been saved."
+    },
+    "authoring_hint_dialog_title": {
+        "value": "이 단계에 대한 힌트 추가/편집",
+        "description": "Text to display as the title of the edit step hints dialog window."
+    },
+    "authoring_hint_new": {
+        "value": "새 힌트",
+        "description": "Default text for a new step hint."
+    },
+    "authoring_hint_forceShow": {
+        "value": "강제로 보기:",
+        "description": "Text to display for the label of the \"Force Show: \" drop down in the step hint authoring panel"
+    },
+    "authoring_hint_option_never": {
+        "value": "보이지 않기",
+        "description": "The text \"Never\" to display in \"force show:\" drop down in the step hint authoring panel"
+    },
+    "authoring_hint_option_firstTimeOnly": {
+        "value": "처음에만 보기",
+        "description": "The text \"First Time Only\" to display in \"force show:\" drop down in the step hint authoring panel"
+    },
+    "authoring_hint_option_always": {
+        "value": "항상 보기",
+        "description": "The text \"Always\" to display in \"force show:\" drop down in the step hint authoring panel"
+    },
+    "authoring_hint_modal": {
+        "value": "대화 양식",
+        "description": "Text to display for the label of the \"Modal Dialog\" checkbox in the step hint authoring panel"
+    },
+    "authoring_hint_isMustViewAllPartsBeforeClosing": {
+        "value": "닫기 전에 모든 부분을 보아야 함",
+        "description": "Text to display for the label of the \"Must View All Parts Before Closing\" checkbox in the step hint authoring panel"
+    },
+    "authoring_hint_options_label": {
+        "value": "선택사항",
+        "description": "The label for the 'Options' settings in the step hint authoring panel"
+    },
+    "authoring_hint_terminology_label": {
+        "value": "표시/용어",
+        "description": "The label for the 'Labels/Terminology' settings in the step hint authoring panel"
+    },
+    "authoring_hint_terminology_instructions": {
+        "value": "선택사항:이 단계에서 \"힌트\"의 이름을 나타내는 것에 대한 선택",
+        "description": "The instructions for the 'Labels/Terminology' settings in the step hint authoring panel"
+    },
+    "authoring_hint_term_label": {
+        "value": "\"힌트\"에 대한 용어:",
+        "description": "The label for the 'hint' term input field in the step hint authoring panel"
+    },
+    "authoring_hint_term_plural_label": {
+        "value": "\"힌트들\"에 대한 용어:",
+        "description": "The label for the 'hints' term input field in the step hint authoring panel"
+    },
+    "authoring_hint_add": {
+        "value": "새 힌트 추가",
+        "description": "The label for the 'add new hint' button in the step hint authoring panel"
+    },
+    "authoring_hint_delete": {
+        "value": "현재 힌트 제거",
+        "description": "The label for the 'delete current hint' button in the step hint authoring panel"
+    },
+    "authoring_imsettings_attribute_help": {
+        "value": "도움말은 여기로 가시오",
+        "description": ""
+    },
+    "authoring_imsettings_terminology_help": {
+        "value": "도움말은 여기로 가시오",
+        "description": ""
+    },
+    "authoring_imsettings_text_required": {
+        "value": "이 글의 속성은 각 아이디어의 기본적인 요소이며 지울 수 없다.",
+        "description": "The help text in the Idea Manager settings for the lock icon on the 'text' idea attribute."
+    },
+    "project_error_has_no_steps": {
+        "value": "오류: 이 프로젝트는 단계가 없다.",
+        "description": "The error text to be displayed when the project has no steps in it"
+    },
+    "preview_project_constraint_enabled_message": {
+        "value": "현재는 학생 네비게이션에 제한이 있습니다. 제한 없이 프로젝트를 보려면, ",
+        "description": "The message shown in preview project mode when student navigation constraints are enabled."
+    },
+    "preview_project_constraint_disabled_message": {
+        "value": "현재는 학생 네비게이션에 제한이 없습니다. 모든 제한이 있는 상태로 프로젝트를 보려면, ",
+        "description": "The message shown in preview project mode when student navigation constraints are enabled."
+    },
+    "common_click_here": {
+        "value": "여기를 클릭하시오",
+        "description": "the common text 'click here'"
+    },
+    "teacher_score": {
+        "value": "교사 점수",
+        "description": "The column header for the teacher score"
+    },
+    "computer_score": {
+        "value": "컴퓨터 점수",
+        "description": "The column header for the computer score"
+    },
+    "total_score": {
+        "value": "전체 점수",
+        "description": "The column header for the total score"
+    },
+    "percent_project_completed": {
+        "value": "완성된 프로젝트의 퍼센트(%)",
+        "description": "The column header for the project completion percentage"
+    },
+    "my_work_with_teacher_feedback_and_scores": {
+        "value": "(교사 피드백과 점수가 포함된)내작업",
+        "description": "The title for the my work dialog popup"
+    },
+    "you_have_new_feedback_from_teacher": {
+        "value": "교사로부터 새 피드백이 도착하였습니다.",
+        "description": "The message that shows up when the student logs in and has new teacher feedback"
+    },
+    "new_feedback_labeled_as_new": {
+        "value": "새 피드백은 [새로운]으로 표시됩니다.",
+        "description": "The message that shows up when the student logs in and has new teacher feedback"
+    },
+    "new_feedback": {
+        "value": "새 피드백",
+        "description": "The header for the section that displays the student work that has new feedback"
+    },
+    "my_work": {
+        "value": "내작업",
+        "description": "The header for the section that displays all of the student work"
+    },
+    "new_text": {
+        "value": "새로운",
+        "description": "The text 'New' used to label new feedback"
+    },
+    "teacher_feedback": {
+        "value": "교사 피드백",
+        "description": "The label for the teacher feedback"
+    },
+    "your_teacher_hasnt_graded": {
+        "value": "점수: 교사가 아직 당신 작업을 평가하지 않았습니다.",
+        "description": "The text to show that there is no feedback from the teacher yet"
+    },
+    "last_visited_on": {
+        "value": "마지막 방문",
+        "description": "The label to show when the student last visited the step"
+    },
+    "latest_work": {
+        "value": "최근 작업",
+        "description": "The label to show the latest work"
+    },
+    "you_havent_visited_this_step": {
+        "value": "이 단계는 처음입니다.",
+        "description": "The text to show that the student hasn't visited the step yet"
+    },
+    "you_havent_submitted_work_for_this_step": {
+        "value": "이 단계에 대한 작업을 제출하지 않았습니다.",
+        "description": "The text to show that the student hasn't submitted work for the step yet"
+    },
+    "teacher_flagged_work": {
+        "value": "교사가 깃발표시한 작업",
+        "description": "The title for the flagged work window in the student vle"
+    },
+    "there_are_no_flagged_items": {
+        "value": "깃발 표시한 문항이 없습니다.",
+        "description": "The message that says there are no flagged items"
+    },
+    "choose_a_step": {
+        "value": "단계를 선택하시오",
+        "description": "The label that tells the student to choose a step to view flagged work for in the flagged work window"
+    },
+    "question_instructions": {
+        "value": "질문/설명",
+        "description": "The label for the step prompt when displaying flagged work for a step"
+    },
+    "sample_responses": {
+        "value": "예시 응답",
+        "description": "The label for the student work that has been flagged for a step"
+    },
+    "anonymous": {
+        "value": "무기명",
+        "description": "The label to specify that the team is anonymous"
+    },
+    "you_got_a_score_of": {
+        "value": "당신의 점수는",
+        "description": "The text to display the score in the feedback popup"
+    },
+    "comments": {
+        "value": "논평",
+        "description": "The text to display the comments in the feedback popup"
+    },
+    "hints_viewAll": {
+        "value": "닫기 전에 {0}을 모두 보아야 합니다.",
+        "description": "The message in the hints popup that says the student must view all hints before closing the hints popup"
+    },
+    "constraint_dialog_title": {
+        "value": "잠겨있는 항목",
+        "description": "Title text for dialog alerting users about locked steps or activities (unable to visit because of navigation constraints)"
+    },
+    "out_of": {
+        "value": "의",
+        "description": "The text to display the score in the feedback popup"
+    },
+    "constraint_allItems": {
+        "value": "(모든 항목)",
+        "description": "Text to add after activity name when a constraint requires user to satisfy a requirement for all items in an activity"
+    },
+    "constraint_message_mustCompleteStepBeforeAdvancing": {
+        "value": "옮겨가기 전에 현재 {0}을 모두 완성해야 합니다.",
+        "description": "The message shown to students telling them to complete work on the current step before moving on"
+    },
+    "constraint_message_mustCompleteActivityBeforeAdvancing": {
+        "value": "옮겨가기 전에 현재 {0}의 모든 항목을 완성해야 합니다.",
+        "description": "The message shown to students telling them to complete work on the current activity before moving on"
+    },
+    "constraint_message_mustCompleteStepBeforeExiting": {
+        "value": "떠나기 전에 현재 {0}을 모두 완성해야 합니다.",
+        "description": "The message shown to students telling them to complete work on the current step before exiting"
+    },
+    "constraint_message_mustCompleteActivityBeforeExiting": {
+        "value": "떠나기 전에 현재 {0}의 모든 항목을 완성해야 합니다.",
+        "description": "The message shown to students telling them to complete work on the current activity before exiting"
+    },
+    "constraint_message_mustCompleteXBeforeVisiting": {
+        "value": "이 항목을 보기 전에 다음을 완성해야 합니다:",
+        "description": "The message shown to students telling them to complete work on previous items before working on the selected step or activity"
+    },
+    "constraint_message_mustVisitXBeforeVisiting": {
+        "value": "이 항목을 보기 전에 다음을 보아야 합니다:",
+        "description": "The message shown to students telling them to visit items before working on the selected step or activity"
+    },
+    "constraint_message_mustUnlockXBeforeVisiting": {
+        "value": "이 항목을 보기 전에 다음을 해결해야 합니다:",
+        "description": "The message shown to students telling them to unlock (make visitable) previous items before working on the selected step or activity"
+    },
+    "constraint_message_xMustHaveStatusY": {
+        "value": "이 항목을 볼수 있기 전에 다음에서 '{0}'을 '{1}'로 설정해야 합니다:",
+        "description": "The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the selected step"
     }
 }
