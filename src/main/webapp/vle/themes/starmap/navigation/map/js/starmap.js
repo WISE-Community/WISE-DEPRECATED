@@ -194,6 +194,9 @@ function starmap() {
 							});
 							links.push({source: source, target: target, type: 'seq-node', group: group});
 							//links.push({source: o.index, target: target, type: 'seqToPath', group: group});
+							
+							// add link between current and previous step in activity
+							links.push({source: o.children[a].index, target: o.children[a+1].index, type: 'node-node', group: o.group});
 						}
 					});
 				}
@@ -440,7 +443,7 @@ function starmap() {
 
 					// Run the layout a fixed number of times.
 					// The ideal number of times scales with graph complexity.
-					// Of course, don't run too longÑyou'll hang the page!
+					// Of course, don't run too longï¿½you'll hang the page!
 					if(!layoutIsSet){
 						  force.start();
 					      var n = 5;
@@ -727,13 +730,15 @@ function starmap() {
 					
 					// Update the links
 					g.selectAll("path.link")
-						.data(force.links().filter(function(d){ return d.type; }))
+						.data(force.links().filter(function(d){ return d.type && d.type !== 'seq-node'; }))
 						.enter().insert("path", ".node")
 						.attr("class", function(d){
 							if(d.type==="seq-path"){
 								return "link path";
 							} else if(d.type==="seq-seq"){
 								return "link seq";
+							} else if(d.type==="node-node"){
+								return "link node";
 							}
 						})
 						.attr("d",function(d){ return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y; })
