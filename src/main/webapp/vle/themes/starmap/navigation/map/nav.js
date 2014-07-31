@@ -1145,7 +1145,7 @@ function IconGlobalTagMap(view, parameters) {
 	img.setAttributeNS(null, 'visibility', 'visible');
 	
 	//add the img element to the starmap
-	$('#wrap').append(img);
+	$('#wrap').prepend(img);
 	
 	/*
 	 * subscribe to the studentWorkUpdated event so this tag map
