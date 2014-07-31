@@ -466,8 +466,16 @@ path.link.seq {
 	/*display:block;*/
 }
 
+path.link.node {
+	opacity:0;
+}
+
+path.link.node.active {
+	opacity: .6;
+}
+
 path.link.seq.active, path.link.seq.inactive {
-	opacity:.1;
+	opacity:.05;
 	/*display:none;*/
 }
 
