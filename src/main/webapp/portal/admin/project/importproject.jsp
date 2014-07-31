@@ -11,9 +11,17 @@
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="${contextPath}/portal/javascript/general.js"></script>
-    
-<title>Upload Project Page</title>
 
+<script type="text/javascript">
+function validateForm() {
+	if ($("#projectZipFile").val() == "") {
+		alert("Please specify a project zip file to import.");
+		return false;
+	}
+	return true;
+}
+</script>    
+<title>Upload Project Page</title>
 </head>
 <body>
 
@@ -73,7 +81,7 @@ unzipped:
 </div>
 <br/><br/>
 <form:form method="post" action="importproject.html" 
-	commandName="projectZipFile" id="editproject" enctype="multipart/form-data" autocomplete='off'>
+	commandName="projectZipFile" id="editproject" enctype="multipart/form-data" autocomplete='off' onsubmit="return validateForm();">
 
 	<div>Project Zip File</div>
 	<input type="file" name="file" id="projectZipFile"/>
