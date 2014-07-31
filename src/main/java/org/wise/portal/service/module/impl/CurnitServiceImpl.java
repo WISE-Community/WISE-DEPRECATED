@@ -19,8 +19,7 @@ package org.wise.portal.service.module.impl;
 
 import java.util.List;
 
-
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.module.CurnitDao;
@@ -36,16 +35,8 @@ import org.wise.portal.service.module.CurnitService;
  */
 public class CurnitServiceImpl implements CurnitService {
 
+    @Autowired
     protected CurnitDao<Curnit> curnitDao;
-
-    /**
-     * @param curnitDao
-     *            the curnitDao to set
-     */
-    @Required
-    public void setCurnitDao(CurnitDao<Curnit> curnitDao) {
-        this.curnitDao = curnitDao;
-    }
 
     /**
      * @see net.sf.sail.webapp.service.curnit.CurnitService#getCurnitList()

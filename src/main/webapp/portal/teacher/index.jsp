@@ -62,7 +62,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 							<c:if test="${discourseSSOLoginURL != null}">
 							  <!-- we will style and internationalize this later -->
 							   <tr>
-							   	  <td><a target=_blank href="${discourseSSOLoginURL}">WISE Teacher Community</a></td>
+							   	  <td><a target=_blank href="${discourseSSOLoginURL}"><spring:message code="wiseTeacherCommunity"/></a></td>
 							   </tr>
                  			</c:if>
 						</table>
@@ -153,14 +153,12 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 				</div>
 				
 				<div class="panelContent">
-					<!-- <iframe id="dynamicFrame" name="dynamicFrame" src="run/projectruntabs.html"	style="overflow: auto; width: 100%; 
-					display: none; margin-top: 5px;"></iframe> -->
 					<%@ include file="run/recentactivity.jsp"%>
 				</div>
 				
 				<c:if test="${discourseSSOLoginURL != null}">
 				 <div id="discourseDiv" class="panelFooter" style="text-align:center; padding:10px; color:#745A33">
-                    <span>Questions using WISE in your classroom? <a target=_blank href="${discourseSSOLoginURL}">Ask the WISE Teacher Community!</a></span>
+                    <span><spring:message code="wiseTeacherCommunity.questionsUsingWISE"/> <a target=_blank href="${discourseSSOLoginURL}"><spring:message code="wiseTeacherCommunity.askWISECommunity"/></a></span>
                  </div>
                  </c:if>
 
@@ -186,7 +184,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
     	link.parent().append(updatingText);
     	$.ajax({
 			type:"post",
-			url: "${contextPath}/teacher/run/manage/updateRun.html",
+			url: "${contextPath}/teacher/run/updateRun.html",
 			data:{"command":"extendReminderTime","runId":id},
 			success: function(request){
 				updatingText.remove();

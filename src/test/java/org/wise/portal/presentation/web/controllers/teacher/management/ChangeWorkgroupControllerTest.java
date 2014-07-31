@@ -32,6 +32,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
@@ -42,7 +44,7 @@ import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 
 /**
@@ -55,7 +57,7 @@ public class ChangeWorkgroupControllerTest extends AbstractModelAndViewTests {
 	
 	private ChangeWorkgroupParameters changeWorkgroupParameters;
 	
-	private WISEWorkgroupService mockWorkgroupService;
+	private WorkgroupService mockWorkgroupService;
 	
 	private UserService mockUserService;
 	
@@ -65,7 +67,9 @@ public class ChangeWorkgroupControllerTest extends AbstractModelAndViewTests {
 	
 	private HttpSession mockSession;
 	
-	private BindException errors;
+	private BindingResult errors;
+	
+	private SessionStatus status;
 	
 	private User user;
 	
@@ -103,7 +107,7 @@ public class ChangeWorkgroupControllerTest extends AbstractModelAndViewTests {
 		mockSession.setAttribute(User.CURRENT_USER_SESSION_KEY, user);
 		request.setSession(mockSession);
 		
-		mockWorkgroupService = EasyMock.createMock(WISEWorkgroupService.class);
+		mockWorkgroupService = EasyMock.createMock(WorkgroupService.class);
 		mockUserService = EasyMock.createMock(UserService.class);
 		
 		student = new UserImpl();
@@ -115,10 +119,6 @@ public class ChangeWorkgroupControllerTest extends AbstractModelAndViewTests {
 		workgroupFrom.addMember(student);
 
 		changeWorkgroupController = new ChangeWorkgroupController();
-		changeWorkgroupController.setSuccessView(SUCCESS);
-		changeWorkgroupController.setFormView(FORM);
-		changeWorkgroupController.setWorkgroupService(mockWorkgroupService);
-		changeWorkgroupController.setUserService(mockUserService);
 		changeWorkgroupParameters = new ChangeWorkgroupParameters();
 		changeWorkgroupParameters.setStudent(student);
 		changeWorkgroupParameters.setWorkgroupFrom(workgroupFrom);
@@ -146,44 +146,13 @@ public class ChangeWorkgroupControllerTest extends AbstractModelAndViewTests {
         EasyMock.replay(this.mockWorkgroupService);
       
 		
-        ModelAndView modelAndView = changeWorkgroupController.onSubmit(request, response, changeWorkgroupParameters, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+        String view = changeWorkgroupController.onSubmit(changeWorkgroupParameters, errors, status);
+		assertEquals(SUCCESS, view);
 		assertTrue(!errors.hasErrors());
 		verify(mockWorkgroupService);
 	}
 	
 	public void testShowForm() throws Exception {
-		assertTrue(true);
-	}
-	
-	public void testFormBackingObject_success() throws ObjectNotFoundException {
-		request.setParameter("workgroupFrom", WORKGROUP_FROM_ID.toString());
-		request.setParameter("student", STUDENT_NAME);
-		request.setParameter("offeringId", OFFERING_ID);
-		request.setParameter("periodId", PERIOD_ID);
-		
-		EasyMock.expect(mockUserService.retrieveUserByUsername(STUDENT_NAME)).andReturn(student);
-		EasyMock.replay(this.mockUserService);
-		EasyMock.expect(mockWorkgroupService.retrieveById(WORKGROUP_FROM_ID)).andReturn(workgroupFrom);
-		EasyMock.replay(this.mockWorkgroupService);
-		
-		Object returnedParams = null;
-		try {
-			returnedParams = changeWorkgroupController.formBackingObject(request);
-		} catch (Exception e) {
-			fail("Exception thrown but should not have been thrown");
-		}
-		assertTrue(returnedParams instanceof ChangeWorkgroupParameters);
-		
-		verify(mockUserService);
-		verify(mockWorkgroupService);
-		ChangeWorkgroupParameters params = (ChangeWorkgroupParameters) returnedParams;
-		assertEquals(params.getStudent().getUserDetails().getUsername(), STUDENT_NAME);
-		assertTrue(true);
-	}
-	
-	public void testFormBackingObject_failure() {
-		// TODO patrick&sally test when formBackingObject throws an exception
 		assertTrue(true);
 	}
 }

@@ -3,20 +3,20 @@ package org.wise.portal.dao.ideabasket.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.ideabasket.IdeaBasketDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
 
-
+@Repository
 public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> implements IdeaBasketDao<IdeaBasket> {
 
 	@Override
@@ -52,15 +52,14 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
 	 * @param workgroupId the id of the workgroup
 	 * @return the IdeaBasket with the matching runId and workgroupId
 	 */
+	@Transactional(readOnly=true)
 	public IdeaBasket getIdeaBasketByRunIdWorkgroupId(long runId, long workgroupId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         
         //find the latest IdeaBasket object that matches
         List<IdeaBasket> result = session.createCriteria(IdeaBasket.class).add(
         		Restrictions.eq("runId", runId)).add(
         				Restrictions.eq("workgroupId", workgroupId)).addOrder(Order.desc("postTime")).setMaxResults(1).list();
-        session.getTransaction().commit();
         
         IdeaBasket ideaBasket = null;
         if(result.size() > 0) {
@@ -83,9 +82,9 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
 	 * @return all the latest IdeaBaskets for a run id
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<IdeaBasket> getLatestIdeaBasketsForRunId(long runId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         
         /*
          * create a projection that will give us the latest idea basket id
@@ -119,8 +118,6 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
         	result = session.createCriteria(IdeaBasket.class).add(createIdOrCriterion(ideaBasketIds, 0)).list();        	
         }
         
-        session.getTransaction().commit();
-        
         return result;
 	}
 	
@@ -135,9 +132,9 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
 	 * @return all the latest IdeaBaskets for a run id
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<IdeaBasket> getLatestIdeaBasketsForRunIdWorkgroupIds(long runId, List<Long> workgroupIds) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         
         /*
          * create a projection that will give us the latest idea basket id
@@ -171,8 +168,6 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
         	result = session.createCriteria(IdeaBasket.class).add(createIdOrCriterion(ideaBasketIds, 0)).list();        	
         }
         
-        session.getTransaction().commit();
-        
         return result;
 	}
 	
@@ -184,14 +179,13 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
 	 * @return a list of idea baskets ordered by workgroup id and then
 	 * by post time
 	 */
+	@Transactional(readOnly=true)
 	public List<IdeaBasket> getIdeaBasketsForRunId(long runId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         
         //find all the IdeaBasket objects that match
         List<IdeaBasket> result = session.createCriteria(IdeaBasket.class).add(
         		Restrictions.eq("runId", runId)).addOrder(Order.asc("workgroupId")).addOrder(Order.asc("periodId")).addOrder(Order.asc("postTime")).list();
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -201,14 +195,13 @@ public class HibernateIdeaBasketDao extends AbstractHibernateDao<IdeaBasket> imp
 	 * @param periodId the period id
 	 * @return the latest public idea basket for this run id, period id or null if there is none
 	 */
+	@Transactional(readOnly=true)
 	public IdeaBasket getPublicIdeaBasketForRunIdPeriodId(long runId, long periodId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         
         //get the latest idea basket revision that matches
         List<IdeaBasket> result = session.createCriteria(IdeaBasket.class).add(
         		Restrictions.eq("runId", runId)).add(Restrictions.eq("periodId", periodId)).add(Restrictions.eq("isPublic", true)).addOrder(Order.desc("id")).setMaxResults(1).list();
-        session.getTransaction().commit();
         
         IdeaBasket ideaBasket = null;
         if(result.size() > 0) {

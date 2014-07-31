@@ -20,8 +20,10 @@ package org.wise.portal.dao.impl;
 import java.io.Serializable;
 import java.util.List;
 
-
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.SimpleDao;
 
@@ -34,9 +36,15 @@ import org.wise.portal.dao.SimpleDao;
 public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
 		implements SimpleDao<T> {
 
+	@Autowired
+	public void init(SessionFactory factory) {
+	    setSessionFactory(factory);
+	}
+	
 	/**
 	 * @see org.wise.portal.dao.SimpleDao#delete(java.lang.Object)
 	 */
+	@Transactional
 	public void delete(T object) {
 		this.getHibernateTemplate().delete(object);
 	}
@@ -44,6 +52,7 @@ public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
 	/**
 	 * @see org.wise.portal.dao.SimpleDao#save(java.lang.Object)
 	 */
+	@Transactional
 	public void save(T object) {
 		this.getHibernateTemplate().saveOrUpdate(object);
 	}
@@ -53,7 +62,7 @@ public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
 	 */
 	@SuppressWarnings("unchecked")
 	public List<T> getList() {
-		return this.getHibernateTemplate().find(this.getFindAllQuery());
+		return (List<T>) this.getHibernateTemplate().find(this.getFindAllQuery());
 	}
 
 	/**

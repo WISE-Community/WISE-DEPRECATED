@@ -23,8 +23,7 @@
 package org.wise.portal.dao.premadecomment.impl;
 
 import java.util.List;
-
-
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.premadecomment.PremadeCommentDao;
 import org.wise.portal.domain.premadecomment.PremadeComment;
@@ -36,6 +35,7 @@ import org.wise.portal.domain.user.User;
  * @author patrick lawler
  *
  */
+@Repository
 public class HibernatePremadeCommentDao extends AbstractHibernateDao<PremadeComment> implements PremadeCommentDao<PremadeComment>{
 	
 	private static final String FIND_ALL_QUERY = "from PremadeCommentImpl";
@@ -53,7 +53,7 @@ public class HibernatePremadeCommentDao extends AbstractHibernateDao<PremadeComm
 	 */
 	public List<PremadeComment> getPremadeCommentsByUser(User owner){
 		String q = "select comment from PremadeCommentImpl comment where comment.owner.id='" + owner.getId() + "'";
-		return this.getHibernateTemplate().find(q);
+		return (List<PremadeComment>) this.getHibernateTemplate().find(q);
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public class HibernatePremadeCommentDao extends AbstractHibernateDao<PremadeComm
 	 */
 	public List<PremadeComment> getPremadeCommentsByRun(Run run){
 		String q = "select comment from PremadeCommentImpl comment where comment.run.id='" + run.getId() + "'";
-		return this.getHibernateTemplate().find(q);
+		return (List<PremadeComment>) this.getHibernateTemplate().find(q);
 	}
 	
 	/**

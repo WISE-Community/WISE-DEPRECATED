@@ -14,19 +14,45 @@
 <!-- $Id$ -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
     http://www.springframework.org/schema/util 
-    http://www.springframework.org/schema/util/spring-util-3.0.xsd
+    http://www.springframework.org/schema/util/spring-util-4.0.xsd
     http://www.springframework.org/schema/mvc
- 	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+ 	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+    http://www.springframework.org/schema/context    
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+ 	">
+
+	<!-- registers the DefaultAnnotationHandlerMapping and AnnotationMethodHandlerAdapter 
+		beans that are required for Spring MVC to dispatch requests to @Controllers. 
+		http://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-annotation-driven -->
+	<mvc:annotation-driven />
+
+	<!-- enable the @Controller Spring annotation for defining controllers using annotations -->
+	<context:component-scan base-package="org.wise.portal.presentation">
+		<!-- exclude unit test annotations -->
+		<context:exclude-filter type="regex"
+			expression=".*?Test.*?" />
+	</context:component-scan>
+	
+	<context:component-scan base-package="org.wise.vle.web">
+		<!-- exclude unit test annotations -->
+		<context:exclude-filter type="regex"
+			expression=".*?Test.*?" />
+	</context:component-scan>
 
 	<!-- Switch locales according to the user's browser -->
 	<bean id="localeResolver"
-		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-	</bean>
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
 
 	<!-- Use a default fixed theme -->
 	<bean id="themeResolver"
@@ -38,794 +64,9 @@
 	<bean id="viewNameTranslator"
 		class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator" />
 
-
 	<!-- maps request URLs to view file names -->
 	<bean id="urlFilenameViewController"
 		class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
-
-	<bean id="controllerUtil"
-		class="org.wise.portal.presentation.web.controllers.ControllerUtil">
-		<property name="userService" ref="userService" />
-	</bean>
-
-	<!-- Custom controllers -->
-
-	<bean id="studentUserDetailsValidator"
-		class="org.wise.portal.presentation.validators.StudentUserDetailsValidator" />
-
-	<bean id="teacherUserDetailsValidator"
-		class="org.wise.portal.presentation.validators.TeacherUserDetailsValidator" />
-
-	<bean id="teacherAccountFormValidator"
-		class="org.wise.portal.presentation.validators.TeacherAccountFormValidator" />
-
-	<bean id="studentAccountFormValidator"
-		class="org.wise.portal.presentation.validators.StudentAccountFormValidator">
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="addprojectparametersValidator"
-		class="org.wise.portal.presentation.validators.student.AddProjectParametersValidator" />
-
-	<bean id="removeStudentFromRunParametersValidator"
-		class="org.wise.portal.presentation.validators.teacher.management.RemoveStudentFromRunParametersValidator" />
-
-	<bean id="teamSignInFormValidator"
-		class="org.wise.portal.presentation.validators.student.TeamSignInFormValidator">
-		<property name="userService" ref="userService" />
-		<property name="systemSaltSource" ref="systemSaltSource" />
-	</bean>
-
-	<bean id="lostTeacherValidator"
-		class="org.wise.portal.presentation.validators.LostTeacherValidator" />
-
-	<bean id="lostPasswordStudentAccountQuestionValidator"
-		class="org.wise.portal.presentation.validators.LostPasswordStudentAccountQuestionValidator" />
-
-	<bean id="findProjectParametersValidator"
-		class="org.wise.portal.presentation.validators.FindProjectParametersValidator">
-		<property name="projectService" ref="projectService" />
-		<property name="userService" ref="userService" />
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="lookupUserParametersValidator"
-		class="org.wise.portal.presentation.validators.LookupUserParametersValidator" />
-
-	<bean id="teacherIndexController"
-		class="org.wise.portal.presentation.web.controllers.TeacherIndexController">
-		<property name="runService" ref="runService" />
-		<property name="messageService" ref="messageService" />
-		<property name="projectService" ref="projectService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="adminIndexController"
-		class="org.wise.portal.presentation.web.controllers.admin.AdminIndexController">
-	</bean>
-
-	<bean id="indexController"
-		class="org.wise.portal.presentation.web.controllers.IndexController">
-		<property name="newsItemService" ref="newsItemService" />
-		<property name="projectService" ref="projectService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="selectteamController"
-		class="org.wise.portal.presentation.web.controllers.student.SelectTeamController">
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="startProjectController"
-		class="org.wise.portal.presentation.web.controllers.student.StartProjectController">
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="projectService" ref="projectService" />
-		<property name="studentAttendanceService" ref="studentAttendanceService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="previewprojectController"
-		class="org.wise.portal.presentation.web.controllers.PreviewProjectController">
-		<property name="runService" ref="runService" />
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="previewprojectlistController"
-		class="org.wise.portal.presentation.web.controllers.PreviewProjectListController">
-		<property name="projectService" ref="projectService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="authorProjectController"
-		class="org.wise.portal.presentation.web.controllers.author.project.AuthorProjectController">
-		<property name="projectService" ref="projectService" />
-		<property name="curnitService" ref="curnitService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="tagger" ref="taggerController" />
-		<property name="aclService" ref="aclServiceImpl" />
-	</bean>
-
-
-	<bean id="teamSignInController"
-		class="org.wise.portal.presentation.web.controllers.student.TeamSignInController">
-		<property name="commandName" value="teamSignInForm" />
-		<property name="commandClass"
-			value="org.wise.portal.presentation.web.TeamSignInForm" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="userService" ref="userService" />
-		<property name="studentService" ref="studentService" />
-		<property name="projectService" ref="projectService" />
-		<property name="validator" ref="teamSignInFormValidator" />
-		<property name="formView" value="student/teamsignin" />
-		<property name="successView" value="student/teamsigninsuccess" />
-		<property name="studentAttendanceService" ref="studentAttendanceService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="gradeWorkController"
-		class="org.wise.portal.presentation.web.controllers.teacher.grading.GradeWorkController">
-		<property name="runService" ref="runService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="submitWorkgroupChangesController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.SubmitWorkgroupChangesController">
-		<property name="userService" ref="userService" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="groupService" ref="groupService" />
-	</bean>
-
-	<bean id="addProjectController"
-		class="org.wise.portal.presentation.web.controllers.student.AddProjectController">
-		<property name="studentService" ref="studentService" />
-		<property name="commandName" value="addProjectParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.project.impl.AddProjectParameters" />
-		<property name="validator" ref="addprojectparametersValidator" />
-		<property name="formView" value="student/addproject" />
-		<property name="successView" value="student/addprojectsuccess" />
-	</bean>
-
-	<bean id="removeStudentFromRunController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.RemoveStudentFromRunController">
-		<property name="runService" ref="runService" />
-		<property name="userService" ref="userService" />
-		<property name="studentService" ref="studentService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="commandName" value="removeStudentFromRunParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.teacher.management.RemoveStudentFromRunParameters" />
-		<property name="sessionForm" value="true" />
-		<property name="validator" ref="removeStudentFromRunParametersValidator" />
-		<property name="formView" value="teacher/management/removestudentfromrun" />
-		<property name="successView"
-			value="teacher/management/removestudentfromrunsuccess" />
-	</bean>
-
-	<bean id="studentIndexController"
-		class="org.wise.portal.presentation.web.controllers.student.StudentIndexController">
-		<property name="runService" ref="runService" />
-		<property name="studentService" ref="studentService" />
-	</bean>
-
-	<bean id="studentVLEController"
-		class="org.wise.portal.presentation.web.controllers.student.StudentVLEController">
-		<property name="runService" ref="runService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="informationController"
-		class="org.wise.portal.presentation.web.controllers.InformationController">
-		<property name="userService" ref="userService" />
-		<property name="runService" ref="runService" />
-		<property name="projectService" ref="projectService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="runInfoController"
-		class="org.wise.portal.presentation.web.controllers.run.RunInfoController">
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="createRunController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.CreateRunController">
-		<property name="runService" ref="runService" />
-		<property name="projectService" ref="projectService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="commandName" value="runParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.run.impl.RunParameters" />
-		<property name="mailService" ref="mailService" />
-		<property name="messageSource" ref="messageSource" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="myClassroomRunsMainController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.MyClassroomRunsMainController">
-		<property name="runService" ref="runService" />
-		<property name="projectService" ref="projectService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="myClassroomRunsController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ClassroomRunListController">
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="runService" ref="runService" />
-		<property name="projectService" ref="projectService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-	</bean>
-
-	<bean id="minifyProjectController"
-		class="org.wise.portal.presentation.web.controllers.teacher.project.MinifyProjectController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="premadeCommentsController"
-		class="org.wise.portal.presentation.web.controllers.teacher.grading.PremadeCommentsController">
-		<property name="premadeCommentService" ref="premadeCommentService" />
-	</bean>
-
-	<bean id="manageStudentsController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ManageStudentsController">
-	</bean>
-
-	<bean id="updateMyAccountInfoController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.UpdateMyAccountInfoController">
-		<property name="userService" ref="userService" />
-		<property name="commandName" value="teacherAccountForm" />
-		<property name="validator" ref="teacherAccountFormValidator" />
-		<property name="formView" value="teacher/management/updatemyaccountinfo" />
-		<property name="successView" value="teacher/management/updatemyaccount" />
-	</bean>
-
-	<bean id="studentUpdateMyAccountInfoController"
-		class="org.wise.portal.presentation.web.controllers.student.StudentUpdateMyAccountInfoController">
-		<property name="userService" ref="userService" />
-		<property name="commandName" value="studentAccountForm" />
-		<property name="validator" ref="studentAccountFormValidator" />
-		<property name="formView" value="student/updatestudentaccount" />
-		<property name="successView" value="student/updatestudentaccountsuccess" />
-	</bean>
-
-	<bean id="contactWiseController"
-		class="org.wise.portal.presentation.web.controllers.ContactWiseController">
-		<property name="commandName" value="contactWISEGeneral" />
-		<property name="validator" ref="contactWISEValidator" />
-		<property name="formView" value="contact/contactwisegeneral" />
-		<property name="successView" value="contact/contactwiseconfirm" />
-		<property name="mailService" ref="mailService" />
-		<property name="i18nProperties" ref="i18nProperties" />
-		<property name="runService" ref="runService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="contactWiseProjectController"
-		class="org.wise.portal.presentation.web.controllers.ContactWiseProjectController">
-		<property name="commandName" value="contactWISEProject" />
-		<property name="validator" ref="contactWISEValidator" />
-		<property name="formView" value="contact/contactwiseproject" />
-		<property name="successView" value="contact/contactwiseconfirm" />
-		<property name="mailService" ref="mailService" />
-		<property name="i18nProperties" ref="i18nProperties" />
-		<property name="projectService" ref="projectService" />
-		<property name="runService" ref="runService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="contactWISEValidator"
-		class="org.wise.portal.presentation.validators.general.contactwise.ContactWISEValidator" />
-
-	<bean id="contactWISEGeneral"
-		class="org.wise.portal.domain.general.contactwise.impl.ContactWISEGeneral">
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="userService" ref="userService" />
-	</bean>
-
-	<bean id="contactWISEProject"
-		class="org.wise.portal.domain.general.contactwise.impl.ContactWISEProject">
-	</bean>
-
-	<bean id="accessDeniedController"
-		class="org.wise.portal.presentation.web.controllers.AccessDeniedController">
-	</bean>
-
-	<bean id="passwordReminderParameters" class="org.wise.portal.domain.impl.PasswordReminderParameters"
-		scope="prototype" />
-
-	<bean id="runParameters" class="org.wise.portal.domain.run.impl.RunParameters"
-		scope="prototype" />
-
-	<bean id="forgotAccountTeacherIndexController"
-		class="org.wise.portal.presentation.web.controllers.forgotaccount.teacher.ForgotAccountTeacherIndexController">
-		<property name="userService" ref="userService" />
-		<property name="commandName" value="userDetails" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.authentication.impl.TeacherUserDetails" />
-		<property name="validator" ref="lostTeacherValidator" />
-		<property name="formView" value="forgotaccount/teacher/index" />
-		<property name="successView" value="forgotaccount/teacher/success" />
-		<property name="errorView" value="forgotaccount/teacher/error" />
-		<property name="mailService" ref="mailService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="messageSource" ref="messageSource" />
-	</bean>
-
-	<bean id="forgotAccountStudentPasswordReminderWizardController"
-		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController">
-		<property name="userService" ref="userService" />
-		<property name="commandName" value="passwordReminderParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
-	</bean>
-
-	<bean id="viewMyStudentsController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ViewMyStudentsController">
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="aclService" ref="aclServiceImpl" />
-	</bean>
-
-	<bean id="listStudentNamesController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ListStudentNamesController">
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-	</bean>
-
-	<bean id="changePasswordParametersValidator"
-		class="org.wise.portal.presentation.validators.ChangePasswordParametersValidator">
-		<property name="systemSaltSource" ref="systemSaltSource" />
-	</bean>
-
-	<bean id="batchStudentChangePasswordController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.BatchStudentChangePasswordController">
-		<property name="formView"
-			value="/teacher/management/batchstudentchangepassword" />
-		<property name="successView"
-			value="/teacher/management/batchstudentchangepasswordsuccess" />
-		<property name="userService" ref="userService" />
-		<property name="groupService" ref="groupService" />
-		<property name="runService" ref="runService" />
-		<property name="aclService" ref="aclServiceImpl" />
-		<property name="sessionForm" value="true" />
-		<property name="commandName" value="batchStudentChangePasswordParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.authentication.impl.BatchStudentChangePasswordParameters" />
-		<property name="validator" ref="changePasswordParametersValidator" />
-	</bean>
-
-	<bean id="changeUserPasswordController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ChangeUserPasswordController">
-		<property name="successView" value="forgotaccount/changepasswordsuccess" />
-		<property name="userService" ref="userService" />
-		<property name="studentService" ref="studentService" />
-		<property name="sessionForm" value="true" />
-		<property name="commandName" value="changeStudentPasswordParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.authentication.impl.ChangeStudentPasswordParameters" />
-		<property name="validator" ref="changePasswordParametersValidator" />
-	</bean>
-
-	<bean id="changeTeacherPasswordController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ChangeUserPasswordController">
-		<property name="successView" value="teacher/management/changepasswordsuccess" />
-		<property name="userService" ref="userService" />
-		<property name="studentService" ref="studentService" />
-		<property name="sessionForm" value="true" />
-		<property name="commandName" value="changeStudentPasswordParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.authentication.impl.ChangeStudentPasswordParameters" />
-		<property name="validator" ref="changePasswordParametersValidator" />
-	</bean>
-
-	<bean id="changeWorkgroupParametersValidator"
-		class="org.wise.portal.presentation.validators.teacher.ChangeWorkgroupParametersValidator" />
-
-	<bean id="changeWorkgroupController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ChangeWorkgroupController">
-		<property name="commandName" value="changeWorkgroupParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.ChangeWorkgroupParameters" />
-		<property name="validator" ref="changeWorkgroupParametersValidator" />
-		<property name="runService" ref="runService" />
-		<property name="sessionForm" value="true" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="userService" ref="userService" />
-		<property name="successView" value="/teacher/management/changeworkgroupsuccess" />
-		<property name="formView" value="/teacher/management/changeworkgroup" />
-	</bean>
-
-	<bean id="libraryController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.LibraryController">
-		<property name="projectService" ref="projectService" />
-		<property name="runService" ref="runService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="shareProjectController"
-		class="org.wise.portal.presentation.web.controllers.teacher.project.customized.ShareProjectController">
-		<property name="commandName" value="addSharedTeacherParameters" />
-		<property name="userService" ref="userService" />
-		<property name="userDetailsService" ref="userDetailsService" />
-		<property name="projectService" ref="projectService" />
-		<property name="aclService" ref="aclServiceImpl" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.AddSharedTeacherParameters" />
-		<property name="mailService" ref="mailService" />
-		<property name="messageSource" ref="messageSource" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="successView" value="shareproject.html" />
-		<property name="formView" value="teacher/projects/customized/shareproject" />
-	</bean>
-
-	<bean id="unShareProjectController"
-		class="org.wise.portal.presentation.web.controllers.teacher.project.customized.UnShareProjectController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="projectParameters" class="org.wise.portal.domain.project.impl.ProjectParameters">
-	</bean>
-
-	<bean id="userInfoController"
-		class="org.wise.portal.presentation.web.controllers.admin.UserInfoController">
-		<property name="userService" ref="userService" />
-		<property name="studentService" ref="studentService" />
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="viewAllUsersController"
-		class="org.wise.portal.presentation.web.controllers.admin.ViewAllUsersController">
-		<property name="userService" ref="userService" />
-		<property name="userDetailsService" ref="userDetailsService" />
-	</bean>
-
-	<bean id="enableDisableUserController"
-		class="org.wise.portal.presentation.web.controllers.admin.EnableDisableUserController">
-		<property name="userService" ref="userService" />
-	</bean>
-
-	<bean id="projectInfoController"
-		class="org.wise.portal.presentation.web.controllers.teacher.project.ProjectInfoController">
-		<property name="projectService" ref="projectService" />
-		<property name="runService" ref="runService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-    <bean id="newsItemController"
-		class="org.wise.portal.presentation.web.controllers.admin.NewsItemController">
-		<property name="newsItemService" ref="newsItemService" />
-	</bean>
-	
-	<bean id="shareProjectRunController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.ShareProjectRunController">
-		<property name="runService" ref="runService" />
-		<property name="userService" ref="userService" />
-		<property name="aclService" ref="aclServiceImpl" />
-		<property name="userDetailsService" ref="userDetailsService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="commandName" value="addSharedTeacherParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.AddSharedTeacherParameters" />
-		<property name="mailService" ref="mailService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="messageSource" ref="messageSource" />
-		<property name="successView" value="shareprojectrun.html" />
-		<property name="formView" value="teacher/run/shareprojectrun" />
-	</bean>
-
-	<bean id="unShareProjectRunController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.UnShareProjectRunController">
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="addSharedTeacherParameters" class="org.wise.portal.domain.impl.AddSharedTeacherParameters">
-	</bean>
-
-	<bean id="manageAllProjectsController"
-		class="org.wise.portal.presentation.web.controllers.admin.ManageAllProjectsController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="currentlyAuthoredProjectsController"
-		class="org.wise.portal.presentation.web.controllers.admin.CurrentlyAuthoredProjectsController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="importExternalProjectController"
-		class="org.wise.portal.presentation.web.controllers.project.ImportExternalProjectController">
-		<property name="wiseUpService" ref="wiseUpService" />
-	</bean>
-
-
-	<bean id="projectInfoParameters"
-		class="org.wise.portal.domain.project.impl.ProjectInfoParameters" />
-
-	<!-- controllers for admin -->
-	<bean id="manageAllProjectRunsController"
-		class="org.wise.portal.presentation.web.controllers.admin.ManageAllProjectRunsController">
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="changeStudentPeriodController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.ChangeStudentPeriodController">
-		<property name="commandName" value="changePeriodParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.ChangePeriodParameters" />
-		<property name="userService" ref="userService" />
-		<property name="studentService" ref="studentService" />
-		<property name="runService" ref="runService" />
-		<property name="sessionForm" value="true" />
-		<property name="validator" ref="changePeriodParametersValidator" />
-		<property name="successView"
-			value="teacher/management/changestudentperiodsuccess" />
-	</bean>
-
-	<bean id="changePeriodParametersValidator"
-		class="org.wise.portal.presentation.validators.teacher.ChangePeriodParametersValidator" />
-
-	<bean id="studentListController"
-		class="org.wise.portal.presentation.web.controllers.teacher.management.StudentListController">
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="exportProjectController"
-		class="org.wise.portal.presentation.web.controllers.project.ExportProjectController">
-		<property name="projectService" ref="projectService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="importProjectController"
-		class="org.wise.portal.presentation.web.controllers.admin.ImportProjectController">
-		<property name="projectService" ref="projectService" />
-		<property name="curnitService" ref="curnitService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="sessionForm" value="true" />
-		<property name="commandName" value="projectZipFile" />
-		<property name="commandClass" value="org.wise.portal.domain.project.ProjectUpload" />
-		<property name="successView" value="admin/project/importproject" />
-		<property name="formView" value="admin/project/importproject" />
-	</bean>
-
-	<bean id="findProjectRunsController"
-		class="org.wise.portal.presentation.web.controllers.admin.FindProjectRunsController">
-		<property name="commandName" value="findProjectParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.project.impl.FindProjectParameters" />
-		<property name="runService" ref="runService" />
-		<property name="userService" ref="userService" />
-		<property name="projectService" ref="projectService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="validator" ref="findProjectParametersValidator" />
-	</bean>
-
-	<bean id="lookupUserController"
-		class="org.wise.portal.presentation.web.controllers.admin.LookupUserController">
-		<property name="userService" ref="userService" />
-		<property name="commandName" value="lookupUserParameters" />
-		<property name="commandClass" value="org.wise.portal.domain.impl.LookupUserParameters" />
-		<property name="validator" ref="lookupUserParametersValidator" />
-	</bean>
-	
-	<bean id="lookupUserParameters" class="org.wise.portal.domain.impl.LookupUserParameters" />
-
-	<bean id="manageUserRolesController"
-		class="org.wise.portal.presentation.web.controllers.admin.ManageUserRolesController">
-		<property name="userService" ref="userService" />
-		<property name="userDetailsService" ref="userDetailsService" />
-	</bean>
-
-
-	<bean id="manageAnnouncementController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.announcement.ManageAnnouncementController">
-		<property name="aclService" ref="aclServiceImpl" />
-	    <property name="runService" ref="runService" />
-		<property name="announcementService" ref="announcementService" />
-	</bean>
-
-	<bean id="viewAnnouncementsController"
-		class="org.wise.portal.presentation.web.controllers.student.ViewAnnouncementsController">
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="bookmarkController"
-		class="org.wise.portal.presentation.web.controllers.teacher.project.bookmarked.BookmarkController">
-		<property name="projectService" ref="projectService" />
-		<property name="userService" ref="userService" />
-	</bean>
-
-	<bean id="deleteProjectController"
-		class="org.wise.portal.presentation.web.controllers.teacher.project.DeleteProjectController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="analyzeProjectController"
-		class="org.wise.portal.presentation.web.controllers.teacher.project.AnalyzeProjectController">
-		<property name="projectService" ref="projectService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-
-	<bean id="outsideErrorController"
-		class="org.wise.portal.presentation.web.controllers.OutsideErrorController">
-		<property name="exceptionResolver" ref="exceptionResolver" />
-	</bean>
-
-	<bean id="managePortalController"
-		class="org.wise.portal.presentation.web.controllers.admin.ManagePortalController">
-		<property name="portalService" ref="portalService" />
-	</bean>
-
-	<bean id="messageController"
-		class="org.wise.portal.presentation.web.controllers.MessageController">
-		<property name="messageService" ref="messageService" />
-		<property name="userService" ref="userService" />
-	</bean>
-
-	<bean id="studentDataController" class="org.wise.vle.web.StudentDataController">
-		<property name="vleService" ref="vleService" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="annotationController" class="org.wise.vle.web.VLEAnnotationController">
-		<property name="vleService" ref="vleService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="studentStatusController" class="org.wise.vle.web.StudentStatusController">
-		<property name="vleService" ref="vleService" />
-	</bean>
-
-	<bean id="runStatusController" class="org.wise.vle.web.RunStatusController">
-		<property name="vleService" ref="vleService" />
-	</bean>
-
-	<bean id="ideaBasketController" class="org.wise.vle.web.VLEIdeaBasketController">
-		<property name="vleService" ref="vleService" />
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="getExportController" class="org.wise.vle.web.VLEGetXLS">
-		<property name="vleService" ref="vleService" />
-		<property name="studentAttendanceService" ref="studentAttendanceService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-	</bean>
-
-	<bean id="getSpecialExportController" class="org.wise.vle.web.VLEGetSpecialExport">
-		<property name="vleService" ref="vleService" />
-		<property name="studentAttendanceService" ref="studentAttendanceService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-	</bean>
-
-	<bean id="peerReviewController" class="org.wise.vle.web.VLEPeerReviewController">
-		<property name="vleService" ref="vleService" />
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="assetManagerController" class="org.wise.vle.utils.AssetManager">
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
-	</bean>
-
-	<bean id="credentialManager"
-		class="org.wise.portal.presentation.web.controllers.CredentialManager">
-		<property name="projectService" ref="projectService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="routerController"
-		class="org.wise.portal.presentation.web.controllers.RouterController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="runStatisticsController"
-		class="org.wise.portal.presentation.web.controllers.admin.RunStatisticsController">
-		<property name="runService" ref="runService" />
-		<property name="studentAttendanceService" ref="studentAttendanceService" />
-	</bean>
-
-	<bean id="updateRunController"
-		class="org.wise.portal.presentation.web.controllers.teacher.run.UpdateRunController">
-		<property name="runService" ref="runService" />
-	</bean>
-
-	<bean id="taggerController"
-		class="org.wise.portal.presentation.web.controllers.TaggerController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="compatibilityCheckController"
-		class="org.wise.portal.presentation.web.controllers.CompatibilityCheckController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="projectMetadataController"
-		class="org.wise.portal.presentation.web.controllers.ProjectMetadataController">
-		<property name="projectService" ref="projectService" />
-	</bean>
-
-	<bean id="checkForExistingAccountController"
-		class="org.wise.portal.presentation.web.controllers.CheckForExistingAccountController">
-		<property name="userService" ref="userService" />
-	</bean>
-
-	<bean id="searchForStudentUserNameController"
-		class="org.wise.portal.presentation.web.controllers.forgotaccount.student.SearchForStudentUserNameController">
-		<property name="commandName" value="passwordReminderParameters" />
-		<property name="validator" ref="searchForStudentUserNameValidator" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
-		<property name="formView"
-			value="forgotaccount/student/searchforstudentusername" />
-		<property name="successView"
-			value="forgotaccount/student/searchforstudentusernameresult" />
-		<property name="userService" ref="userService" />
-	</bean>
-
-	<bean id="searchForStudentUserNameValidator"
-		class="org.wise.portal.presentation.validators.SearchForStudentUserNameValidator" />
-
-	<bean id="statisticsController"
-		class="org.wise.portal.presentation.web.controllers.StatisticsController">
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="portalStatisticsService" ref="portalStatisticsService" />
-		<property name="vleService" ref="vleService" />
-	</bean>
-
-	<bean id="resetPasswordController"
-		class="org.wise.portal.presentation.web.controllers.forgotaccount.ResetPasswordController">
-		<property name="userService" ref="userService" />
-		<property name="commandName" value="passwordReminderParameters" />
-		<property name="commandClass"
-			value="org.wise.portal.domain.impl.PasswordReminderParameters" />
-		<property name="mailService" ref="mailService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="messageSource" ref="messageSource" />
-	</bean>
-
-	<bean id="registerstudentController"
-		class="org.wise.portal.presentation.web.controllers.student.RegisterStudentController">
-		<property name="userService" ref="userService" />
-		<property name="studentService" ref="studentService" />
-		<property name="commandName" value="studentAccountForm" />
-		<property name="validator" ref="studentAccountFormValidator" />
-		<property name="formView" value="student/registerstudent" />
-		<property name="successView" value="student/registerstudentsuccess" />
-	</bean>
-
-	<bean id="registerteacherController"
-		class="org.wise.portal.presentation.web.controllers.teacher.RegisterTeacherController">
-		<property name="userService" ref="userService" />
-		<property name="commandName" value="teacherAccountForm" />
-		<property name="validator" ref="teacherAccountFormValidator" />
-		<property name="formView" value="teacher/registerteacher" />
-		<property name="successView" value="teacher/registerTeacherConfirm" />
-		<property name="mailService" ref="mailService" />
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="messageSource" ref="messageSource" />
-	</bean>
-
-	<bean id="loginController"
-		class="org.wise.portal.presentation.web.controllers.LoginController">
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
-
-	<bean id="cRaterController" class="org.wise.vle.web.CRaterController">
-		<property name="wiseProperties" ref="wiseProperties" />
-	</bean>
 
 	<!-- Specifies where theme properties are located -->
 	<bean id="themeSource"
@@ -846,159 +87,47 @@
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basename" value="classpath:i18n/i18n" />
 		<property name="defaultEncoding" value="UTF-8" />
-		<property name="fallbackToSystemLocale" value="false"/>		
-	</bean>
-
-	<!-- allows user to change language via ?lang=XX url param -->
-	<bean id="localeChangeInterceptor"
-		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-		<property name="paramName" value="lang" />
+		<property name="fallbackToSystemLocale" value="false" />
 	</bean>
 
 	<!-- The real exceptions are logged to the tomcat/logs/catalina.out file. 
 		Look there if you've got a problem. -->
 	<bean id="exceptionResolver"
-		class="org.wise.portal.spring.impl.TelsSimpleMappingExceptionResolver">
+		class="org.wise.portal.spring.impl.WISESimpleMappingExceptionResolver">
 		<property name="exceptionMappings">
 			<props>
 				<prop key="java.lang.Exception">errors/friendlyError</prop>
 				<prop key="org.acegisecurity.AccessDeniedException">
 					errors/securityFriendlyError
 				</prop>
-				<prop
-					key="org.wise.portal.presentation.web.exception.NotAuthorizedException">accessdenied</prop>
+				<prop key="org.wise.portal.presentation.web.exception.NotAuthorizedException">accessdenied</prop>
 			</props>
 		</property>
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="mailService" ref="mailService" />
-	</bean>
-
-	<bean id="securityUtils" class="org.wise.vle.utils.SecurityUtils">
-		<property name="wiseProperties" ref="wiseProperties" />
-		<property name="runService" ref="runService" />
-		<property name="workgroupService" ref="wiseWorkgroupService" />
 	</bean>
 	
-	<bean id="discourseSSOController" class="org.wise.portal.presentation.web.controllers.DiscourseSSOController">
-		<property name="wiseProperties" ref="wiseProperties" />
+	<!-- allows user to change language via ?lang=XX url param -->
+	<bean id="localeChangeInterceptor"
+		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="lang" />
 	</bean>
 
+	<!-- these are resources that do not need to be backed by controllers and 
+		should be handled before looking through the SimpleUrlHandlerMapping mappings -->
+	<mvc:resources mapping="/vle/**" location="/vle/" order="1" />
+	<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
+	
+	<mvc:interceptors>
+	    <ref bean="localeChangeInterceptor"/>
+	</mvc:interceptors>
+
+	<!-- all of the urls have been mapped using @Controller annotation,
+		 except for files like /teacher/termsofuse.jsp, /pages/*
+		 These will be caught last and will be handled by urlFilenameViewController.
+	-->
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="order" value="2"></property>
 		<property name="mappings">
 			<value>
-				/request/info.html=informationController
-				/metadata.html=projectMetadataController
-				/index.html=indexController
-				/login.html=loginController
-				/errors/friendlyError.html=urlFilenameViewController
-				/accessdenied.html=accessDeniedController
-				/router.html=routerController
-				/checkforexistingaccount.html=checkForExistingAccountController
-				/contact/contactwisegeneral.html=contactWiseController
-				/contact/contactwiseproject.html=contactWiseProjectController
-				/student/index.html=studentIndexController
-				/student/vle/vle.html=studentVLEController
-				/student/selectteam.html=selectteamController
-				/student/teamsignin.html=teamSignInController
-				/student/addproject.html=addProjectController
-				/student/startproject.html=startProjectController
-				/student/registerstudent.html=registerstudentController
-				/student/changestudentpassword.html=changeUserPasswordController
-				/student/updatestudentaccount.html=studentUpdateMyAccountInfoController
-				/teacher/index.html=teacherIndexController
-				/teacher/termsofuse.html=urlFilenameViewController
-				/teacher/registerteacher.html=registerteacherController
-				/teacher/projects/projectinfo.html=projectInfoController
-				/teacher/projects/customized/shareproject.html=shareProjectController
-				/teacher/projects/customized/unshareproject.html=unShareProjectController
-				/teacher/run/shareprojectrun.html=shareProjectRunController
-				/teacher/run/unshareprojectrun.html=unShareProjectRunController
-				/teacher/run/manage/updateRun.html=updateRunController
-				/teacher/run/manage/archiveRun.html=updateRunController
-				/teacher/run/manage/startRun.html=updateRunController
-				/teacher/run/createRun.html=createRunController
-				/teacher/run/updaterun.html=updateRunController
-				/teacher/run/editrun.html=updateRunController
-				/teacher/run/notes.html=updateRunController
-				/teacher/grading/gradework.html=gradeWorkController
-				/teacher/grading/premadeComments.html=premadeCommentsController
-				/teacher/classroomMonitor/classroomMonitor.html=gradeWorkController
-				/teacher/management/managemystudents.html=manageStudentsController
-				/teacher/management/updatemyaccount.html=urlFilenameViewController
-				/teacher/management/library.html=libraryController
-				/teacher/management/classroomruns.html=myClassroomRunsMainController
-				/teacher/management/projectruntabs.html=myClassroomRunsController
-				/teacher/management/submitworkgroupchanges.html=submitWorkgroupChangesController
-				/studentinfo.html=userInfoController
-				/teacher/management/studentlist.html=studentListController
-				/teacher/management/studentlistexcel.html=listStudentNamesController
-				/teacher/vle/vle.html=studentVLEController
-				/**/index.html=indexController
-				/previewproject.html=previewprojectController
-				/previewprojectlist.html=previewprojectlistController
-				/forgotaccount/selectaccounttype.html=urlFilenameViewController
-				/forgotaccount/teacher/index.html=forgotAccountTeacherIndexController
-				/forgotaccount/teacher/success.html=urlFilenameViewController
-				/forgotaccount/teacher/error.html=urlFilenameViewController
-				/forgotaccount/student/passwordreminder*.html=forgotAccountStudentPasswordReminderWizardController
-				/forgotaccount/student/searchforstudentusername.html=searchForStudentUserNameController
-				/forgotaccount/resetpassword.html=resetPasswordController
-				/**/changepassword.html=changeUserPasswordController
-				/teacher/management/viewmystudents.html=viewMyStudentsController
-				/teacher/management/batchstudentchangepassword.html=batchStudentChangePasswordController
-				/teacher/management/changepassword.html=changeTeacherPasswordController
-				/teacher/management/changestudentpassword.html=changeUserPasswordController
-				/teacher/management/changeworkgroup.html=changeWorkgroupController
-				/teacher/management/removestudentfromrun.html=removeStudentFromRunController
-				/teacher/management/updatemyaccountinfo.html=updateMyAccountInfoController
-				/teacherinfo.html=userInfoController
-				/author/authorproject.html=authorProjectController
-				/project/exportproject.html=exportProjectController
-				/project/importexternalproject.html=importExternalProjectController
-				/admin/index.html=adminIndexController
-				/admin/project/importproject.html=importProjectController
-				/admin/account/manageusers.html=viewAllUsersController
-				/admin/account/enabledisableuser.html=enableDisableUserController
-				/admin/account/lookupuser.html=lookupUserController
-				/admin/account/manageuserroles.html=manageUserRolesController
-				/admin/project/manageallprojects.html=manageAllProjectsController
-				/admin/run/manageallprojectruns.html=manageAllProjectRunsController
-				/admin/run/findprojectrunsbyprojectid.html=findProjectRunsController
-				/admin/run/findprojectrunsbyteacher.html=findProjectRunsController
-				/admin/run/findprojectrunsbyrunid.html=findProjectRunsController
-				/admin/run/runstats.html=runStatisticsController
-				/admin/news/managenewsitems.html=newsItemController
-				/admin/news/addnewsitems.html=newsItemController
-				/admin/news/editnewsitem.html=newsItemController
-				/admin/project/currentlyAuthoredProjects.html=currentlyAuthoredProjectsController
-				/admin/project/tagger.html=taggerController
-				/admin/portal/manageportal.html=managePortalController
-				/admin/memorymonitor.html=urlFilenameViewController
-				/teacher/management/changestudentperiod.html=changeStudentPeriodController
-				/teacher/run/announcement/*.html=manageAnnouncementController
-				/teacher/projects/bookmark.html=bookmarkController
-				/teacher/projects/deleteproject.html=deleteProjectController
-				/teacher/projects/analyzeproject.html=analyzeProjectController
-				/teacher/projects/minifyproject.html=minifyProjectController
-				/student/viewannouncements.html=viewAnnouncementsController
-				/runinfo.html=runInfoController
-				/message/message.html=messageController
-				/studentData.html=studentDataController
-				/annotation.html=annotationController
-				/studentStatus.html=studentStatusController
-				/runStatus.html=runStatusController
-				/ideaBasket.html=ideaBasketController
-				/errors/outsideerror.html=outsideErrorController
-				/authorize.html=credentialManager
-				/pages/statistics.html=statisticsController
-				/pages/check.html=compatibilityCheckController
-				/getExport.html=getExportController
-				/getSpecialExport.html=getSpecialExportController
-				/peerReview.html=peerReviewController
-				/assetManager.html=assetManagerController
-				/cRater.html=cRaterController
-				/sso/discourse.html=discourseSSOController
 				/**/*.html=urlFilenameViewController
 			</value>
 		</property>
@@ -1008,9 +137,5 @@
 			</list>
 		</property>
 	</bean>
-
-	<mvc:resources mapping="/vle/**" location="/vle/" order="1" />
-
-	<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
 
 </beans>

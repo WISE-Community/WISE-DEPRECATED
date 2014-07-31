@@ -3,6 +3,7 @@ package org.wise.portal.dao.work.impl;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -10,7 +11,7 @@ import org.wise.portal.dao.work.StepWorkCacheDao;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWorkCache;
 
-
+@Repository
 public class HibernateStepWorkCacheDao extends AbstractHibernateDao<StepWorkCache> implements StepWorkCacheDao<StepWorkCache> {
 
 	@Override
@@ -44,11 +45,10 @@ public class HibernateStepWorkCacheDao extends AbstractHibernateDao<StepWorkCach
 	 * Returns the specified userInfo's StepWorkCache. If no cache is found,
 	 * returns null
 	 */
+	@Transactional(readOnly=true)
 	public StepWorkCache getStepWorkCacheByUserInfo(UserInfo userInfo) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         StepWorkCache result =  (StepWorkCache) session.createCriteria(StepWorkCache.class).add(Restrictions.eq("userInfo", userInfo)).uniqueResult();
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -59,11 +59,10 @@ public class HibernateStepWorkCacheDao extends AbstractHibernateDao<StepWorkCach
 	 * @param getRevisions a boolean value whether to get the cache that contains all the revisions (true)
 	 * or only the latest revision (false)
 	 */
+	@Transactional(readOnly=true)
 	public StepWorkCache getStepWorkCacheByUserInfoGetRevisions(UserInfo userInfo, boolean getRevisions) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         StepWorkCache result =  (StepWorkCache) session.createCriteria(StepWorkCache.class).add(Restrictions.eq("userInfo", userInfo)).add(Restrictions.eq("getRevisions", getRevisions)).uniqueResult();
-        session.getTransaction().commit();
         return result;
 	}
 }

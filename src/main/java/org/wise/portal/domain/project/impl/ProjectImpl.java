@@ -22,7 +22,11 @@
  */
 package org.wise.portal.domain.project.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -45,6 +49,7 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.Cascade;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.Module;
 import org.wise.portal.domain.module.impl.CurnitImpl;
@@ -157,7 +162,7 @@ public class ProjectImpl implements Project {
 	@Transient
 	public ProjectInfo projectinfo = new ProjectInfoImpl();
 	
-	@Column(name = COLUMN_NAME_PROJECT_NAME)
+	@Column(name = COLUMN_NAME_PROJECT_NAME, nullable = false)
 	protected String name;
 	
 	@OneToOne(targetEntity = ProjectMetadataImpl.class, fetch = FetchType.LAZY)
@@ -361,6 +366,25 @@ public class ProjectImpl implements Project {
 	
 	public Set<User> getSharedowners() {
 		return sharedowners;
+	}
+	
+	/**
+	 * Get the shared owners in alphabetical order
+	 * @return the shared owners list in alphabetical order
+	 */
+	public List<User> getSharedOwnersOrderedAlphabetically() {
+		List<User> sharedOwnersList = new ArrayList<User>();
+		
+		//get the shared owners in a list
+		sharedOwnersList.addAll(sharedowners);
+		
+		//get the comparator that will order the list alphabetically
+		UserAlphabeticalComparator userAlphabeticalComparator = new UserAlphabeticalComparator();
+		
+		//sort the list alphabetically
+		Collections.sort(sharedOwnersList, userAlphabeticalComparator);
+		
+		return sharedOwnersList;
 	}
 
 	public void setSharedowners(Set<User> sharedowners) {
@@ -590,5 +614,48 @@ public class ProjectImpl implements Project {
 
 	public void setMaxTotalAssetsSize(Long maxTotalAssetsSize) {
 		this.maxTotalAssetsSize = maxTotalAssetsSize;
+	}
+	
+	/**
+	 * Comparator used to order user names alphabetically
+	 */
+	public static class UserAlphabeticalComparator implements Comparator<User> {
+		
+		/**
+		 * Compares the user names of two User objects
+		 * @param user1 a user object
+		 * @param user2 a user object
+		 * @return
+		 * -1 if the user1 user names comes before the user2 user name
+		 * 0 if the user1 user name is the same as the user2 user name
+		 * 1 if the user1 user name comes after the user2 user name
+		 */
+		@Override
+		public int compare(User user1, User user2) {
+			int result = 0;
+			
+			if(user1 != null && user2 != null) {
+				//get the user details
+				MutableUserDetails userDetails1 = user1.getUserDetails();
+				MutableUserDetails userDetails2 = user2.getUserDetails();
+				
+				if(userDetails1 != null && userDetails2 != null) {
+					//get the user names
+					String userName1 = userDetails1.getUsername();
+					String userName2 = userDetails2.getUsername();
+					
+					if(userName1 != null && userName2 != null) {
+						//get the user names in lower case
+						String userName1LowerCase = userName1.toLowerCase();
+						String userName2LowerCase = userName2.toLowerCase();
+						
+						//compare the user names
+						result = userName1LowerCase.compareTo(userName2LowerCase);
+					}
+				}
+			}
+			
+			return result;
+		}
 	}
 }

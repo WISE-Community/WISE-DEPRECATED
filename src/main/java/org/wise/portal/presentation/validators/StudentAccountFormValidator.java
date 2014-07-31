@@ -25,6 +25,10 @@ package org.wise.portal.presentation.validators;
 import java.util.Set;
 
 
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -38,8 +42,10 @@ import org.wise.portal.service.offering.RunService;
  * @author patrick lawler
  * @version $Id:
  */
+@Component
 public class StudentAccountFormValidator extends UserAccountFormValidator {
 
+	@Autowired
 	private RunService runService;
 	
 	@SuppressWarnings("unchecked")
@@ -127,12 +133,4 @@ public class StudentAccountFormValidator extends UserAccountFormValidator {
         if (errors.hasErrors())
             userDetails.setPassword("");
 	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-	
 }

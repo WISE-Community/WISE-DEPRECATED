@@ -24,7 +24,7 @@ package org.wise.portal.dao.message.impl;
 
 import java.util.List;
 
-
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.message.MessageDao;
 import org.wise.portal.domain.message.Message;
@@ -35,6 +35,7 @@ import org.wise.portal.domain.user.User;
  * @author hirokiterashima
  * @version $Id:$
  */
+@Repository
 public class HibernateMessageDao 
 	extends AbstractHibernateDao<Message> implements MessageDao<Message>{
 
@@ -54,7 +55,7 @@ public class HibernateMessageDao
 	public List<Message> getListByRecipient(User recipient) {
 		String q = "select message from MessageImpl message inner join message.recipients mrecipient " +
 				"inner join mrecipient.recipient user where user.id='" + recipient.getId() + "'";
-		return this.getHibernateTemplate().find(q);
+		return (List<Message>) this.getHibernateTemplate().find(q);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -62,7 +63,7 @@ public class HibernateMessageDao
 		String q = "select message from MessageImpl message inner join message.recipients mrecipient " +
 				"inner join mrecipient.recipient user where user.id='" + recipient.getId() + "' and " +
 				"mrecipient.isRead=" + isRead;
-		return this.getHibernateTemplate().find(q);
+		return (List<Message>) this.getHibernateTemplate().find(q);
 	}
 
 	public List<Message> getListBySender(User sender) {
@@ -71,7 +72,7 @@ public class HibernateMessageDao
 	
 	@SuppressWarnings("unchecked")
     public List<Message> retrieveByField(String field, String type, Object term){
-    	return this.getHibernateTemplate().findByNamedParam(
+    	return (List<Message>) this.getHibernateTemplate().findByNamedParam(
     			"select message from MessageImpl message where message." + field + " " + type + " :term", "term", term);
     }
 

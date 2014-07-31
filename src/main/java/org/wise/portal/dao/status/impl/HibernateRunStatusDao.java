@@ -4,13 +4,14 @@ package org.wise.portal.dao.status.impl;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.status.RunStatusDao;
 import org.wise.vle.domain.status.RunStatus;
 
-
+@Repository
 public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus> implements RunStatusDao<RunStatus> {
 
 	@Override
@@ -45,16 +46,15 @@ public class HibernateRunStatusDao extends AbstractHibernateDao<RunStatus> imple
 	 * @param runId the run id
 	 * @return the RunStatus with the given run id or null if none is found
 	 */
+	@Transactional
 	public RunStatus getRunStatusByRunId(Long runId) {
 		RunStatus result = null;
 		
 		try {
 			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-			session.beginTransaction();
 			
 			result = (RunStatus) session.createCriteria(RunStatus.class).add(Restrictions.eq("runId", runId)).uniqueResult();
 			
-			session.getTransaction().commit();
 		} catch (NonUniqueResultException e) {
 			throw e;
 		}

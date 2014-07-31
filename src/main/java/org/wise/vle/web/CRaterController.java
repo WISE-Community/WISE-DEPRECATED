@@ -1,29 +1,25 @@
 package org.wise.vle.web;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.vle.domain.annotation.Annotation;
-import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.webservice.crater.CRaterHttpClient;
-import org.wise.vle.utils.SecurityUtils;
 
-public class CRaterController extends AbstractController {
+@Controller
+public class CRaterController {
 
-	private static final long serialVersionUID = 1L;
-	
+	@Autowired
 	private Properties wiseProperties;
 	
 	/**
@@ -32,8 +28,10 @@ public class CRaterController extends AbstractController {
 	 * @param response
 	 * @throws IOException 
 	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping("/cRater.html")
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
 		
@@ -174,13 +172,5 @@ public class CRaterController extends AbstractController {
 		String cRaterVerificationResponse = CRaterHttpClient.getCRaterVerificationResponse(cRaterUrl, cRaterClientId, itemId);
 		
 		return cRaterVerificationResponse;
-	}
-
-	public Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
 	}
 }

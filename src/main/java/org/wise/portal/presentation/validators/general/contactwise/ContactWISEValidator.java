@@ -24,11 +24,11 @@ package org.wise.portal.presentation.validators.general.contactwise;
 
 import java.util.regex.Pattern;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.wise.portal.domain.general.contactwise.ContactWISE;
-import org.wise.portal.domain.general.contactwise.impl.ContactWISEProject;
+import org.wise.portal.domain.general.contactwise.impl.ContactWISEForm;
 
 /**
  * Validator for TELS Contact WISE page
@@ -38,6 +38,7 @@ import org.wise.portal.domain.general.contactwise.impl.ContactWISEProject;
  *
  * @version $Id$
  */
+@Component
 public class ContactWISEValidator implements Validator {
 
 	private static final String EMAIL_REGEXP =
@@ -48,14 +49,14 @@ public class ContactWISEValidator implements Validator {
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean supports(Class clazz) {		
-		return ContactWISE.class.isAssignableFrom(clazz);
+		return ContactWISEForm.class.isAssignableFrom(clazz);
 	}
 
 	/**
 	 * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
 	 */
 	public void validate(Object contactWISEIn, Errors errors) {
-		ContactWISE contactWISE = (ContactWISE) contactWISEIn;
+		ContactWISEForm contactWISE = (ContactWISEForm) contactWISEIn;
 		
 		/* NOTE: this check may be removed later if we never allow students to 
 		   submit feedback */
@@ -70,18 +71,13 @@ public class ContactWISEValidator implements Validator {
 				"error.contactwise-email-empty");	
 		}
 		
-		if(contactWISE instanceof ContactWISEProject) {
-			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectName",
-			"error.contactwise-project-empty");
-		}
-		
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "summary",
 				"error.contactwise-summary");
 		
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description",
 				"error.contactwise-description");
 		
-		String email = ((ContactWISE)contactWISEIn).getEmail();
+		String email = contactWISE.getEmail();
 		
 		/* validate email if user is not a student and email is not null and 
 		   not empty */

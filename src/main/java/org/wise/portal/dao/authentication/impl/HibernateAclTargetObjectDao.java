@@ -19,6 +19,7 @@ package org.wise.portal.dao.authentication.impl;
 
 
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.authentication.AclTargetObjectDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.authentication.MutableAclTargetObject;
@@ -34,6 +35,7 @@ import org.wise.portal.domain.authentication.impl.PersistentAclTargetObject;
  * @version $Id: HibernateAclTargetObjectDao.java 612 2007-07-09 14:26:01Z
  *          cynick $
  */
+@Repository
 public class HibernateAclTargetObjectDao extends
         AbstractHibernateDao<MutableAclTargetObject> implements
         AclTargetObjectDao<MutableAclTargetObject> {

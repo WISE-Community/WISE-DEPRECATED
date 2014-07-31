@@ -28,6 +28,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.premadecomment.PremadeCommentDao;
@@ -47,16 +51,20 @@ import org.wise.portal.service.project.ProjectService;
 
 /**
  * @author patrick lawler
- *
  */
+@Service
 public class PremadeCommentServiceImpl implements PremadeCommentService {
 	
+	@Autowired
 	private PremadeCommentDao<PremadeComment> premadeCommentDao;
 	
+	@Autowired
 	private PremadeCommentListDao<PremadeCommentList> premadeCommentListDao;
 	
+	@Autowired
 	private ProjectService projectService;
 	
+	@Autowired
 	private RunService runService;
 	
 	@Transactional()
@@ -412,37 +420,5 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
 		}
 		
 		return listName;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public ProjectService getProjectService() {
-		return projectService;
-	}
-
-	/**
-	 * 
-	 * @param projectService
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public RunService getRunService() {
-		return runService;
-	}
-
-	/**
-	 * 
-	 * @param runService
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
 	}
 }

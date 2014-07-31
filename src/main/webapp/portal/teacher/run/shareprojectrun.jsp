@@ -31,7 +31,24 @@ Array.prototype.contains = function(obj) {
 
 var teacherUsernamesString = "${teacher_usernames}";
 var teacherUsernames = teacherUsernamesString.split(":");
-teacherUsernames = teacherUsernames.sort();
+
+//order the teacher user names alphabetically
+teacherUsernames = teacherUsernames.sort(function(userName1, userName2) {
+	var result = 0;
+	
+	if(userName1 != null && userName2 != null) {
+		var userName1LowerCase = userName1.toLowerCase();
+		var userName2LowerCase = userName2.toLowerCase();
+		
+		if(userName1LowerCase < userName2LowerCase) {
+			result = -1;
+		} else if(userName1LowerCase > userName2LowerCase) {
+			result = 1;
+		}
+	}
+	
+	return result;
+});
 
 // updates the search input box with the specified text
 function updateInputBox(text) {
@@ -107,7 +124,7 @@ function removeSharedUserClicked() {
 		</c:choose>
 		
 		<!--  display shared owners of the run -->
-		<c:forEach var="sharedowner" items="${run.sharedowners}">        
+		<c:forEach var="sharedowner" items="${run.sharedOwnersOrderedAlphabetically}">        
 			    <tr>
 			        <td class="user">${sharedowner.userDetails.username}</td>
 				    <td align="left">

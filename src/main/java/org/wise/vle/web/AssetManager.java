@@ -1,4 +1,4 @@
-package org.wise.vle.utils;
+package org.wise.vle.web;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,17 +32,19 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
@@ -51,40 +53,25 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  * @author Patrick Lawler
  * @author Geoffrey Kwan
  */
-public class AssetManager extends AbstractController {
-	private static final long serialVersionUID = 1L;
+@Controller
+@RequestMapping("/assetManager.html")
+public class AssetManager {
+	
+	private static Properties wiseProperties;
 
-	private final static String COMMAND = "command";
+	@Autowired
+	private RunService runService;
+
+	@Autowired
+	private WorkgroupService workgroupService;
 
 	private final static String PATH = "path";
 
-	private final static String ASSET = "asset";
-
 	private final static String FAILED = "failed";
 
-	private static Properties wiseProperties = null;
-
-	private RunService runService;
-
-	private WorkgroupService workgroupService;
-
-	private ProjectService projectService;
-
-	private static final String DEFAULT_DIRNAME = "assets";
-
-	private boolean standAlone = true;
-
-	private boolean modeRetrieved = false;
-
-	static {
-		try {
-			// Read properties file.
-			wiseProperties = new Properties();
-			wiseProperties.load(FileManager.class.getClassLoader().getResourceAsStream("wise.properties"));
-		} catch (Exception e) {
-			System.err.println("FileManager could not read in wiseProperties file");
-			e.printStackTrace();
-		}
+	@Autowired
+	public void setWiseProperties(Properties wiseProperties){
+		AssetManager.wiseProperties = wiseProperties;
 	}
 
 	/**
@@ -94,20 +81,10 @@ public class AssetManager extends AbstractController {
 		super();
 	}
 
-
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if (request.getMethod() == AbstractController.METHOD_GET) {
-			return doGet(request, response);
-		} else if (request.getMethod() == AbstractController.METHOD_POST) {
-			return doPost(request, response);
-		}
-		return null;
-	}
-
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@RequestMapping(method=RequestMethod.GET)
 	protected ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		//get the command such as assetList or getSize 
@@ -125,7 +102,7 @@ public class AssetManager extends AbstractController {
 				String runId = request.getParameter("runId");
 				Run run = null;
 				try {
-					run = getRunService().retrieveById(new Long(runId));
+					run = runService.retrieveById(new Long(runId));
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				} catch (ObjectNotFoundException e) {
@@ -133,7 +110,7 @@ public class AssetManager extends AbstractController {
 				}
 
 				//get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = getWorkgroupService().getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
@@ -153,7 +130,7 @@ public class AssetManager extends AbstractController {
 				String runId = request.getParameter("runId");
 				Run run = null;
 				try {
-					run = getRunService().retrieveById(new Long(runId));
+					run = runService.retrieveById(new Long(runId));
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				} catch (ObjectNotFoundException e) {
@@ -161,7 +138,7 @@ public class AssetManager extends AbstractController {
 				}
 
 				//get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = getWorkgroupService().getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
@@ -183,6 +160,7 @@ public class AssetManager extends AbstractController {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@RequestMapping(method=RequestMethod.POST)
 	protected ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String command = request.getParameter("command");
 		String type = request.getParameter("type");
@@ -199,7 +177,7 @@ public class AssetManager extends AbstractController {
 				String runId = request.getParameter("runId");
 				Run run = null;
 				try {
-					run = getRunService().retrieveById(new Long(runId));
+					run = runService.retrieveById(new Long(runId));
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				} catch (ObjectNotFoundException e) {
@@ -207,7 +185,7 @@ public class AssetManager extends AbstractController {
 				}
 
 				//get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = getWorkgroupService().getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
@@ -231,7 +209,7 @@ public class AssetManager extends AbstractController {
 				String runId = request.getParameter("runId");
 				Run run = null;
 				try {
-					run = getRunService().retrieveById(new Long(runId));
+					run = runService.retrieveById(new Long(runId));
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				} catch (ObjectNotFoundException e) {
@@ -239,7 +217,7 @@ public class AssetManager extends AbstractController {
 				}
 
 				//get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = getWorkgroupService().getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
@@ -277,7 +255,7 @@ public class AssetManager extends AbstractController {
 				String runId = request.getParameter("runId");
 				Run run = null;
 				try {
-					run = getRunService().retrieveById(new Long(runId));
+					run = runService.retrieveById(new Long(runId));
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				} catch (ObjectNotFoundException e) {
@@ -285,7 +263,7 @@ public class AssetManager extends AbstractController {
 				}
 
 				//get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = getWorkgroupService().getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
@@ -772,41 +750,5 @@ public class AssetManager extends AbstractController {
 		} else {
 			return String.valueOf(size) + " b";
 		}
-	}
-
-	public RunService getRunService() {
-		return runService;
-	}
-
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	public WorkgroupService getWorkgroupService() {
-		return workgroupService;
-	}
-
-	public void setWorkgroupService(WorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
-
-	public Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-
-	public ProjectService getProjectService() {
-		return projectService;
-	}
-
-
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
 	}
 }

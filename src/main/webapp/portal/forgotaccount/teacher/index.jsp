@@ -55,7 +55,7 @@
 							<input type="submit" name="sendemailAndPwd" id="sendEmailAndPwd" value="<spring:message code="forgotaccount.teacher.index.sendUsername"/>" />
 						</div>
 					
-						<div><spring:message code="forgotaccount.teacher.index.ifYoureStillStuck"/><a href="${contextPath}/contact/contactwisegeneral.html"><spring:message code="forgotaccount.teacher.index.contactWISE"/></a></div>
+						<div><spring:message code="forgotaccount.teacher.index.ifYoureStillStuck"/><a href="${contextPath}/contact/contactwise.html"><spring:message code="forgotaccount.teacher.index.contactWISE"/></a></div>
 					
 					 </form>
 				</div>

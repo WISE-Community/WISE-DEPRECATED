@@ -32,7 +32,7 @@
         "description": "Text on the Log out button"
     },
     "gohome_button_text": {
-        "value": "ホームに戻る",
+        "value": "ホームページ",
         "description": "Text on the Home button"
     },
     "hint_button_text": {
@@ -566,5 +566,9 @@
     "node_annotations_instructions": {
         "value": "{0} をクリックするとフィードバックを表示することができます",
         "description": "The message at the bottom of the feedback popup to tell the student they can always bring the popup back up"
+    },
+    "error_msg_with_reason": {
+        "value": "エラーが生じました。WISEスタッフに連絡してください。理由：{0}",
+        "description": "An error message a reason"
     }
 }

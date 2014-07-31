@@ -26,20 +26,19 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.hibernate.cfg.AnnotationConfiguration;
-import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 
 /**
  * Overrides default behavior to account for loading in properties via wise.properties file
  * @author Hiroki Terashima
  * @version $Id:$
  */
-public class TelsAnnotationSessionFactoryBean extends
-		AnnotationSessionFactoryBean {
+public class WISESessionFactoryBean extends LocalSessionFactoryBean {
 	
 	protected void postProcessAnnotationConfiguration(AnnotationConfiguration config) {
 		Properties wiseProperties = new Properties();
     	try {
-    		wiseProperties.load(TelsAnnotationSessionFactoryBean.class.getClassLoader().getResourceAsStream("wise.properties"));
+    		wiseProperties.load(WISESessionFactoryBean.class.getClassLoader().getResourceAsStream("wise.properties"));
 		} catch (IOException e) {
 			// pretend like nothing happened.
 			e.printStackTrace();

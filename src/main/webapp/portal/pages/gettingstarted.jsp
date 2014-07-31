@@ -55,9 +55,9 @@
 					<div class="sectionHead"><spring:message code="pages.gettingstarted.run" /></div>
 					<div class="sectionContent">
 						<ol>
-							<li><spring:message code="pages.gettingstarted.run_signIn" /></li>
+							<li><spring:message code="pages.gettingstarted.run_signIn" arguments="${contextPath}" /></li>
 							
-							<li><spring:message code="pages.gettingstarted.run_browseLibrary" /></li>
+							<li><spring:message code="pages.gettingstarted.run_browseLibrary" arguments="${contextPath}" /></li>
 							
 							<li><spring:message code="pages.gettingstarted.run_select" /></li>
 							
@@ -71,7 +71,7 @@
 							
 							<li><spring:message code="pages.gettingstarted.run_preview" /></li>
 							
-							<li><spring:message code="pages.gettingstarted.run_created" /></li>
+							<li><spring:message code="pages.gettingstarted.run_created" arguments="${contextPath}" /></li>
 							
 							<li><spring:message code="pages.gettingstarted.run_accessCode" /></li>
 						
@@ -83,7 +83,7 @@
 						<ol>
 							<li><spring:message code="pages.gettingstarted.student_recommended" /></li>
 							
-							<li><spring:message code="pages.gettingstarted.student_goHome" /></li>
+							<li><spring:message code="pages.gettingstarted.student_goHome" arguments="${contextPath}" /></li>
 							
 							<li><spring:message code="pages.gettingstarted.student_createAccount" /></li>
 							
@@ -106,7 +106,7 @@
 					
 					<div class="sectionHead"><spring:message code="pages.gettingstarted.help" /></div>
 					<div class="sectionContent">
-						<h5><spring:message code="pages.gettingstarted.help_info" /></h5>
+						<h5><spring:message code="pages.gettingstarted.help_info" arguments="${contextPath}" /></h5>
 					</div>
 				</div>
 			</div>

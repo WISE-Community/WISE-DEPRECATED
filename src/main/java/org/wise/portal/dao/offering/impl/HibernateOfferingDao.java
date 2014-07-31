@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.offering.OfferingDao;
 import org.wise.portal.domain.run.Offering;
@@ -37,6 +37,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
  * @author Hiroki Terashima
  * @version $Id$
  */
+@Repository
 public class HibernateOfferingDao extends AbstractHibernateDao<Offering>
         implements OfferingDao<Offering> {
 
@@ -63,7 +64,7 @@ public class HibernateOfferingDao extends AbstractHibernateDao<Offering>
 	 */
 	@SuppressWarnings("unchecked")
 	public Set<Workgroup> getWorkgroupsForOffering(Long offeringId) {
-		List<Workgroup> workgroupList =  this.getHibernateTemplate()
+		List<Workgroup> workgroupList =  (List<Workgroup>) this.getHibernateTemplate()
 		    .findByNamedParam(
 		    		"from WorkgroupImpl as workgroup where workgroup.offering.id = :offeringId", 
 		    		"offeringId", offeringId);

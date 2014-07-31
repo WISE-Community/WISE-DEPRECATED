@@ -11,6 +11,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.annotation.AnnotationDao;
@@ -19,7 +20,7 @@ import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 
-
+@Repository
 public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> implements AnnotationDao<Annotation> {
 
 	@Override
@@ -56,16 +57,15 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @return
 	 */
 	@Override
+	@Transactional(readOnly=true)
 	public List<Annotation> getAnnotationByFromWorkgroupAndWorkByToWorkgroup(UserInfo fromWorkgroup, List<StepWork> workByToWorkgroup, Class<?> clazz) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         List<Annotation> result = 
         	session.createCriteria(clazz)
         		.add( Restrictions.eq("fromUser", fromWorkgroup))
         		.add( Restrictions.in("stepWork", workByToWorkgroup))
         		.list();
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -78,20 +78,19 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * in the list of fromWorkgroups
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<Annotation> getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(List<UserInfo> fromWorkgroups, List<StepWork> workByToWorkgroup, Class<?> clazz) {
 		List<Annotation> result = new Vector<Annotation>();
 		
 		//check if there was any work
 		if(workByToWorkgroup.size() != 0) {
 			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-	        session.beginTransaction();
 
 	        result = 
 	        	session.createCriteria(clazz)
 	        		.add( Restrictions.in("fromUser", fromWorkgroups))
 	        		.add( Restrictions.in("stepWork", workByToWorkgroup))
 	        		.list();
-	        session.getTransaction().commit();
 		}
 
         return result;
@@ -104,15 +103,14 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @return a list of Annotation
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<? extends Annotation> getAnnotationByRunId(Long runId, Class<?> clazz) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         List<Annotation> result = 
         	session.createCriteria(clazz)
         		.add( Restrictions.eq("runId", runId))
         		.list();
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -125,16 +123,15 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @return a list of Annotation
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<? extends Annotation> getAnnotationByRunIdAndType(Long runId, String type, Class<?> clazz) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         List<Annotation> result = 
         	session.createCriteria(clazz)
         		.add(Restrictions.eq("runId", runId))
         		.add(Restrictions.eq("type", type))
         		.list();
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -143,9 +140,9 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @param stepWork stepWork that was annotated
 	 * @return
 	 */
+	@Transactional(readOnly=true)
 	public Annotation getAnnotationByUserInfoAndStepWork(UserInfo userInfo, StepWork stepWork, String type) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         Annotation result = null;
         
@@ -156,22 +153,20 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
         			.add( Restrictions.eq("stepWork", stepWork))
         			.add( Restrictions.eq("type", type))
         			.uniqueResult();
-        	session.getTransaction().commit();        	
         } else {
         	result = 
         			(Annotation) session.createCriteria(Annotation.class)
         			.add( Restrictions.eq("fromUser", userInfo))
         			.add( Restrictions.eq("stepWork", stepWork))
         			.uniqueResult();
-        	session.getTransaction().commit();
         }
         
         return result;
 	}
 	
+	@Transactional(readOnly=true)
 	public Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo, UserInfo toUserInfo, StepWork stepWork, String type) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         Annotation result = null;
         
@@ -197,9 +192,9 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @param type the annotation type
 	 * @see org.wise.portal.dao.annotation.AnnotationDao#getAnnotationByFromUserInfoToUserInfoNodeIdType(org.wise.vle.domain.user.UserInfo, org.wise.vle.domain.user.UserInfo, java.lang.String, java.lang.String)
 	 */
+	@Transactional(readOnly=true)
 	public Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo, UserInfo toUserInfo, String nodeId, String type) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         Annotation result = null;
         
@@ -211,8 +206,6 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 		.addOrder(Order.asc("postTime"));
 
         List<Annotation> results = (List<Annotation>) criteria.list();
-        
-        session.getTransaction().commit();
         
         if(results != null && results.size() > 0) {
         	//get the latest annotation
@@ -229,9 +222,9 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @param type the annotation type
 	 * @see org.wise.portal.dao.annotation.AnnotationDao#getAnnotationByFromUserInfoToUserInfoNodeIdType(org.wise.vle.domain.user.UserInfo, org.wise.vle.domain.user.UserInfo, java.lang.String, java.lang.String)
 	 */
+	@Transactional(readOnly=true)
 	public Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo, UserInfo toUserInfo, String type) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         Annotation result = null;
         
@@ -242,8 +235,6 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 		.addOrder(Order.asc("postTime"));
 
         List<Annotation> results = (List<Annotation>) criteria.list();
-        
-        session.getTransaction().commit();
         
         if(results != null && results.size() > 0) {
         	//get the latest annotation
@@ -263,9 +254,9 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * to the specific step work
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups, StepWork stepWork, String type) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         
         List<Annotation> results = null;
         		
@@ -276,14 +267,12 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
                 		.add( Restrictions.eq("stepWork", stepWork))
                 		.add( Restrictions.eq("type", type))
                 		.list();
-                session.getTransaction().commit();
         } else {
         	results = 
                 	(List<Annotation>) session.createCriteria(Annotation.class)
                 		.add( Restrictions.in("fromUser", fromWorkgroups))
                 		.add( Restrictions.eq("stepWork", stepWork))
                 		.list();
-                session.getTransaction().commit();
         }
 
         return results;
@@ -296,15 +285,14 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @return a list of annotations that are for a given stepwork
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<Annotation> getAnnotationByStepWork(StepWork stepWork, Class<?> clazz) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         List<Annotation> results = 
         	(List<Annotation>) session.createCriteria(clazz)
         		.add( Restrictions.eq("stepWork", stepWork))
         		.list();
-        session.getTransaction().commit();
         return results;
 	}
 	
@@ -315,9 +303,9 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @return a list of annotations that are for a given stepwork
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<Annotation> getAnnotationByFromUserToUserType(List<UserInfo> fromUsers, UserInfo toUser, String annotationType) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         List<Annotation> results = 
         	(List<Annotation>) session.createCriteria(Annotation.class)
@@ -325,7 +313,6 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
         		.add( Restrictions.eq("toUser", toUser))
         		.add( Restrictions.eq("type", annotationType))
         		.list();
-        session.getTransaction().commit();
         return results;
 	}
 	
@@ -336,16 +323,15 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @return a list of annotations that are for a given stepwork
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<Annotation> getAnnotationByToUserType(UserInfo toUser, String annotationType) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         List<Annotation> results = 
         	(List<Annotation>) session.createCriteria(Annotation.class)
         		.add( Restrictions.eq("toUser", toUser))
         		.add( Restrictions.eq("type", annotationType))
         		.list();
-        session.getTransaction().commit();
         return results;
 	}
 	
@@ -356,16 +342,15 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @return a list of annotations that are for a given stepwork
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public Annotation getAnnotationByStepWorkAndAnnotationType(StepWork stepWork, String annotationType) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         Annotation result = 
         	(Annotation) session.createCriteria(Annotation.class)
         		.add( Restrictions.eq("stepWork", stepWork))
         		.add( Restrictions.eq("type", annotationType))
         		.uniqueResult();
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -381,6 +366,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * a fromWorkgroup that is in the workgroupIds list
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, List<String> workgroupIds, String type) {
 		//if either lists are empty we will return null
 		if(stepWorks.size() == 0 || workgroupIds.size() == 0) {
@@ -388,7 +374,6 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 		}
 		
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         /*
          * perform the query to obtain the annotations associated with the workgroup ids,
@@ -399,7 +384,6 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
         		.add(Restrictions.in("stepWork", stepWorks)).addOrder(Order.desc("postTime"))
         		.add(Restrictions.eq("type", type))
         		.list();
-        session.getTransaction().commit();
 
         Annotation annotation = null;
 
@@ -440,13 +424,13 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @return the latest annotation associated with any of the StepWork objects
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, String type) {
 		if(stepWorks.size() == 0) {
 			return null;
 		}
 		
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         /*
          * perform the query to obtain the annotations associated with the workgroup ids,
@@ -457,7 +441,6 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
         		.add(Restrictions.in("stepWork", stepWorks)).addOrder(Order.desc("postTime"))
         		.add(Restrictions.eq("type", type))
         		.list();
-        session.getTransaction().commit();
 
         Annotation annotation = null;
         
@@ -523,15 +506,14 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<Annotation> getAnnotationByStepWorkList(List<StepWork> stepWorkList) {
 		List<Annotation> result = new ArrayList<Annotation>();
 		if (!stepWorkList.isEmpty()) {
 			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-			session.beginTransaction();
 
 			result = 
 				session.createCriteria(Annotation.class).add( Restrictions.in("stepWork", stepWorkList)).list();
-			session.getTransaction().commit();
 		}
 		return result;
 	}
@@ -544,9 +526,9 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	 * @param annotationTypes the annotation types to obtain
 	 * @see org.wise.portal.dao.annotation.AnnotationDao#getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(java.util.List, org.wise.vle.domain.user.UserInfo, java.util.List)
 	 */
+	@Transactional(readOnly=true)
 	public List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers, UserInfo toUser, List<String> annotationTypes) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         List<Annotation> results = 
         	(List<Annotation>) session.createCriteria(Annotation.class)
@@ -554,15 +536,13 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
         		.add( Restrictions.eq("toUser", toUser))
         		.add( Restrictions.in("type", annotationTypes))
         		.list();
-        session.getTransaction().commit();
         return results;
 	}
 	
+	@Transactional(readOnly=true)
 	public List<Annotation> getAnnotationList() {
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<Annotation> result = session.createCriteria(Annotation.class).list();
-        session.getTransaction().commit();
         return result;
 	}
 }

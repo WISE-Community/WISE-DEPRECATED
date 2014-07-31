@@ -34,8 +34,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses( {
 	org.wise.portal.presentation.web.controllers.admin.ViewAllUsersControllerTest.class,
 	org.wise.portal.presentation.web.controllers.admin.FindProjectRunsControllerTest.class,
-	org.wise.portal.presentation.web.controllers.admin.UserInfoControllerTest.class,
-	org.wise.portal.presentation.web.controllers.admin.ManageAllProjectRunsControllerTest.class
+	org.wise.portal.presentation.web.controllers.admin.UserInfoControllerTest.class
 })
 public class AllTests {
 

@@ -23,8 +23,9 @@
 package org.wise.portal.presentation.web.controllers.teacher.run;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -34,16 +35,21 @@ import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.acls.domain.BasePermission;
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
@@ -56,7 +62,7 @@ import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller for handling requests to grant/modify permissions on
@@ -67,22 +73,33 @@ import org.wise.portal.service.workgroup.WISEWorkgroupService;
  * @author Matt Fishbach
  * @version $Id:$
  */
-public class ShareProjectRunController extends SimpleFormController {
-	
+@Controller
+@SessionAttributes("addSharedTeacherParameters")
+@RequestMapping("/teacher/run/shareprojectrun.html")
+public class ShareProjectRunController {
+
+	@Autowired
 	private RunService runService;
 	
-	private WISEWorkgroupService workgroupService = null;
+	@Autowired
+	private WorkgroupService workgroupService;
 
+	@Autowired
 	private UserService userService;
 
+	@Autowired
 	private UserDetailsService userDetailsService;
 	
+	@Autowired
 	private AclService<Run> aclService;
 
-	private IMailFacade mailService = null;
+	@Autowired
+	private IMailFacade mailService;
 
+	@Autowired
 	protected Properties wiseProperties;	
 
+	@Autowired
 	private MessageSource messageSource;
 
 	protected static final String RUNID_PARAM_NAME = "runId";
@@ -91,6 +108,12 @@ public class ShareProjectRunController extends SimpleFormController {
 
 	private static final String ALL_TEACHER_USERNAMES = "teacher_usernames";
 	
+	//the path to this form view
+	private String formView = "teacher/run/shareprojectrun";
+	
+	//the path to the success view
+	private String successView = "teacher/run/shareprojectrun";
+	
 	/* change this to true if you are testing and do not want to send mail to
 	   the actual groups */
 	private static final Boolean DEBUG = false;
@@ -98,124 +121,197 @@ public class ShareProjectRunController extends SimpleFormController {
 	//set this to your email
 	private static final String DEBUG_EMAIL = "youremail@email.com";
 
-	/**
+	
+    /**
+     * Called before the page is loaded to initialize values.
 	 * Adds the AddSharedTeacherParameters object as a form-backing
 	 * object. This object will be filled out and submitted for adding
 	 * new teachers to the shared teachers list.
-	 * 
-	 * @see org.springframework.web.servlet.mvc.AbstractFormController#formBackingObject(javax.servlet.http.HttpServletRequest)
-	 */
-	@Override
-	protected Object formBackingObject(HttpServletRequest request) throws Exception {
-		AddSharedTeacherParameters params = new AddSharedTeacherParameters();
-		params.setRun(runService.retrieveById(Long.parseLong(request.getParameter(RUNID_PARAM_NAME))));
-		params.setPermission(UserDetailsService.RUN_READ_ROLE);
-		return params;
-	}
-	
-    /**
-     * Adds the existing shared teachers and their permissions for
-     * the run requested to the page.
-     * 
-     * @see org.springframework.web.servlet.mvc.SimpleFormController#referenceData(javax.servlet.http.HttpServletRequest)
+     * @param model the model object that contains values for the page to use when rendering the view
+     * @param request the http request object
+     * @return the path of the view to display
      */
-	@Override
-	protected Map<String, Object> referenceData(HttpServletRequest request) 
-	    throws Exception {
-		Map<String, Object> model = new HashMap<String, Object>();
+    @RequestMapping(method=RequestMethod.GET)
+    public String initializeForm(ModelMap modelMap, HttpServletRequest request) throws Exception {
+    	//get the signed in user
 		User user = ControllerUtil.getSignedInUser();
+		
+		//get the run
 		Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID_PARAM_NAME)));
-		Set<User> sharedowners = run.getSharedowners();
-
-		if(user.isAdmin() || 
-				this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user)){
+		
+		//get the message if any
+		String message = request.getParameter("message");
+		
+		//set the necessary objects into the model
+		populateModel(modelMap, user, run, message);
+		
+		return formView;
+    }
+   
+    /**
+     * Set the run, teacher names, and shared owners into the model
+     * @param modelMap the model to add the objects to
+     * @param user the signed in user
+     * @param run the run
+     * @param message the message to display
+     * @return the populated model map
+     * @throws Exception
+     */
+    private Map<String, Object> populateModel(Map<String, Object> modelMap, User user, Run run, String message) throws Exception {
+    	//check if the user is an admin or is the owner of the run
+		if(user.isAdmin() || this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user)){
+			//add the message if it is provided
+			if (message != null) {
+				modelMap.put("message", message);
+			}
+			
+			//get the shared owners of the run
+			Set<User> sharedowners = run.getSharedowners();
+			
+			//loop through all the shared owners
 			for (User sharedowner : sharedowners) {
+				//get the permissions of the shared owner for the run
 				String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedowner);
-				AddSharedTeacherParameters addSharedTeacherParameters = 
-					new AddSharedTeacherParameters();
+				
+				//get the user name of the shared owner
+				String userName = sharedowner.getUserDetails().getUsername();
+				
+				//create the object that will contain the information for the shared owner
+				AddSharedTeacherParameters addSharedTeacherParameters = new AddSharedTeacherParameters();
 				addSharedTeacherParameters.setPermission(sharedTeacherRole);
 				addSharedTeacherParameters.setRun(run);
-				addSharedTeacherParameters.setSharedOwnerUsername(
-						sharedowner.getUserDetails().getUsername());
-				model.put(sharedowner.getUserDetails().getUsername(), 
-						addSharedTeacherParameters);
+				addSharedTeacherParameters.setSharedOwnerUsername(userName);
+				
+				//add the shared owner to the model
+				modelMap.put(userName, addSharedTeacherParameters);
 			}
-			model.put(RUN_PARAM_NAME, run);
-			List<String> allTeacherUsernames = userDetailsService.retrieveAllUsernames("TeacherUserDetails");
-			String allTeacherUsernameString = StringUtils.join(allTeacherUsernames.iterator(), ":");
-			model.put(ALL_TEACHER_USERNAMES, allTeacherUsernameString);
 			
-			return model;
+			//add the run and run id to the model
+			modelMap.put(RUN_PARAM_NAME, run);
+			modelMap.put(RUNID_PARAM_NAME, run.getId());
+			
+			//get all the teacher user names in WISE in alphabetical order
+			List<String> allTeacherUsernames = userDetailsService.retrieveAllUsernames("TeacherUserDetails");
+			AlphabeticalStringComparator alphabeticalStringComparator = new AlphabeticalStringComparator();
+			Collections.sort(allTeacherUsernames, alphabeticalStringComparator);
+			String allTeacherUsernameString = StringUtils.join(allTeacherUsernames.iterator(), ":");
+			
+			//add all the teacher user names to the model
+			modelMap.put(ALL_TEACHER_USERNAMES, allTeacherUsernameString);
+			
+			//create the params object and add it to the model
+			AddSharedTeacherParameters params = new AddSharedTeacherParameters();
+			params.setRun(run);
+			params.setPermission(UserDetailsService.RUN_READ_ROLE);
+			modelMap.put("addSharedTeacherParameters", params);
 		} else {
 			throw new NotAuthorizedException("You do not have permission to share this run.");
 		}
-	}
+		
+		return modelMap;
+    }
 
-	/**
+    /**
      * On submission of the AddSharedTeacherParameters, the specified
      * teacher is granted the specified permission to the specified run.
      * Only teachers can be added as a shared teacher to a run.
-     * 
-     * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
-     *      javax.servlet.http.HttpServletResponse, java.lang.Object,
-     *      org.springframework.validation.BindException)
+     * @param params the model object that contains values for the page to use when rendering the view
+     * @param bindingResult the object used for validation in which errors will be stored
+     * @param request the http request object
+     * @param model the object that contains values to be displayed on the page
+     * @param sessionStatus the session status object
+     * @return the path of the view to display
      */
-    @Override
-    protected ModelAndView onSubmit(HttpServletRequest request,
-            HttpServletResponse response, Object command, BindException errors) {
-    	AddSharedTeacherParameters params = (AddSharedTeacherParameters) command;
-    	User retrievedUser = userService.retrieveUserByUsername(params.getSharedOwnerUsername());
-    	ModelAndView modelAndView;
-    	
-    	if (retrievedUser == null) {
-    		modelAndView = new ModelAndView(new RedirectView("shareprojectrun.html"));
-	    	modelAndView.addObject(RUNID_PARAM_NAME, params.getRun().getId());
-	    	modelAndView.addObject("message", "Username not recognized. Make sure to use the exact spelling of the username.");
-	    	return modelAndView;
-    	} else if (!retrievedUser.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE)) {
-    		modelAndView = new ModelAndView(new RedirectView("shareprojectrun.html"));
-	    	modelAndView.addObject(RUNID_PARAM_NAME, params.getRun().getId());
-	    	modelAndView.addObject("message", "The user is not a teacher and thus cannot be added as a shared teacher.");
-	    	return modelAndView;
-    	} else {
-    	try {
-    		// first check if we're removing a shared teacher
-    		String removeUserFromRun = request.getParameter("removeUserFromRun");
-    		if (removeUserFromRun != null && Boolean.valueOf(removeUserFromRun)) {
-    			runService.removeSharedTeacherFromRun(params.getSharedOwnerUsername(), params.getRun().getId());
-    		} else {  // we're adding a new shared teacher or changing her permissions
-    			boolean newSharedOwner = false;
-    			if (!params.getRun().getSharedowners().contains(retrievedUser)) {
-    				newSharedOwner = true;
-    			}
-    			runService.addSharedTeacherToRun(params);
-
-    			// make a workgroup for this shared teacher for this run
-    			String sharedOwnerUsername = params.getSharedOwnerUsername();
-    			User sharedOwner = userService.retrieveUserByUsername(sharedOwnerUsername);
-    			Set<User> sharedOwners = new HashSet<User>();
-    			sharedOwners.add(sharedOwner);
-    			workgroupService.createWISEWorkgroup("teacher", sharedOwners, params.getRun(), null);			
-    			// only send email if this is a new shared owner
-    			if (newSharedOwner) {
-    				User sharer = ControllerUtil.getSignedInUser();
-
-    				Locale locale = request.getLocale();
-    				ProjectRunEmailService emailService = new ProjectRunEmailService(sharer, retrievedUser,  params.getRun(), locale);
-    				Thread thread = new Thread(emailService);
-    				thread.start();
-    			}
-    		}
-		} catch (ObjectNotFoundException e) {
-			modelAndView = new ModelAndView(new RedirectView(getFormView()));
-	    	modelAndView.addObject(RUNID_PARAM_NAME, params.getRun().getId());
-	    	return modelAndView;
+	@RequestMapping(method=RequestMethod.POST)
+	protected String onSubmit(
+			@ModelAttribute("addSharedTeacherParameters") AddSharedTeacherParameters params, 
+			BindingResult bindingResult, 
+			HttpServletRequest request, 
+			Model model, 
+			SessionStatus sessionStatus) {
+		String view = formView;
+		
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+		
+		//get the run
+		Run run = params.getRun();
+		
+		//get run id
+		Long runId = run.getId();
+		
+		try {
+			//get the run
+			run = runService.retrieveById(runId);
+			params.setRun(run);
+		} catch (ObjectNotFoundException e1) {
+			e1.printStackTrace();
 		}
-    	modelAndView = new ModelAndView(new RedirectView(getSuccessView()));
-    	modelAndView.addObject(RUNID_PARAM_NAME, params.getRun().getId());
-    	return modelAndView;
-    	}
-    }
+		
+		//the error message to display to the user if any
+		String message = null;
+		
+		//get the user that we will share the run with
+		User retrievedUser = userService.retrieveUserByUsername(params.getSharedOwnerUsername());
+
+		if (retrievedUser == null) {
+			//we could not find the user name
+			message = "Username not recognized. Make sure to use the exact spelling of the username.";
+			view = formView;
+		} else if (!retrievedUser.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE)) {
+			//the user name entered is not a teacher
+			message = "The user is not a teacher and thus cannot be added as a shared teacher.";
+			view = formView;
+		} else {
+			try {
+				// first check if we're removing a shared teacher
+				String removeUserFromRun = request.getParameter("removeUserFromRun");
+				if (removeUserFromRun != null && Boolean.valueOf(removeUserFromRun)) {
+					//remove the shared teacher
+					runService.removeSharedTeacherFromRun(params.getSharedOwnerUsername(), run.getId());
+				} else { 
+					// we're adding a new shared teacher or changing her permissions
+					boolean newSharedOwner = false;
+					if (!run.getSharedowners().contains(retrievedUser)) {
+						newSharedOwner = true;
+					}
+					
+					//add the shared teacher to the run
+					runService.addSharedTeacherToRun(params);
+
+					// make a workgroup for this shared teacher for this run
+					String sharedOwnerUsername = params.getSharedOwnerUsername();
+					User sharedOwner = userService.retrieveUserByUsername(sharedOwnerUsername);
+					Set<User> sharedOwners = new HashSet<User>();
+					sharedOwners.add(sharedOwner);
+					workgroupService.createWISEWorkgroup("teacher", sharedOwners, run, null);			
+					// only send email if this is a new shared owner
+					if (newSharedOwner) {
+						Locale locale = request.getLocale();
+						ProjectRunEmailService emailService = new ProjectRunEmailService(signedInUser, retrievedUser,  run, locale);
+						Thread thread = new Thread(emailService);
+						thread.start();
+					}
+				}
+			} catch (ObjectNotFoundException e) {
+				view = formView;
+			}
+			
+			//sessionStatus.setComplete();
+			view = successView;
+		}
+		
+    	//get the model as a map so we can add objects to it
+    	Map<String, Object> asMap = model.asMap();
+    	try {
+    		//add the project, teacher names, and shared owners into the model 
+			populateModel(asMap, signedInUser, run, message);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return view;
+	}
 
     class ProjectRunEmailService implements Runnable {
 
@@ -295,65 +391,33 @@ public class ShareProjectRunController extends SimpleFormController {
 			}
 		}
     }
+    
+    /**
+     * Comparator used to order strings alphabetically
+     */
+	public static class AlphabeticalStringComparator implements Comparator<String> {
 
-	/**
-	 * @param mailService the mailService to set
-	 */
-	public void setMailService(IMailFacade mailService) {
-		this.mailService = mailService;
-	}
-	
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-	
-	public void setMessageSource(MessageSource messageSource) {
-		this.messageSource = messageSource;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @return the userService
-	 */
-	public UserService getUserService() {
-		return userService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * @return the userDetailsService
-	 */
-	public void setUserDetailsService(UserDetailsService userDetailsService) {
-		this.userDetailsService = userDetailsService;
-	}
-	
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	public void setWorkgroupService(WISEWorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
-	/**
-	 * @param aclService the aclService to set
-	 */
-	public void setAclService(AclService<Run> aclService) {
-		this.aclService = aclService;
+		/**
+		 * Compares two strings
+		 * @param string1 a string
+		 * @param string2 a string
+		 * @return
+		 * -1 if string1 comes before string2
+		 * 0 if string1 is the same as string2
+		 * 1 if string1 comes after string2
+		 */
+		@Override
+		public int compare(String string1, String string2) {
+			int result = 0;
+			
+			if(string1 != null && string2 != null) {
+				String string1LowerCase = string1.toLowerCase();
+				String string2LowerCase = string2.toLowerCase();
+				result = string1LowerCase.compareTo(string2LowerCase);
+			}
+			
+			return result;
+		}
 	}
 }
 

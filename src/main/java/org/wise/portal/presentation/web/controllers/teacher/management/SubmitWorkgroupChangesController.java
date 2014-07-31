@@ -31,8 +31,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.run.Run;
@@ -41,28 +43,30 @@ import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
+ * Controller for making changes to student workgroups
  * @author Hiroki Terashima
  */
-public class SubmitWorkgroupChangesController extends AbstractController {
+@Controller
+public class SubmitWorkgroupChangesController {
 
-	private static final String TAB_INDEX = "tabIndex";
-
-	private WISEWorkgroupService workgroupService;
+	@Autowired
+	private WorkgroupService workgroupService;
 	
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private UserService userService;
 	
+	@Autowired
 	private GroupService groupService;
 	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping("/teacher/management/submitworkgroupchanges.html")
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		// scenarios
 		// 0) workgroupFrom and workgroupTo are equal. -> do nothing
@@ -136,35 +140,7 @@ public class SubmitWorkgroupChangesController extends AbstractController {
 				workgroupService.updateWorkgroupMembership(params);
 			}
 		}
-		//ModelAndView modelAndView = new ModelAndView("/teacher/management/viewmystudents.html?runId="+runId);
-		//modelAndView.addObject(TAB_INDEX, tabIndex);
 		response.getWriter().print(tabIndex);
 		return null;
 	}
-	
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	public void setWorkgroupService(WISEWorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-	
-	public void setRunService(RunService runService){
-		this.runService = runService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * @param groupService the groupService to set
-	 */
-	public void setGroupService(GroupService groupService) {
-		this.groupService = groupService;
-	}
-
 }

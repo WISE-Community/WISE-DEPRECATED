@@ -2,10 +2,10 @@ package org.wise.portal.dao.node.impl;
 
 import java.util.List;
 
-
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -13,7 +13,7 @@ import org.wise.portal.dao.node.NodeDao;
 import org.wise.vle.domain.PersistableDomain;
 import org.wise.vle.domain.node.Node;
 
-
+@Repository
 public class HibernateNodeDao extends AbstractHibernateDao<Node> implements NodeDao<Node> {
 
 	@Override
@@ -48,14 +48,13 @@ public class HibernateNodeDao extends AbstractHibernateDao<Node> implements Node
 	 * @param runId
 	 * @return node
 	 */
+	@Transactional(readOnly=true)
 	public Node getNodeByNodeIdAndRunId(String nodeId, String runId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         PersistableDomain result = (PersistableDomain) session.createCriteria(Node.class)
         	.add( Restrictions.eq("nodeId", nodeId))
         	.add( Restrictions.eq("runId", runId)).uniqueResult();
         
-        session.getTransaction().commit();
         return (Node) result;
 	}
 	
@@ -84,11 +83,10 @@ public class HibernateNodeDao extends AbstractHibernateDao<Node> implements Node
 	 * @param runId the run id as a string
 	 * @return a List of Node objects
 	 */
+	@Transactional(readOnly=true)
 	public List<Node> getNodesByNodeIdsAndRunId(List<String> nodeIds, String runId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<Node> result =  session.createCriteria(Node.class).add(Restrictions.eq("runId", runId)).add(createNodeOrCriterion(nodeIds, 0)).list();
-        session.getTransaction().commit();
         return result;
 	}
 	
@@ -120,13 +118,12 @@ public class HibernateNodeDao extends AbstractHibernateDao<Node> implements Node
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional(readOnly=true)
 	public List<Node> getNodesByRunId(String runId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<Node> result = session.createCriteria(Node.class)
         	.add( Restrictions.eq("runId", runId)).list();
         
-        session.getTransaction().commit();
         return result;
 	}
 }

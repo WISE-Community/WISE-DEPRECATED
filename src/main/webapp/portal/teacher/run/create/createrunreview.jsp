@@ -165,12 +165,11 @@
 						</div>
 					</div>
 	
-					<form method="post" class="center" onSubmit="return createRun('${projectId}','${projectType}','<c:out value="${projectName}" />','${projectJSONFilename}')">
-						<input type="submit" name="_target3" value="<spring:message code="teacher.run.create.createrunreview.back" />" />
+					<form:form method="post" commandName="runParameters" class="center" onSubmit="return createRun('${projectId}','${projectType}','${projectName}','${projectJSONFilename}')">
 						<input type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunreview.cancel" />" />
 						<input type="submit" id="submit_form" name="_finish" value="<spring:message code="teacher.run.create.createrunreview.done" />" />
 						<input type="hidden" id="newProjectId" name="newProjectId" value="" />
-					</form>
+					</form:form>
 				</div>
 			</div>
 		</div>

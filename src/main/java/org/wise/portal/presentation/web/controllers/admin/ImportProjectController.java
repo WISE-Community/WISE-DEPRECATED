@@ -36,16 +36,18 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.impl.CreateUrlModuleParameters;
 import org.wise.portal.domain.project.Project;
@@ -66,27 +68,26 @@ import org.wise.portal.service.project.ProjectService;
  * @author hirokiterashima
  * @version $Id$
  */
-public class ImportProjectController extends SimpleFormController {
+@Controller
+@RequestMapping("/admin/project/importproject.html")
+public class ImportProjectController {
 
+	@Autowired
 	private ProjectService projectService;
 	
+	@Autowired
 	private CurnitService curnitService;
 
+	@Autowired
 	private Properties wiseProperties;
 
-	/**
-	 * @override @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.validation.BindException)
-	 */
-	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-	throws Exception {
+	@RequestMapping(method=RequestMethod.POST)
+	protected ModelAndView onSubmit(@ModelAttribute("projectZipFile")ProjectUpload projectUpload, 
+			BindingResult result) throws Exception {
 		// probably should do some kind of virus check. but for now, it's only
 		// accessible to admin.
 
 		// uploaded file must be a zip file and have a .zip extension
-
-		ProjectUpload projectUpload = (ProjectUpload) command;
 		MultipartFile file = projectUpload.getFile();
 
 		// upload the zipfile to curriculum_base_dir
@@ -226,11 +227,19 @@ public class ImportProjectController extends SimpleFormController {
 
 		Project project = projectService.createProject(pParams);
 
-		ModelAndView modelAndView = new ModelAndView(getSuccessView());		
+		ModelAndView modelAndView = new ModelAndView("admin/project/importproject");		
 		modelAndView.addObject("msg", "Upload project complete!");
 		modelAndView.addObject("newProject", project);
 		return modelAndView;
 	}
+	
+	
+    @RequestMapping(method=RequestMethod.GET) 
+    public ModelAndView initializeForm(ModelMap model) { 
+    	ModelAndView mav = new ModelAndView();
+    	mav.addObject("projectZipFile", new ProjectUpload());
+        return mav; 
+    } 
 
 	public static final void copyInputStream(InputStream in, OutputStream out)
 	throws IOException
@@ -243,27 +252,5 @@ public class ImportProjectController extends SimpleFormController {
 
 		in.close();
 		out.close();
-	}
-
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	/**
-	 * @param curnitService the curnitService to set
-	 */
-	public void setCurnitService(CurnitService curnitService) {
-		this.curnitService = curnitService;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
 	}
 }

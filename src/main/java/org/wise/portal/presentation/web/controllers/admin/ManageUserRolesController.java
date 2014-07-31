@@ -28,9 +28,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.authentication.MutableGrantedAuthority;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.authentication.UserDetailsService;
@@ -42,48 +45,51 @@ import org.wise.portal.service.user.UserService;
  * @author Hiroki Terashima
  * @version $Id:$
  */
-public class ManageUserRolesController extends AbstractController {
+@Controller
+@RequestMapping("/admin/account/manageuserroles.html")
+public class ManageUserRolesController {
 
+	@Autowired
 	private UserService userService;
 
+	@Autowired
 	private UserDetailsService userDetailsService;
 
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		ModelAndView mav = new ModelAndView();
+	@RequestMapping(method = RequestMethod.GET)
+	protected String handleGET(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			ModelMap modelMap) throws Exception {
 		List<MutableGrantedAuthority> allAuthorities = userDetailsService.retrieveAllAuthorities();
-		mav.addObject("allAuthorities", allAuthorities);
+		modelMap.put("allAuthorities", allAuthorities);
 		String username = request.getParameter("userName");
 		User user = userService.retrieveUserByUsername(username);
-		mav.addObject("user", user);
-		if (request.getMethod().equals(METHOD_GET)) {
-			if (request.getParameter("userName") != null) {
-			}
-		} else if (request.getMethod().equals(METHOD_POST)) {
-			if (request.getParameter("action") != null) {
-				String action = request.getParameter("action");
-				String authorityName = request.getParameter("authorityName");
-				GrantedAuthority authority = userDetailsService.loadAuthorityByName(authorityName);
-				if ("grant".equals(action)) {
-					user.getUserDetails().addAuthority(authority);
-				} else if ("revoke".equals(action)) {
-					user.getUserDetails().removeAuthority(authority);
-				}
-				userService.updateUser(user);
-			}
-		}
-		return mav;
+		modelMap.put("user", user);
+		return "admin/account/manageuserroles";
 	}
 
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-	
-	public void setUserDetailsService(UserDetailsService userDetailsService) {
-		this.userDetailsService = userDetailsService;
+	@RequestMapping(method = RequestMethod.POST)
+	protected String handlePOST(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			ModelMap modelMap) throws Exception {
+		List<MutableGrantedAuthority> allAuthorities = userDetailsService.retrieveAllAuthorities();
+		modelMap.put("allAuthorities", allAuthorities);
+		String username = request.getParameter("userName");
+		User user = userService.retrieveUserByUsername(username);
+		modelMap.put("user", user);
+
+		if (request.getParameter("action") != null) {
+			String action = request.getParameter("action");
+			String authorityName = request.getParameter("authorityName");
+			GrantedAuthority authority = userDetailsService.loadAuthorityByName(authorityName);
+			if ("grant".equals(action)) {
+				user.getUserDetails().addAuthority(authority);
+			} else if ("revoke".equals(action)) {
+				user.getUserDetails().removeAuthority(authority);
+			}
+			userService.updateUser(user);
+		}
+		return null;
 	}
 }

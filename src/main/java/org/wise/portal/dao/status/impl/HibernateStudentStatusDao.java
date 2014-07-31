@@ -5,13 +5,14 @@ import java.util.List;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.status.StudentStatusDao;
 import org.wise.vle.domain.status.StudentStatus;
 
-
+@Repository
 public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatus> implements StudentStatusDao<StudentStatus> {
 
 	@Override
@@ -52,7 +53,6 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
 		
 		try {
 			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-			session.beginTransaction();
 			
 			/*
 			 * get all the student status rows with the given workgroup id.
@@ -66,8 +66,6 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
 				//get the first element in the list if the list contains more than one element
 				result = list.get(0);
 			}
-			
-			session.getTransaction().commit();
 		} catch (NonUniqueResultException e) {
 			throw e;
 		}
@@ -80,13 +78,11 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
 	 * @param periodId the period id
 	 * @return a list of StudentStatus objects
 	 */
+	@Transactional
 	public List<StudentStatus> getStudentStatusesByPeriodId(Long periodId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         
         List<StudentStatus> studentStatuses = session.createCriteria(StudentStatus.class).add(Restrictions.eq("periodId", periodId)).list();
-        
-        session.getTransaction().commit();
         
         return studentStatuses;
 	}
@@ -96,13 +92,11 @@ public class HibernateStudentStatusDao extends AbstractHibernateDao<StudentStatu
 	 * @param runId the run id
 	 * @return a list of StudentStatus objects
 	 */
+	@Transactional
 	public List<StudentStatus> getStudentStatusesByRunId(Long runId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         
         List<StudentStatus> studentStatuses = session.createCriteria(StudentStatus.class).add(Restrictions.eq("runId", runId)).list();
-        
-        session.getTransaction().commit();
         
         return studentStatuses;
 	}

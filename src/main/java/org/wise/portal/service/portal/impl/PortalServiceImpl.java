@@ -24,7 +24,10 @@ package org.wise.portal.service.portal.impl;
 
 import java.io.Serializable;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.portal.PortalDao;
@@ -35,29 +38,26 @@ import org.wise.portal.service.portal.PortalService;
  * @author hirokiterashima
  * @version $Id$
  */
+@Service
 public class PortalServiceImpl implements PortalService {
 
+	@Autowired
 	private PortalDao<Portal> portalDao;
 	
 	/**
 	 * @throws ObjectNotFoundException 
 	 * @see org.wise.portal.service.portal.PortalService#getById(java.lang.Long)
 	 */
+	@Cacheable(value="portal")
 	public Portal getById(Serializable id) throws ObjectNotFoundException {
 		return portalDao.getById(id);
-	}
-
-	/**
-	 * @param portalDao the portalDao to set
-	 */
-	public void setPortalDao(PortalDao<Portal> portalDao) {
-		this.portalDao = portalDao;
 	}
 
 	/**
 	 * @see org.wise.portal.service.portal.PortalService#updatePortal(org.wise.portal.domain.portal.Portal)
 	 */
 	@Transactional()
+	@CacheEvict(value="portal", allEntries=true)
 	public void updatePortal(Portal portal) {
 		this.portalDao.save(portal);
 	}

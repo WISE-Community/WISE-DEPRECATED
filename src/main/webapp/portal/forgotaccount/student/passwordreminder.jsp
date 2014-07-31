@@ -37,7 +37,7 @@
 							<!-- 			Special script pulls focus onto immediately preceding Input field-->
 				 			<script type="text/javascript">document.getElementById('userName').focus();
 							</script> 
-				
+							<input type="hidden" name="_page" value="1" />							
 							<input style="margin-left:20px; text-align:center;width:55px;" type="submit" id="next" name="_target1" value="<spring:message code="forgotaccount.student.passwordreminder.next" />" />
 						</form:form>
 					</div>

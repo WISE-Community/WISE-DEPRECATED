@@ -37,6 +37,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
@@ -70,7 +72,9 @@ public class BatchStudentChangePasswordControllerTest extends AbstractModelAndVi
 	
 	private HttpSession mockSession;
 	
-	private BindException errors;
+	private BindingResult errors;
+	
+	private SessionStatus status;
 	
 	private User user;
 	
@@ -121,10 +125,6 @@ public class BatchStudentChangePasswordControllerTest extends AbstractModelAndVi
 		mockGroupService = EasyMock.createMock(GroupService.class);
 		
 		batchStudentChangePasswordController = new BatchStudentChangePasswordController();
-		batchStudentChangePasswordController.setGroupService(mockGroupService);
-		batchStudentChangePasswordController.setUserService(mockUserService);
-		batchStudentChangePasswordController.setSuccessView(SUCCESS);
-		batchStudentChangePasswordController.setFormView(FORM);
 		
 		batchStudentChangePasswordParameters = new BatchStudentChangePasswordParameters();
 		batchStudentChangePasswordParameters.setPasswd1(NEW_PASSWORD);
@@ -161,8 +161,8 @@ public class BatchStudentChangePasswordControllerTest extends AbstractModelAndVi
 		replay(mockGroupService);
 		expect(mockUserService.updateUserPassword(student1, batchStudentChangePasswordParameters.getPasswd1())).andReturn(user);
 		replay(mockUserService);
-		ModelAndView modelAndView = batchStudentChangePasswordController.onSubmit(request, response, batchStudentChangePasswordParameters, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = batchStudentChangePasswordController.onSubmit(batchStudentChangePasswordParameters, errors, status);
+		assertEquals(SUCCESS, view);
 		assertTrue(!errors.hasErrors());
 		verify(mockGroupService);
 		verify(mockUserService);
@@ -189,8 +189,8 @@ public class BatchStudentChangePasswordControllerTest extends AbstractModelAndVi
 		expect(mockUserService.updateUserPassword(student1, batchStudentChangePasswordParameters.getPasswd1())).andReturn(user);
 		expect(mockUserService.updateUserPassword(student2, batchStudentChangePasswordParameters.getPasswd1())).andReturn(user);
 		replay(mockUserService);
-		ModelAndView modelAndView = batchStudentChangePasswordController.onSubmit(request, response, batchStudentChangePasswordParameters, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = batchStudentChangePasswordController.onSubmit(batchStudentChangePasswordParameters, errors, status);
+		assertEquals(SUCCESS, view);
 		assertTrue(!errors.hasErrors());
 		verify(mockGroupService);
 		verify(mockUserService);
@@ -223,20 +223,11 @@ public class BatchStudentChangePasswordControllerTest extends AbstractModelAndVi
 		expect(mockUserService.updateUserPassword(student2, batchStudentChangePasswordParameters.getPasswd1())).andReturn(user);
 		expect(mockUserService.updateUserPassword(student3, batchStudentChangePasswordParameters.getPasswd1())).andReturn(user);
 		replay(mockUserService);
-		ModelAndView modelAndView = batchStudentChangePasswordController.onSubmit(request, response, batchStudentChangePasswordParameters, errors);
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		String view = batchStudentChangePasswordController.onSubmit(batchStudentChangePasswordParameters, errors, status);
+		assertEquals(SUCCESS, view);
 		assertTrue(!errors.hasErrors());
 		verify(mockGroupService);
 		verify(mockUserService);
 	}
-	
-	public void testFormBackingObject() throws Exception {
-		request.setParameter("groupId", GROUPID.toString());
-		Object returnedParams = batchStudentChangePasswordController.formBackingObject(request);
-		assertTrue(returnedParams instanceof BatchStudentChangePasswordParameters);
-		BatchStudentChangePasswordParameters params = (BatchStudentChangePasswordParameters) returnedParams;
-		assertEquals(params.getGroupId(), GROUPID);
-	}
-
 	
 }

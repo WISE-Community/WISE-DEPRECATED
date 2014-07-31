@@ -29,6 +29,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,13 +44,16 @@ import net.tanesha.recaptcha.ReCaptchaFactory;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
 
-import org.springframework.context.ApplicationContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.user.UserService;
 
 /**
@@ -60,11 +64,15 @@ import org.wise.portal.service.user.UserService;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class TelsAuthenticationProcessingFilter extends
-PasAuthenticationProcessingFilter {
+public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
+
+	@Autowired
+	protected UserService userService;
+
+	@Autowired
+	private Properties wiseProperties;
 
 	public static final String STUDENT_DEFAULT_TARGET_PATH = "/student/index.html";
-	//private static final String STUDENT_DEFAULT_TARGET_PATH = "/student/vle/vle.html?runId=65";
 	public static final String TEACHER_DEFAULT_TARGET_PATH = "/teacher/index.html";
 	public static final String ADMIN_DEFAULT_TARGET_PATH = "/admin/index.html";
 	public static final String RESEARCHER_DEFAULT_TARGET_PATH = "/teacher/index.html";
@@ -72,9 +80,10 @@ PasAuthenticationProcessingFilter {
 
 	public static final Integer recentFailedLoginTimeLimit = 15;
 	public static final Integer recentFailedLoginAttemptsLimit = 5;
-
-	private Properties wiseProperties;
-
+	
+	private static final Log LOGGER = LogFactory
+            .getLog(WISEAuthenticationProcessingFilter.class);
+	
 	/**
 	 * Check to make sure the public key is valid. We can only check if the public
 	 * key is valid. If the private key is invalid the admin will have to realize that.
@@ -159,8 +168,6 @@ PasAuthenticationProcessingFilter {
 			HttpServletResponse response, Authentication authentication)
 					throws IOException, ServletException {
 		HttpSession session = request.getSession();
-		ApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
-		UserService userService = (UserService) springContext.getBean("userService");
 
 		//get the user
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -190,13 +197,13 @@ PasAuthenticationProcessingFilter {
 				long timeDifference = currentTime.getTime() - recentFailedLoginTime.getTime();
 
 				//check if the time difference is less than 15 minutes
-				if(timeDifference < (TelsAuthenticationProcessingFilter.recentFailedLoginTimeLimit * 60 * 1000)) {
+				if(timeDifference < (WISEAuthenticationProcessingFilter.recentFailedLoginTimeLimit * 60 * 1000)) {
 					//get the number of failed login attempts since recentFailedLoginTime
 					Integer numberOfRecentFailedLoginAttempts = mutableUserDetails.getNumberOfRecentFailedLoginAttempts();
 
 					//check if the user failed to log in 5 or more times
 					if(numberOfRecentFailedLoginAttempts != null &&
-							numberOfRecentFailedLoginAttempts >= TelsAuthenticationProcessingFilter.recentFailedLoginAttemptsLimit) {
+							numberOfRecentFailedLoginAttempts >= WISEAuthenticationProcessingFilter.recentFailedLoginAttemptsLimit) {
 
 						//get the public and private keys from the wise.properties
 						String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
@@ -269,7 +276,21 @@ PasAuthenticationProcessingFilter {
 				}
 			}
 		}
-		super.successfulAuthentication(request, response, authentication);	 
+		
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("UserDetails logging in: " + userDetails.getUsername());
+        }
+
+        // add new session in a allLoggedInUsers servletcontext HashMap variable
+		String sessionId = session.getId();
+		HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) session.getServletContext().getAttribute("allLoggedInUsers");
+		if (allLoggedInUsers == null) {
+			allLoggedInUsers = new HashMap<String, User>();
+			session.getServletContext().setAttribute(WISESessionListener.ALL_LOGGED_IN_USERS, allLoggedInUsers);
+		}
+		allLoggedInUsers.put(sessionId, user);
+        
+        super.successfulAuthentication(request, response, authentication);
 	}
 
 	@Override
@@ -278,13 +299,4 @@ PasAuthenticationProcessingFilter {
 					throws IOException, ServletException {
 		super.unsuccessfulAuthentication(request, response, failed);
 	}
-
-	/**
-	 * 
-	 * @param wiseProperties
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
 }

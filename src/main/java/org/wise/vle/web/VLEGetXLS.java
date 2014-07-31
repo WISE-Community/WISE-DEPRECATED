@@ -31,8 +31,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.attendance.StudentAttendance;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
@@ -53,7 +55,6 @@ import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.utils.FileManager;
-import org.wise.vle.utils.SecurityUtils;
 
 import au.com.bytecode.opencsv.CSVWriter;
 
@@ -61,18 +62,22 @@ import au.com.bytecode.opencsv.CSVWriter;
  * Handles student work export in XLS format
  * @author Geoffrey Kwan
  */
-public class VLEGetXLS extends AbstractController {
+@Controller
+public class VLEGetXLS {
 
-	private static final long serialVersionUID = 1L;
-	
+	@Autowired
 	private Properties wiseProperties;
 	
+	@Autowired
 	private VLEService vleService;
 	
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private WorkgroupService workgroupService;
 	
+	@Autowired
 	private StudentAttendanceService studentAttendanceService;
 	
 	private HashMap<String, JSONObject> nodeIdToNodeContent = new HashMap<String, JSONObject>();
@@ -225,15 +230,10 @@ public class VLEGetXLS extends AbstractController {
 		System.out.println(label + ": " + getDifferenceInSeconds(debugStartTime, currentTime));
 	}
 	
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		return doGet(request, response);
-	}
-	
 	/**
 	 * Generates and returns an excel xls of exported student data.
 	 */
+	@RequestMapping("/getExport.html")
 	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -302,7 +302,7 @@ public class VLEGetXLS extends AbstractController {
 			projectMetaDataJSONString = metadata.toJSONString();
 		}
 		
-		String curriculumBaseDir = getWiseProperties().getProperty("curriculum_base_dir");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 		String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());		
 		String projectPath = curriculumBaseDir + rawProjectUrl;
 		
@@ -319,7 +319,7 @@ public class VLEGetXLS extends AbstractController {
 		JSONObject runInfoJSONObject = RunUtil.getRunInfo(run);
 		
 		//get all the student attendance entries for this run
-		List<StudentAttendance> studentAttendanceList = getStudentAttendanceService().getStudentAttendanceByRunId(run.getId());
+		List<StudentAttendance> studentAttendanceList = studentAttendanceService.getStudentAttendanceByRunId(run.getId());
 		JSONArray studentAttendanceJSONArray = new JSONArray();
 
 		/*
@@ -10710,45 +10710,5 @@ public class VLEGetXLS extends AbstractController {
 		}
 		
 		return cRaterMaxScore;
-	}
-
-	public VLEService getVleService() {
-		return vleService;
-	}
-
-	public void setVleService(VLEService vleService) {
-		this.vleService = vleService;
-	}
-
-	public Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	public RunService getRunService() {
-		return runService;
-	}
-
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	public WorkgroupService getWorkgroupService() {
-		return workgroupService;
-	}
-
-	public void setWorkgroupService(WorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
-	public StudentAttendanceService getStudentAttendanceService() {
-		return studentAttendanceService;
-	}
-
-	public void setStudentAttendanceService(StudentAttendanceService studentAttendanceService) {
-		this.studentAttendanceService = studentAttendanceService;
 	}
 }

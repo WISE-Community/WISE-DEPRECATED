@@ -15,8 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
@@ -28,46 +31,21 @@ import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
-import org.wise.vle.utils.SecurityUtils;
 
 
 /**
  * Controller for handling the peer review step
  * @author Geoffrey Kwan
  */
-public class VLEPeerReviewController extends AbstractController {
+@Controller
+@RequestMapping("/peerReview.html")
+public class VLEPeerReviewController {
 
-	private static final long serialVersionUID = 1L;
-	
+	@Autowired
 	private VLEService vleService;
 	
+	@Autowired
 	private RunService runService;
-
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-
-		ModelAndView modelAndView = null;
-		String requestMethod = request.getMethod();
-		
-		if(requestMethod == null) {
-			
-		} else if(requestMethod.equals(AbstractController.METHOD_GET)) {
-			modelAndView = doGet(request, response);
-		} else if(requestMethod.equals(AbstractController.METHOD_POST)) {
-			modelAndView = doPost(request, response);
-		}
-		
-		return modelAndView;
-	}
-	
-	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		return doPostJSON(request, response);
-	}
-
-	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		return doGetJSON(request, response);
-	}
 
 	/**
 	 * Handles the requesting of other student's work for phase 2
@@ -82,6 +60,7 @@ public class VLEPeerReviewController extends AbstractController {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
+	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView doGetJSON(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
@@ -540,6 +519,7 @@ public class VLEPeerReviewController extends AbstractController {
 	 * @param response
 	 * @throws IOException
 	 */
+	@RequestMapping(method=RequestMethod.POST)
 	private ModelAndView doPostJSON(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		//not used, VLEPostData handles the submit of the original work
@@ -884,21 +864,5 @@ public class VLEPeerReviewController extends AbstractController {
 			//return the PeerReviewWork at the randomly chosen index
 			return peerReviewWorkList.get(nextInt);
 		}
-	}
-
-	public VLEService getVleService() {
-		return vleService;
-	}
-
-	public void setVleService(VLEService vleService) {
-		this.vleService = vleService;
-	}
-
-	public RunService getRunService() {
-		return runService;
-	}
-
-	public void setRunService(RunService runService) {
-		this.runService = runService;
 	}
 }

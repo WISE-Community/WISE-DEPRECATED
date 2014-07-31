@@ -35,9 +35,11 @@ import javax.servlet.http.HttpSession;
 
 import org.hibernate.StaleObjectStateException;
 import org.json.JSONArray;
-import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate4.HibernateOptimisticLockingFailureException;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.run.Run;
@@ -48,7 +50,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller to allow students to launch the VLE using the project.
@@ -60,32 +62,36 @@ import org.wise.portal.service.workgroup.WISEWorkgroupService;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class StartProjectController extends AbstractController {
+@Controller
+public class StartProjectController {
+
+	@Autowired
+	private RunService runService;
+
+	@Autowired
+	private WorkgroupService workgroupService;
+
+	@Autowired
+	private ProjectService projectService;
+	
+	@Autowired
+	private StudentAttendanceService studentAttendanceService;
+	
+	@Autowired
+	protected Properties wiseProperties;
 
 	private static final String SELECT_TEAM_URL = "student/selectteam";
 
 	private static final String TEAM_SIGN_IN_URL = "student/teamsignin";
 
-	private RunService runService;
-
-	private WISEWorkgroupService workgroupService;
-
-	private ProjectService projectService;
-	
-	private StudentAttendanceService studentAttendanceService;
-	
-	protected Properties wiseProperties;
-
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected synchronized ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping("/student/startproject.html")
+	protected synchronized ModelAndView handleRequestInternal(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		 User user = ControllerUtil.getSignedInUser();
 
-		String runIdStr = request.getParameter("runId");
 		String projectIdStr = request.getParameter("projectId");
+		String runIdStr = request.getParameter("runId");
 		Long runId = null;
 		if (runIdStr != null) {
 			runId = Long.valueOf(runIdStr);
@@ -315,57 +321,5 @@ public class StartProjectController extends AbstractController {
 	    
 		//add a student attendance entry
 		this.studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp, presentUserIds.toString(), absentUserIds.toString());
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-	
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	public void setWorkgroupService(WISEWorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public StudentAttendanceService getStudentAttendanceService() {
-		return studentAttendanceService;
-	}
-
-	/**
-	 * 
-	 * @param studentAttendanceService
-	 */
-	public void setStudentAttendanceService(
-			StudentAttendanceService studentAttendanceService) {
-		this.studentAttendanceService = studentAttendanceService;
-	}
-
-	/**
-	 * @return the wiseProperties
-	 */
-	public Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
 	}
 }

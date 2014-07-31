@@ -75,6 +75,11 @@
 						value="${userInfoMap['Curriculum Subjects']}" /></td>
 		</tr>
 		<tr>
+			<th><spring:message code="teacher.registerteacher.language" /></th>
+			<td><span style="text-transform: lowercase;"><c:out
+						value="${userInfoMap['Language']}" /></td>
+		</tr>
+		<tr>
 			<th><spring:message code="teacher.teacherinfo.howDidYouHear" /></th>
 			<td><span style="text-transform: lowercase;"><c:out
 						value="${userInfoMap['How did you hear about us']}" /></td>

@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -13,7 +14,7 @@ import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewGate;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
 
-
+@Repository
 public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewGate> implements PeerReviewGateDao<PeerReviewGate> {
 
 	@Override
@@ -43,12 +44,11 @@ public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewG
 		save(peerReviewGate);
 	}
 	
+	@Transactional(readOnly=true)
 	public PeerReviewGate getPeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node) {
 		try {
 			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-			session.beginTransaction();
 			PeerReviewGate result = (PeerReviewGate) session.createCriteria(PeerReviewGate.class).add(Restrictions.eq("runId", runId)).add(Restrictions.eq("periodId", periodId)).add(Restrictions.eq("node", node)).uniqueResult();
-			session.getTransaction().commit();
 			return result;
 		} catch (NonUniqueResultException e) {
 			//System.err.println("workgroupId: " + id);
@@ -125,15 +125,14 @@ public class HibernatePeerReviewGateDao extends AbstractHibernateDao<PeerReviewG
 		}
 	}
 	
+	@Transactional(readOnly=true)
 	private List<PeerReviewWork> getPeerReviewWorkByRunPeriodNode(Long runId, Long periodId, Node node) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
         List<PeerReviewWork> result =  session.createCriteria(PeerReviewWork.class).add(
         		Restrictions.eq("runId", runId)).add(
         				Restrictions.eq("periodId", periodId)).add(
         						Restrictions.eq("node", node)).add(
         								Restrictions.isNotNull("stepWork")).list();
-        session.getTransaction().commit();
         return result;
 	}
 }

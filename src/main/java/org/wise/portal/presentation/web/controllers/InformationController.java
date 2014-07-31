@@ -35,11 +35,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
@@ -51,7 +53,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilter;
+import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
@@ -62,16 +64,22 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  * @author patrick lawler
  * @version $Id:$
  */
-public class InformationController extends AbstractController{
+@Controller
+public class InformationController {
 
+	@Autowired
 	Properties wiseProperties;
 	
+	@Autowired
 	ProjectService projectService;
 	
+	@Autowired
 	RunService runService;
 	
+	@Autowired
 	UserService userService;
 	
+	@Autowired
 	WorkgroupService workgroupService;
 	
 	/* how long the VLE should wait between each getRunInfo request, 
@@ -82,11 +90,10 @@ public class InformationController extends AbstractController{
 	
 	private static final String PREVIEW = "preview";
 	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping("/request/info.html")
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		String action = request.getParameter("action");
 		
 		if(action.equals("getVLEConfig")){
@@ -749,11 +756,11 @@ public class InformationController extends AbstractController{
 		        UserDetails userDetails = (UserDetails) signedInUser.getUserDetails();
 		        if (userDetails instanceof StudentUserDetails) {
 		        	config.put("userType", "student");
-					config.put("indexUrl", ControllerUtil.getPortalUrlString(request) + TelsAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
+					config.put("indexUrl", ControllerUtil.getPortalUrlString(request) + WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
 		        	
 		        } else if (userDetails instanceof TeacherUserDetails) {
 		        	config.put("userType", "teacher");
-					config.put("indexUrl", ControllerUtil.getPortalUrlString(request) + TelsAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+					config.put("indexUrl", ControllerUtil.getPortalUrlString(request) + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 		        }
 			} else {
 	        	config.put("userType", "none");
@@ -770,21 +777,6 @@ public class InformationController extends AbstractController{
 		response.getWriter().write(config.toString());
 	}
 	
-	/**
-	 * Given a <code>String</code> projectFilename, returns the <code>String</code.
-	 * associated project metadata filename.
-	 * 
-	 * @param projectFilename
-	 * @return String - project metadata filename
-	 */
-	private String resolveMetadataFilename(String projectFilename){
-		if(projectFilename.contains(".project.json")){
-			return projectFilename.replace(".project.json", ".project-meta.json");
-		} else {
-			return projectFilename.replaceFirst(".project(.v[0-9]+.json)", ".project-meta$1");
-		}
-	}
-
 	/**
 	 * Gets the workgroup for the currently-logged in user so that she may
 	 * view the VLE.
@@ -954,40 +946,4 @@ public class InformationController extends AbstractController{
 		
 		return classmateUserInfo;
 	}
-	
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	public void setWorkgroupService(WorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
 }

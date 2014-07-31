@@ -25,7 +25,8 @@ package org.wise.portal.service.module.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.module.ModuleDao;
@@ -42,9 +43,11 @@ import org.wise.portal.service.module.ModuleService;
  * @author Hiroki Terashima
  * @version $Id$
  */
+@Service
 public class ModuleServiceImpl extends CurnitServiceImpl implements
 		ModuleService {
 	
+	@Autowired
 	private ModuleDao<Module> moduleDao;
 	
 	/**
@@ -87,8 +90,7 @@ public class ModuleServiceImpl extends CurnitServiceImpl implements
 	 */
 	@Override
 	public Module getById(Long moduleId) throws ObjectNotFoundException {
-		Module module = moduleDao.getById(moduleId);
-		return module;
+		return moduleDao.getById(moduleId);
 	}
 	
 	/**
@@ -98,12 +100,5 @@ public class ModuleServiceImpl extends CurnitServiceImpl implements
 	@Transactional()
 	public void updateCurnit(Curnit curnit) {
 		this.moduleDao.save((Module) curnit);
-	}
-
-	/**
-	 * @param moduleDao the moduleDao to set
-	 */
-	public void setModuleDao(ModuleDao<Module> moduleDao) {
-		this.moduleDao = moduleDao;
 	}
 }

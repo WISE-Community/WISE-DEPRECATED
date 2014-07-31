@@ -5,20 +5,22 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.attendance.StudentAttendanceDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.attendance.StudentAttendance;
 
-
+@Repository
 public class HibernateStudentAttendanceDao extends AbstractHibernateDao<StudentAttendance> implements StudentAttendanceDao<StudentAttendance> {
 
 	/**
 	 * Get all the student attendance entries for a run id
 	 * @see org.wise.portal.dao.attendance.StudentAttendanceDao#getStudentAttendanceByRunId(java.lang.Long)
 	 */
+	@Transactional(readOnly=true)
 	public List<StudentAttendance> getStudentAttendanceByRunId(Long runId) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-		session.beginTransaction();
 		
 		/*
 		 * get all the student attendance rows for the given run id and
@@ -28,18 +30,17 @@ public class HibernateStudentAttendanceDao extends AbstractHibernateDao<StudentA
 		List<StudentAttendance> results = (List<StudentAttendance>) session.createCriteria(StudentAttendance.class).
 			add(Restrictions.eq("runId", runId)).addOrder(Order.desc("loginTimestamp")).list();
 		
-		session.getTransaction().commit();
-		
 		return results;
 	}
 	
 
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional(readOnly=true)
 	public List<StudentAttendance> getStudentAttendanceByRunIdAndPeriod(
 			Long runId, int lookBackNumDays) {
 		
-			return this.getHibernateTemplate().find("select attendance from StudentAttendanceImpl attendance where"
+			return (List<StudentAttendance>) this.getHibernateTemplate().find("select attendance from StudentAttendanceImpl attendance where"
 					+ " datediff(curdate(), attendance.loginTimestamp) <=" + lookBackNumDays
 					+ " and attendance.runId = " + runId);
 	}

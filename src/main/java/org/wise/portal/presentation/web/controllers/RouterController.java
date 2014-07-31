@@ -23,13 +23,16 @@
 package org.wise.portal.presentation.web.controllers;
 
 import java.util.Date;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.user.User;
@@ -40,17 +43,25 @@ import org.wise.portal.service.project.ProjectService;
  * @author patrick lawler
  * @version $Id:$
  */
-public class RouterController extends AbstractController{
+@Controller
+public class RouterController {
+
+	private static ProjectService projectService;
+	
+	@Autowired
+	public void setProjectService(ProjectService projectService){
+		RouterController.projectService = projectService;
+	}
+	
+	@Autowired
+	private ServletContext servletContext;
 
 	private final static String FORWARD = "forward";
 	
-	private static ProjectService projectService;
-	
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping("/router.html")
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws Exception {
 		User user = ControllerUtil.getSignedInUser();
 		
 		/* ensure that logged in user has administrator permissions if coming from the util page */
@@ -66,8 +77,6 @@ public class RouterController extends AbstractController{
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 				return null;
 			} else {
-				String contextPath = request.getContextPath();
-				ServletContext servletContext = this.getServletContext().getContext(contextPath);
 				CredentialManager.setRequestCredentials(request, user);
 				if(forward.equals("convert") || forward.equals("minifier")){
 					
@@ -111,12 +120,4 @@ public class RouterController extends AbstractController{
 			}
 		}
 	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
 }

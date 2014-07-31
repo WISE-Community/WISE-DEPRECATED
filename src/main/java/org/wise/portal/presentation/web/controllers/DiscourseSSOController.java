@@ -33,8 +33,10 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.util.http.Base64;
@@ -44,15 +46,15 @@ import org.wise.portal.presentation.util.http.Base64;
  * @author Hiroki Terashima
  * @version $Id:$
  */
-public class DiscourseSSOController extends AbstractController {
+@Controller
+public class DiscourseSSOController {
 
+	@Autowired
 	private Properties wiseProperties;
 
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping("/sso/discourse.html")
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		// make sure this WISE instance supports discourse SSO.
 		String secretKey = wiseProperties.getProperty("discourse_sso_secret_key");
@@ -127,12 +129,5 @@ public class DiscourseSSOController extends AbstractController {
 		} catch (NoSuchAlgorithmException e) {
 		}
 		return digest;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
 	}
 }

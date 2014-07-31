@@ -310,7 +310,7 @@
         isDeleted bit,
         ispublic bit,
         maxTotalAssetsSize bigint,
-        name varchar(255),
+        name varchar(255) not null,
         parentprojectid bigint,
         projecttype integer,
         OPTLOCK integer,

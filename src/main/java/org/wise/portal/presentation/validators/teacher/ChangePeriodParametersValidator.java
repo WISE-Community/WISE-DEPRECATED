@@ -22,6 +22,7 @@
  */
 package org.wise.portal.presentation.validators.teacher;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -30,6 +31,7 @@ import org.wise.portal.domain.impl.ChangePeriodParameters;
 /**
  * @author patrick lawler
  */
+@Component
 public class ChangePeriodParametersValidator implements Validator{
 
 	public boolean supports(Class clazz){

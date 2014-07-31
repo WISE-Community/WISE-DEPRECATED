@@ -22,9 +22,6 @@
  */
 package org.wise.portal.service.announcement;
 
-import java.util.Set;
-
-
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.impl.AnnouncementParameters;
@@ -63,13 +60,6 @@ public interface AnnouncementService {
 	public Announcement updateAnnouncement(long id, AnnouncementParameters params) throws ObjectNotFoundException;
 	
 	/**
-	 * retrieves all Announcements from the data store
-	 * 
-	 * @return <code>Set<Announcement></code>
-	 */
-	public Set<Announcement> retrieveAllAnnouncement();
-	
-	/**
 	 * retrieves the Announcement with the given Id from the data store
 	 * 
 	 * @param <code>long</code> id
@@ -77,12 +67,4 @@ public interface AnnouncementService {
 	 * @throws <code>ObjectNotFoundException</code>
 	 */
 	public Announcement retrieveById(long id) throws ObjectNotFoundException;
-	
-	/**
-	 * retrieves the most recent Announcement from the data store
-	 * 
-	 * @return <code>Announcement</code>
-	 * @throws <code>ObjectNotFoundException</code>
-	 */
-	public Announcement retrieveLatest() throws ObjectNotFoundException;
 }

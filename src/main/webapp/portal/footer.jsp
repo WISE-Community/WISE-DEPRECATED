@@ -11,7 +11,7 @@
 						<li><a href="${contextPath}/pages/teacher-tools.html"><spring:message code="footer.teacherTools" /></a></li>
 						<li><a href="${contextPath}/pages/teacherfaq.html"><spring:message code="footer.faq" /></a></li>
 						<li><a href="${contextPath}/pages/gettingstarted.html"><spring:message code="footer.gettingStarted" /></a></li>
-						<li class="last"><a href="${contextPath}/contact/contactwisegeneral.html"><spring:message code="footer.contact" /></a></li>
+						<li class="last"><a href="${contextPath}/contact/contactwise.html"><spring:message code="footer.contact" /></a></li>
 						<!-- <li class="last"><a href="credits.html"><spring:message code="footer.credits" /></a></li> -->
 					</ul>
 	 			</div>

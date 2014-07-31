@@ -29,9 +29,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.message.Message;
 import org.wise.portal.domain.message.MessageRecipient;
@@ -44,17 +45,16 @@ import org.wise.portal.service.user.UserService;
  * @author hirokiterashima
  * @version $Id:$
  */
-public class MessageController extends AbstractController {
+@Controller
+@RequestMapping("/message/message.html")
+public class MessageController {
 
+	@Autowired
 	private MessageService messageService;
 	
+	@Autowired
 	private UserService userService;
 
-
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		User user = ControllerUtil.getSignedInUser();  // logged-in user
@@ -126,19 +126,5 @@ public class MessageController extends AbstractController {
 			response.getWriter().print(failureMessage);
 		}
 		return null;
-	}
-
-	/**
-	 * @param messageService the messageService to set
-	 */
-	public void setMessageService(MessageService messageService) {
-		this.messageService = messageService;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
 	}
 }

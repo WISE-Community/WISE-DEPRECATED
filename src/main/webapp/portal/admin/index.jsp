@@ -94,11 +94,6 @@
 										code='admin.index.runsByActivity' /></a>
 							</h5>
 
-							<!-- 
-						<h5><spring:message code='admin.index.manageProjectRuns'/>: <a href="run/manageallprojectruns.html?q=current"><spring:message code='current'/></a> | 
-												 <a href="run/manageallprojectruns.html?q=archived"><spring:message code='archived'/></a>
-												 </h5>
-												  -->
 							<h5>
 								<spring:message code='admin.index.findProjectRunsBy' />
 								<a href="run/findprojectrunsbyteacher.html"><spring:message

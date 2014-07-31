@@ -19,8 +19,8 @@ package org.wise.portal.dao.authentication.impl;
 
 import java.util.List;
 
-
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.authentication.UserDetailsDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.authentication.MutableUserDetails;
@@ -35,6 +35,7 @@ import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
  * @version $Id$
  * 
  */
+@Repository
 public class HibernateUserDetailsDao extends
         AbstractHibernateDao<MutableUserDetails> implements
         UserDetailsDao<MutableUserDetails> {
@@ -58,14 +59,14 @@ public class HibernateUserDetailsDao extends
 
 	@SuppressWarnings("unchecked")
 	public List<MutableUserDetails> retrieveAll(String userDetailsClassName) {
-		   return this
+		   return (List<MutableUserDetails>) this
                    .getHibernateTemplate()
                    .find("from " + userDetailsClassName);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<String> retrieveAll(String userDetailsClassName, String field) {
-		   return this
+		   return (List<String>) this
                    .getHibernateTemplate()
                    .find("select user_details."+ field +" from PersistentUserDetails as user_details, " + userDetailsClassName + 
                 		   " as user_details_child where user_details.id=user_details_child.id");

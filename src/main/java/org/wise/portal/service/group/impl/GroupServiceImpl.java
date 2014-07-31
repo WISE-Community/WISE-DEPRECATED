@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.acls.domain.BasePermission;
@@ -53,8 +53,10 @@ import org.wise.portal.service.group.GroupService;
  */
 public class GroupServiceImpl implements GroupService {
 
+	@Autowired
     protected GroupDao<Group> groupDao;
     
+    @Autowired
     private UserDao<User> userDao;
 
     private AclService<Group> aclService;
@@ -234,23 +236,5 @@ public class GroupServiceImpl implements GroupService {
     @Transactional(readOnly = true)
 	public Group retrieveById(Long groupId) throws ObjectNotFoundException {
 		return groupDao.getById(groupId);
-	}
-
-    /**
-	 * @param groupDao
-	 *            the groupDao to set
-	 */
-    @Required
-    public void setGroupDao(GroupDao<Group> groupDao) {
-        this.groupDao = groupDao;
-    }
-
-	/**
-	 * @param userDao
-	 *            the userDao to set
-	 */
-    @Required
-	public void setUserDao(UserDao<User> userDao) {
-		this.userDao = userDao;
 	}
 }

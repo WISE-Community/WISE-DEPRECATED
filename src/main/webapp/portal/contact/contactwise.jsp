@@ -7,7 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<title>Contact WISE General Issues</title>
+<title>Contact WISE</title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="homepagestylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
@@ -39,17 +39,20 @@
 					<h4><spring:message code="contact.contactwisegeneral.pleaseDescribeYourIssue"/></h4>
 					<div class="instructions"><spring:message code="contact.contactwisegeneral.ifEncounteringErrorPleaseIncludeText"/>&nbsp;<spring:message code="contact.contactwisegeneral.detailedDescription"/>&nbsp;<spring:message code="contact.contactwisegeneral.boxBelow"/></div>
 					<div class="instructions"><spring:message code="contact.contactwisegeneral.pleaseIndicateURLAddressForProblem"/></div>
+					<c:if test="${discourseSSOLoginURL != null}">
+						<div class="instructions"><a target=_blank href="${discourseSSOLoginURL}"><spring:message code="contact.contactwisegeneral.wiseTeacherCommunity"/></a></div>
+                 	</c:if>
 
 					<!-- Support for Spring errors object -->
 					<div class="errorMsgNoBg">
-						<spring:bind path="contactWISEGeneral.*">
+						<spring:bind path="contactWISEForm.*">
 						  <c:forEach var="error" items="${status.errorMessages}">
 						        <p><c:out value="${error}"/></p>
 						    </c:forEach>
 						</spring:bind>
 					</div>
 
-					<form:form commandName="contactWISEGeneral" method="post" action="contactwisegeneral.html" id="contactWiseForm" autocomplete='off'>  
+					<form:form commandName="contactWISEForm" method="post" action="contactwise.html" id="contactWiseForm" autocomplete='off'>  
 					  
 					  <dl>
 					  
@@ -91,8 +94,13 @@
 							</dd>
 						</sec:authorize>
 						   
-					    <dt><label for="issueTypeContact" id="emailContact"><span class="asterix">* </span><spring:message code="contact.contactwisegeneral.issueType"/></label> </dt>
-						<dd><form:select path="issuetype" id="issuetype"  tabindex="3">
+						<c:if test="${contactWISEForm.projectName != null}">
+					    	<dt><label for="projectName" id="projectName"><span class="asterix">* </span><spring:message code="contact.contactwiseproject.projectName"/>:</label></dt>
+							<dd><form:input path="projectName" id="projectName" size="50"  tabindex="3" disabled="true" /> </dd>
+						</c:if>
+						          
+					    <dt><label for="issueTypeContact" id="issueTypeContact"><span class="asterix">* </span><spring:message code="contact.contactwiseproject.issueType"/>:</label> </dt>
+						<dd><form:select path="issuetype" id="issuetype"  tabindex="4">
 						      <c:forEach items="${issuetypes}" var="issuetype">
 					            <form:option value="${issuetype.name}">
 					            	<spring:message code="contact.contactwisegeneral.${issuetype.name}" />

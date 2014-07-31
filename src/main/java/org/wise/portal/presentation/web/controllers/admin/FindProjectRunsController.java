@@ -26,51 +26,67 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.validation.BindException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.FindProjectParameters;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.validators.FindProjectParametersValidator;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.user.UserService;
 
 /**
+ * Controller to find project runs for admin users
  * @author patrick lawler
- *
  */
-public class FindProjectRunsController extends SimpleFormController{
+@Controller
+@RequestMapping("/admin/run/findprojectruns*")
+public class FindProjectRunsController {
 	
-	private final static String VIEW = "admin/run/manageallprojectruns";
+	private final static String VIEW = "admin/run/manageprojectruns";
 	
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private ProjectService projectService;
 	
+	@Autowired
 	private UserService userService;
 	
+	@Autowired
 	private Properties wiseProperties;
+	
+	@Autowired
+	private FindProjectParametersValidator findProjectParametersValidator;
+	
+	@RequestMapping(method=RequestMethod.POST)
+    protected ModelAndView onSubmit(@ModelAttribute("findProjectParameters")FindProjectParameters param, 
+    		BindingResult result) {
 
-    @Override
-    protected ModelAndView onSubmit(HttpServletRequest request,
-            HttpServletResponse response, Object command, BindException errors){
-
+		findProjectParametersValidator.validate(param, result);
+		if (result.hasErrors()) {
+			return null;
+		}
+		
 		boolean isRealTimeEnabled = false;
 		
 	    String isRealTimeEnabledStr = wiseProperties.getProperty("isRealTimeEnabled");
+	    
 	    if (isRealTimeEnabledStr != null) {
 	    	isRealTimeEnabled = Boolean.valueOf(isRealTimeEnabledStr);
 	    }
 
 		ModelAndView modelAndView = new ModelAndView();
-		FindProjectParameters param = (FindProjectParameters) command;
-	
 		List<Run> runList = new ArrayList<Run>();
 		
 		/* The validation should have ensured that only one of the parameter
@@ -94,7 +110,14 @@ public class FindProjectRunsController extends SimpleFormController{
 		
 		return modelAndView;
     }
-
+	
+    @RequestMapping(method=RequestMethod.GET) 
+    public ModelAndView initializeForm(ModelMap model) { 
+    	ModelAndView mav = new ModelAndView();
+    	mav.addObject("findProjectParameters", new FindProjectParameters());
+        return mav; 
+    } 
+	
     /**
      * Returns a <code>List<Run></code> list of any runs that are
      * associated with the given <code>Long</code> project id.
@@ -155,26 +178,4 @@ public class FindProjectRunsController extends SimpleFormController{
     	
     	return runList;
     }
-    
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
 }

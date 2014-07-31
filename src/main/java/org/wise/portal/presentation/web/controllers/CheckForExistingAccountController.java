@@ -6,17 +6,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.user.UserService;
 
-public class CheckForExistingAccountController extends AbstractController {
+@Controller
+@RequestMapping("/checkforexistingaccount.html")
+public class CheckForExistingAccountController{
 
-	protected UserService userService = null;
+	@Autowired
+	protected UserService userService;
 	
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping(method=RequestMethod.GET)
+	protected String handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//get the account type 'student' or 'teacher'
 		String accountType = request.getParameter("accountType");
 		
@@ -91,10 +96,6 @@ public class CheckForExistingAccountController extends AbstractController {
 			response.getWriter().write(existingUserNames.toString());
 		}
 		
-		return null;
+		return "checkforexistingaccount";
 	}
-
-	public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
 }

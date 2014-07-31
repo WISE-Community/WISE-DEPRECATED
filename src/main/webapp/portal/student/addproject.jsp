@@ -150,7 +150,6 @@
 			</ol>
 
 			<div class="dialogSection formSection" id="addProjectForm">
-
 				<!-- Support for Spring errors object -->
 				<div class="errorMsgNoBg">
 					<spring:bind path="addProjectParameters.*">

@@ -30,7 +30,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +51,6 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.DuplicateRunCodeException;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.project.ProjectService;
 
 /**
  * Services for WISE's Run Domain Object
@@ -65,33 +64,17 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 
 	private static final int MAX_RUNCODE_DIGIT = 1000;
 
+	@Autowired
 	private RunDao<Run> runDao;
 
+	@Autowired
 	private GroupDao<Group> groupDao;
 	
+	@Autowired
 	private UserDao<User> userDao;
 	
-	private ProjectService projectService;
-	
+	@Autowired
 	private Properties wiseProperties;
-
-	/**
-	 * @param groupDao
-	 *            the groupDao to set
-	 */
-	@Required
-	public void setGroupDao(GroupDao<Group> groupDao) {
-		this.groupDao = groupDao;
-	}
-
-	/**
-	 * @param runDao
-	 *            the runDao to set
-	 */
-	@Required
-	public void setRunDao(RunDao<Run> runDao) {
-		this.runDao = runDao;
-	}
 
 	/**
 	 * @see net.sf.sail.webapp.service.offering.OfferingService#getOfferingList()
@@ -179,7 +162,6 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	public Run createRun(RunParameters runParameters)
 			throws ObjectNotFoundException {
 		Project project = runParameters.getProject();
-		//Project projectCopy = projectService.copyProject(project);
 		Run run = new RunImpl();
 		run.setEndtime(null);
 		run.setStarttime(Calendar.getInstance().getTime());
@@ -210,18 +192,6 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		Boolean enableRealTime = runParameters.getEnableRealTime();
 		run.setRealTimeEnabled(enableRealTime);
 
-		/* if this is an LD project take snapshot of project for run and set versionId 
-		if(run.getProject().getProjectType()==ProjectType.LD){
-			String requester = run.getOwners().iterator().next().getUserDetails().getUsername();
-			String versionId = this.projectService.takeSnapshot(run.getProject(), requester, "For Run " + run.getName());
-			if(versionId==null || versionId.equals("failed")){
-				throw new ObjectNotFoundException("Snapshot of project failed when creating the run.", RunImpl.class);
-			} else{
-				run.setVersionId(versionId);
-			}
-		}
-		*/
-		
 		this.runDao.save(run);
 		this.aclService.addPermission(run, BasePermission.ADMINISTRATION);
 		return run;
@@ -424,13 +394,6 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 
 	/**
-	 * @param userDao the userDao to set
-	 */
-	public void setUserDao(UserDao<User> userDao) {
-		this.userDao = userDao;
-	}
-	
-	/**
 	 * @see org.wise.portal.service.offering.RunService#addAnnouncementToRun(java.lang.Long, org.wise.portal.domain.announcement.Announcement)
 	 */
 	@Transactional()
@@ -581,10 +544,6 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		}
 	}
 	
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
 	/**
 	 * @throws ObjectNotFoundException 
 	 * @see org.wise.portal.service.offering.RunService#setIdeaManagerEnabled(java.lang.Long, boolean)
@@ -628,10 +587,5 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		run.setPrivateNotes(privateNotes);
 		run.setPublicNotes(publicNotes);
 		this.runDao.save(run);
-	}
-
-
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
 	}
 }

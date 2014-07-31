@@ -22,15 +22,47 @@
  */
 package org.wise.portal.domain.general.contactwise.impl;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.general.contactwise.IssueType;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.user.UserService;
+
 
 /**
  * @author Hiroki Terashima
  *
  * @version $Id: ContactWISEGeneral.java 1651 2008-01-28 20:13:43Z geoff $
  */
-public class ContactWISEProject extends ContactWISEGeneral {
+public class ContactWISEForm implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
+	
+	protected IssueType issuetype;
+	
+	protected String name;
+	
+	protected String email;
+	
+	private Long teacherId;
+	
+	private String teacherName;
+
+	protected String summary;
+	
+	protected String description;
+	
+	private Boolean isStudent = false;
+	
+	protected String usersystem;
 	
 	private String projectName;
 	
@@ -38,8 +70,106 @@ public class ContactWISEProject extends ContactWISEGeneral {
 	
 	private Long runId;
 	
+	/**
+	 * @see org.wise.portal.domain.general.contactwise.ContactWISE#getDescription()
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @see org.wise.portal.domain.general.contactwise.ContactWISE#getEmail()
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @return the teacherId
+	 */
+	public Long getTeacherId() {
+		return teacherId;
+	}
+
+	/**
+	 * @param teacherId the teacherId to set
+	 */
+	public void setTeacherId(Long teacherId) {
+		this.teacherId = teacherId;
+	}
+
+	/**
+	 * @see org.wise.portal.domain.general.contactwise.ContactWISE#getIssueType()
+	 */
+	public IssueType getIssuetype() {
+		return issuetype;
+	}
+
+	/**
+	 * @see org.wise.portal.domain.general.contactwise.ContactWISE#getName()
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @see org.wise.portal.domain.general.contactwise.ContactWISE#getSummary()
+	 */
+	public String getSummary() {
+		return summary;
+	}
+
+	/**
+	 * @param issueType the issueType to set
+	 */
+	public void setIssuetype(IssueType issuetype) {
+		this.issuetype = issuetype;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @return the teacherName
+	 */
+	public String getTeacherName() {
+		return teacherName;
+	}
+
+	/**
+	 * @param teacherName the teacherName to set
+	 */
+	public void setTeacherName(String teacherName) {
+		this.teacherName = teacherName;
+	}
+
+	/**
+	 * @param summary the summary to set
+	 */
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 	public String getMailSubject() {
-		String subject = "[Contact WISE Project] " + issuetype + ": " + summary;
+		String subject = "[Contact WISE] " + issuetype + ": " + summary;
 		
 		return subject;
 	}
@@ -49,7 +179,7 @@ public class ContactWISEProject extends ContactWISEGeneral {
 		
 		if(getIsStudent()) {
 			//a student is submitting this contact form and we are cc'ing their teacher
-			message.append("Dear " + getTeacherName(getTeacherId()) + ",");
+			message.append("Dear " + getTeacherName() + ",");
 			message.append("\n\n");
 			message.append("One of your students has submitted a WISE trouble ticket.\n\n");
 		}
@@ -85,6 +215,35 @@ public class ContactWISEProject extends ContactWISEGeneral {
 		}
 		
 		return message.toString();
+	}
+	
+	public void setIsStudent(Boolean isStudent) {
+		this.isStudent = isStudent;
+	}
+
+	public void setIsStudent(User user) {
+		if(user != null && user.getUserDetails() instanceof StudentUserDetails) {
+			isStudent = true;
+		}
+	}
+	
+	public Boolean getIsStudent() {
+		return isStudent;
+	}
+	
+
+	/**
+	 * @return the usersystem
+	 */
+	public String getUsersystem() {
+		return usersystem;
+	}
+
+	/**
+	 * @param usersystem the usersystem to set
+	 */
+	public void setUsersystem(String usersystem) {
+		this.usersystem = usersystem;
 	}
 
 	/**

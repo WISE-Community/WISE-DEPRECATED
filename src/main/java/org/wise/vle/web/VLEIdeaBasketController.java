@@ -12,8 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
@@ -22,28 +25,21 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
-import org.wise.vle.utils.SecurityUtils;
 
-public class VLEIdeaBasketController extends AbstractController {
+@Controller
+@RequestMapping("/ideaBasket.html")
+public class VLEIdeaBasketController {
 
-	private static final long serialVersionUID = 1L;
-	
+	@Autowired
 	private VLEService vleService;
 	
+	@Autowired
 	private RunService runService;
 	
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		if (request.getMethod() == AbstractController.METHOD_GET) {
-			return doGet(request, response);
-		} else if (request.getMethod() == AbstractController.METHOD_POST) {
-			return doPost(request, response);
-		}
-		return null;
-	}
-	
-	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping(method=RequestMethod.POST)
+	public ModelAndView doPost(
+			HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
 
@@ -583,7 +579,10 @@ public class VLEIdeaBasketController extends AbstractController {
 		return null;
 	}
 
-	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping(method=RequestMethod.GET)
+	public ModelAndView doGet(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws ServletException, IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
 		
@@ -847,21 +846,5 @@ public class VLEIdeaBasketController extends AbstractController {
 		}
 		
 		return ideaBaskets;
-	}
-
-	public VLEService getVleService() {
-		return vleService;
-	}
-
-	public void setVleService(VLEService vleService) {
-		this.vleService = vleService;
-	}
-
-	public RunService getRunService() {
-		return runService;
-	}
-
-	public void setRunService(RunService runService) {
-		this.runService = runService;
 	}
 }

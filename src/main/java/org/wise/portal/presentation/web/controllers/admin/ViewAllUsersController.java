@@ -22,7 +22,6 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,15 +31,15 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.dao.user.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.admin.DailyAdminJob;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
-import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.user.UserService;
@@ -49,11 +48,18 @@ import org.wise.portal.service.user.UserService;
  * @author Sally Ahn
  * @version $Id: $
  */
-public class ViewAllUsersController extends AbstractController{
+@Controller
+@RequestMapping("/admin/account/manageusers.html")
+public class ViewAllUsersController{
 
+	@Autowired
 	private UserService userService;
 	
+	@Autowired
 	private UserDetailsService userDetailsService;
+	
+	@Autowired
+	private DailyAdminJob adminJob;
 
 	protected static final String VIEW_NAME = "admin/account/manageusers";
 
@@ -81,14 +87,12 @@ public class ViewAllUsersController extends AbstractController{
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest,
 	 *      javax.servlet.http.HttpServletResponse)
 	 */
+	@RequestMapping(method = RequestMethod.GET)
 	@SuppressWarnings("unchecked")
-	@Override
-	protected ModelAndView handleRequestInternal(
+	protected String handleRequestInternal(
 			HttpServletRequest servletRequest,
-			HttpServletResponse servletResponse) throws Exception {
-
-		ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
-		ControllerUtil.addUserToModelAndView(servletRequest, modelAndView);
+			HttpServletResponse servletResponse,
+			ModelMap modelMap) throws Exception {
 
 		String onlyShowLoggedInUser = servletRequest.getParameter("onlyShowLoggedInUser");
 		String onlyShowUsersWhoLoggedIn = servletRequest.getParameter("onlyShowUsersWhoLoggedIn");
@@ -122,11 +126,10 @@ public class ViewAllUsersController extends AbstractController{
 					}
 				}
 			}
-			modelAndView.addObject(LOGGED_IN_STUDENT_USERNAMES, loggedInStudent);
-			modelAndView.addObject(LOGGED_IN_TEACHER_USERNAMES, loggedInTeacher);
+			modelMap.put(LOGGED_IN_STUDENT_USERNAMES, loggedInStudent);
+			modelMap.put(LOGGED_IN_TEACHER_USERNAMES, loggedInTeacher);
 		} else if (onlyShowUsersWhoLoggedIn != null) {
-			DailyAdminJob adminJob = (DailyAdminJob) this.getApplicationContext().getBean("dailyAdminJob");
-			adminJob.setUserDao((UserDao<User>) this.getApplicationContext().getBean("userDao"));
+			
 			Date dateMin = null, dateMax = null;
 			Calendar now = Calendar.getInstance();
 			
@@ -162,40 +165,26 @@ public class ViewAllUsersController extends AbstractController{
 			adminJob.setToday(dateMax);
 			
 			List<User> studentsWhoLoggedInSince = adminJob.findUsersWhoLoggedInSinceYesterday("studentUserDetails");
-			modelAndView.addObject("studentsWhoLoggedInSince", studentsWhoLoggedInSince);
+			modelMap.put("studentsWhoLoggedInSince", studentsWhoLoggedInSince);
 
 			List<User> teachersWhoLoggedInSince = adminJob.findUsersWhoLoggedInSinceYesterday("teacherUserDetails");
-			modelAndView.addObject("teachersWhoLoggedInSince", teachersWhoLoggedInSince);
+			modelMap.put("teachersWhoLoggedInSince", teachersWhoLoggedInSince);
 		} else {
 			// result depends on passed-in userType parameter
 			String userType = servletRequest.getParameter(USER_TYPE);
 			if (userType == null) {
 				List<String> allUsernames = this.userService.retrieveAllUsernames();
-				modelAndView.addObject(USERNAMES, allUsernames);
+				modelMap.put(USERNAMES, allUsernames);
 			} else if (userType.equals(STUDENT)) {
 
 				List<String> usernames = this.userDetailsService.retrieveAllUsernames(StudentUserDetails.class.getName());
-				modelAndView.addObject(STUDENTS, usernames);
+				modelMap.put(STUDENTS, usernames);
 			} else if (userType.equals(TEACHER)) {
 				List<String> usernames = this.userDetailsService.retrieveAllUsernames(TeacherUserDetails.class.getName());
 
-				modelAndView.addObject(TEACHERS, usernames);				
+				modelMap.put(TEACHERS, usernames);				
 			}
 		}
-		return modelAndView;
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * @param userDetailsService the userDetailsService to set
-	 */
-	public void setUserDetailsService(UserDetailsService userDetailsService) {
-		this.userDetailsService = userDetailsService;
+		return VIEW_NAME;
 	}
 }

@@ -43,7 +43,6 @@ public class WISESessionListener implements HttpSessionListener {
 	/**
 	 * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
 	 */
-	@SuppressWarnings("unchecked")
 	public void sessionCreated(HttpSessionEvent event) {
 	}
 	

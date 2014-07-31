@@ -27,9 +27,12 @@ import java.util.Calendar;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.impl.AnnouncementParameters;
@@ -41,15 +44,22 @@ import org.wise.portal.service.announcement.AnnouncementService;
 import org.wise.portal.service.offering.RunService;
 
 /**
+ * Controller for handling Classroom announcements
+ * 
  * @author patrick lawler
  * @version $Id:$
  */
-public class ManageAnnouncementController extends AbstractController{
+@Controller
+@RequestMapping("/teacher/run/announcement/*.html")
+public class ManageAnnouncementController {
 
+	@Autowired
 	private RunService runService;
 
+	@Autowired
 	private AclService<Run> aclService;
 
+	@Autowired
 	private AnnouncementService announcementService;
 
 	protected final static String ANNOUNCEMENTID = "announcementId";
@@ -62,96 +72,73 @@ public class ManageAnnouncementController extends AbstractController{
 
 	protected final static String MANAGEANNOUNCEMENT_VIEW = "teacher/run/announcement/manageannouncement";
 
-
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping(method=RequestMethod.GET)
+	protected ModelAndView handleGET(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		User user = ControllerUtil.getSignedInUser();
 		Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID)));
 		String announcementIdStr = request.getParameter(ANNOUNCEMENTID);
-		
-		if (request.getMethod() == METHOD_GET) {
-			if(this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
-					this.aclService.hasPermission(run, BasePermission.WRITE, user)){
-				ModelAndView modelAndView = new ModelAndView();
-				modelAndView.addObject(RUN, run);
-				if (announcementIdStr != null) {
-					modelAndView.addObject(ANNOUNCEMENT, announcementService.retrieveById(Long.parseLong(announcementIdStr)));
-				}
-				return modelAndView;
-			} else {
-				//get the context path e.g. /wise
-				String contextPath = request.getContextPath();
-
-				return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
+		if(this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
+				this.aclService.hasPermission(run, BasePermission.WRITE, user)){
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.addObject(RUN, run);
+			if (announcementIdStr != null) {
+				modelAndView.addObject(ANNOUNCEMENT, announcementService.retrieveById(Long.parseLong(announcementIdStr)));
 			}
+			return modelAndView;
 		} else {
-			// it's a POST, either add/edit/remove announcement
-			String command = request.getParameter("command");
-			if ("remove".equals(command)) {
-				Announcement announcement = announcementService.retrieveById(Long.parseLong(announcementIdStr));
-				runService.removeAnnouncementFromRun(run.getId(), announcement);
-				announcementService.deleteAnnouncement(announcement.getId());
+			//get the context path e.g. /wise
+			String contextPath = request.getContextPath();
 
-				ModelAndView modelAndView = new ModelAndView(MANAGEANNOUNCEMENT_VIEW);
-				modelAndView.addObject(RUN, run);
-				return modelAndView;
-			} else if ("edit".equals(command)) {
-				Announcement announcement = announcementService.retrieveById(Long.parseLong(announcementIdStr));
-				AnnouncementParameters params = new AnnouncementParameters();
-				params.setId(announcement.getId());
-				params.setRunId(Long.parseLong(request.getParameter(RUNID)));
-				params.setTimestamp(announcement.getTimestamp());
-				params.setTitle(request.getParameter("title"));
-				params.setAnnouncement(request.getParameter("announcement"));
-
-		    	announcementService.updateAnnouncement(params.getId(), params);
-
-				ModelAndView modelAndView = new ModelAndView(MANAGEANNOUNCEMENT_VIEW);
-				modelAndView.addObject(RUN, run);
-				return modelAndView;
-			} else if ("create".equals(command)) {
-				AnnouncementParameters params = new AnnouncementParameters();
-				params.setRunId(Long.parseLong(request.getParameter(RUNID)));
-		    	params.setTimestamp(Calendar.getInstance().getTime());
-				params.setTitle(request.getParameter("title"));
-				params.setAnnouncement(request.getParameter("announcement"));
-
-		    	Announcement announcement = announcementService.createAnnouncement(params);
-		    	runService.addAnnouncementToRun(params.getRunId(), announcement);
-
-				ModelAndView modelAndView = new ModelAndView(MANAGEANNOUNCEMENT_VIEW);
-				modelAndView.addObject(RUN, run);
-				return modelAndView;
-			} else { 
-				return null;
-			}
+			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
 		}
-
 	}
 
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
+	@RequestMapping(method=RequestMethod.POST)
+	protected ModelAndView handlePOST(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID)));
+		String announcementIdStr = request.getParameter(ANNOUNCEMENTID);
 
-	/**
-	 * @param aclService the aclService to set
-	 */
-	public void setAclService(AclService<Run> aclService) {
-		this.aclService = aclService;
-	}	
+		// it's a POST, either add/edit/remove announcement
+		String command = request.getParameter("command");
+		if ("remove".equals(command)) {
+			Announcement announcement = announcementService.retrieveById(Long.parseLong(announcementIdStr));
+			runService.removeAnnouncementFromRun(run.getId(), announcement);
+			announcementService.deleteAnnouncement(announcement.getId());
 
-	/**
-	 * @param announcementService the announcementService to set
-	 */
-	public void setAnnouncementService(AnnouncementService announcementService) {
-		this.announcementService = announcementService;
+			ModelAndView modelAndView = new ModelAndView(MANAGEANNOUNCEMENT_VIEW);
+			modelAndView.addObject(RUN, run);
+			return modelAndView;
+		} else if ("edit".equals(command)) {
+			Announcement announcement = announcementService.retrieveById(Long.parseLong(announcementIdStr));
+			AnnouncementParameters params = new AnnouncementParameters();
+			params.setId(announcement.getId());
+			params.setRunId(Long.parseLong(request.getParameter(RUNID)));
+			params.setTimestamp(announcement.getTimestamp());
+			params.setTitle(request.getParameter("title"));
+			params.setAnnouncement(request.getParameter("announcement"));
+
+			announcementService.updateAnnouncement(params.getId(), params);
+
+			ModelAndView modelAndView = new ModelAndView(MANAGEANNOUNCEMENT_VIEW);
+			modelAndView.addObject(RUN, run);
+			return modelAndView;
+		} else if ("create".equals(command)) {
+			AnnouncementParameters params = new AnnouncementParameters();
+			params.setRunId(Long.parseLong(request.getParameter(RUNID)));
+			params.setTimestamp(Calendar.getInstance().getTime());
+			params.setTitle(request.getParameter("title"));
+			params.setAnnouncement(request.getParameter("announcement"));
+
+			Announcement announcement = announcementService.createAnnouncement(params);
+			runService.addAnnouncementToRun(params.getRunId(), announcement);
+
+			ModelAndView modelAndView = new ModelAndView(MANAGEANNOUNCEMENT_VIEW);
+			modelAndView.addObject(RUN, run);
+			return modelAndView;
+		} else { 
+			return null;
+		}
 	}
 }

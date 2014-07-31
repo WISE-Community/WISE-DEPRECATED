@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.servlet.ModelAndView;
@@ -58,11 +59,11 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.run.RunUtil;
-import org.wise.portal.presentation.web.filters.TelsAuthenticationProcessingFilter;
+import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller to bridge GET/POST access to the vlewrapper webapp. Validates
@@ -74,9 +75,13 @@ import org.wise.portal.service.workgroup.WISEWorkgroupService;
  */
 public class BridgeController extends AbstractController {
 
-	private WISEWorkgroupService workgroupService;
+	@Autowired
+	private WorkgroupService workgroupService;
+	
 	private RunService runService;
 	private Properties wiseProperties;
+	
+	@Autowired
 	private StudentAttendanceService studentAttendanceService;
 
 	/**
@@ -102,10 +107,10 @@ public class BridgeController extends AbstractController {
 			if (request.getRequestURI().equals(contextPath + "/bridge/postdata.html")) {
 				User signedInUser = ControllerUtil.getSignedInUser();
 				if (signedInUser.getUserDetails() instanceof TeacherUserDetails) {
-					response.sendRedirect(contextPath + TelsAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+					response.sendRedirect(contextPath + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 					return null;
 				} else if (signedInUser.getUserDetails() instanceof StudentUserDetails) {
-					response.sendRedirect(contextPath + TelsAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
+					response.sendRedirect(contextPath + WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
 					return null;
 				} else {
 					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this page");
@@ -1093,20 +1098,6 @@ public class BridgeController extends AbstractController {
 		String projectMetaDataJSONString = metadata.toJSONString();
 		
 		request.setAttribute("projectMetaData", projectMetaDataJSONString);
-	}
-	
-	/**
-	 * @return the workgroupService
-	 */
-	public WISEWorkgroupService getWorkgroupService() {
-		return workgroupService;
-	}
-
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	public void setWorkgroupService(WISEWorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
 	}
 	
 	public RunService getRunService() {

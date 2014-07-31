@@ -2,41 +2,58 @@ package org.wise.portal.presentation.web.controllers.forgotaccount;
 
 import java.util.Date;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.PasswordReminderParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.mail.MailService;
 import org.wise.portal.service.user.UserService;
 
-public class ResetPasswordController extends SimpleFormController {
+@Controller
+@RequestMapping("/forgotaccount/resetpassword.html")
+public class ResetPasswordController {
 
-	protected UserService userService = null;
+	@Autowired
+	protected UserService userService;
+	
+	@Autowired
 	private Properties wiseProperties;
-	protected MailService mailService = null;
+	
+	@Autowired
+	protected MailService mailService;
+	
+	@Autowired
 	private MessageSource messageSource;
+	
+	//the path to this form view
+	protected String formView = "/forgotaccount/resetpassword";
 	
 	/**
 	 * Performs processing whenever the resetpassword.html form is shown.
 	 * This handles displaying the form when the user is requested to
 	 * enter a new password and also handles displaying the form when
 	 * the user successfully changes their password.
-	 * @see org.springframework.web.servlet.mvc.SimpleFormController#showForm(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, org.springframework.validation.BindException)
+	 * @param passwordReminderParameters the object that contains values from the form
+	 * @param bindingResult the object used for validation in which errors will be stored
+	 * @param modelMap the model object that contains values for the page to use when rendering the view
+	 * @param request the http request
+	 * @return the path of the view to display
 	 */
-	@Override
-	protected ModelAndView showForm(HttpServletRequest request, HttpServletResponse response, BindException errors) throws Exception {
-		ModelAndView modelAndView = super.showForm(request, response, errors);
-		
+    @RequestMapping(method=RequestMethod.GET)
+    public String initializeForm(@ModelAttribute("passwordReminderParameters") PasswordReminderParameters passwordReminderParameters, BindingResult bindingResult, ModelMap modelMap, HttpServletRequest request) throws Exception {
 		//get the reset password key
 		String resetPasswordKey = request.getParameter("k");
 		
@@ -81,7 +98,7 @@ public class ResetPasswordController extends SimpleFormController {
 					 */
 					if(nowMs - resetPasswordRequestTimeMs > 1800000) {
 						//reset password link has expired 
-						errors.reject("error.password-reset-timeout");
+						bindingResult.reject("error.password-reset-timeout");
 						
 						//variable to tell the jsp page to display the link to the forgot password page
 						displayForgotPasswordSelectAccountTypeLink = true;
@@ -91,37 +108,37 @@ public class ResetPasswordController extends SimpleFormController {
 					 * we could not find a user with the given reset password 
 					 * key so this password reset url is invalid
 					 */
-					errors.reject("error.invalid-password-reset-url");
+					bindingResult.reject("error.invalid-password-reset-url");
 					
 					//variable to tell the jsp page to display the link to the forgot password page
 					displayForgotPasswordSelectAccountTypeLink = true;
 				}
 			} else {
 				//there is no reset password key provided as a GET param so this password reset url is invalid
-				errors.reject("error.invalid-password-reset-url");
+				bindingResult.reject("error.invalid-password-reset-url");
 				
 				//variable to tell the jsp page to display the link to the forgot password page
 				displayForgotPasswordSelectAccountTypeLink = true;
 			}
 		}
 		
-		Map model = modelAndView.getModel();
-		model.put("displayForgotPasswordSelectAccountTypeLink", displayForgotPasswordSelectAccountTypeLink);
-		model.put("displayLoginLink", displayLoginLink);
-		
-		return modelAndView;
+		modelMap.addAttribute("displayForgotPasswordSelectAccountTypeLink", displayForgotPasswordSelectAccountTypeLink);
+		modelMap.addAttribute("displayLoginLink", displayLoginLink);
+
+		return formView;
 	}
 	
 	/**
 	 * Called when the user chooses a new password and submits the form.
-	 * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.validation.BindException)
+	 * @param passwordReminderParameters the object that contains values from the form
+	 * @param bindingResult the object used for validation in which errors will be stored
+	 * @param modelMap the model object that contains values for the page to use when rendering the view
+	 * @param request the http request
+	 * @return the path of the view to display
 	 */
-	@Override
-	protected ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
-			throws Exception {
-		//get the object that can be referenced in the jsp
-		PasswordReminderParameters passwordReminderParameters = (PasswordReminderParameters) command;
+	@RequestMapping(method=RequestMethod.POST)
+	protected String onSubmit(@ModelAttribute("passwordReminderParameters") PasswordReminderParameters passwordReminderParameters, BindingResult bindingResult, Model model, HttpServletRequest request) throws Exception {
+		String view = formView;
 		
 		//get the password values the user entered
 		String newPassword = passwordReminderParameters.getNewPassword();
@@ -133,16 +150,22 @@ public class ResetPasswordController extends SimpleFormController {
 		
 		if (!verifyPassword.equals(newPassword)) {
 			//passwords are not the same
-			errors.reject("error.verify-newpassword");
+			bindingResult.reject("error.verify-newpassword");
 			
-			//show the form again, this time displaying the error message
-			return showForm(request, response, errors);
+			//do not display the "Forgot Username or Password?" link
+			model.addAttribute("displayForgotPasswordSelectAccountTypeLink", false);
+			
+			//do not display the sign in button
+			model.addAttribute("displayLoginLink", false);
 		} else if(verifyPassword.equals("")) {
 			//password is empty string
-			errors.reject("error.verify-password-empty");
+			bindingResult.reject("error.verify-password-empty");
 			
-			//show the form again, this time displaying the error message
-			return showForm(request, response, errors);
+			//do not display the "Forgot Username or Password?" link
+			model.addAttribute("displayForgotPasswordSelectAccountTypeLink", false);
+			
+			//do not display the sign in button
+			model.addAttribute("displayLoginLink", false);
 		} else {
 			//get the reset password key
 			String resetPasswordKey = request.getParameter("k");
@@ -181,45 +204,18 @@ public class ResetPasswordController extends SimpleFormController {
 			mailService.postMail(recipients, subject, body, userEmail);
 			
 			//passwords are the same so we will change their password
-			errors.reject("changePassword_success");
+			bindingResult.reject("changePassword_success");
 
 			//tell the jsp to display the success message
 			request.setAttribute("passwordResetSuccess", true);
 			
-			//show the form again, this time with the success message
-			return showForm(request, response, errors);
+			//do not display the "Forgot Username or Password?" link
+			model.addAttribute("displayForgotPasswordSelectAccountTypeLink", false);
+			
+			//display the sign in button
+			model.addAttribute("displayLoginLink", true);
 		}
-	}
-	
-	/**
-	 * Sets the userDetailsService object.
-	 * 
-	 * @param userDetailsService
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-	
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	/**
-	 * helper for sending emails
-	 * 
-	 * @param mailService
-	 */
-	public void setMailService(MailService mailService) {
-		this.mailService = mailService;
-	}
-	
-	/**
-	 * @param messageSource the messageSource to set
-	 */
-	public void setMessageSource(MessageSource messageSource) {
-		this.messageSource = messageSource;
+		
+		return view;
 	}
 }

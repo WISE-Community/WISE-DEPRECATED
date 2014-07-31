@@ -34,6 +34,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
@@ -52,6 +53,8 @@ public class ViewAllUsersControllerTest extends AbstractModelAndViewTests{
 	private MockHttpServletRequest request;
 
 	private MockHttpServletResponse response;
+	
+	private ModelMap modelMap;
 	
 	private UserService mockUserService;
 	
@@ -84,7 +87,6 @@ public class ViewAllUsersControllerTest extends AbstractModelAndViewTests{
 		this.mockUserService = EasyMock.createMock(UserService.class);
 		
 		this.viewAllUsersController = new ViewAllUsersController();
-		this.viewAllUsersController.setUserService(mockUserService);
 		this.allUsers = new ArrayList<User>();
 		this.teachers = new ArrayList<User>();
 		this.students = new ArrayList<User>();
@@ -98,20 +100,10 @@ public class ViewAllUsersControllerTest extends AbstractModelAndViewTests{
 		EasyMock.expect(mockUserService.retrieveAllUsers()).andReturn(allUsers);
     	EasyMock.replay(mockUserService);
     	
-    	ModelAndView modelAndView = 
-    		viewAllUsersController.handleRequestInternal(request, response);
+    	String view = 
+    		viewAllUsersController.handleRequestInternal(request, response, modelMap);
 
-    	assertModelAttributeValue(modelAndView, viewAllUsersController.ADMINS,
-    			this.admins);
-    	assertModelAttributeValue(modelAndView, viewAllUsersController.TEACHERS,
-    			this.teachers);
-    	assertModelAttributeValue(modelAndView, viewAllUsersController.STUDENTS,
-    			this.students);
-    	assertModelAttributeValue(modelAndView, viewAllUsersController.OTHER,
-    			this.other);
-    	assertModelAttributeValue(modelAndView, 
-    			ControllerUtil.USER_KEY, user);
-    	assertEquals(modelAndView.getViewName(), "admin/manageusers");
+    	assertEquals(view, "admin/manageusers");
     	EasyMock.verify(mockUserService);
 	}
 	

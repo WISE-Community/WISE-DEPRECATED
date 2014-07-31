@@ -24,11 +24,10 @@ package org.wise.portal.presentation.validators.general.contactwise;
 
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.wise.portal.domain.general.contactwise.ContactWISE;
 import org.wise.portal.domain.general.contactwise.IssueType;
 import org.wise.portal.domain.general.contactwise.OperatingSystem;
 import org.wise.portal.domain.general.contactwise.WebBrowser;
-import org.wise.portal.domain.general.contactwise.impl.ContactWISEGeneral;
+import org.wise.portal.domain.general.contactwise.impl.ContactWISEForm;
 import org.wise.portal.presentation.validators.general.contactwise.ContactWISEValidator;
 
 import junit.framework.TestCase;
@@ -56,7 +55,7 @@ public class ContactWISEValidatorTest extends TestCase {
 
 	private static final String SUMMARY = "I type in my username and password but it says my username does not exist.";
 
-	private ContactWISE params;
+	private ContactWISEForm params;
 	
 	private ContactWISEValidator validator;
 	
@@ -65,7 +64,7 @@ public class ContactWISEValidatorTest extends TestCase {
 	@Override
 	protected void setUp() {
 		validator = new ContactWISEValidator();
-		params = new ContactWISEGeneral();
+		params = new ContactWISEForm();
 		errors = new BeanPropertyBindingResult(params, "");
 		
 		params.setName(NAME);

@@ -24,12 +24,14 @@ package org.wise.portal.presentation.web.controllers.admin;
 
 import java.util.Calendar;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.newsitem.NewsItem;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.newsitem.NewsItemService;
@@ -39,10 +41,16 @@ import org.wise.portal.service.newsitem.NewsItemService;
  * @author Patrick Lawler
  * @version $Id:$
  */
-public class NewsItemController extends AbstractController {
+@Controller
+@RequestMapping(value={
+		"/admin/news/managenewsitems.html",
+		"/admin/news/addnewsitems.html",
+		"/admin/news/editnewsitem.html"})
+public class NewsItemController {
 
+	@Autowired
 	private NewsItemService newsItemService;
-	
+
 	protected final static String ALL_NEWS = "all_news";
 
 	protected final static String ACTION = "action";
@@ -55,59 +63,50 @@ public class NewsItemController extends AbstractController {
 
 	protected final static String TITLE = "title";
 
-	/**
-	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping(method = RequestMethod.GET)
+	protected String handleGET(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			ModelMap modelMap) throws Exception {
+		String action = request.getParameter(ACTION);
+		String newsItemId = request.getParameter(NEWS_ITEM_ID);
+
+		if ("edit".equals(action)) {
+			modelMap.put(NEWS_ITEM, newsItemService.retrieveById(Long.parseLong(newsItemId)));
+			return "admin/news/editnewsitem";
+		} else if ("add".equals(action)) {
+			// do nothing, just return add news item page
+			return "admin/news/addnewsitems";
+		} else {
+			// return list all all news to managenewsitems page
+			modelMap.put(ALL_NEWS, newsItemService.retrieveAllNewsItem());
+			return "admin/news/managenewsitems";
+		}
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	protected String handlePOST(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		String action = request.getParameter(ACTION);
 		String newsItemId = request.getParameter(NEWS_ITEM_ID);
 
-		if (request.getMethod().equals(METHOD_GET)) {
-			ModelAndView modelAndView = new ModelAndView();
-			// handle GET requests
-			if ("edit".equals(action)) {
-		        NewsItem newsItem = newsItemService.retrieveById(Long.parseLong(newsItemId));
-				modelAndView.addObject(NEWS_ITEM, newsItem);
-			} else if ("add".equals(action)) {
-				// do nothing, just return add news item page
-			} else {
-				modelAndView.addObject(ALL_NEWS, newsItemService.retrieveAllNewsItem());
-			}
-			return modelAndView;
-		} else {
-			// handle POST requests
-			if ("remove".equals(action)) {
-		    	newsItemService.deleteNewsItem(Long.parseLong(newsItemId));
-		    	response.getWriter().print("success");
-			} else if ("edit".equals(action)) {
-		        NewsItem newsItem = newsItemService.retrieveById(Long.parseLong(newsItemId));
-		        String title = request.getParameter(TITLE);
-		        String news = request.getParameter(NEWS);
-
-				newsItemService.updateNewsItem(newsItem.getId(), newsItem.getDate(), newsItem.getOwner(), title, news);
-				ModelAndView modelAndView = new ModelAndView("admin/news/success");
-				return modelAndView;
-			} else if ("add".equals(action)) {
-		        String title = request.getParameter(TITLE);
-		        String news = request.getParameter(NEWS);
-				newsItemService.createNewsItem(Calendar.getInstance().getTime(), ControllerUtil.getSignedInUser(), title, news);
-				
-				ModelAndView modelAndView = new ModelAndView("admin/news/success");
-				return modelAndView;
-			}
+		if ("remove".equals(action)) {
+			newsItemService.deleteNewsItem(Long.parseLong(newsItemId));
+			response.getWriter().print("success");
+			return null;
+		} else if ("edit".equals(action)) {
+			NewsItem newsItem = newsItemService.retrieveById(Long.parseLong(newsItemId));
+			String title = request.getParameter(TITLE);
+			String news = request.getParameter(NEWS);
+			newsItemService.updateNewsItem(newsItem.getId(), newsItem.getDate(), newsItem.getOwner(), title, news);
+			return "admin/news/success";
+		} else if ("add".equals(action)) {
+			String title = request.getParameter(TITLE);
+			String news = request.getParameter(NEWS);
+			newsItemService.createNewsItem(Calendar.getInstance().getTime(), ControllerUtil.getSignedInUser(), title, news);
+			return "admin/news/success";
 		}
-		
-		
 		return null;
 	}
-
-	/**
-	 * @param newsItemService the newsItemService to set
-	 */
-	public void setNewsItemService(NewsItemService newsItemService) {
-		this.newsItemService = newsItemService;
-	}
-
 }

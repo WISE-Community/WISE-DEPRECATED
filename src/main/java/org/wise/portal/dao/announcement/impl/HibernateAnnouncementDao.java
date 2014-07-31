@@ -23,6 +23,7 @@
 package org.wise.portal.dao.announcement.impl;
 
 
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.announcement.AnnouncementDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.announcement.Announcement;
@@ -32,6 +33,7 @@ import org.wise.portal.domain.announcement.impl.AnnouncementImpl;
  * @author patrick lawler
  * @version $Id:$
  */
+@Repository
 public class HibernateAnnouncementDao extends AbstractHibernateDao<Announcement> implements AnnouncementDao<Announcement>{
 
 	private final static String FIND_ALL_QUERY = "from AnnouncementImpl";

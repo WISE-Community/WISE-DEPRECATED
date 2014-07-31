@@ -31,6 +31,8 @@ import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.offering.RunDao;
@@ -45,6 +47,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
  * @author Hiroki Terashima
  * @version $Id$
  */
+@Repository
 public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 		RunDao<Run> {
 
@@ -88,7 +91,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	 */
 	@SuppressWarnings("unchecked")
 	public Set<Workgroup> getWorkgroupsForOffering(Long offeringId) {
-		List<Workgroup> workgroupList =  this.getHibernateTemplate()
+		List<Workgroup> workgroupList =  (List<Workgroup>) this.getHibernateTemplate()
 	    .findByNamedParam(
 	    		"from WISEWorkgroupImpl as workgroup where workgroup.offering.id = :offeringId",
 	    		"offeringId", offeringId);
@@ -105,7 +108,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	public Set<Workgroup> getWorkgroupsForOfferingAndPeriod(Long offeringId, Long periodId){
 		String q = "select workgroup from WISEWorkgroupImpl workgroup where workgroup.offering.id = '" + offeringId + "' and " +
 		"workgroup.period.id = '" + periodId + "' and workgroup.teacherWorkgroup = false";
-		List<Workgroup> workgroupList = this.getHibernateTemplate().find(q);
+		List<Workgroup> workgroupList = (List<Workgroup>) this.getHibernateTemplate().find(q);
 		return new TreeSet<Workgroup>(workgroupList);
 	}
 
@@ -114,7 +117,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	 */
 	@SuppressWarnings("unchecked")
     public List<Run> retrieveByField(String field, String type, Object term){
-    	return this.getHibernateTemplate().findByNamedParam(
+    	return (List<Run>) this.getHibernateTemplate().findByNamedParam(
     			"select run from RunImpl run where run." + field + " " + type + " :term", "term", term);
     }
     
@@ -125,7 +128,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	public List<Run> getRunListByUserInPeriod(User user){
     	String q = "select run from RunImpl run inner join run.periods period inner " +
     			"join period.members user where user.id='" + user.getId() + "' order by run.id desc ";
-    	return this.getHibernateTemplate().find(q);
+    	return (List<Run>) this.getHibernateTemplate().find(q);
     }
     
     /**
@@ -134,19 +137,19 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
     @SuppressWarnings("unchecked")
 	public List<Run> getRunsOfProject(Long id){
     	String q = "select run from RunImpl run where run.project.id=" + id;
-    	return this.getHibernateTemplate().find(q);
+    	return (List<Run>) this.getHibernateTemplate().find(q);
     }
 
 	@SuppressWarnings("unchecked")
 	public List<Run> getRunListByOwner(User owner) {
     	String q = "select run from RunImpl run inner join run.owners owner where owner.id='" + owner.getId() + "' order by run.id desc";
-    	return this.getHibernateTemplate().find(q);
+    	return (List<Run>) this.getHibernateTemplate().find(q);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Run> getRunListBySharedOwner(User owner) {
     	String q = "select run from RunImpl run inner join run.sharedowners owner where owner.id='" + owner.getId() + "' order by run.id desc";
-    	return this.getHibernateTemplate().find(q);
+    	return (List<Run>) this.getHibernateTemplate().find(q);
 	}
 
 	/**
@@ -167,7 +170,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 			value = String.valueOf(Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH));
 		}
 		
-		return this.getHibernateTemplate().find("select run from RunImpl run where datediff(curdate(), run.lastRun)" + oper + value);
+		return (List<Run>) this.getHibernateTemplate().find("select run from RunImpl run where datediff(curdate(), run.lastRun)" + oper + value);
 	}
 	
 	/**
@@ -176,13 +179,13 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	@SuppressWarnings("unchecked")
 	public List<Run> getRunsByActivity(){
 		String q = "select run from RunImpl run where run.timesRun <> null order by run.timesRun desc";
-		return this.getHibernateTemplate().find(q);
+		return (List<Run>) this.getHibernateTemplate().find(q);
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public Run getById(Long runId, boolean doEagerFetch) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
         Run result = null;
         if (doEagerFetch) {
@@ -199,7 +202,6 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
         			.add( Restrictions.eq("id", runId))
         			.uniqueResult();        	
         }
-        session.getTransaction().commit();
         return result;
      }
 }

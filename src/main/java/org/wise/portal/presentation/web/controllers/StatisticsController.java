@@ -8,8 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.portal.PortalStatistics;
 import org.wise.portal.service.portal.PortalStatisticsService;
 import org.wise.portal.service.vle.VLEService;
@@ -21,18 +24,23 @@ import org.wise.vle.domain.statistics.VLEStatistics;
  * @author geoffreykwan
  * @version $Id:$
  */
-public class StatisticsController extends AbstractController {
+@Controller
+@RequestMapping("/pages/statistics.html")
+public class StatisticsController {
 
+	@Autowired
 	private Properties wiseProperties;
 	
+	@Autowired
 	private PortalStatisticsService portalStatisticsService;
 
+	@Autowired
 	private VLEService vleService;
 
 	/**
 	 * Handle the request to the statistics page
 	 */
-	@Override
+	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String typeParam = request.getParameter("type");
 
@@ -94,30 +102,5 @@ public class StatisticsController extends AbstractController {
 
 			return modelAndView;
 		}
-	}
-
-	/**
-	 * Set the wise properties
-	 * @param wiseProperties
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-	
-	/**
-	 * Set PortalStatisticsService
-	 * @param portalStatisticsService
-	 */
-	public void setPortalStatisticsService(
-			PortalStatisticsService portalStatisticsService) {
-		this.portalStatisticsService = portalStatisticsService;
-	}
-	
-	/**
-	 * Set VLEService
-	 * @param vleService
-	 */
-	public void setVleService(VLEService vleService) {
-		this.vleService = vleService;
 	}
 }

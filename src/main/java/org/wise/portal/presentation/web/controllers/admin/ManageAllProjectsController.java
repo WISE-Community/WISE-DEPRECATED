@@ -28,8 +28,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
@@ -40,72 +43,67 @@ import org.wise.portal.service.project.ProjectService;
  * @author Sally Ahn
  * @version $Id: $
  */
-public class ManageAllProjectsController extends AbstractController {
-	
+@Controller
+@RequestMapping("/admin/project/manageallprojects.html")
+public class ManageAllProjectsController {
+
+	@Autowired
+	private ProjectService projectService;
+
 	private static final String VIEW_NAME = "admin/project/manageallprojects";
 
 	private static final String INTERNAL_PROJECT_LIST_PARAM_NAME = "internal_project_list";
 
-	private static final String EXTERNAL_PROJECT_LIST_PARAM_NAME = "external_project_list";
-
-	private ProjectService projectService;
-
-	/**
-	 * @override @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+	@RequestMapping(method=RequestMethod.GET)
+	protected ModelAndView handleGET(
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		if (request.getMethod().equals("GET")) {
-			// separate calls to project services to get internal and external projects
-			List<Project> internalProjectList = new ArrayList<Project>();
-			// check if projectId was passed in
-			String projectIdStr = request.getParameter("projectId");
-			if (projectIdStr != null) {
-				internalProjectList.add(projectService.getById(Long.valueOf(projectIdStr)));
-			} else {
-				internalProjectList.addAll(projectService.getAdminProjectList());
-			}
-
-			ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
-			modelAndView.addObject(INTERNAL_PROJECT_LIST_PARAM_NAME, internalProjectList);
-			return modelAndView;
+		// separate calls to project services to get internal and external projects
+		List<Project> internalProjectList = new ArrayList<Project>();
+		// check if projectId was passed in
+		String projectIdStr = request.getParameter("projectId");
+		if (projectIdStr != null) {
+			internalProjectList.add(projectService.getById(Long.valueOf(projectIdStr)));
 		} else {
-			// posting changes to project
-			ModelAndView mav = new ModelAndView();
-			try {
-				String projectIdStr = request.getParameter("projectId");
-				Long projectId = new Long(projectIdStr);
-				Project project = projectService.getById(projectId);
-				String attr = request.getParameter("attr");
-				if (attr.equals("isCurrent")) {
-					project.setCurrent(Boolean.valueOf(request.getParameter("val")));
-				} else if (attr.equals("familyTag")) {
-					project.setFamilytag(FamilyTag.valueOf(request.getParameter("val")));
-				} else if (attr.equals("maxTotalAssetsSize")) {
-					String maxTotalAssetsSizeStr = request.getParameter("val");
-					Long maxTotalAssetsSize = Long.parseLong(maxTotalAssetsSizeStr);
-					project.setMaxTotalAssetsSize(maxTotalAssetsSize);
-				}
-				User user = ControllerUtil.getSignedInUser();
-				if (user.isAdmin()) {
-					projectService.updateProject(project, user);
-					mav.addObject("msg", "success");
-				} else {
-					mav.addObject("msg", "error: permission denied");
-				}
-				return mav;
-			} catch (Exception e) {
-				mav.addObject("msg", "error");
-				return mav;
-			}
+			internalProjectList.addAll(projectService.getAdminProjectList());
 		}
+
+		ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
+		modelAndView.addObject(INTERNAL_PROJECT_LIST_PARAM_NAME, internalProjectList);
+		return modelAndView;
 	}
-	
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
+
+	@RequestMapping(method=RequestMethod.POST)
+	protected ModelAndView handleRequestInternal(
+			HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// posting changes to project
+		ModelAndView mav = new ModelAndView();
+		try {
+			String projectIdStr = request.getParameter("projectId");
+			Long projectId = new Long(projectIdStr);
+			Project project = projectService.getById(projectId);
+			String attr = request.getParameter("attr");
+			if (attr.equals("isCurrent")) {
+				project.setCurrent(Boolean.valueOf(request.getParameter("val")));
+			} else if (attr.equals("familyTag")) {
+				project.setFamilytag(FamilyTag.valueOf(request.getParameter("val")));
+			} else if (attr.equals("maxTotalAssetsSize")) {
+				String maxTotalAssetsSizeStr = request.getParameter("val");
+				Long maxTotalAssetsSize = Long.parseLong(maxTotalAssetsSizeStr);
+				project.setMaxTotalAssetsSize(maxTotalAssetsSize);
+			}
+			User user = ControllerUtil.getSignedInUser();
+			if (user.isAdmin()) {
+				projectService.updateProject(project, user);
+				mav.addObject("msg", "success");
+			} else {
+				mav.addObject("msg", "error: permission denied");
+			}
+			return mav;
+		} catch (Exception e) {
+			mav.addObject("msg", "error");
+			return mav;
+		}
 	}
 }

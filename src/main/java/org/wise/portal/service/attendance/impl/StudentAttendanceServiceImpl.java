@@ -3,14 +3,18 @@ package org.wise.portal.service.attendance.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.attendance.StudentAttendanceDao;
 import org.wise.portal.domain.attendance.StudentAttendance;
 import org.wise.portal.domain.attendance.impl.StudentAttendanceImpl;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 
+@Service
 public class StudentAttendanceServiceImpl implements StudentAttendanceService {
 	
+	@Autowired
 	private StudentAttendanceDao<StudentAttendance> studentAttendanceDao;
 
 	/**

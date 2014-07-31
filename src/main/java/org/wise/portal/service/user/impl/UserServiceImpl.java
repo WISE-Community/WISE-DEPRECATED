@@ -17,15 +17,16 @@
  */
 package org.wise.portal.service.user.impl;
 
+import java.util.Calendar;
 import java.util.List;
 
-
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.authentication.GrantedAuthorityDao;
@@ -48,64 +49,23 @@ import org.wise.portal.service.user.UserService;
  * 
  * @version $Id$
  */
+@Service
 public class UserServiceImpl implements UserService {
 
+	@Autowired
 	private UserDetailsDao<MutableUserDetails> userDetailsDao;
 
+	@Autowired
 	private GrantedAuthorityDao<MutableGrantedAuthority> grantedAuthorityDao;
 
+	@Autowired
 	private UserDao<User> userDao;
 
+	@Autowired
 	protected PasswordEncoder passwordEncoder;
 
+	@Autowired
 	private SaltSource saltSource;
-
-	/**
-	 * @param userDao
-	 *            the userDao to set
-	 */
-	@Required
-	public void setUserDao(final UserDao<User> userDao) {
-		this.userDao = userDao;
-	}
-
-	/**
-	 * @param grantedAuthorityDao
-	 *            the grantedAuthorityDao to set
-	 */
-	@Required
-	public void setGrantedAuthorityDao(
-			final GrantedAuthorityDao<MutableGrantedAuthority> grantedAuthorityDao) {
-		this.grantedAuthorityDao = grantedAuthorityDao;
-	}
-
-	/**
-	 * @param userDetailsDao
-	 *            the userDetailsDao to set
-	 */
-	@Required
-	public void setUserDetailsDao(
-			final UserDetailsDao<MutableUserDetails> userDetailsDao) {
-		this.userDetailsDao = userDetailsDao;
-	}
-
-	/**
-	 * @param passwordEncoder
-	 *            the passwordEncoder to set
-	 */
-	@Required
-	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-		this.passwordEncoder = passwordEncoder;
-	}
-
-	/**
-	 * @param saltSource
-	 *            the saltSource to set
-	 */
-	@Required
-	public void setSaltSource(SaltSource saltSource) {
-		this.saltSource = saltSource;
-	}
 
 	/**
 	 * @see net.sf.sail.webapp.service.UserService#retrieveUser(org.acegisecurity.userdetails.UserDetails)
@@ -163,6 +123,9 @@ public class UserServiceImpl implements UserService {
 		String coreUsername = details.getCoreUsername();
 
 		details.setNumberOfLogins(0);
+		
+		//set the sign up date
+		details.setSignupdate(Calendar.getInstance().getTime());
 		
 		//the username suffix
 		String currentUsernameSuffix = null;
@@ -257,7 +220,7 @@ public class UserServiceImpl implements UserService {
 		return this.userDao.getById(userId);
 	}
 
-	@Transactional()
+	@Transactional
 	public void updateUser(User user) {
 		this.userDao.save(user);
 	}
@@ -287,7 +250,6 @@ public class UserServiceImpl implements UserService {
      * @param classVar 'studentUserDetails' or 'teacherUserDetails'
      * @return a list of Users that have matching values for the given fields
      */
-	@Transactional()
 	public List<User> retrieveByFields(String[] fields, String[] types, String classVar){
 		return this.userDao.retrieveByFields(fields, types, classVar);
 	}
@@ -296,7 +258,6 @@ public class UserServiceImpl implements UserService {
 	 * @see net.sf.sail.webapp.service.UserService#retrieveUserByUsername(java.lang.String)
 	 */
 	@Override
-	@Transactional(readOnly = true)
 	public User retrieveUserByUsername(String username) {
 		if (username == null || username.isEmpty()) {
 			return null;

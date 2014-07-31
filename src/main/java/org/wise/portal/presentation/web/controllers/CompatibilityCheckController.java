@@ -25,8 +25,11 @@ package org.wise.portal.presentation.web.controllers;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.service.project.ProjectService;
@@ -36,14 +39,17 @@ import org.wise.portal.service.project.ProjectService;
  * @author patrick lawler
  * @version $Id:$
  */
-public class CompatibilityCheckController extends AbstractController {
+@Controller
+@RequestMapping("/pages/check.html")
+public class CompatibilityCheckController {
 	
+	@Autowired
 	private ProjectService projectService;
 
 	/**
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	@Override
+	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView modelAndView = new ModelAndView();
     	
@@ -67,9 +73,5 @@ public class CompatibilityCheckController extends AbstractController {
 		}
 		
 		return modelAndView;
-	}
-	
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
 	}
 }

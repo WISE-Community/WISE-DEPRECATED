@@ -22,9 +22,11 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.management;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.validation.BindException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.TeacherAccountForm;
@@ -42,28 +44,60 @@ import org.wise.portal.presentation.web.controllers.teacher.RegisterTeacherContr
  * @author Hiroki Terashima
  * @version $Id$
  */
+@Controller
+@SessionAttributes("teacherAccountForm")
+@RequestMapping("/teacher/management/updatemyaccountinfo.html")
 public class UpdateMyAccountInfoController extends RegisterTeacherController {
 	
-	/**
-	 * @see org.wise.portal.presentation.web.controllers.teacher.RegisterTeacherController#formBackingObject(javax.servlet.http.HttpServletRequest)
-	 */
-	@Override
-	protected Object formBackingObject(HttpServletRequest request) throws Exception {
-		User user = ControllerUtil.getSignedInUser();
- 
-		return new TeacherAccountForm((TeacherUserDetails) user.getUserDetails());
-	}
+	//the path to this form view
+	private String formView = "teacher/management/updatemyaccountinfo";
 	
-	/**
-	 * @see org.springframework.web.servlet.mvc.BaseCommandController#onBindAndValidate(javax.servlet.http.HttpServletRequest, java.lang.Object, org.springframework.validation.BindException)
-	 */
-	@Override
-	protected void onBindAndValidate(HttpServletRequest request, Object command, BindException errors)
-	throws Exception {
-
-		TeacherAccountForm accountForm = (TeacherAccountForm) command;		
-		
-		getValidator().validate(accountForm, errors);
-	}
-
+	//the path to the success view
+	private String successView = "teacher/management/updatemyaccount";
+	
+    /**
+     * Called before the page is loaded to initialize values.
+	 * Adds the TeacherAccountForm object to the model so that the form
+	 * can be populated.
+     * @param model the model object that contains values for the page to use when rendering the view
+     * @return the path of the view to display
+     */
+    @RequestMapping(method=RequestMethod.GET)
+    public String initializeForm(ModelMap modelMap) throws Exception {
+    	//get the signed in user
+    	User signedInUser = ControllerUtil.getSignedInUser();
+    	
+    	//get the teacher user details for the signed in user
+    	TeacherUserDetails teacherUserDetails = (TeacherUserDetails) signedInUser.getUserDetails();
+    	
+    	//create the teacher account form object used to populate the form
+    	TeacherAccountForm teacherAccountForm = new TeacherAccountForm(teacherUserDetails);
+    	
+    	//put the teacher account form object into the model
+    	modelMap.put("teacherAccountForm", teacherAccountForm);
+    	
+    	//add more objects into the model that will be used by the form
+    	populateModel(modelMap);
+    	
+    	//get the form view
+    	String view = getFormView();
+    	
+    	return view;
+    }
+    
+    /**
+     * Get the form view
+     * @return the form view
+     */
+    protected String getFormView() {
+    	return formView;
+    }
+    
+    /**
+     * Get the success view
+     * @return the success view
+     */
+    protected String getSuccessView() {
+    	return successView;
+    }
 }

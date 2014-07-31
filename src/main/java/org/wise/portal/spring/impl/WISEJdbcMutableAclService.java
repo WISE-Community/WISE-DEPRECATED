@@ -36,14 +36,14 @@ import org.springframework.security.acls.model.AclCache;
  * @author Hiroki Terashima
  * @version $Id:$
  */
-public class TelsJdbcMutableAclService extends JdbcMutableAclService {
+public class WISEJdbcMutableAclService extends JdbcMutableAclService {
 
-	public TelsJdbcMutableAclService(DataSource dataSource,
+	public WISEJdbcMutableAclService(DataSource dataSource,
 			LookupStrategy lookupStrategy, AclCache aclCache) {
 		super(dataSource, lookupStrategy, aclCache);
 		Properties wiseProperties = new Properties();
     	try {
-    		wiseProperties.load(TelsAnnotationSessionFactoryBean.class.getClassLoader().getResourceAsStream("wise.properties"));
+    		wiseProperties.load(WISESessionFactoryBean.class.getClassLoader().getResourceAsStream("wise.properties"));
     		if (wiseProperties.containsKey("hibernate.connection.driver_class")) {
     			String driverClass = (String) wiseProperties.get("hibernate.connection.driver_class");
     			if ("com.mysql.jdbc.Driver".equals(driverClass)) {

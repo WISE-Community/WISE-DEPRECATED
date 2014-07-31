@@ -25,6 +25,8 @@ package org.wise.portal.dao.premadecomment.impl;
 import java.util.List;
 
 
+
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.premadecomment.PremadeCommentListDao;
 import org.wise.portal.domain.premadecomment.PremadeCommentList;
@@ -36,6 +38,7 @@ import org.wise.portal.domain.user.User;
  * @author patrick lawler
  *
  */
+@Repository
 public class HibernatePremadeCommentListDao extends AbstractHibernateDao<PremadeCommentList> implements PremadeCommentListDao<PremadeCommentList>{
 
 	private static final String FIND_ALL_QUERY = "from PremadeCommentListImpl";
@@ -58,22 +61,22 @@ public class HibernatePremadeCommentListDao extends AbstractHibernateDao<Premade
 	
 	public List<PremadeCommentList> getListByOwner(User user){
 		String q = "select commentList from PremadeCommentListImpl commentList where commentList.owner.id='" + user.getId() + "'";
-		return this.getHibernateTemplate().find(q);
+		return (List<PremadeCommentList>) this.getHibernateTemplate().find(q);
 	}
 	
 	public List<PremadeCommentList> getListByRun(Run run){
 		String q = "select commentList from PremadeCommentListImpl commentList where commentList.run.id='" + run.getId() + "'";
-		return this.getHibernateTemplate().find(q);
+		return (List<PremadeCommentList>) this.getHibernateTemplate().find(q);
 	}
 	
 	public List<PremadeCommentList> getListByProject(Long projectId){
 		String q = "select commentList from PremadeCommentListImpl commentList where commentList.projectId='" + projectId + "'";
-		return this.getHibernateTemplate().find(q);
+		return (List<PremadeCommentList>) this.getHibernateTemplate().find(q);
 	}
 	
 	public List<PremadeCommentList> getListByGlobal(){
 		String q = "select commentList from PremadeCommentListImpl commentList where commentList.global=true";
-		return this.getHibernateTemplate().find(q);
+		return (List<PremadeCommentList>) this.getHibernateTemplate().find(q);
 	}
 
 	public PremadeCommentList getListById(Long id) {

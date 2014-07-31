@@ -33,6 +33,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.wise.portal.domain.user.User;
@@ -50,11 +51,13 @@ import org.wise.portal.service.mail.IMailFacade;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class TelsSimpleMappingExceptionResolver extends
+public class WISESimpleMappingExceptionResolver extends
 	SimpleMappingExceptionResolver {
 	
+	@Autowired
 	protected IMailFacade mailService;
 
+	@Autowired
 	private Properties wiseProperties;
 
 	private static final String HANDLE_EXCEPTION_PROPERTY_KEY = "handle_exception";

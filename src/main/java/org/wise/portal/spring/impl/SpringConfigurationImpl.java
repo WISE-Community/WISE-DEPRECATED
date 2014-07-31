@@ -32,25 +32,21 @@ import org.wise.portal.spring.SpringConfiguration;
  */
 public final class SpringConfigurationImpl implements SpringConfiguration {
 
-    private static String[] ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS = new String[] {
-    	"classpath:configurations/applicationContexts.xml"
-    };
-
-    private static final String[] DISPATCHER_SERVLET_CONTEXT_CONFIG_LOCATIONS = new String[] {
-        "classpath:configurations/dispatcherServletContexts.xml"
-    };
-
     /**
      * @see org.wise.portal.spring.SpringConfiguration#getDispatcherServletContextConfigLocations()
      */
     public String[] getDispatcherServletContextConfigLocations() {
-        return DISPATCHER_SERVLET_CONTEXT_CONFIG_LOCATIONS;
+        return new String[] {
+                "classpath:configurations/dispatcherServletContexts.xml"
+        };
     }
 
     /**
      * @see org.wise.portal.spring.SpringConfiguration#getRootApplicationContextConfigLocations()
      */
     public String[] getRootApplicationContextConfigLocations() {
-        return ROOT_APPLICATION_CONTEXT_CONFIG_LOCATIONS;
+        return new String[] {
+            	"classpath:configurations/applicationContexts.xml"
+        };
     }
 }

@@ -26,8 +26,10 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.attendance.StudentAttendance;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
@@ -44,20 +46,23 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.utils.FileManager;
-import org.wise.vle.utils.SecurityUtils;
 
-public class VLEGetSpecialExport extends AbstractController {
+@Controller
+public class VLEGetSpecialExport {
 
-	private static final long serialVersionUID = 1L;
-	
+	@Autowired
 	private Properties wiseProperties;
 	
+	@Autowired
 	private VLEService vleService;
 	
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private WorkgroupService workgroupService;
 	
+	@Autowired
 	private StudentAttendanceService studentAttendanceService;
 	
 	//the max number of step work columns we need, only used for "allStudentWork"
@@ -203,16 +208,13 @@ public class VLEGetSpecialExport extends AbstractController {
 		System.out.println(label + ": " + getDifferenceInSeconds(debugStartTime, currentTime));
 	}
 	
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		return doGet(request, response);
-	}
-	
 	/**
 	 * Generates and returns an excel xls of exported student data.
 	 */
-	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping("/getSpecialExport.html")
+	public ModelAndView doGet(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws ServletException, IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
 
@@ -277,7 +279,7 @@ public class VLEGetSpecialExport extends AbstractController {
 		ProjectMetadata metadata = projectObj.getMetadata();
 		String projectMetaDataJSONString = metadata.toJSONString();
 		
-		String curriculumBaseDir = getWiseProperties().getProperty("curriculum_base_dir");
+		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 		String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());		
 		String projectPath = curriculumBaseDir + rawProjectUrl;
 		
@@ -294,7 +296,7 @@ public class VLEGetSpecialExport extends AbstractController {
 		JSONObject runInfoJSONObject = RunUtil.getRunInfo(run);
 		
 		//get all the student attendance entries for this run
-		List<StudentAttendance> studentAttendanceList = getStudentAttendanceService().getStudentAttendanceByRunId(run.getId());
+		List<StudentAttendance> studentAttendanceList = studentAttendanceService.getStudentAttendanceByRunId(run.getId());
 		JSONArray studentAttendanceJSONArray = new JSONArray();
 
 		/*
@@ -1123,45 +1125,5 @@ public class VLEGetSpecialExport extends AbstractController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public VLEService getVleService() {
-		return vleService;
-	}
-
-	public void setVleService(VLEService vleService) {
-		this.vleService = vleService;
-	}
-
-	public RunService getRunService() {
-		return runService;
-	}
-
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	public WorkgroupService getWorkgroupService() {
-		return workgroupService;
-	}
-
-	public void setWorkgroupService(WorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
-	public StudentAttendanceService getStudentAttendanceService() {
-		return studentAttendanceService;
-	}
-
-	public void setStudentAttendanceService(StudentAttendanceService studentAttendanceService) {
-		this.studentAttendanceService = studentAttendanceService;
-	}
-
-	public Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
 	}
 }

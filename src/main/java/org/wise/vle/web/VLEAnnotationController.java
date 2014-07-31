@@ -22,8 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -38,48 +40,27 @@ import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.webservice.crater.CRaterHttpClient;
 import org.wise.vle.domain.work.StepWork;
-import org.wise.vle.utils.SecurityUtils;
 
 /**
  * Controllers for handling Annotation GET and POST 
  * @author hirokiterashima
  * @author geoffreykwan
  */
-public class VLEAnnotationController extends AbstractController {
+@Controller
+@RequestMapping("/annotation.html")
+public class VLEAnnotationController {
 
-	private static final long serialVersionUID = 1L;
-	
+	@Autowired
 	private VLEService vleService;
 	
+	@Autowired
 	private Properties wiseProperties;
 	
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private WorkgroupService workgroupService;
-	
-	private boolean standAlone = true;
-	
-	private boolean modeRetrieved = false;
-	
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if (request.getMethod() == AbstractController.METHOD_GET) {
-			return doGet(request, response);
-		} else if (request.getMethod() == AbstractController.METHOD_POST) {
-			return doPost(request, response);
-		}
-		return null;
-	}
-
-	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPostJSON(request, response);
-		return null;
-    }
-	
-	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGetJSON(request, response);
-		return null;
-    }
 	
 	/**
 	 * Handle GETing of Annotations.
@@ -91,6 +72,7 @@ public class VLEAnnotationController extends AbstractController {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("unchecked")
+	@RequestMapping(method=RequestMethod.GET)
 	public void doGetJSON(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -193,7 +175,7 @@ public class VLEAnnotationController extends AbstractController {
 				allowedAccess = true;				
 			} else if("cRater".equals(annotationType)) {
 				//the user is getting a CRater annotation
-				StepWork stepWork = getVleService().getStepWorkById(stepWorkId);
+				StepWork stepWork = vleService.getStepWorkById(stepWorkId);
 				
 				UserInfo stepWorkUserInfo = stepWork.getUserInfo();
 				Long stepWorkWorkgroupId = stepWorkUserInfo.getWorkgroupId();
@@ -744,6 +726,7 @@ public class VLEAnnotationController extends AbstractController {
 	 * @param response
 	 * @throws IOException
 	 */
+	@RequestMapping(method=RequestMethod.POST)
 	private void doPostJSON(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		//get the signed in user
@@ -889,37 +872,4 @@ public class VLEAnnotationController extends AbstractController {
 		
 		response.getWriter().print(postTime.getTime());
 	}
-
-	public VLEService getVleService() {
-		return vleService;
-	}
-
-	public void setVleService(VLEService vleService) {
-		this.vleService = vleService;
-	}
-
-	public Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	public RunService getRunService() {
-		return runService;
-	}
-
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	public WorkgroupService getWorkgroupService() {
-		return workgroupService;
-	}
-
-	public void setWorkgroupService(WorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
 }

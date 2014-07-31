@@ -22,11 +22,8 @@
  */
 package org.wise.portal.service.announcement.impl;
 
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.announcement.AnnouncementDao;
@@ -39,8 +36,10 @@ import org.wise.portal.service.announcement.AnnouncementService;
  * @author patrick lawler
  * @version $Id:$
  */
+@Service
 public class AnnouncementServiceImpl implements AnnouncementService{
 
+	@Autowired
 	private AnnouncementDao<Announcement> announcementDao;
 	
 	/**
@@ -87,17 +86,6 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 	}
 	
 	/**
-	 * @see org.wise.portal.service.announcement.AnnouncementService#retrieveAllAnnouncement()
-	 */
-	@Transactional()
-	public Set<Announcement> retrieveAllAnnouncement(){
-		Set<Announcement> announcements = new TreeSet<Announcement>();
-		List<Announcement> announcementList = announcementDao.getList();
-		announcements.addAll(announcementList);
-		return announcements;
-	}
-	
-	/**
 	 * @see org.wise.portal.service.announcement.AnnouncementService#retrieveById(long)
 	 */
 	@Transactional()
@@ -108,25 +96,5 @@ public class AnnouncementServiceImpl implements AnnouncementService{
 		} catch(ObjectNotFoundException e){
 			throw e;
 		}
-	}
-	
-	/**
-	 * @see org.wise.portal.service.announcement.AnnouncementService#retrieveLatest()
-	 */
-	@Transactional()
-	public Announcement retrieveLatest() throws ObjectNotFoundException{
-		Set<Announcement> announcements = retrieveAllAnnouncement();
-		if(announcements.isEmpty()){
-			throw new ObjectNotFoundException(new Long(0), Announcement.class);
-		} else {
-			return announcements.iterator().next();
-		}
-	}
-
-	/**
-	 * @param announcementDao the announcementDao to set
-	 */
-	public void setAnnouncementDao(AnnouncementDao<Announcement> announcementDao) {
-		this.announcementDao = announcementDao;
 	}
 }

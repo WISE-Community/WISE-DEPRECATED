@@ -27,17 +27,16 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
-import org.wise.portal.dao.ObjectNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.newsitem.NewsItem;
 import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
@@ -51,26 +50,33 @@ import org.wise.portal.service.project.ProjectService;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class IndexController extends AbstractController {
-	
+@Controller
+@RequestMapping("/index.html")
+public class IndexController {
+
+	@Autowired
 	private NewsItemService newsItemService;
 	
-	// path to project thumb image relative to project folder
-	private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
-	
+	@Autowired
 	private ProjectService projectService;
 	
+	@Autowired
 	private Properties wiseProperties;
-	
+
+	// path to project thumb image relative to project folder
+	private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
+
 	/** 
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest arg0,
-			HttpServletResponse arg1) throws Exception {
+	@RequestMapping(method=RequestMethod.GET)
+	protected String handleGET(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			ModelMap modelMap) throws Exception {
 		
 		List<NewsItem> newsItems = newsItemService.retrieveAllNewsItem();
+		
 		if (newsItems.size() == 0) {
 			NewsItem newsItem = new NewsItemImpl();
 			newsItem.setDate(Calendar.getInstance().getTime());
@@ -84,10 +90,7 @@ public class IndexController extends AbstractController {
 		Map<Long,String> projectThumbMap = new TreeMap<Long,String>();  // maps projectId to url where its thumbnail can be found
 		
 		// get library projects
-		Set<String> tagNames = new TreeSet<String>();
-		tagNames.add("library");
-		tagNames.add("public");
-		List<Project> libraryProjectsList = this.projectService.getProjectListByTagNames(tagNames);
+		List<Project> libraryProjectsList = this.projectService.getPublicLibraryProjectList();
 		
 		// divide library projects by subject area
 		List<Project> esProjects = new ArrayList<Project>();
@@ -164,18 +167,17 @@ public class IndexController extends AbstractController {
 			}
 		}
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("newsItems", newsItems);
-        modelAndView.addObject("esProjects", esProjects);
-        modelAndView.addObject("lsProjects", lsProjects);
-        modelAndView.addObject("psProjects", psProjects);
-        modelAndView.addObject("bioProjects", bioProjects);
-        modelAndView.addObject("chemProjects", chemProjects);
-        modelAndView.addObject("physProjects", physProjects);
-        //modelAndView.addObject("subjects", subjects);
-        //modelAndView.addObject("libProjects", libProjects);
-        modelAndView.addObject("projectThumbMap", projectThumbMap);
-        return modelAndView;
+        modelMap.put("newsItems", newsItems);
+        modelMap.put("esProjects", esProjects);
+        modelMap.put("lsProjects", lsProjects);
+        modelMap.put("psProjects", psProjects);
+        modelMap.put("bioProjects", bioProjects);
+        modelMap.put("chemProjects", chemProjects);
+        modelMap.put("physProjects", physProjects);
+        //modelMap.put("subjects", subjects);
+        //modelMap.put("libProjects", libProjects);
+        modelMap.put("projectThumbMap", projectThumbMap);
+        return "index";
 	}
 
 	/**

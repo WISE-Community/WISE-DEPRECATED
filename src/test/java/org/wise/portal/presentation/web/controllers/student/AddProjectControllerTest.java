@@ -122,10 +122,6 @@ public class AddProjectControllerTest extends AbstractModelAndViewTests {
 		
 		this.mockStudentService = createMock(StudentService.class);
 		addProjectController = new AddProjectController();
-		addProjectController.setApplicationContext(mockApplicationContext);
-		addProjectController.setStudentService(mockStudentService);
-		addProjectController.setSuccessView(SUCCESS);
-		addProjectController.setFormView(FORM);
 	}
 	
 	public void testOnSubmit_success() throws Exception {
@@ -135,7 +131,7 @@ public class AddProjectControllerTest extends AbstractModelAndViewTests {
 		expectLastCall();
 		replay(mockStudentService);
 		
-		ModelAndView modelAndView = addProjectController.onSubmit(request, response, addProjectParameters, errors);
+		ModelAndView modelAndView = addProjectController.onSubmit(addProjectParameters, errors, request, response);
 		assertEquals(SUCCESS, modelAndView.getViewName());
 		assertTrue(!errors.hasErrors());
 		verify(mockStudentService);
@@ -150,7 +146,7 @@ public class AddProjectControllerTest extends AbstractModelAndViewTests {
 		expectLastCall().andThrow(new ObjectNotFoundException(RUNCODE_NOT_IN_DB, Run.class));
 		replay(mockStudentService);
 
-		ModelAndView modelAndView = addProjectController.onSubmit(request, response, addProjectParameters, errors);
+		ModelAndView modelAndView = addProjectController.onSubmit(addProjectParameters, errors,request, response);
 		assertEquals(FORM, modelAndView.getViewName());
 		assertTrue(errors.hasErrors());
 		assertEquals(1, errors.getFieldErrorCount());
@@ -168,7 +164,7 @@ public class AddProjectControllerTest extends AbstractModelAndViewTests {
 		expectLastCall().andThrow(new PeriodNotFoundException(PERIODNAME_NOT_IN_DB + " was not found"));
 		replay(mockStudentService);
 
-		ModelAndView modelAndView = addProjectController.onSubmit(request, response, addProjectParameters, errors);
+		ModelAndView modelAndView = addProjectController.onSubmit(addProjectParameters, errors, request, response);
 		assertEquals(FORM, modelAndView.getViewName());
 		assertTrue(errors.hasErrors());
 		assertEquals(1, errors.getFieldErrorCount());
@@ -185,7 +181,7 @@ public class AddProjectControllerTest extends AbstractModelAndViewTests {
 				"student user is already associated with this run."));
 		replay(mockStudentService);
 		
-		ModelAndView modelAndView = addProjectController.onSubmit(request, response, addProjectParameters, errors);
+		ModelAndView modelAndView = addProjectController.onSubmit(addProjectParameters, errors, request, response);
 		assertEquals(FORM, modelAndView.getViewName());
 		assertTrue(errors.hasErrors());
 		assertEquals(1, errors.getFieldErrorCount());

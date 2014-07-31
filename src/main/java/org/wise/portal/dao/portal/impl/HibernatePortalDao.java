@@ -23,6 +23,7 @@
 package org.wise.portal.dao.portal.impl;
 
 
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.portal.PortalDao;
 import org.wise.portal.domain.portal.Portal;
@@ -32,6 +33,7 @@ import org.wise.portal.domain.portal.impl.PortalImpl;
  * @author hirokiterashima
  * @version $Id:$
  */
+@Repository
 public class HibernatePortalDao extends AbstractHibernateDao<Portal> implements PortalDao<Portal> {
 
 	private static final String FIND_ALL_QUERY = "from PortalImpl";

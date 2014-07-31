@@ -25,25 +25,27 @@ package org.wise.portal.dao.workgroup.impl;
 import java.util.List;
 
 import org.hibernate.FetchMode;
-import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.workgroup.WorkgroupDao;
 import org.wise.portal.domain.run.Offering;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
+import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
 
 /**
  * @author Hiroki Terashima
  * @version $Id$
  */
+@Repository
 public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
         implements WorkgroupDao<Workgroup> {
 
-    private static final String FIND_ALL_QUERY = "from WorkgroupImpl";
+	private static final String FIND_ALL_QUERY = "from WISEWorkgroupImpl";
 
     /**
      * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
@@ -53,69 +55,72 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
         return FIND_ALL_QUERY;
     }
 
-    /**
-     * @see org.wise.portal.dao.workgroup.WorkgroupDao#getListByOfferingAndUser(net.sf.sail.webapp.domain.Offering,
-     *      net.sf.sail.webapp.domain.User)
-     */
-    @SuppressWarnings("unchecked")
-    public List<Workgroup> getListByOfferingAndUser(Offering offering, User user) {
-        Session session = this.getSession();
-        SQLQuery sqlQuery = session
-                .createSQLQuery("SELECT w.*, g.* FROM workgroups as w, groups as g, "
-                		+ "groups_related_to_users as g_r_u "
-                        + "WHERE w.group_fk = g.id "
-                        + "AND g_r_u.group_fk = w.group_fk "
-                        + "AND g_r_u.user_fk = :user_param "
-                        + "AND w.offering_fk = :offering_param");
-        sqlQuery.addEntity("workgroup", WorkgroupImpl.class);
-        sqlQuery.setParameter("offering_param", offering.getId());
-        sqlQuery.setParameter("user_param", user.getId());
-        return sqlQuery.list();
-    }
+	/**
+	 * @see org.wise.portal.dao.workgroup.WorkgroupDao#getListByOfferingAndUser(net.sf.sail.webapp.domain.Offering,
+	 *      net.sf.sail.webapp.domain.User)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Workgroup> getListByOfferingAndUser(Offering offering, User user) {
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+		SQLQuery sqlQuery = session
+				.createSQLQuery("SELECT w.*, g.*, ww.* FROM workgroups as w, groups as g, "
+						+ "groups_related_to_users as g_r_u, wiseworkgroups as ww "
+						+ "WHERE w.group_fk = g.id "
+						+ "AND g_r_u.group_fk = w.group_fk "
+						+ "AND g_r_u.user_fk = :user_param "
+						+ "AND w.offering_fk = :offering_param "
+						+ "AND w.id = ww.id");
 
-    /**
-     * @see org.wise.portal.dao.workgroup.WorkgroupDao#getListByUser(net.sf.sail.webapp.domain.User)
-     */
-    @SuppressWarnings("unchecked")
-    public List<Workgroup> getListByUser(User user) {
-        Session session = this.getSession();
-        SQLQuery sqlQuery = session
-                .createSQLQuery("SELECT w.*, g.* FROM workgroups as w, groups as g, "
-                		+ "groups_related_to_users as g_r_u "
-                        + "WHERE w.group_fk = g.id "
-                        + "AND g_r_u.group_fk = w.group_fk "
-                        + "AND g_r_u.user_fk = :user_param ");
-        sqlQuery.addEntity("workgroup", WorkgroupImpl.class);
-        sqlQuery.setParameter("user_param", user.getId());
-        return sqlQuery.list();
-    }
+		sqlQuery.addEntity("wiseworkgroup", WISEWorkgroupImpl.class);
+		sqlQuery.setParameter("offering_param", offering.getId());
+		sqlQuery.setParameter("user_param", user.getId());
+		return sqlQuery.list();
+	}
+
+	/**
+	 * @see org.wise.portal.dao.workgroup.WorkgroupDao#getListByUser(net.sf.sail.webapp.domain.User)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Workgroup> getListByUser(User user) {
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+		SQLQuery sqlQuery = session
+				.createSQLQuery("SELECT w.*, g.*, ww.* FROM workgroups as w, groups as g, "
+						+ "groups_related_to_users as g_r_u, wiseworkgroups as ww  "
+						+ "WHERE w.group_fk = g.id "
+						+ "AND g_r_u.group_fk = w.group_fk "
+						+ "AND g_r_u.user_fk = :user_param "
+						+ "AND w.id = ww.id");
+		sqlQuery.addEntity("wiseworkgroup", WISEWorkgroupImpl.class);
+		sqlQuery.setParameter("user_param", user.getId());
+		return sqlQuery.list();
+	}
     
     /**
      * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
      */
     @Override
-    protected Class<WorkgroupImpl> getDataObjectClass() {
-        return WorkgroupImpl.class;
+    protected Class<WISEWorkgroupImpl> getDataObjectClass() {
+        return WISEWorkgroupImpl.class;
     }
 
-	@Override
-	public Workgroup getById(Long workgroupId, boolean doEagerFetch) {
+    @Override
+    @Transactional(readOnly=true)
+	public WISEWorkgroupImpl getById(Long workgroupId, boolean doEagerFetch) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
 
-        Workgroup result = null;
-        if (doEagerFetch) {
-        	result = (Workgroup) session.createCriteria(WorkgroupImpl.class)
-			.add( Restrictions.eq("id", workgroupId))
-			.setFetchMode("offering", FetchMode.EAGER)
-			.setFetchMode("group", FetchMode.EAGER)
-			.uniqueResult();
-        } else {
-        	result = (Workgroup) session.createCriteria(WorkgroupImpl.class)
-        			.add( Restrictions.eq("id", workgroupId))
-        			.uniqueResult();        	
-        }
-        session.getTransaction().commit();
-        return result;
+		WISEWorkgroupImpl result = null;
+		if (doEagerFetch) {
+			result = (WISEWorkgroupImpl) session.createCriteria(WISEWorkgroupImpl.class)
+					.add( Restrictions.eq("id", workgroupId))
+					.setFetchMode("offering", FetchMode.EAGER)
+					.setFetchMode("group", FetchMode.EAGER)
+					.setFetchMode("period", FetchMode.EAGER)
+					.uniqueResult();
+		} else {
+			result = (WISEWorkgroupImpl) session.createCriteria(WISEWorkgroupImpl.class)
+					.add( Restrictions.eq("id", workgroupId))
+					.uniqueResult();        	
+		}
+		return result;	
 	}
 }

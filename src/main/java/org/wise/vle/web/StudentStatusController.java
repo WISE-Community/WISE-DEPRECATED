@@ -13,30 +13,23 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.status.StudentStatus;
-import org.wise.vle.utils.SecurityUtils;
 
-public class StudentStatusController extends AbstractController {
-	private static final long serialVersionUID = 1L;
+@Controller
+@RequestMapping("/studentStatus.html")
+public class StudentStatusController {
 
+	@Autowired
 	private VLEService vleService;
 	
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		if (request.getMethod() == AbstractController.METHOD_GET) {
-			return doGet(request, response);
-		} else if (request.getMethod() == AbstractController.METHOD_POST) {
-			return doPost(request, response);
-		}
-		return null;
-	}
-
 	/**
 	 * Handles GET requests from the teacher when a teacher requests for all the student
 	 * statuses for a given run id
@@ -44,6 +37,7 @@ public class StudentStatusController extends AbstractController {
 	 * @param response
 	 * @throws IOException 
 	 */
+	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -146,6 +140,7 @@ public class StudentStatusController extends AbstractController {
 	 * @param response
 	 * @throws IOException 
 	 */
+	@RequestMapping(method=RequestMethod.POST)
 	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -214,13 +209,4 @@ public class StudentStatusController extends AbstractController {
 		
 		return null;
 	}
-
-	public VLEService getVleService() {
-		return vleService;
-	}
-
-	public void setVleService(VLEService vleService) {
-		this.vleService = vleService;
-	}
-
 }

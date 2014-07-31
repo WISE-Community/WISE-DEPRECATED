@@ -31,10 +31,16 @@ import static org.easymock.EasyMock.verify;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.AbstractModelAndViewTests;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
@@ -70,7 +76,11 @@ public class ShareProjectRunControllerTest extends AbstractModelAndViewTests {
 
 	private static final Long RUNID = new Long(4);
 	
-	private BindException errors;
+	private BindingResult errors;
+	
+	private SessionStatus status;
+	
+	private Model model;
 	
 	private Run run;
 	
@@ -104,10 +114,6 @@ public class ShareProjectRunControllerTest extends AbstractModelAndViewTests {
 		errors = new BindException(addSharedTeacherParameters, "");
 		
 		shareProjectRunController = new ShareProjectRunController();
-		shareProjectRunController.setRunService(mockRunService);
-		shareProjectRunController.setUserService(mockUserService);
-		shareProjectRunController.setFormView(FORM_VIEW);
-		shareProjectRunController.setSuccessView(SUCCESS_VIEW);
 	}
 	
 	/**
@@ -127,9 +133,8 @@ public class ShareProjectRunControllerTest extends AbstractModelAndViewTests {
 		mockRunService.addSharedTeacherToRun(addSharedTeacherParameters);
 		expectLastCall();		
 		replay(mockRunService);
-		ModelAndView modelAndView = this.shareProjectRunController.onSubmit(
-				request, response, addSharedTeacherParameters, errors);
-		assertModelAttributeAvailable(modelAndView, ShareProjectRunController.RUNID_PARAM_NAME);
+		
+		String view = this.shareProjectRunController.onSubmit(addSharedTeacherParameters, errors, request, model, status);
 		verify(mockUserService);
 		verify(mockRunService);
 	}
@@ -140,9 +145,7 @@ public class ShareProjectRunControllerTest extends AbstractModelAndViewTests {
 		mockRunService.addSharedTeacherToRun(addSharedTeacherParameters);
 		expectLastCall().andThrow(new ObjectNotFoundException("run not found", Run.class));
 		replay(mockRunService);
-		ModelAndView modelAndView = this.shareProjectRunController.onSubmit(
-				request, response, addSharedTeacherParameters, errors);
-		assertModelAttributeAvailable(modelAndView, ShareProjectRunController.RUNID_PARAM_NAME);
+		String view = this.shareProjectRunController.onSubmit(addSharedTeacherParameters, errors, request, model, status);
 		verify(mockUserService);
 		verify(mockRunService);
 	}

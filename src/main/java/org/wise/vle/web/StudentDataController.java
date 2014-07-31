@@ -18,8 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.run.Run;
@@ -28,7 +32,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
@@ -36,25 +40,26 @@ import org.wise.vle.domain.project.Project;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.domain.work.StepWorkCache;
-import org.wise.vle.utils.SecurityUtils;
 import org.wise.vle.utils.VLEDataUtils;
 
-public class StudentDataController extends AbstractController {
+@Controller
+@RequestMapping("/studentData.html")
+public class StudentDataController {
 
-	private static final long serialVersionUID = 1L;
+	@Autowired
+	private VLEService vleService;
+	
+	@Autowired
+	private RunService runService;
+	
+	@Autowired
+	private Properties wiseProperties;
+	
+	@Autowired
+	private WebSocketHandler webSocketHandler;
 
 	private static boolean DEBUG = false;
 
-	private boolean standAlone = true;
-
-	private VLEService vleService;
-	
-	private RunService runService;
-	
-	private static WISEWorkgroupService workgroupService;
-	
-	private Properties wiseProperties;
-	
 	// max size for all nodes allowed to have default student work size, in bytes. Default:  50K=51200 bytes 
 	private int studentMaxWorkSizeDefault = 51200;
 
@@ -63,16 +68,7 @@ public class StudentDataController extends AbstractController {
 
 	private ArrayList<String> nodesWithLargeStudentWork = null;
 	
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if (request.getMethod() == AbstractController.METHOD_GET) {
-			return doGet(request, response);
-		} else if (request.getMethod() == AbstractController.METHOD_POST) {
-			return doPost(request, response);
-		}
-		return null;
-	}
-
+	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView doGet(HttpServletRequest request,
 			HttpServletResponse response)
 					throws ServletException, IOException {
@@ -224,7 +220,7 @@ public class StudentDataController extends AbstractController {
 			// request for all students work in run. lookup workgroups in run and construct workgroupIdString
 			String workgroupIdStr = "";
 			try {
-				Set<Workgroup> workgroups = getRunService().getWorkgroups(runId);
+				Set<Workgroup> workgroups = runService.getWorkgroups(runId);
 				for (Workgroup workgroup : workgroups) {
 					workgroupIdStr += workgroup.getId() + ":";
 				}
@@ -299,7 +295,7 @@ public class StudentDataController extends AbstractController {
 			// now make sure that we can access students' work for all the nodes in the nodeList.
 
 			//get the path to the project on the server
-			String curriculumBaseDir = getWiseProperties().getProperty("curriculum_base_dir");
+			String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 			String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 			String projectPath = curriculumBaseDir + rawProjectUrl;
 
@@ -605,8 +601,7 @@ public class StudentDataController extends AbstractController {
 		return nodeVisitsJSON;
 	}
 
-	
-	
+	@RequestMapping(method=RequestMethod.POST)
 	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		studentMaxWorkSizeDefault = Integer.valueOf(wiseProperties.getProperty("student_max_work_size_default", "51200"));
 		studentMaxWorkSizeLarge = Integer.valueOf(wiseProperties.getProperty("student_max_work_size_large", "256000"));	
@@ -880,6 +875,21 @@ public class StudentDataController extends AbstractController {
 				}
 				//send back the json string with step work id and post time
 				response.getWriter().print(jsonResponse.toString());
+				
+				//check if this node visit should be sent to other users using websockets
+				if(isSendToWebSockets(nodeVisitJSON)) {
+					//inject the step work id into the node visit JSON
+					nodeVisitJSON.put("id", newStepWorkId);
+					
+					if(webSocketHandler != null) {
+						WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+						
+						if(wiseWebSocketHandler != null) {
+							//send this message to websockets
+							wiseWebSocketHandler.handleMessage(signedInUser, nodeVisitJSON.toString());							
+						}
+					}
+				}
 			} else {
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Error saving: " + nodeVisitJSON.toString());
 			}
@@ -891,6 +901,33 @@ public class StudentDataController extends AbstractController {
 		return null;
 	}
 
+	/**
+	 * Check if the node visit should be sent to websockets
+	 * @param nodeVisit the node visit JSON object
+	 * @return whether we should send the node visit to websockets
+	 */
+	private boolean isSendToWebSockets(JSONObject nodeVisit) {
+		boolean result = false;
+		
+		if(nodeVisit != null) {
+			//check if there is a messageType field
+			String messageType = nodeVisit.optString("messageType");
+			
+			//check if there is a messageParticipants field
+			String messageParticipants = nodeVisit.optString("messageParticipants");
+			
+			if(messageType != null && messageParticipants != null) {
+				/*
+				 * the node visit has a messageType and messageParticipants so we will
+				 * send it to websockets
+				 */
+				result = true;
+			}
+		}
+		
+		return result;
+	}
+	
 	/**
 	 * Synchronized node creation/retrieval
 	 * @param runId
@@ -909,37 +946,4 @@ public class StudentDataController extends AbstractController {
 		}
 		return node;
 	}
-
-	public VLEService getVleService() {
-		return vleService;
-	}
-
-	public void setVleService(VLEService vleService) {
-		this.vleService = vleService;
-	}
-
-	public RunService getRunService() {
-		return runService;
-	}
-
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	public Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	public static WISEWorkgroupService getWorkgroupService() {
-		return workgroupService;
-	}
-
-	public static void setWorkgroupService(WISEWorkgroupService workgroupService) {
-		StudentDataController.workgroupService = workgroupService;
-	}
-
 }

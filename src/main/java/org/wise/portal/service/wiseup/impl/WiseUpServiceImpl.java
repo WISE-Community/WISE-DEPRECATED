@@ -40,6 +40,8 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.impl.CreateUrlModuleParameters;
 import org.wise.portal.domain.project.Project;
@@ -56,15 +58,19 @@ import org.wise.portal.service.wiseup.WiseUpService;
  * @author h
  * @version $Id:$
  */
+@Service
 public class WiseUpServiceImpl implements WiseUpService {
 
+	@Autowired
 	private ProjectService projectService;
 
+	@Autowired
 	private CurnitService curnitService;
 
+	@Autowired
 	private Properties wiseProperties;
-	
-	private String wiseUpHubUrl;
+
+	private String wiseUpHubUrl = "http://wise4.org";
 
 	/**
 	 * @throws Exception 
@@ -73,9 +79,9 @@ public class WiseUpServiceImpl implements WiseUpService {
 	@Override
 	public void importExternalProject(User newProjectOwner,
 			String externalWiseInstanceId, String externalWiseProjectId) throws Exception {
-	
+
 		String exportProjectPath = wiseUpHubUrl + "/projectLibrary/exportProject.php" + "?wiseInstanceId=" + externalWiseInstanceId +"&wiseProjectId=" + externalWiseProjectId ;
-		
+
 		// upload the zipfile to curriculum_base_dir
 		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
@@ -92,8 +98,8 @@ public class WiseUpServiceImpl implements WiseUpService {
 		String newFilename = "";
 		String newFileFullPath = "";
 		File downloadedFile = null;
-		
-				
+
+
 		try {
 			URL url = new URL(exportProjectPath);
 			URLConnection conn = url.openConnection();
@@ -110,7 +116,7 @@ public class WiseUpServiceImpl implements WiseUpService {
 			newFileFullPath = curriculumBaseDir + sep + newFilename + ".zip"; 
 			downloadedFile = new File(newFileFullPath);
 
-			
+
 			FileOutputStream out = new FileOutputStream(downloadedFile);
 			byte[] b = new byte[1024];
 			int count;
@@ -233,24 +239,4 @@ public class WiseUpServiceImpl implements WiseUpService {
 		in.close();
 		out.close();
 			}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	public void setCurnitService(CurnitService curnitService) {
-		this.curnitService = curnitService;
-	}
-
-	public void setWiseUpHubUrl(String wiseUpHubUrl) {
-		this.wiseUpHubUrl = wiseUpHubUrl;
-	}
-
 }

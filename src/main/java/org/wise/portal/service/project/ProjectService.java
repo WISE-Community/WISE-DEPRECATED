@@ -27,15 +27,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.security.annotation.Secured;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
-import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.ProjectInfo;
-import org.wise.portal.domain.project.ProjectMetadata;
-import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectParameters;
@@ -50,21 +46,6 @@ import org.wise.portal.presentation.web.exception.NotAuthorizedException;
  */
 public interface ProjectService {
 	
-	/**
-	 * Get a <code>List</code> of <code>Project</code>
-	 * @return a <code>List</code> of <code>Project</code>
-	 */
-	@Transactional
-	public List<Project> getAllProjectsList();
-	
-	/**
-	 * Get a <code>List</code> of <code>Project</code>
-	 * @return a <code>List</code> of <code>Project</code>
-	 */
-	@Transactional
-	@Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
-	public List<Project> getProjectList();
-
 	/**
 	 * Get a <code>List</code> of <code>Project</code> that the specified
 	 * user owns
@@ -84,30 +65,6 @@ public interface ProjectService {
     @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
 	public List<Project> getSharedProjectList(User user);
 
-	/**
-	 * Get a <code>List</code> of <code>Project</code> with
-	 * matching FamilyTag
-	 * @return a <code>List</code> of <code>Project</code>
-	 */
-	@Transactional
-	public List<Project> getProjectListByTag(FamilyTag tag) throws ObjectNotFoundException;
-	
-	/**
-	 * Get a <code>List</code> of <code>Project</code> with
-	 * matching ProjectInfoTag
-	 * @return a <code>List</code> of <code>Project</code>
-	 */
-	@Transactional
-	public List<Project> getProjectListByTag(String tag) throws ObjectNotFoundException;
-
-	/**
-	 * Get a <code>List</code> of <code>Project</code> with
-	 * matching ProjectInfo
-	 * @return a <code>List</code> of <code>Project</code>
-	 */
-	@Transactional
-	public List<Project> getProjectListByInfo(ProjectInfo info) throws ObjectNotFoundException;
-	
 	/**
 	 * Retrieves a <code>List</code> of <code>Project</code> that
 	 * has been bookmarked by the given <code>User</code>
@@ -218,15 +175,6 @@ public interface ProjectService {
 	public Project getById(Serializable projectId) throws ObjectNotFoundException;
 	
 	/**
-	 * Given a <code>String</code> query, returns a <code>List</code> of
-	 * <code>Project</code> that satisfies the query.
-	 * 
-	 * @param <code>String</code> query
-	 * @return <code>List<Project></code>
-	 */
-	public List<Project> getProjectList(String query);
-	
-	/**
 	 * Given a <code>Project</code> project, attempts to minify a file and returns
 	 * a <code>String</code> of the final status of the operation.
 	 * 
@@ -234,16 +182,6 @@ public interface ProjectService {
 	 * @return
 	 */
 	public String minifyProject(Project project);
-	
-	/**
-	 * Given a <code>Long</code> projectId returns the
-	 * <code>ProjectMetadata</code> that is associated with that projectId and versionId, if
-	 * one exists, returns null otherwise.
-	 * 
-	 * @param projectId
-	 * @return
-	 */
-	public ProjectMetadata getMetadata(Long projectId);
 	
 	/**
 	 * Given a <code>Project</code> project and <code>User</code> user, returns
@@ -286,29 +224,25 @@ public interface ProjectService {
 	public List<Project> getAdminProjectList();
 	
 	/**
-	 * Sorts the given <code>List<Project></code> list of projects by the date they were created.
+	 * Returns a
+	 * <code>List<Project></code> list of public library projects
+	 * Library projects show up in "Browse Library" page but not on the homepage.
+	 * Public Library projects show up in both "Browse Library" page and in the homepage.
 	 * 
-	 * @param projectList
+	 * @return List<Project> - list of public library projects
 	 */
-	public void sortProjectsByDateCreated(List<Project> projectList);
+	public List<Project> getPublicLibraryProjectList();
 	
 	/**
-	 * Sorts the given <code>List<Project></code> list of projects by the date they were last edited.
+	 * Returns a
+	 * <code>List<Project></code> list of library projects.
+	 * Library projects show up in "Browse Library" page but not on the homepage.
+	 * Public Library projects show up in both "Browse Library" page and in the homepage.
 	 * 
-	 * @param projectList
+	 * @return List<Project> - list of library projects
 	 */
-	public void sortProjectsByLastEdited(List<Project> projectList);
-	
-	/**
-	 * Given a <code>String</code> tag name, returns a <code>List<Project></code>
-	 * list of projects with that tag.
-	 * 
-	 * @param String - tagName
-	 * @return List<Project> - list of projects
-	 */
-	@Transactional
-	public List<Project> getProjectListByTagName(String tagName);
-	
+	public List<Project> getLibraryProjectList();
+
 	/**
 	 * Given a <code>Set<String></code> set of tag names, returns a
 	 * <code>List<Project></code> list of projects with all of the tag names.
@@ -316,19 +250,8 @@ public interface ProjectService {
 	 * @param Set<String> - set of tagNames
 	 * @return List<Project> - list of projects
 	 */
-	@Transactional
 	public List<Project> getProjectListByTagNames(Set<String> tagNames);
-	
-	/**
-	 * Given a <code>Tag</code> tag and a <code>Long</code> project id
-	 * adds the given tag to the project.
-	 * 
-	 * @param Tag - tag
-	 * @param Project - project
-	 */
-	@Transactional
-	public Long addTagToProject(Tag tag, Long projectId);
-	
+
 	/**
 	 * Given a <code>String</code> and a <code>Project</code> adds the
 	 * tag to the project.

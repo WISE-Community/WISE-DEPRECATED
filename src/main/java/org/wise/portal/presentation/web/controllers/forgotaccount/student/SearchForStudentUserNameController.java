@@ -22,18 +22,19 @@
  */
 package org.wise.portal.presentation.web.controllers.forgotaccount.student;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.impl.PasswordReminderParameters;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.validators.SearchForStudentUserNameValidator;
 import org.wise.portal.service.user.UserService;
 
 /**
@@ -41,29 +42,59 @@ import org.wise.portal.service.user.UserService;
  * 
  * @version $Id: $
  */
+@Controller
+@RequestMapping("/forgotaccount/student/searchforstudentusername.html")
+public class SearchForStudentUserNameController {
 
-
-public class SearchForStudentUserNameController extends SimpleFormController {
-
-	protected UserService userService = null;
+	@Autowired
+	protected UserService userService;
+	
+	@Autowired
+	protected SearchForStudentUserNameValidator searchForStudentUserNameValidator;
+	
+	//the path to this form view
+	protected String formView = "/forgotaccount/student/searchforstudentusername";
+	
+	//the path to the success view
+	protected String successView = "/forgotaccount/student/searchforstudentusernameresult";
 	
     /**
-     * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
-     *      javax.servlet.http.HttpServletResponse, java.lang.Object,
-     *      org.springframework.validation.BindException)
+     * Called before the page is loaded to initialize values
+     * @param model the model object that contains values for the page to use when rendering the view
+     * @return the path of the view to display
      */
-    @Override
-    
-    protected ModelAndView onSubmit(HttpServletRequest request,
-            HttpServletResponse response, Object command, BindException errors)
-            throws Exception {
+    @RequestMapping(method=RequestMethod.GET)
+    public String initializeForm(ModelMap model) {
+    	//create the parameters object for the page
+    	PasswordReminderParameters params = new PasswordReminderParameters();
+    	model.addAttribute("passwordReminderParameters", params);
     	
-    	//get the object that contains the values from the jsp form
-        PasswordReminderParameters params = (PasswordReminderParameters) command;
+    	return formView;
+    }
+    
+    /**
+     * Called when the user submits the form
+     * @param params the object that contains values from the form
+     * @param bindingResult the object used for validation in which errors will be stored
+     * @param model the model object that contains values for the page to use when rendering the view
+     * @return the path of the view to display
+     */
+    @RequestMapping(method=RequestMethod.POST)
+    protected String onSubmit(@ModelAttribute("passwordReminderParameters") PasswordReminderParameters params, BindingResult bindingResult, Model model)
+            throws Exception {
 
         String[] fields = null;
 		String[] values = null;
 		String classVar = "";
+		
+		//validate the values the user entered
+		searchForStudentUserNameValidator.validate(params, bindingResult);
+		
+		//check if there were any errors
+		if(bindingResult.hasErrors()) {
+			//there were errors so we will reload this page and display errors
+			return formView;
+		}
 		
 		//get the values from the form
         String firstName = params.getFirstName();
@@ -91,20 +122,13 @@ public class SearchForStudentUserNameController extends SimpleFormController {
 		//find all the accounts with matching values
 		List<User> accountsThatMatch = userService.retrieveByFields(fields, values, classVar);
         
-        Map<String, Object> model = new HashMap<String, Object>();
+		model.addAttribute("users", accountsThatMatch);
+		model.addAttribute("firstName", firstName);
+		model.addAttribute("lastName", lastName);
+		model.addAttribute("birthMonth", birthMonth);
+		model.addAttribute("birthDay", birthDay);
         
-        //populate the model so the success page has access to these values
-        model.put("users", accountsThatMatch);
-        model.put("firstName", firstName);
-        model.put("lastName", lastName);
-        model.put("birthMonth", birthMonth);
-        model.put("birthDay", birthDay);
-        
-		return new ModelAndView(getSuccessView(), model);
-    }
-
-	public void setUserService(UserService userService) {
-        this.userService = userService;
+		return successView;
     }
 }
 

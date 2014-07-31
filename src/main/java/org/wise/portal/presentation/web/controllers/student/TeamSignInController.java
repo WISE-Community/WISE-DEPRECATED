@@ -34,10 +34,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.StaleObjectStateException;
 import org.json.JSONArray;
-import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
-import org.springframework.validation.BindException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate4.HibernateOptimisticLockingFailureException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.group.Group;
@@ -48,6 +55,7 @@ import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.validators.student.TeamSignInFormValidator;
 import org.wise.portal.presentation.web.TeamSignInForm;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
@@ -55,7 +63,7 @@ import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.workgroup.WISEWorkgroupService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller for handling team sign-ins before students start the project. The first user
@@ -67,43 +75,57 @@ import org.wise.portal.service.workgroup.WISEWorkgroupService;
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class TeamSignInController extends SimpleFormController {
+@Controller
+@SessionAttributes("teamSignInForm")
+@RequestMapping("/student/teamsignin.html")
+public class TeamSignInController {
 
+	@Autowired
 	private UserService userService;
 	
-	private WISEWorkgroupService workgroupService;
+	@Autowired
+	private WorkgroupService workgroupService;
 	
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private StudentService studentService;
 
+	@Autowired
 	private ProjectService projectService;
 
+	@Autowired
 	private StudentAttendanceService studentAttendanceService;
 	
+	@Autowired
 	private Properties wiseProperties;
-
-	public TeamSignInController() {
-		setSessionForm(true);
-	}
 	
+	@Autowired
+	private TeamSignInFormValidator teamSignInFormValidator;
+
 	/**
 	 * On submission of the Team Sign In form, the workgroup is updated
 	 * Assume that the usernames are valid usernames that exist in the data store
-	 * 
-	 * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse, java.lang.Object,
-	 *      org.springframework.validation.BindException)
 	 */
-	@Override
-	protected synchronized ModelAndView onSubmit(HttpServletRequest request,
-			HttpServletResponse response, Object command, BindException errors)
+	@RequestMapping(method=RequestMethod.POST)
+	protected synchronized String onSubmit(@ModelAttribute("teamSignInForm") TeamSignInForm teamSignInForm, 
+			BindingResult result, 
+			HttpServletRequest request,
+			HttpServletResponse response,
+			SessionStatus status,
+			ModelMap modelMap)
 	throws Exception {
+		
+		teamSignInFormValidator.validate(teamSignInForm, result);
+		if (result.hasErrors()) {
+			return "student/teamsignin";
+		}
+		
 		//the arrays to store the user ids of the students that are present or absent
 		JSONArray presentUserIds = new JSONArray();
 		JSONArray absentUserIds = new JSONArray();
 		
-		TeamSignInForm teamSignInForm = (TeamSignInForm) command;
 		User user1 = userService.retrieveUserByUsername(teamSignInForm.getUsername1());
 		User user2 = userService.retrieveUserByUsername(teamSignInForm.getUsername2());
 		User user3 = userService.retrieveUserByUsername(teamSignInForm.getUsername3());
@@ -166,41 +188,6 @@ public class TeamSignInController extends SimpleFormController {
 			}
 		}
 		
-		/*
-		if (user2 != null) {
-			try {
-				studentService.addStudentToRun(user2, projectcode);
-			} catch (StudentUserAlreadyAssociatedWithRunException e) {
-				// do nothing. it's okay if the student is already associated with this run.
-			}
-			
-			//add user2 to the members logged in
-			membersLoggedIn.add(user2);
-			
-			workgroupname += user2.getUserDetails().getUsername();
-			workgroups.addAll(workgroupService.getWorkgroupListByOfferingAndUser(run, user2));
-			
-			//add user2 to the users that are present
-			presentUserIds.put(user2.getId());
-		}
-		if (user3 != null) {
-			try {
-				studentService.addStudentToRun(user3, projectcode);
-			} catch (StudentUserAlreadyAssociatedWithRunException e) {
-				// do nothing. it's okay if the student is already associated with this run.
-			}
-			
-			//add user3 to the members logged in
-			membersLoggedIn.add(user3);
-			
-			workgroupname += user3.getUserDetails().getUsername();
-			workgroups.addAll(workgroupService.getWorkgroupListByOfferingAndUser(run, user3));
-			
-			//add user3 to the users that are present
-			presentUserIds.put(user3.getId());
-		}
-		*/
-
 		Workgroup workgroup = null;
 		Group period = run.getPeriodOfStudent(user1);
 		if (workgroups.size() == 0) {
@@ -258,8 +245,6 @@ public class TeamSignInController extends SimpleFormController {
 		//create a student attendance entry
 		this.studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp, presentUserIds.toString(), absentUserIds.toString());
 		
-		ModelAndView modelAndView = new ModelAndView();
-		
 		/* update run statistics */
 		int maxLoop = 30;  // to ensure that the following while loop gets run at most this many times.
 		int currentLoopIndex = 0;
@@ -284,15 +269,19 @@ public class TeamSignInController extends SimpleFormController {
 		launchProjectParameters.setWorkgroup((WISEWorkgroup) workgroup);
 		launchProjectParameters.setHttpServletRequest(request);
 		StartProjectController.notifyServletSession(request, run);
-		modelAndView = (ModelAndView) projectService.launchProject(launchProjectParameters);
-		modelAndView.addObject("closeokay", true);
+		ModelAndView modelAndView = (ModelAndView) projectService.launchProject(launchProjectParameters);
+		modelMap.put("closeokay", true);
 		
-		return modelAndView;
+		//clear the command object from the session
+		status.setComplete(); 
+
+		return "redirect:"+((RedirectView) modelAndView.getView()).getUrl();
 	}
 	
-	@Override
-	protected Object formBackingObject(HttpServletRequest request) throws Exception {
-		//get the signed in username
+    @RequestMapping(method=RequestMethod.GET) 
+    public String initializeForm(ModelMap modelMap,HttpServletRequest request) throws Exception { 
+
+    	//get the signed in username
 		User user = ControllerUtil.getSignedInUser();
 		String signedInUsername = user.getUserDetails().getUsername();
 		
@@ -316,6 +305,18 @@ public class TeamSignInController extends SimpleFormController {
 		}
 		
 		if(runId != null) {
+			// check to see if the logged-in user is associated with the runId or not before showing the sign in form.
+			try {
+				Run run = runService.retrieveById(runId);
+				User signedInUser = ControllerUtil.getSignedInUser();
+				if (!run.isStudentAssociatedToThisRun(signedInUser)) {
+					return "student/index";	
+				}
+			} catch (NumberFormatException nfe) {
+				// if there was an error (e.g. runId=abc or no runId specified, redirect to student homepage.
+				return "student/index";			
+			}	
+			
 			//set the run id
 			form.setRunId(runId);
 			
@@ -380,101 +381,7 @@ public class TeamSignInController extends SimpleFormController {
 				}					
 			}
 		}
-		
-		return form;
-	}
-	
-	@Override
-	protected final ModelAndView showForm(HttpServletRequest request,
-            HttpServletResponse response,
-            BindException errors)
-     throws Exception {
-		// check to see if the logged-in user is associated with the runId or not before showing the sign in form.
-		try {
-			Long runId = Long.valueOf(request.getParameter("runId"));
-			Run run = runService.retrieveById(runId);
-			User signedInUser = ControllerUtil.getSignedInUser();
-			if (run.isStudentAssociatedToThisRun(signedInUser)) {
-				ModelAndView formToShow = super.showForm(request, response, errors);
-				Integer maxWorkgroupSize = run.getMaxWorkgroupSize();
-				if (maxWorkgroupSize == null) {
-					String maxWorkgroupSizeStr = wiseProperties.getProperty("maxWorkgroupSize", "3");
-					maxWorkgroupSize = Integer.parseInt(maxWorkgroupSizeStr);
-				}
-				formToShow.addObject("maxWorkgroupSize", maxWorkgroupSize);
-				return formToShow;		
-			} else {
-				return new ModelAndView(new RedirectView("index.html"));
-			}
-		} catch (NumberFormatException nfe) {
-			// if there was an error (e.g. runId=abc or no runId specified, redirect to student homepage.
-			return new ModelAndView(new RedirectView("index.html"));			
-		}		
-	}
-
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	/**
-	 * @param workgroupService the workgroupService to set
-	 */
-	public void setWorkgroupService(WISEWorkgroupService workgroupService) {
-		this.workgroupService = workgroupService;
-	}
-
-	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @param studentService the studentService to set
-	 */
-	public void setStudentService(StudentService studentService) {
-		this.studentService = studentService;
-	}
-
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public StudentAttendanceService getStudentAttendanceService() {
-		return studentAttendanceService;
-	}
-
-	/**
-	 * 
-	 * @param studentAttendanceService
-	 */
-	public void setStudentAttendanceService(
-			StudentAttendanceService studentAttendanceService) {
-		this.studentAttendanceService = studentAttendanceService;
-	}
-
-	/**
-	 * @return the wiseProperties
-	 */
-	public Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
+		modelMap.put("teamSignInForm", form);
+		return "student/teamsignin";
 	}
 }

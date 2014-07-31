@@ -38,7 +38,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.AbstractModelAndViewTests;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.Gender;
@@ -48,7 +50,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.presentation.web.StudentAccountForm;
-import org.wise.portal.presentation.web.controllers.student.RegisterStudentController;
+import org.wise.portal.presentation.web.controllers.student.StudentAccountController;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.offering.RunService;
@@ -95,6 +97,10 @@ public class RegisterStudentControllerTest extends AbstractModelAndViewTests {
 
 	private BindException errors;
 	
+	private SessionStatus status;
+	
+	private ModelMap modelMap;
+	
 	private StudentUserDetails studentUserDetails;
 	
 	private StudentAccountForm studentAccountForm;
@@ -107,7 +113,7 @@ public class RegisterStudentControllerTest extends AbstractModelAndViewTests {
 	
 	private AclService<Run> mockAclService;
 	
-	private RegisterStudentController signupController;
+	private StudentAccountController signupController;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -115,6 +121,7 @@ public class RegisterStudentControllerTest extends AbstractModelAndViewTests {
 		super.setUp();
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
+		
 		mockApplicationContext = createMock(ApplicationContext.class);
 		studentUserDetails = new StudentUserDetails();
 		studentAccountForm = new StudentAccountForm();
@@ -138,12 +145,7 @@ public class RegisterStudentControllerTest extends AbstractModelAndViewTests {
 		
 		studentAccountForm.setUserDetails(studentUserDetails);
 		studentAccountForm.setProjectCode(LEGAL_PROJECTCODE);
-		signupController = new RegisterStudentController();
-		signupController.setApplicationContext(mockApplicationContext);
-		signupController.setUserService(mockUserService);
-		signupController.setStudentService(mockStudentService);
-		signupController.setSuccessView(SUCCESS);
-		signupController.setFormView(FORM);
+		signupController = new StudentAccountController();
 	}
 	
 	public void testOnSubmit_success() throws Exception {
@@ -159,10 +161,10 @@ public class RegisterStudentControllerTest extends AbstractModelAndViewTests {
 		expectLastCall();
 		replay(mockStudentService);
 				
-		ModelAndView modelAndView = signupController.onSubmit(request,
-				response, studentAccountForm, errors);
+		String view = signupController.onSubmit(studentAccountForm, errors, request,
+				response, status, modelMap);
 
-		assertEquals(SUCCESS, modelAndView.getViewName());
+		assertEquals(SUCCESS, view);
 		verify(mockUserService);
 		verify(mockStudentService);
 
@@ -173,11 +175,10 @@ public class RegisterStudentControllerTest extends AbstractModelAndViewTests {
 				new DuplicateUsernameException(studentUserDetails.getUsername()));
 		replay(mockUserService);
 
-		signupController.setFormView(FORM);
-		modelAndView = signupController.onSubmit(request, response,
-				studentAccountForm, errors);
+		view = signupController.onSubmit(studentAccountForm, errors, request,
+				response, status, modelMap);
 
-		assertViewName(modelAndView, FORM);
+		assertEquals(view, FORM);
 		assertEquals(1, errors.getErrorCount());
 		assertEquals(1, errors.getFieldErrorCount("userDetails.username"));
 		verify(mockUserService);
@@ -188,9 +189,9 @@ public class RegisterStudentControllerTest extends AbstractModelAndViewTests {
 		expect(mockUserService.createUser(studentUserDetails)).andThrow(
 				new RuntimeException());
 		replay(mockUserService);
-		signupController.setFormView(FORM);
 		try {
-			signupController.onSubmit(request, response, studentAccountForm, errors);
+			signupController.onSubmit(studentAccountForm, errors, request,
+					response, status, modelMap);
 			fail("Expected RuntimeException but it never happened.");
 		} catch (RuntimeException expected) {
 		}
@@ -210,10 +211,10 @@ public class RegisterStudentControllerTest extends AbstractModelAndViewTests {
 		expectLastCall().andThrow(new ObjectNotFoundException(RUNCODE_NOT_IN_DB, Run.class));
 		replay(mockStudentService);
 		
-		ModelAndView modelAndView = signupController.onSubmit(request,
-				response, studentAccountForm, errors);
+		String view = signupController.onSubmit(studentAccountForm, errors, request,
+				response, status, modelMap);
 
-		assertEquals(FORM, modelAndView.getViewName());
+		assertEquals(FORM, view);
 		assertTrue(errors.hasErrors());
 		assertEquals(1, errors.getFieldErrorCount());
 		
@@ -235,10 +236,10 @@ public class RegisterStudentControllerTest extends AbstractModelAndViewTests {
 		expectLastCall().andThrow(new ObjectNotFoundException(PERIODNAME_NOT_IN_DB, Run.class));
 		replay(mockStudentService);
 		
-		ModelAndView modelAndView = signupController.onSubmit(request,
-				response, studentAccountForm, errors);
+		String view = signupController.onSubmit(studentAccountForm, errors, request,
+				response, status, modelMap);
 
-		assertEquals(FORM, modelAndView.getViewName());
+		assertEquals(FORM, view);
 		assertTrue(errors.hasErrors());
 		assertEquals(1, errors.getFieldErrorCount());
 		

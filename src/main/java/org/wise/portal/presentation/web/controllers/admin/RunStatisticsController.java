@@ -28,8 +28,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.wise.portal.domain.attendance.StudentAttendance;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.service.attendance.StudentAttendanceService;
@@ -39,10 +42,14 @@ import org.wise.portal.service.offering.RunService;
  * @author patrick lawler
  * @version $Id:$
  */
-public class RunStatisticsController extends AbstractController {
+@Controller
+@RequestMapping("/admin/run/runstats.html")
+public class RunStatisticsController {
 
+	@Autowired
 	private RunService runService;
 	
+	@Autowired
 	private StudentAttendanceService studentAttendanceService;
 	
 	private final static String RUNS_WITHIN_VIEW = "/admin/run/runswithinperiod";
@@ -56,7 +63,7 @@ public class RunStatisticsController extends AbstractController {
 	/**
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	@Override
+	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String command = request.getParameter("command");
 		
@@ -95,17 +102,5 @@ public class RunStatisticsController extends AbstractController {
 		} else {
 			throw new Exception("I do not understand the command: " + command);
 		}
-	}
-
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @param studentAttendanceService the studentAttendanceService to set
-	 */
-	public void setStudentAttendanceService(
-			StudentAttendanceService studentAttendanceService) {
-		this.studentAttendanceService = studentAttendanceService;
 	}
 }

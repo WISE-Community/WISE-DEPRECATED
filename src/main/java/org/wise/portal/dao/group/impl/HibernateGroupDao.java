@@ -23,6 +23,7 @@
 package org.wise.portal.dao.group.impl;
 
 
+import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.group.GroupDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.group.Group;
@@ -33,6 +34,7 @@ import org.wise.portal.domain.group.impl.PersistentGroup;
  * 
  * @version $Id$
  */
+@Repository
 public class HibernateGroupDao extends AbstractHibernateDao<Group> implements
         GroupDao<Group> {
 

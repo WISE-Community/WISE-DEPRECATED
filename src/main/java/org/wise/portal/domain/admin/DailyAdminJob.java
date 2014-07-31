@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.crater.CRaterRequestDao;
 import org.wise.portal.dao.offering.RunDao;
@@ -43,20 +44,28 @@ import org.wise.vle.web.VLEAnnotationController;
 
 public class DailyAdminJob {
 
-	private IMailFacade mailService = null;
+	@Autowired
+	private IMailFacade mailService;
 
+	@Autowired
 	private RunDao<Run> runDao;
 	
+	@Autowired
 	private UserDao<User> userDao;
 	
+	@Autowired
 	private ProjectDao<Project> projectDao;
 	
+	@Autowired
 	private PortalStatisticsDao<PortalStatistics> portalStatisticsDao;
 	
+	@Autowired
 	private VLEService vleService;
 	
+	@Autowired
 	private Properties wiseProperties;
 	
+	@Autowired
 	private CRaterRequestDao<CRaterRequest> cRaterRequestDao;
 	
 	private boolean DEBUG = false;
@@ -604,68 +613,6 @@ public class DailyAdminJob {
 		}
 	}
 
-	/**
-	 * @param mailService the mailService to set
-	 */
-	public void setMailService(IMailFacade mailService) {
-		this.mailService = mailService;
-	}
-	
-	/**
-	 * @param runDao the runDao to set
-	 */
-	public void setRunDao(RunDao<Run> runDao) {
-		this.runDao = runDao;
-	}
-	
-	/**
-	 * @param userDao the userDao to set
-	 */
-	public void setUserDao(UserDao<User> userDao) {
-		this.userDao = userDao;
-	}
-	
-	/**
-	 * 
-	 * @param projectDao the projectDao to set
-	 */
-	public void setProjectDao(ProjectDao<Project> projectDao) {
-		this.projectDao = projectDao;
-	}
-	
-	/**
-	 * 
-	 * @param portalStatisticsDao
-	 */
-	public void setPortalStatisticsDao(
-			PortalStatisticsDao<PortalStatistics> portalStatisticsDao) {
-		this.portalStatisticsDao = portalStatisticsDao;
-	}
-
-	public VLEService getVleService() {
-		return vleService;
-	}
-
-	public void setVleService(VLEService vleService) {
-		this.vleService = vleService;
-	}
-
-	public Properties getWiseProperties() {
-		return wiseProperties;
-	}
-
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
-	public CRaterRequestDao<CRaterRequest> getcRaterRequestDao() {
-		return cRaterRequestDao;
-	}
-
-	public void setcRaterRequestDao(CRaterRequestDao<CRaterRequest> cRaterRequestDao) {
-		this.cRaterRequestDao = cRaterRequestDao;
-	}
-	
 	/**
 	 * @param yesterday the yesterday to set
 	 */

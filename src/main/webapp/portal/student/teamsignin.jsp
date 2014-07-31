@@ -18,7 +18,7 @@
 <title><spring:message code="student.teamsignin.teamSignIn" /></title>
 
 <style>
-/* hides the close button on the loading modal dialog so students can't close it
+/* hides the close button on the loading modal dialog so students can't close it */
 .ui-dialog-titlebar-close {
   visibility: hidden;
 }
@@ -57,7 +57,6 @@
 <div id="teamSelect" class="teamMargin2">
 	<div id="teamSelectHeader"><span style="color:#0000CC;"><sec:authentication property="principal.username" /></span> <spring:message code="student.teamsignin.alreadySignedIn"/></div>
 	<div id="teamSelectHeader"><spring:message code="student.teamsignin.othersSignIn"/></div>
-	
 	<c:set var="runId" value='<%= request.getParameter("runId") %>' />
 	<form:form method="post" action="teamsignin.html?runId=${runId}" commandName="teamSignInForm" id="teamSignInForm" autocomplete='off'>
 			<table id="multiUserSignIn" border="0" cellspacing="0" cellpadding="2">
@@ -73,7 +72,7 @@
 					<td colspan="3"></td>
 				</tr>
 		  		<tr>
-		  		<c:forEach var="teammate_index" begin="2" end="${maxWorkgroupSize}" step="1">
+		  		<c:forEach var="teammate_index" begin="2" end="${teamSignInForm.maxWorkgroupSize}" step="1">
 		    		<td><label for="username${teammate_index}"><spring:message code="student.teamsignin.username"/> ${teammate_index}:</label></td>
 		        	<td><form:input path="username${teammate_index}" id="username${teammate_index}"/></td>
 		        	<td class="errorMsgStyle"><form:errors path="username${teammate_index}" /></td>

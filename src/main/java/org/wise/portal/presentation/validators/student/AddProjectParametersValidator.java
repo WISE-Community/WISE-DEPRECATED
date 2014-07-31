@@ -22,6 +22,7 @@
  */
 package org.wise.portal.presentation.validators.student;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -34,6 +35,7 @@ import org.wise.portal.domain.project.impl.Projectcode;
  * @author Hiroki Terashima
  * @version $Id$
  */
+@Component
 public class AddProjectParametersValidator implements Validator {
 
 	/**

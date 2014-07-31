@@ -45,6 +45,7 @@
 							<tr>
 								<td colspan="2">		
 									<div id="finalPasswordReminderButtons">
+									<input type="hidden" name="_page" value="3" />							
 									<input type="submit" name="_finish" value="SUBMIT" /> 
 									</div>
 								</td>
