@@ -30,6 +30,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.status.StudentStatus;
@@ -47,6 +48,10 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     //the vle service
 	@Autowired
     private VLEService vleService;
+	
+	//the user service
+	@Autowired
+	private UserService userService;
     
     //the portal properties
 	@Autowired
@@ -124,7 +129,18 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
         	User signedInUser = null;
         	
         	if(signedInUserObject != null) {
-        		signedInUser = (User) signedInUserObject;
+        		try {
+            		//get the signed in user from the attributes
+            		User signedInUserFromAttributes = (User) signedInUserObject;
+            		
+        			//get the user id
+        			Long signedInUserId = signedInUserFromAttributes.getId();
+        			
+        			//retrieve a fresh handle on the signed in user
+					signedInUser = userService.retrieveById(signedInUserId);
+				} catch (ObjectNotFoundException e) {
+					e.printStackTrace();
+				}
         	}
 
         	//validate the user to make sure they are who they say they are
