@@ -475,7 +475,7 @@ path.link.node.active {
 }
 
 path.link.seq.active, path.link.seq.inactive {
-	opacity:.1;
+	opacity:.05;
 	/*display:none;*/
 }
 
