@@ -1,0 +1,90 @@
+{
+    "OK": {
+        "value": "확인",
+        "description": "Text for the word 'OK'"
+    },
+    "Yes": {
+        "value": "네",
+        "description": "Text for the word 'Yes'"
+    },
+    "Cancel": {
+        "value": "취소",
+        "description": "Text for the word 'Cancel'"
+    },
+    "Submit": {
+        "value": "제출",
+        "description": "Text for the word 'Submit'"
+    },
+    "Save": {
+        "value": "저장",
+        "description": "Text for the word 'Save'"
+    },
+    "loading": {
+        "value": "WISE 그리기 시작",
+        "description": "Message to display when draw tool is loading"
+    },
+    "stamps_title": {
+        "value": "도장 선택:",
+        "description": "Title for the choose a stamp tool"
+    },
+    "stamps_button": {
+        "value": "도장 도구",
+        "description": "Title text for the stamp tool button"
+    },
+    "eraseDrawing_button": {
+        "value": "현재 그림 지우기",
+        "description": "Title for the erase drawing tool button"
+    },
+    "eraseDrawing_dialog_title": {
+        "value": "그림 지우기",
+        "description": "Title for the erase drawing dialog"
+    },
+    "eraseDrawing_dialog_warning": {
+        "value": "경고! 이것은 현재 그림을 지우고 초기 상태로 바꿀 것입니다.",
+        "description": "Warning text for the erase drawing dialog"
+    },
+    "eraseDrawing_dialog_instructions": {
+        "value": "계속 하기를 원하면 '확인'을 누르시오.",
+        "description": "Instructions text for the erase drawing dialog"
+    },
+    "description_header_add": {
+        "value": "(추가 클릭)",
+        "description": "Link text for the header of the description input block"
+    },
+    "description_header_title": {
+        "value": "편집 클릭",
+        "description": "Title text for the header of the description input block"
+    },
+    "description_header_label": {
+        "value": "설명:",
+        "description": "Label text for the header of the description input block"
+    },
+    "description_header_labelSnapshot": {
+        "value": "프레임 설명:",
+        "description": "Label text for the header of the description input block when snapshots (frames) are enabled"
+    },
+    "description_header_maximized": {
+        "value": "(아래 빈칸에 글을 쓰시오)",
+        "description": "Instructions text for the header of the description input block"
+    },
+    "description_edit_link": {
+        "value": "편집",
+        "description": "Text for the edit description link/button"
+    },
+    "description_edit_title": {
+        "value": "편집 설명",
+        "description": "Title text for the edit description link/button"
+    },
+    "importStudentAsset_button": {
+        "value": "파일 가져오기",
+        "description": "Title for the import student asset tool button"
+    },
+    "prompt_link": {
+        "value": "설명",
+        "description": "Text for the prompt (instructions) link/button"
+    },
+    "prompt_title": {
+        "value": "설명 검토하기",
+        "description": "Title text for the prompt (instructions) link/button"
+    }
+}
