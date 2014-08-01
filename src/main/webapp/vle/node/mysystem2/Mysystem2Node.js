@@ -139,6 +139,7 @@ Mysystem2Node.prototype.renderGradingView = function(displayStudentWorkDiv, node
             var png = null;
 			var feedback = "";
 			var timestamp = "";
+			var score = null;
 			
 			//get the response string
 			var responseString = nodeState.response;
@@ -172,6 +173,15 @@ Mysystem2Node.prototype.renderGradingView = function(displayStudentWorkDiv, node
                     png = responseJSON["MySystem.GraphicPreview"].LAST_GRAPHIC_PREVIEW.png;
                     if (png != null) { png = "<img src='" + png + "'' />"; }
                 }
+                
+                if(responseJSON["MySystem.RubricScore"] != null &&
+                   responseJSON["MySystem.RubricScore"].LAST_SCORE_ID != null) {
+                	var tempScore = responseJSON["MySystem.RubricScore"].LAST_SCORE_ID.score
+                	
+                	if(tempScore != null && tempScore != -1) {
+                		score = tempScore;
+                	}
+                }
 			}
 			
     	    // prepend contentbaseurl in front of "assets" to student's work
@@ -200,6 +210,12 @@ Mysystem2Node.prototype.renderGradingView = function(displayStudentWorkDiv, node
     		divContent += "<br>";
     		divContent += "Feedback: " + feedback;
     		divContent += "<br>";
+    		
+    		if(score != null) {
+    			divContent += "Score: " + score;
+        		divContent += "<br>";
+    		}
+    		
     		divContent += "Timestamp: " + timestamp;
     		divContent += "<br>";
     		return divContent;
