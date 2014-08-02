@@ -978,5 +978,9 @@
     "constraint_message_xMustHaveStatusY": {
         "value": "이 항목을 볼수 있기 전에 다음에서 '{0}'을 '{1}'로 설정해야 합니다:",
         "description": "The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the selected step"
+    },
+    "grading_show_smart_filtered_items_only": {
+        "value": "필터된 항목만 보이기",
+        "description": "text to show next to the 'Show Smart-Filtered Items Only' checkbox in the grading tool"
     }
 }
