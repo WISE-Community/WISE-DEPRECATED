@@ -255,6 +255,67 @@ ExplanationBuilder.prototype.render = function() {
 		$('#target').css('background-position','left top');
 	}
 
+	var textAreaEnabled = false;
+	var importWorkEnabled = false;
+	
+	if(this.content.enableStudentTextArea) {
+		//the student textarea is enabled 
+		textAreaEnabled = true;
+	}
+	
+	//determine if we need to show the import work button
+	if(this.stepCanImportWork()) {
+		//this step is authored to import work
+		importWorkEnabled = true;
+		
+		//show the import work button
+		$('#importWorkButton').show();
+		
+		//check if there is any available work to import
+		if(this.isImportWorkAvailable()) {
+			//there is work we can import so we will enable the import work button
+			$('#importWorkButton').removeClass('disabled');
+			
+			//set the click action to import work
+			$('#importWorkButton').click({thisExplanationBuilder:this}, function(event){
+				var thisExplanationBuilder = event.data.thisExplanationBuilder;
+				
+				if(!$(this).hasClass('disabled')){
+					/*
+					 * ask the student if they are sure they want to import the work
+					 * and import the work if they answer yes
+					 */
+					thisExplanationBuilder.askImportWork();
+				}
+			});
+		} else {
+			/*
+			 * there is no work for us to import so the import work button
+			 * will remain disabled
+			 */
+		}
+	} else {
+		//this step is not authored to import work so we will hide the button
+		$('#importWorkButton').hide();
+	}
+	
+	if(textAreaEnabled && importWorkEnabled) {
+		//student textarea and import work are both enabled
+		$('#importWorkButtonA').css('width', '120px');
+		$('#showResponseA').css('width', '160px');
+	} else if(textAreaEnabled && !importWorkEnabled) {
+		//student textarea is enabled and import work is disabled
+		$('#showResponseA').css('width', '160px');
+	} else if(!textAreaEnabled && importWorkEnabled) {
+		//student textarea is disabled and import work is enabled
+		$('#importWorkButtonA').css('width', '120px');
+	} else {
+		/*
+		 * student textarea and import work are both disabled so
+		 * we don't need to set any width values
+		 */
+	}
+
 	//initialize the UI and load the idea basket
 	this.initializeUI();
 };
@@ -464,18 +525,6 @@ ExplanationBuilder.prototype.initializeUI = function() {
         }
     });
 
-	//get the question or prompt the student will read
-	var question = this.content.prompt;
-	
-	//get the instructions the student will read
-	var instructions = this.content.instructions;
-	
-	//get the background image that will be displayed in the drop area
-	var bg = this.content.background;
-
-	var explanationIdeas = [],
-		answer = "";
-
 	//get the latest state
 	var latestState = this.getLatestState();
 	
@@ -488,23 +537,9 @@ ExplanationBuilder.prototype.initializeUI = function() {
 	}
 	
 	this.latestState = latestState;
-	
-	if(latestState !== null) {
-		//get the ideas the student used last time
-		explanationIdeas = latestState.explanationIdeas;
-		
-		//get the answer the student typed last time
-		answer = latestState.answer;
-	}
-	
-	//check if we need to filter ideas by their node id
-	if(this.content.filterIdeasByNodeIds) {
-		//we need to filter the ideas so we will get the node ids to filter on
-		nodeIdsToFilter = this.content.nodeIdsToFilter;
-	}
 
-	//load idea basket, the explanation ideas, and other elements of the UI
-	this.load(question, instructions, bg, explanationIdeas, answer, nodeIdsToFilter);
+	//load the work into the step
+	this.loadWork(latestState);
 };
 
 /**
@@ -2228,6 +2263,173 @@ ExplanationBuilder.prototype.processTagMaps = function() {
 	};
 	
 	return returnObject;
+};
+
+/**
+ * Check if this step has been authored to import work
+ * @return whether this step has been authored to import work
+ */
+ExplanationBuilder.prototype.stepCanImportWork = function() {
+	var result = false;
+	
+	//the tag maps
+	var tagMaps = this.node.tagMaps;
+	
+	//check if there are any tag maps
+	if(tagMaps != null) {
+		
+		//loop through all the tag maps
+		for(var x=0; x<tagMaps.length; x++) {
+			
+			//get a tag map
+			var tagMapObject = tagMaps[x];
+			
+			if(tagMapObject != null) {
+				//get the variables for the tag map
+				var tagName = tagMapObject.tagName;
+				var functionName = tagMapObject.functionName;
+				var functionArgs = tagMapObject.functionArgs;
+				
+				if(functionName === "importWork") {
+					//this step has an importWork tag map
+					result = true;
+					break;
+				}
+			}
+		}
+	}
+	
+	return result;
+};
+
+/**
+ * Get the work to import 
+ * @return an array of node states
+ */
+ExplanationBuilder.prototype.getWorkToImport = function() {
+	var workToImport = null;
+	
+	//the tag maps
+	var tagMaps = this.node.tagMaps;
+	
+	//check if there are any tag maps
+	if(tagMaps != null) {
+		
+		//loop through all the tag maps
+		for(var x=0; x<tagMaps.length; x++) {
+			
+			//get a tag map
+			var tagMapObject = tagMaps[x];
+			
+			if(tagMapObject != null) {
+				//get the variables for the tag map
+				var tagName = tagMapObject.tagName;
+				var functionName = tagMapObject.functionName;
+				var functionArgs = tagMapObject.functionArgs;
+				
+				if(functionName === "importWork") {
+					//get the work to import
+					workToImport = this.node.getWorkToImport(tagName, functionArgs);
+				}
+			}
+		}
+	}
+	
+	return workToImport;
+};
+
+/*
+ * Check if there is work that can be imported
+ * @return whether there is work we can import
+ */
+ExplanationBuilder.prototype.isImportWorkAvailable = function() {
+	var result = false;
+	
+	//try to get work to import which is an array of node states
+	var workToImport = this.getWorkToImport();
+	
+	if(workToImport != null && workToImport.length > 0) {
+		//there is work to import
+		result = true;
+	}
+	
+	return result;
+};
+
+/**
+ * Ask the student if they are sure they want to import work
+ */
+ExplanationBuilder.prototype.askImportWork = function() {
+	//ask the student if they are sure they want to import work
+	var answer = confirm('Are you sure you want to import work? It will overwrite your existing work.');
+	
+	if(answer) {
+		/*
+		 * the student answered yes so we will load the
+		 * work to import if there is any
+		 */
+		this.loadImportWork();
+		
+		//save the student work
+		this.save();
+	}
+};
+
+/**
+ * Load work to import if there is any
+ */
+ExplanationBuilder.prototype.loadImportWork = function() {
+	//get the work to import if any. this is an array of node states.
+	var workToImport = this.getWorkToImport();
+	
+	//check that there is actually work to import
+	if(workToImport !== null && workToImport.length > 0) {
+		//get the latest node state from the work to import
+		var nodeState = workToImport[workToImport.length - 1];
+		
+		//load the work
+		this.loadWork(nodeState);
+	}
+};
+
+/**
+ * Load the work
+ * @param nodeState the work to load
+ */
+ExplanationBuilder.prototype.loadWork = function(nodeState) {
+	//get the question or prompt the student will read
+	var question = this.content.prompt;
+	
+	//get the instructions the student will read
+	var instructions = this.content.instructions;
+	
+	//get the background image that will be displayed in the drop area
+	var bg = this.content.background;
+	
+	var nodeIdsToFilter = null;
+	
+	//check if we need to filter ideas by their node id
+	if(this.content.filterIdeasByNodeIds) {
+		//we need to filter the ideas so we will get the node ids to filter on
+		nodeIdsToFilter = this.content.nodeIdsToFilter;
+	}
+	
+	var explanationIdeas = [];
+	var answer = "";
+	
+	if(nodeState != null) {
+		//get the ideas the student used last time
+		explanationIdeas = nodeState.explanationIdeas;
+		
+		//get the answer the student typed last time
+		answer = nodeState.answer;
+	}
+	
+	//set the node state as the latest state
+	this.latestState = nodeState;
+	
+	//load idea basket, the explanation ideas, and other elements of the UI
+	this.load(question, instructions, bg, explanationIdeas, answer, nodeIdsToFilter);
 };
 
 //used to notify scriptloader that this script has finished loading

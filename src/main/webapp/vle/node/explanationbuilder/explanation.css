@@ -23,15 +23,15 @@ header {
 }
 
 #showResponse {
-	position:absolute;
-	right:0;
 	top:.45em;
 	margin:0 .5em;
 	display:none;
 }
 
-#promptLabel {
-	margin-right:135px;
+#importWorkButton {
+	top:.45em;
+	margin:0 .5em;
+	display:none;
 }
 
 #addNew {
