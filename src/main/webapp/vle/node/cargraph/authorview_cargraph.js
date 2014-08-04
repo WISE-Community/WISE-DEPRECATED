@@ -88,6 +88,14 @@ View.prototype.CarGraphNode.generatePage = function(view){
 	pageDiv.appendChild(promptTextArea);
 	pageDiv.appendChild(createBreak());
 
+	// tell author to use the advanced view for authoring this step
+	var advancedModeText = document.createTextNode("Please use the \"Advanced\" mode to author this step.");
+
+	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(advancedModeText);
+	pageDiv.appendChild(createBreak());
+
+	
 	//add the page to the parent
 	parent.appendChild(pageDiv);
 	
