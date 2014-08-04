@@ -32,7 +32,9 @@ import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
@@ -107,15 +109,19 @@ public class WISEAuthenticationSuccessHandler extends
 			}
         }
         
-        // if user is not admin and login is disallowed, redirect user to logout page
+        // if user is not admin and login is disallowed, log out user and redirect them to the "we are undergoing maintenance" page
         try {
 			Portal portal = portalService.getById(1);
 			if (!userIsAdmin && !portal.isLoginAllowed()) {
-				//get the context path e.g. /wise
-				String contextPath = request.getContextPath();
+				 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		          if (auth != null){    
+		             new SecurityContextLogoutHandler().logout(request, response, auth);
+		          }
+		        SecurityContextHolder.getContext().setAuthentication(null);
 				
-		        	response.sendRedirect(contextPath + WISEAuthenticationProcessingFilter.LOGOUT_PATH);
-		        	return;
+				String contextPath = request.getContextPath();
+				response.sendRedirect(contextPath + WISEAuthenticationProcessingFilter.LOGIN_DISABLED_MESSGE_PAGE);
+		        return;
 		    }
         } catch (ObjectNotFoundException e) {
 			// do nothing
