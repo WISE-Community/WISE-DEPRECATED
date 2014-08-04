@@ -482,8 +482,15 @@ ASSESSMENTLIST.prototype.render = function() {
 		}
 	}
 	
-	/* render the overall prompt for the whole step */
-	$("#promptDiv").html(this.content.prompt);
+	/* render the overall prompt for the whole step. if prompt is null, hide the entire prompt div */
+	if (this.content.prompt) {
+		$("#promptDiv").html(this.content.prompt);	
+		$("#promptLabelDiv").show();
+		$("#promptDiv").show();
+	} else {
+		$("#promptLabelDiv").hide();
+		$("#promptDiv").hide();
+	}
 
 	var assessmentHTML = "";
 	/* for each assessment in the list, render them, including the state, if any */
