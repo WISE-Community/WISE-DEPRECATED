@@ -179,26 +179,4 @@ public class IndexController {
         modelMap.put("projectThumbMap", projectThumbMap);
         return "index";
 	}
-
-	/**
-	 * @param newsItemService the newsItemService to set
-	 */
-	public void setNewsItemService(NewsItemService newsItemService) {
-		this.newsItemService = newsItemService;
-	}
-	
-	/**
-	 * @param projectService the projectService to set
-	 */
-	public void setProjectService(ProjectService projectService) {
-		this.projectService = projectService;
-	}
-
-	/**
-	 * @param wiseProperties the wiseProperties to set
-	 */
-	public void setWiseProperties(Properties wiseProperties) {
-		this.wiseProperties = wiseProperties;
-	}
-
 }

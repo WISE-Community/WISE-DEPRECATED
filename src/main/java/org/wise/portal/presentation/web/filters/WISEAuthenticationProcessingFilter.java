@@ -77,6 +77,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
 	public static final String ADMIN_DEFAULT_TARGET_PATH = "/admin/index.html";
 	public static final String RESEARCHER_DEFAULT_TARGET_PATH = "/teacher/index.html";
 	public static final String LOGOUT_PATH = "/j_spring_security_logout";
+	public static final String LOGIN_DISABLED_MESSGE_PAGE = "/pages/maintenance.html";
 
 	public static final Integer recentFailedLoginTimeLimit = 15;
 	public static final Integer recentFailedLoginAttemptsLimit = 5;
