@@ -1069,7 +1069,10 @@ public class VLEGetXLS {
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "End Time (Student Clock)");
 		    	
 		    	//header time the student spent on the step in seconds column
-		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Time Spent (Seconds)");
+		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Visit Time Spent (Seconds)");
+		    	
+		    	//header time the student spent on the revision in seconds column
+		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Revision Time Spent (Seconds)");
 		    	
 		    	//header time the student spent on the step in seconds column
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Teacher Score Timestamp");
@@ -1337,17 +1340,58 @@ public class VLEGetXLS {
 	    	//there is no student work
 			JSONObject nodeState = null;
 			
+			Long nodeStateTimeSpent = null;
+			
+	    	//calculate the time the student spent on the step
+	    	if(endTime != null && startTime != null) {
+	    		/*
+	    		 * since this visit doesn't have any node states, the revision time
+	    		 * will be equal to the visit time.
+	    		 * find the difference between start and end and divide by
+	    		 * 1000 to obtain the value in seconds
+	    		 */
+	    		nodeStateTimeSpent = (endTime.getTime() - startTime.getTime()) / 1000;
+	    	}
+			
 			//write the row for the node state
-			rowCounter = writeAllStudentWorkNodeState(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, nodeState);
+			rowCounter = writeAllStudentWorkNodeState(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, nodeState, nodeStateTimeSpent);
 		} else {
+			
+			Long nodeStateStartTime = null;
+			
+			if(startTime != null) {
+				/*
+				 * get the start time for the first node state which will be the same
+				 * as the start time for the node visit
+				 */
+				nodeStateStartTime = startTime.getTime();
+			}
+			
 			//loop through all the node states
 			for(int i=0; i<nodeStates.length(); i++) {
 				try {
 					//get a node state
 					JSONObject nodeState = nodeStates.getJSONObject(i);
 					
+					Long nodeStateTimeSpent = null;
+					
+					//get the timestamp from the node state if it exists
+					Long nodeStateEndTime = nodeState.optLong("timestamp");
+					
+					if(nodeStateStartTime != null && nodeStateStartTime != 0 
+							&& nodeStateEndTime != null && nodeStateEndTime != 0) {
+						/*
+						 * we have valid start and end times so we will calculate the time
+						 * spent on the node state
+						 */
+						nodeStateTimeSpent = (nodeStateEndTime - nodeStateStartTime) / 1000;
+					}
+					
 					//write the row for the node state
-					rowCounter = writeAllStudentWorkNodeState(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, nodeState);
+					rowCounter = writeAllStudentWorkNodeState(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, nodeState, nodeStateTimeSpent);
+					
+					//set the node state start time as the node state end time for the next node state
+					nodeStateStartTime = nodeStateEndTime;
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -1381,6 +1425,7 @@ public class VLEGetXLS {
 	 * @param stepWorksForWorkgroupId
 	 * @param nodeJSONObject
 	 * @param nodeState
+	 * @param nodeStateTimeSpent
 	 * @return the row counter for the next empty row
 	 */
 	private int writeAllStudentWorkNodeState(XSSFSheet userIdSheet,
@@ -1404,7 +1449,8 @@ public class VLEGetXLS {
 			UserInfo userInfo,
 			List<StepWork> stepWorksForWorkgroupId,
 			JSONObject nodeJSONObject,
-			JSONObject nodeState) {
+			JSONObject nodeState,
+			Long nodeStateTimeSpent) {
 		
     	//get the student work columns for this node state if export columns were authored
     	ArrayList<ArrayList<Object>> columns = getExportColumnDataValues(nodeState, nodeId);
@@ -1457,7 +1503,7 @@ public class VLEGetXLS {
     			}
     			
     			//write the row to the excel
-    			writeAllStudentWorkRow(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, columnNames, row);
+    			writeAllStudentWorkRow(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, columnNames, row, nodeStateTimeSpent);
     			
     			//update the row counter
     			rowCounter++;
@@ -1474,7 +1520,7 @@ public class VLEGetXLS {
     		columnNames = getDefaultColumnNames(nodeId, nodeType, nodeState);
 
     		//write the row to the excel
-    		writeAllStudentWorkRow(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, columnNames, row);
+    		writeAllStudentWorkRow(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, columnNames, row, nodeStateTimeSpent);
     		
     		//update the row counter
     		rowCounter++;
@@ -1659,8 +1705,10 @@ public class VLEGetXLS {
 	    		//get the response
 	    		String response = getNodeStateResponse(nodeState, nodeId);
 	    		
-	    		//put the response in the row
-	    		row.add(response);
+	    		if(response != null) {
+		    		//put the response in the row
+		    		row.add(response);
+	    		}
 			}
 		}
 		
@@ -1983,7 +2031,8 @@ public class VLEGetXLS {
 	 * @param nodeJSONObject
 	 * @param columnNames
 	 * @param row
-	 * @return
+	 * @param nodeStateTimeSpent
+	 * @return the column number for the next empty cell to use
 	 */
 	private int writeAllStudentWorkRow(XSSFSheet userIdSheet,
 			int rowCounter,
@@ -2007,7 +2056,8 @@ public class VLEGetXLS {
 			List<StepWork> stepWorksForWorkgroupId,
 			JSONObject nodeJSONObject,
 			ArrayList<Object> columnNames,
-			ArrayList<Object> row) {
+			ArrayList<Object> row,
+			Long nodeStateTimeSpent) {
     	
 		//counter for the cell columns
     	int tempColumn = 0;
@@ -2082,11 +2132,20 @@ public class VLEGetXLS {
     		timeSpentOnStep = (endTime.getTime() - startTime.getTime()) / 1000;	
     	}
     	
-    	//set the time spent on the step
+    	//set the time spent on the step visit
     	if(timeSpentOnStep == -1) {
     		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, "N/A");
     	} else {
     		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, timeSpentOnStep);
+    	}
+
+    	//set the time spent on the node state
+    	if(nodeStateTimeSpent == null) {
+    		//this node state doesn't have a time spent value
+    		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, "N/A");
+    	} else {
+    		//this node state has a time spent value so we will set it
+    		tempColumn = setCellValue(tempRow, tempRowVector, tempColumn, nodeStateTimeSpent);
     	}
     	
     	//create a list to add the StepWork to
