@@ -179,6 +179,31 @@ Jinna Lei, Noah Paessel, Greg Pitter, Rokham Sadeghnezhadfard, Jeff Schoner, Nat
 		</td>  
 	</tr>
 	<tr>
+		<td class="creditCategory">WISE Translators</td>  
+		<td>
+			<dl>
+			<dt>Chinese (Simplified)</dt>
+				<dd>Nathan Zhao</dd>
+			</dl>
+			<dl>
+			<dt>Chinese (Traditional)</dt>
+				<dd>Researchers at National Kaohsiung Normal University</dd>
+			</dl>
+			<dl>
+			<dt>Dutch</dt>
+				<dd>Annelies Raes, Stefanie De Sloovere</dd>
+			</dl>
+			<dl>
+			<dt>Korean</dt>
+				<dd>Se Jin Youn</dd>
+			</dl>
+			<dl>
+			<dt>Spanish</dt>
+				<dd>Cristian Rizzi</dd>
+			</dl>
+		</td>  
+	</tr>	
+	<tr>
 		<td class="creditCategory">Special Thanks To</td>  
 		<td>
 			<dl>
