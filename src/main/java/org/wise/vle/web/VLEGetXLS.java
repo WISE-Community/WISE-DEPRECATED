@@ -449,11 +449,13 @@ public class VLEGetXLS {
 						//get the text from the file
 						String fileText = FileManager.getFileText(nodeFile);
 
-						//get the content for the node
-						JSONObject nodeContent = new JSONObject(fileText);
-						
-						//put an entry into the hashmap with key as node id and value as JSON node content
-						nodeIdToNodeContent.put(node.getString("identifier"), nodeContent);						
+						if(fileText != null && !fileText.equals("")) {
+							//get the content for the node
+							JSONObject nodeContent = new JSONObject(fileText);
+							
+							//put an entry into the hashmap with key as node id and value as JSON node content
+							nodeIdToNodeContent.put(node.getString("identifier"), nodeContent);							
+						}
 					}
 				} catch(IOException e) {
 					e.printStackTrace();
