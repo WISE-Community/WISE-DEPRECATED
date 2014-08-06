@@ -18,8 +18,10 @@ public class PortalStatisticsServiceImpl implements PortalStatisticsService {
 	 * Get all the portal statistics ordered by timestamp from oldest to newest
 	 */
 	public List<PortalStatistics> getPortalStatistics() {
-		List<PortalStatistics> portalStatisticsList = portalStatisticsDao.getAllPortalStatistics();
-		
-		return portalStatisticsList;
+		return portalStatisticsDao.getAllPortalStatistics();
+	}
+
+	public PortalStatistics getLatestPortalStatistics() {
+		return portalStatisticsDao.getLatestPortalStatistics();
 	}
 }

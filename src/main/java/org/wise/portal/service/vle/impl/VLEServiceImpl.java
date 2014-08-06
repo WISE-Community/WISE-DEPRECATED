@@ -55,7 +55,8 @@ import org.wise.vle.domain.work.StepWorkCache;
 
 
 /**
- * @author h
+ * @author Geoffrey Kwan
+ * @author Hiroki Terashima
  * @version $Id:$
  */
 @Service
@@ -487,6 +488,12 @@ public class VLEServiceImpl implements VLEService {
 	public List<VLEStatistics> getVLEStatistics() {
 		return vleStatisticsDao.getVLEStatistics();
 	}
+	
+	@Override
+	public VLEStatistics getLatestVLEStatistics() {
+		return vleStatisticsDao.getLatestVLEStatistics();
+	}
+
 
 	@Override
 	public StudentStatus getStudentStatusById(Long id) {

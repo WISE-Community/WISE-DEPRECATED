@@ -86,6 +86,10 @@ public class ManagePortalController {
 				portal.setLoginAllowed(Boolean.valueOf(request.getParameter("val")));
 				portalService.updatePortal(portal);
 				mav.addObject("msg", "success");
+			} else if (attr.equals("isSendStatisticsToHub")) {
+				portal.setSendStatisticsToHub(Boolean.valueOf(request.getParameter("val")));
+				portalService.updatePortal(portal);
+				mav.addObject("msg", "success");
 			} else {
 				mav.addObject("msg", "error: permission denied");
 			}

@@ -152,11 +152,6 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<skipTests>true</skipTests>
-					<!-- NP: not sure where this variable was supposed to be defined, but 
-						its not -->
-					<!-- which is fine, because the default value does the right thing in 
-						our case -->
-					<!-- <webappDirectory>${maven.war.portal.webappDirectory}</webappDirectory> -->
 					<webResources>
 						<resource>
 							<!-- this is relative to the pom.xml directory -->
@@ -307,18 +302,6 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.easymock</groupId>
-			<artifactId>easymock</artifactId>
-			<version>2.2</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
