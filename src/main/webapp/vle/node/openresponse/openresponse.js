@@ -1066,47 +1066,7 @@ OPENRESPONSE.prototype.render = function() {
 	}
 	
 	//load the external script if this step has one set
-	this.loadExternalScript();
-};
-
-
-/**
- * Load the external script for this step if it has one
- */
-OPENRESPONSE.prototype.loadExternalScript = function() {
-	if(this.content != null) {
-		//get the external script path from the content if it exists
-		var externalScript = this.content.externalScript;
-		
-		if(externalScript != null) {
-			//this step has an external script so we will load it
-			$.getScript(externalScript, this.getExternalScriptSuccess);
-		}
-	}
-};
-
-
-/**
- * Called when we successfully load the external script
- * @param script the text of the script
- * @param textStatus the text 'success'
- * @param jqXHR the jquery xhr object
- */
-OPENRESPONSE.prototype.getExternalScriptSuccess = function(script, textStatus, jqXHR) {
-	/*
-	 * check if we have registered this external script before
-	 * because we want to make sure we only register it once
-	 */
-	if(!or.node.registeredListener) {
-		/*
-		 * we have not registered this external script before so we will 
-		 * register it now by calling the registerListener() function in 
-		 * the external script. the functions in the external script are 
-		 * accessible globally.
-		 */
-		registerListener(or);
-		or.node.registeredListener = true;
-	}
+	this.view.loadExternalScript(this);
 };
 
 

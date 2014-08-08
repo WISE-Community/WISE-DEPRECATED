@@ -2299,6 +2299,78 @@ View.prototype.getRichTextContent = function(elemId) {
 	return content;
 };
 
+
+/**
+ * Load the external script for the given step object if it has one
+ * @param stepObject the step object that performs the
+ * processing for a step. these are usually created in the
+ * html file of a step type.
+ * e.g.
+ * for an open response step we would be passing in
+ * or = new OPENRESPONSE();
+ */
+View.prototype.loadExternalScript = function(stepObject) {
+	if(stepObject != null) {
+		//get the step content
+		var content = stepObject.content;
+		
+		if(content != null) {
+			//get the external script path from the content if it exists
+			var externalScript = content.externalScript;
+
+			if(externalScript != null) {
+				/*
+				 * save a reference to this step object so we can access it in the
+				 * getExternalScriptSuccess() function
+				 */ 
+				this.stepObject = stepObject;
+				
+				//this step has an external script so we will load it
+				$.getScript(externalScript, this.getExternalScriptSuccess);
+			}
+		}
+	}
+};
+
+
+/**
+ * Called when we successfully load the external script
+ * @param script the text of the script
+ * @param textStatus the text 'success'
+ * @param jqXHR the jquery xhr object
+ */
+View.prototype.getExternalScriptSuccess = function(script, textStatus, jqXHR) {
+	/*
+	 * get the step object that was temporarily stored in the view
+	 * just so we could access it in this function
+	 */
+	var stepObject = view.stepObject;
+	
+	/*
+	 * check if we have registered this external script before
+	 * because we want to make sure we only register it once
+	 */
+	if(!stepObject.node.registeredListener) {
+		/*
+		 * we have not registered this external script before so we will 
+		 * register it now by calling the registerListener() function in 
+		 * the external script. the functions in the external script are 
+		 * accessible globally.
+		 */
+		registerListener(stepObject);
+		stepObject.node.registeredListener = true;
+	}
+	
+	/*
+	 * clear the step object from the view because we set it
+	 * so we could access it in this function. after this it's no
+	 * longer needed and shouldn't be left hanging around since
+	 * this field may be re-used when another step loads an
+	 * external script.
+	 */ 
+	view.stepObject = null;
+};
+
 // preserve carriage return values when retrieving value from textareas in jQuery (see http://api.jquery.com/val/)
 $.valHooks.textarea = {
 	get: function( elem ) {
