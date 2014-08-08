@@ -9,13 +9,14 @@ View.prototype.dropDownMenuDispatcher = function(type,args,obj){
 		obj.showNavigationTree();
 	} else if (type == 'showNodeAnnotations') {
 		var nodeIdToShow = args[0];
+		var feedbackHTML = args[1];
 		// if annotations panel is already open, do not open up another annotations panel
 		if ($("#nodeAnnotationsPanel_"+nodeIdToShow) && 
 				$("#nodeAnnotationsPanel_"+nodeIdToShow).data("dialog") && 
 				$("#nodeAnnotationsPanel_"+nodeIdToShow).data("dialog").isOpen()) {
 			return;
 		}
-		obj.showNodeAnnotations(nodeIdToShow);
+		obj.showNodeAnnotations(nodeIdToShow, feedbackHTML);
 	} else if (type == 'showStepHints') {
 		// if hint is already open, do not open up another hint
 		if ($("#hintsPanel") && 

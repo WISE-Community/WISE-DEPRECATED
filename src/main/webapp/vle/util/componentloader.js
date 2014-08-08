@@ -587,7 +587,8 @@ var componentloader = function(em, sl){
 				'nodeLinkClicked':[null,null],
 				'nodeStatusUpdated':[null,null],
 				'cRaterResponseReceived':[null,null],
-				'renderNodeBlocked':[null,null]
+				'renderNodeBlocked':[null,null],
+				'beforeNodeStateSaved':[null,null]
 			},
 			methods:{},
 			initialize:{

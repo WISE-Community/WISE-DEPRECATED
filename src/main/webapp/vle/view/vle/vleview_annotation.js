@@ -2,8 +2,10 @@
  * Display annotations for the specified step.
  * Annotations for the step will popup in a dialog
  * @param nodeIdToShow id of node to show
+ * @param feedbackHTML feedback html can be passed in to override the text 
+ * that would regularly be displayed
  */
-View.prototype.showNodeAnnotations = function(nodeId) {
+View.prototype.showNodeAnnotations = function(nodeId, feedbackHTML) {
 	$('#nodeAnnotationsLink').stop();
 	$('#nodeAnnotationsLink').css('color','#FFFFFF');
 	
@@ -17,6 +19,10 @@ View.prototype.showNodeAnnotations = function(nodeId) {
 	
 	//get any persistent feedback we want to show from the step
 	var stepFeedback = currentNode.getFeedback();
+	
+	if(feedbackHTML != null) {
+		stepFeedback = feedbackHTML;
+	}
 	
 	if (stepFeedback != null || (currentNodeAnnotations != null && currentNodeAnnotations.length > 0)) {
 

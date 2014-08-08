@@ -122,7 +122,12 @@ Node.prototype.setTitle = function(title){
  * Adds provided nodeState to  global view.states object and POSTs unended node visit to WISE server right away.
  */
 Node.prototype.save = function(nodeState, successCallback, failureCallback, callbackData) {
-
+	/*
+	 * fire the 'beforeSaveNodeState' event so listeners can process
+	 * the work before it's saved
+	 */
+	eventManager.fire('beforeNodeStateSaved', [this.id, nodeState]);
+	
 	//fire the event to push this state to the global view.states object
 	this.view.pushStudentWork(this.id, nodeState);
 	
