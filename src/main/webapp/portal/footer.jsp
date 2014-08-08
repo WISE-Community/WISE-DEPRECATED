@@ -40,7 +40,12 @@
 				</div>
 				<div id="footerText">
 					<p><spring:message code="footer.nsfSupport" /></p>
-					<p>&copy; <spring:message code="legalCopyright" /></p>
+					<p>
+					<c:if test="${wiseVersion != null}">
+						WISE ${wiseVersion} 
+					</c:if>
+					&copy; <spring:message code="legalCopyright" />
+					</p>
 				</div>
 				<div style="clear:both; padding:0;"></div>
 	 		</div>

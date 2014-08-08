@@ -22,10 +22,8 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,10 +34,12 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.wise.portal.service.portal.PortalService;
 
 /**
  * Controller for Admin Index page
@@ -56,6 +56,9 @@ public class AdminIndexController {
 	
 	// where to get commit history information
 	private static final String WISE_COMMIT_HISTORY_URL = "https://api.github.com/repos/WISE-Community/WISE/commits?page=1&per_page=20";
+	
+	@Autowired
+	private PortalService portalService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -66,24 +69,17 @@ public class AdminIndexController {
 		String globalWISEVersion = null;  // master WISE version    e.g. "4.8", "4.9.1", etc
 
 		// get WISE version from src/main/resources/version.json
-		InputStream in = getClass().getResourceAsStream("/version.json");
-		BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8")); 
-		StringBuilder responseStrBuilder = new StringBuilder();
-
-		String inputStr;
-		while ((inputStr = streamReader.readLine()) != null)
-			responseStrBuilder.append(inputStr);
-		
 		try {
-			// now add local (this) WISE Version to ModelAndView
-			JSONObject thisWISEVersionJSON = new JSONObject(responseStrBuilder.toString());
-			String thisWISEMajorVersion = thisWISEVersionJSON.getString("major");
-			String thisWISEMinorVersion = thisWISEVersionJSON.getString("minor");
-		    thisWISEVersion = thisWISEMajorVersion + "." + thisWISEMinorVersion;
+			thisWISEVersion = portalService.getWISEVersion();
 			modelAndView.addObject("thisWISEVersion", thisWISEVersion);
 		} catch (Exception e) {
 			modelAndView.addObject("thisWISEVersion", "error retrieving current WISE version");
 			e.printStackTrace();
+		}
+
+		try {
+			// now add local (this) WISE Version to ModelAndView
+		} catch (Exception e) {
 		}		
 		
 		// get latest WISE info from master location

@@ -24,7 +24,6 @@ package org.wise.portal.service.portal;
 
 import java.io.Serializable;
 
-
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.portal.Portal;
 
@@ -42,4 +41,11 @@ public interface PortalService {
 	 * Updates specified portal
 	 */
 	public void updatePortal(Portal portal);
+
+	/**
+	 * Returns this WISE's version infomation as JSON 
+	 * @return
+	 * @throws Exception 
+	 */
+	public String getWISEVersion() throws Exception;
 }

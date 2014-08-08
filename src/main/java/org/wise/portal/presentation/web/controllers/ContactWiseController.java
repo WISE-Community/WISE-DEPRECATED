@@ -36,6 +36,7 @@ import org.wise.portal.presentation.validators.general.contactwise.ContactWISEVa
 import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.user.UserService;
 
@@ -77,6 +78,9 @@ public class ContactWiseController {
 
 	@Autowired
 	private RunService runService;
+
+	@Autowired
+	private PortalService portalService;
 
 	@Autowired
 	private UserService userService;
@@ -321,6 +325,12 @@ public class ContactWiseController {
 		}
 
 		modelMap.put("contactWISEForm", contactWISEForm);
+		// also show WISEVersion
+		try {
+			modelMap.put("wiseVersion", portalService.getWISEVersion());
+		} catch (Exception e) {
+			// do nothing
+		}
 		return "contact/contactwise"; 
 	} 
 
