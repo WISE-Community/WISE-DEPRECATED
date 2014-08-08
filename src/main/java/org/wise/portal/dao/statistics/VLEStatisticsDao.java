@@ -13,4 +13,6 @@ public interface VLEStatisticsDao<T extends VLEStatistics> extends SimpleDao<T> 
 	public void saveVLEStatistics(VLEStatistics vleStatistics);
 	
 	public List<VLEStatistics> getVLEStatistics();
+
+	public VLEStatistics getLatestVLEStatistics();
 }

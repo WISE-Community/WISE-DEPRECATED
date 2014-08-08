@@ -5,8 +5,9 @@ FlashNode.prototype.i18nEnabled = true;
 FlashNode.prototype.i18nPath = "vle/node/flash/i18n/";
 FlashNode.prototype.supportedLocales = {
 			"en_US":"en_US",
-			"ja":"ja",
 			"es":"es",
+			"ja":"ja",
+			"ko":"ko",
 			"nl":"nl",
 			"nl_GE":"nl",
 			"nl_DE":"nl"			

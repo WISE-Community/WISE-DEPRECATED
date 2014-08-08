@@ -33,6 +33,7 @@ ExplanationBuilderNode.prototype.i18nPath = "vle/node/explanationbuilder/i18n/";
 ExplanationBuilderNode.prototype.supportedLocales = {
 	"en_US":"en_US",
 	"es":"es",
+	"ko":"ko",
 	"nl":"nl",
 	"nl_GE":"nl",
 	"nl_DE":"nl"	

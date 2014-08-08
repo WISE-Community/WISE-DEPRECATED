@@ -106,6 +106,19 @@ public interface Portal extends Persistable {
 	 */
 	public void setLoginAllowed(boolean loginAllowed);
 	
+	
+	/**
+	 * Send WISE usage statistics to central hub?
+	 * @return
+	 */
+	public boolean isSendStatisticsToHub();
+	
+	/**
+	 * Send WISE usage statistics to central hub?
+	 * @param loginAllowed
+	 */
+	public void setSendStatisticsToHub(boolean doSendStatistics);
+	
 	/**
 	 * @return the address
 	 */

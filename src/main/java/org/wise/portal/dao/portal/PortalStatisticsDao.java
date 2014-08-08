@@ -10,4 +10,5 @@ public interface PortalStatisticsDao<T extends PortalStatistics> extends SimpleD
 
 	public List<PortalStatistics> getAllPortalStatistics();
 	
+	public PortalStatistics getLatestPortalStatistics();
 }

@@ -215,7 +215,9 @@ public interface VLEService {
 	public void saveVLEStatistics(VLEStatistics vleStatistics);
 	
 	public List<VLEStatistics> getVLEStatistics();
-	
+
+	public VLEStatistics getLatestVLEStatistics();
+
 	//StudentStatus functions
 	
 	public StudentStatus getStudentStatusById(Long id);

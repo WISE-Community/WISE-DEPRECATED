@@ -224,6 +224,30 @@ public class PortalImpl implements Portal {
 	}
 	
 	/**
+	 * @see org.wise.portal.domain.portal.Portal#isSendStatisticsToHub()
+	 */
+	public boolean isSendStatisticsToHub() {
+		try {
+			JSONObject settings = new JSONObject(getSettings());
+			return settings.getBoolean("isSendStatisticsToHub");
+		} catch (JSONException e) {
+		}		
+		return false;  // don't send statistics by default if there was an exception
+	}
+	
+	/**
+	 * @see org.wise.portal.domain.portal.Portal#setSendStatisticsToHub(boolean)
+	 */
+	public void setSendStatisticsToHub(boolean doSendStatistics) {
+		try {
+			JSONObject settings = new JSONObject(getSettings());
+			settings.put("isSendStatisticsToHub", doSendStatistics);
+			this.setSettings(settings.toString());
+		} catch (JSONException e) {
+		}		
+	}
+	
+	/**
 	 * @return the address
 	 */
 	public String getAddress() {

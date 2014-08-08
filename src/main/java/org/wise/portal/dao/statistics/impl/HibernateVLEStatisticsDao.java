@@ -52,4 +52,17 @@ public class HibernateVLEStatisticsDao extends AbstractHibernateDao<VLEStatistic
         //get the vle statistics from oldest to newest
        return session.createCriteria(VLEStatistics.class).addOrder(Order.asc("timestamp")).list();
 	}
+	
+	/**
+	 * Gets latest vle statistics
+	 * @return a list of all the vle statistics
+	 */
+	@Transactional(readOnly=true)
+	public VLEStatistics getLatestVLEStatistics() {
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        
+        //get the vle statistics from oldest to newest
+       return (VLEStatistics) session.createCriteria(VLEStatistics.class).addOrder(Order.asc("timestamp")).setMaxResults(1).uniqueResult();
+	}
+
 }

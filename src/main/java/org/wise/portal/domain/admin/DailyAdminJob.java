@@ -1,5 +1,6 @@
 package org.wise.portal.domain.admin;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -16,12 +17,19 @@ import java.util.Vector;
 
 import javax.mail.MessagingException;
 
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.crater.CRaterRequestDao;
 import org.wise.portal.dao.offering.RunDao;
 import org.wise.portal.dao.portal.PortalStatisticsDao;
@@ -30,12 +38,15 @@ import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.portal.PortalStatistics;
 import org.wise.portal.domain.portal.impl.PortalStatisticsImpl;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.mail.IMailFacade;
+import org.wise.portal.service.portal.PortalService;
+import org.wise.portal.service.portal.PortalStatisticsService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.statistics.VLEStatistics;
@@ -66,8 +77,16 @@ public class DailyAdminJob {
 	private Properties wiseProperties;
 	
 	@Autowired
+	private PortalService portalService;
+	
+	@Autowired
+	private PortalStatisticsService portalStatisticsService;
+	
+	@Autowired
 	private CRaterRequestDao<CRaterRequest> cRaterRequestDao;
 	
+	private static final String WISE_HUB_URL = "http://wise4.org/postWISEStatistics.php";
+
 	private boolean DEBUG = false;
 
 	private Date yesterday = null;
@@ -83,6 +102,7 @@ public class DailyAdminJob {
 	
 	@Transactional
 	public void doJob() {
+
 		//query for the portal statistics and save a new row in the portalStatistics table
 		gatherPortalStatistics();
 		
@@ -92,9 +112,33 @@ public class DailyAdminJob {
 		//try to score the CRater student work that previously failed to be scored
 		handleIncompleteCRaterRequests();
 		
-		//create and send a message to user_admin
+		//create and send a message to uber_admin
 		String messageBody = getSummaryMessage();
 		sendEmail(messageBody);
+		
+		//post statistics to hub if allowed
+        try {
+			Portal portal = portalService.getById(1);
+			if (portal.isSendStatisticsToHub()) {
+				try {
+					JSONObject wiseStatisticsJSONObject = new JSONObject();
+					wiseStatisticsJSONObject.put("wiseName", wiseProperties.getProperty("wise.name"));
+					wiseStatisticsJSONObject.put("wiseBaseURL", wiseProperties.getProperty("wiseBaseURL"));
+					
+					PortalStatistics latestPortalStatistics = portalStatisticsService.getLatestPortalStatistics();
+					wiseStatisticsJSONObject.put("portal", latestPortalStatistics.getJSONObject());
+				
+					VLEStatistics latestVLEStatistics = vleService.getLatestVLEStatistics();
+					wiseStatisticsJSONObject.put("vle", latestVLEStatistics.getJSONObject());
+					postStatistics(wiseStatisticsJSONObject.toString());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+
+		    }
+        } catch (ObjectNotFoundException e) {
+			// do nothing
+		}
 	}
 	
 	/**
@@ -547,7 +591,6 @@ public class DailyAdminJob {
 		return messageBody;
 	}
 
-
 	public List<User> findUsersJoinedSinceYesterday(String who) {
 		String field = "signupdate";
 		String type = ">";
@@ -602,6 +645,54 @@ public class DailyAdminJob {
 		} catch (MessagingException e) {
 		}
 	}
+	
+	/**
+	 * POSTs WISE usage statistics to central hub
+	 */
+	public void postStatistics(String wiseStatisticsString) {
+		
+		if(WISE_HUB_URL != null) {
+			HttpClient client = new HttpClient();
+
+			// Create a method instance.
+			PostMethod method = new PostMethod(WISE_HUB_URL);
+
+			// Provide custom retry handler is necessary
+			method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
+		
+			method.addParameter("name", wiseProperties.getProperty("wise.name"));
+			method.addParameter("wiseBaseURL", wiseProperties.getProperty("wiseBaseURL"));
+			method.addParameter("stats", wiseStatisticsString);
+			
+			try {
+				
+				// Execute the method.
+				int statusCode = client.executeMethod(method);
+
+				if (statusCode != HttpStatus.SC_OK) {
+					System.err.println("Method failed: " + method.getStatusLine());
+				}
+				// Read the response body.
+				//byte[] responseBody = null;
+				//responseBody = method.getResponseBody();
+				//String responseString = new String(responseBody);
+				//System.out.println(responseString);
+
+				// Deal with the response.
+				// Use caution: ensure correct character encoding and is not binary data
+			} catch (HttpException e) {
+				System.err.println("Fatal protocol violation: " + e.getMessage());
+				e.printStackTrace();
+			} catch (IOException e) {
+				System.err.println("Fatal transport error: " + e.getMessage());
+				e.printStackTrace();
+			} finally {
+				// Release the connection.
+				method.releaseConnection();
+			}
+		}
+	}
+	
 	
 	/**
 	 * A function that outputs the string to System.out if DEBUG is true
