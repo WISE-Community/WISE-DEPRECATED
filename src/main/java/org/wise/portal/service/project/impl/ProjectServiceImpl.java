@@ -409,10 +409,8 @@ public class ProjectServiceImpl implements ProjectService {
 	 */
 	public String generateStudentStartProjectUrlString(HttpServletRequest request,
 			Run run, Workgroup workgroup) {
-		String portalUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + 
-				request.getContextPath();
-		String launchVLE = "/student/vle/vle.html?runId=" + run.getId() + "&workgroupId=" + workgroup.getId();
-		return portalUrl + launchVLE;
+		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+		return wiseBaseURL + "/student/vle/vle.html?runId=" + run.getId() + "&workgroupId=" + workgroup.getId();
 	}
 
 	/**

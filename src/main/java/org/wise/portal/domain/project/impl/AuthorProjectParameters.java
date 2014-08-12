@@ -39,8 +39,6 @@ public class AuthorProjectParameters {
 
 	private HttpServletResponse httpServletResponse;
 
-	private String portalUrl;
-	
 	private Project project;
 	
 	private User author;
@@ -87,20 +85,6 @@ public class AuthorProjectParameters {
 	 */
 	public HttpServletResponse getHttpServletResponse() {
 		return httpServletResponse;
-	}
-
-	/**
-	 * @return the portalUrl
-	 */
-	public String getPortalUrl() {
-		return portalUrl;
-	}
-
-	/**
-	 * @param portalUrl the portalUrl to set
-	 */
-	public void setPortalUrl(String portalUrl) {
-		this.portalUrl = portalUrl;
 	}
 
 	/**
