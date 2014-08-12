@@ -76,9 +76,6 @@ public class GradeWorkController {
 		//get the boolean whether to get revisions
 		String getRevisions = request.getParameter("getRevisions");
 		
-		//get the context path e.g. /wise
-		String contextPath = request.getContextPath();
-		
 		String action = request.getParameter("action");
 		if(action != null) {
 			if(action.equals("postMaxScore")) {
@@ -96,14 +93,15 @@ public class GradeWorkController {
 				if(user.isAdmin() ||
 						this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
 						this.runService.hasRunPermission(run, user, BasePermission.READ)){
-					String portalurl = ControllerUtil.getBaseUrlString(request);
 	
-			    	String getGradeWorkUrl = portalurl + contextPath + "/vle/gradework.html";
-					String getGradingConfigUrl = portalurl + contextPath + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
+					String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+
+			    	String getGradeWorkUrl = wiseBaseURL + "/vle/gradework.html";
+					String getGradingConfigUrl = wiseBaseURL + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
 					
 					//get the classroom monitor urls
-					String getClassroomMonitorUrl = portalurl + contextPath + "/vle/classroomMonitor.html";
-					String getClassroomMonitorConfigUrl = portalurl + contextPath + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
+					String getClassroomMonitorUrl = wiseBaseURL + "/vle/classroomMonitor.html";
+					String getClassroomMonitorConfigUrl = wiseBaseURL + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
 					
 					//set the permission variable so that we can access it in the .jsp
 					if(this.runService.hasRunPermission(run, user, BasePermission.WRITE)) {
