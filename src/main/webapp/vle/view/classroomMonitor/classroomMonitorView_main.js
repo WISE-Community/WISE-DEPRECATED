@@ -4880,6 +4880,12 @@ View.prototype.getRunStatusCallback = function(responseText, responseXML, view) 
 	
 	//start the web socket connection
 	view.startWebSocketConnection();
+	
+	/*
+	 * create all of the UI for the classroom monitor now that we have
+	 * all the information we need
+	 */
+	view.createClassroomMonitorDisplays();
 };
 
 /**
@@ -4980,12 +4986,6 @@ View.prototype.studentsOnlineListReceived = function(data) {
 	
 	//get the list of workgroup ids that are online
 	var studentsOnlineList = data.studentsOnlineList;
-	
-	/*
-	 * create all of the UI for the classroom monitor now that we have
-	 * all the information we need
-	 */
-	this.createClassroomMonitorDisplays();
 	
 	/*
 	 * show the student progress display as the default screen to show

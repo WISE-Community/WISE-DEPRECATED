@@ -17,12 +17,16 @@ View.prototype.startWebSocketConnection = function() {
 	
 	this.socket = null;
 	
-	//create the websocket connection
-	if('WebSocket' in window) {
-		this.socket = new WebSocket(host);
-	} else if('MozWebSocket' in window) {
-		this.socket = new MozWebSocket(host);
-	} else {
+	try {
+		//create the websocket connection
+		if('WebSocket' in window) {
+			this.socket = new WebSocket(host);
+		} else if('MozWebSocket' in window) {
+			this.socket = new MozWebSocket(host);
+		} else {
+			
+		}		
+	} catch(e) {
 		
 	}
 	
