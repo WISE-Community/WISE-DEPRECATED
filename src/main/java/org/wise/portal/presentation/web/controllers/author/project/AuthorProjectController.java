@@ -721,13 +721,10 @@ public class AuthorProjectController {
 	 */
 	private ModelAndView handleLaunchAuthoring(HttpServletRequest request, HttpServletResponse response) {
 		User author = ControllerUtil.getSignedInUser();
-		String portalUrl = ControllerUtil.getBaseUrlString(request);
+		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 		
-		//get the context path e.g. /wise
-		String contextPath = request.getContextPath();
-		
-		String vleUrl = portalUrl + contextPath + "/vle/author.html";
-		String portalAuthorUrl = portalUrl + contextPath + "/author/authorproject.html";
+		String vleUrl = wiseBaseURL + "/vle/author.html";
+		String portalAuthorUrl = wiseBaseURL + "/author/authorproject.html";
 		String command = request.getParameter("param1");
 		
 		String projectIdStr = request.getParameter(PROJECT_ID_PARAM_NAME);
@@ -799,7 +796,7 @@ public class AuthorProjectController {
 				mav.addObject("projectId", projectId);
 				mav.addObject("projectTitle", projectTitle);
 			} else {
-				return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
+				return new ModelAndView(new RedirectView(wiseBaseURL + "/accessdenied.html"));
 			}
 		}
 		return mav;
