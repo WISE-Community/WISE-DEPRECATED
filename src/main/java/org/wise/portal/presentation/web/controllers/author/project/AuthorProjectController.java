@@ -1391,9 +1391,6 @@ public class AuthorProjectController {
 		//get the username
 		String username = user.getUserDetails().getUsername();
 
-		//get the portal url
-		String portalUrl = ControllerUtil.getBaseUrlString(request);
-		
 		//get the wise base url
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 		
@@ -1401,10 +1398,10 @@ public class AuthorProjectController {
 		String contextPath = request.getContextPath();
 		
 		//get the url to get and post metadata
-		String projectMetaDataUrl = portalUrl + contextPath + "/metadata.html";
+		String projectMetaDataUrl = wiseBaseURL + "/metadata.html";
 
 		//get the url to make CRater requests
-		String cRaterRequestUrl = portalUrl + contextPath + "/cRater.html?type=cRater";
+		String cRaterRequestUrl = wiseBaseURL + "/cRater.html?type=cRater";
 
 		//get the curriculum_base_www variable from the wise.properties file
 		String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
@@ -1413,16 +1410,16 @@ public class AuthorProjectController {
 		String previewProjectUrl = wiseBaseURL + "/previewproject.html";
 
 		//get the url to make CRater requests
-		String deleteProjectUrl = portalUrl + contextPath + "/teacher/projects/deleteproject.html";
+		String deleteProjectUrl = wiseBaseURL + "/teacher/projects/deleteproject.html";
 
 		//get the url to make analyze project requests
-		String analyzeProjectUrl = portalUrl + contextPath + "/teacher/projects/analyzeproject.html";
+		String analyzeProjectUrl = wiseBaseURL + "/teacher/projects/analyzeproject.html";
 
 		//the get url for premade comments
-		String getPremadeCommentsUrl = portalUrl + contextPath + "/teacher/grading/premadeComments.html?action=getData";
+		String getPremadeCommentsUrl = wiseBaseURL + "/teacher/grading/premadeComments.html?action=getData";
 
 		//the post url for premade comments
-		String postPremadeCommentsUrl = portalUrl + contextPath + "/teacher/grading/premadeComments.html?action=postData";
+		String postPremadeCommentsUrl = wiseBaseURL + "/teacher/grading/premadeComments.html?action=postData";
 		
 		//create a JSONObject to contain the config params
 		JSONObject config = new JSONObject();
@@ -1432,7 +1429,7 @@ public class AuthorProjectController {
 			config.put("username", username);
 			config.put("projectMetaDataUrl", projectMetaDataUrl);
 			config.put("curriculumBaseUrl", curriculumBaseUrl);
-			config.put("indexUrl", ControllerUtil.getPortalUrlString(request) + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+			config.put("indexUrl", wiseBaseURL + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 			int maxInactiveInterval = request.getSession().getMaxInactiveInterval() * 1000;
 			config.put("sessionTimeoutInterval", maxInactiveInterval);			// add sessiontimeout interval, in milleseconds
 			int sessionTimeoutCheckInterval = maxInactiveInterval / 20;         // check 20 times during the session.
