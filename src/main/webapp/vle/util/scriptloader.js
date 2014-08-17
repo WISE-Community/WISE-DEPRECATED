@@ -488,7 +488,8 @@ var scriptloader = function(){
         premadecomments:[jquerySrc,
                          'vle/jquery/js/jquery.editinplace.js',
                          jqueryUISrc],
-        ideabasket:['vle/ideaBasket/basket.js']
+        ideabasket:['vle/ideaBasket/basket.js'],
+        portfolio:['vle/portfolio/portfolio.js']
 	};
 	
 	/**

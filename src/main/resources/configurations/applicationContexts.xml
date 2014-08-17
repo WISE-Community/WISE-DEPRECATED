@@ -920,6 +920,7 @@
 				<value>org.wise.vle.domain.cRater.CRaterRequest</value>
 				<value>org.wise.vle.domain.peerreview.PeerReviewWork</value>
 				<value>org.wise.vle.domain.peerreview.PeerReviewGate</value>
+				<value>org.wise.vle.domain.portfolio.Portfolio</value>
 				<value>org.wise.vle.domain.ideabasket.IdeaBasket</value>
 				<value>org.wise.vle.domain.statistics.VLEStatistics</value>
 				<value>org.wise.vle.domain.status.StudentStatus</value>

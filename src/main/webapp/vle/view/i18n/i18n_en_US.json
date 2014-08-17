@@ -475,6 +475,18 @@
 		"value":"You can always retrieve it from the trash later on if you change your mind.",
 		"description":"Text for second part of confirmation delete idea confirmation dialog"
 	},
+	"portfolio":{
+		"value":"Portfolio",
+		"description":"The text 'Portfolio' in the Portfolio"
+	},	
+	"portfolio_retrieval_error":{
+		"value":"Error: Could not open Portfolio, refresh the project to try again",
+		"description":"Error message displayed when retrieving portfolio fails"
+	},
+	"portfolio_button_text":{
+		"value":"Portfolio",
+		"description":"Text on the Portfolio button for Student VLE"
+	},
 	"explanation_builder":{
 		"value":"Explanation Builder",
 		"description":"The default text for the 'Explanation Builder' tool."

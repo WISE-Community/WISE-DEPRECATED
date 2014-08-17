@@ -45,6 +45,8 @@ View.prototype.dropDownMenuDispatcher = function(type,args,obj){
 		obj.moveIdeaToTrash(args[0]);
 	} else if(type=='moveIdeaOutOfTrash') {
 		obj.moveIdeaOutOfTrash(args[0]);
+	} else if(type=='displayPortfolio') {
+		obj.displayPortfolio();
 	} else if(type=='viewStudentAssets') {
 		obj.viewStudentAssets(args[0]);
 	} else if(type=='studentAssetSubmitUpload') {
@@ -53,7 +55,13 @@ View.prototype.dropDownMenuDispatcher = function(type,args,obj){
 		obj.loadIdeaBasket();
 	} else if(type=='displayFlaggedWorkForNodeId') {
 		obj.displayFlaggedWorkForNodeId();
-	}
+	} else if(type=='getPortfolio') {
+		obj.getPortfolio();
+	} else if(type=='displayPortfolio') {
+		obj.displayPortfolio();
+	} else if(type=='portfolioDocumentLoaded') {
+		obj.loadPortfolio();
+	} 
 };
 
 /**
@@ -660,7 +668,9 @@ View.prototype.checkForNewTeacherAnnotations = function() {
 		}		
 	}
 	
+	//TODO: Geoff: WHY IS THIS CALL HERE?
 	eventManager.fire('getIdeaBasket');
+	eventManager.fire('getPortfolio');
 };
 
 /**
@@ -1070,6 +1080,42 @@ View.prototype.getPublicIdeaBasketCallback = function(responseText, responseXML,
 	}
 };
 
+
+/**
+ * Retrieve the portfolio from the server
+ */
+View.prototype.getPortfolio = function() {
+	//set the params we will use in the request to the server
+	var portfolioParams = {
+		action:"getPortfolio"	
+	};
+	
+	//request the idea basket from the server
+	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('getPortfolioUrl'), portfolioParams, this.getPortfolioCallback, {thisView:this});
+};
+
+/**
+ * Callback for when we receive the portfolio from the server
+ * @param responseText
+ * @param responseXML
+ * @param args
+ */
+View.prototype.getPortfolioCallback = function(responseText, responseXML, args) {
+	var thisView = args.thisView;
+	
+	//parse the JSON string
+	var portfolioJSONObj = $.parseJSON(responseText);
+	
+	if(portfolioJSONObj == null) {
+		thisView.notificationManager.notify(thisView.getI18NString("portfolio_retrieval_error"), 3);
+	} else {
+		//create the Portfolio from the JSON and set it into the view
+		thisView.portfolio = new Portfolio(portfolioJSONObj);
+	}
+};
+
+
+
 View.prototype.displayStudentAssets = function() {
 	this.initializeAssetEditorDialog();
 };
@@ -1111,6 +1157,101 @@ View.prototype.displayChatRoom = function() {
 		$('#chatRoomDiv').dialog('open');
 	}	
 };
+
+/**
+ * Display the portfolio dialog popup
+ * @param responseText the JSON string representing the idea basket data
+ * @param responseXML
+ * @param args
+ */
+View.prototype.displayPortfolio = function() {
+	console.log('vleview_topmenu.js, displayPortfolio');
+	if(!this.portfolio) {
+		/*
+		 * the vle failed to retrieve the portfolio so we will display
+		 * an error message and not display the portfolio popup
+		 */
+		this.notificationManager.notify(this.getI18NString("portfolio_retrieval_error"), 3);
+		return;
+	}
+	
+	//check if the portfolioDiv exists
+	if($('#portfolioDiv').size()==0){
+		//it does not exist so we will create it
+		$('#w4_vle').append('<div id="portfolioDiv"></div>');
+		$('#portfolioDiv').html('<iframe id="portfolioIfrm" name="portfolioIfrm" frameborder="0" width="100%" height="99%"></iframe><div id="portfolioOverlay" style="display:none;"></div>');
+		
+		var title = this.getI18NString("portfolio");
+		if('portfolioSettings' in this.getProjectMetadata().tools){
+			var portfolioSettings = this.getProjectMetadata().tools.portfolioSettings;
+			if('portfolioTerm' in portfolioSettings && this.utils.isNonWSString(portfolioSettings.portfolioTerm)){
+				title = portfolioSettings.portfolioTerm;
+			}
+		}
+		
+		$('#portfolioDiv').dialog({autoOpen:false,closeText:'',resizable:true,modal:true,show:{effect:"fade",duration:200},hide:{effect:"fade",duration:200},title:title,open:this.portfolioDivOpen,close:this.portfolioDivClose,
+			// because idea basket content is delivered in an iframe
+			// need to show transparent div overlay when dragging/resizing dialog
+			// so that iframe does not catch mouse movements and interupt dragging/resizing
+			dragStart: function(event, ui) {
+				$('#portfolioOverlay').show();
+			},
+			dragStop: function(event, ui) {
+				$('#portfolioOverlay').hide();
+			},
+			resizeStart: function(event, ui) {
+				$('#portfolioOverlay').show();
+			},
+			resizeStop: function(event, ui) {
+				$('#portfolioOverlay').hide();
+			}
+		});
+    }
+	
+	/*
+	 * check if the idea basket div is hidden before trying to open it.
+	 * if it's already open, we don't have to do anything
+	 */
+	if($('#portfolioDiv').is(':hidden')) {
+		// close all dialogs
+		view.utils.closeDialogs();
+		
+		//open the dialog
+		//TODO: set height and width as a config setting
+		var docHeight = $(document).height()-25;
+		if(docHeight>499){
+			docHeight = 500;
+		}
+		$('#portfolioDiv').dialog({width:800,height:docHeight});
+		$('#portfolioDiv').dialog('open');
+		
+		if($('#portfolioIfrm').attr('src') == null) {
+			//set the src so it will load the portfolio.html page
+			console.log('vleview_topmenu.js ifrm src is null');
+			$('#portfolioIfrm').attr('src', "portfolio.html");
+		} else {
+			console.log('vleview_topmenu.js ifrm src is set');
+
+			//generate the JSON string for the portfolio
+			var portfolioJSON = $.stringify(this.portfolio);
+			
+			//generate the JSON object for the portfolio
+			//var portfolioJSONObj = $.parseJSON(portfolioJSON);
+			var portfolioJSONObj = null;
+			
+			/*
+			 * the portfolio.html has already previously been loaded
+			 * so we just need to reload the portfolio contents
+			 */
+			var portfolioSettings = null;
+			if('portfolioSettings' in this.getProjectMetadata().tools){
+				portfolioSettings = this.getProjectMetadata().tools.portfolioSettings;
+			}
+			window.frames['portfolioIfrm'].loadPortfolio(portfolioJSONObj, true, this, portfolioSettings);
+		}		
+	}
+};
+
 
 /**
  * Display the idea basket dialog popup
@@ -1349,6 +1490,25 @@ View.prototype.loadIdeaBasket = function() {
 	
 	//load the idea basket into the iframe
 	window.frames['ideaBasketIfrm'].loadIdeaBasket(ideaBasketJSONObj, true, this, imSettings, this.ideaBasket.publicIdeaBasket);
+};
+
+/**
+ * Load the portfolio into the iframe
+ */
+View.prototype.loadPortfolio = function() {
+	//generate the JSON string for the portfolio
+	var portfolioJSON = $.stringify(this.portfolio);
+	
+	//generate the JSON object for the portfolio
+	var portfolioJSONObj = $.parseJSON(portfolioJSON);
+	
+	var portfolioSettings = null;
+	if('portfolioSettings' in this.getProjectMetadata().tools){
+		portfolioSettings = this.getProjectMetadata().tools.portfolioSettings;
+	}
+	
+	//load the portfolio into the iframe
+	window.frames['portfolioIfrm'].loadPortfolio(portfolioJSONObj, true, this, portfolioSettings, this.portfolio.publicPortfolio);
 };
 
 /**
