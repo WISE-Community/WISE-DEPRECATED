@@ -1238,6 +1238,11 @@ View.prototype.editProjectMetadata = function(){
 			} else {
 				this.enablePublicIdeaManager(false);
 			}
+			
+			//determine if enable portfolio needs to be checked
+			if (tools.isPortfolioEnabled != null && tools.isPortfolioEnabled) {
+				$("#enablePortfolio").attr('checked', true);
+			}
 
 			//determine if enable student asset uploader needs to be checked
 			if (tools.isStudentAssetUploaderEnabled != null && tools.isStudentAssetUploaderEnabled) {

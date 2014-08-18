@@ -287,6 +287,14 @@ public interface RunService extends OfferingService {
     public void setIdeaManagerEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
 
     /**
+     * Sets whether portfolio is enabled for this run or not.
+     * @param runId
+     * @param isEnabled
+     * @throws ObjectNotFoundException 
+     */
+    public void setPortfolioEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
+    
+    /**
      * Sets whether student asset uploader is enabled for this run or not.
      * @param runId
      * @param isEnabled

@@ -85,6 +85,10 @@ public class UpdateRunController {
 			boolean isEnabled = Boolean.parseBoolean(request.getParameter("isEnabled"));
 			this.runService.setIdeaManagerEnabled(Long.parseLong(runId), isEnabled);
 			response.getWriter().write("success");
+		} else if ("enablePortfolio".equals(command)) {
+			boolean isEnabled = Boolean.parseBoolean(request.getParameter("isEnabled"));
+			this.runService.setPortfolioEnabled(Long.parseLong(runId), isEnabled);
+			response.getWriter().write("success");
 		} else if ("enableStudentAssetUploader".equals(command)) {
 			boolean isEnabled = Boolean.parseBoolean(request.getParameter("isEnabled"));
 			this.runService.setStudentAssetUploaderEnabled(Long.parseLong(runId), isEnabled);
