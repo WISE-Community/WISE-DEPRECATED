@@ -200,14 +200,41 @@ BRAINSTORM.prototype.brainfullLoaded = function(frameDoc) {
 		this.enableRefreshResponsesButton();
 	};
 
+	var textAreaId = 'studentResponse';
+	var thisView = this.view;
+	
 	/* start the rich text editor if specified */
 	/* rte disabled for now. erroneous behavior saving/loading */
 	if(this.content.isRichTextEditorAllowed){
 		tinymce.init({
-		    selector: "textarea",
+			selector: '#' + textAreaId,
 		    menubar:false,
 		    statusbar: false,
-		    toolbar: "bold italic"
+		    toolbar: "bold italic importAsset",
+		    contextPath: this.contextPath,
+		    relative_urls: false,
+		    remove_script_host: false,
+		    setup: function(ed) {
+		       ed.addButton('importAsset', {
+		          title: 'Use My Asset',
+		          image: this.settings.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
+		          onclick: function() {
+		             var params = {};
+		             
+		             //set the tinymce object into the params
+		             params.tinymce = tinymce;
+		             
+		             //set the textarea id into the params
+		             params.textAreaId = textAreaId;
+		             
+		             //set the callback function that will be called after a file is uploaded
+		             params.callback = thisView.saImport;
+		             
+		             //display the student asset files so the student can select the one they want
+					 eventManager.fire('viewStudentAssets',params);
+		          }
+		       });
+		    }
 		});
 	} 
 
@@ -779,13 +806,39 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 				//add the reply div below the post we are replying to
 				$($(this).parent().siblings()[0]).after(replyDiv);
 
+				var thisView = bs.view;
+				
 				// make the reply textareas into a rich text editor
 				if(content.isRichTextEditorAllowed){
 					tinymce.init({
-					    selector: "#"+replyTextareaId,
+					    selector: '#' + replyTextareaId,
 					    menubar:false,
 					    statusbar: false,
-					    toolbar: "bold italic"
+					    toolbar: 'bold italic importAsset',
+					    contextPath: bs.contextPath,
+					    relative_urls: false,
+					    remove_script_host: false,
+					    setup: function(ed) {
+					       ed.addButton('importAsset', {
+					          title: 'Use My Asset',
+					          image: this.settings.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
+					          onclick: function() {
+					             var params = {};
+					             
+					             //set the tinymce object into the params
+					             params.tinymce = tinymce;
+					             
+					             //set the textarea id into the params
+					             params.textAreaId = replyTextareaId;
+					             
+					             //set the callback function that will be called after a file is uploaded
+		        			     params.callback = thisView.saImport;
+					             
+					             //display the student asset files so the student can select the one they want
+								 eventManager.fire('viewStudentAssets', params);
+					          }
+					       });
+					    }
 					});
 				} 
 			});

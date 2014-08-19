@@ -600,10 +600,28 @@ View.prototype.utils.getExtension = function(text){
 /**
  * Callback function for when the dynamically created frame for uploading assets has recieved
  * a response from the request. Notifies the response and removes the frame.
+ * @param target
+ * @param view
+ * @param filename the name of the file that was just uploaded
  */
-View.prototype.assetUploaded = function(target,view){
+View.prototype.assetUploaded = function(target, view, filename){
 	var htmlFrame = target;
 	var frame = window.frames[target.id];
+	
+	var assetEditorParams = null;
+	
+	if(view.assetEditorParams == null) {
+		//initialize the asset editor params if it doesn't already exist
+		view.assetEditorParams = {};
+	}
+	
+	assetEditorParams = view.assetEditorParams;
+	
+	/*
+	 * add the filename of the file that was just uploaded into the asset editor params so we
+	 * know which file was just uploaded
+	 */
+	assetEditorParams.filename = filename;
 	
 	if(frame.document && frame.document.body && frame.document.body.innerHTML != ''){
 		var message = "";
@@ -619,8 +637,8 @@ View.prototype.assetUploaded = function(target,view){
 		//display the message in the upload manager
 		notificationManager.notify(message, 3, 'uploadMessage', 'notificationDiv');
 		
-		/* set source to blank in case of page reload */
-		htmlFrame.src = 'about:blank';
+		//clear out the frame
+		$(htmlFrame).remove();
 		
 		/* cancel fired to clean up and hide the dialog */
 		//eventManager.fire('assetUploadCancel');
@@ -639,6 +657,16 @@ View.prototype.assetUploaded = function(target,view){
 		document.getElementById('uploadAssetFile').setAttribute("name", 'uploadAssetFile');
 	} else {
 		document.body.removeChild(htmlFrame);
+	}
+	
+	if(assetEditorParams != null) {
+		//get the callback function to call after the student uploads a file
+		var callback = assetEditorParams.callback;
+		
+		if(callback != null) {
+			//call the callback function
+			callback(assetEditorParams);
+		}
 	}
 };
 

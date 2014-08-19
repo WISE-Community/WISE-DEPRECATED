@@ -517,52 +517,7 @@ View.prototype.viewStudentAssets = function(params) {
 		}
 	};
 
-	var saImport = function() {
-		if(view.getCurrentNode() != null &&
-				view.getCurrentNode().importFile) {			
-			var parent = document.getElementById('assetSelect');
-			var ndx = parent.selectedIndex;
-			if(ndx!=-1){
-				var opt = parent.options[parent.selectedIndex];
-				var filename = opt.value;
 
-				var postStudentAssetUrl = view.getConfig().getConfigParam("studentAssetManagerUrl");
-				// need to get rid of the ?type=StudentAssets&runId=X from the url because we're doing a POST and it will be syntactically incorrect.
-				if (postStudentAssetUrl.indexOf("?") != -1) {
-					postStudentAssetUrl = postStudentAssetUrl.substr(0,postStudentAssetUrl.indexOf("?"));
-				}
-
-				// need to make a copy of the asset in the referenced folder and use it instead of the original.
-				$.ajax({
-					url:postStudentAssetUrl,
-					type:"POST",
-					dataType:"json",
-					data:{
-						"type":"studentAssetManager",			
-						"runId":view.config.getConfigParam("runId"),
-						"forward":"assetmanager",
-						"command":"studentAssetCopyForReference",
-						"assetFilename":filename
-					},
-					success:function(responseJSON) {
-						if (responseJSON != null && responseJSON.result != "" && responseJSON.result == "SUCCESS") {
-							var newFilename = responseJSON.newFilename;
-							var fileWWW = view.getAbsoluteRemoteStudentReferencedUploadsPath() + newFilename;	// make absolute path to file: http://studentuploadsBaseWWW/runId/workgroupId/unreferenced/filename
-							if(view.getCurrentNode().importFile(fileWWW)) {
-								view.notificationManager.notify(view.getI18NString("student_assets_import_success_message")+": " + newFilename, 3, 'uploadMessage', 'notificationDiv');
-								$('#studentAssetsDiv').dialog('close');	
-							} else {
-								view.notificationManager.notify(view.getI18NString("student_assets_import_failure_message"),3, 'uploadMessage', 'notificationDiv');
-							}
-						} else {
-							view.notificationManager.notify(view.getI18NString("student_assets_import_failure_message"),3, 'uploadMessage', 'notificationDiv');
-						}
-					}
-				}
-				);
-			}
-		}
-	};
 
 	var done = function(){
 		$('#studentAssetsDiv').dialog('close');			
@@ -588,7 +543,20 @@ View.prototype.viewStudentAssets = function(params) {
 		this.checkStudentAssetSizeLimit();
 	};	
 
-	var studentAssetsPopulateOptions = function(names, view){
+	/**
+	 * Populate the student assets in the student assets popup
+	 * @param names the names of the student asset files
+	 * @param args additional args passed to this function
+	 */
+	var studentAssetsPopulateOptions = function(names, args){
+		var thisView = args.thisView;
+		
+		/*
+		 * if a file was just uploaded and we are refreshing the list of student
+		 * asset files, get the filename of the file that was just uploaded
+		 */
+		var filename = args.filename;
+
 		if(names && names!=''){
 			var parent = $('#assetSelect');
 			parent.html('');
@@ -606,19 +574,24 @@ View.prototype.viewStudentAssets = function(params) {
 				opt.text = name;
 				opt.value = name;
 				parent.append(opt);
+				
+				if(filename != null && filename == name) {
+					//highlight the file that was just uploaded
+					$(opt).attr('selected', true);
+				}
 			}
 		}
 
 		$('#uploadAssetFile').val('');
 		$('#studentAssetEditorDialog').show();
-		view.checkStudentAssetSizeLimit();
+		thisView.checkStudentAssetSizeLimit();
 	};
 
 	// if the currently-opened node supports file import, show file import button
 	if(this.getCurrentNode() != null &&
 			this.getCurrentNode().importFile) {
 		$( "#studentAssetsDiv" ).dialog( "option", "buttons",
-				[{text:addSelectedFileText,click:saImport},{text:deleteSelectedFileText,click:remove},{text:doneText,click:done}]
+				[{text:addSelectedFileText,click:this.saImport},{text:deleteSelectedFileText,click:remove},{text:doneText,click:done}]
 		);		
 	} else if (view.assetEditorParams && view.assetEditorParams.type) {
 		$( "#studentAssetsDiv" ).dialog( "option", "buttons", 
@@ -630,7 +603,84 @@ View.prototype.viewStudentAssets = function(params) {
 		);		
 	}
 
-	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'assetList', type: 'studentAssetManager'}, function(txt,xml,obj){studentAssetsPopulateOptions(txt,obj);}, this);	
+	var filename = null;
+	
+	if(params != null) {
+		/*
+		 * add the filename to the params so we can highlight it when we
+		 * list the assets
+		 */
+		filename = params.filename;		
+	}
+	
+	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'assetList', type: 'studentAssetManager'}, function(txt,xml,args){studentAssetsPopulateOptions(txt,args);}, {thisView:this,filename:filename});	
+};
+
+/**
+ * The student has chosen a student asset to import into the current step
+ * @param params (optional) additional arguments for this function. if a file
+ * was just imported, the filename of the file can be found in the params.
+ * this will be used instead of looking at the highlighted option in the
+ * select box. when the student uploads a file to import into the step, we 
+ * will import it immediately after the file is uploaded instead of requiring 
+ * the student to select the file again in the select box.
+ */
+View.prototype.saImport = function(params) {
+	if(view.getCurrentNode() != null &&
+			view.getCurrentNode().importFile) {			
+		var parent = document.getElementById('assetSelect');
+		var ndx = parent.selectedIndex;
+		var filename = null;
+		
+		if(params != null) {
+			//get the filename from the params
+			filename = params.filename;
+		}
+		
+		if(ndx!=-1 || filename != null){
+			
+			if(filename == null && ndx != -1) {
+				//filename was not provided so we will get the selected option in the select box
+				var opt = parent.options[parent.selectedIndex];
+				filename = opt.value;
+			}
+
+			var postStudentAssetUrl = view.getConfig().getConfigParam("studentAssetManagerUrl");
+			// need to get rid of the ?type=StudentAssets&runId=X from the url because we're doing a POST and it will be syntactically incorrect.
+			if (postStudentAssetUrl.indexOf("?") != -1) {
+				postStudentAssetUrl = postStudentAssetUrl.substr(0,postStudentAssetUrl.indexOf("?"));
+			}
+
+			// need to make a copy of the asset in the referenced folder and use it instead of the original.
+			$.ajax({
+				url:postStudentAssetUrl,
+				type:"POST",
+				dataType:"json",
+				data:{
+					"type":"studentAssetManager",			
+					"runId":view.config.getConfigParam("runId"),
+					"forward":"assetmanager",
+					"command":"studentAssetCopyForReference",
+					"assetFilename":filename
+				},
+				success:function(responseJSON) {
+					if (responseJSON != null && responseJSON.result != "" && responseJSON.result == "SUCCESS") {
+						var newFilename = responseJSON.newFilename;
+						var fileWWW = view.getAbsoluteRemoteStudentReferencedUploadsPath() + newFilename;	// make absolute path to file: http://studentuploadsBaseWWW/runId/workgroupId/unreferenced/filename
+						if(view.getCurrentNode().importFile(fileWWW)) {
+							view.notificationManager.notify(view.getI18NString("student_assets_import_success_message")+": " + newFilename, 3, 'uploadMessage', 'notificationDiv');
+							$('#studentAssetsDiv').dialog('close');	
+						} else {
+							view.notificationManager.notify(view.getI18NString("student_assets_import_failure_message"),3, 'uploadMessage', 'notificationDiv');
+						}
+					} else {
+						view.notificationManager.notify(view.getI18NString("student_assets_import_failure_message"),3, 'uploadMessage', 'notificationDiv');
+					}
+				}
+			}
+			);
+		}
+	}
 };
 
 /**
@@ -693,7 +743,7 @@ View.prototype.studentAssetSubmitUpload = function() {
 			//form.appendChild(createElement(document,'input',{type:'hidden', name:'projectId', value:view.portalProjectId}));
 
 			/* set up the event and callback when the response comes back to the frame */
-			frame.addEventListener('load', function () { eventManager.fire('assetUploaded', [frame, view]); }, false);
+			frame.addEventListener('load', function () { eventManager.fire('assetUploaded', [frame, view, filename]); }, false);
 
 			/* change the name attribute to reflect that of the file selected by user */
 			document.getElementById('uploadAssetFile').setAttribute("name", filename);

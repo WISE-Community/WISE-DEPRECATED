@@ -145,8 +145,28 @@ BrainstormNode.prototype.canImportFile = function(filename) {
 BrainstormNode.prototype.importFile = function(filename) {
 	if (this.canImportFile(filename) && this.view) {
 		// assume it's an image for now.
-		var importFileHtml = "<img src=\""+filename +"\"></img>";
-		this.view.assetEditorParams.tinymce.execCommand('mceInsertContent', false, importFileHtml);  // this will insert the image at the cursor
+		
+		if(this.view.assetEditorParams != null) {
+			//get the tinymce object
+			var tinymce = this.view.assetEditorParams.tinymce;
+			
+			//get the textarea id to insert the image into
+			var textAreaId = this.view.assetEditorParams.textAreaId;
+			
+			if(tinymce != null) {
+				//get the tinymce editor for the given textarea
+				var editor = tinymce.get(textAreaId);
+				
+				if(editor != null) {
+					//create the img html element to display the image
+					var importFileHtml = "<img src='"+filename +"' height='200px'></img>";
+					
+					//insert the content into the tinymce editor for the given textarea
+					editor.execCommand('mceInsertContent', false, importFileHtml);
+				}
+			}
+		}
+		
 		return true;
 	}
 	return false;
