@@ -8,7 +8,8 @@
  * @param settings Portfolio settings object, which specifies version, portfolio attribute fields, terminology
  * @return an Portfolio instance
  */
-function Portfolio(portfolioJSONObj, createForStep, node, settings) {
+function Portfolio(view, portfolioJSONObj, createForStep, node, settings) {
+	this.view = view;
 	this.id;
 	this.runId;
 	this.workgroupId;
@@ -16,7 +17,7 @@ function Portfolio(portfolioJSONObj, createForStep, node, settings) {
 	this.deletedItems = [];
 	this.version = 1;
 	this.settings = null;
-	
+
 	// set Portfolio settings and version
 	if(settings){
 		this.settings = settings;
@@ -24,15 +25,15 @@ function Portfolio(portfolioJSONObj, createForStep, node, settings) {
 			this.version = parseInt(settings.version, 10);
 		}
 	}
-	
+
 	if(createForStep) {
 		//we are adding a portfolio for a portfolio step
-		
+
 		//set the values for the portfolio step
 		this.node = node;
 		this.view = node.view;
 		this.content = node.getContent().getContentJSON();
-		
+
 		if(node.studentWork !== null) {
 			this.states = node.studentWork; 
 		} else {
@@ -59,14 +60,14 @@ function Portfolio(portfolioJSONObj, createForStep, node, settings) {
  */
 Portfolio.prototype.init = function(context) {
 	var enableStep = true,
-		message = '',
-		workToImport = [];
-	
+	message = '',
+	workToImport = [];
+
 	//process the tag maps if we are not in authoring mode
 	if(this.view && !this.view.authoringMode) {
 		//get the tag map results
 		var tagMapResults = this.processTagMaps();
-		
+
 		//get the result values
 		enableStep = tagMapResults.enableStep;
 		message = tagMapResults.message;
@@ -88,16 +89,16 @@ Portfolio.prototype.load = function(portfolioJSONObj, generateUI, settings, view
 		this.settings = settings;
 		this.version = parseInt(settings.version, 10);
 	}
-	
+
 	if(view){
 		this.view = view;
 	}
-	
+
 	//set the public portfolio if it was provided
 	if(publicPortfolioJSONObj) {
 		//this.setPublicPortfolio(publicPortfolioJSONObj);
 	}
-	
+
 	if(this.view){
 		// set text for customizable terms based on settings or default i18n string
 		this.view.insertTranslations();
@@ -132,30 +133,124 @@ Portfolio.prototype.load = function(portfolioJSONObj, generateUI, settings, view
 			}
 		}
 	}
-	
-	
-	
+
 	/*
 	 * portfolioJSONObj will be null in authoring preview step in which case
 	 * we do not want to load anything
 	 */
 	if(portfolioJSONObj) {
 		//set the values from the JSON object we received from the server
-		
+
 		this.id = portfolioJSONObj.id;
 		this.runId = portfolioJSONObj.runId;
 		this.workgroupId = portfolioJSONObj.workgroupId;
-		
+
 		if(portfolioJSONObj.hasOwnProperty('items') && portfolioJSONObj.items !== null) {
 			this.items = JSON.parse(portfolioJSONObj.items);
 		}
-		
+
 		if(portfolioJSONObj.hasOwnProperty('deletedItems') && portfolioJSONObj.deletedItems !== null) {
 			this.deletedItems = JSON.parse(portfolioJSONObj.deletedItems);		
 		}
 	}
 
 	return this;
+};
+
+/**
+ * Render the portfolio in the specified dom id
+ */
+Portfolio.prototype.render = function(domId) {
+	console.log('Portfolio.prototype.render, domId:'+domId);
+
+	var workgroupId = this.view.getUserAndClassInfo().getWorkgroupId();
+
+	//check if the portfolioDiv exists
+	if($("#"+domId).size()==0){
+		//it does not exist so we will create it
+		$('#w4_vle').append('<div id="'+domId+'"><div id="portfolioItems"></div></div>');
+	}
+
+	var title = this.view.getI18NString("portfolio");
+	if('portfolioSettings' in this.view.getProjectMetadata().tools){
+		var portfolioSettings = this.view.getProjectMetadata().tools.portfolioSettings;
+		if('portfolioTerm' in portfolioSettings && this.view.utils.isNonWSString(portfolioSettings.portfolioTerm)){
+			title = portfolioSettings.portfolioTerm;
+		}
+	}
+
+	$("#"+domId).dialog({autoOpen:false,closeText:'',resizable:true,modal:true,show:{effect:"fade",duration:200},hide:{effect:"fade",duration:200},title:title,open:this.view.portfolioDivOpen,close:this.view.portfolioDivClose,
+		dragStart: function(event, ui) {
+			$('#portfolioOverlay').show();
+		},
+		dragStop: function(event, ui) {
+			$('#portfolioOverlay').hide();
+		},
+		resizeStart: function(event, ui) {
+			$('#portfolioOverlay').show();
+		},
+		resizeStop: function(event, ui) {
+			$('#portfolioOverlay').hide();
+		}
+	});
+
+	// close all dialogs
+	view.utils.closeDialogs();
+
+	//open the portfolio dialog
+	//TODO: set height and width as a config setting
+	var docHeight = $(document).height()-25;
+	if(docHeight>499){
+		docHeight = 500;
+	}
+	$("#"+domId).dialog({width:800,height:docHeight});
+	$("#"+domId).dialog('open');
+
+	// clear existing portfolio items
+	$("#portfolioItems").html();
+
+	// display portfolio items
+	for (var i=0; i<this.items.length;i++) {
+		var portfolioItem = this.items[i];
+		var nodeId = portfolioItem.nodeId;
+		var node = this.view.getProject().getNodeById(nodeId);
+		var nodeShowAllWorkHtml = node.getShowAllWorkHtml(this.view);
+
+		$("#portfolioItems").append("<div>"+portfolioItem.itemType+"</div>")
+		.append("<div>"+portfolioItem.title+"</div>")
+		.append("<div>"+portfolioItem.nodeId+"</div>")
+		.append("<div>"+nodeShowAllWorkHtml+"</div>")
+		.append("<div>"+portfolioItem.annotation+"</div>");
+		$("#portfolioItems").append("<br/>");
+
+		//only perform this for steps that have a grading view
+		if(node.hasGradingView()) {
+			//get the node id
+			var nodeId = node.id;
+
+			//get the latest node visit that contains student work for this step
+			var nodeVisit = this.view.getState().getLatestNodeVisitByNodeId(nodeId);
+
+			//check if the student has any work for this step
+			if(nodeVisit != null) {
+				//get the div to display the work in
+				var studentWorkDiv = $("#latestWork_" + nodeVisit.id);
+
+				//render the work into the div to display it
+				node.renderGradingView(studentWorkDiv, nodeVisit, "", workgroupId);
+
+				if($("#new_latestWork_" + nodeVisit.id).length != 0) {
+					/*
+					 * render the work into the new feedback div if it exists. the
+					 * new feedback div exists when the teacher has given a new
+					 * score or comment and we need to show the work and feedback
+					 * for that step at the the top of the show all work
+					 */
+					node.renderGradingView($("#new_latestWork_" + nodeVisit.id), nodeVisit, "", workgroupId);
+				}
+			}
+		}
+	}
 };
 
 /* used to notify scriptloader that this script has finished loading */

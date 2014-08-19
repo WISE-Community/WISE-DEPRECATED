@@ -1110,7 +1110,7 @@ View.prototype.getPortfolioCallback = function(responseText, responseXML, args) 
 		thisView.notificationManager.notify(thisView.getI18NString("portfolio_retrieval_error"), 3);
 	} else {
 		//create the Portfolio from the JSON and set it into the view
-		thisView.portfolio = new Portfolio(portfolioJSONObj);
+		thisView.portfolio = new Portfolio(thisView, portfolioJSONObj);
 	}
 };
 
@@ -1174,82 +1174,7 @@ View.prototype.displayPortfolio = function() {
 		this.notificationManager.notify(this.getI18NString("portfolio_retrieval_error"), 3);
 		return;
 	}
-	
-	//check if the portfolioDiv exists
-	if($('#portfolioDiv').size()==0){
-		//it does not exist so we will create it
-		$('#w4_vle').append('<div id="portfolioDiv"></div>');
-		$('#portfolioDiv').html('<iframe id="portfolioIfrm" name="portfolioIfrm" frameborder="0" width="100%" height="99%"></iframe><div id="portfolioOverlay" style="display:none;"></div>');
-		
-		var title = this.getI18NString("portfolio");
-		if('portfolioSettings' in this.getProjectMetadata().tools){
-			var portfolioSettings = this.getProjectMetadata().tools.portfolioSettings;
-			if('portfolioTerm' in portfolioSettings && this.utils.isNonWSString(portfolioSettings.portfolioTerm)){
-				title = portfolioSettings.portfolioTerm;
-			}
-		}
-		
-		$('#portfolioDiv').dialog({autoOpen:false,closeText:'',resizable:true,modal:true,show:{effect:"fade",duration:200},hide:{effect:"fade",duration:200},title:title,open:this.portfolioDivOpen,close:this.portfolioDivClose,
-			// because idea basket content is delivered in an iframe
-			// need to show transparent div overlay when dragging/resizing dialog
-			// so that iframe does not catch mouse movements and interupt dragging/resizing
-			dragStart: function(event, ui) {
-				$('#portfolioOverlay').show();
-			},
-			dragStop: function(event, ui) {
-				$('#portfolioOverlay').hide();
-			},
-			resizeStart: function(event, ui) {
-				$('#portfolioOverlay').show();
-			},
-			resizeStop: function(event, ui) {
-				$('#portfolioOverlay').hide();
-			}
-		});
-    }
-	
-	/*
-	 * check if the idea basket div is hidden before trying to open it.
-	 * if it's already open, we don't have to do anything
-	 */
-	if($('#portfolioDiv').is(':hidden')) {
-		// close all dialogs
-		view.utils.closeDialogs();
-		
-		//open the dialog
-		//TODO: set height and width as a config setting
-		var docHeight = $(document).height()-25;
-		if(docHeight>499){
-			docHeight = 500;
-		}
-		$('#portfolioDiv').dialog({width:800,height:docHeight});
-		$('#portfolioDiv').dialog('open');
-		
-		if($('#portfolioIfrm').attr('src') == null) {
-			//set the src so it will load the portfolio.html page
-			console.log('vleview_topmenu.js ifrm src is null');
-			$('#portfolioIfrm').attr('src', "portfolio.html");
-		} else {
-			console.log('vleview_topmenu.js ifrm src is set');
-
-			//generate the JSON string for the portfolio
-			var portfolioJSON = $.stringify(this.portfolio);
-			
-			//generate the JSON object for the portfolio
-			//var portfolioJSONObj = $.parseJSON(portfolioJSON);
-			var portfolioJSONObj = null;
-			
-			/*
-			 * the portfolio.html has already previously been loaded
-			 * so we just need to reload the portfolio contents
-			 */
-			var portfolioSettings = null;
-			if('portfolioSettings' in this.getProjectMetadata().tools){
-				portfolioSettings = this.getProjectMetadata().tools.portfolioSettings;
-			}
-			window.frames['portfolioIfrm'].loadPortfolio(portfolioJSONObj, true, this, portfolioSettings);
-		}		
-	}
+	this.portfolio.render("portfolioDiv");
 };
 
 
@@ -1496,6 +1421,7 @@ View.prototype.loadIdeaBasket = function() {
  * Load the portfolio into the iframe
  */
 View.prototype.loadPortfolio = function() {
+	debugger;
 	//generate the JSON string for the portfolio
 	var portfolioJSON = $.stringify(this.portfolio);
 	

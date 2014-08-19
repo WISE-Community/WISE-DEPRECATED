@@ -489,7 +489,9 @@ var scriptloader = function(){
                          'vle/jquery/js/jquery.editinplace.js',
                          jqueryUISrc],
         ideabasket:['vle/ideaBasket/basket.js'],
-        portfolio:['vle/portfolio/portfolio.js']
+        portfolio:['vle/portfolio/portfolio.js',
+                   'vle/portfolio/portfolioScript.js'
+                   ]
 	};
 	
 	/**

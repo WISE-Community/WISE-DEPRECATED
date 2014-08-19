@@ -69,35 +69,8 @@ var loadPortfolio = function(portfolioJSONObj, generateUI, thisView, settings, p
 	
 	//load the portfolio JSON object that should have been set into the iframe
 	parent.frames['portfolioIfrm'].portfolio.load(portfolioJSONObj, generateUI, settings, thisView, publicPortfolioJSONObj);
-	
-	//display portfolio items
-	console.log('displaying portfolio items');
-	for (var i=0; i<thisView.portfolio.items.length;i++) {
-		createPage(thisView.portfolio.items[i]);
-	}
 };
 
-var createPage = function(portfolioItem) {
-	var nodeId = portfolioItem.nodeId;
-	var node = thisView.getProject().getNodeById(nodeId);
-	
-	//get the latest node visit that has work
-	var latestNodeVisitWithWork = thisView.getState().getLatestNodeVisitByNodeId(nodeId, false);
-	var latestState = latestNodeVisitWithWork.getLatestState();
-	var studentWork = node.translateStudentWork(latestState.getStudentWork());
-	if (node.type == "SVGDrawNode") {
-        studentWork = thisView.utils.decode64(studentWork);
-	} else if (node.type == "OpenResponseNode") {
-		studentWork = studentWork.response;
-	}
-	
-	$("#portfolioItems").append("<div>"+portfolioItem.itemType+"</div>")
-		.append("<div>"+portfolioItem.title+"</div>")
-		.append("<div>"+portfolioItem.nodeId+"</div>")
-		.append("<div>"+studentWork+"</div>")
-		.append("<div>"+portfolioItem.annotation+"</div>");
-	$("#portfolioItems").append("<br/>");
-};
 
 /**
  * This is called when the 'portfolioChanged' event is fired.
