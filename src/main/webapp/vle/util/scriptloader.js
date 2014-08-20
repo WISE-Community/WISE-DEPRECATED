@@ -564,7 +564,7 @@ var scriptloader = function(){
         //'vle/js/DataTables/extensions/ColVis/js/dataTables.colVis.min.js':['vle/js/DataTables/media/js/jquery.dataTables.min.js'],
         'vle/js/DataTables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js':['vle/js/DataTables/media/js/jquery.dataTables.min.js'],
         'vle/js/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js':['vle/js/DataTables/media/js/jquery.dataTables.min.js'],
-        //'vle/js/DataTables/plugins/fnFilterOnReturn.js':['vle/js/DataTables/media/js/jquery.dataTables.min.js'],
+        'vle/js/DataTables/plugins/fnFilterOnReturn.js':['vle/js/DataTables/media/js/jquery.dataTables.min.js'],
         'vle/navigation/constraints/nonvisitablexconstraint.js':['vle/navigation/constraints/constraint.js'],
         'vle/navigation/constraints/visitxafteryconstraint.js':['vle/navigation/constraints/constraint.js'],
         'vle/navigation/constraints/visitxbeforeyconstraint.js':['vle/navigation/constraints/constraint.js'],
