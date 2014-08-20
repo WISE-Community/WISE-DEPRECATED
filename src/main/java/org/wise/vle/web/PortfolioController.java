@@ -31,11 +31,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.vle.VLEService;
-import org.wise.vle.domain.ideabasket.IdeaBasket;
 import org.wise.vle.domain.portfolio.Portfolio;
 
 /**
@@ -49,6 +49,53 @@ public class PortfolioController {
 
 	@Autowired
 	private VLEService vleService;
+
+	@RequestMapping(method=RequestMethod.POST)
+	public ModelAndView doPost(
+			@RequestParam("action") String action,
+			@RequestParam("runId") String runIdStr,
+			@RequestParam("workgroupId") String workgroupIdStr,
+			HttpServletRequest request, 
+			HttpServletResponse response) throws IOException {
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+
+		Long runId = new Long(runIdStr);
+
+		Long workgroupId = new Long(workgroupIdStr);
+
+		boolean isPrivileged = isPrivileged(signedInUser,runId);
+		boolean allowedAccess = isAllowedAcess(signedInUser,runId,workgroupId);
+
+		if(!allowedAccess) {
+			//user is not allowed to make this request
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
+
+		if(action.equals("savePortfolio") && runId != null && workgroupId != null) {
+
+			String items = request.getParameter("items");
+			Portfolio portfolioToSave = new Portfolio(runId,workgroupId,items);
+
+			// get the last Portfolio that was saved
+			Portfolio lastSavedPortfolio = vleService.getPortfolioByRunIdWorkgroupId(runId, workgroupId);
+			if(lastSavedPortfolio != null) {
+				// save iff portfolio to save and the last-saved portfolio are not the same
+				if (portfolioToSave.getItems() != null &&
+						!portfolioToSave.getItems().equals(lastSavedPortfolio.getItems())) {
+					vleService.savePortfolio(portfolioToSave);
+				}
+			} else {
+				// Portfolio was never created before so we'll create a new row
+				Portfolio portfolio = new Portfolio(runId,workgroupId,null);
+				vleService.savePortfolio(portfolio);
+			}
+		}
+
+
+		return null;
+	}
 
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView doGet(
@@ -78,26 +125,9 @@ public class PortfolioController {
 			}
 		}
 
-		boolean isPrivileged = false;
-		boolean allowedAccess = false;
+		boolean isPrivileged = isPrivileged(signedInUser,runId);
+		boolean allowedAccess = isAllowedAcess(signedInUser,runId,workgroupId);
 
-		/*
-		 * admins can make a request
-		 * teachers that are owners of the run can make a request
-		 * students that are in the run and in the workgroup can make a request
-		 */
-		if(SecurityUtils.isAdmin(signedInUser)) {
-			//the user is an admin so we will allow this request
-			allowedAccess = true;
-			isPrivileged = true;
-		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
-			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
-			allowedAccess = true;
-			isPrivileged = true;
-		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
-			//the student is in the run and in the workgroup so we will allow this request
-			allowedAccess = true;
-		}
 
 		if(!allowedAccess) {
 			//user is not allowed to make this request
@@ -113,7 +143,7 @@ public class PortfolioController {
 
 				if(portfolio == null) {
 					//make the Portfolio if it does not exist
-					portfolio = new Portfolio(runId,workgroupId);
+					portfolio = new Portfolio(runId,workgroupId,null);
 					vleService.savePortfolio(portfolio);
 				}
 
@@ -126,6 +156,36 @@ public class PortfolioController {
 		}
 
 		return null;
+	}
+
+	/*
+	 * admins can make a request
+	 * teachers that are owners of the run can make a request
+	 * students that are in the run and in the workgroup can make a request
+	 */
+	private boolean isAllowedAcess(User signedInUser, Long runId, Long workgroupId) {
+		if(SecurityUtils.isAdmin(signedInUser)) {
+			//the user is an admin so we will allow this request
+			return true;
+		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
+			return true;
+		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
+			//the student is in the run and in the workgroup so we will allow this request
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isPrivileged(User signedInUser, Long runId) {
+		if(SecurityUtils.isAdmin(signedInUser)) {
+			//the user is an admin so we will allow this request
+			return true;
+		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
+			return true;
+		} 
+		return false;
 	}
 
 }

@@ -486,6 +486,18 @@ View.prototype.displayShowAllWork = function() {
 					//render the work into the div to display it
 					node.renderGradingView(studentWorkDiv, nodeVisit, "", workgroupId);
 					
+					// show button to add to portfolio
+					if (this.getProjectMetadata().tools.isPortfolioEnabled && this.portfolio) {
+						var addToPortfolio = $("<span>").addClass("addToPortfolio").html(this.getI18NString("add_to_portfolio"));
+						addToPortfolio.click({"itemType":"stepWork",
+											  "nodeId":nodeId,
+											  "title":node.title,
+											  "view":this},
+											this.portfolio.addItemEventHandler);
+						var portfolioSpan = $("<span>").addClass('portfolioAction').html(addToPortfolio);
+						$("[id='stepWork_"+nodeId+"'] .sectionHead").append(portfolioSpan);
+					}
+					
 					if($("#new_latestWork_" + nodeVisit.id).length != 0) {
 						/*
 						 * render the work into the new feedback div if it exists. the
@@ -670,7 +682,9 @@ View.prototype.checkForNewTeacherAnnotations = function() {
 	
 	//TODO: Geoff: WHY IS THIS CALL HERE?
 	eventManager.fire('getIdeaBasket');
-	eventManager.fire('getPortfolio');
+	if (this.getProjectMetadata().tools.isPortfolioEnabled) {
+		eventManager.fire('getPortfolio');
+	}
 };
 
 /**
@@ -1415,26 +1429,6 @@ View.prototype.loadIdeaBasket = function() {
 	
 	//load the idea basket into the iframe
 	window.frames['ideaBasketIfrm'].loadIdeaBasket(ideaBasketJSONObj, true, this, imSettings, this.ideaBasket.publicIdeaBasket);
-};
-
-/**
- * Load the portfolio into the iframe
- */
-View.prototype.loadPortfolio = function() {
-	debugger;
-	//generate the JSON string for the portfolio
-	var portfolioJSON = $.stringify(this.portfolio);
-	
-	//generate the JSON object for the portfolio
-	var portfolioJSONObj = $.parseJSON(portfolioJSON);
-	
-	var portfolioSettings = null;
-	if('portfolioSettings' in this.getProjectMetadata().tools){
-		portfolioSettings = this.getProjectMetadata().tools.portfolioSettings;
-	}
-	
-	//load the portfolio into the iframe
-	window.frames['portfolioIfrm'].loadPortfolio(portfolioJSONObj, true, this, portfolioSettings, this.portfolio.publicPortfolio);
 };
 
 /**

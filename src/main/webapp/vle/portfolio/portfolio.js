@@ -52,6 +52,12 @@ function Portfolio(view, portfolioJSONObj, createForStep, node, settings) {
 	}
 };
 
+function PortfolioItem(object) {
+	this.title = object.title;
+	this.itemType = object.itemType;
+	this.nodeId = object.nodeId;
+};
+
 /**
  * Initialize the Portfolio turning on tablesorter to allow sorting
  * by columns and turning on sortable to allow students to drag and drop
@@ -158,6 +164,45 @@ Portfolio.prototype.load = function(portfolioJSONObj, generateUI, settings, view
 };
 
 /**
+ * Add PortfolioItem to the portfolio and save to server
+ * 
+ */
+Portfolio.prototype.addItem = function(portfolioItem) {
+	this.items.push(portfolioItem);
+
+	if(this.view.config.getConfigParam('mode') !== "portalpreview") {
+		//we are not in preview mode so we will post the idea basket back to the server to be saved
+		portfolioParams = {
+			"action":"savePortfolio",
+			"items":JSON.stringify(this.items)
+		};
+		this.view.connectionManager.request('POST', 3, 
+				this.view.getConfig().getConfigParam('postPortfolioUrl'), 
+				portfolioParams, 
+				this.addItemCallback, 
+				{portfolio:this});
+	}
+};
+
+/**
+ * Add PortfolioItem to the portfolio and save to server
+ * 
+ */
+Portfolio.prototype.addItemCallback = function(responseText, responseXML, args) {
+	var portfolio = args.portfolio;
+	alert(portfolio.view.getI18NString("add_to_portfolio_success"));
+};
+
+/**
+ * Hander for add item event
+ */
+Portfolio.prototype.addItemEventHandler = function(event) {
+	var view = event.data.view;
+	var item = new PortfolioItem(event.data);
+	view.portfolio.addItem(item);
+};
+
+/**
  * Render the portfolio in the specified dom id
  */
 Portfolio.prototype.render = function(domId) {
@@ -198,16 +243,14 @@ Portfolio.prototype.render = function(domId) {
 	view.utils.closeDialogs();
 
 	//open the portfolio dialog
-	//TODO: set height and width as a config setting
-	var docHeight = $(document).height()-25;
-	if(docHeight>499){
-		docHeight = 500;
-	}
-	$("#"+domId).dialog({width:800,height:docHeight});
-	$("#"+domId).dialog('open');
+    var docHeight = $(document).height()-25;
+	var docWidth = $(document).width()-25;
+	$("#"+domId).dialog({height:docHeight,width:docWidth});
+    $("#"+domId).dialog('open');
+    $("#"+domId).scrollTop(0);
 
 	// clear existing portfolio items
-	$("#portfolioItems").html();
+	$("#portfolioItems").html("");
 
 	// display portfolio items
 	for (var i=0; i<this.items.length;i++) {

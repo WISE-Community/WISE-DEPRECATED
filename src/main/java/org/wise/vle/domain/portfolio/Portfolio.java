@@ -104,14 +104,14 @@ public class Portfolio extends PersistableDomain implements Serializable {
 	 * @param projectId
 	 * @param workgroupId
 	 */
-	public Portfolio(long runId, long workgroupId) {
+	public Portfolio(long runId, long workgroupId, String items) {
 		this.runId = runId;
 		this.workgroupId = workgroupId;
 		Calendar now = Calendar.getInstance();
 		this.postTime = new Timestamp(now.getTimeInMillis());
+		this.items = items;
 	}
-
-
+	
 	/**
 	 * @see org.wise.vle.domain.PersistableDomain#getObjectClass()
 	 */
