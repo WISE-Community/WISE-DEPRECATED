@@ -211,8 +211,11 @@ View.prototype.retrieveLocales = function(componentName,localePath) {
 };
 
 /**
- * Finds any DOM elements with data-i18n, data-i18n-title, and data-i18n-placeholder attributes
- * and inserts translation text as the inner html and/or title and/or placeholder for each element.
+ * Finds any DOM elements with data-i18n and data-i18n-* attributes and inserts
+ * translation text as the inner html or specified attribute for each element.
+ * 
+ * Currently supported attributes are: 'title', 'placeholder', 'label', 'name',
+ * 'value' (if setting 'value' for an input element, can also just use 'data-i18n')
  * 
  * @param onComplete Callback function to run when i18n insertion is complete.
  */
@@ -220,42 +223,52 @@ View.prototype.insertTranslations = function(componentName, onComplete){
 	if (!componentName) {
 		componentName = "main";
 	}
-	var view = this;
+	var view = this,
+		attrs = ['i18n-title', 'i18n-placeholder', 'i18n-label', 'i18n-name', 'i18n-value'],
+		totalAttrs = attrs.length,
+		selector = '[data-i18n]',
+		translatableElements = [];
+	
+	for(var i=0; i<totalAttrs; i++){
+		selector += ', [data-' + attrs[i] + ']';
+	}
+	
 	// process and insert i18n text
-	var translatableElements = [];
 	if (componentName == "main") {
-		translatableElements = $('[data-i18n], [data-i18n-title], [data-i18n-placeholder]');
+		translatableElements = $(selector);
 	} else if (this.getProject().getUsedNodeTypes().indexOf(componentName) > -1) {
 		//component is a node. we're trying to translate strings in the content panel where nodes are rendered
 		if (this.currentNode && this.currentNode.contentPanel && this.currentNode.contentPanel.$) {
-			translatableElements = $(this.currentNode.contentPanel.$.find("[data-i18n], [data-i18n-title], [data-i18n-placeholder]"));			
+			translatableElements = $(this.currentNode.contentPanel.$.find(selector));			
 		} else if (this.getCurrentNode() && this.getCurrentNode().getType() == "NoteNode") {
-			translatableElements = $($("#notePanel").find("[data-i18n], [data-i18n-title], [data-i18n-placeholder]"));						
+			translatableElements = $($("#notePanel").find(selector));						
 		};
 	}
 	var count = translatableElements.length;
 	if (count > 0) {
 		translatableElements.each(function(){
-			// get i18n and i18n-title attributes from elements
-			var i18n = $(this).attr('data-i18n'), i18nTitle = $(this).attr('data-i18n-title'), i18nPlaceholder = $(this).attr('data-i18n-placeholder');
-
-			// insert i18n translations
-			if (typeof i18n !== 'undefined' && i18n !== false) {
+			var n = totalAttrs,
+				i18n = $(this).data('i18n');
+			if(typeof i18n === 'string'){
 				if ($(this).is("input")) {
-					// if input, we need to set the value="", not the innerHTML.
+					// if input, we need to set the value, not the innerHTML
 					$(this).val(view.getI18NString(i18n,componentName));				
 				} else {
 					$(this).html(view.getI18NString(i18n,componentName));				
 				}
+				// remove i18n attribute from DOM element
+				$(this).removeAttr('data-i18n')
 			}
-			if (typeof i18nTitle !== 'undefined' && i18nTitle !== false) {
-				$(this).attr('title',view.getI18NString(i18nTitle,componentName));
+			
+			while (n--){
+				var attr = attrs[n],
+					val = $(this).data(attr);
+				if(typeof val === 'string'){ 
+					$(this).attr(attr.replace(/^i18n-/, ''), view.getI18NString(val,componentName));
+				}
+				// remove i18n attribute from DOM element
+				$(this).removeAttr(attr);
 			}
-			if (typeof i18nPlaceholder !== 'undefined' && i18nPlaceholder !== false) {
-				$(this).attr('placeholder',view.getI18NString(i18nPlaceholder,componentName));
-			}
-			// remove i18n attributes from DOM element
-			$(this).removeAttr('data-i18n').removeAttr('data-i18n-title').removeAttr('data-i18n-placeholder');
 
 			// when all i18n text has been inserted, run the callback function
 			if(--count == 0){
