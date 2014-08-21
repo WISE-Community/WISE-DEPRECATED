@@ -489,6 +489,7 @@ View.prototype.displayShowAllWork = function() {
 						var addToPortfolio = $("<span>").addClass("addToPortfolio").html(this.getI18NString("portfolio_add_item"));
 						addToPortfolio.click({"itemType":"stepWork",
 											  "nodeId":nodeId,
+											  "nodeVisitId":nodeVisit.id,
 											  "title":node.title,
 											  "view":this},
 											this.portfolio.addItemEventHandler);

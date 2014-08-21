@@ -119,6 +119,7 @@ function PortfolioItem(object) {
 	this.title = object.title;
 	this.itemType = object.itemType;
 	this.nodeId = object.nodeId;
+	this.nodeVisitId = object.nodeVisitId;
 	this.studentAnnotation = object.studentAnnotation;
 	if (object.timeCreated) {
 		this.timeCreated = object.timeCreated;
@@ -194,7 +195,7 @@ Portfolio.prototype.addItem = function(portfolioItem) {
 
 Portfolio.prototype.saveToServerCallback = function(responseText, responseXML, args) {
 	var portfolio = args.portfolio;
-	alert(portfolio.view.getI18NString("portfolio_save_success"));
+	//alert(portfolio.view.getI18NString("portfolio_save_success"));
 };
 
 
@@ -217,7 +218,7 @@ Portfolio.prototype.saveToServer = function(callback,callbackArgs) {
 
 Portfolio.prototype.addItemSaveToServerCallback = function(responseText, responseXML, args) {
 	var portfolio = args.portfolio;
-	alert(portfolio.view.getI18NString("portfolio_add_item_success"));
+	//alert(portfolio.view.getI18NString("portfolio_add_item_success"));
 };
 
 /**
@@ -263,7 +264,7 @@ Portfolio.prototype.deleteItem = function(portfolioItemIdToDelete) {
 Portfolio.prototype.deleteItemSaveToServerCallback = function(responseText, responseXML, args) {
 	var portfolio = args.portfolio;
 	var deletedItemId = args.portfolioItemId;
-	alert(portfolio.view.getI18NString("portfolio_delete_item_success"));
+	//alert(portfolio.view.getI18NString("portfolio_delete_item_success"));
 	$("#portfolioItem_"+deletedItemId).hide();
 };
 
@@ -307,20 +308,24 @@ Portfolio.prototype.render = function(domId) {
 	//	clear existing portfolio items
 	var portfolioItems = $("<div>").attr("id", "portfolioItems");
 	$("#"+domId).html(portfolioItems);
-	
+
 	//	open the portfolio dialog
 	var docHeight = $(document).height()-25;
 	var docWidth = $(document).width()-25;
 	$("#"+domId).dialog({height:docHeight,width:docWidth});
 	$("#"+domId).dialog('open');
 	$("#"+domId).scrollTop(0);
-	
+
 	//	display portfolio items
 	for (var i=0; i<this.items.length;i++) {
 		var portfolioItem = this.items[i];
 		var nodeId = portfolioItem.nodeId;
 		var node = this.view.getProject().getNodeById(nodeId);
-		var nodeShowAllWorkHtml = node.getShowAllWorkHtml(this.view);
+		//get the node id
+		var nodeVisitId = portfolioItem.nodeVisitId;
+
+		//get the latest node visit that contains student work for this step
+		var nodeVisit = this.view.getState().getNodeVisitById(nodeVisitId);
 
 		var portfolioItemDiv = $("<div>").attr("id","portfolioItem_"+portfolioItem.id).addClass("portfolioItem");
 		var portfolioItemHeader = $("<div>").addClass("portfolioItemHeader");
@@ -335,39 +340,27 @@ Portfolio.prototype.render = function(domId) {
 		.append("<div class='portfolioItemType'>"+portfolioItem.itemType+"</div>")
 		.append("<div class='portfolioItemTitle'>"+portfolioItem.title+"</div>")
 		.append("<div class='portfolioItemNodeId'>"+portfolioItem.nodeId+"</div>")
-		.append("<div class='portfolioItemData'>"+nodeShowAllWorkHtml+"</div>")
+		.append("<div class='portfolioItemData' id='stepwork_"+nodeVisit.id+"'></div>")
 		.append("<div class='portfolioItemStudentAnnotation'></div>");
 
 		portfolioItems.append(portfolioItemDiv).append("<br/>");
 
-		if (portfolioItem.studentAnnotation) {
-		}
+		//check if the student has any work for this step
+		if(nodeVisit != null) {
+			//get the div to display the work in
+			var studentWorkDiv = $("#stepwork_" + nodeVisit.id);
 
-		//only perform this for steps that have a grading view
-		if(node.hasGradingView()) {
-			//get the node id
-			var nodeId = node.id;
+			//render the work into the div to display it
+			node.renderGradingView(studentWorkDiv, nodeVisit, "", workgroupId);
 
-			//get the latest node visit that contains student work for this step
-			var nodeVisit = this.view.getState().getLatestNodeVisitByNodeId(nodeId);
-
-			//check if the student has any work for this step
-			if(nodeVisit != null) {
-				//get the div to display the work in
-				var studentWorkDiv = $("#latestWork_" + nodeVisit.id);
-
-				//render the work into the div to display it
-				node.renderGradingView(studentWorkDiv, nodeVisit, "", workgroupId);
-
-				if($("#new_latestWork_" + nodeVisit.id).length != 0) {
-					/*
-					 * render the work into the new feedback div if it exists. the
-					 * new feedback div exists when the teacher has given a new
-					 * score or comment and we need to show the work and feedback
-					 * for that step at the the top of the show all work
-					 */
-					node.renderGradingView($("#new_latestWork_" + nodeVisit.id), nodeVisit, "", workgroupId);
-				}
+			if($("#new_latestWork_" + nodeVisit.id).length != 0) {
+				/*
+				 * render the work into the new feedback div if it exists. the
+				 * new feedback div exists when the teacher has given a new
+				 * score or comment and we need to show the work and feedback
+				 * for that step at the the top of the show all work
+				 */
+				node.renderGradingView($("#new_latestWork_" + nodeVisit.id), nodeVisit, "", workgroupId);
 			}
 		}
 	}
