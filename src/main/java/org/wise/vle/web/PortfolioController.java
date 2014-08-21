@@ -27,6 +27,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,25 +76,28 @@ public class PortfolioController {
 		}
 
 		if(action.equals("savePortfolio") && runId != null && workgroupId != null) {
+			try {
+				String portfolioJSONString = request.getParameter("portfolio");
+				JSONObject portfolioJSONObject = new JSONObject(portfolioJSONString);
+				Portfolio portfolioToSave = new Portfolio(portfolioJSONObject);
 
-			String items = request.getParameter("items");
-			Portfolio portfolioToSave = new Portfolio(runId,workgroupId,items);
-
-			// get the last Portfolio that was saved
-			Portfolio lastSavedPortfolio = vleService.getPortfolioByRunIdWorkgroupId(runId, workgroupId);
-			if(lastSavedPortfolio != null) {
-				// save iff portfolio to save and the last-saved portfolio are not the same
-				if (portfolioToSave.getItems() != null &&
-						!portfolioToSave.getItems().equals(lastSavedPortfolio.getItems())) {
-					vleService.savePortfolio(portfolioToSave);
+				// get the last Portfolio that was saved
+				Portfolio lastSavedPortfolio = vleService.getPortfolioByRunIdWorkgroupId(runId, workgroupId);
+				if(lastSavedPortfolio != null) {
+					// save iff portfolio to save and the last-saved portfolio are not the same
+					if (portfolioToSave.getData() != null &&
+							!portfolioToSave.getData().equals(lastSavedPortfolio.getData())) {
+						vleService.savePortfolio(portfolioToSave);
+					}
+				} else {
+					// Portfolio was never created before so we'll create a new row
+					Portfolio portfolio = new Portfolio(runId,workgroupId,null);
+					vleService.savePortfolio(portfolio);
 				}
-			} else {
-				// Portfolio was never created before so we'll create a new row
-				Portfolio portfolio = new Portfolio(runId,workgroupId,null);
-				vleService.savePortfolio(portfolio);
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
 		}
-
 
 		return null;
 	}

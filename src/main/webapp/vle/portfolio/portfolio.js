@@ -41,56 +41,6 @@ function Portfolio(view, portfolioJSONObj, createForStep, node, settings) {
 		}
 	}
 
-	if(!portfolioJSONObj) {
-		//JSON is not provided so we will just initialize the UI
-		this.init(this);
-	} else {
-		/*
-		 * JSON is provided so we will populate the data and not initialize the UI.
-		 */
-		this.load(portfolioJSONObj, false, null);
-	}
-};
-
-function PortfolioItem(object) {
-	this.title = object.title;
-	this.itemType = object.itemType;
-	this.nodeId = object.nodeId;
-};
-
-/**
- * Initialize the Portfolio turning on tablesorter to allow sorting
- * by columns and turning on sortable to allow students to drag and drop
- * rows to manually sort the table
- * @param context
- */
-Portfolio.prototype.init = function(context) {
-	var enableStep = true,
-	message = '',
-	workToImport = [];
-
-	//process the tag maps if we are not in authoring mode
-	if(this.view && !this.view.authoringMode) {
-		//get the tag map results
-		var tagMapResults = this.processTagMaps();
-
-		//get the result values
-		enableStep = tagMapResults.enableStep;
-		message = tagMapResults.message;
-		workToImport = tagMapResults.workToImport;
-	}
-};
-
-
-/**
- * Load the portfolio items into the tables in the interface
- * @param potfolioJSONObj the JSON object to populate the data from
- * @param generateUI boolean value whether to generate the UI
- * @param view VLE View instance object
- * @param publicPortfolioJSONObj (optional) the public portfolio JSON object
- */
-Portfolio.prototype.load = function(portfolioJSONObj, generateUI, settings, view, publicPortfolioJSONObj) {
-	console.log('portfolio.js, load');
 	if(settings){
 		this.settings = settings;
 		this.version = parseInt(settings.version, 10);
@@ -98,11 +48,6 @@ Portfolio.prototype.load = function(portfolioJSONObj, generateUI, settings, view
 
 	if(view){
 		this.view = view;
-	}
-
-	//set the public portfolio if it was provided
-	if(publicPortfolioJSONObj) {
-		//this.setPublicPortfolio(publicPortfolioJSONObj);
 	}
 
 	if(this.view){
@@ -152,54 +97,174 @@ Portfolio.prototype.load = function(portfolioJSONObj, generateUI, settings, view
 		this.workgroupId = portfolioJSONObj.workgroupId;
 
 		if(portfolioJSONObj.hasOwnProperty('items') && portfolioJSONObj.items !== null) {
-			this.items = JSON.parse(portfolioJSONObj.items);
+			var portfolioItemsJSONArray = portfolioJSONObj.items;
+			for (var i=0; i< portfolioItemsJSONArray.length; i++) {
+				var portfolioItemJSON = portfolioItemsJSONArray[i];
+				this.items.push(new PortfolioItem(portfolioItemJSON));
+			}
 		}
 
 		if(portfolioJSONObj.hasOwnProperty('deletedItems') && portfolioJSONObj.deletedItems !== null) {
-			this.deletedItems = JSON.parse(portfolioJSONObj.deletedItems);		
+			var portfolioDeletedItemsJSONArray = portfolioJSONObj.deletedItems;
+			for (var i=0; i< portfolioDeletedItemsJSONArray.length; i++) {
+				var portfolioDeletedItemJSON = portfolioDeletedItemsJSONArray[i];
+				this.deletedItems.push(new PortfolioItem(portfolioDeletedItemJSON));
+			}
 		}
 	}
+};
 
-	return this;
+function PortfolioItem(object) {
+	this.id = object.id;
+	this.title = object.title;
+	this.itemType = object.itemType;
+	this.nodeId = object.nodeId;
+	this.studentAnnotation = object.studentAnnotation;
+	if (object.timeCreated) {
+		this.timeCreated = object.timeCreated;
+	} else {
+		this.timeCreated = Date.parse(new Date());
+	}
 };
 
 /**
- * Add PortfolioItem to the portfolio and save to server
- * 
+ * Initialize the Portfolio turning on tablesorter to allow sorting
+ * by columns and turning on sortable to allow students to drag and drop
+ * rows to manually sort the table
+ * @param context
+ */
+Portfolio.prototype.init = function(context) {
+	var enableStep = true,
+	message = '',
+	workToImport = [];
+
+	//process the tag maps if we are not in authoring mode
+	if(this.view && !this.view.authoringMode) {
+		//get the tag map results
+		var tagMapResults = this.processTagMaps();
+
+		//get the result values
+		enableStep = tagMapResults.enableStep;
+		message = tagMapResults.message;
+		workToImport = tagMapResults.workToImport;
+	}
+};
+
+/**
+ * Returns the highest item id number
+ */
+Portfolio.prototype.getHighestItemId = function() {
+	var highestItemIdSoFar = -1;
+	for (var i=0; i<this.items.length; i++) {
+		var item = this.items[i];
+		if (item.id > highestItemIdSoFar) {
+			highestItemIdSoFar = item.id;
+		}
+	}
+	for (var k=0; k<this.deletedItems.length; k++) {
+		var deletedItem = this.deletedItems[k];
+		if (deletedItem.id > highestItemIdSoFar) {
+			highestItemIdSoFar = deletedItem.id;
+		}
+	}
+	return highestItemIdSoFar;
+};
+
+Portfolio.prototype.toJSON = function() {
+	return {
+		"id":this.id,
+		"workgroupId":this.workgroupId,
+		"runId":this.runId,
+		"metadata":this.metadata,
+		"items":this.items,
+		"deletedItems":this.deletedItems,
+		"isPublic":this.isPublic,
+		"isSubmitted":this.isSubmitted,
+		"tags":this.tags
+	};
+};
+
+/**
+ * Add PortfolioItem to the portfolio
+ * @param PortfolioItem object to add
  */
 Portfolio.prototype.addItem = function(portfolioItem) {
 	this.items.push(portfolioItem);
+};
 
+Portfolio.prototype.saveToServerCallback = function(responseText, responseXML, args) {
+	var portfolio = args.portfolio;
+	alert(portfolio.view.getI18NString("portfolio_save_success"));
+};
+
+
+Portfolio.prototype.saveToServer = function(callback,callbackArgs) {
 	if(this.view.config.getConfigParam('mode') !== "portalpreview") {
 		//we are not in preview mode so we will post the idea basket back to the server to be saved
+		this.runId = this.view.getConfig().getConfigParam('runId');
+		this.workgroupId = this.view.getUserAndClassInfo().getWorkgroupId();
 		portfolioParams = {
-			"action":"savePortfolio",
-			"items":JSON.stringify(this.items)
+				"action":"savePortfolio",
+				"portfolio":JSON.stringify(this),
 		};
 		this.view.connectionManager.request('POST', 3, 
 				this.view.getConfig().getConfigParam('postPortfolioUrl'), 
 				portfolioParams, 
-				this.addItemCallback, 
-				{portfolio:this});
+				callback, 
+				callbackArgs);
+	}
+};
+
+Portfolio.prototype.addItemSaveToServerCallback = function(responseText, responseXML, args) {
+	var portfolio = args.portfolio;
+	alert(portfolio.view.getI18NString("portfolio_add_item_success"));
+};
+
+/**
+ * Hander for add new portfolio item event
+ */
+Portfolio.prototype.addItemEventHandler = function(event) {
+	var view = event.data.view;
+	var portfolioItem = new PortfolioItem(event.data);
+	// assign new item id
+	portfolioItem.id = view.portfolio.getHighestItemId()+1;
+	view.portfolio.addItem(portfolioItem);
+	view.portfolio.saveToServer(view.portfolio.addItemSaveToServerCallback,{portfolio:view.portfolio});
+};
+
+
+/**
+ * Hander for deleting item event
+ */
+Portfolio.prototype.deleteItemEventHandler = function(event) {
+	var portfolioItemIdToDelete = event.data.portfolioItemId;
+	var view = event.data.view;
+	view.portfolio.deleteItem(portfolioItemIdToDelete);
+	view.portfolio.saveToServer(view.portfolio.deleteItemSaveToServerCallback,{portfolio:view.portfolio,'portfolioItemId':portfolioItemIdToDelete});
+};
+
+/**
+ * Delete a PortfolioItem specified by portfolioItemIdToDelete
+ * This simply moves the item from this.items to this.deletedItems
+ */
+Portfolio.prototype.deleteItem = function(portfolioItemIdToDelete) {
+	for (var i=0; i<this.items.length; i++) {
+		var item = this.items[i];
+		if (item.id == portfolioItemIdToDelete) {
+			this.items.splice(i,1);
+			this.deletedItems.push(item);
+		}
 	}
 };
 
 /**
- * Add PortfolioItem to the portfolio and save to server
- * 
+ * Callback when the portfolio has been updated on the server after deleting a portfolio item
  */
-Portfolio.prototype.addItemCallback = function(responseText, responseXML, args) {
+Portfolio.prototype.deleteItemSaveToServerCallback = function(responseText, responseXML, args) {
 	var portfolio = args.portfolio;
-	alert(portfolio.view.getI18NString("add_to_portfolio_success"));
-};
-
-/**
- * Hander for add item event
- */
-Portfolio.prototype.addItemEventHandler = function(event) {
-	var view = event.data.view;
-	var item = new PortfolioItem(event.data);
-	view.portfolio.addItem(item);
+	var deletedItemId = args.portfolioItemId;
+	alert(portfolio.view.getI18NString("portfolio_delete_item_success"));
+	$("#portfolioItem_"+deletedItemId).hide();
 };
 
 /**
@@ -213,7 +278,7 @@ Portfolio.prototype.render = function(domId) {
 	//check if the portfolioDiv exists
 	if($("#"+domId).size()==0){
 		//it does not exist so we will create it
-		$('#w4_vle').append('<div id="'+domId+'"><div id="portfolioItems"></div></div>');
+		$("#w4_vle").append($('<div id="'+domId+'"></div>'));
 	}
 
 	var title = this.view.getI18NString("portfolio");
@@ -239,32 +304,44 @@ Portfolio.prototype.render = function(domId) {
 		}
 	});
 
-	// close all dialogs
-	view.utils.closeDialogs();
-
-	//open the portfolio dialog
-    var docHeight = $(document).height()-25;
+	//	clear existing portfolio items
+	var portfolioItems = $("<div>").attr("id", "portfolioItems");
+	$("#"+domId).html(portfolioItems);
+	
+	//	open the portfolio dialog
+	var docHeight = $(document).height()-25;
 	var docWidth = $(document).width()-25;
 	$("#"+domId).dialog({height:docHeight,width:docWidth});
-    $("#"+domId).dialog('open');
-    $("#"+domId).scrollTop(0);
-
-	// clear existing portfolio items
-	$("#portfolioItems").html("");
-
-	// display portfolio items
+	$("#"+domId).dialog('open');
+	$("#"+domId).scrollTop(0);
+	
+	//	display portfolio items
 	for (var i=0; i<this.items.length;i++) {
 		var portfolioItem = this.items[i];
 		var nodeId = portfolioItem.nodeId;
 		var node = this.view.getProject().getNodeById(nodeId);
 		var nodeShowAllWorkHtml = node.getShowAllWorkHtml(this.view);
 
-		$("#portfolioItems").append("<div>"+portfolioItem.itemType+"</div>")
-		.append("<div>"+portfolioItem.title+"</div>")
-		.append("<div>"+portfolioItem.nodeId+"</div>")
-		.append("<div>"+nodeShowAllWorkHtml+"</div>")
-		.append("<div>"+portfolioItem.annotation+"</div>");
-		$("#portfolioItems").append("<br/>");
+		var portfolioItemDiv = $("<div>").attr("id","portfolioItem_"+portfolioItem.id).addClass("portfolioItem");
+		var portfolioItemHeader = $("<div>").addClass("portfolioItemHeader");
+		var portfolioDeleteItemLink = $("<span>").addClass("portfolioDeleteItemLink").html(this.view.getI18NString("portfolio_delete_item"));
+
+		portfolioDeleteItemLink.click({"portfolioItemId":portfolioItem.id, "view":this.view},
+				this.deleteItemEventHandler);
+
+		portfolioItemHeader.html(portfolioDeleteItemLink);
+		portfolioItemDiv
+		.append(portfolioItemHeader)
+		.append("<div class='portfolioItemType'>"+portfolioItem.itemType+"</div>")
+		.append("<div class='portfolioItemTitle'>"+portfolioItem.title+"</div>")
+		.append("<div class='portfolioItemNodeId'>"+portfolioItem.nodeId+"</div>")
+		.append("<div class='portfolioItemData'>"+nodeShowAllWorkHtml+"</div>")
+		.append("<div class='portfolioItemStudentAnnotation'></div>");
+
+		portfolioItems.append(portfolioItemDiv).append("<br/>");
+
+		if (portfolioItem.studentAnnotation) {
+		}
 
 		//only perform this for steps that have a grading view
 		if(node.hasGradingView()) {

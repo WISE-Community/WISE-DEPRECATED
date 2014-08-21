@@ -67,13 +67,8 @@ public class Portfolio extends PersistableDomain implements Serializable {
 	@Column(name="workgroupId")
 	private Long workgroupId = null;
 
-	//the JSONArray string for the portfolio items array
-	@Column(name="items", length=512000)
-	private String items = null;
-
-	//the JSONArray string for the portfolio items array
-	@Column(name="metadata", length=2048)
-	private String metadata = null;
+	@Column(name="data", length=512000)
+	private String data = null;
 
 	//whether this portfolio is a public portfolio
 	@Column(name="isPublic")
@@ -104,14 +99,32 @@ public class Portfolio extends PersistableDomain implements Serializable {
 	 * @param projectId
 	 * @param workgroupId
 	 */
-	public Portfolio(long runId, long workgroupId, String items) {
+	public Portfolio(JSONObject portfolioJSONObject) {
+		try {
+			this.runId = portfolioJSONObject.getLong("runId");
+			this.workgroupId = portfolioJSONObject.getLong("workgroupId");
+			this.data = portfolioJSONObject.toString();
+			Calendar now = Calendar.getInstance();
+			this.postTime = new Timestamp(now.getTimeInMillis());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Constructor that does not populate the data field
+	 * @param runId
+	 * @param projectId
+	 * @param workgroupId
+	 */
+	public Portfolio(long runId, long workgroupId, String data) {
 		this.runId = runId;
 		this.workgroupId = workgroupId;
 		Calendar now = Calendar.getInstance();
 		this.postTime = new Timestamp(now.getTimeInMillis());
-		this.items = items;
+		this.data = data;
 	}
-	
+
 	/**
 	 * @see org.wise.vle.domain.PersistableDomain#getObjectClass()
 	 */
@@ -144,12 +157,12 @@ public class Portfolio extends PersistableDomain implements Serializable {
 		this.workgroupId = workgroupId;
 	}
 
-	public String getItems() {
-		return items;
+	public String getData() {
+		return data;
 	}
 
-	public void setItems(String items) {
-		this.items = items;
+	public void setData(String data) {
+		this.data = data;
 	}
 
 	public Timestamp getPostTime() {
@@ -184,11 +197,9 @@ public class Portfolio extends PersistableDomain implements Serializable {
 	public JSONObject toJSONObject() {
 		JSONObject jsonObject = null;
 
-		String items = getItems();
-
 		try {
 			jsonObject = new JSONObject();
-			jsonObject.put("items", items);
+			jsonObject.put("data", getData());
 			jsonObject.put("id", getId());
 			jsonObject.put("runId", getRunId());
 			jsonObject.put("workgroupId", getWorkgroupId());

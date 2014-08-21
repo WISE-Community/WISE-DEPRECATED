@@ -45,8 +45,6 @@ View.prototype.dropDownMenuDispatcher = function(type,args,obj){
 		obj.moveIdeaToTrash(args[0]);
 	} else if(type=='moveIdeaOutOfTrash') {
 		obj.moveIdeaOutOfTrash(args[0]);
-	} else if(type=='displayPortfolio') {
-		obj.displayPortfolio();
 	} else if(type=='viewStudentAssets') {
 		obj.viewStudentAssets(args[0]);
 	} else if(type=='studentAssetSubmitUpload') {
@@ -488,7 +486,7 @@ View.prototype.displayShowAllWork = function() {
 					
 					// show button to add to portfolio
 					if (this.getProjectMetadata().tools.isPortfolioEnabled && this.portfolio) {
-						var addToPortfolio = $("<span>").addClass("addToPortfolio").html(this.getI18NString("add_to_portfolio"));
+						var addToPortfolio = $("<span>").addClass("addToPortfolio").html(this.getI18NString("portfolio_add_item"));
 						addToPortfolio.click({"itemType":"stepWork",
 											  "nodeId":nodeId,
 											  "title":node.title,
@@ -1118,13 +1116,13 @@ View.prototype.getPortfolioCallback = function(responseText, responseXML, args) 
 	var thisView = args.thisView;
 	
 	//parse the JSON string
-	var portfolioJSONObj = $.parseJSON(responseText);
-	
-	if(portfolioJSONObj == null) {
+	var portfolioResponse = $.parseJSON(responseText);
+	if(portfolioResponse == null) {
 		thisView.notificationManager.notify(thisView.getI18NString("portfolio_retrieval_error"), 3);
 	} else {
 		//create the Portfolio from the JSON and set it into the view
-		thisView.portfolio = new Portfolio(thisView, portfolioJSONObj);
+		var portfolioJSONObject = $.parseJSON(portfolioResponse.data);
+		thisView.portfolio = new Portfolio(thisView, portfolioJSONObject);
 	}
 };
 
@@ -1179,7 +1177,6 @@ View.prototype.displayChatRoom = function() {
  * @param args
  */
 View.prototype.displayPortfolio = function() {
-	console.log('vleview_topmenu.js, displayPortfolio');
 	if(!this.portfolio) {
 		/*
 		 * the vle failed to retrieve the portfolio so we will display

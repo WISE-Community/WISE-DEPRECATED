@@ -487,13 +487,25 @@
 		"value":"My Portfolio",
 		"description":"Text on the Portfolio button for Student VLE"
 	},
-	"add_to_portfolio":{
+	"portfolio_add_item":{
 		"value":"Add to portfolio",
 		"description":"Text 'Add to portfolio' on the Show My Work and Step pages"
 	},
-	"add_to_portfolio_success":{
+	"portfolio_add_item_success":{
 		"value":"Added to portfolio.",
 		"description":"Successful confirmation text 'Added to portfolio' on the Show My Work and Step pages"
+	},
+	"portfolio_delete_item":{
+		"value":"Delete from portfolio",
+		"description":"Text 'Delete to portfolio' on the Show My Work and Step pages"
+	},
+	"portfolio_delete_item_success":{
+		"value":"Successfully deleted from portfolio.",
+		"description":"Portfolio delete item successful confirmation text on the Show My Work and Step pages"
+	},
+	"portfolio_save_success":{
+		"value":"Portfolio saved successfully.",
+		"description":"Portfolio save successful confirmation text on the Show My Work and Step pages"
 	},
 	"explanation_builder":{
 		"value":"Explanation Builder",
