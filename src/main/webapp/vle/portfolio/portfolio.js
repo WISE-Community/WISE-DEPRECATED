@@ -50,41 +50,6 @@ function Portfolio(view, portfolioJSONObj, createForStep, node, settings) {
 		this.view = view;
 	}
 
-	if(this.view){
-		// set text for customizable terms based on settings or default i18n string
-		this.view.insertTranslations();
-		this.ideaTerm = this.view.getI18NString('idea');
-		this.ideaTermPlural = this.view.getI18NString('idea_plural');
-		this.basketTerm = this.view.getI18NString('idea_basket');
-		this.ebTerm = this.view.getI18NString('explanation_builder');
-		this.addIdeaTerm = this.view.getI18NString('idea_basket_add_an_idea');
-		this.privateBasketTerm = this.view.getI18NString('idea_basket_private');
-		this.publicBasketTerm = this.view.getI18NString('idea_basket_public');
-		if(this.version > 1){
-			if(this.settings.hasOwnProperty('ideaTerm') && this.view.utils.isNonWSString(this.settings.ideaTerm)){
-				this.ideaTerm = this.settings.ideaTerm;
-			}
-			if(this.settings.hasOwnProperty('ideaTermPlural') && this.view.utils.isNonWSString(this.settings.ideaTermPlural)){
-				this.ideaTermPlural = this.settings.ideaTermPlural;
-			}
-			if(this.settings.hasOwnProperty('basketTerm') && this.view.utils.isNonWSString(this.settings.basketTerm)){
-				this.basketTerm = this.settings.basketTerm;
-			}
-			if(this.settings.hasOwnProperty('ebTerm') && this.view.utils.isNonWSString(this.settings.ebTerm)){
-				this.ebTerm = this.settings.ebTerm;
-			}
-			if(this.settings.hasOwnProperty('addIdeaTerm') && this.view.utils.isNonWSString(this.settings.addIdeaTerm)){
-				this.addIdeaTerm = this.settings.addIdeaTerm;
-			}
-			if(this.settings.hasOwnProperty('privateBasketTerm') && this.view.utils.isNonWSString(this.settings.privateBasketTerm)){
-				this.privateBasketTerm = this.settings.privateBasketTerm;
-			}
-			if(this.settings.hasOwnProperty('publicBasketTerm') && this.view.utils.isNonWSString(this.settings.publicBasketTerm)){
-				this.publicBasketTerm = this.settings.publicBasketTerm;
-			}
-		}
-	}
-
 	/*
 	 * portfolioJSONObj will be null in authoring preview step in which case
 	 * we do not want to load anything
@@ -114,6 +79,19 @@ function Portfolio(view, portfolioJSONObj, createForStep, node, settings) {
 	}
 };
 
+/**
+ * PortfolioItem is an item entry (both current and deleted) in the portfolio.
+ * 
+ * Possible itemTypes: stepWork, ideabasket, studentUploadedAssets, outside resource
+ * If itemType is stepWork, there are three levels to specify which work to store:
+ * 1. just nodeId: always get the latest work for the node
+ * 2. nodeId+stepWorkId: get the specific stepWork for the node
+ * 3. nodeId+stepWorkId+nodeStateId: get the specific nodeState within the specified stepWork for the node.
+ *
+ * If itemType is studentUploadedAssets, here's the relevant data:
+ *  studentUploadedAssetURL: absolute url to student assets directory
+ *  title: asset file name
+ */
 function PortfolioItem(object) {
 	this.id = object.id;
 	this.title = object.title;
@@ -121,12 +99,72 @@ function PortfolioItem(object) {
 	this.nodeId = object.nodeId;
 	this.nodeVisitId = object.nodeVisitId;
 	this.studentAnnotation = object.studentAnnotation;
+	this.studentUploadedAssetURL = object.studentUploadedAssetURL;
 	if (object.timeCreated) {
 		this.timeCreated = object.timeCreated;
 	} else {
 		this.timeCreated = Date.parse(new Date());
 	}
 };
+
+/**
+ * Render the portfolio item in the specified dom id
+ */
+PortfolioItem.prototype.render = function(domId,view) {
+	var portfolioItemType = this.itemType;
+	var portfolioItemDiv = $("#"+domId);
+	var portfolioItemHeader = $("<div>").addClass("portfolioItemHeader");
+	var portfolioDeleteItemLink = $("<span>").addClass("portfolioDeleteItemLink").html(view.getI18NString("portfolio_delete_item"));
+	portfolioDeleteItemLink.click({"portfolioItemId":this.id, "view":view},
+			view.portfolio.deleteItemEventHandler);
+	portfolioItemHeader.html(portfolioDeleteItemLink);
+
+	if (portfolioItemType == "stepWork") {
+		var workgroupId = view.getUserAndClassInfo().getWorkgroupId();
+		var nodeId = this.nodeId;
+		var node = view.getProject().getNodeById(nodeId);
+		//get the node id
+		var nodeVisitId = this.nodeVisitId;
+
+		//get the latest node visit that contains student work for this step
+		var nodeVisit = view.getState().getNodeVisitById(nodeVisitId);
+
+		portfolioItemDiv
+			.append(portfolioItemHeader)
+			.append("<div class='portfolioItemType'>"+this.itemType+"</div>")
+			.append("<div class='portfolioItemTitle'>"+this.title+"</div>")
+			.append("<div class='portfolioItemNodeId'>"+this.nodeId+"</div>")
+			.append("<div class='portfolioItemData' id='stepwork_"+nodeVisit.id+"'></div>")
+			.append("<div class='portfolioItemStudentAnnotation'></div>");
+
+		//check if the student has any work for this step
+		if(nodeVisit != null) {
+			//get the div to display the work in
+			var studentWorkDiv = $("#stepwork_" + nodeVisit.id);
+
+			//render the work into the div to display it
+			node.renderGradingView(studentWorkDiv, nodeVisit, "", workgroupId);
+
+			if($("#new_latestWork_" + nodeVisit.id).length != 0) {
+				/*
+				 * render the work into the new feedback div if it exists. the
+				 * new feedback div exists when the teacher has given a new
+				 * score or comment and we need to show the work and feedback
+				 * for that step at the the top of the show all work
+				 */
+				node.renderGradingView($("#new_latestWork_" + nodeVisit.id), nodeVisit, "", workgroupId);
+			}
+		}			
+	} else if (portfolioItemType == "studentUploadedAsset") {
+		portfolioItemDiv
+			.append(portfolioItemHeader)
+			.append("<div class='portfolioItemType'>"+this.itemType+"</div>")
+			.append("<div class='portfolioItemTitle'>"+this.title+"</div>")
+			.append("<div class='portfolioItemData'><img src='"+this.studentUploadedAssetURL+"'></img></div>")
+			.append("<div class='portfolioItemStudentAnnotation'></div>");		
+	}
+
+}
 
 /**
  * Initialize the Portfolio turning on tablesorter to allow sorting
@@ -193,6 +231,24 @@ Portfolio.prototype.addItem = function(portfolioItem) {
 	this.items.push(portfolioItem);
 };
 
+/**
+ * Add PortfolioItem of StudentUploadedAsset type to the portfolio
+ * @param PortfolioItem object to add
+ */
+Portfolio.prototype.addStudentUploadedAssetItem = function(assetFilename, assetFileURL) {
+	var portfolioItemArgs = {
+		id: view.portfolio.getHighestItemId()+1,
+		itemType:"studentUploadedAsset",
+		title: assetFilename,
+		studentUploadedAssetURL : assetFileURL,
+	};
+	var portfolioItem = new PortfolioItem(portfolioItemArgs);
+	view.portfolio.addItem(portfolioItem);
+	view.portfolio.saveToServer(view.portfolio.addItemSaveToServerCallback,{portfolio:view.portfolio});
+	
+	this.items.push(portfolioItem);
+};
+
 Portfolio.prototype.saveToServerCallback = function(responseText, responseXML, args) {
 	var portfolio = args.portfolio;
 	//alert(portfolio.view.getI18NString("portfolio_save_success"));
@@ -201,7 +257,7 @@ Portfolio.prototype.saveToServerCallback = function(responseText, responseXML, a
 
 Portfolio.prototype.saveToServer = function(callback,callbackArgs) {
 	if(this.view.config.getConfigParam('mode') !== "portalpreview") {
-		//we are not in preview mode so we will post the idea basket back to the server to be saved
+		//we are not in preview mode so we will post the portfolio back to the server to be saved
 		this.runId = this.view.getConfig().getConfigParam('runId');
 		this.workgroupId = this.view.getUserAndClassInfo().getWorkgroupId();
 		portfolioParams = {
@@ -227,8 +283,7 @@ Portfolio.prototype.addItemSaveToServerCallback = function(responseText, respons
 Portfolio.prototype.addItemEventHandler = function(event) {
 	var view = event.data.view;
 	var portfolioItem = new PortfolioItem(event.data);
-	// assign new item id
-	portfolioItem.id = view.portfolio.getHighestItemId()+1;
+	portfolioItem.id = view.portfolio.getHighestItemId()+1; // assign new item id
 	view.portfolio.addItem(portfolioItem);
 	view.portfolio.saveToServer(view.portfolio.addItemSaveToServerCallback,{portfolio:view.portfolio});
 };
@@ -274,8 +329,6 @@ Portfolio.prototype.deleteItemSaveToServerCallback = function(responseText, resp
 Portfolio.prototype.render = function(domId) {
 	console.log('Portfolio.prototype.render, domId:'+domId);
 
-	var workgroupId = this.view.getUserAndClassInfo().getWorkgroupId();
-
 	//check if the portfolioDiv exists
 	if($("#"+domId).size()==0){
 		//it does not exist so we will create it
@@ -319,50 +372,9 @@ Portfolio.prototype.render = function(domId) {
 	//	display portfolio items
 	for (var i=0; i<this.items.length;i++) {
 		var portfolioItem = this.items[i];
-		var nodeId = portfolioItem.nodeId;
-		var node = this.view.getProject().getNodeById(nodeId);
-		//get the node id
-		var nodeVisitId = portfolioItem.nodeVisitId;
-
-		//get the latest node visit that contains student work for this step
-		var nodeVisit = this.view.getState().getNodeVisitById(nodeVisitId);
-
 		var portfolioItemDiv = $("<div>").attr("id","portfolioItem_"+portfolioItem.id).addClass("portfolioItem");
-		var portfolioItemHeader = $("<div>").addClass("portfolioItemHeader");
-		var portfolioDeleteItemLink = $("<span>").addClass("portfolioDeleteItemLink").html(this.view.getI18NString("portfolio_delete_item"));
-
-		portfolioDeleteItemLink.click({"portfolioItemId":portfolioItem.id, "view":this.view},
-				this.deleteItemEventHandler);
-
-		portfolioItemHeader.html(portfolioDeleteItemLink);
-		portfolioItemDiv
-		.append(portfolioItemHeader)
-		.append("<div class='portfolioItemType'>"+portfolioItem.itemType+"</div>")
-		.append("<div class='portfolioItemTitle'>"+portfolioItem.title+"</div>")
-		.append("<div class='portfolioItemNodeId'>"+portfolioItem.nodeId+"</div>")
-		.append("<div class='portfolioItemData' id='stepwork_"+nodeVisit.id+"'></div>")
-		.append("<div class='portfolioItemStudentAnnotation'></div>");
-
 		portfolioItems.append(portfolioItemDiv).append("<br/>");
-
-		//check if the student has any work for this step
-		if(nodeVisit != null) {
-			//get the div to display the work in
-			var studentWorkDiv = $("#stepwork_" + nodeVisit.id);
-
-			//render the work into the div to display it
-			node.renderGradingView(studentWorkDiv, nodeVisit, "", workgroupId);
-
-			if($("#new_latestWork_" + nodeVisit.id).length != 0) {
-				/*
-				 * render the work into the new feedback div if it exists. the
-				 * new feedback div exists when the teacher has given a new
-				 * score or comment and we need to show the work and feedback
-				 * for that step at the the top of the show all work
-				 */
-				node.renderGradingView($("#new_latestWork_" + nodeVisit.id), nodeVisit, "", workgroupId);
-			}
-		}
+		portfolioItem.render("portfolioItem_"+portfolioItem.id,this.view);
 	}
 };
 

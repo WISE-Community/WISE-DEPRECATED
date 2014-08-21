@@ -191,6 +191,10 @@
 		"value":"Add Selected File to Step",
 		"description":"Text on a button in Student Asset Manager to add the selected file to the current step"
 	},
+	"student_assets_add_selected_file_to_portfolio":{
+		"value":"Add Selected File to Portfolio",
+		"description":"Text on a button in Student Asset Manager to add the selected file to the portfolio"
+	},
 	"student_assets_delete_selected_file":{
 		"value":"Delete Selected File",
 		"description":"Text on a button in Student Asset Manager to delete a selected file"
