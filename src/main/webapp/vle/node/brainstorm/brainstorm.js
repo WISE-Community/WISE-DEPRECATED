@@ -216,7 +216,7 @@ BRAINSTORM.prototype.brainfullLoaded = function(frameDoc) {
 		    remove_script_host: false,
 		    setup: function(ed) {
 		       ed.addButton('importAsset', {
-		          title: 'Use My Asset',
+		          title: thisView.getI18NString('importAssetButtonTitle','BrainstormNode'),
 		          image: this.settings.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
 		          onclick: function() {
 		             var params = {};
@@ -820,7 +820,7 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 					    remove_script_host: false,
 					    setup: function(ed) {
 					       ed.addButton('importAsset', {
-					          title: 'Use My Asset',
+					          title: thisView.getI18NString('importAssetButtonTitle','BrainstormNode'),
 					          image: this.settings.contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/plugins/image_tools/img/image_alt.png',
 					          onclick: function() {
 					             var params = {};
