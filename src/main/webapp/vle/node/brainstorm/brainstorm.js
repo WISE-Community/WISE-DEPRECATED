@@ -214,6 +214,7 @@ BRAINSTORM.prototype.brainfullLoaded = function(frameDoc) {
 		    contextPath: this.contextPath,
 		    relative_urls: false,
 		    remove_script_host: false,
+		    plugins: 'autoresize',
 		    setup: function(ed) {
 		       ed.addButton('importAsset', {
 		          title: thisView.getI18NString('importAssetButtonTitle','BrainstormNode'),
@@ -818,6 +819,7 @@ BRAINSTORM.prototype.addStudentResponse = function(state, vle, content) {
 					    contextPath: bs.contextPath,
 					    relative_urls: false,
 					    remove_script_host: false,
+					    plugins: 'autoresize',
 					    setup: function(ed) {
 					       ed.addButton('importAsset', {
 					          title: thisView.getI18NString('importAssetButtonTitle','BrainstormNode'),
