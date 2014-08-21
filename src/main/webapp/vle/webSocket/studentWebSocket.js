@@ -201,6 +201,15 @@ View.prototype.startWebSocketConnection = function() {
 							 * the classmate websocket data
 							 */
 							eventManager.fire('classmateWebSocketMessageReceived', data);
+						} else if(messageType == 'showClassroomTeacherPromptReceived') {
+							//the teacher has sent a show classroom prompt
+							view.showClassroomTeacherPromptReceived(data);
+						} else if(messageType == 'closeShowClassroomTeacherPrompt') {
+							//the teacher has closed the show classroom prompt
+							view.closeShowClassroomTeacherPrompt(data);
+						} else if(messageType == 'showClassroomTeacherInputReceived') {
+							//the teacher has sent a show classroom input
+							view.showClassroomTeacherInputReceived(data);
 						}
 					}
 				}
@@ -478,6 +487,176 @@ View.prototype.unlockScreen = function() {
 	
 	$('#lockscreen').html('');
     $('#lockscreen').dialog('close');
+};
+
+/**
+ * The teacher has sent a prompt for the class to view. We will lock
+ * the screen and display the prompt.
+ * @param data the websocket message from the teacher
+ */
+View.prototype.showClassroomTeacherPromptReceived = function(data) {
+	//create the lock screen dialog if it does not exist
+	if($('#lockscreen').size()==0){
+		this.renderLockDialog();
+	}
+	
+	//get the background for the prompt
+	var background = data.background;
+
+	//set the size of the lock screen dialog and open it
+	$('#lockscreen').dialog('option', 'width', 800);
+    $('#lockscreen').dialog('option', 'height', 600);
+    $('#lockscreen').dialog('open');
+    
+    //create the canvas for displaying the prompt
+    var canvas = $('<canvas>');
+    canvas.attr('id', 'showClassroomCanvas');
+    canvas.attr('width', '780');
+    canvas.attr('height', '580');
+    canvas.css('border', '1px solid black');
+    
+    //get the canvas DOM element
+    var canvasDOMElement = canvas[0];
+    
+    //add the canvas to the lock screen dialog
+    $('#lockscreen').html(canvas);
+    
+    //get the canvas context
+    var canvasContext = canvasDOMElement.getContext('2d');
+    
+    //create the image object to display the background from the teacher
+    var imageObj = new Image();
+
+    imageObj.onload = function() {
+    	//draw the image onto the canvas context
+    	canvasContext.drawImage(imageObj, 0, 0);
+    };
+    
+    //set the source of the image
+    imageObj.src = background;
+    
+    //listen for when the student clicks on the canvas
+    canvas.on('mousedown', {thisView:this, canvas:canvas}, function(event) {
+    	var thisView = event.data.thisView;
+    	var canvas = event.data.canvas;
+    	
+    	//the student has clicked on the canvas
+    	thisView.showClassroomCanvasClicked(canvas, event);
+    });
+};
+
+/**
+ * The teacher has closed the show classroom prompt. We will unlock the screen
+ * @param data the websocket message from the teacher
+ */
+View.prototype.closeShowClassroomTeacherPrompt = function(data) {
+	//create the lock screen dialog if it does not exist
+	if($('#lockscreen').size()==0){
+		this.renderLockDialog();
+	}
+	
+	//clear the lock screen div
+	$('#lockscreen').html('');
+	
+	//close the lock screen popup
+    $('#lockscreen').dialog('close');
+}
+
+/**
+ * The student has clicked on the show classroom canvas
+ * @param canvas the canvas jquery object
+ * @param event the jquery mousedown event
+ */
+View.prototype.showClassroomCanvasClicked = function(canvas, event) {
+	//get the canvas DOM element
+	var canvasDOMElement = canvas[0];
+	
+	//get the canvas bounding rectangle
+	var canvasRectangle = canvasDOMElement.getBoundingClientRect();
+	
+	//get the x and y coordinates of where the student clicked
+	var x = event.clientX - canvasRectangle.left;
+	var y = event.clientY - canvasRectangle.top;
+	
+	//get the integer values of x and y
+	x = parseInt(x);
+	y = parseInt(y);
+	
+	//create the params object that will contain the x and y values
+	var params = {};
+	params.x = x;
+	params.y = y;
+	
+	//get the canvas context
+    var canvasContext = canvasDOMElement.getContext('2d');
+    
+    //draw a green dot at the x, y position
+    canvasContext.beginPath();
+    canvasContext.arc(x, y, 4, 0, 2 * Math.PI, false);
+    canvasContext.fillStyle = 'green';
+    canvasContext.fill();
+    canvasContext.lineWidth = 1;
+    canvasContext.stroke();
+	
+    //send the student input to websockets
+	this.sendShowClassroomStudentInput(params);
+};
+
+/**
+ * Send the student input to websockets
+ * @param x the x coordinate
+ * @param y the y coordinate
+ */
+View.prototype.sendShowClassroomStudentInput = function(params) {
+	//create the message object with the necessary parameters
+	var messageJSON = {};
+	
+	//set the run id
+	messageJSON.runId = parseInt(this.getConfig().getConfigParam('runId'));
+	
+	//set the message type
+	messageJSON.messageType = 'showClassroomStudentInputReceived';
+	
+	//set the message participants
+	messageJSON.messageParticipants = 'studentToTeachers';
+	
+	//get the x and y values
+	var x = params.x;
+	var y = params.y;
+	messageJSON.x = x;
+	messageJSON.y = y;
+	
+	//send the student input to websockets
+	this.sendStudentWebSocketMessage(messageJSON);
+};
+
+/**
+ * Handle the show classroom teacher input
+ * @param data the websocket message from the teacher
+ */
+View.prototype.showClassroomTeacherInputReceived = function(data) {
+	//get the x and y coordinates of the teacher input
+	var x = data.x;
+	var y = data.y;
+	
+	//get the integer values of x and y
+    x = parseInt(x);
+    y = parseInt(y);
+    
+	//get the show classroom canvas
+    var canvas = $('#showClassroomCanvas');
+    var canvasDOMElement = canvas[0];
+    
+    //get the canvas context
+    var canvasContext = canvasDOMElement.getContext('2d');
+    
+    //draw a red dot at the x, y position
+    canvasContext.beginPath();
+    canvasContext.arc(x, y, 4, 0, 2 * Math.PI, false);
+    canvasContext.fillStyle = 'red';
+    canvasContext.fill();
+    canvasContext.lineWidth = 1;
+    canvasContext.stroke();
 };
 
 
