@@ -75,7 +75,7 @@ public class IndexController {
 			HttpServletResponse response,
 			ModelMap modelMap) throws Exception {
 		
-		List<NewsItem> newsItems = newsItemService.retrieveAllNewsItem();
+		List<NewsItem> newsItems = newsItemService.retrieveByType("public");
 		
 		if (newsItems.size() == 0) {
 			NewsItem newsItem = new NewsItemImpl();

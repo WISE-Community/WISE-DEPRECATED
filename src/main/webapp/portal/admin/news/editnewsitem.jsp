@@ -21,6 +21,20 @@
 		<dl>
 		<dt><label for="titleField"><spring:message code="title" /></label></dt>
 		<dd><input size="75" id="title" name="title" value="${newsItem.title}"></input> </dd>
+		<dt><label for="typeField"><spring:message code="type" /></label></dt>
+		<dd><select name="type">
+				<c:choose>
+					<c:when test="${newsItem.type=='teacherOnly'}">
+						<option value="public"><spring:message code="public" /></option>
+						<option value="teacherOnly" selected="true"><spring:message code="teacherOnly" /></option>
+					</c:when>
+					<c:otherwise>
+						<option value="public"><spring:message code="public" /></option>
+						<option value="teacherOnly"><spring:message code="teacherOnly" /></option>
+					</c:otherwise>
+				</c:choose>
+			</select>
+		</dd>
 		<dt><label for="newsField"><spring:message code="message" /></label></dt>
 		<dd><textarea rows="20" cols="100" id="news" name="news">${newsItem.news}</textarea></dd>
 		</dl>

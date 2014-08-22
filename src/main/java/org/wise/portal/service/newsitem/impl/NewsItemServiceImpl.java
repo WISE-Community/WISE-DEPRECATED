@@ -52,6 +52,11 @@ public class NewsItemServiceImpl implements NewsItemService{
 		return newsItemDao.getList();
 	}
 
+	@Cacheable(value="news")
+	public List<NewsItem> retrieveByType(String type){
+		return newsItemDao.getListByType(type);
+	}
+
 	public NewsItem retrieveById(Long id) throws ObjectNotFoundException{
 		try{
 			return newsItemDao.getById(id);
@@ -62,12 +67,13 @@ public class NewsItemServiceImpl implements NewsItemService{
 	
 	@CacheEvict(value="news", allEntries=true)
 	@Transactional
-	public NewsItem createNewsItem(Date date, User owner, String title, String news){
+	public NewsItem createNewsItem(Date date, User owner, String title, String news, String type){
 		NewsItem newsItem = new NewsItemImpl();
 		newsItem.setDate(date);
 		newsItem.setOwner(owner);
 		newsItem.setTitle(title);
 		newsItem.setNews(news);
+		newsItem.setType(type);
 		
 		newsItemDao.save(newsItem);
 		return newsItem;
@@ -75,7 +81,7 @@ public class NewsItemServiceImpl implements NewsItemService{
 	
 	@CacheEvict(value="news", allEntries=true)
 	@Transactional
-	public void updateNewsItem(Long id, Date date, User owner, String title, String news) 
+	public void updateNewsItem(Long id, Date date, User owner, String title, String news, String type) 
 			throws ObjectNotFoundException {
 		try{
 			NewsItem newsItem = newsItemDao.getById(id);
@@ -83,6 +89,7 @@ public class NewsItemServiceImpl implements NewsItemService{
 			newsItem.setOwner(owner);
 			newsItem.setTitle(title);
 			newsItem.setNews(news);
+			newsItem.setType(type);
 			newsItemDao.save(newsItem);
 		} catch(ObjectNotFoundException e){
 			throw e;

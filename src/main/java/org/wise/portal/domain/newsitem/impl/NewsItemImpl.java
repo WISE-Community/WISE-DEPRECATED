@@ -64,7 +64,10 @@ public class NewsItemImpl implements NewsItem, Comparable<NewsItem> {
     
     @Transient
     public static final String COLUMN_NAME_TITLE = "title";
-    
+
+    @Transient
+    public static final String COLUMN_NAME_TYPE = "type";
+
 	@Transient
 	private static final long serialVersionUID = 1L;
     
@@ -80,6 +83,9 @@ public class NewsItemImpl implements NewsItem, Comparable<NewsItem> {
     
     @Column(name = NewsItemImpl.COLUMN_NAME_TITLE, nullable = false)
     private String title;
+    
+    @Column(name = NewsItemImpl.COLUMN_NAME_TYPE, nullable = false)
+    private String type;  // type of news item: [public,teacherOnly]
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -155,6 +161,14 @@ public class NewsItemImpl implements NewsItem, Comparable<NewsItem> {
 		this.title = title;
 	}
 	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public int compareTo(NewsItem news){
 		return news.getDate().compareTo(this.getDate());
 	}
