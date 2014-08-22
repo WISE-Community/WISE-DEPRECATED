@@ -94,7 +94,7 @@
 						<div class="center">
 							<input id="goToPageInput" type="hidden" name="_page" value="4" />
 							<input id="goBackButton" type="submit" name="_back" value="<spring:message code="teacher.run.create.createrunperiods.back"/>"/>
-							<input type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunconfigure.cancel"/>" />
+							<input id="cancelButton" type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunconfigure.cancel"/>" />
 							<input type="submit" name="_target4" value="<spring:message code="teacher.run.create.createrunconfigure.next"/>" />
 						</div>
 					</div>
@@ -116,6 +116,10 @@
 $("#goBackButton").click(function() {
 	$("#goToPageInput").val("2");	
 });
+$("#cancelButton").click(function() {
+	$("#goToPageInput").remove();
+});
+
 </script>
 
 </body>
