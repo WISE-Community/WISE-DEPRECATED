@@ -114,11 +114,15 @@ PortfolioItem.prototype.render = function(domId,view) {
 	var portfolioItemType = this.itemType;
 	var portfolioItemDiv = $("#"+domId);
 	var portfolioItemHeader = $("<div>").addClass("portfolioItemHeader");
-	var portfolioDeleteItemLink = $("<span>").addClass("portfolioDeleteItemLink").html(view.getI18NString("portfolio_delete_item"));
+	var portfolioDeleteItemLink = $("<span>").addClass("portfolioDeleteItemLink").html("[" + view.getI18NString("portfolio_delete_item") + "]");
 	portfolioDeleteItemLink.click({"portfolioItemId":this.id, "view":view},
 			view.portfolio.deleteItemEventHandler);
-	portfolioItemHeader.html(portfolioDeleteItemLink);
-
+	var portfolioShowTOCLink = $("<span>").addClass("portfolioShowTOCLink").html("[" + "Table of Contents" + "]");
+	portfolioShowTOCLink.click({"pageId":"portfolioTOC","view":view}, view.portfolio.showPortfolioPageEventHandler);
+//	portfolioItemHeader.html(portfolioDeleteItemLink);
+	portfolioItemHeader.append(portfolioShowTOCLink);
+	portfolioItemHeader.append(portfolioDeleteItemLink);
+	
 	if (portfolioItemType == "stepWork") {
 		var workgroupId = view.getUserAndClassInfo().getWorkgroupId();
 		var nodeId = this.nodeId;
@@ -358,10 +362,19 @@ Portfolio.prototype.render = function(domId) {
 		}
 	});
 
+	// clear portfolio
+	var portfolioContent = $("<div>").attr("id","portfolioContent");
+	$("#"+domId).html(portfolioContent);
+	
+	// clear existing Table of Contents
+	var portfolioTOC = $("<div>").attr("id", "portfolioTOC");
+	portfolioContent.append(portfolioTOC);	
+	
 	//	clear existing portfolio items
 	var portfolioItems = $("<div>").attr("id", "portfolioItems");
-	$("#"+domId).html(portfolioItems);
-
+//	$("#"+domId).html(portfolioItems);
+	portfolioContent.append(portfolioItems);
+	
 	//	open the portfolio dialog
 	var docHeight = $(document).height()-25;
 	var docWidth = $(document).width()-25;
@@ -369,13 +382,43 @@ Portfolio.prototype.render = function(domId) {
 	$("#"+domId).dialog('open');
 	$("#"+domId).scrollTop(0);
 
+	// display Table of Contents
+	portfolioTOC.append("<div>Table of Contents</div>");
+	for (var i=0; i < this.items.length; i++) {
+		var portfolioItem = this.items[i];
+		var portfolioTOCItemDiv = $("<div>").attr("id","portfolioTOC_"+portfolioItem.id).addClass("portfolioTOCItem");
+		portfolioTOCItemDiv.append("<a>" + portfolioItem.title + "</a>");
+		portfolioTOCItemDiv.click({"pageId":"portfolioItem_"+portfolioItem.id, "view":view}, view.portfolio.showPortfolioPageEventHandler)
+		portfolioTOC.append(portfolioTOCItemDiv);
+	}
+	portfolioTOC.append("<br/>");
+		
 	//	display portfolio items
 	for (var i=0; i<this.items.length;i++) {
 		var portfolioItem = this.items[i];
 		var portfolioItemDiv = $("<div>").attr("id","portfolioItem_"+portfolioItem.id).addClass("portfolioItem");
-		portfolioItems.append(portfolioItemDiv).append("<br/>");
+		portfolioItems.append(portfolioItemDiv);
 		portfolioItem.render("portfolioItem_"+portfolioItem.id,this.view);
 	}
+};
+
+Portfolio.prototype.hidePages = function() {
+	// hide TOC
+	$("#portfolioTOC").css("display","none");
+	
+	// hide portfolio items
+	for (var i=0; i<this.items.length;i++) {
+		var portfolioItem = this.items[i];
+		var portfolioItemId = "portfolioItem_"+portfolioItem.id;
+		$("#" + portfolioItemId).css("display","none");
+	}
+};
+
+Portfolio.prototype.showPortfolioPageEventHandler = function(event) {
+	var pageId = event.data.pageId;
+	var view = event.data.view;
+	view.portfolio.hidePages();
+	$("#" + pageId).css("display","block");
 };
 
 /* used to notify scriptloader that this script has finished loading */
