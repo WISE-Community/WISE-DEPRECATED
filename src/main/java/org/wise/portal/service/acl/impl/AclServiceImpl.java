@@ -19,6 +19,7 @@ package org.wise.portal.service.acl.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.proxy.HibernateProxyHelper;
@@ -34,6 +35,7 @@ import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.acls.model.Sid;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.wise.portal.domain.Persistable;
@@ -234,6 +236,12 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
+		Collection<? extends GrantedAuthority> grantedAuthorities = authentication.getAuthorities();
+		if (grantedAuthorities.size() == 1) {
+			if ("[ROLE_ANONYMOUS]".equals(grantedAuthorities.toString())) {
+				return false;
+			}
+		}
 		boolean hasAllPermissions = true;
 		ArrayList<Integer> permissionsList = new ArrayList<Integer>();
 		// separate possibly comma-separated permissions string into array of permissions
