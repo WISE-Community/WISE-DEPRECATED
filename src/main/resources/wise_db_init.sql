@@ -184,6 +184,7 @@
         date datetime not null,
         news text not null,
         title varchar(255) not null,
+        type varchar(255),
         owner bigint not null,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -248,6 +249,18 @@
         totalNumberTeachers bigint,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+    create table `portfolio` (
+ 		`id` bigint(20) not null auto_increment,
+  		`workgroupId` bigint(20) default null,
+  		`runId` bigint(20) default null,
+  		`data` mediumtext,
+  		`isPublic` bit(1) default null,
+  		`isSubmitted` bit(1) default null,
+  		`tags` varchar(255) default null,
+  		`postTime` datetime default null,
+  		PRIMARY KEY (`id`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table premadecommentlists (
         id bigint not null auto_increment,

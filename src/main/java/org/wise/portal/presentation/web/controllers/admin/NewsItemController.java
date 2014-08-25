@@ -63,6 +63,8 @@ public class NewsItemController {
 
 	protected final static String TITLE = "title";
 
+	protected final static String TYPE = "type";
+
 	@RequestMapping(method = RequestMethod.GET)
 	protected String handleGET(
 			HttpServletRequest request,
@@ -99,12 +101,14 @@ public class NewsItemController {
 			NewsItem newsItem = newsItemService.retrieveById(Long.parseLong(newsItemId));
 			String title = request.getParameter(TITLE);
 			String news = request.getParameter(NEWS);
-			newsItemService.updateNewsItem(newsItem.getId(), newsItem.getDate(), newsItem.getOwner(), title, news);
+			String type = request.getParameter(TYPE);
+			newsItemService.updateNewsItem(newsItem.getId(), newsItem.getDate(), newsItem.getOwner(), title, news, type);
 			return "admin/news/success";
 		} else if ("add".equals(action)) {
 			String title = request.getParameter(TITLE);
 			String news = request.getParameter(NEWS);
-			newsItemService.createNewsItem(Calendar.getInstance().getTime(), ControllerUtil.getSignedInUser(), title, news);
+			String type = request.getParameter(TYPE);
+			newsItemService.createNewsItem(Calendar.getInstance().getTime(), ControllerUtil.getSignedInUser(), title, news, type);
 			return "admin/news/success";
 		}
 		return null;

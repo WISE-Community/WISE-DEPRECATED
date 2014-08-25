@@ -23,6 +23,8 @@
 package org.wise.portal.dao.newsitem.impl;
 
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.newsitem.NewsItemDao;
@@ -31,7 +33,6 @@ import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
 
 /**
  * @author patrick lawler
- *
  */
 @Repository
 public class HibernateNewsItemDao extends AbstractHibernateDao<NewsItem> implements NewsItemDao<NewsItem>{
@@ -54,5 +55,10 @@ public class HibernateNewsItemDao extends AbstractHibernateDao<NewsItem> impleme
 		return NewsItemImpl.class;
 	}
 
-
+	@Override
+	public List<NewsItem> getListByType(String type) {
+		return (List<NewsItem>) this.getHibernateTemplate().findByNamedParam(
+	    		"from NewsItemImpl as newsitem where newsitem.type = :type order by id desc",
+	    		"type", type);
+	}
 }

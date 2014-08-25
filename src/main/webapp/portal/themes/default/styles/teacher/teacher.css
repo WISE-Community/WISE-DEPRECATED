@@ -244,6 +244,38 @@ ul.reminders {
 	margin:0;  
 }
 
+/* News box styles */
+
+#newsContent {
+	position:relative;
+	overflow:auto;
+	max-height:155px;
+}
+
+#newsContent p {
+	margin-bottom:3px;
+	margin-right:18px;
+}
+
+#newsContent a {
+	color:#FFFFFF;
+}
+
+p.newsTitle {
+	font-size:.95em;
+	font-weight:bold;
+}
+
+span.newsDate {
+	margin-right:5px;
+}
+
+p.newsSnippet {
+	margin-bottom:10px !important;
+	font-size:.9em;
+	line-height:1em;
+}
+
 /* jQuey UI tab overrides for panel (run and project) tabs */
 .panelTabs {
 	margin-top:-1em;

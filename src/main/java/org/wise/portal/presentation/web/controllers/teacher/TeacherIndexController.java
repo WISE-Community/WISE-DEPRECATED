@@ -43,6 +43,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.message.MessageService;
+import org.wise.portal.service.newsitem.NewsItemService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.workgroup.WorkgroupService;
@@ -71,6 +72,9 @@ public class TeacherIndexController {
 
 	@Autowired
 	private WorkgroupService workgroupService;
+	
+	@Autowired
+	private NewsItemService newsItemService;
 
 	protected final static String RUN_LIST = "run_list";
 
@@ -146,6 +150,7 @@ public class TeacherIndexController {
 		modelMap.put(CURRENT_RUN_LIST_KEY2, current_run_list1);
 		modelMap.put(IS_REAL_TIME_ENABLED, isRealTimeEnabled);
 		modelMap.put(WORKGROUP_MAP_KEY, workgroupMap);
+		modelMap.put("teacherOnlyNewsItems",newsItemService.retrieveByType("teacherOnly"));
     	
     	// retrieve all unread messages
     	modelMap.put(UNREAD_MESSAGES, messageService.retrieveUnreadMessages(user));

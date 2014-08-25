@@ -19,6 +19,11 @@
 		<dl>
 		<dt><label for="titleField"><spring:message code="title" /></label></dt>
 		<dd><input name="title" size="75" id="titleField"></input> </dd>
+		<dt><label for="typeField"><spring:message code="type" /></label></dt>
+		<dd><select name="type">
+				<option value="public"><spring:message code="public" /></option>
+				<option value="teacherOnly"><spring:message code="teacherOnly" /></option>
+			</select></dd>
 		<dt><label for="newsField"><spring:message code="message" /></label></dt>
 		<dd><textarea rows="20" cols="100" name="news" id="newsField"></textarea></dd>
 		</dl>

@@ -44,9 +44,10 @@ public interface NewsItemService {
 	 * @param owner user who created this news item
 	 * @param title news item title 
 	 * @param news news item text
+	 * @param type news item type
 	 * @return a NewsItem that was created
 	 */
-	public NewsItem createNewsItem(Date date, User owner, String title, String news);
+	public NewsItem createNewsItem(Date date, User owner, String title, String news, String type);
 	
 
 	/**
@@ -55,6 +56,13 @@ public interface NewsItemService {
 	 * @return a Set of NewsItem
 	 */
 	public List<NewsItem> retrieveAllNewsItem();
+	
+	/**
+	 * Retrieves all NewsItem by specified type
+	 * 
+	 * @return a Set of NewsItem of specified type
+	 */
+	public List<NewsItem> retrieveByType(String type);
 	
 	/**
 	 * Retrieves a NewsItem given an ID
@@ -73,10 +81,11 @@ public interface NewsItemService {
 	 * @param owner user who created this news item
 	 * @param title news item title 
 	 * @param news news item text
+	 * @param type news item type
 	 * @throws ObjectNotFoundException 
 	 */
 	public void updateNewsItem(Long id, Date date, User owner, String title,
-			String news) throws ObjectNotFoundException;
+			String news, String type) throws ObjectNotFoundException;
 	
 	/**
 	 * Deletes a NewsItem from the data store.

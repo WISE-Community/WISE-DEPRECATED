@@ -85,4 +85,14 @@ public interface NewsItem {
 	 */
 	public void setTitle(String title);
 
+	/**
+	 * @return String - the Type of the News Item
+	 */
+	public String getType();
+	
+	/**
+	 * @param String - the Type of the News Item
+	 */
+	public void setType(String type);
+
 }

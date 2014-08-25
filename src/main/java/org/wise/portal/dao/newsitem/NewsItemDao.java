@@ -23,6 +23,8 @@
 package org.wise.portal.dao.newsitem;
 
 
+import java.util.List;
+
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.newsitem.NewsItem;
 
@@ -32,4 +34,5 @@ import org.wise.portal.domain.newsitem.NewsItem;
  */
 public interface NewsItemDao<T extends NewsItem> extends SimpleDao<NewsItem>{
 
+	List<NewsItem> getListByType(String type);
 }
