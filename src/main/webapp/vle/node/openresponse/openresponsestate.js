@@ -3,7 +3,7 @@
  * @constructor
  * @author Hiroki Terashima
  */
-function OPENRESPONSESTATE(response, timestamp, locked, submitPeerReview, cRaterFeedbackId, cRaterFeedbackText, isCRaterSubmit) {
+function OPENRESPONSESTATE(response, timestamp) {
 	this.type = "or";
 	
 	//this is a single element array that contains the response the student wrote
@@ -14,23 +14,6 @@ function OPENRESPONSESTATE(response, timestamp, locked, submitPeerReview, cRater
 		this.timestamp = Date.parse(new Date());
 	} else {
 		this.timestamp = timestamp;
-	}
-	this.locked = locked;
-	this.submitPeerReview = submitPeerReview;
-	
-	if(cRaterFeedbackId != null) {
-		//set the CRater feedback id if it exists
-		this.cRaterFeedbackId = cRaterFeedbackId;
-	}
-	
-	if(cRaterFeedbackText != null) {
-		//set the CRater feedback text if it exists
-		this.cRaterFeedbackText = cRaterFeedbackText;
-	}
-	
-	if(isCRaterSubmit != null) {
-		//set is CRater submit if it exists
-		this.isCRaterSubmit = isCRaterSubmit;
 	}
 };
 
@@ -48,19 +31,33 @@ OPENRESPONSESTATE.prototype.getHtml = function() {
  * @return a OPENRESPONSESTATE object
  */
 OPENRESPONSESTATE.prototype.parseDataJSONObj = function(stateJSONObj) {
+	//create an empty open response state object
+	var orState = new OPENRESPONSESTATE();
 	
-	//set the attributes of the OPENRESPONSESTATE object
-	var response = stateJSONObj.response;
-	var timestamp = stateJSONObj.timestamp;
-	var submitPeerReview = stateJSONObj.submitPeerReview;
-	var locked = stateJSONObj.locked;
-	var cRaterFeedbackId = stateJSONObj.cRaterFeedbackId;
-	var cRaterFeedbackText = stateJSONObj.cRaterFeedbackText;
-	var isCRaterSubmit = stateJSONObj.isCRaterSubmit;
-	
-	//return the OPENRESPONSESTATE object
-	//create a new OPENRESPONSESTATE object
-	var orState = new OPENRESPONSESTATE(response, timestamp, locked, submitPeerReview, cRaterFeedbackId, cRaterFeedbackText, isCRaterSubmit);
+	/*
+	 * we will dynamically inject all the values in the state JSON
+	 * object into the open response state object
+	 */
+	if(stateJSONObj != null) {
+		//get all the fields in the state JSON object
+		var fieldNames = Object.keys(stateJSONObj);
+		
+		if(fieldNames != null) {
+			//loop through all the field names
+			for(var x=0; x<fieldNames.length; x++) {
+				//get a field name
+				var fieldName = fieldNames[x];
+
+				if(fieldName != null) {
+					//get the field value for the given field name
+					var fieldValue = stateJSONObj[fieldName];
+					
+					//set the field value into the field name in the open response state
+					orState[fieldName] = fieldValue;
+				}
+			}
+		}
+	}
 	
 	return orState;
 };

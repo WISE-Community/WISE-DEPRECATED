@@ -870,8 +870,10 @@ View.prototype.removeFromPOSTInProgressArray = function(nodeVisit) {
  * @param cRaterResponseId ID to keep track of this crater request
  * @param successCallback
  * @param failureCallback
+ * @param callbackData the data to be made available in the callback function
+ * @param sync whether the request should be synchronous
  */
-View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData) {
+View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData, sync) {
 	var cRaterRequestURL = this.getConfig().getConfigParam('cRaterRequestUrl');
 
 	var cRaterArgs = {
@@ -884,7 +886,7 @@ View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,
 	};
 	
 	//make the call to GET the annotation
-	this.connectionManager.request('GET', 1, cRaterRequestURL, cRaterArgs, successCallback, callbackData, failureCallback);
+	this.connectionManager.request('GET', 1, cRaterRequestURL, cRaterArgs, successCallback, callbackData, failureCallback, sync);
 };
 
 /**
