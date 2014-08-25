@@ -65,7 +65,7 @@ public class PreviewProjectListController {
 			HttpServletRequest request,
 			HttpServletResponse response,
 			ModelMap modelMap) throws Exception {
-		 List<Project> projectList = this.projectService.getPublicLibraryProjectList();
+		 List<Project> projectList = this.projectService.getLibraryProjectList();
 
 		 List<Project> currentProjectList = new ArrayList<Project>();
 		 for (Project p: projectList) {
