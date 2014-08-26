@@ -1111,6 +1111,10 @@
 		"value":"Run Settings",
 		"description":"Text for run settings link in classroom monitor"
 	},
+	"classroomMonitor_showClassroom":{
+		"value":"Show Classroom",
+		"description":"Text for show classroom link in classroom monitor"
+	},
 	"classroomMonitor_allPeriods":{
 		"value":"All Periods",
 		"description":"Text for select all periods option in a period select dropdown in the classroom monitor"
