@@ -1,0 +1,18 @@
+{
+    "toggle_nav_button_text": {
+        "value": "全屏",
+        "description": "Text on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "toggle_nav_button_text_off": {
+        "value": "显示菜单",
+        "description": "Text on the Toggle Navigation button when navigation UI is off (hidden)"
+    },
+    "navigation_collapse_all": {
+        "value": "全部折叠",
+        "description": "Text on a button to hide all navigation items"
+    },
+    "navigation_expand_all": {
+        "value": "全部展开",
+        "description": "Text on a button to show all navigation items"
+    }
+}
