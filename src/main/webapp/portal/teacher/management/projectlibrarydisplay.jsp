@@ -551,6 +551,9 @@
 													<c:set var="projectClass" value="projectBox rootProject library shared" />
 												</c:if>
 											</c:forEach>
+											<c:forEach items="${project.tags}" var="projectTag">
+												<c:set var="projectClass" value="${projectClass} ${projectTag.name}" />
+											</c:forEach>
 											<div class="${projectClass}" data-id="${project.id}">
 												<div class="projectOverview">
 													<div class="projectHeader">
@@ -599,7 +602,12 @@
 																	</c:forEach>
 																</div>
 															</c:if>
-															<div class="libraryIcon"><img src="${contextPath}/<spring:theme code="open_book"/>" alt="library project" /> <spring:message code="teacher.management.projectlibrarydisplay.libraryProject" /></div>
+															<c:if test="${fn:contains(projectClass,'wise')}">
+																<div class="libraryIcon"><img src="${contextPath}/<spring:theme code="open_book"/>" alt="library project" /> <spring:message code="teacher.management.projectlibrarydisplay.libraryProject" /></div>
+															</c:if>
+															<c:if test="${fn:contains(projectClass,'teachershared')}">
+																<div class="libraryIcon"><img src="${contextPath}/<spring:theme code="open_book"/>" alt="teacher shared project" /> <spring:message code="teacher.management.projectlibrarydisplay.teacherSharedProject" /></div>
+															</c:if>
 															<div class="basicInfo">
 																<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
 																<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
@@ -672,7 +680,7 @@
 											</div>
 										</td>
 										<td style="display:none;">${project.rootProjectId}</td>
-										<td style="display:none;">library</td>
+										<td style="display:none;">${projectClass}</td>
 										<td style="display:none;">${project.metadata.subject}</td>
 										<td style="display:none;">${project.metadata.gradeRange}</td>
 										<td style="display:none;">${project.metadata.totalTime}</td>
@@ -1943,9 +1951,10 @@
 					{
 						"identifier": "source", "label": "<spring:message code="teacher.management.projectlibrarydisplay.filter_source"/>", "column": 2,
 						"options": [
-							{"query": "library", "display": "<spring:message code="teacher.management.projectlibrarydisplay.public"/>"}, // TODO: modify FacetedFilter plugin to only require a query for each filter, use query as display if display option is not set
+							{"query": "wise", "display": "<spring:message code="teacher.management.projectlibrarydisplay.public"/>"}, // TODO: modify FacetedFilter plugin to only require a query for each filter, use query as display if display option is not set
 							{"query": "owned", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_source_owned"/>"},
-							{"query": "shared", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_source_shared"/>"}
+							{"query": "shared", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_source_shared"/>"},
+							{"query": "teachershared", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_source_teacherShared"/>"}
 						]
 					},
 					{
