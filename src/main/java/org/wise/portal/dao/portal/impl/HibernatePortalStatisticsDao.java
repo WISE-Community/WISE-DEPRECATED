@@ -28,7 +28,7 @@ public class HibernatePortalStatisticsDao extends AbstractHibernateDao<PortalSta
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         
         //get the vle statistics from oldest to newest
-       return (PortalStatistics) session.createCriteria(PortalStatistics.class).addOrder(Order.asc("timestamp")).setMaxResults(1).uniqueResult();
+       return (PortalStatistics) session.createCriteria(PortalStatistics.class).addOrder(Order.desc("timestamp")).setMaxResults(1).uniqueResult();
 	}
 	
 	@Override
