@@ -501,6 +501,21 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 			$('#prompt').hide();
 		}
 		
+		if(view.config.getConfigParam('mode') === "portalpreview"){
+			// we're in preview so add link to export data for authoring tool
+			// TODO: remove once visual authoring has been implemented
+			var exportLink = $('<a href="#">Export Labels</a>');
+			$('body').append(exportLink);
+			exportLink.css({'position': 'absolute', 'right': '5px', 'bottom': '40px', 'color': '#555'}).on('click', function(e){
+				e.preventDefault();
+				// TODO: remove export option once visual authoring is implemented
+				bootbox.alert({
+					message: '<div><textarea class="form-control" style="width: 100%; height: 150px;">' + JSON.stringify(svgEditor.ext_labels.content().labels) + '</textarea></div>',
+					title: 'Export Labels'
+				});
+			});
+		}
+		
 		setTimeout(function(){
 			//svgCanvas.undoMgr.resetUndoStack(); // reset undo stack to prevent users from deleting stored starting image
 			//$("#tool_undo").addClass("tool_button_disabled").addClass("disabled");
