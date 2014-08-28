@@ -332,6 +332,9 @@ Grapher.prototype.render = function() {
 		}));
 	}
 
+	//load the external script if this step has one set
+	this.view.loadExternalScript(this);
+	
 	this.node.view.eventManager.fire('contentRenderCompleted', this.node.id, this.node);
 };
 
@@ -631,8 +634,8 @@ Grapher.prototype.save = function() {
 		//set the student response into the state
 		this.grapherState.response = response;
 		
-		//fire the event to push this state to the global view.states object
-		this.view.pushStudentWork(this.node.id, this.grapherState);
+		//save the node state
+		this.node.save(this.grapherState);
 
 		//push the state object into the local copy of states
 		this.states.push(this.grapherState);		
