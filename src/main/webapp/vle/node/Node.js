@@ -47,7 +47,8 @@ function Node(nodeType, view){
 		                        {functionName:'mustCompleteBeforeExiting', functionArgs:[]},
 		                        {functionName:'mustCompleteXBefore', functionArgs:[]},
 		                        {functionName:'mustVisitXBefore', functionArgs:[]},
-		                        {functionName:'xMustHaveStatusY', functionArgs:['statusType', 'statusValue']}
+		                        {functionName:'xMustHaveStatusY', functionArgs:['statusType', 'statusValue']},
+		                        {functionName:'mustHaveXIdeaBasketIdeasBeforeAdvancing', functionArgs:['ideaCount']}
 		                        ];
 	}
 	

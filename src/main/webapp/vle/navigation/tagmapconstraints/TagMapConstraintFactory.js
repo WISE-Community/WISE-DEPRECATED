@@ -28,6 +28,8 @@ TagMapConstraintFactory.createTagMapConstraint = function(view, nodeId, tagName,
 		return new XMustHaveStatusYConstraint(view, nodeId, tagName, functionName, ['isVisited','true'], additionalFunctionArgs, customMessage);
 	} else if(functionName == 'xMustHaveStatusY') {
 		return new XMustHaveStatusYConstraint(view, nodeId, tagName, functionName, functionArgs, additionalFunctionArgs, customMessage);
+	} else if(functionName == 'mustHaveXIdeaBasketIdeasBeforeAdvancing') {
+		return new MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint(view, nodeId, tagName, functionName, functionArgs, additionalFunctionArgs, customMessage);
 	}
 };
 
