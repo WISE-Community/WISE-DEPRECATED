@@ -37,7 +37,7 @@ var orbitGrid = SceneJS.createNode({
             specularColor:  { r: 0.4, g: 0.6, b: 0.4 },
             specular:       1.0,
             shine:          2.0,
-            emit:           1.0,
+            emit:           0.4,
             nodes: [
                 {
                     type: "translate",
