@@ -75,13 +75,13 @@ Seasons2Node.prototype.parseDataJSONObj = function(stateJSONObj) {
    * that you will use for representing student data for this
    * type of step. copy and modify the file below
    *
-   * wise/src/main/webapp/vle/node/seasons2/seasons2state.js
+   * vlewrapper/WebContent/vle/node/seasons2/seasons2state.js
    *
    * and use the object defined in your new state.js file instead
    * of TEMPLATESTATE. for example if you are creating a
    * quiz step type you would copy the file above to
    *
-   * wise/src/main/webapp/vle/node/quiz/quizstate.js
+   * vlewrapper/WebContent/vle/node/quiz/quizstate.js
    *
    * and in that file you would define QUIZSTATE and therefore
    * would change the TEMPLATESTATE to QUIZSTATE below
@@ -148,7 +148,7 @@ Seasons2Node.prototype.onExit = function() {
  * div id to this function and this function will insert the student data
  * into the div.
  *
- * @param displayStudentWorkDiv the div we will render the student work into
+ * @param divId the id of the div we will render the student work into
  * @param nodeVisit the student work
  * @param childDivIdPrefix (optional) a string that will be prepended to all the
  * div ids use this to prevent DOM conflicts such as when the show all work div
