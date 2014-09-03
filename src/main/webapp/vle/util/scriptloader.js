@@ -508,7 +508,7 @@ var scriptloader = function(){
 		student: ['vle/css/globalstyles.css'],
 		//wise: ["vle/css/wise/WISE_styles.css"],
 		//uccp: ["vle/css/uccp/UCCP_styles.css"],
-		vle: [/*"vle/css/niftycube.css"*/],
+		vle: [],
     	navigation:[/*"vle/css/navigation.css"*/],
     	menu:[/*"vle/css/sdmenu.css"*/],
  		grading: ['vle/css/globalstyles.css',
