@@ -771,8 +771,10 @@ View.prototype.endCurrentNode = function(){
 	//close the show all work popup
 	$('#showallwork').dialog('close');
 	
-	// save all unsaved nodes
-	this.postAllUnsavedNodeVisits();
+	var sync = false;
+
+	// save all unsaved nodes asynchronously
+	this.postAllUnsavedNodeVisits(sync);
 };
 
 /**
