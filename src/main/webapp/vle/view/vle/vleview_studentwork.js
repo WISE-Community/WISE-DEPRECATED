@@ -1062,6 +1062,16 @@ View.prototype.getCRaterResponseCallbackFail = function(responseText, responseXM
  * is fired.
  */
 View.prototype.studentWorkUpdatedListener = function() {
+	//update the constraints
+	this.updateConstraints();
+};
+
+/**
+ * Update the constraints. Add any constraints that are no longer
+ * satisfied. Remove any constraints that have been satisfied.
+ */
+View.prototype.updateConstraints = function() {
+	this.addGlobalTagMapConstraints();
 	this.updateActiveTagMapConstraints();
 	this.updateSequenceStatuses();
 };
