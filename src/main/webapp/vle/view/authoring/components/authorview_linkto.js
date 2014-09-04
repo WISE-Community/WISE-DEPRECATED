@@ -268,7 +268,7 @@ View.prototype.linkManager.getLinkStrings = function(){
 	} else {
 		ta = document.getElementById('promptInput').value;
 	}
-	var exp = /<a .*onclick="node\.linkTo\('.{10}'\)">.*<\/a>/g;
+	var exp = /<a .*onclick="node\.linkTo\('.{10}'\)".*>.*<\/a>/g;
 	var result = ta.match(exp);
 	
 	return result;

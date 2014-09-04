@@ -4,7 +4,19 @@
  * Given the type and optional arguments, creates a new 
  * state of the type, passing in the arguments.
  */
-View.prototype.pushStudentWork = function(nodeId, nodeState){
+View.prototype.pushStudentWork = function(nodeId, nodeState) {
+	//check if there is an annotation value we for the current node state
+	if(this.currentAnnotationValue != null) {
+		//there is an annotation value so we will set the node state id
+		this.currentAnnotationValue.nodeStateId = nodeState.timestamp;
+		
+		/*
+		 * we have set the node state id so we no longer need a handle
+		 * to the annotation value
+		 */ 
+		this.currentAnnotationValue = null;
+	}
+	
 	this.model.pushStudentWorkToLatestNodeVisit(nodeId, nodeState);
 };
 
@@ -142,9 +154,12 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
  * from the server.
  * @param nodeVisit its visitPostTime must be null.
  * @param boolean - sync - true if the request should by synchronous
+ * @param successCallback callback func when posting was successful. optional.
+ * @param failureCallback callback func when posting was unsuccessful. optional.
+ * @param additionalData data to be passed into success/failure callback functions. optional.
  * @return
  */
-View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync) {
+View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback, failureCallback, additionalData) {
 	if (!this.getConfig() 
 			|| !this.getConfig().getConfigParam('mode') 
 			|| this.getConfig().getConfigParam('mode') == "portalpreview"
@@ -201,6 +216,30 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync) {
 			userId: this.getUserAndClassInfo().getWorkgroupId(),
 			data: postData};
 
+	if (!successCallback) {
+		successCallback = this.processPostResponse;
+	}
+	if (!failureCallback) {
+		failureCallback = this.processPostFailResponse;
+	}
+	if (!additionalData) {
+		additionalData = {vle: this, nodeVisit:nodeVisit};
+	}
+	
+	//check if there is an auto graded annotation for the current student work that needs to be saved
+	if(this.currentAutoGradedAnnotation != null) {
+		//there is an auto graded annotation that we need to save
+		
+		//set the annotation into the post student data params
+		postStudentDataUrlParams.annotation = encodeURIComponent($.stringify(this.currentAutoGradedAnnotation));
+		
+		/*
+		 * clear the handle to the annotation since we don't need a handle
+		 * to it once it's saved
+		 */
+		this.currentAutoGradedAnnotation = null;
+	}
+	
 	// Only POST this nodevisit if this nodevisit is not currently being POSTed to the server.
 	if (this.isInPOSTInProgressArray(nodeVisit)) {
 		return;
@@ -209,16 +248,17 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync) {
 		var timeout = null;
 		// add  this nodevisit to postInProgress array
 		this.addToPOSTInProgressArray(nodeVisit);
-		this.connectionManager.request('POST', 3, url, postStudentDataUrlParams, this.processPostResponse, {vle: this, nodeVisit:nodeVisit}, this.processPostFailResponse, sync, null);		
+		this.connectionManager.request('POST', 3, url, postStudentDataUrlParams, successCallback, additionalData, failureCallback, sync, null);		
 	}
 };
 
 
 /**
  * Posts all non-posted node_visits to the server
- * @param boolean - sync - whether the visits should be posted synchrounously
+ * @param boolean - sync - whether the visits should be posted synchronously
  */
 View.prototype.postAllUnsavedNodeVisits = function(sync) {
+	
 	// get all node_visits that does not have a visitPostTime set.
 	// then post them one at a time, and set its visitPostTime based on what the
 	// server returns.
@@ -413,7 +453,7 @@ View.prototype.onWindowUnload = function(logout){
 	if(this.getCurrentNode()) {
 		this.getCurrentNode().onExit();
 	}
-
+	
 	/* synchronously save any unsaved node visits */
 	this.postAllUnsavedNodeVisits(true);
 
@@ -1062,6 +1102,16 @@ View.prototype.getCRaterResponseCallbackFail = function(responseText, responseXM
  * is fired.
  */
 View.prototype.studentWorkUpdatedListener = function() {
+	//update the constraints
+	this.updateConstraints();
+};
+
+/**
+ * Update the constraints. Add any constraints that are no longer
+ * satisfied. Remove any constraints that have been satisfied.
+ */
+View.prototype.updateConstraints = function() {
+	this.addGlobalTagMapConstraints();
 	this.updateActiveTagMapConstraints();
 	this.updateSequenceStatuses();
 };

@@ -921,6 +921,9 @@ ExplanationBuilder.prototype.add = function(text,source,tags,flag) {
 	//this.updateOrder();
 	//localStorage.ideas = JSON.stringify(basket.ideas);
 	//localStorage.index = JSON.stringify(basket.index);
+	
+	//notify everyone that the idea basket has changed
+	this.view.ideaBasketChanged();
 };
 
 ExplanationBuilder.prototype.addV2 = function(text,attributes) {
@@ -934,6 +937,9 @@ ExplanationBuilder.prototype.addV2 = function(text,attributes) {
 	this.ideaBasket.index++;
 	this.basketChanged = true;
 	this.addRow(newIdea);
+	
+	//notify everyone that the idea basket has changed
+	this.view.ideaBasketChanged();
 };
 
 ExplanationBuilder.prototype.addRow = function(idea,load){

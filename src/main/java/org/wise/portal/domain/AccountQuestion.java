@@ -32,6 +32,6 @@ package org.wise.portal.domain;
  */
 public enum AccountQuestion {
 	
-	QUESTION_ONE,QUESTION_TWO,QUESTION_THREE; 
+	QUESTION_FOUR,QUESTION_TWO,QUESTION_THREE; 
 	
 }

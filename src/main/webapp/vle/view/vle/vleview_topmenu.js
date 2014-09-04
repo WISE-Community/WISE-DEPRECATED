@@ -1015,6 +1015,13 @@ View.prototype.getIdeaBasketCallback = function(responseText, responseXML, args)
 		thisView.ideaBasket = new IdeaBasket(ideaBasketJSONObj);
 		thisView.ideaBasket.updateToolbarCount();
 	}
+	
+	/*
+	 * call the function that will notify everyone that the idea basket
+	 * has changed so they can perform any processing on the idea basket
+	 * data if necessary
+	 */
+	thisView.ideaBasketChanged();
 };
 
 /**
@@ -1257,6 +1264,9 @@ View.prototype.ideaBasketChanged = function(ideaBasketStep) {
 	
 	this.ideaBasket.updateToolbarCount();
 	eventManager.fire('ideaBasketChanged', args);
+	
+	//update constraints in case there are any constraints that rely on idea basket data
+	this.updateConstraints();
 };
 
 /**

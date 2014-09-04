@@ -509,6 +509,21 @@ var day_number_by_month = {
     dec: 355   // dec 22 05:30
 };
 
+function month_by_day_number(dayNum) {
+  if(dayNum < 31)  { return 'jan'; }
+  if(dayNum < 59)  { return 'feb'; }
+  if(dayNum < 90)  { return 'mar'; }
+  if(dayNum < 120) { return 'apr'; }
+  if(dayNum < 151) { return 'may'; }
+  if(dayNum < 181) { return 'jun'; }
+  if(dayNum < 212) { return 'jul'; }
+  if(dayNum < 243) { return 'aug'; }
+  if(dayNum < 273) { return 'sep'; }
+  if(dayNum < 304) { return 'oct'; }
+  if(dayNum < 334) { return 'nov'; }
+  return 'dec';
+}
+
 var date_by_day_number = {
     19:  "Jan-21",
     50:  "Feb-20",

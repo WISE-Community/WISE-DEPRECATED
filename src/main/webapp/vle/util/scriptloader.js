@@ -471,7 +471,8 @@ var scriptloader = function(){
 		            'vle/navigation/tagmapconstraints/MustCompleteBeforeExitingConstraint.js',
 		            'vle/navigation/tagmapconstraints/MustCompleteXBeforeConstraint.js',
 		            'vle/navigation/tagmapconstraints/MustVisitXBeforeConstraint.js',
-		            'vle/navigation/tagmapconstraints/XMustHaveStatusYConstraint.js'],
+		            'vle/navigation/tagmapconstraints/XMustHaveStatusYConstraint.js',
+		            'vle/navigation/tagmapconstraints/MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.js'],
 		uicontrol:['vle/view/vle/vleview_uicontrol.js'],
 		vle_all:['vle/all/vle_all-min.js'],
 		grading_all:['vle/all/grading_all-min.js'],
@@ -507,7 +508,7 @@ var scriptloader = function(){
 		student: ['vle/css/globalstyles.css'],
 		//wise: ["vle/css/wise/WISE_styles.css"],
 		//uccp: ["vle/css/uccp/UCCP_styles.css"],
-		vle: [/*"vle/css/niftycube.css"*/],
+		vle: [],
     	navigation:[/*"vle/css/navigation.css"*/],
     	menu:[/*"vle/css/sdmenu.css"*/],
  		grading: ['vle/css/globalstyles.css',
@@ -577,7 +578,8 @@ var scriptloader = function(){
         'vle/navigation/tagmapconstraints/MustCompleteBeforeExitingConstraint.js':['vle/navigation/tagmapconstraints/TagMapConstraint.js'],
         'vle/navigation/tagmapconstraints/MustCompleteXBeforeConstraint.js':['vle/navigation/tagmapconstraints/TagMapConstraint.js'],
         'vle/navigation/tagmapconstraints/MustVisitXBeforeConstraint.js':['vle/navigation/tagmapconstraints/TagMapConstraint.js'],
-        'vle/navigation/tagmapconstraints/XMustHaveStatusYConstraint.js':['vle/navigation/tagmapconstraints/TagMapConstraint.js']
+        'vle/navigation/tagmapconstraints/XMustHaveStatusYConstraint.js':['vle/navigation/tagmapconstraints/TagMapConstraint.js'],
+        'vle/navigation/tagmapconstraints/MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.js':['vle/navigation/tagmapconstraints/TagMapConstraint.js']
     };
 	
 	// add jQuery UI/jQuery core dependency
