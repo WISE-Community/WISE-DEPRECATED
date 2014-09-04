@@ -210,17 +210,39 @@ Grapher.prototype.render = function() {
 		// add radio buttons for series
 		if (this.content.seriesLabels.length == 0) this.content.seriesLabels.push('prediction');
 		var seriesLabels = this.content.seriesLabels;
-		if (seriesLabels.length > 1){
-			for (var s = 0; s < seriesLabels.length; s++){
+		
+		// which series are editable?
+		var editableSeries = [];
+		for (var s = 0; s < seriesLabels.length; s++){
+			if (this.content.seriesData === "undefined" || s >= this.content.seriesData.length || typeof this.content.seriesData[s].editable === "undefined" || this.content.seriesData[s].editable){
+				editableSeries.push(seriesLabels[s]);
+			}
+		}
+	
+		// only create a radio if there are more than one editableSeries
+		if (editableSeries.length > 1){
+			for (var s = 0; s < editableSeries.length; s++){
 				// add radio input so students can choose which series they're drawing the graph for
 				var checked = "";
 				if (s==0) checked = "checked";
 				
-				if($("#seriesRadioDiv").children().length < seriesLabels.length) 
-					$("#seriesRadioDiv").append("<input class='seriesRadio' name='dynamic' type='radio' "+checked+" onclick='seriesChanged("+s+")'>"+seriesLabels[s]+"</input>");
-				
-				// initialize this series in the state
-				this.grapherState.initializePrediction(seriesLabels[s]);
+				if($("#seriesRadioDiv").children().length < editableSeries.length) 
+					$("#seriesRadioDiv").append("<input class='seriesRadio' id='radio-"+editableSeries[s]+"' name='dynamic' type='radio' "+checked+" onclick='seriesChanged(\""+editableSeries[s]+"\")'>"+editableSeries[s]+"</input>");
+		
+			}
+		}
+		
+		// make sure that this is an editable series, if so put in radio button
+		for (var s = 0; s < seriesLabels.length; s++){
+			// initialize this series in the state
+			this.grapherState.initializePrediction(seriesLabels[s]);
+			// if there is no data on this series prediction array then check to see if there are any predefined data
+			if (this.grapherState.predictionArray[s].predictions.length == 0){
+				if (typeof this.content.seriesData !== "undefined" && this.content.seriesData.length > s && this.content.seriesData[s].id == seriesLabels[s]){
+					for (var p = 0; p < this.content.seriesData[s].points.length; p++){
+						this.grapherState.predictionReceived(this.graphNames[s], this.content.seriesData[s].points[p].x, this.content.seriesData[s].points[p].y, this.content.seriesData[s].points[p].fixed, typeof this.content.graphParams.allowNonFunctionalData !== "undefined" ? !this.content.graphParams.allowNonFunctionalData : false);
+					}
+				}
 			}
 		}
 
@@ -484,6 +506,10 @@ Grapher.prototype.setCurrentSeriesByIndex = function(seriesIndex) {
 	this.currentGraphName = this.content.seriesLabels[seriesIndex];
 };
 
+Grapher.prototype.setCurrentSeriesByName = function(seriesName) {
+	this.currentGraphName = seriesName;
+};
+
 /**
  * This is called when the student clears the data they have collected
  */
@@ -527,60 +553,51 @@ Grapher.prototype.parseGraphParams = function(contentGraphParams) {
 	
 	if(contentGraphParams != null) {
 		if(contentGraphParams.xmin != null && contentGraphParams.xmin != "") {
-			//set the xmin value
 			graphParams.xaxis.min = contentGraphParams.xmin;
 		}
 
 		if(contentGraphParams.xmax != null && contentGraphParams.xmax != "") {
-			//set the xmax value
 			graphParams.xaxis.max = contentGraphParams.xmax;
 		}
 
 		if(contentGraphParams.ymin != null && contentGraphParams.ymin != "") {
-			//set the ymin value
 			graphParams.yaxis.min = contentGraphParams.ymin;
 		}
 
 		if(contentGraphParams.ymax != null && contentGraphParams.ymax != "") {
-			//set the ymax value
 			graphParams.yaxis.max = contentGraphParams.ymax;
 		}
-		
 	}
 	
 	/*
 	 * if the grapher state contains axis values it will override
 	 * the axis values from the content
 	 */
-	if(this.grapherState != null) {
-		if(this.grapherState.xMin != null) {
-			//set the xmin value from the grapher state
+	if(this.grapherState !== null) {
+		if(typeof this.grapherState.xMin !== "undefined" && this.grapherState.xMin !== null) {
 			graphParams.xaxis.min = this.grapherState.xMin;
 		}
 		
-		if(this.grapherState.xMax != null) {
-			//set the xmax value from the grapher state
+		if(typeof this.grapherState.xMax !== "undefined" && this.grapherState.xMax !== null) {
 			graphParams.xaxis.max = this.grapherState.xMax;
 		}
 		
-		if(this.grapherState.yMin != null) {
-			//set the ymin value from the grapher state
+		if(typeof this.grapherState.yMin !== "undefined" && this.grapherState.yMin !== null) {
 			graphParams.yaxis.min = this.grapherState.yMin;
 		}
 		
-		if(this.grapherState.yMax != null) {
-			//set the ymax value from the grapher state
+		if(typeof this.grapherState.yMax !== "undefined" && this.grapherState.yMax !== null) {
 			graphParams.yaxis.max = this.grapherState.yMax;
 		}
 	}
 	
 	//turn lines and points on
-	graphParams.series = {lines:{show:true}, points:{show:true}};
+	//graphParams.series = {lines:{show:true}, points:{show:true}};
 	
 	//allow points to be hoverable and clickable
 	graphParams.grid = {hoverable:true, clickable:true};
 	// if an easyClickExtremes variable exists and is true in params set up grid to have wide left and right margins to allow clicking of extremes
-	if (typeof contentGraphParams.easyClickExtremes != "undefined" && contentGraphParams.easyClickExtremes){
+	if (typeof contentGraphParams.easyClickExtremes !== "undefined" && contentGraphParams.easyClickExtremes){
 		//graphParams.grid.borderWidth = 10;
 		// when we have the 0.8 version of flot use this:
 		graphParams.grid.borderWidth = {"left":10, "right":10, "top":10, "bottom":10};
@@ -603,6 +620,8 @@ Grapher.prototype.getGraphParams = function() {
 	
 	return this.graphParams;
 };
+
+
 
 /**
  * This function retrieves the student work from the html ui, creates a state
@@ -669,6 +688,9 @@ Grapher.prototype.getResponseFromGrapherState = function() {
 	return response;
 };
 
+/**
+ * Main plotting function
+ */
 Grapher.prototype.plotData = function(graphDiv, graphCheckBoxesDiv) {
 	if(graphDiv == null) {
 		//this will be the default graphDivId if none is provided as an argument
@@ -734,7 +756,10 @@ Grapher.prototype.plotData = function(graphDiv, graphCheckBoxesDiv) {
 
 						if(expectedPoints != null) {
 							//add the line that will show the correct points
-							dataSets.push({data:expectedPoints, label:graphLabel, color:"blue", name:graphName});			
+							var lines = typeof this.content.seriesData !== "undefined" && s < this.content.seriesData.length && typeof this.content.seriesData[s].showLines !== "undefined" && !this.content.seriesData[s].showLines ? {show:false} : {show:true}; 
+							var points =  typeof this.content.seriesData !== "undefined" && s < this.content.seriesData.length && typeof this.content.seriesData[s].showPoints !== "undefined" && !this.content.seriesData[s].showPoints ? {show:false} : {show:true}; 
+							var editable =  typeof this.content.seriesData !== "undefined" && s < this.content.seriesData.length && typeof this.content.seriesData[s].editable !== "undefined" && !this.content.seriesData[s].editable ? false : true; 
+							dataSets.push({data:expectedPoints, label:graphLabel, color:"blue", lines:lines, points:points, editable:editable, name:graphName});			
 						}
 					}
 				}
@@ -756,7 +781,11 @@ Grapher.prototype.plotData = function(graphDiv, graphCheckBoxesDiv) {
 			checked=true;
 		}
 		var color = typeof this.content.seriesColors !== "undefined" && s < this.content.seriesColors.length && this.content.seriesColors[s].length > 0 ? this.content.seriesColors[s] : 'blue';
-		dataSets.push({data:predictionArray, label:seriesLabel, color: color , name:seriesLabel, checked:checked});
+		var lines = typeof this.content.seriesData !== "undefined" && s < this.content.seriesData.length && typeof this.content.seriesData[s].showLines !== "undefined" && !this.content.seriesData[s].showLines ? {show:false} : {show:true}; 
+		var points =  typeof this.content.seriesData !== "undefined" && s < this.content.seriesData.length && typeof this.content.seriesData[s].showPoints !== "undefined" && !this.content.seriesData[s].showPoints ? {show:false} : {show:true}; 
+		var editable =  typeof this.content.seriesData !== "undefined" && s < this.content.seriesData.length && typeof this.content.seriesData[s].editable !== "undefined" && !this.content.seriesData[s].editable ? false : true; 
+		// for this series get an array of 
+		dataSets.push({data:predictionArray, label:seriesLabel, color: color , lines:lines, points:points, editable:editable, name:seriesLabel, checked:checked});
 	}
 
 	//set the data set to a global variable so we can access it in other places
@@ -895,7 +924,7 @@ Grapher.prototype.setupPlotHover = function() {
     	} 
 
     	// jv test with significant figures
-    	if (typeof event.data.thisGrapher.content.graphParams.coordsFollowMouse != "undefined" && event.data.thisGrapher.content.graphParams.coordsFollowMouse){
+    	if (typeof event.data.thisGrapher.content.graphParams.coordsFollowMouse !== "undefined" && event.data.thisGrapher.content.graphParams.coordsFollowMouse){
     		var sigdiginx = 2-Math.floor(Math.log(Math.abs(xmax))/Math.LN10);
     		plotHoverPositionX = sigdiginx >= 0 ? x.toFixed(sigdiginx) : Math.floor(x / Math.pow(10, -sigdiginx)) * Math.pow(10, -sigdiginx); 
     		var sigdiginy = 2-Math.floor(Math.log(Math.abs(ymax))/Math.LN10);
@@ -916,13 +945,14 @@ Grapher.prototype.setupPlotHover = function() {
     	var plotHoverPositionText = "(" + plotHoverPositionX + " " + graphXUnits + ", " + plotHoverPositionY + " " + graphYUnits + ")";
     	
     	$('#plotHoverPosition').html(plotHoverPositionText);
-    	if (typeof event.data.thisGrapher.content.graphParams.coordsFollowMouse != "undefined" && event.data.thisGrapher.content.graphParams.coordsFollowMouse){
+    	if (typeof event.data.thisGrapher.content.graphParams.coordsFollowMouse !== "undefined" && event.data.thisGrapher.content.graphParams.coordsFollowMouse){
     		$('#plotHoverPosition').html(plotHoverPositionText).css({position: 'absolute', float: 'left', left: pos.pageX + 20, top: pos.pageY}); 
    		 }
 
+    	// are we hovering over a point?
         if (item) {
-            if (previousPoint != item.datapoint) {
-                previousPoint = item.datapoint;
+            if (previousPoint != item) {
+                previousPoint = item;
                 
                 //remove the existing tooltip
                 $("#tooltip").remove();
@@ -976,10 +1006,15 @@ Grapher.prototype.setupPlotHover = function() {
         } else {
         	//remove the tool tip
             $("#tooltip").remove();
+            // if there was a previous point, make sure it is not highlighted
+            if (previousPoint !== null){
+            	event.data.thisGrapher.globalPlot.unhighlight();
+            	//event.data.thisGrapher.globalPlot.unhighlight(previousPoint.series, previousPoint.datapoint);	
+            }
             previousPoint = null;            
         }
         
-        //check if the student is click dragging to create prediction points
+        //check if the student is pressing down to create prediction points
         if(event.data.thisGrapher.mouseDown) {
         	if(!event.data.thisGrapher.predictionLocked && event.data.thisGrapher.createPrediction) {
         		// allow author to enable or disable draw while dragging
@@ -989,13 +1024,42 @@ Grapher.prototype.setupPlotHover = function() {
 					
 					//plot the graph again so the new point is displayed
 					event.data.thisGrapher.plotData();        		
-				} // allow points to be dragged up or down around screen
-				 else if (typeof event.data.thisGrapher.content.allowDragPoint != "undefined" && event.data.thisGrapher.content.allowDragPoint) {
-					if (item && event.data.thisGrapher.dragPoint == null){
+				} else if (typeof event.data.thisGrapher.content.allowDragPoint !== "undefined" && event.data.thisGrapher.content.allowDragPoint) {
+					// allow points to be dragged up or down around screen
+					if (item !== null){
+						 // make sure the series is editable and that this point is not fixed
+						var editable = typeof item.series.editable !== "undefined" ? item.series.editable : true;
+						// loop through points in series looking for a match
+						if (editable){
+							for (var p = 0; p < item.series.data.length; p++ ){
+								if (parseFloat(item.series.data[p][0]) == item.datapoint[0] && parseFloat(item.series.data[p][1]) == item.datapoint[1]){
+									// match, now is fixed? If yes, update editable
+									if (Boolean(item.series.data[p][2])){
+										editable = false;
+									}
+								} 
+							}
+						}
+					}
+					 
+					if (item && event.data.thisGrapher.dragPoint == null && editable){
 						// if there is a point we are hovering over and there is no drag point, set it
+						// also point should not be fixed (third index in array is zero or false)
 						 event.data.thisGrapher.dragPoint = item;
-					} else if (event.data.thisGrapher.dragPoint != null) {
-						// move the point
+						// also if this not the current series, update the current series and set radio UNLESS THIS POINT IS ON THE BOUNDARY
+						var fivepctXaxis = typeof xmax === "number" && typeof xmin === "number" ? xmin + 0.05 * (xmax - xmin) : 5;
+						var fivepctYaxis = typeof ymax === "number" && typeof ymin === "number" ? ymin + 0.05 * (ymax - ymin) : 5;
+						if (event.data.thisGrapher.currentGraphName != item.series.name && (typeof item.series.editable === "undefined" || item.series.editable) && pos.x > fivepctXaxis && pos.y > fivepctYaxis){
+							event.data.thisGrapher.currentGraphName = item.series.name;
+							item.series.checked = true;
+			        		if (typeof event.data.thisGrapher.dragPoint !== "undefined") event.data.thisGrapher.dragPoint.series.checked = false;
+			        		if (typeof event.data.thisGrapher.previousPoint !== "undefined") event.data.thisGrapher.previousPoint.series.checked = false;
+							// update radio
+							$('#radio-'+event.data.thisGrapher.currentGraphName).prop('checked', true);
+						}
+						
+					} else if (event.data.thisGrapher.dragPoint !== null) {
+						// move the point, we'll assume that it is not fixed by previous if condition
 						var x = pos.x;
 						var y = pos.y;
 						var oldx = event.data.thisGrapher.dragPoint.datapoint[0];
@@ -1030,7 +1094,12 @@ Grapher.prototype.setupPlotHover = function() {
 				}
         	}
         } else {
-        	event.data.thisGrapher.dragPoint = null;
+        	if (event.data.thisGrapher.dragPoint !== null){
+        		event.data.thisGrapher.globalPlot.unhighlight();
+        		//event.data.thisGrapher.globalPlot.unhighlight(event.data.thisGrapher.dragPoint.series, event.data.thisGrapher.dragPoint.datapoint);	
+        		event.data.thisGrapher.dragPoint = null;
+        	}
+        	
         }
     });
 };
@@ -1066,12 +1135,31 @@ Grapher.prototype.setupPlotClick = function() {
 	 * will be passed into the function and accessed through event.data.thisGrapher
 	 */
     $("#" + this.graphDivId).bind("plotclick", {thisGrapher:this}, function (event, pos, item) {
-        if (item && item.series.name == event.data.thisGrapher.currentGraphName) {
-        	//student has clicked on a point in this series
+        if (item) {
+        	//student has clicked on a point
         	
-        	// if the point is not on a series that is currently selected, do nothing
-        	if (item.series.name != event.data.thisGrapher.currentGraphName) {
-        		return;
+        	
+        	if (item.series.name !== event.data.thisGrapher.currentGraphName) {
+        		// if the point is not on a series that is currently selected switch series
+        		// also if this not the current series, update the current series and set radio UNLESS THIS POINT IS ON THE BOUNDARY
+            	if (typeof item.series.editable === "undefined" || item.series.editable){
+            		var fivepctXaxis = typeof xmax === "number" && typeof xmin === "number" ? xmin + 0.05 * (xmax - xmin) : 5;
+	    			var fivepctYaxis = typeof ymax === "number" && typeof ymin === "number" ? ymin + 0.05 * (ymax - ymin) : 5;
+	    			// if this point is not on the x-axis or y-axis we switch, else we make a new point
+	    			if ((pos.x > fivepctXaxis && pos.y > fivepctYaxis) || item.series.name.indexOf("prediction") > -1 || event.data.thisGrapher.predictionLocked || !event.data.thisGrapher.createPrediction){
+	    				event.data.thisGrapher.currentGraphName = item.series.name;
+		        		item.series.checked = true;
+		        		if (typeof event.data.thisGrapher.dragPoint !== "undefined") event.data.thisGrapher.dragPoint.series.checked = false;
+		        		if (typeof event.data.thisGrapher.previousPoint !== "undefined") event.data.thisGrapher.previousPoint.series.checked = false;
+						// update radio
+						$('#radio-'+event.data.thisGrapher.currentGraphName).prop('checked', true);
+	        		} else {
+	        			// this point is on the x-axis, we want to be able to make a new point in the same location
+	        			event.data.thisGrapher.predictionReceived(pos.x, pos.y);
+	            		//plot the graph again so the point is displayed
+	                	event.data.thisGrapher.plotData();
+	        		}
+            	}
         	}
         	
             //get the name of the graph line
@@ -1086,7 +1174,7 @@ Grapher.prototype.setupPlotClick = function() {
         		 */
         		
             	//highlight the data point that was clicked
-                event.data.thisGrapher.globalPlot.highlight(item.series, item.datapoint);
+               // event.data.thisGrapher.globalPlot.highlight(item.series, item.datapoint);
                 
                 //get the index of the point for the graph line
                 var dataIndex = item.dataIndex;
@@ -1124,7 +1212,7 @@ Grapher.prototype.setupPlotClick = function() {
         		}
         	}
         }
-        this.dragPoint = null;
+        event.data.thisGrapher.dragPoint = null;
     });
 };
 
@@ -1991,7 +2079,7 @@ Grapher.prototype.getPredictionArrayByPredictionIndex = function(predictionIndex
 /**
  * Generate the prediction array in a format that we can give to flot to plot
  * @param state the grapher state
- * @return an array containing arrays with two values [x, y] that represent
+ * @return an array containing arrays with two values [x, y, fixed(0/1)] that represent
  * the prediction points
  */
 Grapher.prototype.generatePredictionArray = function(state,predictionId) {
@@ -2019,12 +2107,14 @@ Grapher.prototype.generatePredictionArray = function(state,predictionId) {
 				
 						//get the y value. this may be distance or temp or etc.
 						var y = predictionData.y;
+						
+						var fixed = typeof predictionData.fixed !== "undefined" ? predictionData.fixed : 0;
 				
 						/*
 						 * add the x, y data point into the array. flot expects
 						 * the each element in the array to be an array.
 						 */
-						predictionArray.push([x, y]);
+						predictionArray.push([x, y, fixed]);
 					}
 				}
 			}
@@ -2032,6 +2122,46 @@ Grapher.prototype.generatePredictionArray = function(state,predictionId) {
 	}
 	return predictionArray;
 };
+
+/**
+ * Get an array as long as the number of points in this series, denoting if points can be
+ * edited or deleted (false), or cannot (true)
+ * @return boolean array, default all true
+ */
+/*
+Grapher.prototype.getFixedArrayByPredictionIndex = function(predictionIndex) {
+	var fixedArray = [];
+	var state = this.grapherState;
+	
+	if(state != null) {
+		//get the data array from the state
+		var statePredictionArray = state.predictionArray;
+		
+		if(statePredictionArray != null) {
+			//loop through all the elements in the data array
+			for(var i=0; i<statePredictionArray.length; i++) {
+				
+				var predictionObj = statePredictionArray[i];
+				
+				if (predictionObj.id == predictionId) {
+					predictions = predictionObj.predictions;
+					
+					for (var k=0; k<predictions.length; k++) {
+						//get the data array element
+						var predictionData = predictions[k];
+
+						//get the time
+						var fixed = typeof predictionData !== "undefined" ? true : Boolean(predictionData.fixed);
+				
+						fixedArray.push(fixed);
+					}
+				}
+			}
+		}		
+	}
+	return fixedArray;
+};
+*/
 
 /**
  * Convert the array of object positions to an array of array positions
@@ -2078,11 +2208,14 @@ Grapher.prototype.convertToPlottableArray = function(arrayToConvert) {
  * @param x the x value for the point
  * @param y the y value for the point
  */
-Grapher.prototype.predictionReceived = function(x, y) {
-	
+Grapher.prototype.predictionReceived = function(x, y, fixed) {
+	fixed = typeof fixed === "undefined" ? false : Boolean(fixed); 
 	if(x != null && y != null) {
 		//round x down to the nearest 0.01
 		//var xFactor = 1 / this.content.gatherXIncrement;
+		x = parseFloat(x);
+		y = parseFloat(y);
+		
 		x = parseFloat(x.toFixed(2));		
 		y = parseFloat(y.toFixed(2));
 		var xmax = typeof this.grapherState.xMax != "undefined" ? parseFloat(this.grapherState.xMax) : parseFloat(this.content.graphParams.xmax);
@@ -2104,7 +2237,7 @@ Grapher.prototype.predictionReceived = function(x, y) {
 		}
 		
 		//insert the point into the grapher state
-		this.grapherState.predictionReceived(this.currentGraphName, x, y, typeof this.content.graphParams.allowNonFunctionalData != "undefined" ? !this.content.graphParams.allowNonFunctionalData : true);
+		this.grapherState.predictionReceived(this.currentGraphName, x, y, fixed, typeof this.content.graphParams.allowNonFunctionalData != "undefined" ? !this.content.graphParams.allowNonFunctionalData : true);
 		
 		this.graphChanged = true;
 		

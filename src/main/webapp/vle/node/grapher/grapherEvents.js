@@ -16,6 +16,10 @@ View.prototype.grapherDispatcher = function(type,args,obj){
 	 */ 
 	if(type == 'grapherUpdatePrompt') {
 		obj.GrapherNode.updatePrompt();
+	} else if(type=='grapherUpdateWidth'){
+		obj.GrapherNode.updateWidth();
+	} else if(type=='grapherUpdateHeight'){
+		obj.GrapherNode.updateHeight();
 	} else if(type=='grapherUpdateXAxisName'){
 		obj.GrapherNode.updateXAxisName();
 	} else if(type=='grapherUpdateXUnits'){
@@ -38,12 +42,26 @@ View.prototype.grapherDispatcher = function(type,args,obj){
 		obj.GrapherNode.updateEnableCreatePrediction();
 	} else if(type=='grapherUpdateEasyPrediction'){
 		obj.GrapherNode.updateEasyPrediction();
-	} else if(type=='grapherNewCustomSeriesLabel'){
-		obj.GrapherNode.newCustomSeriesLabel();
+	} else if(type=='grapherNewCustomSeries'){
+		obj.GrapherNode.newCustomSeries();
+	} else if(type=='grapherNewCustomPoint'){
+		obj.GrapherNode.newCustomPoint(args[0]);
 	} else if(type=='grapherUpdateSeriesLabel'){
 		obj.GrapherNode.updateSeriesLabel(args[0]);
 	} else if(type=='grapherUpdateSeriesColor'){
 		obj.GrapherNode.updateSeriesColor(args[0]);
+	} else if(type=='grapherUpdateSeriesX'){
+		obj.GrapherNode.updateSeriesX(args[0], args[1]);
+	} else if(type=='grapherUpdateSeriesY'){
+		obj.GrapherNode.updateSeriesY(args[0], args[1]);
+	} else if(type=='grapherUpdateSeriesFixed'){
+		obj.GrapherNode.updateSeriesFixed(args[0], args[1]);
+	} else if(type=='grapherUpdateShowPoints'){
+		obj.GrapherNode.updateShowPoints(args[0]);
+	} else if(type=='grapherUpdateShowLines'){
+		obj.GrapherNode.updateShowLines(args[0]);
+	} else if(type=='grapherUpdateEditableSeries'){
+		obj.GrapherNode.updateEditableSeries(args[0]);
 	} else if(type=='grapherUpdateShowVelocity'){
 		obj.GrapherNode.updateShowVelocity();
 	} else if(type=='grapherUpdateShowAcceleration'){
@@ -70,6 +88,8 @@ var events = [
 	 * wait until you implement the authoring before you rename this
 	 */
 	'grapherUpdatePrompt',
+	'grapherUpdateWidth',
+	'grapherUpdateHeight',
 	'grapherUpdateXAxisName',
 	'grapherUpdateXUnits',
 	'grapherUpdateXMin',
@@ -81,9 +101,17 @@ var events = [
 	'grapherUpdateShowGraphOptions',
 	'grapherUpdateEnableCreatePrediction',
 	'grapherUpdateEasyPrediction',
-	'grapherNewCustomSeriesLabel',
+	'grapherNewCustomSeries',
+	'grapherNewCustomPoint',
 	'grapherUpdateSeriesLabel',
 	'grapherUpdateSeriesColor',
+	'grapherUpdateSeriesX',
+	'grapherUpdateSeriesY',
+	'grapherUpdateSeriesFixed',
+	'grapherUpdateSeriesPoint',
+	'grapherUpdateShowPoints',
+	'grapherUpdateShowLines',
+	'grapherUpdateEditableSeries',
 	'grapherUpdateShowVelocity',
 	'grapherUpdateShowAcceleration',
 	'grapherUpdateRequirePredictionBeforeEnter',

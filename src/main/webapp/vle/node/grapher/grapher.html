@@ -80,12 +80,16 @@
 				if (typeof grapher !== "undefined") grapher.save();
 	        }
 
-	        /*
+		    /*
 		     * called when a radio button for a dynamic image is clicked, e.g. when changing 
 		     * which graph to draw
 		     */
-		    function seriesChanged(seriesIndex) {
-		    	grapher.setCurrentSeriesByIndex(seriesIndex);
+		    function seriesChanged(index) {
+		    	 console.log(index);
+		    	// old version
+		    	grapher.setCurrentSeriesByIndex(index);
+		    	// new version
+		    	grapher.setCurrentSeriesByName(index);
 		    };
 
 		    /*
@@ -233,11 +237,12 @@
 	    </table>
 	    
 	    <!-- where the student will write their analysis or explanation to the graph -->
+	    <!-- the save button -->
+	    <input id="saveButton" type="button" value="save" name="Submit" onclick="save()" data-i18n="save" />
+	       <br/><br/>
 	    <div id="showStarterSentenceButtonDiv"><input id="showStarterSentenceButton" type="button" value="Show Starter Sentence" onclick="showStarterSentence()" data-i18n="show_starter_sentence" /></div>
 	    <textarea id='responseTextArea'></textarea>
 	    <br/>
-	    <!-- the save button -->
-	    <input id="saveButton" type="button" value="Save" onclick="save()" data-i18n="save" />
 	    <div id="graphMessageDiv" style="position:absolute;width:500px;display:none"><table id="graphMessageTable" align='center'><tr><td id="graphMessage" style="text-align:center"></td></tr></table></div>
 	</body>
 </html>

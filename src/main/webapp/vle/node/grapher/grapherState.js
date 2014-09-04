@@ -371,7 +371,7 @@ GrapherState.prototype.initializePrediction = function(predictionId) {
  * @param y the y value of the point
  * @param doSort whether array should be sorted, or kept in order given
  */
-GrapherState.prototype.predictionReceived = function(predictionId, x, y, doSort) {
+GrapherState.prototype.predictionReceived = function(predictionId, x, y, fixed, doSort) {
 	if (this.getPredictionObjByPredictionId(predictionId) == null) {
 		this.predictionArray.push({id:predictionId, predictions:[]});
 	}
@@ -389,7 +389,8 @@ GrapherState.prototype.predictionReceived = function(predictionId, x, y, doSort)
 	//create an object that contains the x, y points
 	var predictionData = {
 			x: x,
-			y: y
+			y: y,
+			fixed: fixed
 	};
 
 	//add the element to the array
