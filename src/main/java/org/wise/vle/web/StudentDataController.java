@@ -33,6 +33,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.portal.service.websocket.WISEWebSocketHandler;
+import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
@@ -619,6 +620,7 @@ public class StudentDataController {
 		String userId = request.getParameter("userId");
 		String periodId = request.getParameter("periodId");
 		String data = request.getParameter("data");
+		String annotationJSONString = request.getParameter("annotation");
 		
 		//obtain the id the represents the id in the step work table
 		String stepWorkId = request.getParameter("id");
@@ -873,6 +875,51 @@ public class StudentDataController {
 				} catch(JSONException e) {
 					e.printStackTrace();
 				}
+				
+				//check if there is an annotation that we need to save
+				if(annotationJSONString != null && !annotationJSONString.equals("null")) {
+					try {
+						//get the annotation JSON object
+						JSONObject annotationJSONObject = new JSONObject(annotationJSONString);
+						
+						//get the annotation parameters
+						Long annotationRunId = annotationJSONObject.optLong("runId");
+						Long toWorkgroup = annotationJSONObject.optLong("toWorkgroup");
+						Long fromWorkgroup = annotationJSONObject.optLong("fromWorkgroup");
+						String type = annotationJSONObject.optString("type");
+						
+						//add the step work id and post time to the JSON object
+						annotationJSONObject.put("stepWorkId", stepWork.getId());
+						annotationJSONObject.put("postTime", postTime.getTime());
+						
+						//get the to user
+						UserInfo toUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(toWorkgroup);
+						UserInfo fromUserInfo = null;
+						
+						if(fromWorkgroup != null && fromWorkgroup != -1) {
+							//get the from user 
+							fromUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(toWorkgroup);
+						}
+						
+						//create the annotation object
+						Annotation annotation = new Annotation(type);
+						
+						//set the fields in the annotation object
+						annotation.setRunId(annotationRunId);
+						annotation.setToUser(toUserInfo);
+						annotation.setFromUser(fromUserInfo);
+						annotation.setStepWork(stepWork);
+						annotation.setData(annotationJSONObject.toString());
+						annotation.setPostTime(postTime);
+						
+						//save the annotation object to the database
+						vleService.saveAnnotation(annotation);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				
 				//send back the json string with step work id and post time
 				response.getWriter().print(jsonResponse.toString());
 				

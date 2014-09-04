@@ -274,6 +274,10 @@ public class VLEAnnotationController {
 				annotationTypes.add("comment");
 				List<Annotation> annotationByFromWorkgroupsToWorkgroupWithoutWork = vleService.getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(fromWorkgroups, toWorkgroup, annotationTypes);
 				annotationList.addAll(annotationByFromWorkgroupsToWorkgroupWithoutWork);
+
+				//add all the auto graded annotations
+				List<Annotation> autoGradedAnnotations = vleService.getAnnotationByToUserType(toWorkgroup, "autoGraded");
+				annotationList.addAll(autoGradedAnnotations);
 			} else if (fromWorkgroupIdStr != null || toWorkgroupIdStr != null) {
 				UserInfo fromWorkgroup = null;
 				UserInfo toWorkgroup = null;

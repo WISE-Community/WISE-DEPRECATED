@@ -155,7 +155,7 @@ Node.prototype.getHints = function() {
 
 /**
  * Retrieves the annotations for this node, if exists. Returns only annotations of
- * type {score,comment,cRater} for the logged in user. 
+ * type {score,comment,cRater,autoGraded} for the logged in user. 
  * @return Annotations if exists. if not exist, return null
  */
 Node.prototype.getNodeAnnotations = function() {
@@ -167,7 +167,7 @@ Node.prototype.getNodeAnnotations = function() {
 		var loggedInWorkgroupId = this.view.getUserAndClassInfo().getWorkgroupId();
 		for (var i=0; i < allNodeAnnotations.length; i++) {
 			var nodeAnnotation = allNodeAnnotations[i];
-			if (nodeAnnotation.type == "score" || nodeAnnotation.type == "comment" || nodeAnnotation.type == "cRater") {
+			if (nodeAnnotation.type == "score" || nodeAnnotation.type == "comment" || nodeAnnotation.type == "cRater" || nodeAnnotation.type == "autoGraded") {
 				if (nodeAnnotation.toWorkgroup == loggedInWorkgroupId) {
 					filteredNodeAnnotations.push(nodeAnnotation);					
 				}

@@ -4,7 +4,19 @@
  * Given the type and optional arguments, creates a new 
  * state of the type, passing in the arguments.
  */
-View.prototype.pushStudentWork = function(nodeId, nodeState){
+View.prototype.pushStudentWork = function(nodeId, nodeState) {
+	//check if there is an annotation value we for the current node state
+	if(this.currentAnnotationValue != null) {
+		//there is an annotation value so we will set the node state id
+		this.currentAnnotationValue.nodeStateId = nodeState.timestamp;
+		
+		/*
+		 * we have set the node state id so we no longer need a handle
+		 * to the annotation value
+		 */ 
+		this.currentAnnotationValue = null;
+	}
+	
 	this.model.pushStudentWorkToLatestNodeVisit(nodeId, nodeState);
 };
 
@@ -212,6 +224,20 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback,
 	}
 	if (!additionalData) {
 		additionalData = {vle: this, nodeVisit:nodeVisit};
+	}
+	
+	//check if there is an auto graded annotation for the current student work that needs to be saved
+	if(this.currentAutoGradedAnnotation != null) {
+		//there is an auto graded annotation that we need to save
+		
+		//set the annotation into the post student data params
+		postStudentDataUrlParams.annotation = encodeURIComponent($.stringify(this.currentAutoGradedAnnotation));
+		
+		/*
+		 * clear the handle to the annotation since we don't need a handle
+		 * to it once it's saved
+		 */
+		this.currentAutoGradedAnnotation = null;
 	}
 	
 	// Only POST this nodevisit if this nodevisit is not currently being POSTed to the server.
