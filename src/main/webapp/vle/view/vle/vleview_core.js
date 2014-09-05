@@ -126,6 +126,7 @@ View.prototype.startVLEFromParams = function(obj){
 View.prototype.startVLE = function(){
 	this.model = new StudentModel();
 	this.setState(new VLE_STATE());
+	this.setAnnotations(new Annotations());
 	
 	/* load the project based on new config object parameters, lazy load */
 	this.loadProject(this.config.getConfigParam('getContentUrl'), this.config.getConfigParam('getContentBaseUrl'), true);
