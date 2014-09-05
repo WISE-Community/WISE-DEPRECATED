@@ -6,6 +6,9 @@
  * that would regularly be displayed
  */
 View.prototype.showNodeAnnotations = function(nodeId, feedbackHTML) {
+	//display the feedback button
+	this.displayNodeAnnotation(nodeId);
+	
 	$('#nodeAnnotationsLink').stop();
 	$('#nodeAnnotationsLink').css('color','#FFFFFF');
 	

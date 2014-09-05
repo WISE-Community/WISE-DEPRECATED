@@ -411,9 +411,6 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 										}
 
 										if(hasScore || hasFeedback) {
-											// display the feedback button
-											view.displayNodeAnnotation(nodeId);
-											
 											//popup the message to the student
 											eventManager.fire("showNodeAnnotations",[nodeId]);
 										}

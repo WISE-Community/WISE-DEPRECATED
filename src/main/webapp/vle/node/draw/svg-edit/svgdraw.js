@@ -749,9 +749,6 @@ SVGDRAW.prototype.autoGradeWork = function() {
 					if(this.content.autoScoring.autoScoringDisplayScoreToStudent || this.content.autoScoring.autoScoringDisplayFeedbackToStudent) {
 						//we need to show the score of text feedback to the student
 						
-						//show the Feedback button at the top right of the vle next to the previous and next arrows
-						this.view.displayNodeAnnotation(this.node.id);
-						
 						//display the feedback in a popup dialog
 						eventManager.fire("showNodeAnnotations",[this.node.id]);
 					} else {

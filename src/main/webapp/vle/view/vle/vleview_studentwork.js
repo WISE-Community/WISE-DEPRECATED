@@ -1046,9 +1046,6 @@ View.prototype.getCRaterResponseCallback = function(responseText, responseXML, a
 				}
 
 				if(message != null && message != "") {
-					// display the feedback button
-					vle.displayNodeAnnotation(nodeId);  // display annotation for the current step, if any
-
 					//popup the message to the student
 					eventManager.fire("showNodeAnnotations",[nodeId]);
 				}
