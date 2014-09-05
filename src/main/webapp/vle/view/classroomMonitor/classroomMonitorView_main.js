@@ -6445,7 +6445,7 @@ View.prototype.createGradeByStudentDisplay = function() {
 	
 	$displayTools = $('<div class="pull-right">');
 	// add display options multiselect
-	var $displayOptions = $('<select id="gradeByStudentOptions" multiple="multiple">');
+	var $displayOptions = $('<select id="gradeByStudentOptions" multiple="multiple" disabled>');
 	$displayOptions.append('<option name="gradeByStudentOptions" value="newOnly">' + view.getI18NString('classroomMonitor_newItemsOnly') + '</option>');
 	$displayOptions.append('<option name="gradeByStudentOptions" value="flagOnly">' + view.getI18NString('classroomMonitor_grading_flagOnly') + '</option>');
 	$displayOptions.append('<option name="gradeByStudentOptions" value="hidePersonal">' + view.getI18NString('classroomMonitor_hidePersonalInfo') + '</option>');
@@ -6628,10 +6628,10 @@ View.prototype.createGradeByStepDisplay = function() {
 	
 	$displayTools = $('<div class="pull-right">');
 	// add display options multiselect
-	var $displayOptions = $('<select id="gradeByStudentOptions" multiple="multiple">');
-	$displayOptions.append('<option name="gradeByStudentOptions" value="newOnly">' + view.getI18NString('classroomMonitor_newItemsOnly') + '</option>');
-	$displayOptions.append('<option name="gradeByStudentOptions" value="flagOnly">' + view.getI18NString('classroomMonitor_grading_flagOnly') + '</option>');
-	$displayOptions.append('<option name="gradeByStudentOptions" value="hidePersonal">' + view.getI18NString('classroomMonitor_hidePersonalInfo') + '</option>');
+	var $displayOptions = $('<select id="gradeByStepOptions" multiple="multiple"> disabled');
+	$displayOptions.append('<option name="gradeByStepOptions" value="newOnly">' + view.getI18NString('classroomMonitor_newItemsOnly') + '</option>');
+	$displayOptions.append('<option name="gradeByStepOptions" value="flagOnly">' + view.getI18NString('classroomMonitor_grading_flagOnly') + '</option>');
+	$displayOptions.append('<option name="gradeByStepOptions" value="hidePersonal">' + view.getI18NString('classroomMonitor_hidePersonalInfo') + '</option>');
 	
 	$stepHeader.append($displayTools);
 	$displayTools.append('<label for="gradeByStepOptions">' + view.getI18NString('classroomMonitor_grading_options_label') + '</label> ');
