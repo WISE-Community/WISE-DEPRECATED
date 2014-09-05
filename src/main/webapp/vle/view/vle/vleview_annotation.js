@@ -91,22 +91,10 @@ View.prototype.showNodeAnnotations = function(nodeId, feedbackHTML) {
 				if(latestFeedback != null) {
 					//get the auto feedback message and auto score
 					var autoFeedback = latestFeedback.autoFeedback;
-					var autoScore = latestFeedback.autoScore;
 					
 					if(autoFeedback != null) {
-						//get the label for auto feedback comment
-						var comments = this.getI18NString('comments');
-						
 						//add the comment to the text we will display to show the annotation
-						nodeAnnotationsString += "<span class='nodeAnnotationsComment'>" + comments + ": " + autoFeedback + "</span><br/>";
-					}
-					
-					if(autoScore != null) {
-						//get the label for the auto score
-						var score = this.getI18NString('score');
-						
-						//add the score to the text we will display to show the annotation
-						nodeAnnotationsString += "<span class='nodeAnnotationsScore'>" + score + ": " + autoScore + "</span><br/><br/>";						
+						nodeAnnotationsString += "<span class='nodeAnnotationsComment'>" + autoFeedback + "</span><br/>";
 					}
 				}
 			}
