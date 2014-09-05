@@ -437,7 +437,7 @@
 				 ],
 				"aFilterOpts": [
 					{
-						"identifier": "source", "label": "<spring:message code="teacher.management.projectruntabs.filter_source"/>", "column": 2,
+						"identifier": "source", "label": "<spring:message code="teacher.management.projectruntabs.filter_source"/>", "column": 6,
 						"options": [
 							{"query": "owned", "display": "<spring:message code="teacher.management.projectruntabs.filter_source_owned"/>"},
 							{"query": "shared", "display": "<spring:message code="teacher.management.projectruntabs.filter_source_shared"/>"}
