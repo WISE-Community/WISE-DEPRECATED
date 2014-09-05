@@ -606,7 +606,7 @@
 																<div class="libraryIcon"><img src="${contextPath}/<spring:theme code="open_book"/>" alt="library project" /> <spring:message code="teacher.management.projectlibrarydisplay.libraryProject" /></div>
 															</c:if>
 															<c:if test="${fn:contains(projectClass,'teachershared')}">
-																<div class="libraryIcon"><img src="${contextPath}/<spring:theme code="open_book"/>" alt="teacher shared project" /> <spring:message code="teacher.management.projectlibrarydisplay.teacherSharedProject" /></div>
+																<div class="libraryIcon"><img src="${contextPath}/<spring:theme code="shared"/>" alt="teacher shared project" /> <spring:message code="teacher.management.projectlibrarydisplay.teacherSharedProject" /> (<spring:message code="teacher.management.projectlibrarydisplay.teacherSharedProjectReviewBeforeRunMessage" />)</div>
 															</c:if>
 															<div class="basicInfo">
 																<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
