@@ -13,11 +13,13 @@
    "graphTitle": "",
    "seriesLabels":[],
    "seriesColors":[],
+   "seriesData":[],
    "expectedResults":[],
    "requirePredictionBeforeEnter":false,
    "showGraphOptions": false,
    "showVelocity": false,
    "showAcceleration":false,
+   "allowAnnotations":false,
    "starterSentence": {
       "display": "0",
       "sentence": ""

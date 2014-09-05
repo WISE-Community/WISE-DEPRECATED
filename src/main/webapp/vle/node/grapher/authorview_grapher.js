@@ -119,69 +119,198 @@ View.prototype.GrapherNode.generatePage = function(view){
 	pageDiv.appendChild(graphTitleText);
 	pageDiv.appendChild(graphTitleInput);
 	pageDiv.appendChild(createBreak());
+	
+	// set dimensions of graph
+	var graphDimsText = document.createTextNode("Set width and height of graph element (leave blank for default):");
+	var width = typeof this.content.graphParams.width !== "undefined" ? this.content.graphParams.width : "";
+	var widthText = document.createTextNode('Width: ');
+	var widthInput = createElement(document, 'input', {type: 'input', id: 'widthInput', name: 'widthInput', value: width, size:1, onchange: 'eventManager.fire("grapherUpdateWidth")'});
+	var height = typeof this.content.graphParams.height !== "undefined" ? this.content.graphParams.height : "";
+	var heightText = document.createTextNode('Height: ');
+	var heightInput = createElement(document, 'input', {type: 'input', id: 'heightInput', name: 'heightInput', value: height, size:1, onchange: 'eventManager.fire("grapherUpdateHeight")'});
+	
+	//insert the x axis graph parameters
+	pageDiv.appendChild(graphDimsText);
+	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(widthText);
+	pageDiv.appendChild(widthInput);
+	pageDiv.appendChild(heightText);
+	pageDiv.appendChild(heightInput);
 	pageDiv.appendChild(createBreak());
 	
+	//create the x axis authoring elements
+	var xAxisText = document.createTextNode('X Axis Name: ');
+	var xAxisInput = createElement(document, 'input', {type: 'input', id: 'xAxisNameInput', name: 'xAxisNameInput', value: xLabel, size:5, onchange: 'eventManager.fire("grapherUpdateXAxisName")'});
+	var xUnitsText = document.createTextNode('X Axis Units: ');
+	var xUnitsInput = createElement(document, 'input', {type: 'input', id: 'xUnitsInput', name: 'xLabelInput', value: xUnits, size:5, onchange: 'eventManager.fire("grapherUpdateXUnits")'});
+	var xMinText = document.createTextNode('Min X: ');
+	var xMinInput = createElement(document, 'input', {type: 'input', id: 'xMinInput', name: 'xMinInput', value: xMin, size:1, onchange: 'eventManager.fire("grapherUpdateXMin")'});
+	var xMaxText = document.createTextNode('Max X: ');
+	var xMaxInput = createElement(document, 'input', {type: 'input', id: 'xMaxInput', name: 'xMaxInput', value: xMax, size:1, onchange: 'eventManager.fire("grapherUpdateXMax")'});
 	
-	//create the check box to require prediction before enter
-	var requirePredictionBeforeEnterCheckBox = createElement(document, 'input', {id: 'requirePredictionBeforeEnterCheckBox', type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateRequirePredictionBeforeEnter")'});
-	var requirePredictionBeforeEnterText = document.createTextNode('Require Prediction Before Enter (You must specify a "Show Previous Work" step for this to work)');
-	
-	//insert the create prediction and enable sensor checkboxes
-	pageDiv.appendChild(requirePredictionBeforeEnterCheckBox);
-	pageDiv.appendChild(requirePredictionBeforeEnterText);
+	//insert the x axis graph parameters
+	pageDiv.appendChild(xAxisText);
+	pageDiv.appendChild(xAxisInput);
+	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(xUnitsText);
+	pageDiv.appendChild(xUnitsInput);
+	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(xMinText);
+	pageDiv.appendChild(xMinInput);
+	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(xMaxText);
+	pageDiv.appendChild(xMaxInput);
 	pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(createBreak());
-
-	//populate the require prediction before enter checkbox
-	if(this.content.requirePredictionBeforeEnter) {
-		requirePredictionBeforeEnterCheckBox.checked = true;
+	
+	//create the y axis authoring elements
+	var yAxisText = document.createTextNode('Y Axis Name: ');
+	var yAxisInput = createElement(document, 'input', {type: 'input', id: 'yAxisNameInput', name: 'yAxisNameInput', value: yLabel, size:5, onchange: 'eventManager.fire("grapherUpdateYAxisName")'});
+	var yUnitsText = document.createTextNode('Y Axis Units: ');
+	var yUnitsInput = createElement(document, 'input', {type: 'input', id: 'yUnitsInput', name: 'yLabelInput', value: yUnits, size:5, onchange: 'eventManager.fire("grapherUpdateYUnits")'});
+	var yMinText = document.createTextNode('Min Y: ');
+	var yMinInput = createElement(document, 'input', {type: 'input', id: 'yMinInput', name: 'yMinInput', value: yMin, size:1, onchange: 'eventManager.fire("grapherUpdateYMin")'});
+	var yMaxText = document.createTextNode('Max Y: ');
+	var yMaxInput = createElement(document, 'input', {type: 'input', id: 'yMaxInput', name: 'yMaxInput', value: yMax, size:1, onchange: 'eventManager.fire("grapherUpdateYMax")'});
+	
+	//insert the y axis graph parameters
+	pageDiv.appendChild(yAxisText);
+	pageDiv.appendChild(yAxisInput);
+	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(yUnitsText);
+	pageDiv.appendChild(yUnitsInput);
+	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(yMinText);
+	pageDiv.appendChild(yMinInput);
+	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(yMaxText);
+	pageDiv.appendChild(yMaxInput);
+	pageDiv.appendChild(createBreak());
+	
+	//create the check box to allow the student to change the axis limits
+	var allowUpdateAxisRangeCheckBox = createElement(document, 'input', {id: 'allowUpdateAxisRangeCheckBox', type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateAllowUpdateAxisRange")'});
+	var allowUpdateAxisRangeText = document.createTextNode("Allow Student to Change Axis Limits");
+	//populate the allow student to change axis limit check box
+	if(this.content.graphParams.allowUpdateAxisRange) {
+		allowUpdateAxisRangeCheckBox.checked = true;
 	}
-
+	
+	//insert the allow student to change axis limit check box
+	pageDiv.appendChild(allowUpdateAxisRangeCheckBox);
+	pageDiv.appendChild(allowUpdateAxisRangeText);
+	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(createBreak());
+	
+	// everything below will be added to its own div
+	var predictionDiv = this.predictionDiv = createElement(document, 'div', {id: 'predictionDiv', style:'background-color:#eef;'});
+	var predictionDivTitle = createElement(document, 'h2', {id: 'predictionDivTitle'});
+	predictionDivTitle.appendChild(document.createTextNode("Construction Settings"));
+	
 	//create the check box to enable create prediction
 	var enableCreatePredictionCheckBox = createElement(document, 'input', {id: 'enableCreatePredictionCheckBox', type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateEnableCreatePrediction")'});
 	var enableCreatePredictionText = document.createTextNode("Enable Create Prediction");
-	
-	// everything below will be added to its own div
-	var predictionDiv = this.predictionDiv = createElement(document, 'div', {id: 'predictionDiv'});
-
+		
 	// variables to make prediction easier - jv
 	var easyPredictionCheckBox = createElement(document, 'input', {id: 'easyPredictionCheckBox', type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateEasyPrediction")'});
 	var easyPredictionText = document.createTextNode('Use easy prediction settings');
-	
-	var newSeriesLabelButton = createElement(document, 'input', {type: 'button', id: 'newCustomSeriesLabel', name: 'newCustomSeriesLabel', value: 'New Series', onclick: 'eventManager.fire("grapherNewCustomSeriesLabel")'});
-	
-	pageDiv.appendChild(enableCreatePredictionCheckBox);
-	pageDiv.appendChild(enableCreatePredictionText);
-	pageDiv.appendChild(createBreak());
+		
 	pageDiv.appendChild(predictionDiv);
-	
+	predictionDiv.appendChild(predictionDivTitle);
+	predictionDiv.appendChild(enableCreatePredictionCheckBox);
+	predictionDiv.appendChild(enableCreatePredictionText);
+	predictionDiv.appendChild(createBreak());
 	predictionDiv.appendChild(easyPredictionCheckBox);
 	predictionDiv.appendChild(easyPredictionText);
 	predictionDiv.appendChild(createBreak());
-	predictionDiv.appendChild(newSeriesLabelButton);
-	predictionDiv.appendChild(createBreak());
-
-	if (this.content.seriesLabels == null){
+	
+	// in authoring you can add multiple series. Each series has a label, color, and a set of predefined data (which could be empty, of course)	
+	if (typeof this.content.seriesLabels === "undefined" || this.content.seriesLabels === null){
 		this.content.seriesLabels = [""];
 	} 
 
-	if (this.content.seriesColors == null){
+	if (typeof this.content.seriesColors === "undefined" || this.content.seriesColors === null){
 		this.content.seriesColors = [""];
 	} 
-
+	
+	if (typeof this.content.seriesData === "undefined" || this.content.seriesData === null){
+		this.content.seriesData = [];
+	}
+	this.seriesDivs = [];
+	this.pointsDivs = [];
+	
+	var allSeriesDiv = createElement(document, 'div', {id: 'allSeriesDiv'});
+	predictionDiv.appendChild(allSeriesDiv);
+	
 	for (var index = 0; index < this.content.seriesLabels.length; index++){
-		var seriesLabelText = document.createTextNode('Name of series:');
-		var seriesLabel = createElement(document, 'input', {type: 'input', id: 'seriesLabelInput-'+index, name: 'seriesLabelInput-'+index, value: this.content.seriesLabels[index], size:20, onchange: 'eventManager.fire("grapherUpdateSeriesLabel", '+index+')'});
+		var seriesDiv = createElement(document, 'div', {id: 'seriesDiv-'+index, style:'border-style:solid;border-radius:10px;border-color:#444;border-width:1px;padding-left: 5px;'});
+		this.seriesDivs.push(seriesDiv);
+		
+		var seriesLabelText = document.createTextNode('Series Name:');
+		var seriesLabel = createElement(document, 'input', {type: 'input', id: 'seriesLabelInput-'+index, name: 'seriesLabelInput-'+index, value: this.content.seriesLabels[index], size:10, onchange: 'eventManager.fire("grapherUpdateSeriesLabel", '+index+')'});
 		
 		var seriesColorText = document.createTextNode('Color:');
 		var seriesColor = createElement(document, 'input', {type: 'input', id: 'seriesColorInput-'+index, name: 'seriesColorInput-'+index, value: this.content.seriesColors[index], size:10, onchange: 'eventManager.fire("grapherUpdateSeriesColor", '+index+')'});
 		
-		predictionDiv.appendChild(seriesLabelText);
-		predictionDiv.appendChild(seriesLabel);
-		predictionDiv.appendChild(seriesColorText);
-		predictionDiv.appendChild(seriesColor);
-		predictionDiv.appendChild(createBreak());
+		// put points on its own div
+		var pointsDiv = createElement(document, 'span', {id: 'pointsDiv-'+index, style:'background-color:#efe;'});
+		this.pointsDivs.push(pointsDiv);
+		
+		// this series should have an associated data structure of the form
+		// [{label:"name", color:"blue", showPoint:true, showLines:true, {x:[0,1,2], y:[4,5,6], fixed:[0,0,1]}, {...}]
+		if (index < this.content.seriesData.length && typeof this.content.seriesData[index].points !== "undefined" && this.content.seriesData[index].points.length > 0 ){
+			for (var pindex = 0; pindex < this.content.seriesData[index].points.length; pindex++){
+				var openingParens = document.createTextNode('(');
+				var seriesX = createElement(document, 'input', {type: 'input', id: 'seriesXInput-'+index+"-"+pindex, name: 'seriesXInput-'+index+"-"+pindex, value: this.content.seriesData[index].points[pindex].x, size:1, onchange: 'eventManager.fire("grapherUpdateSeriesX", ['+index+","+pindex+'])'});
+				var seriesY = createElement(document, 'input', {type: 'input', id: 'seriesYInput-'+index+"-"+pindex, name: 'seriesYInput-'+index+"-"+pindex, value: this.content.seriesData[index].points[pindex].y, size:1, onchange: 'eventManager.fire("grapherUpdateSeriesY", ['+index+","+pindex+'])'});
+				var seriesFixed = createElement(document, 'input', {type: 'input', id: 'seriesFixedInput-'+index+"-"+pindex, name: 'seriesFixedInput-'+index+"-"+pindex, value: this.content.seriesData[index].points[pindex].fixed, size:1, onchange: 'eventManager.fire("grapherUpdateSeriesFixed", ['+index+","+pindex+'])'});
+				var closeParens = document.createTextNode(') ');
+				pointsDiv.appendChild(openingParens);
+				pointsDiv.appendChild(seriesX);
+				pointsDiv.appendChild(seriesY);
+				pointsDiv.appendChild(seriesFixed);
+				pointsDiv.appendChild(closeParens);
+			}
+		} else if (index >= this.content.seriesData.length || typeof this.content.seriesData[index].points === "undefined"){
+			// create seriesData if it doesn't exist
+			this.content.seriesData[index] = {id:"", color:"", showLines:true, showPoints:true, editable:true, points:[]};
+		}
+				
+		// place a button for "new point" here
+		var newPointButton = createElement(document, 'input', {type: 'button', id: 'newCustomPoint-'+index, name: 'newCustomPoint-'+index, value: 'New Point (x, y, fixed)', onclick: 'eventManager.fire("grapherNewCustomPoint", '+index+')'});
+		// add options for series
+		var showPointsCheckBox = createElement(document, 'input', {id: 'showPointsCheckBox-'+index, type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateShowPoints", '+index+')'});
+		if (this.content.seriesData[index].showPoints){ showPointsCheckBox.checked = true; } else {showPointsCheckBox.checked = false;}
+		var showPointsText = document.createTextNode("Show points");
+		var showLinesCheckBox = createElement(document, 'input', {id: 'showLinesCheckBox-'+index, type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateShowLines", '+index+')'});
+		if (this.content.seriesData[index].showLines){ showLinesCheckBox.checked = true; } else {showLinesCheckBox.checked = false;}
+		var showLinesText = document.createTextNode("Show lines");
+		var editableSeriesCheckBox = createElement(document, 'input', {id: 'editableSeriesCheckBox-'+index, type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateEditableSeries", '+index+')'});
+		if (this.content.seriesData[index].editable){ editableSeriesCheckBox.checked = true; } else {editableSeriesCheckBox.checked = false;}
+		var editableSeriesText = document.createTextNode("Editable");
+		
+		allSeriesDiv.appendChild(seriesDiv);
+		seriesDiv.appendChild(seriesLabelText);
+		seriesDiv.appendChild(seriesLabel);
+		seriesDiv.appendChild(seriesColorText);
+		seriesDiv.appendChild(seriesColor);
+		seriesDiv.appendChild(createBreak());
+		seriesDiv.appendChild(pointsDiv);
+		seriesDiv.appendChild(newPointButton);
+		seriesDiv.appendChild(createBreak());
+		seriesDiv.appendChild(showPointsCheckBox);
+		seriesDiv.appendChild(showPointsText);
+		seriesDiv.appendChild(showLinesCheckBox);
+		seriesDiv.appendChild(showLinesText);
+		seriesDiv.appendChild(editableSeriesCheckBox);
+		seriesDiv.appendChild(editableSeriesText);
+		seriesDiv.appendChild(createBreak());
+		allSeriesDiv.appendChild(createBreak());
 	}
+	
+	// new series button below all series
+	var newSeriesButton = createElement(document, 'input', {type: 'button', id: 'newCustomSeriesButton', name: 'newCustomSeriesButton', value: 'New Series', onclick: 'eventManager.fire("grapherNewCustomSeries")'});
+	
+	predictionDiv.appendChild(newSeriesButton);
 
 	pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(createBreak());
@@ -204,70 +333,21 @@ View.prototype.GrapherNode.generatePage = function(view){
 		customSeriesCheckBox.checked = true;
 	}
 	
-	//create the x axis authoring elements
-	var xAxisText = document.createTextNode('X Axis Name: ');
-	var xAxisInput = createElement(document, 'input', {type: 'input', id: 'xAxisNameInput', name: 'xAxisNameInput', value: xLabel, onchange: 'eventManager.fire("grapherUpdateXAxisName")'});
-	var xUnitsText = document.createTextNode('X Axis Units: ');
-	var xUnitsInput = createElement(document, 'input', {type: 'input', id: 'xUnitsInput', name: 'xLabelInput', value: xUnits, onchange: 'eventManager.fire("grapherUpdateXUnits")'});
-	var xMinText = document.createTextNode('Min X: ');
-	var xMinInput = createElement(document, 'input', {type: 'input', id: 'xMinInput', name: 'xMinInput', value: xMin, onchange: 'eventManager.fire("grapherUpdateXMin")'});
-	var xMaxText = document.createTextNode('Max X: ');
-	var xMaxInput = createElement(document, 'input', {type: 'input', id: 'xMaxInput', name: 'xMaxInput', value: xMax, onchange: 'eventManager.fire("grapherUpdateXMax")'});
+	//create the check box to require prediction before enter
+	var requirePredictionBeforeEnterCheckBox = createElement(document, 'input', {id: 'requirePredictionBeforeEnterCheckBox', type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateRequirePredictionBeforeEnter")'});
+	var requirePredictionBeforeEnterText = document.createTextNode('Require Prediction Before Enter (You must specify a "Show Previous Work" step for this to work)');
 	
-	//insert the x axis graph parameters
-	pageDiv.appendChild(xAxisText);
-	pageDiv.appendChild(xAxisInput);
-	pageDiv.appendChild(createBreak());
-	pageDiv.appendChild(xUnitsText);
-	pageDiv.appendChild(xUnitsInput);
-	pageDiv.appendChild(createBreak());
-	pageDiv.appendChild(xMinText);
-	pageDiv.appendChild(xMinInput);
-	pageDiv.appendChild(createBreak());
-	pageDiv.appendChild(xMaxText);
-	pageDiv.appendChild(xMaxInput);
+	//insert the create prediction and enable sensor checkboxes
+	pageDiv.appendChild(requirePredictionBeforeEnterCheckBox);
+	pageDiv.appendChild(requirePredictionBeforeEnterText);
 	pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(createBreak());
 	
-	//create the y axis authoring elements
-	var yAxisText = document.createTextNode('Y Axis Name: ');
-	var yAxisInput = createElement(document, 'input', {type: 'input', id: 'yAxisNameInput', name: 'yAxisNameInput', value: xLabel, onchange: 'eventManager.fire("grapherUpdateYAxisName")'});
-	var yUnitsText = document.createTextNode('Y Axis Units: ');
-	var yUnitsInput = createElement(document, 'input', {type: 'input', id: 'yUnitsInput', name: 'yLabelInput', value: yUnits, onchange: 'eventManager.fire("grapherUpdateYUnits")'});
-	var yMinText = document.createTextNode('Min Y: ');
-	var yMinInput = createElement(document, 'input', {type: 'input', id: 'yMinInput', name: 'yMinInput', value: yMin, onchange: 'eventManager.fire("grapherUpdateYMin")'});
-	var yMaxText = document.createTextNode('Max Y: ');
-	var yMaxInput = createElement(document, 'input', {type: 'input', id: 'yMaxInput', name: 'yMaxInput', value: yMax, onchange: 'eventManager.fire("grapherUpdateYMax")'});
-	
-	//insert the y axis graph parameters
-	pageDiv.appendChild(yAxisText);
-	pageDiv.appendChild(yAxisInput);
-	pageDiv.appendChild(createBreak());
-	pageDiv.appendChild(yUnitsText);
-	pageDiv.appendChild(yUnitsInput);
-	pageDiv.appendChild(createBreak());
-	pageDiv.appendChild(yMinText);
-	pageDiv.appendChild(yMinInput);
-	pageDiv.appendChild(createBreak());
-	pageDiv.appendChild(yMaxText);
-	pageDiv.appendChild(yMaxInput);
-	pageDiv.appendChild(createBreak());
-	
-	//create the check box to allow the student to change the axis limits
-	var allowUpdateAxisRangeCheckBox = createElement(document, 'input', {id: 'allowUpdateAxisRangeCheckBox', type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateAllowUpdateAxisRange")'});
-	var allowUpdateAxisRangeText = document.createTextNode("Allow Student to Change Axis Limits");
-	
-	//insert the allow student to change axis limit check box
-	pageDiv.appendChild(allowUpdateAxisRangeCheckBox);
-	pageDiv.appendChild(allowUpdateAxisRangeText);
-	pageDiv.appendChild(createBreak());
-	pageDiv.appendChild(createBreak());
-	
-	//populate the allow student to change axis limit check box
-	if(this.content.graphParams.allowUpdateAxisRange) {
-		allowUpdateAxisRangeCheckBox.checked = true;
+	//populate the require prediction before enter checkbox
+	if(this.content.requirePredictionBeforeEnter) {
+		requirePredictionBeforeEnterCheckBox.checked = true;
 	}
-
+	
 	//create the check box to allow the student to change the axis limits
 	var allowAnnotationsCheckBox = createElement(document, 'input', {id: 'allowAnnotationsCheckBox', type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateAllowAnnotations")'});
 	var allowAnnotationsText = document.createTextNode("Allow Student to Annotate Points");
@@ -680,6 +760,28 @@ View.prototype.GrapherNode.updateStarterSentenceAuthoring = function(){
 };
 
 /**
+ * Save the width of the 
+ */
+View.prototype.GrapherNode.updateWidth = function() {
+	//get the x units and set it into the graph params
+	this.content.graphParams.width = parseFloat($('#widthInput').val());
+	
+	//fire source updated event
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Save the x label to the content
+ */
+View.prototype.GrapherNode.updateHeight = function() {
+	//get the x units and set it into the graph params
+	this.content.graphParams.height = parseFloat($('#heightInput').val());
+	
+	//fire source updated event
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
  * Save the x label to the content
  */
 View.prototype.GrapherNode.updateXAxisName = function() {
@@ -895,51 +997,196 @@ View.prototype.GrapherNode.updateEasyPrediction = function(overrideBoolean) {
 	this.view.eventManager.fire('sourceUpdated');
 };
 
-
 /**
  * Update the custom series options
  */
-View.prototype.GrapherNode.newCustomSeriesLabel = function() {
+View.prototype.GrapherNode.newCustomSeries = function() {
+	
 	var index = 0;
 	if (this.content.seriesLabels == null){
 		this.content.seriesLabels = [];
 	} else {
 		index = this.content.seriesLabels.length;
 	}
-
-	var seriesLabelText = document.createTextNode('Name of series:');
-	var seriesLabel = createElement(document, 'input', {type: 'input', id: 'seriesLabelInput-'+index, name: 'seriesLabelInput-'+index, value: "", size:20, onchange: 'eventManager.fire("grapherUpdateSeriesLabel", '+index+')'});
+	
+	var seriesDiv = createElement(document, 'div', {id: 'seriesDiv-'+index, style:'border-style:solid;border-radius:10px;border-color:#444;border-width:1px;padding-left: 5px;'});
+	this.seriesDivs.push(seriesDiv);
+		
+	var seriesLabelText = document.createTextNode('Series Name:');
+	var seriesLabel = createElement(document, 'input', {type: 'input', id: 'seriesLabelInput-'+index, name: 'seriesLabelInput-'+index, value: "", size:10, onchange: 'eventManager.fire("grapherUpdateSeriesLabel", '+index+')'});
 	this.content.seriesLabels.push("");
 
 	var seriesColorText = document.createTextNode('Color:');
 	var seriesColor = createElement(document, 'input', {type: 'input', id: 'seriesColorInput-'+index, name: 'seriesColorInput-'+index, value: "", size:10, onchange: 'eventManager.fire("grapherUpdateSeriesColor", '+index+')'});
 	this.content.seriesColors.push("");
 
-	this.predictionDiv.appendChild(seriesLabelText);
-	this.predictionDiv.appendChild(seriesLabel);
-	this.predictionDiv.appendChild(seriesColorText);
-	this.predictionDiv.appendChild(seriesColor);
-	this.predictionDiv.appendChild(createBreak());
+	if (typeof this.content.seriesData === "undefined" || this.content.seriesData == null) this.content.seriesData = [];
+	this.content.seriesData.push({id:"", color:"", showLines:true, showPoints:true, editable:true, points:[]})
+	
+	
+	// put points on its own div
+	var pointsDiv = createElement(document, 'span', {id: 'pointsDiv-'+index, span:'background-color:#efe;'});
+	this.pointsDivs.push(pointsDiv);	
+	
+	// add options for series
+	// place a button for "new point" here
+	var newPointButton = createElement(document, 'input', {type: 'button', id: 'newCustomPoint-'+index, name: 'newCustomPoint-'+index, value: 'New Point (x, y, fixed)', onclick: 'eventManager.fire("grapherNewCustomPoint", '+index+')'});
+	var showPointsCheckBox = createElement(document, 'input', {id: 'showPointsCheckBox-'+index, type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateShowPoints", '+index+')'});
+	if(this.content.seriesData[index].showPoints) showPointsCheckBox.checked = true;
+	var showPointsText = document.createTextNode("Show points");
+	var showLinesCheckBox = createElement(document, 'input', {id: 'showLinesCheckBox-'+index, type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateShowLines", '+index+')'});
+	if(this.content.seriesData[index].showLines) showLinesCheckBox.checked = true;
+	var showLinesText = document.createTextNode("Show lines");
+	var editableSeriesCheckBox = createElement(document, 'input', {id: 'editableSeriesCheckBox-'+index, type: 'checkbox', onclick: 'eventManager.fire("grapherUpdateEditableSeries", '+index+')'});
+	if(this.content.seriesData[index].editable) editableSeriesCheckBox.checked = true;
+	var editableSeriesText = document.createTextNode("Editable");
+	
+	allSeriesDiv.appendChild(seriesDiv);
+	seriesDiv.appendChild(seriesLabelText);
+	seriesDiv.appendChild(seriesLabel);
+	seriesDiv.appendChild(seriesColorText);
+	seriesDiv.appendChild(seriesColor);
+	seriesDiv.appendChild(createBreak());
+	seriesDiv.appendChild(pointsDiv);
+	seriesDiv.appendChild(newPointButton);
+	seriesDiv.appendChild(createBreak());
+	seriesDiv.appendChild(showPointsCheckBox);
+	seriesDiv.appendChild(showPointsText);
+	seriesDiv.appendChild(showLinesCheckBox);
+	seriesDiv.appendChild(showLinesText);
+	seriesDiv.appendChild(editableSeriesCheckBox);
+	seriesDiv.appendChild(editableSeriesText);
+	seriesDiv.appendChild(createBreak());
+	allSeriesDiv.appendChild(createBreak());
+	
 	//fire source updated event
 	this.view.eventManager.fire('sourceUpdated');
 };
 
 /**
- * Update the custom series options
+ * Create inputs for a new point for this series
+ */
+View.prototype.GrapherNode.newCustomPoint = function(index) {
+	
+	// put points on its own div
+	var pointsDiv = this.pointsDivs[index];
+	
+	var pindex = this.content.seriesData[index].points.length;
+	var openingParens = document.createTextNode('(');
+	// add a new point with default values
+	this.content.seriesData[index].points.push({x:0, y:0, fixed:0});
+	var seriesX = createElement(document, 'input', {type: 'input', id: 'seriesXInput-'+index+"-"+pindex, name: 'seriesXInput-'+index+"-"+pindex, value: this.content.seriesData[index].points[pindex].x, size:1, onchange: 'eventManager.fire("grapherUpdateSeriesX", ['+index+","+pindex+'])'});
+	var seriesY = createElement(document, 'input', {type: 'input', id: 'seriesYInput-'+index+"-"+pindex, name: 'seriesYInput-'+index+"-"+pindex, value: this.content.seriesData[index].points[pindex].y, size:1, onchange: 'eventManager.fire("grapherUpdateSeriesY", ['+index+","+pindex+'])'});
+	var seriesFixed = createElement(document, 'input', {type: 'input', id: 'seriesFixedInput-'+index+"-"+pindex, name: 'seriesFixedInput-'+index+"-"+pindex, value: this.content.seriesData[index].points[pindex].fixed, size:1, onchange: 'eventManager.fire("grapherUpdateSeriesFixed", ['+index+","+pindex+'])'});
+	var closeParens = document.createTextNode(') ');
+	pointsDiv.appendChild(openingParens);
+	pointsDiv.appendChild(seriesX);
+	pointsDiv.appendChild(seriesY);
+	pointsDiv.appendChild(seriesFixed);
+	pointsDiv.appendChild(closeParens);
+	
+	//fire source updated event
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Update the custom series label
  */
 View.prototype.GrapherNode.updateSeriesLabel = function(index) {
 	
 	this.content.seriesLabels[index] = $('#seriesLabelInput-'+index).attr('value');
+	this.content.seriesData[index].id = this.content.seriesLabels[index];
 	//fire source updated event
 	this.view.eventManager.fire('sourceUpdated');
 };
 
 /**
- * Update the custom series options
+ * Update the custom series 
  */
 View.prototype.GrapherNode.updateSeriesColor = function(index) {
 	
 	this.content.seriesColors[index] = $('#seriesColorInput-'+index).attr('value');
+	this.content.seriesData[index].color = this.content.seriesColors[index];
+	//fire source updated event
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Update the a point's x value associated with a specific label
+ */
+View.prototype.GrapherNode.updateSeriesX = function(index, pindex) {
+	
+	this.content.seriesData[index].points[pindex].x = parseFloat($('#seriesXInput-'+index+'-'+pindex).attr('value'));
+	//fire source updated event
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Update the a point's y value associated with a specific label
+ */
+View.prototype.GrapherNode.updateSeriesY = function(index, pindex) {
+	
+	this.content.seriesData[index].points[pindex].y = parseFloat($('#seriesYInput-'+index+'-'+pindex).attr('value'));
+	//fire source updated event
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Update the a point's "fixed" value associated with a specific label
+ */
+View.prototype.GrapherNode.updateSeriesFixed = function(index, pindex) {
+	this.content.seriesData[index].points[pindex].fixed = parseInt($('#seriesFixedInput-'+index+'-'+pindex).attr('value'));
+	//fire source updated event
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Update whether we are showing points for this series
+ */
+View.prototype.GrapherNode.updateShowPoints = function(index) {
+	
+	this.content.seriesData[index].showPoints = this.isChecked($('#showPointsCheckBox-'+index).attr('checked'));
+	//fire source updated event
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Update whether we are showing points for this series
+ */
+View.prototype.GrapherNode.updateShowLines = function(index) {
+	
+	this.content.seriesData[index].showLines = this.isChecked($('#showLinesCheckBox-'+index).attr('checked'));
+	//fire source updated event
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Update whether we are showing points for this series
+ */
+View.prototype.GrapherNode.updateEditableSeries = function(index) {
+	
+	this.content.seriesData[index].editable = this.isChecked($('#editableSeriesCheckBox-'+index).attr('checked'));
+	//fire source updated event
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Update the allow update axis range value
+ */
+View.prototype.GrapherNode.updateAllowUpdateAxisRange = function() {
+	//get the value of the allow update axis range and set it into the content
+	this.content.graphParams.allowUpdateAxisRange = this.isChecked($('#allowUpdateAxisRangeCheckBox').attr('checked'));
+	//fire source updated event
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Update the allow update axis range value
+ */
+View.prototype.GrapherNode.updateAllowAnnotations = function() {
+	//get the value of the allow update axis range and set it into the content
+	this.content.allowAnnotations = this.isChecked($('#allowAnnotationsCheckBox').attr('checked'));
+	
 	//fire source updated event
 	this.view.eventManager.fire('sourceUpdated');
 };
@@ -960,28 +1207,6 @@ View.prototype.GrapherNode.isChecked = function(value) {
 	}
 	
 	return checked;
-};
-
-/**
- * Update the allow update axis range value
- */
-View.prototype.GrapherNode.updateAllowUpdateAxisRange = function() {
-	//get the value of the allow update axis range and set it into the content
-	this.content.graphParams.allowUpdateAxisRange = this.isChecked($('#allowUpdateAxisRangeCheckBox').attr('checked'));
-	
-	//fire source updated event
-	this.view.eventManager.fire('sourceUpdated');
-};
-
-/**
- * Update the allow update axis range value
- */
-View.prototype.GrapherNode.updateAllowAnnotations = function() {
-	//get the value of the allow update axis range and set it into the content
-	this.content.allowAnnotations = this.isChecked($('#allowAnnotationsCheckBox').attr('checked'));
-	
-	//fire source updated event
-	this.view.eventManager.fire('sourceUpdated');
 };
 
 //used to notify scriptloader that this script has finished loading
