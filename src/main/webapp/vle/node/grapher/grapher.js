@@ -214,7 +214,7 @@ Grapher.prototype.render = function() {
 		// which series are editable?
 		var editableSeries = [];
 		for (var s = 0; s < seriesLabels.length; s++){
-			if (this.content.seriesData === "undefined" || s >= this.content.seriesData.length || typeof this.content.seriesData[s].editable === "undefined" || this.content.seriesData[s].editable){
+			if (typeof this.content.seriesData === "undefined" || s >= this.content.seriesData.length || typeof this.content.seriesData[s].editable === "undefined" || this.content.seriesData[s].editable){
 				editableSeries.push(seriesLabels[s]);
 			}
 		}
