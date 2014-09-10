@@ -9,4 +9,6 @@ Setup WISE on a Server: https://github.com/WISE-Community/WISE/wiki/How-to-Setup
 
 Other documentation: https://github.com/WISE-Community/WISE/wiki
 
-Developer Mailinglist: https://groups.google.com/forum/#!forum/wise4-dev
+Developer mailinglist: https://groups.google.com/forum/#!forum/wise4-dev
+
+Open-source license: GNU General Public License, v3.  See LICENSE.txt for details.
