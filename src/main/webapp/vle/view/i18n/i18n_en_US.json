@@ -1019,13 +1019,9 @@
 		"value":"The following must have '{0}' set to '{1}' before you can view this item:",
 		"description":"The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the selected step"
 	},
-	"constraint_message_mustHaveXIdeaBasketIdeasBeforeAdvancingSingular": {
-		"value":"You must have at least {0} idea in your idea basket in order to proceed.",
+	"constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancing": {
+		"value":"You must create at least {0} idea(s) on 'Step {1}' in order to proceed. You have created {2} idea(s) on that step.",
 		"description":"The message shown to students telling them they need one idea in their idea basket before they can proceed"
-	},
-	"constraint_message_mustHaveXIdeaBasketIdeasBeforeAdvancingPlural": {
-		"value":"You must have at least {0} ideas in your idea basket in order to proceed.",
-		"description":"The message shown to students telling them they need multiple ideas in their idea basket before they can proceed"
 	},
 	"session_timeout_warning":{
 		"value":"You have been inactive for a long time. If you do not renew your session now, you will be logged out of WISE.",

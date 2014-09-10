@@ -1,11 +1,12 @@
-MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.prototype = new TagMapConstraint();
-MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.prototype.constructor = MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint;
-MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.prototype.parent = TagMapConstraint.prototype;
+MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.prototype = new TagMapConstraint();
+MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.prototype.constructor = MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint;
+MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.prototype.parent = TagMapConstraint.prototype;
 
 /**
- * Constructor to create the MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.
- * This constraint prevents the student from moving beyond the given
- * step until they have a certain number of ideas in their idea basket.
+ * Constructor to create the MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.
+ * This constraint prevents the student from moving beyond the step this constraint
+ * was created on until they have created a certain number of ideas in their idea basket
+ * while on the constrained step.
  * @param view the view
  * @param nodeId the node id that this constraint is for. the node id can
  * be for a step or an activity
@@ -19,7 +20,7 @@ MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.prototype.parent = TagMapConst
  * @param customMessage a custom message to be shown to the student when the 
  * constraint prevents the student from moving
  */
-function MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint(view, nodeId, tagName, functionName, functionArgs, additionalFunctionArgs, customMessage) {
+function MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint(view, nodeId, tagName, functionName, functionArgs, additionalFunctionArgs, customMessage) {
 	//call the parent constructor
 	TagMapConstraint.prototype.constructor.call(this, view, nodeId, tagName, functionName, functionArgs, additionalFunctionArgs, customMessage);
 };
@@ -28,7 +29,7 @@ function MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint(view, nodeId, tagName
  * Check if the constraint has been satisfied
  * @return whether the constraint is satisfied or not
  */
-MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.prototype.isSatisfied = function() {
+MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.prototype.isSatisfied = function() {
 	var satisfied = true;
 	
 	//get the function args
@@ -38,18 +39,13 @@ MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.prototype.isSatisfied = functi
 	var ideaCount = 0;
 	
 	if(this.view.ideaBasket != null) {
-		//get the ideas from the idea basket
-		var ideas = this.view.ideaBasket.ideas;
-		
-		if(ideas != null) {
-			//get the number of ideas the student has created
-			ideaCount = ideas.length;
-		}
+		//get the number of ideas that were created on the step that is constrained
+		ideaCount = this.view.ideaBasket.getNumberOfIdeasByNodeId(this.nodeId);
 	}
 	
-	//check if the student has the required number of ideas
+	//check if the student has created the required number of ideas on the step that is constrained
 	if(ideaCount < requiredNumberOfIdeas) {
-		//the student does not have the required number of ideas
+		//the student did not create the required number of ideas on the step that is constrained
 		satisfied = false;
 	}
 
@@ -72,7 +68,7 @@ MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.prototype.isSatisfied = functi
  * prevents them from moving to the step they are trying to move to.
  * @return a message that we will notify the student of the constraint
  */
-MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.prototype.getConstraintMessage = function() {
+MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.prototype.getConstraintMessage = function() {
 	var message = '';
 	
 	//get the number of ideas that are required
@@ -83,23 +79,36 @@ MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.prototype.getConstraintMessage
 		//use the custom message that was provided when this constraint was created
 		message = this.customMessage;
 	} else {
-		if(requiredNumberOfIdeas == 1) {
-			//this constraint requires the student to have one idea basket idea
-			message = this.view.getI18NStringWithParams("constraint_message_mustHaveXIdeaBasketIdeasBeforeAdvancingSingular", [requiredNumberOfIdeas], "main");
-		} else {
-			//this constraint requires the student to have more than one idea basket idea
-			message = this.view.getI18NStringWithParams("constraint_message_mustHaveXIdeaBasketIdeasBeforeAdvancingPlural", [requiredNumberOfIdeas], "main");
+		var ideaCount = 0;
+		
+		if(this.view.ideaBasket != null) {
+			/*
+			 * get the number of ideas that were created on the step that is constrained
+			 */
+			ideaCount = this.view.ideaBasket.getNumberOfIdeasByNodeId(this.nodeId);
 		}
+		
+		/*
+		 * get the step number and title for the step that is constrained
+		 */
+		var stepNumberAndTitle = this.view.getProject().getStepNumberAndTitle(this.nodeId);
+		
+		/*
+		 * generate the message that says
+		 * You must create at least {0} idea(s) on 'Step {1}' in order to proceed. You have created {2} idea(s) on that step.
+		 */
+		message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancing", [requiredNumberOfIdeas, stepNumberAndTitle, ideaCount], "main");
 	}
 	
 	return message;
 };
 
+
 /**
  * Disable the steps in the navigation menu that the student is not
  * allowed to visit due to this constraint.
  */
-MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.prototype.constrainNavigation = function() {
+MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.prototype.constrainNavigation = function() {
 	if(this.view.navigationLogic != null && this.view.navigationLogic.tagMapConstraintManager != null) {
 		this.view.navigationLogic.tagMapConstraintManager.disableAllStepsAfter(this.nodeId, this);
 	}
@@ -107,5 +116,5 @@ MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.prototype.constrainNavigation 
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/navigation/tagmapconstraints/MustHaveXIdeaBasketIdeasBeforeAdvancingConstraint.js');
+	eventManager.fire('scriptLoaded', 'vle/navigation/tagmapconstraints/MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.js');
 }
