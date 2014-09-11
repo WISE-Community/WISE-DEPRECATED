@@ -43,6 +43,8 @@ function NoteNode(nodeType, view) {
  * @param studentWork
  */
 NoteNode.prototype.render = function(contentPanel, studentWork){
+	this.fetchI18NFiles();
+	
 	this.studentWork = studentWork;
 	
 	/* set the baseHtmlContent if it has not yet been set up */
