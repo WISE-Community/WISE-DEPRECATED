@@ -1019,9 +1019,21 @@
 		"value":"The following must have '{0}' set to '{1}' before you can view this item:",
 		"description":"The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the selected step"
 	},
-	"constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancing": {
-		"value":"You must create at least {0} idea(s) on 'Step {1}' in order to proceed. You have created {2} idea(s) on that step.",
-		"description":"The message shown to students telling them they need one idea in their idea basket before they can proceed"
+	"constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingSingularZero": {
+		"value":"You must create at least {0} idea on 'Step {1}' in order to proceed. You have not created any ideas on that step.",
+		"description":"The message shown to students telling them they need to create one idea on the step before they can proceed. They have not created any ideas on the step."
+	},
+	"constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingPluralZero": {
+		"value":"You must create at least {0} ideas on 'Step {1}' in order to proceed. You have not created any ideas on that step.",
+		"description":"The message shown to students telling them they need to create multiple ideas on the step before they can proceed. They have not created any ideas on the step."
+	},
+	"constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingPluralSingular": {
+		"value":"You must create at least {0} ideas on 'Step {1}' in order to proceed. You have only created {2} idea on that step.",
+		"description":"The message shown to students telling them they need to create multiple ideas on the step before they can proceed. They have only created one idea on the step."
+	},
+	"constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingPluralPlural": {
+		"value":"You must create at least {0} ideas on 'Step {1}' in order to proceed. You have only created {2} ideas on that step.",
+		"description":"The message shown to students telling them they need to create multiple ideas on the step before they can proceed. They have not created enough ideas on the step."
 	},
 	"session_timeout_warning":{
 		"value":"You have been inactive for a long time. If you do not renew your session now, you will be logged out of WISE.",

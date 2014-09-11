@@ -94,10 +94,28 @@ MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.prototype.getConst
 		var stepNumberAndTitle = this.view.getProject().getStepNumberAndTitle(this.nodeId);
 		
 		/*
-		 * generate the message that says
-		 * You must create at least {0} idea(s) on 'Step {1}' in order to proceed. You have created {2} idea(s) on that step.
+		 * generate the message that tells the student they need to create more ideas
+		 * on the constrained step
 		 */
-		message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancing", [requiredNumberOfIdeas, stepNumberAndTitle, ideaCount], "main");
+		if(requiredNumberOfIdeas == 1) {
+			//the constraint requires 1 idea
+			if(ideaCount == 0) {
+				//the student has not created any ideas on the constrained step
+				message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingSingularZero", [requiredNumberOfIdeas, stepNumberAndTitle, ideaCount], "main");
+			}
+		} else {
+			//the constraint requires multiple ideas
+			if(ideaCount == 0) {
+				//the student has not created any ideas on the constrained step
+				message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingPluralZero", [requiredNumberOfIdeas, stepNumberAndTitle, ideaCount], "main");
+			} else if(ideaCount == 1) {
+				//the student has only created one idea on the constrained step
+				message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingPluralSingular", [requiredNumberOfIdeas, stepNumberAndTitle, ideaCount], "main");
+			} else {
+				//the student has not created enough ideas on the constrained step
+				message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingPluralPlural", [requiredNumberOfIdeas, stepNumberAndTitle, ideaCount], "main");
+			}
+		}
 	}
 	
 	return message;
