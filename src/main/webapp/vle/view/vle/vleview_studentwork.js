@@ -191,6 +191,15 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback,
 		//increment the counter
 		this.fakeStepWorkIdCounter++;
 		
+		//check if there is an auto graded annotation for the current student work
+		if(this.currentAutoGradedAnnotation != null) {
+			/*
+			 * clear the handle to the annotation since we don't need a handle
+			 * to it anymore
+			 */
+			this.currentAutoGradedAnnotation = null;
+		}
+		
 		return;
 	}
 

@@ -54,7 +54,7 @@ View.prototype.showNodeAnnotations = function(nodeId, feedbackHTML) {
 		var nodeAnnotationComment = null;  // latest comment
 		var nodeAnnotationScore = null;    // latest score
 		var nodeAnnotationCRater = null;    // latest cRater feedback
-		var nodeAnnotationAutoGraded = null;
+		var autoGradedAnnotations = [];
 		for (var i=0; i< currentNodeAnnotations.length; i++) {
 			var currentNodeAnnotation = currentNodeAnnotations[i];
 			if (currentNodeAnnotation.type == "comment") {
@@ -64,7 +64,7 @@ View.prototype.showNodeAnnotations = function(nodeId, feedbackHTML) {
 			} else if (currentNodeAnnotation.type == "cRater") {
 				nodeAnnotationCRater = currentNodeAnnotation;
 			} else if (currentNodeAnnotation.type == "autoGraded") {
-				nodeAnnotationAutoGraded = currentNodeAnnotation;
+				autoGradedAnnotations.push(currentNodeAnnotation);
 			}
 		}
 		
@@ -80,23 +80,48 @@ View.prototype.showNodeAnnotations = function(nodeId, feedbackHTML) {
 
 			nodeAnnotationsString += stepFeedback;
 			nodeAnnotationsString += '<br><br>';
-		} else if(nodeAnnotationAutoGraded != null) {
-			//get the value of the annotation which should be an array of annotation values
-			var value = nodeAnnotationAutoGraded.value;
+		} else if(autoGradedAnnotations.length > 0) {
 			
-			if(value != null && value.length > 0) {
-				//get the latest annotation value from the array of annotation values
-				var latestFeedback = value[value.length - 1];
+			//the variable used to accumulate the auto graded feeback html
+			var autoGradedFeedbackHTML = '';
+			
+			//loop through all the auto graded annotations from newest to oldest
+			for(var x=autoGradedAnnotations.length - 1; x>=0; x--) {
+				//get an auto graded annotation
+				var autoGradedAnnotation = autoGradedAnnotations[x];
 				
-				if(latestFeedback != null) {
-					//get the auto feedback message and auto score
-					var autoFeedback = latestFeedback.autoFeedback;
+				if(autoGradedAnnotation != null) {
+					//get the value of the annotation which should be an array of annotation values
+					var value = autoGradedAnnotation.value;
 					
-					if(autoFeedback != null) {
-						//add the comment to the text we will display to show the annotation
-						nodeAnnotationsString += "<span class='nodeAnnotationsComment'>" + autoFeedback + "</span><br/>";
+					if(value != null) {
+						//loop through all the annotation values from newest to oldest
+						for(var y=value.length - 1; y>=0; y--) {
+							//get the latest annotation value from the array of annotation values
+							var latestFeedback = value[y];
+							
+							if(latestFeedback != null) {
+								//get the auto feedback message and auto score
+								var autoFeedback = latestFeedback.autoFeedback;
+								
+								if(autoFeedback != null) {
+									if(autoGradedFeedbackHTML == '') {
+										//add the newest feedback
+										autoGradedFeedbackHTML += "<span class='nodeAnnotationsComment'><b>New Feedback<br/>" + autoFeedback + "</b></span><br/><hr>";
+									} else {
+										//add the previous feedback
+										autoGradedFeedbackHTML += "<span class='nodeAnnotationsComment'>Previous Feedback<br/>" + autoFeedback + "</span><br/><hr>";										
+									}
+								}
+							}
+						}
 					}
 				}
+			}
+			
+			if(autoGradedFeedbackHTML != '') {
+				//add all the auto graded feedback html
+				nodeAnnotationsString += autoGradedFeedbackHTML + '<br/>';
 			}
 		} else if (currentNode.content.getContentJSON().cRater && 
 				(currentNode.content.getContentJSON().cRater.displayCRaterScoreToStudent ||

@@ -374,13 +374,17 @@ SVGDrawNode.prototype.canSpecialExport = function() {
 	return true;
 };
 
+SVGDrawNode.prototype.getFeedback = function() {
+	return null;
+};
+
 /**
  * Get the feedback that will be displayed when the student clicks
  * on the Feedback button at the upper right of the vle. This feedback
  * will take precedence over feedback from the teacher.
  * @return the feedback html or null if there is no feedback
  */
-SVGDrawNode.prototype.getFeedback = function() {
+SVGDrawNode.prototype.getFeedback0 = function() {
 	var feedback = null;
 	
 	//check if this is an auto graded draw step
