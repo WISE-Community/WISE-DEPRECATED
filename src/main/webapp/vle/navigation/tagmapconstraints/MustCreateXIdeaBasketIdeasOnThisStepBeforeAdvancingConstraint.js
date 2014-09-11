@@ -89,9 +89,12 @@ MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.prototype.getConst
 		}
 		
 		/*
-		 * get the step number and title for the step that is constrained
+		 * get the step number and title for the step that is constrained, as well as step and idea terms
 		 */
-		var stepNumberAndTitle = this.view.getProject().getStepNumberAndTitle(this.nodeId);
+		var stepNumberAndTitle = this.view.getProject().getStepNumberAndTitle(this.nodeId),
+			stepTerm = view.getStepTerm(),
+			ideaTerm = view.getIdeaTerm(),
+			ideaTermPlural = view.getIdeaTermPlural();
 		
 		/*
 		 * generate the message that tells the student they need to create more ideas
@@ -101,19 +104,19 @@ MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.prototype.getConst
 			//the constraint requires 1 idea
 			if(ideaCount == 0) {
 				//the student has not created any ideas on the constrained step
-				message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingSingularZero", [requiredNumberOfIdeas, stepNumberAndTitle, ideaCount], "main");
+				message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingZero", [requiredNumberOfIdeas, ideaTerm, stepTerm, stepNumberAndTitle, ideaTermPlural, stepTerm], "main");
 			}
 		} else {
 			//the constraint requires multiple ideas
 			if(ideaCount == 0) {
 				//the student has not created any ideas on the constrained step
-				message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingPluralZero", [requiredNumberOfIdeas, stepNumberAndTitle, ideaCount], "main");
+				message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingZero", [requiredNumberOfIdeas, ideaTermPlural, stepTerm, stepNumberAndTitle, ideaTermPlural, stepTerm], "main");
 			} else if(ideaCount == 1) {
 				//the student has only created one idea on the constrained step
-				message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingPluralSingular", [requiredNumberOfIdeas, stepNumberAndTitle, ideaCount], "main");
+				message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancing", [requiredNumberOfIdeas, ideaTermPlural, stepTerm, stepNumberAndTitle, ideaCount, ideaTerm, stepTerm], "main");
 			} else {
 				//the student has not created enough ideas on the constrained step
-				message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingPluralPlural", [requiredNumberOfIdeas, stepNumberAndTitle, ideaCount], "main");
+				message = this.view.getI18NStringWithParams("constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancing", [requiredNumberOfIdeas, ideaTermPlural, stepTerm, stepNumberAndTitle, ideaCount, ideaTermPlural, stepTerm], "main");
 			}
 		}
 	}
