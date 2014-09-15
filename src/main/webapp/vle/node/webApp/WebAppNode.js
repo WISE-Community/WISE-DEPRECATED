@@ -208,6 +208,76 @@ WebAppNode.prototype.hasGradingView = function() {
 	return true;
 };
 
+
+/**
+ * Process the student work to determine if we need to display
+ * anything special or perform any additional processing.
+ * For example this can be used to process the student work and
+ * determine whether to display a bronze, silver, or gold
+ * star next to the step in the navigation menu.
+ * 
+ * @param nodeVisits the node visits for this step to look at to determine
+ * if anything special needs to occur.
+ */
+WebAppNode.prototype.processStudentWork = function(nodeVisits) {
+	if(nodeVisits != null && nodeVisits.length > 0) {
+		//the student has visited this step
+		this.setStatus('isVisited', true);
+	}
+	
+	if(this.isCompleted(nodeVisits)) {
+		//the student has completed this step
+		this.setStatus('isCompleted', true);
+	}
+};
+
+
+/**
+ * Determine whether the student has completed the step or not
+ * @param nodeVisits an array of node visits for the step
+ * @return whether the student has completed the step or not
+ */
+WebAppNode.prototype.isCompleted = function(nodeVisits) {
+	if(nodeVisits != null) {
+		
+		//loop through all the node visits
+		for(var x=0; x<nodeVisits.length; x++) {
+			//get a node visit
+			var nodeVisit = nodeVisits[x];
+			
+			if(nodeVisit != null) {
+				//get all the node states
+				var nodeStates = nodeVisit.nodeStates;
+				
+				if(nodeStates != null) {
+					
+					//loop through all the node states
+					for(var y=0; y<nodeStates.length; y++) {
+						
+						//get a node state
+						var nodeState = nodeStates[y];
+						
+						if(nodeState != null) {
+							//get the response object in the node state
+							var response = nodeState.response;
+							
+							if(response != null) {
+								//check if the isCompleted field is true
+								if(response.isCompleted) {
+									return true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return false;
+};
+
+
 /*
  * Add this node to the node factory so the vle knows it exists.
  * TODO: rename both occurrences of WebAppNode
