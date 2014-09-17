@@ -2975,7 +2975,7 @@ Grapher.prototype.hideGraphMessage = function() {
  * @param event the click event
  */
 Grapher.prototype.handleKeyDown = function(event) {
-	if(event.keyCode == 46) {
+	if(event.keyCode == 46 || event.keyCode == 8) {
 		//student pressed the backspace or delete key
 		
 		/*
@@ -2999,6 +2999,7 @@ Grapher.prototype.handleKeyDown = function(event) {
 			
 			this.lastPointClicked = null;
 		}
+		event.preventDefault();
 	}
 };
 
