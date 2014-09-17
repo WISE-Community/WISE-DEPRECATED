@@ -351,7 +351,7 @@ var scriptloader = function(){
                'vle/view/coreview.js',
                'vle/view/view_utils.js',               
                "vle/util/ConnectionManager.js",
-               "vle/session/SessionManager.js",
+               "vle/util/SessionManager.js",
                "vle/util/NotificationManager.js",
                'vle/content/content.js',
                'vle/node/common/nodehelpers.js',
