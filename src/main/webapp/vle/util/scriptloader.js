@@ -360,7 +360,7 @@ var scriptloader = function(){
                'vle/grading/Annotation.js',
 	           'vle/grading/Annotations.js',
                'vle/data/nodevisit.js',
-               'vle/hint/hintstate.js',
+               'vle/data/hintstate.js',
                'vle/data/StudentStatus.js'],
         core_min: ['vle/minified/core_min.js'],
 		student: [jqueryUISrc,
