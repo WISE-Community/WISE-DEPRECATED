@@ -29,7 +29,6 @@ var gradingScripts = [
 
 var dependencies = [
 	{child:"vle/node/brainstorm/BrainstormNode.js", parent:["vle/node/Node.js"]},
-	{child:"vle/jquery/tinymce/jscripts/tiny_mce/jquery.tinymce.js",parent:[scriptloader.jquerySrc]}
 ];
 
 var css = [
