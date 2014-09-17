@@ -278,19 +278,21 @@ SVGDRAW.prototype.save = function() {
 	var checkWork = this.checkWork;
 
 	//create a new svgdrawstate
-	var svgDrawState = new SVGDRAWSTATE(compressedData, null, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore);
+	var svgDrawState = new SVGDRAWSTATE(compressedData, null, null, null, null, checkWork, null);
 
-	//create the auto graded annotation value
-	var annotationValue = {
-		autoScore:autoScore,
-		maxAutoScore:maxAutoScore,
-		autoFeedback:autoFeedback,
-		autoFeedbackKey:autoFeedbackKey,
-		checkWork:checkWork
-	};
-	
-	//add the auto graded annotation value to the current annotation
-	this.view.addAutoGradedAnnotation(annotationValue);
+	if(checkWork) {
+		//create the auto graded annotation value
+		var annotationValue = {
+			autoScore:autoScore,
+			maxAutoScore:maxAutoScore,
+			autoFeedback:autoFeedback,
+			autoFeedbackKey:autoFeedbackKey,
+			checkWork:checkWork
+		};
+		
+		//add the auto graded annotation value to the current annotation
+		this.view.addAutoGradedAnnotation(annotationValue);
+	}
 	
 	//fire the event to push this state to the global view.states object
 	this.view.pushStudentWork(this.node.id, svgDrawState);

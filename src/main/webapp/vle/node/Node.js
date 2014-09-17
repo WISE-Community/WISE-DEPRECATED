@@ -48,7 +48,7 @@ function Node(nodeType, view){
 		                        {functionName:'mustCompleteXBefore', functionArgs:[]},
 		                        {functionName:'mustVisitXBefore', functionArgs:[]},
 		                        {functionName:'xMustHaveStatusY', functionArgs:['statusType', 'statusValue']},
-		                        {functionName:'mustHaveXIdeaBasketIdeasBeforeAdvancing', functionArgs:['ideaCount']}
+		                        {functionName:'mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancing', functionArgs:['ideaCount']}
 		                        ];
 	}
 	
@@ -305,26 +305,7 @@ Node.prototype.preloadContent = function(){
  * Renders itself to the specified content panel
  */
 Node.prototype.render = function(contentPanel, studentWork, disable) {
-	// fetch i18n files for this node if not yet fetched.
-	var nodeConstructor = NodeFactory.nodeConstructors[this.type];
-	if (nodeConstructor != null) {
-		var nodePrototype = nodeConstructor.prototype;
-		if (nodePrototype.i18nEnabled) {		
-			// check to see if we've already fetched i18n files for this node type
-			if (!view.i18n.supportedLocales[this.type]) {
-				view.i18n.supportedLocales[this.type] = nodePrototype.supportedLocales;
-				view.retrieveLocales(this.type,nodePrototype.i18nPath);								
-			} 
-			// if this node extends from another node (e.g. ChallengeQuestionNode, NoteNode, AnnotatorNode)
-			// also fetch i18n files of its parents.
-			if (nodePrototype.parent && nodePrototype.parent != Node.prototype && nodePrototype.parent.i18nType) {
-				if (!view.i18n.supportedLocales[nodePrototype.parent.i18nType]) {
-					view.i18n.supportedLocales[nodePrototype.parent.i18nType] = nodePrototype.parent.supportedLocales;
-					view.retrieveLocales(nodePrototype.parent.i18nType,nodePrototype.parent.i18nPath);								
-				} 
-			}
-		}							
-	}
+	this.fetchI18NFiles();	
 	
 	this.studentWork = studentWork;
 	
@@ -436,6 +417,31 @@ Node.prototype.render = function(contentPanel, studentWork, disable) {
 		}
 		this.view.postCurrentStep(this);
 	}
+};
+
+/**
+ * fetch i18n files for this node if not yet fetched.
+ */
+Node.prototype.fetchI18NFiles = function() {
+	var nodeConstructor = NodeFactory.nodeConstructors[this.type];
+	if (nodeConstructor != null) {
+		var nodePrototype = nodeConstructor.prototype;
+		if (nodePrototype.i18nEnabled) {		
+			// check to see if we've already fetched i18n files for this node type
+			if (!view.i18n.supportedLocales[this.type]) {
+				view.i18n.supportedLocales[this.type] = nodePrototype.supportedLocales;
+				view.retrieveLocales(this.type,nodePrototype.i18nPath);								
+			} 
+			// if this node extends from another node (e.g. ChallengeQuestionNode, NoteNode, AnnotatorNode)
+			// also fetch i18n files of its parents.
+			if (nodePrototype.parent && nodePrototype.parent != Node.prototype && nodePrototype.parent.i18nType) {
+				if (!view.i18n.supportedLocales[nodePrototype.parent.i18nType]) {
+					view.i18n.supportedLocales[nodePrototype.parent.i18nType] = nodePrototype.parent.supportedLocales;
+					view.retrieveLocales(nodePrototype.parent.i18nType,nodePrototype.parent.i18nPath);								
+				} 
+			}
+		}							
+	}	
 };
 
 /**

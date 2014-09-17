@@ -143,5 +143,5 @@ SessionManager.prototype.checkSession = function() {
 
 /* used to notify scriptloader that this script has finished loading */
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/session/SessionManager.js');
+	eventManager.fire('scriptLoaded', 'vle/util/SessionManager.js');
 };

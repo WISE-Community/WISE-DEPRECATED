@@ -2134,6 +2134,44 @@ View.prototype.getStepTermPlural = function(){
 };
 
 /**
+ * Checks whether a valid idea term has been set for current project. If it has,
+ * returns it; if not, returns the default term.
+ * 
+ */
+View.prototype.getIdeaTerm = function(){
+	var project = this.getProject(),
+		ideaTerm = view.getI18NString('idea');
+	if(this.getProjectMetadata() && this.getProjectMetadata().tools && this.getProjectMetadata().tools.hasOwnProperty('ideaManagerSettings')){
+		var imSettings = this.getProjectMetadata().tools.ideaManagerSettings;
+		if(imSettings.version > 1){
+			if(imSettings.hasOwnProperty('ideaTerm') && imSettings.ideaTerm.trim()){
+				ideaTerm = imSettings.ideaTerm;
+			}
+		}
+	}
+	return ideaTerm;
+};
+
+/**
+ * Checks whether a valid plural idea term has been set for current project. If it has,
+ * returns it; if not, returns the default term.
+ * 
+ */
+View.prototype.getIdeaTermPlural = function(){
+	var project = this.getProject(),
+		ideaTermPlural = view.getI18NString('idea_plural');
+	if(this.getProjectMetadata() && this.getProjectMetadata().tools && this.getProjectMetadata().tools.hasOwnProperty('ideaManagerSettings')){
+		var imSettings = this.getProjectMetadata().tools.ideaManagerSettings;
+		if(imSettings.version > 1){
+			if(imSettings.hasOwnProperty('ideaTermPlural') && imSettings.ideaTermPlural.trim()){
+				ideaTermPlural = imSettings.ideaTermPlural;
+			}
+		}
+	}
+	return ideaTermPlural;
+};
+
+/**
  * Checks whether a valid activity term has been set for current project. If it has,
  * returns it; if not, returns the default term.
  * 

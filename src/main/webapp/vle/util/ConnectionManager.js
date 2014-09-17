@@ -237,5 +237,5 @@ function PostConnection(priority, url, cArgs, handler, hArgs, em, fHandler, sync
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/io/ConnectionManager.js');
+	eventManager.fire('scriptLoaded', 'vle/util/ConnectionManager.js');
 };
