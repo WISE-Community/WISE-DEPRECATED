@@ -260,5 +260,5 @@ function createContent(url, contentBaseUrlParam){
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/content/content.js');
+	eventManager.fire('scriptLoaded', 'vle/model/content.js');
 }

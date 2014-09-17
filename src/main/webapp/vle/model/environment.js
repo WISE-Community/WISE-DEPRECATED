@@ -53,5 +53,5 @@ function createEnvironment(name, em){
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/environment/environment.js');
+	eventManager.fire('scriptLoaded', 'vle/model/environment.js');
 };

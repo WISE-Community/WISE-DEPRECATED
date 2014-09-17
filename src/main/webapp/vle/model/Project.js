@@ -2662,5 +2662,5 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/project/Project.js');
+	eventManager.fire('scriptLoaded', 'vle/model/Project.js');
 }

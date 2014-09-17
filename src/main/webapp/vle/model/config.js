@@ -70,5 +70,5 @@ View.prototype.getConfig = function() {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/config/config.js');
+	eventManager.fire('scriptLoaded', 'vle/model/config.js');
 };

@@ -620,5 +620,5 @@ View.prototype.parseUserAndClassInfo = function(contentObject) {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/user/userandclassinfo.js');
+	eventManager.fire('scriptLoaded', 'vle/model/userandclassinfo.js');
 };
