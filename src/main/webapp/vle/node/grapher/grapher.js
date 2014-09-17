@@ -1052,8 +1052,8 @@ Grapher.prototype.setupPlotHover = function() {
 						if (event.data.thisGrapher.currentGraphName != item.series.name && (typeof item.series.editable === "undefined" || item.series.editable) && pos.x > fivepctXaxis && pos.y > fivepctYaxis){
 							event.data.thisGrapher.currentGraphName = item.series.name;
 							item.series.checked = true;
-			        		if (typeof event.data.thisGrapher.dragPoint !== "undefined") event.data.thisGrapher.dragPoint.series.checked = false;
-			        		if (typeof event.data.thisGrapher.previousPoint !== "undefined") event.data.thisGrapher.previousPoint.series.checked = false;
+			        		if (typeof event.data.thisGrapher.dragPoint !== "undefined" && event.data.thisGrapher.dragPoint !== null && typeof event.data.thisGrapher.dragPoint.series !== "undefined" && event.data.thisGrapher.dragPoint.series !== null) event.data.thisGrapher.dragPoint.series.checked = false;
+			        		if (typeof event.data.thisGrapher.previousPoint !== "undefined" && event.data.thisGrapher.previousPoint !== null &&typeof event.data.thisGrapher.previousPoint.series !== "undefined" && event.data.thisGrapher.previousPoint.series !== null) event.data.thisGrapher.previousPoint.series.checked = false;
 							// update radio
 							$('#radio-'+event.data.thisGrapher.currentGraphName).prop('checked', true);
 						}
@@ -1149,8 +1149,8 @@ Grapher.prototype.setupPlotClick = function() {
 	    			if ((pos.x > fivepctXaxis && pos.y > fivepctYaxis) || item.series.name.indexOf("prediction") > -1 || event.data.thisGrapher.predictionLocked || !event.data.thisGrapher.createPrediction){
 	    				event.data.thisGrapher.currentGraphName = item.series.name;
 		        		item.series.checked = true;
-		        		if (typeof event.data.thisGrapher.dragPoint !== "undefined") event.data.thisGrapher.dragPoint.series.checked = false;
-		        		if (typeof event.data.thisGrapher.previousPoint !== "undefined") event.data.thisGrapher.previousPoint.series.checked = false;
+		        		if (typeof event.data.thisGrapher.dragPoint !== "undefined" && event.data.thisGrapher.dragPoint !== null && typeof event.data.thisGrapher.dragPoint.series !== "undefined" && event.data.thisGrapher.dragPoint.series !== null) event.data.thisGrapher.dragPoint.series.checked = false;
+		        		if (typeof event.data.thisGrapher.previousPoint !== "undefined" && event.data.thisGrapher.previousPoint !== null &&typeof event.data.thisGrapher.previousPoint.series !== "undefined" && event.data.thisGrapher.previousPoint.series !== null) event.data.thisGrapher.previousPoint.series.checked = false;
 						// update radio
 						$('#radio-'+event.data.thisGrapher.currentGraphName).prop('checked', true);
 	        		} else {
