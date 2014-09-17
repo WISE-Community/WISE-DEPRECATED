@@ -4,7 +4,6 @@
  * 
  * Note: the variables in this file are no longer used
  */
-var iconUrlOld = 'images/stepIcons/UCCP/';
 var nodeTypesOld = ['HtmlNode', 'BrainstormNode', 'FillinNode', 'MatchSequenceNode', 'MultipleChoiceNode', 
 		'NoteNode', 'OutsideUrlNode', 'OpenResponseNode', 'BlueJNode', 'DrawNode',
 		'DataGraphNode', 'MySystemNode', 'SVGDrawNode', 'MWNode', 'AssessmentListNode', 'ChallengeNode',

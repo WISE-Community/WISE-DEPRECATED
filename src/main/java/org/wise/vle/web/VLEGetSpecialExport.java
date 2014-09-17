@@ -625,7 +625,7 @@ public class VLEGetSpecialExport {
 				if(wiseBaseDir != null && wiseBaseDir != "") {
 					//get the paths of all the files we need to copy
 					Vector<String> filesToCopy = new Vector<String>();
-					filesToCopy.add(wiseBaseDir + "/vle/content/content.js");
+					filesToCopy.add(wiseBaseDir + "/vle/model/content.js");
 					filesToCopy.add(wiseBaseDir + "/vle/common/helperfunctions.js");
 					filesToCopy.add(wiseBaseDir + "/vle/jquery/js/flot/jquery.flot.js");
 					filesToCopy.add(wiseBaseDir + "/vle/jquery/js/flot/jquery.js");
