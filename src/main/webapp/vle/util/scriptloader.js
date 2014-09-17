@@ -506,7 +506,6 @@ var scriptloader = function(){
 		         jqueryUICss
 		         ],
 		student: ['vle/css/globalstyles.css'],
-		//wise: ["vle/css/wise/WISE_styles.css"],
 		vle: [],
     	navigation:[/*"vle/css/navigation.css"*/],
     	menu:[/*"vle/css/sdmenu.css"*/],
