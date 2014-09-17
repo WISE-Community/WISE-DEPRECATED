@@ -6,5 +6,5 @@ function MaxScore(nodeId, maxScoreValue) {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/grading/MaxScore.js');
+	eventManager.fire('scriptLoaded', 'vle/model/MaxScore.js');
 };

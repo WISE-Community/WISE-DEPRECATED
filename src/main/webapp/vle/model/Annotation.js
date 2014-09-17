@@ -82,5 +82,5 @@ Annotation.prototype.parseDataJSONObj = function(annotationJSONObj) {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/grading/Annotation.js');
+	eventManager.fire('scriptLoaded', 'vle/model/Annotation.js');
 };

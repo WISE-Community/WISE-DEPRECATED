@@ -136,4 +136,4 @@ Flags.prototype.getFlag = function(runId, nodeId, toWorkgroup, fromWorkgroup) {
 }
 
 //used to notify scriptloader that this script has finished loading
-scriptloader.scriptAvailable(scriptloader.baseUrl + "vle/grading/Flags.js");
+scriptloader.scriptAvailable(scriptloader.baseUrl + "vle/model/Flags.js");

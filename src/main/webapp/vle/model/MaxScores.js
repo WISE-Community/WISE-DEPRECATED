@@ -181,5 +181,5 @@ MaxScores.prototype.getMaxScoresSum = function(nodeIds) {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/grading/MaxScores.js');
+	eventManager.fire('scriptLoaded', 'vle/model/MaxScores.js');
 };

@@ -24,8 +24,8 @@ var studentVLEScripts = [
 	'vle/jquery/js/jsonplugin.js',
 	'vle/node/openresponse/openresponsestate.js',
 	'vle/node/openresponse/openresponse.js',
-	'vle/grading/Annotation.js',
-	'vle/grading/Annotations.js',
+	'vle/model/Annotation.js',
+	'vle/model/Annotations.js',
 	'vle/data/nodevisit.js',
 	'vle/js/tinymce4/js/tinymce/tinymce.min.js'
 ];

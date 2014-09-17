@@ -121,4 +121,4 @@ Flag.prototype.getDataXML = function() {
 }
 
 //used to notify scriptloader that this script has finished loading
-scriptloader.scriptAvailable(scriptloader.baseUrl + "vle/grading/Flag.js");
+scriptloader.scriptAvailable(scriptloader.baseUrl + "vle/model/Flag.js");
