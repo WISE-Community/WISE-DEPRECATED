@@ -5,16 +5,13 @@
 <meta http-equiv="X-UA-Compatible" content="chrome=1" /> 
 <script type='text/javascript' src='events/eventmanager.js'></script>
 <script type="text/javascript" src="util/scriptloader.js"></script>
-<script type='text/javascript' src='author/pac.js'></script>
 
 <link rel="shortcut icon" href="images/favicon.ico"></link>
-<link rel='stylesheet' media='screen' type='text/css' href="author/css/pac.css"></link>
 <script type='text/javascript'>
 /*
  * Loads scripts when body is loaded 
  */
 function loaded(){
-	//initializeLoading();
 	scriptloader.bootstrap(this, bootstrapListener);
 };
 
@@ -762,15 +759,7 @@ browsers that don't support iframes goes here.] </iframe>
 <div id='overlay'></div>
 
 <div id='coverDiv'>
-	<!--<div id='coverPlace' style='height:40%;'></div>0-->
 	<div id='coverTextDiv'>WISE Authoring Tool is Loading</div>
-	<!--<div id='coverTextUpdateDiv'></div>
-	<br/>
-	<div id='coverImgDiv'>
-		<div id='fullDotsDiv' class='fullDots'></div>
-		<div id='pacDiv' class='pacOpen'></div>
-		<div id='flatDotsDiv' class='flatDots'></div>
-	</div>-->
 	<div><img src='images/loading.gif'/></div>
 </div>
 
