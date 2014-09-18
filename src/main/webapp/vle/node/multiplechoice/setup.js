@@ -68,7 +68,7 @@ scriptloader.addScriptToComponent('studentwork_min', gradingMinScripts);
 scriptloader.addDependencies(dependencies);
 scriptloader.addCssToComponent('multiplechoice', css);
 
-scriptloader.addCssToComponent('author', 'vle/css/authoring/author_multiplechoice.css');
+scriptloader.addCssToComponent('author', 'vle/node/multiplechoice/author_multiplechoice.css');
 
 componentloader.addNodeClasses('MultipleChoiceNode', multipleChoiceNodeClasses);
 
