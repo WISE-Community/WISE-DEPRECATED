@@ -359,9 +359,9 @@ var scriptloader = function(){
 		       'vle/node/NodeUtils.js',
                'vle/model/Annotation.js',
 	           'vle/model/Annotations.js',
-               'vle/data/nodevisit.js',
-               'vle/data/hintstate.js',
-               'vle/data/StudentStatus.js'],
+               'vle/model/nodevisit.js',
+               'vle/model/hintstate.js',
+               'vle/model/StudentStatus.js'],
         core_min: ['vle/minified/core_min.js'],
 		student: [jqueryUISrc,
     		      'vle/jquery/js/jquery.ui.touch-punch.min.js',
@@ -447,8 +447,8 @@ var scriptloader = function(){
 		shortcuts: ['vle/util/shortcutmanager.js'],
 		ddMenu: ['vle/common/dropdown.js'],
 		topMenu: ['vle/view/vle/vleview_topmenu.js'],
-		studentwork: ['vle/data/vlestate.js',
-		              'vle/data/nodevisit.js'
+		studentwork: ['vle/model/vlestate.js',
+		              'vle/model/nodevisit.js'
 		              ],
 		studentwork_min: ['vle/minified/studentwork_min.js'
 		    		              ],		   

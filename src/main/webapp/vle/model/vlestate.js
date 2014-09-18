@@ -365,5 +365,5 @@ VLE_STATE.prototype.getNodeVisitById = function(id) {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/data/vlestate.js');
+	eventManager.fire('scriptLoaded', 'vle/model/vlestate.js');
 };

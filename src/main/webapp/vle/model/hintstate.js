@@ -44,5 +44,5 @@ HINTSTATE.prototype.getStudentWork = function() {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/data/hintstate.js');
+	eventManager.fire('scriptLoaded', 'vle/model/hintstate.js');
 };

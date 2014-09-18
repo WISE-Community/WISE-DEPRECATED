@@ -128,5 +128,5 @@ NODE_VISIT.prototype.getLatestWork = function() {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/data/nodevisit.js');
+	eventManager.fire('scriptLoaded', 'vle/model/nodevisit.js');
 };

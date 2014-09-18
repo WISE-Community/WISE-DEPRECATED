@@ -15,7 +15,7 @@ var studentVLEScripts = [
 	'vle/common/helperfunctions.js',
 	'vle/node/brainstorm/brainstorm.js',
 	'vle/node/brainstorm/brainstormstate.js',
-	'vle/data/nodevisit.js',
+	'vle/model/nodevisit.js',
 	'vle/js/tinymce4/js/tinymce/tinymce.min.js'
 ];
 

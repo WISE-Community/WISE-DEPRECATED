@@ -52,5 +52,5 @@ function StudentAlertable(alertLevel, nodeId, type, value, stepNumberAndTitle, n
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/data/StudentStatus.js');
+	eventManager.fire('scriptLoaded', 'vle/model/StudentStatus.js');
 };

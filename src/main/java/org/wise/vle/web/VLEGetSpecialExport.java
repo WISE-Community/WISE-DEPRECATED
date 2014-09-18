@@ -630,7 +630,7 @@ public class VLEGetSpecialExport {
 					filesToCopy.add(wiseBaseDir + "/vle/jquery/js/flot/jquery.flot.js");
 					filesToCopy.add(wiseBaseDir + "/vle/jquery/js/flot/jquery.js");
 					filesToCopy.add(wiseBaseDir + "/vle/node/Node.js");
-					filesToCopy.add(wiseBaseDir + "/vle/data/nodevisit.js");
+					filesToCopy.add(wiseBaseDir + "/vle/model/nodevisit.js");
 					filesToCopy.add(wiseBaseDir + "/vle/node/sensor/sensor.js");
 					filesToCopy.add(wiseBaseDir + "/vle/node/sensor/SensorNode.js");
 					filesToCopy.add(wiseBaseDir + "/vle/node/sensor/sensorstate.js");
