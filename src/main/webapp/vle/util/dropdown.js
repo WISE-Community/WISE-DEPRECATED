@@ -62,5 +62,5 @@ function ddSlide(c,d){
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/common/dropdown.js');
+	eventManager.fire('scriptLoaded', 'vle/util/dropdown.js');
 };

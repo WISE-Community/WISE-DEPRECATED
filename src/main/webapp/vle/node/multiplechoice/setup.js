@@ -12,7 +12,7 @@ var studentVLEScripts = [
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
 	'vle/node/common/nodehelpers.js',
-	'vle/common/helperfunctions.js',
+	'vle/util/helperfunctions.js',
 	'vle/jquery/js/jsonplugin.js',
 	'vle/node/multiplechoice/multiplechoicestate.js',
 	'vle/node/multiplechoice/challengestate.js',

@@ -347,7 +347,7 @@ var scriptloader = function(){
   		bootstrap_min: ['vle/minified/bootstrap_min.js'],
   		setup: [],
         core: ['vle/view/i18n/view_i18n.js',
-               'vle/common/helperfunctions.js',
+               'vle/util/helperfunctions.js',
                'vle/view/coreview.js',
                'vle/view/view_utils.js',               
                "vle/util/ConnectionManager.js",
@@ -445,7 +445,7 @@ var scriptloader = function(){
 		customcontextmenu: ['vle/util/customcontextmenu.js'],
         outsideurl: [],
 		shortcuts: ['vle/util/shortcutmanager.js'],
-		ddMenu: ['vle/common/dropdown.js'],
+		ddMenu: ['vle/util/dropdown.js'],
 		topMenu: ['vle/view/vle/vleview_topmenu.js'],
 		studentwork: ['vle/model/vlestate.js',
 		              'vle/model/nodevisit.js'
