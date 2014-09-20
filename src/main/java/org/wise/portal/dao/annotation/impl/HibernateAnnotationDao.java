@@ -194,9 +194,12 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
         Annotation result = null;
         
         Criteria criteria = session.createCriteria(Annotation.class)
-		.add( Restrictions.eq("fromUser", fromUserInfo))
 		.add( Restrictions.eq("toUser", toUserInfo))
 		.add( Restrictions.eq("type", type));
+        
+        if(fromUserInfo != null) {
+        	criteria.add( Restrictions.eq("fromUser", fromUserInfo));
+        }
         
         if(stepWork != null) {
         	criteria.add( Restrictions.eq("stepWork", stepWork));

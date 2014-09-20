@@ -537,6 +537,60 @@ SVGDrawNode.prototype.getBase64Image = function(nodeState) {
 	return base64Image;
 }
 
+/**
+ * Function that checks if this step should show the autoScore to the student
+ * when the showNodeAnnotations() function is called.
+ */
+SVGDrawNode.prototype.showAutoScore = function() {
+	var result = true;
+	
+	//get the step content
+	var contentJSON = this.content.getContentJSON();
+	
+	if(contentJSON != null) {
+		//get the autoScoring object if it exists
+		var autoScoring = contentJSON.autoScoring;
+		
+		if(autoScoring != null) {
+			//get whether we should display the auto score to the student
+			var autoScoringDisplayScoreToStudent = autoScoring.autoScoringDisplayScoreToStudent;
+			
+			if(autoScoringDisplayScoreToStudent != null) {
+				result = autoScoringDisplayScoreToStudent;
+			}
+		}
+	}
+	
+	return result;
+};
+
+/**
+ * Function that checks if this step should show the autoFeedback to the student
+ * when the showNodeAnnotations() function is called.
+ */
+SVGDrawNode.prototype.showAutoFeedback = function() {
+	var result = true;
+	
+	//get the step content
+	var contentJSON = this.content.getContentJSON();
+	
+	if(contentJSON != null) {
+		//get the autoScoring object if it exists
+		var autoScoring = contentJSON.autoScoring;
+		
+		if(autoScoring != null) {
+			//get whether we should display the auto feedback to the student
+			var autoScoringDisplayFeedbackToStudent = autoScoring.autoScoringDisplayFeedbackToStudent;
+			
+			if(autoScoringDisplayFeedbackToStudent != null) {
+				result = autoScoringDisplayFeedbackToStudent;
+			}
+		}
+	}
+	
+	return result;
+};
+
 NodeFactory.addNode('SVGDrawNode', SVGDrawNode);
 	
 //used to notify scriptloader that this script has finished loading

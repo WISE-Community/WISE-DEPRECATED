@@ -5,18 +5,6 @@
  * state of the type, passing in the arguments.
  */
 View.prototype.pushStudentWork = function(nodeId, nodeState) {
-	//check if there is an annotation value we for the current node state
-	if(this.currentAnnotationValue != null) {
-		//there is an annotation value so we will set the node state id
-		this.currentAnnotationValue.nodeStateId = nodeState.timestamp;
-		
-		/*
-		 * we have set the node state id so we no longer need a handle
-		 * to the annotation value
-		 */ 
-		this.currentAnnotationValue = null;
-	}
-	
 	this.model.pushStudentWorkToLatestNodeVisit(nodeId, nodeState);
 };
 
@@ -108,6 +96,16 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 	} else {
 		url = "postdata.html";
 	};
+	
+	var annotationString = null;
+	
+	//get the auto graded annotation associated with this node visit if it exists
+	var autoGradedAnnotation = this.getNodeVisitAutoGradedAnnotation(currentNodeVisit);
+	
+	if(autoGradedAnnotation != null) {
+		//we have an auto graded annotation so we will convert it to a string
+		annotationString = encodeURIComponent($.stringify(autoGradedAnnotation));
+	}
 
 	//obtain the json string representation of the node visit
 	var nodeVisitData = encodeURIComponent($.stringify(currentNodeVisit));
@@ -120,13 +118,20 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 		this.addToPOSTInProgressArray(currentNodeVisit);
 
 		if(this.getUserAndClassInfo() != null) {
-			
-			this.connectionManager.request('POST', 3, url, 
-					{id: stepWorkId, 
+			var postParams = {
+				id: stepWorkId, 
 				runId: this.getConfig().getConfigParam('runId'), 
 				userId: this.getUserAndClassInfo().getWorkgroupId(), 
 				data: nodeVisitData
-					}, 
+			};
+			
+			if(annotationString != null) {
+				//add the annotation to the params so it will be saved to the server
+				postParams.annotation = annotationString;
+			}
+			
+			this.connectionManager.request('POST', 3, url, 
+					postParams, 
 					this.processPostResponse, 
 					{vle: this, 
 					 nodeVisit:currentNodeVisit, 
@@ -135,12 +140,20 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 					 additionalData:additionalData},
 					this.processPostFailResponse);
 		} else {
-			this.connectionManager.request('POST', 3, url, 
-					{id: stepWorkId, 
+			var postParams = {
+				id: stepWorkId, 
 				runId: this.getConfig().getConfigParam('runId'), 
-				userId: '-2', 
+				userId: '-2',
 				data: prepareDataForPost(diff)
-					}, 
+			};
+			
+			if(autoGradedAnnotation != null) {
+				//add the annotation to the params so it will be saved to the server
+				postParams.annotation = autoGradedAnnotation;
+			}
+			
+			this.connectionManager.request('POST', 3, url, 
+					postParams, 
 					this.processPostResponse,
 					null,
 					this.processPostFailResponse);
@@ -191,15 +204,6 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback,
 		//increment the counter
 		this.fakeStepWorkIdCounter++;
 		
-		//check if there is an auto graded annotation for the current student work
-		if(this.currentAutoGradedAnnotation != null) {
-			/*
-			 * clear the handle to the annotation since we don't need a handle
-			 * to it anymore
-			 */
-			this.currentAutoGradedAnnotation = null;
-		}
-		
 		return;
 	}
 
@@ -235,18 +239,17 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback,
 		additionalData = {vle: this, nodeVisit:nodeVisit};
 	}
 	
-	//check if there is an auto graded annotation for the current student work that needs to be saved
-	if(this.currentAutoGradedAnnotation != null) {
-		//there is an auto graded annotation that we need to save
+	var annotationString = null;
+	
+	//get the auto graded annotation associated with this node visit if it exists
+	var autoGradedAnnotation = this.getNodeVisitAutoGradedAnnotation(nodeVisit);
+	
+	if(autoGradedAnnotation != null) {
+		//we have an auto graded annotation so we will convert it to a string
+		annotationString = encodeURIComponent($.stringify(autoGradedAnnotation));
 		
-		//set the annotation into the post student data params
-		postStudentDataUrlParams.annotation = encodeURIComponent($.stringify(this.currentAutoGradedAnnotation));
-		
-		/*
-		 * clear the handle to the annotation since we don't need a handle
-		 * to it once it's saved
-		 */
-		this.currentAutoGradedAnnotation = null;
+		//add the annotation to the params so it will be saved to the server
+		postStudentDataUrlParams.annotation = annotationString;
 	}
 	
 	// Only POST this nodevisit if this nodevisit is not currently being POSTed to the server.
@@ -335,6 +338,7 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 	
 	// if cRaterItemId is in the response and it was a CRater submit, make a request to GET the
 	// CRater Annotation
+	/*
 	if(cRaterItemId != null && isCRaterSubmit != null && isCRaterSubmit) {
 		var nodeVisit = args.nodeVisit;
 		var latestState = nodeVisit.getLatestState();
@@ -342,6 +346,7 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 
 		args.vle.getCRaterResponse(id, nodeStateTimestamp, cRaterItemType);
 	}
+	*/
 
 	if(args.vle.isRealTimeEnabled) {
 		//we will send the student status to the teacher

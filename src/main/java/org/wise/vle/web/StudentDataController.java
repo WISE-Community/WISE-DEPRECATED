@@ -844,7 +844,7 @@ public class StudentDataController {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				
+				/*
 				if(cRaterItemId != null) {
 					// Send back the cRater item id to the student in the response
 					// student VLE would get this cRaterItemId and make a GET to
@@ -869,7 +869,7 @@ public class StudentDataController {
 						}
 					}
 				}
-				
+				*/
 				try {
 					//if this post is a peerReviewSubmit, add an entry into the peerreviewwork table
 					if(VLEDataUtils.isSubmitForPeerReview(nodeVisitJSON)) {
@@ -915,28 +915,8 @@ public class StudentDataController {
 						annotationJSONObject.put("stepWorkId", stepWork.getId());
 						annotationJSONObject.put("postTime", postTime.getTime());
 						
-						//get the to user
-						UserInfo toUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(toWorkgroup);
-						UserInfo fromUserInfo = null;
-						
-						if(fromWorkgroup != null && fromWorkgroup != -1) {
-							//get the from user 
-							fromUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(toWorkgroup);
-						}
-						
-						//create the annotation object
-						Annotation annotation = new Annotation(type);
-						
-						//set the fields in the annotation object
-						annotation.setRunId(annotationRunId);
-						annotation.setToUser(toUserInfo);
-						annotation.setFromUser(fromUserInfo);
-						annotation.setStepWork(stepWork);
-						annotation.setData(annotationJSONObject.toString());
-						annotation.setPostTime(postTime);
-						
-						//save the annotation object to the database
-						vleService.saveAnnotation(annotation);
+						//save the annotation JSON object
+						saveAnnotationObject(annotationRunId, toWorkgroup, fromWorkgroup, type, annotationJSONObject, stepWork, postTime);
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -1016,4 +996,65 @@ public class StudentDataController {
 		}
 		return node;
 	}
+	
+	/**
+	 * Save the annotation. If the annotation does not exist we will create a new annotation.
+	 * If the annotation already exists we will overwrite the data field in the existing
+	 * annotation.
+	 * @param runId the run id
+	 * @param toWorkgroup the to workgroup id
+	 * @param fromWorkgroup the from workgroup id
+	 * @param type the annotation type
+	 * @param annotationValue the JSONObject we will save into the data field
+	 * @param stepWork the step work object this annotation is related to
+	 * @param postTime the time this annotation was posted
+	 * @return the annotation
+	 */
+	private Annotation saveAnnotationObject(Long runId, Long toWorkgroup, Long fromWorkgroup, String type, JSONObject annotationValue, StepWork stepWork, Timestamp postTime) {
+		Annotation annotation = null;
+		
+		//get the to user
+		UserInfo toUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(toWorkgroup);
+		
+		//get the from user
+		UserInfo fromUserInfo = null;
+		if(fromWorkgroup != null && fromWorkgroup != -1) {
+			fromUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(toWorkgroup);
+		}
+		
+		//check if there is an existing annotation
+		annotation = vleService.getAnnotationByFromUserInfoToUserInfoStepWorkType(fromUserInfo, toUserInfo, stepWork, type);
+		
+		if(annotation == null) {
+			//the annotation for the fromUser, toUser, StepWork, and type does not exist so we will create one
+			
+			//create the new annotation
+			annotation = new Annotation(type);
+			
+			//set the fields in the annotation object
+			annotation.setRunId(runId);
+			annotation.setToUser(toUserInfo);
+			annotation.setFromUser(fromUserInfo);
+			annotation.setStepWork(stepWork);
+			annotation.setData(annotationValue.toString());
+			annotation.setPostTime(postTime);
+			
+			//save the annotation object to the database
+			vleService.saveAnnotation(annotation);
+		} else {
+			//the annotation for the fromUser, toUser, StepWork, and type already exists so we will overwrite the data
+
+			//update the data
+			annotation.setData(annotationValue.toString());
+			
+			//update the post time
+			annotation.setPostTime(postTime);
+			
+			//save the annotation
+			vleService.saveAnnotation(annotation);
+		}
+		
+		return annotation;
+	}
+	
 }

@@ -314,4 +314,19 @@ public class Project {
 		}
 		return nodesThatHaveTagMapsByTagNameAndTagFunctionName;
 	}
+	
+	/**
+	 * Get the node for the given node id
+	 * @param nodeId the node id
+	 * @return the node object from the project file
+	 */
+	public JSONObject getNodeByNodeId(String nodeId) {
+		JSONObject node = null;
+		
+		if(nodeId != null) {
+			node = nodeIdToNode.get(nodeId);
+		}
+		
+		return node;
+	}
 }
