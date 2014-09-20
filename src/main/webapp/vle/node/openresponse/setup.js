@@ -20,13 +20,13 @@ var studentVLEScripts = [
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
 	'vle/node/common/nodehelpers.js',
-	'vle/common/helperfunctions.js',
+	'vle/util/helperfunctions.js',
 	'vle/jquery/js/jsonplugin.js',
 	'vle/node/openresponse/openresponsestate.js',
 	'vle/node/openresponse/openresponse.js',
-	'vle/grading/Annotation.js',
-	'vle/grading/Annotations.js',
-	'vle/data/nodevisit.js',
+	'vle/model/Annotation.js',
+	'vle/model/Annotations.js',
+	'vle/model/nodevisit.js',
 	'vle/js/tinymce4/js/tinymce/tinymce.min.js'
 ];
 

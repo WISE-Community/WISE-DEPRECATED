@@ -129,7 +129,6 @@ table.wisetable td.emph {
 	font-weight:bold;
 	position:relative;
 	background: none repeat scroll 0 0 #333333;
-	/*background:url("../images/message_bg.png") repeat scroll center center #2e2e2e;*/
 }
 
 #vle_messages .message span.content {

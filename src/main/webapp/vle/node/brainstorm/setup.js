@@ -12,10 +12,10 @@ var studentVLEScripts = [
     scriptloader.jqueryUISrc,
 	'vle/jquery/js/jsonplugin.js',
 	'vle/node/common/nodehelpers.js',
-	'vle/common/helperfunctions.js',
+	'vle/util/helperfunctions.js',
 	'vle/node/brainstorm/brainstorm.js',
 	'vle/node/brainstorm/brainstormstate.js',
-	'vle/data/nodevisit.js',
+	'vle/model/nodevisit.js',
 	'vle/js/tinymce4/js/tinymce/tinymce.min.js'
 ];
 

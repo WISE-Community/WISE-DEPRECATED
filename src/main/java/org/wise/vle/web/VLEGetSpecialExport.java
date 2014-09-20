@@ -626,11 +626,11 @@ public class VLEGetSpecialExport {
 					//get the paths of all the files we need to copy
 					Vector<String> filesToCopy = new Vector<String>();
 					filesToCopy.add(wiseBaseDir + "/vle/model/content.js");
-					filesToCopy.add(wiseBaseDir + "/vle/common/helperfunctions.js");
+					filesToCopy.add(wiseBaseDir + "/vle/util/helperfunctions.js");
 					filesToCopy.add(wiseBaseDir + "/vle/jquery/js/flot/jquery.flot.js");
 					filesToCopy.add(wiseBaseDir + "/vle/jquery/js/flot/jquery.js");
 					filesToCopy.add(wiseBaseDir + "/vle/node/Node.js");
-					filesToCopy.add(wiseBaseDir + "/vle/data/nodevisit.js");
+					filesToCopy.add(wiseBaseDir + "/vle/model/nodevisit.js");
 					filesToCopy.add(wiseBaseDir + "/vle/node/sensor/sensor.js");
 					filesToCopy.add(wiseBaseDir + "/vle/node/sensor/SensorNode.js");
 					filesToCopy.add(wiseBaseDir + "/vle/node/sensor/sensorstate.js");
