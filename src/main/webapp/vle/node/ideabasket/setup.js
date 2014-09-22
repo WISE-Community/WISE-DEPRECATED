@@ -69,6 +69,7 @@ var dependencies = [
 	 * 'vle/node/quiz/QuizNode.js'
 	 */
 	{child:"vle/node/ideabasket/IdeaBasketNode.js", parent:["vle/node/Node.js"]},
+	{child:"vle/node/ideabasket/authorview_ideaBasket.js", parent:["vle/view/authoring/authorview_authoringnode.js"]},
 	{child:"vle/jquery/js/jquery.tablesorter.min.js", parent:[scriptloader.jquerySrc]},
 	{child:"vle/jquery/js/jquery-validate/jquery.validate.pack.js", parent:[scriptloader.jquerySrc]}
 ];

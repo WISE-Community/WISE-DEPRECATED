@@ -2685,6 +2685,44 @@ IdeaBasket.prototype.processTagMaps = function() {
 	return returnObject;
 };
 
+/**
+ * Get the number of ideas that were created on a specific step
+ * @param nodeId the node id of the step
+ * @return the number of ideas created on the given step
+ */
+IdeaBasket.prototype.getNumberOfIdeasByNodeId = function(nodeId) {
+	var count = 0;
+	
+	if(nodeId != null) {
+		//get the ideas from the idea basket
+		var ideas = this.ideas;
+		
+		if(ideas != null) {
+			//loop through all the ideas
+			for(var x=0; x<ideas.length; x++) {
+				//get an idea
+				var idea = ideas[x];
+				
+				if(idea != null) {
+					//get the node id the idea was created on
+					var ideaNodeId = idea.nodeId;
+					
+					//check if the idea was created on the given step
+					if(nodeId == ideaNodeId) {
+						/*
+						 * the idea was created on the step we are looking for so we
+						 * will increment the counter
+						 */
+						count++;
+					}
+				}
+			}
+		}
+	}
+	
+	return count;
+};
+
 /* used to notify scriptloader that this script has finished loading */
 if(typeof eventManager !== 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/ideaBasket/basket.js');

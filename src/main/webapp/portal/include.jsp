@@ -1,12 +1,9 @@
 <!-- 
- * Copyright (c) 2013 Regents of the University of California (Regents). Created
+ * Copyright (c) 2008-2014 Regents of the University of California (Regents). Created
  * by WISE, Graduate School of Education, University of California, Berkeley.
  *
- * This software is distributed under the GNU Lesser General Public License, v3,
- * or (at your option) any later version. To receive a copy of the GNU Lesser
- * General Public License, visit http://www.gnu.org/licenses/lgpl.html or write
- * to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA 02110-1301 USA.
+ * This software is distributed under the GNU General Public License, v3,
+ * or (at your option) any later version.
  *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its

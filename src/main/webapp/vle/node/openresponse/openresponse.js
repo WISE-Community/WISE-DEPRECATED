@@ -193,12 +193,10 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 				
 				if (checkAnswer || !(this.content.cRater.displayCRaterScoreToStudent || this.content.cRater.displayCRaterFeedbackToStudent)) {
 					/*
-					 * set the cRaterItemId into the node state if the student has clicked
-					 * check answer or if we are not displaying the score or feedback to
-					 * the student in which case we always want to CRater submit because
+					 * if we are not displaying the score or feedback to
+					 * the student we always want to CRater submit because
 					 * we are not displaying the check answer button to them.
 					 */
-					orState.isCRaterSubmit = true;
 					checkAnswer = true; // we want to also check the answer immediately, just not show the score or feedback.
 				}
 				
@@ -281,216 +279,8 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 				//set the cRaterItemId into the node state if this step is a CRater item
 				if(this.content.cRater != null && this.content.cRater.cRaterItemId != null
 						&& this.content.cRater.cRaterItemId != '') {
-					
-					//the message to display while we are auto grading the student's work
-					var please_wait_we_are_checking_your_work = this.view.getI18NString('please_wait_we_are_checking_your_work', 'OpenResponseNode');
-					var seconds = this.view.getI18NString('seconds', 'OpenResponseNode');
-					
-					/*
-					 * lock the screen so the student doesn't move to another step before
-					 * they see the CRater feedback. display a waiting spinner and a message
-					 * to the student on the wait screen.
-					 */
-					var waitTime = 15;
-					var lockScreenObj = {};
-					lockScreenObj.shareType = 'TeacherMessage';
-					lockScreenObj.shareObject = '<p align="center"><img src="images/ajax-loader.gif" /> ' + please_wait_we_are_checking_your_work + ' ' + waitTime + ' ' + seconds + '</p>';
-					eventManager.fire('lockScreenAndShareWithClass', lockScreenObj);
-					
-					/*
-					 * create a timeout to unlock the screen in case it takes too long 
-					 * for the CRater request to respond
-					 */
-					setTimeout("eventManager.fire('unlockScreenEvent')", waitTime * 1000);
-					
-					/*
-					 * post the current node visit to the db immediately without waiting
-					 * for the student to exit the step.
-					 */
-					this.node.save(orState);
-					
-					// If we're in preview mode, make a special case to invoke cRater.
-					// This will bypass the normal data-saving method when cRater is invoked in run mode.
-					// We won't save student response in the db, and we won't use annotations to represent&display crater results.
-					if (this.view.getConfig().getConfigParam('mode') == "portalpreview") {
-						var cRaterItemType = this.content.cRater.cRaterItemType;
-						var cRaterItemId = this.content.cRater.cRaterItemId;
-						var cRaterRequestType = "scoring";
-						var cRaterResponseId = new Date().getTime();
-						var studentData = response;
-						
-						var successCallback = function(responseText, responseJSON, successArgs) {
-							var view = successArgs.view;
-							var nodeId = successArgs.nodeId;
-							var or = successArgs.or;
-							var studentData = successArgs.studentData;
-							var currentNode = view.getProject().getNodeById(nodeId);  //get the node							
-							var cRaterItemId = successArgs.cRaterItemId;    //get the crater item id e.g. "SPOON", "GREENROOF-II"
-							var cRaterItemType = successArgs.cRaterItemType; //get the crater item type e.g. 'CRATER' or 'HENRY'
-							var orState = successArgs.orState;
-							
-							if (responseJSON != null) {
-								try {
-									var cRaterAnnotationJSON = JSON.parse(responseJSON);
-									
-									//var cRaterAnnotation = Annotation.prototype.parseDataJSONObj(annotationJSON);
-									var runId = "";
-									var toWorkgroup = null;
-									var fromWorkgroup = -1;
-									var type = "cRater";
-									var value = [
-									        {
-									        	"nodeStateId": null,
-									        	"studentResponse": {
-									        		"timestamp": null,
-									        		"response": studentData,
-									        		"isCRaterSubmit": true,
-									        		"cRaterItemType": cRaterItemType,
-									        		"cRaterItemId": cRaterItemId,
-									        		"type": "or"
-									        	},
-									        	"score": cRaterAnnotationJSON.score,
-									            "cRaterResponse": null,
-									            "concepts": cRaterAnnotationJSON.concepts
-									        }];
-									var postTime = null;
-									var stepWorkId = null;
-
-									var cRaterAnnotation = new Annotation(runId, nodeId, toWorkgroup, fromWorkgroup, type, value, postTime, stepWorkId);
-									
-									//add the CRater annotation to our local collection of annotations
-									if (typeof view.getAnnotations() === 'undefined') {
-										view.setAnnotations(new Annotations());
-									}
-									view.getAnnotations().updateOrAddAnnotation(cRaterAnnotation);
-									
-									// display feedback immediately, if specified in the content
-									// check the step content to see if we need to display the CRater feedback to the student.
-									var cRaterJSON = view.getProject().getNodeById(nodeId).content.getContentJSON().cRater;
-
-									var displayCRaterScoreToStudent = cRaterJSON.displayCRaterScoreToStudent;
-									var displayCRaterFeedbackToStudent = cRaterJSON.displayCRaterFeedbackToStudent;
-									
-									if (displayCRaterScoreToStudent || displayCRaterFeedbackToStudent) {
-										//we will display the score or feedback (or both) to the student
-
-										//get the score and concepts the student received
-										var score = cRaterAnnotationJSON.score;
-										var concepts = cRaterAnnotationJSON.concepts;
-
-										// now find the feedback that the student should see
-										var scoringRules = cRaterJSON.cRaterScoringRules;
-
-										//get the feedback for the given concepts the student satisfied
-										var feedbackTextObject = view.getCRaterFeedback(scoringRules, concepts, score, cRaterItemType);
-
-										//get the feedback text and feedback id
-										var feedbackText = feedbackTextObject.feedbackText;
-										var feedbackId = feedbackTextObject.feedbackId;
-
-										//save the crater feedback and score into the node state
-										orState.cRaterFeedbackText = feedbackText;
-										orState.cRaterFeedbackId = feedbackId;
-										orState.cRaterScore = score;
-										
-										var hasScore = false;
-										var hasFeedback = false;
-										
-										var cRaterFeedbackStringSoFar = "<span class='nodeAnnotationsCRater'>";
-
-										if(displayCRaterScoreToStudent) {
-											if(score != null && score != "") {
-												hasScore = true;
-											}
-										}
-
-										if(displayCRaterFeedbackToStudent) {
-											if(feedbackText != null && feedbackText != "") {
-												hasFeedback = true;
-											}
-										}
-
-										if(hasScore || hasFeedback) {
-											// display the feedback button
-											view.displayNodeAnnotation(nodeId);
-											
-											//popup the message to the student
-											eventManager.fire("showNodeAnnotations",[nodeId]);
-										}
-										
-										// handle rewrite/revise
-										if(score != null) {
-											//get the student action for the given score
-											var studentAction = or.getStudentAction(score);
-											
-											if(studentAction == null) {
-												//do nothing
-											} else if(studentAction == 'rewrite') {
-												/*
-												 * move the current work to the previous work response box
-												 * because we want to display the previous work to the student
-												 * and have them re-write another response after they
-												 * receive the immediate CRater feedback
-												 */
-												or.showPreviousWorkThatHasAnnotation(studentData);
-												
-												//clear the response box so they will need to write a new response
-												$('#responseBox').val('');
-											} else if(studentAction == 'revise') {
-												/*
-												 * the student will need to revise their work so we will hide the
-												 * previous response display
-												 */
-												$('#previousResponseDisplayDiv').hide();
-											}
-										}
-									}
-								} catch(err) {
-									/*
-									 * failed to parse JSON. this can occur if the item id is invalid which
-									 * causes an error to be returned from the server instead of the JSON
-									 * that we expect.
-									 */
-								}
-							}
-							
-							/*
-							 * unlock the screen since we previously locked it to make the student wait
-							 * for the feedback to be displayed
-							 */
-							eventManager.fire('unlockScreenEvent');
-						};
-						var failureCallback = function(failureType, failureArgs) {
-							// a boo-boo happened getting crater in preview mode.
-							alert(failureArgs.view.getI18NStringWithParams("error_msg_with_reason", ["CRATER SCORE PREVIEW"]));
-							
-							/*
-							 * unlock the screen since we previously locked it to make the student wait
-							 * for the feedback to be displayed
-							 */
-							eventManager.fire('unlockScreenEvent');
-						}
-						
-						var callbackData = {
-								view:this.view,
-								nodeId:this.node.id,
-								cRaterItemType:cRaterItemType,
-								studentData:studentData,
-								or:this,
-								orState:orState
-								};
-						
-						// invoke CRater in preview mode.
-						this.view.invokeCRaterInPreviewMode(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData);
-					}					
-				}
-				
-				if((this.content.cRater != null && this.content.cRater.maxCheckAnswers != null && this.isCRaterMaxCheckAnswersUsedUp()) || this.isLocked()) {
-					//student has used up all of their CRater check answer submits so we will disable the check answer button
-					this.setCheckAnswerUnavailable();
-				} else {
-					//the student still has check answer submits available
-					this.setCheckAnswerAvailable();
+					//make the request to have the student work scored by CRater
+					this.makeCRaterRequest(orState);
 				}
 			} else {
 				this.node.save(orState);
@@ -521,6 +311,215 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 		//turn the save button off
 		this.setSaveUnavailable();
 	}
+};
+
+/**
+ * Make the request to CRater to score the student work
+ * @param orState the openresponsestate object
+ */
+OPENRESPONSE.prototype.makeCRaterRequest = function(orState) {
+	//the message to display while we are auto grading the student's work
+	var please_wait_we_are_checking_your_work = this.view.getI18NString('please_wait_we_are_checking_your_work', 'OpenResponseNode');
+	var seconds = this.view.getI18NString('seconds', 'OpenResponseNode');
+	
+	/*
+	 * lock the screen so the student doesn't move to another step before
+	 * they see the CRater feedback. display a waiting spinner and a message
+	 * to the student on the wait screen.
+	 */
+	var waitTime = 15;
+	var lockScreenObj = {};
+	lockScreenObj.shareType = 'TeacherMessage';
+	lockScreenObj.shareObject = '<p align="center"><img src="images/ajax-loader.gif" /> ' + please_wait_we_are_checking_your_work + ' ' + waitTime + ' ' + seconds + '</p>';
+	eventManager.fire('lockScreenAndShareWithClass', lockScreenObj);
+	
+	/*
+	 * create a timeout to unlock the screen in case it takes too long 
+	 * for the CRater request to respond
+	 */
+	setTimeout("eventManager.fire('unlockScreenEvent')", waitTime * 1000);
+	
+	//gather the arguments to make the CRater request
+	var cRaterItemType = this.content.cRater.cRaterItemType;
+	var cRaterItemId = this.content.cRater.cRaterItemId;
+	var cRaterRequestType = "scoring";
+	var cRaterResponseId = new Date().getTime();
+	var studentData = orState.response;
+	var nodeVisit = this.view.getState().getCurrentNodeVisit();
+
+	//create the object that will be accessible in the callback function
+	var callbackData = {
+			view:this.view,
+			nodeId:this.node.id,
+			cRaterItemType:cRaterItemType,
+			studentData:studentData,
+			or:this,
+			orState:orState,
+			nodeVisit:nodeVisit
+	};
+
+	// invoke CRater in preview mode.
+	this.view.invokeCRaterInPreviewMode(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,this.cRaterRequestSuccessCallback,this.cRaterRequestFailureCallback,callbackData);
+};
+
+/**
+ * The success callback for making the CRater request
+ * @param responseText the response from CRater
+ * @param responseJSON the response from CRater
+ * @param successArgs the arguments passed to the callback function
+ */
+OPENRESPONSE.prototype.cRaterRequestSuccessCallback = function(responseText, responseJSON, successArgs) {
+	var view = successArgs.view;
+	var nodeId = successArgs.nodeId;
+	var or = successArgs.or;
+	var studentData = successArgs.studentData;
+	var currentNode = view.getProject().getNodeById(nodeId);  //get the node							
+	var cRaterItemId = successArgs.cRaterItemId;    //get the crater item id e.g. "SPOON", "GREENROOF-II"
+	var cRaterItemType = successArgs.cRaterItemType; //get the crater item type e.g. 'CRATER' or 'HENRY'
+	var orState = successArgs.orState;
+	var nodeVisit = successArgs.nodeVisit;
+	
+	if (responseJSON != null) {
+		try {
+			//get the CRater response text
+			var cRaterResponse = JSON.parse(responseText);
+			
+			//get the CRater step content
+			var cRaterStepContent = view.getProject().getNodeById(nodeId).content.getContentJSON().cRater;
+			
+			//get the score and concepts the student received
+			var score = cRaterResponse.score;
+			var concepts = cRaterResponse.concepts;
+
+			// now find the feedback that the student should see
+			var scoringRules = cRaterStepContent.cRaterScoringRules;
+			var maxScore = cRaterStepContent.cRaterMaxScore;
+
+			//get the feedback for the given concepts the student satisfied
+			var feedbackTextObject = view.getCRaterFeedback(scoringRules, concepts, score, cRaterItemType);
+
+			//get the feedback text and feedback id
+			var feedbackText = feedbackTextObject.feedbackText;
+			var feedbackId = feedbackTextObject.feedbackId;
+			
+			//get the node state timestamp which we will use as the node state id
+			var nodeStateId = orState.timestamp;
+			
+			//create the auto graded annotation value
+			var annotationValue = {
+				autoScore: score,
+				maxAutoScore: maxScore,
+				autoFeedback: feedbackText,
+				concepts: concepts,
+				nodeStateId:nodeStateId
+			}
+			
+			//add the auto graded annotation value to the auto graded annotation for this step current node visit
+			view.addAutoGradedAnnotation(nodeVisit, annotationValue);
+
+			//check if we need to display the auto score or auto feedback to the student
+			var displayCRaterScoreToStudent = cRaterStepContent.displayCRaterScoreToStudent;
+			var displayCRaterFeedbackToStudent = cRaterStepContent.displayCRaterFeedbackToStudent;
+			
+			if (displayCRaterScoreToStudent || displayCRaterFeedbackToStudent) {
+				//we will display the score or feedback (or both) to the student
+
+				var hasScore = false;
+				var hasFeedback = false;
+				
+				var cRaterFeedbackStringSoFar = "<span class='nodeAnnotationsCRater'>";
+
+				if(displayCRaterScoreToStudent) {
+					if(score != null && score != "") {
+						//the student has received a score
+						hasScore = true;
+					}
+				}
+
+				if(displayCRaterFeedbackToStudent) {
+					if(feedbackText != null && feedbackText != "") {
+						//the student has received feedback
+						hasFeedback = true;
+					}
+				}
+
+				if(hasScore || hasFeedback) {
+					//popup the auto graded annotation to the student
+					eventManager.fire("showNodeAnnotations",[nodeId]);
+				}
+				
+				// handle rewrite/revise
+				if(score != null) {
+					//get the student action for the given score
+					var studentAction = or.getStudentAction(score);
+					
+					if(studentAction == null) {
+						//do nothing
+					} else if(studentAction == 'rewrite') {
+						/*
+						 * move the current work to the previous work response box
+						 * because we want to display the previous work to the student
+						 * and have them re-write another response after they
+						 * receive the immediate CRater feedback
+						 */
+						or.showPreviousWorkThatHasAnnotation(studentData);
+						
+						//clear the response box so they will need to write a new response
+						$('#responseBox').val('');
+					} else if(studentAction == 'revise') {
+						/*
+						 * the student will need to revise their work so we will hide the
+						 * previous response display
+						 */
+						$('#previousResponseDisplayDiv').hide();
+					}
+				}
+			}
+			
+			//this student work was graded by CRater
+			orState.isCRaterSubmit = true;
+			
+			//check if we need to disable the check answer button
+			if((or.content.cRater != null && or.content.cRater.maxCheckAnswers != null && or.isCRaterMaxCheckAnswersUsedUp()) || or.isLocked()) {
+				//student has used up all of their CRater check answer submits so we will disable the check answer button
+				or.setCheckAnswerUnavailable();
+			} else {
+				//the student still has check answer submits available
+				or.setCheckAnswerAvailable();
+			}
+			
+			//save the student work to the server immediately
+			view.getProject().getNodeById(nodeId).save(orState);
+		} catch(err) {
+			/*
+			 * failed to parse JSON. this can occur if the item id is invalid which
+			 * causes an error to be returned from the server instead of the JSON
+			 * that we expect.
+			 */
+		}
+	}
+	
+	/*
+	 * unlock the screen since we previously locked it to make the student wait
+	 * for the feedback to be displayed
+	 */
+	eventManager.fire('unlockScreenEvent');
+};
+
+/**
+ * The failure callback for making the CRater request
+ * @param failureType
+ * @param failureArgs
+ */
+OPENRESPONSE.prototype.cRaterRequestFailureCallback = function(failureType, failureArgs) {
+	//the request to score the student work with CRater has failed
+	alert('Failed to score your work. Please try again.');
+	
+	/*
+	 * unlock the screen since we previously locked it to make the student wait
+	 * for the feedback to be displayed
+	 */
+	eventManager.fire('unlockScreenEvent');
 };
 
 /**

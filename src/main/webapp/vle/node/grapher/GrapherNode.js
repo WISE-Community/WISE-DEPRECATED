@@ -175,7 +175,7 @@ GrapherNode.prototype.onExit = function() {
  * requires additional processing
  */
 GrapherNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVisit, childDivIdPrefix, workgroupId) {
-	//create a SENSOR object that we will use to perform all the graphing logic for us
+	//create a Grapher object that we will use to perform all the graphing logic for us
 	var grapher = new Grapher(this, this.view);
 	
 	if(childDivIdPrefix == null) {

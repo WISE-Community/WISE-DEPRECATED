@@ -93,6 +93,7 @@ function editNewsItem(newsItemId) {
 		<table id="newsItems" border="2" cellpadding="2" cellspacing="0" align="center">
 		<tr>
 			<th><h5><spring:message code="date" /></h5></th>
+			<th><h5><spring:message code="type" /></h5></th>
 			<th><h5><spring:message code="title" /></h5></th>
 			<th><h5><spring:message code="message" /></h5></th>
 			<th><h5><spring:message code="available_actions" /></h5></th>
@@ -100,6 +101,7 @@ function editNewsItem(newsItemId) {
 		<c:forEach var="news" items="${all_news}">
 			<tr>
 				<td><fmt:formatDate value="${news.date}" type="both" dateStyle="short" timeStyle="short" /></td>
+				<td>${news.type}</td>
 				<td>${news.title}</td>
 				<td>${news.news}</td>
 				<td>

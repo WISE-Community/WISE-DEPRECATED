@@ -6,6 +6,9 @@
  * that would regularly be displayed
  */
 View.prototype.showNodeAnnotations = function(nodeId, feedbackHTML) {
+	//display the feedback button
+	this.displayNodeAnnotation(nodeId);
+	
 	$('#nodeAnnotationsLink').stop();
 	$('#nodeAnnotationsLink').css('color','#FFFFFF');
 	
@@ -51,6 +54,7 @@ View.prototype.showNodeAnnotations = function(nodeId, feedbackHTML) {
 		var nodeAnnotationComment = null;  // latest comment
 		var nodeAnnotationScore = null;    // latest score
 		var nodeAnnotationCRater = null;    // latest cRater feedback
+		var autoGradedAnnotations = [];
 		for (var i=0; i< currentNodeAnnotations.length; i++) {
 			var currentNodeAnnotation = currentNodeAnnotations[i];
 			if (currentNodeAnnotation.type == "comment") {
@@ -59,6 +63,8 @@ View.prototype.showNodeAnnotations = function(nodeId, feedbackHTML) {
 				nodeAnnotationScore = currentNodeAnnotation;
 			} else if (currentNodeAnnotation.type == "cRater") {
 				nodeAnnotationCRater = currentNodeAnnotation;
+			} else if (currentNodeAnnotation.type == "autoGraded") {
+				autoGradedAnnotations.push(currentNodeAnnotation);
 			}
 		}
 		
@@ -74,6 +80,76 @@ View.prototype.showNodeAnnotations = function(nodeId, feedbackHTML) {
 
 			nodeAnnotationsString += stepFeedback;
 			nodeAnnotationsString += '<br><br>';
+		} else if(autoGradedAnnotations.length > 0) {
+			
+			//the variable used to accumulate the auto graded feeback html
+			var autoGradedFeedbackHTML = '';
+			
+			//loop through all the auto graded annotations from newest to oldest
+			for(var x=autoGradedAnnotations.length - 1; x>=0; x--) {
+				//get an auto graded annotation
+				var autoGradedAnnotation = autoGradedAnnotations[x];
+				
+				if(autoGradedAnnotation != null) {
+					//get the value of the annotation which should be an array of annotation values
+					var value = autoGradedAnnotation.value;
+					
+					if(value != null) {
+						//loop through all the annotation values from newest to oldest
+						for(var y=value.length - 1; y>=0; y--) {
+							//get the latest annotation value from the array of annotation values
+							var tempValue = value[y];
+							
+							if(tempValue != null) {
+								//get the auto feedback message, auto score, and max auto score
+								var autoFeedback = tempValue.autoFeedback;
+								var autoScore = tempValue.autoScore;
+								var maxAutoScore = tempValue.maxAutoScore;
+								
+								var tempFeedbackHTML = '';
+								
+								/*
+								 * check if there is an auto score and if the step is authored 
+								 * to show the auto score to the student
+								 */
+								if(autoScore != null && currentNode.showAutoScore()) {
+									tempFeedbackHTML += 'Score: ' + autoScore;
+									
+									if(maxAutoScore != null) {
+										//display the max auto score as the denominator
+										tempFeedbackHTML += '/' + maxAutoScore;
+									}
+								}
+								
+								/*
+								 * check if there is auto feedback and if the step is authored 
+								 * to show the auto feedback to the student
+								 */
+								if(autoFeedback != null && currentNode.showAutoFeedback()) {
+									if(tempFeedbackHTML != '') {
+										tempFeedbackHTML += '<br>';
+									}
+									
+									tempFeedbackHTML += autoFeedback;
+								}
+								
+								if(autoGradedFeedbackHTML == '') {
+									//this is the latest feedback
+									autoGradedFeedbackHTML += "<span class='nodeAnnotationsComment'><b>New Feedback<br/>" + tempFeedbackHTML + "</b></span><br/><hr>";
+								} else {
+									//this is not the latest feedback
+									autoGradedFeedbackHTML += "<span class='nodeAnnotationsComment'>Previous Feedback<br/>" + tempFeedbackHTML + "</span><br/><hr>";										
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			if(autoGradedFeedbackHTML != '') {
+				//add all the auto graded feedback html
+				nodeAnnotationsString += autoGradedFeedbackHTML + '<br/>';
+			}
 		} else if (currentNode.content.getContentJSON().cRater && 
 				(currentNode.content.getContentJSON().cRater.displayCRaterScoreToStudent ||
 						currentNode.content.getContentJSON().cRater.displayCRaterFeedbackToStudent)) {
@@ -167,6 +243,235 @@ View.prototype.displayNodeAnnotation = function(nodeId){
     } else {
     	$("#nodeAnnotations").empty();
     }
+};
+
+/**
+ * Create an autoGraded annotation
+ * @return an autoGraded annotation object
+ */
+View.prototype.createAutoGradedAnnotation = function() {
+	//get the run id
+	var runId = parseInt(this.config.getConfigParam('runId'));
+	
+	//get the current node visit
+	var currentNodeVisit = this.getState().getCurrentNodeVisit();
+	
+	//get the node id
+	var nodeId = currentNodeVisit.nodeId;
+	
+	//get the to workgroup
+	var toWorkgroup = this.userAndClassInfo.getWorkgroupId();
+	
+	//the from workgroup will be -1 since this is an auto graded annotation
+	var fromWorkgroup = -1;
+	
+	//get the annotation type
+	var type = 'autoGraded';
+	
+	/*
+	 * get the annotation value, the value will be an array that contains
+	 * objects. the objects will be annotation values for specific node 
+	 * states. the annotation object is related to a single node visit.
+	 * the array of values is how we will link annotation values to
+	 * specific node states within the node visit.
+	 */
+	var value = [];
+	
+	/*
+	 * at this point in time the post time and step work id are not generated
+	 * yet so we will set them to null
+	 */
+	var postTime = null;
+	var stepWorkId = null;
+	
+	//create the annotation object
+	var autoGradedAnnotation = new Annotation(runId, nodeId, toWorkgroup, fromWorkgroup, type, value, postTime, stepWorkId);
+	
+	return autoGradedAnnotation;
+};
+
+/**
+ * Add an annotation value to the values array in the current auto graded annotation.
+ * @param nodeVisit the node visit the auto graded annotation is associated with
+ * @param annotationValue an object containing an annotation for a specific node state
+ * 
+ * Here's an example of an annotation value.
+ * 
+ * {
+ *    "nodeStateId": 1409780119000,
+ *    "autoScore": 9,
+ *    "autoFeedback": "Good job"
+ * }
+ * 
+ * 
+ * Here's an example of an annotation object. Notice how the annotation value from above
+ * is placed into the value array below.
+ * 
+ * {
+ *    "stepWorkId": 7644783,
+ *    "nodeId": "node_186.or",
+ *    "fromWorkgroup": -1,
+ *    "value": [
+ *        {
+ *           "nodeStateId": 1409780119000,
+ *           "autoScore": 9,
+ *           "autoFeedback": "Good job!"
+ *        },
+ *        {
+ *           "nodeStateId": 1409780134000,
+ *           "autoScore": 10,
+ *           "autoFeedback": "Great job!!"
+ *        },
+ *        {
+ *           "nodeStateId": 1409780141000,
+ *           "autoScore": 11,
+ *           "autoFeedback": "Excellent job!!!"
+ *        }
+ *    ],
+ *    "runId": 6490,
+ *    "type": "autoGraded",
+ *    "toWorkgroup": 156302,
+ *    "postTime": 1409780146000
+ * }
+ */
+View.prototype.addAutoGradedAnnotation = function(nodeVisit, annotationValue) {
+	if(nodeVisit != null && annotationValue != null) {
+		/*
+		 * get the auto graded annotation associated with the node visit if
+		 * the auto graded annotation exists
+		 */
+		var currentAutoGradedAnnotation = this.getNodeVisitAutoGradedAnnotation(nodeVisit);
+		
+		if(currentAutoGradedAnnotation == null) {
+			/*
+			 * we do not have an auto graded annotation for the node visit so we will
+			 * now make one
+			 */
+			currentAutoGradedAnnotation = this.createAutoGradedAnnotation();
+			
+			//get the local copy of the annotations
+			var annotations = this.getAnnotations();
+			
+			if(annotations != null) {
+				//add the new annotation to the local copy
+				annotations.addAnnotation(currentAutoGradedAnnotation);
+			}
+			
+			//add the mapping between the node visit and the auto graded annotation
+			this.addNodeVisitAutoGradedAnnotation(nodeVisit, currentAutoGradedAnnotation);
+		}
+		
+		//add the new annotation value to the annotation
+		currentAutoGradedAnnotation.value.push(annotationValue);		
+	}
+};
+
+/**
+ * Add the mapping between the node visit and the auto graded annotation
+ * @param nodeVisit the node visit
+ * @param autoGradedAnnotation the auto graded annotation
+ */
+View.prototype.addNodeVisitAutoGradedAnnotation = function(nodeVisit, autoGradedAnnotation) {
+	//initialize the array of mappings if necessary
+	if(this.nodeVisitToAutoGradedAnnotationMappings == null) {
+		this.nodeVisitToAutoGradedAnnotationMappings = [];
+	}
+	
+	if(nodeVisit != null && autoGradedAnnotation != null) {
+		//create the object to map the node visit to the auto graded annotation
+		var nodeVisitToAutoGradedAnnotationMapping = {
+			nodeVisit:nodeVisit,
+			autoGradedAnnotation:autoGradedAnnotation
+		}
+		
+		//add the mapping object to the array
+		this.nodeVisitToAutoGradedAnnotationMappings.push(nodeVisitToAutoGradedAnnotationMapping);
+	}
+};
+
+/**
+ * Get the auto graded annotation for a node visit
+ * @param nodeVisit the node visit
+ * @return the auto graded annotation associated with the node visit
+ * or null if one does not exist
+ */
+View.prototype.getNodeVisitAutoGradedAnnotation = function(nodeVisit) {
+	//initialize the array of mappings if necessary
+	if(this.nodeVisitToAutoGradedAnnotationMappings == null) {
+		this.nodeVisitToAutoGradedAnnotationMappings = [];
+	}
+	
+	//get the mappings
+	var nodeVisitToAutoGradedAnnotationMappings = this.nodeVisitToAutoGradedAnnotationMappings;
+	
+	var autoGradedAnnotation = null;
+	
+	if(nodeVisit != null) {
+		//loop through all the mappings
+		for(var x=0; x<nodeVisitToAutoGradedAnnotationMappings.length; x++) {
+			//get a mapping
+			var nodeVisitToAutoGradedAnnotationMapping = nodeVisitToAutoGradedAnnotationMappings[x];
+			
+			if(nodeVisitToAutoGradedAnnotationMapping != null) {
+				//get the node visit
+				var tempNodeVisit = nodeVisitToAutoGradedAnnotationMapping.nodeVisit;
+				
+				//compare the node visit with the one we are looking for
+				if(nodeVisit === tempNodeVisit) {
+					/*
+					 * we have found the node visit we want so we can get the associated
+					 * auto graded annotation
+					 */
+					autoGradedAnnotation = nodeVisitToAutoGradedAnnotationMapping.autoGradedAnnotation;
+					break;
+				}
+			}
+		}
+	}
+	
+	return autoGradedAnnotation;
+};
+
+/**
+ * Remove the node visit to auto graded annotation mapping
+ * @param nodeVisit the node visit we want to remove
+ */
+View.prototype.removeNodeVisitAutoGradedAnnotation = function(nodeVisit) {
+	//initialize the array of mappings if necessary
+	if(this.nodeVisitToAutoGradedAnnotationMappings == null) {
+		this.nodeVisitToAutoGradedAnnotationMappings = [];
+	}
+
+	//get the mappings
+	var nodeVisitToAutoGradedAnnotationMappings = this.nodeVisitToAutoGradedAnnotationMappings;
+	
+	if(nodeVisit != null) {
+		//loop through all the mappings
+		for(var x=0; x<nodeVisitToAutoGradedAnnotationMappings.length; x++) {
+			//get a mapping
+			var nodeVisitToAutoGradedAnnotationMapping = nodeVisitToAutoGradedAnnotationMappings[x];
+			
+			if(nodeVisitToAutoGradedAnnotationMapping != null) {
+				//get the node visit
+				var temptNodeVisit = nodeVisitToAutoGradedAnnotationMapping.nodeVisit;
+				
+				//compare the node visit with the one we are looking for
+				if(nodeVisit === tempNodeVisit) {
+					/*
+					 * we have found the node visit we want so we will remove the mapping
+					 * object from the array
+					 */
+					nodeVisitToAutoGradedAnnotationMappings.splice(x, 1);
+					
+					/*
+					 * move the counter back one since we have just removed an element
+					 * from the array and continue searching the rest of the array
+					 */
+					x--;
+				}
+			}
+		}
+	}
 };
 
 //used to notify scriptloader that this script has finished loading

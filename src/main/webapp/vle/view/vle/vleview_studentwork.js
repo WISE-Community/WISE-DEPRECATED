@@ -4,7 +4,7 @@
  * Given the type and optional arguments, creates a new 
  * state of the type, passing in the arguments.
  */
-View.prototype.pushStudentWork = function(nodeId, nodeState){
+View.prototype.pushStudentWork = function(nodeId, nodeState) {
 	this.model.pushStudentWorkToLatestNodeVisit(nodeId, nodeState);
 };
 
@@ -96,6 +96,16 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 	} else {
 		url = "postdata.html";
 	};
+	
+	var annotationString = null;
+	
+	//get the auto graded annotation associated with this node visit if it exists
+	var autoGradedAnnotation = this.getNodeVisitAutoGradedAnnotation(currentNodeVisit);
+	
+	if(autoGradedAnnotation != null) {
+		//we have an auto graded annotation so we will convert it to a string
+		annotationString = encodeURIComponent($.stringify(autoGradedAnnotation));
+	}
 
 	//obtain the json string representation of the node visit
 	var nodeVisitData = encodeURIComponent($.stringify(currentNodeVisit));
@@ -108,13 +118,20 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 		this.addToPOSTInProgressArray(currentNodeVisit);
 
 		if(this.getUserAndClassInfo() != null) {
-			
-			this.connectionManager.request('POST', 3, url, 
-					{id: stepWorkId, 
+			var postParams = {
+				id: stepWorkId, 
 				runId: this.getConfig().getConfigParam('runId'), 
 				userId: this.getUserAndClassInfo().getWorkgroupId(), 
 				data: nodeVisitData
-					}, 
+			};
+			
+			if(annotationString != null) {
+				//add the annotation to the params so it will be saved to the server
+				postParams.annotation = annotationString;
+			}
+			
+			this.connectionManager.request('POST', 3, url, 
+					postParams, 
 					this.processPostResponse, 
 					{vle: this, 
 					 nodeVisit:currentNodeVisit, 
@@ -123,12 +140,20 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 					 additionalData:additionalData},
 					this.processPostFailResponse);
 		} else {
-			this.connectionManager.request('POST', 3, url, 
-					{id: stepWorkId, 
+			var postParams = {
+				id: stepWorkId, 
 				runId: this.getConfig().getConfigParam('runId'), 
-				userId: '-2', 
+				userId: '-2',
 				data: prepareDataForPost(diff)
-					}, 
+			};
+			
+			if(autoGradedAnnotation != null) {
+				//add the annotation to the params so it will be saved to the server
+				postParams.annotation = autoGradedAnnotation;
+			}
+			
+			this.connectionManager.request('POST', 3, url, 
+					postParams, 
 					this.processPostResponse,
 					null,
 					this.processPostFailResponse);
@@ -142,9 +167,12 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
  * from the server.
  * @param nodeVisit its visitPostTime must be null.
  * @param boolean - sync - true if the request should by synchronous
+ * @param successCallback callback func when posting was successful. optional.
+ * @param failureCallback callback func when posting was unsuccessful. optional.
+ * @param additionalData data to be passed into success/failure callback functions. optional.
  * @return
  */
-View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync) {
+View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback, failureCallback, additionalData) {
 	if (!this.getConfig() 
 			|| !this.getConfig().getConfigParam('mode') 
 			|| this.getConfig().getConfigParam('mode') == "portalpreview"
@@ -201,6 +229,29 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync) {
 			userId: this.getUserAndClassInfo().getWorkgroupId(),
 			data: postData};
 
+	if (!successCallback) {
+		successCallback = this.processPostResponse;
+	}
+	if (!failureCallback) {
+		failureCallback = this.processPostFailResponse;
+	}
+	if (!additionalData) {
+		additionalData = {vle: this, nodeVisit:nodeVisit};
+	}
+	
+	var annotationString = null;
+	
+	//get the auto graded annotation associated with this node visit if it exists
+	var autoGradedAnnotation = this.getNodeVisitAutoGradedAnnotation(nodeVisit);
+	
+	if(autoGradedAnnotation != null) {
+		//we have an auto graded annotation so we will convert it to a string
+		annotationString = encodeURIComponent($.stringify(autoGradedAnnotation));
+		
+		//add the annotation to the params so it will be saved to the server
+		postStudentDataUrlParams.annotation = annotationString;
+	}
+	
 	// Only POST this nodevisit if this nodevisit is not currently being POSTed to the server.
 	if (this.isInPOSTInProgressArray(nodeVisit)) {
 		return;
@@ -209,16 +260,17 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync) {
 		var timeout = null;
 		// add  this nodevisit to postInProgress array
 		this.addToPOSTInProgressArray(nodeVisit);
-		this.connectionManager.request('POST', 3, url, postStudentDataUrlParams, this.processPostResponse, {vle: this, nodeVisit:nodeVisit}, this.processPostFailResponse, sync, null);		
+		this.connectionManager.request('POST', 3, url, postStudentDataUrlParams, successCallback, additionalData, failureCallback, sync, null);		
 	}
 };
 
 
 /**
  * Posts all non-posted node_visits to the server
- * @param boolean - sync - whether the visits should be posted synchrounously
+ * @param boolean - sync - whether the visits should be posted synchronously
  */
 View.prototype.postAllUnsavedNodeVisits = function(sync) {
+	
 	// get all node_visits that does not have a visitPostTime set.
 	// then post them one at a time, and set its visitPostTime based on what the
 	// server returns.
@@ -286,6 +338,7 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 	
 	// if cRaterItemId is in the response and it was a CRater submit, make a request to GET the
 	// CRater Annotation
+	/*
 	if(cRaterItemId != null && isCRaterSubmit != null && isCRaterSubmit) {
 		var nodeVisit = args.nodeVisit;
 		var latestState = nodeVisit.getLatestState();
@@ -293,6 +346,7 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 
 		args.vle.getCRaterResponse(id, nodeStateTimestamp, cRaterItemType);
 	}
+	*/
 
 	if(args.vle.isRealTimeEnabled) {
 		//we will send the student status to the teacher
@@ -413,7 +467,7 @@ View.prototype.onWindowUnload = function(logout){
 	if(this.getCurrentNode()) {
 		this.getCurrentNode().onExit();
 	}
-
+	
 	/* synchronously save any unsaved node visits */
 	this.postAllUnsavedNodeVisits(true);
 
@@ -558,52 +612,7 @@ View.prototype.viewStudentAssets = function(params) {
 		}
 	};
 
-	var saImport = function() {
-		if(view.getCurrentNode() != null &&
-				view.getCurrentNode().importFile) {			
-			var parent = document.getElementById('assetSelect');
-			var ndx = parent.selectedIndex;
-			if(ndx!=-1){
-				var opt = parent.options[parent.selectedIndex];
-				var filename = opt.value;
 
-				var postStudentAssetUrl = view.getConfig().getConfigParam("studentAssetManagerUrl");
-				// need to get rid of the ?type=StudentAssets&runId=X from the url because we're doing a POST and it will be syntactically incorrect.
-				if (postStudentAssetUrl.indexOf("?") != -1) {
-					postStudentAssetUrl = postStudentAssetUrl.substr(0,postStudentAssetUrl.indexOf("?"));
-				}
-
-				// need to make a copy of the asset in the referenced folder and use it instead of the original.
-				$.ajax({
-					url:postStudentAssetUrl,
-					type:"POST",
-					dataType:"json",
-					data:{
-						"type":"studentAssetManager",			
-						"runId":view.config.getConfigParam("runId"),
-						"forward":"assetmanager",
-						"command":"studentAssetCopyForReference",
-						"assetFilename":filename
-					},
-					success:function(responseJSON) {
-						if (responseJSON != null && responseJSON.result != "" && responseJSON.result == "SUCCESS") {
-							var newFilename = responseJSON.newFilename;
-							var fileWWW = view.getAbsoluteRemoteStudentReferencedUploadsPath() + newFilename;	// make absolute path to file: http://studentuploadsBaseWWW/runId/workgroupId/unreferenced/filename
-							if(view.getCurrentNode().importFile(fileWWW)) {
-								view.notificationManager.notify(view.getI18NString("student_assets_import_success_message")+": " + newFilename, 3, 'uploadMessage', 'notificationDiv');
-								$('#studentAssetsDiv').dialog('close');	
-							} else {
-								view.notificationManager.notify(view.getI18NString("student_assets_import_failure_message"),3, 'uploadMessage', 'notificationDiv');
-							}
-						} else {
-							view.notificationManager.notify(view.getI18NString("student_assets_import_failure_message"),3, 'uploadMessage', 'notificationDiv');
-						}
-					}
-				}
-				);
-			}
-		}
-	};
 
 	var done = function(){
 		$('#studentAssetsDiv').dialog('close');			
@@ -629,7 +638,20 @@ View.prototype.viewStudentAssets = function(params) {
 		this.checkStudentAssetSizeLimit();
 	};	
 
-	var studentAssetsPopulateOptions = function(names, view){
+	/**
+	 * Populate the student assets in the student assets popup
+	 * @param names the names of the student asset files
+	 * @param args additional args passed to this function
+	 */
+	var studentAssetsPopulateOptions = function(names, args){
+		var thisView = args.thisView;
+		
+		/*
+		 * if a file was just uploaded and we are refreshing the list of student
+		 * asset files, get the filename of the file that was just uploaded
+		 */
+		var filename = args.filename;
+
 		if(names && names!=''){
 			var parent = $('#assetSelect');
 			parent.html('');
@@ -647,12 +669,17 @@ View.prototype.viewStudentAssets = function(params) {
 				opt.text = name;
 				opt.value = name;
 				parent.append(opt);
+				
+				if(filename != null && filename == name) {
+					//highlight the file that was just uploaded
+					$(opt).attr('selected', true);
+				}
 			}
 		}
 
 		$('#uploadAssetFile').val('');
 		$('#studentAssetEditorDialog').show();
-		view.checkStudentAssetSizeLimit();
+		thisView.checkStudentAssetSizeLimit();
 	};
 
 	// show different sets of buttons based on current step and WISE configuration
@@ -677,7 +704,84 @@ View.prototype.viewStudentAssets = function(params) {
 	buttonsArray.push({text:doneText,click:done});
 	$( "#studentAssetsDiv" ).dialog( "option", "buttons", buttonsArray);
 
-	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'assetList', type: 'studentAssetManager'}, function(txt,xml,obj){studentAssetsPopulateOptions(txt,obj);}, this);	
+	var filename = null;
+	
+	if(params != null) {
+		/*
+		 * add the filename to the params so we can highlight it when we
+		 * list the assets
+		 */
+		filename = params.filename;		
+	}
+	
+	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'assetList', type: 'studentAssetManager'}, function(txt,xml,args){studentAssetsPopulateOptions(txt,args);}, {thisView:this,filename:filename});	
+};
+
+/**
+ * The student has chosen a student asset to import into the current step
+ * @param params (optional) additional arguments for this function. if a file
+ * was just imported, the filename of the file can be found in the params.
+ * this will be used instead of looking at the highlighted option in the
+ * select box. when the student uploads a file to import into the step, we 
+ * will import it immediately after the file is uploaded instead of requiring 
+ * the student to select the file again in the select box.
+ */
+View.prototype.saImport = function(params) {
+	if(view.getCurrentNode() != null &&
+			view.getCurrentNode().importFile) {			
+		var parent = document.getElementById('assetSelect');
+		var ndx = parent.selectedIndex;
+		var filename = null;
+		
+		if(params != null) {
+			//get the filename from the params
+			filename = params.filename;
+		}
+		
+		if(ndx!=-1 || filename != null){
+			
+			if(filename == null && ndx != -1) {
+				//filename was not provided so we will get the selected option in the select box
+				var opt = parent.options[parent.selectedIndex];
+				filename = opt.value;
+			}
+
+			var postStudentAssetUrl = view.getConfig().getConfigParam("studentAssetManagerUrl");
+			// need to get rid of the ?type=StudentAssets&runId=X from the url because we're doing a POST and it will be syntactically incorrect.
+			if (postStudentAssetUrl.indexOf("?") != -1) {
+				postStudentAssetUrl = postStudentAssetUrl.substr(0,postStudentAssetUrl.indexOf("?"));
+			}
+
+			// need to make a copy of the asset in the referenced folder and use it instead of the original.
+			$.ajax({
+				url:postStudentAssetUrl,
+				type:"POST",
+				dataType:"json",
+				data:{
+					"type":"studentAssetManager",			
+					"runId":view.config.getConfigParam("runId"),
+					"forward":"assetmanager",
+					"command":"studentAssetCopyForReference",
+					"assetFilename":filename
+				},
+				success:function(responseJSON) {
+					if (responseJSON != null && responseJSON.result != "" && responseJSON.result == "SUCCESS") {
+						var newFilename = responseJSON.newFilename;
+						var fileWWW = view.getAbsoluteRemoteStudentReferencedUploadsPath() + newFilename;	// make absolute path to file: http://studentuploadsBaseWWW/runId/workgroupId/unreferenced/filename
+						if(view.getCurrentNode().importFile(fileWWW)) {
+							view.notificationManager.notify(view.getI18NString("student_assets_import_success_message")+": " + newFilename, 3, 'uploadMessage', 'notificationDiv');
+							$('#studentAssetsDiv').dialog('close');	
+						} else {
+							view.notificationManager.notify(view.getI18NString("student_assets_import_failure_message"),3, 'uploadMessage', 'notificationDiv');
+						}
+					} else {
+						view.notificationManager.notify(view.getI18NString("student_assets_import_failure_message"),3, 'uploadMessage', 'notificationDiv');
+					}
+				}
+			}
+			);
+		}
+	}
 };
 
 /**
@@ -740,7 +844,7 @@ View.prototype.studentAssetSubmitUpload = function() {
 			//form.appendChild(createElement(document,'input',{type:'hidden', name:'projectId', value:view.portalProjectId}));
 
 			/* set up the event and callback when the response comes back to the frame */
-			frame.addEventListener('load', function () { eventManager.fire('assetUploaded', [frame, view]); }, false);
+			frame.addEventListener('load', function () { eventManager.fire('assetUploaded', [frame, view, filename]); }, false);
 
 			/* change the name attribute to reflect that of the file selected by user */
 			document.getElementById('uploadAssetFile').setAttribute("name", filename);
@@ -867,8 +971,10 @@ View.prototype.removeFromPOSTInProgressArray = function(nodeVisit) {
  * @param cRaterResponseId ID to keep track of this crater request
  * @param successCallback
  * @param failureCallback
+ * @param callbackData the data to be made available in the callback function
+ * @param sync whether the request should be synchronous
  */
-View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData) {
+View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData, sync) {
 	var cRaterRequestURL = this.getConfig().getConfigParam('cRaterRequestUrl');
 
 	var cRaterArgs = {
@@ -881,7 +987,7 @@ View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,
 	};
 	
 	//make the call to GET the annotation
-	this.connectionManager.request('GET', 1, cRaterRequestURL, cRaterArgs, successCallback, callbackData, failureCallback);
+	this.connectionManager.request('GET', 1, cRaterRequestURL, cRaterArgs, successCallback, callbackData, failureCallback, sync);
 };
 
 /**
@@ -1001,9 +1107,6 @@ View.prototype.getCRaterResponseCallback = function(responseText, responseXML, a
 				}
 
 				if(message != null && message != "") {
-					// display the feedback button
-					vle.displayNodeAnnotation(nodeId);  // display annotation for the current step, if any
-
 					//popup the message to the student
 					eventManager.fire("showNodeAnnotations",[nodeId]);
 				}
@@ -1057,6 +1160,16 @@ View.prototype.getCRaterResponseCallbackFail = function(responseText, responseXM
  * is fired.
  */
 View.prototype.studentWorkUpdatedListener = function() {
+	//update the constraints
+	this.updateConstraints();
+};
+
+/**
+ * Update the constraints. Add any constraints that are no longer
+ * satisfied. Remove any constraints that have been satisfied.
+ */
+View.prototype.updateConstraints = function() {
+	this.addGlobalTagMapConstraints();
 	this.updateActiveTagMapConstraints();
 	this.updateSequenceStatuses();
 };

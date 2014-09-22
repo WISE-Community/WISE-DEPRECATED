@@ -62,5 +62,9 @@
 	"noStarter":{
 		"value":"There is no starter sentenced specified for this {0}.",
 		"description":"Text to display when user requests to display starter sentence but step does not have one set"
+	},
+	"importAssetButtonTitle":{
+		"value":"Use My Asset",
+		"description":"Text to display on the button to import asset and use in a brainstorm post"
 	}
 }

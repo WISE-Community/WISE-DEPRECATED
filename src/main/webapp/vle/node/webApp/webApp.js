@@ -160,6 +160,15 @@ function WebApp(node) {
 		
 		return latestState;
 	}
+	
+	/*
+	 * Set a node status for the step
+	 * @param statusType the status type
+	 * @param statusValue the status value
+	 */
+	this.api.setStatus = function(statusType, statusValue) {
+		node.setStatus(statusType, statusValue);
+	}
 };
 
 /**

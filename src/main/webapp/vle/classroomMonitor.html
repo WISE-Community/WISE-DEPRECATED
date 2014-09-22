@@ -57,9 +57,6 @@
 						<label class="btn btn-default" id="viewStepProgress" data-i18n-title="classroomMonitor_stepProgress_title">
 							<input type="radio" name="monitorView" value="stepProgress"><span class="fa fa-sitemap"></span><span class="btn-text" data-i18n="classroomMonitor_progress">Progress</span>
 						</label>
-						<label class="btn btn-default disabled" id="viewGradebook" data-i18n-title="classroomMonitor_gradebook_title">
-							<input type="radio" name="monitorView" value="gradebook"><span class="fa fa-bar-chart-o"></span><span class="btn-text" data-i18n="classroomMonitor_gradebook">Gradebook</span>
-						</label>
 						<label class="btn btn-default disabled" id="viewManageStudents" data-i18n-title="classroomMonitor_manage_title">
 							<input type="radio" name="monitorView" value="manageStudents"><span class="fa fa-users"></span><span class="btn-text" data-i18n="classroomMonitor_manage">Manage</span>
 						</label>
@@ -68,7 +65,7 @@
 				
 				<div class="btn-toolbar pull-right" role="toolbar">
 					<div id="runTools" class="btn-group btn-group-sm">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" disabled>
 					    	<span class="fa fa-gears"></span> <span class="btn-text" data-i18n="classroomMonitor_tools">Tools</span> <span class="caret"></span>
 					  	</button>
 					  	<ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -76,6 +73,7 @@
 					    	<li><a id="manageStudents" href="#"><span class="fa fa-info-circle"></span><span data-i18n="classroomMonitor_notes">My Notes</span></a></li>
 					    	<li><a id="announcements" href="#"><span class="fa fa-file-excel-o"></span><span data-i18n="classroomMonitor_exportWork">Export Work</span></a></li>
 					    	<li><a id="runSettings" href="#"><span class="fa fa-gear"></span><span data-i18n="classroomMonitor_runSettings">Run Settings</span></a></li>
+					    	<li><a id="showClassroomMenuItem" href="#"><span class="fa fa-file-image-o"></span><span data-i18n="classroomMonitor_showClassroom">Show Classroom</span></a></li>
 					    </ul>
 					</div>
 					<div class="btn-group btn-group-sm">
@@ -190,6 +188,7 @@
        		<section id="manageStudents"></section>
        		<section id="exportWork"></section>
        		<section id="ideaBaskets"></section>
+       		<section id="showClassroomDiv"></section>
        		<!-- TODO: these may be modals, maybe not
        		<section id="runSettings"></section>
        		<section id="announcements"></section>
@@ -215,7 +214,7 @@
     	</div>
 		
 		
-		<script src='events/eventmanager.js'></script>
+		<script src='util/eventmanager.js'></script>
 		<script src="util/scriptloader.js"></script>
 		<script src="https://www.google.com/jsapi"></script>
 		

@@ -84,6 +84,12 @@ View.prototype.startClassroomMonitor = function() {
 		view.setClassroomMonitorView($(this).val());
 	});
 	
+	//set the click event for the show classroom menu item
+	$('#showClassroomMenuItem').on('click', function() {
+		//show the show classroom view
+		view.setClassroomMonitorView('showClassroom');
+	});
+	
 	//display a loading message; TODO: remove
 	//$('#selectDisplayButtonsDiv').html('<p style="display:inline;margin-left:5px">Loading...</p>');
 	
@@ -196,6 +202,7 @@ View.prototype.createClassroomMonitorDisplays = function() {
 	this.createExportStudentWorkDisplay();
 	this.createIdeaBasketDisplay();
 	this.createPremadeCommentsDiv();
+	this.createShowClassroomDisplay();
 	// set the default view
 	this.setClassroomMonitorView(this.currentMonitorView);
 };
@@ -218,6 +225,10 @@ View.prototype.setClassroomMonitorView = function(monitorView){
 		case 'notes':
 		case 'runSettings':
 		case 'studentprogress':
+		case 'showClassroom':
+			//show the show classroom view
+			this.showShowClassroomDisplay();
+			break;
 		default:
 			// student progress is the default view
 			this.showStudentProgressDisplay();
@@ -415,6 +426,23 @@ View.prototype.showIdeaBasketDisplay = function() {
 	
 	//fix the height so scrollbars display correctly
 	this.fixClassroomMonitorDisplayHeight();
+};
+
+/**
+ * Show the show classroom display
+ */
+View.prototype.showShowClassroomDisplay = function() {
+	//hide all the other display views
+	this.hideAllDisplays();
+	
+	//hide the table headers
+	$('.fixedHeader').hide();
+	
+	//clear the nodeIdClicked and workgroupIdClicked values; TODO: revise/remove
+	this.clearNodeIdClickedAndWorkgroupIdClicked();
+	
+	//show the show classroom div
+	$('#showClassroomDiv').show();
 };
 
 /**
@@ -6417,7 +6445,7 @@ View.prototype.createGradeByStudentDisplay = function() {
 	
 	$displayTools = $('<div class="pull-right">');
 	// add display options multiselect
-	var $displayOptions = $('<select id="gradeByStudentOptions" multiple="multiple">');
+	var $displayOptions = $('<select id="gradeByStudentOptions" multiple="multiple" disabled>');
 	$displayOptions.append('<option name="gradeByStudentOptions" value="newOnly">' + view.getI18NString('classroomMonitor_newItemsOnly') + '</option>');
 	$displayOptions.append('<option name="gradeByStudentOptions" value="flagOnly">' + view.getI18NString('classroomMonitor_grading_flagOnly') + '</option>');
 	$displayOptions.append('<option name="gradeByStudentOptions" value="hidePersonal">' + view.getI18NString('classroomMonitor_hidePersonalInfo') + '</option>');
@@ -6600,10 +6628,10 @@ View.prototype.createGradeByStepDisplay = function() {
 	
 	$displayTools = $('<div class="pull-right">');
 	// add display options multiselect
-	var $displayOptions = $('<select id="gradeByStudentOptions" multiple="multiple">');
-	$displayOptions.append('<option name="gradeByStudentOptions" value="newOnly">' + view.getI18NString('classroomMonitor_newItemsOnly') + '</option>');
-	$displayOptions.append('<option name="gradeByStudentOptions" value="flagOnly">' + view.getI18NString('classroomMonitor_grading_flagOnly') + '</option>');
-	$displayOptions.append('<option name="gradeByStudentOptions" value="hidePersonal">' + view.getI18NString('classroomMonitor_hidePersonalInfo') + '</option>');
+	var $displayOptions = $('<select id="gradeByStepOptions" multiple="multiple"> disabled');
+	$displayOptions.append('<option name="gradeByStepOptions" value="newOnly">' + view.getI18NString('classroomMonitor_newItemsOnly') + '</option>');
+	$displayOptions.append('<option name="gradeByStepOptions" value="flagOnly">' + view.getI18NString('classroomMonitor_grading_flagOnly') + '</option>');
+	$displayOptions.append('<option name="gradeByStepOptions" value="hidePersonal">' + view.getI18NString('classroomMonitor_hidePersonalInfo') + '</option>');
 	
 	$stepHeader.append($displayTools);
 	$displayTools.append('<label for="gradeByStepOptions">' + view.getI18NString('classroomMonitor_grading_options_label') + '</label> ');
@@ -7842,6 +7870,299 @@ View.prototype.createPremadeCommentsDiv = function() {
 	
 	//hide the premade comments div, we will show it later when necessary
 	premadeCommentsDiv.hide();
+};
+
+/**
+ * Populate the show classroom div
+ */
+View.prototype.createShowClassroomDisplay = function() {
+	//get the show classroom div
+	var showClassroomDiv = $('#showClassroomDiv');
+	
+	//create a div wrapper that will contain all the show classroom UI elements
+	var showClassroomWrapper = $('<div>');
+	showClassroomWrapper.attr('id', 'showClassroomWrapper');
+	showClassroomWrapper.addClass('dataTables_wrapper');
+	showClassroomDiv.append(showClassroomWrapper);
+	
+	//create the prompt background label
+	var promptBackgroundLabel = $('<span>');
+	promptBackgroundLabel.text('Prompt Background: ');
+	showClassroomWrapper.append(promptBackgroundLabel);
+	
+	//create the prompt background input
+	var showClassroomPromptBackgroundInput = $('<input>');
+	showClassroomPromptBackgroundInput.attr('id', 'showClassroomPromptBackgroundInput');
+	showClassroomPromptBackgroundInput.attr('type', 'input');
+	showClassroomPromptBackgroundInput.attr('size', 70);
+	showClassroomWrapper.append(showClassroomPromptBackgroundInput);
+	
+	//create the send prompt button
+	var showClassroomSendPromptButton = $('<input>');
+	showClassroomSendPromptButton.attr('id', 'showClassroomSendPromptButton');
+	showClassroomSendPromptButton.attr('type', 'button');
+	showClassroomSendPromptButton.val('Send Prompt');
+	showClassroomWrapper.append(showClassroomSendPromptButton);
+	
+	//listen for when the teacher clicks the send prompt button
+	showClassroomSendPromptButton.on('click', {thisView:this}, function(event) {
+    	var thisView = event.data.thisView;
+    	
+    	//get the currently selected period
+    	var periodId = thisView.classroomMonitorPeriodIdSelected;
+    	
+    	//get the prompt background value
+    	var showClassroomPromptBackgroundInputValue = $('#showClassroomPromptBackgroundInput').val();
+
+    	var imageObj = new Image();
+
+	    imageObj.onload = function() {
+	    	//get the canvas
+	    	var canvas = $('#showClassroomCanvas');
+	    	
+	    	//get the canvas context
+	    	var canvasContext = $(canvas)[0].getContext('2d');
+	    	
+	    	//draw the image on the canvas context
+	    	canvasContext.drawImage(imageObj, 0, 0);
+	    };
+	    
+	    //set the source of the image
+	    imageObj.src = showClassroomPromptBackgroundInputValue;
+	    
+	    //send the show classroom prompt to the students
+    	thisView.sendShowClassroomTeacherPrompt(periodId, showClassroomPromptBackgroundInputValue);
+    });
+	
+	//create the close prompt button
+	var showClassroomClosePromptButton = $('<input>');
+	showClassroomClosePromptButton.attr('id', 'showClassroomClosePromptButton');
+	showClassroomClosePromptButton.attr('type', 'button');
+	showClassroomClosePromptButton.val('Close Prompt');
+	showClassroomWrapper.append(showClassroomClosePromptButton);
+	
+	//listen for when the teacher clicks the close prompt button
+	showClassroomClosePromptButton.on('click', {thisView:this}, function(event) {
+    	var thisView = event.data.thisView;
+    	
+    	//get the currently selected period
+    	var periodId = thisView.classroomMonitorPeriodIdSelected;
+    	
+    	//close the show classroom teacher prompt
+    	thisView.closeShowClassroomTeacherPrompt(periodId);
+    	
+    	//get the show classroom canvas
+    	var canvas = $('#showClassroomCanvas');
+    	
+    	//get the canvas DOM element
+    	var canvasDOMElement = canvas[0];
+    	
+    	//get the canvas context
+    	var canvasContext = canvasDOMElement.getContext('2d');
+    	
+    	//clear the canvas
+    	canvasContext.clearRect(0, 0, $(canvas)[0].width, $(canvas)[0].height);
+    });
+	
+	//create the div that will contain the show classroom canvas
+	var showClassroomPromptDisplayDiv = $('<div>');
+	showClassroomPromptDisplayDiv.attr('id', 'showClassroomPromptDisplayDiv');
+	showClassroomPromptDisplayDiv.css('width', '800px');
+	showClassroomPromptDisplayDiv.css('height', '600px');
+	showClassroomPromptDisplayDiv.css('border', '1px');
+	showClassroomWrapper.append(showClassroomPromptDisplayDiv);
+	
+	/*
+	 * create the show classroom canvas that is used to display what the
+	 * teacher will send to the students
+	 */
+	var showClassroomCanvas = $('<canvas>');
+	showClassroomCanvas.attr('id', 'showClassroomCanvas');
+	showClassroomCanvas.attr('width', '800');
+	showClassroomCanvas.attr('height', '600');
+	showClassroomCanvas.css('border', '1px solid black');
+	showClassroomPromptDisplayDiv.append(showClassroomCanvas);
+	
+	//listen for when the teacher clicks on the show classroom canvas
+	showClassroomCanvas.on('mousedown', {thisView:this, showClassroomCanvas:showClassroomCanvas}, function(event) {
+    	var thisView = event.data.thisView;
+    	var showClassroomCanvas = event.data.showClassroomCanvas;
+    	
+    	//the teacher has clicked on the show classroom canvas  
+    	thisView.showClassroomCanvasClicked(showClassroomCanvas, event);
+    });
+	
+	//hide the show classroom div, we will show it later when necessary
+	showClassroomDiv.hide();
+};
+
+/**
+ * Send the teacher input to the students
+ * @param params an object containing the params for the teacher input
+ */
+View.prototype.sendShowClassroomTeacherInput = function(params) {
+	//create the message object with the necessary parameters
+	var messageJSON = {};
+	
+	//set the run id
+	messageJSON.runId = parseInt(this.getConfig().getConfigParam('runId'));
+	
+	//set the message type
+	messageJSON.messageType = 'showClassroomTeacherInputReceived';
+	
+	//get the period id
+	var periodId = this.classroomMonitorPeriodIdSelected;
+	
+	//set the message participants
+	if(periodId == null || periodId == 'all') {
+		//we are going to pause all the students in a run
+		messageJSON.messageParticipants = 'teacherToStudentsInRun';
+	} else if(periodId != null) {
+		//we are going to pause the students in a period
+		messageJSON.periodId = periodId;
+		messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
+	}
+	
+	//get the x and y values
+	var x = params.x;
+	var y = params.y;
+	messageJSON.x = x;
+	messageJSON.y = y;
+	
+	//send the teacher input to websockets
+	this.sendTeacherWebSocketMessage(messageJSON);
+};
+
+/**
+ * Send the show classroom teacher prompt
+ * @param periodId the period id
+ * @param background the background to display to the students
+ */
+View.prototype.sendShowClassroomTeacherPrompt = function(periodId, background) {
+	//create the message object with the necessary parameters
+	var messageJSON = {};
+	
+	//set the run id
+	messageJSON.runId = parseInt(this.getConfig().getConfigParam('runId'));
+	
+	//set the message type
+	messageJSON.messageType = 'showClassroomTeacherPromptReceived';
+	
+	//set the message participants
+	if(periodId == null || periodId == 'all') {
+		//we are going to show the prompt to all the students in a run
+		messageJSON.messageParticipants = 'teacherToStudentsInRun';
+	} else if(periodId != null) {
+		//we are going to show the prompt to the students in a period
+		messageJSON.periodId = periodId;
+		messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
+	}
+	
+	if(background != null) {
+		//set the pause message
+		messageJSON.background = background;
+	}
+	
+	//send the message to show the teacher prompt
+	this.sendTeacherWebSocketMessage(messageJSON);
+};
+
+/**
+ * Close the show classroom teacher prompt
+ * @param periodId the period id
+ */
+View.prototype.closeShowClassroomTeacherPrompt = function(periodId) {
+	//create the message object with the necessary parameters
+	var messageJSON = {};
+	
+	//set the run id
+	messageJSON.runId = parseInt(this.getConfig().getConfigParam('runId'));
+	
+	//set the message type
+	messageJSON.messageType = 'closeShowClassroomTeacherPrompt';
+	
+	//set the message participants
+	if(periodId == null || periodId == 'all') {
+		//we are going to show the prompt to all the students in a run
+		messageJSON.messageParticipants = 'teacherToStudentsInRun';
+	} else if(periodId != null) {
+		//we are going to show the prompt to the students in a period
+		messageJSON.periodId = periodId;
+		messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
+	}
+	
+	//send the message to close the teacher prompt
+	this.sendTeacherWebSocketMessage(messageJSON);
+};
+
+/**
+ * The teacher has clicked on the show classroom canvas
+ * @param canvas the canvas jquery object
+ * @param event the jquery click event
+ */
+View.prototype.showClassroomCanvasClicked = function(canvas, event) {
+	//get the canvas DOM elemenet
+	var canvasDOMElement = canvas[0];
+	
+	//get the canvas bounding rectangle
+	var canvasRectangle = canvasDOMElement.getBoundingClientRect();
+	
+	//get the x and y coordinates of where the teacher clicked
+	var x = event.clientX - canvasRectangle.left;
+	var y = event.clientY - canvasRectangle.top;
+	
+	//get the integer values of x and y
+	x = parseInt(x);
+	y = parseInt(y);
+	
+	//create the params object that will contain the x and y values
+	var params = {};
+	params.x = x;
+	params.y = y;
+	
+    //draw a red dot at the x, y position
+    var context = canvasDOMElement.getContext('2d');
+    context.beginPath();
+    context.arc(x, y, 4, 0, 2 * Math.PI, false);
+    context.fillStyle = 'red';
+    context.fill();
+    context.lineWidth = 1;
+    context.stroke();
+    
+    //send the teacher input to websockets
+	this.sendShowClassroomTeacherInput(params);
+};
+
+/**
+ * A student has sent a show classroom student input
+ * @param data the websocket message from the student
+ */
+View.prototype.showClassroomStudentInputReceived = function(data) {
+	//get the canvas
+    var canvas = $('#showClassroomCanvas');
+    
+    //get the canvas DOM element
+    var canvasDOMElement = canvas[0];
+    
+    //get the x and y values
+	var x = data.x;
+	var y = data.y;
+	
+	//get the integer values of x and y
+    x = parseInt(x);
+    y = parseInt(y);
+    
+    //get the canvas context
+    var canvasContext = canvasDOMElement.getContext('2d');
+
+    //draw a green dot at the x, y position
+    canvasContext.beginPath();
+    canvasContext.arc(x, y, 4, 0, 2 * Math.PI, false);
+    canvasContext.fillStyle = 'green';
+    canvasContext.fill();
+    canvasContext.lineWidth = 1;
+    canvasContext.strokeStyle = '#003300';
+    canvasContext.stroke();
 };
 
 /**

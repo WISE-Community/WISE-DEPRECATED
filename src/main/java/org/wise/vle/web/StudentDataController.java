@@ -1,3 +1,26 @@
+/**
+ * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Created by WISE, Graduate School of Education, University of California, Berkeley.
+ * 
+ * This software is distributed under the GNU General Public License, v3,
+ * or (at your option) any later version.
+ * 
+ * Permission is hereby granted, without written agreement and without license
+ * or royalty fees, to use, copy, modify, and distribute this software and its
+ * documentation for any purpose, provided that the above copyright notice and
+ * the following two paragraphs appear in all copies of this software.
+ * 
+ * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
+ * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+ * 
+ * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+ * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+ * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+ * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.wise.vle.web;
 
 import java.io.File;
@@ -33,6 +56,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.portal.service.websocket.WISEWebSocketHandler;
+import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
@@ -619,6 +643,7 @@ public class StudentDataController {
 		String userId = request.getParameter("userId");
 		String periodId = request.getParameter("periodId");
 		String data = request.getParameter("data");
+		String annotationJSONString = request.getParameter("annotation");
 		
 		//obtain the id the represents the id in the step work table
 		String stepWorkId = request.getParameter("id");
@@ -819,7 +844,7 @@ public class StudentDataController {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				
+				/*
 				if(cRaterItemId != null) {
 					// Send back the cRater item id to the student in the response
 					// student VLE would get this cRaterItemId and make a GET to
@@ -844,7 +869,7 @@ public class StudentDataController {
 						}
 					}
 				}
-				
+				*/
 				try {
 					//if this post is a peerReviewSubmit, add an entry into the peerreviewwork table
 					if(VLEDataUtils.isSubmitForPeerReview(nodeVisitJSON)) {
@@ -873,6 +898,31 @@ public class StudentDataController {
 				} catch(JSONException e) {
 					e.printStackTrace();
 				}
+				
+				//check if there is an annotation that we need to save
+				if(annotationJSONString != null && !annotationJSONString.equals("null")) {
+					try {
+						//get the annotation JSON object
+						JSONObject annotationJSONObject = new JSONObject(annotationJSONString);
+						
+						//get the annotation parameters
+						Long annotationRunId = annotationJSONObject.optLong("runId");
+						Long toWorkgroup = annotationJSONObject.optLong("toWorkgroup");
+						Long fromWorkgroup = annotationJSONObject.optLong("fromWorkgroup");
+						String type = annotationJSONObject.optString("type");
+						
+						//add the step work id and post time to the JSON object
+						annotationJSONObject.put("stepWorkId", stepWork.getId());
+						annotationJSONObject.put("postTime", postTime.getTime());
+						
+						//save the annotation JSON object
+						saveAnnotationObject(annotationRunId, toWorkgroup, fromWorkgroup, type, annotationJSONObject, stepWork, postTime);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				
 				//send back the json string with step work id and post time
 				response.getWriter().print(jsonResponse.toString());
 				
@@ -946,4 +996,65 @@ public class StudentDataController {
 		}
 		return node;
 	}
+	
+	/**
+	 * Save the annotation. If the annotation does not exist we will create a new annotation.
+	 * If the annotation already exists we will overwrite the data field in the existing
+	 * annotation.
+	 * @param runId the run id
+	 * @param toWorkgroup the to workgroup id
+	 * @param fromWorkgroup the from workgroup id
+	 * @param type the annotation type
+	 * @param annotationValue the JSONObject we will save into the data field
+	 * @param stepWork the step work object this annotation is related to
+	 * @param postTime the time this annotation was posted
+	 * @return the annotation
+	 */
+	private Annotation saveAnnotationObject(Long runId, Long toWorkgroup, Long fromWorkgroup, String type, JSONObject annotationValue, StepWork stepWork, Timestamp postTime) {
+		Annotation annotation = null;
+		
+		//get the to user
+		UserInfo toUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(toWorkgroup);
+		
+		//get the from user
+		UserInfo fromUserInfo = null;
+		if(fromWorkgroup != null && fromWorkgroup != -1) {
+			fromUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(toWorkgroup);
+		}
+		
+		//check if there is an existing annotation
+		annotation = vleService.getAnnotationByFromUserInfoToUserInfoStepWorkType(fromUserInfo, toUserInfo, stepWork, type);
+		
+		if(annotation == null) {
+			//the annotation for the fromUser, toUser, StepWork, and type does not exist so we will create one
+			
+			//create the new annotation
+			annotation = new Annotation(type);
+			
+			//set the fields in the annotation object
+			annotation.setRunId(runId);
+			annotation.setToUser(toUserInfo);
+			annotation.setFromUser(fromUserInfo);
+			annotation.setStepWork(stepWork);
+			annotation.setData(annotationValue.toString());
+			annotation.setPostTime(postTime);
+			
+			//save the annotation object to the database
+			vleService.saveAnnotation(annotation);
+		} else {
+			//the annotation for the fromUser, toUser, StepWork, and type already exists so we will overwrite the data
+
+			//update the data
+			annotation.setData(annotationValue.toString());
+			
+			//update the post time
+			annotation.setPostTime(postTime);
+			
+			//save the annotation
+			vleService.saveAnnotation(annotation);
+		}
+		
+		return annotation;
+	}
+	
 }

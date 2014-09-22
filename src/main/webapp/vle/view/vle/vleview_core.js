@@ -61,7 +61,7 @@ View.prototype.vleDispatcher = function(type,args,obj){
 			obj.getRunStatus();
 		}
 	} else if (type == 'assetUploaded') {
-		obj.assetUploaded(args[0], args[1]);
+		obj.assetUploaded(args[0], args[1], args[2]);
 	} else if (type == 'assetCopiedForReference') {
 		obj.assetCopiedForReference(args[0], args[1]);
 	} else if(type=="chatRoomTextEntrySubmitted") {
@@ -126,6 +126,7 @@ View.prototype.startVLEFromParams = function(obj){
 View.prototype.startVLE = function(){
 	this.model = new StudentModel();
 	this.setState(new VLE_STATE());
+	this.setAnnotations(new Annotations());
 	
 	/* load the project based on new config object parameters, lazy load */
 	this.loadProject(this.config.getConfigParam('getContentUrl'), this.config.getConfigParam('getContentBaseUrl'), true);
@@ -747,8 +748,10 @@ View.prototype.endCurrentNode = function(){
 	//close the show all work popup
 	$('#showallwork').dialog('close');
 	
-	// save all unsaved nodes
-	this.postAllUnsavedNodeVisits();
+	var sync = false;
+
+	// save all unsaved nodes asynchronously
+	this.postAllUnsavedNodeVisits(sync);
 };
 
 /**

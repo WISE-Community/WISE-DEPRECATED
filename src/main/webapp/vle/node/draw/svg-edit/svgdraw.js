@@ -278,7 +278,28 @@ SVGDRAW.prototype.save = function() {
 	var checkWork = this.checkWork;
 
 	//create a new svgdrawstate
-	var svgDrawState = new SVGDRAWSTATE(compressedData, null, autoScore, autoFeedback, autoFeedbackKey, checkWork, maxAutoScore);
+	var svgDrawState = new SVGDRAWSTATE(compressedData, null, null, null, null, checkWork, null);
+
+	if(checkWork) {
+		//get the node state timestamp which we will use as the node state id
+		var nodeStateId = svgDrawState.timestamp;
+		
+		//create the auto graded annotation value
+		var annotationValue = {
+			autoScore:autoScore,
+			maxAutoScore:maxAutoScore,
+			autoFeedback:autoFeedback,
+			autoFeedbackKey:autoFeedbackKey,
+			checkWork:checkWork,
+			nodeStateId:nodeStateId
+		};
+		
+		//get the current node visit
+		var nodeVisit = this.view.getState().getCurrentNodeVisit();
+		
+		//add the auto graded annotation value to the current annotation
+		this.view.addAutoGradedAnnotation(nodeVisit, annotationValue);
+	}
 	
 	//fire the event to push this state to the global view.states object
 	this.view.pushStudentWork(this.node.id, svgDrawState);
@@ -704,6 +725,7 @@ SVGDRAW.prototype.autoGradeWork = function() {
 				//get the feedback
 				var feedback = this.getFeedbackByKey(key);
 				
+				/*
 				var message = '';
 				
 				//display the score if we need to
@@ -720,11 +742,12 @@ SVGDRAW.prototype.autoGradeWork = function() {
 					
 					message += feedback;
 				}
+				*/
 				
 				//set the score and feedback so we can access them later when we save the svgdrawstate
 				this.autoScore = score;
 				this.maxAutoScore = max;
-				this.autoFeedback = message;
+				this.autoFeedback = feedback;
 				this.autoFeedbackKey = key;
 				this.checkWork = true;
 				
@@ -736,9 +759,6 @@ SVGDRAW.prototype.autoGradeWork = function() {
 				} else {
 					if(this.content.autoScoring.autoScoringDisplayScoreToStudent || this.content.autoScoring.autoScoringDisplayFeedbackToStudent) {
 						//we need to show the score of text feedback to the student
-						
-						//show the Feedback button at the top right of the vle next to the previous and next arrows
-						this.view.displayNodeAnnotation(this.node.id);
 						
 						//display the feedback in a popup dialog
 						eventManager.fire("showNodeAnnotations",[this.node.id]);

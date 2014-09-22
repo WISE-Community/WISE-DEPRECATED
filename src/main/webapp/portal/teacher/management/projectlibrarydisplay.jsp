@@ -8,8 +8,15 @@
 
 <%@ page buffer="100kb" %>
 
+<sec:authorize ifAnyGranted="ROLE_TEACHER">
+<script type="text/javascript">
+	// is teacher viewing this page, or anonymous?
+	var isTeacher = true;
+</script>
+</sec:authorize>
+
 <div id="projectTabs" class="panelTabs">
-    <ul>
+    <ul id="tabsUL">
     	<li><a href="#activeProjects"><spring:message code="current"/>  (${totalActiveProjects})</a></li>
     	<li><a href="#archivedProjects"><spring:message code="archived"/>  (${totalArchivedProjects})</a></li>
     </ul>
@@ -132,7 +139,7 @@
 																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.archive_tip" />" onclick="archiveProject('<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>', ${project.id})"><img class="icon" alt="archive" src="${contextPath}/<spring:theme code="lock"/>" />
 																	<span><spring:message code="teacher.management.projectlibrarydisplay.archive" /></span></a>&nbsp;|</li>												
 																</c:if>
-																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="../run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="${contextPath}/<spring:theme code="computer"/>" />
+																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="/teacher/run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="${contextPath}/<spring:theme code="computer"/>" />
 																	<span<c:if test="${!isChild && !isChildNoRoot}"> style="font-weight:bold;"</c:if>><spring:message code="teacher.management.projectlibrarydisplay.startRun" /></span></a>
 																</li>
 															</ul>
@@ -363,7 +370,7 @@
 																
 																<!-- <li><a style="color:#666;">Archive</a>
 																<input type='checkbox' id='public_${project.id}' onclick='changePublic("${project.id}")'/> Is Public</li>-->
-																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="../run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="${contextPath}/<spring:theme code="computer"/>" />
+																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="/teacher/run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="${contextPath}/<spring:theme code="computer"/>" />
 																	<span<c:if test="${!isChild && !isChildNoRoot}"> style="font-weight:bold;"</c:if>><spring:message code="teacher.management.projectlibrarydisplay.startRun" /></span></a>
 																</li>
 															</ul>
@@ -544,6 +551,9 @@
 													<c:set var="projectClass" value="projectBox rootProject library shared" />
 												</c:if>
 											</c:forEach>
+											<c:forEach items="${project.tags}" var="projectTag">
+												<c:set var="projectClass" value="${projectClass} ${projectTag.name}" />
+											</c:forEach>
 											<div class="${projectClass}" data-id="${project.id}">
 												<div class="projectOverview">
 													<div class="projectHeader">
@@ -572,7 +582,7 @@
 																</sec:accesscontrollist>
 																<!-- <li><a style="color:#666;">Archive</a>
 																<input type='checkbox' id='public_${project.id}' onclick='changePublic("${project.id}")'/> Is Public</li>-->
-																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="../run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="${contextPath}/<spring:theme code="computer"/>" />
+																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="/teacher/run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="${contextPath}/<spring:theme code="computer"/>" />
 																	<span style="font-weight:bold;"><spring:message code="teacher.management.projectlibrarydisplay.startRun" /></span></a>
 																</li>
 															</ul>
@@ -592,7 +602,12 @@
 																	</c:forEach>
 																</div>
 															</c:if>
-															<div class="libraryIcon"><img src="${contextPath}/<spring:theme code="open_book"/>" alt="library project" /> <spring:message code="teacher.management.projectlibrarydisplay.libraryProject" /></div>
+															<c:if test="${fn:contains(projectClass,'wise')}">
+																<div class="libraryIcon"><img src="${contextPath}/<spring:theme code="open_book"/>" alt="library project" /> <spring:message code="teacher.management.projectlibrarydisplay.libraryProject" /></div>
+															</c:if>
+															<c:if test="${fn:contains(projectClass,'teachershared')}">
+																<div class="libraryIcon"><img src="${contextPath}/<spring:theme code="shared"/>" alt="teacher shared project" /> <spring:message code="teacher.management.projectlibrarydisplay.teacherSharedProject" /> (<spring:message code="teacher.management.projectlibrarydisplay.teacherSharedProjectReviewBeforeRunMessage" />)</div>
+															</c:if>
 															<div class="basicInfo">
 																<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
 																<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
@@ -665,7 +680,7 @@
 											</div>
 										</td>
 										<td style="display:none;">${project.rootProjectId}</td>
-										<td style="display:none;">library</td>
+										<td style="display:none;">${projectClass}</td>
 										<td style="display:none;">${project.metadata.subject}</td>
 										<td style="display:none;">${project.metadata.gradeRange}</td>
 										<td style="display:none;">${project.metadata.totalTime}</td>
@@ -1345,7 +1360,7 @@
 				</div>
 			</c:when>
 			<c:otherwise>
-				<p class="info">
+				<p class="info" id='archived_empty_msg'>
 					<spring:message code="teacher.management.projectlibrarydisplay.archive_introEmpty"/>
 				</p>
 			</c:otherwise>
@@ -1429,6 +1444,10 @@
 	 * @param relativeProjectFilePathUrl the relative project file path e.g. "/513/wise4.project.json" 
 	 */
 	function copy(pID, type, name, fileName, relativeProjectFilePathUrl){
+		if (typeof(isTeacher) == "undefined") {
+			window.location.href = "${contextPath}/login.html";
+			return;
+		}
 		var $copyDialog = '<div id="copyDialog" class="dialog"><p><spring:message code="teacher.management.projectlibrarydisplay.copy_info" /></p>' +
 			'<p><spring:message code="teacher.management.projectlibrarydisplay.copy_confirm" /></p></div>';
 		
@@ -1849,7 +1868,13 @@
 				// TODO: add url params to current page location for each filter/search/sort/pagination/projects per page
 			},
 			"fnInitComplete":function(){
-				// setup tabs
+				// if viewer is not logged in, don't show tabs
+				if (typeof(isTeacher) == "undefined") {
+					$("#tabsUL").hide();
+					$("#archived_empty_msg").hide();
+					return;
+				}
+				// setup tabs if logged in
 				$( "#projectTabs" ).tabs({ 
 					active: 0,
 					activate: function(event, ui){
@@ -1926,9 +1951,10 @@
 					{
 						"identifier": "source", "label": "<spring:message code="teacher.management.projectlibrarydisplay.filter_source"/>", "column": 2,
 						"options": [
-							{"query": "library", "display": "<spring:message code="teacher.management.projectlibrarydisplay.public"/>"}, // TODO: modify FacetedFilter plugin to only require a query for each filter, use query as display if display option is not set
+							{"query": "wise", "display": "<spring:message code="teacher.management.projectlibrarydisplay.public"/>"}, // TODO: modify FacetedFilter plugin to only require a query for each filter, use query as display if display option is not set
 							{"query": "owned", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_source_owned"/>"},
-							{"query": "shared", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_source_shared"/>"}
+							{"query": "shared", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_source_shared"/>"},
+							{"query": "teachershared", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_source_teacherShared"/>"}
 						]
 					},
 					{

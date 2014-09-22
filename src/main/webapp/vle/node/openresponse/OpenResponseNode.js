@@ -623,6 +623,61 @@ OpenResponseNode.prototype.processStudentWork = function(nodeVisits) {
 	}
 };
 
+/**
+ * Function that checks if this step should show the autoScore to the student
+ * when the showNodeAnnotations() function is called.
+ */
+OpenResponseNode.prototype.showAutoScore = function() {
+	var result = true;
+	
+	//get the step content
+	var contentJSON = this.content.getContentJSON();
+	
+	if(contentJSON != null) {
+		//get the cRater object if it exists
+		var cRater = contentJSON.cRater;
+		
+		if(cRater != null) {
+			//get whether we should display the CRater score to the student
+			var displayCRaterScoreToStudent = cRater.displayCRaterScoreToStudent;
+			
+			if(displayCRaterScoreToStudent != null) {
+				result = displayCRaterScoreToStudent;
+			}
+		}
+	}
+	
+	return result;
+};
+
+/**
+ * Function that checks if this step should show the autoFeedback to the student
+ * when the showNodeAnnotations() function is called.
+ */
+OpenResponseNode.prototype.showAutoFeedback = function() {
+	var result = true;
+	
+	//get the step content
+	var contentJSON = this.content.getContentJSON();
+	
+	if(contentJSON != null) {
+		//get the cRater object if it exists
+		var cRater = contentJSON.cRater;
+		
+		if(cRater != null) {
+			//get whether we should display the CRater feedback to the student
+			var displayCRaterFeedbackToStudent = cRater.displayCRaterFeedbackToStudent;
+			
+			if(displayCRaterFeedbackToStudent != null) {
+				result = displayCRaterFeedbackToStudent;
+			}
+		}
+	}
+	
+	return result;
+};
+
+
 OpenResponseNode.prototype.getHTMLContentTemplate = function() {
 	return createContent('node/openresponse/openresponse.html');
 };

@@ -1,3 +1,26 @@
+/**
+ * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Created by WISE, Graduate School of Education, University of California, Berkeley.
+ * 
+ * This software is distributed under the GNU General Public License, v3,
+ * or (at your option) any later version.
+ * 
+ * Permission is hereby granted, without written agreement and without license
+ * or royalty fees, to use, copy, modify, and distribute this software and its
+ * documentation for any purpose, provided that the above copyright notice and
+ * the following two paragraphs appear in all copies of this software.
+ * 
+ * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
+ * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+ * 
+ * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+ * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+ * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+ * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.wise.vle.web;
 
 import java.io.File;
@@ -1091,6 +1114,15 @@ public class VLEGetXLS {
 		    	//header time the student spent on the step in seconds column
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Teacher Comment");
 		    	
+		    	//header cell for the auto score
+		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Auto Score");
+		    	
+		    	//header cell for the max auto score
+		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Max Auto Score");
+		    	
+		    	//header cell for the auto feedback
+		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Auto Feedback");
+		    	
 		    	//header classmate id for review type steps
 		    	headerColumn = setCellValue(headerRow, headerRowVector, headerColumn, "Classmate Id");
 		    	
@@ -1344,6 +1376,8 @@ public class VLEGetXLS {
 			
 			Long nodeStateTimeSpent = null;
 			
+			JSONObject autoGradedAnnotationForNodeState = null;
+			
 	    	//calculate the time the student spent on the step
 	    	if(endTime != null && startTime != null) {
 	    		/*
@@ -1356,7 +1390,7 @@ public class VLEGetXLS {
 	    	}
 			
 			//write the row for the node state
-			rowCounter = writeAllStudentWorkNodeState(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, nodeState, nodeStateTimeSpent);
+			rowCounter = writeAllStudentWorkNodeState(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, nodeState, nodeStateTimeSpent, autoGradedAnnotationForNodeState);
 		} else {
 			
 			Long nodeStateStartTime = null;
@@ -1389,8 +1423,11 @@ public class VLEGetXLS {
 						nodeStateTimeSpent = (nodeStateEndTime - nodeStateStartTime) / 1000;
 					}
 					
+					//get the autoGraded annotation for the node state
+					JSONObject autoGradedAnnotationForNodeState = getAutoGradedAnnotationForNodeState(stepWork, nodeStateEndTime);
+					
 					//write the row for the node state
-					rowCounter = writeAllStudentWorkNodeState(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, nodeState, nodeStateTimeSpent);
+					rowCounter = writeAllStudentWorkNodeState(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, nodeState, nodeStateTimeSpent, autoGradedAnnotationForNodeState);
 					
 					//set the node state start time as the node state end time for the next node state
 					nodeStateStartTime = nodeStateEndTime;
@@ -1401,6 +1438,64 @@ public class VLEGetXLS {
 		}
 		
 		return rowCounter;
+	}
+	
+	/**
+	 * Get the autoGraded annotation for the given node state
+	 * @param stepWork the step work
+	 * @param nodeStateTimestamp the timestamp for the node state
+	 * @return the autoGraded annotation
+	 */
+	private JSONObject getAutoGradedAnnotationForNodeState(StepWork stepWork, Long nodeStateTimestamp) {
+		JSONObject autoGradedAnnotationForNodeState = null;
+		String annotationType = "autoGraded";
+
+		//get the autoGraded annotation for the whole node visit
+		Annotation autoGradedAnnotation = vleService.getAnnotationByStepWorkAndAnnotationType(stepWork, annotationType);
+		
+		if(autoGradedAnnotation != null && nodeStateTimestamp != null) {
+			//get the annotation data
+			String autoGradedAnnotationData = autoGradedAnnotation.getData();
+			
+			if(autoGradedAnnotationData != null && !autoGradedAnnotationData.equals("")) {
+				try {
+					//get the annotation data as a JSONObject
+					JSONObject autoGradedAnnotationDataJSONObject = new JSONObject(autoGradedAnnotationData);
+					
+					if(autoGradedAnnotationDataJSONObject != null) {
+						//get the array of annotations within the annotation data
+						JSONArray annotationsForNodeStates = autoGradedAnnotationDataJSONObject.getJSONArray("value");
+						
+						if(annotationsForNodeStates != null) {
+							//loop through all the node state annotations
+							for(int x=0; x<annotationsForNodeStates.length(); x++) {
+								//get a node state annotation
+								JSONObject nodeStateAnnotation = annotationsForNodeStates.getJSONObject(x);
+								
+								if(nodeStateAnnotation != null) {
+									/*
+									 * get the node state id of the annotation which is the timestamp of the node state
+									 * for which is refers to
+									 */
+									Long nodeStateId = nodeStateAnnotation.getLong("nodeStateId");
+									
+									//check if the node state id matches the one we want
+									if(nodeStateTimestamp.equals(nodeStateId)) {
+										//the node state id matches so we have found the node state annotation we want
+										autoGradedAnnotationForNodeState = nodeStateAnnotation;
+										break;
+									}
+								}
+							}
+						}
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return autoGradedAnnotationForNodeState;
 	}
 	
 	/**
@@ -1428,6 +1523,7 @@ public class VLEGetXLS {
 	 * @param nodeJSONObject
 	 * @param nodeState
 	 * @param nodeStateTimeSpent
+	 * @param autoGradedAnnotationForNodeState
 	 * @return the row counter for the next empty row
 	 */
 	private int writeAllStudentWorkNodeState(XSSFSheet userIdSheet,
@@ -1452,10 +1548,11 @@ public class VLEGetXLS {
 			List<StepWork> stepWorksForWorkgroupId,
 			JSONObject nodeJSONObject,
 			JSONObject nodeState,
-			Long nodeStateTimeSpent) {
+			Long nodeStateTimeSpent,
+			JSONObject autoGradedAnnotationForNodeState) {
 		
     	//get the student work columns for this node state if export columns were authored
-    	ArrayList<ArrayList<Object>> columns = getExportColumnDataValues(nodeState, nodeId);
+    	ArrayList<ArrayList<Object>> columns = getExportColumnDataValues(nodeState, nodeId, autoGradedAnnotationForNodeState);
     	
     	//get the column names of the export columns if they were authored
     	ArrayList<Object> columnNames = getExportColumnNames(nodeId);
@@ -1505,7 +1602,7 @@ public class VLEGetXLS {
     			}
     			
     			//write the row to the excel
-    			writeAllStudentWorkRow(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, columnNames, row, nodeStateTimeSpent);
+    			writeAllStudentWorkRow(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, columnNames, row, nodeStateTimeSpent, autoGradedAnnotationForNodeState);
     			
     			//update the row counter
     			rowCounter++;
@@ -1522,7 +1619,7 @@ public class VLEGetXLS {
     		columnNames = getDefaultColumnNames(nodeId, nodeType, nodeState);
 
     		//write the row to the excel
-    		writeAllStudentWorkRow(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, columnNames, row, nodeStateTimeSpent);
+    		writeAllStudentWorkRow(userIdSheet, rowCounter, nodeId, workgroupId, wiseId1, wiseId2, wiseId3, stepWorkId, stepVisitCount, nodeTitle, nodeType, nodePrompt, nodeContent, startTime, endTime, postTime, stepWork, periodId, userInfo, stepWorksForWorkgroupId, nodeJSONObject, columnNames, row, nodeStateTimeSpent, autoGradedAnnotationForNodeState);
     		
     		//update the row counter
     		rowCounter++;
@@ -2034,6 +2131,7 @@ public class VLEGetXLS {
 	 * @param columnNames
 	 * @param row
 	 * @param nodeStateTimeSpent
+	 * @param autoGradedAnnotationForNodeState
 	 * @return the column number for the next empty cell to use
 	 */
 	private int writeAllStudentWorkRow(XSSFSheet userIdSheet,
@@ -2059,7 +2157,8 @@ public class VLEGetXLS {
 			JSONObject nodeJSONObject,
 			ArrayList<Object> columnNames,
 			ArrayList<Object> row,
-			Long nodeStateTimeSpent) {
+			Long nodeStateTimeSpent,
+			JSONObject autoGradedAnnotationForNodeState) {
     	
 		//counter for the cell columns
     	int tempColumn = 0;
@@ -2159,6 +2258,9 @@ public class VLEGetXLS {
     	
     	//set the latest annotation comment and timestamp
     	tempColumn = setLatestAnnotationCommentAndTimestamp(stepWorkList, tempRow, tempRowVector, tempColumn);
+    	
+    	//set the auto graded cells such as auto score, max auto score, and auto feedback
+    	tempColumn = setLatestAutoGradedAnnotation(autoGradedAnnotationForNodeState, tempRow, tempRowVector, tempColumn);
     	
 		/*
 		 * set the review cells, if the current step does not utilize any review
@@ -2578,11 +2680,12 @@ public class VLEGetXLS {
 	 * Get the student data values for the export column
 	 * @param nodeState the node state
 	 * @param nodeId the node if of the step
+	 * @param autoGradedAnnotationForNodeState the auto graded annotation for the node state if it exists
 	 * @return the student data values columns. this is a two dimensional array
 	 * with the first dimension being the columns and the second dimension being
 	 * the rows.
 	 */
-	private ArrayList<ArrayList<Object>> getExportColumnDataValues(JSONObject nodeState, String nodeId) {
+	private ArrayList<ArrayList<Object>> getExportColumnDataValues(JSONObject nodeState, String nodeId, JSONObject autoGradedAnnotationForNodeState) {
 		//holds the columns and values of the columns
 		ArrayList<ArrayList<Object>> columns = new ArrayList<ArrayList<Object>>();
 		
@@ -2631,7 +2734,7 @@ public class VLEGetXLS {
 						}
 						
 						//get the student data values for the field
-						ArrayList<Object> newColumn = getColumnValuesForField(exportColumn, nodeState, nodeId);
+						ArrayList<Object> newColumn = getColumnValuesForField(exportColumn, nodeState, nodeId, autoGradedAnnotationForNodeState);
 						
 						if(relatedColumnExpandAndMultiplyAmounts == null) {
 							//we did not find any previous columns that referenced the same object
@@ -5427,11 +5530,12 @@ public class VLEGetXLS {
 	 * Get the column values for a field in the student data
 	 * @param fieldObject the object that specifies what field to get
 	 * @param studentWork the student data
+	 * @param autoGradedAnnotationForNodeState the auto graded annotation for the node state if it exists
 	 * @return an array of objects that are found in the specified field
 	 * in the student data. if the field only contains one value, there
 	 * will only be one element in the array.
 	 */
-	private ArrayList<Object> getColumnValuesForField(JSONObject fieldObject, JSONObject studentWork, String nodeId) {
+	private ArrayList<Object> getColumnValuesForField(JSONObject fieldObject, JSONObject studentWork, String nodeId, JSONObject autoGradedAnnotationForNodeState) {
 		//the array to hold the values
 		ArrayList<Object> values = new ArrayList<Object>();
 		
@@ -5453,9 +5557,20 @@ public class VLEGetXLS {
 					}
 					
 					if(field != null) {
-						if(studentWork.has(field)) {
+						//check if the student work or the autoGraded annotation has the field we are looking for
+						if(studentWork.has(field) || (autoGradedAnnotationForNodeState != null && autoGradedAnnotationForNodeState.has(field))) {
 							//get the value in the field in the student work
-							Object value = studentWork.get(field);
+							Object value = studentWork.opt(field);
+							
+							if(value == null) {
+								/*
+								 * the student work does not have the field we are looking for so we
+								 * will try to find it in the autoGraded annotation
+								 */
+								if(autoGradedAnnotationForNodeState != null) {
+									value = autoGradedAnnotationForNodeState.opt(field);
+								}
+							}
 
 							if(value != null) {
 								if(value instanceof JSONObject) {
@@ -5464,7 +5579,7 @@ public class VLEGetXLS {
 									
 									if(childFieldObject != null) {
 										//there is a childField specified so we will recursively go deeper into the student work
-										values.addAll(getColumnValuesForField(childFieldObject, jsonObjectValue, nodeId));							
+										values.addAll(getColumnValuesForField(childFieldObject, jsonObjectValue, nodeId, autoGradedAnnotationForNodeState));							
 									} else {
 										//there is no childField so we have traversed as far as we need to and will get this value 
 										values.add(jsonObjectValue.toString());
@@ -5475,7 +5590,7 @@ public class VLEGetXLS {
 									
 									if(childFieldObject != null) {
 										//there is a childField specified so we will recursively go deeper into the student work
-										values.addAll(getValueForField(childFieldObject, jsonArrayValue, nodeId));							
+										values.addAll(getValueForField(childFieldObject, jsonArrayValue, nodeId, autoGradedAnnotationForNodeState));							
 									} else {
 										/*
 										 * there is no childField so we have traversed as far as we need to and will get this value.
@@ -5767,9 +5882,10 @@ public class VLEGetXLS {
 	 *  "world"
 	 * ]
 	 * 
+	 * @param autoGradedAnnotationForNodeState the auto graded annotation for the node state if it exists
 	 * @return an array that contains the field value from each element in the array
 	 */
-	private ArrayList<Object> getValueForField(JSONObject fieldObject, JSONArray studentWork, String nodeId) {
+	private ArrayList<Object> getValueForField(JSONObject fieldObject, JSONArray studentWork, String nodeId, JSONObject autoGradedAnnotationForNodeState) {
 		ArrayList<Object> values = new ArrayList<Object>();
 		
 		if(studentWork != null) {
@@ -5807,6 +5923,16 @@ public class VLEGetXLS {
 									}
 								}
 								
+								if(value == null) {
+									/*
+									 * the student work does not have the field we are looking for so we
+									 * will try to find it in the autoGraded annotation
+									 */
+									if(autoGradedAnnotationForNodeState != null) {
+										value = autoGradedAnnotationForNodeState.opt(field);
+									}
+								}
+								
 								if(value != null) {
 									//we were able to retrieve the field value
 									
@@ -5815,7 +5941,7 @@ public class VLEGetXLS {
 										
 										if(childFieldObject != null) {
 											//there is a child field so we will traverse deeper into the student work
-											values.add(getColumnValuesForField(childFieldObject, (JSONObject) value, nodeId));							
+											values.add(getColumnValuesForField(childFieldObject, (JSONObject) value, nodeId, autoGradedAnnotationForNodeState));							
 										} else {
 											//there is no child field so we will just get the string value of the object
 											values.add(value.toString());
@@ -5823,7 +5949,7 @@ public class VLEGetXLS {
 									} else if(value instanceof JSONArray) {
 										if(childFieldObject != null) {
 											//there is a child field so we will traverse deeper into the student work
-											values.add(getValueForField(childFieldObject, (JSONArray) value, nodeId));							
+											values.add(getValueForField(childFieldObject, (JSONArray) value, nodeId, autoGradedAnnotationForNodeState));							
 										} else {
 											//there is no child field so we will just get the string value of the array
 											values.add(value.toString());
@@ -9909,6 +10035,35 @@ public class VLEGetXLS {
 			//there is no annotation so we will just increment the column counter
 			workgroupColumnCounter += 2;
 			addEmptyElementsToVector(rowForWorkgroupIdVector, 2);
+		}
+		
+		return workgroupColumnCounter;
+	}
+	
+	/**
+	 * Set the autoGraded values into the cells
+	 * @param autoGradedAnnotationForNodeState the autoGraded annotation
+	 * @param rowForWorkgroupId the row
+	 * @param rowForWorkgroupIdVector the vector
+	 * @param workgroupColumnCounter the column index
+	 * @return the updated column counter pointing to the next empty column
+	 */
+	private int setLatestAutoGradedAnnotation(JSONObject autoGradedAnnotationForNodeState, Row rowForWorkgroupId, Vector<String> rowForWorkgroupIdVector, int workgroupColumnCounter) {
+		
+		if(autoGradedAnnotationForNodeState != null) {
+			//get the auto score, max auto score, and auto feedback
+			Long autoScore = autoGradedAnnotationForNodeState.optLong("autoScore");
+			Long maxAutoScore = autoGradedAnnotationForNodeState.optLong("maxAutoScore");
+			String autoFeedback = autoGradedAnnotationForNodeState.optString("autoFeedback");
+			
+			//set the values into the cells
+			workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, autoScore);
+			workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, maxAutoScore);
+			workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, autoFeedback);
+		} else {
+			//there is no autoGraded annotation so there will be 3 empty cells
+			workgroupColumnCounter += 3;
+			addEmptyElementsToVector(rowForWorkgroupIdVector, 3);
 		}
 		
 		return workgroupColumnCounter;

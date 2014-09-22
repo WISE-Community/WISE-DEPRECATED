@@ -75,6 +75,8 @@ View.prototype.startWebSocketConnection = function() {
 						} else if(messageType == 'unPauseScreen') {
 							//another teacher has unpaused the screen
 							view.pauseScreenReceived(data);
+						} else if(messageType == 'showClassroomStudentInputReceived') {
+							view.showClassroomStudentInputReceived(data);
 						}
 					}
 				}

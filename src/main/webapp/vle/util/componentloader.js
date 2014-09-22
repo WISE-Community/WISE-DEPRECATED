@@ -30,7 +30,6 @@ var componentloader = function(em, sl){
 				HTML_CONTENT_TEMPLATES:{}, 
 				isLoadedProjectMinified:false, 
 				minifierUrl:'../util/minifier.html',
-				//iconUrl:'images/stepIcons/UCCP/',
 				nodeClasses:{},
 				nodeIconPaths:{},
 				activeThemes: [],

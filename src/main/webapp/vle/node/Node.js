@@ -47,7 +47,8 @@ function Node(nodeType, view){
 		                        {functionName:'mustCompleteBeforeExiting', functionArgs:[]},
 		                        {functionName:'mustCompleteXBefore', functionArgs:[]},
 		                        {functionName:'mustVisitXBefore', functionArgs:[]},
-		                        {functionName:'xMustHaveStatusY', functionArgs:['statusType', 'statusValue']}
+		                        {functionName:'xMustHaveStatusY', functionArgs:['statusType', 'statusValue']},
+		                        {functionName:'mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancing', functionArgs:['ideaCount']}
 		                        ];
 	}
 	
@@ -154,7 +155,7 @@ Node.prototype.getHints = function() {
 
 /**
  * Retrieves the annotations for this node, if exists. Returns only annotations of
- * type {score,comment,cRater} for the logged in user. 
+ * type {score,comment,cRater,autoGraded} for the logged in user. 
  * @return Annotations if exists. if not exist, return null
  */
 Node.prototype.getNodeAnnotations = function() {
@@ -166,7 +167,7 @@ Node.prototype.getNodeAnnotations = function() {
 		var loggedInWorkgroupId = this.view.getUserAndClassInfo().getWorkgroupId();
 		for (var i=0; i < allNodeAnnotations.length; i++) {
 			var nodeAnnotation = allNodeAnnotations[i];
-			if (nodeAnnotation.type == "score" || nodeAnnotation.type == "comment" || nodeAnnotation.type == "cRater") {
+			if (nodeAnnotation.type == "score" || nodeAnnotation.type == "comment" || nodeAnnotation.type == "cRater" || nodeAnnotation.type == "autoGraded") {
 				if (nodeAnnotation.toWorkgroup == loggedInWorkgroupId) {
 					filteredNodeAnnotations.push(nodeAnnotation);					
 				}
@@ -304,26 +305,7 @@ Node.prototype.preloadContent = function(){
  * Renders itself to the specified content panel
  */
 Node.prototype.render = function(contentPanel, studentWork, disable) {
-	// fetch i18n files for this node if not yet fetched.
-	var nodeConstructor = NodeFactory.nodeConstructors[this.type];
-	if (nodeConstructor != null) {
-		var nodePrototype = nodeConstructor.prototype;
-		if (nodePrototype.i18nEnabled) {		
-			// check to see if we've already fetched i18n files for this node type
-			if (!view.i18n.supportedLocales[this.type]) {
-				view.i18n.supportedLocales[this.type] = nodePrototype.supportedLocales;
-				view.retrieveLocales(this.type,nodePrototype.i18nPath);								
-			} 
-			// if this node extends from another node (e.g. ChallengeQuestionNode, NoteNode, AnnotatorNode)
-			// also fetch i18n files of its parents.
-			if (nodePrototype.parent && nodePrototype.parent != Node.prototype && nodePrototype.parent.i18nType) {
-				if (!view.i18n.supportedLocales[nodePrototype.parent.i18nType]) {
-					view.i18n.supportedLocales[nodePrototype.parent.i18nType] = nodePrototype.parent.supportedLocales;
-					view.retrieveLocales(nodePrototype.parent.i18nType,nodePrototype.parent.i18nPath);								
-				} 
-			}
-		}							
-	}
+	this.fetchI18NFiles();	
 	
 	this.studentWork = studentWork;
 	
@@ -435,6 +417,31 @@ Node.prototype.render = function(contentPanel, studentWork, disable) {
 		}
 		this.view.postCurrentStep(this);
 	}
+};
+
+/**
+ * fetch i18n files for this node if not yet fetched.
+ */
+Node.prototype.fetchI18NFiles = function() {
+	var nodeConstructor = NodeFactory.nodeConstructors[this.type];
+	if (nodeConstructor != null) {
+		var nodePrototype = nodeConstructor.prototype;
+		if (nodePrototype.i18nEnabled) {		
+			// check to see if we've already fetched i18n files for this node type
+			if (!view.i18n.supportedLocales[this.type]) {
+				view.i18n.supportedLocales[this.type] = nodePrototype.supportedLocales;
+				view.retrieveLocales(this.type,nodePrototype.i18nPath);								
+			} 
+			// if this node extends from another node (e.g. ChallengeQuestionNode, NoteNode, AnnotatorNode)
+			// also fetch i18n files of its parents.
+			if (nodePrototype.parent && nodePrototype.parent != Node.prototype && nodePrototype.parent.i18nType) {
+				if (!view.i18n.supportedLocales[nodePrototype.parent.i18nType]) {
+					view.i18n.supportedLocales[nodePrototype.parent.i18nType] = nodePrototype.parent.supportedLocales;
+					view.retrieveLocales(nodePrototype.parent.i18nType,nodePrototype.parent.i18nPath);								
+				} 
+			}
+		}							
+	}	
 };
 
 /**
@@ -711,7 +718,7 @@ Node.prototype.injectBaseRef = function(content) {
 		}
 
 		// check for tinymce flv embed instances, inject baseURI into any 'url' flashvars
-		if(newContent.match(contextPath + '/vle/jquery/tinymce/jscripts/tiny_mce/plugins/media/moxieplayer.swf')){
+		if(newContent.match(contextPath + '/vle/js/tinymce4/js/tinymce/plugins/media/moxieplayer.swf')){
 			newContent = newContent.replace(/url=assets/g,'url=' + cbu + 'assets');
 		}
 
@@ -2664,6 +2671,24 @@ Node.prototype.disableInteractivity = function(doDisable, message) {
 		$('#disabledPanel').remove();
 	}
 }
+
+/**
+ * Function that checks if this step should show the autoScore to the student
+ * when the showNodeAnnotations() function is called.
+ * Child classes should override this function.
+ */
+Node.prototype.showAutoScore = function() {
+	return true;
+};
+
+/**
+ * Function that checks if this step should show the autoFeedback to the student
+ * when the showNodeAnnotations() function is called.
+ * Child classes should override this function.
+ */
+Node.prototype.showAutoFeedback = function() {
+	return true;
+};
 
 /*
  * Takes in a state JSON object and returns a STATE object. This

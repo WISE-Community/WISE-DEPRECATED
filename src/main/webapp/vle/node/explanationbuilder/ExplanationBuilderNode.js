@@ -395,7 +395,7 @@ ExplanationBuilderNode.prototype.ideaBasketChanged = function(type,args,obj) {
 	 * and we only need to update the basket if the student is on 
 	 * an ExplanationBuilderNode step.
 	 */
-	if(thisNode.view.getCurrentNode().id == thisNode.id) {
+	if(thisNode.view.getCurrentNode().id == thisNode.id && thisNode.contentPanel.explanationBuilder != null) {
 		//update the idea basket within the step
 		thisNode.contentPanel.explanationBuilder.ideaBasketChanged(thisNode.view.ideaBasket);
 	}

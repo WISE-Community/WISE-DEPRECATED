@@ -77,7 +77,15 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 						<table id="teacherMessageTable">
 							<tr>
 								<td>
-								<div class="highlight welcomeMsg">
+								<div id="newsContent" class="highlight welcomeMsg">
+									<c:forEach var="newsItem" items="${teacherOnlyNewsItems}">
+										<div class="newsItem">
+											<p class="newsTitle"><span class="newsDate"><fmt:formatDate value="${newsItem.date}" type="date" dateStyle="short" /></span>${newsItem.title}</p>
+											<p class="newsSnippet">${newsItem.news}</p>
+										</div>
+									</c:forEach>
+								</div>
+								<div class="highlight welcomeMsg" style="display:none">
 									<c:set var="current_date" value="<%= new java.util.Date() %>" />
 									<c:choose>
 										<c:when test="${(current_date.hours>=4) && (current_date.hours<5)}">

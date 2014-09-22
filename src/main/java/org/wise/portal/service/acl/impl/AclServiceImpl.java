@@ -1,17 +1,20 @@
 /**
- * Copyright (c) 2007 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ *
+ * This software is distributed under the GNU General Public License, v3,
+ * or (at your option) any later version.
  * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * Permission is hereby granted, without written agreement and without license
+ * or royalty fees, to use, copy, modify, and distribute this software and its
+ * documentation for any purpose, provided that the above copyright notice and
+ * the following two paragraphs appear in all copies of this software.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
+ * You should have received a copy of the GNU Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
@@ -19,6 +22,7 @@ package org.wise.portal.service.acl.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.proxy.HibernateProxyHelper;
@@ -34,6 +38,7 @@ import org.springframework.security.acls.model.ObjectIdentity;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.acls.model.Sid;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.wise.portal.domain.Persistable;
@@ -234,6 +239,12 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
+		Collection<? extends GrantedAuthority> grantedAuthorities = authentication.getAuthorities();
+		if (grantedAuthorities.size() == 1) {
+			if ("[ROLE_ANONYMOUS]".equals(grantedAuthorities.toString())) {
+				return false;
+			}
+		}
 		boolean hasAllPermissions = true;
 		ArrayList<Integer> permissionsList = new ArrayList<Integer>();
 		// separate possibly comma-separated permissions string into array of permissions

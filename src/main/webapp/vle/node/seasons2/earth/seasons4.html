@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Seasons 4: Investigating Earth's tilt and hours of daylight</title>
+    <link href="../stylesheets/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../stylesheets/rangeinput.css" rel="stylesheet" type="text/css" />
+    <link href="../stylesheets/table.css" rel="stylesheet" type="text/css" />
+
+    <script src="http://cdn.jquerytools.org/1.2.5/full/jquery.tools.min.js"></script>
+
+    <script type="text/javascript" src="../lib/scenejs-0.8.0/scenejs.js"></script>
+    <script type="text/javascript" src="../lib/glmatrix.js"></script>
+    <script type="text/javascript" src="../lib/sprintf.js"></script>
+
+    <script type="text/javascript" src="../lib/modernizr-1.6.js"></script>
+
+		<script type="text/javascript" src="../lib/table/fastinit.js"></script>
+		<script type="text/javascript" src="../lib/table/tablesort.js"></script>
+		
+    <style>
+
+  	/* Override skin1.css to make it vertical */
+
+  	/* height is now larger than width  */
+  	.slider {
+  		height:300px;
+  		width:9px;
+  		margin:0 0 0 60px;
+  	}
+
+  	.vertical .slider {
+  		height:300px;
+  		width:9px;
+  		margin:20px 8px 12px 24px;
+  	}
+
+  	/* tweak drag handle position */
+  	.handle {
+  		top:0;
+  		left:-10px;		
+  	}
+
+  	/* position progressbar on the bottom edge */
+  	.progress {
+  		width:9px; 
+  		position:absolute;
+  		bottom:0;	
+  	}
+  	
+  	.range {
+        background: none repeat scroll 0 0 transparent;
+        border: 0 none;
+        border-radius: 2px 2px 2px 2px;
+        color: #FFFFFF;
+        float: left;
+        font-size: 12px;
+        margin: -5px 0 10px;
+        text-align: center;
+        width: 30px;
+    }
+
+  	.vertical .range {
+        background: none repeat scroll 0 0 transparent;
+        border: 0 none;
+        border-radius: 2px 2px 2px 2px;
+        color: #FFFFFF;
+        float: left;
+        font-size: 14px;
+        margin: -8px 12px 0px -26px;
+        text-align: center;
+        width: 30px;
+    }
+    </style>
+
+</head>
+<div id="container">
+  <div id="header-inner">
+    <h1 id="title">Seasons 4: Investigating Earth's tilt and hours of daylight</h1>
+  </div>
+  <div id="content">
+    <div id="webglCanvasContainer">
+      <canvas id="theCanvas" height="700px", width="1000px"></canvas>
+      <div id="info-label" class="webgl-canvas-label transparent-ui">
+        <label><input id="info-view" type="checkbox" checked/></label>
+        <div id="info-content"></div>
+      </div>
+      <div id="info-graph" class="webgl-canvas-graph transparent-ui">
+        <label><input id="graph-view" type="checkbox" /></label>
+        <canvas id="altitude-graph-canvas" width="1" height="1"></canvas>
+        <canvas id="radiation-lon-graph-canvas" width="1" height="1"></canvas>
+        <canvas id="radiation-lat-graph-canvas" width="1" height="1"></canvas>
+      </div>
+      <div id="controls-label" class="webgl-canvas-label transparent-ui">
+        <form id="show-me">
+          <fieldset>
+            <legend>Controls</legend>
+            <label><input id="earth-rotation" type="checkbox"/> Rotation</label><br />
+            <label><input id="surface-view" type="checkbox"/> Surface View</label><br />
+          </fieldset>
+          <br />
+          <fieldset>
+            <legend>Display</legend>
+            <label><input id="solar-altitude-graph" type="checkbox" checked/> Solar Altitude</label><br />
+          </fieldset>
+          <br />
+          <fieldset>
+            <legend>Ecliptic Grids</legend>
+            <label><input id="earth-grid" type="checkbox" checked/> Earth Square</label><br />
+          </fieldset>
+          <br />
+          <fieldset>
+            <legend>Markers</legend>
+            <label><input id="sun-earth-line" type="checkbox" checked/> Center Ray</label><br />
+            <label><input id="sun-rise-set" type="checkbox" checked/> Rise/Set</label><br />
+            <label><input id="lat-hour-markers" type="checkbox"/> Latitude Hours</label><br />
+          </fieldset>
+          <br />
+          <form id="select-city">
+            <fieldset>
+              <legend>Select city</legend>
+              <select id="selected-city" name="selected-city">City
+                <option disabled selected>city ...</option>
+              </select>
+            </fieldset>
+          </form>
+          <form id="choose-month">
+            <fieldset>
+              <legend>Month</legend>
+              <label><input type="radio" name="month" value="jun" checked> Jun</input></label>
+              <label><input type="radio" name="month" value="sep"> Sep</input></label><br />
+              <label><input type="radio" name="month" value="dec"> Dec</input></label>
+              <label><input type="radio" name="month" value="mar"> Mar</input></label>
+            </fieldset>
+          </form>
+          <form id="choose-tilt">
+            <fieldset>
+              <legend>Tilt of Earth</legend>
+              <label><input type="radio" name="tilt" value="yes" checked> Yes</input></label>
+              <label><input type="radio" name="tilt" value="no"> No</input></label>
+            </fieldset>          
+          </form>
+        </form>
+      </div>
+      <div id="experiment-panel" class="webgl-canvas-panel transparent-ui">
+        <div id="experiment-checkbox"><label ><b>Experiment Panel</b><input id="experiment-view" type="checkbox"/></label></div>
+        <div id="experiment-content">
+          <br />
+          First select a city and date ... then predict the number
+          <form id="daylight-hours-prediction">
+            <label id="daylight-hours-prediction-label" for="daylight-hours-prediction">of daylight hours:</label>
+            <input type="text" id="daylight-hours-prediction" name="daylight-hours-prediction" />
+            <input type="submit" value="Check" />
+          </form>
+          
+          <table id='city-data-table' class='sortable'>
+            <thead>
+              <tr>
+                <th class='sortfirstasc text'>City</th>
+                <th class='text'>Month</th>
+                <th class='number'>Daylight Hours</th>
+                <th class='number'>Prediction</th>
+                <th class="nosort">Season ?</th>
+                <th class="nosort">Graph</th>
+            </thead>
+            <tbody id="city-data-table-body">
+              <tr>
+                <td class='sortfirstasc text'>San Francisco</td>
+                <td class='text'>June</td>
+                <td class='number'>13.3</td>
+                <td class='number'>12</td>
+                <td class="nosort">Fall</td>
+                <td class="nosort">Graph</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id="debug-label" class="webgl-canvas-label transparent-ui" style="font-size:90%">
+        <div id="debug-content"></div>
+        <div id="debug-checkbox"><label >debugging output <input id="debug-view" type="checkbox"/></label></div>
+      </div>
+    </div>
+    <div id="latitude-slider-div" class="webgl-canvas-label transparent-ui vertical" style="font-size:90%">
+        <input id="latitude-slider" name="latitude-slider" type="range" min="-90" max="90" value="0">
+    </div>
+    <div id="info">
+    </div>
+    <div id="log">
+      <h3>SceneJS Log</h3>
+      <div id="theLoggingDiv"></div>
+    </div> 
+  </div>
+</div>
+<script type="text/javascript" src="jpl-earth-ephemerides.js"></script>
+<script type="text/javascript" src="cities.js"></script>
+<script type="text/javascript" src="seasons-v2.js"></script>
+<script type="text/javascript" src="seasons4.js"></script>
+</body>
+</html>

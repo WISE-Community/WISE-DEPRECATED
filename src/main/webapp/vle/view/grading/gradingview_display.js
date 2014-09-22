@@ -2971,31 +2971,33 @@ View.prototype.getPeerOrTeacherReviewData = function(studentWork, node, workgrou
 			//get the latest node visit from the original node
 			var originalNodelatestNodeVisit = vleState.getLatestNodeVisitByNodeId(associatedOriginalNodeId);
 			
-			//get the latest work from the original node
-			var originalWork = originalNodelatestNodeVisit.getLatestWork();
-			
-			var teacherAnnotation = "";
-			
-			if(this.getAnnotations() != null) {
-				//get the latest comment annotation for the original step written by the teacher
-				var latestCommentAnnotationForStep = this.getAnnotations().getLatestAnnotation(
-						this.getConfig().getConfigParam('runId'),
-						associatedOriginalNodeId,
-						workgroupId,
-						this.getUserAndClassInfo().getAllTeacherWorkgroupIds(),
-						'comment'
-						);
+			if(originalNodelatestNodeVisit != null) {
+				//get the latest work from the original node
+				var originalWork = originalNodelatestNodeVisit.getLatestWork();
 				
-				if(latestCommentAnnotationForStep != null) {
-					//get the value of the annotation
-					teacherAnnotation = latestCommentAnnotationForStep.value;					
+				var teacherAnnotation = "";
+				
+				if(this.getAnnotations() != null) {
+					//get the latest comment annotation for the original step written by the teacher
+					var latestCommentAnnotationForStep = this.getAnnotations().getLatestAnnotation(
+							this.getConfig().getConfigParam('runId'),
+							associatedOriginalNodeId,
+							workgroupId,
+							this.getUserAndClassInfo().getAllTeacherWorkgroupIds(),
+							'comment'
+							);
+					
+					if(latestCommentAnnotationForStep != null) {
+						//get the value of the annotation
+						teacherAnnotation = latestCommentAnnotationForStep.value;					
+					}
 				}
+				
+				//display the original work, the teacher review, and the revised work
+				studentWork = "<u>Original work written by this student:</u><br>" + originalWork + 
+				"<br><br><u>Review written by teacher:</u><br>" + teacherAnnotation + 
+				"<br><br><u>Revised work written by this student:</u><br>" + studentWork;
 			}
-			
-			//display the original work, the teacher review, and the revised work
-			studentWork = "<u>Original work written by this student:</u><br>" + originalWork + 
-			"<br><br><u>Review written by teacher:</u><br>" + teacherAnnotation + 
-			"<br><br><u>Revised work written by this student:</u><br>" + studentWork;
 		}
 	}
 	

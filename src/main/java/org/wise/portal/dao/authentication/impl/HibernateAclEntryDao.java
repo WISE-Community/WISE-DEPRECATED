@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

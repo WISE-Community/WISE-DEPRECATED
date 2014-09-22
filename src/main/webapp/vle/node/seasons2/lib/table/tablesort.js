@@ -132,6 +132,7 @@ var SortableTable = {
     },
 	_sort : function(e) {
 		SortableTable.sort(null, this);
+		e.stopImmediatePropagation();
 	},
 	_sortScroll : function(e) {	
 		var hdiv = $(this).up('div.scroll-table-head');
@@ -139,24 +140,35 @@ var SortableTable = {
 		SortableTable.sort($(id[1]), this);
 	},
 	sort : function(table, index, order) {
-		var cell;
+		var cell,
+				hcells,
+				op = SortableTable.options;
 		if(typeof index == 'number') {
 			if(!table || (table.tagName && table.tagName != "TABLE")) return;
 			index = Math.min(table.rows[0].cells.length, index);
 			index = Math.max(1, index);
 			index -= 1;
 			cell = (table.tHead && table.tHead.rows.length > 0) ? $(table.tHead.rows[table.tHead.rows.length-1].cells[index]) : $(table.rows[0].cells[index]);
+		} else if (typeof index == 'undefined') {
+			hcells = SortableTable.getHeaderCells(table);
+			cell = hcells.filter(function(c) { return c.hasClassName('sortdesc') || c.hasClassName('sortasc') })[0];
+			if (cell) {
+				index = hcells.indexOf(cell);
+				// flip order once so next flip flips it back
+				order = order ? order : (cell.hasClassName(op.descendingClass) ? -1 : 1);
+			} else {
+				return;
+			}
 		} else {
 			cell = $(index);
 			table = table ? $(table) : table = cell.up('table');
 			index = SortableTable.getCellIndex(cell)
 		}
-		var op = SortableTable.options;
 		
 		if(cell.hasClassName(op.nosortClass)) return;	
 		order = order ? order : (cell.hasClassName(op.descendingClass) ? 1 : -1);
 
-		var hcells = SortableTable.getHeaderCells(null, cell);
+		hcells = SortableTable.getHeaderCells(null, cell);
 		$A(hcells).each(function(c,i){
 			c = $(c);
 			if(i == index) {

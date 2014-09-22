@@ -229,8 +229,8 @@
 					
 					<div style="text-align:center;">
 						<form method="post">
-							<input type="hidden" name="_page" value="1" />
-							<input type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunconfirm.cancel" />" />
+							<input id="goToPageInput" type="hidden" name="_page" value="1" />
+							<input id="cancelButton" type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunconfirm.cancel" />" />
 							<input type="submit" name="_target1" value="<spring:message code="teacher.run.create.createrunconfirm.next" />" style="display:none;" id='nextButt'/>
 						</form>
 					
@@ -244,6 +244,11 @@
 
 	<%@ include file="../../../footer.jsp"%>
 </div>
+<script type="text/javascript">
+$("#cancelButton").click(function() {
+	$("#goToPageInput").remove();
+});
+</script>
 
 </body>
 </html>
