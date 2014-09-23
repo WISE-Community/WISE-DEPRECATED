@@ -966,7 +966,7 @@ public class StudentDataController {
 			//check if there is a messageParticipants field
 			String messageParticipants = nodeVisit.optString("messageParticipants");
 			
-			if(messageType != null && messageParticipants != null) {
+			if(messageType != null && !messageType.equals("") && messageParticipants != null && !messageParticipants.equals("")) {
 				/*
 				 * the node visit has a messageType and messageParticipants so we will
 				 * send it to websockets
