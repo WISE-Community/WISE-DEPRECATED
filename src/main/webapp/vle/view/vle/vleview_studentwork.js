@@ -348,12 +348,20 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 	}
 	*/
 
-	if(args.vle.isRealTimeEnabled) {
-		//we will send the student status to the teacher
-		args.vle.sendStudentStatusWebSocketMessage();
-	} else {
-		//send the student status to the server
-		args.vle.sendStudentStatusToServer();
+	/*
+	 * Check if the node visit that was just posted was an intermediate post
+	 * or a completed node visit. If it was a completed node visit we will
+	 * send the student status. If it was an intermediate post, which means
+	 * it does not have a visitEndTime, we will not send the student status.
+	 */
+	if(args.nodeVisit.visitEndTime != null) {
+		if(args.vle.isRealTimeEnabled) {
+			//we will send the student status to the teacher
+			args.vle.sendStudentStatusWebSocketMessage();
+		} else {
+			//send the student status to the server
+			args.vle.sendStudentStatusToServer();
+		}		
 	}
 
 	//fire the event that says we are done processing the post response

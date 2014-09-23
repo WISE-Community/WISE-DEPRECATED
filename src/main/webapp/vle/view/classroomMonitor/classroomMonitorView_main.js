@@ -5061,6 +5061,9 @@ View.prototype.studentStatusReceived = function(data) {
 	
 		//update our local copy of the student status object for the workgroup id
 		studentStatusObject = this.updateStudentStatusObject(data);
+
+	//get the annotation if any
+	var annotation = data.annotation;
 	
 	//update the student progress row for the workgroup id
 	this.updateStudentProgress(runId, periodId, workgroupId, currentNodeId, previousNodeVisit, nodeStatuses, timeSpent);
@@ -5070,6 +5073,65 @@ View.prototype.studentStatusReceived = function(data) {
 	
 	//check if we need to notify the teacher that there's new work for the screen they are viewing
 	this.checkIfNeedToDisplayNewWorkNotification(data);
+	
+	if(annotation != null) {
+		//analyze the annotation to see if we need to do anything special
+		this.analyzeAnnotation(annotation, previousNodeVisit);
+	}
+};
+
+/**
+ * Analyze the annotation to see if we need to do anything special such
+ * as notify the teacher that the student may need help
+ * @param annotation the auto graded annotation
+ * @param nodeVisit the student work
+ */
+View.prototype.analyzeAnnotation = function(annotation, nodeVisit) {
+	if(annotation != null && nodeVisit != null) {
+		//get the annotation value which is an array
+		var value = annotation.value;
+		
+		if(value != null && value.length > 0) {
+			//get the latest value
+			var latestValue = value[value.length - 1];
+			
+			if(latestValue != null) {
+				//get the auto score
+				var autoScore = latestValue.autoScore;
+				
+				//get the node id for the student work
+				var nodeId = nodeVisit.nodeId;
+				
+				if(nodeId != null) {
+					//get the step node
+					var node = this.getProject().getNodeById(nodeId);
+					
+					if(node != null) {
+						//get the step content
+						var nodeContent = node.content.getContentJSON();
+						
+						//get the score at which we will alert the teacher
+						var alertTeacherScore = nodeContent.alertTeacherScore;
+						
+						if(alertTeacherScore != null) {
+							
+							/*
+							 * check if the student has received a score less than or equal
+							 * to the value for which we will alert the teacher
+							 */
+							if(autoScore <= alertTeacherScore) {
+								//get the step number and title
+								var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
+								
+								//alert the teacher that the student may need attention
+								//alert("Student scored " + autoScore + " on step " + stepNumberAndTitle);
+							}							
+						}
+					}
+				}
+			}
+		}
+	}
 };
 
 /**
