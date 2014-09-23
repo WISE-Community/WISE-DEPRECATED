@@ -229,10 +229,7 @@ public class StudentDataController {
 			return null;
 		}
 		
-		boolean useCachedWork = true;
-		if (request.getParameter("useCachedWork") != null) {
-			useCachedWork = Boolean.valueOf(request.getParameter("useCachedWork"));
-		}
+		boolean useCachedWork = false;  // disables using cache always
 
 		/* set headers so that browsers don't cache the data (due to ie problem */
 		response.setHeader("Pragma", "no-cache");
