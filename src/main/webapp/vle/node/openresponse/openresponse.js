@@ -346,6 +346,8 @@ OPENRESPONSE.prototype.makeCRaterRequest = function(orState) {
 	var cRaterResponseId = new Date().getTime();
 	var studentData = orState.response;
 	var nodeVisit = this.view.getState().getCurrentNodeVisit();
+	var sync = false;
+	var timeout = waitTime * 1000;
 
 	//create the object that will be accessible in the callback function
 	var callbackData = {
@@ -359,7 +361,7 @@ OPENRESPONSE.prototype.makeCRaterRequest = function(orState) {
 	};
 
 	// invoke CRater in preview mode.
-	this.view.invokeCRaterInPreviewMode(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,this.cRaterRequestSuccessCallback,this.cRaterRequestFailureCallback,callbackData);
+	this.view.invokeCRaterInPreviewMode(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,this.cRaterRequestSuccessCallback,this.cRaterRequestFailureCallback,callbackData, sync, timeout);
 };
 
 /**
@@ -513,13 +515,21 @@ OPENRESPONSE.prototype.cRaterRequestSuccessCallback = function(responseText, res
  */
 OPENRESPONSE.prototype.cRaterRequestFailureCallback = function(failureType, failureArgs) {
 	//the request to score the student work with CRater has failed
-	alert('Failed to score your work. Please try again.');
+	
+	//save the student work
+	var view = failureArgs.view;
+	var nodeId = failureArgs.nodeId;
+	var orState = failureArgs.orState;
+	view.getProject().getNodeById(nodeId).save(orState);
 	
 	/*
 	 * unlock the screen since we previously locked it to make the student wait
 	 * for the feedback to be displayed
 	 */
 	eventManager.fire('unlockScreenEvent');
+	
+	//display an error message to the student
+	alert('Failed to score your work. Please try again.');
 };
 
 /**

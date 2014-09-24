@@ -934,8 +934,9 @@ View.prototype.removeFromPOSTInProgressArray = function(nodeVisit) {
  * @param failureCallback
  * @param callbackData the data to be made available in the callback function
  * @param sync whether the request should be synchronous
+ * @param timeout the timeout for the request in milliseconds
  */
-View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData, sync) {
+View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData, sync, timeout) {
 	var cRaterRequestURL = this.getConfig().getConfigParam('cRaterRequestUrl');
 
 	var cRaterArgs = {
@@ -948,7 +949,7 @@ View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,
 	};
 	
 	//make the call to GET the annotation
-	this.connectionManager.request('GET', 1, cRaterRequestURL, cRaterArgs, successCallback, callbackData, failureCallback, sync);
+	this.connectionManager.request('GET', 1, cRaterRequestURL, cRaterArgs, successCallback, callbackData, failureCallback, sync, timeout);
 };
 
 /**
