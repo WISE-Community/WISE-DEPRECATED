@@ -696,7 +696,6 @@ var componentloader = function(em, sl){
 					'ideaBasketChanged':[null,null],
 					'displayAddAnIdeaDialog':[null,null],
 					'displayIdeaBasket':[null,null],
-					'getPortfolio':[null,null],
 					'displayPortfolio':[null,null],
 					'viewStudentAssets':[null,null],
 					'studentAssetSubmitUpload':[null,null],
@@ -704,7 +703,6 @@ var componentloader = function(em, sl){
 					'moveIdeaToTrash':[null,null],
 					'moveIdeaOutOfTrash':[null,null],
 					'ideaBasketDocumentLoaded':[null,null],
-					'portfolioDocumentLoaded':[null,null],
 					'displayFlaggedWorkForNodeId':[null,null]
 			},
 			methods:{},
@@ -722,7 +720,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('ideaBasketChanged', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('displayAddAnIdeaDialog', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('displayIdeaBasket', view.dropDownMenuDispatcher, view);
-					view.eventManager.subscribe('getPortfolio', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('displayPortfolio', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('addIdeaToBasket', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('viewStudentAssets', view.dropDownMenuDispatcher, view);
@@ -730,7 +727,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('moveIdeaToTrash', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('moveIdeaOutOfTrash', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('ideaBasketDocumentLoaded', view.dropDownMenuDispatcher, view);
-					view.eventManager.subscribe('portfolioDocumentLoaded', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('displayFlaggedWorkForNodeId', view.dropDownMenuDispatcher, view);
 				}
 			}

@@ -277,14 +277,6 @@ View.prototype.showToolsBasedOnConfigs = function(metadata, runInfo) {
 
 					};
 				}, this);
-	
-		/*
-		$http.get(getPortfolioUrl).success(function(data) {
-			var portfolio = new Portfolio(vle,JSON.parse(data.data));
-			vle.portfolio = portfolio;
-			$scope.items = portfolio.items;
-		});
-		*/
 	} else {
 		$("#portfolioLinks").hide();
 	}

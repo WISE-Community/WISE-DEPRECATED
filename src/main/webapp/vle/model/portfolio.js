@@ -32,7 +32,7 @@ function Portfolio(view, portfolioJSONString) {
 			var portfolioItemsJSONArray = portfolioJSONObj.items;
 			for (var i=0; i< portfolioItemsJSONArray.length; i++) {
 				var portfolioItemJSON = portfolioItemsJSONArray[i];
-				this.items.push(new PortfolioItem(this.view, portfolioItemJSON));
+				this.items.push(new PortfolioItem(portfolioItemJSON));
 			}
 		}
 
@@ -40,7 +40,7 @@ function Portfolio(view, portfolioJSONString) {
 			var portfolioDeletedItemsJSONArray = portfolioJSONObj.deletedItems;
 			for (var i=0; i< portfolioDeletedItemsJSONArray.length; i++) {
 				var portfolioDeletedItemJSON = portfolioDeletedItemsJSONArray[i];
-				this.deletedItems.push(new PortfolioItem(this.view, portfolioDeletedItemJSON));
+				this.deletedItems.push(new PortfolioItem(portfolioDeletedItemJSON));
 			}
 		}
 	}
@@ -104,10 +104,9 @@ Portfolio.prototype.addStudentUploadedAssetItem = function(assetFilename, assetF
 		title: assetFilename,
 		studentUploadedAssetURL : assetFileURL,
 	};
-	var portfolioItem = new PortfolioItem(this.view,portfolioItemArgs);
+	var portfolioItem = new PortfolioItem(portfolioItemArgs);
 	this.addItem(portfolioItem);
 	this.saveToServer(this.addItemSaveToServerCallback,{portfolio:this});
-	
 	this.items.push(portfolioItem);
 };
 
@@ -144,93 +143,11 @@ Portfolio.prototype.addItemSaveToServerCallback = function(responseText, respons
  */
 Portfolio.prototype.addItemEventHandler = function(event) {
 	var view = event.data.view;
-	var portfolioItem = new PortfolioItem(view,event.data);
+	var portfolioItem = new PortfolioItem(event.data);
 	portfolioItem.id = view.portfolio.getHighestItemId()+1; // assign new item id
 	view.portfolio.addItem(portfolioItem);
 	view.portfolio.saveToServer(view.portfolio.addItemSaveToServerCallback,{portfolio:view.portfolio});
-};
-
-/**
- * Hander for deleting item event
- */
-Portfolio.prototype.deleteItemEventHandler = function(event) {
-	var portfolioItemIdToDelete = event.data.portfolioItemId;
-	var view = event.data.view;
-	view.portfolio.deleteItem(portfolioItemIdToDelete);
-	view.portfolio.saveToServer(view.portfolio.deleteItemSaveToServerCallback,{portfolio:view.portfolio,'portfolioItemId':portfolioItemIdToDelete});
-};
-
-/**
- * Delete a PortfolioItem specified by portfolioItemIdToDelete
- * This simply moves the item from this.items to this.deletedItems
- */
-Portfolio.prototype.deleteItem = function(portfolioItemIdToDelete) {
-	for (var i=0; i<this.items.length; i++) {
-		var item = this.items[i];
-		if (item.id == portfolioItemIdToDelete) {
-			this.items.splice(i,1);
-			this.deletedItems.push(item);
-		}
-	}
-};
-
-/**
- * Callback when the portfolio has been updated on the server after deleting a portfolio item
- */
-Portfolio.prototype.deleteItemSaveToServerCallback = function(responseText, responseXML, args) {
-	var portfolio = args.portfolio;
-	var deletedItemId = args.portfolioItemId;
-	// show some kind of feedback to user here
-	$("#portfolioItem_"+deletedItemId).hide();
-};
-
-/**
- * Render the portfolio
- */
-Portfolio.prototype.render = function() {
-	var title = this.view.getI18NString("portfolio");
-	if('portfolioSettings' in this.view.getProjectMetadata().tools){
-		var portfolioSettings = this.view.getProjectMetadata().tools.portfolioSettings;
-		if('portfolioTerm' in portfolioSettings && this.view.utils.isNonWSString(portfolioSettings.portfolioTerm)){
-			title = portfolioSettings.portfolioTerm;
-		}
-	}
-
-	$("#portfolioIframe").dialog({autoOpen:false,closeText:'',resizable:true,modal:true,show:{effect:"fade",duration:200},hide:{effect:"fade",duration:200},title:title,open:this.view.portfolioDivOpen,close:this.view.portfolioDivClose,
-		dragStart: function(event, ui) {
-			$('#portfolioOverlay').show();
-		},
-		dragStop: function(event, ui) {
-			$('#portfolioOverlay').hide();
-		},
-		resizeStart: function(event, ui) {
-			$('#portfolioOverlay').show();
-		},
-		resizeStop: function(event, ui) {
-			$('#portfolioOverlay').hide();
-		}
-	});
-
-	// clear portfolio
-	var portfolioContent = $("<div>").attr("id","portfolioContent");
-	//$("#"+domId).html(portfolioContent);
-	
-	// clear existing Table of Contents
-	var portfolioTOC = $("<div>").attr("id", "portfolioTOC");
-	portfolioContent.append(portfolioTOC);	
-	
-	//	clear existing portfolio items
-	var portfolioItems = $("<div>").attr("id", "portfolioItems");
-	portfolioContent.append(portfolioItems);
-	
-	//	open the portfolio dialog
-	var docHeight = $(document).height()-25;
-	var docWidth = $(document).width()-25;
-	$("#portfolioIframe").dialog({height:docHeight,width:docWidth});
-	$("#portfolioIframe").dialog('open');
-	$("#portfolioIframe").scrollTop(0);
-	$("#portfolioIframe").attr("src","portfolio.html");
-	$("#portfolioIframe").css("width","100%");
+	view.displayPortfolio(portfolioItem.id);
 };
 
 Portfolio.prototype.toJSON = function() {
@@ -247,22 +164,20 @@ Portfolio.prototype.toJSON = function() {
 	};
 };
 
-
 /**
  * PortfolioItem is an item entry (both current and deleted) in the portfolio.
  * 
  * Possible itemTypes: stepWork, ideabasket, studentUploadedAssets, outside resource
- * If itemType is stepWork, there are three levels to specify which work to store:
+ * If itemType is nodeVisit (stepWork), there are three levels to specify which work to store:
  * 1. just nodeId: always get the latest work for the node
- * 2. nodeId+stepWorkId: get the specific stepWork for the node
- * 3. nodeId+stepWorkId+nodeStateId: get the specific nodeState within the specified stepWork for the node.
+ * 2. nodeId+nodeVisitId: get the specific stepWork for the node
+ * 3. nodeId+nodeVisitId+nodeStateId: get the specific nodeState within the specified nodeVisit (stepwork) for the node.
  *
  * If itemType is studentUploadedAssets, here's the relevant data:
  *  studentUploadedAssetURL: absolute url to student assets directory
  *  title: asset file name
  */
-function PortfolioItem(view,object) {
-	this.view = view;
+function PortfolioItem(object) {
 	this.id = object.id;
 	this.title = object.title;
 	this.itemType = object.itemType;

@@ -53,13 +53,9 @@ View.prototype.dropDownMenuDispatcher = function(type,args,obj){
 		obj.loadIdeaBasket();
 	} else if(type=='displayFlaggedWorkForNodeId') {
 		obj.displayFlaggedWorkForNodeId();
-	} else if(type=='getPortfolio') {
-		obj.getPortfolio();
 	} else if(type=='displayPortfolio') {
 		obj.displayPortfolio();
-	} else if(type=='portfolioDocumentLoaded') {
-		obj.loadPortfolio();
-	} 
+	}
 };
 
 /**
@@ -681,9 +677,6 @@ View.prototype.checkForNewTeacherAnnotations = function() {
 	
 	//TODO: Geoff: WHY IS THIS CALL HERE?
 	eventManager.fire('getIdeaBasket');
-	if (this.getProjectMetadata().tools.isPortfolioEnabled) {
-		eventManager.fire('getPortfolio');
-	}
 };
 
 /**
@@ -1100,42 +1093,6 @@ View.prototype.getPublicIdeaBasketCallback = function(responseText, responseXML,
 	}
 };
 
-
-/**
- * Retrieve the portfolio from the server
- */
-View.prototype.getPortfolio = function() {
-	//set the params we will use in the request to the server
-	var portfolioParams = {
-		action:"getPortfolio"	
-	};
-	
-	//request the idea basket from the server
-	//this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('getPortfolioUrl'), portfolioParams, this.getPortfolioCallback, {thisView:this});
-};
-
-/**
- * Callback for when we receive the portfolio from the server
- * @param responseText
- * @param responseXML
- * @param args
- */
-View.prototype.getPortfolioCallback = function(responseText, responseXML, args) {
-	var thisView = args.thisView;
-	
-	//parse the JSON string
-	var portfolioResponse = $.parseJSON(responseText);
-	if(portfolioResponse == null) {
-		thisView.notificationManager.notify(thisView.getI18NString("portfolio_retrieval_error"), 3);
-	} else {
-		//create the Portfolio from the JSON and set it into the view
-		var portfolioJSONObject = $.parseJSON(portfolioResponse.data);
-		thisView.portfolio = new Portfolio(thisView, portfolioJSONObject);
-	}
-};
-
-
-
 View.prototype.displayStudentAssets = function() {
 	this.initializeAssetEditorDialog();
 };
@@ -1180,23 +1137,45 @@ View.prototype.displayChatRoom = function() {
 
 /**
  * Display the portfolio dialog popup
- * @param responseText the JSON string representing the idea basket data
- * @param responseXML
- * @param args
+ * @param itemId which item to display. If null, display TOC.
  */
-View.prototype.displayPortfolio = function() {
-	//if(!this.portfolio) {
-		/*
-		 * the vle failed to retrieve the portfolio so we will display
-		 * an error message and not display the portfolio popup
-		 */
-		//this.notificationManager.notify(this.getI18NString("portfolio_retrieval_error"), 3);
-		//return;
-	//}
-	//this.portfolio = new Portfolio(this);
-	this.portfolio.render();
-};
+View.prototype.displayPortfolio = function(itemId) {
+	var title = this.getI18NString("portfolio");
+	if('portfolioSettings' in this.getProjectMetadata().tools){
+		var portfolioSettings = this.getProjectMetadata().tools.portfolioSettings;
+		if('portfolioTerm' in portfolioSettings && this.utils.isNonWSString(portfolioSettings.portfolioTerm)){
+			title = portfolioSettings.portfolioTerm;
+		}
+	}
 
+	$("#portfolioIframe").dialog({autoOpen:false,closeText:'',resizable:true,modal:true,show:{effect:"fade",duration:200},hide:{effect:"fade",duration:200},title:title,open:this.portfolioDivOpen,close:this.portfolioDivClose,
+		dragStart: function(event, ui) {
+			$('#portfolioOverlay').show();
+		},
+		dragStop: function(event, ui) {
+			$('#portfolioOverlay').hide();
+		},
+		resizeStart: function(event, ui) {
+			$('#portfolioOverlay').show();
+		},
+		resizeStop: function(event, ui) {
+			$('#portfolioOverlay').hide();
+		}
+	});
+
+	//	open the portfolio dialog
+	var docHeight = $(document).height()-25;
+	var docWidth = $(document).width()-25;
+	$("#portfolioIframe").dialog({height:docHeight,width:docWidth});
+	$("#portfolioIframe").dialog('open');
+	$("#portfolioIframe").scrollTop(0);
+	if (itemId) {
+		$("#portfolioIframe").attr("src","portfolio.html#/item/"+itemId);
+	} else {
+		$("#portfolioIframe").attr("src","portfolio.html");
+	}
+	$("#portfolioIframe").css("width","100%");
+};
 
 /**
  * Display the idea basket dialog popup

@@ -15,15 +15,21 @@ portfolioApp.config(['$routeProvider',
                           controller: 'portfolioItemController'
                         }).
                         otherwise({
-                          redirectTo: '/toc'
+                        	redirectTo: '/toc'
                         });
                     }]);
+
+portfolioApp.controller('portfolioMainController', 
+		['$scope', '$routeParams', '$location', function ($scope, $routeParams, $location) {
+	$scope.location = $location;
+		}
+]);
+
 
 portfolioApp.controller('portfolioTOCController', 
 		['$scope', '$http', function ($scope, $http) {
 	var view = window.parent.view;  // currently assumes this is loaded in an iFrame
 	$scope.portfolio = view.portfolio;
-	
 	
 	$scope.sortableOptions = {
 		    stop: function(event, ui) { 
@@ -33,23 +39,9 @@ portfolioApp.controller('portfolioTOCController',
 	
 	$scope.removeItem = function (item) {
 		$scope.portfolio.items.splice($scope.portfolio.items.indexOf(item), 1);
+		$scope.portfolio.deletedItems.push(item);
 		$scope.portfolio.saveToServer();
 	};
-	
-	// we need to fetch the portfolio here so that it gets instantiated in the angular context.
-	// The Portfolio object that is created in VLE does not share the same context as the one created here using method below.
-	// I could be wrong, but in order to have just one portfolio (view.portfolio) and use it with angular, 
-	// the entire WISE view must start out with Angular. So until then, we'll need to fetch and instantiate the Portfolio object
-	// when portfolio app (portfolio.html) is loaded.
-	/*
-	var getPortfolioUrl = view.getConfig().getConfigParam('getPortfolioUrl');
-	$http.get(getPortfolioUrl).success(function(data) {
-		var portfolio = new Portfolio(view,JSON.stringify(data));
-		view.portfolio = portfolio;
-		$scope.view = view;
-		$scope.portfolio = portfolio;
-	});
-	*/
 }]);
 
 portfolioApp.controller('portfolioItemController', 
@@ -63,10 +55,10 @@ portfolioApp.controller('portfolioItemController',
 	
 	$scope.removeItem = function (item) {
 		$scope.portfolio.items.splice($scope.portfolio.items.indexOf(item), 1);
+		$scope.portfolio.deletedItems.push(item);
 		$scope.portfolio.saveToServer();
 		$scope.location.path('/toc');
 	};
-	
 }]);
 
 portfolioApp
