@@ -36,7 +36,9 @@ var studentVLEScripts = [
 	'vle/node/grapher/grapherState.js',
 	'vle/jquery/js/flot/excanvas.js',
 	'vle/jquery/js/flot/jquery.js',
-	'vle/jquery/js/flot/jquery.flot.js'
+	'vle/jquery/js/flot/jquery.flot.js',
+	scriptloader.jquerySrc,
+	scriptloader.jqueryUISrc
 ];
 
 var authorScripts = [
@@ -133,6 +135,7 @@ componentloader.addNodeClasses('GrapherNode', nodeClasses);
  * 'vle/node/quiz/quiz.css'
  */
 var css = [
+"vle/node/box2dModel/libs/jquery-ui-1.9.0.custom.min.css"      
 ];
 
 /*

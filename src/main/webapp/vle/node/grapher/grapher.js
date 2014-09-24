@@ -40,6 +40,14 @@ function Grapher(node) {
 	this.view = node.view;
 	this.content = node.getContent().getContentJSON();
 	
+	// loads an external script for animation if available
+	if (typeof this.content.externalAnimationScript !== "undefined" && this.content.externalAnimationScript !== null ){
+		this.loadExternalAnimationScript (this.content.externalAnimationScript);
+	}
+	
+	// make the save button pretty;
+	if (typeof $("#saveButton").button !== "undefined") $("saveButton").button();
+	
 	if(node.studentWork != null) {
 		this.states = node.studentWork; 
 	} else {
@@ -142,6 +150,9 @@ function Grapher(node) {
 
 	// a point being dragged
 	this.dragPoint = null;
+	
+	// a point currently highlighted
+	this.highlightedPoint = null;
 };
 
 /**
@@ -892,15 +903,12 @@ Grapher.prototype.calculateDerivativeArray = function(dataArray) {
  */
 Grapher.prototype.setupPlotHover = function() {
 	$("#" + this.graphDivId).unbind("plothover");
-	
-    var previousPoint = null;
-    
+	  
     /*
      * bind this function to the plothover event. the thisGrapher object
      * will be passed into the function and accessed through event.data.thisGrapher
      */
     $("#" + this.graphDivId).bind("plothover", {thisGrapher:this}, function (event, pos, item) {
-    	
     	var contentGraphParams = event.data.thisGrapher.content.graphParams;
         //get the position of the mouse in the graph	
     	var x = pos.x;
@@ -951,9 +959,8 @@ Grapher.prototype.setupPlotHover = function() {
 
     	// are we hovering over a point?
         if (item) {
-            if (previousPoint != item) {
-                previousPoint = item;
-                
+            if (event.data.thisGrapher.highlightedPoint != item) {
+            	              
                 //remove the existing tooltip
                 $("#tooltip").remove();
                 
@@ -977,6 +984,18 @@ Grapher.prototype.setupPlotHover = function() {
         				x:item.datapoint[0],
         				y:item.datapoint[1]
         		};
+        		
+        		// unhighlight any other point
+                event.data.thisGrapher.globalPlot.unhighlight();
+                event.data.thisGrapher.highlightedPoint = {
+               		seriesName:item.series.name,
+               		dataIndex:item.dataIndex,
+               		x:item.datapoint[0]
+               	};
+                //debugger;
+                event.data.thisGrapher.globalPlot.highlight(item.series, item.datapoint);
+               
+        		
         		//get the offset of the points relative to the plot div
                 var offsetObject = event.data.thisGrapher.globalPlot.pointOffset(dataPointObject);
         		var plotOffsetX = offsetObject.left;
@@ -1003,15 +1022,16 @@ Grapher.prototype.setupPlotHover = function() {
                 //display the tool tip
                 event.data.thisGrapher.showTooltip(plotOffsetX, plotOffsetY, toolTipText);
             }
-        } else {
-        	//remove the tool tip
+        } else { // we are not hovering over a point
+        	//remove the tool tip (even if it is not there)
             $("#tooltip").remove();
             // if there was a previous point, make sure it is not highlighted
-            if (previousPoint !== null){
+            if (event.data.thisGrapher.highlightedPoint != null && event.data.thisGrapher.lastPointClicked == null){
+            	event.data.thisGrapher.highlightedPoint = null;
             	event.data.thisGrapher.globalPlot.unhighlight();
+            	//debugger;
             	//event.data.thisGrapher.globalPlot.unhighlight(previousPoint.series, previousPoint.datapoint);	
-            }
-            previousPoint = null;            
+            }        
         }
         
         //check if the student is pressing down to create prediction points
@@ -1021,6 +1041,8 @@ Grapher.prototype.setupPlotHover = function() {
         		if (event.data.thisGrapher.content.allowDragDraw) {
 					//add prediction point
 					event.data.thisGrapher.predictionReceived(pos.x, pos.y);
+					// graph animator check
+					if (typeof animator !== "undefined" && animator !== null) animator.processEvent("newPoint",[pos.x, pos.y],event.data.thisGrapher);
 					
 					//plot the graph again so the new point is displayed
 					event.data.thisGrapher.plotData();        		
@@ -1045,18 +1067,21 @@ Grapher.prototype.setupPlotHover = function() {
 					if (item && event.data.thisGrapher.dragPoint == null && editable){
 						// if there is a point we are hovering over and there is no drag point, set it
 						// also point should not be fixed (third index in array is zero or false)
-						 event.data.thisGrapher.dragPoint = item;
+						 
 						// also if this not the current series, update the current series and set radio UNLESS THIS POINT IS ON THE BOUNDARY
-						var fivepctXaxis = typeof xmax === "number" && typeof xmin === "number" ? xmin + 0.05 * (xmax - xmin) : 5;
-						var fivepctYaxis = typeof ymax === "number" && typeof ymin === "number" ? ymin + 0.05 * (ymax - ymin) : 5;
-						if (event.data.thisGrapher.currentGraphName != item.series.name && (typeof item.series.editable === "undefined" || item.series.editable) && pos.x > fivepctXaxis && pos.y > fivepctYaxis){
+						//var fivepctXaxis = typeof xmax === "number" && typeof xmin === "number" ? xmin + 0.05 * (xmax - xmin) : 5;
+						//var fivepctYaxis = typeof ymax === "number" && typeof ymin === "number" ? ymin + 0.05 * (ymax - ymin) : 5;
+						//if (event.data.thisGrapher.currentGraphName != item.series.name && (typeof item.series.editable === "undefined" || item.series.editable) && pos.x > fivepctXaxis && pos.y > fivepctYaxis){
+						if (event.data.thisGrapher.currentGraphName != item.series.name && (typeof item.series.editable === "undefined" || item.series.editable)){
 							event.data.thisGrapher.currentGraphName = item.series.name;
 							item.series.checked = true;
 			        		if (typeof event.data.thisGrapher.dragPoint !== "undefined" && event.data.thisGrapher.dragPoint !== null && typeof event.data.thisGrapher.dragPoint.series !== "undefined" && event.data.thisGrapher.dragPoint.series !== null) event.data.thisGrapher.dragPoint.series.checked = false;
-			        		if (typeof event.data.thisGrapher.previousPoint !== "undefined" && event.data.thisGrapher.previousPoint !== null &&typeof event.data.thisGrapher.previousPoint.series !== "undefined" && event.data.thisGrapher.previousPoint.series !== null) event.data.thisGrapher.previousPoint.series.checked = false;
-							// update radio
+			        		// update radio
 							$('#radio-'+event.data.thisGrapher.currentGraphName).prop('checked', true);
 						}
+						// graph animator check
+						//if (typeof animator !== "undefined" && animator !== null) animator.processEvent("selectPoint",[item.datapoint[0], item.datapoint[1]],event.data.thisGrapher);
+						event.data.thisGrapher.dragPoint = item;
 						
 					} else if (event.data.thisGrapher.dragPoint !== null) {
 						// move the point, we'll assume that it is not fixed by previous if condition
@@ -1088,18 +1113,17 @@ Grapher.prototype.setupPlotHover = function() {
 				    		y = y.toFixed(2);
 				    	}
 				    	event.data.thisGrapher.predictionUpdateBySeriesDataIndex(parseFloat(x), parseFloat(y), event.data.thisGrapher.dragPoint.dataIndex);
-						//plot the graph again so the point is displayed
+				    	// graph animator check
+						if (typeof animator !== "undefined" && animator !== null) animator.processEvent("movePoint",[parseFloat(x), parseFloat(y)],event.data.thisGrapher);
+						
+				    	//plot the graph again so the point is displayed
 						event.data.thisGrapher.plotData();
 					}
 				}
         	}
         } else {
-        	if (event.data.thisGrapher.dragPoint !== null){
-        		event.data.thisGrapher.globalPlot.unhighlight();
-        		//event.data.thisGrapher.globalPlot.unhighlight(event.data.thisGrapher.dragPoint.series, event.data.thisGrapher.dragPoint.datapoint);	
-        		event.data.thisGrapher.dragPoint = null;
-        	}
-        	
+        	// no mouse down, make sure drag point is null
+        	event.data.thisGrapher.dragPoint = null;
         }
     });
 };
@@ -1135,10 +1159,12 @@ Grapher.prototype.setupPlotClick = function() {
 	 * will be passed into the function and accessed through event.data.thisGrapher
 	 */
     $("#" + this.graphDivId).bind("plotclick", {thisGrapher:this}, function (event, pos, item) {
-        if (item) {
-        	//student has clicked on a point
-        	
-        	
+    	event.data.thisGrapher.highlightedPoint = null;
+    	event.data.thisGrapher.globalPlot.unhighlight();
+		
+    	if (item) {//student has clicked on a point
+    		var isNewPoint = false;
+        	// switch the series
         	if (item.series.name !== event.data.thisGrapher.currentGraphName) {
         		// if the point is not on a series that is currently selected switch series
         		// also if this not the current series, update the current series and set radio UNLESS THIS POINT IS ON THE BOUNDARY
@@ -1150,15 +1176,17 @@ Grapher.prototype.setupPlotClick = function() {
 	    				event.data.thisGrapher.currentGraphName = item.series.name;
 		        		item.series.checked = true;
 		        		if (typeof event.data.thisGrapher.dragPoint !== "undefined" && event.data.thisGrapher.dragPoint !== null && typeof event.data.thisGrapher.dragPoint.series !== "undefined" && event.data.thisGrapher.dragPoint.series !== null) event.data.thisGrapher.dragPoint.series.checked = false;
-		        		if (typeof event.data.thisGrapher.previousPoint !== "undefined" && event.data.thisGrapher.previousPoint !== null &&typeof event.data.thisGrapher.previousPoint.series !== "undefined" && event.data.thisGrapher.previousPoint.series !== null) event.data.thisGrapher.previousPoint.series.checked = false;
-						// update radio
+		        		// update radio
 						$('#radio-'+event.data.thisGrapher.currentGraphName).prop('checked', true);
-	        		} else {
+		     		} else {
 	        			// this point is on the x-axis, we want to be able to make a new point in the same location
 	        			event.data.thisGrapher.predictionReceived(pos.x, pos.y);
 	            		//plot the graph again so the point is displayed
 	                	event.data.thisGrapher.plotData();
-	        		}
+	                	// graph animator check
+						if (typeof animator !== "undefined" && animator !== null) animator.processEvent("newPoint",[pos.x, pos.y],event.data.thisGrapher);				
+						isNewPoint = true;
+		     		}
             	}
         	}
         	
@@ -1173,9 +1201,7 @@ Grapher.prototype.setupPlotClick = function() {
         		 * disabled
         		 */
         		
-            	//highlight the data point that was clicked
-               // event.data.thisGrapher.globalPlot.highlight(item.series, item.datapoint);
-                
+            	 
                 //get the index of the point for the graph line
                 var dataIndex = item.dataIndex;
                 
@@ -1188,21 +1214,37 @@ Grapher.prototype.setupPlotClick = function() {
                 //get the x value
                 var x = dataPoint[0];
                 
+                //highlight the data point that was clicked
+        	    event.data.thisGrapher.highlightedPoint = {
+                		seriesName:seriesName,
+                		dataIndex:dataIndex,
+                		x:x
+                	};
+                event.data.thisGrapher.globalPlot.highlight(item.series, item.datapoint);
+               
+                
             	//remember the data for the point that was clicked
                 event.data.thisGrapher.lastPointClicked = {
             		seriesName:seriesName,
             		dataIndex:dataIndex,
             		x:x
             	};
+                
+             // graph animator check
+             if (typeof animator !== "undefined" && animator !== null && !isNewPoint) animator.processEvent("selectPoint",[item.datapoint[0], item.datapoint[1]],event.data.thisGrapher);
+
         	}
         } else {
         	//student has clicked on an empty spot on the graph
         	
         	//check if this step allows the student to create a prediction
         	if(!event.data.thisGrapher.predictionLocked && event.data.thisGrapher.createPrediction && event.data.thisGrapher.dragPoint == null) {
+        		
         		var isCompleted = event.data.thisGrapher.node.isCompleted();
         		//create the prediction point
         		event.data.thisGrapher.predictionReceived(pos.x, pos.y);
+        		// graph animator check
+				if (typeof animator !== "undefined" && animator !== null) animator.processEvent("newPoint",[pos.x,pos.y],event.data.thisGrapher);
         		//plot the graph again so the point is displayed
             	event.data.thisGrapher.plotData();
 
@@ -1582,7 +1624,7 @@ Grapher.prototype.deletePredictionAnnotationsFromUI = function() {
  * @param dataPoint the x, y data point in an array [x,y]
  */
 Grapher.prototype.createAnnotation = function(seriesName, dataIndex, dataPoint) {
-	if (typeof this.content.allowAnnotations !== "undefined" && !this.content.allowAnnotations) return;
+	if (typeof this.content.allowAnnotations === "undefined" || !this.content.allowAnnotations) return;
 	//get the y units
 	var graphYUnits = this.content.graphParams.yUnits;
 	
@@ -1645,6 +1687,7 @@ Grapher.prototype.deleteAnnotation = function(seriesName, dataIndex, x) {
 	
 	if(series != null) {
 		//remove the highlight on the point on the graph that this annotation was for
+		this.highlightedPoint = null;
 		this.globalPlot.unhighlight(series, dataIndex);		
 	}
 	
@@ -2763,8 +2806,6 @@ Grapher.prototype.addAnnotationToolTipToUI = function(seriesName, dataIndex, x, 
 			dataIndex = dataIndexAtX;
 		}
 		
-		//highlight the point
-		plot.highlight(series, dataIndex);
 		
 		//get the point in the series
 		var dataPointArray = series.data[dataIndex];
@@ -2772,6 +2813,16 @@ Grapher.prototype.addAnnotationToolTipToUI = function(seriesName, dataIndex, x, 
 		if (!dataPointArray) {
 			return;
 		}
+		
+		//highlight the point
+		this.highlightedPoint = {
+        		seriesName:seriesName,
+        		dataIndex:dataIndex,
+        		x:x
+        	};
+		plot.highlight(series, dataIndex);
+		
+		
 		//get the x and y values
 		var dataPointObject = {
 				x:dataPointArray[0],
@@ -2982,11 +3033,12 @@ Grapher.prototype.handleKeyDown = function(event) {
 		 * check if the student clicked on a prediction point
 		 * just before pressing the backspace key
 		 */
-		if(this.lastPointClicked != null && (typeof this.content.createPrediction == "undefined" || this.content.createPrediction)) {
+		if(this.highlightedPoint != null && (typeof this.content.createPrediction == "undefined" || this.content.createPrediction)) {
+			this.globalPlot.unhighlight();
 			//get the data of the point
-			var seriesName = this.lastPointClicked.seriesName;
-			var dataIndex = this.lastPointClicked.dataIndex;
-			var x = this.lastPointClicked.x;
+			var seriesName = this.highlightedPoint.seriesName;
+			var dataIndex = this.highlightedPoint.dataIndex;
+			var x = this.highlightedPoint.x;
 			
 			//remove the prediction point
 			this.removePredictionPoint(seriesName, dataIndex, x);
@@ -2997,6 +3049,7 @@ Grapher.prototype.handleKeyDown = function(event) {
 			//update the flag since the graph has changed
 			this.graphChanged = true;
 			
+			this.highlightedPoint = null;
 			this.lastPointClicked = null;
 		}
 		event.preventDefault();
@@ -3149,6 +3202,26 @@ Grapher.prototype.generateGraphDataArray = function(state) {
 	return dataArray;
 };
 
+/**
+ * Load the external script for the given step object if it has one
+ * @param stepObject the step object that performs the
+ * processing for a step. these are usually created in the
+ * html file of a step type.
+ * e.g.
+ * for an open response step we would be passing in
+ * or = new OPENRESPONSE();
+ */
+Grapher.prototype.loadExternalAnimationScript = function(externalAnimationScript) {
+	if(externalAnimationScript !== null && externalAnimationScript !== "") {
+		$.getScript(externalAnimationScript, function( data, textStatus, jqxhr ) {
+			console.log( "Animation script loaded." );
+			animator.processEvent("init", null, grapher);
+		})
+		.fail(function( jqxhr, settings, exception ) {
+		    console.log(exception.message);
+		});
+	}
+};
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
