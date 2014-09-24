@@ -1190,15 +1190,15 @@ View.prototype.OpenResponseNode.setAutoGradedExportColumns = function() {
           },
           {
         	  "columnName": "Score",
-        	  "field": "cRaterScore"
+        	  "field": "autoScore"
           },
           {
         	  "columnName": "Max Score",
-        	  "field": "cRaterMaxScore"
+        	  "field": "maxAutoScore"
           },
           {
         	  "columnName": "Feedback",
-        	  "field": "cRaterFeedbackText"
+        	  "field": "autoFeedback"
           },
           {
         	  "columnName": "Submit",

@@ -6,7 +6,7 @@
 <script type='text/javascript' src='util/eventmanager.js'></script>
 <script type="text/javascript" src="util/scriptloader.js"></script>
 
-<link rel="shortcut icon" href="images/favicon.ico"></link>
+<link rel="shortcut icon" href="images/favicon.ico" type="image/png"></link>
 <script type='text/javascript'>
 /*
  * Loads scripts when body is loaded 
@@ -81,7 +81,7 @@ var view;
 <div id="authorHeader">
 	<div id="authorToolHeader"><div>WISE 4&nbsp;<img src="images/favicon_panda.ico" alt="WISE Panda" border="0" /></div>
 		<div>Authoring Tool</div>
-		<div><span id="authorToolLinks"><a href="./author/authorToolInstructions.html" title="Author Tool Instructions" target="_blank">Instructions</a>
+		<div><span id="authorToolLinks"><a href="authorToolInstructions.html" title="Author Tool Instructions" target="_blank">Instructions</a>
 		<!--<a href="./author/authorToolKeyboardShortcuts.html" title="Author Tool Keyboard Shortcuts" target="_blank">Keyboard
 		Shortcuts</a>--></span></div>
 	</div>  
@@ -96,7 +96,7 @@ var view;
 				Open Project</button>
 			<button onclick="eventManager.fire('createNewProject')" id="createProjectButton" title='Create a New Project'><img src="images/createProject.png" alt="create project icon" /><br />
 				Create Project</button>
-			<button onclick='eventManager.fire("copyProject")' id='copyProjectButton' title='Create a Copy of Current Project'><img src="images/copyProject.png" alt="create project icon" /><br />
+			<button onclick='eventManager.fire("copyProject")' id='copyProjectButton' title='Create a Copy of Current Project'><img src="images/copyProject.png" alt="copy project icon" /><br />
 				Copy Project</button>
 		</div>
 		<div id="projectButtons">
@@ -109,17 +109,6 @@ var view;
 			<button disabled="true" onclick='eventManager.fire("previewProject");' id="previewProjectButton" title='Preview Current Project'><img src="images/previewproject.png"
 				alt="preview project icon" /><br />Preview Project</button>
 		</div>
-		<!--<li><a onclick="eventManager.fire('createNewSequence');" id="createActivityButton"><img src="images/addSequence.png"
-			alt="Add Activity icon" /><br />Add Activity</a></li>
-		<li><a onclick="eventManager.fire('createNewNode');" id="createNodeButton"><img src="images/addNode.png" alt="Add Step icon" /><br />
-			Add<br />Step</a>
-		<li><img src="images/separatorIcon2.png" alt="tool separator icon" /></li>
-		<li><a onclick='eventManager.fire("moveSelected");' id='moveButton'><img src="images/move.png" alt="Move Selected Item" />
-			Move Selected</a></li>
-		<li><a onclick="eventManager.fire('deleteSelected');" id="deleteNodeButton"><img src="images/trash.png"
-			alt="delete selected icon" /><br />Delete Selected</a></li>
-		<li><a onclick="eventManager.fire('duplicateSelected');" id="duplicateodeButton"><img src="images/duplicateNode.png"
-			alt="duplicate selected icon" /><br />Duplicate Selected</a></li>-->
 	</div>
 
 	 <div id="toolsAreaAuthor">
@@ -136,11 +125,6 @@ var view;
 	                <li style="text-decoration:line-through;"><a onclick="" id="importNodeButton">
 	                <img src="images/importNode.png" alt="import step icon"  />Import an Activity or Step<br/>(from Library, Custom, or Shared project)</a></li>
 	
-	                <!--
-	         	    <li style="text-decoration:line-through;"><a onclick="" class="underline"><img src="images/shareProject.png"
-					alt="share project icon"  />Share Project</a></li>	
-					-->
-			
 				<!--<td><a onclick="eventManager.fire('createNewProject')" id="createProjectButton"><img src="images/createProject.png" alt="create project icon" />
 				Create Project</a></td>-->
 	
@@ -154,10 +138,7 @@ var view;
 			
 				<!--<li><a onclick="eventManager.fire('viewAssets')"><img src="images/manageArt.png" alt="Manage Art/Files" />
 				Manage Art/Files</a></li>-->
-			
-				<!--<li><a onclick='eventManager.fire("useSelected")' id='useButton'>
-					<img src="images/link_copy2.png" alt="Mirror Copy Selected Item(s)" />Mirror Selected Step<br/>(make data-clone of selected step)</a></li>-->
-	
+				
 				<li><a onclick="eventManager.fire('startCreateReviewSequence', 'Peer')"><img src="images/manageArt.png" alt="Create Peer Review Sequence" />
 				Create Peer Review Sequence</a></li>
 				
@@ -188,10 +169,6 @@ var view;
 			<li><a class='last' onclick="eventManager.fire('reviewUpdateProject')" ><img src="images/constraint.png"
 			alt="Update Project"  />Update Project</a></li>
 			
-			<!-- 
-			        <li><a onclick="eventManager.fire('importProject')" id="importProjectButton"><img
-			src="images/importProject.png" alt="import project icon"  />Restore Project</a></li>
-			 -->
 				    <!-- 	<li><a onclick="eventManager.fire('retrieveArchive')" id="retrieveArchiveButton">Retrieve Archived Project</a></li>  -->
 			
 			        <!--  <li><a onclick='eventManager.fire("createTODOTask")' id='createTODOTaskLI'>Create TODO Task</a></li>  -->

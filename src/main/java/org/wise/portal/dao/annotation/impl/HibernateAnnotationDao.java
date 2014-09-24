@@ -159,52 +159,76 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	}
 	
 	/**
+	 * Get the latest annotation from the user, for the step work and annotation type
 	 * @param userInfo User who did the annotation
 	 * @param stepWork stepWork that was annotated
-	 * @return
+	 * @param type (optional) the annotation type
+	 * @return the latest annotation that matches the criteria
 	 */
 	@Transactional(readOnly=true)
 	public Annotation getAnnotationByUserInfoAndStepWork(UserInfo userInfo, StepWork stepWork, String type) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 
-        Annotation result = null;
+        Annotation annotation = null;
+        
+        Criteria criteria = session.createCriteria(Annotation.class)
+		.add( Restrictions.eq("fromUser", userInfo))
+		.add( Restrictions.eq("stepWork", stepWork));
         
         if(type != null) {
-        	result = 
-        			(Annotation) session.createCriteria(Annotation.class)
-        			.add( Restrictions.eq("fromUser", userInfo))
-        			.add( Restrictions.eq("stepWork", stepWork))
-        			.add( Restrictions.eq("type", type))
-        			.uniqueResult();
-        } else {
-        	result = 
-        			(Annotation) session.createCriteria(Annotation.class)
-        			.add( Restrictions.eq("fromUser", userInfo))
-        			.add( Restrictions.eq("stepWork", stepWork))
-        			.uniqueResult();
+        	criteria.add( Restrictions.eq("type", type));
         }
         
-        return result;
+        //order the results from newest to oldest
+        criteria.addOrder(Order.desc("postTime"));
+        
+        List<Annotation> results = (List<Annotation>) criteria.list();
+        
+        if(results != null && results.size() > 0) {
+        	//get the latest annotation
+        	results.get(0);
+        }
+        
+        return annotation;
 	}
 	
+	/**
+	 * Get the latest annotation from the user, to a user, for a specific work and annotation type
+	 * @param fromUserInfo the from user
+	 * @param toUserInfo the to user
+	 * @param stepWork the student work
+	 * @param type the annotation type
+	 * @return the latest annotation that matches the criteria
+	 */
 	@Transactional(readOnly=true)
 	public Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo, UserInfo toUserInfo, StepWork stepWork, String type) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 
-        Annotation result = null;
+        Annotation annotation = null;
         
         Criteria criteria = session.createCriteria(Annotation.class)
-		.add( Restrictions.eq("fromUser", fromUserInfo))
 		.add( Restrictions.eq("toUser", toUserInfo))
 		.add( Restrictions.eq("type", type));
+        
+        if(fromUserInfo != null) {
+        	criteria.add( Restrictions.eq("fromUser", fromUserInfo));
+        }
         
         if(stepWork != null) {
         	criteria.add( Restrictions.eq("stepWork", stepWork));
         }
         
-        result = (Annotation) criteria.uniqueResult();
+        //order the results from newest to oldest
+        criteria.addOrder(Order.desc("postTime"));
         
-        return result;
+        List<Annotation> results = (List<Annotation>) criteria.list();
+        
+        if(results != null && results.size() > 0) {
+        	//get the latest annotation
+        	annotation = results.get(0);
+        }
+        
+        return annotation;
 	}
 	
 	/**
@@ -359,22 +383,31 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 	}
 	
 	/**
-	 * Get all the annotations for the given stepwork
-	 * @param stepWork
-	 * @param clazz
-	 * @return a list of annotations that are for a given stepwork
+	 * Get the annotation for a step work and annotation type
+	 * @param stepWork the student work
+	 * @param annotationType the annotation type
+	 * @return the latest annotation for the step work with the given
+	 * annotation type
 	 */
 	@SuppressWarnings("unchecked")
 	@Transactional(readOnly=true)
 	public Annotation getAnnotationByStepWorkAndAnnotationType(StepWork stepWork, String annotationType) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 
-        Annotation result = 
-        	(Annotation) session.createCriteria(Annotation.class)
+		Annotation annotation = null;
+		
+		List<Annotation> results = 
+        		(List<Annotation>) session.createCriteria(Annotation.class)
         		.add( Restrictions.eq("stepWork", stepWork))
         		.add( Restrictions.eq("type", annotationType))
-        		.uniqueResult();
-        return result;
+        		.addOrder(Order.desc("postTime")).list();
+		
+		if(results != null && results.size() > 0) {
+			//get the latest annotation
+			annotation = results.get(0);
+		}
+		
+        return annotation;
 	}
 	
 	

@@ -2672,6 +2672,24 @@ Node.prototype.disableInteractivity = function(doDisable, message) {
 	}
 }
 
+/**
+ * Function that checks if this step should show the autoScore to the student
+ * when the showNodeAnnotations() function is called.
+ * Child classes should override this function.
+ */
+Node.prototype.showAutoScore = function() {
+	return true;
+};
+
+/**
+ * Function that checks if this step should show the autoFeedback to the student
+ * when the showNodeAnnotations() function is called.
+ * Child classes should override this function.
+ */
+Node.prototype.showAutoFeedback = function() {
+	return true;
+};
+
 /*
  * Takes in a state JSON object and returns a STATE object. This
  * function should be overriden by child nodes.

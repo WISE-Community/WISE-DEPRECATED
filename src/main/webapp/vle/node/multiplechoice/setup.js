@@ -12,7 +12,7 @@ var studentVLEScripts = [
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
 	'vle/node/common/nodehelpers.js',
-	'vle/common/helperfunctions.js',
+	'vle/util/helperfunctions.js',
 	'vle/jquery/js/jsonplugin.js',
 	'vle/node/multiplechoice/multiplechoicestate.js',
 	'vle/node/multiplechoice/challengestate.js',
@@ -68,7 +68,7 @@ scriptloader.addScriptToComponent('studentwork_min', gradingMinScripts);
 scriptloader.addDependencies(dependencies);
 scriptloader.addCssToComponent('multiplechoice', css);
 
-scriptloader.addCssToComponent('author', 'vle/css/authoring/author_multiplechoice.css');
+scriptloader.addCssToComponent('author', 'vle/node/multiplechoice/author_multiplechoice.css');
 
 componentloader.addNodeClasses('MultipleChoiceNode', multipleChoiceNodeClasses);
 

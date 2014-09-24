@@ -299,6 +299,14 @@ View.prototype.sendStudentStatusWebSocketMessage = function() {
 	var ideaBasketIdeaCount = this.getIdeaBasketIdeaCount();
 	messageJSON.ideaBasketIdeaCount = ideaBasketIdeaCount;
 	
+	//get the auto graded annotation for the given node visit if it exists
+	var autoGradedAnnotation = this.getNodeVisitAutoGradedAnnotation(previousNodeVisit);
+	
+	if(autoGradedAnnotation != null) {
+		//there is an auto graded annotation for the node visit
+		messageJSON.annotation = autoGradedAnnotation;
+	}
+	
 	//send the message to the web socket server to be forwarded to the teacher
 	var result = this.sendStudentWebSocketMessage(messageJSON);
 	
@@ -338,6 +346,14 @@ View.prototype.sendStudentStatusToServer = function() {
 	//get the number if ideas in the student idea basket
 	var ideaBasketIdeaCount = this.getIdeaBasketIdeaCount();
 	studentStatusJSON.ideaBasketIdeaCount = ideaBasketIdeaCount;
+	
+	//get the auto graded annotation for the given node visit if it exists
+	var autoGradedAnnotation = this.getNodeVisitAutoGradedAnnotation(previousNodeVisit);
+	
+	if(autoGradedAnnotation != null) {
+		//there is an auto graded annotation for the node visit
+		studentStatusJSON.annotation = autoGradedAnnotation;
+	}
 	
 	//get the student status as a string
 	var status = JSON.stringify(studentStatusJSON);
