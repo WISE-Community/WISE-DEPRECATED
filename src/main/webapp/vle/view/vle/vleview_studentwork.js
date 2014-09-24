@@ -348,12 +348,20 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 	}
 	*/
 
-	if(args.vle.isRealTimeEnabled) {
-		//we will send the student status to the teacher
-		args.vle.sendStudentStatusWebSocketMessage();
-	} else {
-		//send the student status to the server
-		args.vle.sendStudentStatusToServer();
+	/*
+	 * Check if the node visit that was just posted was an intermediate post
+	 * or a completed node visit. If it was a completed node visit we will
+	 * send the student status. If it was an intermediate post, which means
+	 * it does not have a visitEndTime, we will not send the student status.
+	 */
+	if(args.nodeVisit.visitEndTime != null) {
+		if(args.vle.isRealTimeEnabled) {
+			//we will send the student status to the teacher
+			args.vle.sendStudentStatusWebSocketMessage();
+		} else {
+			//send the student status to the server
+			args.vle.sendStudentStatusToServer();
+		}		
 	}
 
 	//fire the event that says we are done processing the post response
@@ -973,8 +981,9 @@ View.prototype.removeFromPOSTInProgressArray = function(nodeVisit) {
  * @param failureCallback
  * @param callbackData the data to be made available in the callback function
  * @param sync whether the request should be synchronous
+ * @param timeout the timeout for the request in milliseconds
  */
-View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData, sync) {
+View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData, sync, timeout) {
 	var cRaterRequestURL = this.getConfig().getConfigParam('cRaterRequestUrl');
 
 	var cRaterArgs = {
@@ -987,7 +996,7 @@ View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,
 	};
 	
 	//make the call to GET the annotation
-	this.connectionManager.request('GET', 1, cRaterRequestURL, cRaterArgs, successCallback, callbackData, failureCallback, sync);
+	this.connectionManager.request('GET', 1, cRaterRequestURL, cRaterArgs, successCallback, callbackData, failureCallback, sync, timeout);
 };
 
 /**

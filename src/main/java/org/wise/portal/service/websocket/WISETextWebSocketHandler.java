@@ -109,6 +109,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 	 * @param the message object
 	 */
 	@Override
+	@Transactional
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
 		//get the message and process it
 		Object payload = message.getPayload();
@@ -121,6 +122,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 	 * @param the text message object
 	 */
 	@Override
+	@Transactional
 	public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		//get the message and process it
 		Object payload = message.getPayload();

@@ -1477,10 +1477,10 @@ public class VLEGetXLS {
 									 * get the node state id of the annotation which is the timestamp of the node state
 									 * for which is refers to
 									 */
-									Long nodeStateId = nodeStateAnnotation.getLong("nodeStateId");
+									Long nodeStateId = nodeStateAnnotation.optLong("nodeStateId");
 									
 									//check if the node state id matches the one we want
-									if(nodeStateTimestamp.equals(nodeStateId)) {
+									if(nodeStateId != null && nodeStateTimestamp.equals(nodeStateId)) {
 										//the node state id matches so we have found the node state annotation we want
 										autoGradedAnnotationForNodeState = nodeStateAnnotation;
 										break;
