@@ -693,7 +693,7 @@ View.prototype.viewStudentAssets = function(params) {
 	if(this.getCurrentNode() != null &&
 			this.getCurrentNode().importFile) {
 		// if the currently-opened node supports file import, show file import button
-		buttonsArray.push({text:addSelectedFileText,click:saImport});
+		buttonsArray.push({text:addSelectedFileText,click:this.saImport});
 	} else if (view.assetEditorParams && view.assetEditorParams.type) {
 		buttonsArray.push({text:insertImageText,click:insertImage});
 	} else {

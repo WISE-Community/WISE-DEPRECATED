@@ -255,24 +255,36 @@ View.prototype.showToolsBasedOnConfigs = function(metadata, runInfo) {
 		$("#ideaBasketLinks").hide();
 	}
 	
-	var isPortfolioEnabled = false;
-	
-	if(metadata != null) {
-		isPortfolioEnabled = metadata.isPortfolioEnabled;
-	}
-
 	//Portfolio
-	if (isPortfolioEnabled) {
-		// display the portfolio links if the run/project has portfolio enabled
-		var portfolioLinktext = this.getI18NString("portfolio_button_text");
-		if (this.getProjectMetadata() != null && this.getProjectMetadata().tools != null){
-			if('portfolioSettings' in this.getProjectMetadata().tools){
-				var portfolioSettings = this.getProjectMetadata().tools.portfolioSettings;
-			}
-		}
-		var portfolioLink = "<a id='viewPortfolioLink' onclick='eventManager.fire(\"displayPortfolio\")'>"+portfolioLinktext+" </a>";
-		$("#viewPortfolio").html(portfolioLink);
-		$("#portfolioLinks").show().css('display','inline');
+	if (metadata != null && metadata.isPortfolioEnabled) {
+		// fetch portfolio and display the portfolio links 
+		var getPortfolioUrl = this.getConfig().getConfigParam('getPortfolioUrl');
+		var extraParams = null;
+		this.connectionManager.request('GET', 2, getPortfolioUrl, extraParams, 
+				function(responseText, responseXML, view) {
+					if (responseText) {
+						view.portfolio = new Portfolio(view,responseText);
+
+						var portfolioLinktext = view.getI18NString("portfolio_button_text");
+						if (view.getProjectMetadata() != null && view.getProjectMetadata().tools != null){
+							if('portfolioSettings' in view.getProjectMetadata().tools){
+								var portfolioSettings = view.getProjectMetadata().tools.portfolioSettings;
+							}
+						}
+						var portfolioLink = "<a id='viewPortfolioLink' onclick='eventManager.fire(\"displayPortfolio\")'>"+portfolioLinktext+" </a>";
+						$("#viewPortfolio").html(portfolioLink);
+						$("#portfolioLinks").show().css('display','inline');
+
+					};
+				}, this);
+	
+		/*
+		$http.get(getPortfolioUrl).success(function(data) {
+			var portfolio = new Portfolio(vle,JSON.parse(data.data));
+			vle.portfolio = portfolio;
+			$scope.items = portfolio.items;
+		});
+		*/
 	} else {
 		$("#portfolioLinks").hide();
 	}

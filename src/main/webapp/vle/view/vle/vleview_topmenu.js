@@ -1111,7 +1111,7 @@ View.prototype.getPortfolio = function() {
 	};
 	
 	//request the idea basket from the server
-	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('getPortfolioUrl'), portfolioParams, this.getPortfolioCallback, {thisView:this});
+	//this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('getPortfolioUrl'), portfolioParams, this.getPortfolioCallback, {thisView:this});
 };
 
 /**
@@ -1185,15 +1185,16 @@ View.prototype.displayChatRoom = function() {
  * @param args
  */
 View.prototype.displayPortfolio = function() {
-	if(!this.portfolio) {
+	//if(!this.portfolio) {
 		/*
 		 * the vle failed to retrieve the portfolio so we will display
 		 * an error message and not display the portfolio popup
 		 */
-		this.notificationManager.notify(this.getI18NString("portfolio_retrieval_error"), 3);
-		return;
-	}
-	this.portfolio.render("portfolioDiv");
+		//this.notificationManager.notify(this.getI18NString("portfolio_retrieval_error"), 3);
+		//return;
+	//}
+	//this.portfolio = new Portfolio(this);
+	this.portfolio.render();
 };
 
 

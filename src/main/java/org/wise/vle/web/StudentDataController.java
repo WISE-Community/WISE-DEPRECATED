@@ -57,7 +57,6 @@ import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.domain.annotation.Annotation;
-import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.project.Project;

@@ -140,23 +140,20 @@ public class PortfolioController {
 			return null;
 		}
 
+		if(runId != null && workgroupId != null) {
+			//get the Portfolio
+			Portfolio portfolio = vleService.getPortfolioByRunIdWorkgroupId(runId, workgroupId);
 
-		if(action.equals("getPortfolio")) {
-			if(runId != null && workgroupId != null) {
-				//get the Portfolio
-				Portfolio portfolio = vleService.getPortfolioByRunIdWorkgroupId(runId, workgroupId);
+			if(portfolio == null) {
+				//make the Portfolio if it does not exist
+				portfolio = new Portfolio(runId,workgroupId,null);
+				vleService.savePortfolio(portfolio);
+			}
 
-				if(portfolio == null) {
-					//make the Portfolio if it does not exist
-					portfolio = new Portfolio(runId,workgroupId,null);
-					vleService.savePortfolio(portfolio);
-				}
-
-				if(portfolio != null) {
-					//get the Portfolio JSONString
-					String portfolioJSONString = portfolio.toJSONString();
-					response.getWriter().print(portfolioJSONString);
-				}
+			if(portfolio != null) {
+				//get the Portfolio JSONString
+				String portfolioJSONString = portfolio.toJSONString();
+				response.getWriter().print(portfolioJSONString);
 			}
 		}
 
