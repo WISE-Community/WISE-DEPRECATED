@@ -23,16 +23,9 @@ portfolioApp.run(function(editableOptions) {
 	  editableOptions.theme = 'default'; // Can be  'bs2' (bootstrap2), 'bs3' (bootstrap3), 'default'
 });
 
-portfolioApp.controller('portfolioMainController', 
-		['$scope', '$routeParams', '$location', function ($scope, $routeParams, $location) {
-	$scope.location = $location;
-		}
-]);
-
-
 portfolioApp.controller('portfolioTOCController', 
 		['$scope', function ($scope) {
-	var view = window.parent.view;  // currently assumes this is loaded in an iFrame
+	var view = window.parent.view;  // currently assumes portfolio is loaded in an iFrame
 	$scope.portfolio = view.portfolio;
 	
 	$scope.sortableOptions = {
@@ -50,9 +43,8 @@ portfolioApp.controller('portfolioTOCController',
 
 portfolioApp.controller('portfolioItemController', 
 		['$scope', '$routeParams', '$location', function ($scope, $routeParams, $location) {
+	var view = window.parent.view;  // currently assumes portfolio is loaded in an iFrame
 	$scope.location = $location;
-
-	var view = window.parent.view;  // currently assumes this is loaded in an iFrame
 	$scope.view = view;
 	$scope.portfolio = view.portfolio;
 	$scope.item = view.portfolio.getItemById($routeParams.itemId);
@@ -62,6 +54,28 @@ portfolioApp.controller('portfolioItemController',
 		$scope.portfolio.deletedItems.push(item);
 		$scope.portfolio.saveToServer();
 		$scope.location.path('/toc');
+	};
+	
+	$scope.gotoPreviousPage = function (item) {
+		var itemIndex = $scope.portfolio.items.indexOf(item);
+		if (itemIndex == 0) {
+			// the item is first item, so go to TOC
+			$scope.location.path('/toc');
+		} else {
+			var previousItem = $scope.portfolio.items[itemIndex-1];
+			$scope.location.path('/item/'+previousItem.id);
+		}
+	};
+	
+	$scope.gotoNextPage = function (item) {
+		var itemIndex = $scope.portfolio.items.indexOf(item);
+		if (itemIndex == $scope.portfolio.items.length-1) {
+			// the item is last item, so go to TOC
+			$scope.location.path('/toc');
+		} else {
+			var nextItem = $scope.portfolio.items[itemIndex+1];
+			$scope.location.path('/item/'+nextItem.id);
+		}
 	};
 	
 	$scope.$watch('item.title', function (newValue, oldValue) {
@@ -75,7 +89,6 @@ portfolioApp.controller('portfolioItemController',
 			$scope.portfolio.saveToServer();
 		}
 	}, true);
-
 }]);
 
 portfolioApp
