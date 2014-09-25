@@ -1,7 +1,7 @@
 <ul ui-sortable="sortableOptions" ng-model="portfolio.items">
-  <li ng-repeat="item in portfolio.items track by $index">
+  <li class="portfolioItem" ng-repeat="item in portfolio.items track by $index">
     <a href="#/item/{{item.id}}/">{{item.title}}</a>
-    <button ng-click="removeItem(item)">Delete Item</button>
+    <button id="portfolioDeleteItemButton" ng-click="removeItem(item)">Delete Item</button>
   </li>
 </ul>
 

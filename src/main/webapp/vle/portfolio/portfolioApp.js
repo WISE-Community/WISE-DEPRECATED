@@ -1,23 +1,27 @@
 'use strict';  // Defines that JavaScript code should be executed in "strict mode" 
                // see here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 
-var portfolioApp = angular.module('portfolioApp', ['ngRoute', 'ui.sortable']);
+var portfolioApp = angular.module('portfolioApp', ['ngRoute', 'ui.sortable', "xeditable"]);
 
 portfolioApp.config(['$routeProvider',
                     function($routeProvider) {
                       $routeProvider.
                         when('/toc', {
-                          templateUrl: 'portfolio/partials/portfolioTOC.html',
+                          templateUrl: 'portfolio/portfolioTOC.html',
                           controller: 'portfolioTOCController'
                         }).
                         when('/item/:itemId', {
-                          templateUrl: 'portfolio/partials/portfolioItem.html',
+                          templateUrl: 'portfolio/portfolioItem.html',
                           controller: 'portfolioItemController'
                         }).
                         otherwise({
                         	redirectTo: '/toc'
                         });
                     }]);
+
+portfolioApp.run(function(editableOptions) {
+	  editableOptions.theme = 'default'; // Can be  'bs2' (bootstrap2), 'bs3' (bootstrap3), 'default'
+});
 
 portfolioApp.controller('portfolioMainController', 
 		['$scope', '$routeParams', '$location', function ($scope, $routeParams, $location) {
@@ -27,7 +31,7 @@ portfolioApp.controller('portfolioMainController',
 
 
 portfolioApp.controller('portfolioTOCController', 
-		['$scope', '$http', function ($scope, $http) {
+		['$scope', function ($scope) {
 	var view = window.parent.view;  // currently assumes this is loaded in an iFrame
 	$scope.portfolio = view.portfolio;
 	
@@ -59,6 +63,19 @@ portfolioApp.controller('portfolioItemController',
 		$scope.portfolio.saveToServer();
 		$scope.location.path('/toc');
 	};
+	
+	$scope.$watch('item.title', function (newValue, oldValue) {
+		if (newValue !== oldValue) { // This prevents unneeded calls to the local storage
+			$scope.portfolio.saveToServer();
+		}
+	}, true);
+	
+	$scope.$watch('item.studentAnnotation', function (newValue, oldValue) {
+		if (newValue !== oldValue) { // This prevents unneeded calls to the local storage
+			$scope.portfolio.saveToServer();
+		}
+	}, true);
+
 }]);
 
 portfolioApp
