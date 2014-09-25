@@ -553,6 +553,9 @@ Table.prototype.render = function() {
 		$('#deleteRowButton').hide();
 	}
 	
+	//load the external script if this step has one set
+	this.view.loadExternalScript(this);
+	
 	this.node.view.eventManager.fire('contentRenderCompleted', this.node.id, this.node);
 };
 
