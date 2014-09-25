@@ -1,3 +1,4 @@
+Table of Contents (drag to reorder, click item to go to page, click delete item to delete item)
 <ul ui-sortable="sortableOptions" ng-model="portfolio.items">
   <li class="portfolioItem" ng-repeat="item in portfolio.items track by $index">
     <a href="#/item/{{item.id}}/">{{item.title}}</a>
@@ -5,5 +6,4 @@
   </li>
 </ul>
 
-{{portfolio.items.length}} Current Items<br/>
-{{portfolio.deletedItems.length}} Deleted Items
+{{portfolio.items.length}} Current Items | {{portfolio.deletedItems.length}} Deleted Items
