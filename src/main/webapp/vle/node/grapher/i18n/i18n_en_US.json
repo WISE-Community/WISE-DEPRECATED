@@ -27,6 +27,10 @@
 		"value":"Save",
 		"description":"The text for the save button"
 	},
+	"submit": {
+		"value":"SUBMIT WORK",
+		"description":"The text for the submit button"
+	},
 	"distance": {
 		"value":"distance",
 		"description":"The label for the distance graph type"

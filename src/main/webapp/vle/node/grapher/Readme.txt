@@ -32,3 +32,13 @@ Now when user selects a point that is not the currently selected series,
 the radio button changes and the current series changes.
 UNLESS the point is near the x-axis or y-axis. In this case we make a new point because it is the
 only way to make two series start from the origin or same y-intercept.
+
+
+9/24/2014
+- Now any point that is highlighted can be deleted by pressing delete or backspace. The point does not need to be clicked on.
+- "Save" button now says "SUBMIT WORK" and looks a lot cooler.
+- inclusion of external animation script:
+	- html now has a div on the right of the graph for an animation. (Can of course be left empty).
+	- In content add "externalAnimationScript" field with a reference to a js file in the assets. Should have a "processEvents" function.
+	- Events are sent to "processEvents" from grapher.js when something interesting happens (like making a new point). May need to expand events.	
+	
