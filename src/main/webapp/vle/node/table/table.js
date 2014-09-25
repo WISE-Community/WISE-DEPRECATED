@@ -780,8 +780,9 @@ Table.prototype.save = function() {
 		 * the student work is saved to the server once they move on to the
 		 * next step.
 		 */
-		this.view.pushStudentWork(this.node.id, tableState);
-
+		//this.view.pushStudentWork(this.node.id, tableState);
+		this.node.save(tableState);
+		
 		//push the state object into this or object's own copy of states
 		this.states.push(tableState);		
 	}
