@@ -1336,6 +1336,8 @@ View.prototype.OpenResponseNode.setRegularExportColumns = function() {
  * Set the export columns for the auto graded open response steps
  */
 View.prototype.OpenResponseNode.setAutoGradedExportColumns = function() {
+	this.content.isAutoGraded = true;
+	
 	this.content.exportColumns = [
           {
         	  "columnName": "Response",
