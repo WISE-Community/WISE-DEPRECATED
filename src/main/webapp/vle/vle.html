@@ -84,6 +84,71 @@ function bootstrapListener(type,args,obj){
 		env.startView('student');
 	};
 };
+
+/**
+ * Prevent the backspace key from causing the browser to move back in navigation
+ * @param event the key down event
+ */
+function preventBackspaceBrowserBack(event) {
+	if(event.keyCode == 8) {
+		//the backspace key was pressed down
+		
+		var preventBackspace = false;
+
+		//get the element that contains focus
+		var element = event.srcElement || event.target;
+		
+		if(element != null) {
+			//get the tag name of the element
+			var tagName = element.tagName;
+			var tagNameUpperCase = tagName.toUpperCase();
+			
+			if(tagNameUpperCase === 'INPUT') {
+				//the element is an input
+				
+				//get the input type
+				var type = element.type;
+				var typeUpperCase = type.toUpperCase();
+				
+				if(typeUpperCase === 'TEXT' ||
+						typeUpperCase === 'PASSWORD' ||
+						typeUpperCase === 'FILE' ||
+						typeUpperCase === 'EMAIL' ||
+						typeUpperCase === 'SEARCH' ||
+						typeUpperCase === 'DATE') {
+					//allow the backspace for these elements
+					preventBackspace = false;
+				} else if(typeUpperCase == 'CHECKBOX' ||
+						typeUpperCase == 'RADIO' ||
+						typeUpperCase == 'SUBMIT' ||
+						typeUpperCase == 'BUTTON') {
+					//prevent the backspace for these elements
+					preventBackspace = true;
+				}
+			} else if(tagNameUpperCase === 'TEXTAREA') {
+				//the element is a textarea so we will allow the backspace
+				preventBackspace = false;
+			} else {
+				/*
+				 * the element is not an element that accepts input so
+				 * we will prevent the backspace in order to prevent
+				 * the browser from moving back in the history.
+				 * the element is most likely a body or div.
+				 */
+				preventBackspace = true;
+			}
+		}
+		
+		if(preventBackspace) {
+			//prevent the backspace
+			event.preventDefault();
+		}
+	}
+}
+
+//check for the backspace key whenever a key is pressed down
+document.onkeydown = preventBackspaceBrowserBack;
+
 </script>
 
 </head>
