@@ -380,6 +380,8 @@ OPENRESPONSE.prototype.cRaterRequestSuccessCallback = function(responseText, res
 	var cRaterItemType = successArgs.cRaterItemType; //get the crater item type e.g. 'CRATER' or 'HENRY'
 	var orState = successArgs.orState;
 	var nodeVisit = successArgs.nodeVisit;
+	var runId = view.getConfig().getConfigParam('runId');
+	var toWorkgroupId = view.getUserAndClassInfo().getWorkgroupId();
 	
 	if (responseJSON != null) {
 		try {
@@ -404,8 +406,41 @@ OPENRESPONSE.prototype.cRaterRequestSuccessCallback = function(responseText, res
 			var feedbackText = feedbackTextObject.feedbackText;
 			var feedbackId = feedbackTextObject.feedbackId;
 			
+			//handle multipleAttemptFeedback, if this step has it enabled &&&&
+			if (cRaterStepContent.enableMultipleAttemptFeedbackRules && 
+				cRaterStepContent.multipleAttemptFeedbackRules != null &&
+				cRaterStepContent.multipleAttemptFeedbackRules.rules != null &&
+				cRaterStepContent.multipleAttemptFeedbackRules.rules.length > 0) {
+				
+				var authoredScoreSequenceRules = cRaterStepContent.multipleAttemptFeedbackRules.rules;
+				var fromWorkgroups = [-1];
+				var type = "autoGraded";
+			
+				// get the last annotation, if exists
+				var latestCRaterAnnotation = view.model.annotations.getLatestAnnotation(runId, nodeId, toWorkgroupId, fromWorkgroups, type);
+				if (latestCRaterAnnotation != null && latestCRaterAnnotation.value.length > 0) {
+					var lastCRaterAnnotation = latestCRaterAnnotation.value[latestCRaterAnnotation.value.length-1];
+					if (lastCRaterAnnotation != null && lastCRaterAnnotation.autoScore) {
+						var lastCRaterScore = lastCRaterAnnotation.autoScore;
+													
+						// test against authored scoreSequences
+						for (var ruleIndex = 0; ruleIndex < authoredScoreSequenceRules.length; ruleIndex++) {
+							var ruleScoreSequenceLastScore = authoredScoreSequenceRules[ruleIndex].scoreSequence[0];
+							var ruleScoreSequenceCurrentScore = authoredScoreSequenceRules[ruleIndex].scoreSequence[1];
+							
+							if (lastCRaterScore.toString().match("["+ruleScoreSequenceLastScore+"]") &&
+									score.toString().match("["+ruleScoreSequenceCurrentScore+"]")) {
+								feedbackText = authoredScoreSequenceRules[ruleIndex].feedback;
+								feedbackId = authoredScoreSequenceRules[ruleIndex].id;
+								break;
+							}
+						}						
+					}
+				}
+			}
+			
 			//get the node state timestamp which we will use as the node state id
-			var nodeStateId = orState.timestamp;
+			var nodeStateId = orState.timestamp;			
 			
 			//create the auto graded annotation value
 			var annotationValue = {

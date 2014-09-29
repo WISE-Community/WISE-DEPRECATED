@@ -488,11 +488,11 @@ Annotations.prototype.getLatestAnnotation = function(runId, nodeId, toWorkgroup,
 				if(latestAnnotation) {
 					//we have previously found a matching
 					
-					if(latestAnnotation.postTime < tempAnnotation.postTime) {
+					if(latestAnnotation.postTime < tempAnnotation.postTime || (tempAnnotation.postTime == null && tempAnnotation.type == "autoGraded")) {
 						/*
 						 * the post time of the previously matching is older than the
-						 * new match we have just found so we will set it as the 
-						 * latest annotation
+						 * new match, or this tempAnnotation is an autoGraded annotation and has not been saved to server yet.
+						 * We have just found so we will set it as the latest annotation
 						 */
 						latestAnnotation = tempAnnotation;
 					}

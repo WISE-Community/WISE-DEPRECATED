@@ -18,6 +18,8 @@ View.prototype.cRaterManager.dispatcher = function(type, args, obj) {
 		obj.updateCRaterDisplayFeedbackToStudent();
 	} else if(type=='cRaterMustSubmitAndReviseBeforeExitChanged') {
 		obj.updateCRaterMustSubmitAndReviseBeforeExit();
+	} else if(type=='cRaterEnableMultipleAttemptFeedbackRulesChanged') {
+		obj.updateEnableMultipleAttemptFeedbackRules();
 	} else if(type=='cRaterAddFeedback') {
 		obj.cRaterAddFeedback(args);
 	} else if(type=='cRaterRemoveFeedback') {
