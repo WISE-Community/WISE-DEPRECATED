@@ -356,3 +356,11 @@ textarea:focus {
     -khtml-user-select: none; /* probably old webkit browsers, but new support it too */
     user-select: none; /* for future CSS3 compliant browsers */
 }
+
+#multipleAttemptFeedbackRulesTable {
+border-collapse: collapse;
+}
+
+#multipleAttemptFeedbackRulesTable, #multipleAttemptFeedbackRulesTable th, #multipleAttemptFeedbackRulesTable td {
+   border: 1px solid black;
+}
