@@ -107,8 +107,9 @@ Portfolio.prototype.addStudentUploadedAssetItem = function(assetFilename, assetF
 	var portfolioItem = new PortfolioItem(portfolioItemArgs);
 	this.addItem(portfolioItem);
 	this.saveToServer(this.addItemSaveToServerCallback,{portfolio:this});
-	this.items.push(portfolioItem);
+	this.view.displayPortfolio(portfolioItem.id);
 };
+
 
 Portfolio.prototype.saveToServerCallback = function(responseText, responseXML, args) {
 	var portfolio = args.portfolio;
