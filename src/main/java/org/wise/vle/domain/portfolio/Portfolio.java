@@ -223,30 +223,6 @@ public class Portfolio extends PersistableDomain implements Serializable {
 		this.isSubmitted = isSubmitted;
 	}
 
-
-	/**
-	 * Get the JSON object representation of the Portfolio
-	 * @return a JSONObject containing the data from the portfolio
-	 */
-	public JSONObject toJSONObject() {
-		JSONObject jsonObject = null;
-
-		try {
-			jsonObject = new JSONObject();
-			jsonObject.put("metadata", getMetadata());
-			jsonObject.put("items", getItems());
-			jsonObject.put("deletedItems", getDeletedItems());
-			jsonObject.put("id", getId());
-			jsonObject.put("runId", getRunId());
-			jsonObject.put("workgroupId", getWorkgroupId());
-			jsonObject.put("isPublic", isPublic());
-			jsonObject.put("isSubmitted", isSubmitted());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return jsonObject;
-	}
-
 	/**
 	 * Get the JSON string representation of the Portfolio
 	 * @return
@@ -254,8 +230,8 @@ public class Portfolio extends PersistableDomain implements Serializable {
 	public String toJSONString() {
 		String jsonString = null;
 
-		//get the JSONObject representation of the idea basket
-		JSONObject jsonObject = toJSONObject();
+		//get the JSONObject representation of the portfolio
+		JSONObject jsonObject = new JSONObject(this);
 
 		try {
 			if(jsonObject != null) {

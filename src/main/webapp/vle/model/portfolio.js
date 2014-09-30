@@ -30,7 +30,7 @@ function Portfolio(view, portfolioJSONString) {
 		this.metadata = portfolioJSONObj.metadata ? portfolioJSONObj.metadata : "";
 
 		if(portfolioJSONObj.hasOwnProperty('items') && portfolioJSONObj.items !== null) {
-			var portfolioItemsJSONArray = portfolioJSONObj.items;
+			var portfolioItemsJSONArray = JSON.parse(portfolioJSONObj.items);
 			for (var i=0; i< portfolioItemsJSONArray.length; i++) {
 				var portfolioItemJSON = portfolioItemsJSONArray[i];
 				this.items.push(new PortfolioItem(portfolioItemJSON));
@@ -38,7 +38,7 @@ function Portfolio(view, portfolioJSONString) {
 		}
 
 		if(portfolioJSONObj.hasOwnProperty('deletedItems') && portfolioJSONObj.deletedItems !== null) {
-			var portfolioDeletedItemsJSONArray = portfolioJSONObj.deletedItems;
+			var portfolioDeletedItemsJSONArray = JSON.parse(portfolioJSONObj.deletedItems);
 			for (var i=0; i< portfolioDeletedItemsJSONArray.length; i++) {
 				var portfolioDeletedItemJSON = portfolioDeletedItemsJSONArray[i];
 				this.deletedItems.push(new PortfolioItem(portfolioDeletedItemJSON));
