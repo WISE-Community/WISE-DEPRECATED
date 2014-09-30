@@ -66,7 +66,6 @@ public class PortfolioController {
 
 		Long workgroupId = new Long(workgroupIdStr);
 
-		boolean isPrivileged = isPrivileged(signedInUser,runId);
 		boolean allowedAccess = isAllowedAcess(signedInUser,runId,workgroupId);
 
 		if(!allowedAccess) {
@@ -83,16 +82,12 @@ public class PortfolioController {
 
 				// get the last Portfolio that was saved
 				Portfolio lastSavedPortfolio = vleService.getPortfolioByRunIdWorkgroupId(runId, workgroupId);
-				if(lastSavedPortfolio != null) {
-					// save iff portfolio to save and the last-saved portfolio are not the same
-					if (portfolioToSave.getData() != null &&
-							!portfolioToSave.getData().equals(lastSavedPortfolio.getData())) {
+				// save iff this is first time saving portfolio, or if this portfolio to save and the last-saved portfolio are not the same
+				if(lastSavedPortfolio == null ||
+						(lastSavedPortfolio != null && 
+						portfolioToSave.getItems() != null &&
+						!portfolioToSave.getItems().equals(lastSavedPortfolio.getItems()))){
 						vleService.savePortfolio(portfolioToSave);
-					}
-				} else {
-					// Portfolio was never created before so we'll create a new row
-					Portfolio portfolio = new Portfolio(runId,workgroupId,null);
-					vleService.savePortfolio(portfolio);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -108,7 +103,6 @@ public class PortfolioController {
 			HttpServletResponse response) throws IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
-		String action = request.getParameter("action");
 
 		String runIdStr = request.getParameter("runId");
 		Long runId = null;
@@ -130,7 +124,6 @@ public class PortfolioController {
 			}
 		}
 
-		boolean isPrivileged = isPrivileged(signedInUser,runId);
 		boolean allowedAccess = isAllowedAcess(signedInUser,runId,workgroupId);
 
 
@@ -146,8 +139,7 @@ public class PortfolioController {
 
 			if(portfolio == null) {
 				//make the Portfolio if it does not exist
-				portfolio = new Portfolio(runId,workgroupId,null);
-				vleService.savePortfolio(portfolio);
+				portfolio = new Portfolio(runId,workgroupId);
 			}
 
 			if(portfolio != null) {

@@ -67,8 +67,14 @@ public class Portfolio extends PersistableDomain implements Serializable {
 	@Column(name="workgroupId")
 	private Long workgroupId = null;
 
-	@Column(name="data", length=512000)
-	private String data = null;
+	@Column(name="metadata", length=512000)
+	private String metadata = null;
+
+	@Column(name="items", length=512000)
+	private String items = null;
+
+	@Column(name="deletedItems", length=512000)
+	private String deletedItems = null;
 
 	//whether this portfolio is a public portfolio
 	@Column(name="isPublic")
@@ -103,7 +109,9 @@ public class Portfolio extends PersistableDomain implements Serializable {
 		try {
 			this.runId = portfolioJSONObject.getLong("runId");
 			this.workgroupId = portfolioJSONObject.getLong("workgroupId");
-			this.data = portfolioJSONObject.toString();
+			this.metadata = portfolioJSONObject.getString("metadata");
+			this.items = portfolioJSONObject.getString("items");
+			this.deletedItems = portfolioJSONObject.getString("deletedItems");
 			Calendar now = Calendar.getInstance();
 			this.postTime = new Timestamp(now.getTimeInMillis());
 		} catch (JSONException e) {
@@ -114,15 +122,13 @@ public class Portfolio extends PersistableDomain implements Serializable {
 	/**
 	 * Constructor that does not populate the data field
 	 * @param runId
-	 * @param projectId
 	 * @param workgroupId
 	 */
-	public Portfolio(long runId, long workgroupId, String data) {
+	public Portfolio(long runId, long workgroupId) {
 		this.runId = runId;
 		this.workgroupId = workgroupId;
 		Calendar now = Calendar.getInstance();
 		this.postTime = new Timestamp(now.getTimeInMillis());
-		this.data = data;
 	}
 
 	/**
@@ -157,12 +163,40 @@ public class Portfolio extends PersistableDomain implements Serializable {
 		this.workgroupId = workgroupId;
 	}
 
-	public String getData() {
-		return data;
+	public String getMetadata() {
+		return metadata;
 	}
 
-	public void setData(String data) {
-		this.data = data;
+	public void setMetadata(String metadata) {
+		this.metadata = metadata;
+	}
+
+	/**
+	 * @return the items
+	 */
+	public String getItems() {
+		return items;
+	}
+
+	/**
+	 * @param items the items to set
+	 */
+	public void setItems(String items) {
+		this.items = items;
+	}
+
+	/**
+	 * @return the deletedItems
+	 */
+	public String getDeletedItems() {
+		return deletedItems;
+	}
+
+	/**
+	 * @param deletedItems the deletedItems to set
+	 */
+	public void setDeletedItems(String deletedItems) {
+		this.deletedItems = deletedItems;
 	}
 
 	public Timestamp getPostTime() {
@@ -199,7 +233,9 @@ public class Portfolio extends PersistableDomain implements Serializable {
 
 		try {
 			jsonObject = new JSONObject();
-			jsonObject.put("data", getData());
+			jsonObject.put("metadata", getMetadata());
+			jsonObject.put("items", getItems());
+			jsonObject.put("deletedItems", getDeletedItems());
 			jsonObject.put("id", getId());
 			jsonObject.put("runId", getRunId());
 			jsonObject.put("workgroupId", getWorkgroupId());

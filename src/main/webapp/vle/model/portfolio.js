@@ -9,6 +9,7 @@ function Portfolio(view, portfolioJSONString) {
 	this.id;
 	this.runId;
 	this.workgroupId;
+	this.metadata;
 	this.items = [];
 	this.deletedItems = [];
 	this.version = 1;
@@ -19,14 +20,14 @@ function Portfolio(view, portfolioJSONString) {
 	 * we do not want to load anything
 	 */
 	if(portfolioJSONString) {
-		var portfolioDataJSONString = JSON.parse(portfolioJSONString).data;
-		var portfolioJSONObj = JSON.parse(portfolioDataJSONString);
+		var portfolioJSONObj = JSON.parse(portfolioJSONString);
 		
 		//set the values from the JSON object we received from the server
 
 		this.id = portfolioJSONObj.id;
 		this.runId = portfolioJSONObj.runId;
 		this.workgroupId = portfolioJSONObj.workgroupId;
+		this.metadata = portfolioJSONObj.metadata ? portfolioJSONObj.metadata : "";
 
 		if(portfolioJSONObj.hasOwnProperty('items') && portfolioJSONObj.items !== null) {
 			var portfolioItemsJSONArray = portfolioJSONObj.items;
