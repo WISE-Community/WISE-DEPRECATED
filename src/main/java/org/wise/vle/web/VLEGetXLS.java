@@ -3314,17 +3314,16 @@ public class VLEGetXLS {
 				//set the step work data into the row in the given column
 				workgroupColumnCounter = setStepWorkResponse(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, latestStepWorkWithResponse, nodeId);
 
-				//check if this step utilizes CRater scoring
-				if(isCRaterType(nodeContent)) {
-					//set the latest CRater score and timestamp
-					workgroupColumnCounter = setLatestCRaterScoreAndTimestamp(stepWorksForNodeId, rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter);
+				if(isAutoGraded(nodeContent)) {
+					//set the auto graded values
+					workgroupColumnCounter = setLatestAutoScoreValues(stepWorksForNodeId, rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter);
 				}
 				
 				//set the latest annotation score and timestamp from any of the teachers
-				workgroupColumnCounter = setLatestAnnotationScoreAndTimestamp(stepWorksForNodeId, rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, nodeId);
+				workgroupColumnCounter = setLatestAnnotationScore(stepWorksForNodeId, rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, nodeId);
 				
 				//set the latest annotation comment and timestamp from any of the teachers
-				workgroupColumnCounter = setLatestAnnotationCommentAndTimestamp(stepWorksForNodeId, rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter);
+				workgroupColumnCounter = setLatestAnnotationComment(stepWorksForNodeId, rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter);
 			}
 			
 			//write the csv row if we are generating a csv file
@@ -3755,9 +3754,9 @@ public class VLEGetXLS {
 					stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
 					stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
 					columnCounter, nodeId, nodeTitle, nodeContent);
-		} else if(isCRaterType(nodeContent)) {
-			//the step is uses CRater grading
-			columnCounter = setGetLatestStudentWorkCRaterHeaderCells(
+		} else if(isAutoGraded(nodeContent)) {
+			//the step is auto graded
+			columnCounter = setGetLatestStudentWorkAutoGradedHeaderCells(
 					stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
 					stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
 					columnCounter, nodeId, nodeTitle, nodeContent);
@@ -3782,37 +3781,20 @@ public class VLEGetXLS {
 		//get the prompt
 		String nodePrompt = getPromptFromNodeContent(nodeContent);
 		
-		//set the step extra so the researcher knows this column is for the teacher score
-		String stepExtra = "teacher score timestamp";
+		String stepExtra = "";
 		
-		//set the step extra cell
-		columnCounter = setGetLatestStepWorkHeaderCells(
-				columnCounter, 
-				stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow,
-				stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
-				nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
+		stepExtra = "Teacher Score";
 		
-		stepExtra = "teacher score";
-		
-		//set the step extra cell
+		//set the step extra cell so the researcher knows this column is for the teacher score
 		columnCounter = setGetLatestStepWorkHeaderCells(
 				columnCounter, 
 				stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
 				stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
 				nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
 		
-		stepExtra = "teacher max score";
+		stepExtra = "Teacher Max Score";
 		
-		//set the step extra cell
-		columnCounter = setGetLatestStepWorkHeaderCells(
-				columnCounter, 
-				stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
-				stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
-				nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
-		
-		stepExtra = "teacher comment timestamp";
-		
-		//set the step extra cell
+		//set the step extra cell so the researcher knows this column is for the teacher max score
 		columnCounter = setGetLatestStepWorkHeaderCells(
 				columnCounter, 
 				stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
@@ -3820,7 +3802,7 @@ public class VLEGetXLS {
 				nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
 		
 		//set the step extra so the researcher knows this column is for the teacher comment
-		stepExtra = "teacher comment";
+		stepExtra = "Teacher Comment";
 		
 		//set the step extra cell
 		columnCounter = setGetLatestStepWorkHeaderCells(
@@ -4036,6 +4018,24 @@ public class VLEGetXLS {
 					e.printStackTrace();
 				}
 			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Check if the step is auto graded
+	 * @param nodeJSONObject the step content
+	 * @return whether the step is auto graded
+	 */
+	private boolean isAutoGraded(JSONObject nodeJSONObject) {
+		boolean result = false;
+		
+		if(nodeJSONObject == null) {
+			result = false;
+		} else {
+			//get the isAutoGraded field if it exists
+			result = nodeJSONObject.optBoolean("isAutoGraded");
 		}
 		
 		return result;
@@ -4391,6 +4391,90 @@ public class VLEGetXLS {
 		stepExtra = "CRater score";
 		
 		//set the crater header cells for the CRater score column
+		columnCounter = setGetLatestStepWorkHeaderCells(columnCounter, 
+				stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
+				stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
+				nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
+		
+		return columnCounter;
+	}
+	
+	/**
+	 * Set the auto graded header cells
+	 * 
+	 * @param stepTitleRow the step title excel row
+	 * @param stepTypeRow the step type excel row 
+	 * @param stepPromptRow the step prompt excel row
+	 * @param nodeIdRow the node id excel row
+	 * @param stepExtraRow the step extra excel row
+	 * @param stepTitleRowVector the step title csv row
+	 * @param stepTypeRowVector the step type csv row
+	 * @param stepPromptRowVector the step prompt csv row
+	 * @param nodeIdRowVector the node id csv row
+	 * @param stepExtraRowVector the step extra csv row
+	 * @param columnCounter the column counter
+	 * @param nodeId the node id
+	 * @param nodeTitle the node title
+	 * @param nodeContent the node content
+	 * 
+	 * @return the updated column position
+	 */
+	private int setGetLatestStudentWorkAutoGradedHeaderCells(
+			Row stepTitleRow,
+			Row stepTypeRow,
+			Row stepPromptRow,
+			Row nodeIdRow,
+			Row stepExtraRow,
+			Vector<String> stepTitleRowVector,
+			Vector<String> stepTypeRowVector,
+			Vector<String> stepPromptRowVector,
+			Vector<String> nodeIdRowVector,
+			Vector<String> stepExtraRowVector,
+			int columnCounter, 
+			String nodeId,
+			String nodeTitle, 
+			JSONObject nodeContent) {
+		
+		String nodeType = "";
+		try {
+			if(nodeContent != null) {
+				//get the node type
+				nodeType = nodeContent.getString("type");
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		//get the prompt
+		String nodePrompt = getPromptFromNodeContent(nodeContent);
+		
+		String stepExtra = "";
+		
+		//set the header cells
+		columnCounter = setGetLatestStepWorkHeaderCells(columnCounter, 
+				stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
+				stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
+				nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
+		
+		stepExtra = "Auto Score";
+		
+		//set the auto score header cell
+		columnCounter = setGetLatestStepWorkHeaderCells(columnCounter, 
+				stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
+				stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
+				nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
+		
+		stepExtra = "Max Auto Score";
+		
+		//set the max auto score cell
+		columnCounter = setGetLatestStepWorkHeaderCells(columnCounter, 
+				stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
+				stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
+				nodeTitle, nodeType, nodePrompt, nodeId, stepExtra);
+		
+		stepExtra = "Auto Feedback";
+		
+		//set the auto feedback cell
 		columnCounter = setGetLatestStepWorkHeaderCells(columnCounter, 
 				stepTitleRow, stepTypeRow, stepPromptRow, nodeIdRow, stepExtraRow, 
 				stepTitleRowVector, stepTypeRowVector, stepPromptRowVector, nodeIdRowVector, stepExtraRowVector,
@@ -5629,6 +5713,7 @@ public class VLEGetXLS {
 							
 							boolean valueAdded = false;
 							
+							/*
 							if(nodeId != null) {
 								//get the step content
 								JSONObject nodeContent = nodeIdToNodeContent.get(nodeId);
@@ -5645,7 +5730,7 @@ public class VLEGetXLS {
 										 * the step type is Challenge and the field is maxScore
 										 * or
 										 * the step type is SVGDraw and the field is maxAutoScore
-										 */
+										 *
 										if((type.equals("OpenResponse") && field.equals("cRaterMaxScore")) ||
 												(type.equals("Challenge") && field.equals("maxScore")) ||
 												(type.equals("SVGDraw") && field.equals("maxAutoScore"))) {
@@ -5661,6 +5746,7 @@ public class VLEGetXLS {
 									}
 								}
 							}
+							*/
 							
 							//check if we have already added a value
 							if(!valueAdded) {
@@ -9937,7 +10023,92 @@ public class VLEGetXLS {
 	}
 	
 	/**
-	 * Get the latest annotation score and timestamp and set it into the row
+	 * Set the latest auto score value into the row
+	 * 
+	 * @param stepWorksForNodeId the StepWork objects we want to look at
+	 * for the associated annotation
+	 * @param rowForWorkgroupId the row
+	 * @param workgroupColumnCounter the column index
+	 * 
+	 * @return the updated column counter pointing to the next empty column
+	 */
+	private int setLatestAutoScoreValues(List<StepWork> stepWorksForNodeId, Row rowForWorkgroupId, Vector<String> rowForWorkgroupIdVector, int workgroupColumnCounter) {
+		String annotationType = "autoGraded";
+		
+		//get the latest auto graded annotation associated with any of the StepWork objects
+		Annotation latestAutoScoreAnnotationByStepWork = vleService.getLatestAnnotationByStepWork(stepWorksForNodeId, annotationType);
+
+		if(latestAutoScoreAnnotationByStepWork != null) {
+			try {
+				//get the annotation data
+				String data = latestAutoScoreAnnotationByStepWork.getData();
+				JSONObject annotationData = new JSONObject(data);
+				
+				/*
+				 * get the value e.g.
+				 * "value": [
+				 *     {
+				 *         "autoScore":3,
+				 *         "maxAutoScore":5,
+				 *         "autoFeedback":"Good start, now try to add more evidence.",
+				 *         "nodeStateId": 1328317997000
+				 *     },
+				 *     {
+				 *         "autoScore":5,
+				 *         "maxAutoScore":5,
+				 *         "autoFeedback":"Good job, you provided an accurate explanation.",
+				 *         "nodeStateId": 1328318997000
+				 *     }
+				 * ]
+				 */
+				JSONArray value = annotationData.getJSONArray("value");
+				
+				if(value.length() > 0) {
+					//get the last entry in the array
+					JSONObject valueElement = value.getJSONObject(value.length() - 1);
+					
+					Long autoScore = null;
+					Long maxAutoScore = null;
+					String autoFeedback = null;
+					
+					if(valueElement.has("autoScore")) {
+						//get the auto score
+						autoScore = valueElement.optLong("autoScore");
+					}
+					
+					if(valueElement.has("maxAutoScore")) {
+						//get the max auto score
+						maxAutoScore = valueElement.optLong("maxAutoScore");
+					}
+					
+					if(valueElement.has("autoFeedback")) {
+						//get the auto feedback
+						autoFeedback = valueElement.optString("autoFeedback");
+					}
+					
+					//set the auto score
+					workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, autoScore);
+					
+					//set the max auto score
+					workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, maxAutoScore);
+					
+					//set the auto feedback
+					workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, autoFeedback);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} else {
+			//there is no annotation so we will just increment the column counter
+			workgroupColumnCounter += 3;
+			addEmptyElementsToVector(rowForWorkgroupIdVector, 3);
+		}
+		
+		return workgroupColumnCounter;
+	}
+	
+	/**
+	 * Set the latest annotation score and timestamp into the row
 	 * 
 	 * @param stepWorksForNodeId the StepWork objects we want to look at
 	 * for the associated annotation
@@ -9992,7 +10163,53 @@ public class VLEGetXLS {
 	}
 	
 	/**
-	 * Get the latest annotation comment and timestamp and set it into the row
+	 * Set the latest annotation score into the row
+	 * 
+	 * @param stepWorksForNodeId the StepWork objects we want to look at
+	 * for the associated annotation
+	 * @param rowForWorkgroupId the row
+	 * @param workgroupColumnCounter the column index
+	 * @param nodeId the node id for the step
+	 * 
+	 * @return the updated column counter pointing to the next empty column
+	 */
+	private int setLatestAnnotationScore(List<StepWork> stepWorksForNodeId, Row rowForWorkgroupId, Vector<String> rowForWorkgroupIdVector, int workgroupColumnCounter, String nodeId) {
+		/*
+		 * get the latest annotation associated with any of the StepWork objects
+		 * and have fromWorkgroup as any of the workgroup ids in teacherWorkgroupIds
+		 */
+		Annotation latestAnnotationScoreByStepWork = vleService.getLatestAnnotationScoreByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
+		
+		if(latestAnnotationScoreByStepWork != null) {
+			try {
+				//get the annotation data
+				String data = latestAnnotationScoreByStepWork.getData();
+				JSONObject annotation = new JSONObject(data);
+				
+				//get the score value
+				String score = annotation.getString("value");
+
+				//set the score
+				workgroupColumnCounter = setCellValueConvertStringToLong(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, score);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} else {
+			//there is no annotation so we will just increment the column counter
+			workgroupColumnCounter += 1;
+			addEmptyElementsToVector(rowForWorkgroupIdVector, 1);
+		}
+
+		//get the max score for the step
+		Long maxScore = getMaxScoreByNodeId(nodeId);
+		
+		workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, maxScore);
+		
+		return workgroupColumnCounter;
+	}
+	
+	/**
+	 * Set the latest annotation comment and timestamp into the row
 	 * 
 	 * @param stepWorksForNodeId the StepWork objects we want to look at
 	 * for the associated annotation
@@ -10041,6 +10258,46 @@ public class VLEGetXLS {
 	}
 	
 	/**
+	 * Set the latest annotation comment into the row
+	 * 
+	 * @param stepWorksForNodeId the StepWork objects we want to look at
+	 * for the associated annotation
+	 * @param rowForWorkgroupId the row
+	 * @param workgroupColumnCounter the column index
+	 * 
+	 * @return the updated column counter pointing to the next empty column
+	 */
+	private int setLatestAnnotationComment(List<StepWork> stepWorksForNodeId, Row rowForWorkgroupId, Vector<String> rowForWorkgroupIdVector, int workgroupColumnCounter) {
+		/*
+		 * get the latest annotation associated with any of the StepWork objects
+		 * and have fromWorkgroup as any of the workgroup ids in teacherWorkgroupIds
+		 */
+		Annotation latestAnnotationCommentByStepWork = vleService.getLatestAnnotationCommentByStepWork(stepWorksForNodeId, teacherWorkgroupIds);
+		
+		if(latestAnnotationCommentByStepWork != null) {
+			try {
+				//get the annotation data
+				String data = latestAnnotationCommentByStepWork.getData();
+				JSONObject annotation = new JSONObject(data);
+				
+				//get the score value
+				String comment = annotation.getString("value");
+				
+				//set the comment
+				workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, comment);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} else {
+			//there is no annotation so we will just increment the column counter
+			workgroupColumnCounter += 1;
+			addEmptyElementsToVector(rowForWorkgroupIdVector, 1);
+		}
+		
+		return workgroupColumnCounter;
+	}
+	
+	/**
 	 * Set the autoGraded values into the cells
 	 * @param autoGradedAnnotationForNodeState the autoGraded annotation
 	 * @param rowForWorkgroupId the row
@@ -10051,10 +10308,24 @@ public class VLEGetXLS {
 	private int setLatestAutoGradedAnnotation(JSONObject autoGradedAnnotationForNodeState, Row rowForWorkgroupId, Vector<String> rowForWorkgroupIdVector, int workgroupColumnCounter) {
 		
 		if(autoGradedAnnotationForNodeState != null) {
-			//get the auto score, max auto score, and auto feedback
-			Long autoScore = autoGradedAnnotationForNodeState.optLong("autoScore");
-			Long maxAutoScore = autoGradedAnnotationForNodeState.optLong("maxAutoScore");
-			String autoFeedback = autoGradedAnnotationForNodeState.optString("autoFeedback");
+			Long autoScore = null;
+			Long maxAutoScore = null;
+			String autoFeedback = null;
+			
+			if(autoGradedAnnotationForNodeState.has("autoScore")) {
+				//get the auto score
+				autoScore = autoGradedAnnotationForNodeState.optLong("autoScore");
+			}
+			
+			if(autoGradedAnnotationForNodeState.has("maxAutoScore")) {
+				//get the max auto score
+				maxAutoScore = autoGradedAnnotationForNodeState.optLong("maxAutoScore");
+			}
+			
+			if(autoGradedAnnotationForNodeState.has("autoFeedback")) {
+				//get the auto feedback
+				autoFeedback = autoGradedAnnotationForNodeState.optString("autoFeedback");
+			}
 			
 			//set the values into the cells
 			workgroupColumnCounter = setCellValue(rowForWorkgroupId, rowForWorkgroupIdVector, workgroupColumnCounter, autoScore);

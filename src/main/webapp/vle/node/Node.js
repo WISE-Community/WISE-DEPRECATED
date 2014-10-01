@@ -417,6 +417,11 @@ Node.prototype.render = function(contentPanel, studentWork, disable) {
 		}
 		this.view.postCurrentStep(this);
 	}
+	
+	if(preventBackspaceBrowserBack != null) {
+		//prevent the backspace key from causing the browser to move back in navigation
+		this.contentPanel.document.onkeydown = preventBackspaceBrowserBack;
+	}
 };
 
 /**

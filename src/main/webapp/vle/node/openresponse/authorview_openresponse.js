@@ -543,6 +543,15 @@ View.prototype.OpenResponseNode.populateCRater = function() {
 			//populate the feedback
 			this.displayCRaterFeedback(this.content.cRater.cRaterScoringRules);
 		}
+		
+		if(this.content.cRater.enableMultipleAttemptFeedbackRules != null) {
+			$('#cRaterEnableMultipleAttemptFeedbackRules').attr('checked', this.content.cRater.enableMultipleAttemptFeedbackRules);
+
+			if (this.content.cRater.enableMultipleAttemptFeedbackRules) {
+				//show multiple attempt feedback div
+				this.displayCRaterMultipleAttemptFeedbackRules(this.content.cRater.multipleAttemptFeedbackRules);
+			}
+		}
 	}
 };
 
@@ -731,6 +740,38 @@ View.prototype.OpenResponseNode.updateCRaterMustSubmitAndReviseBeforeExit = func
 };
 
 /**
+ * Update the must submit and revise before exit value
+ */
+View.prototype.OpenResponseNode.updateEnableMultipleAttemptFeedbackRules = function() {
+	var value = false;
+	
+	//get the 'checked' attribute which will either be null or the string 'checked'
+	var checked = $('#cRaterEnableMultipleAttemptFeedbackRules').attr('checked');
+	
+	if(checked == 'checked') {
+		//checkbox was checked
+		value = true;
+	}
+	
+	//update the value in the content
+	this.content.cRater.enableMultipleAttemptFeedbackRules = value;
+	
+	if (this.content.cRater.enableMultipleAttemptFeedbackRules) {
+		$("#cRaterMultipleAttemptFeedbackRules").show();
+		if (!this.content.cRater.multipleAttemptFeedbackRules) {
+			this.content.cRater.multipleAttemptFeedbackRules = {"rules":[]};
+		}
+		this.displayCRaterMultipleAttemptFeedbackRules(this.content.cRater.multipleAttemptFeedbackRules);
+	} else {
+		$("#cRaterMultipleAttemptFeedbackRules").hide();
+	}
+	
+	/* fire source updated event */
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+
+/**
  * Transfer the old feedback from the old scoring rules to the new scoring rules.
  * We do this because we don't want the author to accidentally lose all
  * their feedback if they accidentally click on the 'Verify' button again.
@@ -848,13 +889,124 @@ View.prototype.OpenResponseNode.displayCRaterFeedback = function(cRaterScoringRu
 			} else {
 				cRaterFeedbackHtml += "<input id='' type='radio' name='studentAction_" + x + "' value='rewrite' onclick='eventManager.fire(\"cRaterStudentActionUpdated\", [" + x + ", \"rewrite\"])'>Rewrite";
 			}
-			
 			cRaterFeedbackHtml += "<br>";
 			cRaterFeedbackHtml += "<br>";
 		}
 	}
 	
 	$('#cRaterFeedback').html(cRaterFeedbackHtml);
+};
+
+
+/**
+ * Display the CRater feedback authoring UI
+ * @param cRaterScoringRules an array of scoring rule objects
+ */
+View.prototype.OpenResponseNode.displayCRaterMultipleAttemptFeedbackRules = function(multipleAttemptFeedbackRules) {
+	$("#cRaterMultipleAttemptFeedbackRules").html("");
+	$("#cRaterMultipleAttemptFeedbackRules").append("<b>Multiple Attempt Feedback Rules</b>");
+	
+	$("#cRaterMultipleAttemptFeedbackRules").append(" (<a id='multipleAttemptFeedbackHelp'>HELP</a>)");
+	var multipleAttemptFeedbackRulesTableHtml = "<table id='multipleAttemptFeedbackRulesTable'><tr><th>Last Score</th><th>Current Score</th><th>Feedback</th><th></th></tr>";
+	for (var ruleIndex = 0; ruleIndex < multipleAttemptFeedbackRules.rules.length; ruleIndex++) {
+		var rule = multipleAttemptFeedbackRules.rules[ruleIndex];
+		multipleAttemptFeedbackRulesTableHtml += "<tr id='"+rule.id+"'><td><input ruleId='"+rule.id+"' columnType='lastScore' type='text' value='"+rule.scoreSequence[0]+"' size='10'></input></td>"+
+			"<td><input ruleId='"+rule.id+"' columnType='currentScore' type='text' value='"+rule.scoreSequence[1]+"' size='10'></input></td>"+
+			"<td><input ruleId='"+rule.id+"' columnType='feedback' type='text' value='"+ rule.feedback+"' size='50'></input></td><td><input type='button' value='Remove' onclick='eventManager.fire(\"openResponseRemoveMultipleAttemptFeedbackRule\",\""+rule.id+"\");'></input></tr>";
+	}
+	multipleAttemptFeedbackRulesTableHtml += "</table>"
+	$("#multipleAttemptFeedbackHelp").click(function() {
+		alert("Use single numbers (1), comma-separated numbers (2,4,5), or ranges (2-4)\n\n"+
+		"Example #1: Last Score: 1, Current Score: 2-5, Feedback: You improved!\n\n"+
+		"Example #2: Last Score: 3-5, Current Score:1,2, Feedback: Oh no, what happened!?");
+	});
+	$("#cRaterMultipleAttemptFeedbackRules").append(multipleAttemptFeedbackRulesTableHtml);
+	$("#cRaterMultipleAttemptFeedbackRules").append("<input type='button' value='Add New Rule' onclick='eventManager.fire(\"openResponseAddMultipleAttemptFeedbackRule\");'></input>");
+	$("#multipleAttemptFeedbackRulesTable input").off("change");
+	$("#multipleAttemptFeedbackRulesTable input").on("change", {"content":this.content, "view":this.view}, function(event) {
+		var ruleId = $(this).attr("ruleId");
+		var columnType = $(this).attr("columnType");
+		var newValue = $(this).val();
+		var mAFR = event.data.content.cRater.multipleAttemptFeedbackRules.rules;
+		for (var i=0; i< mAFR.length; i++) {
+			var rule = mAFR[i];
+			if (rule.id==ruleId) {
+				if (columnType == "lastScore") {
+					rule.scoreSequence[0] = newValue;
+					event.data.view.eventManager.fire('sourceUpdated');
+				} else if (columnType == "currentScore") {
+					rule.scoreSequence[1] = newValue;					
+					event.data.view.eventManager.fire('sourceUpdated');
+				} else if (columnType == "feedback")
+					rule.feedback = newValue;					
+					event.data.view.eventManager.fire('sourceUpdated');
+			}
+		}
+	});
+}
+
+/**
+ * Add new blank rule (of type MultipleAttemptFeedbackRule) to content and to view
+ */
+View.prototype.OpenResponseNode.addMultipleAttemptFeedbackRule = function(){
+	var newId = new Node().utils.generateKey();
+	var mAFR = this.content.cRater.multipleAttemptFeedbackRules.rules;
+	mAFR.push({
+        "id":newId,
+        "scoreSequence": [
+           "",
+           ""
+        ],
+        "feedback": ""
+     });
+	$("#multipleAttemptFeedbackRulesTable").append("<tr id='"+newId+"'><td><input ruleId='"+newId+"' columnType='lastScore' type='text' value='' size='10'></input></td>"+
+			"<td><input ruleId='"+newId+"' columnType='currentScore' type='text' value='' size='10'></input></td>"+
+			"<td><input ruleId='"+newId+"' columnType='feedback' type='text' value='' size='50'></input></td>"+
+			"<td><input type='button' value='Remove' onclick='eventManager.fire(\"openResponseRemoveMultipleAttemptFeedbackRule\",\""+newId+"\");'></input></td></tr>"); //remove rule row from view
+	$("#multipleAttemptFeedbackRulesTable input").off("change");
+	$("#multipleAttemptFeedbackRulesTable input").on("change", {"content":this.content, "view":this.view}, function(event) {
+		var ruleId = $(this).attr("ruleId");
+		var columnType = $(this).attr("columnType");
+		var newValue = $(this).val();
+		var mAFR = event.data.content.cRater.multipleAttemptFeedbackRules.rules;
+		for (var i=0; i< mAFR.length; i++) {
+			var rule = mAFR[i];
+			if (rule.id==ruleId) {
+				if (columnType == "lastScore") {
+					rule.scoreSequence[0] = newValue;
+					event.data.view.eventManager.fire('sourceUpdated');
+				} else if (columnType == "currentScore") {
+					rule.scoreSequence[1] = newValue;					
+					event.data.view.eventManager.fire('sourceUpdated');
+				} else if (columnType == "feedback")
+					rule.feedback = newValue;					
+					event.data.view.eventManager.fire('sourceUpdated');
+			}
+		}
+	});
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Remove specific rule (of type MultipleAttemptFeedbackRule) from content and from view
+ */
+View.prototype.OpenResponseNode.removeMultipleAttemptFeedbackRule = function(ruleId){
+	var mAFR = this.content.cRater.multipleAttemptFeedbackRules.rules;
+		
+	var ruleIndexInArray = null;
+	for (var i=0; i<mAFR.length; i++) {
+		var rule = mAFR[i];
+		if (rule.id == ruleId) {
+			ruleIndexInArray = i;
+			break;
+		}
+	}
+	if (ruleIndexInArray != null) {
+		mAFR.splice(ruleIndexInArray,1);
+	}
+	
+	$("#"+ruleId).remove(); //remove rule row from view
+	this.view.eventManager.fire('sourceUpdated');
 };
 
 /**
@@ -1143,6 +1295,7 @@ View.prototype.OpenResponseNode.updateEnableCRater = function() {
 				$('#cRaterDisplayScoreToStudent').attr('checked', false);
 				$('#cRaterDisplayFeedbackToStudent').attr('checked', false);
 				$('#cRaterMustSubmitAndReviseBeforeExit').attr('checked', false);
+				$('#cRaterEnableMultipleAttemptFeedbackRules').attr('checked', false);
 				$('#cRaterMaxCheckAnswers').val('');
 				$('#cRaterFeedback').html('');
 				
@@ -1183,6 +1336,8 @@ View.prototype.OpenResponseNode.setRegularExportColumns = function() {
  * Set the export columns for the auto graded open response steps
  */
 View.prototype.OpenResponseNode.setAutoGradedExportColumns = function() {
+	this.content.isAutoGraded = true;
+	
 	this.content.exportColumns = [
           {
         	  "columnName": "Response",
@@ -1202,7 +1357,7 @@ View.prototype.OpenResponseNode.setAutoGradedExportColumns = function() {
           },
           {
         	  "columnName": "Submit",
-        	  "field": "isCRaterSubmit"
+        	  "field": "isSubmit"
           }
   	];
 	

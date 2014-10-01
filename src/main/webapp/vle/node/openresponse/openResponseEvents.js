@@ -29,6 +29,10 @@ View.prototype.openResponseDispatcher = function(type,args,obj){
 		obj.OpenResponseNode.peerReviewStepNotOpenCustomMessageUpdated();
 	} else if(type=='openResponseUpdateShowPreviousWorkThatHasAnnotation'){
 		obj.OpenResponseNode.updateShowPreviousWorkThatHasAnnotation();
+	} else if(type=='openResponseRemoveMultipleAttemptFeedbackRule'){
+		obj.OpenResponseNode.removeMultipleAttemptFeedbackRule(args[0]);
+	} else if(type=='openResponseAddMultipleAttemptFeedbackRule'){
+		obj.OpenResponseNode.addMultipleAttemptFeedbackRule();
 	};
 };
 
@@ -45,7 +49,9 @@ var events = [
 	'openResponsePeerReviewNumberTriggerUpdated',
 	'openResponsePeerReviewAuthoredReviewUpdated',
 	'openResponsePeerReviewStepNotOpenCustomMessageUpdated',
-	'openResponseUpdateShowPreviousWorkThatHasAnnotation'
+	'openResponseUpdateShowPreviousWorkThatHasAnnotation',
+	'openResponseRemoveMultipleAttemptFeedbackRule',
+	'openResponseAddMultipleAttemptFeedbackRule'
 ];
 
 /*
