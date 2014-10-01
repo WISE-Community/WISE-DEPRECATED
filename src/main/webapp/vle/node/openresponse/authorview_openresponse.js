@@ -1357,7 +1357,7 @@ View.prototype.OpenResponseNode.setAutoGradedExportColumns = function() {
           },
           {
         	  "columnName": "Submit",
-        	  "field": "isCRaterSubmit"
+        	  "field": "isSubmit"
           }
   	];
 	

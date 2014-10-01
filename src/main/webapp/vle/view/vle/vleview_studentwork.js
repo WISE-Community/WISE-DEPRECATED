@@ -298,9 +298,9 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 	var responseJSONObj = $.parseJSON(responseText);
 	var id = responseJSONObj.id;
 	var visitPostTime = responseJSONObj.visitPostTime;
-	var cRaterItemId = responseJSONObj.cRaterItemId;
-	var cRaterItemType = responseJSONObj.cRaterItemType;
-	var isCRaterSubmit = responseJSONObj.isCRaterSubmit;
+	//var cRaterItemId = responseJSONObj.cRaterItemId;
+	//var cRaterItemType = responseJSONObj.cRaterItemType;
+	//var isCRaterSubmit = responseJSONObj.isCRaterSubmit;
 
 	/*
 	 * this is for resolving node visits that used to end up with null

@@ -514,7 +514,7 @@ OPENRESPONSE.prototype.cRaterRequestSuccessCallback = function(responseText, res
 			}
 			
 			//this student work was graded by CRater
-			orState.isCRaterSubmit = true;
+			orState.isSubmit = true;
 			
 			//check if we need to disable the check answer button
 			if((or.content.cRater != null && or.content.cRater.maxCheckAnswers != null && or.isCRaterMaxCheckAnswersUsedUp()) || or.isLocked()) {
@@ -2311,7 +2311,10 @@ OPENRESPONSE.prototype.getNumberOfCRaterSubmits = function() {
 		var nodeState = this.states[x];
 		
 		if(nodeState != null) {
-			if(nodeState.isCRaterSubmit) {
+			if(nodeState.isSubmit) {
+				//the node state was a CRater submit
+				numCRaterSubmits++;
+			} else if(nodeState.isCRaterSubmit) {
 				//the node state was a CRater submit
 				numCRaterSubmits++;
 			}

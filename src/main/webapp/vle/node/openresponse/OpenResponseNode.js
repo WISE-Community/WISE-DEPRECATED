@@ -222,44 +222,173 @@ OpenResponseNode.prototype.onExit = function() {
  * requires additional processing
  */
 OpenResponseNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVisit, childDivIdPrefix, workgroupId) {
-	/*
-	 * Get the latest student state object for this step
-	 * TODO: rename templateState to reflect your new step type
-	 * 
-	 * e.g. if you are creating a quiz step you would change it to quizState
-	 */
-	var openResponseState = nodeVisit.getLatestWork();
-	
-	/*
-	 * get the step work id from the node visit in case we need to use it in
-	 * a DOM id. we don't use it in this case but I have retrieved it in case
-	 * someone does need it. look at SensorNode.js to view an example of
-	 * how one might use it.
-	 */
+	//get the step work id
 	var stepWorkId = nodeVisit.id;
 	
-	/*
-	 * TODO: rename templateState to match the variable name you
-	 * changed in the previous line above
-	 */
-	var studentWork = openResponseState.response;
+	var studentWork = '';
 	
-	//get the string value of the student work in case student work is an array
-	studentWork = this.getStudentWorkString(studentWork);
-	
-	//get the step content
-	var contentJSON = this.content.getContentJSON();
-	
-	if(contentJSON.cRater != null) {
-		//this step is a CRater step so we will get he CRater grading view
-		studentWork = this.getCRaterGradingView(nodeVisit);
+	if(nodeVisit != null) {
+		//get the node states
+		var nodeStates = nodeVisit.nodeStates;
+		
+		/*
+		 * Get the number of submits up until this step work id. this is used
+		 * so that we can display the Check Answer #X on node states that
+		 * were CRater submits where the X value is a counter that accumulates
+		 * over all node visits for the step. For example this node visit
+		 * might include Check Answer #3 and #4 where as a previous node
+		 * visit will include Check Answer #1 and #2.
+		 */
+		var checkAnswerCount = this.getNumberOfSubmits(stepWorkId, workgroupId);
+		
+		if(nodeStates != null) {
+			//loop through all the node states
+			for(var x=0; x<nodeStates.length; x++) {
+				//get a node state
+				var nodeState = nodeStates[x];
+				
+				if(nodeState != null) {
+					var tempStudentWork = '';
+					
+					//get the response
+					var response = nodeState.response;
+					
+					//get the isSubmit value
+					var isSubmit = nodeState.isSubmit;
+					
+					if(isSubmit) {
+						/*
+						 * this node state was a submit so we will increment the counter
+						 * and display the submit counter above the student work
+						 */
+						checkAnswerCount++;
+						
+						tempStudentWork += 'Check Answer #' + checkAnswerCount;
+						tempStudentWork += '<br>';
+					}
+					
+					//display the student response
+					tempStudentWork += response;
+					tempStudentWork += '<br>';
+					
+					//get the node state timestamp
+					var nodeStateTimestamp = nodeState.timestamp;
+					
+					//get the auto graded annotation associated with the node state if one exists
+					var autoGradedAnnotationValue = this.view.getAnnotations().getAnnotationValueByStepWorkIdNodeStateIdType(stepWorkId, nodeStateTimestamp, 'autoGraded');
+					
+					if(autoGradedAnnotationValue != null) {
+						//there is an auto graded annotation value associated with the node state
+						
+						//get the auto score, max auto score, and auto feedback
+						var autoScore = autoGradedAnnotationValue.autoScore;
+						var maxAutoScore = autoGradedAnnotationValue.maxAutoScore;
+						var autoFeedback = autoGradedAnnotationValue.autoFeedback;
+						
+						if(autoScore != null) {
+							//display the auto score
+							tempStudentWork += 'Auto Score: ' + autoScore;
+						} else if(maxAutoScore != null) {
+							/*
+							 * there is no auto score but there is a max auto score
+							 * so we will display - as the score
+							 */
+							tempStudentWork += 'Auto Score: -';
+						}
+						
+						if(maxAutoScore != null) {
+							//display the max auto score as the denominator
+							tempStudentWork += '/' + maxAutoScore;
+							tempStudentWork += '<br>';
+						} else {
+							tempStudentWork += '<br>';
+						}
+						
+						if(autoFeedback != null) {
+							//display the auto feedback
+							tempStudentWork += 'Auto Feedback: ' + autoFeedback;
+							tempStudentWork += '<br>';
+						}
+					}
+					
+					if(studentWork != '') {
+						/*
+						 * place a line before the student work to separate it from
+						 * previous work that we have displayed
+						 */
+						studentWork = '<hr>' + studentWork;
+					}
+					
+					/*
+					 * add the temp student work to the top of the student work so that
+					 * the newest student work shows up at the top
+					 */
+					studentWork = tempStudentWork + studentWork;
+				}
+			}
+		}
 	}
-	
+
 	//replace \n with <br>
 	studentWork = this.view.replaceSlashNWithBR(studentWork);
 	
 	//put the student work into the div
 	displayStudentWorkDiv.html(studentWork);
+};
+
+/**
+ * Get the number of submits that the student has used
+ * @param stepWorkId we will count up all the submits for all node visits  
+ * up until the given step work id (aka node visit id)
+ * @param workgroupId the workgroup id
+ * @return the number of submits up until the given step work id
+ */
+OpenResponseNode.prototype.getNumberOfSubmits = function(stepWorkId, workgroupId) {
+	var numberOfSubmits = 0;
+	
+	//get all the node visits for the step and workgroup
+	var nodeVisits = this.view.model.getNodeVisitsByNodeIdAndWorkgroupId(this.id, workgroupId);
+	
+	if(nodeVisits != null) {
+		//loop through all the node visits
+		for(var x=0; x<nodeVisits.length; x++) {
+			//get a node visit
+			var nodeVisit = nodeVisits[x];
+			
+			if(stepWorkId == nodeVisit.id) {
+				//we have found the step work id so we will stop searching
+				break;
+			}
+			
+			if(nodeVisit != null) {
+				//get the node states
+				var nodeStates = nodeVisit.nodeStates;
+				
+				if(nodeStates != null) {
+					//loop through all the node states
+					for(var y=0; y<nodeStates.length; y++) {
+						//get a node state
+						var nodeState = nodeStates[y];
+						
+						if(nodeState != null) {
+							//get the isSubmit field of the node state
+							var isSubmit = nodeState.isSubmit;
+							
+							if(isSubmit) {
+								/*
+								 * this node state has isSubmit set to true so we will 
+								 * increment the number of submits count
+								 */
+								numberOfSubmits++;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return numberOfSubmits;
 };
 
 /**
@@ -557,6 +686,13 @@ OpenResponseNode.prototype.isCompleted = function(nodeVisits) {
 							//we have not found a submit node state yet
 							
 							//check if this node state was a submit
+							var isSubmit = nodeState.isSubmit;
+							
+							if(isSubmit) {
+								//the node state was a submit so we have now found a submit
+								foundSubmit = true;
+							}
+							
 							var isCRaterSubmit = nodeState.isCRaterSubmit;
 							
 							if(isCRaterSubmit) {

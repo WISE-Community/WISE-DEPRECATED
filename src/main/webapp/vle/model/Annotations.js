@@ -631,6 +631,97 @@ Annotations.prototype.getAnnotationByStepWorkIdType = function(stepWorkId, type)
 };
 
 /**
+ * Get the annotation value for a given step work id, node state id and annotation
+ * type
+ * 
+ * The value field of an annotation will be an array that looks something
+ * like this
+ * "value": [
+ *    {
+ *       "maxAutoScore": 4,
+ *       "concepts": "1,2,3,4",
+ *       "autoScore": 4,
+ *       "nodeStateId": 1412029354000,
+ *       "autoFeedback": "good 4"
+ *    },
+ *    {
+ *       "maxAutoScore": 4,
+ *       "concepts": "",
+ *       "autoScore": 0,
+ *       "autoFeedback": "bad 0"
+ *    }
+ * ]
+ * but we will actually only return one of the objects in the array like this
+ *    {
+ *       "maxAutoScore": 4,
+ *       "concepts": "1,2,3,4",
+ *       "autoScore": 4,
+ *       "nodeStateId": 1412029354000,
+ *       "autoFeedback": "good 4"
+ *    }
+ * The usage of the field name "value" is confusing due to the fact that we originally
+ * only set the value field to a number or string but later had to expand it to allow
+ * arrays in order to save multiple annotations for a single node visit.
+ * 
+ * @param stepWorkId the step work id
+ * @param nodeStateId the node state id (aka the node state timestamp)
+ * @param type the annotation type
+ * @return the annotation value or null if not found
+ */
+Annotations.prototype.getAnnotationValueByStepWorkIdNodeStateIdType = function(stepWorkId, nodeStateId, type) {
+	var annotation = null;
+	
+	/*
+	 * loop through the annotations array backwards so we look
+	 * at the most recent annotations first
+	 */
+	for(var x=this.annotationsArray.length - 1; x>=0; x--) {
+		//get an annotation
+		annotation = this.annotationsArray[x];
+		
+		//check if the parameters match
+		if(annotation.stepWorkId == stepWorkId && annotation.type == type) {
+			/*
+			 * we have found an annotation with the step work id and annotation 
+			 * type that matches what we want
+			 */
+			
+			//get the annotation value
+			var annotationValue = annotation.value;
+			
+			//make sure the annotation value is an array
+			if(annotationValue != null && Array.isArray(annotationValue)) {
+				/*
+				 * loop through all the objects in the array backwards
+				 * so we look at the most recent objects first
+				 */
+				for(var y=annotationValue.length - 1; y>=0; y--) {
+					//get an object
+					var value = annotationValue[y];
+					
+					if(value != null) {
+						//get the node state id from the object
+						var tempNodeStateId = value.nodeStateId;
+						
+						//check if the node state id matches what we want
+						if(nodeStateId == tempNodeStateId) {
+							/*
+							 * the node state id matches so we have found the 
+							 * object we want and will return the object
+							 */
+							return value;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	//we did not find the annotation
+	return null;
+};
+
+/**
  * Determine if there are any annotations after the given date.
  * This does not include flag annotations. All other types
  * of annotations are checked.
