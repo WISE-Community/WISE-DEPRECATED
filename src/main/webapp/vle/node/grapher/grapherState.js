@@ -140,6 +140,9 @@ GrapherState.prototype.parseDataJSONObj = function(stateJSONObj, emptyState) {
 		//populate the empty SENSORSTATE object
 		grapherState = emptyState.constructorHelper(response, annotationArray, predictionArray, timestamp, xMin, xMax, yMin, yMax, predictionLocked, xlabel, ylabel);
 	}
+	if (stateJSONObj.processStream != null){
+		grapherState.processStream = stateJSONObj.processStream; 	
+	}
 
 	//return the state object
 	return grapherState;
