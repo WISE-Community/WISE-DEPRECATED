@@ -1356,8 +1356,8 @@ View.prototype.OpenResponseNode.setAutoGradedExportColumns = function() {
         	  "field": "autoFeedback"
           },
           {
-        	  "columnName": "Submit",
-        	  "field": "isSubmit"
+        	  "columnName": "Check Work",
+        	  "field": "checkWork"
           }
   	];
 	

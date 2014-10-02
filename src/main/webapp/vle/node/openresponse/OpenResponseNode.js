@@ -253,10 +253,10 @@ OpenResponseNode.prototype.renderGradingView = function(displayStudentWorkDiv, n
 					//get the response
 					var response = nodeState.response;
 					
-					//get the isSubmit value
-					var isSubmit = nodeState.isSubmit;
+					//get the checkWork value
+					var checkWork = nodeState.checkWork;
 					
-					if(isSubmit) {
+					if(checkWork) {
 						/*
 						 * this node state was a submit so we will increment the counter
 						 * and display the submit counter above the student work
@@ -371,12 +371,12 @@ OpenResponseNode.prototype.getNumberOfSubmits = function(stepWorkId, workgroupId
 						var nodeState = nodeStates[y];
 						
 						if(nodeState != null) {
-							//get the isSubmit field of the node state
-							var isSubmit = nodeState.isSubmit;
+							//get the checkWork field of the node state
+							var checkWork = nodeState.checkWork;
 							
-							if(isSubmit) {
+							if(checkWork) {
 								/*
-								 * this node state has isSubmit set to true so we will 
+								 * this node state has checkWork set to true so we will 
 								 * increment the number of submits count
 								 */
 								numberOfSubmits++;
@@ -686,9 +686,9 @@ OpenResponseNode.prototype.isCompleted = function(nodeVisits) {
 							//we have not found a submit node state yet
 							
 							//check if this node state was a submit
-							var isSubmit = nodeState.isSubmit;
+							var checkWork = nodeState.checkWork;
 							
-							if(isSubmit) {
+							if(checkWork) {
 								//the node state was a submit so we have now found a submit
 								foundSubmit = true;
 							}
