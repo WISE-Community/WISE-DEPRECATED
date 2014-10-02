@@ -78,8 +78,8 @@ public class TeacherAccountFormValidator extends UserAccountFormValidator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.schoolname",
                 "error.schoolname-not-specified");
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.curriculumsubjects",
-                "error.curriculumsubjects-not-specified");
+        //ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.curriculumsubjects",
+        //        "error.curriculumsubjects-not-specified");
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.schoollevel",
                 "error.schoollevel-not-specified");

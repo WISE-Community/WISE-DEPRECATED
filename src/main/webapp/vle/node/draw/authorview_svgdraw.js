@@ -1216,6 +1216,8 @@ View.prototype.SVGDrawNode.setRegularExportColumns = function() {
  * Set the export columns for auto graded draw steps
  */
 View.prototype.SVGDrawNode.setAutoGradedExportColumns = function() {
+	this.content.isAutoGraded = true;
+	
 	this.content.exportColumns = [
           {
         	  "columnName": "Data",

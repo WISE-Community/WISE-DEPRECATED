@@ -553,6 +553,9 @@ Table.prototype.render = function() {
 		$('#deleteRowButton').hide();
 	}
 	
+	//load the external script if this step has one set
+	this.view.loadExternalScript(this);
+	
 	this.node.view.eventManager.fire('contentRenderCompleted', this.node.id, this.node);
 };
 
@@ -777,8 +780,9 @@ Table.prototype.save = function() {
 		 * the student work is saved to the server once they move on to the
 		 * next step.
 		 */
-		this.view.pushStudentWork(this.node.id, tableState);
-
+		//this.view.pushStudentWork(this.node.id, tableState);
+		this.node.save(tableState);
+		
 		//push the state object into this or object's own copy of states
 		this.states.push(tableState);		
 	}

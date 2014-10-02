@@ -664,11 +664,17 @@ Grapher.prototype.save = function() {
 		//set the student response into the state
 		this.grapherState.response = response;
 		
+		var newGrapherStateString = JSON.stringify(this.grapherState);
+		var newGrapherStateJSON = JSON.parse(newGrapherStateString);
+		var newGrapherState = GrapherState.prototype.parseDataJSONObj(newGrapherStateJSON);
+		newGrapherState.timestamp = new Date().getTime();
 		//save the node state
-		this.node.save(this.grapherState);
+		//this.node.save(this.grapherState);
+		this.node.save(newGrapherState);
 
 		//push the state object into the local copy of states
-		this.states.push(this.grapherState);		
+		//this.states.push(this.grapherState);		
+		this.states.push(newGrapherState);		
 	}
 	
 	/*
