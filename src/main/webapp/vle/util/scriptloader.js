@@ -517,7 +517,7 @@ var scriptloader = function(){
  	 		         jqueryUICss],
  		ideabasket: [//'vle/css/globalstyles.css',
  		             'vle/css/ideaManager/jquery-validate/cmxformTemplate.css'],
- 		portfolio: ['vle/css/portfolio.css'],
+ 		portfolio: [],
  		premadecomments:['vle/css/globalstyles.css',
  		                 'vle/css/premadecomments/premadecomments.css',
  		                jqueryUICss],
