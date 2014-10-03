@@ -3,7 +3,7 @@ body {
 	font-family: "Gill Sans", Arial, Verdana, sans-serif;
 	font-size: 1em;
 	background-color:#666666;
-	background-image:url(../../images/robots/surrounding_bg3.png);
+	background-image:url(../../images/surrounding_bg3.png);
 	background-repeat:repeat;
 	text-align:center;
 }
@@ -1161,7 +1161,7 @@ div.authorStepDialog {
 
 #previousWorkPanel {
 	padding:1em;
-	background-image: url(../../images/robots/surrounding_bg3.png);
+	background-image: url(../../images/surrounding_bg3.png);
 	font-family: "Gill Sans", Arial, Verdana, sans-serif;
 	text-align: left;
 }
@@ -1240,7 +1240,7 @@ div#toolsAreaAuthor {
 	font-size:11px;
 	letter-spacing:1.2px;
 	font-variant:small-caps;
-	background:url(../../images/robots/toolbar_bg2.png)
+	background:url(../../images/toolbar_bg2.png)
 }
 	
 .dropdownAuthor #menuTitle {
@@ -1253,7 +1253,7 @@ div#toolsAreaAuthor {
 }
 	
 .dropdownAuthor dt:hover {
-	background:url(../../images/robots/toolbar_bg3.png);
+	background:url(../../images/toolbar_bg3.png);
 	cursor:pointer;
 }
 .dropdownAuthor dd {position:absolute; right:16px; overflow:hidden; display:none; background:#fff; z-index:200; opacity:0;}
