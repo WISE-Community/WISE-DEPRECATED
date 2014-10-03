@@ -257,6 +257,27 @@ StudentModel.prototype.setCurrentNodePosition = function(currentNodePosition) {
 	eventManager.fire('currentNodePositionUpdated');
 };
 
+/**
+ * Get the node visits with the given node id and workgroup id
+ * @param nodeId the node id
+ * @param workgroupId the workgroup id
+ * @return an array of node visits with the given node id and
+ * workgroup id
+ */
+StudentModel.prototype.getNodeVisitsByNodeIdAndWorkgroupId = function(nodeId, workgroupId) {
+	var nodeVisits = null;
+	
+	if(nodeId != null) {
+		//get the work for this student
+		var vleState = this.getState();
+		
+		//get all the node visits for the node id
+		nodeVisits = vleState.getNodeVisitsByNodeId(nodeId);
+	}
+	
+	return nodeVisits;
+};
+
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/vle/vleview_model.js');
