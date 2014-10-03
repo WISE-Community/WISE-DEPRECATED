@@ -2052,7 +2052,7 @@ View.prototype.populateNodeSelector = function(event, cancelEvent){
 		} else {
 			var opt = createElement(document, 'option', {id:node.id});
 			opt.value = node.view.getProject().getPositionById(node.id);
-			opt.text = node.title;
+			opt.text = node.view.getProject().getStepNumberAndTitle(node.id);
 			
 			select.appendChild(opt);
 		}
