@@ -1170,9 +1170,9 @@ View.prototype.displayPortfolio = function(itemId) {
 	$("#portfolioIframe").dialog('open');
 	$("#portfolioIframe").scrollTop(0);
 	if (itemId) {
-		$("#portfolioIframe").attr("src","portfolio.html#/item/"+itemId);
+		$("#portfolioIframe").attr("src","portfolio/portfolio.html#/item/"+itemId);
 	} else {
-		$("#portfolioIframe").attr("src","portfolio.html");
+		$("#portfolioIframe").attr("src","portfolio/portfolio.html");
 	}
 	$("#portfolioIframe").css("width","100%");
 };
