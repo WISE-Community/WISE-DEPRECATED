@@ -34,6 +34,7 @@ import org.wise.portal.dao.ideabasket.IdeaBasketDao;
 import org.wise.portal.dao.node.NodeDao;
 import org.wise.portal.dao.peerreview.PeerReviewGateDao;
 import org.wise.portal.dao.peerreview.PeerReviewWorkDao;
+import org.wise.portal.dao.portfolio.PortfolioDao;
 import org.wise.portal.dao.statistics.VLEStatisticsDao;
 import org.wise.portal.dao.status.RunStatusDao;
 import org.wise.portal.dao.status.StudentStatusDao;
@@ -47,6 +48,7 @@ import org.wise.vle.domain.ideabasket.IdeaBasket;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewGate;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
+import org.wise.vle.domain.portfolio.Portfolio;
 import org.wise.vle.domain.statistics.VLEStatistics;
 import org.wise.vle.domain.status.RunStatus;
 import org.wise.vle.domain.status.StudentStatus;
@@ -94,7 +96,10 @@ public class VLEServiceImpl implements VLEService {
 	
 	@Autowired
 	private IdeaBasketDao<IdeaBasket> ideaBasketDao;
-	
+
+	@Autowired
+	private PortfolioDao<Portfolio> portfolioDao;
+
 	@Autowired
 	private CRaterRequestDao<CRaterRequest> cRaterRequestDao;
 
@@ -570,6 +575,17 @@ public class VLEServiceImpl implements VLEService {
 	public IdeaBasket getPublicIdeaBasketForRunIdPeriodId(long runId, long periodId) {
 		return ideaBasketDao.getPublicIdeaBasketForRunIdPeriodId(runId, periodId);
 	}
+	
+	@Override
+	public Portfolio getPortfolioByRunIdWorkgroupId(long runId, long workgroupId) {
+		return portfolioDao.getPortfolioByRunIdWorkgroupId(runId, workgroupId);
+	}
+
+	@Override
+	public void savePortfolio(Portfolio portfolio) {
+		portfolioDao.savePortfolio(portfolio);
+	}
+
 
 	@Override
 	public CRaterRequest getCRaterRequestById(Long id) {

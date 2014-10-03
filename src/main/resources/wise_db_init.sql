@@ -250,16 +250,18 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table `portfolio` (
- 		`id` bigint(20) not null auto_increment,
-  		`workgroupId` bigint(20) default null,
-  		`runId` bigint(20) default null,
-  		`data` mediumtext,
-  		`isPublic` bit(1) default null,
-  		`isSubmitted` bit(1) default null,
-  		`tags` varchar(255) default null,
-  		`postTime` datetime default null,
-  		PRIMARY KEY (`id`)
+    create table portfolio (
+ 		id bigint(20) not null auto_increment,
+  		workgroupId bigint(20) default null,
+  		runId bigint(20) default null,
+		metadata mediumtext,
+  	    items mediumtext,
+  		deletedItems mediumtext,
+  		isPublic bit(1) default null,
+  		isSubmitted bit(1) default null,
+  		tags varchar(255) default null,
+  		postTime datetime default null,
+  		PRIMARY KEY (id)
 	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table premadecommentlists (

@@ -1238,6 +1238,11 @@ View.prototype.editProjectMetadata = function(){
 			} else {
 				this.enablePublicIdeaManager(false);
 			}
+			
+			//determine if enable portfolio needs to be checked
+			if (tools.isPortfolioEnabled != null && tools.isPortfolioEnabled) {
+				$("#enablePortfolio").attr('checked', true);
+			}
 
 			//determine if enable student asset uploader needs to be checked
 			if (tools.isStudentAssetUploaderEnabled != null && tools.isStudentAssetUploaderEnabled) {
@@ -2047,7 +2052,7 @@ View.prototype.populateNodeSelector = function(event, cancelEvent){
 		} else {
 			var opt = createElement(document, 'option', {id:node.id});
 			opt.value = node.view.getProject().getPositionById(node.id);
-			opt.text = node.title;
+			opt.text = node.view.getProject().getStepNumberAndTitle(node.id);
 			
 			select.appendChild(opt);
 		}

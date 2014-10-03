@@ -398,6 +398,14 @@ img.tooltip {
 	color: #FF563F;
 }
 
+#showallwork .portfolioAction {
+	float:right;
+}
+
+#showallwork .portfolioAction .addToPortfolio {
+	cursor:pointer;
+}
+
 #showflaggedwork #chooseStep {
 	background-color: #EEEEEE;
 	border-bottom: 1px solid #CCCCCC;

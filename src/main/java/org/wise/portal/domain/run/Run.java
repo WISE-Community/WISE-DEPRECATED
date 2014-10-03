@@ -215,6 +215,18 @@ public interface Run extends Offering {
 	public void setInfo(String info);
 
 	/**
+	 * Sets whether or not portfolio is enabled for this run.
+	 * @return
+	 */
+	public void setPortfolioEnabled(boolean isPortfolioEnabled);
+
+	/**
+	 * Returns whether or not portfolio is enabled for this run.
+	 * @return
+	 */
+	public boolean isPortfolioEnabled();
+	
+	/**
 	 * Sets whether or not student asset uploading is enabled for this run.
 	 * @return
 	 */

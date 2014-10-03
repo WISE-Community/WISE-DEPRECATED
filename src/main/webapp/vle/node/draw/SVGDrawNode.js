@@ -170,41 +170,72 @@ SVGDrawNode.prototype.onExit = function() {
  * 
  */
 SVGDrawNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVisit, childDivIdPrefix, workgroupId) {
-
+	//get the step work id
+	var stepWorkId = nodeVisit.id;
+	
 	//get the node states
 	var nodeStates = nodeVisit.nodeStates;
+	
+	/*
+	 * Get the number of submits up until this step work id. this is used
+	 * so that we can display the Check Answer #X on node states that
+	 * were CRater submits where the X value is a counter that accumulates
+	 * over all node visits for the step. For example this node visit
+	 * might include Check Answer #3 and #4 where as a previous node
+	 * visit will include Check Answer #1 and #2.
+	 */
+	var checkAnswerCount = this.getNumberOfCheckWorks(stepWorkId, workgroupId);
 	
 	//loop through all the node states from newest to oldest
 	for(var x=nodeStates.length - 1; x>=0; x--) {
 		//get a node state
 		var nodeState = nodeStates[x];
 		
-		var studentWork = nodeState.data;
+		var studentData = nodeState.data;
 		var stepWorkId = nodeVisit.id;
 		var timestamp = nodeState.timestamp;
-		var autoScore = nodeState.autoScore;
-		var autoFeedback = nodeState.autoFeedback;
-		var autoFeedbackKey = nodeState.autoFeedbackKey;
 		var checkWork = nodeState.checkWork;
+		
+		//get the node state timestamp
+		var nodeStateTimestamp = nodeState.timestamp;
 		
 		// if the work is for a SVGDrawNode, embed the svg
 		var innerDivId = "svgDraw_"+stepWorkId+"_"+timestamp;
 		var contentBaseUrl = this.view.config.getConfigParam('getContentBaseUrl');
 		// if studentData has been compressed, decompress it and parse (for legacy compatibility)
-		if (typeof studentWork == "string") {
-			if (studentWork.match(/^--lz77--/)) {
+		if (typeof studentData == "string") {
+			if (studentData.match(/^--lz77--/)) {
 				var lz77 = new LZ77();
-				studentWork = studentWork.replace(/^--lz77--/, "");
-				studentWork = lz77.decompress(studentWork);
-				studentWork = $.parseJSON(studentWork);
+				studentData = studentData.replace(/^--lz77--/, "");
+				studentData = lz77.decompress(studentData);
+				studentData = $.parseJSON(studentData);
 			}
 		} 
-		var svgString = studentWork.svgString;
-		var description = studentWork.description;
-		var snaps = studentWork.snapshots;
+		var svgString = studentData.svgString;
+		var description = studentData.description;
+		var snaps = studentData.snapshots;
 		var contentUrl = this.getContent().getContentUrl();
-		studentWork = "<div id='"+innerDivId+"_contentUrl' style='display:none;'>"+contentUrl+"</div>"+
-			"<a class='drawEnlarge' onclick='enlargeDraw(\""+innerDivId+"\");'>enlarge</a>";
+		var studentWork = '';
+		
+		if(checkWork) {
+			/*
+			 * this node state was a check work so we will increment the counter
+			 * and display the check work counter above the student work
+			 */
+			checkAnswerCount++;
+			
+			studentWork += 'Check Answer #' + checkAnswerCount;
+			studentWork += '<br>';
+		}
+		
+		//get the auto graded annotation text if any
+		var autoGradedAnnotationText = this.getAutoGradedAnnotationText(stepWorkId, nodeStateTimestamp);
+		
+		if(autoGradedAnnotationText != null && autoGradedAnnotationText != '') {
+			//add the auto graded annotation text
+			studentWork += autoGradedAnnotationText;
+		}
+		
 		// if the svg has been compressed, decompress it
 		if (svgString != null){
 			if (svgString.match(/^--lz77--/)) {
@@ -228,6 +259,13 @@ SVGDrawNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVi
 			svgString = Utils.encode64(svgString);
 		}
 		if(snaps != null && snaps.length>0){
+			if(description != null){
+				studentWork += "<span>Description: </span><div id='"+innerDivId+"_description' class='drawDescription'>"+description+"</div>";
+			}
+			
+			studentWork += "<div id='"+innerDivId+"_contentUrl' style='display:none;'>"+contentUrl+"</div>"+
+			"<a class='drawEnlarge' onclick='enlargeDraw(\""+innerDivId+"\");'>enlarge</a>";
+			
 			var snapTxt = "<div id='"+innerDivId+"_snaps' class='snaps'>";
 			for(var i=0;i<snaps.length;i++){
 				var snapId = innerDivId+"_snap_"+i;
@@ -237,6 +275,10 @@ SVGDrawNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVi
 					currSnap = currSnap.replace(/^--lz77--/, "");
 					currSnap = lz77.decompress(currSnap);
 				}
+				
+				var currDescription = snaps[i].description;
+				snapTxt += "<div id='"+snapId+"_description' class='snapDescription' style='display:none;'>"+currDescription+"</div>";
+				
 				//currSnap = currSnap.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, '$1'+'"'+contentBaseUrl+'$2'+'"'+'$3');
 				// only replace local hrefs. leave absolute hrefs alone!
 				currSnap = currSnap.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, function(m,key,value) {
@@ -252,21 +294,19 @@ SVGDrawNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVi
 				currSnap = currSnap.replace(/<g>/gmi,'<g transform="scale(0.6)">');
 				currSnap = Utils.encode64(currSnap);
 				snapTxt += "<div id="+snapId+" class='snapCell' onclick='enlargeDraw(\""+innerDivId+"\");'>"+currSnap+"</div>";
-				var currDescription = snaps[i].description;
-				snapTxt += "<div id='"+snapId+"_description' class='snapDescription' style='display:none;'>"+currDescription+"</div>";
 			}
 			
 			snapTxt += "</div>";
 			studentWork += snapTxt;
-			
-			if(description != null){
-				studentWork += "<span>Description: </span><div id='"+innerDivId+"_description' class='drawDescription'>"+description+"</div>";
-			}
 		} else {
-			studentWork += "<div id='"+innerDivId+"' class='svgdrawCell'>"+svgString+"</div>";
 			if(description != null){
 				studentWork += "<span>Description: </span><div id='"+innerDivId+"_description' class='drawDescription'>"+description+"</div>";
 			}
+			
+			studentWork += "<div id='"+innerDivId+"_contentUrl' style='display:none;'>"+contentUrl+"</div>"+
+			"<a class='drawEnlarge' onclick='enlargeDraw(\""+innerDivId+"\");'>enlarge</a>";
+			
+			studentWork += "<div id='"+innerDivId+"' class='svgdrawCell'>"+svgString+"</div>";
 		}
 		
 		if(displayStudentWorkDiv.html() != '') {
@@ -280,39 +320,6 @@ SVGDrawNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVi
 		//perform post processing of the svg data so that the drawing is displayed
 		displayStudentWorkDiv.find(".svgdrawCell").each(this.showDrawNode);
 		displayStudentWorkDiv.find(".snapCell").each(this.showSnaps);
-		
-		var autoScoreText = '';
-		
-		if(autoFeedbackKey != null) {
-			//get the auto feedback key if available
-			autoScoreText += 'Auto-Feedback Key: ' + autoFeedbackKey;
-		}
-		
-		if(autoScore != null) {
-			//get the auto score if available
-			
-			if(autoScoreText != '') {
-				autoScoreText += '<br>';
-			}
-			
-			autoScoreText += 'Auto-Score: ' + autoScore;
-		}
-		
-		if(autoFeedback != null) {
-			//get the auto feedback if available
-			
-			if(autoScoreText != '') {
-				autoScoreText += '<br>';
-			}
-			
-			autoFeedback = autoFeedback.replace(/\n/g, '<br>');
-			autoScoreText += 'Auto-Feedback: ' + autoFeedback;
-		}
-		
-		if(autoScoreText != '') {
-			//insert the auto score text
-			displayStudentWorkDiv.append(autoScoreText);		
-		}
 	}
 };
 

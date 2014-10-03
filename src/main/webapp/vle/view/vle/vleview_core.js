@@ -199,52 +199,6 @@ View.prototype.displayGlobalTools = function() {
 	var mode = this.config.getConfigParam('mode');
 };
 
-// TODO: Add options to enable/disable viewMyWork, viewFlaggedWork in run and project configs (perhaps also navigation controls, full screen button?) 
-View.prototype.showToolsBasedOnConfig = function(runInfo) {
-  	if (runInfo == null) {
-        return;
-      }
-
-	if (runInfo.isStudentAssetUploaderEnabled != null &&
-			runInfo.isStudentAssetUploaderEnabled) {
-		/*
-		 * display student assets link if run has student asset uploader enabled
-		 */
-		var studentAssetsLink=	"<a id='viewMyFilesLink' onclick='eventManager.fire(\"viewStudentAssets\",null)' title='View and Upload Files'>"+this.getI18NString("file_button_text")+"</a>";
-		$('#viewMyFiles').html(studentAssetsLink);
-		$('#viewMyFiles').show().css('display','inline');
-	} else if (runInfo.isStudentAssetUploaderEnabled != null &&
-			!runInfo.isStudentAssetUploaderEnabled) {
-		$('#viewMyFiles').hide();
-	}
-	
-	if (runInfo.isIdeaManagerEnabled != null && runInfo.isIdeaManagerEnabled) {
-		// display the idea basket links if the run/project has idea basket enabled
-		// if project is using IM version > 1, set custom link text based on IM settings
-		var basketLinktext = this.getI18NString("ideas_button_text"), addIdeaLinkText = this.getI18NString("addidea_button_text");
-		if (this.getProjectMetadata() != null && this.getProjectMetadata().tools != null){
-			if('ideaManagerSettings' in this.getProjectMetadata().tools){
-				var imSettings = this.getProjectMetadata().tools.ideaManagerSettings;
-				if(imSettings.version > 1){
-					if('ideaTermPlural' in imSettings && this.utils.isNonWSString(imSettings.ideaTermPlural)){
-						basketLinktext = this.utils.capitalize(imSettings.ideaTermPlural);
-					}
-					if('addIdeaTerm' in imSettings && this.utils.isNonWSString(imSettings.addIdeaTerm)){
-						addIdeaLinkText = imSettings.addIdeaTerm;
-					}
-				}
-			}
-		}
-		var ideaBasketLink = "<a id='viewIdeaBasketLink' onclick='eventManager.fire(\"displayIdeaBasket\")'>"+basketLinktext+" <span id='ideaCount' class='count'>(0)</span></a>";
-		var addIdeaLink = "<a id='addIdeaLink' onclick='eventManager.fire(\"displayAddAnIdeaDialog\")'>"+addIdeaLinkText+"</a>";
-		$("#viewIdeaBasket").html(ideaBasketLink);
-		$("#addIdea").html(addIdeaLink);
-		$("#ideaBasketLinks").show().css('display','inline');
-	} else {
-		$("#ideaBasketLinks").hide();
-	}
-};
-
 /**
  * Show the buttons in the top menu based on the metadata and runinfo
  * @param metadata the metadata object
@@ -299,6 +253,32 @@ View.prototype.showToolsBasedOnConfigs = function(metadata, runInfo) {
 		$("#ideaBasketLinks").show().css('display','inline');
 	} else {
 		$("#ideaBasketLinks").hide();
+	}
+	
+	//Portfolio
+	if (metadata != null && metadata.isPortfolioEnabled) {
+		// fetch portfolio and display the portfolio links 
+		var getPortfolioUrl = this.getConfig().getConfigParam('getPortfolioUrl');
+		var extraParams = null;
+		this.connectionManager.request('GET', 2, getPortfolioUrl, extraParams, 
+				function(responseText, responseXML, view) {
+					if (responseText) {
+						view.portfolio = new Portfolio(view,responseText);
+
+						var portfolioLinktext = view.getI18NString("portfolio_button_text");
+						if (view.getProjectMetadata() != null && view.getProjectMetadata().tools != null){
+							if('portfolioSettings' in view.getProjectMetadata().tools){
+								var portfolioSettings = view.getProjectMetadata().tools.portfolioSettings;
+							}
+						}
+						var portfolioLink = "<a id='viewPortfolioLink' onclick='eventManager.fire(\"displayPortfolio\")'>"+portfolioLinktext+" </a>";
+						$("#viewPortfolio").html(portfolioLink);
+						$("#portfolioLinks").show().css('display','inline');
+
+					};
+				}, this);
+	} else {
+		$("#portfolioLinks").hide();
 	}
 };
 

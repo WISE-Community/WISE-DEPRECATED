@@ -1,0 +1,18 @@
+<a href="#/toc">Return to Table of Contents</a>  <button id="nextItemButton" ng-click="gotoPreviousPage(item)"><- Previous Page</button>  <button id="nextItemButton" ng-click="gotoNextPage(item)">Next Page -></button>
+<br/><br/>
+<div id="work" render-work>
+<b>Title:</b> 
+<span ng-switch on="item.title || 'null'">
+	<span ng-switch-when="null" class='portfolioItemTitle' editable-text="item.title">Click here to add a title...</span>
+	<span ng-switch-default class='portfolioItemTitle' editable-text="item.title">{{item.title}}</span>
+</span>
+<button id="portfolioDeleteItemButton" ng-click="removeItem(item)">Delete Item</button>
+
+<div class='portfolioItemData' id='studentWork'></div>
+<b>Description:</b>
+<span ng-switch on="item.studentAnnotation || 'null'">
+	<span ng-switch-when="null" class='portfolioItemStudentAnnotation' editable-text="item.studentAnnotation">Click here to add a description...</span>
+	<span ng-switch-default class='portfolioItemStudentAnnotation' editable-text="item.studentAnnotation">{{item.studentAnnotation}}</span>
+</span>
+
+</div>

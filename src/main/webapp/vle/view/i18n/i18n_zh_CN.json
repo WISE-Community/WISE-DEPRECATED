@@ -176,7 +176,7 @@
         "description": "Text 'cancel'"
     },
     "ok": {
-        "value": "好了",
+        "value": "确定",
         "description": "Text 'OK'"
     },
     "done": {
@@ -200,7 +200,7 @@
         "description": "The default text for 'ideas' in the Idea Manager tool."
     },
     "idea_basket": {
-        "value": "创意池",
+        "value": "想法篮",
         "description": "The text 'Idea Basket' in the Idea Manager"
     },
     "idea_basket_add_an_idea": {
@@ -208,7 +208,7 @@
         "description": "The text 'Add Idea' in the Idea Manager"
     },
     "idea_basket_retrieval_error": {
-        "value": "错误：不能打开创意池，刷新VLE再载入一次",
+        "value": "错误：无法打开想法篮。请刷新项目再载入一次。",
         "description": "Error message displayed when retrieving idea basket fails"
     },
     "chat_room": {
@@ -236,7 +236,7 @@
         "description": "GradingTool: Text in the Export All Student Work button"
     },
     "grading_button_export_idea_baskets": {
-        "value": "导出创意池内容",
+        "value": "导出想法篮内容",
         "description": "GradingTool: Text in the Export Idea Baskets button"
     },
     "grading_button_export_custom_work": {
@@ -260,7 +260,7 @@
         "description": "GradingTool: Description next the Export All Student Work button"
     },
     "grading_button_export_idea_baskets_description": {
-        "value": "（导出所有创意池更新内容）",
+        "value": "（导出所有想法篮更改记录）",
         "description": "GradingTool: Description next the Export Idea Baskets button"
     },
     "grading_button_export_student_names_description": {
@@ -768,7 +768,7 @@
         "description": "Error message to display when Idea Basket fails to save on the server"
     },
     "ideaBasket_loadError": {
-        "value": "错误：撷取{0}失败，刷新这个项目或访问不同的步骤然后返回到这一步骤，试着重新载入",
+        "value": "错误：撷取{0}失败。刷新这个项目或者先访问别的步骤然后返回到这一步骤以重新载入此步骤。",
         "description": "Error message to display when Idea Basket fails to load"
     },
     "ideaManager_attributeSelectMultiple": {
@@ -804,7 +804,7 @@
         "description": "Title text for the edit idea dialog/form in Idea Manager tools"
     },
     "ideaManager_editIdea_changeConfirm": {
-        "value": "{0}用于以下操作步骤：{1}假如你改变了这项{2}，你也将会改变所有步骤中的相关内容",
+        "value": "{0}用于以下操作步骤：{1}假如你改变了这项{2}，你也将会改变所有步骤中的相关答案。",
         "description": "Text for the warning confirmation dialog that appears when users attempt to edit an idea that is being used in Explanation Builder steps"
     },
     "ideaManager_deleteIdea_title": {
@@ -944,11 +944,11 @@
         "description": "The message that shows the step number and title and the work from a previous step."
     },
     "idea_basket_private": {
-        "value": "私人想法库",
+        "value": "私人想法篮",
         "description": "The text for the private idea basket"
     },
     "idea_basket_public": {
-        "value": "公共想法库",
+        "value": "公共想法篮",
         "description": "The text for the public idea basket"
     },
     "grading_all_revisions": {

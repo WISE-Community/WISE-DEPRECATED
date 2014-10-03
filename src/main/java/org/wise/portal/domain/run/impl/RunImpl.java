@@ -657,6 +657,39 @@ public class RunImpl extends OfferingImpl implements Run {
 			e.printStackTrace();
 		}
 	}
+	
+	public void setPortfolioEnabled(
+			boolean isPortfolioEnabled) {
+		String runInfoStr = this.getInfo();
+		JSONObject runInfo = null;
+		try {
+			if (runInfoStr != null && runInfoStr != null) {
+				runInfo = new JSONObject(runInfoStr);
+			} else {
+				runInfo = new JSONObject();
+			}
+			runInfo.put("isPortfolioEnabled", isPortfolioEnabled);
+			this.setInfo(runInfo.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public boolean isPortfolioEnabled() {
+		String runInfoStr = this.getInfo();
+		if (runInfoStr != null && runInfoStr != null) {
+			try {
+				JSONObject runInfo = new JSONObject(runInfoStr);
+				if (runInfo.has("isPortfolioEnabled")) {
+					return runInfo.getBoolean("isPortfolioEnabled");
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		return false;
+	}
 
 	public void setStudentAssetUploaderEnabled(
 			boolean isStudentAssetUploaderEnabled) {

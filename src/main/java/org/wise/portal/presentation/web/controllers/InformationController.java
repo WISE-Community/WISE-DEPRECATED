@@ -546,7 +546,24 @@ public class InformationController {
 	    		postIdeaBasketUrl += "&workgroupId=" + workgroupId;
 	    	}
 
-	    	//get the url to get idea basket data
+	    	//get the url to get portfolio data
+	    	String getPortfolioUrl = wiseBaseURL + "/portfolio.html?runId=" + run.getId().toString();
+	    	
+	    	//get the url to post portfolio data
+	    	String postPortfolioUrl = wiseBaseURL + "/portfolio.html?runId=" + run.getId().toString() + "&projectId=" + run.getProject().getId().toString();
+
+	    	if(periodId != null) {
+	    		//add the period id if it is available
+	    		getPortfolioUrl += "&periodId=" + periodId;
+	    		postPortfolioUrl += "&periodId=" + periodId;
+	    	}
+
+	    	if (workgroupId != null) {
+	    		getPortfolioUrl += "&workgroupId=" + workgroupId;
+	    		postPortfolioUrl += "&workgroupId=" + workgroupId;
+	    	}
+	    	
+	    	//get the url to get student assets
 	    	String studentAssetManagerUrl = wiseBaseURL + "/assetManager.html?type=studentAssetManager&runId=" + run.getId().toString();
 
 	    	String viewStudentAssetsUrl = wiseBaseURL + "/assetManager.html?type=viewStudentAssets&runId=" + run.getId().toString();
@@ -593,6 +610,8 @@ public class InformationController {
 				config.put("getPeerReviewUrl", getPeerReviewUrl);
 				config.put("getIdeaBasketUrl", getIdeaBasketUrl);
 				config.put("postIdeaBasketUrl", postIdeaBasketUrl);
+				config.put("getPortfolioUrl", getPortfolioUrl);
+				config.put("postPortfolioUrl", postPortfolioUrl);
 				config.put("studentAssetManagerUrl", studentAssetManagerUrl);
 				config.put("viewStudentAssetsUrl", viewStudentAssetsUrl);
 				config.put("runInfo", run.getInfo());

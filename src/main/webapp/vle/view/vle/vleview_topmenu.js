@@ -53,6 +53,8 @@ View.prototype.dropDownMenuDispatcher = function(type,args,obj){
 		obj.loadIdeaBasket();
 	} else if(type=='displayFlaggedWorkForNodeId') {
 		obj.displayFlaggedWorkForNodeId();
+	} else if(type=='displayPortfolio') {
+		obj.displayPortfolio();
 	}
 };
 
@@ -478,6 +480,19 @@ View.prototype.displayShowAllWork = function() {
 					//render the work into the div to display it
 					node.renderGradingView(studentWorkDiv, nodeVisit, "", workgroupId);
 					
+					// show button to add to portfolio
+					if (this.getProjectMetadata().tools.isPortfolioEnabled && this.portfolio) {
+						var addToPortfolio = $("<span>").addClass("addToPortfolio").html(this.getI18NString("portfolio_add_item"));
+						addToPortfolio.click({"itemType":"stepWork",
+											  "nodeId":nodeId,
+											  "nodeVisitId":nodeVisit.id,
+											  "title":node.title,
+											  "view":this},
+											this.portfolio.addItemEventHandler);
+						var portfolioSpan = $("<span>").addClass('portfolioAction').html(addToPortfolio);
+						$("[id='stepWork_"+nodeId+"'] .sectionHead").append(portfolioSpan);
+					}
+					
 					if($("#new_latestWork_" + nodeVisit.id).length != 0) {
 						/*
 						 * render the work into the new feedback div if it exists. the
@@ -660,6 +675,7 @@ View.prototype.checkForNewTeacherAnnotations = function() {
 		}		
 	}
 	
+	//TODO: Geoff: WHY IS THIS CALL HERE?
 	eventManager.fire('getIdeaBasket');
 };
 
@@ -1117,6 +1133,48 @@ View.prototype.displayChatRoom = function() {
 		$('#chatRoomDiv').dialog({width:400,height:500});
 		$('#chatRoomDiv').dialog('open');
 	}	
+};
+
+/**
+ * Display the portfolio dialog popup
+ * @param itemId which item to display. If null, display TOC.
+ */
+View.prototype.displayPortfolio = function(itemId) {
+	var title = this.getI18NString("portfolio");
+	if('portfolioSettings' in this.getProjectMetadata().tools){
+		var portfolioSettings = this.getProjectMetadata().tools.portfolioSettings;
+		if('portfolioTerm' in portfolioSettings && this.utils.isNonWSString(portfolioSettings.portfolioTerm)){
+			title = portfolioSettings.portfolioTerm;
+		}
+	}
+
+	$("#portfolioIframe").dialog({autoOpen:false,closeText:'',resizable:true,modal:true,show:{effect:"fade",duration:200},hide:{effect:"fade",duration:200},title:title,open:this.portfolioDivOpen,close:this.portfolioDivClose,
+		dragStart: function(event, ui) {
+			$('#portfolioOverlay').show();
+		},
+		dragStop: function(event, ui) {
+			$('#portfolioOverlay').hide();
+		},
+		resizeStart: function(event, ui) {
+			$('#portfolioOverlay').show();
+		},
+		resizeStop: function(event, ui) {
+			$('#portfolioOverlay').hide();
+		}
+	});
+
+	//	open the portfolio dialog
+	var docHeight = $(document).height()-25;
+	var docWidth = $(document).width()-25;
+	$("#portfolioIframe").dialog({height:docHeight,width:docWidth});
+	$("#portfolioIframe").dialog('open');
+	$("#portfolioIframe").scrollTop(0);
+	if (itemId) {
+		$("#portfolioIframe").attr("src","portfolio.html#/item/"+itemId);
+	} else {
+		$("#portfolioIframe").attr("src","portfolio.html");
+	}
+	$("#portfolioIframe").css("width","100%");
 };
 
 /**

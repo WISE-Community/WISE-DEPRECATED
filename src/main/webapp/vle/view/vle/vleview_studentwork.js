@@ -578,6 +578,47 @@ View.prototype.viewStudentAssets = function(params) {
 			view.connectionManager.request('POST', 1, view.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'remove', asset: name, cmd: 'studentAssetUpload'}, success, view, success);
 		}
 	};
+	
+	var addToPortfolio = function() {
+		if (view.getProjectMetadata().tools.isPortfolioEnabled && view.portfolio) {
+			var parent = document.getElementById('assetSelect');
+			var ndx = parent.selectedIndex;
+			if(ndx!=-1){
+				var opt = parent.options[parent.selectedIndex];
+				var filename = opt.value;
+
+				var postStudentAssetUrl = view.getConfig().getConfigParam("studentAssetManagerUrl");
+				// need to get rid of the ?type=StudentAssets&runId=X from the url because we're doing a POST and it will be syntactically incorrect.
+				if (postStudentAssetUrl.indexOf("?") != -1) {
+					postStudentAssetUrl = postStudentAssetUrl.substr(0,postStudentAssetUrl.indexOf("?"));
+				}
+
+				// need to make a copy of the asset in the referenced folder and use it instead of the original.
+				$.ajax({
+					url:postStudentAssetUrl,
+					type:"POST",
+					dataType:"json",
+					data:{
+						"type":"studentAssetManager",			
+						"runId":view.config.getConfigParam("runId"),
+						"forward":"assetmanager",
+						"command":"studentAssetCopyForReference",
+						"assetFilename":filename
+					},
+					success:function(responseJSON) {
+						if (responseJSON != null && responseJSON.result != "" && responseJSON.result == "SUCCESS") {
+							var newFilename = responseJSON.newFilename;
+							var fileWWW = view.getAbsoluteRemoteStudentReferencedUploadsPath() + newFilename;	// make absolute path to file: http://studentuploadsBaseWWW/runId/workgroupId/unreferenced/filename
+							view.portfolio.addStudentUploadedAssetItem(newFilename,fileWWW);
+						} else {
+							view.notificationManager.notify(view.getI18NString("student_assets_import_failure_message"),3, 'uploadMessage', 'notificationDiv');
+						}
+					}
+				}
+				);
+			}
+		}
+	};
 
 
 
@@ -649,21 +690,27 @@ View.prototype.viewStudentAssets = function(params) {
 		thisView.checkStudentAssetSizeLimit();
 	};
 
-	// if the currently-opened node supports file import, show file import button
+	// show different sets of buttons based on current step and WISE configuration
+	var buttonsArray = [];
+	
+	if (this.getProjectMetadata().tools.isPortfolioEnabled && this.portfolio) {
+		// if portfolio is enabled for this run, let student upload assets to it
+		buttonsArray.push({text:this.getI18NString("student_assets_add_selected_file_to_portfolio"),click:addToPortfolio});
+	}
+	
 	if(this.getCurrentNode() != null &&
 			this.getCurrentNode().importFile) {
-		$( "#studentAssetsDiv" ).dialog( "option", "buttons",
-				[{text:addSelectedFileText,click:this.saImport},{text:deleteSelectedFileText,click:remove},{text:doneText,click:done}]
-		);		
+		// if the currently-opened node supports file import, show file import button
+		buttonsArray.push({text:addSelectedFileText,click:this.saImport});
 	} else if (view.assetEditorParams && view.assetEditorParams.type) {
-		$( "#studentAssetsDiv" ).dialog( "option", "buttons", 
-				[{text:deleteSelectedFileText,click:remove},{text:doneText,click:done},{text:insertImageText,click:insertImage}]				
-		);		
+		buttonsArray.push({text:insertImageText,click:insertImage});
 	} else {
-		$( "#studentAssetsDiv" ).dialog( "option", "buttons", 
-				[{text:deleteSelectedFileText,click:remove},{text:doneText,click:done}]				
-		);		
+		// use default set of buttons (remove and done)
 	}
+	// add default buttons
+	buttonsArray.push({text:deleteSelectedFileText,click:remove});
+	buttonsArray.push({text:doneText,click:done});
+	$( "#studentAssetsDiv" ).dialog( "option", "buttons", buttonsArray);
 
 	var filename = null;
 	

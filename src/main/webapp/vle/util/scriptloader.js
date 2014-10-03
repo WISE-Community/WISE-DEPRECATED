@@ -487,7 +487,8 @@ var scriptloader = function(){
         premadecomments:[jquerySrc,
                          'vle/jquery/js/jquery.editinplace.js',
                          jqueryUISrc],
-        ideabasket:['vle/ideaBasket/basket.js']
+        ideabasket:['vle/ideaBasket/basket.js'],
+        portfolio:['vle/model/portfolio.js']
 	};
 	
 	/**
@@ -516,6 +517,7 @@ var scriptloader = function(){
  	 		         jqueryUICss],
  		ideabasket: [//'vle/css/globalstyles.css',
  		             'vle/css/ideaManager/jquery-validate/cmxformTemplate.css'],
+ 		portfolio: ['vle/css/portfolio.css'],
  		premadecomments:['vle/css/globalstyles.css',
  		                 'vle/css/premadecomments/premadecomments.css',
  		                jqueryUICss],

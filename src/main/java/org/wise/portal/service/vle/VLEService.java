@@ -31,6 +31,7 @@ import org.wise.vle.domain.ideabasket.IdeaBasket;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.peerreview.PeerReviewGate;
 import org.wise.vle.domain.peerreview.PeerReviewWork;
+import org.wise.vle.domain.portfolio.Portfolio;
 import org.wise.vle.domain.statistics.VLEStatistics;
 import org.wise.vle.domain.status.RunStatus;
 import org.wise.vle.domain.status.StudentStatus;
@@ -253,6 +254,12 @@ public interface VLEService {
 	public List<IdeaBasket> getIdeaBasketsForRunId(long runId);
 	
 	public IdeaBasket getPublicIdeaBasketForRunIdPeriodId(long runId, long periodId);
+
+	//Portfolio functions
+	public Portfolio getPortfolioByRunIdWorkgroupId(long runId, long workgroupId);
+	
+	public void savePortfolio(Portfolio portfolio);
+
 
 	//CRaterRequest functions
 	

@@ -12,7 +12,7 @@ var componentloader = function(em, sl){
 	
 	//place components in the order you want them to load
 	var views = {
-		student: ['topMenu','setup', 'core', 'keystroke', 'config', 'user', 'session','studentwork','student','hint','navigation','annotations','uicontrol', 'wise', 'maxscores', 'peerreviewhelper', 'ideabasket', 'studentasset', 'studentWebSocket'],
+		student: ['topMenu','setup', 'core', 'keystroke', 'config', 'user', 'session','studentwork','student','hint','navigation','annotations','uicontrol', 'wise', 'maxscores', 'peerreviewhelper', 'ideabasket','portfolio', 'studentasset', 'studentWebSocket'],
 		grading: ['setup', 'core', 'config', 'studentwork', 'user', 'session', 'grading', 'annotations', 'maxscores', 'ideabasket'],
 		grading_min: ['setup', 'core_min', 'config', 'studentwork_min', 'user', 'session', 'grading_min', 'annotations_min', 'maxscores_min', 'ideabasket'],
 		authoring: ['ddMenu', 'setup', 'core','keystroke','customcontextmenu', 'config', 'session','messagemanager','author','authoringcomponents', 'maxscores'],
@@ -696,6 +696,7 @@ var componentloader = function(em, sl){
 					'ideaBasketChanged':[null,null],
 					'displayAddAnIdeaDialog':[null,null],
 					'displayIdeaBasket':[null,null],
+					'displayPortfolio':[null,null],
 					'viewStudentAssets':[null,null],
 					'studentAssetSubmitUpload':[null,null],
 					'addIdeaToBasket':[null,null],
@@ -719,6 +720,7 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('ideaBasketChanged', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('displayAddAnIdeaDialog', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('displayIdeaBasket', view.dropDownMenuDispatcher, view);
+					view.eventManager.subscribe('displayPortfolio', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('addIdeaToBasket', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('viewStudentAssets', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('studentAssetSubmitUpload', view.dropDownMenuDispatcher, view);
@@ -736,6 +738,7 @@ var componentloader = function(em, sl){
 		wise:{},
 		peerreviewhelper:{},
 		ideabasket:{},
+		portfolio:{},
 		studentasset:{},
 		authoringcomponents:{
 			variables:{

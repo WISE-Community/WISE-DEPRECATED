@@ -191,6 +191,10 @@
 		"value":"Add Selected File to Step",
 		"description":"Text on a button in Student Asset Manager to add the selected file to the current step"
 	},
+	"student_assets_add_selected_file_to_portfolio":{
+		"value":"Add Selected File to Portfolio",
+		"description":"Text on a button in Student Asset Manager to add the selected file to the portfolio"
+	},
 	"student_assets_delete_selected_file":{
 		"value":"Delete Selected File",
 		"description":"Text on a button in Student Asset Manager to delete a selected file"
@@ -474,6 +478,38 @@
 	"ideaManager_deleteIdea_confirm2":{
 		"value":"You can always retrieve it from the trash later on if you change your mind.",
 		"description":"Text for second part of confirmation delete idea confirmation dialog"
+	},
+	"portfolio":{
+		"value":"Portfolio",
+		"description":"The text 'Portfolio' in the Portfolio"
+	},	
+	"portfolio_retrieval_error":{
+		"value":"Error: Could not open Portfolio, refresh the project to try again",
+		"description":"Error message displayed when retrieving portfolio fails"
+	},
+	"portfolio_button_text":{
+		"value":"My Portfolio",
+		"description":"Text on the Portfolio button for Student VLE"
+	},
+	"portfolio_add_item":{
+		"value":"Add to portfolio",
+		"description":"Text 'Add to portfolio' on the Show My Work and Step pages"
+	},
+	"portfolio_add_item_success":{
+		"value":"Added to portfolio.",
+		"description":"Successful confirmation text 'Added to portfolio' on the Show My Work and Step pages"
+	},
+	"portfolio_delete_item":{
+		"value":"Delete from portfolio",
+		"description":"Text 'Delete to portfolio' on the Show My Work and Step pages"
+	},
+	"portfolio_delete_item_success":{
+		"value":"Successfully deleted from portfolio.",
+		"description":"Portfolio delete item successful confirmation text on the Show My Work and Step pages"
+	},
+	"portfolio_save_success":{
+		"value":"Portfolio saved successfully.",
+		"description":"Portfolio save successful confirmation text on the Show My Work and Step pages"
 	},
 	"explanation_builder":{
 		"value":"Explanation Builder",

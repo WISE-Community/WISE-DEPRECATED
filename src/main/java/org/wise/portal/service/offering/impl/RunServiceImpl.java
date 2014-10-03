@@ -558,6 +558,17 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 
 	/**
 	 * @throws ObjectNotFoundException 
+	 * @see org.wise.portal.service.offering.RunService#setPortfolioEnabled(java.lang.Long, boolean)
+	 */
+	@Transactional
+	public void setPortfolioEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
+		Run run = this.retrieveById(runId);
+		run.setPortfolioEnabled(isEnabled);
+		this.runDao.save(run);
+	}
+
+	/**
+	 * @throws ObjectNotFoundException 
 	 * @see org.wise.portal.service.offering.RunService#setStudentAssetUploaderEnabled(java.lang.Long, boolean)
 	 */
 	@Transactional
