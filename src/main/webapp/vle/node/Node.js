@@ -2705,6 +2705,110 @@ Node.prototype.parseDataJSONObj = function(nodeStateJSONObj) {
 	return null;
 };
 
+/**
+ * Get the text representation of the auto graded annotation for a node state
+ * @param stepWorkId the step work id (aka node visit id)
+ * @param nodeStateTimestamp the node state timestamp (aka node state id)
+ * @return the text representation of the auto graded annotation for the node state
+ */
+Node.prototype.getAutoGradedAnnotationText = function(stepWorkId, nodeStateTimestamp) {
+	var autoScoreText = '';
+	
+	//get the auto graded annotation associated with the node state if one exists
+	var autoGradedAnnotationValue = this.view.getAnnotations().getAnnotationValueByStepWorkIdNodeStateIdType(stepWorkId, nodeStateTimestamp, 'autoGraded');
+	
+	if(autoGradedAnnotationValue != null) {
+		//there is an auto graded annotation value associated with the node state
+		
+		//get the auto score, max auto score, and auto feedback
+		var autoScore = autoGradedAnnotationValue.autoScore;
+		var maxAutoScore = autoGradedAnnotationValue.maxAutoScore;
+		var autoFeedback = autoGradedAnnotationValue.autoFeedback;
+		
+		if(autoScore != null) {
+			//display the auto score
+			autoScoreText += 'Auto Score: ' + autoScore;
+		} else if(maxAutoScore != null) {
+			/*
+			 * there is no auto score but there is a max auto score
+			 * so we will display - as the score
+			 */
+			autoScoreText += 'Auto Score: -';
+		}
+		
+		if(maxAutoScore != null) {
+			//display the max auto score as the denominator
+			autoScoreText += '/' + maxAutoScore;
+			autoScoreText += '<br>';
+		} else {
+			autoScoreText += '<br>';
+		}
+		
+		if(autoFeedback != null) {
+			//display the auto feedback
+			autoScoreText += 'Auto Feedback: ' + autoFeedback;
+			autoScoreText += '<br>';
+		}
+	}
+	
+	return autoScoreText;
+};
+
+/**
+ * Get the number of check works that the student has used
+ * @param stepWorkId we will count up all the check works for all node visits  
+ * up until the given step work id (aka node visit id)
+ * @param workgroupId the workgroup id
+ * @return the number of check works up until the given step work id
+ */
+Node.prototype.getNumberOfCheckWorks = function(stepWorkId, workgroupId) {
+	var numberOfCheckWorks = 0;
+	
+	//get all the node visits for the step and workgroup
+	var nodeVisits = this.view.model.getNodeVisitsByNodeIdAndWorkgroupId(this.id, workgroupId);
+	
+	if(nodeVisits != null) {
+		//loop through all the node visits
+		for(var x=0; x<nodeVisits.length; x++) {
+			//get a node visit
+			var nodeVisit = nodeVisits[x];
+			
+			if(stepWorkId == nodeVisit.id) {
+				//we have found the step work id so we will stop searching
+				break;
+			}
+			
+			if(nodeVisit != null) {
+				//get the node states
+				var nodeStates = nodeVisit.nodeStates;
+				
+				if(nodeStates != null) {
+					//loop through all the node states
+					for(var y=0; y<nodeStates.length; y++) {
+						//get a node state
+						var nodeState = nodeStates[y];
+						
+						if(nodeState != null) {
+							//get the checkWork field of the node state
+							var checkWork = nodeState.checkWork;
+							
+							if(checkWork) {
+								/*
+								 * this node state has checkWork set to true so we will 
+								 * increment the number of submits count
+								 */
+								numberOfCheckWorks++;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return numberOfCheckWorks;
+};
+
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/node/Node.js');

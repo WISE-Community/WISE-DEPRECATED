@@ -1240,7 +1240,7 @@ View.prototype.SVGDrawNode.setAutoGradedExportColumns = function() {
         	  "field": "autoFeedback"
           },
           {
-        	  "columnName": "Submit",
+        	  "columnName": "Check Work",
         	  "field": "checkWork"
           }
   	];
