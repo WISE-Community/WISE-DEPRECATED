@@ -225,8 +225,6 @@ a:hover { text-decoration:underline; }
 
 body#w4_vle {
 	background: url("../images/vle_bg2.png") repeat scroll center top #E2E2E2;
-	/*background: url("../images/surrounding_bg.png") repeat scroll center top #b2b2b2;
-	background: url("../images/vle-wrapper-bg.png") repeat-x scroll center top #FCEBC1;*/
 	font-size:.9em
 	font-family: Arial, Helvetica, Tahoma, sans-serif;
 }

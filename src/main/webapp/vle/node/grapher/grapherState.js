@@ -138,7 +138,8 @@ GrapherState.prototype.parseDataJSONObj = function(stateJSONObj, emptyState) {
 		grapherState = new GrapherState(response, annotationArray, predictionArray, timestamp, xMin, xMax, yMin, yMax, predictionLocked, xlabel, ylabel);		
 	} else {
 		//populate the empty SENSORSTATE object
-		grapherState = emptyState.constructorHelper(response, annotationArray, predictionArray, timestamp, xMin, xMax, yMin, yMax, predictionLocked, xlabel, ylabel);
+		emptyState.constructorHelper(response, annotationArray, predictionArray, timestamp, xMin, xMax, yMin, yMax, predictionLocked, xlabel, ylabel);
+		grapherState = emptyState;
 	}
 	if (stateJSONObj.processStream != null){
 		grapherState.processStream = stateJSONObj.processStream; 	
