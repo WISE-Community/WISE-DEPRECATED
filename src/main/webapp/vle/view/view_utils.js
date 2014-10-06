@@ -2444,6 +2444,23 @@ $.valHooks.textarea = {
 	}
 };
 
+
+/**
+ * Replaces WISE variables in the string with WISE values.
+ * 
+ * Ex: "Hello {{studentNames}}! You got a {{autoGradedScore}}" => "Hello Hiroki&Geoff! You go a 3!"
+ */
+View.prototype.replaceWISEVariables = function(text) {
+	if (text.indexOf("{{studentFirstNames}}") >= 0) {
+		var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
+		var studentFirstNamesArray = this.getUserAndClassInfo().getStudentFirstNamesByWorkgroupId(workgroupId);
+		var studentFirstNames = studentFirstNamesArray.join("&");
+		
+		text = text.replace("{{studentFirstNames}}", studentFirstNames);
+	} 
+	return text;
+};
+
 /* used to notify scriptloader that this script has finished loading */
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/view_utils.js');

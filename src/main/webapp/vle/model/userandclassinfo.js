@@ -488,6 +488,42 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			return studentNames;
 		}
 		
+		/**
+		 * Get the student names
+		 * @param workgroupId the workgroup id
+		 * @return an array containing the student names
+		 */
+		var getStudentFirstNamesByWorkgroupId = function(workgroupId) {
+			var studentNames = [];
+			
+			//get the user names for the workgroup e.g. "Spongebob Squarepants (SpongebobS0101):Patrick Star (PatrickS0101)"
+			var userNames = getUserNameByUserId(workgroupId);
+			
+			if(userNames != null) {
+				//split the user names string by ':'
+				var userNamesSplit = userNames.split(':');
+				
+				if(userNamesSplit != null) {
+					//loop through each user name
+					for(var x=0; x<userNamesSplit.length; x++) {
+						//get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
+						var userName = userNamesSplit[x];
+						
+						//get the index of the first empty space
+						var indexOfSpace = userName.indexOf(' ');
+						
+						//get the student first name e.g. "Spongebob"
+						var studentFirstName = userName.substring(0, indexOfSpace);
+						
+						//add the student name to the array
+						studentNames.push(studentFirstName);
+					}
+				}
+			}
+			
+			return studentNames;
+		}
+		
 		return {
 			getWorkgroupId:function() {
 				return getWorkgroupId();
@@ -572,6 +608,9 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			},
 			getStudentNamesByWorkgroupId:function(workgroupId) {
 				return getStudentNamesByWorkgroupId(workgroupId);
+			},
+			getStudentFirstNamesByWorkgroupId:function(workgroupId) {
+				return getStudentFirstNamesByWorkgroupId(workgroupId);
 			}
 		};
 	}(myUserInfo, periods, classmateUserInfos, teacherUserInfo, sharedTeacherUserInfos);
