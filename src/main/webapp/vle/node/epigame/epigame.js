@@ -1025,7 +1025,7 @@ Epigame.prototype.embedGame = function(flashVars) {
 			encodedFlashVars[paramName] = encodeURIComponent(flashVars[paramName]);
 		}
 	}
-	swfobject.embedSWF(url, elementID, "100%", "100%", "10.2.0", "../../swfobject/expressInstall.swf",
+	swfobject.embedSWF(url, elementID, "100%", "100%", "10.2.0", "../../util/swfobject/expressInstall.swf",
 						encodedFlashVars, null, null, embedGameResultCallback);
 }
 

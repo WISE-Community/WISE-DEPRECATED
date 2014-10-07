@@ -5,5 +5,5 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/swfobject/swfobject.js');
+	eventManager.fire('scriptLoaded', 'vle/util/swfobject/swfobject.js');
 };

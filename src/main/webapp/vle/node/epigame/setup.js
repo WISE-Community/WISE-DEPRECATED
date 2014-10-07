@@ -13,7 +13,7 @@ var coreMinScripts = ['vle/node/epigame/epigame_core_min.js'];
 var studentVLEScripts = [
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
-	'vle/swfobject/swfobject.js',
+	'vle/util/swfobject/swfobject.js',
 	'vle/node/common/nodehelpers.js',
 	'vle/node/epigame/epigame.js',
 	'vle/node/epigame/epigameState.js'

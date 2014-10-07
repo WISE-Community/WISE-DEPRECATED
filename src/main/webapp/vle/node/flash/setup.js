@@ -13,7 +13,7 @@ var studentVLEScripts = [
 	scriptloader.jqueryUISrc,
 	'vle/node/flash/flash.js',
 	'vle/node/flash/flashState.js',
-	'vle/swfobject/swfobject.js',
+	'vle/util/swfobject/swfobject.js',
 	'vle/util/underscore-min.js'
 ];
 

@@ -234,7 +234,7 @@ FlashNode.prototype.renderGradingViewFlash = function(displayStudentWorkDiv, nod
 		attributes.id = "flashContent_" + divId;
 		attributes.name = "flashContent_" + divId;
 		attributes.styleclass = "flashContent";
-		swfobject.embedSWF(activity_uri, "alternateContent_" + divId, width, height, minPlayerVersion, "../../swfobject/expressInstall.swf", flashvars, params, attributes);
+		swfobject.embedSWF(activity_uri, "alternateContent_" + divId, width, height, minPlayerVersion, "../../util/swfobject/expressInstall.swf", flashvars, params, attributes);
 	} else {
 		gradingHtml += this.view.getI18NString("error_student_data_not_found","FlashNode");
 		
