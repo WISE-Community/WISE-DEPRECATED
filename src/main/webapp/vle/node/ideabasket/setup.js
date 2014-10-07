@@ -30,10 +30,10 @@ var studentVLEScripts = [
      * 'vle/node/quiz/quizstate.js'
 	 */
 	'vle/node/ideabasket/ideaBasketState.js',
-	'vle/jquery/js/jquery-validate/jquery.validate.pack.js',
-	'vle/jquery/js/jquery.form.js',
-	'vle/jquery/js/jsonplugin.js',
-	'vle/jquery/js/jquery.tablesorter.min.js',
+	'vle/lib/jquery/js/jquery-validate/jquery.validate.pack.js',
+	'vle/lib/jquery/js/jquery.form.js',
+	'vle/lib/jquery/js/jsonplugin.js',
+	'vle/lib/jquery/js/jquery.tablesorter.min.js',
 	'vle/ideaBasket/basket.js',
 	'vle/ideaBasket/ideaBasketScript.js'
 ];
@@ -70,8 +70,8 @@ var dependencies = [
 	 */
 	{child:"vle/node/ideabasket/IdeaBasketNode.js", parent:["vle/node/Node.js"]},
 	{child:"vle/node/ideabasket/authorview_ideaBasket.js", parent:["vle/view/authoring/authorview_authoringnode.js"]},
-	{child:"vle/jquery/js/jquery.tablesorter.min.js", parent:[scriptloader.jquerySrc]},
-	{child:"vle/jquery/js/jquery-validate/jquery.validate.pack.js", parent:[scriptloader.jquerySrc]}
+	{child:"vle/lib/jquery/js/jquery.tablesorter.min.js", parent:[scriptloader.jquerySrc]},
+	{child:"vle/lib/jquery/js/jquery-validate/jquery.validate.pack.js", parent:[scriptloader.jquerySrc]}
 ];
 
 /*

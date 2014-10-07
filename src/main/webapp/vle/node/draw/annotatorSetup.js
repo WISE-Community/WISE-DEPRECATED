@@ -34,7 +34,7 @@ var dependencies = [
 	{child:"vle/node/draw/SVGDrawNode.js", parent:["vle/node/Node.js"]},
 	{child:"vle/node/draw/AnnotatorNode.js", parent:["vle/node/draw/SVGDrawNode.js"]},
 	{child:'vle/lib/bootstrap/bootstrap.min.js',parent:[scriptloader.jQuerySrc]} // TODO: when bootstrap is standard
-	/*{child:"vle/jquery/js/jsonplugin.js", parent:['vle/node/draw/svg-edit/jquery.js']},
+	/*{child:"vle/lib/jquery/js/jsonplugin.js", parent:['vle/node/draw/svg-edit/jquery.js']},
 	{child:"vle/node/draw/svg-edit/js-hotkeys/jquery.hotkeys.min.js", parent:['vle/node/draw/svg-edit/jquery.js']},
 	{child:"vle/node/draw/svg-edit/jquerybbq/jquery.bbq.min.js", parent:['vle/node/draw/svg-edit/jquery.js']},
 	{child:"vle/node/draw/svg-edit/svgicons/jquery.svgicons.js", parent:['vle/node/draw/svg-edit/jquery.js']},

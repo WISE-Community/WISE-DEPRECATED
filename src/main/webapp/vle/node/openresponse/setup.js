@@ -21,7 +21,7 @@ var studentVLEScripts = [
 	scriptloader.jqueryUISrc,
 	'vle/node/common/nodehelpers.js',
 	'vle/util/helperfunctions.js',
-	'vle/jquery/js/jsonplugin.js',
+	'vle/lib/jquery/js/jsonplugin.js',
 	'vle/node/openresponse/openresponsestate.js',
 	'vle/node/openresponse/openresponse.js',
 	'vle/model/Annotation.js',

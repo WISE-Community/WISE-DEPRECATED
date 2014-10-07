@@ -25,11 +25,11 @@ var coreMinScripts = [
 var studentVLEScripts = [
     scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
-	'vle/jquery/jquery-validation/jquery.validate.min.js',
-	'vle/jquery/js/jquery.form.js',
-	'vle/jquery/js/jsonplugin.js',
-	//'vle/jquery/jquery-tools/jquery.tools.tooltip.min.js',
-	'vle/jquery/miniTip/jquery.miniTip.min.js',
+	'vle/lib/jquery/jquery-validation/jquery.validate.min.js',
+	'vle/lib/jquery/js/jquery.form.js',
+	'vle/lib/jquery/js/jsonplugin.js',
+	//'vle/lib/jquery/jquery-tools/jquery.tools.tooltip.min.js',
+	'vle/lib/jquery/miniTip/jquery.miniTip.min.js',
 	'vle/ideaBasket/basket.js',
  	/*
      * xTODO: rename template
@@ -87,16 +87,16 @@ var dependencies = [
 	 */
 	{child:"vle/node/explanationbuilder/ExplanationBuilderNode.js", parent:["vle/node/Node.js"]},
 	{child:"vle/node/explanationbuilder/authorview_explanationbuilder.js", parent:["vle/view/authoring/authorview_authoringnode.js"]},
-	{child:"vle/jquery/jquery-validation/jquery.validate.min.js", parent:[scriptloader.jquerySrc]},
-	{child:"vle/jquery/js/jquery.form.js", parent:[scriptloader.jquerySrc]},
-	//{child:"vle/jquery/jquery-tools/jquery.tools.tooltip.min.js", parent:[scriptloader.jquerySrc]}
-	{child:"vle/jquery/miniTip/jquery.miniTip.min.js", parent:[scriptloader.jquerySrc]}
+	{child:"vle/lib/jquery/jquery-validation/jquery.validate.min.js", parent:[scriptloader.jquerySrc]},
+	{child:"vle/lib/jquery/js/jquery.form.js", parent:[scriptloader.jquerySrc]},
+	//{child:"vle/lib/jquery/jquery-tools/jquery.tools.tooltip.min.js", parent:[scriptloader.jquerySrc]}
+	{child:"vle/lib/jquery/miniTip/jquery.miniTip.min.js", parent:[scriptloader.jquerySrc]}
 ];
 
 var css = [
        	scriptloader.jqueryUICss,
        	"vle/css/ideaManager/blue/style.css",
-       	"vle/jquery/miniTip/miniTip.css",
+       	"vle/lib/jquery/miniTip/miniTip.css",
        	"vle/css/ideaManager/basket.css",
        	"vle/node/explanationbuilder/explanation.css",
        	"vle/node/common/css/stepContent.css",

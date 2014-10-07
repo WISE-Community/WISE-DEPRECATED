@@ -12,8 +12,8 @@ var studentVLEScripts = [
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
 	'vle/util/helperfunctions.js',
-	'vle/jquery/js/jsonplugin.js',
-	'vle/jquery/flot/jquery.flot.min.js',
+	'vle/lib/jquery/js/jsonplugin.js',
+	'vle/lib/jquery/flot/jquery.flot.min.js',
 	'vle/node/datagraph/datagraph.js',
 	'vle/node/datagraph/datagraphstate.js'
 ];

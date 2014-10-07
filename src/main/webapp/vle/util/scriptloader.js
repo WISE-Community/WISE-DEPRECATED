@@ -48,10 +48,10 @@ var scriptloader = function(){
 	var scriptLoaderWait = 30000;
 	var callerId;
 	var loaded = [];
-	var jquerySrc = 'vle/jquery/js/jquery-2.1.1.min.js';
-	var jqueryUISrc = 'vle/jquery/js/jquery-ui-1.10.0.custom.min.js';
-	var jqueryUICss = 'vle/jquery/css/wise-theme/jquery-ui-1.10.0.custom.css';
-	var jqueryUISrc_interactions = 'vle/jquery/js/jquery-ui-1.10.4.interactions.min.js';
+	var jquerySrc = 'vle/lib/jquery/js/jquery-2.1.1.min.js';
+	var jqueryUISrc = 'vle/lib/jquery/js/jquery-ui-1.10.0.custom.min.js';
+	var jqueryUICss = 'vle/lib/jquery/css/wise-theme/jquery-ui-1.10.0.custom.css';
+	var jqueryUISrc_interactions = 'vle/lib/jquery/js/jquery-ui-1.10.4.interactions.min.js';
 	var bootstrapSrc = 'vle/lib/bootstrap/bootstrap.min.js';
 	var bootstrapCss = 'vle/css/bootstrap/bootstrap-custom.css';
 	
@@ -332,13 +332,13 @@ var scriptloader = function(){
         bootstrap: ['vle/util/componentloader.js',
                   jquerySrc,
     		      //jqueryUISrc,
-    		      //'vle/jquery/js/jquery.ui.touch-punch.min.js',
+    		      //'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
                   'vle/view/view.js',
                   'vle/node/nodefactory.js',
                   'vle/model/environment.js',
-  		          'vle/jquery/js/jquery-migrate-1.2.1.min.js', // TODO: remove when all instances of jQuery.browser are removed from VLE
-  		          'vle/jquery/js/jsonplugin.js',
-  		          'vle/jquery/js/jqueryhelper.js',
+  		          'vle/lib/jquery/js/jquery-migrate-1.2.1.min.js', // TODO: remove when all instances of jQuery.browser are removed from VLE
+  		          'vle/lib/jquery/js/jsonplugin.js',
+  		          'vle/lib/jquery/js/jqueryhelper.js',
  			      'vle/node/Node.js',
  			      //'vle/node/DuplicateNode.js', 
   		          'vle/node/setupNodes.js',
@@ -364,8 +364,8 @@ var scriptloader = function(){
                'vle/model/StudentStatus.js'],
         core_min: ['vle/minified/core_min.js'],
 		student: [jqueryUISrc,
-    		      'vle/jquery/js/jquery.ui.touch-punch.min.js',
-			      'vle/jquery/jquery-validation/jquery.validate.min.js',
+    		      'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
+			      'vle/lib/jquery/jquery-validation/jquery.validate.min.js',
 			      'vle/view/vle/vleview_core.js',
 			      'vle/view/vle/vleview_utils.js',
 			      'vle/view/vle/vleview_studentwork.js',
@@ -374,10 +374,10 @@ var scriptloader = function(){
 			      'vle/navigation/GlobalTagMap.js',
 	              'vle/util/swfobject/swfobject.js'],
         author: [jqueryUISrc,
-   		      	 'vle/jquery/js/jquery.ui.touch-punch.min.js',
+   		      	 'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
                  'vle/lib/tinymce4/js/tinymce/tinymce.min.js',
-                 'vle/jquery/miniTip/jquery.miniTip.min.js',
-                 'vle/jquery/jquery-validation/jquery.validate.min.js',
+                 'vle/lib/jquery/miniTip/jquery.miniTip.min.js',
+                 'vle/lib/jquery/jquery-validation/jquery.validate.min.js',
                  'vle/view/authoring/authorview_dispatchers.js',
                  'vle/view/authoring/authorview_startup.js',
                  'vle/view/authoring/authorview_main.js',
@@ -401,10 +401,10 @@ var scriptloader = function(){
                  'vle/model/MaxScores.js',
 		         'vle/model/MaxScore.js',
 		         'vle/view/grading/gradingview_premadecomments.js',
-		         'vle/jquery/js/jquery.editinplace.js',
+		         'vle/lib/jquery/js/jquery.editinplace.js',
 		         'vle/view/authoring/authorview_model.js'],
 		grading: [jqueryUISrc,
-    		      'vle/jquery/js/jquery.ui.touch-punch.min.js',
+    		      'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
     		      'vle/view/grading/gradingview_annotations.js',
 		          'vle/view/grading/gradingview_dispatcher.js',
 		          'vle/view/grading/gradingview_display.js',
@@ -412,18 +412,18 @@ var scriptloader = function(){
 	              'vle/view/grading/gradingview_startup.js',
 	              'vle/view/grading/gradingview_studentwork.js',
 	              'vle/view/grading/gradingview_classroommonitor.js',
-	              'vle/jquery/js/jquery.tablesorter.min.js', // TODO: remove when all references are removed
-	              'vle/jquery/jquery-dataTables/js/jquery.dataTables.min.js',
-	              'vle/jquery/jquery-dataTables/extras/FixedHeader/js/FixedHeader.min.js',
+	              'vle/lib/jquery/js/jquery.tablesorter.min.js', // TODO: remove when all references are removed
+	              'vle/lib/jquery/jquery-dataTables/js/jquery.dataTables.min.js',
+	              'vle/lib/jquery/jquery-dataTables/extras/FixedHeader/js/FixedHeader.min.js',
 	              'vle/view/grading/gradingview_premadecomments.js',
-	              'vle/jquery/js/jquery.editinplace.js',
+	              'vle/lib/jquery/js/jquery.editinplace.js',
 	              'vle/view/grading/gradingview_model.js',
 	              'vle/util/swfobject/swfobject.js'],
 	    studentWebSocket: [jqueryUISrc,
-	         		      'vle/jquery/js/jquery.ui.touch-punch.min.js',
+	         		      'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
 	         		      'vle/webSocket/studentWebSocket.js'],
 	    teacherWebSocket: [jqueryUISrc_interactions,
-	         		       'vle/jquery/js/jquery.ui.touch-punch.min.js',
+	         		       'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
 	         		       bootstrapSrc, // TODO: move to vle bootstrap sources when using globally
 	                       //'vle/lib/bootstrap/bootstrap-switch/dist/js/bootstrap-switch.min.js', // TODO: move to vle bootstrap sources when using globally
 	                       'vle/lib/bootstrap/bootbox/bootbox.min.js',  // TODO: move to vle bootstrap sources when using globally
@@ -431,7 +431,7 @@ var scriptloader = function(){
 	                       'vle/webSocket/teacherWebSocket.js',
 	                       'vle/view/classroomMonitor/classroomMonitorView_model.js',
 	                       'vle/view/classroomMonitor/classroomMonitorView_main.js',
-	                       'vle/jquery/js/jquery.editinplace.js',
+	                       'vle/lib/jquery/js/jquery.editinplace.js',
 	                       'vle/lib/DataTables/media/js/jquery.dataTables.min.js',
 	                       'vle/lib/DataTables/media/js/dataTables.bootstrap.js',
 	                       //'vle/lib/DataTables/extensions/ColVis/js/dataTables.colVis.min.js',
@@ -485,7 +485,7 @@ var scriptloader = function(){
                 'vle/view/authoring/components/authorview_cRater.js',
                 'vle/view/authoring/components/authorview_stepIcons.js'],
         premadecomments:[jquerySrc,
-                         'vle/jquery/js/jquery.editinplace.js',
+                         'vle/lib/jquery/js/jquery.editinplace.js',
                          jqueryUISrc],
         ideabasket:['vle/ideaBasket/basket.js'],
         portfolio:['vle/model/portfolio.js']
@@ -501,7 +501,7 @@ var scriptloader = function(){
 		core_min: [],
 		author: ['vle/css/authoring/authoring.css',
 		         'vle/css/ui-tools.css',
-		         'vle/jquery/miniTip/miniTip.css',
+		         'vle/lib/jquery/miniTip/miniTip.css',
 		         jqueryUICss
 		         ],
 		student: ['vle/css/globalstyles.css'],
@@ -510,10 +510,10 @@ var scriptloader = function(){
     	menu:[],
  		grading: ['vle/css/globalstyles.css',
  		         'vle/css/portal/teachergrading.css',
- 		         'vle/jquery/jquery-dataTables/css/datatable.css',
+ 		         'vle/lib/jquery/jquery-dataTables/css/datatable.css',
  		         jqueryUICss],
  		grading_min: ['vle/css/portal/teachergrading.css',
- 	 		         'vle/jquery/jquery-dataTables/css/datatable.css',
+ 	 		         'vle/lib/jquery/jquery-dataTables/css/datatable.css',
  	 		         jqueryUICss],
  		ideabasket: [//'vle/css/globalstyles.css',
  		             'vle/css/ideaManager/jquery-validate/cmxformTemplate.css'],
@@ -549,15 +549,15 @@ var scriptloader = function(){
         'vle/lib/bootstrap/bootstrap-switch/dist/js/bootstrap-switch.min.js':[bootstrapSrc],
         'vle/lib/bootstrap/bootbox/bootbox.min.js':[bootstrapSrc],
         'vle/lib/bootstrap/bootstrap-multiselect/js/bootstrap-multiselect.js':[bootstrapSrc],
-        'vle/jquery/js/jsonplugin.js':[jquerySrc],
-        'vle/jquery/js/jqueryhelper.js':[jquerySrc],
-        'vle/jquery/js/jquery.form.js':[jquerySrc],
-        'vle/jquery/js/jquery.tablesorter.min.js':[jquerySrc],
-        'vle/jquery/jquery-validation/jquery.validate.min.js':[jquerySrc],
-        'vle/jquery/miniTip/jquery.miniTip.min.js':[jquerySrc],
-        'vle/jquery/js/jquery.editinplace.js':[jquerySrc],
-        'vle/jquery/js/jquery-migrate-1.2.1.min.js':[jquerySrc],
-        'vle/jquery/js/jquery.ui.touch-punch.min.js':[jqueryUISrc],
+        'vle/lib/jquery/js/jsonplugin.js':[jquerySrc],
+        'vle/lib/jquery/js/jqueryhelper.js':[jquerySrc],
+        'vle/lib/jquery/js/jquery.form.js':[jquerySrc],
+        'vle/lib/jquery/js/jquery.tablesorter.min.js':[jquerySrc],
+        'vle/lib/jquery/jquery-validation/jquery.validate.min.js':[jquerySrc],
+        'vle/lib/jquery/miniTip/jquery.miniTip.min.js':[jquerySrc],
+        'vle/lib/jquery/js/jquery.editinplace.js':[jquerySrc],
+        'vle/lib/jquery/js/jquery-migrate-1.2.1.min.js':[jquerySrc],
+        'vle/lib/jquery/js/jquery.ui.touch-punch.min.js':[jqueryUISrc],
         'vle/lib/DataTables/media/js/jquery.dataTables.min.js':[jquerySrc],
         'vle/lib/DataTables/media/js/dataTables.bootstrap.js':['vle/lib/DataTables/media/js/jquery.dataTables.min.js', bootstrapSrc],
         //'vle/lib/DataTables/extensions/ColVis/js/dataTables.colVis.min.js':['vle/lib/DataTables/media/js/jquery.dataTables.min.js'],

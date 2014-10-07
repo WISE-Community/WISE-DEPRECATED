@@ -10,7 +10,7 @@ var coreMinScripts = [
 var studentVLEScripts = [
     scriptloader.jquerySrc,
     scriptloader.jqueryUISrc,
-	'vle/jquery/js/jsonplugin.js',
+	'vle/lib/jquery/js/jsonplugin.js',
 	'vle/node/common/nodehelpers.js',
 	'vle/util/helperfunctions.js',
 	'vle/node/brainstorm/brainstorm.js',

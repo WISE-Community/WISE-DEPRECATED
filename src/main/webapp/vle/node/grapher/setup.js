@@ -34,9 +34,9 @@ var studentVLEScripts = [
      * 'vle/node/quiz/quizState.js'
 	 */
 	'vle/node/grapher/grapherState.js',
-	'vle/jquery/js/flot/excanvas.js',
-	'vle/jquery/js/flot/jquery.js',
-	'vle/jquery/js/flot/jquery.flot.js',
+	'vle/lib/jquery/js/flot/excanvas.js',
+	'vle/lib/jquery/js/flot/jquery.js',
+	'vle/lib/jquery/js/flot/jquery.flot.js',
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc
 ];
@@ -62,7 +62,7 @@ var gradingScripts = [
 	 */
 	'vle/node/grapher/grapherState.js',
 	'vle/node/grapher/grapher.js',
-	'vle/jquery/js/flot/jquery.flot.js'
+	'vle/lib/jquery/js/flot/jquery.flot.js'
 ];
 
 var dependencies = [
@@ -74,7 +74,7 @@ var dependencies = [
 	 * 'vle/node/quiz/QuizNode.js'
 	 */
 	{child:"vle/node/grapher/GrapherNode.js", parent:["vle/node/Node.js"]},
-	{child:"vle/jquery/js/flot/jquery.flot.js", parent:["vle/jquery/js/flot/jquery.js"]}
+	{child:"vle/lib/jquery/js/flot/jquery.flot.js", parent:["vle/lib/jquery/js/flot/jquery.js"]}
 ];
 
 /*
@@ -149,7 +149,7 @@ scriptloader.addCssToComponent('grapher', css);
 var topMenuScripts = [
 	'vle/node/grapher/grapher.js',
 	'vle/node/grapher/grapherState.js',
-	'vle/jquery/js/flot/jquery.flot.js'
+	'vle/lib/jquery/js/flot/jquery.flot.js'
 ];
 
 scriptloader.addScriptToComponent('topMenu', topMenuScripts);

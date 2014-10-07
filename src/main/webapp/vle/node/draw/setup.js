@@ -30,7 +30,7 @@ var gradingMinScripts = [
 
 var dependencies = [
 	{child:"vle/node/draw/SVGDrawNode.js", parent:["vle/node/Node.js"]}
-	/*{child:"vle/jquery/js/jsonplugin.js", parent:['vle/node/draw/svg-edit/jquery.js']},
+	/*{child:"vle/lib/jquery/js/jsonplugin.js", parent:['vle/node/draw/svg-edit/jquery.js']},
 	{child:"vle/node/draw/svg-edit/js-hotkeys/jquery.hotkeys.min.js", parent:['vle/node/draw/svg-edit/jquery.js']},
 	{child:"vle/node/draw/svg-edit/jquerybbq/jquery.bbq.min.js", parent:['vle/node/draw/svg-edit/jquery.js']},
 	{child:"vle/node/draw/svg-edit/svgicons/jquery.svgicons.js", parent:['vle/node/draw/svg-edit/jquery.js']},

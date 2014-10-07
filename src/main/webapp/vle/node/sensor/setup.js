@@ -8,9 +8,9 @@ var coreMinScripts = ['vle/node/sensor/sensor_core_min.js'];
 var studentVLEScripts = [
 	'vle/node/sensor/sensor.js',
 	'vle/node/sensor/sensorstate.js',
-	'vle/jquery/js/flot/excanvas.js',
-	'vle/jquery/js/flot/jquery.js',
-	'vle/jquery/js/flot/jquery.flot.js'
+	'vle/lib/jquery/js/flot/excanvas.js',
+	'vle/lib/jquery/js/flot/jquery.js',
+	'vle/lib/jquery/js/flot/jquery.flot.js'
 ];
 
 var authorScripts = [
@@ -20,13 +20,13 @@ var authorScripts = [
 var gradingScripts = [
 	'vle/node/sensor/sensorstate.js',
 	'vle/node/sensor/sensor.js',
-	'vle/jquery/js/flot/jquery.flot.js'
+	'vle/lib/jquery/js/flot/jquery.flot.js'
 ];
 
 
 var dependencies = [
 	{child:"vle/node/sensor/SensorNode.js", parent:["vle/node/Node.js"]},
-	{child:"vle/jquery/js/flot/jquery.flot.js", parent:["vle/jquery/js/flot/jquery.js"]}
+	{child:"vle/lib/jquery/js/flot/jquery.flot.js", parent:["vle/lib/jquery/js/flot/jquery.js"]}
 ];
 
 var css = [
@@ -52,7 +52,7 @@ scriptloader.addCssToComponent('sensor', css);
 var topMenuScripts = [
 	'vle/node/sensor/sensor.js',
 	'vle/node/sensor/sensorstate.js',
-	'vle/jquery/js/flot/jquery.flot.js'
+	'vle/lib/jquery/js/flot/jquery.flot.js'
 ];
 
 scriptloader.addScriptToComponent('topMenu', topMenuScripts);
