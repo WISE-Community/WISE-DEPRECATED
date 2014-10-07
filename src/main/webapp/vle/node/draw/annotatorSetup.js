@@ -14,7 +14,7 @@ var studentVLEScripts = [
 ];
 
 var authorScripts = [
-	'vle/js/bootstrap/bootstrap.min.js', // TODO: when bootstrap is standard
+	'vle/lib/bootstrap/bootstrap.min.js', // TODO: when bootstrap is standard
 	'vle/node/draw/authorview_annotator.js',
 	//'vle/node/draw/svg-edit/lz77.js',
 	'vle/node/draw/svg-edit/autograde/annotatorAutoScore.js'
@@ -33,7 +33,7 @@ var gradingMinScripts = [
 var dependencies = [
 	{child:"vle/node/draw/SVGDrawNode.js", parent:["vle/node/Node.js"]},
 	{child:"vle/node/draw/AnnotatorNode.js", parent:["vle/node/draw/SVGDrawNode.js"]},
-	{child:'vle/js/bootstrap/bootstrap.min.js',parent:[scriptloader.jQuerySrc]} // TODO: when bootstrap is standard
+	{child:'vle/lib/bootstrap/bootstrap.min.js',parent:[scriptloader.jQuerySrc]} // TODO: when bootstrap is standard
 	/*{child:"vle/jquery/js/jsonplugin.js", parent:['vle/node/draw/svg-edit/jquery.js']},
 	{child:"vle/node/draw/svg-edit/js-hotkeys/jquery.hotkeys.min.js", parent:['vle/node/draw/svg-edit/jquery.js']},
 	{child:"vle/node/draw/svg-edit/jquerybbq/jquery.bbq.min.js", parent:['vle/node/draw/svg-edit/jquery.js']},

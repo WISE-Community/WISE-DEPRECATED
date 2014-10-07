@@ -52,7 +52,7 @@ var scriptloader = function(){
 	var jqueryUISrc = 'vle/jquery/js/jquery-ui-1.10.0.custom.min.js';
 	var jqueryUICss = 'vle/jquery/css/wise-theme/jquery-ui-1.10.0.custom.css';
 	var jqueryUISrc_interactions = 'vle/jquery/js/jquery-ui-1.10.4.interactions.min.js';
-	var bootstrapSrc = 'vle/js/bootstrap/bootstrap.min.js';
+	var bootstrapSrc = 'vle/lib/bootstrap/bootstrap.min.js';
 	var bootstrapCss = 'vle/css/bootstrap/bootstrap-custom.css';
 	
 	/**
@@ -375,7 +375,7 @@ var scriptloader = function(){
 	              'vle/util/swfobject/swfobject.js'],
         author: [jqueryUISrc,
    		      	 'vle/jquery/js/jquery.ui.touch-punch.min.js',
-                 'vle/js/tinymce4/js/tinymce/tinymce.min.js',
+                 'vle/lib/tinymce4/js/tinymce/tinymce.min.js',
                  'vle/jquery/miniTip/jquery.miniTip.min.js',
                  'vle/jquery/jquery-validation/jquery.validate.min.js',
                  'vle/view/authoring/authorview_dispatchers.js',
@@ -425,19 +425,19 @@ var scriptloader = function(){
 	    teacherWebSocket: [jqueryUISrc_interactions,
 	         		       'vle/jquery/js/jquery.ui.touch-punch.min.js',
 	         		       bootstrapSrc, // TODO: move to vle bootstrap sources when using globally
-	                       //'vle/js/bootstrap/bootstrap-switch/dist/js/bootstrap-switch.min.js', // TODO: move to vle bootstrap sources when using globally
-	                       'vle/js/bootstrap/bootbox/bootbox.min.js',  // TODO: move to vle bootstrap sources when using globally
-	                       'vle/js/bootstrap/bootstrap-multiselect/js/bootstrap-multiselect.js',  // TODO: possibly move to vle bootstrap sources when using globally
+	                       //'vle/lib/bootstrap/bootstrap-switch/dist/js/bootstrap-switch.min.js', // TODO: move to vle bootstrap sources when using globally
+	                       'vle/lib/bootstrap/bootbox/bootbox.min.js',  // TODO: move to vle bootstrap sources when using globally
+	                       'vle/lib/bootstrap/bootstrap-multiselect/js/bootstrap-multiselect.js',  // TODO: possibly move to vle bootstrap sources when using globally
 	                       'vle/webSocket/teacherWebSocket.js',
 	                       'vle/view/classroomMonitor/classroomMonitorView_model.js',
 	                       'vle/view/classroomMonitor/classroomMonitorView_main.js',
 	                       'vle/jquery/js/jquery.editinplace.js',
-	                       'vle/js/DataTables/media/js/jquery.dataTables.min.js',
-	                       'vle/js/DataTables/media/js/dataTables.bootstrap.js',
-	                       //'vle/js/DataTables/extensions/ColVis/js/dataTables.colVis.min.js',
-	                       'vle/js/DataTables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js',
-	                       'vle/js/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js',
-	                       'vle/js/DataTables/plugins/fnFilterOnReturn.js'],
+	                       'vle/lib/DataTables/media/js/jquery.dataTables.min.js',
+	                       'vle/lib/DataTables/media/js/dataTables.bootstrap.js',
+	                       //'vle/lib/DataTables/extensions/ColVis/js/dataTables.colVis.min.js',
+	                       'vle/lib/DataTables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js',
+	                       'vle/lib/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js',
+	                       'vle/lib/DataTables/plugins/fnFilterOnReturn.js'],
 	    grading_min: ['vle/minified/grading_min.js'],
 	    user: ['vle/model/userandclassinfo.js'],	    
 	    config: ['vle/model/config.js'],
@@ -522,13 +522,13 @@ var scriptloader = function(){
  		                 'vle/css/premadecomments/premadecomments.css',
  		                jqueryUICss],
  		teacherWebSocket:[//'vle/css/classroomMonitor/monitor-styles.css',
- 		                 'vle/js/DataTables/media/css/jquery.dataTables.css',
- 		                 'vle/js/DataTables/media/css/dataTables.bootstrap.css',
+ 		                 'vle/lib/DataTables/media/css/jquery.dataTables.css',
+ 		                 'vle/lib/DataTables/media/css/dataTables.bootstrap.css',
  		                 'vle/css/bootstrap/bootstrap-switch.css',
- 		                 'vle/js/bootstrap/bootstrap-multiselect/css/bootstrap-multiselect.css',
- 		                 //'vle/js/DataTables/extensions/ColVis/css/dataTables.colVis.min.css',
- 		                 'vle/js/DataTables/extensions/FixedHeader/css/dataTables.fixedHeader.min.css',
- 		                 'vle/js/DataTables/extensions/TableTools/css/dataTables.tableTools.min.css']
+ 		                 'vle/lib/bootstrap/bootstrap-multiselect/css/bootstrap-multiselect.css',
+ 		                 //'vle/lib/DataTables/extensions/ColVis/css/dataTables.colVis.min.css',
+ 		                 'vle/lib/DataTables/extensions/FixedHeader/css/dataTables.fixedHeader.min.css',
+ 		                 'vle/lib/DataTables/extensions/TableTools/css/dataTables.tableTools.min.css']
 	};
 	
 	/**
@@ -546,9 +546,9 @@ var scriptloader = function(){
         'vle/node/BranchNode.js':['vle/node/Node.js','vle/node/MultipleChoiceNode.js'],
         'vle/ui/vleui.js': ['vle/VLE.js'],
         'vle/util/projectutils.js': ['vle/model/Project.js'],
-        'vle/js/bootstrap/bootstrap-switch/dist/js/bootstrap-switch.min.js':[bootstrapSrc],
-        'vle/js/bootstrap/bootbox/bootbox.min.js':[bootstrapSrc],
-        'vle/js/bootstrap/bootstrap-multiselect/js/bootstrap-multiselect.js':[bootstrapSrc],
+        'vle/lib/bootstrap/bootstrap-switch/dist/js/bootstrap-switch.min.js':[bootstrapSrc],
+        'vle/lib/bootstrap/bootbox/bootbox.min.js':[bootstrapSrc],
+        'vle/lib/bootstrap/bootstrap-multiselect/js/bootstrap-multiselect.js':[bootstrapSrc],
         'vle/jquery/js/jsonplugin.js':[jquerySrc],
         'vle/jquery/js/jqueryhelper.js':[jquerySrc],
         'vle/jquery/js/jquery.form.js':[jquerySrc],
@@ -558,12 +558,12 @@ var scriptloader = function(){
         'vle/jquery/js/jquery.editinplace.js':[jquerySrc],
         'vle/jquery/js/jquery-migrate-1.2.1.min.js':[jquerySrc],
         'vle/jquery/js/jquery.ui.touch-punch.min.js':[jqueryUISrc],
-        'vle/js/DataTables/media/js/jquery.dataTables.min.js':[jquerySrc],
-        'vle/js/DataTables/media/js/dataTables.bootstrap.js':['vle/js/DataTables/media/js/jquery.dataTables.min.js', bootstrapSrc],
-        //'vle/js/DataTables/extensions/ColVis/js/dataTables.colVis.min.js':['vle/js/DataTables/media/js/jquery.dataTables.min.js'],
-        'vle/js/DataTables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js':['vle/js/DataTables/media/js/jquery.dataTables.min.js'],
-        'vle/js/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js':['vle/js/DataTables/media/js/jquery.dataTables.min.js'],
-        'vle/js/DataTables/plugins/fnFilterOnReturn.js':['vle/js/DataTables/media/js/jquery.dataTables.min.js'],
+        'vle/lib/DataTables/media/js/jquery.dataTables.min.js':[jquerySrc],
+        'vle/lib/DataTables/media/js/dataTables.bootstrap.js':['vle/lib/DataTables/media/js/jquery.dataTables.min.js', bootstrapSrc],
+        //'vle/lib/DataTables/extensions/ColVis/js/dataTables.colVis.min.js':['vle/lib/DataTables/media/js/jquery.dataTables.min.js'],
+        'vle/lib/DataTables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js':['vle/lib/DataTables/media/js/jquery.dataTables.min.js'],
+        'vle/lib/DataTables/extensions/TableTools/js/dataTables.tableTools.min.js':['vle/lib/DataTables/media/js/jquery.dataTables.min.js'],
+        'vle/lib/DataTables/plugins/fnFilterOnReturn.js':['vle/lib/DataTables/media/js/jquery.dataTables.min.js'],
         'vle/navigation/constraints/nonvisitablexconstraint.js':['vle/navigation/constraints/constraint.js'],
         'vle/navigation/constraints/visitxafteryconstraint.js':['vle/navigation/constraints/constraint.js'],
         'vle/navigation/constraints/visitxbeforeyconstraint.js':['vle/navigation/constraints/constraint.js'],

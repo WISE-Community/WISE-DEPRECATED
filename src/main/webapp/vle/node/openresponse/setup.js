@@ -27,7 +27,7 @@ var studentVLEScripts = [
 	'vle/model/Annotation.js',
 	'vle/model/Annotations.js',
 	'vle/model/nodevisit.js',
-	'vle/js/tinymce4/js/tinymce/tinymce.min.js'
+	'vle/lib/tinymce4/js/tinymce/tinymce.min.js'
 ];
 
 var authorScripts = [
