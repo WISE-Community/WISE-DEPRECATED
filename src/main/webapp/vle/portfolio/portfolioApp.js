@@ -7,11 +7,11 @@ portfolioApp.config(['$routeProvider',
                     function($routeProvider) {
                       $routeProvider.
                         when('/toc', {
-                          templateUrl: 'portfolio/portfolioTOC.html',
+                          templateUrl: 'portfolioTOC.html',
                           controller: 'portfolioTOCController'
                         }).
                         when('/item/:itemId', {
-                          templateUrl: 'portfolio/portfolioItem.html',
+                          templateUrl: 'portfolioItem.html',
                           controller: 'portfolioItemController'
                         }).
                         otherwise({

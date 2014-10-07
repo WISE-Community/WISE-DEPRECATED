@@ -446,7 +446,7 @@ OPENRESPONSE.prototype.cRaterRequestSuccessCallback = function(responseText, res
 			var annotationValue = {
 				autoScore: score,
 				maxAutoScore: maxScore,
-				autoFeedback: feedbackText,
+				autoFeedback: view.replaceWISEVariables(feedbackText),
 				concepts: concepts,
 				nodeStateId:nodeStateId
 			}

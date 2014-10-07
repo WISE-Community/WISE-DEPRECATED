@@ -830,7 +830,7 @@ View.prototype.OpenResponseNode.displayCRaterFeedback = function(cRaterScoringRu
 				//the feedback is a string
 				
 				//make the feedback field into an authorable text input
-				cRaterFeedbackHtml += "Feedback: <input id='cRaterFeedback_" + x + "_0' type='text' value='" + feedback + "' size='50' onchange='eventManager.fire(\"cRaterFeedbackChanged\", [" + x + ", " + y + "])'/>";
+				cRaterFeedbackHtml += "Feedback: <textarea id='cRaterFeedback_" + x + "_0' type='text' cols='50' rows='5' onchange='eventManager.fire(\"cRaterFeedbackChanged\", [" + x + ", " + y + "])'>"+feedback+"</textarea>";
 				
 				//add the button to remove the feedback
 				cRaterFeedbackHtml += "<input id='' type='button' value='Remove' onclick='eventManager.fire(\"cRaterRemoveFeedback\", [" + x + ", " + y + "])'>";
@@ -852,7 +852,7 @@ View.prototype.OpenResponseNode.displayCRaterFeedback = function(cRaterScoringRu
 							}
 							
 							//make the feedback field into an authorable text input
-							cRaterFeedbackHtml += "Feedback: <input id='cRaterFeedback_" + x + "_" + y + "' type='text' value='" + feedbackText + "' size='50' onchange='eventManager.fire(\"cRaterFeedbackChanged\", [" + x + ", " + y + "])'/>";
+							cRaterFeedbackHtml += "Feedback: <textarea id='cRaterFeedback_" + x + "_" + y + "' type='text' cols='50' rows='5' onchange='eventManager.fire(\"cRaterFeedbackChanged\", [" + x + ", " + y + "])'>"+feedbackText+"</textarea>";
 							
 							//add the button to remove the feedback
 							cRaterFeedbackHtml += "<input id='' type='button' value='Remove' onclick='eventManager.fire(\"cRaterRemoveFeedback\", [" + x + ", " + y + "])'>";
@@ -912,7 +912,7 @@ View.prototype.OpenResponseNode.displayCRaterMultipleAttemptFeedbackRules = func
 		var rule = multipleAttemptFeedbackRules.rules[ruleIndex];
 		multipleAttemptFeedbackRulesTableHtml += "<tr id='"+rule.id+"'><td><input ruleId='"+rule.id+"' columnType='lastScore' type='text' value='"+rule.scoreSequence[0]+"' size='10'></input></td>"+
 			"<td><input ruleId='"+rule.id+"' columnType='currentScore' type='text' value='"+rule.scoreSequence[1]+"' size='10'></input></td>"+
-			"<td><input ruleId='"+rule.id+"' columnType='feedback' type='text' value='"+ rule.feedback+"' size='50'></input></td><td><input type='button' value='Remove' onclick='eventManager.fire(\"openResponseRemoveMultipleAttemptFeedbackRule\",\""+rule.id+"\");'></input></tr>";
+			"<td><textarea ruleId='"+rule.id+"' columnType='feedback' type='text' cols='50' rows='5'>"+rule.feedback+"</textarea></td><td><input type='button' value='Remove' onclick='eventManager.fire(\"openResponseRemoveMultipleAttemptFeedbackRule\",\""+rule.id+"\");'></input></tr>";
 	}
 	multipleAttemptFeedbackRulesTableHtml += "</table>"
 	$("#multipleAttemptFeedbackHelp").click(function() {
@@ -922,8 +922,8 @@ View.prototype.OpenResponseNode.displayCRaterMultipleAttemptFeedbackRules = func
 	});
 	$("#cRaterMultipleAttemptFeedbackRules").append(multipleAttemptFeedbackRulesTableHtml);
 	$("#cRaterMultipleAttemptFeedbackRules").append("<input type='button' value='Add New Rule' onclick='eventManager.fire(\"openResponseAddMultipleAttemptFeedbackRule\");'></input>");
-	$("#multipleAttemptFeedbackRulesTable input").off("change");
-	$("#multipleAttemptFeedbackRulesTable input").on("change", {"content":this.content, "view":this.view}, function(event) {
+	$("#multipleAttemptFeedbackRulesTable input, #multipleAttemptFeedbackRulesTable textarea").off("change");
+	$("#multipleAttemptFeedbackRulesTable input, #multipleAttemptFeedbackRulesTable textarea").on("change", {"content":this.content, "view":this.view}, function(event) {
 		var ruleId = $(this).attr("ruleId");
 		var columnType = $(this).attr("columnType");
 		var newValue = $(this).val();
@@ -961,10 +961,10 @@ View.prototype.OpenResponseNode.addMultipleAttemptFeedbackRule = function(){
      });
 	$("#multipleAttemptFeedbackRulesTable").append("<tr id='"+newId+"'><td><input ruleId='"+newId+"' columnType='lastScore' type='text' value='' size='10'></input></td>"+
 			"<td><input ruleId='"+newId+"' columnType='currentScore' type='text' value='' size='10'></input></td>"+
-			"<td><input ruleId='"+newId+"' columnType='feedback' type='text' value='' size='50'></input></td>"+
+			"<td><textarea ruleId='"+newId+"' columnType='feedback' type='text' cols='50' rows='5'></textarea></td>"+
 			"<td><input type='button' value='Remove' onclick='eventManager.fire(\"openResponseRemoveMultipleAttemptFeedbackRule\",\""+newId+"\");'></input></td></tr>"); //remove rule row from view
-	$("#multipleAttemptFeedbackRulesTable input").off("change");
-	$("#multipleAttemptFeedbackRulesTable input").on("change", {"content":this.content, "view":this.view}, function(event) {
+	$("#multipleAttemptFeedbackRulesTable input, #multipleAttemptFeedbackRulesTable textarea").off("change");
+	$("#multipleAttemptFeedbackRulesTable input, #multipleAttemptFeedbackRulesTable textarea").on("change", {"content":this.content, "view":this.view}, function(event) {
 		var ruleId = $(this).attr("ruleId");
 		var columnType = $(this).attr("columnType");
 		var newValue = $(this).val();
