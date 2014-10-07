@@ -257,13 +257,22 @@ EpigameNode.prototype.isCompleted = function(nodeVisits) {
 				result = true;					
 			}
 		} else if(mode == 'mission') {
+			var statusValue = null;
+			
 			//get the highest mission score from the node visits
 			var score = this.getHighestMissionScore(nodeVisits);
 			
-			var statusValue = null;
-			
 			if(score == null) {
+				/*
+				 * this step doesn't have a highest mission score so we will search
+				 * for a final score
+				 */
+				score = this.getHighestResponseFieldValue(nodeVisits, 'finalScore');
 				
+				if(score != null) {
+					//the student has completed this step
+					statusValue = 'gold';
+				}
 			} else if(score >= 350) {
 				statusValue = 'gold';
 			} else if(score >= 300) {
@@ -341,13 +350,22 @@ EpigameNode.prototype.processStudentWork = function(nodeVisits) {
 					this.setStatus('isCompleted', true);					
 				}
 			} else if(mode == 'mission') {
+				var statusValue = null;
+				
 				//get the highest mission score from the node visits
 				var score = this.getHighestMissionScore(nodeVisits);
 				
-				var statusValue = null;
-				
 				if(score == null) {
+					/*
+					 * this step doesn't have a highest mission score so we will search
+					 * for a final score
+					 */
+					score = this.getHighestResponseFieldValue(nodeVisits, 'finalScore');
 					
+					if(score != null) {
+						//the student has completed this step
+						statusValue = 'gold';
+					}
 				} else if(score >= 350) {
 					statusValue = 'gold';
 				} else if(score >= 300) {
@@ -434,6 +452,57 @@ EpigameNode.prototype.getHighestMissionScore = function(nodeVisits) {
 	}
 	
 	return score;
+};
+
+/**
+ * Get the highest numerical value for a given field in the response object from the node visits
+ * @param nodeVisits the node visits
+ * @param responseField a field in the response object
+ * @return the highest value for the given field in the response object from the node visits
+ */
+EpigameNode.prototype.getHighestResponseFieldValue = function(nodeVisits, responseField) {
+	var value = null;
+	
+	if(nodeVisits != null) {
+		//loop through all the node visits
+		for(var x=0; x<nodeVisits.length; x++) {
+			var nodeVisit = nodeVisits[x];
+			
+			if(nodeVisit != null) {
+				var nodeStates = nodeVisit.nodeStates;
+				
+				if(nodeStates != null) {
+					//loop through all the node states
+					for(var y=0; y<nodeStates.length; y++) {
+						var nodeState = nodeStates[y];
+						
+						if(nodeState != null) {
+							//get the response object from the node state
+							var response = nodeState.response;
+							
+							if(response != null) {
+								//get the value of the field
+								var tempValue = response[responseField];
+								
+								//check that the value is a number
+								if(tempValue != null && !isNaN(tempValue)) {
+									//the value is a number
+									
+									//check if the value is higher than any we have seen before
+									if(tempValue > value) {
+										//the value is higher so we will remember it
+										value = tempValue;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return value;
 };
 
 /**
