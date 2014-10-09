@@ -4,7 +4,6 @@ var coreScripts = [
 ];
 
 var coreMinScripts = [
-   	'vle/node/html/html_core_min.js'
 ];
 
 var studentVLEScripts = [
@@ -39,7 +38,6 @@ var nodeIconPath = 'node/html/icons/';
 componentloader.addNodeIconPath('HtmlNode', nodeIconPath);
 
 var css = [
-	//'vle/node/html/html.css'
 ];
 
 scriptloader.addScriptToComponent('core', coreScripts);

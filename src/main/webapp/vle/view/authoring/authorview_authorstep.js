@@ -51,6 +51,13 @@ View.prototype.setInitialAuthorStepState = function(){
 	 * contentBaseUrl but after previewStep() is called, the content
 	 * object will contain the injected contentBaseUrl.
 	 */
+	// if this is a selfRendering step (like HTMLNode), there will be no advanced mode
+	if (this.activeNode.selfRendering) {
+		this.easyMode = true;		
+		$('#easyFalse').attr('disabled','disabled');
+	} else {
+		$('#easyFalse').removeAttr('disabled');
+	}
 	
 	/*
 	 * set active content as copy of the active node's content.
