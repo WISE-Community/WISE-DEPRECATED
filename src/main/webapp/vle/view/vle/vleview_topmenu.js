@@ -349,6 +349,10 @@ View.prototype.showAllWork = function(){
  * from the teacher.
  */
 View.prototype.retrieveAnnotations = function(callerId) {
+	if (this.config.getConfigParam("mode") == "portalpreview") {
+		// no annotations in preview mode
+		return;
+	}
 	var processGetAnnotationResponse = function(responseText, responseXML, args) {
 		var thisView = args[0];
 		var callerId = args[1];

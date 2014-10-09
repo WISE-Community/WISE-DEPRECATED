@@ -2448,7 +2448,7 @@ $.valHooks.textarea = {
 /**
  * Replaces WISE variables in the string with WISE values.
  * 
- * Ex: "Hello {{studentNames}}! You got a {{autoGradedScore}}" => "Hello Hiroki&Geoff! You go a 3!"
+ * Ex: "Hello {{studentNames}}! You got a {{autoGradedScore}}" => "Hello Hiroki & Geoff! You got a 3!"
  */
 View.prototype.replaceWISEVariables = function(text) {
 	if (text.indexOf("{{studentFirstNames}}") >= 0) {
