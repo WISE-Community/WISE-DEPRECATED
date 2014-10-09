@@ -313,208 +313,35 @@ View.prototype.displayFlaggedWorkForNodeId = function(nodeId) {
 };
 
 /**
- * Retrieve all the data required to display the show all work. Perform
- * this retrieval every time the student opens Show All Work so that
- * they can get grades and comments the teacher made immediately.
+ * Display Show All Work. The rendering is done by the myWorkIframe, which is its own app
+ * that renders in an iframe.
  */
-View.prototype.showAllWork = function(annotationsRetrieved, projectMetaDataRetrieved){
-	//clear out these values so that the respective data will be retrieved again
-	this.annotationsRetrieved = annotationsRetrieved;
-	this.projectMetaDataRetrieved = projectMetaDataRetrieved;
-	
-	//get the annotation, project meta data, and run extras
-	this.getShowAllWorkData();
-};
+View.prototype.showAllWork = function(){
+	var title = this.getI18NString('my_work_with_teacher_feedback_and_scores');
 
-/**
- * This function checks to make sure annotations, project meta data, and
- * run extras are retrieved before displaying Show All Work.
- * 
- * The dispatcher listens for the 3 events below and calls displayShowAllWork 
- * each time but only displays Show All Work after all 3 have been fired
- * by checking the *Retrieved flags
- * 
- * retrieveAnnotationsCompleted
- * retrieveProjectMetaDataCompleted
- * retrieveRunExtrasCompleted
- *
- */
-View.prototype.displayShowAllWork = function() {
-	/*
-	 * make sure annotations and project meta data have been retrieved 
-	 * or the user is in preview which does not require annotations or
-	 * project meta data
-	 */
-	if(this.annotationsRetrieved && this.projectMetaDataRetrieved || this.config.getConfigParam("mode") == "portalpreview") {
-	    var allWorkHtml = "";
-	    
-	    var totalScoreForWorkgroup = 0;
-	    
-	    //do not retrieve annotations in preview
-	    if(this.config.getConfigParam("mode") != "portalpreview") {
-	    	//we are not in preview so we will obtain the annotations
-	    	
-		    var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
-		    
-		    //get all the ids for teacher and shared teachers
-		    var teacherIds = this.getUserAndClassInfo().getAllTeacherWorkgroupIds();
-		    
-		    //get the scores given to the student by the teachers
-		    var totalScoreAndTotalPossible = this.getAnnotations().getTotalScoreAndTotalPossibleByToWorkgroupAndFromWorkgroups(workgroupId, teacherIds, this.maxScores);
-		    
-		    //get the total score for the workgroup
-		    totalScoreForWorkgroup = totalScoreAndTotalPossible.totalScore;
-		    
-		    //get the max total score for the steps that were graded for this workgroup
-		    var totalPossibleForWorkgroup = totalScoreAndTotalPossible.totalPossible;
-		    
-		    //get the max total score for this project
-		    var totalPossibleForProject = this.getMaxScoreForProject();
-	    }
-	    
-	    var vleState = this.getState();
-	    
-	    var numStepsCompleted = 0;
-	    
-	    //get all the node ids that the student can potentially visit
-	    var nodeIds = this.getStepNodeIdsStudentCanVisit(vleState);
-	    
-		//loop through all the nodeIds
-		for(var y=0; y<nodeIds.length; y++) {
-			var nodeId = nodeIds[y];
-			
-			//get the latest work for the current workgroup 
-			var latestNodeVisit = vleState.getLatestNodeVisitByNodeId(nodeId);
-			var latestNodeVisitPostTime = null;
-			
-			//check if there was any work
-			if (latestNodeVisit != null) {
-				//student has completed this step so we will increment the counter
-				numStepsCompleted++;
-			}
+	$("#myWorkIframe").dialog({autoOpen:false,closeText:'',resizable:true,modal:true,show:{effect:"fade",duration:200},hide:{effect:"fade",duration:200},title:title,open:this.myWorkDivOpen,close:this.myWorkDivClose,
+		dragStart: function(event, ui) {
+			$('#myWorkOverlay').show();
+		},
+		dragStop: function(event, ui) {
+			$('#myWorkOverlay').hide();
+		},
+		resizeStart: function(event, ui) {
+			$('#myWorkOverlay').show();
+		},
+		resizeStop: function(event, ui) {
+			$('#myWorkOverlay').hide();
 		}
-		
-		//for the current team, calculate the percentage of the project they have completed
-		var teamPercentProjectCompleted = Math.floor((numStepsCompleted / nodeIds.length) * 100) + "%";
-	    
-		var score = this.getI18NString('score');
-		var percent_project_completed = this.getI18NString('percent_project_completed');
-		var my_work_with_teacher_feedback_and_scores = this.getI18NString('my_work_with_teacher_feedback_and_scores');
-		
-		//create the table to display the student score and percent project completed
-		var scoreTable = "<table class='wisetable'>";
-		scoreTable += "<thead><tr><th>" + score + "</th><th>" + percent_project_completed + "</th></tr></thead>";
-		scoreTable += "<tr><td class='scoreValue'>" + totalScoreForWorkgroup + "</td><td class='scoreValue'><div class='pValue'>" + teamPercentProjectCompleted + "</div><div id='teamProgress' class='progress'></div></td></tr>";
-		scoreTable += "</table>";
-		
-		var showGrades = true;
-		
-		if(this.config.getConfigParam("mode") == "portalpreview") {
-			//do not show annotations in preview
-			showGrades = false;
-		}
-		
-	    //create the div that will contain the score table as well as all the student work
-		allWorkHtml = "<div id='showWorkContainer' class='dialogContent'>" + scoreTable + this.getProject().getShowAllWorkHtml(this.getProject().getRootNode(), showGrades) + "</div>";
-		
-	    if($('#showallwork').size()==0){
-	    	$('<div id="showallwork"></div>').dialog({autoOpen:false,closeText:'',modal:true,show:{effect:"fade",duration:200},hide:{effect:"fade",duration:200},title:my_work_with_teacher_feedback_and_scores});
-	    }	    
-	    
-	    $('#showallwork').html(allWorkHtml);
-	    
-	    //the default bar size, we will use this for the thickness of the hr
-		var percentBarSize = 0;
-		
-		//check if the percent complete is 0%
-		if(teamPercentProjectCompleted != '0%') {
-			//set the thickness to 3
-			percentBarSize = 3;
-		}
+	});
 
-	    var docHeight = $(document).height()-25;
-		var docWidth = $(document).width()-25;
-		$('#showallwork').dialog({height:docHeight,width:docWidth});
-	    $('#showallwork').dialog('open');
-	    $('#showallwork').scrollTop(0);
-	    
-	    //display the percentage and jqueryui progressbar
-		var completedVal = parseInt(teamPercentProjectCompleted.replace('%',''));
-		var item = document.getElementById("teamProgress");
-		$(item).progressbar({value: completedVal});
-		
-	    // print mysystem...should happen after opening showallworkdialog
-		$(".mysystem").each(function() {
-			var json_str = $(this).html();
-			$(this).html("");
-			var divId = $(this).attr("id");
-			var contentBaseUrl = $(this).attr("contentBaseUrl");
-			try {
-				new MySystemPrint(json_str,divId,contentBaseUrl);
-			} catch (err) {
-				// do nothing
-			}
-		});
-		
-		//get all the node ids in the project
-		var nodeIds = this.getProject().getNodeIds();
-		
-		//loop through all the node ids
-		for(var x=0; x<nodeIds.length; x++) {
-			//get a node object
-			var node = this.getProject().getNodeById(nodeIds[x]);
-
-			//only perform this for steps that have a grading view
-			if(node.hasGradingView()) {
-				//get the node id
-				var nodeId = node.id;
-				
-				//get the latest node visit that contains student work for this step
-				var nodeVisit = this.getState().getLatestNodeVisitByNodeId(nodeId);
-				
-				//check if the student has any work for this step
-				if(nodeVisit != null) {
-					//get the div to display the work in
-					var studentWorkDiv = $("#latestWork_" + nodeVisit.id);
-					
-					//render the work into the div to display it
-					node.renderGradingView(studentWorkDiv, nodeVisit, "", workgroupId);
-					
-					// show button to add to portfolio
-					if (this.getProjectMetadata().tools.isPortfolioEnabled && this.portfolio) {
-						var addToPortfolio = $("<span>").addClass("addToPortfolio").html(this.getI18NString("portfolio_add_item"));
-						addToPortfolio.click({"itemType":"stepWork",
-											  "nodeId":nodeId,
-											  "nodeVisitId":nodeVisit.id,
-											  "title":node.title,
-											  "view":this},
-											this.portfolio.addItemEventHandler);
-						var portfolioSpan = $("<span>").addClass('portfolioAction').html(addToPortfolio);
-						$("[id='stepWork_"+nodeId+"'] .sectionHead").append(portfolioSpan);
-					}
-					
-					if($("#new_latestWork_" + nodeVisit.id).length != 0) {
-						/*
-						 * render the work into the new feedback div if it exists. the
-						 * new feedback div exists when the teacher has given a new
-						 * score or comment and we need to show the work and feedback
-						 * for that step at the the top of the show all work
-						 */
-						node.renderGradingView($("#new_latestWork_" + nodeVisit.id), nodeVisit, "", workgroupId);
-					}
-				}
-			}
-		}
-		
-		//check if there was any new feeback for the student
-		if(this.getProject().hasNewFeedback()) {
-			var you_have_new_feedback_from_teacher = this.getI18NString('you_have_new_feedback_from_teacher');
-			var new_feedback_labeled_as_new = this.getI18NString('new_feedback_labeled_as_new');
-			
-			//display a popup to notify the student that there is new feedback
-			alert(you_have_new_feedback_from_teacher + '\n\n' + new_feedback_labeled_as_new);
-		}
-	}
+	//	open the portfolio iframe dialog
+	var docHeight = $(document).height()-25;
+	var docWidth = $(document).width()-25;
+	$("#myWorkIframe").dialog({height:docHeight,width:docWidth});
+	$("#myWorkIframe").dialog('open');
+	$("#myWorkIframe").scrollTop(0);
+	$("#myWorkIframe").attr("src","mywork/myWork.html");
+	$("#myWorkIframe").css("width","100%");
 };
 
 /**
@@ -608,55 +435,9 @@ View.prototype.getShowFlaggedWorkData = function() {
 };
 
 /**
- * Makes sure all 3 sets of data are retrieved before
- * Show All Work is displayed.
- */
-View.prototype.getShowAllWorkData = function() {
-	//do not retrieve annotations or metadata in preview
-	if(this.config.getConfigParam("mode") == "portalpreview") {
-		this.displayShowAllWork();
-		return;
-	}
-	
-	//make sure annotations are retrieved
-	if(this.annotationsRetrieved == null) {
-		this.retrieveAnnotations('displayShowAllWork');
-	} else {
-		/*
-		 * the annotations were already retrieved so we will make sure
-		 * the flag has been set and we will fire the event again
-		 * so listeners will be notified 
-		 */
-		this.annotationsRetrieved = true;
-		eventManager.fire('retrieveAnnotationsCompleted', 'displayShowAllWork');
-	}
-	
-	//make sure project meta data is retrieved
-	if(this.projectMetaDataRetrieved == null) {
-		this.retrieveProjectMetaData();
-	} else {
-		/*
-		 * the annotations were already retrieved so we will make sure
-		 * the flag has been set and we will fire the event again
-		 * so listeners will be notified 
-		 */
-		this.projectMetaDataRetrieved = true;
-		eventManager.fire('retrieveProjectMetaDataCompleted');
-	}
-};
-
-/**
- * Get annotations so we can check if there are any new teacher annotations
- * to notify the student about
- */
-View.prototype.getAnnotationsToCheckForNewTeacherAnnotations = function() {
-	this.retrieveAnnotations('checkForNewTeacherAnnotations');
-};
-
-/**
  * Check if there are any new teacher annotations since the student last
- * visited. If there are new annotations we will display a popup message
- * to the student and automatically open up show all work.
+ * visited. If there are new annotations we will automatically open up show all work
+ * and it will display a popup message to the student about the new feedback
  * @return
  */
 View.prototype.checkForNewTeacherAnnotations = function() {
@@ -670,7 +451,7 @@ View.prototype.checkForNewTeacherAnnotations = function() {
 			
 			if(areNewAnnotations) {
 				//there are new annotations so we will automatically open up the show all work
-				this.showAllWork(true, null, null);
+				this.showAllWork();
 			}		
 		}		
 	}

@@ -15,7 +15,6 @@ View.prototype.vleDispatcher = function(type,args,obj){
 	} else if(type=='getUserAndClassInfoCompleted'){
 
 	} else if(type=='processLoadViewStateResponseCompleted'){
-		obj.getAnnotationsToCheckForNewTeacherAnnotations();
 		eventManager.fire('startVLECompleted');
 	} else if(type=='navigationLoadingCompleted'){
 		obj.populateNodeDependencies();
@@ -33,17 +32,13 @@ View.prototype.vleDispatcher = function(type,args,obj){
 		};
 	} else if(type=='retrieveAnnotationsCompleted') {
 		if(args != null && args.length != 0) {
-			if(args[0] == 'displayShowAllWork') {
-				obj.displayShowAllWork();
-			} else if(args[0] == 'checkForNewTeacherAnnotations') {
+			if(args[0] == 'checkForNewTeacherAnnotations') {
 				obj.checkForNewTeacherAnnotations();
 			}
 		}
 	} else if(type=='retrieveProjectMetaDataCompleted') {
-		obj.displayShowAllWork();
 		obj.setProjectPostLevel();
 	} else if(type=='retrieveRunExtrasCompleted') {
-		obj.displayShowAllWork();
 	} else if(type=='ifrmLoaded'){
 		obj.onFrameLoaded();
 	} else if(type=='noteEditorKeyPressed'){
@@ -60,6 +55,8 @@ View.prototype.vleDispatcher = function(type,args,obj){
 		if(obj.isRealTimeEnabled) {
 			obj.getRunStatus();
 		}
+		//Get annotations so we can check if there are any new teacher annotations to notify the student about
+		obj.retrieveAnnotations('checkForNewTeacherAnnotations');
 	} else if (type == 'assetUploaded') {
 		obj.assetUploaded(args[0], args[1], args[2]);
 	} else if (type == 'assetCopiedForReference') {
