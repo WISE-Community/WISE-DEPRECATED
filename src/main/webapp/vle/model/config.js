@@ -8,7 +8,7 @@
  * mode - run (aka student), preview, grading
  * runId - the id of the run
  * runInfoRequestInterval - how often to poll for special events
- * theme - currently only UCCP and WISE are allowed
+ * theme - currently only WISE is allowed
  * runInfoUrl - where to get run info
  * getUserInfoUrl - where to get user information
  * getContentUrl - where the .project file is
@@ -47,7 +47,7 @@ View.prototype.createConfig = function(contentObject) {
 
 		return {
 			isValidTheme:function(theme) {
-				var allowableThemes = ['UCCP', 'WISE'];
+				var allowableThemes = ['WISE'];
 				return allowableThemes.contains(theme);
 			},
 			getConfigParam:function(configParam) {

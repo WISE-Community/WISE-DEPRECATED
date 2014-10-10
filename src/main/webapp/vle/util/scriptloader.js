@@ -538,7 +538,6 @@ var scriptloader = function(){
     	'vle/node/NodeUtils.js': ['vle/node/Node.js'],
     	'vle/node/DrawNode.js': ['vle/node/HtmlNode.js'],
         'vle/node/CustomNode.js': ['vle/node/Node.js'],
-        'vle/node/BlueJNode.js': ['vle/node/Node.js'],
         //'vle/node/DuplicateNode.js': ['vle/node/Node.js', 'vle/node/nodefactory.js'],
         'vle/node/BranchNode.js':['vle/node/Node.js','vle/node/MultipleChoiceNode.js'],
         'vle/ui/vleui.js': ['vle/VLE.js'],

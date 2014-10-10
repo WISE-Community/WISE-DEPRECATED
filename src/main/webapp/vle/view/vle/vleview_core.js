@@ -308,16 +308,6 @@ View.prototype.loadTheme = function(themeName){
 		/* load scripts for specified theme and navMode */
 		scriptloader.loadScripts(currentTheme, document, 'theme', context.eventManager);
 		
-		if (themeName && themeName == "UCCP") { // TODO: move this to UCCP theme setup
-			/* update the project menu links */
-			$("#gotoStudentHomePageLink").attr("href","../../moodle/index.php");
-			$("#quitAndLogoutLink").attr("href","../index.php");
-			$("#goHomeLink").attr("href","../page/index.php");
-			$("#myWorkTD").hide();
-			$("#flaggedWorkTD").hide();
-		} else {
-		}
-		
 		// create and initialize system dialogs
 		var constraintsDialog = $('<div id="constraintsDialog"></div>');
 		$('#w4_vle').append(constraintsDialog);

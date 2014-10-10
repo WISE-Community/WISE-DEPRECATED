@@ -402,22 +402,6 @@ Node.prototype.render = function(contentPanel, studentWork, disable) {
 		this.disableInteractivity(true);
 	}
 
-	if(this.view.config.getConfigParam('theme') == 'UCCP') {
-		/*
-		 * if this is a UCCP project then we will post the current step
-		 * for BlueJ interaction purposes. we need to post the current step
-		 * even when it is not a BlueJ step because we need to know when
-		 * they are not on a BlueJ step.
-		 */
-		this.extraData = "";
-		var blueJProjectPath = this.content.getContentJSON().blueJProjectPath;
-
-		if(blueJProjectPath != null) {
-			this.extraData = blueJProjectPath;
-		}
-		this.view.postCurrentStep(this);
-	}
-	
 	if(preventBackspaceBrowserBack != null) {
 		//prevent the backspace key from causing the browser to move back in navigation
 		this.contentPanel.document.onkeydown = preventBackspaceBrowserBack;
