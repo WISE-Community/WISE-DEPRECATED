@@ -2172,19 +2172,18 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
 									<td>' + stepWorkId + '</td><td>' + visitPostTime + '</td>');
 						}
 						
+						//get the auto graded annotation that has an autoScore for the step work id
+						var autoGradedAutoScoreAnnotation = this.model.annotations.getAnnotationByStepWorkIdTypeField(stepWorkId, 'autoGraded', 'autoScore');
+
 						// get the score annotation for the step work
 						var scoreAnnotation = this.model.annotations.getAnnotationByStepWorkIdType(stepWorkId, 'score'),
-							latestScoreAnnotation = this.getLatestAnnotation(nodeId, workgroupId, 'score'),
 							needsReview = isLatest ? true : false,
 							latestScore = null,
 							scorePostTime = null;
 						
-						if(latestScoreAnnotation !== null) {
-							// get the latest score
-							latestScore = latestScoreAnnotation.value;
-						}
-						
 						if(scoreAnnotation !== null){
+							//there is a teacher score annotation for the student work
+							
 							// get the score
 							score = scoreAnnotation.value;
 							// get the post time for the score
@@ -2194,11 +2193,98 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
 								$('input[type=text]', $thisFeedbackCell).val(score);
 								needsReview = false;
 							}
-						} else if (isLatest && latestScore !== null) {	
-							// get the post time for the score
-							scorePostTime = latestScoreAnnotation.postTime;
-							// set the latest score into the score input
-							$('input[type=text]', $thisFeedbackCell).val(latestScore);
+						} else if(autoGradedAutoScoreAnnotation != null) {
+							//there is an auto graded score for the student work
+
+							//get the annotation value from the auto graded annotation
+							var autoGradedAutoScoreAnnotationValue = this.getLatestAnnotationValueFromValueArray(autoGradedAutoScoreAnnotation, 'autoScore');
+							
+							if(autoGradedAutoScoreAnnotationValue != null) {
+								//get the auto score
+								score = autoGradedAutoScoreAnnotationValue.autoScore;
+								
+								//get the auto graded timestamp
+								scorePostTime = autoGradedAutoScoreAnnotation.postTime;
+								
+								//set the score
+								$('input[type=text]', $thisFeedbackCell).val(score);								
+							}
+						} else if (isLatest) {
+							/*
+							 * this is the latest work for this step and the teacher has
+							 * not scored this specific work and the student work was not
+							 * auto graded so we will display the latest teacher score or
+							 * latest auto graded score from the latest previous work 
+							 * for this step that does have a score
+							 */
+							
+							//get the latest teacher score from any of the previous student work for this step
+							var latestScoreAnnotation = this.getLatestAnnotation(nodeId, workgroupId, 'score');
+							
+							//get the latest auto graded annotation that has an autoScore from any of the previous student work for this step
+							var latestAutoGradedAutoScoreAnnotation = this.getLatestAnnotationWithField(nodeId, workgroupId, [-1], 'autoGraded', 'autoScore');
+							
+							if(latestScoreAnnotation == null && latestAutoGradedAutoScoreAnnotation == null) {
+								/*
+								 * there is no previous teacher score annotation or autoGraded annotation with an autoScore
+								 * so we won't do anything
+								 */
+							} else if(latestScoreAnnotation != null && latestAutoGradedAutoScoreAnnotation == null) {
+								//we have a previous teacher score but no previous auto graded score
+
+								//get the score from the latest teacher score annotation
+								latestScore = latestScoreAnnotation.value;
+								
+								//get the post time from the latest teacher score annotation
+								scorePostTime = latestScoreAnnotation.postTime;
+							} else if(latestScoreAnnotation == null && latestAutoGradedAutoScoreAnnotation != null) {
+								//we have a previous auto graded score but no previous teacher score
+								
+								//get the latest value that has an autoScore from the latest auto graded annotation
+								var autoGradedAnnotationValue = this.getLatestAnnotationValueFromValueArray(latestAutoGradedAutoScoreAnnotation, 'autoScore');
+								
+								if(autoGradedAnnotationValue != null) {
+									//get the auto score from the latest autoGraded annotation
+									latestScore = autoGradedAnnotationValue.autoScore;
+									
+									//get the post time from the latest autoGraded annotation
+									scorePostTime = latestAutoGradedAutoScoreAnnotation.postTime;									
+								}
+							} else if(latestScoreAnnotation != null && latestAutoGradedAutoScoreAnnotation != null) {
+								//we have a previous auto graded score and a previous teacher score
+								
+								//get the post times for the latest teacher score annotation and the latest autoGraded annotation that has an autoScore
+								var latestScoreAnnotationPostTime = latestScoreAnnotation.postTime;
+								var latestAutoGradedAnnotationPostTime = latestAutoGradedAutoScoreAnnotation.postTime;
+								
+								if(latestScoreAnnotationPostTime > latestAutoGradedAnnotationPostTime) {
+									//the teacher score is newer so we will use that
+									
+									//get the score from the latest teacher score annotation
+									latestScore = latestScoreAnnotation.value;
+									
+									//get the post time from the latest teacher score annotation
+									scorePostTime = latestScoreAnnotation.postTime;
+								} else {
+									//the auto graded score is newer so we will use that
+									
+									//get the autoScore value from the latest auto graded annotation
+									var autoGradedAnnotationValue = this.getLatestAnnotationValueFromValueArray(latestAutoGradedAutoScoreAnnotation, 'autoScore');
+									
+									if(autoGradedAnnotationValue != null) {
+										//get the auto score from the latest autoGraded annotation
+										latestScore = autoGradedAnnotationValue.autoScore;
+										
+										//get the post time from the latest autoGraded annotation
+										scorePostTime = latestAutoGradedAutoScoreAnnotation.postTime;									
+									}
+								}
+							}
+							
+							if(latestScore !== null) {
+								//set the latest score into the score input
+								$('input[type=text]', $thisFeedbackCell).val(latestScore);
+							}
 						}
 						
 						var scoreInputId = '';
@@ -2321,6 +2407,9 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
 						var commentAnnotation = this.model.annotations.getAnnotationByStepWorkIdType(stepWorkId, 'comment');
 							comment = null,
 							commentPostTime = null;
+							
+						//get the auto graded annotation that has an autoFeedback for the step work id
+						var autoGradedAutoFeedbackAnnotation = this.model.annotations.getAnnotationByStepWorkIdTypeField(stepWorkId, 'autoGraded', 'autoFeedback');
 						
 						if(commentAnnotation !== null) {
 							//get the comment
@@ -2330,16 +2419,94 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
 							if(comment !== null){
 								needsReview = false;
 							}
+						} else if(autoGradedAutoFeedbackAnnotation != null) {
+							//there is an auto graded feedback for the student work
+
+							//get the annotation value from the auto graded annotation
+							var autoGradedAutoFeedbackAnnotationValue = this.getLatestAnnotationValueFromValueArray(autoGradedAutoFeedbackAnnotation, 'autoFeedback');
+							
+							if(autoGradedAutoFeedbackAnnotationValue != null) {
+								//get the auto feedback
+								comment = autoGradedAutoFeedbackAnnotationValue.autoFeedback;
+								
+								//get the auto graded timestamp
+								commentPostTime = autoGradedAutoFeedbackAnnotation.postTime;
+							}
 						} else {
 							if(isLatest){
+								/*
+								 * this is the latest work for this step and the teacher has
+								 * not commented on this specific work and the student work was not
+								 * auto graded so we will display the latest teacher comment or
+								 * latest auto graded feedback from the latest previous work 
+								 * for this step that does have a comment/feedback
+								 */
+
+								//get the latest teacher comment from any of the previous student work for this step
 								var latestCommentAnnotation = this.getLatestAnnotation(nodeId, workgroupId, 'comment');
-								if(latestCommentAnnotation){
-									// get the post time for the comment
-									commentPostTime = latestCommentAnnotation.postTime;
+								
+								//get the latest auto graded annotation that has autoFeedback from any of the previous student work for this step
+								var latestAutoGradedAutoFeedbackAnnotation = this.getLatestAnnotationWithField(nodeId, workgroupId, [-1], 'autoGraded', 'autoFeedback');
+								
+								if(latestCommentAnnotation == null && latestAutoGradedAutoFeedbackAnnotation == null) {
+									/*
+									 * there is no teacher feedback annotation or autoGraded annotation
+									 * so we won't do anything
+									 */
+								} else if(latestCommentAnnotation != null && latestAutoGradedAutoFeedbackAnnotation == null) {
+									//we have a previous teacher comment but no previous auto graded comment
+
+									//get the comment from the latest teacher comment annotation
 									comment = latestCommentAnnotation.value;
+									
+									//get the post time from the latest teacher comment annotation
+									commentPostTime = latestCommentAnnotation.postTime;
+								} else if(latestCommentAnnotation == null && latestAutoGradedAutoFeedbackAnnotation != null) {
+									//we have a previous auto graded feedback but no previous teacher comment
+									
+									//get the latest value from the latest auto graded annotation
+									var autoGradedAnnotationValue = this.getLatestAnnotationValueFromValueArray(latestAutoGradedAutoFeedbackAnnotation, 'autoFeedback');
+									
+									if(autoGradedAnnotationValue != null) {
+										//get the auto feedback from the latest autoGraded annotation
+										comment = autoGradedAnnotationValue.autoFeedback;
+										
+										//get the post time from the latest autoGraded annotation
+										commentPostTime = latestAutoGradedAutoFeedbackAnnotation.postTime;									
+									}
+								} else if(latestCommentAnnotation != null && latestAutoGradedAutoFeedbackAnnotation != null) {
+									//we have a previous auto graded feedback and a previous teacher comment
+									
+									//get the post times for the latest teacher comment annotation and the latest autoGraded annotation that has autoFeedback
+									var latestCommentAnnotationPostTime = latestCommentAnnotation.postTime;
+									var latestAutoGradedAnnotationPostTime = latestAutoGradedAutoFeedbackAnnotation.postTime;
+									
+									if(latestCommentAnnotationPostTime > latestAutoGradedAnnotationPostTime) {
+										//the teacher comment is newer so we will use that
+										
+										//get the comment from the latest teacher comment annotation
+										comment = latestCommentAnnotation.value;
+										
+										//get the post time from the latest teacher comment annotation
+										commentPostTime = latestCommentAnnotation.postTime;
+									} else {
+										//the auto graded feedback is newer so we will use that
+										
+										//get the autoFeedback value from the latest auto graded annotation
+										var autoGradedAnnotationValue = this.getLatestAnnotationValueFromValueArray(latestAutoGradedAutoFeedbackAnnotation, 'autoFeedback');
+										
+										if(autoGradedAnnotationValue != null) {
+											//get the auto feedback from the latest autoGraded annotation
+											comment = autoGradedAnnotationValue.autoFeedback;
+											
+											//get the post time from the latest autoGraded annotation
+											commentPostTime = latestAutoGradedAutoFeedbackAnnotation.postTime;									
+										}
+									}
 								}
 							}
 						}
+						
 						// set the comment into the textarea
 						if(comment !== null){
 							$('textarea', $thisFeedbackCell).val(comment);
@@ -3722,6 +3889,41 @@ View.prototype.getLatestAnnotation = function(nodeId, workgroupId, type) {
 	if(annotations != null) {
 		//get the latest annotation with the given parameters
 		annotation = annotations.getLatestAnnotation(runId, nodeId, workgroupId, fromWorkgroups, type, stepWorkId);
+	}
+	
+	return annotation;
+};
+
+/**
+ * Get the latest annotation that contains the given field in one of its objects
+ * in its value array
+ * @param nodeId the node id
+ * @param workgroupId the workgroup id
+ * @param fromWorkgroups the from workgroups
+ * @param type the type of annotation
+ * @param field the field to look for in the objects in the value array
+ * @return the latest annotation that has an object in its value array that
+ * contains the given field
+ */
+View.prototype.getLatestAnnotationWithField = function(nodeId, workgroupId, fromWorkgroups, type, field) {
+	var annotation = null;
+	
+	//get the annotations for the run
+	var annotations = this.model.getAnnotations();
+	
+	//get the run id
+	var runId = this.getConfig().getConfigParam('runId');
+	
+	if(fromWorkgroups == null) {
+		//get the teacher workgroup ids
+		fromWorkgroups = this.getUserAndClassInfo().getAllTeacherWorkgroupIds();		
+	}
+	
+	var stepWorkId = null;
+	
+	if(annotations != null) {
+		//get the latest annotation with the given parameters
+		annotation = annotations.getLatestAnnotation(runId, nodeId, workgroupId, fromWorkgroups, type, stepWorkId, field);
 	}
 	
 	return annotation;

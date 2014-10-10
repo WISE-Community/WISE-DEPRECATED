@@ -456,15 +456,18 @@ Annotations.prototype.getAnnotationsByNodeIdAndToWorkgroup = function(nodeId, to
 };
 
 /**
- * Retrieves the latest annotation with the given nodeId and toWorkgroup
+ * Retrieves the latest annotation that matches all the parameters
  * @param runId the id of the run
  * @param nodeId the id of the node
  * @param toWorkgroup the id of the student workgroup
  * @param fromWorkgroups an array of workgroups that we want annotations from
  * @param type the type of annotation
- * @return the latest annotation for the given nodeId and toWorkgroup
+ * @param field (optional) if a field is provided we will require the annotation 
+ * to have an object in its value array that has the given field
+ * e.g. 'autoScore' or 'autoFeedback'
+ * @return the latest annotation that matches all the parameters
  */
-Annotations.prototype.getLatestAnnotation = function(runId, nodeId, toWorkgroup, fromWorkgroups, type, stepWorkId) {
+Annotations.prototype.getLatestAnnotation = function(runId, nodeId, toWorkgroup, fromWorkgroups, type, stepWorkId, field) {
 	var latestAnnotation = null;
 	
 	for(var x=0; x<this.annotationsArray.length; x++) {
@@ -480,7 +483,8 @@ Annotations.prototype.getLatestAnnotation = function(runId, nodeId, toWorkgroup,
 				tempAnnotation.nodeId == nodeId &&
 				tempAnnotation.toWorkgroup == toWorkgroup && 
 				fromWorkgroups.indexOf(parseInt(tempAnnotation.fromWorkgroup)) != -1 &&
-				(type == null || tempAnnotation.type == type)) {
+				(type == null || tempAnnotation.type == type) &&
+				(field == null || this.annotationContainsField(tempAnnotation, field))) {
 
 			//if stepWorkId was passed in, make sure it matches
 			if(stepWorkId == null || (stepWorkId != null && tempAnnotation.stepWorkId == stepWorkId)) {
@@ -505,6 +509,42 @@ Annotations.prototype.getLatestAnnotation = function(runId, nodeId, toWorkgroup,
 	}
 	
 	return latestAnnotation;
+};
+
+
+/**
+ * Check if any of the objects in the value array have a non-null value
+ * for the field
+ * @param annotation the annotation object
+ * @param field the field we are looking for
+ * @return whether any of the objects in the value array have a non-null
+ * value for the field
+ */
+Annotations.prototype.annotationContainsField = function(annotation, field) {
+	var result = false;
+	
+	if(annotation != null) {
+		//get the value of the annotation
+		var value = annotation.value;
+		
+		//check if the value is an array
+		if(Array.isArray(value)) {
+			//loop through all the objects in the array
+			for(var x=0; x<value.length; x++) {
+				//get an object in the array
+				var tempValue = value[x];
+				
+				//check if the object contains a non-null value for the field we are looking for
+				if(tempValue[field] != null) {
+					//the object contains a non-null value for the field
+					result = true;
+					break;
+				}
+			}
+		}
+	}
+	
+	return result;
 };
 
 /**
@@ -631,6 +671,42 @@ Annotations.prototype.getAnnotationByStepWorkIdType = function(stepWorkId, type)
 };
 
 /**
+ * Returns the latest annotation with the matching stepWorkId and type and has an object
+ * in its value array that contains a non-null value for the given field.
+ * @param stepWorkId the id of the stepWork
+ * @param type the type of annotation (score, comment, flag)
+ * @param field we will require the annotation to have an object in its value array
+ * that has the given field
+ * e.g. 'autoScore' or 'autoFeedback'
+ * @return the latest annotation with the matching values or null if not found
+ */
+Annotations.prototype.getAnnotationByStepWorkIdTypeField = function(stepWorkId, type, field) {
+	var annotation = null;
+	
+	/*
+	 * loop through the annotations array backwards so we look
+	 * at the most recent annotations first
+	 */
+	for(var x=this.annotationsArray.length - 1; x>=0; x--) {
+		//get an annotation
+		annotation = this.annotationsArray[x];
+		
+		if(annotation != null) {
+			//check if the parameters match
+			if(annotation.stepWorkId == stepWorkId &&
+					annotation.type == type &&
+					this.annotationContainsField(annotation, field)) {
+				//they match so we will return the annotation
+				return annotation;
+			}			
+		}
+	}
+	
+	//we did not find an annotation that matches
+	return null;
+};
+
+/**
  * Get the annotation value for a given step work id, node state id and annotation
  * type
  * 
@@ -639,25 +715,26 @@ Annotations.prototype.getAnnotationByStepWorkIdType = function(stepWorkId, type)
  * "value": [
  *    {
  *       "maxAutoScore": 4,
+ *       "concepts": "",
+ *       "autoScore": 0,
+ *       "nodeStateId": 1412029344000,
+ *       "autoFeedback": "bad 0"
+ *    },
+ *    {
+ *       "maxAutoScore": 4,
  *       "concepts": "1,2,3,4",
  *       "autoScore": 4,
  *       "nodeStateId": 1412029354000,
  *       "autoFeedback": "good 4"
- *    },
- *    {
- *       "maxAutoScore": 4,
- *       "concepts": "",
- *       "autoScore": 0,
- *       "autoFeedback": "bad 0"
  *    }
  * ]
  * but we will actually only return one of the objects in the array like this
  *    {
  *       "maxAutoScore": 4,
- *       "concepts": "1,2,3,4",
- *       "autoScore": 4,
- *       "nodeStateId": 1412029354000,
- *       "autoFeedback": "good 4"
+ *       "concepts": "",
+ *       "autoScore": 0,
+ *       "nodeStateId": 1412029344000,
+ *       "autoFeedback": "bad 0"
  *    }
  * The usage of the field name "value" is confusing due to the fact that we originally
  * only set the value field to a number or string but later had to expand it to allow
