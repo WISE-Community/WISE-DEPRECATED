@@ -402,7 +402,7 @@ Node.prototype.render = function(contentPanel, studentWork, disable) {
 		this.disableInteractivity(true);
 	}
 
-	if(preventBackspaceBrowserBack != null) {
+	if(typeof preventBackspaceBrowserBack != 'undefined' && preventBackspaceBrowserBack != null) {
 		//prevent the backspace key from causing the browser to move back in navigation
 		this.contentPanel.document.onkeydown = preventBackspaceBrowserBack;
 	}
