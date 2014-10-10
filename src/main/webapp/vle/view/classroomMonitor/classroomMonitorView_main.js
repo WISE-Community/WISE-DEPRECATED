@@ -2551,6 +2551,12 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
 						} else {
 							// add revision class to row
 							$stepWork.addClass('revision');
+							
+							//disable the score input if this is not the latest revision
+							$('input[type=text]', $thisFeedbackCell).attr('disabled', 'disabled');
+							
+							//disable the comment textarea if this is not the latest revision
+							$('textarea', $thisFeedbackCell).attr('disabled', 'disabled');
 						}
 						
 						// insert flagged, latest and needs review cells
