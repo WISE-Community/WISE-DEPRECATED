@@ -391,6 +391,7 @@ var scriptloader = function(){
                  'vle/view/authoring/authorview_tags.js',
                  'vle/view/authoring/authorview_import.js',
                  'vle/view/authoring/authorview_icons.js',
+                 'vle/view/authoring/authorview_hint.js',
                  'vle/view/authoring/cleaning/authorview_clean_main.js',
                  'vle/view/authoring/cleaning/authorview_clean_parts.js',
                  'vle/view/authoring/cleaning/authorview_clean_problem.js',
