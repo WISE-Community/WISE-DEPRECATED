@@ -264,7 +264,7 @@ img.notification {
 /* tooltip styling. by default the element to be styled is .tooltip  */
 .tooltip {
 	display:none;
-	/*background:transparent url('../../jquery/css/jquerytools/black_arrow_132w.png');
+	/*background:transparent url('../../lib/jquery/css/jquerytools/black_arrow_132w.png');
 	font-size:12px;
 	height:60px;
 	width:176px;
@@ -275,7 +275,7 @@ img.notification {
 }
 
 /*.tooltip.bottom {
-	background:transparent url('../../jquery/css/jquerytools/black_arrow_132w_bottom.png');
+	background:transparent url('../../lib/jquery/css/jquerytools/black_arrow_132w_bottom.png');
 	padding-top:40px;
 	height:45px;
 }*/

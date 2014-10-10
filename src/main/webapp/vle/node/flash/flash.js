@@ -93,7 +93,7 @@ Flash.prototype.render = function() {
 	attributes.id = "flashContent";
 	attributes.name = "flashContent";
 	attributes.styleclass = "flashContent";
-	swfobject.embedSWF(activity_uri, "alternateContent", width, height, minPlayerVersion, "../../swfobject/expressInstall.swf", flashvars, params, attributes);	
+	swfobject.embedSWF(activity_uri, "alternateContent", width, height, minPlayerVersion, "../../util/swfobject/expressInstall.swf", flashvars, params, attributes);	
 };
 
 /**

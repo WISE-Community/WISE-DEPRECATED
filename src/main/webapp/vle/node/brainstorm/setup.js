@@ -10,13 +10,13 @@ var coreMinScripts = [
 var studentVLEScripts = [
     scriptloader.jquerySrc,
     scriptloader.jqueryUISrc,
-	'vle/jquery/js/jsonplugin.js',
+	'vle/lib/jquery/js/jsonplugin.js',
 	'vle/node/common/nodehelpers.js',
 	'vle/util/helperfunctions.js',
 	'vle/node/brainstorm/brainstorm.js',
 	'vle/node/brainstorm/brainstormstate.js',
 	'vle/model/nodevisit.js',
-	'vle/js/tinymce4/js/tinymce/tinymce.min.js'
+	'vle/lib/tinymce4/js/tinymce/tinymce.min.js'
 ];
 
 var authorScripts = [

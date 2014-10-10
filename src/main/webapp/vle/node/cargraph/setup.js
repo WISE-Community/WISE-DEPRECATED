@@ -10,17 +10,17 @@ var coreMinScripts = [
 var studentVLEScripts = [
 	//scriptloader.jquerySrc,
 	//scriptloader.jqueryUISrc,
-	//'vle/jquery/js/jquery-ui-1.8.17.custom.min.js',
+	//'vle/lib/jquery/js/jquery-ui-1.8.17.custom.min.js',
 	'vle/node/cargraph/cargraph.js',
 	'vle/node/cargraph/cargraphstate.js',	
-	'vle/jquery/js/flot/excanvas.js',
-	'vle/jquery/js/flot/jquery.js',
-	'vle/jquery/js/flot/jquery.flot.js',
-	'vle/jquery/js/flot/jquery.flot.crosshair.js'	
+	'vle/lib/jquery/js/flot/excanvas.js',
+	'vle/lib/jquery/js/flot/jquery.js',
+	'vle/lib/jquery/js/flot/jquery.flot.js',
+	'vle/lib/jquery/js/flot/jquery.flot.crosshair.js'	
 ];
 
 var css = [
-	'vle/jquery/css/custom-theme/jquery-ui-1.8.7.custom.css'
+	'vle/lib/jquery/css/custom-theme/jquery-ui-1.8.7.custom.css'
 ];
 
 var authorScripts = [
@@ -30,14 +30,14 @@ var authorScripts = [
 var gradingScripts = [
 	'vle/node/cargraph/cargraphstate.js',
 	'vle/node/cargraph/cargraph.js',
-	'vle/jquery/js/flot/jquery.flot.js'		
+	'vle/lib/jquery/js/flot/jquery.flot.js'		
 ];
 
 var dependencies = [
 	{child:"vle/node/cargraph/CarGraphNode.js", parent:["vle/node/Node.js"]},
 	{child:"vle/node/cargraph/cargraph.js", parent:["vle/node/cargraph/cargraphstate.js"]},
-	{child:"vle/jquery/js/flot/jquery.flot.js", parent:["vle/jquery/js/flot/jquery.js"]},
-	{child:"vle/jquery/js/flot/jquery.flot.crosshair.js", parent:["vle/jquery/js/flot/jquery.flot.js"]}	
+	{child:"vle/lib/jquery/js/flot/jquery.flot.js", parent:["vle/lib/jquery/js/flot/jquery.js"]},
+	{child:"vle/lib/jquery/js/flot/jquery.flot.crosshair.js", parent:["vle/lib/jquery/js/flot/jquery.flot.js"]}	
 ];
 
 var nodeClasses = [

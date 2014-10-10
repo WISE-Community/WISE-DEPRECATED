@@ -17,7 +17,7 @@ var studentVLEScripts = [
 	scriptloader.jqueryUISrc,
 	'vle/node/mysystem/mysystem_complete.js',
 	'vle/node/mysystem/mysystem_print.js',
-	'vle/jquery/js/jsonplugin.js'
+	'vle/lib/jquery/js/jsonplugin.js'
 ];
 
 var authorScripts = [

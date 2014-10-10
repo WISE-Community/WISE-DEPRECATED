@@ -11,8 +11,7 @@ var studentVLEScripts = [
    	scriptloader.jquerySrc,
 	'vle/node/assessmentlist/assessmentlist.js',
 	'vle/node/assessmentlist/assessmentliststate.js',
-	'vle/model/Annotation.js',
-	'vle/model/Annotations.js',
+	'vle/model/Annotation.js'
 ];
 
 var authorScripts = [

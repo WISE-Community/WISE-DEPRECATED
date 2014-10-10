@@ -1,7 +1,6 @@
 /*
- * HtmlNode
+ * HtmlNode for rendering display pages (instructions, informations, images, etc)
  */
-
 HtmlNode.prototype = new Node();
 HtmlNode.prototype.constructor = HtmlNode;
 HtmlNode.prototype.parent = Node.prototype;
@@ -23,11 +22,6 @@ function HtmlNode(nodeType, view) {
 	this.selfRendering = true;
 }
 
-HtmlNode.prototype.setHtmlContent = function(htmlContent) {
-	//update the htmlContent attribute that contains the html
-	this.content.setContent(htmlContent);
-};
-
 /**
  * Takes in a state JSON object and returns an HTMLSTATE object
  * @param nodeStatesJSONObj a state JSON object
@@ -37,26 +31,6 @@ HtmlNode.prototype.parseDataJSONObj = function(stateJSONObj) {
 	return HTMLSTATE.prototype.parseDataJSONObj(stateJSONObj);
 };
 
-
-HtmlNode.prototype.exportNode = function() {
-	var exportXML = "";
-	
-	exportXML += this.exportNodeHeader();
-	
-	exportXML += "<content><![CDATA[";
-	exportXML += this.element.getElementsByTagName("content")[0].firstChild.nodeValue;
-	exportXML += "]]></content>";
-	
-	exportXML += this.exportNodeFooter();
-	
-	return exportXML;
-};
-
-HtmlNode.prototype.doNothing = function() {
-	window.frames["ifrm"].document.open();
-	window.frames["ifrm"].document.write(this.injectBaseRef(this.elementText));
-	window.frames["ifrm"].document.close();
-};
 
 /**
  * Not used

@@ -627,8 +627,8 @@ public class VLEGetSpecialExport {
 					Vector<String> filesToCopy = new Vector<String>();
 					filesToCopy.add(wiseBaseDir + "/vle/model/content.js");
 					filesToCopy.add(wiseBaseDir + "/vle/util/helperfunctions.js");
-					filesToCopy.add(wiseBaseDir + "/vle/jquery/js/flot/jquery.flot.js");
-					filesToCopy.add(wiseBaseDir + "/vle/jquery/js/flot/jquery.js");
+					filesToCopy.add(wiseBaseDir + "/vle/lib/jquery/js/flot/jquery.flot.js");
+					filesToCopy.add(wiseBaseDir + "/vle/lib/jquery/js/flot/jquery.js");
 					filesToCopy.add(wiseBaseDir + "/vle/node/Node.js");
 					filesToCopy.add(wiseBaseDir + "/vle/model/nodevisit.js");
 					filesToCopy.add(wiseBaseDir + "/vle/node/sensor/sensor.js");
@@ -1130,7 +1130,7 @@ public class VLEGetSpecialExport {
 	private void copyFileToFolder(String sourcePath, File folder) {
 		/*
 		 * get the file name
-		 * if the path is /Users/geoffreykwan/dev/apache-tomcat-7.0.28/webapps/wise/vle/jquery/js/flot/jquery.js
+		 * if the path is /Users/geoffreykwan/dev/apache-tomcat-7.0.28/webapps/wise/vle/lib/jquery/js/flot/jquery.js
 		 * the file name will be
 		 * jquery.js
 		 */

@@ -15,7 +15,6 @@ View.prototype.vleDispatcher = function(type,args,obj){
 	} else if(type=='getUserAndClassInfoCompleted'){
 
 	} else if(type=='processLoadViewStateResponseCompleted'){
-		obj.getAnnotationsToCheckForNewTeacherAnnotations();
 		eventManager.fire('startVLECompleted');
 	} else if(type=='navigationLoadingCompleted'){
 		obj.populateNodeDependencies();
@@ -33,17 +32,13 @@ View.prototype.vleDispatcher = function(type,args,obj){
 		};
 	} else if(type=='retrieveAnnotationsCompleted') {
 		if(args != null && args.length != 0) {
-			if(args[0] == 'displayShowAllWork') {
-				obj.displayShowAllWork();
-			} else if(args[0] == 'checkForNewTeacherAnnotations') {
+			if(args[0] == 'checkForNewTeacherAnnotations') {
 				obj.checkForNewTeacherAnnotations();
 			}
 		}
 	} else if(type=='retrieveProjectMetaDataCompleted') {
-		obj.displayShowAllWork();
 		obj.setProjectPostLevel();
 	} else if(type=='retrieveRunExtrasCompleted') {
-		obj.displayShowAllWork();
 	} else if(type=='ifrmLoaded'){
 		obj.onFrameLoaded();
 	} else if(type=='noteEditorKeyPressed'){
@@ -60,6 +55,8 @@ View.prototype.vleDispatcher = function(type,args,obj){
 		if(obj.isRealTimeEnabled) {
 			obj.getRunStatus();
 		}
+		//Get annotations so we can check if there are any new teacher annotations to notify the student about
+		obj.retrieveAnnotations('checkForNewTeacherAnnotations');
 	} else if (type == 'assetUploaded') {
 		obj.assetUploaded(args[0], args[1], args[2]);
 	} else if (type == 'assetCopiedForReference') {
@@ -310,16 +307,6 @@ View.prototype.loadTheme = function(themeName){
 		
 		/* load scripts for specified theme and navMode */
 		scriptloader.loadScripts(currentTheme, document, 'theme', context.eventManager);
-		
-		if (themeName && themeName == "UCCP") { // TODO: move this to UCCP theme setup
-			/* update the project menu links */
-			$("#gotoStudentHomePageLink").attr("href","../../moodle/index.php");
-			$("#quitAndLogoutLink").attr("href","../index.php");
-			$("#goHomeLink").attr("href","../page/index.php");
-			$("#myWorkTD").hide();
-			$("#flaggedWorkTD").hide();
-		} else {
-		}
 		
 		// create and initialize system dialogs
 		var constraintsDialog = $('<div id="constraintsDialog"></div>');

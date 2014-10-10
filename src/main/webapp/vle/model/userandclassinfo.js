@@ -621,7 +621,7 @@ View.prototype.parseUserAndClassInfo = function(contentObject) {
 	if (contentObject != null) {
 		contentObjectJSON = contentObject.getContentJSON();
 	} else {
-		contentObjectJSON = {};
+		contentObjectJSON = {"myUserInfo":{"userName":"PreviewUser One (PreviewUserO0101)"}};
 	}
 	var classInfoJSON;
 	var myUserInfo;
