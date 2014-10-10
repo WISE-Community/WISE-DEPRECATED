@@ -42,7 +42,10 @@ public final class Template {
 		JSONObject master = getSequenceTemplate("master", "Master");
 		ArrayList<JSONObject> nodes = new ArrayList<JSONObject>();
 		ArrayList<JSONObject> sequences = new ArrayList<JSONObject>();
+		JSONObject seq_1 = getSequenceTemplate("seq_1", "Activity 1");
+		master.getJSONArray("refs").put("seq_1");
 		sequences.add(master);
+		sequences.add(seq_1);
 		project.put("autoStep", true);
 		project.put("stepLevelNum", false);
 		project.put("stepTerm", "Step");
