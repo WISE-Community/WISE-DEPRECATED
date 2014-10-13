@@ -232,10 +232,11 @@ View.prototype.closeOnStepSaved = function(success){
 		 * so we need to replace it with the content that does not have
 		 * the injected contentBaseUrl
 		 */
-		this.activeNode.content.setContent(this.preservedContentString);
-		
-		this.activeNode.baseHtmlContent = undefined;
-		this.activeNode = undefined;
+		if (this.activeNode) {
+			this.activeNode.content.setContent(this.preservedContentString);
+			this.activeNode.baseHtmlContent = undefined;
+			this.activeNode = undefined;			
+		}
 		this.activeContent = undefined;
 		this.activeTA = undefined;
 		this.preservedContent = undefined;
@@ -488,11 +489,13 @@ View.prototype.insertCommonComponents = function() {
 };
 
 View.prototype.cleanupCommonComponents = function() {
-	var commonComponents = this[this.resolveType(this.activeNode.type)].getCommonComponents();
-	if(commonComponents) {
-		for(var x=0; x<commonComponents.length; x++) {
-			this['cleanup' + commonComponents[x]]();
-		}		
+	if (this.activeNode && this.resolveType(this.activeNode.type)) {
+		var commonComponents = this[this.resolveType(this.activeNode.type)].getCommonComponents();
+		if(commonComponents) {
+			for(var x=0; x<commonComponents.length; x++) {
+				this['cleanup' + commonComponents[x]]();
+			}		
+		}
 	}
 };
 
