@@ -252,6 +252,22 @@ public interface ProjectService {
 	 * @return List<Project> - list of projects
 	 */
 	public List<Project> getProjectListByTagNames(Set<String> tagNames);
+	
+	/**
+	 * Given a partial author name (e.g. "hiro", "hiroki"), returns a list of projects
+	 * that were authored by that person
+	 * @param authorName<String> partial or full author name
+	 * @return List<Project> - list of projects
+	 */
+	public List<Project> getProjectListByAuthorName(String authorName);
+	
+	/**
+	 * Given a partial title (e.g. "Global", "Global Climate"), returns a list of projects
+	 * that match that title
+	 * @param projectLookupValue <String> partial or full project title
+	 * @return List<Project> - list of projects
+	 */
+	public List<Project> getProjectListByTitle(String title);
 
 	/**
 	 * Given a <code>String</code> and a <code>Project</code> adds the

@@ -612,6 +612,19 @@ public class ProjectServiceImpl implements ProjectService {
 	public List<Project> getProjectListByTagNames(Set<String> tagNames) {
 		return this.projectDao.getProjectListByTagNames(tagNames);
 	}
+	
+	/**
+	 * @see org.wise.portal.service.project.ProjectService#getProjectListByAuthor(java.lang.String)
+	 */
+	public List<Project> getProjectListByAuthorName(String authorName) {
+		return this.projectDao.getProjectListByAuthorName(authorName);
+	}
+	
+	@Override
+	public List<Project> getProjectListByTitle(String title) {
+		return this.projectDao.getProjectListByTitle(title);
+	}
+
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#getProjectCopies(java.lang.Long)

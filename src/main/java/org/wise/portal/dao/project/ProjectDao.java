@@ -26,7 +26,6 @@ package org.wise.portal.dao.project;
 import java.util.List;
 import java.util.Set;
 
-
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.project.FamilyTag;
@@ -111,6 +110,22 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 */
 	public List<T> getProjectListByTagNames(Set<String> tagNames);
 	
+	/**
+	 * Given a partial author name (e.g. "hiro", "hiroki"), returns a list of projects
+	 * that were authored by that person
+	 * @param authorName<String> partial or full author name
+	 * @return List<Project> - list of projects
+	 */
+	public List<Project> getProjectListByAuthorName(String authorName);
+
+	/**
+	 * Given a partial title (e.g. "Global", "Global Climate"), returns a list of projects
+	 * that match that title
+	 * @param projectLookupValue <String> partial or full project title
+	 * @return List<Project> - list of projects
+	 */
+	public List<Project> getProjectListByTitle(String title);
+
 	/**
 	 * Retrieves and returns a <code>Project</code> from the data store without
 	 * populating its metadata. This method should only be called when the use of

@@ -61,10 +61,17 @@ public class ManageAllProjectsController {
 			HttpServletResponse response) throws Exception {
 		// separate calls to project services to get internal and external projects
 		List<Project> internalProjectList = new ArrayList<Project>();
-		// check if projectId was passed in
-		String projectIdStr = request.getParameter("projectId");
-		if (projectIdStr != null) {
-			internalProjectList.add(projectService.getById(Long.valueOf(projectIdStr)));
+		// check if projectLookupType was passed in, can be ["id","author","title"]
+		String projectLookupType = request.getParameter("projectLookupType");
+		if (projectLookupType != null) {
+			String projectLookupValue = request.getParameter("projectLookupValue");
+			if ("id".equals(projectLookupType)) {
+				internalProjectList.add(projectService.getById(Long.valueOf(projectLookupValue)));
+			} else if ("author".equals(projectLookupType)) {
+				internalProjectList.addAll(projectService.getProjectListByAuthorName(projectLookupValue));
+			} else if ("title".equals(projectLookupType)) {
+				internalProjectList.addAll(projectService.getProjectListByTitle(projectLookupValue));
+			}
 		} else {
 			internalProjectList.addAll(projectService.getAdminProjectList());
 		}

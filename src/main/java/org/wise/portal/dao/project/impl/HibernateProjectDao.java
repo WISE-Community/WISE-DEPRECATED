@@ -184,6 +184,33 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	}
 	
 	/**
+	 * @see org.wise.portal.dao.project.ProjectDao#getProjectListByAuthorName(java.lang.String)
+	 */
+	@Override
+	public List<Project> getProjectListByAuthorName(String authorName) {
+		List<Project> projects = (List<Project>) this
+				.getHibernateTemplate()
+				.findByNamedParam(
+						"from ProjectImpl as project where project.metadata.author like :authorName",
+						"authorName", "%"+authorName+"%");
+		return projects;
+	}
+
+	/**
+	 * @see org.wise.portal.dao.project.ProjectDao#getProjectListByTitle(java.lang.String)
+	 */
+	@Override
+	public List<Project> getProjectListByTitle(String title) {
+		List<Project> projects = (List<Project>) this
+				.getHibernateTemplate()
+				.findByNamedParam(
+						"from ProjectImpl as project where project.name like :title",
+						"title", "%"+title+"%");
+		return projects;
+	}
+
+	
+	/**
 	 * @see org.wise.portal.dao.project.ProjectDao#getProjectWithoutMetadata(java.lang.Long)
 	 */
 	public Project getProjectWithoutMetadata(Long projectId){

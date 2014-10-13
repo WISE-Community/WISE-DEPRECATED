@@ -108,12 +108,15 @@
 								<spring:message code='admin.index.projectManagement' />
 							</div>
 							<div class="sectionContent">
-								<spring:message code='admin.index.manageByProjectId' />
-								:
-								<form action="project/manageallprojects.html" method="GET"
-									style="display: inline">
-									<input type="text" name="projectId" size="5"></input><input
-										type="Submit" value="Go"></input>
+								<spring:message code='admin.index.manageProjectBy' />
+								<form style="display:inline" action="project/manageallprojects.html" method="GET">								
+									<select name="projectLookupType" id="projectLookupType">
+										<option value="id"><spring:message code='id' /></option>
+										<option value="title"><spring:message code='title' /></option>
+										<option value="author"><spring:message code='author' /></option>
+									</select>
+									<input type="text" name="projectLookupValue" size="20"></input>
+									<input type="Submit" value="Go"></input>
 								</form>
 								<br />
 								<h5>
