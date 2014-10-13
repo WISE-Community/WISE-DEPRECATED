@@ -13,6 +13,19 @@
 	media="screen" rel="stylesheet" type="text/css" />
 
 <title><spring:message code="wiseAdmin" /></title>
+<script type="text/javascript">
+function validateForm() {
+	debugger;
+	if ("id" == $("#projectLookupType :selected").val()) {
+		// make sure id is numeric
+		if (!$.isNumeric($("#projectLookupValue").val())) {
+			alert("Please enter a numeric Project ID value.");
+			return false;
+		}
+	}
+	return true;
+}
+</script>
 </head>
 
 <body>
@@ -109,13 +122,13 @@
 							</div>
 							<div class="sectionContent">
 								<spring:message code='admin.index.manageProjectBy' />
-								<form style="display:inline" action="project/manageallprojects.html" method="GET">								
+								<form style="display:inline" id="lookupProjectForm" action="project/manageallprojects.html" method="GET" onsubmit="return validateForm()">								
 									<select name="projectLookupType" id="projectLookupType">
 										<option value="id"><spring:message code='id' /></option>
 										<option value="title"><spring:message code='title' /></option>
 										<option value="author"><spring:message code='author' /></option>
 									</select>
-									<input type="text" name="projectLookupValue" size="20"></input>
+									<input type="text" name="projectLookupValue" id="projectLookupValue" size="20"></input>
 									<input type="Submit" value="Go"></input>
 								</form>
 								<br />

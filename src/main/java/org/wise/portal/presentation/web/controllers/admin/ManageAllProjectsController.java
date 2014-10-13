@@ -66,7 +66,7 @@ public class ManageAllProjectsController {
 		if (projectLookupType != null) {
 			String projectLookupValue = request.getParameter("projectLookupValue");
 			if ("id".equals(projectLookupType)) {
-				internalProjectList.add(projectService.getById(Long.valueOf(projectLookupValue)));
+				internalProjectList.add(projectService.getById(Long.valueOf(projectLookupValue.trim())));
 			} else if ("author".equals(projectLookupType)) {
 				internalProjectList.addAll(projectService.getProjectListByAuthorName(projectLookupValue));
 			} else if ("title".equals(projectLookupType)) {
