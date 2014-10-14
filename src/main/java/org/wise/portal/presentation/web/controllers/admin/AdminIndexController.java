@@ -25,6 +25,7 @@ package org.wise.portal.presentation.web.controllers.admin;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,6 +61,9 @@ public class AdminIndexController {
 	
 	@Autowired
 	private PortalService portalService;
+	
+	@Autowired
+	private Properties wiseProperties;
 
 	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -78,11 +82,9 @@ public class AdminIndexController {
 			e.printStackTrace();
 		}
 
-		try {
-			// now add local (this) WISE Version to ModelAndView
-		} catch (Exception e) {
-		}		
-		
+		// add if this WISE instance allows batch creation of user accounts
+		modelAndView.addObject("isBatchCreateUserAccountsEnabled", Boolean.valueOf(wiseProperties.getProperty("isBatchCreateUserAccountsEnabled", "false")));
+
 		// get latest WISE info from master location
 		String globalWISEVersionJSONString = retrieveGlobalWISEVersionJSONString();
 		try {

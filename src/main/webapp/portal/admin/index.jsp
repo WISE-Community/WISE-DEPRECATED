@@ -87,6 +87,12 @@ function validateForm() {
 								<a href="account/enabledisableuser.html"><spring:message
 										code='admin.index.enableDisableUser' /></a>
 							</h5>
+							<c:if test="${isBatchCreateUserAccountsEnabled}">
+								<h5>
+									<a href="account/batchcreateuseraccounts.html"><spring:message
+											code='admin.index.batchCreateUserAccounts' /></a>
+								</h5>
+							</c:if>
 						</div>
 
 						<div class="sectionHead">
@@ -113,6 +119,7 @@ function validateForm() {
 									href='run/findprojectrunsbyrunid.html'><spring:message
 										code='run_id' /></a>
 							</h5>
+							
 						</div>
 
 
