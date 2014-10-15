@@ -71,8 +71,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.publishProject();
 	} else if(type=='previewProject'){
 		obj.previewProject();
-	} else if(type=='startPreview'){
-		obj.startPreview(args[0]);
 	} else if(type=='whoIsEditing'){
 		obj.getEditors();
 	} else if(type=='editProjectSubmit'){

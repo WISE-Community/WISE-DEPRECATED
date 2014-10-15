@@ -1018,16 +1018,6 @@ View.prototype.previewProject = function(){
 };
 
 /**
- * The opened vle window is ready, start the loading of the project in the vle
- * by firing the startpreview event in the given eventManager with a custom object
- * of name:value pairs that match that of the config object in the vle @see config.js
- */
-View.prototype.startPreview = function(em){
-	var obj = {'mode':'standaloneauthorpreview','getContentUrl':this.getProject().getUrl(),'getContentBaseUrl':this.getProject().getContentBase()};
-	this.startVLEFromParams(obj);
-};
-
-/**
  * Retrieves the project name and sets global path and name, then
  * loads the project into the authoring tool.
  */

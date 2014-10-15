@@ -5,6 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
 <title>WISE</title>
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 
 <script type="text/javascript">
 var contentUrl = "${contentUrl}";

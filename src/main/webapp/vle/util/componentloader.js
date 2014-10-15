@@ -314,7 +314,6 @@ var componentloader = function(em, sl){
 				'closeOnStepSaved':[null,null], 
 				'closeStep':[null,null], 
 				'previewProject':[null,null], 
-				'startPreview':[null,null], 
 				'maxScoreUpdated':[null,null],
 				'postLevelChanged':[null,null], 
 				'setLastEdited':[null,null], 
@@ -419,7 +418,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('exportProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('editProjectFile', view.authorDispatcher, view);
 					view.eventManager.subscribe('previewProject', view.authorDispatcher, view);
-					view.eventManager.subscribe('startPreview', view.authorDispatcher, view);
 					view.eventManager.subscribe('whoIsEditing', view.authorDispatcher, view);
 					view.eventManager.subscribe('authorWindowScrolled', view.authorDispatcher, view);
 					view.eventManager.subscribe('previewFrameLoaded', view.authorDispatcher, view);
