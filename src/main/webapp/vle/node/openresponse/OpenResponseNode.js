@@ -62,6 +62,11 @@ OpenResponseNode.prototype.getCriteriaValue = function() {
 						// get the CRater/Henry score 
 						result = nodeAnnotation.value[0].score;
 					}
+				} else if(nodeAnnotation.type == 'autoGraded') {
+					if (nodeAnnotation.value != null && nodeAnnotation.value[0] != null && nodeAnnotation.value[0].autoScore != null) {
+						//get the auto score 
+						result = nodeAnnotation.value[0].autoScore;
+					}
 				}
 			}
 		}
