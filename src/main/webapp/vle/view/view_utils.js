@@ -2451,7 +2451,7 @@ $.valHooks.textarea = {
  * Ex: "Hello {{studentNames}}! You got a {{autoGradedScore}}" => "Hello Hiroki & Geoff! You got a 3!"
  */
 View.prototype.replaceWISEVariables = function(text) {
-	if (text.indexOf("{{studentFirstNames}}") >= 0) {
+	if (text != null && text.indexOf("{{studentFirstNames}}") >= 0) {
 		var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
 		var studentFirstNamesArray = this.getUserAndClassInfo().getStudentFirstNamesByWorkgroupId(workgroupId);
 		var studentFirstNames = studentFirstNamesArray.join(' & ');
