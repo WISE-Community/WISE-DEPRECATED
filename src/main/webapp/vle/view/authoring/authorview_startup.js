@@ -25,6 +25,7 @@ View.prototype.startAuthorMode = function(url, command, relativeProjectUrl, proj
 	this.minifierUrl = this.portalUrl;
 	this.mode = "portal";
 	this.authoringMode = true;
+	this.notificationManager.setMode('authoring');
 	
 	this.model = new AuthoringModel();
 
@@ -216,14 +217,16 @@ View.prototype.getCurriculumBaseUrlSuccess = function(t,x,o){
  */
 View.prototype.onAuthoringToolReady = function(){
 	var view = this;
-	notificationManager.setMode('authoring');
 	$('#centeredDiv').show();
 	$('#coverDiv').hide();
 	$('#overlay').hide();
 	
 	// insert i18n text and tooltips/help items into DOM
 	this.insertTranslations("main", function(){ view.insertTooltips(); });
-	//clearInterval(window.loadingInterval);
+	
+	if (this.getProject() && !this.getProject().getStartNodeId()) {
+		$("#authorToolLinks").effect("highlight", {}, 3000);
+	}
 };
 
 //used to notify scriptloader that this script has finished loading

@@ -1651,17 +1651,9 @@ View.prototype.onProjectLoaded = function(){
 			this.disengageSelectMode(-1);
 		};
 	
-		/*if(this.project && this.project.useAutoStep()==true){
-			document.getElementById('autoStepCheck1').checked = true;
-		} else {
-			document.getElementById('autoStepCheck1').checked = false;
-		};*/
-	
 		if(this.getProject() && this.getProject().useStepLevelNumbering()==true){
-			//document.getElementById('stepLevel').checked = true;
 			document.getElementById('numberStepSelect').options[1].selected = true;
 		} else {
-			//document.getElementById('stepLevel').checked = false;
 			document.getElementById('numberStepSelect').options[0].selected = true;
 		};
 	
@@ -1739,7 +1731,6 @@ View.prototype.onProjectLoaded = function(){
 		}
 		
 		this.premadeCommentLists = null;
-		
 		this.notificationManager.notify("Loaded Project ID: " + this.portalProjectId, 3);
 	}
 };
