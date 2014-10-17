@@ -100,7 +100,7 @@ View.prototype.displayHint = function(){
 			}).on( "dialogbeforeclose", {view:currentNode.view}, function(event, ui) {
 				// check if isMustViewAllPartsBeforeClosing is true. If true, check if this is the first time they view the hints, and student has viewed all parts.
 				var currHints = event.data.view.getCurrentNode().getHints();
-				if ($(this).data("uiDialog").isOpen() && currHints && currHints.isMustViewAllPartsBeforeClosing && event.data.view.getState()) {
+				if ($("#hintsPanel").dialog("isOpen") && currHints && currHints.isMustViewAllPartsBeforeClosing && event.data.view.getState()) {
 					
 					var studentHasSeenAllParts = false;
 					var nodeVisitsForThisNode = event.data.view.getState().getNodeVisitsByNodeId(event.data.view.getCurrentNode().id);
@@ -139,7 +139,7 @@ View.prototype.displayHint = function(){
 				};
 				
 			    // before the dialog closes, save hintstate
-		    	if ($(this).data("uiDialog").isOpen()) {	    		    		
+		    	if ($("#hintsPanel").dialog("isOpen")) {	    		    		
 		    		var hintState = new HINTSTATE({"action":"hintclosed","nodeId":event.data.view.getCurrentNode().id});
 		    		event.data.view.pushHintState(hintState);
 		    		//$('#hintsHeader').html('&nbsp').addClass('visited');
