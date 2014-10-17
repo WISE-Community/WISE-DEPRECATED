@@ -224,7 +224,8 @@ View.prototype.onAuthoringToolReady = function(){
 	// insert i18n text and tooltips/help items into DOM
 	this.insertTranslations("main", function(){ view.insertTooltips(); });
 	
-	if (this.getProject() && !this.getProject().getStartNodeId()) {
+	// highlight link to instructions if project is not opened or if project has no start node
+	if (!this.getProject() || (this.getProject() && !this.getProject().getStartNodeId())) {
 		$("#authorToolLinks").effect("highlight", {}, 3000);
 	}
 };
