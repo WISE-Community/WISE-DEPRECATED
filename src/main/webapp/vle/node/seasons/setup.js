@@ -34,8 +34,8 @@ var studentVLEScripts = [
      * 'vle/node/quiz/quizstate.js'
   */
 	'vle/node/seasons/seasonsstate.js',
-	'vle/lib/jquery/js/jquery-1.6.1.min.js',
-	'vle/lib/jquery/js/jquery-ui-1.8.17.custom.min.js'
+	'vle/lib/jquery/js/jquery-2.1.1.min.js',
+	'vle/lib/jquery/js/jquery-ui-1.10.0.custom.min.js'
 ];
 
 var authorScripts = [
