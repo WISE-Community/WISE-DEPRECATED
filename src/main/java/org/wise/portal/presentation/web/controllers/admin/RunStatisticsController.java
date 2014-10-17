@@ -55,8 +55,6 @@ public class RunStatisticsController {
 	
 	private final static String RUNS_WITHIN_VIEW = "/admin/run/runswithinperiod";
 	
-	private final static String RUNS_BY_ACTIVITY_VIEW = "/admin/run/runsactivity";
-	
 	private final static String RUNS = "runs";
 	
 	private final static String PERIOD = "period";
@@ -67,7 +65,8 @@ public class RunStatisticsController {
 	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String command = request.getParameter("command");
-		
+		ModelAndView mav = new ModelAndView(RUNS_WITHIN_VIEW);
+
 		if(command.equals("today") || command.equals("week") || command.equals("month")){
 			List<Run> runs = this.runService.getRunsRunWithinPeriod(command);
 			int lookBackPeriod = 0;
@@ -90,18 +89,15 @@ public class RunStatisticsController {
 				period = "this " + command;
 			}
 			
-			ModelAndView mav = new ModelAndView(RUNS_WITHIN_VIEW);
 			mav.addObject(RUNS, runs);
 			mav.addObject(PERIOD, period);
-			return mav;
 		} else if(command.equals("activity")) {
 			List<Run> runs = this.runService.getRunsByActivity();
-			
-			ModelAndView mav = new ModelAndView(RUNS_BY_ACTIVITY_VIEW);
 			mav.addObject(RUNS, runs);
-			return mav;
 		} else {
 			throw new Exception("I do not understand the command: " + command);
 		}
+		return mav;
+
 	}
 }
