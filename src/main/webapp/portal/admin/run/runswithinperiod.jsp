@@ -9,6 +9,12 @@
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 
 <title><spring:message code="wiseAdmin" /></title>
+<style>
+th {
+	font-weight:bold;
+	border:1px solid;
+}
+</style>
 </head>
 
 <body>
@@ -21,27 +27,30 @@
 <h3><spring:message code="run_plural" /> ${period} (${fn:length(runs)} <spring:message code="run_plural" />)</h3>
 <table id="runStatsTable" border="1">
 	<thead>
-		<tr><th><spring:message code="run_id" /></th><th><spring:message code="run_accessCode" /></th><th><spring:message code="run_name" /></th>
-			<th><spring:message code="run_lastAccessTime" /></th><th><spring:message code="admin.run.accessCount" /> ${period}</th>
-			<th><spring:message code="run_name" /><spring:message code="admin.run.totalAccessCount" /></th><th><spring:message code="admin.run.owners" /></th>
+		<tr><th><spring:message code="run_id" /> (<spring:message code="run_accessCode" />)</th>
+			<th><spring:message code="run_name" /></th>
+			<th><spring:message code="admin.run.owners" /></th>
+			<c:if test="${period!=null}">
+				<th><spring:message code="admin.run.accessCount" /> ${period}</th>
+			</c:if>
+			<th><spring:message code="admin.run.totalAccessCount" /></th>
 			<th><spring:message code="available_actions" /></th></tr>
 	</thead>
 	<tbody>
-		<tr></tr>
 		<c:forEach var="run" items="${runs}">
 			<tr>
-				<td>${run.id}</td>
-				<td>${run.runcode}</td>
+				<td>${run.id} (${run.runcode})</td>
 				<td>${run.name}</td>
-				<td><fmt:formatDate value="${run.lastRun}" type="both" dateStyle="short" timeStyle="short" /></td>
-				<td>${fn:length(run.studentAttendance)}</td>
-				<td>${run.timesRun}</td>
 				<td>
 					<c:forEach var="owner" items="${run.owners}">
 						<a href="${contextPath}/j_acegi_switch_user?j_username=${owner.userDetails.username}">${owner.userDetails.username}</a><br/>
 						(${owner.userDetails.schoolname}, ${owner.userDetails.city}, ${owner.userDetails.state},${owner.userDetails.country})
 					</c:forEach>
 				</td>
+				<c:if test="${period!=null}">
+					<td>${fn:length(run.studentAttendance)}</td>
+				</c:if>
+				<td>${run.timesRun}</td>
 			    <td>
 			    	<ul>
 			    		<sec:authorize ifAnyGranted="ROLE_ADMINISTRATOR">

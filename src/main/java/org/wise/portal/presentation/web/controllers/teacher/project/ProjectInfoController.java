@@ -24,8 +24,6 @@
 package org.wise.portal.presentation.web.controllers.teacher.project;
 
 import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
