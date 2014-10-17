@@ -23,6 +23,8 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.run;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,11 +33,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.project.ProjectService;
 
 /**
  * Controller for updating run settings, like add period, 
@@ -50,6 +55,9 @@ public class UpdateRunController {
 
 	@Autowired
 	private RunService runService;
+	
+	@Autowired
+	private ProjectService projectService;
 
 	@RequestMapping(method=RequestMethod.GET)
 	protected ModelAndView handleGET(HttpServletRequest request) throws Exception {
@@ -106,12 +114,36 @@ public class UpdateRunController {
 		} else if ("archiveRun".equals(command)) {
 			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwners().contains(user)) {
 				runService.endRun(run);
+				// also archive project
+				try {
+					Project project = run.getProject();
+					project.setDeleted(true);
+					project.setDateDeleted(new Date());
+				
+					User signedInUser = ControllerUtil.getSignedInUser(); //get the currently signed in user
+					projectService.updateProject(project, signedInUser);
+				} catch (NotAuthorizedException e) {
+					e.printStackTrace();
+				}
+
 				ModelAndView endRunSuccessMAV = new ModelAndView("teacher/run/manage/endRunSuccess");
 				return endRunSuccessMAV;
 			} 			
 		} else if ("unArchiveRun".equals(command)) {
 			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwners().contains(user)) {
 				runService.startRun(run);
+				// also un-archive project
+				try {
+					Project project = run.getProject();
+					project.setDeleted(false);
+					project.setDateDeleted(null);
+				
+					User signedInUser = ControllerUtil.getSignedInUser(); //get the currently signed in user
+					projectService.updateProject(project, signedInUser);
+				} catch (NotAuthorizedException e) {
+					e.printStackTrace();
+				}
+
 				ModelAndView startRunSuccessMAV = new ModelAndView("teacher/run/manage/startRunSuccess");
 				return startRunSuccessMAV;
 			}

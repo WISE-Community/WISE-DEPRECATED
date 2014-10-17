@@ -25,6 +25,7 @@ package org.wise.portal.presentation.web.controllers.teacher.project;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,9 +38,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 
 @Controller
@@ -47,6 +50,9 @@ public class DeleteProjectController {
 
 	@Autowired
 	private ProjectService projectService;
+	
+	@Autowired
+	private RunService runService;
 	
 	/**
 	 * @param projectIdStr
@@ -93,19 +99,30 @@ public class DeleteProjectController {
 							//the owner is trying to delete the project so we will allow it
 							
 							if(revive != null && revive.equals("true")) {
-								//we are reviving the project
+								//we are unarchiving the project
 								project.setDeleted(false);
 								project.setDateDeleted(null);
 								
 								try {
-									//update the project in teh database
+									//update the project in the database
 									projectService.updateProject(project, signedInUser);
 									responseString = "success";
 								} catch (NotAuthorizedException e) {
 									e.printStackTrace();
 								}
+								// also, if project is used in a run, unarchive it also
+								try {
+									List<Run> runsUsingProject = this.runService.getProjectRuns(projectId);
+									if (!runsUsingProject.isEmpty()){
+										// since a project can now only be run once, just use the first run in the list
+										Run run = runsUsingProject.get(0);
+										runService.startRun(run);
+									}
+								} catch (Exception e) {
+									// ignore exceptions
+								}
 							} else {
-								//we are deleting the project
+								//we are deleting (archiving) the project
 								project.setDeleted(true);
 								project.setDateDeleted(new Date());
 								
@@ -116,6 +133,19 @@ public class DeleteProjectController {
 								} catch (NotAuthorizedException e) {
 									e.printStackTrace();
 								}
+								
+								// also, if project is used in a run, archive it also
+								try {
+									List<Run> runsUsingProject = this.runService.getProjectRuns(projectId);
+									if (!runsUsingProject.isEmpty()){
+										// since a project can now only be run once, just use the first run in the list
+										Run run = runsUsingProject.get(0);
+										runService.endRun(run);
+									}
+								} catch (Exception e) {
+									// ignore exceptions
+								}
+
 							}
 						} else {
 							/*
