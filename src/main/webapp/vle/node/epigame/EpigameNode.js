@@ -409,6 +409,31 @@ EpigameNode.prototype.processStudentWork = function(nodeVisits) {
 				this.setStatus('isCompleted', true);
 			}
 		}
+		
+		var isCompleted = this.getStatus('isCompleted');
+		
+		if(isCompleted) {
+			//the step is completed
+			this.setStatus('atLeast3AttemptsOrIsCompleted', true);
+		} else {
+			//get the latest node state
+			var nodeState = this.view.getLatestNodeStateWithWorkFromNodeVisits(nodeVisits);
+			
+			//check if the node state has the totalTrials field
+			if(nodeState != null &&
+					nodeState.response != null &&
+					nodeState.response.missionData != null &&
+					nodeState.response.missionData.totalTrials != null) {
+				
+				//get the total trials the student has attempted
+				var totalTrials = nodeState.response.missionData.totalTrials;
+
+				//check if the total trials is greater than or equal to 3
+				if(totalTrials >= 3) {
+					this.setStatus('atLeast3AttemptsOrIsCompleted', true);
+				}
+			}
+		}
 	}
 };
 
