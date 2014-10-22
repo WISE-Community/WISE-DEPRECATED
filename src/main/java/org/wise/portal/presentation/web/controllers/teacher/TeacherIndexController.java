@@ -50,7 +50,7 @@ import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
- * Controller for TELS teacher's index page
+ * Controller for WISE Teacher index page
  *
  * @author Hiroki Terashima
  * @version $Id$

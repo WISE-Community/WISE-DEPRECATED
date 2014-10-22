@@ -12,6 +12,8 @@
 <link href="${contextPath}/<spring:theme code="stylesheet"/>"
 	media="screen" rel="stylesheet" type="text/css" />
 
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+
 <title><spring:message code="wiseAdmin" /></title>
 <script type="text/javascript">
 function validateForm() {
@@ -30,10 +32,7 @@ function validateForm() {
 
 <body>
 	<div id="pageWrapper">
-
 		<%@ include file="../headermain.jsp"%>
-
-
 		<div id="page">
 
 			<div id="pageContent">

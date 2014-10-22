@@ -10,7 +10,7 @@
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
     
 <title><spring:message code="wiseAdmin" /></title>
 

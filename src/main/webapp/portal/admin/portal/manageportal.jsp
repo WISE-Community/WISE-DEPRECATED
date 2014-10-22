@@ -4,6 +4,7 @@
 <html>
 <head>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource" />"></script>
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 
 <script type="text/javascript">
 $(document).ready(function() {

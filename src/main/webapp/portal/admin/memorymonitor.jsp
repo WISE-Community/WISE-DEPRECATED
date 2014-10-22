@@ -3,6 +3,11 @@
 <%@ page import="java.lang.management.*" %>
 <%@ page import="java.util.*" %>
 
+<html>
+<head>
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+</head>
+<body>
 <h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 <h1 style="text-decoration: underline;">JVM Memory Monitor</h1>
@@ -29,3 +34,5 @@ MemoryPoolMXBean item = (MemoryPoolMXBean) iter.next();
 <%
 }
 %>
+</body>
+</html>

@@ -9,6 +9,7 @@
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>  
 <script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
