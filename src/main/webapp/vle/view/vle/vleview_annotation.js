@@ -130,7 +130,7 @@ View.prototype.showNodeAnnotations = function(nodeId, feedbackHTML) {
 										tempFeedbackHTML += '<br>';
 									}
 									
-									tempFeedbackHTML += autoFeedback;
+									tempFeedbackHTML += this.replaceWISEVariables(autoFeedback);
 								}
 								
 								if(autoGradedFeedbackHTML == '') {
