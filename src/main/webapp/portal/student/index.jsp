@@ -13,7 +13,6 @@
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="browserdetectsource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="checkcompatibilitysource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -147,12 +146,6 @@ $(document).ready(function() {
 	}
 	
 });
-</script>
-
-<script type="text/javascript">
-	function popup(URL) {
-  	    window.open(URL, '<spring:message code="student.selectteam.selectTeam"/>', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=1,width=850,height=600,left = 570,top = 300');
-  	}
 </script>
 
 <!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->

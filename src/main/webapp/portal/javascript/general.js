@@ -180,23 +180,6 @@ if(typeof $ != 'undefined'){
 }
 
 
-/* Added my MattFish to handle special Pop-Up Windows on Teacher Dashboard pages 
-** TODO: remove 
-*/
-
-function popupSpecial(mylink, windowname)
-		{
-		if (! window.focus)return true;
-		var href;
-		if (typeof(mylink) == 'string')
-		   href=mylink;
-		else
-		   href=mylink.href;
-		window.open(href, windowname, 'width=850,height=600,resizable=yes,scrollbars=yes');
-		return false;
-		}
-		
-
 function popup640(mylink, windowname)
 		{
 		if (! window.focus)return true;

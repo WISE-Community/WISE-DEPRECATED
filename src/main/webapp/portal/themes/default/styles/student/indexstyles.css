@@ -43,17 +43,6 @@ table tr, table td {
 	border: 1px solid #DDD;
 }
 
-#list1 {
-		padding:12px 10px;
-		margin:0 0 5px 5px;
-}
-
-#list1 dt {
-	margin:0 0 5px 0;
-	padding:0px;
-	width:220px;
-}
-
 #studentUsername {
 	font-weight:bold;
 	font-size: 1.1em;
@@ -131,28 +120,11 @@ table tr, table td {
 	text-align:center;
 }
 	
-#studentcopyright {
-	text-align:center;
-	font-size:.75em;
-	margin:-10px 0px 5px 0px;
-	}
-
-#columnLabel {
-	color: #4E94A2;
-font-size: 1.1em;
-letter-spacing: 3px;
-text-align: left;
-padding: 5px 5px 5px 8px;
-margin: 2px 0 15px 0;
-font-family: Trebuchet MS;
-font-weight: bold;	
-}
-
 #tabSystem {
 	margin-top:-1em;
 }
 
-.runTable{
+.runTable {
 	width:100%;
 	margin-top:.5em;
 	margin-bottom:.5em;
@@ -167,20 +139,10 @@ font-weight: bold;
 	padding:.25em .5em;
 } 
 		
-#secondaryRowTightFormat {
-	padding:2px 5px;
-} 
-	
-.projectMainRow{
+.projectMainRow {
 	border: 1px solid black;
 	margin:0px;
 	padding:0px;
-}
-
-.blankRow {
-	padding:4px;
-	border-left:0px;
-	border-right:0px;
 }
 
 .runTable td.rowLabel {
@@ -188,31 +150,6 @@ font-weight: bold;
 	font-weight:bold;
 }
 
-#archivedAdvisory {
-	background-color:#993333;
-	color:#fff;
-	font-size:.85em;
-	padding:10px;
-	margin:4px 0 10px 0;
-}
-
-#tightBorderCell{
-	padding:0px;
-	margin:0px;
-}
-
-#tableStudentProjectData {
-	border-collapse:collapse;
-	width:100%;
-	margin:0px;
-	padding:0px;
-}
-
-/* #tableStudentProjectData tr, #tableStudentProjectData td  {
-	margin:0px;
-	padding:3px 5px;
-	}    */
-	
 .studentTitleText {
 	font-weight:bold;
 	font-size:1.3em;
@@ -249,106 +186,16 @@ font-weight: bold;
 .studentActionList li a {
 	margin:0 auto;
 }
-	
-/* #studentActionList a:link, #studentActionList a:visited {
-	display:block;
-	text-decoration:none;
-	font-size:1.1em;
-	background-color:#3333FF;
-	color:#FFFFCC;
-	margin:0px;
-	padding:1px 0px;
-	border:1px solid #666;
-	-moz-border-radius:8px;
-	-webkit-border-radius:8px;
-	border-radius:8px;
-	}
-
-#studentActionList a:hover, #studentActionList.classAnimHover {
-	display:block;
-	color:#000066;
-	background-color:#ffff33;
-	border:1px solid #666666;
-}*/
 
 .periodMessage {
 	margin-left:5px;
 	font-size:80%;
 	color:#000;
-	
 }
 
 .teamNotRegisteredMessage {
 	font-weight:bold;
 	color:#ff563f;
-}
-
-#firstUseBox{
-	margin-top:50px;
-	background-color:#543f23;
-	color:#fff;
-	padding:10px 15px;
-	border:1px solid #666;
-	} 
-	
-#firstUseHeader{
-	color:#FFCCFF;
-	font-weight:bold;
-	font-size:1.6em;
-	margin-bottom:5px;
-	} 
-	
-#instructionsArea {
-	line-height:110%;
-	} 
-		
-#instructionsArea ol {
-	margin-top:8px;
-	font-size:.8em;
-	
-	} 
-
-#instructionsArea li {
-	padding-left:5px;
-	margin-left:0;
-	} 
-	
-/* STYLES FOR STUDENT PROJECT MENU */
-#studentBannerLabel {
-	position: absolute;
-	left: 430px;
-	top: 5px;
-}
-
-#usernameSignOutBoxStudent {
-	text-align: right;
-	position: absolute;
-	right: 8px;
-	top: 3px;
-}
-
-#usernameBannerStudent {
-	position: relative;
-	color: #FFFF99;
-	font-style: italic;
-	font-weight: bold;
-	font-size: 1.1em;
-	padding: 0;
-	margin: 0;
-}
-
-#signOutBannerStudent  a:link,#signOutBannerStudent  a:visited {
-	color: #FFFF66;
-	font-size: .8em;
-	text-decoration: none;
-	border-bottom: 1px solid #FFFF66;
-}
-
-#signOutBannerStudent  a:hover {
-	color: #330066;
-	font-size: .8em;
-	text-decoration: none;
-	border-bottom: 1px solid #330066;
 }
 
 /* STYLES FOR STUDENT ADD A PROJECT  */

@@ -108,22 +108,9 @@
   margin-top:20px;
 }
 	
-#genderFieldDefault {color:#0099FF;}
-#birthMonthFieldDefault {color:#0099FF;}
-#birthDateFieldDefault {color:#0099FF;}
-#reminderQuestionFieldDefault {color:#0099FF;}
-
-.buttonStyle1 {
-	clear: both;
-	padding: 15px 6px 15px 10px;
-}
-
 .hint {
   display:none;
   position: absolute;
-  /*right: -180px;
-  width: 175px;
-  margin-top: -2px;*/
   padding: .25em .5em;
   color:#FFFFFF;
   font-size: .9em;
@@ -158,46 +145,6 @@
     font-size: 1.25em;
     font-weight: bold;
 }
-
-
-/* FOR TEACHER CONFIRMATION PAGE/  */
-
-#confirmationButtonTeacher {
-	position: relative;
-	left: 270px;
-	font-size:1.0em;
-	}
-
-.smallText {
-	font-size:.9em;
-	}
-
-#confirmationButtons {
-	margin: 0 auto;
-	text-align:center;
-	font-size:.8em;
-	line-height:140%;
-	border-collapse:collapse;
-	width:600px;
-	}
-
-
-#confirmationButtons td {
-	vertical-align:top;
-	}
-
-#confirmationButtons td.text {
-	color:#330033;
-	font-weight:bold;
-	padding-bottom:30px;
-}
-
-#buttonText1 {
-	text-align:center;
-	font-size:.8em;
-	margin: 10px 320px 30px 320px;
-}
-
 
 
 /* ONLY FOR TEACHER REGISTRATION PAGE/  */
@@ -241,73 +188,6 @@
 	margin-top:.25em;
 }
 	
-/* FOR TEACHER USAGE AGREEMENT PAGE */
-
-#useAgreement {
-	font-size: 1.2em;
-	width:70%;
-	padding:10px;
-	border: 1px solid #000099;
-	bordercolor:#000066;
-	background-color:#99FF66;
-	margin: 10px auto 15px auto;
-	}
-
-#useAgreement p {
-	line-height:120%;
-	margin-bottom:10px;
-	text-align:left;
-	}
-	
-	
-/* New Account Picker Screen  (Setup.html) */
-		
-#questionPromptReg {
-	margin: 20px 0 30px 0;
-	ppadding: 0px;
-	font-size: 1.3em;
-	font-weight: bold;	
-		}
-		
-#newAccountButtons  {
-	line-height:120%;
-	text-align:center;
-}
-
-#newAccountButtons ul {
-	list-style:none;
-	margin: 0 0 20px 0;
-	padding:0px;
-	}
-
-#newAccountDetails {
-	margin: 30px auto 30px auto;
-	font-size:1em;
-	text-align:center;
-	width:50%;
-	padding:0px;
-	}
-	
-#newAccountDetails ul {
-	list-style:none;
-	margin:0px;
-	padding:0px;
-	}
-	
-#newAccountDetails li {
-	line-height:160%;
-	margin: 0 0 15px 0;
-	padding:0px;
-	font-size:.8em;
-	font-weight:bold;
-	}
-	
-#homelink {
-	position:relative;
-	text-align:center;
-	margin:15px;
-		}
-		
 /* STYLING FOR PREVIEW PROJECT PAGE */
 
 #previewProjectTitle {
@@ -325,77 +205,11 @@
 	padding:10px 0;
 		}
 		
-#boxPreviewProject{
+#boxPreviewProject {
 	border: 1px solid #006600;
 	width:95%;
 	margin:15px auto 30px auto;
 	}
-	
-#previewProjectHeader2 {
-	color:#000000;
-	text-align:center;
-	font-size:1.5em; 
-	font-weight:bold;
-	margin:25px 50px; 
-}
-
-#previewProjectDetails {
-	color:#000000;
-	text-align:left;
-	font-size:.9em;
-	margin: 20px 0 0 70px;	
-}
-
-#previewProjectDetails ul{
-	padding: 0 40px 10px 20px;
-}
-
-#previewProjectDetails li{
-	line-height:140%;
-	padding-bottom:8px;
-}
-
-#previewProjectTable {
-	border: 1px solid;
-    border-collapse: collapse;
-    font-size: 0.9em;
-    margin: 5px auto 20px;
-    width: 96%;
-}
-
-#previewProjectTable td {
-	background-color: #FFCE8E;
-    padding: 0 0.5em;
-    text-align: left;
-    vertical-align: middle;
-}
-
-#previewProjectTable th {
-	background-color: #A97E46;
-    color: #000000;
-    font-weight: bold;
-    padding: 0.25em 0.5em;
-    text-align: left;
-}
-
-#previewActionLinks{
-	line-height:180%;
-	
-}
-
-#previewActionLinks a:link, #previewActionLinks a:visited {
-	padding:3px;
-	color:#0000CC;
-	border:1px solid transparent;
-	text-decoration:none;
-	}
-
-#previewActionLinks a:hover {
-	background-color:#FFFF00;
-	color:000066;
-	border:1px solid #666;
-	
-}
 
 /* STYLING FOR CREDITS PAGE */
 
@@ -482,54 +296,4 @@
 
  #creditsTeamTable .secondaryDL dt {
  	width:220px;
-	}
-
-#createBrandNewAccountButton {
- 	color:#000;
- 	font-size:1.2em;
-	font-weight:bold;
-	border-top:1px solid #666666;
-	border-right:1px solid black;
-	border-bottom:1px solid black;
-	border-left:1px solid #666666;
-	padding:4px 15px;
-	margin:0 10px;
-	background-image: url(../images/WISE-Secondary-Banner-Gradient.png);
-	background-position: top;
-	text-decoration:none;
-  	-moz-border-radius:8px;
-	-webkit-border-radius:8px;
-	border-radius:8px;
-	cursor:pointer;
-}
-
-#createBrandNewAccountButton:hover {
- 	background-image:none;
- 	background-color:#FFFF00;
- 	cursor:pointer;
-}
-
-.createAccountButton {
- 	color:#000;
- 	font-size:1.2em;
-	font-weight:bold;
-	border-top:1px solid #666666;
-	border-right:1px solid black;
-	border-bottom:1px solid black;
-	border-left:1px solid #666666;
-	padding:4px 15px;
-	margin:0 10px;
-	background-image: url(../images/WISE-Secondary-Banner-Gradient.png);
-	background-position: top;
-	text-decoration:none;
-  	-moz-border-radius:8px;
-	-webkit-border-radius:8px;
-	border-radius:8px;
-	cursor:pointer;
-}
-
-.createAccountButton:hover {
- 	background-image:none;
- 	background-color:#FFFF00;
- 	cursor:pointer;
 }

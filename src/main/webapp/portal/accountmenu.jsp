@@ -1,6 +1,5 @@
 <link rel="stylesheet" type="text/css" href="${contextPath}/<spring:theme code="jquerystylesheet"/>">
 <link rel="stylesheet" type="text/css" href="${contextPath}/<spring:theme code="superfishstylesheet"/>" media="screen">
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <sec:authorize ifNotGranted="ROLE_USER">
 <script type="text/javascript">

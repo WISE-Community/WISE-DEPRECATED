@@ -1,17 +1,5 @@
 /* Project and run display styles */
 
-#myProjects_wrapper .bottom, #myArchivedProjects_wrapper .bottom {
-	height:20px;  /*TODO: Fix this - should not need to set a height */
-}
-
-#libraryTable_wrapper .bottom, #libraryTable_wrapper .top {
-	height:20px; /*TODO: Fix this - should not need to set a height */
-}
-
-#myProjects_wrapper .datatables_length {
-	float:none;
-}
-
 .projectTable .tableHeaderMain {
 	display:none;
 }
@@ -42,14 +30,6 @@
     top: 0;
     z-index: 1;
 }
-
-/*.projectBox {
-	padding:0 .5em;
-	position:relative;
-	border:1px solid #999;
-	margin:0 1em;
-	background-color:#F5F5F5;
-}*/
 
 .projectBox {
 	padding:0 .5em;
@@ -308,9 +288,6 @@ a.viewLesson:hover {
 	display:none;
 }
 
-/*.projectTitle {
-	color: #765936;
-}*/
 .projectOverview {
 	border: 0 none;
 }
@@ -364,16 +341,11 @@ ul.actions li {
 	list-style-type:none;
 }
 
-th.infoHead, td.projectInfo {
+td.projectInfo {
 	border:1px solid #CCCCCC;
 	padding:0.25em 0.5em;
 	font-size:.9em;
 	width:20%;
-}
-
-th.infoHead {
-	font-weight:bold;
-	/*background-color:#C3FDCF;*/
 }
 
 .runTitleTable, .projectDetails {
@@ -425,35 +397,6 @@ th.infoHead {
 	width:120px;
 }
 
-.sharedTeacherMsg1 {
-	background-color: #FFE3DF;
-    border-left: 6px solid #FF8D7E;
-    color: #444444;
-    font-size: 0.8em;
-    margin-right: 0.5em;
-    margin-top: 0.25em;
-    padding: 0 0.4em;
-}
-
-div.sharedTeacherMsg1 {
-	font-size:1em;
-	margin-bottom:.5em;
-	margin-top:0;
-}
-
-.projectTable .sharedTeacherMsg1 {
-	display:inline-block;
-}
-
-.projectDetailsLink {
-	padding-right:.25em;
-}
-
-#currentrunWrapper {
-	background-color:#FFF;
-	/*min-height:480px;*/
-}
-
 .subHeader {
 	margin:.25em 0 .5em;
 	font-size:.8em;
@@ -485,22 +428,6 @@ div.sharedTeacherMsg1 {
 	background-color: #FFE2DF;
 }
 
-.titleCell {
-	padding: .5em;
-	vertical-align:top;
-}
-
-.titleCell .titleCellLinkList{
-	margin:0 auto;
-	padding:0;
-	}
-	
-.titleCell .titleCellLinkList li{
-	list-style-type:none;
-	margin:0;
-	padding:0;
-}
-	
 .runTitleTable .accesscode, .runTitleTable .archivedDate {
 	font-weight:bold;
 	color:#FF563F;
@@ -592,103 +519,9 @@ ul.actionList:last-child {
 	text-align:center;
 }
 
-/*.currentRunTable a:link, .currentRunTable a:visited, .actionList a:link, .actionList a:visited {
-	text-decoration:none;
-	color:#0033CC;
-	padding:1px 7px 1px 7px;
-}
-
-.currentRunTable a:hover, .actionList a:hover {
-	color:#000066;
-	padding:0px 6px 0px 6px;
-	background-color:#ffff33;
-	border:1px solid #666666;
-}*/
-
-
-
-/* STYLES FOR MY PROJECT RUN: POP UP WINDOWS  */
-
-#popUpBoxBoundary {
-	margin:5px;
-	border:1px solid #333333;
-	}
-
-#largeHeader {
-	margin-top:30px;
-	font-size:2.1em;
-	font-variant:small-caps;
-	text-align:center;
-}
-
-#blockHighlight {
-	width:80%;
-	text-align:center;
-	background-color:#99FF99;
-	border:1px solid #000000; 
-	margin: 20px auto 20px auto;
-	padding:15px;
-}
-
-#blockHighlight #blockItem {
-	width:170px; 
-}
-
-#popUpNotice1 {
-	font-size:1.0em;
-	font-weight:bold;
-	text-align:center;
-	padding: 0px 85px;
-	margin: 10px auto;
-}
-
-#popUpNotice2 {
-	text-align:center;
-	font-size:90%;
-	margin:10px auto;
-	width:85%;
-	margin:15px auto;
-	color:#FF0000;
-	}
-
-#responseButtons  {
-	padding:10px;
-}
-
-#responseButtons input {
-	text-align:center;
-	border:1px solid #666666;
-	-moz-border-radius:8px;
-	-webkit-border-radius:8px;
-	border-radius:8px;
-	background-color:#1e69ff;
-	color:#CCC;
-	padding:4px 10px;
-	margin:0 8px;
-}
-
-#responseButtons input:hover {
-	background-color:#FFFF00;
-	color:#666;
-}
-
-
 
 /* STYLES FOR VIEW STUDENTS: POP-UP WINDOWS  */
 
-#popUpWindowViewStudents {
-	width:560px;
-	background-image: url(../../images/student/Gradient-ProjectMenu-Green-450.png);
-	background-position: center bottom;
-	background-repeat: repeat-x;
-	border-top:1px solid #666666;
-	border-right:1px solid black;
-	border-bottom:1px solid black;
-	border-left:1px solid #666666;
-	margin: 40px auto;
-	padding:20px;
-	}
-	
 #errorMessage {
 	color:#FF0000;
 	padding:0px;
@@ -696,62 +529,8 @@ ul.actionList:last-child {
 	font-size:1.3em;
 }
 
-#studentchangepasswordbox {
-	text-align:left;
-	margin: 0 auto;
-}
-
-#studentchangepasswordbox dt {
-	float:left;
-	vertical-align:baseline;
-	width:215px;
-	font-size:.8em;
-	font-weight:bold;
-	padding:3px 0px;
-	margin:6px 0 0 30px;
-}
-
-#studentchangepasswordbox dd {
-	margin:0px;
-	padding:5px 0px;
-	 }
-
-.changePasswordField {
-	font-size:.8em;
-	border-top:1px solid #666666;
-	border-right:1px solid black;
-	border-bottom:1px solid black;
-	border-left:1px solid #666666;
-	margin:0 0 0 10px;
-	padding:3px;
-}
-
-#saveCancelButtons {
-text-align:center;
-margin: 30px auto 5px auto;
-}
-
-#errorMsgDiv {
-	color:#aa5522;	
-}
-
 #mainDiv {
 	text-align:left;
-}
-
-.editRunBlock {
-	background-color:#333333;
-	font-size:1.2em;
-	color:silver;
-	-webkit-border-radius:7px;
-	-moz-border-radius:7px;
-	border-radius:7px;
-	margin:3px 0 2px 0;
-	padding:0 5px 0 5px;
-}
-
-#errorMsgDiv {
-	height:25px;
 }
 
 #existingPeriodsList {

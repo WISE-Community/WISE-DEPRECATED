@@ -9,7 +9,6 @@
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script> 
@@ -18,8 +17,6 @@
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="browserdetectsource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="checkcompatibilitysource"/>"></script>
-<!-- <script type="text/javascript" src="<spring:theme code="utilssource"/>"></script> -->
 
 <title><spring:message code="teacher.index.wiseTeacherDashboard" /></title>
 
