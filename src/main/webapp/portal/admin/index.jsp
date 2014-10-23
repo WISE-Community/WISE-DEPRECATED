@@ -16,13 +16,22 @@
 
 <title><spring:message code="wiseAdmin" /></title>
 <script type="text/javascript">
-function validateForm() {
-	debugger;
-	if ("id" == $("#projectLookupType :selected").val()) {
-		// make sure id is numeric
-		if (!$.isNumeric($("#projectLookupValue").val())) {
-			alert("Please enter a numeric Project ID value.");
-			return false;
+function validateForm(type) {
+	if (type=='project') {
+		if ("id" == $("#projectLookupType :selected").val()) {
+			// make sure id is numeric
+			if (!$.isNumeric($("#projectLookupValue").val())) {
+				alert("Please enter a numeric Project ID value.");
+				return false;
+			}
+		}
+	} else if (type=='run') {
+		if ("runId" == $("#runLookupType :selected").val()) {
+			// make sure id is numeric
+			if (!$.isNumeric($("#runLookupValue").val())) {
+				alert("Please enter a numeric Run ID value.");
+				return false;
+			}
 		}
 	}
 	return true;
@@ -111,12 +120,15 @@ function validateForm() {
 
 							<h5>
 								<spring:message code='admin.index.findProjectRunsBy' />
-								<a href="run/findprojectrunsbyteacher.html"><spring:message
-										code='teacher_cap' /></a> | <a
-									href='run/findprojectrunsbyprojectid.html'><spring:message
-										code='project_id' /></a> | <a
-									href='run/findprojectrunsbyrunid.html'><spring:message
-										code='run_id' /></a>
+								<form style="display:inline" id="lookupProjectForm" action="run/manageprojectruns.html" method="GET" onsubmit="return validateForm('run')">								
+									<select name="runLookupType" id="runLookupType">
+										<option value="runId"><spring:message code='run_id' /></option>
+										<!-- <option value="projectId"><spring:message code='project_id' /></option> -->
+										<option value="teacherUsername"><spring:message code='student.studentinfo.runTeacherUsername' /></option>
+									</select>
+									<input type="text" name="runLookupValue" id="runLookupValue" size="20"></input>
+									<input type="Submit" value="Go"></input>
+								</form>		
 							</h5>
 							
 						</div>
@@ -128,7 +140,7 @@ function validateForm() {
 							</div>
 							<div class="sectionContent">
 								<spring:message code='admin.index.manageProjectBy' />
-								<form style="display:inline" id="lookupProjectForm" action="project/manageallprojects.html" method="GET" onsubmit="return validateForm()">								
+								<form style="display:inline" id="lookupProjectForm" action="project/manageallprojects.html" method="GET" onsubmit="return validateForm('project')">								
 									<select name="projectLookupType" id="projectLookupType">
 										<option value="id"><spring:message code='id' /></option>
 										<option value="title"><spring:message code='title' /></option>

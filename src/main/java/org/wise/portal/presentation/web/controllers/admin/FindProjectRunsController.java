@@ -27,20 +27,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.impl.FindProjectParameters;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.validators.FindProjectParametersValidator;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.user.UserService;
@@ -50,7 +47,7 @@ import org.wise.portal.service.user.UserService;
  * @author patrick lawler
  */
 @Controller
-@RequestMapping("/admin/run/findprojectruns*")
+@RequestMapping("/admin/run/manageprojectruns.html")
 public class FindProjectRunsController {
 	
 	private final static String VIEW = "admin/run/manageprojectruns";
@@ -67,57 +64,35 @@ public class FindProjectRunsController {
 	@Autowired
 	private Properties wiseProperties;
 	
-	@Autowired
-	private FindProjectParametersValidator findProjectParametersValidator;
-	
-	@RequestMapping(method=RequestMethod.POST)
-    protected ModelAndView onSubmit(@ModelAttribute("findProjectParameters")FindProjectParameters param, 
-    		BindingResult result) {
-
-		findProjectParametersValidator.validate(param, result);
-		if (result.hasErrors()) {
-			return null;
-		}
-		
-		boolean isRealTimeEnabled = false;
-		
-	    String isRealTimeEnabledStr = wiseProperties.getProperty("isRealTimeEnabled");
-	    
-	    if (isRealTimeEnabledStr != null) {
-	    	isRealTimeEnabled = Boolean.valueOf(isRealTimeEnabledStr);
-	    }
+	@RequestMapping(method=RequestMethod.GET)
+    protected ModelAndView handleGET(
+    		HttpServletRequest request) {
 
 		ModelAndView modelAndView = new ModelAndView();
 		List<Run> runList = new ArrayList<Run>();
 		
-		/* The validation should have ensured that only one of the parameter
-		 * fields has a value, so we will just set the run list based on the
-		 * field with a value. */
-		if(param.getProjectId() != null && !param.getProjectId().equals("")){
-			runList = this.getRunListByProjectId(Long.parseLong(param.getProjectId()));
-		}
-		
-		if(param.getUserName() != null && !param.getUserName().equals("")){
-			runList = this.getRunListByUsername(param.getUserName());
-		}
-		
-		if(param.getRunId() != null && !param.getRunId().equals("")){
-			runList = this.getRunListByRunId(Long.parseLong(param.getRunId()));
-		}
+		// check if runLookupType was passed in, can be ["runId","projectId","teacherUsername"]
+		String runLookupType = request.getParameter("runLookupType");
+		String runLookupValue = request.getParameter("runLookupValue");
 
+		if (runLookupType != null && runLookupValue != null) {
+			if ("runId".equals(runLookupType)) {
+				runList = this.getRunListByRunId(Long.parseLong(runLookupValue));
+			} else if ("projectId".equals(runLookupType)) {
+				runList = this.getRunListByProjectId(Long.parseLong(runLookupValue));
+			} else if ("teacherUsername".equals(runLookupType)) {
+				runList = this.getRunListByUsername(runLookupValue);
+			}
+		}
+		
 		modelAndView = new ModelAndView(VIEW);
 		modelAndView.addObject("runList", runList);
-		modelAndView.addObject("isRealTimeEnabled", isRealTimeEnabled);
+		
+	    String isRealTimeEnabledStr = wiseProperties.getProperty("isRealTimeEnabled", "false");
+		modelAndView.addObject("isRealTimeEnabled", Boolean.valueOf(isRealTimeEnabledStr));
 		
 		return modelAndView;
     }
-	
-    @RequestMapping(method=RequestMethod.GET) 
-    public ModelAndView initializeForm(ModelMap model) { 
-    	ModelAndView mav = new ModelAndView();
-    	mav.addObject("findProjectParameters", new FindProjectParameters());
-        return mav; 
-    } 
 	
     /**
      * Returns a <code>List<Run></code> list of any runs that are
@@ -128,7 +103,6 @@ public class FindProjectRunsController {
      */
     private List<Run> getRunListByProjectId(Long projectId){
 		List<Run> runList = new ArrayList<Run>();
-		
     	List<Run> run_list = runService.getAllRunList();
     	List<Project> projectCopies = projectService.getProjectCopies(projectId);
 		for(Run run: run_list){
