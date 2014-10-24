@@ -2449,15 +2449,20 @@ $.valHooks.textarea = {
  * Replaces WISE variables in the string with WISE values.
  * 
  * Ex: "Hello {{studentNames}}! You got a {{autoGradedScore}}" => "Hello Hiroki & Geoff! You got a 3!"
+ * Ex: "Now {{link|1.2|go to the finger bowl activity}} and try again! => "Now <a onclick="view.goToStep('1.2')">go to the finger bowl activity</a> and try again!"
  */
 View.prototype.replaceWISEVariables = function(text) {
-	if (text != null && text.indexOf("{{studentFirstNames}}") >= 0) {
-		var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
-		var studentFirstNamesArray = this.getUserAndClassInfo().getStudentFirstNamesByWorkgroupId(workgroupId);
-		var studentFirstNames = studentFirstNamesArray.join(' & ');
-		
-		text = text.replace(/{{studentFirstNames}}/g, studentFirstNames);
-	} 
+	if (text != null) {
+		if (text.indexOf("{{studentFirstNames}}") >= 0) {
+			var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
+			var studentFirstNamesArray = this.getUserAndClassInfo().getStudentFirstNamesByWorkgroupId(workgroupId);
+			var studentFirstNames = studentFirstNamesArray.join(' & ');
+			text = text.replace(/{{studentFirstNames}}/g, studentFirstNames);
+		}
+		if (text.indexOf("{{link") >= 0) {
+			text = text.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, "<a onclick=\"view.goToStep('$1')\">$2</a>")
+		}
+	}
 	return text;
 };
 

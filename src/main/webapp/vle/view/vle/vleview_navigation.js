@@ -40,6 +40,20 @@ View.prototype.createNavigationLogicOnProjectLoad = function(){
 	this.updateNavigationLogic();
 };
 
+
+/**
+ * Navigates VLE to specified step
+ * @param step human readable step (e.g. "1.2), not the orthogonal step (e.g. "0.1")
+ */
+View.prototype.goToStep = function(stepNum) {
+	try {
+		var nodePosition = this.getProject().stepNumToNodePosition(stepNum);
+		this.goToNodePosition(nodePosition);
+	} catch (exception) {
+		this.notificationManager.notify('Could not retrieve the step specified in the link.',3);
+	}
+};
+
 /**
  * Renders the previous node in the sequence if it exists.
  */

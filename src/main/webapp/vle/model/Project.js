@@ -1347,6 +1347,17 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 		};
 
 		/*
+		 * Convert stepNum ("1.2") into nodePosition ("0.1")
+		 */
+		var stepNumToNodePosition = function(stepNum) {
+			var stepNumExploded = stepNum.split(".");
+			for (var i=0; i<stepNumExploded.length; i++) {
+				stepNumExploded[i] = parseInt(stepNumExploded[i]) - 1;
+			}
+			return stepNumExploded.join(".");
+		}
+		
+		/*
 		 * Get the position of the node in the project as seen in the
 		 * vle by the student.
 		 * e.g. if a node is the first node in the first activity
@@ -2575,6 +2586,8 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 			setPostLevel:function(level){postLevel = level;},
 			/* Returns the post level for this project */
 			getPostLevel:function(){return postLevel;},
+			/* converts "1.2"->"0.1" */
+			stepNumToNodePosition:function(stepNum){return stepNumToNodePosition(stepNum);},
 			/* Returns the first position as seen in the vle that the node with the given id exists in. Returns "" if no node with id exists. */
 			getVLEPositionById:function(id){return getVLEPositionById(id);},
 			/* Returns an array of any duplicate nodes of the node with the given id. If the node with
