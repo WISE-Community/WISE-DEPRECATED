@@ -2456,7 +2456,7 @@ View.prototype.replaceWISEVariables = function(text) {
 		var studentFirstNamesArray = this.getUserAndClassInfo().getStudentFirstNamesByWorkgroupId(workgroupId);
 		var studentFirstNames = studentFirstNamesArray.join(' & ');
 		
-		text = text.replace("{{studentFirstNames}}", studentFirstNames);
+		text = text.replace(/{{studentFirstNames}}/g, studentFirstNames);
 	} 
 	return text;
 };
