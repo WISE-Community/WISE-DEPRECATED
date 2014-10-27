@@ -57,7 +57,6 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 								<td><a href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>
 							</tr>
 							<c:if test="${discourseSSOLoginURL != null}">
-							  <!-- we will style and internationalize this later -->
 							   <tr>
 							   	  <td><a target=_blank href="${discourseSSOLoginURL}"><spring:message code="wiseTeacherCommunity"/></a></td>
 							   </tr>
@@ -74,6 +73,22 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 						<table id="teacherMessageTable">
 							<tr>
 								<td>
+								<div id="welcomeMsg" class="highlight welcomeMsg">
+									<c:set var="current_date" value="<%=new java.util.Date()%>" />
+									<c:choose>
+										<c:when test="${(current_date.hours>=0) && (current_date.hours<12)}">
+											<spring:message code="teacher.index.hopeHavingGoodMorning" />
+										</c:when>
+										<c:when test="${(current_date.hours>=12) && (current_date.hours<18)}">
+											<spring:message code="teacher.index.goodAfternoon" />
+										</c:when>
+										<c:when test="${(current_date.hours>=18) && (current_date.hours<23)}">
+											<spring:message code="teacher.index.goodEvening" />
+										</c:when>
+										<c:otherwise>
+										</c:otherwise>
+									</c:choose>
+								</div>
 								<div id="newsContent" class="highlight welcomeMsg">
 									<c:forEach var="newsItem" items="${teacherOnlyNewsItems}">
 										<div class="newsItem">
@@ -81,56 +96,6 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 											<p class="newsSnippet">${newsItem.news}</p>
 										</div>
 									</c:forEach>
-								</div>
-								<div class="highlight welcomeMsg" style="display:none">
-									<c:set var="current_date" value="<%= new java.util.Date() %>" />
-									<c:choose>
-										<c:when test="${(current_date.hours>=4) && (current_date.hours<5)}">
-												<spring:message code="teacher.index.benjaminFranklinQuote" />
-										</c:when>
-										<c:when test="${(current_date.hours>=5) && (current_date.hours<6)}">
-												<spring:message code="teacher.index.topOfTheMorning" />
-										</c:when>
-										<c:when test="${(current_date.hours>=6) && (current_date.hours<6.5)}">
-												<spring:message code="teacher.index.guatamaSiddhartaQuote" />
-										</c:when>
-										<c:when test="${(current_date.hours>=6.5) && (current_date.hours<7)}">
-												<spring:message code="teacher.index.hopeHavingGoodMorning" />
-										</c:when>
-										<c:when test="${(current_date.hours>=7) && (current_date.hours<9)}">
-												<spring:message code="teacher.index.goodMorning" />
-										</c:when>
-										<c:when test="${(current_date.hours>=9) && (current_date.hours<10)}">
-												<spring:message code="teacher.index.robertFrostQuote" />
-										</c:when>
-										<c:when test="${(current_date.hours>=10) && (current_date.hours<11)}">
-												<spring:message code="teacher.index.milesDavisQuote" />
-										</c:when>
-										<c:when test="${(current_date.hours>=11) && (current_date.hours<11.5)}">
-												<spring:message code="teacher.index.aaMilneQuote" />
-										</c:when>
-										<c:when test="${(current_date.hours>=11.5) && (current_date.hours<12)}">
-												<spring:message code="teacher.index.teacher.index.grouchoMarxQuote" />
-										</c:when>
-										<c:when test="${(current_date.hours>=12) && (current_date.hours<15)}">
-												<spring:message code="teacher.index.goodAfternoon" />
-										</c:when>
-										<c:when test="${(current_date.hours>=15) && (current_date.hours<18)}">
-												<spring:message code="teacher.index.productiveAfternoon" />
-										</c:when>
-										<c:when test="${(current_date.hours>=18) && (current_date.hours<22)}">
-												<spring:message code="teacher.index.goodEvening" />
-										</c:when>
-										<c:when test="${(current_date.hours>=22) && (current_date.hours<23)}">
-												<spring:message code="teacher.index.georgeCarlinQuote" />
-										</c:when>
-										<c:when test="${(current_date.hours>=23) && (current_date.hours<24)}">
-												<spring:message code="teacher.index.marilynVosSavantQuote" />
-										</c:when>
-										<c:otherwise>
-												<spring:message code="teacher.index.helloNightOwl" />
-										</c:otherwise>
-									</c:choose>
 								</div>
 								<ul class="reminders">
 									<c:forEach var="run" items="${current_run_list1}">

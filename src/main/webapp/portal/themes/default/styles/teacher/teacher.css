@@ -77,7 +77,7 @@
 	margin: .5em 0;
 }
 
-ul.reminders {
+ul.reminders, #newsContent {
 	margin-top:.5em;
 	padding-top: .5em;
 	border-top: 1px solid #9B7F5E;
