@@ -221,8 +221,8 @@ function validateForm(type) {
 
 								<div style="font-weight:bold;padding:10px;background-color:antiquewhite;margin:10px 0px 0px 0px"><a href="https://github.com/WISE-Community/WISE">Latest Changes: please update often!</a></div>
 								<div style="height:150px; overflow:auto; border: 1px solid lightgray; margin:0">
-									<div id="recentCommitHistory" style="display:none">${recentCommitHistoryJSON}</div>
-								</div>								
+                                    <div id="recentCommitHistory"></div>
+                                </div>								
 
 							</div>
 
@@ -239,9 +239,8 @@ function validateForm(type) {
 	</div>
 
 <script type="text/javascript">
-var recentCommitHistoryArrayString = $("#recentCommitHistory").html();
-if (recentCommitHistoryArrayString != null && recentCommitHistoryArrayString != "") {
-	var recentCommitHistoryArray = JSON.parse(recentCommitHistoryArrayString);
+var recentCommitHistoryArray = ${recentCommitHistoryJSON};
+if (recentCommitHistoryArray != null) {
 	var commitsUL = $("<ul>");
 	for (var i=0; i<recentCommitHistoryArray.length; i++) {
 		var commitHistory = recentCommitHistoryArray[i];
@@ -253,7 +252,6 @@ if (recentCommitHistoryArrayString != null && recentCommitHistoryArrayString != 
 		commitsUL.append(commitLI);
 	}
 	$("#recentCommitHistory").html(commitsUL);
-	$("#recentCommitHistory").show();
 }
 </script>
 </body>
