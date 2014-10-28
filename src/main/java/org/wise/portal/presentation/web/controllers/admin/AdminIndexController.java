@@ -25,6 +25,11 @@ package org.wise.portal.presentation.web.controllers.admin;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +46,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.wise.portal.domain.admin.DailyAdminJob;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.portal.PortalService;
 
 /**
@@ -64,6 +73,9 @@ public class AdminIndexController {
 	
 	@Autowired
 	private Properties wiseProperties;
+	
+	@Autowired
+	private DailyAdminJob adminJob;
 
 	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -123,6 +135,38 @@ public class AdminIndexController {
 			modelAndView.addObject("recentCommitHistoryJSON", "error retrieving WISE commit history");
 			e.printStackTrace();
 		}
+		
+		// add number of curently-logged in users to model
+		HashMap<String, User> allLoggedInUsers = 
+			(HashMap<String, User>) request.getSession()
+				.getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
+		
+		if (allLoggedInUsers != null) {
+			modelAndView.addObject("numCurrentlyLoggedInUsers", allLoggedInUsers.size());
+		} else {
+			modelAndView.addObject("numCurrentlyLoggedInUsers", 0);
+		}
+
+		// add number of users logged in today to model
+		Calendar todayZeroHour = Calendar.getInstance();
+		todayZeroHour.set(Calendar.HOUR_OF_DAY, 0);            // set hour to midnight
+		todayZeroHour.set(Calendar.MINUTE, 0);                 // set minute in hour
+		todayZeroHour.set(Calendar.SECOND, 0);                 // set second in minute
+		todayZeroHour.set(Calendar.MILLISECOND, 0);            // set millis in second
+		Date dateMin = todayZeroHour.getTime();  
+
+		Date dateMax = new java.util.Date(Calendar.getInstance().getTimeInMillis());
+		adminJob.setYesterday(dateMin);
+		adminJob.setToday(dateMax);
+
+		List<User> studentsWhoLoggedInToday = adminJob.findUsersWhoLoggedInSinceYesterday("studentUserDetails");
+		List<User> teachersWhoLoggedInToday = adminJob.findUsersWhoLoggedInSinceYesterday("teacherUserDetails");
+		if (studentsWhoLoggedInToday != null && teachersWhoLoggedInToday != null) {
+			modelAndView.addObject("numUsersWhoLoggedInToday", studentsWhoLoggedInToday.size()+teachersWhoLoggedInToday.size());
+		} else {
+			modelAndView.addObject("numUsersWhoLoggedInToday", 0);
+		}
+
 		return modelAndView;
 	}
 
