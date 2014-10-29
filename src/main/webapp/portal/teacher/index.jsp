@@ -3,22 +3,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="teacher.index.wiseTeacherDashboard" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script> 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
+<script type="text/javascript" src="${contextPath}/<spring:theme code="superfishsource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerymigrate.js"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="browserdetectsource"/>"></script>
-
-<title><spring:message code="teacher.index.wiseTeacherDashboard" /></title>
 
 <!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->
 <!--[if lt IE 7]>
@@ -28,11 +29,8 @@
 <script type='text/javascript'>
 var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 </script>
-
 </head>
-    
 <body>
-
 <div id="pageWrapper">
 
 	<%@ include file="../headermain.jsp"%>

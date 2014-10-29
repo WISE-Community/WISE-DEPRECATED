@@ -1,6 +1,3 @@
-<link rel="stylesheet" type="text/css" href="${contextPath}/<spring:theme code="jquerystylesheet"/>">
-<link rel="stylesheet" type="text/css" href="${contextPath}/<spring:theme code="superfishstylesheet"/>" media="screen">
-
 <sec:authorize ifNotGranted="ROLE_USER">
 <script type="text/javascript">
 function validateLoginForm() {
@@ -113,11 +110,6 @@ function validateLoginForm() {
 
 <div id="editPremadeCommentsDiv" style="display:none;"></div>
 <div id="editPremadeCommentsLoadingDiv" style="display:none;"><h5 style="text-align:center"><spring:message code="accountmenu.loadingPremadeComments"/></h5></div>
-
-<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="superfishsource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
 
 <script type="text/javascript">
 	

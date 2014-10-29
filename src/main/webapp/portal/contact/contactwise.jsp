@@ -6,19 +6,22 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 <title>Contact WISE</title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="homepagestylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
+<link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
 
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
 
 </head>
-
 <body>
-
 <script type="text/javascript">
 	function detectUserSystem() {
 		document.getElementById("usersystem").setAttribute("value", navigator.userAgent);
@@ -152,7 +155,6 @@
 	
 	<%@ include file="../footer.jsp"%>
 </div>
-
 
 </body>
 </html>

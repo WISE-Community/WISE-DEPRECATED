@@ -5,19 +5,22 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="teacher.run.create.createrunconfigure.settingUpAProjectRunStep4" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-    
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
+<link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
 
-
-<title><spring:message code="teacher.run.create.createrunconfigure.settingUpAProjectRunStep4" /></title>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
 
 </head>
 
@@ -27,7 +30,7 @@
     <c:choose>
       <c:when test="${fn:length(error) > 0}" >
         <script type="text/javascript">
-          <!--
+          <!--  TODO: IS THIS NECESSARY?
             alert("${error}");
           //-->
         </script>
@@ -35,15 +38,10 @@
     </c:choose>
   </c:forEach>
 </spring:bind>
-
 <body>
-
 <div id="pageWrapper">
-
 	<%@ include file="../../../headermain.jsp"%>
 		
-	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-	
 	<div id="page">
 			
 		<div id="pageContent">
@@ -119,8 +117,6 @@ $("#goBackButton").click(function() {
 $("#cancelButton").click(function() {
 	$("#goToPageInput").remove();
 });
-
 </script>
-
 </body>
 </html>

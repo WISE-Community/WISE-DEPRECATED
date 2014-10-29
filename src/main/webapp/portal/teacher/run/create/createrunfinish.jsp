@@ -4,30 +4,29 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="teacher.run.create.createrunfinish.classroomRunCreated" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
+<link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
 
-<title><spring:message code="teacher.run.create.createrunfinish.classroomRunCreated" /></title>
-
-<script type="text/javascript" src="${contextPath}/<spring:theme code="utilssource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="rotatorsource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="effectssource"/>"></script>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript" ></script>
 
 </head>
-
 <body>
-
 <div id="pageWrapper">
 
 	<%@ include file="../../../headermain.jsp"%>
 		
-	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-	
 	<div id="page">
 			
 		<div id="pageContent">
@@ -84,7 +83,5 @@
 
 	<%@ include file="../../../footer.jsp"%>
 </div>
-
 </body>
-
 </html>

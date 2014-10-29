@@ -5,6 +5,8 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="student.registerstudent.studentRegistration" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
@@ -14,7 +16,6 @@
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 
-<title><spring:message code="student.registerstudent.studentRegistration" /></title>
 <script type="text/javascript">
 $(document).ready(function(){
 	
@@ -353,10 +354,8 @@ function checkRunCode() {
 	 */
 	previousRunCode = runCode;
 }
-
 </script>
 </head>
-
 <body>
 <%@ page buffer="64kb" %>
 <div id="pageWrapper">
@@ -514,9 +513,4 @@ function checkRunCode() {
 	</div>
 </div>
 </body>
-
 </html>
-
-
-
-

@@ -3,19 +3,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="utilssource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="teacher.management.classroomruns.title" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
 
-<title><spring:message code="teacher.management.classroomruns.title" /></title>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="utilssource"/>" type="text/javascript"></script>
 
 <!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->
 <!--[if lt IE 7]>
@@ -25,12 +27,9 @@
 <script type='text/javascript'>
 var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 </script>
-
 </head>
-    
 <body>
 <div id="pageWrapper">
-
 	<%@ include file="../headerteacher.jsp"%>
 		
 	<div id="page">
@@ -55,7 +54,5 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 	
 	<%@ include file="../../footer.jsp"%>
 </div>
-
 </body>
-
 </html>

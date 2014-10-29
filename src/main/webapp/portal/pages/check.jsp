@@ -5,27 +5,25 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-
-<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-    
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="utilssource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="browserdetectsource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="checkcompatibilitysource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="deployJava.js"/>"></script>
-
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-  
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 <title><spring:message code="pages.check.title" /></title>
 
-<link rel="shortcut icon" href="${contextPath}/themes/default/images/favicon_panda.ico" /> 
-
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
+<link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
+    
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="utilssource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="browserdetectsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="checkcompatibilitysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="deployJava.js"/>" type="text/javascript"></script>
 </head>
-
 <body onload='checkCompatibility(${specificRequirements})'>
-
 <div id="pageWrapper">
 
 	<%@ include file="../headermain.jsp"%>
@@ -270,8 +268,5 @@
 	
 	<%@ include file="../footer.jsp"%>
 </div>
-
 </body>
 </html>
-
-

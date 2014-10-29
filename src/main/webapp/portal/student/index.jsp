@@ -2,21 +2,23 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 <title><spring:message code="student.title" /></title>
-
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="browserdetectsource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="checkcompatibilitysource"/>"></script>
 
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="studenthomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
+
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="browserdetectsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="checkcompatibilitysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
 
 <script type="text/javascript">
 // only alert user about browser comptibility issue once.
@@ -173,12 +175,8 @@ $(document).ready(function() {
 </style>
 <![endif]-->
 
-<link rel="shortcut icon" href="${contextPath}/themes/default/images/favicon_panda.ico" />
-
 </head>
-
 <body>
-
 <div id="pageWrapper">
 
 	<%@ include file="../headermain.jsp"%>
@@ -465,8 +463,5 @@ $(document).ready(function() {
 </div>
 
 <div id="announcementsDialog" class="dialog" style="display:none; overflow:hidden;"></div>
-
 </body>
 </html>
-
- 

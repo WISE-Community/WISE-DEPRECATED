@@ -3,23 +3,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script type="text/javascript" src="javascript/jquery-1.4.1.min.js" ></script>
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title>Messages</title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
+<link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
 
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
 
 <!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->
 <!--[if lt IE 7]>
 <script defer type="text/javascript" src="../../javascript/iefixes.js"></script>
 <![endif]-->
-
-<!-- SuperFish drop-down menu from http://www.electrictoolbox.com/jquery-superfish-menus-plugin/  -->
-
-<link rel="stylesheet" type="text/css" href="themes/default/styles/teacher/superfish.css" media="screen">
-<script type="text/javascript" src="javascript/superfish.js"></script>
 
 <script type="text/javascript">
     
@@ -195,11 +197,8 @@ function sendReply(originalMessageId) {
 		};
 	};
 </script>
-
 </head>
-
 <body>
-
 <div id="centeredDiv">
 
 <%@ include file="../headerteacher.jsp"%>
@@ -319,6 +318,5 @@ function sendReply(originalMessageId) {
 </div>
 
 </div>   <!-- end of centered div-->
-
 </body>
 </html>

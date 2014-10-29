@@ -4,19 +4,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="wiseAdmin" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
+<link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
 
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>  
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
-    
-<title><spring:message code="wiseAdmin" /></title>
-
-<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
 <style>
 table th {
@@ -28,12 +27,9 @@ table, tr, td {
   border: 1px solid black;
   padding:3px;
 }
-
 </style>
 </head>
 <body>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <div id="page">
 <div id="pageContent" class="contentPanel">
 

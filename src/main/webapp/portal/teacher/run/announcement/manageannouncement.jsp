@@ -3,14 +3,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="teacher.run.announcement.manageannouncement.manageAnnouncements"/></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<title><spring:message code="teacher.run.announcement.manageannouncement.manageAnnouncements"/></title>
 <style>
 .aTitle {
   font-weight:bold;
@@ -27,7 +28,6 @@ function removeAnnouncement(runId, announcementId, announcementTitle) {
 </head>
 
 <body style="background:#FFFFFF;">
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <div class="dialogContent">
 	<div class="sectionHead"><spring:message code="teacher.run.announcement.manageannouncement.existingAnnouncements"/></div>

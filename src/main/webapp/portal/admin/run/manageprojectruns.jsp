@@ -5,12 +5,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="wiseAdmin" /></title>
 
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script> 
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerydatatables.js"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="facetedfilter.js"/>"></script>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script> 
+<script src="${contextPath}/<spring:theme code="jquerydatatables.js"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="facetedfilter.js"/>" type="text/javascript"></script>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -19,9 +21,6 @@
 <link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="jquerydatatables.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="facetedfilter.css"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
-
-<title><spring:message code="wiseAdmin" /></title>
 
 <!-- TODO: move to separate js setup file (will require js i18n implementation for portal) -->
 <script type="text/javascript">
@@ -337,20 +336,10 @@
 		    });
 		}
 	});
-
 </script>
-
 </head>
-
 <body>
-
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
-
 <div id="pageWrapper">
-
-
 	<div id="page">
 		
 		<div id="pageContent">

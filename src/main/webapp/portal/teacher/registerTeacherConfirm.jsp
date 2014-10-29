@@ -4,17 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="teacher.registerTeacherConfirm.createAWiseAccount" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-  
-<title><spring:message code="teacher.registerTeacherConfirm.createAWiseAccount" /></title>
 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="utilssource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 </head>
-
+<body>
 <div id="pageWrapper">
 	
 	<div id="page">
@@ -44,11 +44,5 @@
 		</div>
 	</div>
 </div>
-
 </body>
-
 </html>
-
-
-
-

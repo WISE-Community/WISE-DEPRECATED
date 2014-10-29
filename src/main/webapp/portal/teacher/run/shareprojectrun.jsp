@@ -139,7 +139,6 @@ function removeSharedUserClicked() {
 	            		<input type="hidden" name="removeUserFromRun" value="true"></input>
 						<input type="submit" value="Remove this User" onclick="return removeSharedUserClicked();"></input>
 				    	</form:form>			        
-					    <!-- <a href='#' onclick="alert('Remove Shared Teacher is not yet implemented.');"><spring:message code="teacher.run.shareprojectrun.removeThisUser"/></a> -->
 					</td>
 				</tr>
 		</c:forEach>

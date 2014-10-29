@@ -4,6 +4,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="teacher.registerteacher.teacherRegistration" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -12,7 +14,6 @@
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
-
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -200,15 +201,10 @@ $(document).ready(function(){
 	});
 
 });
-
 </script>
 
-<title><spring:message code="teacher.registerteacher.teacherRegistration" /></title>
-
 </head>
-
 <body>
-
 <div id="pageWrapper">
 	
 	<div id="page">
@@ -370,4 +366,3 @@ $(document).ready(function(){
 </div>
 </body>
 </html>
-

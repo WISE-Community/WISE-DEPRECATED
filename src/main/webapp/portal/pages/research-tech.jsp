@@ -3,25 +3,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-	Remove this if you use the .htaccess -->
 <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="pages.research-tech.title" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="homepagestylesheet"/>" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
-
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
-
-<title><spring:message code="pages.research-tech.title" /></title>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
 
 </head>
-
 <body>
 <spring:htmlEscape defaultHtmlEscape="false">
 <spring:escapeBody htmlEscape="false">
@@ -124,5 +121,4 @@
 </spring:escapeBody>
 </spring:htmlEscape>
 </body>
-
 </html>

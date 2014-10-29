@@ -5,6 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="teacher.run.create.createrunreview.settingUpAProjectRunStep5" /></title>
 
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -12,12 +14,13 @@
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
     
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
-
-<title><spring:message code="teacher.run.create.createrunreview.settingUpAProjectRunStep5" /></title>
+<script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
 
 <script type="text/javascript">
         var doneClicked=false;
@@ -103,8 +106,6 @@
    			};
     	};
     	
-    	
-    	
    	// Set up view project details click action for each project id link
 	$('a.projectDetail').on('click',function(){
 		var title = $(this).attr('title');
@@ -126,16 +127,12 @@
 		$("#projectDetailDialog > #projectIfrm").attr('src',path);
 	});
 </script>
-
 </head>
 <body>
-
 <div id="pageWrapper">
 
 	<%@ include file="../../../headermain.jsp"%>
 		
-	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-	
 	<div id="page">
 			
 		<div id="pageContent">

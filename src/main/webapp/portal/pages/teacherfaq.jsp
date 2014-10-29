@@ -5,10 +5,18 @@
 <head>
 <meta name=Title content="<spring:message code="pages.teacherfaq.wise4TeacherInformationSheet" />">
 <meta name=Keywords content="">
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 <title><spring:message code="pages.teacherfaq.wise4TeacherInformationSheet" /></title>
+
+<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
+<link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
+
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
 
 <style type="text/css">
 #tableOfContents {
@@ -27,7 +35,6 @@
 }
 </style>
 </head>
-
 <body>
 <spring:htmlEscape defaultHtmlEscape="false">
 <spring:escapeBody htmlEscape="false">
@@ -274,7 +281,5 @@
 </div>
 </spring:escapeBody>
 </spring:htmlEscape>
-
- </body>
- </html>
-
+</body>
+</html>

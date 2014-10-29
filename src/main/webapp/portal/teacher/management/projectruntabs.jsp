@@ -2,9 +2,6 @@
 <link href="${contextPath}/<spring:theme code="jquerydatatables.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="facetedfilter.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
 <div id="runTabs" class="panelTabs">
     <ul>
     	<li><a href="#currentRuns"><spring:message code="current"/>  (${fn:length(current_run_list)})</a></li>

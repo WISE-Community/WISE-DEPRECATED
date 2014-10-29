@@ -17,7 +17,6 @@
 </head>
 
 <body style="background:#FFFFFF;">
-	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 	<div class="dialogContent">
 		<div class="sectionHead"><spring:message code="teacher.run.announcement.editannouncement.editAnnouncement"/></div>
 		<div class="dialogSection">

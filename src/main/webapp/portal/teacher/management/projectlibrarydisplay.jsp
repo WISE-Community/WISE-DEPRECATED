@@ -3,9 +3,6 @@
 <link href="${contextPath}/<spring:theme code="facetedfilter.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="tiptip.css"/>" media="screen" rel="stylesheet" type="text/css" />
 
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
 <%@ page buffer="100kb" %>
 
 <sec:authorize ifAnyGranted="ROLE_TEACHER">
@@ -367,9 +364,6 @@
 																<sec:accesscontrollist domainObject="${project}" hasPermission="2">
 																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.edit_tip" />" href="${contextPath}/author/authorproject.html?projectId=${project.id}"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="edit" /></span></a>&nbsp;|</li>
 																</sec:accesscontrollist>
-																
-																<!-- <li><a style="color:#666;">Archive</a>
-																<input type='checkbox' id='public_${project.id}' onclick='changePublic("${project.id}")'/> Is Public</li>-->
 																<li><a class="setupRun tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.startRun_tip" />" href="<c:url value="/teacher/run/createRun.html"><c:param name="projectId" value="${project.id}"/></c:url>"><img class="icon" alt="new run" src="${contextPath}/<spring:theme code="computer"/>" />
 																	<span<c:if test="${!isChild && !isChildNoRoot}"> style="font-weight:bold;"</c:if>><spring:message code="teacher.management.projectlibrarydisplay.startRun" /></span></a>
 																</li>
@@ -1605,19 +1599,6 @@
 					if($.inArray(newRootId,missingRootIds)<0){
 						missingRootIds.push(newRootId);
 					}
-					//if($('.projectBox[data-id="' + newRootId + '"]').length){
-						// if root project does not exist in this table but does in other table, add dummy copy of root project
-						//var cloneTr = $('.projectBox[data-id="' + newRootId + '"]').parent().parent().clone();
-						//$('.projectBox',cloneTr).addClass('dummy');
-						//$('.projectTools, .bookmark',cloneTr).remove();
-						//var dummyMsg = context == 'active' ? '[Archived Project]' : '[Active Project]';
-						//$('.projectInfo',cloneTr).append('<span class="dummyMsg">' + dummyMsg + '</span>');
-						//cloneTr.appendTo(tableBody);
-					//} else {
-						// if root project does not exist in either table, remove child designation from project and display as root
-						//$(this).removeClass('childProject').addClass('rootProject');
-						//$('.childDate',$(this)).remove();
-					//}
 				}
 			});
 			
