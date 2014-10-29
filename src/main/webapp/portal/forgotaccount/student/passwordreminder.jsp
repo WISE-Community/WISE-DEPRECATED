@@ -4,18 +4,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="forgotaccount.student.passwordreminder.forgotPasswordStudentReminder"/></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />  
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
    
-<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>	
-<script type="text/javascript" src="${contextPath}/<spring:theme code="effectssource"/>"></script>	
+<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>	
 
-<title><spring:message code="forgotaccount.student.passwordreminder.forgotPasswordStudentReminder"/></title>
 </head>
-
 <body>
-
 <div id="pageWrapper">
 	
 	<div id="page">
@@ -57,6 +55,5 @@
 		</div>
 	</div>
 </div>
-
 </body>
 </html>

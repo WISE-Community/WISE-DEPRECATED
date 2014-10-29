@@ -4,21 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title>WISE 4.0 Credits Screen</title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-
   
-<title>WISE 4.0 Credits Screen</title>
-
-<script type="text/javascript" src="${contextPath}/<spring:theme code="utilssource"/>"></script> 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 
 </head>
-
 <body>
-
 <div id="centeredDiv">
 
 <h1 id="previewProjectTitle" class="blueText">Credits</h1>
@@ -217,8 +213,5 @@ Jinna Lei, Noah Paessel, Greg Pitter, Rokham Sadeghnezhadfard, Jeff Schoner, Nat
 </div>
 	
 </div>   <!-- end of centered div-->
-   
 </body>
 </html>
-
-

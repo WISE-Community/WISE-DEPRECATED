@@ -13,7 +13,6 @@
 <head>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="utilssource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 
 <!-- TODO: move to js file once js i18n is implemented for portal -->

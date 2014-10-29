@@ -4,16 +4,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="forgotaccount.selectaccounttype.findYourPassword" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
     
 <script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
 
-<title><spring:message code="forgotaccount.selectaccounttype.findYourPassword" /></title>
 </head>
-
 <body>
-
 <div id="pageWrapper">
 	
 	<div id="page">

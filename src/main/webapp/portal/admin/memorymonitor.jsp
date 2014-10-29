@@ -6,6 +6,7 @@
 <html>
 <head>
 <link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title>WISE Memory Monitor</title>
 </head>
 <body>
 <h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>

@@ -2,23 +2,15 @@
 <%@ page import="net.tanesha.recaptcha.ReCaptcha" %>
 <%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
 
-<!-- $Id$ -->
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="description" content="login for portal"/>
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="signIn" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-
-<style type="text/css" media="screen">
-  .inplaceeditor-saving {background: url(${contextPath}/<spring:theme code="wait"/>) bottom right no-repeat; }
-</style>
-
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
-
-<title><spring:message code="signIn" /></title>
 
 <script type="text/javascript">
 function validateLoginForm() {
@@ -32,7 +24,6 @@ function validateLoginForm() {
 }
 </script>
 </head>
-
 <body onload="document.getElementById('j_username').focus();">
 
 <div id="pageWrapper" style="min-width:550px; background:transparent;">
@@ -88,6 +79,5 @@ function validateLoginForm() {
 				</div>
 			</div>
 		</div>
-
 </body>
 </html>
