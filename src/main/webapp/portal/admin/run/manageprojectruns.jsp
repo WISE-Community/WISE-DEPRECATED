@@ -8,12 +8,6 @@
 <link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 <title><spring:message code="wiseAdmin" /></title>
 
-<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script> 
-<script src="${contextPath}/<spring:theme code="jquerydatatables.js"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="facetedfilter.js"/>" type="text/javascript"></script>
-
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
@@ -21,6 +15,12 @@
 <link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="jquerydatatables.css"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="facetedfilter.css"/>" media="screen" rel="stylesheet"  type="text/css" />
+
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script> 
+<script src="${contextPath}/<spring:theme code="jquerydatatables.js"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="facetedfilter.js"/>" type="text/javascript"></script>
 
 <!-- TODO: move to separate js setup file (will require js i18n implementation for portal) -->
 <script type="text/javascript">
@@ -295,16 +295,7 @@
 						"regexreplace": {"match": "/,\s*/gi", "replacement": " "},
 						"instructions": "<spring:message code="datatable_ff_period_instructions"/>"
 					}
-				 ],
-				"aFilterOpts": [
-					{
-						"identifier": "source", "label": "<spring:message code="teacher.management.projectruntabs.filter_source"/>", "column": 2,
-						"options": [
-							{"query": "owned", "display": "<spring:message code="teacher.management.projectruntabs.filter_source_owned"/>"},
-							{"query": "shared", "display": "<spring:message code="teacher.management.projectruntabs.filter_source_shared"/>"}
-						]
-					}
-				]
+				 ]
 			});
 			
 			// add sort logic
@@ -344,7 +335,7 @@
 		
 		<div id="pageContent">
 
-<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
+		<h5 style="color:#0000CC;"><a href="${contextPath}/admin/index.html"><spring:message code="returnToMainAdminPage" /></a></h5>
 
 			<div class="contentPanel">
 				<div class="panelHeader"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/>
@@ -352,7 +343,7 @@
 				</div>
 				
 				<div class="panelContent">
-<table id="currentRunTable" class="runTable" border="1" cellpadding="0" cellspacing="0">
+					<table id="currentRunTable" class="runTable" border="1" cellpadding="0" cellspacing="0">
 						<thead>
 						    <tr>
 						       <th style="width:220px;" class="tableHeaderMain runHeader"><spring:message code="teacher.management.projectruntabs.active_header" /></th>
@@ -368,8 +359,6 @@
 						<tbody>
 						  <c:if test="${fn:length(runList) > 0}">
 							  <c:forEach var="run" items="${runList}">
-							  <sec:accesscontrollist domainObject="${run}" hasPermission="16" var="isRunOwner"></sec:accesscontrollist>
-							  
 							  <tr id="runTitleRow_${run.id}" class="runRow">
 							    <td>
 							    	<div class="runTitle">${run.name}</div>
@@ -390,11 +379,17 @@
 								    	</c:forEach>
 							     
 									<table class="runTitleTable">
+										    <tr>
+										    	<th><spring:message code="teacher.management.projectruntabs.ownedBy" /></th>
+												<td>
+													<c:forEach var="owner" items="${run.owners}">
+									    	    		${owner.userDetails.firstname} ${owner.userDetails.lastname}
+									    	    	</c:forEach>
+									    	    </td>
 							      			<tr>
 												<th><spring:message code="run_accessCode" /></th>
 												<td class="accesscode">${run.runcode}</td>
 											</tr>
-											
 							      			<tr>
 							      				<th><spring:message code="run_id_label" /></th>
 							      				<td>${run.id}</td>
@@ -417,16 +412,13 @@
 												<td><a id="projectDetail_${run.project.parentProjectId}" class="projectDetail" title="<spring:message code="project_details"/>">${run.project.parentProjectId}</a></td>
 												</c:if>
 							      			</tr>
-
 							      				<tr>
 							      					<td colspan="2" style="padding-top:.5em;">
 							      						<a id="editRun_${run.id}" class="editRun" title="<spring:message code="teacher.management.projectruntabs.editSettings"/>: ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="settings" src="${contextPath}/<spring:theme code="processing"/>" /><span><spring:message code="teacher.management.projectruntabs.editSettings"/></span></a>
 							      					</td>
 							      				</tr>
 									</table>
-							      	
 								</td>
-															
 							    <td style="padding:.5em 0;" >
 							    	<table class="currentRunInfoTable" border="0" cellpadding="0" cellspacing="0">
 							          <tr>
@@ -445,53 +437,24 @@
 							        </table>
 							    </td> 
 							    <td>
-								    <c:set var="isExternalProject" value="0"/>
-								    
-								        <c:forEach var="external_run" items="${externalprojectruns}">
-								           <c:if test="${run.id == external_run.id}">
-								                   <c:set var="isExternalProject" value="1"/>
-								           </c:if>
-								        </c:forEach>
-								           <c:choose>
-								               <c:when test="${isExternalProject == 1}">
-								               	  <ul class="actionList">
-								                  	<li><spring:message code="teacher.management.projectruntabs.periodReports"/> <c:forEach var="periodInRun" items="${run.periods}"><a href="report.html?runId=${run.id}&groupId=${periodInRun.id}">${periodInRun.name}</a>&nbsp;</c:forEach></li>
-								               	  </ul>
-								               </c:when>
-								               <c:otherwise>
-											   <ul class="actionList">
-													<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
-								               </ul>
-								               <ul class="actionList">
-											        <li>
-											        	<spring:message code="teacher.management.projectruntabs.projectLabel"/>&nbsp;<a href="${contextPath}/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" /><span><spring:message code="preview"/></span></a>
-										    			|&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="project_details"/>"><img class="icon" alt="info" src="${contextPath}/<spring:theme code="id"/>" /><span><spring:message code="teacher.management.projectruntabs.projectInfo"/></span></a>
-											        	<sec:accesscontrollist domainObject="${run.project}" hasPermission="16">
-											        		|&nbsp;<a onclick="if(confirm('<spring:message code="teacher.management.projectruntabs.editWarning"/>')){window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.management.projectruntabs.edit"/></span></a>
-											        	</sec:accesscontrollist>
-											        </li>
-											    </ul>
-								               </c:otherwise>
-								           </c:choose>
-									
+
+							   <ul class="actionList">
+									<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
+				               </ul>
+				               <ul class="actionList">
+							        <li>
+							        	<spring:message code="teacher.management.projectruntabs.projectLabel"/>&nbsp;<a href="${contextPath}/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" /><span><spring:message code="preview"/></span></a>
+						    			|&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="project_details"/>"><img class="icon" alt="info" src="${contextPath}/<spring:theme code="id"/>" /><span><spring:message code="teacher.management.projectruntabs.projectInfo"/></span></a>
+							        	|&nbsp;<a onclick="if(confirm('<spring:message code="teacher.management.projectruntabs.editWarning"/>')){window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.management.projectruntabs.edit"/></span></a>
+							        </li>
+							    </ul>
 									<ul class="actionList">
-				
-										<sec:accesscontrollist domainObject="${run}" hasPermission="16">
-				   					      <li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.management.projectruntabs.sharingPermissionsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="teacher.management.projectruntabs.sharingPermissions"/></span></a></li> 
-				 	                    	</sec:accesscontrollist>
-								    	
-								    	<c:set var="isExternalProject" value="0"/>
-								    	<sec:accesscontrollist domainObject="${run}" hasPermission="16">
-								      		<li><a id="editAnnouncements_${run.id}" class="editAnnouncements" title="<spring:message code="teacher.management.projectruntabs.announcementsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" ><img class="icon" alt="announcements" src="${contextPath}/<spring:theme code="chat"/>" /><spring:message code="teacher.management.projectruntabs.announcements"/></a></li>
-								        </sec:accesscontrollist>
+				   					    <li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.management.projectruntabs.sharingPermissionsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="teacher.management.projectruntabs.sharingPermissions"/></span></a></li> 
+								      	<li><a id="editAnnouncements_${run.id}" class="editAnnouncements" title="<spring:message code="teacher.management.projectruntabs.announcementsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" ><img class="icon" alt="announcements" src="${contextPath}/<spring:theme code="chat"/>" /><spring:message code="teacher.management.projectruntabs.announcements"/></a></li>
 								        <li><a class="researchTools" title="<spring:message code="teacher.management.projectruntabs.researcherTools"/>: ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=export"><img class="icon" alt="export" src="${contextPath}/<spring:theme code="save"/>" /><span><spring:message code="teacher.management.projectruntabs.researcherTools"/> <spring:message code="teacher.management.projectruntabs.exportStudentData"/></span></a></li>	    	
 										<li><a href="${contextPath}//contact/contactwise.html?projectId=${run.project.id}&runId=${run.id}"><img class="icon" alt="contact" src="${contextPath}/<spring:theme code="email"/>" /><span><spring:message code="teacher.management.projectruntabs.reportProblem"/></span></a></li>
-					                    <sec:accesscontrollist domainObject="${run}" hasPermission="16">					    	
-								    	  <li><a class="archiveRun" id="archiveRun_runId=${run.id}&runName=<c:out value="${fn:escapeXml(run.name)}" />" title="<spring:message code="teacher.management.projectruntabs.archive_title"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="archive" src="${contextPath}/<spring:theme code="lock"/>" /><span><spring:message code="teacher.management.projectruntabs.archive"/></span></a></li>
-								    	</sec:accesscontrollist>
-								    	
+	  						    	    <li><a class="archiveRun" id="archiveRun_runId=${run.id}&runName=<c:out value="${fn:escapeXml(run.name)}" />" title="<spring:message code="teacher.management.projectruntabs.archive_title"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="archive" src="${contextPath}/<spring:theme code="lock"/>" /><span><spring:message code="teacher.management.projectruntabs.archive"/></span></a></li>
 								    </ul>
-				
 								</td>
 								<td style="display:none;">${run.starttime}</td>
 								<td style="display:none;"></td>
@@ -505,8 +468,6 @@
 							</c:if>
 						</tbody>
 					</table>
-
-
 				</div>
 			</div>
 		</div>
@@ -520,6 +481,5 @@
 <div id="manageStudentsDialog" style="overflow:hidden;" class="dialog"></div>
 <div id="projectDetailDialog" style="overflow:hidden;" class="dialog"></div>
 <div id="archiveRunDialog" style="overflow:hidden;" class="dialog"></div>
-
 </body>
 </html>
