@@ -9,9 +9,8 @@
 
 <title><spring:message code="pages.statistics.title" /></title>
 
-<script src="${contextPath}/<spring:theme code="jquery.js"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="flot.js"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="excanvas.js"/>" type="text/javascript"></script>
 
 <script type="text/javascript">
 
