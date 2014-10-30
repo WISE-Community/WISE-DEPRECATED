@@ -184,14 +184,18 @@ AnnotatorNode.prototype.hasGradingView = function() {
  * @param currNode the annotatorCell element
  */
 AnnotatorNode.prototype.showAnnotatorNode = function(currNode) {
-	var svgString = String($(this).html());
-	var svgString = $(this).data('svg');
-	svgString = Utils.decode64(svgString);
-	var svgXml = Utils.text2xml(svgString);
-	$(this).html('');
-	$(this).append(document.importNode(svgXml.documentElement, true)); // add svg to cell
-	$(this).height($(this).find('svg').height()/2);
-	$(this).width($(this).find('svg').width()/2);
+	try {
+		var svgString = String($(this).html());
+		var svgString = $(this).data('svg');
+		svgString = Utils.decode64(svgString);
+		var svgXml = Utils.text2xml(svgString);
+		$(this).html('');
+		$(this).append(document.importNode(svgXml.documentElement, true)); // add svg to cell
+		$(this).height($(this).find('svg').height()/2);
+		$(this).width($(this).find('svg').width()/2);	
+	} catch(e) {
+		
+	}
 };
 
 /**
