@@ -1268,7 +1268,7 @@ public class FileManager {
 						String newFileName = fileNamePrefix + fileNameExtension;
 						
 						/*
-						 * check if we are importing a .ht file since we also need to
+						 * check if we are importing a .ht or .wa file since we also need to
 						 * import the associated .html file
 						 */
 						if(fileNameExtension.equals(".ht")) {
@@ -1312,9 +1312,44 @@ public class FileManager {
 								 */
 								fileContent = fileContent.replaceAll(htmlFileName, newHtmlFileName);
 							}
+						} else if(fileNameExtension.equals(".wa")) {
+							//we are importing a webapp step so we need to also import the associated .html file
+							
+							if(fileContent != null) {
+								try {
+									//get the step content
+									JSONObject fileContentJSON = new JSONObject(fileContent);
+									
+									if(fileContentJSON != null) {
+										//get the file name of the associated .html file
+										String fromAssetFileName = fileContentJSON.getString("url");
+										
+										//get a handle on the .html file
+										File fromAssetFile = new File(fromProjectAssetsFolder, fromAssetFileName);
+										
+										//get the string content of the .html file
+										String fromAssetFileContent = FileUtils.readFileToString(fromAssetFile);
+										
+										//import any assets that are referenced in the .html file
+										String toAssetFileContent = importReferencedFilesInContent(fromAssetFileContent, fromProjectAssetsFolder, toProjectAssetsFolder);
+										
+										//import the .html file to the to project asset folder
+										String toAssetFileName = importAssetInContent(fromAssetFileName, toAssetFileContent, fromProjectAssetsFolder, toProjectAssetsFolder);
+										
+										//replace references to the file name in the content if we changed the file name
+										if(fromAssetFileName != null && toAssetFileName != null &&
+												!fromAssetFileName.equals(toAssetFileName)) {
+											fileContent = fileContent.replaceAll(fromAssetFileName, toAssetFileName);
+										}
+									}
+									
+								} catch(JSONException e) {
+									
+								}
+							}
 						}
 						
-						//import assets that are reference in the step content
+						//import assets that are referenced in the step content
 						fileContent = importAssetsInContent(fileContent, fromProjectAssetsFolder, toProjectAssetsFolder);
 						
 						//create a new file in our project
@@ -1341,8 +1376,8 @@ public class FileManager {
 	/**
 	 * Search for any references to assets in the step content and copy the assets to our assets folder
 	 * @param content the step content
-	 * @param fromProjectAssetsFolder the project we are copying the asset from
-	 * @param toProjectAssetsFolder the project we are copying the asset to
+	 * @param fromProjectAssetsFolder the asset folder in the project we are copying the asset from
+	 * @param toProjectAssetsFolder the asset folder in the project we are copying the asset to
 	 * @return the updated content string
 	 */
 	public static String importAssetsInContent(String content, File fromProjectAssetsFolder, File toProjectAssetsFolder) {
@@ -1381,74 +1416,183 @@ public class FileManager {
 						fromAssetFileName = fromAssetFileName.substring(0, fromAssetFileName.indexOf("?"));
 					}
 					
-					//create the file handle for the "from" file
-					File fromAsset = new File(fromProjectAssetsFolder, fromAssetFileName);
-					
-					//make sure the file exists in the "from" project
-					if(fromAsset.exists()) {
-						//create the file handle for the "to" file
-						String toAssetFileName = fromAssetFileName;
-						File toAsset = new File(toProjectAssetsFolder, toAssetFileName);
-						
-						boolean assetCompleted = false;
-						int counter = 1;
-						
-						/*
-						 * this while loop will check if the file already exists.
-						 * 
-						 * if the file already exists, we will check if the content in the "from" file is the same as in the "to" file.
-						 *    if the content is the same, we do not need to do anything.
-						 *    if the content is different, we will look for another file name to use.
-						 * if the file does not exist, we will make it.
-						 */
-						while(!assetCompleted) {
-							if(toAsset.exists()) {
-								//file already exists
-								
-								try {
-									if(FileUtils.contentEquals(fromAsset, toAsset)) {
-										//files are the same so we do not need to do anything
-										assetCompleted = true;
-									} else {
-										//files are not the same so we need to try a different file name
-										
-										//get new file name e.g. myPicture-1.jpg
-										toAssetFileName = createNewFileName(fromAssetFileName, counter);
+					//import the asset file into the project asset folder
+					String toAssetFileName = importAssetInContent(fromAssetFileName, null, fromProjectAssetsFolder, toProjectAssetsFolder);
 
-										//create the handle for the next file we will try to use
-										toAsset = new File(toProjectAssetsFolder, toAssetFileName);
-										
-										counter++;
-									}
-								} catch (IOException e) {
-									e.printStackTrace();
-									break;
-								}
-							} else {
-								//file does not exist so we will copy the file to the "to" assets folder
-								
-								try {
-									//copy the file into our new asset file
-									FileUtils.copyFile(fromAsset, toAsset);
-									assetCompleted = true;
-								} catch (IOException e) {
-									e.printStackTrace();
-									break;
-								}
-							}
-						}
-
-						//replace references to the file name in the content if we changed the file name
-						if(fromAssetFileName != null && toAssetFileName != null &&
-								!fromAssetFileName.equals(toAssetFileName)) {
-							content = content.replaceAll(fromAssetFileName, toAssetFileName);					
-						}					
+					//replace references to the file name in the content if we changed the file name
+					if(fromAssetFileName != null && toAssetFileName != null &&
+							!fromAssetFileName.equals(toAssetFileName)) {
+						content = content.replaceAll(fromAssetFileName, toAssetFileName);					
 					}
 				}
 			}
 		}
 		
 		return content;
+	}
+	
+	/**
+	 * Search for any references to a file in the content and copy the file to our assets folder
+	 * @param content the content
+	 * @param fromProjectAssetsFolder the asset folder in the project we are copying the asset from
+	 * @param toProjectAssetsFolder the asset folder in the project we are copying the asset to
+	 * @return the updated content string
+	 */
+	public static String importReferencedFilesInContent(String content, File fromProjectAssetsFolder, File toProjectAssetsFolder) {
+		/*
+		 * create a pattern that will search for file references that use the src attribute
+		 * 
+		 * the pattern will match any of these below and extract just the file name
+		 * src="Heat.png"
+		 * src='Heat.png'
+		 * src="Heat.png?w=15&amp;h=18"
+		 * src='Heat.png?w=15&amp;h=18'
+		 * 
+		 * if the pattern matcher is run on src="Heat.png?w=15&amp;h=18"
+		 * this is what the groups will look like
+		 * group(0)=src="Heat.png?w=15&amp;h=18"
+		 * group(1)=Heat.png
+		 */
+		Pattern p = Pattern.compile("src=[\"']([^\"'\\?\\.]*\\.[^\"'\\?\\.]*)[^\"']*[\"']");
+		
+		//run the matcher
+		Matcher m = p.matcher(content);
+		
+		//loop through all the matches
+		while(m.find()) {
+			if(m.groupCount() == 1) {
+				//get the captured group 1
+				String fromAssetFileName = m.group(1);
+				
+				if(fromAssetFileName != null && !fromAssetFileName.isEmpty()) {
+					//import the asset file into the project asset folder
+					String toAssetFileName = importAssetInContent(fromAssetFileName, null, fromProjectAssetsFolder, toProjectAssetsFolder);
+
+					//replace references to the file name in the content if we changed the file name
+					if(fromAssetFileName != null && toAssetFileName != null &&
+							!fromAssetFileName.equals(toAssetFileName)) {
+						content = content.replaceAll(fromAssetFileName, toAssetFileName);					
+					}
+				}
+			}
+		}
+		
+		return content;
+	}
+	
+	/**
+	 * Import the asset from one project asset folder to another project asset folder
+	 * @param fromAssetFileName the name of the file in the asset folder
+	 * @param fromAssetFileContent (optional) the content that we want to save to the to asset.
+	 * if this is not provided we will obtain the content from the fromAssetFileName handle.
+	 * this parameter is used when the content in the fromAssetFileName needs to be modified
+	 * such as when file name references in the content need to be changed due to file name
+	 * conflicts.
+	 * @param fromProjectAssetsFolder the asset folder in the from project
+	 * @param toProjectAssetsFolder the asset folder in the to project
+	 * @return the name of the asset file that was created in the to project asset folder
+	 */
+	private static String importAssetInContent(String fromAssetFileName, String fromAssetFileContent, File fromProjectAssetsFolder, File toProjectAssetsFolder) {
+		String toAssetFileName = fromAssetFileName;
+		String toAssetFileContent = null;
+		
+		//create the file handle for the "from" file
+		File fromAsset = new File(fromProjectAssetsFolder, fromAssetFileName);
+		
+		//make sure the file exists in the "from" project
+		if(fromAsset.exists()) {
+			//create the file handle for the "to" file
+			File toAsset = new File(toProjectAssetsFolder, toAssetFileName);
+			
+			boolean assetCompleted = false;
+			int counter = 1;
+			
+			/*
+			 * this while loop will check if the file already exists.
+			 * 
+			 * if the file already exists, we will check if the content in the "from" file is the same as in the "to" file.
+			 *    if the content is the same, we do not need to do anything.
+			 *    if the content is different, we will look for another file name to use.
+			 * if the file does not exist, we will make it.
+			 */
+			while(!assetCompleted) {
+				if(toAsset.exists()) {
+					//file already exists
+					
+					try {
+						//get the to asset file content
+						toAssetFileContent = FileUtils.readFileToString(toAsset);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					
+					try {
+						boolean contentMatches = false;
+						
+						if(fromAssetFileContent != null) {
+							/*
+							 * the from asset file content was passed in so we will compare it with
+							 * the to asset file content
+							 */
+							if(fromAssetFileContent.equals(toAssetFileContent)) {
+								//the file content matches
+								contentMatches = true;								
+							}
+						} else if(FileUtils.contentEquals(fromAsset, toAsset)) {
+							/*
+							 * the from asset file content was not passed in so we will compare
+							 * the contents from their file handles
+							 */
+							
+							//the file content matches
+							contentMatches = true;
+						}
+						
+						if(contentMatches) {
+							//files are the same so we do not need to do anything
+							assetCompleted = true;
+						} else {
+							//files are not the same so we need to try a different file name
+							
+							//get new file name e.g. myPicture-1.jpg
+							toAssetFileName = createNewFileName(fromAssetFileName, counter);
+
+							//create the handle for the next file we will try to use
+							toAsset = new File(toProjectAssetsFolder, toAssetFileName);
+							
+							counter++;
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+						break;
+					}
+				} else {
+					//file does not exist so we will copy the file to the "to" assets folder
+					
+					try {
+						if(fromAssetFileContent != null) {
+							//the content was passed in so we will use it
+							FileUtils.write(toAsset, fromAssetFileContent);
+						} else {
+							/*
+							 * the content was not passed in so we will use the content
+							 * obtained from the file handle
+							 */
+							
+							//copy the file into our new asset file
+							FileUtils.copyFile(fromAsset, toAsset);
+						}
+						
+						assetCompleted = true;
+					} catch (IOException e) {
+						e.printStackTrace();
+						break;
+					}
+				}
+			}
+		}
+		
+		return toAssetFileName;
 	}
 	
 	/**
