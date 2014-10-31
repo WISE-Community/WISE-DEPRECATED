@@ -1,0 +1,14 @@
+{
+    "file_button_text": {
+        "value": "Fichiers",
+        "description": "Text on the File Manager button for Student VLE"
+    },
+    "ideas_button_text": {
+        "value": "Idées",
+        "description": "Text on the Idea Manager button for Student VLE"
+    },
+    "mywork_button_text": {
+        "value": "Mon Travail",
+        "description": "Text on the My Work button for Student VLE"
+    }
+}

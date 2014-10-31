@@ -21,6 +21,7 @@ View.prototype.i18n.supportedLocales = {
 		main: {
 			"en_US":"en_US",
 			"es":"es",
+			"fr":"fr",
 			"it":"it",
 			"ja":"ja",
 			"ko":"ko",
