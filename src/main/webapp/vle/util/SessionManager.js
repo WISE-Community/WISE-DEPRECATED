@@ -22,6 +22,15 @@ function SessionManager(em, view) {
 		this.sessionTimeoutInterval = view.config.getConfigParam("sessionTimeoutInterval");
 	}
 	
+	/*
+	 * set the client timeout interval to be one minute less than the server timeout interval
+	 * so that any final requests that the client needs to make to the server will still
+	 * succeed. also make sure that the new client timeout interval is greater than 0.
+	 */
+	if(this.sessionTimeoutInterval - (60*1000) > 0) {
+		this.sessionTimeoutInterval = this.sessionTimeoutInterval - (60*1000);		
+	}
+	
 	// how often session should be checked, in milliseconds
 	this.sessionTimeoutCheckInterval = 60000; 
 	

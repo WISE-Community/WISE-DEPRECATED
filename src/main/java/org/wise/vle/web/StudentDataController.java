@@ -124,8 +124,12 @@ public class StudentDataController {
 		}
 		
 		if (userIdStr == null) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "get data: userId missing.");
-			return null;
+			/*
+			 * this request was most likely caused by a session timeout and the user logging
+			 * back in which makes a request to studentData.html without any parameters.
+			 * in this case we will just redirect the user back to the WISE home page.
+			 */
+			return new ModelAndView("redirect:/");
 		}
 		
 		//the get request can be for multiple ids that are delimited by ':'
