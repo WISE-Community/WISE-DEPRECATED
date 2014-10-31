@@ -16,5 +16,5 @@ eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/lib/jquery/js/jquery-validate/jquery.validate.pack.js');
+	eventManager.fire('scriptLoaded', 'vle/lib/jquery/jquery-validation/jquery.validate.pack.js');
 };
