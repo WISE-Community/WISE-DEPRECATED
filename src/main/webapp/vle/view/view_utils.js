@@ -1531,14 +1531,6 @@ View.prototype.utils.getImageDimensions = function(url,callback){
 };
 
 /**
- * Blocks out the UI and displays a message
- * @param message the message to display 
- */
-View.prototype.blockUI = function(message) {
-	$.blockUI({ message: message, css: {padding:15}, overlayCSS: {opacity:1.0} });
-};
-
-/**
  * Used in Show My Work for draw steps
  */
 function enlargeDraw(divId){
