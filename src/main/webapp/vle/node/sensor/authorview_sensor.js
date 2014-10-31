@@ -563,7 +563,7 @@ View.prototype.SensorNode.populatePrompt = function() {
  */
 View.prototype.SensorNode.updatePrompt = function(){
 	/* update content */
-	var content = this.view.getRichTextContent('promptInput');
+	var prompt = this.view.getRichTextContent('promptInput');
 	
 	this.content.prompt = prompt;
 	
