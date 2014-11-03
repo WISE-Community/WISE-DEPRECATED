@@ -38,7 +38,6 @@ View.prototype.vleDispatcher = function(type,args,obj){
 		}
 	} else if(type=='retrieveProjectMetaDataCompleted') {
 		obj.setProjectPostLevel();
-	} else if(type=='retrieveRunExtrasCompleted') {
 	} else if(type=='ifrmLoaded'){
 		obj.onFrameLoaded();
 	} else if(type=='noteEditorKeyPressed'){

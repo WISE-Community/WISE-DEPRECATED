@@ -7,7 +7,6 @@
  * 
  * mode - run (aka student), preview, grading
  * runId - the id of the run
- * runInfoRequestInterval - how often to poll for special events
  * theme - currently only WISE is allowed
  * runInfoUrl - where to get run info
  * getUserInfoUrl - where to get user information

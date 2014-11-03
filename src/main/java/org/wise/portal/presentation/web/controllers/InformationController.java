@@ -83,10 +83,6 @@ public class InformationController {
 	@Autowired
 	WorkgroupService workgroupService;
 	
-	/* how long the VLE should wait between each getRunInfo request, 
-	 * in milliseconds 10000=10 seconds, -1=never */
-	private static final String GET_RUNINFO_REQUEST_INTERVAL = "-1";
-	
 	private static final String WORKGROUP_ID_PARAM = "workgroupId";
 	
 	private static final String PREVIEW = "preview";
@@ -250,9 +246,7 @@ public class InformationController {
 			}
 		}
 		
-		// add this user's info:
-		//userInfoString.append("<myUserInfo><workgroupId>" + workgroup.getId() + "</workgroupId><userName>" + userNames + "</userName><periodId>" + periodId + "</periodId><periodName>" + periodName + "</periodName></myUserInfo>");
-		//userInfoString.append("<myUserInfo><workgroupId>" + workgroup.getId() + "</workgroupId><userName>" + workgroup.getGroup().getName().trim() + "</userName><periodId>" + periodId + "</periodId><periodName>" + periodName + "</periodName></myUserInfo>");
+		// add this user's info
 		JSONObject myUserInfo = new JSONObject();
 		try {
 			myUserInfo.put("workgroupId", workgroupId);
@@ -265,10 +259,7 @@ public class InformationController {
 		}
 		
 		// add the class info:
-		//userInfoString.append("<myClassInfo>");
-		
 		JSONObject myClassInfo = new JSONObject();
-		
 		JSONArray classmateUserInfos = new JSONArray();
 		
 		// now add classmates
@@ -286,9 +277,7 @@ public class InformationController {
 					// only include non-teacher, non-detached classmates, excluding yourself.
 					for (String requestedWorkgroupId : requestedWorkgroupIds) {
 						if (requestedWorkgroupId.equals(classmateWorkgroup.getId().toString())) {
-							//get the xml for the classmate and append it
-							//userInfoString.append(getClassmateUserInfoXML(classmateWorkgroup));
-							
+							//get the classmate info and append it
 							classmateUserInfos.put(getClassmateUserInfoJSON(classmateWorkgroup));
 						}
 					}
@@ -301,13 +290,10 @@ public class InformationController {
 						&& (workgroup == null || classmateWorkgroup.getId() != workgroup.getId())  // workgroup==null check is in case the logged in user is an admin, then the admin would not be in a workgroup for this run.
 						&& !((WISEWorkgroup) classmateWorkgroup).isTeacherWorkgroup()
 						&& ((WISEWorkgroup) classmateWorkgroup).getPeriod() != null) {   // only include classmates, not yourself.
-					//get the xml for the classmate and append it
-					//userInfoString.append(getClassmateUserInfoXML(classmateWorkgroup));
-					
+					//get the classmate info and append it
 					classmateUserInfos.put(getClassmateUserInfoJSON(classmateWorkgroup));
 				}
 			}
-
 		}
 		
 		JSONObject teacherUserInfo = new JSONObject();
@@ -392,8 +378,7 @@ public class InformationController {
 		response.setHeader("Cache-Control", "no-cache");
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader ("Expires", 0);
-		
-		response.setContentType("text/xml");
+		response.setContentType("application/json");
 		response.getWriter().write(userInfo.toString());
 	}
 	
@@ -412,7 +397,6 @@ public class InformationController {
 		String projectIdStr = request.getParameter("projectId");
 		String runId = request.getParameter("runId");
 		String requester = request.getParameter("requester");
-		//String versionId = request.getParameter("versionId");
 		String step = request.getParameter("step");
 		
 		String portalurl = ControllerUtil.getBaseUrlString(request);
@@ -429,7 +413,6 @@ public class InformationController {
 		//get the context path e.g. /wise
 		String contextPath = request.getContextPath();
 		
-		String polishedProjectUrl = null;
 		String rawProjectUrl = null;
 		String portalVLEControllerUrl = null;
 		
@@ -437,14 +420,7 @@ public class InformationController {
 		if(projectIdStr != null){
 			Project project = projectService.getById(projectIdStr);
 			
-			/* get the url for the project content file 
-			if(versionId == null || versionId.equals("")){
-				versionId = this.projectService.getActiveVersion(project);
-			}
-			*/
-			
 			rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-			
 			portalVLEControllerUrl = wiseBaseURL + "/vle/preview.html";
 		}
 		
@@ -486,9 +462,6 @@ public class InformationController {
 			
 			//get the boolean whether to get revisions
 			String getRevisions = request.getParameter("getRevisions");
-			
-			//get the url for the run info
-			String getRunInfoUrl = portalVLEControllerUrl + "&action=getRunInfo";
 			
 			//get the url to get student data
 			String getStudentDataUrl = wiseBaseURL + "/studentData.html";
@@ -604,7 +577,6 @@ public class InformationController {
 				config.put("postAnnotationsUrl", postAnnotationsUrl);
 				config.put("getStudentDataUrl", getStudentDataUrl);
 				config.put("postStudentDataUrl", postStudentDataUrl);
-				config.put("getRunInfoUrl", getRunInfoUrl);
 				config.put("gradingType", gradingType);
 				config.put("getRevisions", getRevisions);
 				config.put("getPeerReviewUrl", getPeerReviewUrl);
@@ -641,30 +613,19 @@ public class InformationController {
 			}
 		}
 		
-		/* The polishedProjectUrl is the project url with the version id inserted into the project filename
-		 * If null or empty string is returned, we want to use the rawUrl 
-		if(versionId==null || versionId.equals("")){
-			polishedProjectUrl = rawProjectUrl;
-		} else {
-			polishedProjectUrl = rawProjectUrl.replace(".project.json", ".project." + versionId + ".json");
-		}
-		*/
-		
-		polishedProjectUrl = rawProjectUrl;
-		
-		/* set the content url */
-		String getContentUrl = curriculumBaseWWW + polishedProjectUrl;
+		// set the content url 
+		String getContentUrl = curriculumBaseWWW + rawProjectUrl;
 
-		/* get location of last separator in url */
+		// get location of last separator in url 
 		int lastIndexOfSlash = getContentUrl.lastIndexOf("/");
 		if(lastIndexOfSlash==-1){ 
 			lastIndexOfSlash = getContentUrl.lastIndexOf("\\");
 		}
 		
-		/* get the url for the *.project.meta.json file */
+		// get the url for the *.project.meta.json file 
 		String projectMetaDataUrl = wiseBaseURL + "/metadata.html";
 		
-		/* set the contentbase based on the contenturl */
+		// set the contentbase based on the contenturl 
 		String getContentBaseUrl = getContentUrl.substring(0, lastIndexOfSlash) + "/";
 		
 		String getUserInfoUrl = infourl + "?action=getUserInfo";
@@ -677,10 +638,7 @@ public class InformationController {
 			String runName = "";
 			
 			if(projectIdStr == null) {
-				/*
-				 * look for the project id in the run if project id was not
-				 * provided in the request
-				 */
+				//look for the project id in the run if project id was not provided in the request
 				Run run = runService.retrieveById(new Long(runId));
 				
 				if(run != null) {
@@ -738,7 +696,6 @@ public class InformationController {
 	        	} 
 	        }
 			config.put("locale", locale);
-			config.put("runInfoRequestInterval", GET_RUNINFO_REQUEST_INTERVAL);
 			config.put("wiseBaseURL",wiseBaseURL);
 			
 			if(step != null) {
@@ -792,7 +749,6 @@ public class InformationController {
 		response.setHeader("Cache-Control", "no-cache");
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader ("Expires", 0);
-		
 		response.setContentType("application/json");
 		response.getWriter().write(config.toString());
 	}
@@ -809,8 +765,6 @@ public class InformationController {
 	private Workgroup getWorkgroup(HttpServletRequest request, Run run)
 	throws ObjectNotFoundException {
 		Workgroup workgroup = null;
-		//User user = (User) request.getSession().getAttribute(
-    	//		User.CURRENT_USER_SESSION_KEY);
 		SecurityContext context = SecurityContextHolder.getContext();
 		
 		if(context.getAuthentication().getPrincipal() instanceof UserDetails) {
@@ -831,8 +785,7 @@ public class InformationController {
 				
 				String previewRequest = request.getParameter(PREVIEW);
 				if (previewRequest != null && Boolean.valueOf(previewRequest)) {
-					// if this is a preview, workgroupId should be specified, so use
-					// that
+					// if this is a preview, workgroupId should be specified, so use that
 					String workgroupIdStr = request
 							.getParameter(WORKGROUP_ID_PARAM);
 					if (workgroupIdStr != null) {
@@ -934,12 +887,11 @@ public class InformationController {
 	}
 	
 	/**
-	 * Get the xml for the classmate user info
+	 * Get the classmate user info
 	 * @param classmateWorkgroup the workgroup of the classmate
-	 * @return an xml string containing the info for the classmate
+	 * @return a json string containing the info for the classmate
 	 */
 	private JSONObject getClassmateUserInfoJSON(Workgroup classmateWorkgroup) {
-		//StringBuffer userInfoString = new StringBuffer();
 		JSONObject classmateUserInfo = new JSONObject();
 		
 		try {			

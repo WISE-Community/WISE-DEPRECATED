@@ -39,7 +39,6 @@ View.prototype.retrieveProjectMetaData = function() {
 			var thisView = args[0];
 			
 			if(text != null && text != "") {
-				//thisView.processMaxScoresJSON(text);
 				thisView.setProjectMetadata(thisView.$.parseJSON(text));
 				
 				var maxScores = thisView.getProjectMetadata().maxScores;
@@ -66,36 +65,6 @@ View.prototype.retrieveProjectMetaData = function() {
 		this.connectionManager.request('GET', 1, projectMetaDataUrl, projectMetaDataUrlParams, projectMetaDataCallbackSuccess, [this], projectMetaDataCallbackFailure);
 	};
 };
-
-/**
- * Get the run extras such as the max scores
- * @return
- */
-View.prototype.retrieveRunExtras = function() {
-	//get the url to retrieve the run extras
-	var retrieveRunExtrasUrl = this.getConfig().getConfigParam('getRunExtrasUrl');
-	
-	var runExtrasCallbackSuccess = function(text, xml, args) {
-		var thisView = args[0];
-		
-		if(text != null && text != "") {
-			thisView.processMaxScoresJSON(text);
-		}
-
-		thisView.runExtrasRetrieved = true;
-		eventManager.fire("retrieveRunExtrasCompleted");
-	};
-	
-	var runExtrasCallbackFailure = function(text, args) {
-		var thisView = args[0];
-		thisView.runExtrasRetrieved = true;
-		eventManager.fire("retrieveRunExtrasCompleted");
-	};
-	
-	this.connectionManager.request('GET', 1, retrieveRunExtrasUrl, null, runExtrasCallbackSuccess, [this], runExtrasCallbackFailure);
-};
-
-
 
 /**
  * Parses and sets or merges the new max scores

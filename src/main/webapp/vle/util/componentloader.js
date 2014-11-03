@@ -43,7 +43,6 @@ var componentloader = function(em, sl){
 				'contentTimedOut':[null,null], 
 				'fatalError':[null,null],
 				'retrieveProjectMetaDataCompleted':[null,null], 
-				'retrieveRunExtrasCompleted':[null,null], 
 				'nullEvent':[null,null],
 				'retrieveAnnotationsCompleted':[null,null]
 			},
@@ -163,7 +162,6 @@ var componentloader = function(em, sl){
 					eventManager.subscribe("specialExportButtonClicked", view.gradingDispatcher, view);
 					eventManager.subscribe("exportExplanationButtonClicked", view.gradingDispatcher, view);
 					eventManager.subscribe("retrieveProjectMetaDataCompleted", view.gradingDispatcher, view);
-					eventManager.subscribe("retrieveRunExtrasCompleted", view.gradingDispatcher, view);
 					eventManager.subscribe("maxScoreChanged", view.gradingDispatcher, view);
 					eventManager.subscribe("gradeByStepViewSelected", view.gradingDispatcher, view);
 					eventManager.subscribe("gradeByTeamViewSelected", view.gradingDispatcher, view);
@@ -600,7 +598,6 @@ var componentloader = function(em, sl){
 						view.eventManager.subscribe('renderNodeCompleted', view.vleDispatcher, view);
 						view.eventManager.subscribe('retrieveAnnotationsCompleted', view.vleDispatcher, view);
 						view.eventManager.subscribe('retrieveProjectMetaDataCompleted', view.vleDispatcher, view);
-						view.eventManager.subscribe('retrieveRunExtrasCompleted', view.vleDispatcher, view);
 						view.eventManager.subscribe('ifrmLoaded', view.vleDispatcher, view);
 						view.eventManager.subscribe('noteEditorKeyPressed', view.vleDispatcher, view);
 						view.eventManager.subscribe('contentRenderCompleted', view.vleDispatcher, view);
