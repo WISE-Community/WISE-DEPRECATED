@@ -283,7 +283,15 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 					this.makeCRaterRequest(orState);
 				}
 			} else {
-				this.node.save(orState);
+				//check if we need to make a CRater request when the student exits the step
+				if(this.content.cRater != null && this.content.cRater.checkWorkOnExit) {
+					//we need to make a CRater request when the student exits the step
+					var checkWorkOnExit = true;
+					this.makeCRaterRequest(orState, checkWorkOnExit);
+				} else {
+					//we do not need to do anything special so we will save the work normally
+					this.node.save(orState);
+				}
 			}
 
 			//push the state object into this or object's own copy of states
@@ -316,8 +324,10 @@ OPENRESPONSE.prototype.save = function(saveAndLock,checkAnswer) {
 /**
  * Make the request to CRater to score the student work
  * @param orState the openresponsestate object
+ * @param checkWorkOnExit (optional) if this is true we will make the CRater request
+ * synchronous and not show the feedback to the student
  */
-OPENRESPONSE.prototype.makeCRaterRequest = function(orState) {
+OPENRESPONSE.prototype.makeCRaterRequest = function(orState, checkWorkOnExit) {
 	//the message to display while we are auto grading the student's work
 	var please_wait_we_are_checking_your_work = this.view.getI18NString('please_wait_we_are_checking_your_work', 'OpenResponseNode');
 	var seconds = this.view.getI18NString('seconds', 'OpenResponseNode');
@@ -348,7 +358,19 @@ OPENRESPONSE.prototype.makeCRaterRequest = function(orState) {
 	var nodeVisit = this.view.getState().getCurrentNodeVisit();
 	var sync = false;
 	var timeout = waitTime * 1000;
-
+	var suppressFeedback = false;
+	
+	if(checkWorkOnExit) {
+		/*
+		 * make the CRater request synchronous so that we save the student work
+		 * before they move to the next step
+		 */
+		sync = true;
+		
+		//do not show the feedback to the student
+		suppressFeedback = true;
+	}
+	
 	//create the object that will be accessible in the callback function
 	var callbackData = {
 			view:this.view,
@@ -357,7 +379,8 @@ OPENRESPONSE.prototype.makeCRaterRequest = function(orState) {
 			studentData:studentData,
 			or:this,
 			orState:orState,
-			nodeVisit:nodeVisit
+			nodeVisit:nodeVisit,
+			suppressFeedback:suppressFeedback
 	};
 
 	// invoke CRater in preview mode.
@@ -382,6 +405,7 @@ OPENRESPONSE.prototype.cRaterRequestSuccessCallback = function(responseText, res
 	var nodeVisit = successArgs.nodeVisit;
 	var runId = view.getConfig().getConfigParam('runId');
 	var toWorkgroupId = view.getUserAndClassInfo().getWorkgroupId();
+	var suppressFeedback = successArgs.suppressFeedback;
 	
 	if (responseJSON != null) {
 		try {
@@ -481,8 +505,10 @@ OPENRESPONSE.prototype.cRaterRequestSuccessCallback = function(responseText, res
 				}
 
 				if(hasScore || hasFeedback) {
-					//popup the auto graded annotation to the student
-					eventManager.fire("showNodeAnnotations",[nodeId]);
+					if(!suppressFeedback) {
+						//popup the auto graded annotation to the student
+						eventManager.fire("showNodeAnnotations",[nodeId]);						
+					}
 				}
 				
 				// handle rewrite/revise

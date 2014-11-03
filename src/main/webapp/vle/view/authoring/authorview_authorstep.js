@@ -780,6 +780,15 @@ View.prototype.updateCRaterMustSubmitAndReviseBeforeExit = function(){
 };
 
 /**
+ * Updates the CRater check work on exit value
+ */
+View.prototype.updateCRaterCheckWorkOnExit = function(){
+	if(this.easyMode && this[this.resolveType(this.activeNode.type)] && this[this.resolveType(this.activeNode.type)].updateCRaterCheckWorkOnExit){
+		this[this.resolveType(this.activeNode.type)].updateCRaterCheckWorkOnExit();
+	}
+};
+
+/**
  * Updates the CRater must submit and revise before exit value
  */
 View.prototype.updateEnableMultipleAttemptFeedbackRules = function(){

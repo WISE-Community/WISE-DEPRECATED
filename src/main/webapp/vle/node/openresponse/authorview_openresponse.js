@@ -534,6 +534,11 @@ View.prototype.OpenResponseNode.populateCRater = function() {
 			$('#cRaterMustSubmitAndReviseBeforeExit').attr('checked', this.content.cRater.mustSubmitAndReviseBeforeExit);
 		}
 		
+		if(this.content.cRater.checkWorkOnExit != null) {
+			//populate the check work on exit checkbox
+			$('#cRaterCheckWorkOnExit').attr('checked', this.content.cRater.checkWorkOnExit);
+		}
+		
 		if(this.content.cRater.maxCheckAnswers != null) {
 			//populate the max check answers text input
 			$('#cRaterMaxCheckAnswers').val(this.content.cRater.maxCheckAnswers);
@@ -734,6 +739,27 @@ View.prototype.OpenResponseNode.updateCRaterMustSubmitAndReviseBeforeExit = func
 	
 	//update the value in the content
 	this.content.cRater.mustSubmitAndReviseBeforeExit = value;
+	
+	/* fire source updated event */
+	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Update the check work on exit value
+ */
+View.prototype.OpenResponseNode.updateCRaterCheckWorkOnExit = function() {
+	var value = false;
+	
+	//get the 'checked' attribute which will either be null or the string 'checked'
+	var checked = $('#cRaterCheckWorkOnExit').attr('checked');
+	
+	if(checked == 'checked') {
+		//checkbox was checked
+		value = true;
+	}
+	
+	//update the value in the content
+	this.content.cRater.checkWorkOnExit = value;
 	
 	/* fire source updated event */
 	this.view.eventManager.fire('sourceUpdated');
@@ -1264,6 +1290,7 @@ View.prototype.OpenResponseNode.updateEnableCRater = function() {
 				cRaterItemId:'',
 				displayCRaterScoreToStudent:false,
 				displayCRaterFeedbackToStudent:false,
+				checkWorkOnExit:false,
 				cRaterMaxScore:null,
 				cRaterScoringRules:null
 			};
@@ -1295,6 +1322,7 @@ View.prototype.OpenResponseNode.updateEnableCRater = function() {
 				$('#cRaterDisplayScoreToStudent').attr('checked', false);
 				$('#cRaterDisplayFeedbackToStudent').attr('checked', false);
 				$('#cRaterMustSubmitAndReviseBeforeExit').attr('checked', false);
+				$('#cRaterCheckWorkOnExit').attr('checked', false);
 				$('#cRaterEnableMultipleAttemptFeedbackRules').attr('checked', false);
 				$('#cRaterMaxCheckAnswers').val('');
 				$('#cRaterFeedback').html('');

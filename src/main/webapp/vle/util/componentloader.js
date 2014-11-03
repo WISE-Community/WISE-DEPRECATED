@@ -760,6 +760,7 @@ var componentloader = function(em, sl){
 				'cRaterDisplayScoreToStudentChanged':[null, null],
 				'cRaterDisplayFeedbackToStudentChanged':[null, null],
 				'cRaterMustSubmitAndReviseBeforeExitChanged':[null, null],
+				'cRaterCheckWorkOnExitChanged':[null, null],
 				'cRaterEnableMultipleAttemptFeedbackRulesChanged':[null, null],
 				'cRaterAddFeedback':[null, null],
 				'cRaterRemoveFeedback':[null, null],
@@ -789,6 +790,7 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('cRaterDisplayScoreToStudentChanged', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterDisplayFeedbackToStudentChanged', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterMustSubmitAndReviseBeforeExitChanged', view.cRaterManager.dispatcher, view);
+					view.eventManager.subscribe('cRaterCheckWorkOnExitChanged', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterEnableMultipleAttemptFeedbackRulesChanged', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterAddFeedback', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterRemoveFeedback', view.cRaterManager.dispatcher, view);

@@ -18,6 +18,8 @@ View.prototype.cRaterManager.dispatcher = function(type, args, obj) {
 		obj.updateCRaterDisplayFeedbackToStudent();
 	} else if(type=='cRaterMustSubmitAndReviseBeforeExitChanged') {
 		obj.updateCRaterMustSubmitAndReviseBeforeExit();
+	} else if(type=='cRaterCheckWorkOnExitChanged') {
+		obj.updateCRaterCheckWorkOnExit();
 	} else if(type=='cRaterEnableMultipleAttemptFeedbackRulesChanged') {
 		obj.updateEnableMultipleAttemptFeedbackRules();
 	} else if(type=='cRaterAddFeedback') {
@@ -56,6 +58,7 @@ View.prototype.cRaterManager.cleanupCRater = function() {
 	$('#cRaterDisplayScoreToStudent').attr('checked', false);
 	$('#cRaterDisplayFeedbackToStudent').attr('checked', false);
 	$('#cRaterMustSubmitAndReviseBeforeExit').attr('checked', false);
+	$('#cRaterCheckWorkOnExit').attr('checked', false);
 	$('#cRaterMaxCheckAnswers').val('');
 	$('#cRaterFeedback').html('');
 	$('#cRaterSettingsDiv').hide();
