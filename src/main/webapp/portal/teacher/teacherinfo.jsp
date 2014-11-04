@@ -1,18 +1,18 @@
 <%@ include file="../include.jsp"%>
 
 <!DOCTYPE html>
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-
-<script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
-
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 <title>Teacher Information</title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 
-</head>
+<script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
 
+</head>
 <body style="background: #FFFFFF;">
 	<div class="dialogContent">
 		<div class="sectionHead">

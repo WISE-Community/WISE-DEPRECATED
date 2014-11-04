@@ -130,13 +130,9 @@
 </head>
 <body>
 <div id="pageWrapper">
-
 	<%@ include file="../../../headermain.jsp"%>
-		
 	<div id="page">
-			
 		<div id="pageContent">
-			
 			<div class="contentPanel">
 				<div class="panelHeader">
 					<spring:message code="teacher.run.create.createrunreview.setupAClassroomRun" />
@@ -161,7 +157,6 @@
 							<h5><spring:message code="teacher.run.create.createrunreview.whenYoureReady"/></h5>
 						</div>
 					</div>
-	
 					<form:form method="post" commandName="runParameters" class="center" onSubmit="return createRun('${projectId}','${projectType}','${projectName}','${projectJSONFilename}')">
 						<input type="submit" name="_cancel" value="<spring:message code="teacher.run.create.createrunreview.cancel" />" />
 						<input type="submit" id="submit_form" name="_finish" value="<spring:message code="teacher.run.create.createrunreview.done" />" />
@@ -173,7 +168,6 @@
 		<div style="clear: both;"></div>
 		<div id="projectDetailDialog" style="overflow:hidden;" class="dialog"></div>
 	</div>   <!-- End of page-->
-
 	<%@ include file="../../../footer.jsp"%>
 </div>
 </body>

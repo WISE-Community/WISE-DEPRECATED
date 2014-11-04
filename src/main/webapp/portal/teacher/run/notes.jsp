@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 <title><spring:message code="teacher.run.editrun.editRun"/></title>
 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
@@ -87,6 +87,7 @@
 		<span style='font-color:gray'>If you have any advice, suggestions, or thoughts for other WISE teachers who will be running this project in their classroom, write them here.</span><br/>
 		<textarea cols="100" rows="15" id='publicNotesTextarea'></textarea><br/>
 		<input type="button" class="save" value="<spring:message code='save'/>"></input>
+	</div>
 </div>
 </body>
 </html>

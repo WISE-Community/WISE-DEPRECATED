@@ -23,7 +23,7 @@
 <script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
 
 </head>
-
+<body>
 <!-- Support for Spring errors object -->
 <spring:bind path="runParameters.postLevel">
   <c:forEach var="error" items="${status.errorMessages}">
@@ -38,7 +38,6 @@
     </c:choose>
   </c:forEach>
 </spring:bind>
-<body>
 <div id="pageWrapper">
 	<%@ include file="../../../headermain.jsp"%>
 		

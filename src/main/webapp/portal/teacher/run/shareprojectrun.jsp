@@ -1,22 +1,20 @@
 <%@ include file="../../include.jsp" %>
 
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="teacher.run.shareprojectrun.sharingPermissions"/></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherrunstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 
-
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
  
-<title><spring:message code="teacher.run.shareprojectrun.sharingPermissions"/></title>
-
 <script type="text/javascript">
 //extend Array prototype
 Array.prototype.contains = function(obj) {
@@ -85,9 +83,7 @@ function removeSharedUserClicked() {
   return confirm('<spring:message code="teacher.run.shareprojectrun.areYouSureYouWantToRemoveSharedTeacher"/>');
 }
 </script>
-
 </head>
-
 <body style="background:#FFFFFF;">
 
 <div class="dialogContent">		
@@ -145,7 +141,5 @@ function removeSharedUserClicked() {
 	
 	</table>
 </div>
-
 </body>
 </html>
-

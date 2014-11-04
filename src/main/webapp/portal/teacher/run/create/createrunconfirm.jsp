@@ -37,13 +37,9 @@
   </c:forEach>
 </spring:bind>
 <div id="pageWrapper">
-
 	<%@ include file="../../../headermain.jsp"%>
-		
 	<div id="page">
-			
 		<div id="pageContent">
-			
 			<div class="contentPanel">
 				<div class="panelHeader">
 					<spring:message code="teacher.run.create.createrunconfirm.setupAClassroomRun" />
@@ -86,7 +82,6 @@
 							</h5>
      	    	    	</div>
      	    	    </div> <!-- /* End setUpRunBox */-->
-
 					<div style="text-align:center;">
 						<form method="post">
 							<input id="goToPageInput" type="hidden" name="_page" value="1" />
@@ -99,7 +94,6 @@
 		</div>
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page-->
-
 	<%@ include file="../../../footer.jsp"%>
 </div>
 <script type="text/javascript">

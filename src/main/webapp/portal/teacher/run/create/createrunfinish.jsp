@@ -24,11 +24,8 @@
 </head>
 <body>
 <div id="pageWrapper">
-
 	<%@ include file="../../../headermain.jsp"%>
-		
 	<div id="page">
-			
 		<div id="pageContent">
 			
 			<div class="contentPanel">
@@ -80,7 +77,6 @@
 		</div>
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page-->
-
 	<%@ include file="../../../footer.jsp"%>
 </div>
 </body>

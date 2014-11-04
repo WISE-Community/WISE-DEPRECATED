@@ -39,6 +39,7 @@ function checkIfTextAreaEmpty (form) {
 }
 </script>
 </head>
+<body>
 <!-- Support for Spring errors object -->
 <spring:bind path="runParameters.periodNames">
   <c:forEach var="error" items="${status.errorMessages}">
@@ -53,16 +54,10 @@ function checkIfTextAreaEmpty (form) {
     </c:choose>
   </c:forEach>
 </spring:bind>
-
-<body>
 <div id="pageWrapper">
-
 	<%@ include file="../../../headermain.jsp"%>
-		
 	<div id="page">
-			
 		<div id="pageContent">
-			
 			<div class="contentPanel">
 				<div class="panelHeader">
 					<spring:message code="teacher.run.create.createrunperiods.setupAClassroomRun" />
@@ -104,13 +99,9 @@ function checkIfTextAreaEmpty (form) {
 			</div>
 		</div>
 		<div style="clear: both;"></div>
-	</div>   <!-- End of page-->
-
+	</div>   <!-- End of page div-->
 	<%@ include file="../../../footer.jsp"%>
-</div>
-
-<!--end of centered div-->
-</div>
+</div><!--end of pageWrapper div-->
 <script type="text/javascript">
 $("#goBackButton").click(function() {
 	$("#goToPageInput").val("1");	

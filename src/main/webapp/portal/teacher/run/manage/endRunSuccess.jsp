@@ -4,20 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="teacher.run.manage.endRunSuccess.archiveRunSuccess"/></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 
-<title><spring:message code="teacher.run.manage.endRunSuccess.archiveRunSuccess"/></title>
-
 <script type='text/javascript'>
 var refreshRequired = true;
 </script>
-
 </head>
-
 <body style="background:#FFF;">
-
 	<div class="dialogContent">
 		<div class="dialogSection">
 			<div class="errorMsgNoBg">
@@ -26,6 +23,5 @@ var refreshRequired = true;
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>
