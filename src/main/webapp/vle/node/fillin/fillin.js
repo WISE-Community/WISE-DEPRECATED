@@ -56,11 +56,8 @@ FILLIN.prototype.render = function(textInteractionEntryIndex) {
 	
 	this.html = "";
 	clearFeedbackDiv();
-	//removeClassFromElement("checkAnswerButton", "disabledLink");
 	$('#checkAnswerButton').parent().removeClass('ui-state-disabled');
-	//addClassToElement("tryAgainButton", "disabledLink");
 	$('#tryAgainButton').parent().addClass('ui-state-disabled');
-	//addClassToElement("nextButton", "disabledLink");
 	$('#nextButton').parent().addClass('ui-state-disabled');
 	
 	this.generateNonInteractiveDivHtml();
@@ -135,11 +132,10 @@ FILLIN.prototype.tryAgain = function() {
 		return;
 	};
 	
-	//removeClassFromElement("checkAnswerButton", "disabledLink");
 	$('#checkAnswerButton').parent().removeClass('ui-state-disabled');
-	//addClassToElement("tryAgainButton", "disabledLink");
 	$('#tryAgainButton').parent().addClass('ui-state-disabled');
-	setResponseBoxEnabled(true);
+	var responseBox = document.getElementById('responseBox').removeAttribute('disabled');
+	
 	clearFeedbackDiv();
 	clearResponseBox();
 };
@@ -150,11 +146,9 @@ FILLIN.prototype.checkAnswer = function() {
 		return;
 	};
 
-	//removeClassFromElement("tryAgainButton", "disabledLink");
 	$('#tryAgainButton').parent().removeClass('ui-state-disabled');
-	//addClassToElement("checkAnswerButton", "disabledLink");
 	$('#checkAnswerButton').parent().addClass('ui-state-disabled');
-	setResponseBoxEnabled(false);
+	document.getElementById('responseBox').setAttribute('disabled','disabled');
 
 	var studentAnswerText = document.getElementById('responseBox').value;
 	var textEntryInteraction = this.textEntryInteractions[currentTextEntryInteractionIndex];
@@ -167,14 +161,11 @@ FILLIN.prototype.checkAnswer = function() {
 		var customResponse = this.customCheck(this.states);
 		if(customResponse.correct){	
 			$('#tryAgainButton').parent().addClass('ui-state-disabled');
-			//addClassToElement("tryAgainButton", "disabledLink");
 			$('#nextButton').parent().removeClass('ui-state-disabled');
-			//removeClassFromElement("nextButton", "disabledLink");
 			document.getElementsByName("activeBlank")[0].value = studentAnswerText;
 			
 			if(customResponse.complete){
 				$('#nextButton').parent().addClass('ui-state-disabled');
-				//addClassToElement("nextButton", "disabledLink");
 			};
 		};
 		
@@ -183,13 +174,9 @@ FILLIN.prototype.checkAnswer = function() {
 		// default processing
 		if (textEntryInteraction.isCorrect(studentAnswerText)) {
 			$('#feedbackDiv').removeClass('incorrect');
-			//removeClassFromElement("feedbackDiv", "incorrect");
 			$('#feedbackDiv').addClass('correct');
-			//addClassToElement("feedbackDiv", "correct");	
 			$('#tryAgainButton').parent().addClass('ui-state-disabled');
-			//addClassToElement("tryAgainButton", "disabledLink");
 			$('#nextButton').parent().removeClass('ui-state-disabled');
-			//removeClassFromElement("nextButton", "disabledLink");
 			
 			feedbackDiv.innerHTML = this.view.getI18NString('correct', 'FillinNode');
 			document.getElementsByName("activeBlank")[0].value = studentAnswerText;   // display activeBlank with correctAnswer
@@ -199,15 +186,12 @@ FILLIN.prototype.checkAnswer = function() {
 				// there are no more boxes for student to fill in. show congratulations message and indicate that student has completed the step.
 				fillinState.isCompleted = true;
 				$('#nextButton').parent().addClass('ui-state-disabled');
-				//addClassToElement("nextButton", "disabledLink");
 				feedbackDiv.innerHTML += this.view.getI18NString('all_correct_msg', 'FillinNode');							
 				feedbackDiv.innerHTML += this.getCorrectText(this.textEntryInteractions.length, this.states.length);			
 			};
 		} else {
 			$('#feedbackDiv').addClass('correct');
-			//removeClassFromElement("feedbackDiv", "correct");
 			$('#feedbackDiv').removeClass('incorrect');
-			//addClassToElement("feedbackDiv", "incorrect");		
 			feedbackDiv.innerHTML = this.view.getI18NString('not_correct_msg', 'FillinNode');	
 		};
 	};
