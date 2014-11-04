@@ -26,6 +26,8 @@ function ANNOTATOR(node) {
 	this.width = 450,
 	//this.teacherAnnotation = "";
 	this.backgroundDefault = ""; // svg string to hold background svg image
+	this.bgRatio = 1,
+	this.bgPadding = 25,
 	this.instructions = ""; // string to hold prompt/instructions text
 	this.instructionsModal;
 	this.labelTotal = 0; // var to hold total number of snapshots created
@@ -129,18 +131,23 @@ ANNOTATOR.prototype.loadModules = function(jsonfilename, context) {
 			
 			if(height > width || height === width){
 				if(height > maxH){
+					context.bgRatio = maxH/height;
 					height = maxH;
 					width = height/ratio;
 				}
 			} else {
 				if(width > maxW){
+					context.bgRatio = maxW/width;
 					width = maxW;
 					height = width*ratio;
 				}
 			}
 			
-			var h = context.height = height + 50,
-				w = context.width = width + 50,
+			context.height = height;
+			context.width = width;
+			var padding = context.bgPadding*2,
+				h = height + padding,
+				w = width + padding,
 				rightX = w-width-1,
 				centerX = (rightX+1)/2,
 				bottomY = h-height-1,
@@ -1224,7 +1231,11 @@ ANNOTATOR.prototype.isPointInRegion = function(x, y, region) {
 	
 	if(x != null && y != null && region != null) {
 		//get the shape object
-		var shape = region.shape;
+		var shape = region.shape,
+			ratio = this.bgRatio,
+			padding = this.bgPadding/ratio - this.bgPadding;
+		x = x/ratio-padding;
+		y = y/ratio-padding;
 		
 		if(shape != null) {
 			//get the shape type e.g. 'rectangle' or 'circle'
