@@ -14,6 +14,9 @@ View.prototype.AnnotatorNode.generatePage = function(view){
 	this.view = view;
 	this.content = this.view.activeContent.getContentJSON();
 	
+	//retrieve the translation files for this step type
+	this.view.activeNode.fetchI18NFiles();
+	
 	var parent = document.getElementById('dynamicParent');
 	
 	/* wipe out old */
