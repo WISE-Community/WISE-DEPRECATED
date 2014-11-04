@@ -21,7 +21,7 @@
 <body>
 <div id="pageWrapper">
 
-	<%@ include file="../headerteacher.jsp"%>
+	<%@ include file="../../headermain.jsp"%>
 	
 	<div id="page">
 			

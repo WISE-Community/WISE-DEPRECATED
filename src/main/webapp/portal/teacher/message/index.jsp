@@ -201,7 +201,7 @@ function sendReply(originalMessageId) {
 <body>
 <div id="centeredDiv">
 
-<%@ include file="../headerteacher.jsp"%>
+<%@ include file="../../headermain.jsp"%>
 
 <div id="navigationSubHeader2"><spring:message code="teacher.message.index.viewAndSendMessages"/><span id="navigationSubHeader1"><spring:message code="teacher.message.index.management"/></span></div>
 

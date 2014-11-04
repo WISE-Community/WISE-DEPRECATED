@@ -31,7 +31,8 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 </head>
 <body>
 <div id="pageWrapper">
-	<%@ include file="../headerteacher.jsp"%>
+
+	<%@ include file="../../headermain.jsp"%>
 		
 	<div id="page">
 			

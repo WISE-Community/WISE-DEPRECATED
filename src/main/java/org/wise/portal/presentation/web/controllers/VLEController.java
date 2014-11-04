@@ -79,8 +79,6 @@ public class VLEController {
 				return handleGetData(request, response, run);
 			} else  if (action.equals("postData")) {
 				return handlePostData(request, response, run);
-			} else if (action.equals("getRunInfo")) {
-				return handleGetRunInfo(request, response, run);
 			} else if (action.equals("getRunExtras")) {
 				return handleGetRunExtras(request, response, run);
 			} else {
@@ -92,27 +90,6 @@ public class VLEController {
 		}
 	}
 
-	/**
-	 * Retrns the RunInfo XML containing information like whether the run
-	 * is paused or messages that teacher wants to send to students.
-	 * @param request
-	 * @param response
-	 * @param run
-	 * @return
-	 * @throws IOException 
-	 */
-	private ModelAndView handleGetRunInfo(HttpServletRequest request,
-			HttpServletResponse response, Run run) throws IOException {
-		String runInfoString = "<RunInfo>" + run.getInfo() + "</RunInfo>";
-		response.setHeader("Cache-Control", "no-cache");
-		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader("Expires", 0);
-
-		response.setContentType("text/xml");
-		response.getWriter().print(runInfoString);
-		return null;
-	}
-	
 	/**
 	 * Retrns the RunExtras JSON string containing information like
 	 * the maxscores that teacher defines
