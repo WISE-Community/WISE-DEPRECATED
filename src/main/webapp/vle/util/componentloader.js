@@ -318,7 +318,6 @@ var componentloader = function(em, sl){
 				'whoIsEditing':[null,null],
 				'startCreateReviewSequence':[null,null], 
 				'cancelReviewSequence':[null,null], 
-				'authorWindowScrolled':[null,null],
 				'previewFrameLoaded':[null,null],
 				'cleanProject':[null,null],
 				'deleteProject':[null,null],
@@ -417,7 +416,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('editProjectFile', view.authorDispatcher, view);
 					view.eventManager.subscribe('previewProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('whoIsEditing', view.authorDispatcher, view);
-					view.eventManager.subscribe('authorWindowScrolled', view.authorDispatcher, view);
 					view.eventManager.subscribe('previewFrameLoaded', view.authorDispatcher, view);
 					view.eventManager.subscribe('reviewUpdateProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('updateProject', view.authorDispatcher, view);

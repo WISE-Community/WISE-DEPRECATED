@@ -77,8 +77,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.editProjectSubmit();
 	} else if(type=='editProjectCancel'){
 		obj.editProjectCancel();
-	} else if(type=='authorWindowScrolled'){
-		obj.authorWindowScrolled();
 	} else if(type=='previewFrameLoaded'){
 		obj.onPreviewFrameLoad();
 	} else if(type=='browserResize'){
