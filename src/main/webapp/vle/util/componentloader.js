@@ -15,7 +15,7 @@ var componentloader = function(em, sl){
 		student: ['topMenu','setup', 'core', 'keystroke', 'config', 'user', 'session','studentwork','student','hint','navigation','annotations','uicontrol', 'wise', 'maxscores', 'peerreviewhelper', 'ideabasket','portfolio', 'studentasset', 'studentWebSocket'],
 		grading: ['setup', 'core', 'config', 'studentwork', 'user', 'session', 'grading', 'annotations', 'maxscores', 'ideabasket'],
 		grading_min: ['setup', 'core_min', 'config', 'studentwork_min', 'user', 'session', 'grading_min', 'annotations_min', 'maxscores_min', 'ideabasket'],
-		authoring: ['ddMenu', 'setup', 'core','keystroke','customcontextmenu', 'config', 'session','messagemanager','author','authoringcomponents', 'maxscores'],
+		authoring: ['ddMenu', 'setup', 'core','keystroke', 'config', 'session','messagemanager','author','authoringcomponents', 'maxscores'],
 		summary: ['core'],
 		classroomMonitor: ['setup', 'core', 'config', 'studentwork', 'user', 'session', 'annotations', 'maxscores', 'teacherWebSocket', 'ideabasket']
 	};
@@ -383,7 +383,6 @@ var componentloader = function(em, sl){
 					var keystrokes = [['openProject', 79, ['shift','alt']],['previewProject', 80, ['shift','alt']],['saveProject',83,['shift','alt']]];
 					return createKeystrokeManager(eventManager,keystrokes);
 				},
-				//customContextMenu:function(){return createCustomContextMenu(eventManager);}, //disabling TODO menu for now
 				init:function(view){
 					view.eventManager.subscribe('openProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('projectSelected', view.authorDispatcher, view);
@@ -726,7 +725,6 @@ var componentloader = function(em, sl){
 		},
 		annotations:{},
 		maxscores:{},
-		customcontextmenu:{},
 		messagemanager:{},
 		wise:{},
 		peerreviewhelper:{},

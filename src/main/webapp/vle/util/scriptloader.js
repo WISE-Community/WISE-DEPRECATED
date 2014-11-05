@@ -435,7 +435,6 @@ var scriptloader = function(){
 	    user: ['vle/model/userandclassinfo.js'],	    
 	    config: ['vle/model/config.js'],
 		keystroke: ['vle/util/keystrokemanager.js'],
-		customcontextmenu: ['vle/util/customcontextmenu.js'],
         outsideurl: [],
 		shortcuts: ['vle/util/shortcutmanager.js'],
 		ddMenu: ['vle/util/dropdown.js'],
