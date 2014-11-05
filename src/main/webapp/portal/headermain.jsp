@@ -94,7 +94,6 @@
 					<div>
 						<a href="${contextPath}/teacher/management/updatemyaccount.html"><spring:message
 								code="accountmenu.myAccount" /></a>
-						<!-- <a href="${contextPath}/message.html?action=index" ><spring:message code="accountmenu.messages"/><span id="unreadMsg"></span></a>  -->
 					</div>
 				</sec:authorize>
 				<sec:authorize ifAnyGranted="ROLE_ADMINISTRATOR">
@@ -125,9 +124,6 @@
 												code="accountmenu.quickstart" /></a></li>
 									<li><a href="${contextPath}/pages/teacherfaq.html"><spring:message
 												code="accountmenu.faq" /></a></li>
-									<!--  
-				            <li><a href="#" style="color:#999;">Search the Help Guide</a></li>
-				            -->
 									<c:if test="${discourseSSOLoginURL != null}">
 										<!-- we will style and internationalize this later -->
 										<li><a target=_blank href="${discourseSSOLoginURL}"><spring:message
@@ -154,7 +150,6 @@
 							<li class="level1 menu3"><a
 								href="${contextPath}/teacher/index.html"><spring:message
 										code="accountmenu.teacherHome" /></a></li>
-
 						</sec:authorize>
 					</ul>
 				</div>
@@ -180,8 +175,6 @@
 		</div>
 
 		<script type="text/javascript">
-			//$.cookie("lastLoginTime",lastLogin,{path:"/"});
-
 			// initialise menu, set last login time and unread messages
 			$(function() {
 				$('ul.sf-menu').superfish({});

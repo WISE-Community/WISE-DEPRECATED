@@ -10,19 +10,14 @@
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 </head>
 <body>
 <div id="pageWrapper">
-	
 	<div id="page">
-		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
 				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise" /></a>
 			</div>
-			
 			<div class="infoContent">
 				<div class="panelHeader"><spring:message code="teacher.registerTeacherConfirm.teacherRegistration"/></div>
 				<div class="infoContentBox">

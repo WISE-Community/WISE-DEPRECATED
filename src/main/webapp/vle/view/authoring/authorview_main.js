@@ -2065,17 +2065,6 @@ View.prototype.populateNodeSelector = function(event, cancelEvent){
 };
 
 /**
- * Called whenever the author window is scrolled
- */
-View.prototype.authorWindowScrolled = function() {
-	//see if there is a msgDiv
-	if(document.msgDiv) {
-		//modify the vertical position so the msgDiv is always displayed at the top of the screen
-		document.msgDiv.style.top = (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
-	}
-};
-
-/**
  * Fires the pageRenderCompleted event whenever the preview frame is loaded.
  */
 View.prototype.onPreviewFrameLoad = function(){

@@ -254,11 +254,6 @@ img.tooltip {
 	min-height: 350px;
 }
 
-#msgDiv {
-	color: #FF563F;
-	margin: .5em;
-}
-
 /* Add an Idea Dialog Form */
 #addAnIdeaForm {
 	font-size:.9em;

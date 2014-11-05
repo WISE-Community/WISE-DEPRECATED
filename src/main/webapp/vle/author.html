@@ -3,10 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="chrome=1" /> 
-<script type='text/javascript' src='util/eventmanager.js'></script>
-<script type="text/javascript" src="util/scriptloader.js"></script>
-
 <link rel="shortcut icon" href="images/favicon.ico" type="image/png"></link>
+<script src='util/eventmanager.js' type='text/javascript'></script>
+<script src="util/scriptloader.js" type="text/javascript"></script>
+
 <script type='text/javascript'>
 /*
  * Loads scripts when body is loaded 
@@ -66,9 +66,7 @@ var view;
 
 </script>
 </head>
-
-<body id="w4_author" onload='loaded();' onScroll='eventManager.fire("authorWindowScrolled");' style='height:500px'>
-	
+<body id="w4_author" onload='loaded();' style='height:500px'>
 <div id="centeredDiv" style="display:none;">
 
 <div id="authorHeader">
@@ -701,9 +699,6 @@ var view;
 
 <div id='stepTypeDescriptions' style="display: none;"></div>
 
-<iframe id="hiddenifrm" name="hiddenifrm" scrolling="auto" frameborder="0" width="0%" height="0%"> [Content for
-browsers that don't support iframes goes here.] </iframe>
-
 </div>   <!--end of centered div-->
 
 <div id='overlay'></div>
@@ -716,5 +711,4 @@ browsers that don't support iframes goes here.] </iframe>
 <div id="sessionMessageDiv">
 </div>
 </body>
-
 </html>

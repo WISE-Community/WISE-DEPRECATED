@@ -12,7 +12,7 @@
 						<li><a href="${contextPath}/pages/teacherfaq.html"><spring:message code="footer.faq" /></a></li>
 						<li><a href="${contextPath}/pages/gettingstarted.html"><spring:message code="footer.gettingStarted" /></a></li>
 						<li class="last"><a href="${contextPath}/contact/contactwise.html"><spring:message code="footer.contact" /></a></li>
-						<!-- <li class="last"><a href="credits.html"><spring:message code="footer.credits" /></a></li> -->
+						<!-- TODO: uncomment me when credits page is ready <li class="last"><a href="credits.html"><spring:message code="footer.credits" /></a></li> -->
 					</ul>
 	 			</div>
 				<div id="wiseOpenSource">
@@ -31,9 +31,7 @@
 					<a href="http://concord.org" title="<spring:message code="footer.link_concord" />" target="_blank">
 						<img src="${contextPath}/<spring:theme code="concord_logo"/>" alt="<spring:message code="footer.link_concord" />" />
 					</a>
-					<!-- <a href="http://www.telscenter.org/confluence/display/SAIL/Home" title="<spring:message code="footer.link_sail" />" target="_blank"> -->
-						<img src="${contextPath}/<spring:theme code="sail_logo"/>" alt="<spring:message code="footer.link_sail" />" />
-					<!-- </a>  -->
+					<img src="${contextPath}/<spring:theme code="sail_logo"/>" alt="<spring:message code="footer.link_sail" />" />
 					<a href="http://www.telscenter.org/" title="<spring:message code="footer.link_tels" />" target="_blank">
 						<img src="${contextPath}/<spring:theme code="tels_logo_small"/>" alt="<spring:message code="footer.link_tels" />" />
 					</a>
@@ -50,6 +48,6 @@
 				<div style="clear:both; padding:0;"></div>
 	 		</div>
 		</div>
-	<!--    End of contentFooter -->
-	</div>
-</div>
+	<!-- End of contentFooter -->
+	</div> 	<!-- End of banner -->
+</div>	<!-- End of footer -->
