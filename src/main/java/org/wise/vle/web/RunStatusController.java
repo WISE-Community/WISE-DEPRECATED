@@ -72,6 +72,15 @@ public class RunStatusController {
 			e.printStackTrace();
 		}
 		
+		if(runId == null) {
+			/*
+			 * this request was most likely caused by a session timeout and the user logging
+			 * back in which makes a request to runStatus.html without any parameters.
+			 * in this case we will just redirect the user back to the WISE home page.
+			 */
+			return new ModelAndView("redirect:/");
+		}
+		
 		boolean allowedAccess = false;
 		
 		/*
@@ -95,35 +104,30 @@ public class RunStatusController {
 			return null;
 		}
 
-		if(runId != null) {
-			//try to retrieve the run status for the run id
-			RunStatus runStatus = vleService.getRunStatusByRunId(runId);
-			
-			if(runStatus == null) {
-				//the run status for the run id has not been created yet so we will create it
-				try {
-					//create a JSONObject for the status
-					JSONObject status = new JSONObject();
-					
-					//put the run id into the status
-					status.put("runId", runId);
-					
-					//get the status as a string
-					statusString = status.toString();
-					
-					//create the new run status
-					runStatus = new RunStatus(runId, statusString);
-					vleService.saveRunStatus(runStatus);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			} else {
-				//we have a run status so we will ge the status string
-				statusString = runStatus.getStatus();
+		//try to retrieve the run status for the run id
+		RunStatus runStatus = vleService.getRunStatusByRunId(runId);
+		
+		if(runStatus == null) {
+			//the run status for the run id has not been created yet so we will create it
+			try {
+				//create a JSONObject for the status
+				JSONObject status = new JSONObject();
+				
+				//put the run id into the status
+				status.put("runId", runId);
+				
+				//get the status as a string
+				statusString = status.toString();
+				
+				//create the new run status
+				runStatus = new RunStatus(runId, statusString);
+				vleService.saveRunStatus(runStatus);
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
 		} else {
-			//run id is null so we will send an error
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "");
+			//we have a run status so we will ge the status string
+			statusString = runStatus.getStatus();
 		}
 		
 		try {
