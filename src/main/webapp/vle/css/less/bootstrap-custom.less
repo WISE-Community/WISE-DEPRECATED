@@ -1,14 +1,123 @@
 // NOTE: This file should be compiled to vle/css/bootstrap-custom.css
 
-@import "bootstrap/bootstrap.less";
+// Core variables and mixins
+@import "bootstrap/variables.less";
+@import "bootstrap/mixins.less";
+
+// Reset and dependencies
+@import "bootstrap/normalize.less";
+@import "bootstrap/print.less";
+@import "bootstrap/glyphicons.less";
+
+// Core CSS
+@import "bootstrap/scaffolding.less";
+@import "bootstrap/type.less";
+@import "bootstrap/code.less";
+@import "bootstrap/grid.less";
+@import "bootstrap/tables.less";
+@import "bootstrap/forms.less";
+@import "bootstrap/buttons.less";
+
+// Components
+@import "bootstrap/component-animations.less";
+@import "bootstrap/dropdowns.less";
+@import "bootstrap/button-groups.less";
+@import "bootstrap/input-groups.less";
+@import "bootstrap/navs.less";
+@import "bootstrap/navbar.less";
+//@import "bootstrap/breadcrumbs.less";
+@import "bootstrap/pagination.less";
+@import "bootstrap/pager.less";
+@import "bootstrap/labels.less";
+@import "bootstrap/badges.less";
+@import "bootstrap/jumbotron.less";
+@import "bootstrap/thumbnails.less";
+@import "bootstrap/alerts.less";
+@import "bootstrap/progress-bars.less";
+@import "bootstrap/media.less";
+@import "bootstrap/list-group.less";
+@import "bootstrap/panels.less";
+@import "bootstrap/responsive-embed.less";
+@import "bootstrap/wells.less";
+@import "bootstrap/close.less";
+
+// Components w/ JavaScript
+@import "bootstrap/modals.less";
+@import "bootstrap/tooltip.less";
+@import "bootstrap/popovers.less";
+//@import "bootstrap/carousel.less";
+
+// Utility classes
+@import "bootstrap/utilities.less";
+@import "bootstrap/responsive-utilities.less";
+
+// WISE Custom
 @import "../fonts/font-awesome/less/font-awesome.less";
 @import "variables.less";
 @import "mixins.less";
 
+// Use rem or em instead of pixels: https://gist.github.com/jasny/9731895
+
+// Set root font size
+
+html {
+    font-size: 81.25%;
+}
+
+// Change styling for elements that mix pixels and ems
+
+.navbar-toggle {
+	margin-top: @navbar-padding-vertical/4;
+	margin-bottom: @navbar-padding-vertical/4;
+}
+
+pre {
+  font-size: ( @font-size-base - (1 / (@font-size-root + 0)) );
+}
+
+.form-control-feedback {
+  width: calc(@input-height-base ~" + 2px");
+  height: calc(@input-height-base ~" + 2px");
+}
+.input-lg + .form-control-feedback {
+  width: calc(@input-height-large ~" + 2px");
+  height: calc(@input-height-large ~" + 2px");
+}
+.input-sm + .form-control-feedback {
+  width: calc(@input-height-small ~" + 2px");
+  height: calc(@input-height-small ~" + 2px");
+}
+
+.form-control {
+    height: @input-height-base;
+}
+
+.form-horizontal {
+    .radio, .checkbox, .radio-inline, .checkbox-inline {
+        padding: @padding-base-vertical;
+        border: 1px solid transparent;
+    }
+    .radio, .checkbox {
+        min-height: calc((@line-height-computed + @padding-base-vertical) ~"+ 1px");
+    }
+    .form-control-static {
+        padding-top: @padding-base-vertical;
+        border-top: 1px solid transparent;
+        padding-bottom: @padding-base-vertical;
+        border-bottom: 1px solid transparent;
+    }
+
+    @media (min-width: @screen-sm-min) {
+        .control-label {
+            padding-top: @padding-base-vertical;
+            border-top: 1px solid transparent;
+        }
+    }
+}
+
 /*--------------------------------------------------
 Default Bootstrap style overrides for the WISE VLE
 --------------------------------------------------*/
-
 
 h4, h5, h6, .h4, .h5, .h6 {
 	font-family: Arial, Helvetica, sans-serif;
@@ -42,12 +151,15 @@ a {
 // Forms
 // --------------------------------------------------
 
-
+input[type="radio"], input[type="checkbox"] {
+	margin-top: 2px;
+}
 
 // Panels
 // --------------------------------------------------
 .panel {
 	.box-shadow(1px 1px 2px rgba(0, 0, 0, 0.1));
+	border-radius: @border-radius-base;
 	//border-color: #bbb;
 	//border-color: rgba(0,0,0,.25);
 }
@@ -58,10 +170,17 @@ a {
 		font-size: inherit;
 		line-height: inherit;
 	}
+	.border-top-radius(@border-radius-base);
 	> * {
 		vertical-align: middle;
 	}
 }
+
+.panel-footer {
+	.border-bottom-radius(@border-radius-base);
+}
+
+
 
 // Modals
 // --------------------------------------------------
@@ -72,13 +191,17 @@ a {
   &.fade .modal-dialog {
     .translate(0, 0);
     .scale(.5);
-    .transition-transform(~"0.2s");
+    //.transition-transform(~"0.2s");
   }
   &.in .modal-dialog { .translate(0, 0); .scale(1); }
 }
 
 .modal-content {
-	border-radius: @border-radius-base;
+    .box-shadow(0 3px 9px rgba(0,0,0,.25));
+    
+    @media (min-width: @screen-sm-min) {
+		.box-shadow(0 5px 15px rgba(0,0,0,.25));
+	}
 }
 
 .modal-header {
@@ -86,15 +209,20 @@ a {
 	.border-top-radius(@border-radius-base);
 }
 
+.modal-footer {
+	padding: ((6 / @font-size-root) + @font-unit);
+}
+
 .modal-title {
-	font-size: ((16px / @font-size-root) + @font-unit);
-	line-height: ((16px / @font-size-root) + @font-unit);
+	.px-rem(font-size, 16);
+	line-height: 1;
 	color: @brand-info;
+	text-shadow: 0 none;
 	font-family: @headings-font-family;
 }
 
 .modal-footer {
-	margin-top: ((5px / @font-size-root) + @font-unit);
+	margin-top: 0.4em;
 	.border-bottom-radius(@border-radius-base);
 }
 
@@ -139,7 +267,7 @@ a {
 .dropdown-menu, .nav {
 	li .fa {
 		.fa-fixed-width;
-		margin-right: ((4px / @font-size-root) + @font-unit);
+		margin-right: 0.25em;
 		text-align: center;
 	}
 }
@@ -148,11 +276,35 @@ a {
 .fa-stack {
 	width: 1em;
 	height: 1em;
-	line-height: 1em;
+	line-height: 1;
 	
 	.fa {
 		line-height: inherit;
 		vertical-align: inherit;
+	}
+}
+
+// Text (email, search, etc) input field clear icons
+.input-clear {
+	position: relative;
+	font-weight: normal;
+	
+	> input {
+		padding-right: 2.5em;
+	}
+	
+	> .fa {
+		color: #cccccc;
+	    font-size: 1.35em;
+	    padding: 0.55em 0.35em;
+	    position: absolute;
+	    right: 0;
+	    top: 0;
+	    cursor: pointer;
+	    
+	    &:hover, &:focus {
+	    	color: #555555;
+	    }
 	}
 }
 
@@ -166,13 +318,13 @@ a {
 /* Use Font Awesome (icon) replacements for radios and checkboxes with .fa-input class
 Requires wrapping in a label and adding an empty span after the input */
 
-input[type="radio"] + .fa-input,
-input[type="checkbox"] + .fa-input {
+input[type="radio"].fa-input,
+input[type="checkbox"].fa-input {
   display:none;
 }
 
-input[type="radio"] + .fa-input + :before,
-input[type="checkbox"] + .fa-input + :before {
+input[type="radio"].fa-input + :before,
+input[type="checkbox"].fa-input + :before {
   font-family: 'FontAwesome';
   font-size: 1.1em;
   font-weight: normal;
@@ -182,7 +334,7 @@ input[type="checkbox"] + .fa-input + :before {
   //color: @gray;
 }
 
-input[type="radio"] + .fa-input {
+input[type="radio"].fa-input {
 	+ span:before {
   		content: "\f10c"; /* circle-blank */
   	}
@@ -191,7 +343,7 @@ input[type="radio"] + .fa-input {
   	}
 }
 
-input[type="checkbox"] + .fa-input {
+input[type="checkbox"].fa-input {
 	+ span:before {
 		//content: "\f0c8"; /* square */
 		content: "\f096"; /* square open */
@@ -206,13 +358,12 @@ input[type="checkbox"] + .fa-input {
 	margin: 1px 0 0;
 }
 
-/*.editable {
-	border-bottom: 1px dashed;
-	 &:hover {
-	 	text-decoration: none;
-	 }
-}
-*/
+//.editable {
+	//border-bottom: 1px dashed;
+	 //&:hover {
+	 	//text-decoration: none;
+	 //}
+//}
 
 // Buttons
 // --------------------------------------------------
@@ -226,7 +377,7 @@ input[type="checkbox"] + .fa-input {
 }
 
 .btn-sm {
-	border-radius: ((3px / @font-size-root) + @font-unit);
+	.px-rem(border-radius, 3);
 }
 
 .btn {
@@ -245,9 +396,31 @@ input[type="checkbox"] + .fa-input {
 	}
 }
 
+.btn-group {
+	.btn-info {
+		border-color: darken(@btn-info-bg, 5%);
+	}
+	
+	.btn-success {
+		border-color: darken(@btn-success-bg, 3%);
+	}
+	
+	.btn-warning {
+		border-color: darken(@btn-warning-bg, 5%);
+	}
+	
+	.btn-danger {
+		border-color: darken(@btn-danger-bg, 3%);
+	}
+	
+	.btn-primary {
+		border-color: darken(@btn-primary-bg, 3%);
+	}
+}
+
 .btn, .badge {
 	.fa {
-		margin-right: ((5px / @font-size-root) + @font-unit);
+		margin-right: 0.4em;
 	}
 }
 
@@ -258,13 +431,13 @@ input[type="checkbox"] + .fa-input {
 }
 
 .handle {
-	margin-right: ((5px / @font-size-root) + @font-unit);
+	margin-right: 0.4em;
 	cursor: move;
 }
 
 .dropdown-menu {
 	form {
-		margin: 0 ((5px / @font-size-root) + @font-unit);
+		margin: 0 0.4em;
 		.form-group{
 			&:last-of-type {
 				margin-bottom: 0;
@@ -280,13 +453,11 @@ input[type="checkbox"] + .fa-input {
 // Navbars
 // --------------------------------------------------
 .navbar-default {
-	.navbar-nav {
-	    > li > a {
-	    	&:active {
-	    		color: @navbar-default-link-color;
-	    	}
-	    }
-    }
+	.navbar-header {
+		&:hover {
+			background-color: @navbar-default-bg;
+		}
+	}
 }
 
 .navbar-inverse {
@@ -302,18 +473,16 @@ input[type="checkbox"] + .fa-input {
     }
 }
 
-/* Help/info elements */
+// Progress Bars
+// --------------------------------------------------
 
-.help, .info {
-	cursor: pointer;
-	margin: 0 ((2px / @font-size-root) + @font-unit);
-	color: @brand-primary;
-	.fa-lg;
+.progress-bar[aria-valuenow="0"] {
+	min-width: 0;
 }
 
-/* Bootbox dialogs */
-.bootbox-alert, .bootbox-confirm {
-	.bootbox-close-button {
-		display: none;
-	}
+// Jumbotron
+// --------------------------------------------------
+
+.jumbotron {
+	background-color: @gray-lighter;
 }

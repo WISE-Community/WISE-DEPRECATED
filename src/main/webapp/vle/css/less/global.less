@@ -1,7 +1,7 @@
 // NOTE: This file should be compiled to vle/css/global.css
 
 // Import Bootstrap styles
-@import "bootstrap-custom.less";
+@import (reference) "bootstrap-custom.less";
 
 // Import header and footer styles
 @import "header.less";
@@ -9,152 +9,13 @@
 
 // TODO: make semantic :)
 
-// Use rem instead of pixels: https://gist.github.com/jasny/9731895
-
-// Set root font size
-
-html {
-    font-size: @font-size-root;
-}
-
-
-// Change styling for elements that mix pixels and ems
-
-.navbar-toggle {
-	margin-top: @navbar-padding-vertical/8;
-	margin-bottom: @navbar-padding-vertical/8;
-}
-
-pre {
-  font-size: ( @font-size-base - (1 / @font-size-root) );
-}
-
-.form-control-feedback {
-  width: calc(@input-height-base ~" + 2px");
-  height: calc(@input-height-base ~" + 2px");
-}
-.input-lg + .form-control-feedback {
-  width: calc(@input-height-large ~" + 2px");
-  height: calc(@input-height-large ~" + 2px");
-}
-.input-sm + .form-control-feedback {
-  width: calc(@input-height-small ~" + 2px");
-  height: calc(@input-height-small ~" + 2px");
-}
-
-.form-control {
-    height: calc(@input-height-base ~" + 2px");
-}
-
-.form-horizontal {
-    .radio, .checkbox, .radio-inline, .checkbox-inline {
-        padding: @padding-base-vertical;
-        border: 1px solid transparent;
-    }
-    .radio, .checkbox {
-        min-height: calc((@line-height-computed + @padding-base-vertical) ~"+ 1px");
-    }
-    .form-control-static {
-        padding-top: @padding-base-vertical;
-        border-top: 1px solid transparent;
-        padding-bottom: @padding-base-vertical;
-        border-bottom: 1px solid transparent;
-    }
-
-    @media (min-width: @screen-sm-min) {
-        .control-label {
-            padding-top: @padding-base-vertical;
-            border-top: 1px solid transparent;
-        }
-    }
-}
-
 /*--------------------------------------------------
 Global Styles for the WISE VLE
 --------------------------------------------------*/
 
+// Custom Variables
+@content-border-color: #ccc;
 
-/* Content headers */
-
-.panel-header {
-	font-size: 1.25 + @font-unit;
-	margin: 0 0 (0.5  + @font-unit);
-	padding-bottom: (0.5  + @font-unit);
-	border-bottom: 1px solid #aaa;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-	color: @brand-danger;
-}
-
-
-/* Main content */
-
-.content {
-	padding: 15px;
-	width: 100%;
-}
-
-
-/* Layout & navigation elements */
-
-.top-nav {
-	//border-bottom: 4px solid @brand-warning;
-	.navbar-brand {
-		background-image: url('../../images/logo/WISE-logo-icon-flat.svg');
-		background-repeat: no-repeat;
-		background-position: left center;
-		padding-left: ((46px / @font-size-root) + @font-unit);
-		-webkit-background-size: ((40px / @font-size-root) + @font-unit);
-		-o-background-size: ((40px / @font-size-root) + @font-unit);
-		-moz-background-size: ((40px / @font-size-root) + @font-unit);
-		background-size: ((40px / @font-size-root) + @font-unit);
-		margin-left: ((5px / @font-size-root) + @font-unit);
-		font-family: @headings-font-family;
-	}
-	
-	.navbar-right {
-		padding-right: ((5px / @font-size-root) + @font-unit);
-	}
-	
-	.navbar-collapse {
-		&.in {
-			padding: 0;
-			.navbar-nav {
-				margin: ((5.5px / @font-size-root) + @font-unit) 0;
-			}
-		}
-	}
-}
-
-.navbar-toggle {
-	margin-right: ((5px / @font-size-root) + @font-unit);
-}
-
-.navbar-collapse {
-	max-height: none;
-}
-
-.no-padding {
-	padding: 0;
-}
-
-.no-margin {
-	margin: 0;
-}
-
-/* Dividers */
-
-.divider, .dropdown-menu .divider {
-	height: 1px;
-	margin: ((8px / @font-size-root) + @font-unit) 0;
-	overflow: hidden;
-	background-color: #eee;
-	background-color: rgba(0,0,0,.1);
-}
-
-.sortable-placeholder {
-	background-color: #eee;
-	background-color: rgba(0,0,0,.1);
-}
 
 /* Links, buttons, & inputs */
 
@@ -171,14 +32,36 @@ a, button {
 }
 
 button {
-	//.btn;
-	//.btn-default;
+	&.link {
+		cursor: pointer;
+		color: @brand-primary;
+		background: transparent;
+		border: 0 none;
+		display: inline;
+		padding: 0;
+		margin: 0;
+		text-align: left;
+		
+		&:hover, &:focus {
+			text-decoration: underline;
+		}
+		
+		&.button {
+			padding: 0.4em 0.5em;
+			.px-rem(border-radius, 3);
+			
+			&:hover, &:active {
+				text-decoration: none;
+				background-color: #e5e5e5;
+				color: @gray-dark;
+			}
+		}
+	}
 	
 	&.multiselect {
 		overflow: hidden;
 	    text-overflow: ellipsis;
 	    white-space: nowrap;
-	    //width: 100%;
 	}
 }
 
@@ -188,22 +71,32 @@ button {
 	vertical-align: middle;
 }
 
+/* Dividers */
+
+.divider, .dropdown-menu .divider {
+	height: 1px;
+	margin: 0.6em 0;
+	overflow: hidden;
+	background-color: #eee;
+	background-color: rgba(0,0,0,.1);
+}
+
 /* Content elements */
 
 .menu {
 	&.panel-body {
-		padding: ((5px / @font-size-root) + @font-unit);
+		padding: 0.4em;
 	}
 }
 
 .label {
-	padding-top: .3 + @font-unit;
+	padding-top: 0.3em;
 }
 
 .btn {
 	display: inline-block;
 	.fa {
-		padding: 0 ((5px / @font-size-root) + @font-unit);
+		padding: 0 0.4em;
 		text-align: center;
 	}
 	.btn-text {
@@ -215,7 +108,7 @@ button {
 	.btn {
 		.fa {
 			padding: 0;
-			margin-right: ((5px / @font-size-root) + @font-unit);
+			margin-right: 0.4em;
 		}
 		.btn-text {
 			display: inline-block;
@@ -224,14 +117,14 @@ button {
 }
 
 .project-thumb {
-    height: ((70px / @font-size-root) + @font-unit);
-    width: ((70px / @font-size-root) + @font-unit);
+    .px-rem(height, 70);
+    .px-rem(width, 70);
     border: 1px solid #ddd;
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 	.small {
-		margin: 0 (.5 + @font-unit);
+		margin: 0 0.5em;
 	}
 }
 
@@ -255,10 +148,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 /* Modals */
 
-.bootbox {
-	&.modal-lg, &.modal-sm {
-		width: auto;
-	}
+.dialog {
+	display: none;
 }
 
 .modal-lg {
@@ -299,9 +190,20 @@ form {
 		padding: @padding-base-vertical;
 	}
 	
-	> li > a {
-		padding-top: ((6px / @font-size-root) + @font-unit);
-		padding-bottom: ((6px / @font-size-root) + @font-unit);
+	> li {
+		> a {
+			padding-top: 0.45em;
+			padding-bottom: 0.45em;
+			
+			&:focus {
+				outline: none;
+			}
+		}
+		
+		&.selected > a {
+			background-color: @component-active-bg;
+			color: #ffffff;
+		}
 	}
 }
 
@@ -313,15 +215,15 @@ form {
 
 .form-inline {
 	.form-group {
-		margin-bottom: ((5px / @font-size-root) + @font-unit);
+		margin-bottom: 0.4em;
 	}
 }
 
 .form-header {
 	border-bottom: 1px solid;
     font-weight: bold;
-    margin-bottom: ((15px / @font-size-root) + @font-unit);
-    padding-bottom: ((5px / @font-size-root) + @font-unit);
+    margin-bottom: 1.15em;
+    padding-bottom: 0.4em;
 }
 
 .panel-info {
@@ -376,10 +278,147 @@ form {
     .bs-callout(@brand-success, lighten(@brand-success, 40%));
 }
 
+/* Content headers */
+
+.panel-header {
+	font-size: 1.25rem;
+	margin: 0 0 0.5em;
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid #aaa;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+	color: @brand-danger;
+}
+
+
+/* Content & layout */
+
+.content {
+	padding: 1em;
+	width: 100%;
+}
+
+.content-panel {
+	.section-head {
+		font-size: 1.2em;
+		text-shadow: 1px 1px #eee;
+		padding-bottom: 0.2em;
+		border-bottom: 1px solid;
+		border-color: lighten(@gray-light, 10%);
+		
+		small {
+			color: lighten(@gray, 10%);
+			font-size: 0.8em;
+			margin-left: 0.25em;
+		}
+	}
+	
+	.panel {
+		box-shadow: none;
+		border-color: @content-border-color;
+		//border-radius: 0;
+	}
+	
+	.panel-heading {
+		.border-top-radius(0);
+	}
+	
+	.panel-footer {
+		.border-bottom-radius(0);
+	}
+}
+
+.center {
+	text-align: center;
+}
+
+.no-padding {
+	padding: 0;
+}
+
+.no-margin {
+	margin: 0;
+}
+
+
+/* Navigation */
+
+.top-nav {
+	border-bottom: 0 none;
+	
+	.navbar-icon {
+		background-image: url('../images/logo/WISE-logo-icon-flat.svg');
+		background-repeat: no-repeat;
+		background-position: center;
+		background-color: darken(@brand-primary, 20%);
+		.px-rem(-webkit-background-size, 38);
+		.px-rem(-o-background-size, 38);
+		.px-rem(-moz-background-size, 38);
+		.px-rem(background-size, 38);
+		.px-rem(width, 48);
+		.px-rem(height, 40);
+		display: block;
+		float: left;
+	}
+	
+	.navbar-brand {
+		.px-rem(height, 40);
+		.px-rem(line-height, 40);
+		padding-top: @navbar-padding-vertical/8;
+		padding-bottom: @navbar-padding-vertical/8;
+		padding-left: 0.6em;
+		font-family: @headings-font-family;
+		background-color: @navbar-default-bg;
+	}
+	
+	.navbar-nav {
+		@media (min-width: @screen-sm-min) {
+			> li > a {
+				padding-top: 0;
+			}
+		}
+	}
+	
+	.navbar-right {
+		padding-right: 0.4em;
+	}
+	
+	.navbar-collapse {
+		&:not(.in){
+			> ul > li > a {
+				.px-rem(height, 40);
+				.px-rem(line-height, 40);
+			}
+		}
+		
+		&.in {
+			padding: 0;
+			.navbar-nav {
+				margin: 0.4em 0;
+			}
+		}
+	}
+	
+	.navbar-toggle {
+		.px-rem(height, (40 - @navbar-padding-vertical/4));
+	}
+}
+
+.navbar-brand {
+	font-size: 1.2em;
+}
+
+.navbar-toggle {
+	margin-right: 0.4em;
+}
+
+.navbar-collapse {
+	max-height: none;
+}
+
 /* TinyMCE */
 
 div.mce-edit-area {
-	padding: ((4px / @font-size-root) + @font-unit) ((6px / @font-size-root) + @font-unit);
+	padding: 0.3em 0.45em;
 }
 
 /* DataTables */
@@ -390,8 +429,8 @@ table.dataTable thead .sorting_desc,
 table.dataTable thead .sorting_asc_disabled,
 table.dataTable thead .sorting_desc_disabled {
 	cursor: pointer;
-	padding-left: ((12px / @font-size-root) + @font-unit);
-	padding-right: ((18px / @font-size-root) + @font-unit);
+	padding-left: 1em;
+	padding-right: 1.4em;
 	color: @brand-primary;
 }
 
@@ -404,38 +443,39 @@ table.dataTable thead .sorting_desc_disabled {
 	}
 }
 
-/* Bootstrap Multiselect */
-
-.multiselect {
-	> span {
-		display: inline-flex;
-		display: -moz-box;
-		display: -ms-flexbox;
-		display: box;
-		//display: -webkit-box;
-		margin-right: ((2px / @font-size-root) + @font-unit);
-	    max-width: ((150px / @font-size-root) + @font-unit);
-	    overflow: hidden;
-	    white-space: nowrap;
-	    text-overflow: ellipsis;
+/* Bootstrap Select */
+.bootstrap-select.btn-group .dropdown-menu li {
+	&:not(.disabled) a:hover small, &:not(.disabled) a:focus small, &.active:not(.disabled) a small {
+		color: @gray-lighter;
 	}
 }
 
-.multiselect-container {
-	.radio {
-		padding-left: ((20px / @font-size-root) + @font-unit);
+/* Sortables */
+
+.sortable-placeholder {
+	background-color: #eee;
+	background-color: rgba(0,0,0,.1);
+}
+
+/* Help/info elements */
+
+.help, .info {
+	cursor: pointer;
+	margin: 0 0.15em;
+	color: @brand-primary;
+	.fa-lg;
+}
+
+// AngularJS
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
+
+// Angular X-Editable
+.editable-click {
+	color: @link-color;
 	
-		> input {
-			display: none;
-		}
+	&:hover, &:focus {
+		color: darken(@link-color, 10%);
 	}
-	
-	> li > a > label {
-		padding-top: ((6px / @font-size-root) + @font-unit) !important;
-		padding-bottom: ((6px / @font-size-root) + @font-unit) !important;
-		
-		> input[type="checkbox"] {
- 			margin-top: ((2px / @font-size-root) + @font-unit);
- 		}
- 	}
 }

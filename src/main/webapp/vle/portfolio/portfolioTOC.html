@@ -1,9 +1,0 @@
-Table of Contents (drag to reorder, click item to go to page, click delete item to delete item)
-<ul ui-sortable="sortableOptions" ng-model="portfolio.items">
-  <li class="portfolioItem" ng-repeat="item in portfolio.items track by $index">
-    <a href="#/item/{{item.id}}/">{{item.title}}</a>
-    <button id="portfolioDeleteItemButton" ng-click="removeItem(item)">Delete Item</button>
-  </li>
-</ul>
-
-{{portfolio.items.length}} Current Items | {{portfolio.deletedItems.length}} Deleted Items
