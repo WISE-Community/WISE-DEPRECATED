@@ -141,4 +141,16 @@ public interface Portal extends Persistable {
 	 * @return
 	 */
 	public void setGoogleMapKey(String googleMapKey);
+
+	/**
+	 * Get the Run Survey Template string
+	 * @return run survey template string
+	 */
+	public String getRunSurveyTemplate();
+	
+	/**
+	 * Set the Run Survey Template string
+	 * @param run survey template string
+	 */
+	public void setRunSurveyTemplate(String runSurveyTemplate);
 }

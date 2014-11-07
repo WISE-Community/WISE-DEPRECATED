@@ -57,7 +57,6 @@ public class PortalImpl implements Portal {
 	@Transient
 	private static final String COLUMN_NAME_SENDMAIL_PROPERTIES = "sendmail_properties";
 
-	@SuppressWarnings("unused")
 	@Transient
 	private static final String COLUMN_NAME_GOOGLEMAPS_API_KEY = "googlemaps_api_key";
 
@@ -75,7 +74,10 @@ public class PortalImpl implements Portal {
 
 	@Transient
 	private static final String COLUMN_NAME_SETTINGS = "settings";
-	
+
+	@Transient
+	private static final String COLUMN_NAME_RUN_SURVEY_TEMPLATE = "run_survey_template";
+
 	@Transient
 	private static final String COLUMN_NAME_GOOGLE_MAP_KEY = "google_map_key";
 
@@ -99,7 +101,10 @@ public class PortalImpl implements Portal {
 	
 	@Column(name = COLUMN_NAME_SETTINGS, length = 32768)
 	private String settings;  // text (blob) 2^15
-	
+
+	@Column(name = COLUMN_NAME_RUN_SURVEY_TEMPLATE, length = 32768)
+	private String runSurveyTemplate;  // text (blob) 2^15
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	public Long id = null;
@@ -274,5 +279,15 @@ public class PortalImpl implements Portal {
 	 */
 	public void setGoogleMapKey(String googleMapKey) {
 		this.googleMapKey = googleMapKey;
+	}
+
+	@Override
+	public String getRunSurveyTemplate() {
+		return this.runSurveyTemplate;
+	}
+
+	@Override
+	public void setRunSurveyTemplate(String runSurveyTemplate) {
+		this.runSurveyTemplate = runSurveyTemplate;
 	}
 }

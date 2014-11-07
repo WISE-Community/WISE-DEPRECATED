@@ -90,7 +90,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 @RequestMapping("/teacher/run/createRun.html")
 @SessionAttributes("runParameters")
 public class CreateRunController {
-
+	
 	@Autowired
 	private RunService runService;
 
@@ -439,10 +439,8 @@ public class CreateRunController {
 		thread.start();
 		
 		status.setComplete();
-
 		return modelAndView;
 	}
-	
 
 	class CreateRunEmailService implements Runnable {
 
@@ -468,7 +466,6 @@ public class CreateRunController {
 				if (!sendEmailEnabled) {
 					return;
 				}
-
 				sendEmail();
 			} catch (MessagingException e) {
 				// what if there was an error sending email?
@@ -573,7 +570,6 @@ public class CreateRunController {
 
 			//sends the email to the admin
 			mailService.postMail(recipients, subject, message, fromEmail);
-
 
 			//also send email to teacher	
 			String[] teacherRecipient = new String[]{teacherEmail};

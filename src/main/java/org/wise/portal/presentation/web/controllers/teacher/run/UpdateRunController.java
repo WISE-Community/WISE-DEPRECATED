@@ -24,7 +24,9 @@
 package org.wise.portal.presentation.web.controllers.teacher.run;
 
 import java.util.Date;
+import java.util.Properties;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,12 +35,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 
@@ -46,11 +50,16 @@ import org.wise.portal.service.project.ProjectService;
  * Controller for updating run settings, like add period, 
  * enable/disable idea manager and student file uploader.
  * 
- * @author patrick lawler
- * @version $Id:$
+ * @author Patrick Lawler
+ * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping(value={"/teacher/run/manage/*.html","/teacher/run/updaterun.html", "/teacher/run/editrun.html", "/teacher/run/notes.html"})
+@RequestMapping(value={
+		"/teacher/run/manage/*.html",
+		"/teacher/run/updaterun.html",
+		"/teacher/run/editrun.html",
+		"/teacher/run/notes.html",
+		"/teacher/run/survey.html"})
 public class UpdateRunController {
 
 	@Autowired
@@ -58,13 +67,24 @@ public class UpdateRunController {
 	
 	@Autowired
 	private ProjectService projectService;
+	
+	@Autowired
+	private IMailFacade mailService = null;
+
+	@Autowired
+	protected Properties wiseProperties;
 
 	@RequestMapping(method=RequestMethod.GET)
 	protected ModelAndView handleGET(HttpServletRequest request) throws Exception {
+		User user = ControllerUtil.getSignedInUser();
 		String runId = request.getParameter("runId");
 		Run run = null;
 		if (runId != null) {
 			run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
+			if (!run.getOwners().contains(user) && !user.isAdmin()) {
+				String contextPath = request.getContextPath();
+				return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
+			}
 		}
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("run", run);
@@ -78,10 +98,13 @@ public class UpdateRunController {
 		Run run = null;
 		if (runId != null) {
 			run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
+			if (!run.getOwners().contains(user) && !user.isAdmin()) {
+				String contextPath = request.getContextPath();
+				return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
+			}
 		}
 
 		String command = request.getParameter("command");
-
 		if("updateTitle".equals(command)){
 			String title = request.getParameter("title");
 			this.runService.updateRunName(Long.parseLong(runId), title);
@@ -108,8 +131,18 @@ public class UpdateRunController {
 			response.getWriter().write("success");
 		} else if ("saveNotes".equals(command)) {
 			String privateNotes = request.getParameter("privateNotes");
-			String publicNotes = request.getParameter("publicNotes");
-			this.runService.updateNotes(Long.parseLong(runId), privateNotes, publicNotes);
+			this.runService.updateNotes(Long.parseLong(runId), privateNotes);
+			response.getWriter().write("success");
+		} else if ("saveSurvey".equals(command)) {
+			String survey = request.getParameter("survey");
+			this.runService.updateSurvey(Long.parseLong(runId), survey);
+			
+			// send email to WISE staff with Survey
+			EmailService emailService = 
+					new EmailService("Survey completed [Run ID="+runId+"]: "+run.getName(), survey);
+			Thread thread = new Thread(emailService);
+			thread.start();
+			
 			response.getWriter().write("success");
 		} else if ("archiveRun".equals(command)) {
 			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwners().contains(user)) {
@@ -127,6 +160,7 @@ public class UpdateRunController {
 				}
 
 				ModelAndView endRunSuccessMAV = new ModelAndView("teacher/run/manage/endRunSuccess");
+				endRunSuccessMAV.addObject("run",run);
 				return endRunSuccessMAV;
 			} 			
 		} else if ("unArchiveRun".equals(command)) {
@@ -153,5 +187,34 @@ public class UpdateRunController {
 			}			
 		}
 		return null;
+	}
+	
+	class EmailService implements Runnable {
+
+		private String messageSubject;
+		private String messageBody;
+		
+		public EmailService(String messageSubject, String messageBody) {
+			this.messageBody = messageBody;
+			this.messageSubject = messageSubject;
+		}
+
+		@Override
+		public void run() {
+			try {
+				String sendEmailEnabledStr = wiseProperties.getProperty("send_email_enabled");
+				Boolean sendEmailEnabled = Boolean.valueOf(sendEmailEnabledStr);
+				if (!sendEmailEnabled) {
+					return;
+				}
+				
+				String fromEmail = wiseProperties.getProperty("portalemailaddress");
+				String[] recipients = wiseProperties.getProperty("project_setup").split(",");
+
+				mailService.postMail(recipients, messageSubject, messageBody, fromEmail);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

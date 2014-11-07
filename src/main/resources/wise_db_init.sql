@@ -370,7 +370,7 @@
         name varchar(255),
         postLevel integer,
         private_notes text,
-        public_notes text,
+        survey text,
         run_code varchar(255) not null unique,
         start_time datetime not null,
         timesRun integer,

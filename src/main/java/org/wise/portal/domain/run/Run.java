@@ -368,14 +368,14 @@ public interface Run extends Offering {
 	public void setPrivateNotes(String privateNotes);
 	
 	/**
-	 * Gets public notes for this run
-	 * @return String public notes for this run
+	 * Gets survey for this run
+	 * @return String survey for this run
 	 */
-	public String getPublicNotes();
+	public String getSurvey();
 	
 	/**
-	 * Sets public notes for this run
-	 * @return String public notes for this run
+	 * Sets survey for this run
+	 * @return String survey for this run
 	 */
-	public void setPublicNotes(String publicNotes);
+	public void setSurvey(String survey);
 }

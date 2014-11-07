@@ -312,13 +312,20 @@ public interface RunService extends OfferingService {
     public void setRealTimeEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException;
 
     /**
-     * Update public and private run notes for this run
+     * Update private run notes for this run
      * @param runId
      * @param privateNotes String private notes
-     * @param publicNotes String public notes
      * @throws ObjectNotFoundException
      */
-    public void updateNotes(Long runId, String privateNotes, String publicNotes) throws ObjectNotFoundException;
+    public void updateNotes(Long runId, String privateNotes) throws ObjectNotFoundException;
+
+    /**
+     * Update survey for the specified run
+     * @param runId
+     * @param survey String survey
+     * @throws ObjectNotFoundException
+     */
+    public void updateSurvey(Long runId, String survey) throws ObjectNotFoundException;
 
     /**
      * Given a <code>Long</code> runId, changes the archiveReminderTime to be 30 days

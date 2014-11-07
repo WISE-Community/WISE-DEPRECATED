@@ -455,7 +455,7 @@ View.prototype.openTeacherRunNotes = function (runId) {
 	myNotesDiv.dialog({
 		modal: true,
 		width: '700',
-		height: '600',
+		height: '450',
 		title: 'My Notes',
 		close: function(){ $(this).html(''); },
 		buttons: {

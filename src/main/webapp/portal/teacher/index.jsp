@@ -103,7 +103,8 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 												<li><spring:message code="teacher.index.yourProjectRun" /> <span style="font-weight:bold;">${run.name} (${run.id})</span> <spring:message code="teacher.index.hasBeenOpenSince" />
 													<fmt:formatDate value="${run.starttime}" type="date" dateStyle="medium" timeStyle="short" />.
 													 <spring:message code="teacher.index.doYouWantToArchive" />  [<a class="runArchiveLink"
-															id='archiveRun_${run.id}'><spring:message code="teacher.index.yes" /></a> / <a class="extendReminderLink" id='extendReminder_${run.id}'><spring:message code="teacher.index.remindMeLater" /></a>]</li>
+													 	id="archiveRun_runId=${run.id}&runName=<c:out value="${fn:escapeXml(run.name)}" />" title="<spring:message code="teacher.management.projectruntabs.archive_title"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"
+														><spring:message code="teacher.index.yes" /></a> / <a class="extendReminderLink" id='extendReminder_${run.id}'><spring:message code="teacher.index.remindMeLater" /></a>]</li>
 											</c:if>
 										</sec:accesscontrollist>
 									</c:forEach>
@@ -138,6 +139,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 	
 	<%@ include file="../footer.jsp"%>
 </div>
+<div id="archiveRunDialog" style="overflow:hidden;" class="dialog"></div>
 
 <!-- Page-specific script TODO: Make text translatable and move to external script-->
 
@@ -172,25 +174,29 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
         * Asynchronously archives a run
         **/
         $('.runArchiveLink').on('click',function(){
-        	var link = $(this);
-        	var id = $(this).attr('id').replace('archiveRun_','');
-        	var updatingText = $('<span style="color: #DDCDB5;"> ' + '<spring:message code="teacher.index.updating"/>' + '</span>');
-        	link.parent().append(updatingText);
-        	$.ajax({
-				type:"post",
-				url:"${contextPath}/teacher/run/manage/archiveRun.html",
-				data: {"command":"archiveRun","runId":id},
-				success: function(request){
-					updatingText.remove();
-					link.css('text-decoration','strike-through');
-					link.parent().append('<span style="color: #DDCDB5;"> ' + '<spring:message code="teacher.index.projectRun"/>' + ' ' + id + ' ' + '<spring:message code="teacher.index.hasBeenArchivedWillRefresh"/>' + '</span>');
-					setTimeout(function(){window.location.reload();},2000);
-				},
-				error: function(request,error){
-					updatingText.remove();
-					link.parent().append('<span style="color: #DD2424;"> ' + '<spring:message code="teacher.index.unableToArchiveRun"/>' + ' ' + id + ' ' + '<spring:message code="teacher.index.tryAgainLater"/>' + '</span>');
-				}
-        	});
+    		var title = $(this).attr('title');
+   			var params = $(this).attr('id').replace('archiveRun_','');
+   			var path = "${contextPath}/teacher/run/manage/archiveRun.html?" + params;
+    		var div = $('#archiveRunDialog').html('<iframe id="archiveIfrm" width="100%" height="100%"></iframe>');
+    		div.dialog({
+    			modal: true,
+    			width: '600',
+    			height: '450',
+    			title: title,
+    			close: function(){
+    				if(document.getElementById('archiveIfrm').contentWindow['refreshRequired']){
+    					window.location.reload();
+    				}
+    				$(this).html('');
+    			},
+    			buttons: {
+    				Close: function(){
+    					$(this).dialog('close');
+                        window.location.reload();
+                   }
+    			}
+    		});
+    		$("#archiveRunDialog > #archiveIfrm").attr('src',path);        	
         });
 
 	/**

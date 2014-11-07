@@ -154,7 +154,7 @@ public class RunImpl extends OfferingImpl implements Run {
     private static final String COLUMN_NAME_PRIVATE_NOTES = "private_notes";
     
     @Transient
-    private static final String COLUMN_NAME_PUBLIC_NOTES = "public_notes";
+    private static final String COLUMN_NAME_SURVEY = "survey";
 
     @Column(name = RunImpl.COLUMN_NAME_LAST_RUN)
     private Date lastRun;
@@ -228,8 +228,8 @@ public class RunImpl extends OfferingImpl implements Run {
 	@Column(name = COLUMN_NAME_PRIVATE_NOTES, length = 32768)
 	private String privateNotes;   // text (blob) 2^15
 
-	@Column(name = COLUMN_NAME_PUBLIC_NOTES, length = 32768)
-	private String publicNotes;   // text (blob) 2^15
+	@Column(name = COLUMN_NAME_SURVEY, length = 32768)
+	private String survey;   // text (blob) 2^15
 
     /**
      * @return the endtime
@@ -727,12 +727,12 @@ public class RunImpl extends OfferingImpl implements Run {
 		this.privateNotes = privateNotes;
 	}
 
-	public String getPublicNotes() {
-		return publicNotes;
+	public String getSurvey() {
+		return survey;
 	}
 
-	public void setPublicNotes(String publicNotes) {
-		this.publicNotes = publicNotes;
+	public void setSurvey(String survey) {
+		this.survey = survey;
 	}
 	
 	/**

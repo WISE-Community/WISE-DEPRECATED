@@ -85,7 +85,6 @@ function removeSharedUserClicked() {
 </script>
 </head>
 <body style="background:#FFFFFF;">
-
 <div class="dialogContent">		
 
 	<div id="sharingSearchBoxHelp" class="dialogSection"><spring:message code="teacher.run.shareprojectrun.toShareRunWithAnotherTeacher"/></div>
@@ -98,7 +97,6 @@ function removeSharedUserClicked() {
 	</div>
 	
 	<table id="sharedProjectPermissions" class='wisetable'>
-	
 		<tr>
 			<th><spring:message code="teacher.run.shareprojectrun.username"/></th>
 			<th><spring:message code="teacher.run.shareprojectrun.permissionLevel"/></th> 
@@ -138,7 +136,6 @@ function removeSharedUserClicked() {
 					</td>
 				</tr>
 		</c:forEach>
-	
 	</table>
 </div>
 </body>

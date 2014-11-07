@@ -115,49 +115,30 @@
 							        </table>
 							    </td> 
 							    <td>
-								    <c:set var="isExternalProject" value="0"/>
-								    
-								        <c:forEach var="external_run" items="${externalprojectruns}">
-								           <c:if test="${run.id == external_run.id}">
-								                   <c:set var="isExternalProject" value="1"/>
-								           </c:if>
-								        </c:forEach>
-								           <c:choose>
-								               <c:when test="${isExternalProject == 1}">
-								               	  <ul class="actionList">
-								                  	<li><spring:message code="teacher.management.projectruntabs.periodReports"/> <c:forEach var="periodInRun" items="${run.periods}"><a href="report.html?runId=${run.id}&groupId=${periodInRun.id}">${periodInRun.name}</a>&nbsp;</c:forEach></li>
-								               	  </ul>
-								               </c:when>
-								               <c:otherwise>
-											   <ul class="actionList">
-													<li><span style="font-weight:bold;"><spring:message code="teacher.management.projectruntabs.gradeByStep"/>:</span> <a class="grading" title="<spring:message code="teacher.management.projectruntabs.gradingFeedback"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=step&getRevisions=false&minified=true"><spring:message code="teacher.management.projectruntabs.latestWork"/></a>&nbsp;|&nbsp;<a class="grading" title="<spring:message code="teacher.management.projectruntabs.gradingFeedback"/> ${run.name} (<spring:message code="run_id"/>: ${run.id})" id="runId=${run.id}&gradingType=step&getRevisions=true&minified=true"><spring:message code="teacher.management.projectruntabs.allRevisions"/></a></li>
-							  	                    <li><span style="font-weight:bold;"><spring:message code="teacher.management.projectruntabs.gradeByTeam"/>:</span> <a class="grading" title="<spring:message code="teacher.management.projectruntabs.gradingFeedback"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=team&getRevisions=false&minified=true"><spring:message code="teacher.management.projectruntabs.latestWork"/></a>&nbsp;|&nbsp;<a class="grading" title="<spring:message code="teacher.management.projectruntabs.gradingFeedback"/> ${run.name} (<spring:message code="run_id"/>: ${run.id})" id="runId=${run.id}&gradingType=team&getRevisions=true&minified=true"><spring:message code="teacher.management.projectruntabs.allRevisions"/></a></li>
-		                    						<sec:accesscontrollist domainObject="${run}" hasPermission="2">
-		                    							<c:choose>
-		                    								<c:when test="${isRealTimeEnabled && run.realTimeEnabled}">
-		                    									<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.monitor"/></span></a></li>
-		                    								</c:when>
-		                    								<c:otherwise>
-		                    									<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor" style="display:none"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.monitor"/></span></a></li>
-		                    								</c:otherwise>
-		                    							</c:choose>
-		                    						</sec:accesscontrollist>
-								               </ul>
-								               <ul class="actionList">
-											        <li>
-											        	<spring:message code="teacher.management.projectruntabs.projectLabel"/>&nbsp;<a href="${contextPath}/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" /><span><spring:message code="preview"/></span></a>
-										    			|&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="project_details"/>"><img class="icon" alt="info" src="${contextPath}/<spring:theme code="id"/>" /><span><spring:message code="teacher.management.projectruntabs.projectInfo"/></span></a>
-											        	<sec:accesscontrollist domainObject="${run.project}" hasPermission="16">
-											        		|&nbsp;<a onclick="if(confirm('<spring:message code="teacher.management.projectruntabs.editWarning"/>')){window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.management.projectruntabs.edit"/></span></a>
-											        	</sec:accesscontrollist>
-											        </li>
-											    </ul>
-								               </c:otherwise>
-								           </c:choose>
-									
+								   <ul class="actionList">
+										<li><span style="font-weight:bold;"><spring:message code="teacher.management.projectruntabs.gradeByStep"/>:</span> <a class="grading" title="<spring:message code="teacher.management.projectruntabs.gradingFeedback"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=step&getRevisions=false&minified=true"><spring:message code="teacher.management.projectruntabs.latestWork"/></a>&nbsp;|&nbsp;<a class="grading" title="<spring:message code="teacher.management.projectruntabs.gradingFeedback"/> ${run.name} (<spring:message code="run_id"/>: ${run.id})" id="runId=${run.id}&gradingType=step&getRevisions=true&minified=true"><spring:message code="teacher.management.projectruntabs.allRevisions"/></a></li>
+				  	                    <li><span style="font-weight:bold;"><spring:message code="teacher.management.projectruntabs.gradeByTeam"/>:</span> <a class="grading" title="<spring:message code="teacher.management.projectruntabs.gradingFeedback"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=team&getRevisions=false&minified=true"><spring:message code="teacher.management.projectruntabs.latestWork"/></a>&nbsp;|&nbsp;<a class="grading" title="<spring:message code="teacher.management.projectruntabs.gradingFeedback"/> ${run.name} (<spring:message code="run_id"/>: ${run.id})" id="runId=${run.id}&gradingType=team&getRevisions=true&minified=true"><spring:message code="teacher.management.projectruntabs.allRevisions"/></a></li>
+	                  						<sec:accesscontrollist domainObject="${run}" hasPermission="2">
+	                  							<c:choose>
+	                  								<c:when test="${isRealTimeEnabled && run.realTimeEnabled}">
+	                  									<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.monitor"/></span></a></li>
+	                  								</c:when>
+	                  								<c:otherwise>
+	                  									<li><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor" style="display:none"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.monitor"/></span></a></li>
+	                  								</c:otherwise>
+	                  							</c:choose>
+	                  						</sec:accesscontrollist>
+					               </ul>
+					               <ul class="actionList">
+								        <li>
+								        	<spring:message code="teacher.management.projectruntabs.projectLabel"/>&nbsp;<a href="${contextPath}/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" /><span><spring:message code="preview"/></span></a>
+							    			|&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="project_details"/>"><img class="icon" alt="info" src="${contextPath}/<spring:theme code="id"/>" /><span><spring:message code="teacher.management.projectruntabs.projectInfo"/></span></a>
+								        	<sec:accesscontrollist domainObject="${run.project}" hasPermission="16">
+								        		|&nbsp;<a onclick="if(confirm('<spring:message code="teacher.management.projectruntabs.editWarning"/>')){window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.management.projectruntabs.edit"/></span></a>
+								        	</sec:accesscontrollist>
+								        </li>
+								    </ul>
 									<ul class="actionList">				
-								    	
-								    	<c:set var="isExternalProject" value="0"/>
 								    	<sec:accesscontrollist domainObject="${run}" hasPermission="16">
   							      		    <li><a id="myNotes_${run.id}" class="myNotes" title="<spring:message code="teacher.run.notes.myNotes"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" ><img class="icon" alt="notes" src="${contextPath}/<spring:theme code="edit"/>" /><spring:message code="teacher.run.notes.myNotes"/></a></li>
 								      		<li><a id="editAnnouncements_${run.id}" class="editAnnouncements" title="<spring:message code="teacher.management.projectruntabs.announcementsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" ><img class="icon" alt="announcements" src="${contextPath}/<spring:theme code="chat"/>" /><spring:message code="teacher.management.projectruntabs.announcements"/></a></li>
@@ -573,7 +554,7 @@
 		div.dialog({
 			modal: true,
 			width: '700',
-			height: '600',
+			height: '450',
 			title: title,
 			close: function(){ $(this).html(''); },
 			buttons: {
@@ -738,14 +719,8 @@
 							$('button:eq(1)',$('#unshareDialog').parent()).show().click(function(){
 								agreed = true;
 								$('#unshareDialog').dialog('close');
-								// reload page
-								// TODO: remove row dynamically without page reload
+								// reload page TODO: remove row dynamically without page reload
 								window.location.reload();
-								//remove run from listing
-								/*var otable = $("#runTitleRow_"+runId).parent().parent().dataTable();
-								$("#runTitleRow_"+runId).fadeOut(function(){
-									otable.fnDeleteRow($(this));
-								});*/
 							});
 						},
 						error: function(data, text, xml){

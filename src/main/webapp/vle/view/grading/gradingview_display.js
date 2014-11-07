@@ -53,7 +53,7 @@ View.prototype.openTeacherRunNotes = function (runId) {
 	myNotesDiv.dialog({
 		modal: true,
 		width: '700',
-		height: '600',
+		height: '450',
 		title: this.getI18NString("grading_button_teacher_run_notes"),
 		close: function(){ $(this).html(''); },
 		buttons: {

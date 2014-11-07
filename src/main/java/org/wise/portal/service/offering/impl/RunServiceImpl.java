@@ -43,6 +43,7 @@ import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
+import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
@@ -52,6 +53,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.DuplicateRunCodeException;
 import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.portal.PortalService;
 
 /**
  * Services for WISE's Run Domain Object
@@ -64,6 +66,9 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	private String DEFAULT_RUNCODE_PREFIXES = "Tiger,Lion,Fox,Owl,Panda,Hawk,Mole,Falcon,Orca,Eagle,Manta,Otter,Cat,Zebra,Flea,Wolf,Dragon,Seal,Cobra,Bug,Gecko,Fish,Koala,Mouse,Wombat,Shark,Whale,Sloth,Slug,Ant,Mantis,Bat,Rhino,Gator,Monkey,Swan,Ray,Crow,Goat,Marmot,Dog,Finch,Puffin,Fly,Camel,Kiwi,Spider,Lizard,Robin,Bear,Boa,Cow,Crab,Mule,Moth,Lynx,Moose,Skunk,Mako,Liger,Llama,Shrimp,Parrot,Pig,Clam,Urchin,Toucan,Frog,Toad,Turtle,Viper,Trout,Hare,Bee,Krill,Dodo,Tuna,Loon,Leech,Python,Wasp,Yak,Snake,Duck,Worm,Yeti";
 
 	private static final int MAX_RUNCODE_DIGIT = 1000;
+	
+	@Autowired
+	private PortalService portalService;
 
 	@Autowired
 	private RunDao<Run> runDao;
@@ -192,12 +197,22 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		
 		Boolean enableRealTime = runParameters.getEnableRealTime();
 		run.setRealTimeEnabled(enableRealTime);
+		
+		//set default survey template for this run, if any
+		try {
+			Portal portal = portalService.getById(1);
+			String runSurveyTemplate = portal.getRunSurveyTemplate();
+			if (runSurveyTemplate != null) {
+				run.setSurvey(runSurveyTemplate);
+			}
+		} catch (Exception e) {
+			// it's ok if the code block above fails
+		}		
 
 		this.runDao.save(run);
 		this.aclService.addPermission(run, BasePermission.ADMINISTRATION);
 		return run;
 	}
-	
 	
 	/**
 	 * @see org.wise.portal.service.offering.RunService#addRolesToSharedTeacher(java.lang.Long, java.lang.Long, java.util.Set)
@@ -594,10 +609,20 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	 * @see org.wise.portal.service.offering.RunService#updateNotes(java.lang.Long, String, String)
 	 */
 	@Transactional
-    public void updateNotes(Long runId, String privateNotes, String publicNotes) throws ObjectNotFoundException {
+    public void updateNotes(Long runId, String privateNotes) throws ObjectNotFoundException {
 		Run run = this.retrieveById(runId);
 		run.setPrivateNotes(privateNotes);
-		run.setPublicNotes(publicNotes);
+		this.runDao.save(run);
+	}
+	
+	/**
+	 * @throws ObjectNotFoundException 
+	 * @see org.wise.portal.service.offering.RunService#updateNotes(java.lang.Long, String, String)
+	 */
+	@Transactional
+    public void updateSurvey(Long runId, String survey) throws ObjectNotFoundException {
+		Run run = this.retrieveById(runId);
+		run.setSurvey(survey);
 		this.runDao.save(run);
 	}
 }

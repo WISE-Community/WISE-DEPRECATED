@@ -35,7 +35,7 @@ import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.service.portal.PortalService;
 
 /**
- * Controller for configuring this portal.
+ * Controller for configuring this WISE instance.
  * 
  * @author hirokiterashima
  * @version $Id$
@@ -89,6 +89,10 @@ public class ManagePortalController {
 				mav.addObject("msg", "success");
 			} else if (attr.equals("isSendStatisticsToHub")) {
 				portal.setSendStatisticsToHub(Boolean.valueOf(request.getParameter("val")));
+				portalService.updatePortal(portal);
+				mav.addObject("msg", "success");
+			} else if (attr.equals("runSurveyTemplate")) {
+				portal.setRunSurveyTemplate(request.getParameter("val"));
 				portalService.updatePortal(portal);
 				mav.addObject("msg", "success");
 			} else {
