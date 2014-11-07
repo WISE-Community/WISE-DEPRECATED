@@ -18,20 +18,7 @@ View.prototype.selectClick = function(id){
 		} else {
 			this.processSelected(id);
 		}
-	} /*else if(id!='uSeq' && id!='uNode' && id.split('--')[1]!=this.project.getRootNode().id) {
-		var node = $('#' + $.escapeId(id));
-		
-		//if(this.keystrokeManager.isShiftkeydown()){ //toggle selected for node
-			if(node.hasClass('selected')){
-				node.removeClass('selected');
-			} else {
-				node.addClass('selected');
-			}
-		//} else { //clear previous and select only node
-			//this.clearAllSelected();
-			//node.addClass('selected');
-		}
-	}*/
+	}
 };
 
 View.prototype.selectBoxClick = function(id){

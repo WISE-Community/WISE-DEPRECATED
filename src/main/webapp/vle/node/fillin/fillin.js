@@ -55,7 +55,7 @@ FILLIN.prototype.render = function(textInteractionEntryIndex) {
 	}
 	
 	this.html = "";
-	clearFeedbackDiv();
+	$("#feedbackDiv").html('');  // clear feedback div
 	$('#checkAnswerButton').parent().removeClass('ui-state-disabled');
 	$('#tryAgainButton').parent().addClass('ui-state-disabled');
 	$('#nextButton').parent().addClass('ui-state-disabled');
@@ -136,8 +136,8 @@ FILLIN.prototype.tryAgain = function() {
 	$('#tryAgainButton').parent().addClass('ui-state-disabled');
 	var responseBox = document.getElementById('responseBox').removeAttribute('disabled');
 	
-	clearFeedbackDiv();
-	clearResponseBox();
+	$("#feedbackDiv").html('');  // clear feedback div
+	document.getElementById("responseBox").value = "";  // clear response box
 };
 
 FILLIN.prototype.checkAnswer = function() {

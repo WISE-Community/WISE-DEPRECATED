@@ -22,20 +22,6 @@ function hasClass(identifier, classString) {
 };
 
 /**
- * Clears innerHTML of a div with id=feedbackDiv
- */
-function clearFeedbackDiv() {
-	$("#feedbackDiv").html('');
-};
-
-/**
- * Clears value of an element with id=responseBox
- */
-function clearResponseBox() {
-	document.getElementById("responseBox").value = "";
-};
-
-/**
  * Get the table that will display the possible scores and highlight 
  * the current possible score
  * @param numAttempts the current attempt number
