@@ -18,6 +18,32 @@
 <script src="${contextPath}/<spring:theme code="browserdetectsource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="checkcompatibilitysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="deployJava.js"/>" type="text/javascript"></script>
+
+<style>
+table.compatibility {
+	width:100%;
+}
+
+#browserAdditionalInfo a {
+	display:none;
+}
+
+#compatibilityCheckMessages p {
+	display:none;
+}
+
+.checkCompatibilityWarning {
+	font-size:1.0em;
+	text-align:left;
+	color:red
+}
+
+.checkCompatibilityCaution {
+	font-size:1.0em;
+	text-align:left;
+	color:blue
+}
+</style>
 </head>
 <body onload='checkCompatibility(${specificRequirements})'>
 <div id="pageWrapper">

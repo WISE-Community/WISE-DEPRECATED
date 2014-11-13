@@ -8,8 +8,119 @@
 <title>WISE 4.0 Credits Screen</title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="${contextPath}/<spring:theme code="registerstylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 
+<style>
+.blueText {
+	color: #0000FF;
+	padding: 0 0 0 5px;
+}
+	
+#previewProjectTitle {
+	clear:both;
+	width:95%;
+	text-align: center;
+	font-size:2em;
+	border: 1px solid #333333;
+	background-color:#FFCE8E;
+	background-image: url(../images/Gradient_7a.png);
+    background-position: bottom;
+    background-repeat:repeat-x;
+	margin: 20px auto;
+	vertical-align:text-bottom;
+	padding:10px 0;
+}
+		
+#boxPreviewProject {
+	border: 1px solid #006600;
+	width:95%;
+	margin:15px auto 30px auto;
+}
+	
+#creditsIntroText {
+	margin:20px; 
+	line-height:130%;
+}
+
+#creditsTeamTable {
+	margin:10px auto 10px auto;
+	width:98%;
+	border-collapse:collapse;
+	border-top:1px solid #666666;
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+	border-left:1px solid #666666;
+	text-align:left;
+}
+
+#creditsTeamTable th {
+	padding:5px 10px;
+	background-color:#000066;
+    color:#FFFFFF;
+    font-size:1.4em;
+	font-weight:bold;
+	font-variant:small-caps; 
+	vertical-align:top;
+}
+
+#creditsTeamTable td {
+	padding: 10px;
+	border:1px solid #333333;
+	background-image: url(../images/textureUltraLightBlue.png); 
+    background-position: top;	
+    background-repeat: repeat;
+    vertical-align:top;
+}
+
+.creditCategory {
+	font-style:italic; 
+	color:#000033;
+	font-size:.9em;
+	width:100px; 
+}
+
+#creditsTeamTable dl {
+	line-height:140%;
+	margin:0;
+	padding:0;
+}
+ 
+ #creditsTeamTable dt {
+	float:left; 
+	width:180px;
+	font-weight:bold;
+	font-size:.9em;
+	margin-left:10px; 
+}
+
+#creditsTeamTable dd {
+	font-weight:normal;
+	color:#333333;
+	font-size:.8em;
+}
+
+#creditsTeamTable .email {
+	color:green;
+	margin-left:25px;
+}
+	
+.alumnaeHeader {
+	margin: 10px 10px 0 10px;
+	font-size:.8em;
+	font-variant:small-caps; 
+	color:#333333;
+}
+	
+.alumnaeNames {
+	margin: 5px 10px 0 10px;
+	font-size:.9em;
+	color:#000000;
+	font-weight:bold;
+}
+
+#creditsTeamTable .secondaryDL dt {
+ 	width:220px;
+}
+</style>
 </head>
 <body>
 <div id="centeredDiv">
