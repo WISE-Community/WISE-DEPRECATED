@@ -1902,7 +1902,7 @@ View.prototype.author = function(nodeInfo) {
 	var nodeId = nodeInfo.split('----')[1];
 	
 	// add editing (highlight) class to node display
-	setTimeout(function(){$('#' + $.escapeId(absId)).addClass('editing');},1000);
+	setTimeout(function(){$('#' + this.escapeIdForJquery(absId)).addClass('editing');},1000);
 		
 	// retrieve the node from the project
 	var node = this.getProject().getNodeById(nodeId);
