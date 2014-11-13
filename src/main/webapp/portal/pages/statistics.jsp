@@ -5,8 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 <title><spring:message code="pages.statistics.title" /></title>
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
