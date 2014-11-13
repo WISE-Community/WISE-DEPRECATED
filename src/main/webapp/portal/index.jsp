@@ -11,7 +11,6 @@
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="homepagestylesheet"/>" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="jqueryjscrollpane.css"/>" rel="stylesheet" type="text/css" />
-<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="nivoslider.css"/>" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="nivoslider-wise.css"/>" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="tinycarousel.css"/>" rel="stylesheet" type="text/css" />
@@ -19,13 +18,11 @@
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jquerymigrate.js"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jquerymousewheel.js"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jqueryjscrollpane.js"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="nivoslider.js"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="easyaccordion.js"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="tinycarousel.js"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
 
