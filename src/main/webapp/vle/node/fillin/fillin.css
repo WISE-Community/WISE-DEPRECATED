@@ -157,29 +157,6 @@
 	text-align:center;
 }
 
-#triesContainer{
-	margin:5px auto 5px auto;
-	border-collapse:collapse;
-	background-color:#CCCCCC;
-}
-
-#triesContainer th {
-	text-align:left;
-	font-size:.75em;
-	color:#333;
-	margin:0px;
-	padding:2px 0 2px 20px;
-}
-
-#triesContainer td {
-	text-align:left;
-	font-size:.75em;
-	color:#333;
-	margin:0px;
-	padding:2px 20px;
-	font-weight:bold;
-}
-
 #buttonDiv {
 	margin-top:10px;
 }

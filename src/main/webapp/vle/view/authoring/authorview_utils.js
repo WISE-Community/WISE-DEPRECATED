@@ -102,7 +102,6 @@ View.prototype.utils.resize = function(){
  * Returns the current view mode (student, grading, authoring, etc.)
  */
 View.prototype.getMode = function() {
-	debugger;
 	var mode = this.config.getConfigParam('mode');
 	return mode;
 };

@@ -1,6 +1,6 @@
 .color1 {color:#164CBA;}   /* vibrant blue */
 
-#promptdiv {
+#promptDiv {
 	font-size:.9em;
 	font-weight:bold;
 	color: #000033;
@@ -8,7 +8,7 @@
 	text-align: left;
 }
 
-#promptdiv p {
+#promptDiv p {
 	font-size:.9em;
 	}
 
@@ -71,43 +71,6 @@
 	margin: 10px auto;
 }
 
-/*#submitButtonDiv input {
-	display:block;
-	vertical-align:center;
-	padding:5px 15px;
-	margin:15px auto;
-	font: bold Verdana, Arial, sans-serif;
-	font-size:.9em;
-	background-color:#164cba;
-	background-color:#1e69ff;
-	color: #FFF;
-	text-transform: capitalization;
-	border:1px solid #333;
-	text-decoration: none;
-	text-align: center;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-}
-
-#submitButtonDiv input:hover {
-	background-color: #FFFF00;
-	color:#333;
-	cursor:pointer;
-	}
-
-#submitButtonDiv .disabledLink:hover {
-	background-color: #666;
-	color: #999999;
-	cursor:default;
-}
-
-#submitButtonDiv .disabledLink {
-	background-color: #666;
-	color: #999999;
-	outline: 0;
-}*/
-	
 .itemLabel {
 	font-size:.7em;
 	text-transform:uppercase;

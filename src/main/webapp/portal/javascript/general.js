@@ -28,21 +28,21 @@
 function insertTooltips(target,options){
 	function processElement(item,options){
 		item.css('cursor','pointer');
-		
+
 		// set tipTip default options
 		var settings = {
-			defaultPosition:'top',
-			maxWidth:'400px',
-			edgeOffset:2,
-			fadeIn:100,
-			fadOut:100,
-			delay:100
+				defaultPosition:'top',
+				maxWidth:'400px',
+				edgeOffset:2,
+				fadeIn:100,
+				fadOut:100,
+				delay:100
 		};
 		if(options != null && typeof options == 'object'){
 			// tipTip options have been sent in as a parameter, so merge with defaults
 			$.extend(settings,options);
 		}
-		
+
 		// set options based on target element attributes
 		if(item.data('tooltip-event') == 'click'){
 			settings['activation'] = 'click';
@@ -86,25 +86,25 @@ function insertTooltips(target,options){
 				settings['keepAlive'] = false;
 			}
 		}
-		
+
 		// prevent the title from showing on hover when activation is set to 'click', 'focus', or 'manual'
 		if(item.attr('title') && item.attr('title') != '' && !settings.content){
 			// if title is set and content is not, set content to title value and remove title
 			settings['content'] = item.attr('title');
 			item.removeAttr('title');
 		}
-		
+
 		if(typeof item.data('tooltip-title') == 'string'){
 			settings['content'] = '<h3>' + item.data('tooltip-title') + '</h3>' + settings['content'];
 		}
-		
+
 		// initialize tipTip on element
 		item.tipTip(settings);
-		
+
 		// remove all tooltip attributes and class from DOM element (to clean up html and so item are not re-processed if insertTooltips is called again on same page)
 		item.removeAttr('data-tooltip-event').removeAttr('data-tooltip-anchor').removeAttr('data-tooltip-maxw').removeAttr('data-tooltip-content').removeAttr('data-tooltip-class').removeAttr('data-tooltip-offset').removeAttr('data-tooltip-keep').removeAttr('data-tooltip-delay').removeClass('tooltip');
 	}
-	
+
 	// for all DOM elements with the 'tooltip' class, initialize tipTip
 	if(target){
 		if(target.hasClass('tooltip')){
@@ -121,47 +121,46 @@ function insertTooltips(target,options){
 	}
 };
 
-
 /**
  * These three functions are used for the FORM HINT functionality on registration pages
  * TODO: remove and use jQuery form plugin for input hints
  */
 function prepareInputsForHints() {
-  var inputs = $('input');
-  for (var i=0; i<inputs.length; i++){
-    $(inputs[i]).on('focus', function () {
-		var hint = $('.hint', $(this).parent());
-		var xpos = $(this).offset().left + $(this).width() + 15 + 'px';
-		var ypos = $(this).offset().top + 'px';
-		hint.css({'left':xpos,'top':ypos}).show();
-    });
-    $(inputs[i]).on('blur', function () {
-    	$('.hint', $(this).parent()).hide();
-    });
-  }
-  var selects = $('select');
-  for (var k=0; k<selects.length; k++){
-	 $(selects[i]).on('focus', function () {
-		var hint = $('.hint', this.parent());
-		var xpos = $(this).offset().left + $(this).width() + 35 + 'px';
-		var ypos = $(this).offset().top + 'px';
-		hint.css({'left':xpos,'top':ypos}).show();
-    });
-	 $(selects[i]).on('blur', function () {
-    	$('.hint', $(this).parent()).hide();
-    })
-  }
-}
+	var inputs = $('input');
+	for (var i=0; i<inputs.length; i++){
+		$(inputs[i]).on('focus', function () {
+			var hint = $('.hint', $(this).parent());
+			var xpos = $(this).offset().left + $(this).width() + 15 + 'px';
+			var ypos = $(this).offset().top + 'px';
+			hint.css({'left':xpos,'top':ypos}).show();
+		});
+		$(inputs[i]).on('blur', function () {
+			$('.hint', $(this).parent()).hide();
+		});
+	}
+	var selects = $('select');
+	for (var k=0; k<selects.length; k++){
+		$(selects[i]).on('focus', function () {
+			var hint = $('.hint', this.parent());
+			var xpos = $(this).offset().left + $(this).width() + 35 + 'px';
+			var ypos = $(this).offset().top + 'px';
+			hint.css({'left':xpos,'top':ypos}).show();
+		});
+		$(selects[i]).on('blur', function () {
+			$('.hint', $(this).parent()).hide();
+		})
+	}
+};
 
 function prepareSubjectsSelect(){
 	$('#closeSubjects').on('click',function(){
 		$('#curriculumSubjectsBox').fadeOut();
 	});
-	
+
 	$('#toggleSubjects').on('click',function(){
 		showSubjectsSelect();
 	});
-}
+};
 
 /**
  * Toggle show/hide of the curriculum box
@@ -177,30 +176,17 @@ if(typeof $ != 'undefined'){
 		prepareInputsForHints();
 		prepareSubjectsSelect();
 	});
-}
+};
 
-
-function popup640(mylink, windowname)
-		{
-		if (! window.focus)return true;
-		var href;
-		if (typeof(mylink) == 'string')
-		   href=mylink;
-		else
-		   href=mylink.href;
-		window.open(href, windowname, 'width=640,height=480,resizable=yes,scrollbars=yes');
-		return false;
-		}
+function popup640(mylink, windowname){
+	if (! window.focus)return true;
+	var href;
+	if (typeof(mylink) == 'string') {
+		href=mylink;
 		
-function popup300(mylink, windowname)
-		{
-		if (! window.focus)return true;
-		var href;
-		if (typeof(mylink) == 'string')
-		   href=mylink;
-		else
-		   href=mylink.href;
-		window.open(href, windowname, 'width=300,height=300,resizable=yes,scrollbars=yes');
-		return false;
-		}
-		
+	} else {
+		href=mylink.href;
+	}
+	window.open(href, windowname, 'width=640,height=480,resizable=yes,scrollbars=yes');
+	return false;
+};

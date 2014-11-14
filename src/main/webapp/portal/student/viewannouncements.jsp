@@ -9,11 +9,7 @@
 <title><spring:message code="student.viewannouncements.viewAnnouncements" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="${contextPath}/<spring:theme code="studenthomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-
-<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
+<link href="${contextPath}/<spring:theme code="studentAnnouncements"/>" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
 <body style="background:#FFFFFF;">

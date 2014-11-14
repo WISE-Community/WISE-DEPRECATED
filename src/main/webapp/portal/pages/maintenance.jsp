@@ -9,18 +9,14 @@
 <title><spring:message code="pages.features.title" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
-<link href="${contextPath}/<spring:theme code="homepagestylesheet"/>" rel="stylesheet" type="text/css" />
-<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
 
 </head>
 <body>
-
 <div id="pageWrapper">
 
 	<%@ include file="../headermain.jsp"%>

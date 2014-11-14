@@ -336,7 +336,6 @@ var scriptloader = function(){
                   'vle/model/environment.js',
   		          'vle/lib/jquery/js/jquery-migrate-1.2.1.min.js', // TODO: remove when all instances of jQuery.browser are removed from VLE
   		          'vle/lib/jquery/js/jsonplugin.js',
-  		          'vle/lib/jquery/js/jqueryhelper.js',
  			      'vle/node/Node.js',
   		          'vle/node/setupNodes.js',
   		          'vle/themes/setupThemes.js'
@@ -535,7 +534,6 @@ var scriptloader = function(){
         'vle/lib/bootstrap/bootbox/bootbox.min.js':[bootstrapSrc],
         'vle/lib/bootstrap/bootstrap-multiselect/js/bootstrap-multiselect.js':[bootstrapSrc],
         'vle/lib/jquery/js/jsonplugin.js':[jquerySrc],
-        'vle/lib/jquery/js/jqueryhelper.js':[jquerySrc],
         'vle/lib/jquery/js/jquery.form.js':[jquerySrc],
         'vle/lib/jquery/js/jquery.tablesorter.min.js':[jquerySrc],
         'vle/lib/jquery/jquery-validation/jquery.validate.min.js':[jquerySrc],

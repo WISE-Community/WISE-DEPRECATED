@@ -151,27 +151,5 @@
 	font-size:inherit;
 }
 
-#triesContainer {
-	color: #333;
-	margin: 2px auto;
-	text-align: center;
-	padding: 0;
-}
-
-#triesContainer table {
-	margin: 0px auto;
-	text-align: center;
-}
-
-#triesContainer #remainingMatchTries {
-	font-size: .7em;
-	color: #333;
-	padding: 8px 20px;
-	background-color: #CCC;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	border-radius: 2px;
-}
-
 #sourceBucket { list-style-type: none; margin: 0; padding: 0; }
 .horizontalLi { margin: 3px 3px 3px 0; padding: 1px; float:left; width:150px; height: 100px; text-align: center; }

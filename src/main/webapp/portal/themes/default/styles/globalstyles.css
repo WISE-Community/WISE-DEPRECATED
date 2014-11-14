@@ -991,31 +991,6 @@ form {margin:0px; padding:0px;}
 	background:white;
 }
 
-.generalButton {
- 	color:#000;
- 	font-size:1.2em;
-	font-weight:bold;
-	border-top:1px solid #666666;
-	border-right:1px solid black;
-	border-bottom:1px solid black;
-	border-left:1px solid #666666;
-	padding:4px 15px;
-	margin:0 10px;
-	background-image: url(../images/WISE-Secondary-Banner-Gradient.png);
-	background-position: top;
-	text-decoration:none;
-  	-moz-border-radius:8px;
-	-webkit-border-radius:8px;
-	border-radius:8px;
-	cursor:pointer;
-}
-
-.generalButton:hover {
- 	background-image:none;
- 	background-color:#FFFF00;
- 	cursor:pointer;
-}
-
 /* Featured Content Styling */
 .featuresShowcase {
 	margin-bottom:1em;
@@ -1166,35 +1141,7 @@ a.printLesson {
     margin-right: 0.25em;
     padding-left: 28px;
 }
-
-/* Compatibility Check Page */
-
-table.compatibility {
-	width:100%;
-}
-
-#browserAdditionalInfo a {
-	display:none;
-}
-
-#compatibilityCheckMessages p {
-	display:none;
-}
-
-.checkCompatibilityWarning {
-	font-size:1.0em;
-	text-align:left;
-	color:red
-}
-
-.checkCompatibilityCaution {
-	font-size:1.0em;
-	text-align:left;
-	color:blue
-}
 	
 .alignLeft 	{text-align:left;}
 .alignCenter {text-align:center;}
 .alignRight {text-align:right;}
-.width15 {width:15px;}
-.imgNoBorder {border:0px;}

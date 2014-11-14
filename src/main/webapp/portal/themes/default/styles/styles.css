@@ -59,10 +59,6 @@
 	font-weight: bold;
 }
 
-.blueText {
-	color: #0000FF;
-}
-
 #setupProjectTableContainer {
 	margin: 1em;
 }
@@ -254,108 +250,6 @@ ol#addProjectInstructions li {
 	font-size: 1.5em;
 	font-weight: bold;
 }
-
-/* Student Annoucements */
-
-#existingAnnouncements .newAnnouncement {
-	font-size: 1.4em;
-	color: #FF0000;
-	font-weight: bold;
-}
-
-#existingAnnouncements .existingAnnouncements {
-	margin-top: 20px;
-	font-size: 1.2em;
-	font-weight: bold;
-}
-
-#announcementTable {
-	border-collapse: collapse;
-	width: 90%;
-	margin: 5px 10px;
-}
-
-#announcementTable td {
-	border: 1px solid black;
-	background-color: #339933;
-	color: #FFFFFF;
-	padding: 3px 5px;
-	vertical-align: top;
-	font-size: 1.1em;
-}
-
-#announcementTable .col1 {
-	width: 20%;
-	font-style: italic;
-}
-
-#announcementTable .col2 {
-	width: 25%;
-}
-
-#announcementTable .col3 {
-	width: 55%;
-}
-
-ul#announcementList .aDate {
-	color:#777;
-}
-
-ul#announcementList {
-	margin:.5em;
-}
-
-ul#announcementList li {
-	margin-left:1em;
-	list-style-type:disc;
-}
-
-ul#announcementList li a {
-	font-size:.85em;
-}
-
-ul.announcements {
-	margin:.5em;
-}
-
-ul.announcements.new {
-	color:#F47F6E;
-}
-
-ul.announcements li {
-	border: 1px solid #CCCCCC;
-    margin: 0.5em 0;
-    padding: 0.5em;
-}
-
-ul.announcements li.new {
-	border-color:#F47F6E;
-	background-color:#FFF7F7;
-}
-
-ul.announcements .aTitle {
-	text-decoration:underline;
-}
-
-ul.announcements .aDate {
-	color: #777777;
-    font-size: 0.85em;
-}
-
-ul.announcements .aMessage {
-    font-size: 0.9em;
-    margin: 0.5em 0.5em 0;
-}
-
-ul.announcements li.new .newTag {
-	color:#FF563F;
-	font-style:italic;
-}
-
-div.noMessages {
-	margin:.5em;
-}
-
 
 /* STYLES FOR MESSAGE CENTER   (presented as part of the Management area)*/
 

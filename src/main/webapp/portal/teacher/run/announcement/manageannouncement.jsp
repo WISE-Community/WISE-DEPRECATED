@@ -8,8 +8,6 @@
 <title><spring:message code="teacher.run.announcement.manageannouncement.manageAnnouncements"/></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 
 <style>
@@ -26,9 +24,7 @@ function removeAnnouncement(runId, announcementId, announcementTitle) {
 };
 </script>
 </head>
-
 <body style="background:#FFFFFF;">
-
 <div class="dialogContent">
 	<div class="sectionHead"><spring:message code="teacher.run.announcement.manageannouncement.existingAnnouncements"/></div>
 	<div id="existingAnnouncements" class="dialogSection">
@@ -74,7 +70,6 @@ function removeAnnouncement(runId, announcementId, announcementTitle) {
 	<div class="dialogSection">
 		<p class="info"><spring:message code="teacher.run.announcement.manageannouncement.newAnnouncementsWillBeShown"/></p>
 	</div>
-
 </div>
 </body>
 </html>

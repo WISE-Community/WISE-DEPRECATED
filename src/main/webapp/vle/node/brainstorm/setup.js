@@ -33,8 +33,7 @@ var dependencies = [
 
 var css = [
 	"vle/node/common/css/htmlAssessment.css",
-	"vle/node/brainstorm/brainstorm.css",
-	"vle/node/common/css/niftyCorners.css"
+	"vle/node/brainstorm/brainstorm.css"
 ];
 
 var nodeClasses = [

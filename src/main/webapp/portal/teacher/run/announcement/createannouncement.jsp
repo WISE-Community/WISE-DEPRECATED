@@ -5,17 +5,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="teacher.run.announcement.createannouncement.sendNewAnnouncement"/></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<title>Create Announcement</title>
-
-<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 </head>
-
 <body style="background:#FFFFFF;">
 	<div class="dialogContent">
 		<div class="sectionHead"><spring:message code="teacher.run.announcement.createannouncement.sendNewAnnouncement"/></div>
@@ -28,9 +23,14 @@
 				<div><textarea name="announcement" rows="8" cols="84" id="announcementField"></textarea></div>
 				<input type="hidden" name="command" value="create" />
 				<input type="hidden" name="runId" value="${run.id}" />
-				<div><input type="submit" id="save" value="Save" />   <a href="manageannouncement.html?runId=<c:out value='${param.runId}' />">
-				<spring:message code="teacher.run.announcement.createannouncement.cancel"/></a></div>
+				<div>
+					<input type="submit" id="save" value="<spring:message code="save"/>" />
+					<input type="button" id="cancel" 
+						value="<spring:message code='teacher.run.announcement.createannouncement.cancel'/>" 
+						onclick="window.location='manageannouncement.html?runId=${param.runId}';" />
+				</div>
 			</form>
 		</div>
 	</div>
 </body>
+</html>

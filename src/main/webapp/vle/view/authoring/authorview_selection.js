@@ -18,27 +18,14 @@ View.prototype.selectClick = function(id){
 		} else {
 			this.processSelected(id);
 		}
-	} /*else if(id!='uSeq' && id!='uNode' && id.split('--')[1]!=this.project.getRootNode().id) {
-		var node = $('#' + $.escapeId(id));
-		
-		//if(this.keystrokeManager.isShiftkeydown()){ //toggle selected for node
-			if(node.hasClass('selected')){
-				node.removeClass('selected');
-			} else {
-				node.addClass('selected');
-			}
-		//} else { //clear previous and select only node
-			//this.clearAllSelected();
-			//node.addClass('selected');
-		}
-	}*/
+	}
 };
 
 View.prototype.selectBoxClick = function(id){
 	if(this.selectModeEngaged){
 		return;
 	} else if(id!='uSeq' && id!='uNode' && id.split('--')[1]!=this.getProject().getRootNode().id) {
-		var node = $('#' + $.escapeId(id));
+		var node = $('#' + this.escapeIdForJquery(id));
 		
 		//if(this.keystrokeManager.isShiftkeydown()){ //toggle selected for node
 			if(node.hasClass('selected')){
@@ -788,7 +775,7 @@ View.prototype.removeFromProject = function(list, removeFromProject){
 	for(var e=list.size()-1;e>=0;e--){
 		var node = list.get(e);
 		
-		if($('#' + $.escapeId(node.id)).hasClass('master')){
+		if($('#' + this.escapeIdForJquery(node.id)).hasClass('master')){
 			//skip remaining, don't want to remove it
 			this.notificationManager.notify('The master activity cannot be deleted.', 2);
 		} else {
@@ -892,7 +879,8 @@ View.prototype.disengageSelectMode = function(val){
  * Determines what has been clicked and how to proceed based on the current state.
  */
 View.prototype.processSelected = function(id){
-	var node = $('#' + $.escapeId(id));
+	var node = $('#' + this.escapeIdForJquery(id));
+	console.log('processSelected'+node);
 	
 	/*
 	 * get the selected type if it has not been set already. it will
@@ -1016,7 +1004,7 @@ View.prototype.processSelected = function(id){
  */
 View.prototype.processChoice = function(id, opt){
 	this.disambiguateMode = false;
-	var node = $('#' + $.escapeId(id));
+	var node = $('#' + this.escapeIdForJquery(id));
 	node.children().css('display', 'block');
 	document.getElementById('choiceDiv_' + id).style.display = 'none';
 	
@@ -1043,19 +1031,19 @@ View.prototype.checkModeAndSelect = function(id){
 				}
 			}
 		}
-		if(!$('#' + $.escapeId(id)).hasClass('moving')){
+		if(!$('#' + this.escapeIdForJquery(id)).hasClass('moving')){
 			if(this.selectArgs[0] == 'createReviewSequence1' ||
 					this.selectArgs[0] == 'createReviewSequence2' ||
 					this.selectArgs[0] == 'createReviewSequence3') {
-				$('#' + $.escapeId(id)).addClass('reviewTarget selected');
+				$('#' + this.escapeIdForJquery(id)).addClass('reviewTarget selected');
 			} else {
-				$('#' + $.escapeId(id)).addClass('target selected');
+				$('#' + this.escapeIdForJquery(id)).addClass('target selected');
 			}
 		}
 	} else {
-		if(!$('#' + $.escapeId(id)).hasClass('seq') && !$('#' + $.escapeId(id)).hasClass('master') &&
-				!$('#' + $.escapeId(id)).hasClass('uSeq') && id != 'uNode'){
-			$('#' + $.escapeId(id)).addClass('nodeHover');
+		if(!$('#' + this.escapeIdForJquery(id)).hasClass('seq') && !$('#' + this.escapeIdForJquery(id)).hasClass('master') &&
+				!$('#' + this.escapeIdForJquery(id)).hasClass('uSeq') && id != 'uNode'){
+			$('#' + this.escapeIdForJquery(id)).addClass('nodeHover');
 		}
 	}
 };
@@ -1066,13 +1054,13 @@ View.prototype.checkModeAndSelect = function(id){
  */
 View.prototype.checkModeAndDeselect = function(id){
 	if(this.selectModeEngaged){
-		$('#' + $.escapeId(id)).removeClass('selected');
-		$('#' + $.escapeId(id)).removeClass('target');
-		$('#' + $.escapeId(id)).removeClass('reviewTarget');
+		$('#' + this.escapeIdForJquery(id)).removeClass('selected');
+		$('#' + this.escapeIdForJquery(id)).removeClass('target');
+		$('#' + this.escapeIdForJquery(id)).removeClass('reviewTarget');
 	} else {
-		if(!$('#' + $.escapeId(id)).hasClass('seq') && !$('#' + $.escapeId(id)).hasClass('master') &&
-				!$('#' + $.escapeId(id)).hasClass('uSeq') && id != 'uNode'){
-			$('#' + $.escapeId(id)).removeClass('nodeHover');
+		if(!$('#' + this.escapeIdForJquery(id)).hasClass('seq') && !$('#' + this.escapeIdForJquery(id)).hasClass('master') &&
+				!$('#' + this.escapeIdForJquery(id)).hasClass('uSeq') && id != 'uNode'){
+			$('#' + this.escapeIdForJquery(id)).removeClass('nodeHover');
 		}
 	}
 };
@@ -1185,7 +1173,7 @@ View.prototype.createReviewSequenceCallback = function(id, args) {
 		reviewType = 'T';
 	}
 	
-	var $node = $('#' + $.escapeId(id.id));
+	var $node = $('#' + this.escapeIdForJquery(id.id));
 	$node.addClass('reviewAdded'); // add reviewAdded class to selected node
 	
 	//get the next available review group number
