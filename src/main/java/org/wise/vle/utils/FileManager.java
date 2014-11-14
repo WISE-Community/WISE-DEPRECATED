@@ -1448,21 +1448,26 @@ public class FileManager {
 		 * src="Heat.png?w=15&amp;h=18"
 		 * src='Heat.png?w=15&amp;h=18'
 		 * 
+		 * the pattern will not match any of these below
+		 * src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"
+		 * src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'
+		 * 
 		 * if the pattern matcher is run on src="Heat.png?w=15&amp;h=18"
 		 * this is what the groups will look like
 		 * group(0)=src="Heat.png?w=15&amp;h=18"
-		 * group(1)=Heat.png
+		 * group(1)=src
+		 * group(2)=Heat.png
 		 */
-		Pattern p = Pattern.compile("src=[\"']([^\"'\\?\\.]*\\.[^\"'\\?\\.]*)[^\"']*[\"']");
+		Pattern p = Pattern.compile("(src|href)=[\"'](?!http)([^\"'\\?]*)[^\"']*[\"']");
 		
 		//run the matcher
 		Matcher m = p.matcher(content);
 		
 		//loop through all the matches
 		while(m.find()) {
-			if(m.groupCount() == 1) {
-				//get the captured group 1
-				String fromAssetFileName = m.group(1);
+			if(m.groupCount() == 2) {
+				//get the captured group 2
+				String fromAssetFileName = m.group(2);
 				
 				if(fromAssetFileName != null && !fromAssetFileName.isEmpty()) {
 					//import the asset file into the project asset folder
@@ -1491,9 +1496,10 @@ public class FileManager {
 	 * @param fromProjectAssetsFolder the asset folder in the from project
 	 * @param toProjectAssetsFolder the asset folder in the to project
 	 * @return the name of the asset file that was created in the to project asset folder
+	 * or null if we were unable to create the asset in the to project asset folder
 	 */
 	private static String importAssetInContent(String fromAssetFileName, String fromAssetFileContent, File fromProjectAssetsFolder, File toProjectAssetsFolder) {
-		String toAssetFileName = fromAssetFileName;
+		String toAssetFileName = null;
 		String toAssetFileContent = null;
 		
 		//create the file handle for the "from" file
@@ -1501,6 +1507,8 @@ public class FileManager {
 		
 		//make sure the file exists in the "from" project
 		if(fromAsset.exists()) {
+			toAssetFileName = fromAssetFileName;
+			
 			//create the file handle for the "to" file
 			File toAsset = new File(toProjectAssetsFolder, toAssetFileName);
 			
