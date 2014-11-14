@@ -180,7 +180,7 @@ View.prototype.linkManager.processExistingLinks = function(view){
 		
 		parent.appendChild(linkDiv);
 		linkDiv.appendChild(linkSelect);
-		linkDiv.appendChild(createSpace());
+		linkDiv.appendChild(document.createTextNode(" "));
 		linkDiv.appendChild(removeButt);
 		linkDiv.appendChild(createBreak());
 	}

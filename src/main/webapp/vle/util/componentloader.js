@@ -15,7 +15,6 @@ var componentloader = function(em, sl){
 		student: ['topMenu','setup', 'core', 'keystroke', 'config', 'user', 'session','studentwork','student','hint','navigation','annotations','uicontrol', 'wise', 'maxscores', 'peerreviewhelper', 'ideabasket','portfolio', 'studentasset', 'studentWebSocket'],
 		grading: ['setup', 'core', 'config', 'studentwork', 'user', 'session', 'grading', 'annotations', 'maxscores', 'ideabasket'],
 		authoring: ['ddMenu', 'setup', 'core','keystroke', 'config', 'session','messagemanager','author','authoringcomponents', 'maxscores'],
-		summary: ['core'],
 		classroomMonitor: ['setup', 'core', 'config', 'studentwork', 'user', 'session', 'annotations', 'maxscores', 'teacherWebSocket', 'ideabasket']
 	};
 	
@@ -106,7 +105,6 @@ var componentloader = function(em, sl){
 						getContentBaseUrl:undefined,
 						getFlagsUrl:undefined,
 						postFlagsUrl:undefined,
-						
 						runId:undefined
 						},
 			events: {'gradingConfigUrlReceived': [null, null],

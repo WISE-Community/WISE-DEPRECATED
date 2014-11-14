@@ -385,18 +385,18 @@ View.prototype.SVGDrawNode.generateStamps = function(){
 		parent.appendChild(sText);
 		parent.appendChild(sLabelText);
 		parent.appendChild(sLabelInput);
-		parent.appendChild(createSpace());
+		parent.appendChild(document.createTextNode(" "));
 		parent.appendChild(sValueText);
 		parent.appendChild(sInput);
-		parent.appendChild(createSpace());
+		parent.appendChild(document.createTextNode(" "));
 		parent.appendChild(sWidthText);
 		parent.appendChild(sWidthInput);
-		parent.appendChild(createSpace());
+		parent.appendChild(document.createTextNode(" "));
 		parent.appendChild(sHeightText);
 		parent.appendChild(sHeightInput);
-		parent.appendChild(createSpace());
+		parent.appendChild(document.createTextNode(" "));
 		parent.appendChild(removeButt);
-		parent.appendChild(createBreak());
+		parent.appendChild(document.createTextNode(" "));
 	};
 };
 

@@ -435,7 +435,6 @@ MC.prototype.checkAnswer = function() {
 	enableRadioButtons(false);        // disable radiobuttons
 	//addClassToElement("checkAnswerButton", "disabledLink");
 	$('#checkAnswerButton').parent().addClass('ui-state-disabled'); // disable checkAnswerButton
-	//removeClassFromElement("tryAgainButton", "disabledLink");
 	$('#tryAgainButton').parent().removeClass('ui-state-disabled'); // show try again button
 	
 	for (var i=0;i<inputbuttons.length;i++) {
@@ -833,10 +832,8 @@ MC.prototype.processTagMaps = function() {
  */
 function enableCheckAnswerButton(doEnable) {
 	if (doEnable == 'true') {
-		//removeClassFromElement("checkAnswerButton", "disabledLink");
 		$('#checkAnswerButton').parent().removeClass('ui-state-disabled'); // disable checkAnswerButton
 	} else {
-		//addClassToElement("checkAnswerButton", "disabledLink");
 		$('#tryAgainButton').parent().addClass('ui-state-disabled'); // disable checkAnswerButton
 	}
 };

@@ -42,7 +42,6 @@ var css = [
 	scriptloader.jqueryUICss,
 	"vle/node/common/css/htmlAssessment.css",
 	"vle/node/openresponse/openresponse.css"
-	//"vle/css/globalstyles.css"
 ];
 
 var openResponseNodeClasses = [

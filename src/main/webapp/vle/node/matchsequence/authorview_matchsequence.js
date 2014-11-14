@@ -186,9 +186,9 @@ View.prototype.MatchSequenceNode.buildPage = function(){
 	pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(addNewContainerButton);
 	pageDiv.appendChild(removeContainerButton);
-	pageDiv.appendChild(createSpace());
-	pageDiv.appendChild(createSpace());
-	pageDiv.appendChild(createSpace());
+	pageDiv.appendChild(document.createTextNode(" "));
+	pageDiv.appendChild(document.createTextNode(" "));
+	pageDiv.appendChild(document.createTextNode(" "));
 	pageDiv.appendChild(createNew);
 	pageDiv.appendChild(removeChoice);
 	pageDiv.appendChild(editFeedback);
@@ -201,11 +201,11 @@ View.prototype.MatchSequenceNode.buildPage = function(){
 	this.generateContainers();
 	
 	if(this.feedbackMode){
-		showElement('feedbackDiv');
-		hideElement('containerTable');
+		$('#feedbackDiv').show();
+		$('#containerTable').hide();
 	} else {
-		showElement('containerTable');
-		hideElement('feedbackDiv');
+		$('#containerTable').show();
+		$('#feedbackDiv').hide();
 	};
 };
 
@@ -329,7 +329,7 @@ View.prototype.MatchSequenceNode.editIndividualFeedback = function(choiceId,cont
 		document.getElementById('feedbackEditInput').value = this.getValueByChoiceAndFieldIdentifiers(choiceId,containerId).feedback;	
 	}
 	
-	showElement('feedbackEditDiv');
+	$('#feedbackEditDiv').show();
 };
 
 /**
@@ -346,7 +346,7 @@ View.prototype.MatchSequenceNode.saveFeedback = function(){
  	
  	this.generateFeedbackTable();
  	document.getElementById('feedbackEditInput').value = '';
- 	hideElement('feedbackEditDiv');
+ 	$('#feedbackEditDiv').hide();
  	
  	/* fire source updated event */
 	this.view.eventManager.fire('sourceUpdated');

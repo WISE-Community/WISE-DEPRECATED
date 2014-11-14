@@ -1,5 +1,5 @@
 /*****														******
- * 			Helper functions for the scriptloader				 *
+ * 			Helper functions for the scriptloader   		     *
  *****														*****/
 function createAttribute(doc, node, type, val){
 	var attribute = doc.createAttribute(type);
@@ -17,6 +17,7 @@ function createElement(doc, type, attrArgs){
 	return newElement;
 };
 
+//IE 7 doesn't have indexOf method, so we need to define it........
 if(!Array.indexOf){
     Array.prototype.indexOf = function(obj){
         for(var i=0; i<this.length; i++){

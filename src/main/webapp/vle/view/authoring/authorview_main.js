@@ -347,15 +347,9 @@ View.prototype.generateNodeElement = function(node, parentNode, el, depth, pos){
 		/* add max scores input field. values will be set on retrieval of metadata */
 		var maxScoreText = document.createTextNode('Max Score: ');
 		var maxScoreInput = createElement(document, 'input', {type: 'text', 'class':'maxScoreInput', title: 'Click to Edit Maximum Score', id: 'maxScore_' + node.id, 'size':'2', onchange: 'eventManager.fire("maxScoreUpdated","'+ node.id + '")'});
-		mainDiv.appendChild(createSpace());
+		mainDiv.appendChild(document.createTextNode(" "));
 		mainDiv.appendChild(maxScoreText);
 		mainDiv.appendChild(maxScoreInput);
-		
-		/* add link to revert node to its original state when version was created
-		var revertNodeLink = createElement(document, 'a', {class: 'revertNodeLink', id:'revertNode_' + node.id, value:'Revert Node', onclick: 'eventManager.fire("versionRevertNode","' + node.id + '")'});
-		mainDiv.appendChild(createSpace());
-		mainDiv.appendChild(revertNodeLink);
-		revertNodeLink.appendChild(document.createTextNode("Revert"));*/
 		
 		/* Add button to reference work to student's work in other steps, if this is
 		 * a duplicate node, the type should be resolved to that of the node that it
@@ -368,7 +362,7 @@ View.prototype.generateNodeElement = function(node, parentNode, el, depth, pos){
 		
 		if(ndx2==-1){
 			var prevWorkLink = createElement(document, 'a', {'class': 'prevWorkLink', id: 'prevWork_' + node.id, title: 'Show Work from Preview Step', onclick: 'eventManager.fire("launchPrevWork","' + node.id + '")'});
-			mainDiv.appendChild(createSpace());
+			mainDiv.appendChild(document.createTextNode(" "));
 			mainDiv.appendChild(prevWorkLink);
 			prevWorkLink.appendChild(document.createTextNode("Show Previous Work"));
 		}
@@ -558,7 +552,7 @@ View.prototype.stepLevelChanged = function(){
  * it represents.
  */
 View.prototype.launchPrevWork = function(nodeId){
-	showElement('previousWorkDialog');
+	$('#previousWorkDialog').show();
 	this.activeNode = this.getProject().getNodeById(nodeId).getNode(); //calling getNode gets the original node even if this is a duplicate
 	
 	//generate the node label e.g. "1.3: Analyze the data"
@@ -579,7 +573,7 @@ View.prototype.launchPrevWork = function(nodeId){
  * Shows the create project dialog
  */
 View.prototype.createNewProject = function(){
-	showElement('createProjectDialog');
+	$('#createProjectDialog').show();
 	$('#createProjectDialog').dialog('open');
 };
 
@@ -589,7 +583,7 @@ View.prototype.createNewProject = function(){
  */
 View.prototype.createNewSequence = function(){
 	if(this.getProject()){
-		showElement('createSequenceDialog');
+		$('#createSequenceDialog').show();
 		$('#createSequenceDialog').dialog('open');
 	} else {
 		this.notificationManager.notify('Please open or create a Project before creating an Activity', 3);
@@ -602,7 +596,7 @@ View.prototype.createNewSequence = function(){
  */
 View.prototype.createNewNode = function(){
 	if(this.getProject()){
-		showElement('createNodeDialog');
+		$('#createNodeDialog').show();
 		$('#createNodeDialog').dialog('open');
 	} else {
 		this.notificationManager.notify('Please open or create a Project before adding a Step', 3);
@@ -616,7 +610,7 @@ View.prototype.createNewNode = function(){
 View.prototype.editProjectFile = function(){
 	if(this.getProject()){
 		$('#projectText').val($.stringify(this.getProject().projectJSON(),null,3));
-		showElement('editProjectFileDialog');
+		$('#editProjectFileDialog').show();
 		$('#editProjectFileDialog').dialog('open');
 	} else {
 		this.notificationManager.notify('Please open or create a Project before editing the project data file.', 3);
@@ -700,7 +694,6 @@ View.prototype.initializeAssetEditorDialog = function(){
  */
 View.prototype.uploadAsset = function(view){
 	if(this.getProject()){
-		//showElement('assetUploaderDialog');
 
 		var callback = function(text, xml, o){
 			var assetsSizeUsed = parseInt(text.split("/")[0]);  // how much space is taken up by existing assets
@@ -812,7 +805,7 @@ View.prototype.viewAssets = function(params){
 		} else {
 			this.assetEditorParams = null;
 		}
-		showElement('assetEditorDialog');
+		$('#assetEditorDialog').show();
 		var populateOptions = function(projectListText, args){
 			var view = args[0];
 			
@@ -1091,7 +1084,7 @@ View.prototype.openProject = function(){
  * sets hidden form elements, and shows the dialog.
  */
 View.prototype.copyProject = function(){
-	showElement('copyProjectDialog');
+	$('#copyProjectDialog').show();
 	
 	var doSuccess = function(list, view){
 		var parent = document.getElementById('copyProjectSelect');
@@ -1166,7 +1159,7 @@ View.prototype.toggleProjectMode = function(){
  */
 View.prototype.editProjectMetadata = function(){
 	if(this.getProject()){
-		showElement('editProjectMetadataDialog');
+		$('#editProjectMetadataDialog').show();
 		$('#projectMetadataTitle').val(this.utils.resolveNullToEmptyString(this.projectMeta.title));
 		$('#projectMetadataAuthor').text(this.utils.resolveNullToEmptyString(this.projectMeta.author)); // TODO: author is null - fix
 		
@@ -2060,7 +2053,7 @@ View.prototype.populateNodeSelector = function(event, cancelEvent){
 	parent.appendChild(cancelButt);
 	
 	/* show the dialog */
-	showElement('nodeSelectorDialog');
+	$('#nodeSelectorDialog').show();
 	$('#nodeSelectorDialog').dialog('open');
 };
 
@@ -2511,7 +2504,7 @@ View.prototype.analyzeProjectFailure = function(text, obj) {
  * Show the step type descriptions popup to the author 
  */
 View.prototype.openStepTypeDescriptions = function(){
-	showElement('stepTypeDescriptions');
+	$('#stepTypeDescriptions').show();
 	$('#stepTypeDescriptions').dialog('open');
 };
 
