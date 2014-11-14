@@ -439,12 +439,8 @@ var scriptloader = function(){
 		studentwork: ['vle/model/vlestate.js',
 		              'vle/model/nodevisit.js'
 		              ],
-		studentwork_min: ['vle/minified/studentwork_min.js'
-		    		              ],		   
 		annotations: ['vle/view/vle/vleview_annotation.js'],
-		annotations_min: ['vle/minified/annotations_min.js'],
 		maxscores: ['vle/model/MaxScore.js'],
-		maxscores_min:['vle/minified/maxscores_min.js'],
 		hint: ['vle/view/vle/vleview_hint.js'],
 		navigation: ['vle/navigation/NavigationLogic.js',
 		            'vle/navigation/DFS.js',

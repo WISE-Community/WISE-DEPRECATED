@@ -41,7 +41,6 @@ scriptloader.addScriptToComponent('core', coreScripts);
 scriptloader.addScriptToComponent('datagraph', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);
-scriptloader.addScriptToComponent('studentwork_min', gradingScripts);
 scriptloader.addDependencies(dependencies);
 scriptloader.addCssToComponent('datagraph', css);
 

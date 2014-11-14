@@ -819,10 +819,6 @@ var componentloader = function(em, sl){
 		}
 	};
 	
-	components.studentwork_min = components.studentwork;
-	components.annotations_min = components.annotations;
-	components.maxscores_min = components.maxscores;
-	
 	/**
 	 * Component loader listener listens for events pertaining to the loading
 	 * of components.

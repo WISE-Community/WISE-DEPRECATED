@@ -44,7 +44,6 @@ scriptloader.addScriptToComponent('core', coreScripts);
 scriptloader.addScriptToComponent('fillin', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);
-scriptloader.addScriptToComponent('studentwork_min', gradingScripts);
 scriptloader.addDependencies(dependencies);
 scriptloader.addCssToComponent('fillin', css);
 
