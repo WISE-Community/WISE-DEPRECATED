@@ -2,8 +2,6 @@
  * Display hints for the current step.
  * Hints will popup in a dialog and each hint will
  * be in its own tab
- * 
- * TODO: Internationalize!
  */
 View.prototype.showStepHints = function() {
 	$('#hintsLink').stop();
@@ -33,12 +31,6 @@ View.prototype.displayHint = function(){
 	var currentNode = this.getCurrentNode(); //get the node the student is currently on
 	var hints = currentNode.getHints(); // get the hints object for the current node
     if (currentNode.getHints() != null && currentNode.getHints().hintsArray != null && currentNode.getHints().hintsArray.length > 0) {
-    	//var hintTerm = '';
-    	//if(hints.hintTerm && this.utils.isNonWSString(hints.hintTerm)){
-    		//hintTerm = hints.hintTerm;
-    	//} else {
-    		//hintTitle = this.getI18NString("hint_hint");
-    	//}
     	
     	var hintTitle = '';
     	if(hints.hintTermPlural && this.utils.isNonWSString(hints.hintTermPlural)){
@@ -90,7 +82,6 @@ View.prototype.displayHint = function(){
 				show:{effect:"fade",duration:200},
 				hide:{effect:"fade",duration:200},
 				title:hintTitle,
-				//zindex:9999,
 				width:600,
 				height:'auto',
 				open: function(){
@@ -142,7 +133,6 @@ View.prototype.displayHint = function(){
 		    	if ($("#hintsPanel").dialog("isOpen")) {	    		    		
 		    		var hintState = new HINTSTATE({"action":"hintclosed","nodeId":event.data.view.getCurrentNode().id});
 		    		event.data.view.pushHintState(hintState);
-		    		//$('#hintsHeader').html('&nbsp').addClass('visited');
 		    	};
 		    }).on( "tabsselect", {view:currentNode.view}, function(event, ui) {
 	    		var hintState = new HINTSTATE({"action":"hintpartselected","nodeId":event.data.view.getCurrentNode().id,"partindex":ui.index});
@@ -193,7 +183,6 @@ View.prototype.displayHint = function(){
 			if(selected != 0){
 				$tabs.tabs('option', 'active', selected-1);
 			}
-			//eventManager.fire("adjustHintSize");
 		});
 		
 		// bind tab navigation links
@@ -203,7 +192,6 @@ View.prototype.displayHint = function(){
 			if(selected < numHints-1){
 				$tabs.tabs('option', 'active', selected+1);
 			}
-			//eventManager.fire("adjustHintSize");
 		});
 		
 		// check if forceShow is set

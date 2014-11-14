@@ -128,7 +128,6 @@ var componentloader = function(em, sl){
 					 'projectDataReceived':[null,null],
 					 'initiateClassroomMonitorDisplayStarted':[null,null],					 
 					 'classroomMonitorDisplayCompleted':[null,null],
-					 'chatRoomTextEntrySubmitted':[null,null],
 					 'realTimeMonitorSelectWorkgroupIdDropDownClicked':[null,null],
 					 'realTimeMonitorSelectStepDropDownClicked':[null,null],
 					 'realTimeMonitorShareWithClassClicked':[null,null],
@@ -148,7 +147,6 @@ var componentloader = function(em, sl){
 					eventManager.subscribe("gradingConfigUrlReceived", view.gradingDispatcher, view);
 					eventManager.subscribe("getGradingConfigCompleted", view.gradingDispatcher, view);
 					eventManager.subscribe("loadingProjectCompleted", view.gradingDispatcher, view);
-					eventManager.subscribe("getUserAndClassInfoCompleted", view.gradingDispatcher, view);
 					eventManager.subscribe("processUserAndClassInfoCompleted", view.gradingDispatcher, view);
 					eventManager.subscribe("customActivityCheckBoxClicked", view.gradingDispatcher, view);
 					eventManager.subscribe("customSelectAllStepsCheckBoxClicked", view.gradingDispatcher, view);
@@ -175,7 +173,6 @@ var componentloader = function(em, sl){
 					eventManager.subscribe("premadeCommentLabelClicked", view.gradingDispatcher, view);
 					eventManager.subscribe("retrieveIdeaBasketsCompleted", view.gradingDispatcher, view);
 					eventManager.subscribe("groupClicked", view.gradingDispatcher, view);
-					eventManager.subscribe("chatRoomTextEntrySubmitted", view.gradingDispatcher, view);
 					eventManager.subscribe("realTimeMonitorSelectWorkgroupIdDropDownClicked", view.gradingDispatcher, view);
 					eventManager.subscribe("realTimeMonitorSelectStepDropDownClicked", view.gradingDispatcher, view);
 					eventManager.subscribe("realTimeMonitorShareWithClassClicked", view.gradingDispatcher, view);
@@ -569,7 +566,6 @@ var componentloader = function(em, sl){
 				'noteEditorKeyPressed':[null,null],
 				'loadingThemeCompleted':[null,null],
 				'assetUploaded':[null,null],
-				'chatRoomTextEntrySubmitted':[null, null],
 				'studentWorkUpdated':[null,null],
 				'currentNodePositionUpdated':[null,null],
 				'constraintStatusUpdated':[null,null],
@@ -586,8 +582,6 @@ var componentloader = function(em, sl){
 						view.eventManager.subscribe('retrieveThemeLocalesCompleted', view.vleDispatcher, view);
 						view.eventManager.subscribe('loadingProjectStarted', view.vleDispatcher, view);
 						view.eventManager.subscribe('loadingProjectCompleted', view.vleDispatcher, view);
-						view.eventManager.subscribe('getUserAndClassInfoStarted', view.vleDispatcher, view);
-						view.eventManager.subscribe('getUserAndClassInfoCompleted', view.vleDispatcher, view);
 						view.eventManager.subscribe('processLoadViewStateResponseCompleted', view.vleDispatcher, view);
 						view.eventManager.subscribe('renderNodeCompleted', view.vleDispatcher, view);
 						view.eventManager.subscribe('retrieveAnnotationsCompleted', view.vleDispatcher, view);
@@ -599,7 +593,6 @@ var componentloader = function(em, sl){
 						view.eventManager.subscribe('loadingThemeCompleted', view.vleDispatcher, view);
 						view.eventManager.subscribe('scriptsLoaded', view.vleDispatcher, view);
 						view.eventManager.subscribe('assetUploaded', view.vleDispatcher, view);
-						view.eventManager.subscribe('chatRoomTextEntrySubmitted', view.vleDispatcher, view);
 						view.eventManager.subscribe('studentWorkUpdated', view.vleDispatcher, view);
 						view.eventManager.subscribe('currentNodePositionUpdated', view.vleDispatcher, view);
 						view.eventManager.subscribe('constraintStatusUpdated', view.vleDispatcher, view);
@@ -679,7 +672,6 @@ var componentloader = function(em, sl){
 					'showStepHints':[null,null],
 					'showNodeAnnotations':[null,null],
 					'adjustHintSize':[null,null],
-					'showNavigationTree':[null,null],
 					'getIdeaBasket':[null,null],
 					'getPublicIdeaBasket':[null,null],
 					'ideaBasketChanged':[null,null],
@@ -703,7 +695,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('showStepHints', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('showNodeAnnotations', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('adjustHintSize', view.dropDownMenuDispatcher, view);
-					view.eventManager.subscribe('showNavigationTree', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('getIdeaBasket', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('getPublicIdeaBasket', view.dropDownMenuDispatcher, view);
 					view.eventManager.subscribe('ideaBasketChanged', view.dropDownMenuDispatcher, view);

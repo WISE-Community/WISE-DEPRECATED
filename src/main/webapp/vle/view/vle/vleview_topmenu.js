@@ -5,8 +5,6 @@ View.prototype.dropDownMenuDispatcher = function(type,args,obj){
 		obj.displayProgress(args[0], args[1]);
 	} else if(type=='showFlaggedWork'){
 		obj.showFlaggedWork();
-	} else if (type == 'showNavigationTree') {
-		obj.showNavigationTree();
 	} else if (type == 'showNodeAnnotations') {
 		var nodeIdToShow = args[0];
 		var feedbackHTML = args[1];
@@ -64,14 +62,6 @@ View.prototype.dropDownMenuDispatcher = function(type,args,obj){
  */
 View.prototype.showFlaggedWork = function() {
 	this.getShowFlaggedWorkData();
-};
-
-/**
- * Shows the NavigationPanel with tree view
- * @return
- */
-View.prototype.showNavigationTree = function() {
-	this.navigationPanel.showNavigationTree();
 };
 
 /**
@@ -164,9 +154,7 @@ View.prototype.displayFlaggedWork = function() {
     $('#showflaggedwork').html(flaggedWorkHtml);
     
     //make the div visible
-    var docHeight = $(document).height()-25;
-	var docWidth = $(document).width()-25;
-	$('#showflaggedwork').dialog({height:docHeight,width:docWidth});
+	$('#showflaggedwork').dialog({height:$(document).height()-25,width:$(document).width()-25});
     $('#showflaggedwork').dialog('open');
 
 	//display the flagged work for the node id that is selected in the select box
@@ -334,10 +322,8 @@ View.prototype.showAllWork = function(){
 		}
 	});
 
-	//	open the portfolio iframe dialog
-	var docHeight = $(document).height()-25;
-	var docWidth = $(document).width()-25;
-	$("#myWorkIframe").dialog({height:docHeight,width:docWidth});
+	//	open the myWork iframe dialog
+	$("#myWorkIframe").dialog({height:$(document).height()-25,width:$(document).width()-25});
 	$("#myWorkIframe").dialog('open');
 	$("#myWorkIframe").scrollTop(0);
 	$("#myWorkIframe").attr("src","mywork/myWork.html");
@@ -883,44 +869,6 @@ View.prototype.displayStudentAssets = function() {
 };
 
 /**
- * Display the Chat Room popup
- */
-View.prototype.displayChatRoom = function() {
-	
-	//check if the chatRoomDiv exists
-	if($('#chatRoomDiv').size()==0){
-		//it does not exist so we will create it
-		$('#w4_vle').append('<div id="chatRoomDiv"><div id="chatRoomTextDisplay" style="height:85%;overflow:auto"></div><textarea id="chatRoomTextEntry" style="width:95%;height:40px"></textarea></div>');
-		var title = this.getI18NString("chat_room");
-		$('#chatRoomDiv').dialog({autoOpen:false,closeText:'',resizable:true,modal:true,show:{effect:"fade",duration:200},hide:{effect:"fade",duration:200},title:title,open:this.chatRoomDivOpen,close:this.chatRoomDivClose});
-		
-		$('#chatRoomTextEntry').keypress(function(event) {
-			if(event.which == 13) {
-				//the user has typed the enter key so we will submit the chat message
-				var chatMessage = $("#chatRoomTextEntry").val();
-				eventManager.fire("chatRoomTextEntrySubmitted", chatMessage);
-				$("#chatRoomTextEntry").attr("value","");
-				event.preventDefault();
-			}
-		});
-    }
-	
-	/*
-	 * check if the chat room div is hidden before trying to open it.
-	 * if it's already open, we don't have to do anything
-	 */
-	if($('#chatRoomDiv').is(':hidden')) {
-		//open the dialog
-		var docHeight = $(document).height()-25;
-		if(docHeight>499){
-			docHeight = 500;
-		}
-		$('#chatRoomDiv').dialog({width:400,height:500});
-		$('#chatRoomDiv').dialog('open');
-	}	
-};
-
-/**
  * Display the portfolio dialog popup
  * @param itemId which item to display. If null, display TOC.
  */
@@ -949,9 +897,7 @@ View.prototype.displayPortfolio = function(itemId) {
 	});
 
 	//	open the portfolio dialog
-	var docHeight = $(document).height()-25;
-	var docWidth = $(document).width()-25;
-	$("#portfolioIframe").dialog({height:docHeight,width:docWidth});
+	$("#portfolioIframe").dialog({height:$(document).height()-25,width:$(document).width()-25});
 	$("#portfolioIframe").dialog('open');
 	$("#portfolioIframe").scrollTop(0);
 	if (itemId) {

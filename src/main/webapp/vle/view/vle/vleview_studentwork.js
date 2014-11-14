@@ -176,8 +176,6 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback,
 	if (!this.getConfig() 
 			|| !this.getConfig().getConfigParam('mode') 
 			|| this.getConfig().getConfigParam('mode') == "portalpreview"
-				|| this.getConfig().getConfigParam('mode') == "developerpreview"
-					|| this.getConfig().getConfigParam('mode') == "standaloneauthorpreview"
 						|| this.getConfig().getConfigParam('isRunActive') === false) {
 		// no need to post data if we're in preview mode
 
@@ -298,20 +296,6 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 	var responseJSONObj = $.parseJSON(responseText);
 	var id = responseJSONObj.id;
 	var visitPostTime = responseJSONObj.visitPostTime;
-	//var cRaterItemId = responseJSONObj.cRaterItemId;
-	//var cRaterItemType = responseJSONObj.cRaterItemType;
-	//var isCRaterSubmit = responseJSONObj.isCRaterSubmit;
-
-	/*
-	 * this is for resolving node visits that used to end up with null
-	 * endTime values in the db. this problem occurs when the student
-	 * clicks on the same step in the nav rapidly, which causes a race condition.
-	 * check if the id has been set already, if it has, it means a row in the
-	 * db has already been created and we need to end the visit.
-	 */
-	if(args.nodeVisit.id != null) {
-		//args.vle.postUnsavedNodeVisit(args.nodeVisit);
-	}
 
 	/*
 	 * set the id for the node visit, this is the same as the id value
@@ -336,18 +320,6 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 		return;
 	}
 	
-	// if cRaterItemId is in the response and it was a CRater submit, make a request to GET the
-	// CRater Annotation
-	/*
-	if(cRaterItemId != null && isCRaterSubmit != null && isCRaterSubmit) {
-		var nodeVisit = args.nodeVisit;
-		var latestState = nodeVisit.getLatestState();
-		var nodeStateTimestamp = latestState.timestamp;
-
-		args.vle.getCRaterResponse(id, nodeStateTimestamp, cRaterItemType);
-	}
-	*/
-
 	/*
 	 * Check if the node visit that was just posted was an intermediate post
 	 * or a completed node visit. If it was a completed node visit we will

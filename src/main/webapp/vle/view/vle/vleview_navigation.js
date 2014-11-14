@@ -6,8 +6,6 @@ View.prototype.navigationDispatcher = function(type,args,obj){
 		obj.createNavigationLogicOnProjectLoad();
 	} else if(type=='renderNodeCompleted'){
 		obj.preloadNextNode(args[0]);
-	} else if(type=='processLoadViewStateResponseCompleted'){
-
 	}
 };
 
@@ -19,7 +17,7 @@ View.prototype.preloadNextNode = function(){
 	if(this.navigationLogic){
 		var nextNodeLoc = this.navigationLogic.getNextVisitableNode(this.getCurrentPosition());
 		
-		if(nextNodeLoc){
+		if(nextNodeLoc) {
 			this.getProject().getNodeByPosition(nextNodeLoc).preloadContent();
 		}
 	}
