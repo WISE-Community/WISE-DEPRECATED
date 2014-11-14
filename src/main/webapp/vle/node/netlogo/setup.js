@@ -34,7 +34,6 @@ var nodeClasses = [
 componentloader.addNodeIconPath('NetlogoNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreScripts);
 scriptloader.addScriptToComponent('netlogo', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

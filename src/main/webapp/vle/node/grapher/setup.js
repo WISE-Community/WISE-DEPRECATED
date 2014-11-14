@@ -104,7 +104,6 @@ var nodeIconPath = 'node/grapher/icons/';
 componentloader.addNodeIconPath('GrapherNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreScripts);
 
 /*
  * TODO: rename grapher

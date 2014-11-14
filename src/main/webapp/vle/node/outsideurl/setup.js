@@ -3,8 +3,6 @@ var coreScripts = [
 	'vle/node/outsideurl/outsideUrlEvents.js'
 ];
 
-var coreMinScripts = ['vle/node/outsideurl/outsideurl_core_min.js'];
-
 var studentVLEScripts = [
 
 ];
@@ -29,7 +27,6 @@ var nodeIconPath = 'node/outsideurl/icons/';
 componentloader.addNodeIconPath('OutsideUrlNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('outsideurl', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

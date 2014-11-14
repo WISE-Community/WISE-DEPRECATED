@@ -3,8 +3,6 @@ var coreScripts = [
 	'vle/node/sensor/sensorEvents.js'
 ];
 
-var coreMinScripts = ['vle/node/sensor/sensor_core_min.js'];
-
 var studentVLEScripts = [
 	'vle/node/sensor/sensor.js',
 	'vle/node/sensor/sensorstate.js',
@@ -41,7 +39,6 @@ var nodeIconPath = 'node/sensor/icons/';
 componentloader.addNodeIconPath('SensorNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('sensor', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

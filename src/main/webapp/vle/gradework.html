@@ -63,11 +63,7 @@ function bootstrapListener(type,args,obj){
 		eventManager.subscribe('loadingViewComplete', gradingListener);
 		createEnvironment('env', eventManager);
 
-		if (isMinifiedEnabled()) {
-			env.startView('grading_min');
-		} else {
-			env.startView('grading');
-		}
+		env.startView('grading');
 	};
 };
 

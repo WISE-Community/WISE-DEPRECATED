@@ -7,8 +7,6 @@ var coreScripts = [
 	'vle/node/surge/surgeEvents.js'
 ];
 
-var coreMinScripts = ['vle/node/surge/surge_core_min.js'];
-
 //the scripts used in the vle
 var studentVLEScripts = [
 	scriptloader.jquerySrc,
@@ -41,7 +39,6 @@ var nodeIconPath = 'node/surge/icons/';
 componentloader.addNodeIconPath('SurgeNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('surge', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

@@ -7,8 +7,6 @@ var coreScripts = [
 	'vle/node/epigame/epigameEvents.js'
 ];
 
-var coreMinScripts = ['vle/node/epigame/epigame_core_min.js'];
-
 //the scripts used in the vle
 var studentVLEScripts = [
 	scriptloader.jquerySrc,
@@ -64,7 +62,6 @@ var nodeIconPath = 'node/epigame/icons/';
 componentloader.addNodeIconPath('EpigameNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('epigame', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

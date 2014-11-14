@@ -3,10 +3,6 @@ var coreScripts = [
 	'vle/node/cargraph/cargraphEvents.js'
 ];
 
-var coreMinScripts = [
-	'vle/node/cargraph/cargraph_core_min.js'
-];
-
 var studentVLEScripts = [
 	'vle/node/cargraph/cargraph.js',
 	'vle/node/cargraph/cargraphstate.js',	
@@ -45,7 +41,6 @@ var nodeIconPath = 'node/cargraph/icons/';
 componentloader.addNodeIconPath('CarGraphNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('cargraph', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

@@ -3,10 +3,6 @@ var coreScripts = [
 	'vle/node/fillin/fillinEvents.js'
 ];
 
-var coreMinScripts = [
-  	'vle/node/fillin/fillin_core_min.js',
-];
-
 var studentVLEScripts = [
     scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
@@ -45,7 +41,6 @@ var nodeIconPath = 'node/fillin/icons/';
 componentloader.addNodeIconPath('FillinNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('fillin', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

@@ -3,11 +3,6 @@ var coreScripts = [
 	'vle/node/flash/flashEvents.js'
 ];
 
-var coreMinScripts = [
-	'vle/node/flash/FlashNode.js'
-	//'vle/node/flash/flash_core_min.js'
-];
-
 var studentVLEScripts = [
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
@@ -37,7 +32,6 @@ var nodeIconPath = 'node/flash/icons/';
 componentloader.addNodeIconPath('FlashNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('flash', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

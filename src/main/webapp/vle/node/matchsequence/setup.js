@@ -3,11 +3,6 @@ var coreScripts = [
 	'vle/node/matchsequence/matchSequenceEvents.js'
 ];
 
-var coreMinScripts = [
-  	'vle/node/matchsequence/matchsequence_core_min.js'
-];
-
-
 var studentVLEScripts = [
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
@@ -53,7 +48,6 @@ var nodeIconPath = 'node/matchsequence/icons/';
 componentloader.addNodeIconPath('MatchSequenceNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('matchsequence', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

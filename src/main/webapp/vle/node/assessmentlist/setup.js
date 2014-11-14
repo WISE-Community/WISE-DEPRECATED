@@ -3,10 +3,6 @@ var coreScripts = [
 	'vle/node/assessmentlist/assessmentListEvents.js'
 ];
 
-var coreMinScripts = [
-	'vle/node/assessmentlist/assessmentlist_core_min.js'
-];
-
 var studentVLEScripts = [
    	scriptloader.jquerySrc,
 	'vle/node/assessmentlist/assessmentlist.js',
@@ -41,7 +37,6 @@ var nodeIconPath = 'node/assessmentlist/icons/';
 componentloader.addNodeIconPath('AssessmentListNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('assessmentlist', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

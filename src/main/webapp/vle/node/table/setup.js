@@ -17,8 +17,6 @@ var coreScripts = [
 	'vle/node/table/tableEvents.js'
 ];
 
-var coreMinScripts = ['vle/node/table/table_core_min.js'];
-
 var studentVLEScripts = [
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
@@ -63,8 +61,6 @@ var gradingScripts = [
 	'vle/node/table/table.js'
 ];
 
-var gradingMinScripts = ['vle/node/table/table_grading_min.js'];
-
 var dependencies = [
   	/*
 	 * TODO: rename template
@@ -90,7 +86,6 @@ var nodeIconPath = 'node/table/icons/';
 componentloader.addNodeIconPath('TableNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 
 /*
  * TODO: rename template
@@ -99,10 +94,8 @@ scriptloader.addScriptToComponent('core_min', coreMinScripts);
  * 'quiz'
  */
 scriptloader.addScriptToComponent('table', studentVLEScripts);
-
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);
-scriptloader.addScriptToComponent('studentwork_min', gradingMinScripts);
 
 scriptloader.addDependencies(dependencies);
 

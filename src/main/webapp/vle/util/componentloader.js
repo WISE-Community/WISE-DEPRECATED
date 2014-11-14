@@ -14,7 +14,6 @@ var componentloader = function(em, sl){
 	var views = {
 		student: ['topMenu','setup', 'core', 'keystroke', 'config', 'user', 'session','studentwork','student','hint','navigation','annotations','uicontrol', 'wise', 'maxscores', 'peerreviewhelper', 'ideabasket','portfolio', 'studentasset', 'studentWebSocket'],
 		grading: ['setup', 'core', 'config', 'studentwork', 'user', 'session', 'grading', 'annotations', 'maxscores', 'ideabasket'],
-		grading_min: ['setup', 'core_min', 'config', 'studentwork_min', 'user', 'session', 'grading_min', 'annotations_min', 'maxscores_min', 'ideabasket'],
 		authoring: ['ddMenu', 'setup', 'core','keystroke', 'config', 'session','messagemanager','author','authoringcomponents', 'maxscores'],
 		summary: ['core'],
 		classroomMonitor: ['setup', 'core', 'config', 'studentwork', 'user', 'session', 'annotations', 'maxscores', 'teacherWebSocket', 'ideabasket']
@@ -820,8 +819,6 @@ var componentloader = function(em, sl){
 		}
 	};
 	
-	components.grading_min = components.grading;
-	components.core_min = components.core;
 	components.studentwork_min = components.studentwork;
 	components.annotations_min = components.annotations;
 	components.maxscores_min = components.maxscores;

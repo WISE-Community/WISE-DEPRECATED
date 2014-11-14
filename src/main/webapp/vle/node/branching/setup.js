@@ -82,7 +82,6 @@ var nodeClasses = [
 ];
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreScripts);
 
 /*
  * TODO: rename branching

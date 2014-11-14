@@ -17,11 +17,6 @@ var coreScripts = [
 	'vle/node/explanationbuilder/explanationBuilderEvents.js'
 ];
 
-var coreMinScripts = [
-    'vle/node/explanationbuilder/explanationbuilder_core_min.js'               
-];
-                      
-
 var studentVLEScripts = [
     scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
@@ -72,11 +67,6 @@ var gradingScripts = [
 	'vle/node/explanationbuilder/explanationBuilder.js'
 ];
 
-var gradingMinScripts = [
-    'vle/node/explanationbuilder/explanationbuilder_grading_min.js'                         
-];
-                        
-
 var dependencies = [
   	/*
 	 * xTODO: rename template
@@ -111,7 +101,6 @@ var nodeIconPath = 'node/explanationbuilder/icons/';
 componentloader.addNodeIconPath('ExplanationBuilderNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 
 /*
  * xTODO: rename template
@@ -123,7 +112,6 @@ scriptloader.addScriptToComponent('explanationbuilder', studentVLEScripts);
 
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);
-scriptloader.addScriptToComponent('studentwork_min', gradingMinScripts);
 scriptloader.addDependencies(dependencies);
 scriptloader.addCssToComponent('explanationbuilder', css);
 

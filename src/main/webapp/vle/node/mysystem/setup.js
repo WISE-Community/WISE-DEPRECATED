@@ -8,10 +8,6 @@ var coreScripts = [
     'vle/node/mysystem/mysystem_print.js'
 ];
 
-var coreMinScripts = [
-  	'vle/node/mysystem/mysystem_core_min.js'
-];
-
 var studentVLEScripts = [
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
@@ -49,7 +45,6 @@ var css = [
 ];
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('mysystem', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

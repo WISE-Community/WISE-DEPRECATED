@@ -12,10 +12,6 @@ var coreScripts = [
     'vle/node/openresponse/openresponse.js'
 ];
 
-var coreMinScripts = [
-	'vle/node/openresponse/openresponse_core_min.js'
-];
-
 var studentVLEScripts = [
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
@@ -62,7 +58,6 @@ componentloader.addNodeIconPath('NoteNode', nodeIconPath);
 componentloader.addNodeIconPath('OpenResponseNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('openresponse', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

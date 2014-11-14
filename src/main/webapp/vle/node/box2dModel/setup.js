@@ -98,7 +98,6 @@ var nodeIconPath = 'node/box2dModel/icons/';
 componentloader.addNodeIconPath('Box2dModelNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreScripts);
 
 /*
  * TODO: rename box2dModel

@@ -3,9 +3,6 @@ var coreScripts = [
 	'vle/node/html/htmlEvents.js'
 ];
 
-var coreMinScripts = [
-];
-
 var studentVLEScripts = [
 
 ];
@@ -41,7 +38,6 @@ var css = [
 ];
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('html', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

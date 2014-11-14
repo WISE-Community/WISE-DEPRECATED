@@ -3,11 +3,6 @@ var coreScripts = [
 	'vle/node/datagraph/dataGraphEvents.js'
 ];
 
-var coreMinScripts = [
-   	'vle/node/datagraph/datagraph_core_min.js'
-];
-
-
 var studentVLEScripts = [
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
@@ -43,7 +38,6 @@ var nodeIconPath = 'node/datagraph/icons/';
 componentloader.addNodeIconPath('DataGraphNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 scriptloader.addScriptToComponent('datagraph', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);

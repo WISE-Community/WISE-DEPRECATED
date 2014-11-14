@@ -17,8 +17,6 @@ var coreScripts = [
 	'vle/node/ideabasket/ideaBasketEvents.js'
 ];
 
-var coreMinScripts = ['vle/node/ideabasket/ideabasket_core_min.js'];
-
 var studentVLEScripts = [
 	scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
@@ -88,7 +86,6 @@ var nodeIconPath = 'node/ideabasket/icons/';
 componentloader.addNodeIconPath('IdeaBasketNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
-scriptloader.addScriptToComponent('core_min', coreMinScripts);
 
 /*
  * TODO: rename template
