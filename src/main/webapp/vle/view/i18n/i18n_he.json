@@ -1,2 +1,6 @@
 {
+    "error_msg_with_reason": {
+        "value": "",
+        "description": "An error message a reason"
+    }
 }
