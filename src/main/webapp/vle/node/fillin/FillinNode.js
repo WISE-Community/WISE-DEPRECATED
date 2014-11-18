@@ -12,7 +12,6 @@ FillinNode.prototype.i18nPath = "vle/node/fillin/i18n/";
 FillinNode.prototype.supportedLocales = {
 			"en_US":"en_US",
 			"es":"es",
-			"he":"he",
 			"iw":"he",
 			"ja":"ja",
 			"ko":"ko",

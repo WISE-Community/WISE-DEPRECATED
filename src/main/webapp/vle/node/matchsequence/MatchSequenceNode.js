@@ -12,6 +12,7 @@ MatchSequenceNode.prototype.i18nPath = "vle/node/matchsequence/i18n/";
 MatchSequenceNode.prototype.supportedLocales = {
 		"en_US":"en_US",
 		"es":"es",
+		"iw":"he",
 		"ja":"ja",
 		"ko":"ko",
 		"nl":"nl",

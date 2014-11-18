@@ -9,6 +9,7 @@ MWNode.prototype.i18nPath = "vle/node/mw/i18n/";
 MWNode.prototype.supportedLocales = {
 			"en_US":"en_US",
 			"es":"es",
+			"iw":"he",
 			"ja":"ja",
 			"ko":"ko",
 			"nl":"nl",

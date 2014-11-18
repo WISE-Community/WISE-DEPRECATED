@@ -41,6 +41,7 @@ GrapherNode.prototype.i18nPath = "vle/node/grapher/i18n/";
 GrapherNode.prototype.supportedLocales = {
 	"en_US":"en_US",
 	"es":"es",
+	"iw":"he",
 	"zh_CN":"zh_CN",
 	"nl":"nl",
 	"nl_GE":"nl",
