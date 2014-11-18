@@ -1,10 +1,8 @@
 var coreScripts = [
-	'vle/node/html/HtmlNode.js',
-	'vle/node/html/htmlEvents.js'
+	'vle/node/html/HtmlNode.js'
 ];
 
 var studentVLEScripts = [
-
 ];
 
 var authorScripts = [
