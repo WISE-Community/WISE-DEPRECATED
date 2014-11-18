@@ -880,33 +880,6 @@ NavigationPanel.prototype.getStudentViewPosition = function(position) {
 };
 
 /**
- * Shows Navigation Tree
- * TODO: remove this
- * @return
- */
-NavigationPanel.prototype.showNavigationTree = function() {
-	this.currentStepNum = 1;
-	var navHtml = "";  
-
-	//loop through the nodes and child nodes and create the html
-	for (var i = 0; i < this.rootNode.children.length; i++) {
-		navHtml += this.getNavigationHtml(this.rootNode.children[i], 0, i);
-	};
-
-	//check if the showflaggedwork div exists
-	if($('#dropDownTreeNavigationDiv').size()==0){
-		//the show flaggedworkdiv does not exist so we will create it
-		$('<div id="dropDownTreeNavigationDiv" style="text-align:left"></div>').dialog({autoOpen:false,closeText:'',width:400,height:(document.height - 20),modal:false,title:'Project Navigator',zindex:9999, left:0, position:{my:"left top", at:"left top"}});
-	}
-
-	//set the html into the div
-	$('#dropDownTreeNavigationDiv').html(navHtml);
-
-	//make the div visible
-	$('#dropDownTreeNavigationDiv').dialog('open');
-};
-
-/**
  * Checks if there are any constraints in effect for the node being rendered
  * and applies the appropriate classes to the menu.
  */

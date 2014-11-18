@@ -1,5 +1,5 @@
 /*****														******
- * 			Helper functions for the scriptloader				 *
+ * 			Helper functions for the scriptloader   		     *
  *****														*****/
 function createAttribute(doc, node, type, val){
 	var attribute = doc.createAttribute(type);
@@ -17,6 +17,7 @@ function createElement(doc, type, attrArgs){
 	return newElement;
 };
 
+//IE 7 doesn't have indexOf method, so we need to define it........
 if(!Array.indexOf){
     Array.prototype.indexOf = function(obj){
         for(var i=0; i<this.length; i++){
@@ -352,7 +353,6 @@ var scriptloader = function(){
                'vle/model/content.js',
                'vle/node/common/nodehelpers.js',
                'vle/model/Project.js',
-		       'vle/node/NodeUtils.js',
                'vle/model/Annotation.js',
                'vle/model/nodevisit.js',
                'vle/model/hintstate.js',
@@ -439,12 +439,8 @@ var scriptloader = function(){
 		studentwork: ['vle/model/vlestate.js',
 		              'vle/model/nodevisit.js'
 		              ],
-		studentwork_min: ['vle/minified/studentwork_min.js'
-		    		              ],		   
 		annotations: ['vle/view/vle/vleview_annotation.js'],
-		annotations_min: ['vle/minified/annotations_min.js'],
 		maxscores: ['vle/model/MaxScore.js'],
-		maxscores_min:['vle/minified/maxscores_min.js'],
 		hint: ['vle/view/vle/vleview_hint.js'],
 		navigation: ['vle/navigation/NavigationLogic.js',
 		            'vle/navigation/DFS.js',
@@ -518,7 +514,6 @@ var scriptloader = function(){
 		'vle/node/setupNodes.js': ['vle/node/nodefactory.js'],
 		'vle/themes/setupThemes.js': ['vle/util/componentloader.js'],
     	'vle/model/Project.js': ['vle/node/Node.js'],
-    	'vle/node/NodeUtils.js': ['vle/node/Node.js'],
     	'vle/node/DrawNode.js': ['vle/node/HtmlNode.js'],
         'vle/node/CustomNode.js': ['vle/node/Node.js'],
         'vle/node/BranchNode.js':['vle/node/Node.js','vle/node/MultipleChoiceNode.js'],

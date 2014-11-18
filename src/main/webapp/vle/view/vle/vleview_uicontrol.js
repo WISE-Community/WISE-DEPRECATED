@@ -102,7 +102,6 @@ View.prototype.lockScreenAndShareWithClass = function(teacherShareWithClassObj) 
 	    $('#lockscreen').dialog('option', 'width', 800);
 	    $('#lockscreen').dialog('option', 'height', 600);
 	}
-
 };
 
 /**

@@ -12,8 +12,6 @@ View.prototype.vleDispatcher = function(type,args,obj){
 		obj.setDialogEvents();
 	} else if(type=='scriptsLoaded' && args[0]=='theme'){
 		obj.retrieveThemeLocales();
-	} else if(type=='getUserAndClassInfoCompleted'){
-
 	} else if(type=='processLoadViewStateResponseCompleted'){
 		eventManager.fire('startVLECompleted');
 	} else if(type=='navigationLoadingCompleted'){
@@ -60,16 +58,13 @@ View.prototype.vleDispatcher = function(type,args,obj){
 		obj.assetUploaded(args[0], args[1], args[2]);
 	} else if (type == 'assetCopiedForReference') {
 		obj.assetCopiedForReference(args[0], args[1]);
-	} else if(type=="chatRoomTextEntrySubmitted") {
-		obj.sendChat(args[0]);
 	} else if(type=="studentWorkUpdated") {
 		obj.studentWorkUpdatedListener();
 	} else if(type=="currentNodePositionUpdated") {
 		obj.currentNodePositionUpdatedListener();
 	} else if(type=="nodeLinkClicked") {
-		obj.nodeLinkClickedListener(args[0]);
+		obj.goToNodePosition(args[0])
 	}
-
 };
 
 /**
@@ -212,7 +207,7 @@ View.prototype.showToolsBasedOnConfigs = function(metadata, runInfo) {
 		/*
 		 * display student assets link if run has student asset uploader enabled
 		 */
-		var studentAssetsLink=	"<a id='viewMyFilesLink' onclick='eventManager.fire(\"viewStudentAssets\",null)' title='View and Upload Files'>"+this.getI18NString("file_button_text")+"</a>";
+		var studentAssetsLink= "<a id='viewMyFilesLink' onclick='eventManager.fire(\"viewStudentAssets\",null)' title='View and Upload Files'>"+this.getI18NString("file_button_text")+"</a>";
 		$('#viewMyFiles').html(studentAssetsLink);
 		$('#viewMyFiles').show().css('display','inline');
 	} else {
@@ -329,15 +324,6 @@ View.prototype.loadLearnerData = function(userUrl){
 		
 		//set the user names in the vle html
 		document.getElementById('userNames').innerHTML = this.getI18NString("welcome") + ' ' + this.getUserAndClassInfo().getUserName() + '!';
-		
-		//get the date
-		/*var currentDate = new Date();
-		var month = currentDate.getMonth() + 1;
-		var day = currentDate.getDate();
-		var year = currentDate.getFullYear();*/
-
-		//set the date in the vle at the upper left in format mm/dd/yyyy
-		//document.getElementById('dateTime').innerHTML = month + "/" + day + "/" + year;
 				
 		this.loadVLEState();
 	}
@@ -362,7 +348,6 @@ View.prototype.loadVLEState = function(){
 		this.connectionManager.request('GET', 2, this.config.getConfigParam('getStudentDataUrl'), null, this.processLoadViewStateResponse, this);
 	}
 };
-
 
 /**
  * Process the response from connection manager's async call to load the state for this view
@@ -677,17 +662,13 @@ View.prototype.renderStartNode = function(){
  * @return boolean
  */
 View.prototype.canRenderStartNode = function(mode){
-	switch (mode){
-	case 'run':
+	if (mode == "run") {
 		return this.getProject() != null && this.userAndClassInfoLoaded && this.viewStateLoaded;
-	case 'portalpreview':
+	} else if (mode == "portalpreview") {
 		return this.getProject() != null && this.userAndClassInfoLoaded;
-	case 'standaloneauthorpreview':
-		return this.getProject() != null;
-	case 'developerpreview':
-		return this.getProject() != null;
-	default:
-		throw 'Provided MODE is not supported. Unable to continue.';
+	} else {
+		alert("Provided MODE is not supported. Unable to continue.");
+		return false;
 	}
 };
 
@@ -738,9 +719,8 @@ View.prototype.endCurrentNode = function(){
 	//close the show all work popup
 	$('#showallwork').dialog('close');
 	
-	var sync = false;
-
 	// save all unsaved nodes asynchronously
+	var sync = false;
 	this.postAllUnsavedNodeVisits(sync);
 };
 
@@ -919,33 +899,6 @@ View.prototype.importWork = function(fromNodeId,toNodeId) {
  * 2: Ensures that dialogs appear above any embedded applets in node content (not functional yet, so disabling - no effect in Firefox 3.6/Chrome Mac)
  */
 View.prototype.setDialogEvents = function() {
-	// create iframe shim under dialog when opened
-	// Inspired by Dave Willkomm's Shim jQuery plug-in: http://sourceforge.net/projects/jqueryshim/ (copyright 2010, MIT License: http://www.opensource.org/licenses/mit-license.php)
-	/*$('.ui-dialog').on("dialogopen", function(event, ui) {
-		var element = $(this),
-			offset = element.offset(),
-			zIndex = element.css('z-index') - 2;
-			html = '<iframe class="shim" frameborder="0" style="' +
-				'display: block;'+
-				'position: absolute;' +
-				'top:' + offset.top + 'px;' +
-				'left:' + offset.left + 'px;' +
-				'width:' + element.outerWidth() + 'px;' +
-				'height:' + element.outerHeight() + 'px;' +
-				'z-index:' + zIndex + ';' +
-				'"/>';
-	
-		element.before(html);
-		
-		var applet = $("#ifrm").contents().find("applet");
-		applet.after(html);
-		
-	});
-	
-	// remove iframe shim under dialog when closed
-	$('.ui-dialog').on("dialogclose", function(event, ui) {
-		$(this).prev("iframe.shim").remove();
-	});*/
 	
 	// show transparent overlay div under dialog when drag/resize is initiated
 	$('.ui-dialog').on("dialogresizestart dialogdragstart", function(event, ui) {
@@ -953,11 +906,6 @@ View.prototype.setDialogEvents = function() {
 		var zIndex = $(this).css('z-index') - 1;
 		$('#vleOverlay').css('z-index',zIndex);
 	});
-	
-	// adjust iframe shim dimensions and position when dragging/resizing dialog
-	/*$('.ui-dialog').on("dialogresize dialogdrag", function(event, ui) {
-		
-	});*/
 	
 	// hide transparent overlay div under dialog when drag/resize is initiated
 	$('.ui-dialog').on("dialogresizestop dialogdragstop", function(event, ui) {
@@ -1103,14 +1051,6 @@ View.prototype.setCurrentNodePosition = function(nodePosition) {
 View.prototype.currentNodePositionUpdatedListener = function() {
 	//render the node at the current node position
 	this.renderNode(this.model.getCurrentNodePosition());
-};
-
-/**
- * Listens for the nodeLinkClicked event
- * @param nodePosition the node position to go to
- */
-View.prototype.nodeLinkClickedListener = function(nodePosition) {
-	this.goToNodePosition(nodePosition)
 };
 
 /**

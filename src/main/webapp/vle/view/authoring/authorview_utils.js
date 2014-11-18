@@ -129,7 +129,14 @@ if (!Array.prototype.indexOf)
     }  
     return -1;  
   };  
-}  
+};
+
+/**
+ * returns a <br> element
+ */
+function createBreak(){
+	return createElement(document, 'br', null);
+};
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){

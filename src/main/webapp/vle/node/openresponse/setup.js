@@ -42,7 +42,6 @@ var css = [
 	scriptloader.jqueryUICss,
 	"vle/node/common/css/htmlAssessment.css",
 	"vle/node/openresponse/openresponse.css"
-	//"vle/css/globalstyles.css"
 ];
 
 var openResponseNodeClasses = [
@@ -61,7 +60,6 @@ scriptloader.addScriptToComponent('core', coreScripts);
 scriptloader.addScriptToComponent('openresponse', studentVLEScripts);
 scriptloader.addScriptToComponent('author', authorScripts);
 scriptloader.addScriptToComponent('studentwork', gradingScripts);
-scriptloader.addScriptToComponent('studentwork_min', gradingScripts);
 scriptloader.addDependencies(dependencies);
 scriptloader.addCssToComponent('openresponse', css);
 

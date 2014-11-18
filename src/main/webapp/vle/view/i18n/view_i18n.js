@@ -22,6 +22,8 @@ View.prototype.i18n.supportedLocales = {
 			"en_US":"en_US",
 			"es":"es",
 			"fr":"fr",
+			"he":"he",
+			"iw":"he",
 			"it":"it",
 			"ja":"ja",
 			"ko":"ko",
@@ -37,6 +39,8 @@ View.prototype.i18n.supportedLocales = {
 			"en_US":"en_US",
 			"es":"es",
 			"it":"it",
+			"he":"he",
+			"iw":"he",
 			"ja":"ja",
 			"ko":"ko",
 			"nl":"nl",
@@ -47,18 +51,6 @@ View.prototype.i18n.supportedLocales = {
 			"zh_CN":"zh_CN",
 			"zh_TW":"zh_TW"
 		}
-};
-
-/**
- * Given a locale, like "nl_NL" or "nl_BG", returns a canonical, supported locale, if exists, like "nl", in this case.
- * If it doesn't exist, return locale.
- */
-View.prototype.i18n.convertToSupportedLocale = function(locale) {
-	if (this.localeConversions[locale] != null) {
-		return this.localeConversions[locale];
-	} else {
-		return locale;
-	}
 };
 
 /**

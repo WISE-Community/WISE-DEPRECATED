@@ -80,8 +80,6 @@ View.prototype.gradingDispatcher = function(type, args, obj) {
 		obj.groupClickedEventListener(args[0], args[1]);
 	} else if(type=='specialExportButtonClicked') {
 		obj.specialExportButtonClickedEventListener(args[0]);
-	} else if(type=='chatRoomTextEntrySubmitted') {
-		obj.sendChat(args[0]);
 	} else if(type=='realTimeMonitorSelectWorkgroupIdDropDownClicked') {
 		obj.realTimeMonitorSelectWorkgroupIdDropDownClicked();
 	} else if(type=='realTimeMonitorSelectStepDropDownClicked') {

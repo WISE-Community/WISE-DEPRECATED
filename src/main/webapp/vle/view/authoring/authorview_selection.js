@@ -835,14 +835,12 @@ View.prototype.engageSelectMode = function(callback, message, args){
 	this.selectCallback = callback;
 	this.selectArgs = args;
 	
-	//hideElement('authorHeader');
 	if(message){
 		document.getElementById('selectModeMessage').innerHTML = message;
 	} else {
 		document.getElementById('selectModeMessage').innerHTML = this.defaultSelectModeMessage;
 	};
-	showElement('selectModeDiv');
-	//document.body.style.cursor = 'crosshair';
+	$('#selectModeDiv').show();
 };
 
 /**
@@ -863,8 +861,7 @@ View.prototype.disengageSelectMode = function(val){
 	};
 	
 	document.getElementById('selectModeMessage').innerHTML = '';
-	hideElement('selectModeDiv');
-	//showElement('authorHeader');
+	$('#selectModeDiv').hide();
 	//document.body.style.cursor = 'auto';
 	this.generateAuthoring();
 	this.populateMaxScores();
@@ -1105,9 +1102,6 @@ View.prototype.cancelReviewSequence = function(reviewGroupNumber) {
 		 * the nodes in the specified review group number
 		 */
 		this.getProject().cancelReviewSequenceGroup(reviewGroupNumber);
-		
-		//hide the right-click pop up dialog
-		//hideElement("contextMenu");
 		
 		//get the html elements for the nodes that are in the group
 		var reviewGroupElements = this.getElementsByClassName(null, "reviewGroup" + reviewGroupNumber, null);

@@ -17,20 +17,6 @@ function createElement(doc, type, attrArgs){
 	return newElement;
 };
 
-/**
- * returns a <br> element
- */
-function createBreak(){
-	return createElement(document, 'br', null);
-};
-
-/**
- * returns a space
- */
-function createSpace(){
-	return document.createTextNode(' ');
-};
-
 // define array.contains method, which returns true iff the array
 //contains the element specified
 if(!Array.contains){
@@ -56,7 +42,6 @@ if(!Array.indexOf){
     };
 }
 
-
 /**
  * Adds a compare function to Array.prototype if one
  * does not exist
@@ -72,20 +57,6 @@ if(!Array.compare){
 	    };
 	    return true;
 	};
-};
-
-/**
- * Hides the element with the given id
- */
-function hideElement(id){
-	document.getElementById(id).style.display = 'none';
-};
-
-/**
- * Shows the element with the given id
- */
-function showElement(id){
-	document.getElementById(id).style.display = 'block';
 };
 
 //used to notify scriptloader that this script has finished loading

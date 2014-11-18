@@ -9,6 +9,8 @@ AssessmentListNode.prototype.supportedLocales = {
 		"en_US":"en_US",
 		"es":"es",
 		"fr":"fr",
+		"he":"he",
+		"iw":"he",
 		"ja":"ja",
 		"ko":"ko",
 		"nl":"nl",
