@@ -175,15 +175,9 @@
 		</div>
 
 		<script type="text/javascript">
-			// initialise menu, set last login time and unread messages
+			// initialise menu, set last login time
 			$(function() {
 				$('ul.sf-menu').superfish({});
-				if ($.cookie("unreadMessages") != null
-						&& typeof $.cookie("unreadMessages") == "string") {
-					var unreadMessages = " (" + $.cookie("unreadMessages")
-							+ ")";
-					$('#unreadMsg').text(unreadMessages);
-				}
 				<c:choose>
 				<c:when test="${user.userDetails.lastLoginTime == null}">
 				var lastLogin = "";

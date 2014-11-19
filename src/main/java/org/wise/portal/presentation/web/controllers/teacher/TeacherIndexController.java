@@ -43,7 +43,6 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.message.MessageService;
 import org.wise.portal.service.newsitem.NewsItemService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
@@ -63,9 +62,6 @@ public class TeacherIndexController {
 	private RunService runService;
 
 	@Autowired
-	private MessageService messageService;
-
-	@Autowired
 	private Properties wiseProperties;
 
 	@Autowired
@@ -79,8 +75,6 @@ public class TeacherIndexController {
 
 	protected final static String RUN_LIST = "run_list";
 
-	private static final String UNREAD_MESSAGES = "unreadMessages";
-	
 	protected final static String IS_REAL_TIME_ENABLED = "isRealTimeEnabled";
 
 	protected final static String CURRENT_RUN_LIST_KEY = "current_run_list";
@@ -152,9 +146,6 @@ public class TeacherIndexController {
 		modelMap.put(IS_REAL_TIME_ENABLED, isRealTimeEnabled);
 		modelMap.put(WORKGROUP_MAP_KEY, workgroupMap);
 		modelMap.put("teacherOnlyNewsItems",newsItemService.retrieveByType("teacherOnly"));
-    	
-    	// retrieve all unread messages
-    	modelMap.put(UNREAD_MESSAGES, messageService.retrieveUnreadMessages(user));
     	
     	// if discourse is enabled for this WISE instance, add the link to the model
     	// so the view can display it

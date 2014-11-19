@@ -144,23 +144,6 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table messages (
-        id bigint not null auto_increment,
-        body text not null,
-        date datetime not null,
-        subject varchar(255) not null,
-        originalMessage bigint,
-        sender bigint not null,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table messages_related_to_message_recipients (
-        messages_fk bigint not null,
-        recipients_fk bigint not null,
-        primary key (messages_fk, recipients_fk),
-        unique (recipients_fk)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
     create table modules (
         authors varchar(255),
         computer_time bigint,
@@ -633,36 +616,6 @@
         references users (id);
 
     create index runIdAndWorkgroupIdIndex on ideabasket (runId, workgroupId);
-
-    alter table message_recipient 
-        add index FK398E4FE1478EAB69 (recipient_fk), 
-        add constraint FK398E4FE1478EAB69 
-        foreign key (recipient_fk) 
-        references users (id);
-
-    alter table messages 
-        add index FKE475014CC630A8F3 (sender), 
-        add constraint FKE475014CC630A8F3 
-        foreign key (sender) 
-        references users (id);
-
-    alter table messages 
-        add index FKE475014C4EAC74DE (originalMessage), 
-        add constraint FKE475014C4EAC74DE 
-        foreign key (originalMessage) 
-        references messages (id);
-
-    alter table messages_related_to_message_recipients 
-        add index FKB9B5242F605DD860 (messages_fk), 
-        add constraint FKB9B5242F605DD860 
-        foreign key (messages_fk) 
-        references messages (id);
-
-    alter table messages_related_to_message_recipients 
-        add index FKB9B5242FC6FF4CDB (recipients_fk), 
-        add constraint FKB9B5242FC6FF4CDB 
-        foreign key (recipients_fk) 
-        references message_recipient (id);
 
     alter table modules 
         add index FK49292787C1DDF6C8 (id), 
