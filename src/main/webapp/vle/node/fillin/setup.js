@@ -7,7 +7,6 @@ var studentVLEScripts = [
     scriptloader.jquerySrc,
 	scriptloader.jqueryUISrc,
 	'vle/lib/jquery/js/jsonplugin.js',
-	'vle/node/common/nodehelpers.js',
 	'vle/node/fillin/textentryinteraction.js',
 	'vle/node/fillin/fillinstate.js',
 	'vle/node/fillin/fillin.js'

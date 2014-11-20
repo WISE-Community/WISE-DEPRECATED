@@ -1,7 +1,3 @@
-/*
- * FillinNode
- */
-
 FillinNode.prototype = new Node();
 FillinNode.prototype.constructor = FillinNode;
 FillinNode.prototype.parent = Node.prototype;
@@ -19,7 +15,6 @@ FillinNode.prototype.supportedLocales = {
 			"nl_GE":"nl",
 			"nl_DE":"nl"			
 };
-
 
 FillinNode.tagMapFunctions = [
 	{functionName:'importWork', functionArgs:[]},
