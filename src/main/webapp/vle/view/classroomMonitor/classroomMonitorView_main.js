@@ -3,6 +3,12 @@ View.prototype.classroomMonitorDispatcher = function(type, args, obj) {
 		obj.getClassroomMonitorConfig(args[0]);
 	} else if(type == 'loadingProjectCompleted') {
 		obj.getStudentStatuses();
+		
+		//check if the idea basket is enabled for the run
+		if(!obj.isIdeaBasketEnabled()) {
+			//the idea basket is not enabled for the run so we will hide the idea basket button
+			$('#viewIdeaBasketList').hide();
+		}
 	} else if(type=='premadeCommentWindowLoaded') {
 		obj.premadeCommentWindowLoaded();
 	}
@@ -200,7 +206,14 @@ View.prototype.createClassroomMonitorDisplays = function() {
 	this.createGradeByStudentDisplay();
 	this.createGradeByStepDisplay();
 	this.createExportStudentWorkDisplay();
-	this.createIdeaBasketDisplay();
+	
+	//check if the idea basket is enabled for the run
+	if(this.isIdeaBasketEnabled()) {
+		//create the idea basket list and item displays
+		this.createIdeaBasketListDisplay();
+		this.createIdeaBasketItemDisplay();		
+	}
+	
 	this.createPremadeCommentsDiv();
 	this.createShowClassroomDisplay();
 	// set the default view
@@ -225,6 +238,10 @@ View.prototype.setClassroomMonitorView = function(monitorView){
 		case 'notes':
 		case 'runSettings':
 		case 'studentprogress':
+		case 'ideaBasketList':
+			//show the idea basket list view
+			this.showIdeaBasketList();
+			break;
 		case 'showClassroom':
 			//show the show classroom view
 			this.showShowClassroomDisplay();
@@ -407,25 +424,40 @@ View.prototype.showExportStudentWorkDisplay = function() {
 };
 
 /**
- * Show the idea basket display
+ * Show the list of students and how many ideas each student has in their basket
  */
-View.prototype.showIdeaBasketDisplay = function() {
-	//clear any existing buttons in the upper right
-	this.clearDisplaySpecificButtonsDiv();
-	this.clearSaveButtonDiv();
-	this.clearNewWorkNotificationDiv();
+View.prototype.showIdeaBasketList = function() {
+	//get the idea basket list table
+	var ideaBasketListTable = $('#ideaBasketListTable');
 	
-	//hide all the other display divs
+	//get the data table object
+	var ideaBasketListTableDataTable = ideaBasketListTable.DataTable();
+	
+	// hide all sections
 	this.hideAllDisplays();
 	
-	//hide the period buttons
-	this.hidePeriodButtonsDiv();
+	// clear the nodeIdClicked and workgroupIdClicked values; TODO: remove/revise
+	this.clearNodeIdClickedAndWorkgroupIdClicked();
 	
-	//show the idea basket div
-	$('#ideaBasketDisplay').show();
+	// filter for currently selected period
+	if(this.classroomMonitorPeriodSelected !== null) {
+		var period = (this.classroomMonitorPeriodSelected === 'all') ? '' : this.classroomMonitorPeriodSelected;
+		$('#ideaBasketListTable_periodSelect').multiselect('select', period).multiselect('refresh');
+		ideaBasketListTableDataTable
+			.column( 5 )
+	        .search( period )
+	        .draw();
+	}
 	
-	//fix the height so scrollbars display correctly
-	this.fixClassroomMonitorDisplayHeight();
+	//show the idea basket list div
+	$('#ideaBasketList').show();
+	
+	// hide loading message
+	$('#loading').hide();
+	
+	// redraw DataTable fixed headers
+	this.redrawFixedHeaders();
+	ideaBasketListTableDataTable.columns.adjust();
 };
 
 /**
@@ -1154,6 +1186,47 @@ View.prototype.addSectionHeader = function($table, $wrapper, headerText, options
 			}
 			
 			break;
+		case 'ideaBasketItem':
+			// initiate workgroup select
+			var $workgroupFilter = $('<select id="' + $table.attr('id') + '_workgroupSelect"></select>');
+			// insert workgroup select into DOM
+			$header.prepend($workgroupFilter);
+			// initialize Bootstrap Multiselect
+			$workgroupFilter
+				.multiselect({
+					buttonText: view.multiselectButtonText,
+					buttonClass: 'btn btn-default btn-sm',
+					enableCaseInsensitiveFiltering: true,
+					maxHeight: 250,
+					onChange: function(){
+						var id = $workgroupFilter.val();
+						view.ideaBasketClickedHandler(id);
+					}
+				});
+			
+			//called when the period is changed in the drop down
+			changePeriod = function(period){
+				if(period !== view.classroomMonitorPeriodSelected){
+					if(period === settings.allSelector){
+						// only need to rebuild workgroup select
+						view.populateWorkgroupSelect('all', $table.attr('id'), $workgroupFilter.val());
+						view.classroomMonitorPeriodSelected = 'all';
+					} else {
+						// need to rebuild workgroup select and switch grading view to first workgroup from chosen period
+						var id = '',
+							table = view.ideaBasketListTable;
+						table.rows().eq( 0 ).each( function (rowIdx) {
+						    if (table.cell( rowIdx, 5 ).data() === period && id === '') { // TODO: figure out why return false isn't breaking out of $.each
+						    	id = table.row( rowIdx ).data().workgroup_id;
+						    	return false;
+						    }
+						} );
+						view.classroomMonitorPeriodSelected = (period === settings.allSelector) ? 'all' : period;
+						view.ideaBasketClickedHandler(id);
+					}
+				}
+			}
+			break;
 		case 'progress':
 		default:
 			changePeriod = function(period){
@@ -1520,28 +1593,69 @@ View.prototype.getIdeaBasketCallbackHandler = function(workgroupId, text) {
 	//save the idea basket
 	this.model.setIdeaBasket(workgroupId, ideaBasket);
 	
-	//display the idea basket
-	this.showIdeaBasket(workgroupId);
+	//display the idea basket for a specific workgroup
+	this.showIdeaBasketItem(workgroupId);
 };
 
 /**
- * The failur callback for retrieving an idea basket
+ * The failure callback for retrieving an idea basket
  */
 View.prototype.getIdeaBasketFailCallback = function() {
 	
 };
 
 /**
- * Display the idea basket
+ * Display the idea basket for a specific workgroup
  * @param workgroupId the workgroup id of the student to show the idea basket for
  */
-View.prototype.showIdeaBasket = function(workgroupId) {
+View.prototype.showIdeaBasketItem = function(workgroupId) {
+	$('#monitorView > label').removeClass('active');
+	
 	//retrieve the idea basket for the workgroup id
 	var ideaBasket = this.model.getIdeaBasket(workgroupId);
 	
+	//get the idea basket item table
+	var ideaBasketItemTable = $('#ideaBasketItemTable');
+	
+	//get the data table object
+	var ideaBasketItemTableDataTable = ideaBasketItemTable.DataTable();
+	
+	if(ideaBasketItemTableDataTable != null) {
+		/*
+		 * clear the data table in case there is existing data from
+		 * a previous time we displayed an idea basket item
+		 */
+		ideaBasketItemTableDataTable.clear();
+	}
+	
+	// hide all sections
+	this.hideAllDisplays();
+	
+	// clear the nodeIdClicked and workgroupIdClicked values; TODO: remove/revise
+	this.clearNodeIdClickedAndWorkgroupIdClicked();
+	
+	// filter for currently selected period
+	if(this.classroomMonitorPeriodSelected !== null) {
+		var period = (this.classroomMonitorPeriodSelected === 'all') ? '' : this.classroomMonitorPeriodSelected;
+		$('#ideaBasketItemTable_periodSelect').multiselect('select', period).multiselect('refresh');
+		ideaBasketItemTableDataTable
+			.column( 1 )
+	        .search( period )
+	        .draw();
+	}
+	
+	// show the idea basket item div
+	$('#ideaBasketItem').show();
+	
+	// hide loading message
+	$('#loading').hide();
+	
+	// redraw DataTable fixed headers
+	this.redrawFixedHeaders();
+	ideaBasketItemTableDataTable.columns.adjust();
+	
 	if(ideaBasket != null) {
-		//clear out the idea basket display so we can re-populate it
-		$('#ideaBasketDisplay').html('');
+		//the student has an idea basket
 		
 		//get the student names for this workgroup
 		var studentNames = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId);
@@ -1551,57 +1665,6 @@ View.prototype.showIdeaBasket = function(workgroupId) {
 		
 		var showStudentWorkLink = true;
 		var showIdeaBasketLink = false;
-		
-		//create the table that will display the student names
-		var gradeByStudentHeaderTable = this.createStudentHeaderTable(studentNames, workgroupId, periodName, showStudentWorkLink, showIdeaBasketLink);
-		
-		//add the header table to the display
-		$('#ideaBasketDisplay').append(gradeByStudentHeaderTable);
-		
-		//create an empty table for spacing purposes
-		var spacingTable = $('<table>');
-		var spacingTR = $('<tr>');
-		var spacingCell = $('<td>');
-		spacingCell.html('&nbsp');
-		
-		spacingTR.append(spacingCell);
-		spacingTable.append(spacingTR);
-		
-		$('#ideaBasketDisplay').append(spacingTable);
-		
-		//create the table that will display the text 'Idea Basket'
-		var titleTable = $('<table>');
-		titleTable.attr('width', '100%');
-		var titleTR = $('<tr>');
-		var titleCell = $('<td>');
-		
-		var titleH3 = $('<h3>');
-		titleH3.css('text-align', 'center');
-		titleH3.text('Idea Basket');
-		
-		titleCell.append(titleH3);
-		titleTR.append(titleCell);
-		titleTable.append(titleTR);
-		
-		$('#ideaBasketDisplay').append(titleTable);
-		
-		//create the table that will display the ideas in the idea basket
-		var ideaBasketTable = $('<table>');
-		ideaBasketTable.attr('border', '1px');
-		ideaBasketTable.attr('cellpadding', '3px');
-		ideaBasketTable.css('border-collapse', 'collapse');
-		ideaBasketTable.css('width', '100%');
-		ideaBasketTable.css('border-width', '2px');
-		ideaBasketTable.css('border-style', 'solid');
-		ideaBasketTable.css('border-color', 'black');
-		
-		//create the header row
-		var ideaBasketHeaderTR = $('<tr>');
-		
-		//create the header idea cell
-		var ideaBasketHeaderIdeaCell = $('<th>');
-		ideaBasketHeaderIdeaCell.text('Idea');
-		ideaBasketHeaderTR.append(ideaBasketHeaderIdeaCell);
 		
 		//get the project meta data
 		var projectMetaData = this.getProjectMetadata();
@@ -1623,53 +1686,6 @@ View.prototype.showIdeaBasket = function(workgroupId) {
 			}
 		}
 		
-		if(ideaAttributes != null) {
-			//loop through all the idea basket attributes and create a header cell for each
-			for(var x=0; x<ideaAttributes.length; x++) {
-				//get an attribute
-				var ideaAttribute = ideaAttributes[x];
-				
-				if(ideaAttribute != null) {
-					//get the attribute name
-					var ideaAttributeName = ideaAttribute.name;
-					
-					//create a header cell for the attribute
-					var ideaBasketHeaderAttributeCell = $('<th>');
-					ideaBasketHeaderAttributeCell.attr('width', '15%');
-					ideaBasketHeaderAttributeCell.text(ideaAttributeName);
-					ideaBasketHeaderTR.append(ideaBasketHeaderAttributeCell);
-				}
-			}
-		}
-		
-		//set the width of the idea cell depending on how many attributes there are
-		if(ideaAttributes == null) {
-			ideaBasketHeaderIdeaCell.attr('width', '70%');
-		} else {
-			if(ideaAttributes.length == 0) {
-				ideaBasketHeaderIdeaCell.attr('width', '70%');
-			} else if(ideaAttributes.length == 1) {
-				ideaBasketHeaderIdeaCell.attr('width', '55%');
-			} else if(ideaAttributes.length == 2) {
-				ideaBasketHeaderIdeaCell.attr('width', '40%');
-			} else if(ideaAttributes.length == 3) {
-				ideaBasketHeaderIdeaCell.attr('width', '25%');
-			}
-		}
-		
-		//create the step created on header cell
-		var ideaBasketHeaderStepCreatedOnCell = $('<th>');
-		ideaBasketHeaderStepCreatedOnCell.attr('width', '15%');
-		ideaBasketHeaderStepCreatedOnCell.text('Step Created On');
-		ideaBasketHeaderTR.append(ideaBasketHeaderStepCreatedOnCell);
-		
-		//create the created timestamp header cell
-		var ideaBasketHeaderTimestampCell = $('<th>');
-		ideaBasketHeaderTimestampCell.attr('width', '15%');
-		ideaBasketHeaderTimestampCell.text('Created');
-		ideaBasketHeaderTR.append(ideaBasketHeaderTimestampCell);
-		ideaBasketTable.append(ideaBasketHeaderTR);
-		
 		//get the student ideas
 		var ideas = ideaBasket.ideas;
 		
@@ -1680,23 +1696,57 @@ View.prototype.showIdeaBasket = function(workgroupId) {
 				var idea = ideas[x];
 				
 				if(idea != null) {
+					//get the values of the idea
 					var ideaText = idea.text;
 					var attributes = idea.attributes;
 					var nodeName = idea.nodeName;
 					var timeCreated = idea.timeCreated;
 					var timeLastEdited = idea.timeLastEdited;
 					
-					//create the row for the idea
-					var ideaTR = $('<tr>');
+					//get the created on timestamp
+					var timeCreatedFormatted = this.formatTimestamp(timeCreated);
 					
-					//create the cell to display the text for the idea
-					var ideaTextCell = $('<td>');
-					ideaTextCell.text(ideaText);
-					ideaTR.append(ideaTextCell);
+					//create the object that will be turned into a DataTable row
+					var ideaObject = {
+						"ideaText": ideaText,
+						"stepName": nodeName,
+						"timeCreated": timeCreatedFormatted,
+						"period_name": periodName
+					};
 					
-					if(ideaAttributes != null) {
+					if(ideaAttributes == null) {
+						/*
+						 * there are no idea basket attributes which means the default
+						 * attributes were used in the project
+						 */
+						
+						var source = '';
+						var tags = '';
+						var flag = '';
+
+						//get the source from the idea
+						if(idea.source != null) {
+							source = idea.source;
+						}
+						
+						//get the tags from the idea
+						if(idea.tags != null) {
+							tags = idea.tags;
+						}
+						
+						//get the flag from the idea
+						if(idea.flag != null) {
+							flag = idea.flag;
+						}
+						
+						//set the source, tags, and flag into the object
+						ideaObject.attribute_0 = source;
+						ideaObject.attribute_1 = tags;
+						ideaObject.attribute_2 = flag;
+					} else {
 						//loop through all the idea attributes that are available in the basket
 						for(var y=0; y<ideaAttributes.length; y++) {
+							//get an idea attribute
 							var ideaAttribute = ideaAttributes[y];
 							
 							if(ideaAttribute != null) {
@@ -1706,97 +1756,29 @@ View.prototype.showIdeaBasket = function(workgroupId) {
 								//get the attribute value from the idea
 								var ideaAttributeValue = this.getIdeaAttributeValue(idea, ideaAttributeId);
 								
-								var ideaAttributeCell = $('<td>');
-								
-								if(ideaAttributeValue != null) {
-									//set the attribute value
-									ideaAttributeCell.text(ideaAttributeValue);									
+								if(ideaAttributeValue == null) {
+									ideaAttributeValue = '';
 								}
-								
-								ideaTR.append(ideaAttributeCell);
+
+								//set the attribute value into the object
+								ideaObject['attribute_' + y] = ideaAttributeValue;
 							}
 						}
 					}
 					
-					//set the step that the idea was created on
-					var ideaNodeNameCell = $('<td>');
-					ideaNodeNameCell.text(nodeName);
-					ideaTR.append(ideaNodeNameCell);
-
-					//set the created on timestamp
-					var timeCreatedFormatted = this.formatTimestamp(timeCreated);
-					var ideaTimeCreatedCell = $('<td>');
-					ideaTimeCreatedCell.text(timeCreatedFormatted);
-					ideaTR.append(ideaTimeCreatedCell);
-					
-					//add the idea row to the table
-					ideaBasketTable.append(ideaTR);					
+					//add the idea object to the DataTable so it will create a row for it
+					ideaBasketItemTableDataTable.row.add(ideaObject);
 				}
 			}			
 		}
 		
-		//add the idea table to the display
-		$('#ideaBasketDisplay').append(ideaBasketTable);
+		//draw the DataTable
+		ideaBasketItemTableDataTable.draw();
 		
-		//show the idea basket div
-		this.showIdeaBasketDisplay();
+		var periodSelected = this.classroomMonitorPeriodSelected;
 		
-		//create the refresh button
-		var refreshButton = $('<input>');
-		refreshButton.attr('id', 'refreshButton');
-		refreshButton.attr('type', 'button');
-		refreshButton.val('Check for New Work');
-		refreshButton.click({thisView:this, workgroupId:workgroupId}, this.ideaBasketClicked);
-		
-		var periodIdSelected = null;
-		
-		if(this.classroomMonitorPeriodIdSelected != null && this.classroomMonitorPeriodIdSelected != 'all') {
-			//there was a period id that was selected
-			periodIdSelected = this.classroomMonitorPeriodIdSelected;
-		}
-		
-		//get the previous and next workgroup ids
-		var previousAndNextWorkgroupIds = this.getUserAndClassInfo().getPreviousAndNextWorkgroupIdsInAlphabeticalOrder(workgroupId, periodIdSelected);
-		var previousWorkgroupId = previousAndNextWorkgroupIds.previousWorkgroupId;
-		var nextWorkgroupId = previousAndNextWorkgroupIds.nextWorkgroupId;
-
-		//make the button for the previous workgroup id
-		var previousWorkgroupIdButton = $('<input>');
-		previousWorkgroupIdButton.attr('id', 'previousWorkgroup');
-		previousWorkgroupIdButton.attr('type', 'button');
-		previousWorkgroupIdButton.val('Previous Workgroup');
-		
-		if(previousWorkgroupId == null) {
-			//there is no previous workgroup id so we will disable the button
-			previousWorkgroupIdButton.attr('disabled', true);
-		} else {
-			//set the click event for the previous workgroup id button
-			previousWorkgroupIdButton.click({thisView:this, workgroupId:previousWorkgroupId}, this.ideaBasketClicked);
-		}
-		
-		//make the button for the next workgroup id
-		var nextWorkgroupIdButton = $('<input>');
-		nextWorkgroupIdButton.attr('id', 'nextWorkgroup');
-		nextWorkgroupIdButton.attr('type', 'button');
-		nextWorkgroupIdButton.val('Next Workgroup');
-		
-		if(nextWorkgroupId == null) {
-			//there is no next workgroup id so we will disable the button
-			nextWorkgroupIdButton.attr('disabled', true);
-		} else {
-			//set the click event for the next workgroup id button
-			nextWorkgroupIdButton.click({thisView:this, workgroupId:nextWorkgroupId}, this.ideaBasketClicked);		
-		}
-		
-		//clear any existing buttons in the upper right
-		this.clearDisplaySpecificButtonsDiv();
-		this.clearSaveButtonDiv();
-		this.clearNewWorkNotificationDiv();
-
-		//add the buttons
-		$('#displaySpecificButtonsDiv').append(previousWorkgroupIdButton);
-		$('#displaySpecificButtonsDiv').append(refreshButton);
-		$('#displaySpecificButtonsDiv').append(nextWorkgroupIdButton);
+		// update workgroup select element with workgroups in selected period
+		this.populateWorkgroupSelect(periodSelected, 'ideaBasketItemTable', workgroupId);
 	}
 };
 
@@ -5532,6 +5514,27 @@ View.prototype.updateStudentIdeaBasketCount = function(workgroupId) {
 };
 
 /**
+ * Get the number of ideas in a student's basket
+ * @param workgroupId the workgroup id we want the idea count from
+ * @return the number of ideas the workgroup has in their basket
+ */
+View.prototype.getStudentIdeaBasketIdeaCount = function(workgroupId) {
+	var ideaCount = null;
+	
+	if(workgroupId != null) {
+		//get the student status object
+		var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
+		
+		if(studentStatus != null) {
+			//get the idea basket count from the student status
+			ideaCount = studentStatus.ideaBasketIdeaCount;
+		}		
+	}
+	
+	return ideaCount;
+}
+
+/**
  * Update the percentage completion bar and number for a student
  * @param workgroupId the workgroup id
  * @param completionPercentage the completion percentage
@@ -6281,6 +6284,46 @@ View.prototype.updateStudentOnline = function(workgroupId, isOnline) {
 		    .data( data );
 		table.draw();
 		
+		//check if idea baskets are enabled for the run
+		if(this.isIdeaBasketEnabled()) {
+			//idea baskets are enabled
+			
+			//get the idea basket list table
+			var ideaBasketListTable = $('#ideaBasketListTable');
+			
+			if(ideaBasketListTable != null) {
+				//get the idea basket list data table
+				var ideaBasketListTableDataTable = ideaBasketListTable.DataTable();
+				
+				if(ideaBasketListTableDataTable != null) {
+					//get the row for the workgroup in the idea basket list
+					var ideaBasketRow = $('#ideaBasketList_' + workgroupId);
+					
+					if(ideaBasketRow != null) {
+						//get the data in the row
+						var ideaBasketRowData = ideaBasketListTableDataTable.row(ideaBasketRow).data();
+						
+						if(ideaBasketRowData != null) {
+							//get the number of ideas the workgroup has in their basket
+							var ideaCount = this.getStudentIdeaBasketIdeaCount(workgroupId);
+							
+							//update the values of the row
+							ideaBasketRowData.online = isOnline;
+							ideaBasketRowData.online_html = this.getStudentOnlineHtml(isOnline);
+							ideaBasketRowData.idea_count = ideaCount;
+							ideaBasketRowData.DT_RowClass = rowClass;
+							
+							//update the row data
+							ideaBasketListTableDataTable.row(ideaBasketRow).data(ideaBasketRowData);
+							
+							//re-draw the table
+							ideaBasketListTableDataTable.draw();							
+						}
+					}
+				}
+			}
+		}
+		
 		// update number of online workgroups display
 		var $online = $('#studentsOnline');
 		$online.text(this.getI18NStringWithParams('classroomMonitor_workgroupsOnline', [this.studentsOnline.length]));
@@ -7019,17 +7062,254 @@ View.prototype.createExportStudentWorkDisplay = function() {
 };
 
 /**
- * Create the div used to display an idea basket
+ * Create the idea basket list display that will list all the students
+ * in the run and how many ideas each student has in their basket
  */
-View.prototype.createIdeaBasketDisplay = function() {
-	//create the idea basket div
-	var ideaBasketDisplay = $('<div></div>').attr({id:'ideaBasketDisplay'});
+View.prototype.createIdeaBasketListDisplay = function() {
+	var view = this,
+		table = $('#ideaBasketListTable');
+	var ideaBasketListData = [];
 	
-	//add the idea basket div to the main div
-	$('#classroomMonitorMainDiv').append(ideaBasketDisplay);
+	//get all the workgroup ids in the class
+	var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIdsInAlphabeticalOrder();
 	
-	//hide the idea basket div, we will show it later when necessary
-	ideaBasketDisplay.hide();
+	if(workgroupIds != null) {
+		//loop through all the workgroup ids
+		for(var x=0; x<workgroupIds.length; x++) {
+			//get a workgroup id
+			var workgroupId = workgroupIds[x],
+			
+				//check if the student is online
+				online = this.isStudentOnline(workgroupId),
+				rowClass = online ? 'online' : 'offline',
+				onlineHtml = view.getStudentOnlineHtml(online),
+				
+				//get the student names for this workgroup
+				students = this.userAndClassInfo.getStudentNamesByWorkgroupId(workgroupId),
+				studentNames = '';
+			
+			for(var i=0; i<students.length; i++){
+				if(i>0){
+					studentNames += ', ';
+				}
+				studentNames += students[i];
+			}
+				
+			//get the period name the workgroup is in
+			var periodName = this.userAndClassInfo.getClassmatePeriodNameByWorkgroupId(workgroupId),
+				
+				//get the period id the workgroup is in
+				periodId = this.userAndClassInfo.getClassmatePeriodIdByWorkgroupId(workgroupId);
+			
+			studentNames = '<a href="javascript:void(0);" class="grade-by-student" title="' + view.getI18NString('classroomMonitor_studentProgress_viewStudentWork') + '" data-workgroupid="' + workgroupId + '">' + studentNames + '<span class="fa fa-search-plus fa-flip-horizontal"></span> <span class="label label-default">' + view.getI18NStringWithParams('classroomMonitor_periodLabel', [periodName]) + '</span></a>';
+
+			//get the number of ideas the workgroup has in their idea basket
+			var ideaCount = this.getStudentIdeaBasketIdeaCount(workgroupId);
+			
+			//create the row for the student
+			ideaBasketListData.push(
+				{
+					"DT_RowId": 'ideaBasketList_' + workgroupId,
+					"DT_RowClass": rowClass,
+					"online": online,
+					"online_html": onlineHtml, 
+					"workgroup_id": workgroupId,
+					"period_id": periodId,
+					"period_name": periodName,
+					"student_names": studentNames,
+					"idea_count": ideaCount
+				});
+		}		
+	}
+
+	// initialize dataTable
+	table.dataTable( {
+        'data': ideaBasketListData,
+        'paging': false,
+        'autoWidth': false,
+        'dom': '<"dataTables_top"lf><"clearfix">rt<"dataTables_bottom"ip><"clear">',
+        'language': {
+        	'search': '',
+	    	'info': view.getI18NStringWithParams('classroomMonitor_tableInfoText', ['_TOTAL_'])
+        },
+        'columns': [
+            { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_online'), 'data': 'online_html', 'class': 'center', 'sort': 'online', 'width': '5%' },
+            { 'title': 'Workgroup ID', 'data': 'workgroup_id' },
+            { 'title': 'Period ID', 'data': 'period_id' },
+            { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_workgroup'), 'data': 'student_names', 'class': 'gradable viewStudentWork', 'width': '70%' },
+            { 'title': 'Number of Ideas', 'data': 'idea_count', 'width': '25%' },
+            { 'title': view.getI18NString('classroomMonitor_studentProgress_headers_period'), 'data': 'period_name', 'class': 'center', 'orderData': [5, 3] }
+        ],
+        'order': [[ 3, 'asc' ]],
+        'columnDefs': [
+			{
+				'targets': [ 1, 2, 5 ],
+				'visible': false
+			},
+			{
+				'targets': [ 1, 2 ],
+				'searchable': false
+			}
+		],
+        'initComplete': function( settings, json ) {
+        	$('.dataTables_filter input[type="search"]', $('#ideaBasketList')).attr('placeholder', view.getI18NString('classroomMonitor_search'));
+        },
+        'drawCallback': function( settings ) {
+        	view.redrawFixedHeaders(true);
+        	
+        	// bind click actions to workgroup links
+        	$('.grade-by-student', table).each(function(){
+        		$(this).off('click').on('click', {thisView:view, workgroupId:$(this).data('workgroupid')}, view.ideaBasketClicked);
+        	});
+        }
+    } );
+	
+	table.dataTable().fnFilterOnReturn();
+	
+	// create view object for future api access
+	this.ideaBasketListTable = table.DataTable();
+	
+	// add period filter and header text
+	this.addSectionHeader(table, $('#ideaBasketListTable_wrapper'), view.getI18NString('classroomMonitor_idea_baskets_title'), { 'view': 'ideaBasketList', 'periodCol': 5 });
+};
+
+/**
+ * Create the idea basket item display
+ */
+View.prototype.createIdeaBasketItemDisplay = function() {
+	//get the idea basket item table
+	var table = $('#ideaBasketItemTable');
+	
+	//get the project meta data
+	var projectMetaData = this.getProjectMetadata();
+	
+	var ideaAttributeNames = [];
+	
+	var ideaAttributes = null;
+	
+	//get the idea basket attributes
+	if(projectMetaData != null) {
+		if(projectMetaData.hasOwnProperty('tools')) {
+			var tools = projectMetaData.tools;
+			
+			if(tools.hasOwnProperty('ideaManagerSettings')) {
+				var ideaManagerSettings = tools.ideaManagerSettings;
+				
+				if(ideaManagerSettings.hasOwnProperty('ideaAttributes')) {
+					ideaAttributes = ideaManagerSettings.ideaAttributes;
+				}
+			}
+		}
+	}
+	
+	if(ideaAttributes == null) {
+		/*
+		 * there are no idea attributes authored in the idea basket which means
+		 * the default attributes were used for the project
+		 */
+		ideaAttributeNames.push('Source');
+		ideaAttributeNames.push('Tags');
+		ideaAttributeNames.push('Flag');
+	} else {
+		//loop through all the idea basket attributes
+		for(var x=0; x<ideaAttributes.length; x++) {
+			//get an attribute
+			var ideaAttribute = ideaAttributes[x];
+			
+			if(ideaAttribute != null) {
+				//get the attribute name
+				var ideaAttributeName = ideaAttribute.name;
+				ideaAttributeNames.push(ideaAttributeName);
+			}
+		}
+	}
+	
+	var dataTableSettings = {
+        'paging': false,
+        'dom': '<"dataTables_top"lf><"clearfix">rt<"dataTables_bottom"ip><"clear">',
+	    'language': {
+	    	'search': ''
+	    },
+        'autoWidth': false,
+        'columns': [],
+        'columnDefs': [
+   			{
+   				'targets': [ 1 ],
+   				'visible': false
+   			}
+   		],
+        'initComplete': function( settings, json ) {
+        	$('.dataTables_filter input[type="search"]', $('#ideaBasketItem')).attr('placeholder', view.getI18NString('classroomMonitor_search'));
+        }
+    };
+	
+	//add the idea text column
+	dataTableSettings.columns.push({ 'title': 'Idea', 'data': 'ideaText', 'width': '50%' });
+	
+	//add the hidden period name column
+	dataTableSettings.columns.push({ 'title': view.getI18NString('classroomMonitor_studentProgress_headers_period'), 'data': 'period_name', 'class': 'center' });
+	
+	//the number of attributes for an idea
+	var numAttributes = 0;
+	
+	//the column number that the period is located at
+	var periodColumn = 1;
+	
+	//get the number of attributes for an idea
+	if(ideaAttributeNames == null) {
+		/*
+		 * attributes were not authored for the idea basket which means
+		 * the default attributes were used for the project
+		 */
+		numAttributes = 3;
+	} else {
+		//attributes were authored so we will get how many were used
+		
+		if(ideaAttributeNames.length > 0) {
+			numAttributes = ideaAttributeNames.length;
+		}
+	}
+	
+	/*
+	 * calculate the widths of the columns that appear to the right of
+	 * the idea text column. all columns to the right of the idea text
+	 * column will share 50% of the width of the table
+	 */
+	var extraColumnWidths = 50 / (numAttributes + 2);
+	
+	if(ideaAttributeNames != null && ideaAttributeNames.length > 0) {
+		//loop through all the attribute names
+		for(var i=0; i<ideaAttributeNames.length; i++) {
+			//get an attibute name
+			var ideaAttributeName = ideaAttributeNames[i];
+
+			//create the object that will specify the attribute column
+			var columnObject = {};
+			columnObject.title = ideaAttributeName;
+			columnObject.data = 'attribute_' + i;
+			columnObject.width = extraColumnWidths + '%';
+			
+			//add the attribute column
+			dataTableSettings.columns.push(columnObject);
+		}
+	}
+	
+	//add the step created on column
+	dataTableSettings.columns.push({ 'title': 'Step Created On', 'data': 'stepName', 'width': extraColumnWidths + '%' });
+	
+	//add the time created column
+	dataTableSettings.columns.push({ 'title': 'Created', 'data': 'timeCreated', 'width': extraColumnWidths + '%' });
+	
+	//get the column number of the time created column
+	var createdColumn = 3 + numAttributes;
+	
+	//sort the rows based on the time created column from newest to oldest
+	dataTableSettings.order = [[ createdColumn, 'desc' ]];
+	
+	// initialize dataTable
+	table.dataTable(dataTableSettings);
+
+	this.addSectionHeader(table, $('#ideaBasketItemTable_wrapper'), view.getI18NString('classroomMonitor_idea_basket_title'), { 'view': 'ideaBasketItem', 'periodCol': periodColumn });
 };
 
 /**

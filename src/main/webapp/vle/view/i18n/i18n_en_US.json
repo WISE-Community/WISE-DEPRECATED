@@ -1135,6 +1135,18 @@
 		"value":"Manage Students",
 		"description":"Title text for manage students link in classroom monitor"
 	},
+	"classroomMonitor_idea_baskets":{
+		"value":"Idea Baskets",
+		"description":"Text for idea baskets link in classroom monitor"
+	},
+	"classroomMonitor_idea_basket_title":{
+		"value":"Idea Basket",
+		"description":"Text for idea basket title"
+	},
+	"classroomMonitor_idea_baskets_title":{
+		"value":"Idea Baskets",
+		"description":"Text for idea baskets title"
+	},
 	"classroomMonitor_tools":{
 		"value":"Tools",
 		"description":"Text for tools button in classroom monitor"

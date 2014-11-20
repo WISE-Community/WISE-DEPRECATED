@@ -23,8 +23,6 @@ View.prototype.dropDownMenuDispatcher = function(type,args,obj){
 			return;
 		}
 		obj.showStepHints();
-	} else if(type=='getIdeaBasket') {
-		obj.getIdeaBasket();
 	} else if(type=='getPublicIdeaBasket') {
 		obj.getPublicIdeaBasket();
 	} else if(type=='ideaBasketChanged') {
@@ -445,9 +443,6 @@ View.prototype.checkForNewTeacherAnnotations = function() {
 			}		
 		}		
 	}
-	
-	//TODO: Geoff: WHY IS THIS CALL HERE?
-	eventManager.fire('getIdeaBasket');
 };
 
 /**
@@ -780,7 +775,7 @@ View.prototype.getIdeaBasket = function() {
 	};
 	
 	//request the idea basket from the server
-	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('getIdeaBasketUrl'), ideaBasketParams, this.getIdeaBasketCallback, {thisView:this});
+	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('getIdeaBasketUrl'), ideaBasketParams, this.getIdeaBasketCallback, {thisView:this}, this.getIdeaBasketFailureCallback, true);
 };
 
 /**
@@ -809,6 +804,13 @@ View.prototype.getIdeaBasketCallback = function(responseText, responseXML, args)
 	 * data if necessary
 	 */
 	thisView.ideaBasketChanged();
+};
+
+/**
+ * The failure callback when retrieving the idea basket
+ */
+View.prototype.getIdeaBasketFailureCallback = function(responseText, args) {
+	
 };
 
 /**

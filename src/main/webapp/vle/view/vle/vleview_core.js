@@ -13,6 +13,7 @@ View.prototype.vleDispatcher = function(type,args,obj){
 	} else if(type=='scriptsLoaded' && args[0]=='theme'){
 		obj.retrieveThemeLocales();
 	} else if(type=='processLoadViewStateResponseCompleted'){
+		obj.getIdeaBasket();
 		eventManager.fire('startVLECompleted');
 	} else if(type=='navigationLoadingCompleted'){
 		obj.populateNodeDependencies();

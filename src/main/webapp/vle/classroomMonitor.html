@@ -60,6 +60,9 @@
 						<label class="btn btn-default disabled" id="viewManageStudents" data-i18n-title="classroomMonitor_manage_title">
 							<input type="radio" name="monitorView" value="manageStudents"><span class="fa fa-users"></span><span class="btn-text" data-i18n="classroomMonitor_manage">Manage</span>
 						</label>
+						<label class="btn btn-default" id="viewIdeaBasketList" data-i18n-title="classroomMonitor_idea_baskets_title">
+							<input type="radio" name="monitorView" value="ideaBasketList"><span class="fa fa-lightbulb-o"></span><span class="btn-text" data-i18n="classroomMonitor_idea_baskets">Idea Baskets</span>
+						</label>
 					</div>
 				</div>
 				
@@ -187,7 +190,20 @@
        		</section>
        		<section id="manageStudents"></section>
        		<section id="exportWork"></section>
-       		<section id="ideaBaskets"></section>
+       		<section id="ideaBasketList">
+       			<table id="ideaBasketListTable" class="table table-bordered" cellspacing="0" width="100%">
+			        <thead></thead>
+			        <tfoot></tfoot>
+			        <tbody></tbody>
+				</table>
+       		</section>
+       		<section id="ideaBasketItem">
+       			<table id="ideaBasketItemTable" class="table table-bordered" cellspacing="0" width="100%">
+			        <thead></thead>
+			        <tfoot></tfoot>
+			        <tbody></tbody>
+				</table>
+       		</section>
        		<section id="showClassroomDiv"></section>
        		<!-- TODO: these may be modals, maybe not
        		<section id="runSettings"></section>
