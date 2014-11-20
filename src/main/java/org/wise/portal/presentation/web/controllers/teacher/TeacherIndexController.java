@@ -43,10 +43,8 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.message.MessageService;
 import org.wise.portal.service.newsitem.NewsItemService;
 import org.wise.portal.service.offering.RunService;
-import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
@@ -58,18 +56,12 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 @Controller
 @RequestMapping("/teacher/index.html")
 public class TeacherIndexController {
-	
-	@Autowired
-	private RunService runService;
-
-	@Autowired
-	private MessageService messageService;
 
 	@Autowired
 	private Properties wiseProperties;
 
 	@Autowired
-	private ProjectService projectService;
+	private RunService runService;
 
 	@Autowired
 	private WorkgroupService workgroupService;
@@ -77,18 +69,6 @@ public class TeacherIndexController {
 	@Autowired
 	private NewsItemService newsItemService;
 
-	protected final static String RUN_LIST = "run_list";
-
-	private static final String UNREAD_MESSAGES = "unreadMessages";
-	
-	protected final static String IS_REAL_TIME_ENABLED = "isRealTimeEnabled";
-
-	protected final static String CURRENT_RUN_LIST_KEY = "current_run_list";
-	
-	protected final static String CURRENT_RUN_LIST_KEY2 = "current_run_list1";
-
-	protected final static String WORKGROUP_MAP_KEY = "workgroup_map";
-	
 	static final Comparator<Run> CREATED_ORDER =
 	new Comparator<Run>() {
 		public int compare(Run o1, Run o2) {
@@ -96,7 +76,6 @@ public class TeacherIndexController {
         }
 	};
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(method=RequestMethod.GET)
 	protected String handleGET(
 			HttpServletRequest request,
@@ -147,14 +126,11 @@ public class TeacherIndexController {
 		}
     	
 		modelMap.put("user", user);
-		modelMap.put(CURRENT_RUN_LIST_KEY, current_run_list);
-		modelMap.put(CURRENT_RUN_LIST_KEY2, current_run_list1);
-		modelMap.put(IS_REAL_TIME_ENABLED, isRealTimeEnabled);
-		modelMap.put(WORKGROUP_MAP_KEY, workgroupMap);
+		modelMap.put("current_run_list", current_run_list);
+		modelMap.put("current_run_list1", current_run_list1);
+		modelMap.put("isRealTimeEnabled", isRealTimeEnabled);
+		modelMap.put("workgroup_map", workgroupMap);
 		modelMap.put("teacherOnlyNewsItems",newsItemService.retrieveByType("teacherOnly"));
-    	
-    	// retrieve all unread messages
-    	modelMap.put(UNREAD_MESSAGES, messageService.retrieveUnreadMessages(user));
     	
     	// if discourse is enabled for this WISE instance, add the link to the model
     	// so the view can display it

@@ -919,8 +919,6 @@
 				<value>org.wise.portal.domain.newsitem.impl.NewsItemImpl</value>
 				<value>org.wise.portal.domain.announcement.impl.AnnouncementImpl</value>
 				<value>org.wise.portal.domain.project.impl.ProjectMetadataImpl</value>
-				<value>org.wise.portal.domain.message.impl.MessageImpl</value>
-				<value>org.wise.portal.domain.message.impl.MessageRecipientImpl</value>
 				<value>org.wise.portal.domain.project.impl.TagImpl</value>
 				<value>org.wise.portal.domain.portal.impl.PortalStatisticsImpl</value>
 				<value>org.wise.portal.domain.attendance.impl.StudentAttendanceImpl</value>

@@ -198,36 +198,6 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
     		});
     		$("#archiveRunDialog > #archiveIfrm").attr('src',path);        	
         });
-
-	/**
-	 * Asynchronously archives a message
-	 **/
-	function archiveMessage(messageId, sender) {
-		var messageDiv = $('#message_' + messageId);
-		messageDiv.html('<spring:message code="teacher.index.archivingMessage"/>');
-
-		$.ajax({
-			type: 'post',
-			url: '${contextPath}/message.html?action=archive&messageId='+messageId,
-			success: function(request){
-				/* update message on teacher index page announcements section */
-				messageDiv.remove();
-				$("#message_confirm_div_" + messageId).html('<span style="color: #24DD24;">' + '<spring:message code="teacher.index.messageFrom"/>' + ' ' + sender + ' ' + '<spring:message code="teacher.index.hasBeenArchived"/>' + '</span>');
-				/* update count of new message in message count div */
-				var messageCountDiv = $("#newMessageCount");
-				var messages = $("#messageDiv");
-				if (messages.length == 1) {
-					messageCountDiv.html('<spring:message code="teacher.index.youHave"/>' + " " + messages.length + " " + '<spring:message code="teacher.index.newMessage"/>');
-				} else {
-					messageCountDiv.html('<spring:message code="teacher.index.youHave"/>' + " " + messages.length + " " + '<spring:message code="teacher.index.newMessage"/>');
-				}
-			},
-			error: function(request,error){
-				/* set failure message */
-				messageDiv.html('<span style="color: #992244;">' + '<spring:message code="teacher.index.unableToArchiveMessage"/>' + '</span>');
-			}
-		});
-    }
 </script>
 </body>
 </html>

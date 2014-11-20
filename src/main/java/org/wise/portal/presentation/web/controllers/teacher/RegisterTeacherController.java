@@ -54,7 +54,7 @@ import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.user.UserService;
 
 /**
- * Signup controller for TELS teacher user
+ * Signup controller for WISE teacher user
  *
  * @author Hiroki Terashima
  * @version $Id: RegisterTeacherController.java 1033 2007-09-08 00:05:01Z archana $
@@ -64,10 +64,10 @@ import org.wise.portal.service.user.UserService;
 public class RegisterTeacherController {
 
 	@Autowired
-	protected IMailFacade mailService;
+	protected Properties wiseProperties;
 
 	@Autowired
-	protected Properties wiseProperties;
+	protected IMailFacade mailService;
 
 	@Autowired
 	protected MessageSource messageSource;
@@ -108,9 +108,7 @@ public class RegisterTeacherController {
     	populateModel(modelMap);
     	
     	//get the form view
-    	String view = getFormView();
-    	
-    	return view;
+    	return formView;
     }
     
     /**
@@ -160,7 +158,7 @@ public class RegisterTeacherController {
     		BindingResult bindingResult, 
     		HttpServletRequest request, 
     		Model model) {
-		String view = getFormView();
+		String view = formView;
 		
 		String domain = ControllerUtil.getBaseUrlString(request);
 		String domainWithPort = domain + ":" + request.getLocalPort();
@@ -187,7 +185,7 @@ public class RegisterTeacherController {
 			if(bindingResult.hasErrors()) {
 				//there were errors
 				populateModel(model);
-				view = getFormView();
+				view = formView;
 			} else {
 				//there were no errors
 				if (accountForm.isNewAccount()) {
@@ -204,7 +202,7 @@ public class RegisterTeacherController {
 					catch (DuplicateUsernameException e) {
 						bindingResult.rejectValue("username", "error.duplicate-username", new Object[] { userDetails.getUsername() }, "Duplicate Username.");
 						populateModel(model);
-						view = getFormView();
+						view = formView;
 					}
 				} else {
 					// we're updating an existing teacher's account
@@ -240,13 +238,13 @@ public class RegisterTeacherController {
 				
 				model.addAttribute(USERNAME_KEY, userDetails.getUsername());
 				model.addAttribute(DISPLAYNAME_KEY, userDetails.getDisplayname());
-				view = getSuccessView();
+				view = successView;
 			}
 		} else {
 			//the request is not coming from a valid domain address so we will not allow it
 			bindingResult.reject("Forbidden");
 			populateModel(model);
-			view = getFormView();
+			view = formView;
 		}
 		
 		return view;
@@ -312,20 +310,4 @@ public class RegisterTeacherController {
 			}
 		}
 	}
-	
-    /**
-     * Get the form view
-     * @return the form view
-     */
-    protected String getFormView() {
-    	return formView;
-    }
-    
-    /**
-     * Get the success view
-     * @return the success view
-     */
-    protected String getSuccessView() {
-    	return successView;
-    }
 }

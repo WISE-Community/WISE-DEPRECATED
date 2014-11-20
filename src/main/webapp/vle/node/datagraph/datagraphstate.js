@@ -29,13 +29,6 @@ DATAGRAPHSTATE.prototype.parseDataJSONObj = function(stateJSONObj) {
 /**
  * Returns the student edited table as a string
  */
-DATAGRAPHSTATE.prototype.getDataXML = function() {
-	return this.tableString + "<timestamp>" + this.timestamp + "</timestamp>";
-};
-
-/**
- * Returns the student edited table as a string
- */
 DATAGRAPHSTATE.prototype.getStudentWorkString = function() {
 	return this.tableString;
 };

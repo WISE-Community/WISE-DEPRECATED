@@ -19,27 +19,7 @@ function FILLINSTATE(textEntryInteractionIndex, response, timestamp) {
 	} else {
 		this.timestamp = timestamp;
 	}
-}
-
-FILLINSTATE.prototype.print = function() {
 };
-
-FILLINSTATE.prototype.getDataXML = function() {
-	return "<textEntryInteractionIndex>" + this.textEntryInteractionIndex + "</textEntryInteractionIndex><response>" + this.response + "</response><timestamp>" + this.timestamp + "</timestamp>";
-};
-
-FILLINSTATE.prototype.parseDataXML = function(stateXML) {
-	var textEntryInteractionIndex = stateXML.getElementsByTagName("textEntryInteractionIndex")[0];
-	var response = stateXML.getElementsByTagName("response")[0];
-	var timestamp = stateXML.getElementsByTagName("timestamp")[0];
-	
-	if(textEntryInteractionIndex == undefined || response == undefined || timestamp == undefined) {
-		return null;
-	} else {
-		return new FILLINSTATE(textEntryInteractionIndex.textContent, response.textContent, timestamp.textContent);
-	}
-};
-
 
 /**
  * Takes in a state JSON object and returns an FILLINSTATE object

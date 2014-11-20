@@ -24,37 +24,24 @@
 	vertical-align: middle;
 }
 
-.introPhrase {
-	font-size:80%;
-	margin:5px 0 0 5px;
-}
-
 #currentFillBlankParagraph {
 	margin: 0 auto;
 	padding:10px 0 0 0;
 	text-align:left;
-	}
+}
 	
 #currentFillBlankParagraph #leftColumn { 
 	float:left;
 	width:83%;
 	min-height:450px;
-	}
+}
 	 
 #currentFillBlankParagraph #rightColumn {
 	text-align:center;
 	margin-left:84%;
 	color:#FFF;
-	}
-	
-.itemLabel {
-	font-size:.7em;
-	text-transform:uppercase;
-	color:#543F23;
-	margin:2px 0 0 15px;
-	font-weight:bold;
 }
-
+	
 #nonInteractiveDiv {
 	margin:5px 0;
 	font-size:.9em;
@@ -89,7 +76,7 @@
 	white-space:pre;
 	font-family: monospace;
 	line-height:120%;
-		}
+}
 
 #nonInteractiveDiv input{
 	position:relative;
@@ -103,7 +90,6 @@
 	text-align:center;
 	width:120px;
 	margin: 0 6px;
-	
 }
 
 #nonInteractiveDiv .activeBlank {

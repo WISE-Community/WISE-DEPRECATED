@@ -1,5 +1,5 @@
 <!--
-* Copyright (c) 2009 Regents of the University of California (Regents). Created
+* Copyright (c) 2014 Regents of the University of California (Regents). Created
 * by TELS, Graduate School of Education, University of California at Berkeley.
 *
 * This software is distributed under the GNU Lesser General Public License, v2.
@@ -30,11 +30,6 @@
 
         var currentTextEntryInteractionIndex = 0;
 
-        function edit() {
-        	fi.edit();
-        }
-
-        
         function loadContent(node){
         	scriptloader.loadScripts('fillin', node.contentPanel.window.document, node.id, eventManager);
         };
@@ -56,7 +51,6 @@
         }
 
         function next() {
-        	//var isNextDisabled = hasClass("nextButton", "disabledLink");
         	var isNextDisabled = $('#nextButton').parent().hasClass('ui-state-disabled');
 
         	if (isNextDisabled) {
@@ -66,25 +60,6 @@
         	currentTextEntryInteractionIndex++;
         	fi.render(currentTextEntryInteractionIndex);
         };
-
-        var newWin = null;
-        function popUp(strURL, strType, strHeight, strWidth) {
-         if (newWin != null && !newWin.closed)
-           newWin.close();
-         var strOptions="";
-         if (strType=="console")
-           strOptions="resizable,height="+
-             strHeight+",width="+strWidth;
-         if (strType=="fixed")
-           strOptions="status,height="+
-             strHeight+",width="+strWidth;
-         if (strType=="elastic")
-           strOptions="toolbar,menubar,scrollbars,"+
-             "resizable,location,height="+
-             strHeight+",width="+strWidth;
-         newWin = window.open(strURL, 'newWin', strOptions);
-         newWin.focus();
-        }
         </script>
     </head>
     <body>
@@ -94,11 +69,11 @@
                     <tr>
                         <td>
                             <div id="helpIcon">
-                                <a href="node/fillin/FillBlankInfoBox.html" onclick="popUp(this.href,'console',800,800);return false;" target="_blank">&nbsp;&nbsp;&nbsp;</a>
+                                <a href="FillBlankInfoBox.html" onclick="popUp(this.href,'console',800,800);return false;" target="_blank">&nbsp;&nbsp;&nbsp;</a>
                             </div>
                         </td>
                         <td>
-                            <a id="helpTextLink" href="node/fillin/FillBlankInfoBox.html" onclick="popUp(this.href,'console',800,800);return false;" target="_blank" data-i18n="help">help</a>
+                            <a id="helpTextLink" href="FillBlankInfoBox.html" onclick="popUp(this.href,'console',800,800);return false;" target="_blank" data-i18n="help">help</a>
                         </td>
                     </tr>
                 </table>
@@ -111,7 +86,7 @@
             </div>
             <!-- end of questinCountBox -->
             <div style="display:none;">
-                <div id="promptDiv" class="color1" data-i18n="fill_in_the_blanks_instructions">
+                <div id="promptDiv" class="color1" data-i18n="fill_in_the_blank_instructions">
                     Fill each blank with the correct word(s).
                 </div>
             </div>
@@ -136,7 +111,7 @@
                     <tr>
                         <td>
                             <div class="buttonDiv">
-                            	<input type="button" id="checkAnswerButton" class="firstButton" value="Check Answer" onclick="javascript:checkAnswer();" />
+                            	<input type="button" id="checkAnswerButton" value="Check Answer" onclick="javascript:checkAnswer();" />
                             </div>
                         </td>
                         <td>

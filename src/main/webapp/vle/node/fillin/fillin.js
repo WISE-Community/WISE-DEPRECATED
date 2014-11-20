@@ -127,7 +127,6 @@ FILLIN.prototype.generateNonInteractiveDivHtml = function() {
  * Clears FeedbackDiv and inputbox
  */
 FILLIN.prototype.tryAgain = function() {
-	//if (hasClass("tryAgainButton", "disabledLink")) {
 	if ($('#tryAgainButton').parent().hasClass('ui-state-disabled')) {
 		return;
 	};
@@ -141,7 +140,6 @@ FILLIN.prototype.tryAgain = function() {
 };
 
 FILLIN.prototype.checkAnswer = function() {
-	//if (hasClass("checkAnswerButton", "disabledLink")) {
 	if ($('#checkAnswerButton').parent().hasClass('ui-state-disabled')) {
 		return;
 	};

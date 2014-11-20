@@ -877,7 +877,6 @@ View.prototype.disengageSelectMode = function(val){
  */
 View.prototype.processSelected = function(id){
 	var node = $('#' + this.escapeIdForJquery(id));
-	console.log('processSelected'+node);
 	
 	/*
 	 * get the selected type if it has not been set already. it will
