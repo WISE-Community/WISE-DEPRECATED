@@ -525,21 +525,15 @@ var view;
 
 <div id='authorStepDialog' style="display:none;">
 	<div id='authorStepHeader' class='authorStepDialog'>
-		<table style='float:left;'>
-			<tr>
-				<td id='iconTD'><div id='iconDiv'></div></td>
-				<td>
+	<span>
 					Editor View:
 					<input type='radio' id='easyTrue' name='radioMode' onclick='eventManager.fire("authorStepModeChanged","true")'>Simple</input>
 					<input type='radio' id='easyFalse' name='radioMode' onclick='eventManager.fire("authorStepModeChanged","false")'/>Advanced</input>
-				</td>
-				<td id='refreshOptions'>
-					<input type='checkbox' id='refreshCheck' onclick='eventManager.fire("updateRefreshOption")' CHECKED>Refresh As Typing</input>
+					<input type='checkbox' id='refreshCheck' onclick='eventManager.fire("updateRefreshOption")' CHECKED>Refresh As I Type</input>
 					<input type='button' id='refreshButt' onclick='eventManager.fire("refreshNow")' value='Refresh Now'></input>
 					<input type='button' id='hintsButt' onclick='eventManager.fire("editHints",[0])' value='Edit Hints'></input>
-				</td>
-			</tr>
-		</table>
+	</span>
+	
 		<div id="authorNavButtons" style='float:right'>
 			<input type='button' value='Save' onclick='eventManager.fire("saveStep")'/>
 			<input type='button' value='Save & Close' onclick='eventManager.fire("saveAndCloseStep")'/>

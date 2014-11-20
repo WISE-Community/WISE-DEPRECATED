@@ -126,5 +126,5 @@ View.prototype.logout = function() {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/view/vle/vleview_uicontrol.js');
+	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_uicontrol.js');
 }

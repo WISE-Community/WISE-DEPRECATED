@@ -1644,5 +1644,5 @@ View.prototype.uncopyPublicIdeaCallback = function(responseText, responseXML, ar
 
 /* used to notify scriptloader that this script has finished loading */
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/view/vle/vleview_topmenu.js');
+	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_topmenu.js');
 }

@@ -294,5 +294,5 @@ View.prototype.utils.decode64 = function(input) {
 
 /* used to notify scriptloader that this script has finished loading */
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/view/vle/vleview_utils.js');
+	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_utils.js');
 };

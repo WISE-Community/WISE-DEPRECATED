@@ -220,5 +220,5 @@ View.prototype.displayHint = function(){
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/view/vle/vleview_hint.js');
+	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_hint.js');
 }
