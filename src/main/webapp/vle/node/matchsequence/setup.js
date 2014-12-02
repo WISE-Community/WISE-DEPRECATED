@@ -5,7 +5,10 @@ var coreScripts = [
 
 var studentVLEScripts = [
 	scriptloader.jquerySrc,
-	scriptloader.jqueryUISrc,
+	scriptloader.jqueryUISrc_interactions,
+	scriptloader.bootstrapSrc,
+	'vle/lib/bootstrap/bootstrap-dialog/dist/js/bootstrap-dialog.min.js',
+	'vle/lib/jquery/slick/slick.min.js',
 	'vle/node/common/nodehelpers.js',
 	'vle/lib/jquery/js/jsonplugin.js',
 	'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
@@ -31,13 +34,17 @@ var gradingScripts = [
 
 var dependencies = [
 	{child:"vle/node/matchsequence/MatchSequenceNode.js", parent:["vle/node/Node.js"]},
-	{child:"vle/lib/jquery/js/jquery.ui.touch-punch.min.js", parent:[scriptloader.jqueryUISrc]}
+	{child:"vle/lib/jquery/js/jquery.ui.touch-punch.min.js", parent:[scriptloader.jqueryUISrc_interactions]},
+	{child:scriptloader.bootstrapSrc, parent:[scriptloader.jquerySrc]},
+	{child:'vle/lib/bootstrap/bootstrap-dialog/dist/js/bootstrap-dialog.min.js', parent:[scriptloader.bootstrapSrc]},
+	{child:'vle/lib/jquery/slick/slick.min.js', parent:[scriptloader.jquerySrc]}
 ];
 
 var css = [
-	scriptloader.jqueryUICss,
-	"vle/node/common/css/htmlAssessment.css",
-	"vle/node/matchsequence/matchstyles.css"
+	//scriptloader.bootstrapCss,
+	//scriptloader.globalCss,
+	//"vle/node/matchsequence/match-styles.css",
+	//"vle/node/matchsequence/matchstyles.css"
 ];
 
 var nodeClasses = [

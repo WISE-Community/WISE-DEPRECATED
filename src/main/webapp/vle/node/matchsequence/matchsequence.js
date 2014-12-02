@@ -1,26 +1,6 @@
 /*
- * Copyright (c) 2009 Regents of the University of California (Regents). Created
- * by TELS, Graduate School of Education, University of California at Berkeley.
- *
- * This software is distributed under the GNU Lesser General Public License, v2.
- *
- * Permission is hereby granted, without written agreement and without license
- * or royalty fees, to use, copy, modify, and distribute this software and its
- * documentation for any purpose, provided that the above copyright notice and
- * the following two paragraphs appear in all copies of this software.
- *
- * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
- * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
- * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- *
- * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
- * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
- * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
- * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
  * @author: Hiroki Terashima
+ * @author: Jonathan Lim-Breitbart
  */
 
 /**
@@ -44,7 +24,9 @@ function MS(node, view) {
     this.logLevel = this.content.logLevel;
     this.showFeedback = true;
     this.numSubmitsAllowedBeforeLock = (this.content.numSubmitsAllowedBeforeLock != null) ? this.content.numSubmitsAllowedBeforeLock : -1;  // how many times can the student submit before getting locked out?
-
+    this.hasPreviousWork = false;
+    this.hasPrompt = false;
+    
     //set whether to display feedback to the student when they submit their answer
     if(this.content.showFeedback != null) {
     	this.showFeedback = this.content.showFeedback; 
@@ -94,6 +76,14 @@ function MS(node, view) {
 	 * incorrectly
 	 */
     this.allowEnableSubmitButton = true;
+    
+    // set modal defaults; TODO: should probably be defined in the core view in the future
+	BootstrapDialog.configDefaultOptions({
+		//type: BootstrapDialog.TYPE_PRIMARY,
+		type: BootstrapDialog.TYPE_DEFAULT,
+		spinicon: 'fa fa-spinner fa-spin',
+		autodestroy: false
+	});
 };
 
 /**
@@ -321,9 +311,10 @@ MS.prototype.render = function() {
 	var enableStep = true;
 	var message = '';
 	var workToImport = [];
+	var view = this.view;
 	
 	//process the tag maps if we are not in authoring mode
-	if(this.view.authoringMode == null || !this.view.authoringMode) {
+	if(view.authoringMode == null || !view.authoringMode) {
 		//get the tag map results
 		var tagMapResults = this.processTagMaps();
 		
@@ -347,20 +338,52 @@ MS.prototype.render = function() {
 	this.loadStudentWork(nodeState);
 	
 	// render the prompt
-	var promptdiv = document.getElementById('promptDiv');
-	promptdiv.innerHTML=this.content.assessmentItem.interaction.prompt;
+	if(view.utils.isNonWSString(this.content.assessmentItem.interaction.prompt)){
+		$('#prompt').html(this.content.assessmentItem.interaction.prompt);
+		this.hasPrompt = true;
+	}
+	
+	// create the instructions dialog
+	if(this.hasPrompt || this.hasPreviousWork){
+		if(this.hasPreviousWork){
+			$('#previousWork').show();
+		}
+		
+		var $promptDialog = new BootstrapDialog({
+			title: view.getI18NString('instructions','MatchSequenceNode'),
+	        message: function(){
+	        	return $('#promptContainer').show();
+	        },
+	        buttons: [{
+	            label: view.getI18NString('ok'),
+	            cssClass: 'btn-primary',
+	            action: function(dialog){
+	                dialog.close();
+	            }
+	        }]
+		});
+		
+		// bind instructions button click to open dialog
+		$('#instructions').on('click', function(){
+			$promptDialog.open();
+		});
+		
+		if(this.node.studentWork && this.node.studentWork.length < 1){
+			// if student hasn't saved any work, show instructions
+			$promptDialog.open();
+		}
+	}
 	  
 	var bucketsHtml = "";
 	var choicesBucketHtml = "";
-    document.getElementById('play').innerHTML = "";
+    $('#play').html('');
     
     //layout is vertical or horizontal
     var displayLayout = this.displayLayout;
     
-    if(displayLayout == "horizontal") {
-    	bucketsHtml += "<table>";
-    	bucketsHtml += "<tr>";
+    if(displayLayout === "horizontal") {
     	//add the html for the target bucket(s)
+    	bucketsHtml += '<div id="targetsDisplay" class="row horizontal">';
     	
     	//loop through the target buckets
     	for(var x=0; x<this.buckets.length; x++) {
@@ -370,28 +393,25 @@ MS.prototype.render = function() {
     		//add the html for the target bucket
     		bucketsHtml += this.getBucketHtml(currentBucket, displayLayout, true, this.buckets.length);	
     	}
-    	bucketsHtml += "</tr>";
-    	bucketsHtml += "</table>";
+    	bucketsHtml += '</div></div>';
     	
-    	bucketsHtml += "<table>";
-    	bucketsHtml += "<tr>";
     	//add the html for the source bucket(s)
+    	bucketsHtml += '<div id="choicesDisplay" class="row horizontal">';
     	bucketsHtml += this.getBucketHtml(this.sourceBucket, displayLayout, false);
-    	bucketsHtml += "</tr>";
-    	bucketsHtml += "</table>";
+    	bucketsHtml += '</div><div>';
     } else {
     	choicesBucketHtml = this.getBucketHtml(this.sourceBucket);
-        bucketsHtml += "<table><tr><td><div id=\"choicesColumn\">"+ choicesBucketHtml +"</div></td>";
-        bucketsHtml += "<td><div id=\"bucketsAndFeedbackColumn\">";
+        bucketsHtml += '<div class="row"><div class="col-xs-6" id="choicesDisplay">' + choicesBucketHtml + '</div>';
+        bucketsHtml += '<div class="col-xs-6" id="targetsDisplay">';
         for (var i=0; i < this.buckets.length; i++) {
             var currentBucket = this.buckets[i];
-            var currentBucketHtml = this.getBucketHtml(currentBucket);
+            var currentBucketHtml = this.getBucketHtml(currentBucket, null, true);
             bucketsHtml += currentBucketHtml;
         };
-        bucketsHtml += "</div></td></tr></table>";
+        bucketsHtml += '</div></div>';
     }
     
-    document.getElementById('play').innerHTML = bucketsHtml;
+    $('#play').html(bucketsHtml);
     
     /* enables jquery drag and drop */
     renderDragAndDrop();
@@ -411,7 +431,7 @@ MS.prototype.render = function() {
     	
         //check if scoring is enabled
         if(this.isChallengeScoringEnabled()) {
-        	this.displayCurrentPossibleScoreTable(numWrongChoices);
+        	this.displayCurrentPossibleScores(numWrongChoices, true);
         }
         
     	if(numWrongChoices != 0) {
@@ -431,12 +451,13 @@ MS.prototype.render = function() {
     	    }
     	}
     } else {
-    	//hide the feedback and number of attempts display
-    	$('#feedbackDiv').hide();
-    	$('#numberAttemptsDiv').hide();
+    	//hide the status and number of attempts display
+    	$('#status').hide();
+    	$('#attempts').hide();
 	}
     
-    $("#checkAnswerButton").val(this.view.getI18NString("check_answer","MatchSequenceNode"));
+    var ms = this;
+    $("#checkAnswer").on('click', function(){ ms.checkAnswer(); });
     
 	// check to see if we need to disable the step from further interactivity by checking if student has exhausted number of attempted allowed
 	if (this.numSubmitsAllowedBeforeLock != -1) {
@@ -474,141 +495,36 @@ MS.prototype.getBucketHtml = function(bucket, displayLayout, targetBucket, total
 	
 	var bucketName = "bucket_ul";
 	var bucketClass = "bucket_ul";
+	var wrapClass = "";
 	
-	if(!targetBucket) {
+	if(targetBucket) {
+		bucketClass += " well targetBucket";
+	} else {
 		//this is a source bucket
 		bucketClass += " sourceBucket";
 	}
 	
-	if(displayLayout == "horizontal") {
-		var choicesInBucketHtml = "";
-		var tempChoicesInRowHtml = "";
-		
-		//the max number of choices in a row for the source bucket
-		var maxChoicesPerRow = 4;
-		var numChoicesInRow = 0;
-		
-		/*
-		 * the default width and height for the target buckets.
-		 * there may be multiple buckets. these dimensions will
-		 * accomodate up to 4 target buckets without the buckets
-		 * going off the screen
-		 */
-		
-		//var targetWidth = 150;
-		var targetWidth = 700 / totalNumTargetBuckets - 25;
-		var targetHeight = 125;
-		
-		//loop through all the choices
-		for(var x=0; x<bucket.choices.length; x++) {
-			var choice = bucket.choices[x];
-			var choiceText = choice.text;
-			var choiceId = bucket.choices[x].identifier;
-			
-			var choiceLi = "";
-			//create the td for the choice
-			if (this.content.assessmentItem.interaction.ordered) {
-				choiceLi = "<li id="+ choiceId +" class=\"choice draggable horizontalLi\"><div class=\"orderNumber\"></div>" + choiceText +"</li>";
-			} else {
-				choiceLi = "<li id="+ choiceId +" class=\"choice draggable horizontalLi\">" + choiceText +"</li>";
-			};
-			
-			//wrap the choice in td if it is in the source bucket
-			if(!targetBucket) {
-				//choice is in source bucket
-				tempChoicesInRowHtml += choiceLi;
-			} else {
-				//choice is in target bucket
-				tempChoicesInRowHtml += choiceLi;
-			}
-			
-			//increment the number of choices in the current tr
-			numChoicesInRow++;
-			
-			//check if we've hit the max choices per row, only do this for source buckets
-			if(!targetBucket && numChoicesInRow >= maxChoicesPerRow) {
-				/*
-				 * we have hit the max choices per row so we will end this tr
-				 * so subsequent td's will start on a new row
-				 */
-				choicesInBucketHtml += tempChoicesInRowHtml;
-				
-				//reset the html and counter
-				tempChoicesInRowHtml = "";
-				numChoicesInRow = 0;
-			}
-		}
-		
-		/*
-		 * check if there were any remaining choices that we haven't
-		 * added to the choices bucket html
-		 */
-		if(tempChoicesInRowHtml != "") {
-			if(!targetBucket) {
-				//wrap in tr if choice is in source bucket
-				choicesInBucketHtml += tempChoicesInRowHtml;	
-			} else {
-				//choice is in target bucket, don't wrap in tr
-				choicesInBucketHtml += tempChoicesInRowHtml;
-			}
-			
-		}
-		
-		//check if there were any choices
-		if(!targetBucket && choicesInBucketHtml != "") {
-			//this is a source bucket and there were choices so we will put them in a table
-			choicesInBucketHtml = choicesInBucketHtml;
-		}
-		
-		//start the td, this will be the outermost element
-		bucketHtml += "<td>";
-		
-		//start the bucketblock
-		bucketHtml += "<div class=\"bucketblock\">";
-		
-		//add the label for the bucket
-		bucketHtml += "<div class=\"bucketlabel\" >"+ bucket.text + "</div>";
-		
-		var bucketUlStyle = "";
-		
-		//check if this is a target bucket
-		if(targetBucket) {
-			//this is a target bucket, we will give it the necessary dimensions
-			bucketUlStyle = "style='overflow:auto; width:" + targetWidth + "px; height: " + targetHeight + "px;'";
-		}
-		
-		//create the bucket and add any necessary choices
-		bucketHtml += "<div class=\"bucket\"><ul name=\"" + bucketName + "\" class=\"" + bucketClass + "\" id=" + bucket.identifier +" " + bucketUlStyle + ">" + choicesInBucketHtml + "</ul></div>";
-		
-		//add the feedback div
-		bucketHtml += "<div id=\"feedbackdiv_"+ bucket.identifier +"\"></div>";
-		
-		//close the bucketblock
-		bucketHtml += "</div>";
-		
-		//end the td, this is the outermost element
-		bucketHtml += "</td>";
-	} else {
-		var choicesInBucketHtml = "";
-		for (var j=0; j < bucket.choices.length; j++) {
-			var choice = bucket.choices[j];
-			var choiceText = choice.text;
-			var choiceId = bucket.choices[j].identifier;
-			
-			if (this.content.assessmentItem.interaction.ordered) {
-			    choicesInBucketHtml += "<li id="+ choiceId +" class=\"choice draggable\"><div class=\"orderNumber\"></div>" + choiceText +"</li>";			
-			} else {
-			    choicesInBucketHtml += "<li id="+ choiceId +" class=\"choice draggable\">" + choiceText +"</li>";
-			};
-		};
-
-		bucketHtml += "<div class=\"bucketblock\">";
-		bucketHtml += "<div class=\"bucketlabel\" >"+ bucket.text + "</div>";
-		bucketHtml += "<table id='bucketTable'><tr><td>";
-		bucketHtml += "<div class=\"bucket\"><ul name=\"" + bucketName + "\" class=\"" + bucketClass + "\" id=" + bucket.identifier +">"+choicesInBucketHtml+"</ul></div></td>";
-		bucketHtml += "<td><div id=\"feedbackdiv_"+ bucket.identifier +"\"></div></td></tr>"
-		bucketHtml += "</table></div>";
+	if(displayLayout === "horizontal") {
+		wrapClass = "col-xs-6 col-sm-4";
 	}
+	
+	var choicesInBucketHtml = "";
+	for (var j=0; j < bucket.choices.length; j++) {
+		var choice = bucket.choices[j];
+		var choiceText = choice.text;
+		var choiceId = bucket.choices[j].identifier;
+		
+		if (this.content.assessmentItem.interaction.ordered) {
+		    choicesInBucketHtml += "<li id="+ choiceId +" class='choice draggable panel panel-default " + wrapClass + "'><div class='orderNumber'></div>" + choiceText +"</li>";			
+		} else {
+		    choicesInBucketHtml += "<li id="+ choiceId +" class='choice draggable panel panel-default " + wrapClass + "'>" + choiceText +"</li>";
+		};
+	};
+	
+	if(!targetBucket && displayLayout === "horizontal"){
+		wrapClass = 'col-xs-12';
+	}
+	bucketHtml += "<div class='bucket " + wrapClass + "'><div class='section-head' >"+ bucket.text + "</div><ul name='" + bucketName + "' class='" + bucketClass + "' id=" + bucket.identifier +">"+choicesInBucketHtml+"</ul></div>";
 
 	return bucketHtml;
 };
@@ -716,12 +632,12 @@ MS.prototype.checkAnswer = function() {
 		}
 	}
 	
-	if ($('#checkAnswerButton').parent().hasClass('ui-state-disabled')) {
+	if ($('#checkAnswer').hasClass('disabled')) {
 		return;
 	}
 	
 	//clear the previous result message
-	$('#resultMessageDiv').html('');
+	$('#resultMessage').html('');
 	
 	this.attempts.push(null);
 	
@@ -729,8 +645,7 @@ MS.prototype.checkAnswer = function() {
 		//we are not showing feedback
 		
 		//disable the submit button
-		//addClassToElement("checkAnswerButton", "disabledLink");
-		$('#checkAnswerButton').parent().addClass('ui-state-disabled');
+		$('#checkAnswer').addClass('disabled');
 		
 		//get the student data
 		var state = this.getState();
@@ -741,17 +656,16 @@ MS.prototype.checkAnswer = function() {
 		var feedback = this.customCheck(ms.getState());
 		var message;
 		if(feedback.getSuccess()){
-			message = "<font color='008B00'>" + feedback.getMessage() + "</font>";
+			message = feedback.getMessage();
 			this.setChoicesDraggable(false);
-			//document.getElementById('checkAnswerButton').className = 'disabledLink';
-			$('#checkAnswerButton').parent().addClass('ui-state-disabled');
+			$('#checkAnswer').addClass('disabled');
 		} else {
-			message = "<font color='8B0000'>" + feedback.getMessage() + "</font>";
+			message = feedback.getMessage();
 			
 			//display which attempt number was just attempted
 			this.displayPreviousAttemptNumber();
 		}
-		document.getElementById("feedbackDiv").innerHTML = message;
+		$('#feedback').html(message);
 	} else {
 		//we are showing feedback
 		
@@ -765,11 +679,7 @@ MS.prototype.checkAnswer = function() {
 		var numWrongChoices = checkBucketAnswerResults.numWrongChoices;
 		var numCorrectChoices = checkBucketAnswerResults.numCorrectChoices;
 		
-		// update feedback div
-		var feedbackDiv = document.getElementById("feedbackDiv");
-		
-		//clear the previous feedback
-		feedbackDiv.innerHTML = "&nbsp";
+		$('#feedback').html(''); // clean out old feedback
 		
 		if (numWrongChoices == 0) {
 			//the student answered correctly
@@ -806,7 +716,7 @@ MS.prototype.checkAnswer = function() {
 			this.displayPreviousAttemptNumber();
 			
 			var totalNumChoices = numCorrectChoices + numWrongChoices;
-			feedbackDiv.innerHTML = this.view.getI18NStringWithParams("correct_feedback",[numCorrectChoices,totalNumChoices],"MatchSequenceNode");
+			$('#feedback').html(this.view.getI18NStringWithParams("correct_feedback",[numCorrectChoices,totalNumChoices],"MatchSequenceNode"));
 			
 			if(this.challengeEnabled()) {
 				//display the linkto so the student can visit the associated step
@@ -820,7 +730,7 @@ MS.prototype.checkAnswer = function() {
 					/* create the linkTo and add it to the message */
 					var linkTo = {key:this.node.utils.generateKey(),nodeIdentifier:nodeId};
 					this.node.addLink(linkTo);
-					msg += '<a style=\"color:blue;text-decoration:underline;font-weight:bold;cursor:pointer\" onclick=\"node.linkTo(\'' + linkTo.key + '\')\">'+this.view.getI18NString("please_review_step","MatchSequenceNode") + "&nbsp;"+ stepNumberAndTitle + '</a>&nbsp;' +this.view.getI18NString("please_review_before_trying_again","MatchSequenceNode") +' </b>';
+					msg += '<a onclick=\"node.linkTo(\'' + linkTo.key + '\')\">'+this.view.getI18NString("please_review_step","MatchSequenceNode") + "&nbsp;"+ stepNumberAndTitle + '</a>&nbsp;' +this.view.getI18NString("please_review_before_trying_again","MatchSequenceNode") +' </b>';
 					
 					//create the args to pass to the tag map constraint
 					var additionalFunctionArgs = {
@@ -832,28 +742,27 @@ MS.prototype.checkAnswer = function() {
 					//create the constraint to make the student visit the navigateTo step
 					this.view.addActiveTagMapConstraint(this.node.id, null, 'mustVisitXBefore', null, additionalFunctionArgs);
 					
-					/*
-					 * the student answered incorrectly so we will make the 
-					 * background yellow since we will also be highlighting
-					 * the associated step in the menu yellow
-					 */
-					var msgHTML = "<table style='background-color:yellow' align='center'><tr><td>" + msg + "</td></tr></table>";
-					
 					//display the linkto message and link to the student
-					$('#resultMessageDiv').html(msgHTML);
+					$('#resultMessage').html('<b>' + msg + '</b>');
 					
 					//disable the check answer button
-					$('#checkAnswerButton').parent().addClass('ui-state-disabled');
+					$('#checkAnswer').addClass('disabled');
 					
 					//do not allow the submit button to be enabled
 					this.allowEnableSubmitButton = false;
 				}
 			}
+			
+			$('#status').fadeOut(function(){
+				$('#status')
+					.removeClass('success')
+					.fadeIn();
+			});
 		}
 		
 		//check if there are any scores enabled for this challenge question
 		if(this.isChallengeScoringEnabled()) {
-			this.displayCurrentPossibleScoreTable(numWrongChoices);
+			this.displayCurrentPossibleScores(numWrongChoices);
 			
 			//get the max score and put it into the state
 			var maxScore = this.getMaxPossibleScore();
@@ -873,9 +782,9 @@ MS.prototype.checkAnswer = function() {
 };
 
 /**
- * Display the current possible score table
+ * Display the current possible scores
  */
-MS.prototype.displayCurrentPossibleScoreTable = function(numWrongChoices) {
+MS.prototype.displayCurrentPossibleScores = function(numWrongChoices, doInit) {
 	
 	//check if there is an attempts object
 	if(this.content.assessmentItem.interaction.attempts != null) {
@@ -894,11 +803,44 @@ MS.prototype.displayCurrentPossibleScoreTable = function(numWrongChoices) {
 			numAttempts += 1;
 		}
 		
-		//get the current possible score table
-		var scoreMessage = getCurrentPossibleScoreTable(numAttempts, scores);
+		if(doInit){
+			//get the current possible scores html
+			var scoreMessage = getCurrentPossibleScores(numAttempts, scores);
+			
+			//display the score
+			$('#score').html(scoreMessage);
+			// set up the score slider
+			this.$scores = $('#possibleScores').slick({
+				dots: false,
+				infinite: false,
+				arrows: true,
+				slidesToShow: 5,
+				slidesToScroll: 5,
+				prevArrow: '<a class="slick-match-prev slick-nav"><span class="fa fa-play fa-flip-horizontal"></span></a>',
+				nextArrow: '<a class="slick-match-next slick-nav"><span class="fa fa-play"></span></a>',
+				responsive: [
+		             {
+		            	 breakpoint: 768,
+		            	 settings: {
+		            		 slidesToShow: 3,
+		            		 slidesToScroll: 3
+		            	 }
+		             }
+			    ]
+			});
+		}
 		
-		//display the score
-		$('#scoreDiv').html(scoreMessage);	
+		var att = numAttempts-1;
+		$('.score').removeClass('active').removeClass('disabled');
+		$('.score').each(function(index){
+			if(index === att){
+				$(this).addClass('active');
+			} else if(index < att){
+				$(this).addClass('disabled')
+			}
+		});
+		
+		this.$scores.slickGoTo(numAttempts-2);
 	}
 };
 
@@ -910,8 +852,7 @@ MS.prototype.checkBucketAnswers = function(initialRenderCheck) {
 	// clean out old feedback
 	for (var i=0; i < state.buckets.length; i++) {
 		var bucket = state.buckets[i];
-		var feedbackDivElement = document.getElementById('feedbackdiv_'+bucket.identifier);
-		feedbackDivElement.innerHTML = "";  // clean out old feedback
+		$('#feedback').html(''); // clean out old feedback
 	}
 	
 	var numCorrectChoices = 0;
@@ -925,16 +866,16 @@ MS.prototype.checkBucketAnswers = function(initialRenderCheck) {
 		
 		if(!initialRenderCheck) {
 			//make the source choice incorrect
-			removeClassFromElement(sourceBucketChoice.identifier, "correct");
-			removeClassFromElement(sourceBucketChoice.identifier, "wrongorder");																			
-			addClassToElement(sourceBucketChoice.identifier, "incorrect");				
+			$('#' + sourceBucketChoice.identifier)
+				.removeClass("correct")
+				.removeClass("wrongorder")
+				.addClass("incorrect");				
 		}
 	}
 	
 	//loop through all the target buckets
 	for (var i=0; i < state.buckets.length; i++) {
 		var bucket = state.buckets[i];
-		var feedbackDivElement = document.getElementById('feedbackdiv_'+bucket.identifier);
 		var feedbackHTMLString = "";
 		
 		//loop through all the choices in the target bucket
@@ -944,38 +885,39 @@ MS.prototype.checkBucketAnswers = function(initialRenderCheck) {
 			
 			if (feedback) {
 				if (feedback.isCorrect) {
-					removeClassFromElement(bucket.choices[j].identifier, "incorrect");						
-					removeClassFromElement(bucket.choices[j].identifier, "wrongorder");						
-					addClassToElement(bucket.choices[j].identifier, "correct");
-					feedbackHTMLString += "<li class=\"feedback_li correct\">"+ bucket.choices[j].text + ": " + feedback.feedback +"</li>";
+					$('#' + bucket.choices[j].identifier)
+						.removeClass("incorrect")
+						.removeClass("wrongorder")
+						.addClass("correct");
 					numCorrectChoices++;
 				} else {
-					removeClassFromElement(bucket.choices[j].identifier, "correct");
-					removeClassFromElement(bucket.choices[j].identifier, "wrongorder");																			
-					addClassToElement(bucket.choices[j].identifier, "incorrect");					
+					$('#' + bucket.choices[j].identifier)
+						.removeClass("correct")
+						.removeClass("wrongorder")
+						.addClass("incorrect");
 					//removeClassFromElement("resetWrongChoicesButton", "disabledLink");
-					feedbackHTMLString += "<li class=\"feedback_li incorrect\">"+ bucket.choices[j].text + ": " + feedback.feedback +"</li>";
 					numWrongChoices++;
 				}
 			} else {/* it could be that there is no feedback because it is in the wrong order */
 				if (this.content.assessmentItem.interaction.ordered && this.isInRightBucketButWrongOrder(bucket.identifier,bucket.choices[j].identifier,j)) {   // correct bucket, wrong order
-					removeClassFromElement(bucket.choices[j].identifier, "correct");												
-					removeClassFromElement(bucket.choices[j].identifier, "incorrect");												
-					addClassToElement(bucket.choices[j].identifier, "wrongorder");						
-					feedbackHTMLString += "<li class=\"feedback_li wrongorder\">"+ bucket.choices[j].text + ": "+this.view.getI18NString("correct_box_wrong_order","MatchSequenceNode")+"</li>";
+					$('#' + bucket.choices[j].identifier)
+						.removeClass("correct")
+						.removeClass("incorrect")
+						.addClass("wrongorder");
 					numWrongChoices++;
 				} else {/* this should never be the case, but it could be that no default feedback was created */
-					removeClassFromElement(bucket.choices[j].identifier, "correct");												
-					removeClassFromElement(bucket.choices[j].identifier, "wrongorder");												
-					addClassToElement(bucket.choices[j].identifier, "incorrect");						
-					feedbackHTMLString += "<li class=\"feedback_li incorrect\">"+ bucket.choices[j].text + ": " + this.view.getI18NString("no_feedback","MatchSequenceNode") +"</li>";
+					$('#' + bucket.choices[j].identifier)
+						.removeClass("correct")
+						.removeClass("wrongorder")
+						.addClass("incorrect");
 					numWrongChoices++;
 				}
 			}
-		}
-		
-		if (feedbackHTMLString != "") {
-			feedbackDivElement.innerHTML = "<ul class=\"feedback_ul\">"+ feedbackHTMLString + "</ul>";
+			// add feedback
+			if(feedback){
+				$('#' + bucket.choices[j].identifier).find('.feedback').remove();
+				$('#' + bucket.choices[j].identifier).append('<span class="feedback">*' + feedback.feedback + '*</span>');
+			}
 		}
 	}
 	
@@ -996,24 +938,31 @@ MS.prototype.checkBucketAnswers = function(initialRenderCheck) {
  * Display the message when the student answers correctly
  */
 MS.prototype.displayCompletionMessage = function() {
-	var resultMessageDiv = document.getElementById("resultMessageDiv");
 	var resultMessage = this.view.getI18NString("all_completed_msg","MatchSequenceNode");
 	
 	//check if scoring is enabled
 	if(this.isChallengeScoringEnabled()) {
 		//display the score they received
 		var currentScore = this.getScore(this.attempts.length);
-		resultMessage += this.view.getI18NStringWithParams("you_received_x_points",[currentScore],"MatchSequenceNode");
+		resultMessage += ' ' + this.view.getI18NStringWithParams("you_received_x_points",[currentScore],"MatchSequenceNode");
 	}
 	
-	//set the message into the div
-	resultMessageDiv.innerHTML = resultMessage;
+	// set the message into the div
+	$('#resultMessage').html('<b>' + resultMessage + '</b>');
+	
+	// show the status message and add the success class
+	$('#status').fadeOut(function(){ 
+		$('#status')
+			.addClass('success')
+			.fadeIn();
+	});
+	
 	
 	//disable moving of the items
 	this.setChoicesDraggable(false);
 	
 	//disable the check answer button
-	$('#checkAnswerButton').parent().addClass('ui-state-disabled');
+	$('#checkAnswer').addClass('disabled');
 };
 
 /**
@@ -1174,8 +1123,7 @@ MS.prototype.setChoicesDraggable = function(setDraggable) {
  * Resets to original state
  */
 MS.prototype.reset = function() {
-	//removeClassFromElement("checkAnswerButton", "disabledLink");
-	$('#checkAnswerButton').parent().removeClass('ui-state-disabled');
+	$('#checkAnswer').removeClass('disabled');
 	this.render();
 }
 
@@ -1189,8 +1137,7 @@ MS.prototype.resetWrongChoices = function() {
 		return;
 	}
 	
-	//removeClassFromElement("checkAnswerButton", "disabledLink");
-	$('#checkAnswerButton').parent().removeClass('ui-state-disabled');
+	$('#checkAnswer').removeClass('disabled');
 	this.node.view.notificationManager.notify('not implemented yet, will reset all answers for now',3);
 	
 	this.render();
@@ -1214,12 +1161,11 @@ MS.prototype.saveState = function() {
  * Enables the check answer button 
  */
 MS.prototype.enableCheckAnswerButton = function() {
-	//removeClassFromElement("checkAnswerButton", "disabledLink");
-	$('#checkAnswerButton').parent().removeClass('ui-state-disabled');
+	$('#checkAnswer').removeClass('disabled');
 	
 	if(this.showFeedback) {
-		var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_attempt_x",[this.attempts.length+1],"MatchSequenceNode");
-		$("#numberAttemptsDiv").html(numberAttemptsMessage);
+		var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_attempt_x",[this.attempts.length],"MatchSequenceNode");
+		$("#attempts").html(numberAttemptsMessage);
 	}
 };
 
@@ -1239,10 +1185,10 @@ MS.prototype.canSubmitButtonBeEnabled = function() {
  * "This is your 2nd attempt"
  */
 MS.prototype.displayCurrentAttemptNumber = function() {
-	var numAttempts = this.attempts.length + 1;
+	var numAttempts = this.attempts.length;
 	
 	var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_attempt_x",[numAttempts],"MatchSequenceNode");
-	$("#numberAttemptsDiv").html(numberAttemptsMessage);
+	$("#attempts").html(numberAttemptsMessage);
 };
 
 /**
@@ -1254,7 +1200,7 @@ MS.prototype.displayPreviousAttemptNumber = function() {
 	var numAttempts = this.attempts.length;
 	
 	var numberAttemptsMessage = this.view.getI18NStringWithParams("this_was_attempt_x",[numAttempts],"MatchSequenceNode");
-	$("#numberAttemptsDiv").html(numberAttemptsMessage);
+	$("#attempts").html(numberAttemptsMessage);
 };
 
 /**
@@ -1328,8 +1274,9 @@ MS.prototype.processTagMaps = function() {
 					//get the work to import
 					workToImport = this.node.getWorkToImport(tagName, functionArgs);
 				} else if(functionName == "showPreviousWork") {
-					//show the previous work in the previousWorkDiv
-					this.node.showPreviousWork($('#previousWorkDiv'), tagName, functionArgs);
+					//show the previous work
+					this.hasPreviousWork = true;
+					this.node.showPreviousWork($('#previousWork'), tagName, functionArgs);
 				} else if(functionName == "checkCompleted") {
 					//we will check that all the steps that are tagged have been completed
 					
