@@ -58,15 +58,44 @@ OpenResponseNode.prototype.getCriteriaValue = function() {
 		if (nodeAnnotationsArray != null) {
 			for (var i=0; i<nodeAnnotationsArray.length; i++) {
 				var nodeAnnotation = nodeAnnotationsArray[i];
-				if (nodeAnnotation.type == "cRater" || nodeAnnotation.type == "henry") {
-					if (nodeAnnotation.value != null && nodeAnnotation.value[0] != null && nodeAnnotation.value[0].score != null) {
-						// get the CRater/Henry score 
-						result = nodeAnnotation.value[0].score;
-					}
-				} else if(nodeAnnotation.type == 'autoGraded') {
-					if (nodeAnnotation.value != null && nodeAnnotation.value[0] != null && nodeAnnotation.value[0].autoScore != null) {
-						//get the auto score 
-						result = nodeAnnotation.value[0].autoScore;
+				
+				if(nodeAnnotation != null) {
+					var value = nodeAnnotation.value;
+					var type = nodeAnnotation.type;
+					
+					if(value != null) {
+						if(type == 'cRater' || type == 'henry' || type == 'autoGraded') {
+							
+							//loop through all the annotation values
+							for(var x=0; x<value.length; x++) {
+								//get a value
+								var tempValue = value[x];
+								var tempScore = null;
+								
+								if(tempValue != null) {
+									if(type == 'cRater' || type == 'henry') {
+										//get the cRater or henry score
+										tempScore = tempValue.score;
+									} else if(type == 'autoGraded') {
+										//get the autoScore
+										tempScore = tempValue.autoScore;
+									}
+								}
+								
+								if(tempScore != null) {
+									if(result == null) {
+										//we do not have a result yet so we will use the tempScore
+										result = tempScore;
+									} else {
+										//check if the tempScore is greater than the result so far
+										if(tempScore > result) {
+											//the tempScore is higher so we will use it as the result so far
+											result = tempScore;
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}
