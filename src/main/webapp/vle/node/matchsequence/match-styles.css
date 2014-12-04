@@ -161,6 +161,7 @@ body {
   margin-bottom: 2em;
 }
 #promptTitle {
+  color: #795c3a;
   border-bottom: 1px solid #dddddd;
   margin-top: 0;
   padding-bottom: 0.5em;
