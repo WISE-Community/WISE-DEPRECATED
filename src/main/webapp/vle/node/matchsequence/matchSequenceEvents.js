@@ -41,6 +41,8 @@ View.prototype.matchsequenceDispatcher = function(type,args,obj){
 		obj.MatchSequenceNode.saveFeedback();
 	} else if(type=='msUpdateDisplayLayout'){
 		obj.MatchSequenceNode.updateDisplayLayout(args[0]);
+	} else if(type=='msUpdatePromptInline'){
+		obj.MatchSequenceNode.updatePromptInline(args[0]);
 	} else if(type=='msUpdateLogLevel'){
 		obj.MatchSequenceNode.updateLogLevel(args[0]);
 	} else if(type=='msUpdateShowFeedback'){
@@ -76,6 +78,7 @@ var events = [
 	'msEditIndividualFeedback',
 	'msSaveFeedback',
 	'msUpdateDisplayLayout',
+	'msUpdatePromptInline',
 	'msUpdateLogLevel',
 	'msUpdateShowFeedback',
 	'matchSequenceChallengeNavigateToChanged',

@@ -42,6 +42,11 @@ body {
 #matchHeader {
 	top: 0;
 	border-width: 0 0 1px 0;
+	
+	&.prompt-inline .menu {
+		padding: 0 0.5em;
+		.px-rem(line-height, 40);
+	}
 }
 
 #matchFooter {
@@ -73,8 +78,23 @@ body {
     }
 }
 
+#instructions {
+	display: none;
+}
+
 #promptContainer, #previousWork {
 	display: none;
+}
+
+#promptContainer {
+	box-shadow: none;
+	margin-bottom: 2em;
+}
+
+#promptTitle {
+	border-bottom: 1px solid @gray-lighter;
+    margin-top: 0;
+    padding-bottom: 0.5em;
 }
 
 #attempts {

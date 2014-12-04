@@ -12,6 +12,7 @@
          "hasInlineFeedback": true,
          "ordered": false,
          "prompt": "",
+         "promptInline": false,
          "responseIdentifier": "MatchSequence",
          "shuffle": false
       },

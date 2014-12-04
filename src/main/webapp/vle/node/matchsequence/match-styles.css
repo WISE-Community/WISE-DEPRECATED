@@ -122,6 +122,10 @@ body {
   top: 0;
   border-width: 0 0 1px 0;
 }
+#matchHeader.prompt-inline .menu {
+  padding: 0 0.5em;
+  -: ;line-height: 3.076923076923077rem;
+}
 #matchFooter {
   bottom: 0;
   box-shadow: 1px -1px 2px rgba(0, 0, 0, 0.1);
@@ -145,9 +149,21 @@ body {
 #score > * {
   vertical-align: middle;
 }
+#instructions {
+  display: none;
+}
 #promptContainer,
 #previousWork {
   display: none;
+}
+#promptContainer {
+  box-shadow: none;
+  margin-bottom: 2em;
+}
+#promptTitle {
+  border-bottom: 1px solid #dddddd;
+  margin-top: 0;
+  padding-bottom: 0.5em;
 }
 #attempts {
   font-size: 0.9em;

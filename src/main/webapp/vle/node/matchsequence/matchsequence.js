@@ -26,6 +26,7 @@ function MS(node, view) {
     this.numSubmitsAllowedBeforeLock = (this.content.numSubmitsAllowedBeforeLock != null) ? this.content.numSubmitsAllowedBeforeLock : -1;  // how many times can the student submit before getting locked out?
     this.hasPreviousWork = false;
     this.hasPrompt = false;
+    this.inlinePrompt = false;
     
     //set whether to display feedback to the student when they submit their answer
     if(this.content.showFeedback != null) {
@@ -337,40 +338,61 @@ MS.prototype.render = function() {
 	
 	this.loadStudentWork(nodeState);
 	
-	// render the prompt
+	// get the prompt
 	if(view.utils.isNonWSString(this.content.assessmentItem.interaction.prompt)){
 		$('#prompt').html(this.content.assessmentItem.interaction.prompt);
 		this.hasPrompt = true;
 	}
 	
-	// create the instructions dialog
+	if(this.content.assessmentItem.interaction.hasOwnProperty("promptInline") && this.content.assessmentItem.interaction.promptInline){
+		this.inlinePrompt = true;
+	}
+	
+	// create the instructions display
 	if(this.hasPrompt || this.hasPreviousWork){
 		if(this.hasPreviousWork){
 			$('#previousWork').show();
 		}
 		
-		var $promptDialog = new BootstrapDialog({
-			title: view.getI18NString('instructions','MatchSequenceNode'),
-	        message: function(){
-	        	return $('#promptContainer').show();
-	        },
-	        buttons: [{
-	            label: view.getI18NString('ok'),
-	            cssClass: 'btn-primary',
-	            action: function(dialog){
-	                dialog.close();
-	            }
-	        }]
-		});
+		var title = view.getI18NString('instructions','MatchSequenceNode');
 		
-		// bind instructions button click to open dialog
-		$('#instructions').on('click', function(){
-			$promptDialog.open();
-		});
-		
-		if(this.node.studentWork && this.node.studentWork.length < 1){
-			// if student hasn't saved any work, show instructions
-			$promptDialog.open();
+		if(this.inlinePrompt){
+			// if in authoring mode and switching from popup instructions, move prompt content back to inline positions and close dialogs
+			$('#promptTitle').after($('#previousWork'));
+			$('#previousWork').after($('#prompt'));
+			BootstrapDialog.closeAll();
+			$('#instructions').hide();
+			
+			$('#matchHeader').addClass('prompt-inline');
+			$('#promptTitle').html(title)
+			$('#promptContainer').show();
+		} else {
+			$('#matchHeader').removeClass('prompt-inline');
+			$('#promptContainer').hide();
+			var $promptDialog = new BootstrapDialog({
+				title: title,
+		        message: function(){
+		        	return $content = $('<div>').append($('#previousWork')).append($('#prompt'));
+		        },
+		        size: 'size-wide',
+		        buttons: [{
+		            label: view.getI18NString('ok'),
+		            cssClass: 'btn-primary',
+		            action: function(dialog){
+		                dialog.close();
+		            }
+		        }]
+			});
+			
+			// bind instructions button click to open dialog
+			$('#instructions').show().off('click').on('click', function(){
+				$promptDialog.open();
+			});
+			
+			if(this.node.studentWork && this.node.studentWork.length < 1 || !this.node.studentWork){
+				// if student hasn't saved any work, show instructions
+				$promptDialog.open();
+			}
 		}
 	}
 	  
