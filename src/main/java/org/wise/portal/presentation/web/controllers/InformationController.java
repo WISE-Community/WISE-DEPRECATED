@@ -414,14 +414,11 @@ public class InformationController {
 		String contextPath = request.getContextPath();
 		
 		String rawProjectUrl = null;
-		String portalVLEControllerUrl = null;
 		
 		// if projectId provided, this is a request for preview
 		if(projectIdStr != null){
 			Project project = projectService.getById(projectIdStr);
-			
 			rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-			portalVLEControllerUrl = wiseBaseURL + "/vle/preview.html";
 		}
 		
 		/* if no projectId String provided, try getting project url from run also add gradework
@@ -454,8 +451,6 @@ public class InformationController {
 				periodId = periodGroup.getId();
 				workgroupId = workgroup.getId();
 			}
-			
-			portalVLEControllerUrl = wiseBaseURL + "/student/vle/vle.html?runId=" + run.getId();
 			
 			//get the grading type (step or team)
 			String gradingType = request.getParameter("gradingType");

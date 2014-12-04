@@ -2590,13 +2590,13 @@ View.prototype.reloadProject = function() {
 };
 
 /**
- * Exit the authoring tool
+ * Exit the authoring tool and return to teacher homepage
  */
 View.prototype.gotoDashboard = function() {
 	/*
 	 * since the authoring tool is inside an iframe, we need to set the parent's location
 	 */
-	window.parent.location=this.config.getConfigParam("wiseBaseURL");
+	window.parent.location=this.config.getConfigParam("wiseBaseURL")+"/teacher/index.html";
 };
 
 //used to notify scriptloader that this script has finished loading

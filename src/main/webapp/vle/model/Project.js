@@ -1520,7 +1520,7 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 					}
 				}
 			}
-			eventManager.fire('saveProject');
+			node.view.saveProject();
 		};
 
 		/**
