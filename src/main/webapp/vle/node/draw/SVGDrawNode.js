@@ -493,22 +493,50 @@ SVGDrawNode.prototype.getFeedback0 = function() {
  * For the SVGDrawNode for now, it's the top score that the student has gotten.
  */
 SVGDrawNode.prototype.getCriteriaValue = function() {
-	var studentStates = view.getStudentWorkForNodeId(this.id);
 	var topScoreSoFar = -1;
-	if(studentStates != null && studentStates != '') {
-		for (var i=0; i<studentStates.length; i++) {
-			var studentState = studentStates[i];
-			if (studentState.autoScore != null && studentState.autoScore > topScoreSoFar) {
-				topScoreSoFar = studentState.autoScore;
+	
+	//get all the annotations for this step
+	var annotations = this.view.getAnnotations().getAnnotationsByNodeId(this.id);
+	
+	if(annotations != null) {
+		//loop through all the annotations
+		for(var x=0; x<annotations.length; x++) {
+			//get an annotation
+			var annotation = annotations[x];
+			
+			//look for autoGraded annotations
+			if(annotation != null && annotation.type == 'autoGraded') {
+				/*
+				 * the annotation is an autoGraded annotation so we will
+				 * get the annotation value
+				 */
+				var annotationValue = annotation.value;
+				
+				if(annotationValue != null) {
+					//loop through all the values
+					for(var y=0; y<annotationValue.length; y++) {
+						var tempValue = annotationValue[y];
+						
+						if(tempValue != null) {
+							//get the autoScore
+							var autoScore = tempValue.autoScore;
+							
+							//update the topScoreSoFar if necessary
+							if(autoScore != null && autoScore > topScoreSoFar) {
+								topScoreSoFar = autoScore;
+							}
+						}
+					}
+				}
 			}
 		}
 	}
+	
 	if (topScoreSoFar != -1) {
 		return topScoreSoFar;
 	} else {
 		return null;
 	}
-
 };
 
 /**
