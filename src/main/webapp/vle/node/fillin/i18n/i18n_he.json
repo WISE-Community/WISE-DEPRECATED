@@ -24,7 +24,7 @@
         "description": "Text indicating which blank the student is currently on"
     },
     "check_answer": {
-        "value": "יש לבדוק את התשובה",
+        "value": "בדיקת התשובה",
         "description": "Text for the 'check answer' button"
     },
     "try_again": {

@@ -16,7 +16,7 @@
         "description": "The text 'SAVE DRAFT' on the button shown at the bottom of the questionnaire"
     },
     "original_question": {
-        "value": "שאלה מקורית",
+        "value": "השאלה המקורית",
         "description": "The text 'original question' used in peer review steps"
     },
     "show_hide_text": {
@@ -24,7 +24,7 @@
         "description": "The text 'show/hide text' for the button used in peer review steps"
     },
     "text_is_hidden": {
-        "value": "טקסט מוסתר",
+        "value": "הטקסט חבוי",
         "description": "The text 'text is hidden' used in peer review steps"
     },
     "your_original_response...": {
