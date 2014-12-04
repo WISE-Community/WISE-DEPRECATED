@@ -228,5 +228,5 @@ View.prototype.processTagMapConstraints = function(nodeId) {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/view/vle/vleview_navigation.js');
+	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_navigation.js');
 }

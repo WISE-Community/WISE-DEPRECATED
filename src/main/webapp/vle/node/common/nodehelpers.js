@@ -99,6 +99,56 @@ function getCurrentPossibleScoreTable(numAttempts, scores) {
 };
 
 /**
+ * Get the html display for the possible scores and highlight 
+ * the current possible score
+ * @param numAttempts the current attempt number
+ */
+function getCurrentPossibleScores(numAttempts, scores) {
+	if(numAttempts == 0) {
+		/*
+		 * if this is the first attempt, the number of attempts will
+		 * be 0 so we will just set this to 1 so that the table highlights
+		 * the first possible score
+		 */
+		numAttempts = 1;
+	}
+	
+	var html = '<span class="possible-scores-label" data-i18n="current_possible_score">Possible Score:</span>';
+	
+	// add the element that will hold the scores label text and the scores wrapper
+	html += '<div id="possibleScores">';
+	
+	var hasMoreScores = true;
+	var attemptCounter = 1;
+	
+	//loop through all the possible scores
+	while(hasMoreScores) {
+		//get the possible score for the current attempt counter
+		var scoreForAttempt = scores[attemptCounter];
+		
+		if(scoreForAttempt != null) {
+			if(attemptCounter == numAttempts) {
+				// add active score
+				html += "<div class='score active'><span class='sr-only'>(current)</span><span>" + scoreForAttempt + "</span></div>";
+			} else if(attemptCounter < numAttempts) {
+				// add disabled score
+				html += "<div class='score disabled'><span class='sr-only'>(disabled)</span><span>" + scoreForAttempt + "</span></div>";
+			} else {
+				// add score
+				html += "<div class='score'><span>" + scoreForAttempt + "</span></div>";
+			}
+			
+			attemptCounter++;
+		} else {
+			hasMoreScores = false;
+		}
+	}
+	
+	html += "</div>";
+	return html;
+};
+
+/**
  * Check if scores have been set
  * @param content the content for the step, we need this
  * because we need to check 

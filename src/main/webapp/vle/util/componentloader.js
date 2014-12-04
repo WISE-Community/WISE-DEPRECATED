@@ -251,7 +251,6 @@ var componentloader = function(em, sl){
 				nodeTemplateParams:{}
 			},
 			events: {
-				'openProject':[null,null], 
 				'projectSelected':[null,null],
 				'checkAndSelect':[null, null], 
 				'checkAndDeselect':[null,null], 
@@ -261,7 +260,6 @@ var componentloader = function(em, sl){
 				'clearAll':[null,null], 
 				'hideNodes':[null,null], 
 				'unhideNodes':[null,null], 
-				'toggleProjectMode':[null,null], 
 				'projectTitleChanged':[null,null],
 				'stepLevelChanged':[null,null], 
 				'autoStepChanged':[null,null], 
@@ -274,9 +272,6 @@ var componentloader = function(em, sl){
 				'launchPrevWork':[null,null], 
 				'moveSelectedLeft':[null,null],
 				'moveSelectedRight':[null,null], 
-				'saveProject':[null,null],
-				'createNewProject':[null,null], 
-				'copyProject':[null,null], 
 				'createNewSequence':[null,null], 
 				'createNewNode':[null,null],
 				'nodeTypeSelected':[null,null], 
@@ -291,7 +286,6 @@ var componentloader = function(em, sl){
 				'disengageSelectMode':[null,null],
 				'processChoice':[null,null], 
 				'editProjectFile':[null,null], 
-				'editProjectMetadata':[null,null], 
 				'saveStep':[null,null], 
 				'saveAndCloseStep':[null,null], 
 				'authorStepModeChanged':[null,null], 
@@ -305,7 +299,6 @@ var componentloader = function(em, sl){
 				'sourceUpdated':[null,null], 
 				'closeOnStepSaved':[null,null], 
 				'closeStep':[null,null], 
-				'previewProject':[null,null], 
 				'maxScoreUpdated':[null,null],
 				'postLevelChanged':[null,null], 
 				'setLastEdited':[null,null], 
@@ -366,24 +359,21 @@ var componentloader = function(em, sl){
 				'openProjectInImportView':[null,null],
 				'importSelectedItems':[null,null],
 				'premadeCommentWindowLoaded':[null, null],
-				'premadeCommentLabelClicked':[null, null],
-				'gotoDashboard':[null, null]
+				'premadeCommentLabelClicked':[null, null]
 			},
 			methods: {
 				onWindowUnload:function(view){return function(){view.onWindowUnload();};}
 			},
 			initialize:{
 				keystrokeManager:function(){
-					var keystrokes = [['openProject', 79, ['shift','alt']],['previewProject', 80, ['shift','alt']],['saveProject',83,['shift','alt']]];
+					var keystrokes = [];
 					return createKeystrokeManager(eventManager,keystrokes);
 				},
 				init:function(view){
-					view.eventManager.subscribe('openProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('projectSelected', view.authorDispatcher, view);
 					view.eventManager.subscribe('loadingProjectCompleted', view.authorDispatcher, view);
 					view.eventManager.subscribe('hideNodes', view.authorDispatcher, view);
 					view.eventManager.subscribe('unhideNodes', view.authorDispatcher, view);
-					view.eventManager.subscribe('toggleProjectMode', view.authorDispatcher, view);
 					view.eventManager.subscribe('projectTitleChanged', view.authorDispatcher, view);
 					view.eventManager.subscribe('stepLevelChanged', view.authorDispatcher, view);
 					view.eventManager.subscribe('autoStepChanged', view.authorDispatcher, view);
@@ -396,9 +386,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('launchPrevWork', view.authorDispatcher, view);
 					view.eventManager.subscribe('moveSelectedLeft', view.authorDispatcher, view);
 					view.eventManager.subscribe('moveSelectedRight', view.authorDispatcher, view);
-					view.eventManager.subscribe('saveProject', view.authorDispatcher, view);
-					view.eventManager.subscribe('createNewProject', view.authorDispatcher, view);
-					view.eventManager.subscribe('copyProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('createNewSequence', view.authorDispatcher, view);
 					view.eventManager.subscribe('createNewNode', view.authorDispatcher, view);
 					view.eventManager.subscribe('nodeTypeSelected', view.authorDispatcher, view);
@@ -407,7 +394,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('submitUpload', view.authorDispatcher, view);
 					view.eventManager.subscribe('exportProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('editProjectFile', view.authorDispatcher, view);
-					view.eventManager.subscribe('previewProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('whoIsEditing', view.authorDispatcher, view);
 					view.eventManager.subscribe('previewFrameLoaded', view.authorDispatcher, view);
 					view.eventManager.subscribe('reviewUpdateProject', view.authorDispatcher, view);
@@ -427,7 +413,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('useSelected', view.selectDispatcher, view);
 					view.eventManager.subscribe('disengageSelectMode', view.selectDispatcher, view);
 					view.eventManager.subscribe('processChoice', view.selectDispatcher, view);
-					view.eventManager.subscribe('editProjectMetadata', view.metaDispatcher, view);
 					view.eventManager.subscribe('maxScoreUpdated', view.metaDispatcher, view);
 					view.eventManager.subscribe('postLevelChanged', view.metaDispatcher, view);
 					view.eventManager.subscribe('setLastEdited', view.metaDispatcher, view);
@@ -513,7 +498,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('importSelectedItems', view.authorDispatcher, view);
 					view.eventManager.subscribe("premadeCommentWindowLoaded", view.authoringToolPremadeCommentsDispatcher, view);
 					view.eventManager.subscribe("premadeCommentLabelClicked", view.authoringToolPremadeCommentsDispatcher, view);
-					view.eventManager.subscribe("gotoDashboard", view.authorDispatcher, view);
 					
 					view.initializeOpenProjectDialog();
 					view.initializeCreateProjectDialog();

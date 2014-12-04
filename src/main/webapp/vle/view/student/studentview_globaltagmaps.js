@@ -1,4 +1,3 @@
-
 /**
  * Load the global tag maps from the project
  */
@@ -114,5 +113,5 @@ View.prototype.createGlobalTagMap = function(globalTagMapParameters) {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/view/vle/vleview_globaltagmaps.js');
+	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_globaltagmaps.js');
 }

@@ -17,8 +17,8 @@ View.prototype.HtmlNode.generatePage = function(view){
 	
 	/* create new elements */
 	var pageDiv = createElement(document, 'div', {id:'dynamicPage', style:'width:100%;height:100%'});
-	parent.appendChild(pageDiv);
 	pageDiv.appendChild(createElement(document, 'div', {id: 'promptContainer'}));
+	parent.appendChild(pageDiv);
 };
 
 /**
@@ -71,7 +71,7 @@ View.prototype.HtmlNode.save = function(close){
 	}
 };
 
-View.prototype.HtmlNode.populatePrompt = function() {	
+View.prototype.HtmlNode.populatePrompt = function() {
 	$('#promptInput').val(this.view.activeNode.baseHtmlContent.getContentString());
 };
 

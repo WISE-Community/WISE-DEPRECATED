@@ -67,7 +67,7 @@ var view;
 </script>
 </head>
 <body id="w4_author" onload='loaded();' style='height:500px'>
-<div id="centeredDiv" style="display:none;">
+<div id="centeredDiv" style="display:none; background-color:transparent">
 
 <div id="authorHeader">
 	<div id="authorToolHeader"><div>WISE &nbsp;<img src="images/favicon_panda.ico" alt="WISE Panda" border="0" /></div>
@@ -77,23 +77,23 @@ var view;
 	
 	<div id="authorButtons">
 		<div>
-			<button onclick="eventManager.fire('gotoDashboard');" id="gotoDashboard" title='Exit to Teacher Dashboard'><img src="images/go-home.png" alt="goto Teacher Dashboard icon" /><br />
+			<button onclick="view.gotoDashboard();" id="gotoDashboard" title='Exit to Teacher Dashboard'><img src="images/go-home.png" alt="goto Teacher Dashboard icon" /><br />
 				Exit to Home</button>
-			<button onclick="eventManager.fire('openProject');" id="openProjectButton" title='Open an Existing Project for Editing'><img src="images/openProject.png" alt="open project icon" /><br />
+			<button onclick="view.openProject();" id="openProjectButton" title='Open an Existing Project for Editing'><img src="images/openProject.png" alt="open project icon" /><br />
 				Open Project</button>
-			<button onclick="eventManager.fire('createNewProject')" id="createProjectButton" title='Create a New Project'><img src="images/createProject.png" alt="create project icon" /><br />
+			<button onclick="view.createNewProject();" id="createProjectButton" title='Create a New Project'><img src="images/createProject.png" alt="create project icon" /><br />
 				Create Project</button>
-			<button onclick='eventManager.fire("copyProject")' id='copyProjectButton' title='Create a Copy of Current Project'><img src="images/copyProject.png" alt="copy project icon" /><br />
+			<button onclick='view.copyProject();' id='copyProjectButton' title='Create a Copy of Current Project'><img src="images/copyProject.png" alt="copy project icon" /><br />
 				Copy Project</button>
 		</div>
 		<div id="projectButtons">
-			<button disabled="true" onclick="eventManager.fire('saveProject');" id="saveProjectButton" title='Save Project'><img src="images/saveProject.png" alt="save project icon" /><br />
+			<button disabled="true" onclick="view.saveProject();" id="saveProjectButton" title='Save Project'><img src="images/saveProject.png" alt="save project icon" /><br />
 				Save Project</button>
 			<button disabled="true" onclick="eventManager.fire('viewAssets')" title='Add/Edit Project Files'><img src="images/uploadArt.png" alt="Manage Art/Files" /><br />
 				Manage Art/Files</button>
-			<button disabled="true" onclick='eventManager.fire("editProjectMetadata")' id='editprojectmetaLI' title='Edit Lesson Plan & Project Details'><img src="images/editProjectFile.png"
+			<button disabled="true" onclick='view.editProjectMetadata();' id='editprojectmetaLI' title='Edit Lesson Plan & Project Details'><img src="images/editProjectFile.png"
 				alt="edit project file icon" /><br/>Edit Info</button>
-			<button disabled="true" onclick='eventManager.fire("previewProject");' id="previewProjectButton" title='Preview Current Project'><img src="images/previewproject.png"
+			<button disabled="true" onclick='view.previewProject();' id="previewProjectButton" title='Preview Current Project'><img src="images/previewproject.png"
 				alt="preview project icon" /><br />Preview Project</button>
 		</div>
 	</div>
@@ -154,7 +154,7 @@ var view;
 		<input type="text" id='projectTitleInput' title='Click to Edit Project Title' size='40' onchange='eventManager.fire("projectTitleChanged")'/>
 		<a id='editProjectTitle' onclick='$("#projectTitleInput").focus();' title='Edit Project Title'>Edit</a>
 		<div id='projectID'>ID:&nbsp;<span id='projectIdDisplay'></span></div>
-		<div id='projectModeDiv'><span>Simple Mode</span><a id='toggleMode' onclick='eventManager.fire("toggleProjectMode")' title='Toggle Project Mode (Simple or Advanced)'>Toggle</a></div>
+		<div id='projectModeDiv'><span>Simple Mode</span><a id='toggleMode' onclick='view.toggleProjectMode();' title='Toggle Project Mode (Simple or Advanced)'>Toggle</a></div>
 	</div>
 	<div id="authorOptions">
 		<div class='authorOption'>Number Steps By: 
@@ -162,13 +162,7 @@ var view;
 				<option value='0'>Project</option>
 				<option value='1'>Activity</option>
 			</select>
-			<!--<input align="middle" type='checkbox' name='autoStepCheck' id='autoStepCheck1' onclick='eventManager.fire("autoStepChanged")'/>
-			<span class="spacer">Number steps per Project</span>-->
 		</div>
-		<!--<div class='authorOption'>
-			<input align="middle" type='checkbox' name='stepLevelNumbering' id='stepLevel' onclick='eventManager.fire("stepLevelChanged")'/>
-			<span class="spacer">Number steps per Activity</span>
-		</div>-->
 		<div class="authorOption">
 			Step Term:
 			<input type='text' name='stepTerm' title='Click to Edit Step Term' id='stepTerm' onchange='eventManager.fire("stepTermChanged")' size='8'/>
@@ -223,8 +217,6 @@ var view;
 		<button id='hideNodesBtn' title='Hide All Steps in Project' onclick='eventManager.fire("hideNodes");'><span class='tool-icon action-icon action-icon-hide'></span><span class='tool-label'>Hide Steps</span></button>
 		<button id='showNodesBtn' title='Show All Steps in Project' onclick='eventManager.fire("unhideNodes");' class='hidden'><span class='tool-icon action-icon action-icon-show'></span><span class='tool-label'>Show Steps</span></button>
 	</div>
-	<!--<td><div id='projectTasks' class='taskInfo' style='display: none;' onMouseOver='eventManager.fire("showTaskBox","project")' onMouseOut='eventManager.fire("hideTaskBox")'>Project Tasks</div></td>
-	<td><div id='userTasks' class='taskInfo' style='display: none;' onMouseOver='eventManager.fire("showTaskBox","users")' onMouseOut='eventManager.fire("hideTaskBox")'>User Tasks</div></td>-->
 </div>
 
 <div id="authoringContainer">
@@ -295,20 +287,6 @@ var view;
 	 </div><br/>
 </div>
 </div>
-
-<!--<div id="assetUploaderDialog" style="display: none;">
-	<div class='hd'>Upload a File to the WISE4 Server</div>
-	<div id='assetUploaderBodyDiv' class='bd'>
-	
-	<input type='file' id='uploadAssetFile' name='dontmatter' size='30'></input><br/>
-
-	<div id="uploaderInstructions">
-		<h5>Example Link to an Uploaded File:</h5>
-		<p>If the uploaded file is called <b>myimage.jpg</b> then your HTML reference will be:</p>
-		<p class="sampleCode">&#60;img src="assets/myimage.jpg" alt="description of graphic here" /&nbsp;&#62;</p>
-	</div>
-	</div>
-</div>-->
 
 <div id='assetEditorDialog' style="display: none;">
 <div class='hd'>
@@ -525,21 +503,15 @@ var view;
 
 <div id='authorStepDialog' style="display:none;">
 	<div id='authorStepHeader' class='authorStepDialog'>
-		<table style='float:left;'>
-			<tr>
-				<td id='iconTD'><div id='iconDiv'></div></td>
-				<td>
+	<span>
 					Editor View:
 					<input type='radio' id='easyTrue' name='radioMode' onclick='eventManager.fire("authorStepModeChanged","true")'>Simple</input>
 					<input type='radio' id='easyFalse' name='radioMode' onclick='eventManager.fire("authorStepModeChanged","false")'/>Advanced</input>
-				</td>
-				<td id='refreshOptions'>
-					<input type='checkbox' id='refreshCheck' onclick='eventManager.fire("updateRefreshOption")' CHECKED>Refresh As Typing</input>
+					<input type='checkbox' id='refreshCheck' onclick='eventManager.fire("updateRefreshOption")' CHECKED>Refresh As I Type</input>
 					<input type='button' id='refreshButt' onclick='eventManager.fire("refreshNow")' value='Refresh Now'></input>
 					<input type='button' id='hintsButt' onclick='eventManager.fire("editHints",[0])' value='Edit Hints'></input>
-				</td>
-			</tr>
-		</table>
+	</span>
+	
 		<div id="authorNavButtons" style='float:right'>
 			<input type='button' value='Save' onclick='eventManager.fire("saveStep")'/>
 			<input type='button' value='Save & Close' onclick='eventManager.fire("saveAndCloseStep")'/>

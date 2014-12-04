@@ -19,7 +19,6 @@
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
 
 <!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->

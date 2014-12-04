@@ -1,21 +1,30 @@
 
 function renderDragAndDrop(){
-	$('#play ul').sortable(
-			{
-				connectWith:'ul',
-				stop:function(e,ui){
-					/* update the match sequence */
-					ms.orderSourceBucket();
-					ms.addOrderingToChoices();
-					ms.saveState();
-					
-					//check if we can enable the check answer button
-					if(ms.canSubmitButtonBeEnabled()) {
-						ms.enableCheckAnswerButton();						
-					}
-				}
-			});
-	$('#play ul').disableSelection();
+	$('.bucket_ul').sortable({
+		connectWith:'.bucket_ul',
+		tolerance: 'pointer',
+		forcePlaceholderSize: true,
+		over: function(e, ui){
+			ui.placeholder.parent().addClass('over');
+		},
+		out: function(e, ui){
+			ui.placeholder.parent().removeClass('over');
+		},
+		stop: function(e, ui){
+			ui.item.parent().removeClass('over');
+			
+			// update the match sequence
+			ms.orderSourceBucket();
+			ms.addOrderingToChoices();
+			ms.saveState();
+			
+			//check if we can enable the check answer button
+			if(ms.canSubmitButtonBeEnabled()) {
+				ms.enableCheckAnswerButton();						
+			}
+		}
+	});
+	$('.bucket_ul').disableSelection();
 };
 
 //used to notify scriptloader that this script has finished loading

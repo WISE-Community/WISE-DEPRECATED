@@ -246,6 +246,29 @@ View.prototype.setAnnotations = function(annotations) {
 	}
 };
 
+/**
+ * Get the latest node state for the given node
+ * @param nodeId
+ * @return a node state
+ */
+View.prototype.getLatestStateForNode = function(nodeId) {
+	var nodeState = null;
+	
+	if(this.getState() != null) {
+		for (var i=this.getState().visitedNodes.length - 1; i>=0 ; i--) {
+			var nodeVisit = this.getState().visitedNodes[i];
+			if (nodeVisit.getNodeId() == nodeId) {
+				for (var j=nodeVisit.nodeStates.length - 1; j>=0; j--) {
+					nodeState = nodeVisit.nodeStates[j];
+					return nodeState;
+				}
+			}
+		}	
+	}
+	
+	return nodeState;
+};
+
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/coreview.js');

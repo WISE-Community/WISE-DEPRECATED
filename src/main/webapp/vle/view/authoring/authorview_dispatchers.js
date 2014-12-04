@@ -5,9 +5,7 @@
  * @author patrick lawler
  */
 View.prototype.authorDispatcher = function(type,args,obj){
-	if(type=='openProject'){
-		obj.openProject();
-	} else if(type=='projectSelected'){
+	if(type=='projectSelected'){
 		obj.projectOptionSelected();
 	} else if(type=='loadingProjectCompleted'){
 		obj.onProjectLoaded();
@@ -15,8 +13,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.utils.hideNodes();
 	} else if(type=='unhideNodes'){
 		obj.utils.unhideNodes();
-	} else if(type=='toggleProjectMode'){
-		obj.toggleProjectMode();
 	} else if(type=='projectTitleChanged'){
 		obj.projectTitleChanged();
 	} else if(type=='stepLevelChanged'){
@@ -41,12 +37,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.moveSelectedLeft();
 	} else if(type=='moveSelectedRight'){
 		obj.moveSelectedRight();
-	} else if(type=='saveProject'){
-		obj.saveProject();
-	} else if(type=='createNewProject'){
-		obj.createNewProject();
-	} else if(type=='copyProject'){
-		obj.copyProject();
 	} else if(type=='createNewSequence'){
 		obj.createNewSequence();
 	} else if(type=='createNewNode'){
@@ -69,8 +59,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.exportProject();
 	} else if(type=='publishProject'){
 		obj.publishProject();
-	} else if(type=='previewProject'){
-		obj.previewProject();
 	} else if(type=='whoIsEditing'){
 		obj.getEditors();
 	} else if(type=='editProjectSubmit'){
@@ -119,8 +107,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.analyzeProject(type);
 	} else if(type == 'findUnusedAssetsInProject') {
 		obj.analyzeProject(type);
-	} else if(type == 'gotoDashboard') {
-		obj.gotoDashboard();
 	};
 };
 
@@ -180,9 +166,7 @@ View.prototype.reviewSequenceDispatcher = function(type,args,obj){
  * delegates them to the appropriate functions for this view.
  */
 View.prototype.metaDispatcher = function(type,args,obj){
-	if(type=='editProjectMetadata'){
-		obj.editProjectMetadata();
-	} else if(type=='maxScoreUpdated'){
+	if(type=='maxScoreUpdated'){
 		obj.maxScoreUpdated(args[0]);
 	} else if(type=='postLevelChanged'){
 		obj.postLevelChanged();

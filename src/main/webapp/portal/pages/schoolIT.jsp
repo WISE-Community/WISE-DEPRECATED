@@ -13,7 +13,6 @@
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
 </head>
 <body>
 <spring:htmlEscape defaultHtmlEscape="false">

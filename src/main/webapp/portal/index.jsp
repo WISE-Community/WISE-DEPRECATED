@@ -26,7 +26,6 @@
 <script src="${contextPath}/<spring:theme code="easyaccordion.js"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="tinycarousel.js"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="jquerycookiesource"/>" type="text/javascript"></script>
 
 <!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->
 <!--[if lt IE 7]>

@@ -2,6 +2,8 @@
  * Sets the MatchSequenceNode type as an object of this view
  * @constructor
  * @author patrick lawler
+ * 
+ * TODO: i18n!!!!
  */
 View.prototype.MatchSequenceNode = {};
 View.prototype.MatchSequenceNode.commonComponents = ['Prompt', 'LinkTo'];
@@ -55,15 +57,22 @@ View.prototype.MatchSequenceNode.buildPage = function(){
 	var shuffle = createElement(document, 'input', {type: 'checkbox', id: 'shuffled', onclick: 'eventManager.fire("msShuffleChanged")'});
 	var shuffleText = document.createTextNode('Shuffle Choices');
 	
-	//will contain the displayLayout, loglevel, and showFeedback options
+	//will contain the promptInline, displayLayout, loglevel, and showFeedback options
 	var advancedOptionsDiv = createElement(document, 'div', {id: 'advancedOptions'});
+	
+	//the promptInline radio option
+	var promptInlineText = document.createTextNode('Prompt Location:');
+	var showPromptPopup = createElement(document, 'input', {type: 'radio', id: 'showPromptPopup', name: 'promptInline', value: false, onclick: 'eventManager.fire("msUpdatePromptInline", false)'});
+	var showPromptPopupText = document.createTextNode('Popup (Default)');
+	var showPromptInline = createElement(document, 'input', {type: 'radio', id: 'showPromptInline', name: 'promptInline', value: true, onclick: 'eventManager.fire("msUpdatePromptInline", true)'});
+	var showPromptInlineText = document.createTextNode('Inline (Above Step Content)');
 	
 	//the displayLayout radio option
 	var displayLayoutText = document.createTextNode('Select display layout:');
-	var displayLayoutVertical = createElement(document, 'input', {type: 'radio', id: 'displayLayoutVertical', name: 'displayLayout', value: 'vertical', onclick: 'eventManager.fire("msUpdateDisplayLayout","vertical")'});
-	var displayLayoutVerticalText = document.createTextNode('Vertical (Default)');
 	var displayLayoutHorizontal = createElement(document, 'input', {type: 'radio', id: 'displayLayoutHorizontal', name: 'displayLayout', value: 'horizontal', onclick: 'eventManager.fire("msUpdateDisplayLayout","horizontal")'});
-	var displayLayoutHorizontalText = document.createTextNode('Horizontal');
+	var displayLayoutHorizontalText = document.createTextNode('Horizontal (Default)');
+	var displayLayoutVertical = createElement(document, 'input', {type: 'radio', id: 'displayLayoutVertical', name: 'displayLayout', value: 'vertical', onclick: 'eventManager.fire("msUpdateDisplayLayout","vertical")'});
+	var displayLayoutVerticalText = document.createTextNode('Vertical');
 	
 	//the logLevel radio option
 	var logLevelText = document.createTextNode('Select log level:');
@@ -100,23 +109,43 @@ View.prototype.MatchSequenceNode.buildPage = function(){
 	orderingDiv.appendChild(shuffleText);
 	orderingDiv.appendChild(createBreak());
 	
+	//get the value of promptInline from the content
+	var promptInlineValue = this.getPromptInline();
+	
+	//determine which promptInline radio button should be checked
+	if(promptInlineValue == null || !promptInlineValue) {
+		showPromptPopup.checked = true;
+	} else if(promptInlineValue) {
+		showPromptInline.checked = true;
+	}
+	
+	//add the promptInline elements to the authoring display
+	advancedOptionsDiv.appendChild(promptInlineText);
+	advancedOptionsDiv.appendChild(createBreak());
+	advancedOptionsDiv.appendChild(showPromptPopup);
+	advancedOptionsDiv.appendChild(showPromptPopupText);
+	advancedOptionsDiv.appendChild(showPromptInline);
+	advancedOptionsDiv.appendChild(showPromptInlineText);
+	advancedOptionsDiv.appendChild(createBreak());
+	advancedOptionsDiv.appendChild(createBreak());
+	
 	//get the value of displayLayout from the content
 	var displayLayoutValue = this.getDisplayLayout();
 	
 	//determine which displayLayout radio button should be checked
-	if(displayLayoutValue == null || displayLayoutValue == 'vertical') {
-		displayLayoutVertical.checked = true;
-	} else if(displayLayoutValue == 'horizontal') {
+	if(displayLayoutValue == null || displayLayoutValue == 'horizontal') {
 		displayLayoutHorizontal.checked = true;
+	} else if(displayLayoutValue == 'vertical') {
+		displayLayoutVertical.checked = true;
 	}
 	
 	//add the displayLayout elements to the authoring display
 	advancedOptionsDiv.appendChild(displayLayoutText);
 	advancedOptionsDiv.appendChild(createBreak());
-	advancedOptionsDiv.appendChild(displayLayoutVertical);
-	advancedOptionsDiv.appendChild(displayLayoutVerticalText);
 	advancedOptionsDiv.appendChild(displayLayoutHorizontal);
 	advancedOptionsDiv.appendChild(displayLayoutHorizontalText);
+	advancedOptionsDiv.appendChild(displayLayoutVertical);
+	advancedOptionsDiv.appendChild(displayLayoutVerticalText);
 	advancedOptionsDiv.appendChild(createBreak());
 	advancedOptionsDiv.appendChild(createBreak());
 	
@@ -129,7 +158,7 @@ View.prototype.MatchSequenceNode.buildPage = function(){
 	} else if(logLevelValue == 'high') {
 		logLevelHigh.checked = true;
 	}
-
+	
 	//add the logLevel elements to the authoring display
 	advancedOptionsDiv.appendChild(logLevelText);
 	advancedOptionsDiv.appendChild(createBreak());
@@ -157,15 +186,15 @@ View.prototype.MatchSequenceNode.buildPage = function(){
 	advancedOptionsDiv.appendChild(showFeedbackEnabledText);
 	advancedOptionsDiv.appendChild(showFeedbackDisabled);
 	advancedOptionsDiv.appendChild(showFeedbackDisabledText);
-	advancedOptionsDiv.appendChild(createBreak());
-	advancedOptionsDiv.appendChild(createBreak());
 	
 	pageDiv.appendChild(promptText);
 	pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(createElement(document, 'div', {id:'promptContainer'}));
-	pageDiv.appendChild(orderingDiv);
 	pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(advancedOptionsDiv);
+	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(orderingDiv);
+	pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(createBreak());
 	
 	//create the authoring section to enable challenge question
@@ -1073,6 +1102,13 @@ View.prototype.MatchSequenceNode.updateContent = function(){
 };
 
 /**
+ * Get whether to show instructions inline or in popup (true or false)
+ */
+View.prototype.MatchSequenceNode.getPromptInline = function() {
+	return this.content.assessmentItem.interaction.promptInline;
+};
+
+/**
  * Get the display layout ('vertical' or 'horizontal')
  */
 View.prototype.MatchSequenceNode.getDisplayLayout = function() {
@@ -1091,6 +1127,16 @@ View.prototype.MatchSequenceNode.getLogLevel = function() {
  */
 View.prototype.MatchSequenceNode.getShowFeedback = function() {
 	return this.content.showFeedback;
+};
+
+/**
+ * Set the value of the promptInline to the content
+ */
+View.prototype.MatchSequenceNode.updatePromptInline = function(val){
+	this.content.assessmentItem.interaction.promptInline = val;
+	
+	/* fire source updated event */
+	this.view.eventManager.fire('sourceUpdated');
 };
 
 /**

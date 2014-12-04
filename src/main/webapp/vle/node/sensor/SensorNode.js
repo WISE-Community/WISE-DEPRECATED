@@ -9,6 +9,7 @@ SensorNode.prototype.i18nPath = "vle/node/sensor/i18n/";
 SensorNode.prototype.supportedLocales = {
 	"en_US":"en_US",
 	"es":"es",
+	"iw":"he",
 	"nl":"nl",
 	"nl_GE":"nl",
 	"nl_DE":"nl"				

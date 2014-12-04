@@ -1282,38 +1282,11 @@ div#toolsAreaAuthor {
 	display:none !important;
 }
 
-#taskBox {
-	background-color:#bbbbbb;
-	border: 2px solid #000;
-	padding: 5px;
-}
-
 #contextMenu{
 	background-color:#bbbbbb;
 	border: 2px solid #000;
 	padding: 5px;
 }
-
-.taskInfo{
-	background-color:#CC99FF;
-	padding-left: 5px;
-	padding-right: 5px;
-}
-
-.taskButt{
-	padding-left: 5px;
-	padding-right: 5px;
-}
-
-.notifyFont{
-	font-style: bold;
-	color: #FF0000;
-}
-
-#editTODODialog .bd{
-	overflow:auto;
-}
-
 
 /* STYLES FOR DATA GRAPHER EDITOR */
 

@@ -18,7 +18,6 @@
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="superfishsource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerymigrate.js"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerycookiesource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="browserdetectsource"/>"></script>
 
@@ -55,6 +54,11 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 							<tr>
 								<td><a href="${contextPath}/teacher/management/classroomruns.html"><spring:message code="teacher.index.gradeAndManageClassroomRuns"/></a></td>
 							</tr>
+							<!--  TODO: uncomment me to re-enable premade comments when it's added to ClassroomManager tool
+							<tr>
+								<td><a onclick="editPremadeComments()"><spring:message code="accountmenu.editpremadecomments" /></a></td>
+							</tr>
+							-->
 							<c:if test="${discourseSSOLoginURL != null}">
 							   <tr>
 							   	  <td><a target=_blank href="${discourseSSOLoginURL}"><spring:message code="wiseTeacherCommunity"/></a></td>
@@ -137,11 +141,17 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page -->
 	
+	
 	<%@ include file="../footer.jsp"%>
 </div>
 <div id="archiveRunDialog" style="overflow:hidden;" class="dialog"></div>
 
-<!-- Page-specific script TODO: Make text translatable and move to external script-->
+<div id="editPremadeCommentsDiv" style="display: none;"></div>
+<div id="editPremadeCommentsLoadingDiv" style="display: none;">
+	<h5 style="text-align: center">
+		<spring:message code="accountmenu.loadingPremadeComments" />
+	</h5>
+</div>
 
 <script type="text/javascript">
     /**
@@ -198,6 +208,46 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
     		});
     		$("#archiveRunDialog > #archiveIfrm").attr('src',path);        	
         });
+        
+        
+        /**
+		 * the user has clicked "Edit Premade Comments" from the drop down on
+		 * the teacher home page.
+		 * TODO: move to external js file
+		 */
+		function editPremadeComments() {
+
+			//create a popup for the loading premade comments message
+			$('#editPremadeCommentsLoadingDiv').dialog({
+				autoOpen : false
+			});
+
+			//display the loading premade comments message
+			$('#editPremadeCommentsLoadingDiv').dialog('open');
+
+			//create a div with an iframe in it so we can load the vle in it
+			var div = $('#editPremadeCommentsDiv')
+					.html(
+							'<iframe id="editPremadeCommentsIfrm" width="100%" height="100%" style="overflow-y:hidden;"></iframe>');
+
+			/*
+			 * the path to open the authoring tool that will automatically
+			 * open the premade comments. this will not display the authoring
+			 * tool. we are only loading the authoring tool so that the vle
+			 * is loaded and can then open the premade comments editing view.
+			 */
+			var path = '${contextPath}/author/authorproject.html?editPremadeComments=true';
+
+			//set the path to start loading the authoring tool
+			$("#editPremadeCommentsIfrm").attr('src', path);
+		}
+
+		/**
+		 * Close the loading premade comments message
+		 */
+		function closeLoadingPremadeCommentsDialog() {
+			$('#editPremadeCommentsLoadingDiv').dialog('close');
+		}
 </script>
 </body>
 </html>

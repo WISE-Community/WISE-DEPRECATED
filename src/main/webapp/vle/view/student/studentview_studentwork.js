@@ -1,5 +1,3 @@
-
-
 /**
  * Given the type and optional arguments, creates a new 
  * state of the type, passing in the arguments.
@@ -437,18 +435,18 @@ View.prototype.saveState = function(state, node) {
  * @param whether to logout the user
  */
 View.prototype.onWindowUnload = function(logout){
-	/* display splash screen letting user know that saving is occuring */
+	//display splash screen letting user know that saving is occuring 
 	$('#onUnloadSaveDiv').dialog('open');
 
-	/* set the endVisitTime to the current time for the current state */
+	//set the endVisitTime to the current time for the current state 
 	this.getState().endCurrentNodeVisit();
 	
-	/* tell current step to clean up */ 
+	//tell current step to clean up 
 	if(this.getCurrentNode()) {
 		this.getCurrentNode().onExit();
 	}
 	
-	/* synchronously save any unsaved node visits */
+	//synchronously save any unsaved node visits 
 	this.postAllUnsavedNodeVisits(true);
 
 	/*
@@ -458,7 +456,7 @@ View.prototype.onWindowUnload = function(logout){
 	 */
 	this.ideaBasketDivClose();
 
-	/* try to blip final message before going */
+	//try to blip final message before going
 	$('#onUnloadSaveDiv').html('SAVED!!');
 
 	/*
@@ -591,8 +589,6 @@ View.prototype.viewStudentAssets = function(params) {
 			}
 		}
 	};
-
-
 
 	var done = function(){
 		$('#studentAssetsDiv').dialog('close');			
@@ -1157,5 +1153,5 @@ View.prototype.updateConstraints = function() {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/view/vle/vleview_studentwork.js');
+	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_studentwork.js');
 };

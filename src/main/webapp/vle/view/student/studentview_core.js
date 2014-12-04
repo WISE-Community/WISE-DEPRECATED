@@ -1128,5 +1128,5 @@ View.prototype.updateSequenceStatuses = function() {
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
-	eventManager.fire('scriptLoaded', 'vle/view/vle/vleview_core.js');
+	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_core.js');
 }

@@ -40,8 +40,6 @@ var documentReadyFunction = function(object, createForStep, stepBasket) {
 	}
 };
 
-//$(document).ready(documentReadyFunction);
-
 /**
  * Loads the idea basket from the global ideaBasket JSON object
  * that should have been set into the iframe
@@ -137,21 +135,12 @@ function resetForm(target){
 		switch(this.type) {
 		case 'password':
 		case 'select-multiple':
-			//case 'select-one':
 		case 'text':
 		case 'textarea':
 			$(this).val('');
 			break;
-			//case 'checkbox':
-			//case 'radio':
-			// this.checked = false;
 		}
 	});
-	/*$(':input','#' + target)
-	 .not(':button, :submit, :reset, :hidden')
-	 .val('')
-	 .removeAttr('checked')
-	 .removeAttr('selected');*/
 };
 
 /* used to notify scriptloader that this script has finished loading */
