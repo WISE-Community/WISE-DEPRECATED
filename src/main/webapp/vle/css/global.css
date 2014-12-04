@@ -215,13 +215,18 @@ h6 .small,
 .dialog {
   display: none;
 }
+.modal-lg {
+  margin: 10px auto;
+  padding: 0 10px;
+  width: auto;
+}
 @media (min-width: 992px) {
-  .modal-lg .modal-dialog {
+  .modal-lg {
     width: 900px;
   }
 }
 @media (min-width: 768px) {
-  .modal-sm .modal-dialog {
+  .modal-sm {
     width: 300px;
   }
 }
