@@ -61,7 +61,7 @@ View.prototype.MatchSequenceNode.buildPage = function(){
 	var advancedOptionsDiv = createElement(document, 'div', {id: 'advancedOptions'});
 	
 	//the promptInline radio option
-	var promptInlineText = document.createTextNode('Instructions Location:');
+	var promptInlineText = document.createTextNode('Prompt Location:');
 	var showPromptPopup = createElement(document, 'input', {type: 'radio', id: 'showPromptPopup', name: 'promptInline', value: false, onclick: 'eventManager.fire("msUpdatePromptInline", false)'});
 	var showPromptPopupText = document.createTextNode('Popup (Default)');
 	var showPromptInline = createElement(document, 'input', {type: 'radio', id: 'showPromptInline', name: 'promptInline', value: true, onclick: 'eventManager.fire("msUpdatePromptInline", true)'});
@@ -69,10 +69,10 @@ View.prototype.MatchSequenceNode.buildPage = function(){
 	
 	//the displayLayout radio option
 	var displayLayoutText = document.createTextNode('Select display layout:');
-	var displayLayoutVertical = createElement(document, 'input', {type: 'radio', id: 'displayLayoutVertical', name: 'displayLayout', value: 'vertical', onclick: 'eventManager.fire("msUpdateDisplayLayout","vertical")'});
-	var displayLayoutVerticalText = document.createTextNode('Vertical (Default)');
 	var displayLayoutHorizontal = createElement(document, 'input', {type: 'radio', id: 'displayLayoutHorizontal', name: 'displayLayout', value: 'horizontal', onclick: 'eventManager.fire("msUpdateDisplayLayout","horizontal")'});
-	var displayLayoutHorizontalText = document.createTextNode('Horizontal');
+	var displayLayoutHorizontalText = document.createTextNode('Horizontal (Default)');
+	var displayLayoutVertical = createElement(document, 'input', {type: 'radio', id: 'displayLayoutVertical', name: 'displayLayout', value: 'vertical', onclick: 'eventManager.fire("msUpdateDisplayLayout","vertical")'});
+	var displayLayoutVerticalText = document.createTextNode('Vertical');
 	
 	//the logLevel radio option
 	var logLevelText = document.createTextNode('Select log level:');
@@ -133,19 +133,19 @@ View.prototype.MatchSequenceNode.buildPage = function(){
 	var displayLayoutValue = this.getDisplayLayout();
 	
 	//determine which displayLayout radio button should be checked
-	if(displayLayoutValue == null || displayLayoutValue == 'vertical') {
-		displayLayoutVertical.checked = true;
-	} else if(displayLayoutValue == 'horizontal') {
+	if(displayLayoutValue == null || displayLayoutValue == 'horizontal') {
 		displayLayoutHorizontal.checked = true;
+	} else if(displayLayoutValue == 'vertical') {
+		displayLayoutVertical.checked = true;
 	}
 	
 	//add the displayLayout elements to the authoring display
 	advancedOptionsDiv.appendChild(displayLayoutText);
 	advancedOptionsDiv.appendChild(createBreak());
-	advancedOptionsDiv.appendChild(displayLayoutVertical);
-	advancedOptionsDiv.appendChild(displayLayoutVerticalText);
 	advancedOptionsDiv.appendChild(displayLayoutHorizontal);
 	advancedOptionsDiv.appendChild(displayLayoutHorizontalText);
+	advancedOptionsDiv.appendChild(displayLayoutVertical);
+	advancedOptionsDiv.appendChild(displayLayoutVerticalText);
 	advancedOptionsDiv.appendChild(createBreak());
 	advancedOptionsDiv.appendChild(createBreak());
 	
@@ -186,8 +186,6 @@ View.prototype.MatchSequenceNode.buildPage = function(){
 	advancedOptionsDiv.appendChild(showFeedbackEnabledText);
 	advancedOptionsDiv.appendChild(showFeedbackDisabled);
 	advancedOptionsDiv.appendChild(showFeedbackDisabledText);
-	advancedOptionsDiv.appendChild(createBreak());
-	advancedOptionsDiv.appendChild(createBreak());
 	
 	pageDiv.appendChild(promptText);
 	pageDiv.appendChild(createBreak());
@@ -196,6 +194,7 @@ View.prototype.MatchSequenceNode.buildPage = function(){
 	pageDiv.appendChild(advancedOptionsDiv);
 	pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(orderingDiv);
+	pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(createBreak());
 	
 	//create the authoring section to enable challenge question

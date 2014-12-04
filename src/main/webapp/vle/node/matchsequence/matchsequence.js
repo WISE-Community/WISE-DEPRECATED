@@ -85,6 +85,9 @@ function MS(node, view) {
 		spinicon: 'fa fa-spinner fa-spin',
 		autodestroy: false
 	});
+	
+	// set status lose button to hide message
+	$('#status .close').off('click').on('click', function(){ $('#status').hide(); });
 };
 
 /**
@@ -775,11 +778,10 @@ MS.prototype.checkAnswer = function() {
 				}
 			}
 			
-			$('#status').fadeOut(function(){
-				$('#status')
-					.removeClass('success')
-					.fadeIn();
-			});
+			$('#status')
+				.hide()
+				.removeClass('success')
+				.fadeIn();
 		}
 		
 		//check if there are any scores enabled for this challenge question
@@ -973,12 +975,10 @@ MS.prototype.displayCompletionMessage = function() {
 	$('#resultMessage').html('<b>' + resultMessage + '</b>');
 	
 	// show the status message and add the success class
-	$('#status').fadeOut(function(){ 
-		$('#status')
-			.addClass('success')
-			.fadeIn();
-	});
-	
+	$('#status')
+		.hide()
+		.addClass('success')
+		.fadeIn();
 	
 	//disable moving of the items
 	this.setChoicesDraggable(false);

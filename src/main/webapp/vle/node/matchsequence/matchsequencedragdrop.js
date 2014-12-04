@@ -4,7 +4,6 @@ function renderDragAndDrop(){
 		connectWith:'.bucket_ul',
 		tolerance: 'pointer',
 		forcePlaceholderSize: true,
-		revert: 100,
 		over: function(e, ui){
 			ui.placeholder.parent().addClass('over');
 		},
