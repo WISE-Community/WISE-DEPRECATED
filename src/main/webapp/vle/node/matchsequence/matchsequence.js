@@ -940,7 +940,7 @@ MS.prototype.checkBucketAnswers = function(initialRenderCheck) {
 			// add feedback
 			if(feedback){
 				$('#' + bucket.choices[j].identifier).find('.feedback').remove();
-				$('#' + bucket.choices[j].identifier).append('<span class="feedback">*' + feedback.feedback + '*</span>');
+				$('#' + bucket.choices[j].identifier).append('<div class="feedback">*' + feedback.feedback + '*</div>');
 			}
 		}
 	}
