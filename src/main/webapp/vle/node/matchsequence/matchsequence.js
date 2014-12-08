@@ -770,8 +770,9 @@ MS.prototype.checkAnswer = function() {
 					//display the linkto message and link to the student
 					$('#resultMessage').html('<b>' + msg + '</b>');
 					
-					//disable the check answer button
-					$('#checkAnswer').addClass('disabled');
+					//disable the check answer and status dismiss buttons
+					$('#checkAnswer, #status .close').addClass('disabled').prop('disabled', true);
+					$('#status .close').hide();
 					
 					//do not allow the submit button to be enabled
 					this.allowEnableSubmitButton = false;
