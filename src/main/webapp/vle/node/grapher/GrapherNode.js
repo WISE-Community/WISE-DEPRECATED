@@ -52,8 +52,7 @@ GrapherNode.tagMapFunctions = [
 	{functionName:'importWork', functionArgs:[]},
 	{functionName:'showPreviousWork', functionArgs:[]},
 	{functionName:'mustNotExceedMaxErrorBeforeAdvancing', functionArgs:['maxError']},
-	{functionName:'mustNotExceedAvgErrorBeforeAdvancing', functionArgs:['avgError']},
-	{functionName:'mustSpanDomainBeforeAdvancing', functionArgs:[]}
+	{functionName:'mustNotExceedAvgErrorBeforeAdvancing', functionArgs:['avgError']}
 ];
 
 /**
@@ -258,7 +257,7 @@ GrapherNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVi
 
 /**
  * Get the tag map functions that are available for this step type
- */
+ *
 GrapherNode.prototype.getTagMapFunctions = function() {
 	//get all the tag map function for this step type
 	var tagMapFunctions = GrapherNode.tagMapFunctions;
@@ -266,11 +265,11 @@ GrapherNode.prototype.getTagMapFunctions = function() {
 	return tagMapFunctions;
 };
 
-/**
+**
  * Get a tag map function given the function name
  * @param functionName
  * @return 
- */
+ *
 GrapherNode.prototype.getTagMapFunctionByName = function(functionName) {
 	var fun = null;
 	
@@ -295,6 +294,7 @@ GrapherNode.prototype.getTagMapFunctionByName = function(functionName) {
 	
 	return fun;
 };
+*/
 
 /**
  * Override of Node.overridesIsCompleted
@@ -309,37 +309,30 @@ GrapherNode.prototype.overridesIsCompleted = function() {
  * Get whether the step is completed or not
  * @return a boolean value whether the step is completed or not
  */
-GrapherNode.prototype.isCompleted = function(grapherState) {
-	if (typeof this.tagMaps == "undefined") return true;
-	if (typeof grapherState === "undefined") grapherState = this.view.getState().getLatestWorkByNodeId(this.id);
-	// cycle through tag maps, if I get a custom tag map check student work to complete
-	var isCompleted = true;
-	for (var i = 0; i < this.tagMaps.length; i++){
-		var functionName = this.tagMaps[i].functionName;
-		var functionArgs = this.tagMaps[i].functionArgs;
-		if (functionName == "mustSpanDomainBeforeAdvancing"){
-			if (grapherState != "" && grapherState.predictionArray.length > 0 ){
-				var predictions = grapherState.predictionArray;
-				var foundMin = false;
-				var foundMax = false;
-				for (var i=0; i < predictions.length; i++){
-					var p = predictions[i];
-					var objJson = this.content.getContentJSON();
-					if (typeof grapherState.xMin != "undefined" && grapherState.xMin != "" && !isNaN(Number(grapherState.xMin)) && typeof grapherState.xMax != "undefined" && grapherState.xMax != "" && !isNaN(Number(grapherState.xMax))){
-						if (p.x <= parseFloat(grapherState.xMin)) foundMin = true;
-						if (p.x >= parseFloat(grapherState.xMax)) foundMax = true;
-					} else {
-						if (p.x <= parseFloat(objJson.graphParams.xmin)) foundMin = true;
-						if (p.x >= parseFloat(objJson.graphParams.xmax)) foundMax = true;
+GrapherNode.prototype.isCompleted = function(nodeVisits) {
+	var result = false;
+
+	if(nodeVisits != null) {
+		//loop through all the node visits
+		for(var x=0; x<nodeVisits.length; x++) {
+			//get a node visit
+			var nodeVisit = nodeVisits[x];
+			
+			if(nodeVisit != null) {
+				//get the node states
+				var nodeStates = nodeVisit.nodeStates;
+				
+				if(nodeStates != null) {
+					if(nodeStates.length > 0) {
+						//there are node states so the student has completed the step
+						result = true;
 					}
 				}
-				if (!foundMin || !foundMax) isCompleted = false;
-			} else {
-				isCompleted = false;
 			}
 		}
 	}
-	return isCompleted;
+
+	return result;
 };
 
 /**

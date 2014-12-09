@@ -3132,8 +3132,6 @@ Grapher.prototype.processTagMaps = function() {
 					this.view.eventManager.fire('addActiveTagMapConstraint', [this.node.id, null, 'mustCompleteBeforeAdvancing', null, null,"Your graph needs some work before advancing."]);
 				} else if (functionName == "mustNotExceedAvgErrorBeforeAdvancing"){
 					this.view.eventManager.fire('addActiveTagMapConstraint', [this.node.id, null, 'mustCompleteBeforeAdvancing', null, null,"Your graph needs some work before advancing."]);
-				} else if (functionName == "mustSpanDomainBeforeAdvancing"){
-					this.view.eventManager.fire('addActiveTagMapConstraint', [this.node.id, null, 'mustCompleteBeforeAdvancing', null, null,"Your graph doesn't cover the entire x-axis."]);
 				}
 			}
 		}
