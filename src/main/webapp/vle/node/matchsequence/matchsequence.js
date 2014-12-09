@@ -397,6 +397,8 @@ MS.prototype.render = function() {
 				$promptDialog.open();
 			}
 		}
+	} else {
+		$('#matchHeader').addClass('prompt-inline');
 	}
 	  
 	var bucketsHtml = "";

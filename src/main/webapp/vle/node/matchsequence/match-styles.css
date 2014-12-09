@@ -266,13 +266,15 @@ body {
   -: ;margin-left: 1.9230769230769231rem;
   -: ;margin-right: 1.9230769230769231rem;
   margin-bottom: 0;
-  border-right: 1px solid #aaaaaa;
   -: ;width: 9.23076923076923rem;
 }
 @media (min-width: 768px) {
   #possibleScores {
     -: ;width: 15.384615384615385rem;
   }
+}
+#possibleScores .slick-track {
+  border-right: 1px solid #aaaaaa;
 }
 .score {
   margin-right: -1px;
