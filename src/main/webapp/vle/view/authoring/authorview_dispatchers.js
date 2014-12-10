@@ -55,8 +55,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.submitUpload();
 	} else if(type=='editProjectFile'){
 		obj.editProjectFile();
-	} else if(type=='exportProject'){
-		obj.exportProject();
 	} else if(type=='publishProject'){
 		obj.publishProject();
 	} else if(type=='whoIsEditing'){
@@ -103,10 +101,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.importSelectedItems();
 	} else if(type == 'deleteProject') {
 		obj.deleteProject();
-	} else if(type == 'findBrokenLinksInProject') {
-		obj.analyzeProject(type);
-	} else if(type == 'findUnusedAssetsInProject') {
-		obj.analyzeProject(type);
 	};
 };
 

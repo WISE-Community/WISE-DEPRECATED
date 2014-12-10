@@ -122,25 +122,22 @@ var view;
 			
 			<li><a onclick="view.openPremadeComments()"><img src="images/constraint.png" alt="find broken links in project" />Open Premade Comments for Project</a></li>
 			
-			<li><a onclick="eventManager.fire('findBrokenLinksInProject')"><img src="images/constraint.png" alt="find broken links in project" />Find Broken Links in Project</a></li>
+			<li><a onclick="view.analyzeProject('findBrokenLinksInProject')"><img src="images/constraint.png" alt="find broken links in project" />Find Broken Links in Project</a></li>
 			
-			<li><a onclick="eventManager.fire('findUnusedAssetsInProject')"><img src="images/constraint.png" alt="find unused assets in project" />Find Unused Assets in Project</a></li>
+			<li><a onclick="view.analyzeProject('findUnusedAssetsInProject')"><img src="images/constraint.png" alt="find unused assets in project" />Find Unused Assets in Project</a></li>
 			
 			<li><a onclick="eventManager.fire('deleteProject')"><img src="images/constraint.png" alt="delete project" />Delete Project</a></li>
 			
 			<li><a onclick="eventManager.fire('cleanProject')"><img src="images/edit-clear.png" alt="clean project" />Clean Project</a></li>
 			
-			 <li><a onclick="eventManager.fire('editProjectFile')"><img src="images/document-properties.png"
-			alt="edit project file icon" />Edit Project Data File</a></li>
+			 <li><a onclick="eventManager.fire('editProjectFile')"><img src="images/document-properties.png" alt="edit project file icon" />Edit Project Data File</a></li>
 			
 			<li><a onclick="eventManager.fire('authorConstraints')"><img src="images/constraint.png" alt="author constraints icon"/>Author
 			Student Navigation Constraints</a></li>
 			
-			<li><a onclick="eventManager.fire('exportProject')" ><img src="images/copyProject.png"
-			alt="Download Project as Zip File"  />Download Project</a></li>
+			<li><a onclick="view.exportProject()" ><img src="images/copyProject.png" alt="Download Project as Zip File"  />Download Project</a></li>
             			
-			<li><a class='last' onclick="eventManager.fire('reviewUpdateProject')" ><img src="images/constraint.png"
-			alt="Update Project"  />Update Project</a></li>
+			<li><a class='last' onclick="eventManager.fire('reviewUpdateProject')" ><img src="images/constraint.png" alt="Update Project"  />Update Project</a></li>
 	            </ul>
 	        </dd>
 	    </dl>

@@ -41,7 +41,6 @@ var componentloader = function(em, sl){
 				'contentTimedOut':[null,null], 
 				'fatalError':[null,null],
 				'retrieveProjectMetaDataCompleted':[null,null], 
-				'nullEvent':[null,null],
 				'retrieveAnnotationsCompleted':[null,null]
 			},
 			methods: {
@@ -278,7 +277,6 @@ var componentloader = function(em, sl){
 				'uploadAsset':[null,null], 
 				'viewAssets':[null,null], 
 				'submitUpload':[null,null],
-				'exportProject':[null,null],
 				'moveSelected':[null,null],
 				'deleteSelected':[null,null], 
 				'duplicateSelected':[null,null], 
@@ -308,8 +306,6 @@ var componentloader = function(em, sl){
 				'previewFrameLoaded':[null,null],
 				'cleanProject':[null,null],
 				'deleteProject':[null,null],
-				'findBrokenLinksInProject':[null,null],
-				'findUnusedAssetsInProject':[null,null],
 				'cleanClosingProjectStart':[null,null],
 				'cleanClosingProjectComplete':[null,null], 
 				'cleanLoadingProjectFileStart':[null,null], 
@@ -392,7 +388,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('uploadAsset', view.authorDispatcher, view);
 					view.eventManager.subscribe('viewAssets', view.authorDispatcher, view);
 					view.eventManager.subscribe('submitUpload', view.authorDispatcher, view);
-					view.eventManager.subscribe('exportProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('editProjectFile', view.authorDispatcher, view);
 					view.eventManager.subscribe('whoIsEditing', view.authorDispatcher, view);
 					view.eventManager.subscribe('previewFrameLoaded', view.authorDispatcher, view);
@@ -431,8 +426,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('closeStep', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('cleanProject', view.cleanDispatcher, view);
 					view.eventManager.subscribe('deleteProject', view.authorDispatcher, view);
-					view.eventManager.subscribe('findBrokenLinksInProject', view.authorDispatcher, view);
-					view.eventManager.subscribe('findUnusedAssetsInProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('cleanSavingProjectStart', view.cleanDispatcher, view);
 					view.eventManager.subscribe('cleanSavingProjectComplete', view.cleanDispatcher, view);
 					view.eventManager.subscribe('cleanClosingProjectStart', view.cleanDispatcher, view);
