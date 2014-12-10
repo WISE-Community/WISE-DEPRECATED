@@ -125,6 +125,5 @@ function editNewsItem(newsItemId) {
 </div>
 <div id="editNewsItemDialog" class="dialog"></div>
 <div id="addNewsItemDialog" class="dialog"></div>
-
 </body>
 </html>

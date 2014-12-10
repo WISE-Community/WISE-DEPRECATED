@@ -178,16 +178,16 @@ function validateForm(type) {
 							</div>
 							<div class="sectionContent">
 								<h5>
+									<a href="portal/manageportal.html"><spring:message
+											code='admin.index.configureWISESettings' /></a>
+								</h5>
+								<h5>
 									<a href="${contextPath}/pages/statistics.html"><spring:message
 											code='admin.index.statistics' /></a>
 								</h5>
 								<h5>
 									<a href="${contextPath}/admin/memorymonitor.html"><spring:message
 											code='admin.index.memoryMonitor' /></a>
-								</h5>
-								<h5>
-									<a href="portal/manageportal.html"><spring:message
-											code='admin.index.configureWISESettings' /></a>
 								</h5>
 								<table class="table table-condensed table-hover">
 									<thead style="background-color: antiquewhite">

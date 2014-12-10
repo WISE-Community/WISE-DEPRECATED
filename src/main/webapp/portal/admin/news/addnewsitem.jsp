@@ -4,14 +4,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<title><spring:message code="wiseAdmin" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
 
-<title><spring:message code="wiseAdmin" /></title>
 </head>
 <body>
 <h3><spring:message code="admin.news.addNewsItem" /></h3>
