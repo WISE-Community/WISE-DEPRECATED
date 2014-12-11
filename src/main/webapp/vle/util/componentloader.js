@@ -283,7 +283,6 @@ var componentloader = function(em, sl){
 				'useSelected':[null,null], 
 				'disengageSelectMode':[null,null],
 				'processChoice':[null,null], 
-				'editProjectFile':[null,null], 
 				'saveStep':[null,null], 
 				'saveAndCloseStep':[null,null], 
 				'authorStepModeChanged':[null,null], 
@@ -388,7 +387,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('uploadAsset', view.authorDispatcher, view);
 					view.eventManager.subscribe('viewAssets', view.authorDispatcher, view);
 					view.eventManager.subscribe('submitUpload', view.authorDispatcher, view);
-					view.eventManager.subscribe('editProjectFile', view.authorDispatcher, view);
 					view.eventManager.subscribe('whoIsEditing', view.authorDispatcher, view);
 					view.eventManager.subscribe('previewFrameLoaded', view.authorDispatcher, view);
 					view.eventManager.subscribe('reviewUpdateProject', view.authorDispatcher, view);
@@ -497,6 +495,7 @@ var componentloader = function(em, sl){
 					view.initializeCreateSequenceDialog();
 					view.initializeCreateNodeDialog();
 					view.initializeEditProjectFileDialog();
+					view.initializeEditProjectCSSDialog();
 					view.initializeAssetEditorDialog();
 					view.initializeCopyProjectDialog();
 					view.initializeEditProjectMetadataDialog();

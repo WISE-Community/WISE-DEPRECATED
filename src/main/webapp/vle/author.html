@@ -119,6 +119,10 @@ var view;
 				Create Teacher Review Sequence</a></li>
 				
 			<div id="listTitle">Advanced Users Only</div>
+
+			 <li><a onclick="view.editProjectCSS()"><img src="images/document-properties.png" alt="edit project css icon" />Edit Look and Feel of WISE</a></li>
+
+			 <li><a onclick="view.editProjectFile()"><img src="images/document-properties.png" alt="edit project file icon" />Edit Project Data File</a></li>
 			
 			<li><a onclick="view.openPremadeComments()"><img src="images/constraint.png" alt="find broken links in project" />Open Premade Comments for Project</a></li>
 			
@@ -130,7 +134,6 @@ var view;
 			
 			<li><a onclick="eventManager.fire('cleanProject')"><img src="images/edit-clear.png" alt="clean project" />Clean Project</a></li>
 			
-			 <li><a onclick="eventManager.fire('editProjectFile')"><img src="images/document-properties.png" alt="edit project file icon" />Edit Project Data File</a></li>
 			
 			<li><a onclick="eventManager.fire('authorConstraints')"><img src="images/constraint.png" alt="author constraints icon"/>Author
 			Student Navigation Constraints</a></li>
@@ -281,6 +284,15 @@ var view;
 <div class='bd'>
 	 <div id='editProjectDiv'> 
 	 	<textarea id='projectText' cols='110' rows='32' wrap='hard' name='param3' /></textarea>
+	 </div><br/>
+</div>
+</div>
+
+<div id="editProjectCSSDialog" style="display: none;">
+<div class='hd'>Edit Project CSS</div>
+<div class='bd'>
+	 <div id='editProjectCSSDiv'> 
+	 	<textarea id='projectCSS' cols='110' rows='32' wrap='hard' name='param3' /></textarea>
 	 </div><br/>
 </div>
 </div>

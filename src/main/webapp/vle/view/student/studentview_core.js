@@ -312,7 +312,6 @@ View.prototype.loadTheme = function(themeName){
 			height: 300,
 			buttons: [{text: view.getI18NString("ok"), click: function(){ $(this).dialog('close'); }}]
 		});
-
 	});
 };
 
@@ -511,6 +510,11 @@ View.prototype.onThemeLoad = function(){
 			
 			if (window.parent) {
 				window.parent.document.title = window.parent.document.title + ": " + this.getProject().getTitle();
+			}
+
+			// check if project-style-override file exists. If yes, load project-style-override
+			if (this.getConfig().getConfigParam("wiseStyleOverrideEnabled")) {
+				document.getElementsByTagName('head')[0].appendChild(createElement(document, 'link', {rel: 'stylesheet', type: 'text/css', href: this.projectStyleOverrideCSSURL}));
 			}
 		}
 		

@@ -406,6 +406,11 @@ Node.prototype.render = function(contentPanel, studentWork, disable) {
 		//prevent the backspace key from causing the browser to move back in navigation
 		this.contentPanel.document.onkeydown = preventBackspaceBrowserBack;
 	}
+	
+	// load project-specific style overrides, if it's enabled
+	if (this.view.getConfig().getConfigParam("wiseStyleOverrideEnabled")) {
+		this.contentPanel.document.getElementsByTagName('head')[0].appendChild(createElement(document, 'link', {rel: 'stylesheet', type: 'text/css', href: this.view.config.getConfigParam("getContentBaseUrl")+"/assets/wise_styles_override.css"}));
+	}
 };
 
 /**

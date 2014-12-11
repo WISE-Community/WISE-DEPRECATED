@@ -1384,8 +1384,10 @@ public class AuthorProjectController {
 	 * @param response
 	 * @return
 	 * @throws IOException
+	 * @throws ObjectNotFoundException 
 	 */
-	private ModelAndView handleGetConfig(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private ModelAndView handleGetConfig(HttpServletRequest request, HttpServletResponse response) throws IOException, ObjectNotFoundException{
+		
 		//get the user
 		User user = (User) request.getSession().getAttribute(User.CURRENT_USER_SESSION_KEY);
 
@@ -1448,9 +1450,33 @@ public class AuthorProjectController {
 			config.put("postPremadeCommentsUrl", postPremadeCommentsUrl);
 			config.put("wiseBaseURL", wiseBaseURL);
 			config.put("contextPath", contextPath);
+			
+			// if projectId provided, this is a request for preview
+			String projectIdStr = request.getParameter("projectId");
+			if(projectIdStr != null){
+				Project project = projectService.getById(projectIdStr);
+				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				// set the content url 
+				String getContentUrl = curriculumBaseWWW + rawProjectUrl;
+				
+				// get location of last separator in url 
+				int lastIndexOfSlash = getContentUrl.lastIndexOf("/");
+				if(lastIndexOfSlash==-1){ 
+					lastIndexOfSlash = getContentUrl.lastIndexOf("\\");
+				}
+				
+				// set the contentbase based on the contenturl 
+				String getContentBaseUrl = getContentUrl.substring(0, lastIndexOfSlash) + "/";
+
+				config.put("getContentBaseUrl", getContentBaseUrl);
+			}			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		
+		
+		
 
 		//set the string value of the JSON object in the response
 		response.getWriter().write(config.toString());

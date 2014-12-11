@@ -377,6 +377,47 @@ View.prototype.initializeEditProjectFileDialog = function(){
 };
 
 /**
+ * Creates and renders the dialog to edit the project CSS file
+ */
+View.prototype.initializeEditProjectCSSDialog = function(){
+	var view = this;
+	
+	var submit = function(){
+		var text = $('#projectCSS').val();
+		if(text && text != ''){
+			/* processes the response to the request to update project file after editing */
+			var success = function(t,x,o){
+				if(t!='success'){
+					o.notificationManager.notify('Unable to save project CSS to WISE server', 3);
+				} else {
+					o.loadProject(o.getProject().getUrl(), o.getProject().getContentBase(), true);
+					$('#editProjectCSSDialog').dialog('close');
+				}
+			};
+			
+			/* handles the failure case when the request to update the edited project file fails */
+			var failure = function(t,o){
+				o.notificationManager.notify('Unable to save project to the WISE server', 3);
+			};
+		} else {
+			view.notificationManager.notify('No project text found to save, aborting...', 3);
+		}
+		
+		var filename = "assets/wise_styles_override.css";
+		
+		text = encodeURIComponent(text);
+		
+		view.connectionManager.request('POST',1,view.requestUrl,{forward:'filemanager',projectId:view.portalProjectId,command:'updateFile',fileName:filename,data:text},success,view,failure);
+	};
+
+	var cancel = function(){
+		$('projectCSS').val('');
+	};
+	
+	$('#editProjectCSSDialog').dialog({autoOpen:false, draggable:false, width:900, buttons: {'Submit':submit}, close: cancel});
+};
+
+/**
  * Initializes and renders copy project dialog
  */
 View.prototype.initializeCopyProjectDialog = function (){
