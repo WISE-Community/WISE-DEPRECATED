@@ -313,25 +313,44 @@ GrapherNode.prototype.isCompleted = function(nodeVisits) {
 	var result = false;
 
 	if(nodeVisits != null) {
-		//loop through all the node visits
-		for(var x=0; x<nodeVisits.length; x++) {
-			//get a node visit
-			var nodeVisit = nodeVisits[x];
+		//get the step content
+		var content = this.content.getContentJSON();
+		
+		if(content != null && content.externalScript != null && content.externalScriptSetsIsCompleted == true) {
+			/*
+			 * the step uses an external script and sets isCompleted in the 
+			 * external script so in order for the student to complete
+			 * the step there must be a field of isCompleted with value 
+			 * true in one of the node states
+			 */
+			result = this.view.nodeStateInNodeVisitsIsCompleted(nodeVisits);
+		} else {
+			/*
+			 * this is a regular step that does not use an external script
+			 * so we will just check if there are any node states
+			 */
 			
-			if(nodeVisit != null) {
-				//get the node states
-				var nodeStates = nodeVisit.nodeStates;
+			//loop through all the node visits
+			for(var x=0; x<nodeVisits.length; x++) {
+				//get a node visit
+				var nodeVisit = nodeVisits[x];
 				
-				if(nodeStates != null) {
-					if(nodeStates.length > 0) {
-						//there are node states so the student has completed the step
-						result = true;
+				if(nodeVisit != null) {
+					//get the node states
+					var nodeStates = nodeVisit.nodeStates;
+					
+					if(nodeStates != null) {
+						if(nodeStates.length > 0) {
+							//there are node states so the student has completed the step
+							result = true;
+							break;
+						}
 					}
 				}
 			}
 		}
 	}
-
+	
 	return result;
 };
 

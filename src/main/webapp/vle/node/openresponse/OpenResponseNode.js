@@ -677,16 +677,55 @@ OpenResponseNode.prototype.isCompleted = function(nodeVisits) {
 			}
 		}
 		
+		
+		if(content != null && content.externalScript != null && content.externalScriptSetsIsCompleted == true) {
+			/*
+			 * the step uses an external script and sets isCompleted in the 
+			 * external script so in order for the student to complete
+			 * the step there must be a field of isCompleted with value 
+			 * true in one of the node states
+			 */
+			result = this.view.nodeStateInNodeVisitsIsCompleted(nodeVisits);
+		} else {
+			/*
+			 * this is a regular step that does not use an external script
+			 * so we will check if any of the node states has a response
+			 */
 
-		//get the latest node state for this step
-		var nodeState = this.view.getLatestNodeStateWithWorkFromNodeVisits(nodeVisits);
-			
-		if(nodeState != null && nodeState != '') {
-			if(nodeState.response != null && nodeState.response != '') {
-				//the student has completed this step
-				result = true;
+			//loop through all the node visits
+			for(var i=0; i<nodeVisits.length; i++) {
+				//get a node visit
+				var nodeVisit = nodeVisits[i];
+				
+				if(nodeVisit != null) {
+					//get the node states
+					var nodeStates = nodeVisit.nodeStates;
+					
+					if(nodeStates != null) {
+						//loop through all the node states
+						for(var j=0; j<nodeStates.length; j++) {
+							//get a node state
+							var nodeState = nodeStates[j];
+							
+							if(nodeState != null && nodeState != '') {
+								//get the response
+								var nodeStateResponse = nodeState.response;
+								
+								if(nodeStateResponse != null && nodeStateResponse != '') {
+									//the student has completed this step
+									result = true;
+									break;
+								}
+							}
+						}
+						
+						if(result == true) {
+							break;
+						}
+					}
+				}
 			}
-		}	
+		}
 	}
 	
 	return result;
