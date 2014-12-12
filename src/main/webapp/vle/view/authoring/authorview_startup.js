@@ -32,6 +32,10 @@ View.prototype.startAuthorMode = function(url, command, relativeProjectUrl, proj
 	//create the config url
 	var configUrl = this.portalUrl + "?command=getConfig";
 	
+	if (projectId != null && projectId != "") {
+		configUrl += "&projectId="+projectId;
+	}
+	
 	//create the config
 	this.config = this.createConfig(createContent(configUrl));
 	this.eventManager.fire('loadConfigCompleted');

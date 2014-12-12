@@ -12,6 +12,7 @@
  * @param lazyLoading
  */
 View.prototype.loadProject = function(url, contentBase, lazyLoading){
+	
 	/* success called when project metadata exists, create project meta content and load project according
 	 * to lastEdited and lastMinified times if specified in metadata file */
 	var success = function(t,x,view){
@@ -105,6 +106,41 @@ View.prototype.loadProject = function(url, contentBase, lazyLoading){
 		this.isLoadedProjectMinified = false;
 		this.eventManager.fire('loadingProjectCompleted');
 	}
+	
+	this.loadProjectCSS(url, contentBase, lazyLoading);
+};
+
+/**
+ * Loads the project CSS
+ * 
+ * @param url
+ * @param contentBase
+ * @param lazyLoading
+ */
+View.prototype.loadProjectCSS = function(url, contentBase, lazyLoading){
+	
+	
+	if (this.portalProjectId != null && this.portalProjectId != "") {
+		//we're in authoring mode...create the config url
+		var configUrl = this.portalUrl + "?command=getConfig";
+		configUrl += "&projectId="+this.portalProjectId;
+		//re-create the config
+		this.config = this.createConfig(createContent(configUrl));
+	}
+	
+	this.getConfig().setConfigParam("wiseStyleOverrideEnabled", false);  // disabled CSS override by default
+	this.projectCSS = null;
+	this.projectStyleOverrideCSSURL=this.config.getConfigParam("getContentBaseUrl")+"/assets/wise_styles_override.css";
+	var extraParams = null;
+	this.connectionManager.request('GET', 2, this.projectStyleOverrideCSSURL, extraParams, 
+			function(responseText, responseXML, view) {
+				if (responseText) {
+					// projectStyleOverrideCSSURL exists, so we are overriding default WISE styles with its content
+					view.getConfig().setConfigParam("wiseStyleOverrideEnabled", true);
+					view.projectCSS=responseText;
+					document.getElementsByTagName('head')[0].appendChild(createElement(document, 'link', {rel: 'stylesheet', type: 'text/css', href: view.projectStyleOverrideCSSURL}));
+				};
+			}, this);
 };
 
 /**

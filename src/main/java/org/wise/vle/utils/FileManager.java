@@ -328,7 +328,13 @@ public class FileManager {
 		ensureDir(parent);
 		
 		//all project json files will be given the filename of wise4.project.json
-		File newFile = new File(createNewprojectPath(parent), "wise4.project.json");
+		File newProjectPath = createNewprojectPath(parent);
+		
+		// also make assets directory
+		File newProjectAssetsDir = new File(newProjectPath, "assets");
+		newProjectAssetsDir.mkdir();
+		
+		File newFile = new File(newProjectPath, "wise4.project.json");
 		
 		try {
 			//write the empty project json to the file

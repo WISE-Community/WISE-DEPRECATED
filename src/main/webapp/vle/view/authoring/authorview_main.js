@@ -618,6 +618,19 @@ View.prototype.editProjectFile = function(){
 };
 
 
+/**
+ * Sets necessary form variables, confirms that project has been saved and
+ * shows edit project dialog.
+ */
+View.prototype.editProjectCSS = function(){
+	if(this.projectCSS == null){
+		this.projectCSS="";
+	}
+	$('#projectCSS').val(this.projectCSS);
+	$('#editProjectCSSDialog').show();
+	$('#editProjectCSSDialog').dialog('open');
+};
+
 
 /**
  * Initializes and renders asset editor dialog with clean up function.
