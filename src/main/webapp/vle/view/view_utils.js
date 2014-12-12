@@ -2039,6 +2039,44 @@ View.prototype.getExternalScriptSuccess = function(script, textStatus, jqXHR) {
 	view.stepObject = null;
 };
 
+/**
+ * Check if any of the node states in the node node visits is completed
+ * @param nodeVisits an array of node visits
+ * @return whether any of the node states in the node visits is completed
+ */
+View.prototype.nodeStateInNodeVisitsIsCompleted = function(nodeVisits) {
+	
+	if(nodeVisits != null) {
+		//loop through all the node visits
+		for(var x=0; x<nodeVisits.length; x++) {
+			//get a node visit
+			var nodeVisit = nodeVisits[x];
+			
+			if(nodeVisit != null) {
+				//get the node states
+				var nodeStates = nodeVisit.nodeStates;
+				
+				if(nodeStates != null) {
+					//loop through all the node states
+					for(var y=0; y<nodeStates.length; y++) {
+						//get a node state
+						var nodeState = nodeStates[y];
+						
+						if(nodeState != null) {
+							//check if the node state is completed by looking at the value of the isCompleted field
+							if(nodeState.isCompleted) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return false;
+}
+
 // preserve carriage return values when retrieving value from textareas in jQuery (see http://api.jquery.com/val/)
 $.valHooks.textarea = {
 	get: function( elem ) {
