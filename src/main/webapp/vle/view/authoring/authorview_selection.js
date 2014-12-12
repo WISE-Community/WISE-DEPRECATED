@@ -27,16 +27,11 @@ View.prototype.selectBoxClick = function(id){
 	} else if(id!='uSeq' && id!='uNode' && id.split('--')[1]!=this.getProject().getRootNode().id) {
 		var node = $('#' + this.escapeIdForJquery(id));
 		
-		//if(this.keystrokeManager.isShiftkeydown()){ //toggle selected for node
 			if(node.hasClass('selected')){
 				node.removeClass('selected');
 			} else {
 				node.addClass('selected');
 			}
-		/*} else { //clear previous and select only node
-			this.clearAllSelected();
-			node.addClass('selected');
-		}*/
 	}
 	this.updateSelectCounts();
 };
@@ -63,7 +58,7 @@ View.prototype.selectAll = function(){
 		$('.seq').addClass('selected');
 		$('#editNodeTools button').removeAttr('disabled');
 		$('#editNodeTools .action-icon').removeClass('action-icon-inactive');
-		eventManager.fire('unhideNodes'); // show all steps
+		this.utils.unhideNodes(); // show all steps
 		this.updateSelectCounts();
 	}
 };
@@ -335,7 +330,7 @@ View.prototype.moveSelected = function(){
 					$(this).addClass('moving');
 				}
 			});
-			view.eventManager.fire("hideNodes");
+			view.utils.hideNodes();
 		}
 	});
 	
@@ -388,54 +383,6 @@ View.prototype.removeChildrenHTML = function(view, node){
 		if(sib){
 			sib = sib.childNodes[1].firstChild;
 		}
-	}
-};
-
-/**
- * Verifies and retrieves selected elements, creates duplicates of them and prompts
- * the user to place them in the project.
- */
-View.prototype.useSelected = function(){
-	var selected = this.getSelected();
-	
-	/* if any sequences or the master sequence is selected, notify user and return */
-	if(selected.seqs.size()>0 || selected.master.size()>0){
-		this.notificationManager.notify('Neither activities nor the master sequence can be duplicated, ignoring.', 3);
-		return;
-	}
-	
-	/* if more than one node is selected or none is selected, notify user and return */
-	if(selected.nodes.size()!=1){
-		this.notificationManager.notify('Select at least one, but no more than one, step before activating this tool.',3);
-		return;
-	}
-	
-	if(confirm('ADVISORY: This tool creates a mirror copy of the selected item not a true duplicate.  Mirror copies remain linked and share the same data. Mirror copies should only be used for Adaptive (branching) projects that branch, otherwise use the Duplicate tool. Are you sure you wish to continue?')){
-		/* validation completed, proceed with creating duplicate nodes 
-		 * for any that remain in the list */
-		
-		/* create a duplicate node for the node in the list */
-		var listNode = selected.nodes.get(0);
-		var projectNode = this.getProject().getNodeById(listNode.id.split('--')[1]);
-		
-		/* if the specified node is also a duplicate, we want the new duplicate
-		 * to reference the original node, not another duplicate */
-		if(projectNode.type=='DuplicateNode'){
-			projectNode = projectNode.getNode(); //get node returns the real node for this duplicate
-		}
-		
-		var duplicateNode = new DuplicateNode('DuplicateNode', this);
-		duplicateNode.id = this.getProject().generateUniqueId('duplicate');
-		duplicateNode.realNode = projectNode;
-		this.getProject().getLeafNodes().push(duplicateNode);
-		
-		/* duplicate node created, so save the project and refresh the project
-		 * starting the selection tool so that the duplicate may be placed in
-		 * the project. */
-		this.saveProject();
-		this.placeNode = true;
-		this.placeNodeId = duplicateNode.id;
-		this.loadProject(this.getProject().getContentBase() + this.utils.getSeparator(this.getProject().getContentBase()) + this.getProject().getProjectFilename(), this.getProject().getContentBase(), true);
 	}
 };
 
@@ -869,7 +816,7 @@ View.prototype.disengageSelectMode = function(val){
 	$('.reviewAdded').each(function(){
 		$(this).removeClass('reviewAdded');
 	});
-	this.eventManager.fire("unhideNodes");
+	this.utils.unhideNodes();
 };
 
 /**

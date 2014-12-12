@@ -9,10 +9,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.projectOptionSelected();
 	} else if(type=='loadingProjectCompleted'){
 		obj.onProjectLoaded();
-	} else if(type=='hideNodes'){
-		obj.utils.hideNodes();
-	} else if(type=='unhideNodes'){
-		obj.utils.unhideNodes();
 	} else if(type=='projectTitleChanged'){
 		obj.projectTitleChanged();
 	} else if(type=='stepLevelChanged'){
@@ -33,14 +29,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.nodeTitleChanged(args[0]);
 	} else if(type=='launchPrevWork'){
 		obj.launchPrevWork(args[0]);
-	} else if(type=='moveSelectedLeft'){
-		obj.moveSelectedLeft();
-	} else if(type=='moveSelectedRight'){
-		obj.moveSelectedRight();
-	} else if(type=='createNewSequence'){
-		obj.createNewSequence();
-	} else if(type=='createNewNode'){
-		obj.createNewNode();
 	} else if(type=='nodeTypeSelected'){
 		obj.nodeTypeSelected();
 	} else if(type=='uploadAsset'){
@@ -51,8 +39,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		} else {
 			obj.viewAssets();
 		}
-	} else if(type=='submitUpload'){
-		obj.submitUpload();
 	} else if(type=='publishProject'){
 		obj.publishProject();
 	} else if(type=='whoIsEditing'){
@@ -69,14 +55,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.reviewUpdateProject();
 	} else if(type=='updateProject') {
 		obj.updateProject();
-	} else if(type=='openStepTypeDescriptions') {
-		obj.openStepTypeDescriptions();
-	} else if(type == 'displayTagView') {
-		obj.displayTagView();
-	} else if(type == 'displayImportView') {
-		obj.displayImportView();
-	} else if(type == 'displayIconsView') {
-		obj.displayIconsView();
 	} else if(type == 'populateAddTagSelect') {
 		obj.populateAddTagSelect(args[0]);
 	} else if(type == 'populateAddTagMapSelect') {
@@ -97,8 +75,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.openProjectInImportView(args[0]);
 	} else if(type == 'importSelectedItems') {
 		obj.importSelectedItems();
-	} else if(type == 'deleteProject') {
-		obj.deleteProject();
 	};
 };
 
@@ -123,18 +99,6 @@ View.prototype.selectDispatcher = function(type,args,obj){
 		obj.selectClick(args[0]);
 	} else if(type=='selectBoxClick'){
 		obj.selectBoxClick(args[0]);
-	} else if(type=='selectAll'){
-		obj.selectAll();
-	} else if(type=='clearAll'){
-		obj.clearAllSelected();
-	} else if(type=='moveSelected'){
-		obj.moveSelected();
-	} else if(type=='deleteSelected'){
-		obj.deleteSelected();
-	} else if(type=='duplicateSelected'){
-		obj.duplicateSelected();
-	} else if(type=='useSelected'){
-		obj.useSelected();
 	} else if(type=='disengageSelectMode'){
 		obj.disengageSelectMode(args[0]);
 	} else if(type=='processChoice'){
@@ -176,12 +140,6 @@ View.prototype.authorStepDispatcher = function(type,args,obj){
 		obj.saveStep();
 	} else if(type=='saveAndCloseStep'){
 		obj.saveStep(true);
-	} else if(type=='authorStepModeChanged'){
-		obj.authorStepModeChanged(args[0]);
-	} else if(type=='updateRefreshOption'){
-		obj.updateRefreshOption();
-	} else if(type=='refreshNow'){
-		obj.refreshNow();
 	} else if(type=='editHints'){
 		obj.editHints(args[0]);
 	} else if(type=='addHint'){

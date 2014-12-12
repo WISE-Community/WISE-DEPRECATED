@@ -89,7 +89,7 @@ var view;
 		<div id="projectButtons">
 			<button disabled="true" onclick="view.saveProject();" id="saveProjectButton" title='Save Project'><img src="images/saveProject.png" alt="save project icon" /><br />
 				Save Project</button>
-			<button disabled="true" onclick="eventManager.fire('viewAssets')" title='Add/Edit Project Files'><img src="images/uploadArt.png" alt="Manage Art/Files" /><br />
+			<button disabled="true" onclick="view.viewAssets()" title='Add/Edit Project Files'><img src="images/uploadArt.png" alt="Manage Art/Files" /><br />
 				Manage Art/Files</button>
 			<button disabled="true" onclick='view.editProjectMetadata();' id='editprojectmetaLI' title='Edit Lesson Plan & Project Details'><img src="images/editProjectFile.png"
 				alt="edit project file icon" /><br/>Edit Info</button>
@@ -130,7 +130,7 @@ var view;
 			
 			<li><a onclick="view.analyzeProject('findUnusedAssetsInProject')"><img src="images/constraint.png" alt="find unused assets in project" />Find Unused Assets in Project</a></li>
 			
-			<li><a onclick="eventManager.fire('deleteProject')"><img src="images/constraint.png" alt="delete project" />Delete Project</a></li>
+			<li><a onclick="view.deleteProject()"><img src="images/constraint.png" alt="delete project" />Delete Project</a></li>
 			
 			<li><a onclick="eventManager.fire('cleanProject')"><img src="images/edit-clear.png" alt="clean project" />Clean Project</a></li>
 			
@@ -191,31 +191,30 @@ var view;
 
 <div id='projectTools'>
 	<div id='selectNodeTools'>
-		<button class='first' title='Select All Steps & Activities' onclick='eventManager.fire("selectAll");'><span class='tool-icon-left action-icon action-icon-select'></span><span class='tool-label'>Select All</span></button>
-		<button class='last' title='Deselect All Steps & Activities' onclick='eventManager.fire("clearAll");'><span class='tool-icon-left action-icon action-icon-deselect'></span><span class='tool-label'>Select None</span></button>
+		<button class='first' title='Select All Steps & Activities' onclick='view.selectAll();'><span class='tool-icon-left action-icon action-icon-select'></span><span class='tool-label'>Select All</span></button>
+		<button class='last' title='Deselect All Steps & Activities' onclick='view.clearAllSelected();'><span class='tool-icon-left action-icon action-icon-deselect'></span><span class='tool-label'>Select None</span></button>
 	</div>
 	<div id='createNodeTools'>
-		<button id='newSequence' class='first' title='Add New Activity to Project' onclick='eventManager.fire("createNewSequence");'><span class='tool-icon action-icon action-icon-new2'></span><span class='tool-label'>Add Activity</span></button>
-		<button id='newNode' class='last' title='Add New Step to Project' onclick='eventManager.fire("createNewNode");'><span class='tool-icon action-icon action-icon-new'></span><span class='tool-label'>Add Step</span></button>
+		<button id='newSequence' class='first' title='Add New Activity to Project' onclick='view.createNewSequence();'><span class='tool-icon action-icon action-icon-new2'></span><span class='tool-label'>Add Activity</span></button>
+		<button id='newNode' class='last' title='Add New Step to Project' onclick='view.createNewNode();'><span class='tool-icon action-icon action-icon-new'></span><span class='tool-label'>Add Step</span></button>
 	</div>
 	<div id='editNodeTools'>
-		<button id='moveSelected' disabled='true' class='first' title='Move Selected Items' onclick='eventManager.fire("moveSelected");'><span class='tool-icon action-icon action-icon-move action-icon-inactive'></span><span class='tool-label'>Move</span></button>
-		<button id='duplicateSelected' disabled='true' class='mid' title='Duplicate Selected Items' onclick='eventManager.fire("duplicateSelected");'><span class='tool-icon action-icon action-icon-copy action-icon-inactive'></span><span class='tool-label'>Duplicate</span></button>
-		<!-- <button id='useButton' disabled='true' class='mid' title='Mirror Selected Step (Make Data Clone)' onclick='eventManager.fire("useSelected");' ><span class='tool-icon action-icon action-icon-clone action-icon-inactive'></span><span class='tool-label'>Mirror</span></button> -->
-		<button id='deleteSelected' disabled='true' class='last' title='Delete Selected Items' onclick='eventManager.fire("deleteSelected");'><span class='tool-icon action-icon action-icon-delete action-icon-inactive'></span><span class='tool-label'>Delete</span></button>
+		<button id='moveSelected' disabled='true' class='first' title='Move Selected Items' onclick='view.moveSelected();'><span class='tool-icon action-icon action-icon-move action-icon-inactive'></span><span class='tool-label'>Move</span></button>
+		<button id='duplicateSelected' disabled='true' class='mid' title='Duplicate Selected Items' onclick='view.duplicateSelected();'><span class='tool-icon action-icon action-icon-copy action-icon-inactive'></span><span class='tool-label'>Duplicate</span></button>
+		<button id='deleteSelected' disabled='true' class='last' title='Delete Selected Items' onclick='view.deleteSelected();'><span class='tool-icon action-icon action-icon-delete action-icon-inactive'></span><span class='tool-label'>Delete</span></button>
 	</div>
 	<div id='tagTools'>
-		<button id='displayTagView' title='Tags' onclick='eventManager.fire("displayTagView");'><span class='tool-icon action-icon action-icon-copy action-icon-inactive'></span><span class='tool-label'>Tags</span></button>
+		<button id='displayTagView' title='Tags' onclick='view.displayTagView();'><span class='tool-icon action-icon action-icon-copy action-icon-inactive'></span><span class='tool-label'>Tags</span></button>
 	</div>
 	<div id='importTools'>
-		<button id='displayImportView' title='Import' onclick='eventManager.fire("displayImportView");'><span class='tool-icon action-icon action-icon-copy action-icon-inactive'></span><span class='tool-label'>Import</span></button>
+		<button id='displayImportView' title='Import' onclick='view.displayImportView();'><span class='tool-icon action-icon action-icon-copy action-icon-inactive'></span><span class='tool-label'>Import</span></button>
 	</div>
 	<div id='iconsTools'>
-		<button id='displayIconsView' title='Icons' onclick='eventManager.fire("displayIconsView");'><span class='tool-icon action-icon action-icon-copy action-icon-inactive'></span><span class='tool-label'>Icons</span></button>
+		<button id='displayIconsView' title='Icons' onclick='view.displayIconsView();'><span class='tool-icon action-icon action-icon-copy action-icon-inactive'></span><span class='tool-label'>Icons</span></button>
 	</div>
 	<div id='visibiltyNodeTools'>
-		<button id='hideNodesBtn' title='Hide All Steps in Project' onclick='eventManager.fire("hideNodes");'><span class='tool-icon action-icon action-icon-hide'></span><span class='tool-label'>Hide Steps</span></button>
-		<button id='showNodesBtn' title='Show All Steps in Project' onclick='eventManager.fire("unhideNodes");' class='hidden'><span class='tool-icon action-icon action-icon-show'></span><span class='tool-label'>Show Steps</span></button>
+		<button id='hideNodesBtn' title='Hide All Steps in Project' onclick='view.utils.hideNodes();'><span class='tool-icon action-icon action-icon-hide'></span><span class='tool-label'>Hide Steps</span></button>
+		<button id='showNodesBtn' title='Show All Steps in Project' onclick='view.utils.unhideNodes();' class='hidden'><span class='tool-icon action-icon action-icon-show'></span><span class='tool-label'>Show Steps</span></button>
 	</div>
 </div>
 
@@ -273,7 +272,7 @@ var view;
 		<select id='createNodeType' onchange='eventManager.fire("nodeTypeSelected");'>
 			<option value=""></option>
 		</select>
-		<a onclick='eventManager.fire("openStepTypeDescriptions")' style='color:blue;text-decoration:underline'>Step Type Descriptions</a>
+		<a onclick='view.openStepTypeDescriptions()' style='color:blue;text-decoration:underline'>Step Type Descriptions</a>
 		<br/>
 	</div>
 </div>
@@ -299,9 +298,9 @@ var view;
 
 <div id='assetEditorDialog' style="display: none;">
 <div class='hd'>
-	<div>Upload a file to the WISE4 server:</div>
+	<div>Upload a file to the WISE server:</div>
 	<div id='assetUploaderBodyDiv' class='bd'>
-		<input type='file' id='uploadAssetFile' name='uploadAssetFile' size='50' onchange="eventManager.fire('submitUpload')"></input><div id='assetProcessing' style='display:none;'><img class='loadingImg' src='images/ajax-loader.gif' alt='loading...' /></div>
+		<input type='file' id='uploadAssetFile' name='uploadAssetFile' size='50' onchange="view.submitUpload()"></input><div id='assetProcessing' style='display:none;'><img class='loadingImg' src='images/ajax-loader.gif' alt='loading...' /></div>
 	</div>
 </div>
 <div class='bd'><div>Existing Files: </div>
@@ -496,8 +495,8 @@ var view;
 					<select id='selectTo' size='15' multiple='multiple'></select>
 				</td>
 				<td id='buttCol'>
-					<input type='button' value='&lt;-- Add' onclick='eventManager.fire("moveSelectedLeft")'></input></br></br>
-					<input type='button' value='Remove --&gt;' onclick='eventManager.fire("moveSelectedRight")'></input>
+					<input type='button' value='&lt;-- Add' onclick='view.moveSelectedLeft()'></input></br></br>
+					<input type='button' value='Remove --&gt;' onclick='view.moveSelectedRight()'></input>
 				</td>
 				<td id='fromCol'>
 					Previous<br> Assessment Steps:</br></br>
@@ -514,10 +513,10 @@ var view;
 	<div id='authorStepHeader' class='authorStepDialog'>
 	<span>
 					Editor View:
-					<input type='radio' id='easyTrue' name='radioMode' onclick='eventManager.fire("authorStepModeChanged","true")'>Simple</input>
-					<input type='radio' id='easyFalse' name='radioMode' onclick='eventManager.fire("authorStepModeChanged","false")'/>Advanced</input>
-					<input type='checkbox' id='refreshCheck' onclick='eventManager.fire("updateRefreshOption")' CHECKED>Refresh As I Type</input>
-					<input type='button' id='refreshButt' onclick='eventManager.fire("refreshNow")' value='Refresh Now'></input>
+					<input type='radio' id='easyTrue' name='radioMode' onclick='view.authorStepModeChanged("true")'>Simple</input>
+					<input type='radio' id='easyFalse' name='radioMode' onclick='view.authorStepModeChanged("false")'/>Advanced</input>
+					<input type='checkbox' id='refreshCheck' onclick='view.updateRefreshOption()' CHECKED>Refresh As I Type</input>
+					<input type='button' id='refreshButt' onclick='view.refreshNow()' value='Refresh Now'></input>
 					<input type='button' id='hintsButt' onclick='eventManager.fire("editHints",[0])' value='Edit Hints'></input>
 	</span>
 	
