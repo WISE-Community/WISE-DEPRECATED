@@ -271,7 +271,6 @@ var componentloader = function(em, sl){
 				'disengageSelectMode':[null,null],
 				'processChoice':[null,null], 
 				'saveStep':[null,null], 
-				'saveAndCloseStep':[null,null], 
 				'editHints':[null,null],
 				'addHint':[null,null],
 				'deleteHint':[null,null],
@@ -279,7 +278,6 @@ var componentloader = function(em, sl){
 				'saveHints':[null,null],
 				'sourceUpdated':[null,null], 
 				'closeOnStepSaved':[null,null], 
-				'closeStep':[null,null], 
 				'maxScoreUpdated':[null,null],
 				'postLevelChanged':[null,null], 
 				'setLastEdited':[null,null], 
@@ -375,7 +373,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('postLevelChanged', view.metaDispatcher, view);
 					view.eventManager.subscribe('setLastEdited', view.metaDispatcher, view);
 					view.eventManager.subscribe('saveStep', view.authorStepDispatcher, view);
-					view.eventManager.subscribe('saveAndCloseStep', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('editHints', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('addHint', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('deleteHint', view.authorStepDispatcher, view);
@@ -383,7 +380,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('saveHints', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('sourceUpdated', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('closeOnStepSaved', view.authorStepDispatcher, view);
-					view.eventManager.subscribe('closeStep', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('cleanProject', view.cleanDispatcher, view);
 					view.eventManager.subscribe('cleanSavingProjectStart', view.cleanDispatcher, view);
 					view.eventManager.subscribe('cleanSavingProjectComplete', view.cleanDispatcher, view);
@@ -660,18 +656,12 @@ var componentloader = function(em, sl){
 			events:{
 				'nodeSelectorSelected':[null,null],
 				'nodeSelectorCanceled':[null,null],
-				'createLink':[null,null],
-				'linkToNodeChanged':[null,null],
-				'removeLinkTo':[null,null],
-				'stepPromptChanged':[null, null],
 				'stepStudentResponseBoxSizeChanged':[null, null],
 				'stepRichTextEditorToggleChanged':[null, null],
 				'stepStarterSentenceAuthoringOptionChanged':[null, null],
 				'stepStarterSentenceAuthoringSentenceChanged':[null, null],
-				'cRaterVerify':[null, null],
 				'cRaterItemTypeChanged':[null,null],
 				'cRaterItemIdChanged':[null, null],
-				'cRaterFeedbackChanged':[null, null],
 				'cRaterDisplayScoreToStudentChanged':[null, null],
 				'cRaterDisplayFeedbackToStudentChanged':[null, null],
 				'cRaterMustSubmitAndReviseBeforeExitChanged':[null, null],
@@ -680,7 +670,6 @@ var componentloader = function(em, sl){
 				'cRaterAddFeedback':[null, null],
 				'cRaterRemoveFeedback':[null, null],
 				'cRaterMaxCheckAnswersChanged':[null, null],
-				'enableCRater':[null, null],
 				'stepIconUpdated':[null, null],
 				'cRaterStudentActionUpdated':[null, null]
 			},
@@ -689,19 +678,13 @@ var componentloader = function(em, sl){
 				init:function(view){
 					view.eventManager.subscribe('nodeSelectorSelected', view.linkManager.dispatcher, view);
 					view.eventManager.subscribe('nodeSelectorCanceled', view.linkManager.dispatcher, view);
-					view.eventManager.subscribe('createLink', view.linkManager.dispatcher, view);
-					view.eventManager.subscribe('linkToNodeChanged', view.linkManager.dispatcher, view);
-					view.eventManager.subscribe('removeLinkTo', view.linkManager.dispatcher, view);
 					view.eventManager.subscribe('contentRenderCompleted', view.linkManager.dispatcher, view);
-					view.eventManager.subscribe('stepPromptChanged', view.promptManager.dispatcher, view);
 					view.eventManager.subscribe('stepStudentResponseBoxSizeChanged', view.studentResponseBoxSizeManager.dispatcher, view);
 					view.eventManager.subscribe('stepRichTextEditorToggleChanged', view.richTextEditorToggleManager.dispatcher, view);
 					view.eventManager.subscribe('stepStarterSentenceAuthoringOptionChanged', view.starterSentenceAuthoringManager.dispatcher, view);
 					view.eventManager.subscribe('stepStarterSentenceAuthoringSentenceChanged', view.starterSentenceAuthoringManager.dispatcher, view);
-					view.eventManager.subscribe('cRaterVerify', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterItemIdChanged', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterItemTypeChanged', view.cRaterManager.dispatcher, view);
-					view.eventManager.subscribe('cRaterFeedbackChanged', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterDisplayScoreToStudentChanged', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterDisplayFeedbackToStudentChanged', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterMustSubmitAndReviseBeforeExitChanged', view.cRaterManager.dispatcher, view);
@@ -710,7 +693,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('cRaterAddFeedback', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterRemoveFeedback', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterMaxCheckAnswersChanged', view.cRaterManager.dispatcher, view);
-					view.eventManager.subscribe('enableCRater', view.cRaterManager.dispatcher, view);
 					view.eventManager.subscribe('stepIconUpdated', view.stepIconsManager.dispatcher, view);
 					view.eventManager.subscribe('cRaterStudentActionUpdated', view.cRaterManager.dispatcher, view);
 				}

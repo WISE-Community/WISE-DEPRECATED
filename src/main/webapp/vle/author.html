@@ -522,8 +522,8 @@ var view;
 	
 		<div id="authorNavButtons" style='float:right'>
 			<input type='button' value='Save' onclick='eventManager.fire("saveStep")'/>
-			<input type='button' value='Save & Close' onclick='eventManager.fire("saveAndCloseStep")'/>
-			<input type='button' value='Close' onclick='eventManager.fire("closeStep")'/>
+			<input type='button' value='Save & Close' onclick='view.saveStep(true);'/>
+			<input type='button' value='Close' onclick='view.closeStep()'/>
 		</div>
 	</div>
 	<div id='authorStepPanel' class='authorStepDialog'>
@@ -567,7 +567,7 @@ var view;
 </div>
 
 <div id='promptDiv' class='authoringComponent' style='display:none;'>
-	<textarea id='promptInput' name='promptInput' cols='85' wrap='hard' onkeyup="eventManager.fire('stepPromptChanged')"></textarea>
+	<textarea id='promptInput' name='promptInput' cols='85' wrap='hard' onkeyup="view.updatePrompt();"></textarea>
 </div>
 
 <div id='linkContainer' style='display:none;'>
@@ -578,18 +578,18 @@ var view;
 	Existing Links:
 	<div id='existingLinksDiv'></div><br/>
 	<div id='buttonDiv'>
-		<input type='button' value='Create New Link' onclick='eventManager.fire("createLink")'></input>
+		<input type='button' value='Create New Link' onclick='view.linkManager.createLink(view)'></input>
 	</div>
 </div>
 </div>
 
 <div id='cRaterDiv' style='display:none;'>
-	Enable CRater <input id='enableCRaterCheckbox' name='enableCRaterCheckbox' type='checkbox' onclick='eventManager.fire("enableCRater")' />
+	Enable CRater <input id='enableCRaterCheckbox' name='enableCRaterCheckbox' type='checkbox' onclick='view.updateEnableCRater();' />
 	<div id='cRaterSettingsDiv' style='display:none;'>
 		Type: <input id='cRaterItemTypeCRATER' name='cRaterItemTypeCheckbox' type='radio' value='cRaterItemTypeCRATER' checked='checked' onclick='eventManager.fire("cRaterItemTypeChanged", ["CRATER"])' />CRater
 		<input id='cRaterItemTypeHENRY' name='cRaterItemTypeCheckbox' type='radio' value='cRaterItemTypeHENRY' onclick='eventManager.fire("cRaterItemTypeChanged", ["HENRY"])' />HENRY
 		<br>
-		CRater Item Id: <input id='cRaterItemIdInput' name='cRaterItemIdInput' type='text' size=15 onkeyup='eventManager.fire("cRaterItemIdChanged")' /> <input id='cRaterVerifyButton' type='button' value='Verify' onclick="eventManager.fire('cRaterVerify')"/> <div id='cRaterItemIdStatus' style='display:inline'></div>
+		CRater Item Id: <input id='cRaterItemIdInput' name='cRaterItemIdInput' type='text' size=15 onkeyup='eventManager.fire("cRaterItemIdChanged")' /> <input id='cRaterVerifyButton' type='button' value='Verify' onclick="view.updateCRater();"/> <div id='cRaterItemIdStatus' style='display:inline'></div>
 		<br>
 		Display CRater Score to Student <input id='cRaterDisplayScoreToStudent' name='cRaterDisplayScoreToStudent' type='checkbox' onclick='eventManager.fire("cRaterDisplayScoreToStudentChanged")' />
 		<br>

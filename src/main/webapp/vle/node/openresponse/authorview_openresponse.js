@@ -856,7 +856,7 @@ View.prototype.OpenResponseNode.displayCRaterFeedback = function(cRaterScoringRu
 				//the feedback is a string
 				
 				//make the feedback field into an authorable text input
-				cRaterFeedbackHtml += "Feedback: <textarea id='cRaterFeedback_" + x + "_0' type='text' cols='50' rows='5' onchange='eventManager.fire(\"cRaterFeedbackChanged\", [" + x + ", " + y + "])'>"+feedback+"</textarea>";
+				cRaterFeedbackHtml += "Feedback: <textarea id='cRaterFeedback_" + x + "_0' type='text' cols='50' rows='5' onchange='view.updateCRaterFeedback([" + x + ", " + y + "]);'>"+feedback+"</textarea>";
 				
 				//add the button to remove the feedback
 				cRaterFeedbackHtml += "<input id='' type='button' value='Remove' onclick='eventManager.fire(\"cRaterRemoveFeedback\", [" + x + ", " + y + "])'>";
@@ -878,7 +878,7 @@ View.prototype.OpenResponseNode.displayCRaterFeedback = function(cRaterScoringRu
 							}
 							
 							//make the feedback field into an authorable text input
-							cRaterFeedbackHtml += "Feedback: <textarea id='cRaterFeedback_" + x + "_" + y + "' type='text' cols='50' rows='5' onchange='eventManager.fire(\"cRaterFeedbackChanged\", [" + x + ", " + y + "])'>"+feedbackText+"</textarea>";
+							cRaterFeedbackHtml += "Feedback: <textarea id='cRaterFeedback_" + x + "_" + y + "' type='text' cols='50' rows='5' onchange='view.updateCRaterFeedback([" + x + ", " + y + "]);'>"+feedbackText+"</textarea>";
 							
 							//add the button to remove the feedback
 							cRaterFeedbackHtml += "<input id='' type='button' value='Remove' onclick='eventManager.fire(\"cRaterRemoveFeedback\", [" + x + ", " + y + "])'>";

@@ -3,12 +3,6 @@ View.prototype.promptManager = function() {
 	this.view;
 };
 
-View.prototype.promptManager.dispatcher = function(type, args, obj) {
-	if(type=='stepPromptChanged') {
-		obj.updatePrompt();
-	}
-};
-
 View.prototype.promptManager.insertPrompt = function(view) {
 	this.view = view;
 	var nodeToPromptRowSize = {
@@ -34,7 +28,7 @@ View.prototype.promptManager.insertPrompt = function(view) {
 		// if node type is HtmlNode, enable full page editing because the prompt is actually the full page content for html steps (TODO: specify this in the node type itself)
 		fullpage = true;
 	}
-	this.view.addRichTextAuthoring('promptInput',function() {eventManager.fire('stepPromptChanged');},fullpage);
+	this.view.addRichTextAuthoring('promptInput',function() {this.view.updatePrompt();},fullpage);
 };
 
 View.prototype.promptManager.cleanupPrompt = function() {

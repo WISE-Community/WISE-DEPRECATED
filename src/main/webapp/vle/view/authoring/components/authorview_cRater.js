@@ -4,14 +4,10 @@ View.prototype.cRaterManager = function() {
 };
 
 View.prototype.cRaterManager.dispatcher = function(type, args, obj) {
-	if(type=='cRaterVerify') {
-		obj.updateCRater();
-	} else if(type=='cRaterItemIdChanged') {
+	if(type=='cRaterItemIdChanged') {
 		obj.cRaterItemIdChanged();
 	} else if(type=='cRaterItemTypeChanged') {
 		obj.cRaterItemTypeChangedListener(args[0]);
-	} else if(type=='cRaterFeedbackChanged') {
-		obj.updateCRaterFeedback(args);
 	} else if(type=='cRaterDisplayScoreToStudentChanged') {
 		obj.updateCRaterDisplayScoreToStudent();
 	} else if(type=='cRaterDisplayFeedbackToStudentChanged') {
@@ -28,8 +24,6 @@ View.prototype.cRaterManager.dispatcher = function(type, args, obj) {
 		obj.cRaterRemoveFeedback(args);
 	} else if(type=='cRaterMaxCheckAnswersChanged') {
 		obj.updateCRaterMaxCheckAnswers();
-	} else if(type=='enableCRater') {
-		obj.updateEnableCRater();
 	} else if(type=='cRaterStudentActionUpdated') {
 		obj.cRaterStudentActionUpdated(args);
 	}
