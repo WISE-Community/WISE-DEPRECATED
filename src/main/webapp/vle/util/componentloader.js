@@ -255,10 +255,6 @@ var componentloader = function(em, sl){
 				'checkAndDeselect':[null,null], 
 				'selectClick':[null,null],
 				'selectBoxClick':[null,null],
-				'selectAll':[null,null], 
-				'clearAll':[null,null], 
-				'hideNodes':[null,null], 
-				'unhideNodes':[null,null], 
 				'projectTitleChanged':[null,null],
 				'stepLevelChanged':[null,null], 
 				'autoStepChanged':[null,null], 
@@ -269,25 +265,13 @@ var componentloader = function(em, sl){
 				'nodeIconUpdated':[null,null], 
 				'nodeTitleChanged':[null,null], 
 				'launchPrevWork':[null,null], 
-				'moveSelectedLeft':[null,null],
-				'moveSelectedRight':[null,null], 
-				'createNewSequence':[null,null], 
-				'createNewNode':[null,null],
 				'nodeTypeSelected':[null,null], 
 				'uploadAsset':[null,null], 
 				'viewAssets':[null,null], 
-				'submitUpload':[null,null],
-				'moveSelected':[null,null],
-				'deleteSelected':[null,null], 
-				'duplicateSelected':[null,null], 
-				'useSelected':[null,null], 
 				'disengageSelectMode':[null,null],
 				'processChoice':[null,null], 
 				'saveStep':[null,null], 
 				'saveAndCloseStep':[null,null], 
-				'authorStepModeChanged':[null,null], 
-				'updateRefreshOption':[null,null], 
-				'refreshNow':[null,null],
 				'editHints':[null,null],
 				'addHint':[null,null],
 				'deleteHint':[null,null],
@@ -304,7 +288,6 @@ var componentloader = function(em, sl){
 				'cancelReviewSequence':[null,null], 
 				'previewFrameLoaded':[null,null],
 				'cleanProject':[null,null],
-				'deleteProject':[null,null],
 				'cleanClosingProjectStart':[null,null],
 				'cleanClosingProjectComplete':[null,null], 
 				'cleanLoadingProjectFileStart':[null,null], 
@@ -339,10 +322,6 @@ var componentloader = function(em, sl){
 				'browserResize':[null,null],
 				'reviewUpdateProject':[null,null],
 				'updateProject':[null,null],
-				'openStepTypeDescriptions':[null,null],
-				'displayTagView':[null,null],
-				'displayImportView':[null,null],
-				'displayIconsView':[null,null],
 				'populateAddTagSelect':[null,null],
 				'populateAddTagMapSelect':[null,null],
 				'addTag':[null,null],
@@ -367,8 +346,6 @@ var componentloader = function(em, sl){
 				init:function(view){
 					view.eventManager.subscribe('projectSelected', view.authorDispatcher, view);
 					view.eventManager.subscribe('loadingProjectCompleted', view.authorDispatcher, view);
-					view.eventManager.subscribe('hideNodes', view.authorDispatcher, view);
-					view.eventManager.subscribe('unhideNodes', view.authorDispatcher, view);
 					view.eventManager.subscribe('projectTitleChanged', view.authorDispatcher, view);
 					view.eventManager.subscribe('stepLevelChanged', view.authorDispatcher, view);
 					view.eventManager.subscribe('autoStepChanged', view.authorDispatcher, view);
@@ -379,31 +356,19 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('nodeIconUpdated', view.authorDispatcher, view);
 					view.eventManager.subscribe('nodeTitleChanged', view.authorDispatcher, view);
 					view.eventManager.subscribe('launchPrevWork', view.authorDispatcher, view);
-					view.eventManager.subscribe('moveSelectedLeft', view.authorDispatcher, view);
-					view.eventManager.subscribe('moveSelectedRight', view.authorDispatcher, view);
-					view.eventManager.subscribe('createNewSequence', view.authorDispatcher, view);
-					view.eventManager.subscribe('createNewNode', view.authorDispatcher, view);
 					view.eventManager.subscribe('nodeTypeSelected', view.authorDispatcher, view);
 					view.eventManager.subscribe('uploadAsset', view.authorDispatcher, view);
 					view.eventManager.subscribe('viewAssets', view.authorDispatcher, view);
-					view.eventManager.subscribe('submitUpload', view.authorDispatcher, view);
 					view.eventManager.subscribe('whoIsEditing', view.authorDispatcher, view);
 					view.eventManager.subscribe('previewFrameLoaded', view.authorDispatcher, view);
 					view.eventManager.subscribe('reviewUpdateProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('updateProject', view.authorDispatcher, view);
-					view.eventManager.subscribe('openStepTypeDescriptions', view.authorDispatcher, view);
 					view.eventManager.subscribe('checkAndSelect', view.selectDispatcher, view);
 					view.eventManager.subscribe('checkAndDeselect', view.selectDispatcher, view);
 					view.eventManager.subscribe('selectClick', view.selectDispatcher, view);
 					view.eventManager.subscribe('selectBoxClick', view.selectDispatcher, view);
-					view.eventManager.subscribe('clearAll', view.selectDispatcher, view);
-					view.eventManager.subscribe('selectAll', view.selectDispatcher, view);
-					view.eventManager.subscribe('moveSelected', view.selectDispatcher, view);
 					view.eventManager.subscribe('startCreateReviewSequence', view.reviewSequenceDispatcher, view);
 					view.eventManager.subscribe('cancelReviewSequence', view.reviewSequenceDispatcher, view);
-					view.eventManager.subscribe('deleteSelected', view.selectDispatcher, view);
-					view.eventManager.subscribe('duplicateSelected', view.selectDispatcher, view);
-					view.eventManager.subscribe('useSelected', view.selectDispatcher, view);
 					view.eventManager.subscribe('disengageSelectMode', view.selectDispatcher, view);
 					view.eventManager.subscribe('processChoice', view.selectDispatcher, view);
 					view.eventManager.subscribe('maxScoreUpdated', view.metaDispatcher, view);
@@ -411,9 +376,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('setLastEdited', view.metaDispatcher, view);
 					view.eventManager.subscribe('saveStep', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('saveAndCloseStep', view.authorStepDispatcher, view);
-					view.eventManager.subscribe('authorStepModeChanged', view.authorStepDispatcher, view);
-					view.eventManager.subscribe('updateRefreshOption', view.authorStepDispatcher, view);
-					view.eventManager.subscribe('refreshNow', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('editHints', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('addHint', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('deleteHint', view.authorStepDispatcher, view);
@@ -423,7 +385,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('closeOnStepSaved', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('closeStep', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('cleanProject', view.cleanDispatcher, view);
-					view.eventManager.subscribe('deleteProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('cleanSavingProjectStart', view.cleanDispatcher, view);
 					view.eventManager.subscribe('cleanSavingProjectComplete', view.cleanDispatcher, view);
 					view.eventManager.subscribe('cleanClosingProjectStart', view.cleanDispatcher, view);
@@ -474,9 +435,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('projectTagTagChanged', view.projectTagsDispatcher, view);
 					view.eventManager.subscribe('projectTagRemoveTag', view.projectTagsDispatcher, view);
 					view.eventManager.subscribe('browserResize', view.authorDispatcher, view);
-					view.eventManager.subscribe('displayTagView', view.authorDispatcher, view);
-					view.eventManager.subscribe('displayImportView', view.authorDispatcher, view);
-					view.eventManager.subscribe('displayIconsView', view.authorDispatcher, view);
 					view.eventManager.subscribe('populateAddTagSelect', view.authorDispatcher, view);
 					view.eventManager.subscribe('populateAddTagMapSelect', view.authorDispatcher, view);
 					view.eventManager.subscribe('addTag', view.authorDispatcher, view);

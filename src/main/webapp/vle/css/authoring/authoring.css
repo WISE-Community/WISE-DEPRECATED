@@ -168,13 +168,6 @@ body#w4_author {
 	clear: both;
 }
 
-.betaTag {
-	font-weight:bold;
-	font-size:80%;
-	color:#FF9900;
-	margin-left:4px;
-}
-
 #currentProjectContainer {
 	background-color: #DDD;
 	-moz-border-radius:4px 4px 0 0;
@@ -390,16 +383,6 @@ button.mid, #centeredDiv button.mid, #centeredDiv input[type='button'].mid {
 	vertical-align: middle;
 }
 
-.authorInstruct1 {
-	font-size: .9em;
-	color: #666;
-}
-
-.nodeInstruct2 {
-	font-size: .9em;
-	padding-left: 10px;
-}
-
 #projectTitle {
 	color:#990000;
 	font-size:1.2em;
@@ -480,10 +463,6 @@ button.mid, #centeredDiv button.mid, #centeredDiv input[type='button'].mid {
 	background-color: #FFF;
 }
 
-.feedback_ul {
-	background-color: #FFF;
-}
-
 .choice {
 	margin:3px 0;
 	padding:4px 15px;
@@ -501,21 +480,6 @@ button.mid, #centeredDiv button.mid, #centeredDiv input[type='button'].mid {
 	background-color:#FFFF00;
 	color:#000066;
 	}
-
-#navAuthoringDiv ul li.correct {
-	background-color: #CCFF99;
-	border: 1px solid #004C6D;
-}
-
-#navAuthoringDiv ul li.wrongorder {
-	background-color: yellow;
-	border: 1px solid #004C6D;
-}
-
-#navAuthoringDiv ul li.incorrect {
-	background-color: #FF3333;
-	border: 1px solid #004C6D;
-}
 
 #ddTable {
 	padding: 0px;
