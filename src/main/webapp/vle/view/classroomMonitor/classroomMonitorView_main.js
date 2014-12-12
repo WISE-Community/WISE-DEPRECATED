@@ -3414,6 +3414,19 @@ View.prototype.saveScoreHandler = function(stepWorkId, nodeId, workgroupId, mode
 };
 
 /**
+ * The teacher has changed a max score
+ * event the jquery change event fired from the max score input
+ */
+View.prototype.maxScoreChanged = function(event) {
+	var thisView = event.data.thisView;
+	var nodeId = event.data.nodeId;
+	var runId = thisView.getConfig().getConfigParam('runId');
+	
+	//save the max score to the server
+	thisView.saveMaxScore(runId, nodeId);
+};
+
+/**
  * Get the score input value
  * @param stepWorkId the step work id
  * @param nodeId the node id
@@ -3963,11 +3976,14 @@ View.prototype.createStepProgressDisplay = function() {
 					// initiate students on step display
 					studentsOnStepHtml = null,
 					
-					// intiaite the row class
+					// initiate the row class
 					rowClass = '',
 					
 					// initiate gradable variable
-					gradable = false
+					gradable = false,
+					
+					//the div to display the max score input
+					maxScoreDiv = '';
 				
 				// loop through periods
 				var i = periods.length;
@@ -4028,6 +4044,12 @@ View.prototype.createStepProgressDisplay = function() {
 						} else {
 							nodeTitle +=  ' ' + nodeTypeReadable;
 						}
+
+						//get the max score for the step
+						var maxScoreValue = view.getMaxScoreValueByNodeId(nodeId);
+						
+						//create the div that will display the max score input for the step
+						maxScoreDiv = '<div class="form-inline" style="text-align:center"><input id="maxScore_' + nodeId + '" type="text" size="6" class="score form-control max-score" value="' + maxScoreValue + '" data-nodeid="' + nodeId + '"></input></div>';
 					}
 					
 					var pId = (periodId === null) ? 'all' : periodId;
@@ -4046,7 +4068,8 @@ View.prototype.createStepProgressDisplay = function() {
 							"node_title": nodeTitle,
 							"complete": stepCompletion,
 							"complete_html": completionHtml,
-							"gradable": gradable
+							"gradable": gradable,
+							"max_score": maxScoreDiv
 						});
 				}
 			}
@@ -4087,7 +4110,8 @@ View.prototype.createStepProgressDisplay = function() {
 	        //{ 'title': 'Average Score %' }, TODO: enable and sort Average Score column by this
 	        { 'title': view.getI18NString('classroomMonitor_stepProgress_headers_studentsOnStep'), 'data': 'students_on_step', 'class': 'center', 'orderData': [4, 1], 'width': '10%' },
 	        { 'title': 'Complete', 'data': 'complete' },
-	        { 'title': view.getI18NString('classroomMonitor_stepProgress_headers_stepCompletion'), 'data': 'complete_html', 'class': 'center', 'orderData': [5, 1] }
+	        { 'title': view.getI18NString('classroomMonitor_stepProgress_headers_stepCompletion'), 'data': 'complete_html', 'class': 'center', 'orderData': [5, 1] },
+	        { 'title': view.getI18NString('classroomMonitor_stepProgress_headers_maxScore'), 'data': 'max_score', 'class': 'center', 'width': '8%' }
 	    ],
 	    'order': [[ 3, 'asc' ]],
 	    'columnDefs': [
@@ -4137,6 +4161,11 @@ View.prototype.createStepProgressDisplay = function() {
 	    },
 	    'initComplete': function( settings, json ) {
 	    	$('.dataTables_filter input[type="search"]', $('#stepProgress')).attr('placeholder', view.getI18NString('classroomMonitor_search'));
+	    	
+        	$('.max-score', table).each(function() {
+        		//set a change event on the max score
+        		$(this).on('change', {thisView:view, nodeId:$(this).data('nodeid')}, view.maxScoreChanged);
+        	});
 	    },
 	    'drawCallback': function( settings ) {
 	    	view.redrawFixedHeaders(true);

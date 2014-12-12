@@ -1267,6 +1267,10 @@
 		"value":"Step Completion",
 		"description":"Header text for the step completion column in the step progress table of classroom monitor"
 	},
+	"classroomMonitor_stepProgress_headers_maxScore":{
+		"value":"Max Score",
+		"description":"Header text for the max score column in the step progress table of classroom monitor"
+	},
 	"classroomMonitor_stepProgress_title":{
 		"value":"Step Progress",
 		"description":"Title text for step progress link and section in classroom monitor"
