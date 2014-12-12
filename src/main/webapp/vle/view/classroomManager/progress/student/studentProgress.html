@@ -1,0 +1,12 @@
+<div>
+{{ studentProgressController.title }}
+<br>
+
+<table>
+	<tr ng-repeat="workgroup in studentProgressController.workgroups">
+		<td>{{workgroup.userName}}</td>
+		<td>{{studentProgressController.getCurrentStepForWorkgroupId(workgroup.workgroupId)}}</td>
+	</tr>
+</table>
+
+</div>

@@ -1,0 +1,38 @@
+<html>
+<head>
+<script>
+	var getClassroomMonitorConfigUrl = null;
+
+	function load(tempGetClassroomMonitorConfigUrl) {
+		//eventManager.fire('classroomMonitorConfigUrlReceived', [getClassroomMonitorConfigUrl]);
+		//alert(getClassroomMonitorConfigUrl);
+		getClassroomMonitorConfigUrl = tempGetClassroomMonitorConfigUrl;
+	}
+	
+	window.onload = function(){
+		//scriptloader.bootstrap(this, bootstrapListener);
+		window.parent.topiframeOnLoad();
+	}
+</script>
+</head>
+<body>
+	<h1>Classroom Manager</h1>
+	<div ng-app='classroomManagerApp'>
+		<div ng-include="'nav.html'"></div>
+		<div ui-view></div>
+	</div>
+	<script src='../../lib/angular/angular.js'></script>
+	<script src='../../lib/angular/angular-ui-router.js'></script>
+	<script src='app.js'></script>
+	<script src='grading/step/stepGradingController.js'></script>
+	<script src='grading/student/studentGradingController.js'></script>
+	<script src='progress/step/stepProgressController.js'></script>
+	<script src='progress/student/studentProgressController.js'></script>
+	<script src='services/annotation.js'></script>
+	<script src='services/config.js'></script>
+	<script src='services/project.js'></script>
+	<script src='services/studentStatus.js'></script>
+	<script src='services/studentWork.js'></script>
+	<script src='services/userAndClassInfo.js'></script>
+</body>
+</html>
