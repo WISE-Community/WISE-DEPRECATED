@@ -473,7 +473,7 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 				}
 				
 				// populate descriptions object
-				if (data){
+				if (data && data.snapshots){
 					i = 0;
 					for (i; i<data.snapshots.length; i++) {
 						var snap = data.snapshots[i];
@@ -900,8 +900,11 @@ SVGDRAW.prototype.getCheckWorkChancesUsed = function() {
 	    },
 
 	    load: function(context,callback) {
-	    	//this.data = this.vle.getLatestStateForCurrentNode();
-			var data = this.vle.getLatestStateForCurrentNode();
+	    	var nodeState = this.vle.getLatestStateForNode(context.node.id);
+	    	var data = null;
+	    	if(nodeState !== null){
+	    		data = nodeState.data;
+	    	}
 			
 			if((data == null || data == '') && context.workToImport != null && context.workToImport.length > 0) {
 				/*
