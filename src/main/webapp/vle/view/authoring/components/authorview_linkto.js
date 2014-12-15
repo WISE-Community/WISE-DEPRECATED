@@ -15,12 +15,6 @@ View.prototype.linkManager.dispatcher = function(type,args,obj){
 		obj.linkManager.nodeSelected(obj);
 	} else if(type=='nodeSelectorCanceled'){
 		obj.linkManager.nodeSelectionCanceled(obj);
-	} else if(type=='createLink'){
-		obj.linkManager.createLink(obj);
-	} else if(type=='linkToNodeChanged'){
-		obj.linkManager.linkToNodeChanged(obj, args[0]);
-	} else if(type=='removeLinkTo'){
-		obj.linkManager.removeLinkTo(obj, args[0]);
 	} else if(type=='contentRenderCompleted'){
 		if(obj.updatePromptAfterPreview){
 			obj.updatePromptAfterPreview = false;
@@ -168,8 +162,8 @@ View.prototype.linkManager.processExistingLinks = function(view){
 	var links = view.activeNode.links;
 	for(var d=0;d<links.length;d++){
 		var linkDiv = createElement(document, 'div', {id:'linkDiv_' + links[d].key});
-		var linkSelect = createElement(document, 'select', {id:'linkSelect_' + links[d].key, onchange:"eventManager.fire('linkToNodeChanged','" + links[d].key + "')"});
-		var removeButt = createElement(document, 'input', {type:'button', value:'remove link', onclick:"eventManager.fire('removeLinkTo','" + links[d].key + "')"});
+		var linkSelect = createElement(document, 'select', {id:'linkSelect_' + links[d].key, onchange:"view.linkManager.linkToNodeChanged(view, '" + links[d].key + "');"});
+		var removeButt = createElement(document, 'input', {type:'button', value:'remove link', onclick:"view.linkManager.removeLinkTo(view, '"+links[d].key+"')"});
 		
 		if (links[d].nodePosition) {
 			var nodeId = view.getProject().getNodeByPosition(links[d].nodePosition).id;
@@ -306,6 +300,7 @@ View.prototype.linkManager.populateSelectOptionsWithNodes = function(select, nod
  * the currently authored textarea to reflect the changes.
  */
 View.prototype.linkManager.linkToNodeChanged = function(view, key){
+	console.log('linkToNodeChanged: '+ key)
 	var select = document.getElementById('linkSelect_' + key);
 	var opt = select.options[select.selectedIndex];
 	var link = view.activeNode.getLink(key);

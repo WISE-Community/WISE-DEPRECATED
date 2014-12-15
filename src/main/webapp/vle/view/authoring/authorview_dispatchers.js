@@ -138,8 +138,6 @@ View.prototype.metaDispatcher = function(type,args,obj){
 View.prototype.authorStepDispatcher = function(type,args,obj){
 	if(type=='saveStep'){
 		obj.saveStep();
-	} else if(type=='saveAndCloseStep'){
-		obj.saveStep(true);
 	} else if(type=='editHints'){
 		obj.editHints(args[0]);
 	} else if(type=='addHint'){
@@ -154,8 +152,6 @@ View.prototype.authorStepDispatcher = function(type,args,obj){
 		obj.sourceUpdated();
 	} else if(type=='closeOnStepSaved'){
 		obj.closeOnStepSaved(args[0]);
-	} else if(type=='closeStep'){
-		obj.closeStep();
 	};
 };
 

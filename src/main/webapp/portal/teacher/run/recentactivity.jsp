@@ -385,8 +385,12 @@
                   								</c:otherwise>
                   							</c:choose>
                  							</sec:accesscontrollist>
+	                  					<a id='linkToSeeOldGradingTools_${run.id}' onclick="$('#oldGradingTools_${run.id}').show();$('#linkToSeeOldGradingTools_${run.id}').hide();">(click here to access old grading tools)</a>
+	                  					<span id="oldGradingTools_${run.id}" style="display:none">
 									<li><span style="font-weight:bold;"><spring:message code="teacher.run.recentactivity.gradeByStep"/>:</span> <a class="grading" title="${gradingAndFeedback}: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=step&getRevisions=false&minified=true"><spring:message code="teacher.run.recentactivity.latestWork"/></a>&nbsp;|&nbsp;<a class="grading" title="${gradingAndFeedback}: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/>: ${run.id})" id="runId=${run.id}&gradingType=step&getRevisions=true&minified=true"><spring:message code="teacher.run.recentactivity.allRevisions"/></a></li>
 			  	                    <li><span style="font-weight:bold;"><spring:message code="teacher.run.recentactivity.gradeByTeam"/>:</span> <a class="grading" title="${gradingAndFeedback}: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=team&getRevisions=false&minified=true"><spring:message code="teacher.run.recentactivity.latestWork"/></a>&nbsp;|&nbsp;<a class="grading" title="${gradingAndFeedback}: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/>: ${run.id})" id="runId=${run.id}&gradingType=team&getRevisions=true&minified=true"><spring:message code="teacher.run.recentactivity.allRevisions"/></a></li>
+			  	                    <li><span>Please note that these old grading tools will be removed in the near future!</span></li>
+			  	                    </span>
 				               </ul>
 				               <ul class="actionList">
 							        <li>

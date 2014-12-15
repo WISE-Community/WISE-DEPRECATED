@@ -690,7 +690,7 @@ View.prototype.initializeOpenProjectDialog = function(){
  * Initializes the author project dialog.
  */
 View.prototype.initializeAuthorStepDialog = function(){
-	$('#authorStepDialog').dialog({autoOpen:false, width:800, height:600, resizable:true, draggable:true, modal:true, title:'Edit Step', open: function(){}, buttons: {'Save':function(){eventManager.fire("saveStep");},'Save and Close':function(){eventManager.fire("saveAndCloseStep");},'Close':function(){eventManager.fire("closeStep");}}});
+	$('#authorStepDialog').dialog({autoOpen:false, width:800, height:600, resizable:true, draggable:true, modal:true, title:'Edit Step', open: function(){}, buttons: {'Save':function(){eventManager.fire("saveStep");},'Save and Close':function(){view.saveStep(true);},'Close':function(){view.closeStep();}}});
 };
 
 /**
