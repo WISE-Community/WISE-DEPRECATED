@@ -130,7 +130,7 @@ View.prototype.maxScoreUpdated = function(id){
 			var projectId = this.getProjectId();
 			
 			//save the max score to the server and to our local variable
-			this.saveMaxScore(projectId, id);
+			this.saveMaxScore(id, val);
 		} else {
 			this.notificationManager.notify('The max score value is either not a number, is less than 0, or could not be determined.  Please try again.', 3);
 			this.populateMaxScores();

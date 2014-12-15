@@ -214,7 +214,7 @@ View.prototype.getLatestStateForCurrentNode = function() {
  * @param runId
  * @param nodeId
  */
-View.prototype.saveMaxScore = function(runId, nodeId) {
+View.prototype.saveMaxScore = function(nodeId, maxScoreValue) {
 	/*
 	 * updates the local copy of the max scores after the server
 	 * has successfully updated it on the server
@@ -268,9 +268,6 @@ View.prototype.saveMaxScore = function(runId, nodeId) {
 		thisView.revertMaxScore(nodeId);
 	};
 	
-	//get the new max score the teacher has entered for this nodeId
-	var maxScoreValue = document.getElementById("maxScore_" + nodeId).value;
-	
 	//parse the value from the text box to see if it is a valid integer
 	var maxScoreValueInt = parseInt(maxScoreValue);
 	
@@ -279,8 +276,11 @@ View.prototype.saveMaxScore = function(runId, nodeId) {
 		//the value is invalid so we will notify the teacher
 		alert("Error: invalid Max Score value, please enter a value 0 or greater");
 		
+		//get the previous max score
+		var previousMaxScore = this.getMaxScoreValueByNodeId(nodeId);
+		
 		//set the value back to the previous value
-		document.getElementById("maxScore_" + nodeId).value = this.getMaxScoreValueByNodeId(nodeId);
+		$('#' + this.escapeIdForJquery('maxScore_' + nodeId)).val(previousMaxScore);
 		
 		return;
 	}
@@ -300,8 +300,11 @@ View.prototype.revertMaxScore = function(nodeId) {
 	//display a message telling the teacher the max score value will be reverted back
 	alert("Failed to save max score, the max score will be reverted back to its previous value.");
 	
+	//get the previous max score
+	var previousMaxScore = this.getMaxScoreValueByNodeId(nodeId);
+	
 	//set the value back to the previous value
-	document.getElementById("maxScore_" + nodeId).value = this.getMaxScoreValueByNodeId(nodeId);
+	$('#' + this.escapeIdForJquery('maxScore_' + nodeId)).val(previousMaxScore);
 };
 
 /**

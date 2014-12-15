@@ -3421,9 +3421,10 @@ View.prototype.maxScoreChanged = function(event) {
 	var thisView = event.data.thisView;
 	var nodeId = event.data.nodeId;
 	var runId = thisView.getConfig().getConfigParam('runId');
+	var maxScore = event.srcElement.value;
 	
 	//save the max score to the server
-	thisView.saveMaxScore(runId, nodeId);
+	thisView.saveMaxScore(nodeId, maxScore);
 };
 
 /**
@@ -4161,11 +4162,6 @@ View.prototype.createStepProgressDisplay = function() {
 	    },
 	    'initComplete': function( settings, json ) {
 	    	$('.dataTables_filter input[type="search"]', $('#stepProgress')).attr('placeholder', view.getI18NString('classroomMonitor_search'));
-	    	
-        	$('.max-score', table).each(function() {
-        		//set a change event on the max score
-        		$(this).on('change', {thisView:view, nodeId:$(this).data('nodeid')}, view.maxScoreChanged);
-        	});
 	    },
 	    'drawCallback': function( settings ) {
 	    	view.redrawFixedHeaders(true);
@@ -4175,6 +4171,28 @@ View.prototype.createStepProgressDisplay = function() {
 	    	// bind click actions to workgroup links
         	$('.grade-by-step', table).each(function(){
         		$(this).off('click').on('click', {thisView:view, nodeId:$(this).data('nodeid')}, view.stepRowClicked);
+        	});
+        	
+        	$('.max-score', table).each(function() {
+        		/*
+        		 * get the max score value for the step and set it into the max score input.
+        		 * this is for handling multiple periods since each period has an input box
+        		 * for an individual step. this means if there are 3 periods, each step
+        		 * will have 3 max score input boxes associated with it but only one will
+        		 * be shown to the teacher at any given time. therefore if the teacher
+        		 * switches periods, we need to update the max scores in the input box.
+        		 */
+        		var maxScoreValue = view.getMaxScoreValueByNodeId($(this).data('nodeid'));
+        		$(this).val(maxScoreValue);
+        		
+        		/*
+        		 * unbind the change event from any previous times drawCallback was called
+        		 * so that maxScoreChanged() isn't called multiple times
+        		 */
+        		$(this).unbind('change');
+        		
+        		//set a change event on the max score
+        		$(this).on('change', {thisView:view, nodeId:$(this).data('nodeid')}, view.maxScoreChanged);
         	});
 	    }
 	} );
