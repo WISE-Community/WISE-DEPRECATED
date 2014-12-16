@@ -63,7 +63,7 @@ public class GradeWorkController {
 	@Autowired
 	Properties wiseProperties;
 
-	@RequestMapping(value={"/teacher/grading/gradework.html","/teacher/classroomMonitor/classroomMonitor.html"})
+	@RequestMapping(value={"/teacher/grading/gradework.html", "/teacher/classroomMonitor/classroomMonitor.html", "/teacher/classroomManager"})
 	protected ModelAndView handleRequestInternal(
 			@RequestParam("runId") String runId,
 			HttpServletRequest request,
@@ -119,6 +119,11 @@ public class GradeWorkController {
 					if ("monitor".equals(gradingType)) {
 						modelAndView.addObject("vleurl", getClassroomMonitorUrl);
 						modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
+					} else if("classroomManager".equals(gradingType)) {
+						String classroomManagerUrl = wiseBaseURL + "/vle/view/classroomManager/index.html";
+						String classroomManagerConfigUrl = wiseBaseURL + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
+						modelAndView.addObject("vleurl", classroomManagerUrl);
+						modelAndView.addObject("vleConfigUrl", classroomManagerConfigUrl);
 					} else {
 						modelAndView.addObject("vleurl", getGradeWorkUrl);
 						modelAndView.addObject("vleConfigUrl", getGradingConfigUrl);
