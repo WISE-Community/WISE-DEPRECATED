@@ -941,8 +941,8 @@ MS.prototype.checkBucketAnswers = function(initialRenderCheck) {
 				}
 			}
 			// add feedback
-			if(feedback){
-				$('#' + bucket.choices[j].identifier).find('.feedback').remove();
+			$('#' + bucket.choices[j].identifier).find('.feedback').remove();
+			if(feedback && this.view.utils.isNonWSString(feedback.feedback)){
 				$('#' + bucket.choices[j].identifier).append('<div class="feedback">*' + feedback.feedback + '*</div>');
 			}
 		}
