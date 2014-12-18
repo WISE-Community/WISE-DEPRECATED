@@ -249,6 +249,35 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	/**
+	 * Update the permissions for a shared teacher for a run
+	 * @param updateSharedTeacherParameters the parameters that specify how to 
+	 * change the permissions for the teacher for the run
+	 */
+	public void updateSharedTeacherForRun(
+			AddSharedTeacherParameters updateSharedTeacherParameters) {
+		Run run = updateSharedTeacherParameters.getRun();
+		String sharedOwnerUsername = updateSharedTeacherParameters.getSharedOwnerUsername();
+		User user = userDao.retrieveByUsername(sharedOwnerUsername);
+		
+		//make sure the user is already a shared owner of the run
+		if(run.getSharedowners().contains(user)) {
+			//the user is already a shared owner of the run
+			
+			//get the new permissions
+			String permission = updateSharedTeacherParameters.getPermission();
+			
+			//update the permissions
+			if (permission.equals(UserDetailsService.RUN_GRADE_ROLE)) {
+				this.aclService.removePermission(run, BasePermission.READ, user);
+				this.aclService.addPermission(run, BasePermission.WRITE, user);	
+			} else if (permission.equals(UserDetailsService.RUN_READ_ROLE)) {
+				this.aclService.removePermission(run, BasePermission.WRITE, user);
+				this.aclService.addPermission(run, BasePermission.READ, user);
+			}
+		}
+	}
+	
+	/**
 	 * @throws ObjectNotFoundException 
 	 * @see org.wise.portal.service.offering.RunService#removeSharedTeacherFromRun(java.lang.String, java.lang.Long)
 	 */

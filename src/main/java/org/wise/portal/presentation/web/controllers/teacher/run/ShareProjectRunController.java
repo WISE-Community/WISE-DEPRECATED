@@ -272,22 +272,24 @@ public class ShareProjectRunController {
 					runService.removeSharedTeacherFromRun(params.getSharedOwnerUsername(), run.getId());
 				} else { 
 					// we're adding a new shared teacher or changing her permissions
-					boolean newSharedOwner = false;
-					if (!run.getSharedowners().contains(retrievedUser)) {
-						newSharedOwner = true;
-					}
 					
-					//add the shared teacher to the run
-					runService.addSharedTeacherToRun(params);
+					if(run.getSharedowners().contains(retrievedUser)) {
+						//the user is already a shared owner so we will update their permissions
+						runService.updateSharedTeacherForRun(params);
+					} else {
+						//the user is not a shared owner yet so we will add them as a shared teacher
+						
+						//add the shared teacher to the run
+						runService.addSharedTeacherToRun(params);
 
-					// make a workgroup for this shared teacher for this run
-					String sharedOwnerUsername = params.getSharedOwnerUsername();
-					User sharedOwner = userService.retrieveUserByUsername(sharedOwnerUsername);
-					Set<User> sharedOwners = new HashSet<User>();
-					sharedOwners.add(sharedOwner);
-					workgroupService.createWISEWorkgroup("teacher", sharedOwners, run, null);			
-					// only send email if this is a new shared owner
-					if (newSharedOwner) {
+						// make a workgroup for this shared teacher for this run
+						String sharedOwnerUsername = params.getSharedOwnerUsername();
+						User sharedOwner = userService.retrieveUserByUsername(sharedOwnerUsername);
+						Set<User> sharedOwners = new HashSet<User>();
+						sharedOwners.add(sharedOwner);
+						workgroupService.createWISEWorkgroup("teacher", sharedOwners, run, null);			
+						
+						//send an email to the new shared owner
 						Locale locale = request.getLocale();
 						ProjectRunEmailService emailService = new ProjectRunEmailService(signedInUser, retrievedUser,  run, locale);
 						Thread thread = new Thread(emailService);

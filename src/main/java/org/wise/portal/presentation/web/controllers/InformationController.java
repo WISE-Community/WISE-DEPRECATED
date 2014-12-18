@@ -332,36 +332,40 @@ public class InformationController {
 			//get the workgroups
 			List<Workgroup> sharedTeacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, sharedOwner);
 			
-			//there should only be one workgroup for the shared owner
-			Workgroup sharedTeacherWorkgroup = sharedTeacherWorkgroups.get(0);
-			
-			//make a JSONObject for this shared owner
-			JSONObject sharedTeacherUserInfo = new JSONObject();
-			
-			try {
-				//set the values into the shared owner JSONObject
-				sharedTeacherUserInfo.put("workgroupId", sharedTeacherWorkgroup.getId());
-				sharedTeacherUserInfo.put("userName", sharedTeacherWorkgroup.generateWorkgroupName());
+			/*
+			 * loop through all the shared teacher workgroups in case a shared
+			 * owner has multiple workgroups for this run due to a bug which
+			 * created multiple workgroups for a shared teacher
+			 */
+			for(Workgroup sharedTeacherWorkgroup: sharedTeacherWorkgroups) {
+				//make a JSONObject for this shared owner
+				JSONObject sharedTeacherUserInfo = new JSONObject();
 				
-				//get the shared teacher role
-				String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedOwner);
+				try {
+					//set the values into the shared owner JSONObject
+					sharedTeacherUserInfo.put("workgroupId", sharedTeacherWorkgroup.getId());
+					sharedTeacherUserInfo.put("userName", sharedTeacherWorkgroup.generateWorkgroupName());
+					
+					//get the shared teacher role
+					String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedOwner);
 
-				if(sharedTeacherRole == null) {
-					//shared teacher does not have a role
-					sharedTeacherUserInfo.put("role", "");
-				} else if(sharedTeacherRole.equals(UserDetailsService.RUN_READ_ROLE)) {
-					//shared teacher can view the run
-					sharedTeacherUserInfo.put("role", "read");
-				} else if(sharedTeacherRole.equals(UserDetailsService.RUN_GRADE_ROLE)) {
-					//shared teacher can grade the run
-					sharedTeacherUserInfo.put("role", "grade");
+					if(sharedTeacherRole == null) {
+						//shared teacher does not have a role
+						sharedTeacherUserInfo.put("role", "");
+					} else if(sharedTeacherRole.equals(UserDetailsService.RUN_READ_ROLE)) {
+						//shared teacher can view the run
+						sharedTeacherUserInfo.put("role", "read");
+					} else if(sharedTeacherRole.equals(UserDetailsService.RUN_GRADE_ROLE)) {
+						//shared teacher can grade the run
+						sharedTeacherUserInfo.put("role", "grade");
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
-			} catch (JSONException e) {
-				e.printStackTrace();
+				
+				//add the shared owner to the array
+				sharedTeacherUserInfos.put(sharedTeacherUserInfo);
 			}
-			
-			//add the shared owner to the array
-			sharedTeacherUserInfos.put(sharedTeacherUserInfo);
 		}
 		
 		try {
