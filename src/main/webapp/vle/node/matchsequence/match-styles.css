@@ -273,13 +273,10 @@ body {
     -: ;width: 15.384615384615385rem;
   }
 }
-#possibleScores .slick-track {
-  border-right: 1px solid #aaaaaa;
-}
 .score {
-  margin-right: -1px;
   text-align: center;
   border: 1px solid #aaaaaa;
+  margin: 0 1px;
 }
 .score > a,
 .score > span {

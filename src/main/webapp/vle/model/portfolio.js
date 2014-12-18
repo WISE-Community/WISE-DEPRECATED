@@ -20,29 +20,34 @@ function Portfolio(view, portfolioJSONString) {
 	 * we do not want to load anything
 	 */
 	if(portfolioJSONString) {
-		var portfolioJSONObj = JSON.parse(portfolioJSONString);
-		
-		//set the values from the JSON object we received from the server
+		var portfolioJSONObj = {};
+		try {
+			portfolioJSONObj = JSON.parse(portfolioJSONString);
+			
+			//set the values from the JSON object we received from the server
 
-		this.id = portfolioJSONObj.id;
-		this.runId = portfolioJSONObj.runId;
-		this.workgroupId = portfolioJSONObj.workgroupId;
-		this.metadata = portfolioJSONObj.metadata ? portfolioJSONObj.metadata : "";
+			this.id = portfolioJSONObj.id;
+			this.runId = portfolioJSONObj.runId;
+			this.workgroupId = portfolioJSONObj.workgroupId;
+			this.metadata = portfolioJSONObj.metadata ? portfolioJSONObj.metadata : "";
 
-		if(portfolioJSONObj.hasOwnProperty('items') && portfolioJSONObj.items !== null) {
-			var portfolioItemsJSONArray = JSON.parse(portfolioJSONObj.items);
-			for (var i=0; i< portfolioItemsJSONArray.length; i++) {
-				var portfolioItemJSON = portfolioItemsJSONArray[i];
-				this.items.push(new PortfolioItem(portfolioItemJSON));
+			if(portfolioJSONObj.hasOwnProperty('items') && portfolioJSONObj.items !== null) {
+				var portfolioItemsJSONArray = JSON.parse(portfolioJSONObj.items);
+				for (var i=0; i< portfolioItemsJSONArray.length; i++) {
+					var portfolioItemJSON = portfolioItemsJSONArray[i];
+					this.items.push(new PortfolioItem(portfolioItemJSON));
+				}
 			}
-		}
 
-		if(portfolioJSONObj.hasOwnProperty('deletedItems') && portfolioJSONObj.deletedItems !== null) {
-			var portfolioDeletedItemsJSONArray = JSON.parse(portfolioJSONObj.deletedItems);
-			for (var i=0; i< portfolioDeletedItemsJSONArray.length; i++) {
-				var portfolioDeletedItemJSON = portfolioDeletedItemsJSONArray[i];
-				this.deletedItems.push(new PortfolioItem(portfolioDeletedItemJSON));
+			if(portfolioJSONObj.hasOwnProperty('deletedItems') && portfolioJSONObj.deletedItems !== null) {
+				var portfolioDeletedItemsJSONArray = JSON.parse(portfolioJSONObj.deletedItems);
+				for (var i=0; i< portfolioDeletedItemsJSONArray.length; i++) {
+					var portfolioDeletedItemJSON = portfolioDeletedItemsJSONArray[i];
+					this.deletedItems.push(new PortfolioItem(portfolioDeletedItemJSON));
+				}
 			}
+		} catch(err) {
+			// probably in regular preview mode, so don't load any portfolio data
 		}
 	}
 };
