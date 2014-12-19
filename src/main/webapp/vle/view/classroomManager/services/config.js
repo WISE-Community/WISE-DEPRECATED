@@ -16,45 +16,6 @@ angular.module('ConfigService', [])
 	
 	this.getConfig = function() {
 		return this.config;
-		/*
-		if(this.config != null) {
-			var deferred = $q.defer();
-			deferred.resolve(this.config);
-			return deferred.promise;
-		} else {
-			var parentHref = parent.window.location.href;
-			var runId = parent.window.location.search.split('runId=')[1].substring(0, parent.window.location.search.split('runId=')[1].indexOf('&'));
-			
-			var deferred = $q.defer();
-			
-			$http.get('http://localhost:8080/wise/request/info.html?action=getVLEConfig&runId=' + runId + '&gradingType=classroomManager&requester=grading&getRevisions=null').then(angular.bind(this, function(result) {
-				this.setConfig(result.data);
-				deferred.resolve(result.data);
-			}));
-			
-			return deferred.promise;
-		}
-		*/
-	};
-	
-	this.getConfig0 = function() {
-		if(this.config != null) {
-			var deferred = $q.defer();
-			deferred.resolve(this.config);
-			return deferred.promise;
-		} else {
-			var parentHref = parent.window.location.href;
-			var runId = parent.window.location.search.split('runId=')[1].substring(0, parent.window.location.search.split('runId=')[1].indexOf('&'));
-			
-			var deferred = $q.defer();
-			
-			$http.get('http://localhost:8080/wise/request/info.html?action=getVLEConfig&runId=' + runId + '&gradingType=classroomManager&requester=grading&getRevisions=null').then(angular.bind(this, function(result) {
-				this.setConfig(result.data);
-				deferred.resolve(result.data);
-			}));
-			
-			return deferred.promise;
-		}
 	};
 
 	this.getConfigParam = function(urlName) {

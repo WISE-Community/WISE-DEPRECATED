@@ -16,27 +16,6 @@ angular.module('UserAndClassInfoService', [])
 		}));
 	};
 	
-	this.retrieveUserAndClassInfo0 = function(update) {
-		
-		if(this.userAndClassInfo == null || update) {
-			return ConfigService.getConfigParam('getUserInfoUrl').then(angular.bind(this, function(result) {
-				var userAndClassInfoUrl = result;
-				
-				return $http.get(userAndClassInfoUrl).then(angular.bind(this, function(result) {
-					var userAndClassInfo = result.data;
-					
-					this.userAndClassInfo = userAndClassInfo;
-					
-					return userAndClassInfo;
-				}));
-			}));
-		} else {
-			var deferred = $q.defer();
-			deferred.resolve(this.userAndClassInfo);
-			return deferred.promise;
-		}
-	};
-	
 	this.getClassmateUserInfos = function() {
 		var userAndClassInfo = this.userAndClassInfo;
 		
@@ -142,5 +121,17 @@ angular.module('UserAndClassInfoService', [])
 		}
 		
 		return periodIds;
+	};
+	
+	this.getNumberOfStudentsInRun = function() {
+		var numberOfStudentsInRun = null;
+		
+		var classmateUserInfos = this.getClassmateUserInfos();
+		
+		if(classmateUserInfos != null) {
+			numberOfStudentsInRun = classmateUserInfos.length;
+		}
+		
+		return numberOfStudentsInRun;
 	};
 }]);

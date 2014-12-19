@@ -18,4 +18,8 @@ angular.module('StudentProgressView', [
 	this.getCurrentStepForWorkgroupId = function(workgroupId) {
 		return StudentStatusService.getCurrentStepTitleForWorkgroupId(workgroupId);
 	};
+	
+	this.getStudentProjectCompletion = function(workgroupId) {
+		return StudentStatusService.getStudentProjectCompletion(workgroupId);
+	};
 }]);

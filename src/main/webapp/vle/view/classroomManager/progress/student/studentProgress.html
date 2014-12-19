@@ -1,11 +1,21 @@
 <div>
-{{ studentProgressController.title }}
+{{ studentProgress.title }}
 <br>
 
 <table>
-	<tr ng-repeat="workgroup in studentProgressController.workgroups">
+	<th>
+		<tr>
+			<td>Team</td>
+			<td>Latest Step</td>
+			<td>Time Spent</td>
+			<td>Project Completion</td>		
+		</tr>
+	</th>
+	<tr ng-repeat="workgroup in studentProgress.workgroups">
 		<td>{{workgroup.userName}}</td>
-		<td>{{studentProgressController.getCurrentStepForWorkgroupId(workgroup.workgroupId)}}</td>
+		<td>{{studentProgress.getCurrentStepForWorkgroupId(workgroup.workgroupId)}}</td>
+		<td></td>
+		<td>{{studentProgress.getStudentProjectCompletion(workgroup.workgroupId)}}</td>
 	</tr>
 </table>
 

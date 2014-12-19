@@ -43,14 +43,14 @@ classroomManagerApp.config(['$urlRouterProvider', '$stateProvider', function($ur
 			url: '/studentProgress',
 			templateUrl: 'progress/student/studentProgress.html',
 			controller: 'StudentProgressController',
-			controllerAs: 'studentProgressController'
+			controllerAs: 'studentProgress'
 		})
 		.state('stepProgress', {
 			parent: 'root',
 			url: '/stepProgress',
 			templateUrl: 'progress/step/stepProgress.html',
 			controller: 'StepProgressController',
-			controllerAs: 'stepProgressController'
+			controllerAs: 'stepProgress'
 		})
 		.state('studentGrading', {
 			url: '/studentGrading',
