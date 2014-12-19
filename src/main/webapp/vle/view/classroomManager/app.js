@@ -3,6 +3,7 @@ var classroomManagerApp = angular.module('classroomManagerApp', [
    'AnnotationService',
    'ConfigService',
    'ProjectService',
+   'ProjectMetadataService',
    'StepProgressView',
    'StudentProgressView',
    'StudentStatusService',
@@ -25,6 +26,9 @@ classroomManagerApp.config(['$urlRouterProvider', '$stateProvider', function($ur
 				},
 				project: function(ProjectService, config) {
 					return ProjectService.retrieveProject();
+				},
+				projectMetadata: function(ProjectMetadataService, config) {
+					return ProjectMetadataService.retrieveProjectMetadata();
 				},
 				studentStatuses: function(StudentStatusService, config) {
 					return StudentStatusService.retrieveStudentStatuses();
