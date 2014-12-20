@@ -1,16 +1,5 @@
 <div id="header">
 	<div class="banner">
-		<c:if test="${pageContext.request.servletPath == '/portal/index.jsp'}">
-			<!-- show a link to WISE2 if this is the main homepage -->
-			<div class="announce">
-				<spring:htmlEscape defaultHtmlEscape="false">
-					<spring:escapeBody htmlEscape="false">
-						<spring:message code="headermain.newUrl" />
-					</spring:escapeBody>
-				</spring:htmlEscape>
-			</div>
-			<img class="announceIcon" src="${contextPath}/<spring:theme code="marker"/>" alt="announcement" />
-		</c:if>
 		
 		<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 

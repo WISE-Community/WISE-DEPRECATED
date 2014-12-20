@@ -98,6 +98,6 @@ public class PreviewProjectListController {
 			
 		 modelMap.put("libraryProjectsList", currentProjectList);
 	     modelMap.put("projectThumbMap", projectThumbMap);
-		 return "preview/previewprojectlist";
+		 return "previewprojectlist";
 	}
 }

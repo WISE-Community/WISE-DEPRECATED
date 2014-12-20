@@ -98,6 +98,5 @@ public class RunStatisticsController {
 			throw new Exception("I do not understand the command: " + command);
 		}
 		return mav;
-
 	}
 }

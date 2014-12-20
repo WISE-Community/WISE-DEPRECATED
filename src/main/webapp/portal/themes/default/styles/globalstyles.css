@@ -89,34 +89,6 @@ abbr, acronym {
 	text-align:center;
 }
 
-.announce {
-	background-color: rgb(242, 245, 219);
-	/*background-color: rgba(242, 245, 219, 0.9);*/
-    border: 1px solid #C4D151;
-    -moz-box-shadow: 1px 1px 2px #777777;
-    -webkit-box-shadow: 1px 1px 2px #777777;
-    -o-box-shadow: 1px 1px 2px #777777;
-    box-shadow: 1px 1px 2px #777777;
-    color: #785F2F;
-    font-size: 0.85em;
-    font-weight: bold;
-    height: 24px;
-    right: 14px;
-    line-height: 24px;
-    padding: 0.1em 0.75em;
-    position: absolute;
-    text-align: center;
-    top: -13px;
-}
-
-img.announceIcon {
-	height: 52px;
-    right: -20px;
-    position: absolute;
-    top: -19px;
-    width: 42px;
-}
-
 input[type="button"], input[type="submit"], input[type="text"], input[type="password"], textarea  {
 	border-radius: 4px;
 	-moz-border-radius: 4px;
