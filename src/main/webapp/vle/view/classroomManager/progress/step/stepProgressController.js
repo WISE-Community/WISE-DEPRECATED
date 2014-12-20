@@ -6,7 +6,7 @@ angular.module('StepProgressView', [
 	
 }])
 
-.controller('StepProgressController', ['StudentStatusService', 'ProjectService', 'ProjectMetadataService', function(StudentStatusService, ProjectService, ProjectMetadataService) {
+.controller('StepProgressController', ['$state', 'StudentStatusService', 'ProjectService', 'ProjectMetadataService', function($state, StudentStatusService, ProjectService, ProjectMetadataService) {
 	this.title = 'Step Progress';
 	
 	this.nodes = ProjectService.getSequenceAndStepNodesInTraversalOrder();
@@ -26,4 +26,10 @@ angular.module('StepProgressView', [
 	this.getMaxScore = function(nodeId) {
 		return ProjectMetadataService.getMaxScore(nodeId);
 	}
+	
+	this.stepRowClicked = function(node) {
+		var nodeId = node.identifier;
+
+		$state.go('stepGrading', {nodeId:nodeId});
+	};
 }]);

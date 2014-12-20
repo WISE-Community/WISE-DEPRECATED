@@ -19,7 +19,7 @@
 		<th>Step Completion</th>
 		<th>Max Score</th>		
 	</tr>
-	<tr ng-repeat="node in stepProgress.nodes">
+	<tr ng-repeat="node in stepProgress.nodes" ng-click="stepProgress.stepRowClicked(node)">
 		<td>{{stepProgress.getNodeNumberAndTitle(node.identifier)}} ({{node.type}})</td>
 		<td>{{stepProgress.getNumberOfStudentsOnStep(node.identifier)}}</td>
 		<td>{{stepProgress.getStepCompletion(node.identifier)}}</td>

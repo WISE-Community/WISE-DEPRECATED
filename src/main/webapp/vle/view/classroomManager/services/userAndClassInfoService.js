@@ -38,6 +38,29 @@ angular.module('UserAndClassInfoService', [])
 		return null;
 	};
 	
+	this.getStudentNameForWorkgroupId = function(workgroupId) {
+		var studentName = null;
+		
+		var classmateUserInfos = this.getClassmateUserInfos();
+		
+		if(classmateUserInfos != null) {
+			for(var x=0; x<classmateUserInfos.length; x++) {
+				var classmateUserInfo = classmateUserInfos[x];
+				
+				if(classmateUserInfo != null) {
+					var tempWorkgroupId = classmateUserInfo.workgroupId;
+					
+					if(workgroupId == tempWorkgroupId) {
+						studentName = classmateUserInfo.userName;
+						break;
+					}
+				}
+			}
+		}
+		
+		return studentName;
+	};
+	
 	this.getStudentWorkgroupIds = function() {
 		var studentWorkgroupIds = [];
 		

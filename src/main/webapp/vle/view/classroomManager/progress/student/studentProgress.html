@@ -19,7 +19,7 @@
 		<th>Time Spent</th>
 		<th>Project Completion</th>		
 	</tr>
-	<tr ng-repeat="workgroup in studentProgress.workgroups">
+	<tr ng-repeat="workgroup in studentProgress.workgroups" ng-click="studentProgress.studentRowClicked(workgroup)">
 		<td>{{workgroup.userName}}</td>
 		<td>{{studentProgress.getCurrentStepForWorkgroupId(workgroup.workgroupId)}}</td>
 		<td></td>

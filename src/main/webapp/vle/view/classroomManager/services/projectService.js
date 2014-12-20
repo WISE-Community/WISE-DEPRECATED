@@ -209,6 +209,28 @@ angular.module('ProjectService', [])
 		return nodes;
 	};
 	
+	this.getStepNodeIdsInTraversalOrder = function() {
+		var stepNodeIds = [];
+		
+		var stepNodes = this.getStepNodesInTraversalOrder();
+		
+		if(stepNodes != null) {
+			for(var x=0; x<stepNodes.length; x++) {
+				var stepNode = stepNodes[x];
+				
+				if(stepNode != null) {
+					var nodeId = stepNode.nodeId;
+					
+					if(nodeId != null) {
+						stepNodeIds.push(nodeId);
+					}
+				}
+			}
+		}
+		
+		return stepNodeIds;
+	};
+	
 	this.getNodeNumberAndTitle = function(nodeId) {
 		var nodeNumberAndTitle = null;
 		
@@ -252,13 +274,12 @@ angular.module('ProjectService', [])
 			var type = nodeToSearch.type;
 			
 			if(type == null || type == '') {
-				
+				/*
+				 * node to search is a step. since steps don't have children,
+				 * we will not be able to find the node id we want in this node.
+				 */
 			} else if(type == 'sequence') {
 				//node to search is a sequence
-				
-				//look for nodeId in current sequence
-				
-				//we did not find the node Id in this sequence so we will look at the children
 				
 				var refs = nodeToSearch.refs;
 				
@@ -283,7 +304,7 @@ angular.module('ProjectService', [])
 								return tempNodeNumber;
 							} else {
 								/*
-								 * the current child is a sequence so we will search its children
+								 * search the children of the current child
 								 */
 								var childNodeNumber = this.getNodeNumberAndTitleHelper(ref, nodeIdSearchingFor);
 								

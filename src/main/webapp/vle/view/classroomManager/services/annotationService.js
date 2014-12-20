@@ -16,24 +16,4 @@ angular.module('AnnotationService', [])
 	this.getAnnotations = function() {
 		return this.annotations;
 	}
-	
-	this.retrieveAnnotations0 = function() {
-		
-		var deferred = $q.defer();
-		
-		return ConfigService.getConfigParam('getAnnotationsUrl')
-		.then(angular.bind(this, function(result) {
-			var getAnnotationsUrl = result;
-			return $http.get(getAnnotationsUrl);
-		}))
-		.then(angular.bind(this, function(result) {
-			var annotations = result.data;
-			this.annotations = annotations;
-			deferred.resolve(annotations);
-			return annotations;
-		}));
-		
-		
-		return deferred.promise;
-	};
 }]);

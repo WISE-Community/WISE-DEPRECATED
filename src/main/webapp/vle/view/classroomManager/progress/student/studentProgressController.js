@@ -6,7 +6,7 @@ angular.module('StudentProgressView', [
 	
 }])
 
-.controller('StudentProgressController', ['StudentStatusService', 'UserAndClassInfoService', 'AnnotationService', function(StudentStatusService, UserAndClassInfoService, AnnotationService) {
+.controller('StudentProgressController', ['$state', 'StudentStatusService', 'UserAndClassInfoService', 'AnnotationService', function($state, StudentStatusService, UserAndClassInfoService, AnnotationService) {
 	this.title = 'Student Progress';
 	
 	this.studentStatuses = StudentStatusService.getStudentStatuses();
@@ -21,5 +21,11 @@ angular.module('StudentProgressView', [
 	
 	this.getStudentProjectCompletion = function(workgroupId) {
 		return StudentStatusService.getStudentProjectCompletion(workgroupId);
+	};
+	
+	this.studentRowClicked = function(workgroup) {
+		var workgroupId = workgroup.workgroupId;
+
+		$state.go('studentGrading', {workgroupId:workgroupId});
 	};
 }]);

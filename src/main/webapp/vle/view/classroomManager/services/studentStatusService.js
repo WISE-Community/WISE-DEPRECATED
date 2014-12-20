@@ -21,30 +21,6 @@ angular.module('StudentStatusService', [])
 			return studentStatuses;
 		}));
 	};
-
-	this.retrieveStudentStatuses0 = function() {
-		var all = $q.all([ConfigService.getConfigParam('studentStatusUrl'), ConfigService.getConfigParam('runId')])
-		.then(angular.bind(this, function(result) {
-			var studentStatusUrl = result[0];
-			var runId = result[1];
-			
-			var requestConfig = {
-				params: {
-					runId: runId
-				}
-			};
-			
-			return $http.get(studentStatusUrl, requestConfig).then(angular.bind(this, function(result) {
-				var studentStatuses = result.data;
-		
-				this.studentStatuses = studentStatuses;
-				
-				return studentStatuses;
-			}));
-		}));
-		
-		return all;
-	};
 	
 	this.getStudentStatuses = function() {
 		return this.studentStatuses;

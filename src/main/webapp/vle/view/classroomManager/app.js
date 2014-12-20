@@ -4,7 +4,9 @@ var classroomManagerApp = angular.module('classroomManagerApp', [
    'ConfigService',
    'ProjectService',
    'ProjectMetadataService',
+   'StepGradingView',
    'StepProgressView',
+   'StudentGradingView',
    'StudentProgressView',
    'StudentStatusService',
    'StudentWorkService',
@@ -57,12 +59,32 @@ classroomManagerApp.config(['$urlRouterProvider', '$stateProvider', function($ur
 			controllerAs: 'stepProgress'
 		})
 		.state('studentGrading', {
+			parent: 'root',
 			url: '/studentGrading',
-			templateUrl: 'grading/student/studentGrading.html'
+			params: {workgroupId:null},
+			templateUrl: 'grading/student/studentGrading.html',
+			controller: 'StudentGradingController',
+			controllerAs: 'studentGrading',
+			resolve: {
+				studentWork: function(StudentWorkService, $stateParams) {
+					var workgroupId = $stateParams.workgroupId;
+					return StudentWorkService.retrieveStudentWorkForWorkgroupId(workgroupId);
+				}
+			}
 		})
 		.state('stepGrading', {
+			parent: 'root',
 			url: '/stepGrading',
-			templateUrl: 'grading/step/stepGrading.html'
+			params: {nodeId:null},
+			templateUrl: 'grading/step/stepGrading.html',
+			controller: 'StepGradingController',
+			controllerAs: 'stepGrading',
+			resolve: {
+				studentWork: function(StudentWorkService, $stateParams) {
+					var nodeId = $stateParams.nodeId;
+					return StudentWorkService.retrieveStudentWorkForNodeId(nodeId);
+				}
+			}
 		})
 }]);
 

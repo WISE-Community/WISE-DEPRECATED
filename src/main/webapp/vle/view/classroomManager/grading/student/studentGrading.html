@@ -1,1 +1,18 @@
-Student Grading View
+{{studentGrading.title}}
+<br>
+{{studentGrading.getStudentNameForWorkgroupId(studentGrading.workgroupId)}}
+
+<table>
+	<tr ng-repeat="node in studentGrading.nodes">
+		<td>
+			<table>
+				<tr>
+					<td>{{studentGrading.getNodeNumberAndTitle(node.identifier)}} ({{node.type}})</td>
+				</tr>
+				<tr ng-repeat="nodeVisit in studentGrading.getNodeVisitsForWorkgroupIdAndNodeId(studentGrading.workgroupId, node.identifier)">
+					<td>{{nodeVisit}}</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
