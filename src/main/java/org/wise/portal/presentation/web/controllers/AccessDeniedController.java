@@ -43,5 +43,4 @@ public class AccessDeniedController extends AbstractController{
 			HttpServletResponse response) throws Exception {
 		return new ModelAndView("errors/accessdenied");
 	}
-
 }

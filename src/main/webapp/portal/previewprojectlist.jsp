@@ -1,4 +1,4 @@
-<%@ include file="../include.jsp"%>
+<%@ include file="include.jsp"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,14 +23,14 @@
 
 <!--NOTE: the following scripts has CONDITIONAL items that only apply to IE (MattFish)-->
 <!--[if lt IE 7]>
-<script defer type="text/javascript" src="../javascript/iefixes.js"></script>
+<script defer type="text/javascript" src="javascript/iefixes.js"></script>
 <![endif]-->
 
 </head>
 <body>
 <div id="pageWrapper">
 
-	<%@ include file="../headermain.jsp"%>
+	<%@ include file="headermain.jsp"%>
 		
 	<div id="page">
 			
@@ -54,7 +54,7 @@
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page -->
 	
-	<%@ include file="../footer.jsp"%>
+	<%@ include file="footer.jsp"%>
 	
 </div>
 </body>
