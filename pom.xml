@@ -485,7 +485,7 @@
 	<properties>
 		<org.springframework.version>4.0.6.RELEASE</org.springframework.version>
 		<org.springframework.security.version>3.2.4.RELEASE</org.springframework.security.version>
-		<org.hibernate.version>4.3.5.Final</org.hibernate.version>
+		<org.hibernate.version>4.3.7.Final</org.hibernate.version>
 		<startup.listeners>
 		</startup.listeners>
 	</properties>
