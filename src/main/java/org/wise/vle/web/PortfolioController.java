@@ -170,16 +170,4 @@ public class PortfolioController {
 		}
 		return false;
 	}
-
-	private boolean isPrivileged(User signedInUser, Long runId) {
-		if(SecurityUtils.isAdmin(signedInUser)) {
-			//the user is an admin so we will allow this request
-			return true;
-		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
-			//the user is a teacher that is an owner or shared owner of the run so we will allow this request
-			return true;
-		} 
-		return false;
-	}
-
 }

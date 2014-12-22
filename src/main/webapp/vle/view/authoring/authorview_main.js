@@ -425,7 +425,7 @@ View.prototype.nodeTitleChanged = function(id){
  * Updates the changed project title in the current project and updates the
  * metadata, publishing changes to the portal.
  */
-View.prototype.projectTitleChanged = function(){
+View.prototype.handleProjectTitleChanged = function(){
 	/* get user input title */
 	var newTitle = document.getElementById('projectTitleInput').value;
 	

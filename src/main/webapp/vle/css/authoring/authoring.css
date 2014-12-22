@@ -1214,7 +1214,7 @@ div#toolsAreaAuthor {
 	background:url(../../images/toolbar_bg3.png);
 	cursor:pointer;
 }
-.dropdownAuthor dd {position:absolute; right:16px; overflow:hidden; display:none; background:#fff; z-index:200; opacity:0;}
+.dropdownAuthor dd {position:absolute; right:75px; overflow:hidden; display:none; background:#fff; z-index:200; opacity:0;}
 .dropdownAuthor ul {font-size:80%; border:2px solid #000; list-style:none;background-color:#333;padding:0;margin:0;}
 
 .dropdownAuthor li img {float:left;vertical-align:middle;margin:0 8px 0px 0;}

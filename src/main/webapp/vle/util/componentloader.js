@@ -255,7 +255,6 @@ var componentloader = function(em, sl){
 				'checkAndDeselect':[null,null], 
 				'selectClick':[null,null],
 				'selectBoxClick':[null,null],
-				'projectTitleChanged':[null,null],
 				'stepLevelChanged':[null,null], 
 				'autoStepChanged':[null,null], 
 				'stepNumberChanged':[null,null],
@@ -302,7 +301,6 @@ var componentloader = function(em, sl){
 				'cleanDisplayingResultsComplete':[null,null],
 				'cleanUpdateProjectMetaFile':[null,null], 
 				'notifyCleaningComplete':[null,null],
-				'authorConstraints':[null,null],
 				'constraintTitleClicked':[null,null],
 				'constraintCreateConstraint':[null,null],
 				'constraintSelectTypeChanged':[null,null],
@@ -318,7 +316,6 @@ var componentloader = function(em, sl){
 				'projectTagRemoveTag':[null,null],
 				'projectTagCreateTag':[null,null],
 				'browserResize':[null,null],
-				'reviewUpdateProject':[null,null],
 				'updateProject':[null,null],
 				'populateAddTagSelect':[null,null],
 				'populateAddTagMapSelect':[null,null],
@@ -344,7 +341,6 @@ var componentloader = function(em, sl){
 				init:function(view){
 					view.eventManager.subscribe('projectSelected', view.authorDispatcher, view);
 					view.eventManager.subscribe('loadingProjectCompleted', view.authorDispatcher, view);
-					view.eventManager.subscribe('projectTitleChanged', view.authorDispatcher, view);
 					view.eventManager.subscribe('stepLevelChanged', view.authorDispatcher, view);
 					view.eventManager.subscribe('autoStepChanged', view.authorDispatcher, view);
 					view.eventManager.subscribe('stepTermChanged', view.authorDispatcher, view);
@@ -359,7 +355,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('viewAssets', view.authorDispatcher, view);
 					view.eventManager.subscribe('whoIsEditing', view.authorDispatcher, view);
 					view.eventManager.subscribe('previewFrameLoaded', view.authorDispatcher, view);
-					view.eventManager.subscribe('reviewUpdateProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('updateProject', view.authorDispatcher, view);
 					view.eventManager.subscribe('checkAndSelect', view.selectDispatcher, view);
 					view.eventManager.subscribe('checkAndDeselect', view.selectDispatcher, view);
@@ -415,7 +410,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('snapshotInfoSelectChanged', view.versionDispatcher, view);
 					view.eventManager.subscribe('snapshotInfoDone', view.versionDispatcher, view);
 					view.eventManager.subscribe('setActiveVersionById', view.versionDispatcher, view);
-					view.eventManager.subscribe('authorConstraints', view.constraintDispatcher, view);
 					view.eventManager.subscribe('constraintTitleClicked', view.constraintDispatcher, view);
 					view.eventManager.subscribe('constraintCreateConstraint', view.constraintDispatcher, view);
 					view.eventManager.subscribe('constraintSelectTypeChanged', view.constraintDispatcher, view);

@@ -9,8 +9,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.projectOptionSelected();
 	} else if(type=='loadingProjectCompleted'){
 		obj.onProjectLoaded();
-	} else if(type=='projectTitleChanged'){
-		obj.projectTitleChanged();
 	} else if(type=='stepLevelChanged'){
 		obj.stepLevelChanged();
 	} else if(type=='stepTermChanged'){
@@ -51,8 +49,6 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.onPreviewFrameLoad();
 	} else if(type=='browserResize'){
 		obj.utils.resize();
-	} else if(type=='reviewUpdateProject') {
-		obj.reviewUpdateProject();
 	} else if(type=='updateProject') {
 		obj.updateProject();
 	} else if(type == 'populateAddTagSelect') {
@@ -242,9 +238,7 @@ View.prototype.versionDispatcher = function(type,args,obj){
 };
 
 View.prototype.constraintDispatcher = function(type,args,obj){
-	if(type=='authorConstraints'){
-		obj.Constraint.initializeConstraintAuthoring(obj);
-	} else if(type=='constraintTitleClicked'){
+	if(type=='constraintTitleClicked'){
 		obj.Constraint.constraintTitleClicked(args[0]);
 	} else if(type=='constraintCreateConstraint'){
 		obj.Constraint.createConstraint(args[0]);
