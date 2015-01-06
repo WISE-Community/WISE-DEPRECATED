@@ -325,6 +325,35 @@ FlashNode.prototype.hasGradingView = function() {
 	return result;
 };
 
+/**
+ * Override of Node.overridesIsCompleted
+ * Specifies whether the node overrides Node.isCompleted
+ */
+FlashNode.prototype.overridesIsCompleted = function(){
+	return true;
+};
+
+/**
+ * Determine whether the student has completed the step or not
+ * @param nodeState the latest node state for the step
+ * @return whether the student has completed the step or not
+ */
+FlashNode.prototype.isCompleted = function(nodeVisits) {
+	var isCompleted = false;
+	
+	var nodeState = this.view.getLatestNodeStateWithWorkFromNodeVisits(nodeVisits);
+	
+	if(nodeState != null && nodeState != '' && nodeState.hasOwnProperty('isCompleted')) {
+		isCompleted = nodeState.data.isCompleted;
+	} else {
+		if(nodeVisits != null && nodeVisits.length > 0) {
+			result = true;
+		}
+	}
+
+	return isCompleted;
+};
+
 //Add this node to the node factory so the vle knows it exists.
 NodeFactory.addNode('FlashNode', FlashNode);
 
