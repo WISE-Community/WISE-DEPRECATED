@@ -917,6 +917,9 @@ public class StudentDataController {
 						
 						//save the annotation JSON object
 						saveAnnotationObject(annotationRunId, toWorkgroup, fromWorkgroup, type, annotationJSONObject, stepWork, postTime);
+						
+						//set the annotation post time into the response
+						jsonResponse.put("annotationPostTime", postTime.getTime());
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}

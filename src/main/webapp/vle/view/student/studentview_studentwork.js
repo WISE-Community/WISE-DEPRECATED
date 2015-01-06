@@ -133,6 +133,7 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 					this.processPostResponse, 
 					{vle: this, 
 					 nodeVisit:currentNodeVisit, 
+					 annotation:autoGradedAnnotation,
 					 successCallback:successCallback,
 					 failureCallback:failureCallback,
 					 additionalData:additionalData},
@@ -294,6 +295,7 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 	var responseJSONObj = $.parseJSON(responseText);
 	var id = responseJSONObj.id;
 	var visitPostTime = responseJSONObj.visitPostTime;
+	var annotationPostTime = responseJSONObj.annotationPostTime;
 
 	/*
 	 * set the id for the node visit, this is the same as the id value
@@ -332,6 +334,15 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 			//send the student status to the server
 			args.vle.sendStudentStatusToServer();
 		}		
+	}
+	
+	/*
+	 * check if we need to update the annotation post time of the annotation
+	 * that was saved to the server along with the node visit
+	 */
+	if(args.annotation != null && annotationPostTime != null) {
+		//set the post time of our local copy of the annotation
+		args.annotation.postTime = annotationPostTime;
 	}
 
 	//fire the event that says we are done processing the post response

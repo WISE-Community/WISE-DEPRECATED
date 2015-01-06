@@ -1009,19 +1009,83 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 							//add a '/' before the max score
 							maxScoreForStep = " / " + maxScoreForStep;
 						}
-
+						
+						var annotationScoreValue = null;
+						var annotationScorePostTime = null;
+						var annotationCommentValue = null;
+						var annotationCommentPostTime = null;
+						
 						//get the latest score annotation
 						var annotationScore = view.getAnnotations().getLatestAnnotation(runId, nodeId, toWorkgroup, fromWorkgroups, 'score');
+						if(annotationScore != null) {
+							annotationScoreValue = annotationScore.value;
+							annotationScorePostTime = annotationScore.postTime;
+						}
+						
+						//get the latest comment annotation
+						var annotationComment = view.getAnnotations().getLatestAnnotation(runId, nodeId, toWorkgroup, fromWorkgroups, 'comment');
+						if(annotationComment != null) {
+							annotationCommentValue = annotationComment.value;
+							annotationCommentPostTime = annotationComment.postTime;
+						}
+						
+						//get the latest autoGraded annotation
+						var latestAutoGradedAnnotation = view.getAnnotations().getLatestAnnotation(runId, nodeId, toWorkgroup, [-1], 'autoGraded');
+						var latestAutoGradedAnnotationPostTime = null;
 
-						if(annotationScore != null && annotationScore.value !== '') {
+						if(latestAutoGradedAnnotation != null) {
+							//get the auto graded annotation post time
+							latestAutoGradedAnnotationPostTime = latestAutoGradedAnnotation.postTime;
+							
+							//check if the auto graded annotation is newer than the teacher score
+							if(latestAutoGradedAnnotationPostTime > annotationScorePostTime) {
+								/*
+								 * the auto graded annotation is newer than the teacher score so we will
+								 * show the auto graded score
+								 */
+								
+								if(latestAutoGradedAnnotation.value != null) {
+									if(latestAutoGradedAnnotation.value.length > 0) {
+										//get the latest auto graded value object
+										var autoGradedObject = latestAutoGradedAnnotation.value[latestAutoGradedAnnotation.value.length - 1];
+										
+										if(autoGradedObject != null) {
+											//get the auto score and post time
+											annotationScoreValue = autoGradedObject.autoScore;
+											annotationScorePostTime = latestAutoGradedAnnotation.postTime;
+										}
+									}
+								}
+							}
+							
+							//check if the auto graded annotation is newer than the teacher comment
+							if(latestAutoGradedAnnotationPostTime > annotationCommentPostTime) {
+								/*
+								 * the auto graded annotation is newer than the teacher comment so we will
+								 * show the auto graded comment
+								 */
+								
+								if(latestAutoGradedAnnotation.value != null) {
+									if(latestAutoGradedAnnotation.value.length > 0) {
+										//get the latest auto graded value object
+										var autoGradedObject = latestAutoGradedAnnotation.value[latestAutoGradedAnnotation.value.length - 1];
+										
+										if(autoGradedObject != null) {
+											//get the auto feedback and post time
+											annotationCommentValue = autoGradedObject.autoFeedback;
+											annotationCommentPostTime = latestAutoGradedAnnotation.postTime;											
+										}
+									}
+								}
+							}
+						}
+							
+						if(annotationScoreValue != null) {
 							var teacher_score = view.getI18NString('teacher_score');
 
 							//the p that displays the score
-							var scoreP = "<p style='display: inline'>" + teacher_score + ": " + annotationScore.value + maxScoreForStep + "</p>";
+							var scoreP = "<p style='display: inline'>" + teacher_score + ": " + annotationScoreValue + maxScoreForStep + "</p>";
 							var newP = "";
-
-							//get the post time of the annotation
-							var annotationScorePostTime = annotationScore.postTime;
 
 							//check if the annotation is new for the student
 							if(annotationScorePostTime > lastTimeVisited) {
@@ -1043,18 +1107,12 @@ function createProject(content, contentBaseUrl, lazyLoading, view, totalProjectC
 							annotationHtml += annotationScoreHtml; 	
 						}
 
-						//get the latest comment annotation
-						var annotationComment = view.getAnnotations().getLatestAnnotation(runId, nodeId, toWorkgroup, fromWorkgroups, 'comment');
-
-						if(annotationComment && annotationComment.value != '') {
+						if(annotationCommentValue != null) {
 							var teacher_feedback = view.getI18NString('teacher_feedback');
 
 							//create the p that displays the comment
-							var commentP = "<p style='display: inline'>" + teacher_feedback + ": " + annotationComment.value + "</p>";
+							var commentP = "<p style='display: inline'>" + teacher_feedback + ": " + annotationCommentValue + "</p>";
 							var newP = "";
-
-							//get the post time of the annotation
-							var annotationCommentPostTime = annotationComment.postTime;
 
 							//check if the annotation is new for the student
 							if(annotationCommentPostTime > lastTimeVisited) {
