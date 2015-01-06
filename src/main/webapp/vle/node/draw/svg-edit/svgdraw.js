@@ -498,7 +498,7 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 				
 				//$('#description_collapse').hide();
 			} else {
-				if(data.description && data.description!=""){
+				if(data && data.description && data.description!=""){
 					descriptionExt.content(data.description);
 					
 				} else if (context.defaultDescription!="") {
