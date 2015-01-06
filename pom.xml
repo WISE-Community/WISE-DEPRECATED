@@ -404,7 +404,7 @@
 			<artifactId>hibernate-ehcache</artifactId>
 			<version>${org.hibernate.version}</version>
 		</dependency>
-		<!-- TODO: when hibernate-ehcache includes ehcache-core 2.5.0+ (which is required by spring 4.1.x), remove this ehcache-core dependcy below -->
+		<!-- TODO: when hibernate-ehcache includes ehcache-core 2.5.0+ (which is required by spring 4.1.x), remove this ehcache-core dependency below -->
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
@@ -489,7 +489,7 @@
 		</plugins>
 	</reporting>
 	<properties>
-		<org.springframework.version>4.1.3.RELEASE</org.springframework.version>
+		<org.springframework.version>4.1.4.RELEASE</org.springframework.version>
 		<org.springframework.security.version>3.2.5.RELEASE</org.springframework.security.version>
 		<org.hibernate.version>4.3.7.Final</org.hibernate.version>
 		<startup.listeners>
