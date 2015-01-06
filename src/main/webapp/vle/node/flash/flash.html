@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<script type="text/javascript">
+		<script>
 			var flash;
 		
 			function loadContentAfterScriptsLoad(node) {
@@ -22,6 +22,11 @@
 	         function save() {
 	     		flash.save();
 	     	};
+	     	
+	     	// callback that can be used by swf file
+	     	function swfLoaded() {
+	     		flash.swfLoaded();
+	     	}
 	        
 		</script>
 	</head>
