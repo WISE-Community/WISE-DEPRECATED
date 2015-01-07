@@ -11,14 +11,8 @@ View.prototype.authorDispatcher = function(type,args,obj){
 		obj.onProjectLoaded();
 	} else if(type=='stepLevelChanged'){
 		obj.stepLevelChanged();
-	} else if(type=='stepTermChanged'){
-		obj.stepTermChanged();
-	} else if(type=='stepTermPluralChanged'){
-		obj.stepTermChanged(true);
 	} else if(type=='autoStepChanged'){
 		obj.autoStepChanged();
-	} else if(type=='stepNumberChanged'){
-		obj.stepNumberChanged();
 	} else if(type=='author'){
 		obj.author(args[0]);
 	} else if(type=='nodeIconUpdated'){
@@ -120,8 +114,6 @@ View.prototype.reviewSequenceDispatcher = function(type,args,obj){
 View.prototype.metaDispatcher = function(type,args,obj){
 	if(type=='maxScoreUpdated'){
 		obj.maxScoreUpdated(args[0]);
-	} else if(type=='postLevelChanged'){
-		obj.postLevelChanged();
 	} else if(type=='setLastEdited'){
 		obj.setLastEdited();
 	}
@@ -156,9 +148,7 @@ View.prototype.authorStepDispatcher = function(type,args,obj){
  * of project files.
  */
 View.prototype.cleanDispatcher = function(type,args,obj){
-	if(type=='cleanProject'){
-		obj.cleaner.initializeCleaning(obj);
-	} else if(type=='cleanSavingProjectStart'){
+	if(type=='cleanSavingProjectStart'){
 		obj.cleaner.saveProject();
 	} else if(type=='cleanSavingProjectComplete'){
 		obj.cleaner.onSavingProjectComplete(args[0]);

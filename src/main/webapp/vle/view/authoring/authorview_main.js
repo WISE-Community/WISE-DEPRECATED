@@ -1153,14 +1153,13 @@ View.prototype.copyProject = function(){
 View.prototype.toggleProjectMode = function(){
 	this.projectStructureViolation = false;
 	
-	//toggle modes and set associated text
-	if(this.simpleProject){
-		this.simpleProject = false;
-		$('#projectModeDiv > span').text('Advanced Mode');
-	} else {
+	var val = document.getElementById('toggleMode').options[document.getElementById('toggleMode').selectedIndex].value;
+	if(val=="simple"){
 		this.simpleProject = true;
-		$('#projectModeDiv > span').text('Simple Mode');
+	} else if(val=="advanced"){
+		this.simpleProject = false;
 	};
+
 	//regenerate authoring if a project is open
 	if(this.getProject()){
 		this.generateAuthoring();
@@ -1643,7 +1642,7 @@ View.prototype.onProjectLoaded = function(){
 	if(this.cleanMode){
 		this.retrieveMetaData();
 		this.retrieveProjectRunStatus();
-		eventManager.fire('cleanProject');
+		this.cleaner.initializeCleaning(this);
 	} else {
 		//make the top project authoring container visible (where project title shows up)
 		$('#currentProjectContainer').show();
