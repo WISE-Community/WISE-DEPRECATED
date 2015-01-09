@@ -7,7 +7,7 @@ Setup WISE Local Development: https://github.com/WISE-Community/WISE/wiki/How-to
 
 Other documentation: https://github.com/WISE-Community/WISE/wiki
 
-Developer mailinglist: https://groups.google.com/forum/#!forum/wise4-dev
+Developer mailinglist: https://groups.google.com/forum/#!forum/wise-dev
 
 Open-source license: GNU General Public License, v3.  See LICENSE.txt for details.
 
