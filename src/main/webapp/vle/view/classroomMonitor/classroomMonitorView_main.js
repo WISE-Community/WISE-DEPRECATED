@@ -2348,15 +2348,17 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
 						
 						$studentWorkCell.append($studentWorkHeader);
 						
-						// create student response container
-						var $studentWorkContainer = $('<div id="stepWork_' + stepWorkId + '" class="stepwork">');
-						try {
-							// render the student work into the response container
-							node.renderGradingView($studentWorkContainer, nodeVisit, null, workgroupId);
-						} catch(e) {
-							console.log(e);
+						if(nodeType != 'FlashNode') {
+							// create student response container
+							var $studentWorkContainer = $('<div id="stepWork_' + stepWorkId + '" class="stepwork">');
+							try {
+								// render the student work into the response container
+								node.renderGradingView($studentWorkContainer, nodeVisit, null, workgroupId);
+							} catch(e) {
+								console.log(e);
+							}
+							$studentWorkCell.append($studentWorkContainer);
 						}
-						$studentWorkCell.append($studentWorkContainer);
 						
 						// create student response cell footer (timestamp)
 						$workTimestamp = $('<div class="timestamp">').append('<span class="fa fa-clock-o"></span>');
@@ -2551,6 +2553,23 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
 							this.gradeByStudentTable.row.add($stepWork[0]);
 						} else if(mode === 'stepGrading'){
 							this.gradeByStepTable.row.add($stepWork[0]);
+							
+							if(nodeType == 'FlashNode') {
+								this.gradeByStepTable.draw();								
+							}
+						}
+						
+						if(nodeType == 'FlashNode') {
+							// create student response container
+							var $studentWorkContainer = $('<div id="stepWork_' + stepWorkId + '" class="stepwork">');
+							$studentWorkCell.append($studentWorkContainer);
+							
+							try {
+								// render the student work into the response container
+								node.renderGradingView($studentWorkContainer, nodeVisit, null, workgroupId);
+							} catch(e) {
+								console.log(e);
+							}
 						}
 						
 						// set latest to false for all but first item

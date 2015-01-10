@@ -118,6 +118,7 @@ FlashNode.prototype.onExit = function() {
 FlashNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVisit, childDivIdPrefix, workgroupId) {
 	var divId = displayStudentWorkDiv.attr('id');
 	var nodeContent = this.getContent().getContentJSON();
+	this.fetchI18NFiles();
 	if(nodeContent.gradingType == "flashDisplay"){
 		//if node type if FlashNode and grading type is set to flashDisplaty render Flash applet with stored student data
 		this.renderGradingViewFlash(displayStudentWorkDiv, nodeVisit, "", workgroupId, nodeContent);
