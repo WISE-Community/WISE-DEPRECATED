@@ -2551,6 +2551,10 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
 						// add row to DataTable
 						if(mode === 'studentGrading'){
 							this.gradeByStudentTable.row.add($stepWork[0]);
+							
+							if(nodeType == 'FlashNode') {
+								this.gradeByStudentTable.draw();								
+							}
 						} else if(mode === 'stepGrading'){
 							this.gradeByStepTable.row.add($stepWork[0]);
 							
