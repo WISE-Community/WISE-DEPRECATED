@@ -66,24 +66,6 @@ Flash.prototype.render = function() {
 	
 	// flashvars can be used by authors to send starting parameters to the swf on load
 	var flashvars = this.content.flashvars;
-	
-	// if data logging is enabled, add latest student work to the flashvars
-	if(this.content.enableData){
-		var lastState = '';
-		// get latest student state
-		if (flash.getLatestState()) {
-			lastState = JSON.stringify(flash.getLatestState().response.data);
-		} else if(workToImport != null && workToImport.length > 0) {
-			/*
-			 * the student does not have any previous work and there
-			 * is work to import so we will use the work to import
-			 */
-			nodeState = workToImport[workToImport.length - 1];
-			lastState = JSON.stringify(nodeState.response.data);
-		}
-		// add student data to flashvars (needs to be processed by Flash on load)
-		flashvars.studentData = lastState;
-	}
 
 	var params = {};
 	params.quality = "high";
@@ -152,6 +134,34 @@ Flash.prototype.save = function() {
 				//push the state object into this or object's own copy of states
 				this.states.push(flashState);
 			 }
+		}
+	}
+};
+
+/**
+ * Callback function that can be called be swf when it has loaded
+ * 
+ * Once swf has loaded, WISE will send latest student data to Flash if student data saving is enabled
+ * (Can be omitted from swf file if data repopulating is not needed)
+ */
+Flash.prototype.swfLoaded = function() {
+	// if data logging is enabled, add latest student work to the flashvars
+	if(this.content.enableData){
+		var lastState = null;
+		// get latest student state
+		if (this.getLatestState()) {
+			lastState = JSON.stringify(this.getLatestState().response.data);
+		} else if(workToImport != null && workToImport.length > 0) {
+			/*
+			 * the student does not have any previous work and there
+			 * is work to import so we will use the work to import
+			 */
+			nodeState = workToImport[workToImport.length - 1];
+			lastState = JSON.stringify(nodeState.response.data);
+		}
+		if(lastState){
+			// send student data to Flash
+			this.sendStateToFlash(lastState);
 		}
 	}
 };

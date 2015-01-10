@@ -566,7 +566,12 @@ View.prototype.initializeSession = function(){
  * to upload as asset, false otherwise.
  */
 View.prototype.utils.fileFilter = function(extensions,name){
+	try {
 	return extensions.indexOf(this.getExtension(name).toLowerCase()) != -1;
+	}
+	catch(err) {
+		return false;
+	}
 };
 
 View.prototype.checkRealTimeEnabled = function() {

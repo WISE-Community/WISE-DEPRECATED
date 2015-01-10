@@ -257,9 +257,6 @@ var componentloader = function(em, sl){
 				'selectBoxClick':[null,null],
 				'stepLevelChanged':[null,null], 
 				'autoStepChanged':[null,null], 
-				'stepNumberChanged':[null,null],
-				'stepTermChanged':[null,null],
-				'stepTermPluralChanged':[null,null],
 				'author':[null,null],
 				'nodeIconUpdated':[null,null], 
 				'nodeTitleChanged':[null,null], 
@@ -278,13 +275,11 @@ var componentloader = function(em, sl){
 				'sourceUpdated':[null,null], 
 				'closeOnStepSaved':[null,null], 
 				'maxScoreUpdated':[null,null],
-				'postLevelChanged':[null,null], 
 				'setLastEdited':[null,null], 
 				'whoIsEditing':[null,null],
 				'startCreateReviewSequence':[null,null], 
 				'cancelReviewSequence':[null,null], 
 				'previewFrameLoaded':[null,null],
-				'cleanProject':[null,null],
 				'cleanClosingProjectStart':[null,null],
 				'cleanClosingProjectComplete':[null,null], 
 				'cleanLoadingProjectFileStart':[null,null], 
@@ -343,9 +338,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('loadingProjectCompleted', view.authorDispatcher, view);
 					view.eventManager.subscribe('stepLevelChanged', view.authorDispatcher, view);
 					view.eventManager.subscribe('autoStepChanged', view.authorDispatcher, view);
-					view.eventManager.subscribe('stepTermChanged', view.authorDispatcher, view);
-					view.eventManager.subscribe('stepTermPluralChanged', view.authorDispatcher, view);
-					view.eventManager.subscribe('stepNumberChanged', view.authorDispatcher, view);
 					view.eventManager.subscribe('author', view.authorDispatcher, view);
 					view.eventManager.subscribe('nodeIconUpdated', view.authorDispatcher, view);
 					view.eventManager.subscribe('nodeTitleChanged', view.authorDispatcher, view);
@@ -365,7 +357,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('disengageSelectMode', view.selectDispatcher, view);
 					view.eventManager.subscribe('processChoice', view.selectDispatcher, view);
 					view.eventManager.subscribe('maxScoreUpdated', view.metaDispatcher, view);
-					view.eventManager.subscribe('postLevelChanged', view.metaDispatcher, view);
 					view.eventManager.subscribe('setLastEdited', view.metaDispatcher, view);
 					view.eventManager.subscribe('saveStep', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('editHints', view.authorStepDispatcher, view);
@@ -375,7 +366,6 @@ var componentloader = function(em, sl){
 					view.eventManager.subscribe('saveHints', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('sourceUpdated', view.authorStepDispatcher, view);
 					view.eventManager.subscribe('closeOnStepSaved', view.authorStepDispatcher, view);
-					view.eventManager.subscribe('cleanProject', view.cleanDispatcher, view);
 					view.eventManager.subscribe('cleanSavingProjectStart', view.cleanDispatcher, view);
 					view.eventManager.subscribe('cleanSavingProjectComplete', view.cleanDispatcher, view);
 					view.eventManager.subscribe('cleanClosingProjectStart', view.cleanDispatcher, view);

@@ -212,7 +212,7 @@ View.prototype.setPostLevel = function(){
 /**
  * Retrieves the user selected value for logging level and updates the metadata file.
  */
-View.prototype.postLevelChanged = function(){
+View.prototype.handlePostLevelChanged = function(){
 	var val = document.getElementById('postLevelSelect').options[document.getElementById('postLevelSelect').selectedIndex].value;
 	this.projectMeta.postLevel = parseInt(val);
 	this.getProject().setPostLevel(parseInt(val));
@@ -265,7 +265,7 @@ View.prototype.verifyCleaning = function(){
 	};
 	
 	if(forceCleaning){
-		this.eventManager.fire('cleanProject');
+		this.cleaner.initializeCleaning(this);
 	};
 };
 
