@@ -204,6 +204,9 @@ public class RegisterTeacherController {
 						populateModel(model);
 						view = formView;
 					}
+					model.addAttribute(USERNAME_KEY, userDetails.getUsername());
+					model.addAttribute(DISPLAYNAME_KEY, userDetails.getDisplayname());
+					view = successView;
 				} else {
 					// we're updating an existing teacher's account
 					User user = userService.retrieveUserByUsername(userDetails.getUsername());
@@ -234,11 +237,8 @@ public class RegisterTeacherController {
 					userService.updateUser(user);
 					// update user in session
 					request.getSession().setAttribute(User.CURRENT_USER_SESSION_KEY, user);
+					view = "teacher/management/updatemyaccount";
 				}
-				
-				model.addAttribute(USERNAME_KEY, userDetails.getUsername());
-				model.addAttribute(DISPLAYNAME_KEY, userDetails.getDisplayname());
-				view = successView;
 			}
 		} else {
 			//the request is not coming from a valid domain address so we will not allow it
