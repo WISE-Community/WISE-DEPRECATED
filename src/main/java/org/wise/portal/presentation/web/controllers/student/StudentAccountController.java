@@ -64,10 +64,9 @@ import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 
 /**
- * Signup controller for WISE student user
+ * Controller for creating and updating WISE student accounts
  *
  * @author Hiroki Terashima
- * @version $Id: StudentAccountController.java 955 2007-08-21 22:47:13Z hiroki $
  */
 @Controller
 @SessionAttributes("studentAccountForm")

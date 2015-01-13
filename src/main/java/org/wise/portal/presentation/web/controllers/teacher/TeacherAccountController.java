@@ -25,7 +25,6 @@ package org.wise.portal.presentation.web.controllers.teacher;
 
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
@@ -35,12 +34,12 @@ import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.wise.portal.domain.authentication.Curriculumsubjects;
 import org.wise.portal.domain.authentication.Schoollevel;
@@ -54,14 +53,13 @@ import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.user.UserService;
 
 /**
- * Signup controller for WISE teacher user
+ * Controller for creating and updating WISE teacher accounts
  *
  * @author Hiroki Terashima
- * @version $Id: RegisterTeacherController.java 1033 2007-09-08 00:05:01Z archana $
  */
 @Controller
-@RequestMapping("/teacher/registerteacher.html")
-public class RegisterTeacherController {
+@SessionAttributes("teacherAccountForm")
+public class TeacherAccountController {
 
 	@Autowired
 	protected Properties wiseProperties;
@@ -74,182 +72,199 @@ public class RegisterTeacherController {
 
 	@Autowired
 	protected UserService userService;
-	
+
 	@Autowired
 	protected TeacherAccountFormValidator teacherAccountFormValidator;
-	
-	//the path to this form view
-	private String formView = "teacher/registerteacher";
-	
-	//the path to the success view
-	private String successView = "teacher/registerTeacherConfirm";
-	
+
 	protected static final String USERNAME_KEY = "username";
-	
+
 	protected static final String DISPLAYNAME_KEY = "displayname";
 
-    /**
-     * Called before the page is loaded to initialize values.
+	/**
+	 * Called before the page is loaded to initialize values.
 	 * Adds the TeacherAccountForm object to the model. 
 	 * This object will be filled out and submitted for creating
 	 * the new teacher
-     * @param modelMap the model object that contains values for the page to use when rendering the view
-     * @return the path of the view to display
-     */
-    @RequestMapping(method=RequestMethod.GET)
-    public String initializeForm(ModelMap modelMap) throws Exception {
-    	//create the teacher account form object
-    	TeacherAccountForm teacherAccountForm = new TeacherAccountForm();
-    	
-    	//put the teacher account form object into the model
-    	modelMap.put("teacherAccountForm", teacherAccountForm);
+	 * @param modelMap the model object that contains values for the page to use when rendering the view
+	 * @return the path of the view to display
+	 */
+	@RequestMapping(value={"/teacher/registerteacher.html"},method=RequestMethod.GET)
+	public String initializeFormNewTeacher(ModelMap modelMap) throws Exception {
+		//create the teacher account form object
+		TeacherAccountForm teacherAccountForm = new TeacherAccountForm();
 
-    	//populate the model with other objects the form requires
-    	populateModel(modelMap);
-    	
-    	//get the form view
-    	return formView;
-    }
-    
-    /**
-     * Populate the model with objects the form requires
-     * @param modelMap the model to populate
-     * @return the model
-     */
-    protected Map<String, Object> populateModel(Map<String, Object> modelMap) {
-    	//add objects into the model that will be used by the form
-    	modelMap.put("schoollevels", Schoollevel.values());
-    	modelMap.put("curriculumsubjects",Curriculumsubjects.values());
-    	modelMap.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
-    	
-    	return modelMap;
-    }
-    
-    /**
-     * Populate the model with objects the form requires
-     * @param modelMap the model to populate
-     * @return the model
-     */
-    protected Model populateModel(Model model) {
-    	//get the model as a map so we can add objects to it
-    	Map<String, Object> asMap = model.asMap();
-    	try {
-    		//populate the model with objects the form requires 
-    		populateModel(asMap);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+		//put the teacher account form object into the model
+		modelMap.addAttribute("teacherAccountForm", teacherAccountForm);
 
-    	return model;
-    }
-	
-    /**
+		//populate the model with other objects the form requires
+		populateModelMap(modelMap);
+
+		return "teacher/registerteacher";
+	}
+
+	/**
+	 * Called before the page is loaded to initialize values.
+	 * Adds the TeacherAccountForm object to the model so that the form
+	 * can be populated.
+	 * @param model the model object that contains values for the page to use when rendering the view
+	 * @return the path of the view to display
+	 */
+	@RequestMapping(value={"/teacher/management/updatemyaccountinfo.html"},method=RequestMethod.GET)
+	public String initializeFormExistingTeacher(ModelMap modelMap) throws Exception {
+		//get the signed in user
+		User signedInUser = ControllerUtil.getSignedInUser();
+
+		//get the teacher user details for the signed in user
+		TeacherUserDetails teacherUserDetails = (TeacherUserDetails) signedInUser.getUserDetails();
+
+		//create the teacher account form object used to populate the form
+		TeacherAccountForm teacherAccountForm = new TeacherAccountForm(teacherUserDetails);
+
+		//put the teacher account form object into the model
+		modelMap.addAttribute("teacherAccountForm", teacherAccountForm);
+
+		//populate the model with other objects the form requires
+		populateModelMap(modelMap);
+
+		return "teacher/management/updatemyaccountinfo";
+	}
+
+	/**
+	 * Shows page where teacher selects between changing password or changing other account information
+	 */
+	@RequestMapping(value={"/teacher/management/updatemyaccount.html"},method=RequestMethod.GET)
+	public String updateMyAccountIntialPage() {
+		return "teacher/management/updatemyaccount";
+	}
+
+	/**
+	 * Populate the model map with objects the form requires
+	 * @param modelMap the model to populate
+	 * @return the model
+	 */
+	protected ModelMap populateModelMap(ModelMap modelMap) {
+		try {
+			//populate the model with objects the form requires 
+			modelMap.put("schoollevels", Schoollevel.values());
+			modelMap.put("curriculumsubjects",Curriculumsubjects.values());
+			modelMap.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return modelMap;
+	}
+
+	/**
 	 * On submission of the signup form, a user is created and saved to the data
 	 * store.
-     * @param accountForm the model object that contains values for the page to use when rendering the view
-     * @param bindingResult the object used for validation in which errors will be stored
-     * @param request the http request object
-     * @param model the object that contains values to be displayed on the page
-     * @return the path of the view to display
-     */
-	@RequestMapping(method=RequestMethod.POST)
-    protected String onSubmit(
-    		@ModelAttribute("teacherAccountForm") TeacherAccountForm accountForm, 
-    		BindingResult bindingResult, 
-    		HttpServletRequest request, 
-    		Model model) {
-		String view = formView;
-		
+	 * @param accountForm the model object that contains values for the page to use when rendering the view
+	 * @param bindingResult the object used for validation in which errors will be stored
+	 * @param request the http request object
+	 * @param model the object that contains values to be displayed on the page
+	 * @return the path of the view to display
+	 */
+	@RequestMapping(value={"/teacher/registerteacher.html","/teacher/management/updatemyaccountinfo.html"}, method=RequestMethod.POST)
+	protected String onSubmit(
+			@ModelAttribute("teacherAccountForm") TeacherAccountForm accountForm, 
+			BindingResult bindingResult, 
+			HttpServletRequest request, 
+			ModelMap modelMap) {
+
 		String domain = ControllerUtil.getBaseUrlString(request);
 		String domainWithPort = domain + ":" + request.getLocalPort();
 		String referrer = request.getHeader("referer");
-		
+
 		//get the context path e.g. /wise
 		String contextPath = request.getContextPath();
-				
+
 		String registerUrl = contextPath + "/teacher/registerteacher.html";
 		String updateAccountInfoUrl = contextPath + "/teacher/management/updatemyaccountinfo.html";
-		
+
 		if(referrer.contains(domain + registerUrl) || 
 				referrer.contains(domainWithPort + registerUrl) ||
 				referrer.contains(domain + updateAccountInfoUrl) ||
 				referrer.contains(domainWithPort + updateAccountInfoUrl)){
 			TeacherUserDetails userDetails = (TeacherUserDetails) accountForm.getUserDetails();
-			
-			//set the sign up date
-			userDetails.setSignupdate(Calendar.getInstance().getTime());
-	
-			//validate the form
-			teacherAccountFormValidator.validate(accountForm, bindingResult);
-			
-			if(bindingResult.hasErrors()) {
-				//there were errors
-				populateModel(model);
-				view = formView;
-			} else {
-				//there were no errors
-				if (accountForm.isNewAccount()) {
-					try {
-						userDetails.setDisplayname(userDetails.getFirstname() + " " + userDetails.getLastname());
-						userDetails.setEmailValid(true);
-						User createdUser = this.userService.createUser(userDetails);
-						// send email to new teacher if email server is configured properly
-						
-						NewAccountEmailService newAccountEmailService = new NewAccountEmailService(createdUser,request.getLocale());
-						Thread thread = new Thread(newAccountEmailService);
-						thread.start();
-					}
-					catch (DuplicateUsernameException e) {
-						bindingResult.rejectValue("username", "error.duplicate-username", new Object[] { userDetails.getUsername() }, "Duplicate Username.");
-						populateModel(model);
-						view = formView;
-					}
-					model.addAttribute(USERNAME_KEY, userDetails.getUsername());
-					model.addAttribute(DISPLAYNAME_KEY, userDetails.getDisplayname());
-					view = successView;
-				} else {
-					// we're updating an existing teacher's account
-					User user = userService.retrieveUserByUsername(userDetails.getUsername());
-					
-					TeacherUserDetails teacherUserDetails = (TeacherUserDetails) user.getUserDetails();
-					teacherUserDetails.setCity(userDetails.getCity());
-					teacherUserDetails.setCountry(userDetails.getCountry());
-					teacherUserDetails.setCurriculumsubjects(userDetails.getCurriculumsubjects());
-					teacherUserDetails.setEmailAddress(userDetails.getEmailAddress());
-					teacherUserDetails.setSchoollevel(userDetails.getSchoollevel());
-					teacherUserDetails.setSchoolname(userDetails.getSchoolname());
-					teacherUserDetails.setState(userDetails.getState());
-					teacherUserDetails.setDisplayname(userDetails.getDisplayname());
-					teacherUserDetails.setEmailValid(true);
-					teacherUserDetails.setLanguage(userDetails.getLanguage());
-			        String userLanguage = userDetails.getLanguage();
-			        Locale locale = null;
-			        if (userLanguage.contains("_")) {
-		        		String language = userLanguage.substring(0, userLanguage.indexOf("_"));
-		        		String country = userLanguage.substring(userLanguage.indexOf("_")+1);
-		            	locale = new Locale(language, country); 	
-		        	} else {
-		        		locale = new Locale(userLanguage);
-		        	}
-			        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
 
-		
-					userService.updateUser(user);
-					// update user in session
-					request.getSession().setAttribute(User.CURRENT_USER_SESSION_KEY, user);
-					view = "teacher/management/updatemyaccount";
+
+			//there were no errors
+			if (accountForm.isNewAccount()) {
+				//set the sign up date
+				userDetails.setSignupdate(Calendar.getInstance().getTime());
+				//validate the form
+				teacherAccountFormValidator.validate(accountForm, bindingResult);
+				if(bindingResult.hasErrors()) {
+					//there were errors
+					populateModelMap(modelMap);
+					return "teacher/registerteacher";
 				}
+
+				try {
+					userDetails.setDisplayname(userDetails.getFirstname() + " " + userDetails.getLastname());
+					userDetails.setEmailValid(true);
+					User createdUser = this.userService.createUser(userDetails);
+					// send email to new teacher if email server is configured properly
+
+					NewAccountEmailService newAccountEmailService = new NewAccountEmailService(createdUser,request.getLocale());
+					Thread thread = new Thread(newAccountEmailService);
+					thread.start();
+					modelMap.addAttribute(USERNAME_KEY, userDetails.getUsername());
+					modelMap.addAttribute(DISPLAYNAME_KEY, userDetails.getDisplayname());
+					return "teacher/registerTeacherConfirm";
+				}
+				catch (DuplicateUsernameException e) {
+					bindingResult.rejectValue("username", "error.duplicate-username", new Object[] { userDetails.getUsername() }, "Duplicate Username.");
+					populateModelMap(modelMap);
+					return "teacher/registerteacher";
+				}
+			} else {
+				// we're updating an existing teacher's account
+				//validate the form
+				teacherAccountFormValidator.validate(accountForm, bindingResult);
+				if(bindingResult.hasErrors()) {
+					//there were errors
+					populateModelMap(modelMap);
+					return "teacher/management/updatemyaccountinfo";
+				}
+				
+				User user = userService.retrieveUserByUsername(userDetails.getUsername());
+
+				TeacherUserDetails teacherUserDetails = (TeacherUserDetails) user.getUserDetails();
+				teacherUserDetails.setCity(userDetails.getCity());
+				teacherUserDetails.setCountry(userDetails.getCountry());
+				teacherUserDetails.setCurriculumsubjects(userDetails.getCurriculumsubjects());
+				teacherUserDetails.setEmailAddress(userDetails.getEmailAddress());
+				teacherUserDetails.setSchoollevel(userDetails.getSchoollevel());
+				teacherUserDetails.setSchoolname(userDetails.getSchoolname());
+				teacherUserDetails.setState(userDetails.getState());
+				teacherUserDetails.setDisplayname(userDetails.getDisplayname());
+				teacherUserDetails.setEmailValid(true);
+				teacherUserDetails.setLanguage(userDetails.getLanguage());
+				String userLanguage = userDetails.getLanguage();
+				Locale locale = null;
+				if (userLanguage.contains("_")) {
+					String language = userLanguage.substring(0, userLanguage.indexOf("_"));
+					String country = userLanguage.substring(userLanguage.indexOf("_")+1);
+					locale = new Locale(language, country); 	
+				} else {
+					locale = new Locale(userLanguage);
+				}
+				request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
+
+				userService.updateUser(user);
+				// update user in session
+				request.getSession().setAttribute(User.CURRENT_USER_SESSION_KEY, user);
+				return "teacher/management/updatemyaccount";
 			}
 		} else {
 			//the request is not coming from a valid domain address so we will not allow it
 			bindingResult.reject("Forbidden");
-			populateModel(model);
-			view = formView;
+			populateModelMap(modelMap);
+			return "teacher/registerteacher";
 		}
-		
-		return view;
 	}
-	
+
 	// new thread that sends email to new teacher
 	class NewAccountEmailService implements Runnable {
 
@@ -277,7 +292,7 @@ public class RegisterTeacherController {
 				return;
 			}
 			TeacherUserDetails newUserDetails = 
-				(TeacherUserDetails) newUser.getUserDetails();
+					(TeacherUserDetails) newUser.getUserDetails();
 			String userUsername = newUserDetails.getUsername();
 			String userEmailAddress[] = {newUserDetails.getEmailAddress()};
 

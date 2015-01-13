@@ -161,7 +161,7 @@
 						    </tr>
 							 
 						  </table>
-						      
+	  					  <form:input path="newAccount" type="hidden" value="0" />
 					      <div><input type="submit" value="Save Changes"/></div>
 						  <div><a href="updatemyaccount.html"><spring:message code="teacher.registerteacher.cancel"/></a></div>
 						           
