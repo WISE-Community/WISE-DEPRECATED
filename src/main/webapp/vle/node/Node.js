@@ -2221,6 +2221,43 @@ Node.prototype.getAvailableStatusesIncludingSpecialStatusValues = function() {
 };
 
 /**
+ * Get the the available status values for a given status type
+ * @param statusType the status type
+ * @param includeSpecialStatusValues
+ * @return an array of possible status values for the given status type
+ */
+Node.prototype.getAvailableStatusValuesForStatusType = function(statusType, includeSpecialStatusValues) {
+	
+	//get all the available statuses
+	var statuses = this.getAvailableStatuses(includeSpecialStatusValues);
+	
+	if(statuses != null) {
+		//loop through all the statuses
+		for(var x=0; x<statuses.length; x++) {
+			//get a status object
+			var tempStatus = statuses[x];
+			
+			if(tempStatus != null) {
+				//get the status type
+				var tempStatusType = tempStatus.statusType;
+				
+				//check if this is the status type we're looking for
+				if(statusType == tempStatusType) {
+					//this is the status type we're looking for
+					
+					//get the possible status values for the status type
+					var possibleStatusValues = tempStatus.possibleStatusValues;
+					
+					return possibleStatusValues;
+				}
+			}
+		}
+	}
+	
+	return [];
+};
+
+/**
  * Get the status constraint messages
  */
 Node.prototype.getStatusConstraintMessages = function() {
