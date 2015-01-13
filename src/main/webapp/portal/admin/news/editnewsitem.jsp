@@ -26,10 +26,17 @@
 					<c:when test="${newsItem.type=='teacherOnly'}">
 						<option value="public"><spring:message code="public" /></option>
 						<option value="teacherOnly" selected="true"><spring:message code="teacherOnly" /></option>
+						<option value="hidden"><spring:message code="hidden" /></option>
 					</c:when>
-					<c:otherwise>
+					<c:when test="${newsItem.type=='hidden'}">
 						<option value="public"><spring:message code="public" /></option>
 						<option value="teacherOnly"><spring:message code="teacherOnly" /></option>
+						<option value="hidden" selected="true"><spring:message code="hidden" /></option>
+					</c:when>
+					<c:otherwise>
+						<option value="public" selected="true"><spring:message code="public" /></option>
+						<option value="teacherOnly"><spring:message code="teacherOnly" /></option>
+						<option value="hidden"><spring:message code="hidden" /></option>
 					</c:otherwise>
 				</c:choose>
 			</select>
