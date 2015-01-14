@@ -41,14 +41,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.AccountQuestion;
 import org.wise.portal.domain.PeriodNotFoundException;
@@ -223,13 +227,46 @@ public class StudentAccountController {
 		}
 	}
 	
+	/**
+	 * When the session is expired, send student back to form page
+	 */
+	@ExceptionHandler(HttpSessionRequiredException.class)
+	public ModelAndView handleRegisterStudentSessionExpired(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		String domain = ControllerUtil.getBaseUrlString(request);
+		String domainWithPort = domain + ":" + request.getLocalPort();
+		String referrer = request.getHeader("referer");
+
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+		
+		String registerUrl = contextPath + "/student/registerstudent.html";
+		String updateAccountInfoUrl = contextPath + "/student/updatestudentaccount.html";
+		
+		if(referrer != null && 
+				(referrer.contains(domain + registerUrl) || 
+				 referrer.contains(domainWithPort + registerUrl))) {
+			// if student was on register page, have them re-fill out the form.
+			mav.setView(new RedirectView(registerUrl));
+		} else if (referrer != null && 
+				(referrer.contains(domain + updateAccountInfoUrl) ||
+						 referrer.contains(domainWithPort + updateAccountInfoUrl))) {
+			// if student was on update account page, redirect them back to home page
+			mav.setView(new RedirectView(contextPath+"/index.html"));
+		} else {
+			// if student was on any other page, redirect them back to home page
+			mav.setView(new RedirectView(contextPath+"/index.html"));
+		}
+		return mav;
+	}
+
     @RequestMapping(value={"/student/registerstudent.html"},method=RequestMethod.GET) 
     public String initializeFormNewStudent(ModelMap model) { 
 		model.put("genders", Gender.values());
 		model.put("accountQuestions",AccountQuestion.values());
 		model.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
 		model.addAttribute("studentAccountForm", new StudentAccountForm());
-        return "/student/registerstudent"; 
+        return "student/registerstudent"; 
     } 
     
     @RequestMapping(value={"/student/updatestudentaccount.html"},method=RequestMethod.GET) 
@@ -239,7 +276,7 @@ public class StudentAccountController {
 		model.put("accountQuestions",AccountQuestion.values());
 		model.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
 		model.addAttribute("studentAccountForm",  new StudentAccountForm((StudentUserDetails) user.getUserDetails()));
-        return "/student/updatestudentaccount"; 
+        return "student/updatestudentaccount"; 
     } 
     
 	@InitBinder
