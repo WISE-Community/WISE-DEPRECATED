@@ -94,7 +94,7 @@ MatchSequenceNode.prototype.renderGradingView = function(displayStudentWorkDiv, 
 		for(var g=0;g<bucket.choices.length;g++){
 			//if this is not the first choice, add a comma to separate them
 			if(choicesText != "") {
-				choicesText += ", ";
+				choicesText += "<br/>";
 			}
 
 			//add the bucket text
@@ -126,7 +126,7 @@ MatchSequenceNode.prototype.renderGradingView = function(displayStudentWorkDiv, 
 		for(var g=0;g<bucket.choices.length;g++){
 			//if this is not the first choice, add a comma to separate them
 			if(choicesText != "") {
-				choicesText += ", ";
+				choicesText += "<br/>";
 			}
 
 			//add the bucket text

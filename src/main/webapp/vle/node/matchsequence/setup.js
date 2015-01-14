@@ -29,7 +29,9 @@ var gradingScripts = [
 	'vle/node/matchsequence/matchsequencedragdrop.js',
 	'vle/node/matchsequence/matchsequencebucket.js',
 	'vle/node/matchsequence/matchsequencechoice.js',
-	'vle/node/matchsequence/matchsequence.js'
+	'vle/node/matchsequence/matchsequence.js',
+	scriptloader.bootstrapSrc,
+	'vle/lib/bootstrap/bootstrap-dialog/dist/js/bootstrap-dialog.min.js'
 ];
 
 var dependencies = [
