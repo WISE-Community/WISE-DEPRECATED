@@ -342,17 +342,42 @@ FlashNode.prototype.overridesIsCompleted = function(){
 FlashNode.prototype.isCompleted = function(nodeVisits) {
 	var isCompleted = false;
 	
-	var nodeState = this.view.getLatestNodeStateWithWorkFromNodeVisits(nodeVisits);
-	
-	if(nodeState != null && nodeState != '' && nodeState.hasOwnProperty('isCompleted')) {
-		isCompleted = nodeState.data.isCompleted;
-	} else {
-		if(nodeVisits != null && nodeVisits.length > 0) {
-			result = true;
+	try {
+		var nodeState = this.view.getLatestNodeStateWithWorkFromNodeVisits(nodeVisits).response;
+		
+		if(nodeState != null && nodeState != '' && nodeState.hasOwnProperty('data')) {
+			if(nodeState.data.hasOwnProperty('isCompleted')){
+				isCompleted = nodeState.data.isCompleted;
+			}
+		} else {
+			if(nodeVisits != null && nodeVisits.length > 0) {
+				isCompleted = true;
+			}
 		}
+	} catch(err){
+		
 	}
 
 	return isCompleted;
+};
+
+/**
+ * Process the student work to see if we need to change the node's status
+ * 
+ * @param nodeVisits the node visits for this step
+ */
+FlashNode.prototype.processStudentWork = function(nodeVisits) {
+	if(nodeVisits != null) {
+		if(nodeVisits.length > 0) {
+			//the student has visited this step
+			this.setStatus('isVisited', true);
+
+			if(this.isCompleted(nodeVisits)) {
+				//the student has completed this step
+				this.setStatus('isCompleted', true);
+			}
+		}
+	}
 };
 
 //Add this node to the node factory so the vle knows it exists.
