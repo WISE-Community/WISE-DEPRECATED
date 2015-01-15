@@ -134,9 +134,6 @@ View.prototype.displayHint = function(){
 		    		var hintState = new HINTSTATE({"action":"hintclosed","nodeId":event.data.view.getCurrentNode().id});
 		    		event.data.view.pushHintState(hintState);
 		    	};
-		    }).on( "tabsselect", {view:currentNode.view}, function(event, ui) {
-	    		var hintState = new HINTSTATE({"action":"hintpartselected","nodeId":event.data.view.getCurrentNode().id,"partindex":ui.index});
-	    		event.data.view.pushHintState(hintState);
 		    });
 	    };
 		
@@ -181,7 +178,10 @@ View.prototype.displayHint = function(){
 			$(".hintMsg").html("");
 			var selected = $tabs.tabs('option', 'active');
 			if(selected != 0){
-				$tabs.tabs('option', 'active', selected-1);
+				var selectedTabIndex=selected-1;
+				$tabs.tabs('option', 'active', selectedTabIndex);
+				var hintState = new HINTSTATE({"action":"hintpartselected","nodeId":view.getCurrentNode().id,"partindex":selectedTabIndex});
+				view.pushHintState(hintState);
 			}
 		});
 		
@@ -190,7 +190,10 @@ View.prototype.displayHint = function(){
 			$(".hintMsg").html("");
 			var selected = $tabs.tabs('option', 'active');
 			if(selected < numHints-1){
-				$tabs.tabs('option', 'active', selected+1);
+				var selectedTabIndex=selected+1;
+				$tabs.tabs('option', 'active', selectedTabIndex);
+				var hintState = new HINTSTATE({"action":"hintpartselected","nodeId":view.getCurrentNode().id,"partindex":selectedTabIndex});
+				view.pushHintState(hintState);
 			}
 		});
 		
