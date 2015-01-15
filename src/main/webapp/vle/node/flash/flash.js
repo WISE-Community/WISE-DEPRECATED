@@ -21,7 +21,7 @@ Flash.prototype.sendStateToFlash = function(value) {
 	if (swfobject.getObjectById("flashContent")){
 		swfobject.getObjectById("flashContent").importData(value);
 	} else {
-		if (window.console) console.log("Can't find importData function in Flash activity; no data loaded.");
+		if (window.console) console.log("Can't find Flash applet; no data loaded.");
 	}
 };
 
@@ -30,7 +30,7 @@ Flash.prototype.getStateFromFlash = function() {
 	if(swfobject.getObjectById("flashContent")){
 		return swfobject.getObjectById("flashContent").exportData();
 	} else {
-		if (window.console) console.log("Can't find exportData function in Flash activity; no data saved.");
+		if (window.console) console.log("Can't find Flash applet; no data retrieved.");
 	}
 };
 
