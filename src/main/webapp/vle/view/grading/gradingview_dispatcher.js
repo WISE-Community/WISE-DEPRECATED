@@ -27,7 +27,20 @@ View.prototype.gradingDispatcher = function(type, args, obj) {
 	} else if(type=='retrieveProjectMetaDataCompleted') {
 		obj.retrieveAnnotations();
 	} else if(type=='maxScoreChanged') {
-		obj.saveMaxScore(args[0], args[1]);
+		//get the node id
+		var nodeId = args[1];
+		
+		//get the max score input for the node id
+		var maxScoreInputId = 'maxScore_' + nodeId;
+		var maxScoreInput = $('#' + obj.escapeIdForJquery(maxScoreInputId));
+		
+		if(maxScoreInput != null) {
+			//get the max score value
+			var maxScoreValue = maxScoreInput.val();
+			
+			//save the max score to the server
+			obj.saveMaxScore(nodeId, maxScoreValue);
+		}
 	} else if(type=='gradeByStepViewSelected') {
 		//display the grade by step view
 		obj.displayGradeByStepSelectPage();
