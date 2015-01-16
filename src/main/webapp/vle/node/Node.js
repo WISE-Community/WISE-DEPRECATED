@@ -503,6 +503,10 @@ Node.prototype.contentRenderCompletedListener = function(type, args, obj){
 	}
 };
 
+Node.prototype.finalize = function(callback) {
+	callback();
+};
+
 /**
  * This is called when a node is exited
  */
