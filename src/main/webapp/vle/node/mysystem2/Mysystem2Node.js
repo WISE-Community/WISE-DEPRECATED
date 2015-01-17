@@ -255,6 +255,15 @@ Mysystem2Node.prototype.renderGradingView = function(displayStudentWorkDiv, node
         //shift the background image down 120px
         backgroundImage.attr('transform', 'translate(0,120)');
     }
+    
+    //get the svg element that contains the student work
+    var svgElement = displayStudentWorkDiv.find('svg')
+    
+    //get the group elements that are a direct children of the svg element
+    var groups = svgElement.children('g');
+    
+    //shift all the group elements down 120 pixels
+    groups.attr('transform', 'translate(0, 120)');
 };
 
 
