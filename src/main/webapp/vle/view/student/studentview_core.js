@@ -1034,24 +1034,24 @@ View.prototype.goToNodePosition = function(nodePosition) {
 	if(prevNode != null && !prevNode.canExit()){
 		return;
 	}
-
-	if (prevNode) {
-		prevNode.finalize(function() {
-			// Prepare to move to the specified position. 
-			// Save nodevisit state for current position, close popups, remove highlighted steps, etc.
-			view.endCurrentNode();
-			
-			//we are able to go to the new node position so we will set it as the current node position
-			view.setCurrentNodePosition(nodePosition);		
-		});
-	} else {
+	
+	// call back function for node.finalize.
+	var finalizeNodeCallback = function() {
+		// Prepare to move to the specified position. 
 		// Save nodevisit state for current position, close popups, remove highlighted steps, etc.
 		view.endCurrentNode();
 		
 		//we are able to go to the new node position so we will set it as the current node position
 		view.setCurrentNodePosition(nodePosition);		
-	}
+	};
+
+	if (prevNode) {
+		prevNode.finalize(finalizeNodeCallback);
+	} else {
+		finalizeNodeCallback();
+	};
 };
+
 
 /**
  * Set the current node position into the model
