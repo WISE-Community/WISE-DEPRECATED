@@ -90,11 +90,17 @@ Mysystem2.prototype.render = function() {
 				if (importFromNode.type == "SVGDrawNode") {
 					//the other node is a draw node
 
-					//get the base64 image string
-					var base64Image = importFromNode.getBase64Image(studentWork);
+					//get the student work svg string
+					var studentWorkSVGString = importFromNode.getStudentWorkSVGString(studentWork);
 
-					//set the base64 image into the background image element
-					$('.diagram-background svg image').first().attr({'href':base64Image, 'width':600, 'height':450});
+					//make an svg element from the svg string
+					var studentWorkSVGElement = $(studentWorkSVGString);
+					
+					//get the children of the svg element
+					var children = studentWorkSVGElement.children();
+					
+					//append the children to the svg
+					$('.diagram-background svg').append(children);
 				} else {
 					/*
 					 * the student has not done any work for this step and

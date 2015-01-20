@@ -536,7 +536,7 @@ Annotations.prototype.getAnnotationsByNodeIdAndToWorkgroup = function(nodeId, to
 
 /**
  * Retrieves the latest annotation that matches all the parameters
- * @param runId the id of the run
+ * @param runId the id of the run. If in preview mode, runId==""
  * @param nodeId the id of the node
  * @param toWorkgroup the id of the student workgroup
  * @param fromWorkgroups an array of workgroups that we want annotations from
@@ -558,7 +558,7 @@ Annotations.prototype.getLatestAnnotation = function(runId, nodeId, toWorkgroup,
 		 * type can be null in which case any type will be accepted
 		 * stepWorkId can be null in which case any stepWorkId will be accepted
 		 */
-		if(tempAnnotation.runId == runId && 
+		if((runId == "" || tempAnnotation.runId == runId) && 
 				tempAnnotation.nodeId == nodeId &&
 				tempAnnotation.toWorkgroup == toWorkgroup && 
 				fromWorkgroups.indexOf(parseInt(tempAnnotation.fromWorkgroup)) != -1 &&

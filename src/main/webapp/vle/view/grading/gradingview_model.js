@@ -113,6 +113,69 @@ GradingModel.prototype.getWorkByNodeId = function(nodeId) {
 	return this.nodeIdToWork[nodeId];
 };
 
+/**
+ * Get the node visits with the given node id and workgroupd id
+ * @param nodeId the node id
+ * @param workgroupId the workgroup id
+ * @return an array of node visits with the given node id and
+ * workgroup id
+ */
+GradingModel.prototype.getNodeVisitsByNodeIdAndWorkgroupId = function(nodeId, workgroupId) {
+	var nodeVisits = null;
+	
+	/*
+	 * the student work can be found in the nodeIdToWork or the workgroupIdToWork
+	 * or both depending on which pages of the classroom monitor that were accessed.
+	 * if a grade by step page was loaded, the nodeIdToWork will be populated for the
+	 * step that was loaded.
+	 * if a grade by student page was loaded, the workgroupIdToWork will be populated
+	 * for the workgroup that was loaded.
+	 */
+	
+	/*
+	 * check the nodeIdToWork and get all the vle states for a step.
+	 * each vle state contains the work for a student for the specific
+	 * step.
+	 */ 
+	var vleStates = this.nodeIdToWork[nodeId];
+	
+	if(vleStates != null) {
+		//loop through all the vle states
+		for(var x=0; x<vleStates.length; x++) {
+			//get a vle state
+			var tempVleState = vleStates[x];
+			
+			if(tempVleState != null) {
+				//get the workgroup id for the vle state
+				var tempWorkgroupId = tempVleState.workgroupId;
+				
+				if(workgroupId == tempWorkgroupId) {
+					/*
+					 * the workgroup id matches the one we want so we have found
+					 * the vle state that we want
+					 */
+					nodeVisits = tempVleState.getNodeVisitsByNodeId(nodeId);
+					break;
+				}
+			}
+		}
+	} else {
+		/*
+		 * we did not find the work in the nodeIdToWork so we will look in the
+		 * workgroupIdToWork. check the workgroupIdToWork and get all the
+		 * work for a specific workgroup
+		 */
+		var tempVleState = this.workgroupIdToWork[workgroupId];
+		
+		if(tempVleState != null) {
+			//get all the node visits for the specific step
+			nodeVisits = tempVleState.getNodeVisitsByNodeId(nodeId);			
+		}
+	}
+	
+	return nodeVisits;
+};
+
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/grading/gradingview_model.js');
