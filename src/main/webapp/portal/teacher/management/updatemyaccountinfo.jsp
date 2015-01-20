@@ -153,6 +153,7 @@
 						    	<td><label for="language" id="language"><spring:message code="teacher.registerteacher.language" /></label></td>
 								<td>
 									<form:select path="userDetails.language" id="language">           
+	    				            	<form:option value="default"><spring:message code="default" /></form:option>
 							    		<c:forEach items="${languages}" var="languageOption">
 							            	<form:option value="${languageOption}"><spring:message code="language.${languageOption}" /></form:option>
 							          	</c:forEach>

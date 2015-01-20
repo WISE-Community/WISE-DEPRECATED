@@ -261,7 +261,7 @@ $(document).ready(function() {
 									<td class="listTitle2"><spring:message code="student.index.language"/></td> 
 									<c:choose>
 									<c:when test="${user.userDetails.language == null}">
-										<td id="language"><spring:message code="english"/> (<a id="updateStudentAccountLink"><spring:message code="change" /></a>)</td>
+										<td id="language"><spring:message code="default"/> (<a id="updateStudentAccountLink"><spring:message code="change" /></a>)</td>
 									</c:when>
 									<c:otherwise>
 										<td id="language"><spring:message code="language.${user.userDetails.language}"/> (<a style=""id="updateStudentAccountLink"><spring:message code="change" /></a>)</td>

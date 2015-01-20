@@ -240,16 +240,28 @@ public class TeacherAccountController {
 				teacherUserDetails.setState(userDetails.getState());
 				teacherUserDetails.setDisplayname(userDetails.getDisplayname());
 				teacherUserDetails.setEmailValid(true);
-				teacherUserDetails.setLanguage(userDetails.getLanguage());
-				String userLanguage = userDetails.getLanguage();
-				Locale locale = null;
-				if (userLanguage.contains("_")) {
-					String language = userLanguage.substring(0, userLanguage.indexOf("_"));
-					String country = userLanguage.substring(userLanguage.indexOf("_")+1);
-					locale = new Locale(language, country); 	
+				if ("default".equals(userDetails.getLanguage())) {
+					teacherUserDetails.setLanguage(null);
 				} else {
-					locale = new Locale(userLanguage);
+					teacherUserDetails.setLanguage(userDetails.getLanguage());
 				}
+				
+		        // set user's language (if specified)
+		        Locale locale = null;
+		        String userLanguage = teacherUserDetails.getLanguage();
+		        if (userLanguage != null) {
+		        	if (userLanguage.contains("_")) {
+		        		String language = userLanguage.substring(0, userLanguage.indexOf("_"));
+		        		String country = userLanguage.substring(userLanguage.indexOf("_")+1);
+		            	locale = new Locale(language, country); 	
+		        	} else {
+		        		locale = new Locale(userLanguage);
+		        	}
+		        } else {
+		        	// user default browser locale setting if user hasn't specified locale
+		        	locale = request.getLocale();
+		        }
+				
 				request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
 
 				userService.updateUser(user);
