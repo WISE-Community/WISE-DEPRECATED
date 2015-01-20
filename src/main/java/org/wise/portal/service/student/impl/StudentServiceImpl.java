@@ -64,7 +64,7 @@ public class StudentServiceImpl implements StudentService {
 	/**
 	 * @see org.wise.portal.service.student.StudentService#addStudentToRun(net.sf.sail.webapp.domain.User, org.wise.portal.domain.impl.Projectcode)
 	 */
-	public void addStudentToRun(User studentUser, Projectcode projectcode) 
+	public synchronized void addStudentToRun(User studentUser, Projectcode projectcode) 
 	    throws ObjectNotFoundException, PeriodNotFoundException, StudentUserAlreadyAssociatedWithRunException {
 		// TODO HT: figure out if we need a Transactional annotation for this method
 		// possible problem: groupService.addMembers is transactional
@@ -83,7 +83,7 @@ public class StudentServiceImpl implements StudentService {
 				String name = "Workgroup for user: " + studentUser.getUserDetails().getUsername();
 				Set<User> members = new HashSet<User>();
 				members.add(studentUser);
-				WISEWorkgroup workgroup = workgroupService.createWISEWorkgroup(name, members, run, period);
+				workgroupService.createWISEWorkgroup(name, members, run, period);
 			}
 		} else {
 			throw new StudentUserAlreadyAssociatedWithRunException(studentUser, run);
