@@ -623,8 +623,13 @@ View.prototype.addRichTextAuthoring = function(id,update,fullpage){
 	    templates: [],
 	    extended_valid_elements: "a[href|target|title|onclick|name|id|class|style]",
 	    document_base_url: view.getProjectFolderPath(),
-	    content_css : contextPath + "/vle/css/global.css",
+	    content_css : contextPath + "/vle/css/global.css",  // TODO: replace with something smaller; don't need to load the entire global stylesheet since it is not already retrieved in the authoring view
 	    relative_urls: false,
+	    target_list: [
+	        {title: 'New page', value: '_blank'},
+			{title: 'None', value: ''}
+		],
+		default_link_target: '_blank',
 	    setup: function(ed){
 	    	// add keyUp listener
 	        ed.on('keyup change', function(e){
