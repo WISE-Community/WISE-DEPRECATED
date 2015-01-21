@@ -413,12 +413,15 @@ var scriptloader = function(){
 	              'vle/view/grading/gradingview_premadecomments.js',
 	              'vle/lib/jquery/js/jquery.editinplace.js',
 	              'vle/view/grading/gradingview_model.js',
-	              'vle/util/swfobject/swfobject.js'],
+	              'vle/util/swfobject/swfobject.js',
+	              bootstrapSrc,
+	              'vle/lib/bootstrap/bootstrap-dialog/dist/js/bootstrap-dialog.min.js',],
 	    teacherWebSocket: [jqueryUISrc_interactions,
 	         		       'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
 	         		       bootstrapSrc, // TODO: move to vle bootstrap sources when using globally
 	                       //'vle/lib/bootstrap/bootstrap-switch/dist/js/bootstrap-switch.min.js', // TODO: move to vle bootstrap sources when using globally
 	                       'vle/lib/bootstrap/bootbox/bootbox.min.js',  // TODO: move to vle bootstrap sources when using globally
+	                       'vle/lib/bootstrap/bootstrap-dialog/dist/js/bootstrap-dialog.min.js',
 	                       'vle/lib/bootstrap/bootstrap-multiselect/js/bootstrap-multiselect.js',  // TODO: possibly move to vle bootstrap sources when using globally
 	                       'vle/webSocket/teacherWebSocket.js',
 	                       'vle/view/classroomMonitor/classroomMonitorView_model.js',
@@ -522,6 +525,7 @@ var scriptloader = function(){
         'vle/util/projectutils.js': ['vle/model/Project.js'],
         'vle/lib/bootstrap/bootstrap-switch/dist/js/bootstrap-switch.min.js':[bootstrapSrc],
         'vle/lib/bootstrap/bootbox/bootbox.min.js':[bootstrapSrc],
+        'vle/lib/bootstrap/bootstrap-dialog/dist/js/bootstrap-dialog.min.js':[bootstrapSrc],
         'vle/lib/bootstrap/bootstrap-multiselect/js/bootstrap-multiselect.js':[bootstrapSrc],
         'vle/lib/jquery/js/jsonplugin.js':[jquerySrc],
         'vle/lib/jquery/js/jquery.form.js':[jquerySrc],
