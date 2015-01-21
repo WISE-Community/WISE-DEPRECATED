@@ -149,10 +149,19 @@ public class PasswordReminderWizardController{
 			accountAnswer = StringUtils.lowerCase(accountAnswer);
 
 			submittedAccountAnswer = StringUtils.lowerCase(submittedAccountAnswer);
-
-			if (!accountAnswer.equals(submittedAccountAnswer)) {
+			
+			if(accountAnswer == null) {
+				/*
+				 * the account answer is null perhaps because the session has
+				 * timed out so we will redirect them back to the first
+				 * password reminder page where they enter their user name
+				 */
+				return "forgotaccount/student/passwordreminder";
+			} else if(!accountAnswer.equals(submittedAccountAnswer)) {
+				//they have provided an incorrect account answer
 				result.reject("presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorSubmittedAccountQuestion");
 			}
+			
 			if (result.hasErrors()) {
 				modelMap.put(USERNAME, passwordReminderParameters.getUsername());
 				modelMap.put(ACCOUNT_QUESTION, passwordReminderParameters.getAccountQuestion());
