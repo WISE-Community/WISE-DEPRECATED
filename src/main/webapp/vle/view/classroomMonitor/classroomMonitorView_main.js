@@ -3444,7 +3444,20 @@ View.prototype.maxScoreChanged = function(event) {
 	var thisView = event.data.thisView;
 	var nodeId = event.data.nodeId;
 	var runId = thisView.getConfig().getConfigParam('runId');
-	var maxScore = event.srcElement.value;
+	
+	//get the max score input element
+	var target = event.target;
+	
+	if(target == null) {
+		/*
+		 * try to get the max score input element again
+		 * since we were unable to find it in event.target
+		 */
+		target = event.srcElement;
+	}
+	
+	//get the value in the max score input element
+	var maxScore = target.value;
 	
 	//save the max score to the server
 	thisView.saveMaxScore(nodeId, maxScore);
