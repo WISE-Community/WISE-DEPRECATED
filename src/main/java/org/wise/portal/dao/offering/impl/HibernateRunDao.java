@@ -23,6 +23,7 @@
  */
 package org.wise.portal.dao.offering.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -143,6 +144,9 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 
 	@SuppressWarnings("unchecked")
 	public List<Run> getRunListByOwner(User owner) {
+		if (owner == null) {
+			return new ArrayList<Run>();
+		}
     	String q = "select run from RunImpl run inner join run.owners owner where owner.id='" + owner.getId() + "' order by run.id desc";
     	return (List<Run>) this.getHibernateTemplate().find(q);
 	}

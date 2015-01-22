@@ -279,7 +279,7 @@
 				<div id="openSourceHeader" class="feature">
 					<span class="featureContent"><spring:message code="index.openSourcePartnerships" /></span>
 				</div>
-				<div id="openSourceContent"><spring:message code="index.openSourceInfo" /></div>
+				<div id="openSourceContent"><spring:message code="index.openSourceInfo" htmlEscape="false"  /></div>
 			</div>
 		</div>
 	</div>

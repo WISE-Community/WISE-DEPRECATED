@@ -36,7 +36,7 @@
 					
 					<div class="sectionHead"><spring:message code="pages.schoolIT.requirements" /></div>
 					<div class="sectionContent">
-						<div><spring:message code="pages.schoolIT.requirements_content" arguments="${contextPath}" /></div>
+						<div><spring:message code="pages.schoolIT.requirements_content" arguments="${empty contextPath ? ' ' : contextPath}" /></div>
 					</div>
 					
 					<div class="sectionHead"><spring:message code="pages.schoolIT.aboutWISE" /></div>
@@ -57,7 +57,7 @@
 					<div class="sectionHead"><spring:message code="pages.schoolIT.contact" /></div>
 					<div class="sectionContent">
 						<div><spring:message code="pages.schoolIT.contact_devGroup" /></div>
-						<div><spring:message code="pages.schoolIT.contact_info" arguments="${contextPath}" /></div>
+						<div><spring:message code="pages.schoolIT.contact_info" arguments="${empty contextPath ? ' ' : contextPath}" /></div>
 					</div>
 				</div>
 			</div>
