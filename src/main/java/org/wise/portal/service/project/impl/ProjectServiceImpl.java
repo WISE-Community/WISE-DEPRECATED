@@ -51,6 +51,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.ProjectDao;
+import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.module.Curnit;
@@ -71,6 +72,7 @@ import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.module.ModuleService;
+import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.premadecomment.PremadeCommentService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.tag.TagService;
@@ -97,13 +99,16 @@ public class ProjectServiceImpl implements ProjectService {
 	@Autowired
 	private ProjectDao<Project> projectDao;
 
-	private AclService<Project> aclService;
-
+	private AclService<Persistable> aclService;
+	
 	@Autowired
 	private UserService userService;
 
 	@Autowired
 	private TagService tagService;
+	
+	@Autowired
+	private RunService runService;
 
 	@Autowired
 	private PremadeCommentService premadeCommentService;
@@ -393,8 +398,17 @@ public class ProjectServiceImpl implements ProjectService {
 	 */
 	@Transactional()
 	public void updateProject(Project project, User user) throws NotAuthorizedException{
+		// check to see if user can author project or the run that it's in
+		List<Run> runList = this.runService.getProjectRuns((Long) project.getId());
+		Run run = null;
+		if (!runList.isEmpty()){
+			// since a project can now only be run once, just use the first run in the list
+			run = runList.get(0);
+		}
+
 		if(user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
-				this.aclService.hasPermission(project, BasePermission.WRITE, user)){
+				this.aclService.hasPermission(project, BasePermission.WRITE, user) ||
+				(run != null && runService.hasRunPermission(run, user, BasePermission.WRITE))) {
 			this.projectDao.save(project);
 		} else {
 			throw new NotAuthorizedException("You are not authorized to update this project");
@@ -417,7 +431,7 @@ public class ProjectServiceImpl implements ProjectService {
 	/**
 	 * @param aclService the aclService to set
 	 */
-	public void setAclService(AclService<Project> aclService) {
+	public void setAclService(AclService<Persistable> aclService) {
 		this.aclService = aclService;
 	}
 
