@@ -16,7 +16,7 @@
         "description": "Text on Add Idea buttons for Student VLE"
     },
     "mywork_button_text": {
-        "value": "עבודתי",
+        "value": "העבודה שלי",
         "description": "Text on the My Work button for Student VLE"
     },
     "display_chat_room": {
@@ -24,11 +24,11 @@
         "description": "Text on the Chat Room button for Student VLE"
     },
     "mywork_button_title": {
-        "value": "צפייה בעבודתי",
+        "value": "צפייה בעבודה שלי",
         "description": "Text for mouse hover title on the My Work button"
     },
     "mywork_preview_mode": {
-        "value": "עבודתי אינה נגישה בתצוגה מקדימה. בעת הרצת הפרויקט כאן יוצגו עבודתך וציוניך.",
+        "value": "עבודתי אינה נגישה בתצוגה מקדימה. בעת הרצת הפרויקט כאן יוצגו עבודתך וציוניך",
         "description": "Text to display when user clicks on review work button in preview mode"
     },
     "flagged_button_text": {
@@ -36,11 +36,11 @@
         "description": "Text on the Flagged button"
     },
     "flagged_button_title": {
-        "value": "עבור על עבודות שסומנו ע\\\\\\\\\\\"י המורה",
+        "value": "מעבר על עבודות שסומנו ע\\\"י המורה",
         "description": "Text for mouse hover title on the Flagged button"
     },
     "flagged_preview_mode": {
-        "value": "סימון אינו פועל בתצוגה מקדימה. בעת הרצת הפרויקט כאן יוצגו פריטים שיסומנו ע\\\\\\\\\\\"י המורה.",
+        "value": "סימון אינו פועל בתצוגה מקדימה. בעת הרצת הפרויקט כאן יוצגו פריטים שיסומנו ע\\\"י המורה",
         "description": "Text to display when user clicks on flagged work button in preview mode"
     },
     "journal_button_text": {
@@ -152,12 +152,11 @@
         "description": "Text for mouse hover title on the Hint button (will be followed by the hint_title, e.g. 'View Hints')"
     },
     "node_annotations_instructions": {
-        "value": "תמיד אפשר לשוב לצפות במשוב ע\\\\\\\\\\\"י לחיצה על האייקון \\\\\\\\\\\"{0}\\\\\\\\\\\".",
+        "value": "תמיד אפשר לשוב לצפות במשוב ע\\\"י לחיצה על האייקון {0}.",
         "description": "The message at the bottom of the feedback popup to tell the student they can always bring the popup back up"
     },
     "show_previous_work_message": {
-        "value": "תזכורת, עבודתך מ\\\\\\\\\\\"שלב {0}\\\\\\\\\\\"  הייתה
-{1}",
+        "value": "תזכורת, עבודתך מ\\\"שלב {0}\\\" הייתה {1}",
         "description": "The message that shows the step number and title and the work from a previous step."
     },
     "navigation_expand_all": {
@@ -197,11 +196,11 @@
         "description": "Text on a button in Student Asset Manager to delete a selected file"
     },
     "student_assets_student_usage_message": {
-        "value": "יש שימוש ב{0} מתוך שטח האחסון שלך שהוא {1}.",
+        "value": "יש שימוש ב{0} מתוך שטח האחסון שלך שהוא {1}",
         "description": "Text on a button in Student Asset Manager to delete a selected file"
     },
     "student_assets_student_usage_exceeded_message": {
-        "value": "השתמשת במלוא האחסון! המקום המוקצה הוא {0}, כאשר הועלו לשרת {1}. יש למחוק קבצים על מנת לפנות מקום.",
+        "value": "השתמשת במלוא האחסון! המקום המוקצה הוא {0}, כאשר הועלו לשרת {1}. יש למחוק קבצים על מנת לפנות מקום",
         "description": "Text on a button in Student Asset Manager to delete a selected file"
     },
     "student_assets_preview_mode": {
@@ -229,19 +228,19 @@
         "description": "Text for the word 'on' (uppercase)"
     },
     "off": {
-        "value": "כיבוי",
-        "description": "Text for the word 'off' (uppercase)"
-    },
-    "OFF": {
         "value": "כבוי",
-        "description": "Text for the word 'OFF' (uppercase)"
+        "description": "Text for the word 'off' (uppercase)"
     },
     "ON": {
         "value": "הפעלה",
         "description": "Text for the word 'ON' (uppercase)"
     },
+    "OFF": {
+        "value": "כבוי",
+        "description": "Text for the word 'OFF' (uppercase)"
+    },
     "done": {
-        "value": "בוצע",
+        "value": "הפעלה",
         "description": "Text 'Done', to mean completed"
     },
     "stepTerm": {
@@ -253,19 +252,19 @@
         "description": "Plural form of the default term for a 'Step' in a WISE project"
     },
     "activityTerm": {
-        "value": "פעילות",
+        "value": "פעילויות",
         "description": "Default term for an 'Activity' in a WISE project (singular)"
     },
     "activityTermPlural": {
-        "value": "פעילויות",
+        "value": "הוספת תמונה",
         "description": "Plural form of the default term for a 'Activity' in a WISE project"
     },
     "insertImage": {
-        "value": "הוספת תמונה",
+        "value": "רעיון",
         "description": "Text 'Insert Image', to use for file upload"
     },
     "idea": {
-        "value": "רעיון",
+        "value": "רעיונות",
         "description": "The default text for an 'idea' in the Idea Manager tool."
     },
     "idea_plural": {
@@ -297,7 +296,7 @@
         "description": "Title/tooltip for sortable rows in a table"
     },
     "ideaBasket_empty": {
-        "value": "ה{0} שלך ריק. לחצ/י על \\\\\\\\"{1}\\\\\\\\" כדי להתחיל להוסיף {2}.",
+        "value": "ה{0} שלך ריק. לחצ/י על \\\"{1}\\\" כדי להתחיל להוסיף {2}",
         "description": "Text to display when idea basket is empty"
     },
     "ideaBasket_deletedTableHeader": {
@@ -329,7 +328,7 @@
         "description": "Text for the link to show the contents of the Deleted Ideas table in the Idea Basket"
     },
     "ideaBasket_hideDeleted": {
-        "value": "(לחיצה כדי להחביא)",
+        "value": "(לחיצה כדי להסתיר)",
         "description": "Text for the link to hide the contents of the Deleted Ideas table in the Idea Basket"
     },
     "ideaBasket_ideaTitle": {
@@ -369,7 +368,7 @@
         "description": "Label designating a public idea in the Idea Basket"
     },
     "ideaBasket_public_empty": {
-        "value": "{0} ריק.",
+        "value": "{0} ריק",
         "description": "Text to display when public Idea Basket is empty"
     },
     "ideaBasket_public_publicRowLabel": {
@@ -405,7 +404,7 @@
         "description": "Text identifying an idea that was did not originate as a copy from the Public Idea Basket"
     },
     "ideaBasket_public_copySuccess": {
-        "value": "{0} הועתק בהצלחה מ{1}.",
+        "value": "{0} הועתק בהצלחה מ{1}",
         "description": "Message to display when successfully copying an idea from the pubic Idea Basket"
     },
     "ideaBasket_public_loadFailure": {
@@ -417,7 +416,7 @@
         "description": "Error text to display when workgroup attempts to copy their own idea from the public Idea Basket."
     },
     "ideaBasket_public_alreadyCopiedError": {
-        "value": "תקלה: כבר העתקת את {0}.",
+        "value": "תקלה: כבר העתקת את {0}",
         "description": "Error text to display when workgroup attempts to copy an idea from the public Idea Basket they have already copied."
     },
     "ideaBasket_saveError": {
@@ -493,7 +492,7 @@
         "description": "GradingTool: Text in the grade-by-team button"
     },
     "grading_all_revisions": {
-        "value": "כל הגרסאוץ",
+        "value": "כל הגרסאות",
         "description": "GradingTool: Text 'all revisions' to show all student revisions"
     },
     "grading_latest_work": {
@@ -501,7 +500,7 @@
         "description": "GradingTool: Text 'latest work' to show only the latest student work"
     },
     "grading_button_view_student_uploaded_files": {
-        "value": "קבצים שהועלו ע\\\\\\\"י תלמידים או תלמידות",
+        "value": "קבצים שהועלו ע\\\"י תלמידים או תלמידות",
         "description": "GradingTool: Text in the View Student Uploaded Files button"
     },
     "grading_button_export_latest_student_work": {
@@ -521,11 +520,11 @@
         "description": "GradingTool: Text in the Export Explanation Builder Work button"
     },
     "grading_button_export_custom_work": {
-        "value": "ייצוא עבודה מותאמת של תלמידים",
+        "value": "ייצוא עבודה מותאמת של תלמידים ותלמידות",
         "description": "GradingTool: Text in the Export Custom Student Work button"
     },
     "grading_button_export_student_names": {
-        "value": "ייצוא שמות לתמידים",
+        "value": "ייצוא שמות תלמידים ותלמידות",
         "description": "GradingTool: Text in the Export Student Names button"
     },
     "grading_button_special_export": {
@@ -537,7 +536,7 @@
         "description": "GradingTool: Description next the Export Student Names button"
     },
     "grading_button_export_all_student_work_description": {
-        "value": "יצוא של כל הגרסאות של העבודות כמו גם נתוני הניווט)",
+        "value": "(יצוא של כל הגרסאות של העבודות כמו גם נתוני הניווט)",
         "description": "GradingTool: Description next the Export All Student Work button"
     },
     "grading_button_export_idea_baskets_description": {
@@ -565,7 +564,7 @@
         "description": "GradingTool: Text in the Explanation button"
     },
     "grading_button_teacher_run_notes": {
-        "value": "הערותי",
+        "value": "ההערות שלי",
         "description": "GradingTool: Text in the My Notes button to bring up teacher run notes"
     },
     "grading_button_check_for_new_student_work": {
@@ -588,10 +587,6 @@
         "value": "ניתן לעריכה",
         "description": "GradingTool: grade by step editable table column"
     },
-    "grading_grade_by_step_items_to_review": {
-        "value": "פריטים לסקירה",
-        "description": "GradingTool: grade by step Items to Review table column"
-    },
     "grading_grade_by_step_average_class_score": {
         "value": "ציון ממוצע",
         "description": "GradingTool: grade by step Avg Class Score table column"
@@ -599,6 +594,10 @@
     "grading_grade_by_step_scored_items_only": {
         "value": "רק פריטים שקיבלו ציון",
         "description": "GradingTool: grade by step scored items only table column"
+    },
+    "grading_grade_by_step_items_to_review": {
+        "value": "פריטים לסקירה",
+        "description": "GradingTool: grade by step Items to Review table column"
     },
     "grading_grade_by_step_percent_completed_step": {
         "value": "% סיימו שלב",
@@ -613,7 +612,7 @@
         "description": "GradingTool: grade by team page header"
     },
     "grading_grade_by_team_teacher_graded_score": {
-        "value": "ציון שניתן ע\\\\\\"י המורה",
+        "value": "ציון שניתן ע\\\"י המורה",
         "description": "GradingTool: grade by team teacher-graded score"
     },
     "grading_grade_by_team_percentage_project_completed": {
@@ -625,7 +624,7 @@
         "description": "the text 'question', to be shown next to the question that was presented to the student"
     },
     "grading_hide_show_question": {
-        "value": "הצה/הסתרה של שאלה",
+        "value": "הצגה/הסתרה של שאלה",
         "description": "'hide/show question' link that toggles the question's visibility in the grading tool"
     },
     "grading_current_step": {
@@ -633,7 +632,7 @@
         "description": "'Current Step' label in the grading tool that shows the title of the current step in the project"
     },
     "grading_previous_step": {
-        "value": "קודם>",
+        "value": "<קודם",
         "description": "'Previous Step' button in the grading tool that will show the previous step in the project"
     },
     "grading_previous_step_not_exist": {
@@ -645,7 +644,7 @@
         "description": "'Change Step' button in the grading tool that will show the select step page"
     },
     "grading_next_step": {
-        "value": "<הבא",
+        "value": "הבא>",
         "description": "'Next Step' button in the grading tool that will show the next step in the project"
     },
     "grading_next_step_not_exist": {
@@ -661,7 +660,7 @@
         "description": "Period"
     },
     "workgroupId": {
-        "value": "מספר קבוצת עבודה",
+        "value": "צוות",
         "description": "Workgroup Id"
     },
     "team": {
@@ -697,15 +696,15 @@
         "description": "Flag, for flagging student's work using the flagging tool"
     },
     "flag_as_inappropriate": {
-        "value": "סימון אינו מתאים",
-        "description": "\\\\\\"Flag as inappropriate\\\\\\" text, for flagging inappropriate student's work using the flagging tool"
+        "value": "סימון 'אינו מתאים'",
+        "description": "\\\"Flag as inappropriate\\\" text, for flagging inappropriate student's work using the flagging tool"
     },
     "timestamp": {
         "value": "חותמת זמן",
         "description": "timestamp"
     },
     "last_annotation": {
-        "value": "הערה אחרונה",
+        "value": "הערה אחרונה:",
         "description": "the text 'last annotation'"
     },
     "grading_open_premade_comments": {
@@ -717,7 +716,7 @@
         "description": "the text 'not available'"
     },
     "grading_no_work_warning": {
-        "value": "התלמיד אן התלמידה לא העלו עבודה בשלב זה, ולכן לא ניתן לתת ציון או משוב.",
+        "value": "התלמיד אן התלמידה לא הגישו עבודה בשלב זה, ולכן לא ניתן לתת ציון או משוב.",
         "description": "text to show in grading cells that do not have students' work to display"
     },
     "grading_no_revisions": {
@@ -753,7 +752,7 @@
         "description": "text to show next to the 'Show All Revisions' checkbox in the grading tool"
     },
     "grading_sort_by_auto_graded_score_checkbox": {
-        "value": "מיון לפי ציון אטוטמטי",
+        "value": "מיון לפי ציון אטומטי",
         "description": "text to show next to the 'Sort By Auto Graded Score' checkbox in the grading tool"
     },
     "grading_hide_show_revisions": {
@@ -781,7 +780,7 @@
         "description": "Message displayed in the Authoring Tool to authors when trying to switch between simple/advanced modes but their changes have not been saved."
     },
     "authoring_hint_dialog_title": {
-        "value": "הוספה/ערכיה של רמזים לשלב זה",
+        "value": "הוספה/עריכה של רמזים לשלב זה",
         "description": "Text to display as the title of the edit step hints dialog window."
     },
     "authoring_hint_new": {
@@ -789,28 +788,28 @@
         "description": "Default text for a new step hint."
     },
     "authoring_hint_forceShow": {
-        "value": "חובת הצגה:",
-        "description": "Text to display for the label of the \\\\"Force Show: \\\\" drop down in the step hint authoring panel"
+        "value": "חובת הצגה",
+        "description": "Text to display for the label of the \\\"Force Show: \\\" drop down in the step hint authoring panel"
     },
     "authoring_hint_option_never": {
         "value": "לעולם לא",
-        "description": "The text \\\\"Never\\\\" to display in \\\\"force show:\\\\" drop down in the step hint authoring panel"
+        "description": "The text \\\"Never\\\" to display in \\\"force show:\\\" drop down in the step hint authoring panel"
     },
     "authoring_hint_option_firstTimeOnly": {
         "value": "רק בפעם הראשונה",
-        "description": "The text \\\\"First Time Only\\\\" to display in \\\\"force show:\\\\" drop down in the step hint authoring panel"
+        "description": "The text \\\"First Time Only\\\" to display in \\\"force show:\\\" drop down in the step hint authoring panel"
     },
     "authoring_hint_option_always": {
         "value": "תמיד",
-        "description": "The text \\\\"Always\\\\" to display in \\\\"force show:\\\\" drop down in the step hint authoring panel"
+        "description": "The text \\\"Always\\\" to display in \\\"force show:\\\" drop down in the step hint authoring panel"
     },
     "authoring_hint_modal": {
         "value": "שיח עזר",
-        "description": "Text to display for the label of the \\\\"Modal Dialog\\\\" checkbox in the step hint authoring panel"
+        "description": "Text to display for the label of the \\\"Modal Dialog\\\" checkbox in the step hint authoring panel"
     },
     "authoring_hint_isMustViewAllPartsBeforeClosing": {
         "value": "יש לצפות בכל החלקים לפני סגירה",
-        "description": "Text to display for the label of the \\\\"Must View All Parts Before Closing\\\\" checkbox in the step hint authoring panel"
+        "description": "Text to display for the label of the \\\"Must View All Parts Before Closing\\\" checkbox in the step hint authoring panel"
     },
     "authoring_hint_options_label": {
         "value": "אפשרויות",
@@ -821,15 +820,15 @@
         "description": "The label for the 'Labels/Terminology' settings in the step hint authoring panel"
     },
     "authoring_hint_terminology_instructions": {
-        "value": "אפציונאלי: התאם אישית את השם שיוצג עבור \\\\"רמז(ים)\\\\" בשלב זה",
+        "value": "אפציונאלי: התאם אישית את השם שיוצג עבור \\\"רמז(ים)\\\" בשלב זה",
         "description": "The instructions for the 'Labels/Terminology' settings in the step hint authoring panel"
     },
     "authoring_hint_term_label": {
-        "value": "המונח עבור \\\\"רמז\\\\":",
+        "value": "המונח עבור \\\"רמז\\\":",
         "description": "The label for the 'hint' term input field in the step hint authoring panel"
     },
     "authoring_hint_term_plural_label": {
-        "value": "המונח עבור \\\\"רמזים\\\\" (ברבים):",
+        "value": "המונח עבור \\\"רמזים\\\" (ברבים):",
         "description": "The label for the 'hints' term input field in the step hint authoring panel"
     },
     "authoring_hint_add": {
@@ -849,7 +848,7 @@
         "description": ""
     },
     "authoring_imsettings_text_required": {
-        "value": "תכונת ה\\\"טקסט\\\" היא הרכיב הבסיסי של כל רעיון ולא ניתן לבטלה.",
+        "value": "\\\"תכונת ה\\\"טקסט\\\" היא הרכיב הבסיסי של כל רעיון ולא ניתן לבטלה.",
         "description": "The help text in the Idea Manager settings for the lock icon on the 'text' idea attribute."
     },
     "project_error_has_no_steps": {
@@ -861,7 +860,7 @@
         "description": "The message shown in preview project mode when student navigation constraints are enabled."
     },
     "preview_project_constraint_disabled_message": {
-        "value": "כרגע חלים מגבלות הרצה של תלמידים ותלמידות. כדי להציג פרויקט ללא המגבלות,",
+        "value": "כרגע חלים מגבלות הרצה של תלמידים ותלמידות. כדי להציג פרויקט עם כל המגבלות,",
         "description": "The message shown in preview project mode when student navigation constraints are enabled."
     },
     "common_click_here": {
@@ -885,7 +884,7 @@
         "description": "The column header for the project completion percentage"
     },
     "my_work_with_teacher_feedback_and_scores": {
-        "value": "עבודתי (עם משוב מהמורה וציון)",
+        "value": "העבודה שלי (עם משוב מהמורה וציון)",
         "description": "The title for the my work dialog popup"
     },
     "you_have_new_feedback_from_teacher": {
@@ -901,20 +900,20 @@
         "description": "The header for the section that displays the student work that has new feedback"
     },
     "my_work": {
-        "value": "עבודתי",
+        "value": "העבודה שלי",
         "description": "The header for the section that displays all of the student work"
     },
     "new_text": {
         "value": "חדש",
         "description": "The text 'New' used to label new feedback"
     },
-    "teacher_feedback": {
-        "value": "משוב מורה",
-        "description": "The label for the teacher feedback"
-    },
     "your_teacher_hasnt_graded": {
         "value": "נתינת ציונים: עבודתך עדיין לא קיבלה ציון מהמורה שלך.",
         "description": "The text to show that there is no feedback from the teacher yet"
+    },
+    "teacher_feedback": {
+        "value": "משוב מורה",
+        "description": "The label for the teacher feedback"
     },
     "last_visited_on": {
         "value": "ביקור אחרון ב",
@@ -929,15 +928,15 @@
         "description": "The text to show that the student hasn't visited the step yet"
     },
     "you_havent_submitted_work_for_this_step": {
-        "value": "לא שלחת עבודה בשלב זה.",
+        "value": "לא הגשת עבודה לשלב זה.",
         "description": "The text to show that the student hasn't submitted work for the step yet"
     },
     "teacher_flagged_work": {
-        "value": "עבודה מסומנת ע\\"י המורה",
+        "value": "עבודה מסומנת ע\\\"י המורה",
         "description": "The title for the flagged work window in the student vle"
     },
     "there_are_no_flagged_items": {
-        "value": "אין פריטים מסומנים.",
+        "value": "אין פריטים מסומנים",
         "description": "The message that says there are no flagged items"
     },
     "choose_a_step": {
@@ -973,7 +972,7 @@
         "description": "The message in the hints popup that says the student must view all hints before closing the hints popup"
     },
     "constraint_dialog_title": {
-        "value": "הפריט נעול",
+        "value": "הפריט הנעול",
         "description": "Title text for dialog alerting users about locked steps or activities (unable to visit because of navigation constraints)"
     },
     "constraint_allItems": {
@@ -1009,7 +1008,335 @@
         "description": "The message shown to students telling them to unlock (make visitable) previous items before working on the selected step or activity"
     },
     "constraint_message_xMustHaveStatusY": {
-        "value": "'{0}' צריך להיות '{1}' לפני שניתן יהיה לצפות בפריט:",
+        "value": "צריך להיות '{0}' לפני שניתן יהיה לצפות בפריט '{1}':",
         "description": "The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the selected step"
+    },
+    "session_timeout_warning": {
+        "value": "לא הייתה פעילות בחשבונך זמן רב. אם אין ברצונך לחדש את הפעילות באון מיידי, יהיה  עליך להכנס מחדש.",
+        "description": "Warning text to display to users in the session timeout alert."
+    },
+    "session_timeout_confirm": {
+        "value": "חידוש הפעילות כדי לא לצאת",
+        "description": "Text to display on button in the session timeout alert that users can press to renew session."
+    },
+    "session_timeout_message": {
+        "value": "לא הייתה פעילות בחשבונך זמן רב ולכן התבצעה יציאה אוטומטית מהחשבון. יש  צורך להכנס מחדש כדי להמשיך.",
+        "description": "Text to display to display to users when there session timed out and they have been logged out of WISE."
+    },
+    "session_timeout_title": {
+        "value": "הזמן עבר",
+        "description": "Title text for the session timeout alert."
+    },
+    "classroomMonitor_title": {
+        "value": "ניהול הרצות",
+        "description": "Title for the classroom monitor"
+    },
+    "classroomMonitor_run": {
+        "value": "#{0}",
+        "description": "Text displaying the ID of the current run in the classroom monitor ({0} will be replaced by ID number)"
+    },
+    "classroomMonitor_search": {
+        "value": "חיפוש",
+        "description": "Placeholder text for search inputs in the classroom monitor"
+    },
+    "classroomMonitor_save": {
+        "value": "שמירת שינויים",
+        "description": "Text for save button in classroom monitor"
+    },
+    "classroomMonitor_viewProject": {
+        "value": "צפיה בפרויקט",
+        "description": "Text for link to preview project in classroom monitor"
+    },
+    "classroomMonitor_workgroupsOnline": {
+        "value": "מספר הקבוצות הפעילות באתר כרגע: {0}",
+        "description": "Text displaying number of workgroups currently online ({0} will be replaced with actual number)"
+    },
+    "classroomMonitor_progress": {
+        "value": "פרויקט",
+        "description": "Text for step progress link in classroom monitor"
+    },
+    "classroomMonitor_monitor": {
+        "value": "תלמידים ותלמידות",
+        "description": "Text for student progress link in classroom monitor"
+    },
+    "classroomMonitor_studentProgress_title": {
+        "value": "התקדמות התלמיד/ה",
+        "description": "Title text for student progress link and section in classroom monitor"
+    },
+    "classroomMonitor_stepProgress_title": {
+        "value": "התקדמות בשלבים",
+        "description": "Title text for step progress link and section in classroom monitor"
+    },
+    "classroomMonitor_gradebook": {
+        "value": "ספר הציונים",
+        "description": "Text for grade book link in classroom monitor"
+    },
+    "classroomMonitor_gradebook_title": {
+        "value": "ספר הציונים של התלמיד/ה",
+        "description": "Title text for grade book link in classroom monitor"
+    },
+    "classroomMonitor_manage": {
+        "value": "ניהול",
+        "description": "Text for manage students link in classroom monitor"
+    },
+    "classroomMonitor_manage_title": {
+        "value": "ניהול תלמידים ותלמידות",
+        "description": "Title text for manage students link in classroom monitor"
+    },
+    "classroomMonitor_tools": {
+        "value": "כלים",
+        "description": "Text for tools button in classroom monitor"
+    },
+    "classroomMonitor_announcements": {
+        "value": "הודעות",
+        "description": "Text for announcements link in classroom monitor"
+    },
+    "classroomMonitor_notes": {
+        "value": "ההערות שלי",
+        "description": "Text for run notes link in classroom monitor"
+    },
+    "classroomMonitor_exportWork": {
+        "value": "ייצוא עבודות",
+        "description": "Text for export work link in classroom monitor"
+    },
+    "classroomMonitor_runSettings": {
+        "value": "הגדרות הרצה",
+        "description": "Text for run settings link in classroom monitor"
+    },
+    "classroomMonitor_showClassroom": {
+        "value": "הצגת הכתה",
+        "description": "Text for show classroom link in classroom monitor"
+    },
+    "classroomMonitor_allPeriods": {
+        "value": "כל התקופות",
+        "description": "Text for select all periods option in a period select dropdown in the classroom monitor"
+    },
+    "classroomMonitor_periodLabel": {
+        "value": "תקופה {0}",
+        "description": "Text for period options ({0} will be replaced by period name) in a select dropdown in the classroom monitor"
+    },
+    "classroomMonitor_pause": {
+        "value": "מסכים",
+        "description": "Text for pause screens tool button in classroom monitor (will be preceded by 'pause' icon)"
+    },
+    "classroomMonitor_pause_on": {
+        "value": "מסכים: הפעלה",
+        "description": "Text for pause screens tool button (when pause is on) in classroom monitor (will be preceded by 'pause' icon)"
+    },
+    "classroomMonitor_pause_off": {
+        "value": "מסכים: כבוי",
+        "description": "Text for pause screens tool button (when pause is off) in classroom monitor (will be preceded by 'pause' icon)"
+    },
+    "classroomMonitor_pause_title": {
+        "value": "השהיית מסכי תלמידים ותלמידות",
+        "description": "Title text for pause screens tool button in classroom monitor"
+    },
+    "classroomMonitor_pause_selectPeriods": {
+        "value": "בחירת תקופה(ות)",
+        "description": "Label text for pause screens select period control in classroom monitor"
+    },
+    "classroomMonitor_pause_message_label": {
+        "value": "הודעה להצגה:",
+        "description": "Label text for pause screens message to show students input field in classroom monitor"
+    },
+    "classroomMonitor_pause_message_default": {
+        "value": "המסך שלך מושהה על ידי המורה שלך ",
+        "description": "Default message to show students when teacher pauses their screens using the classroom monitor"
+    },
+    "classroomMonitor_pause_noneSelected": {
+        "value": "לא נבחרו תקופות",
+        "description": "Text to show when no periods are selected in the pause screens tool the classroom monitor"
+    },
+    "classroomMonitor_pause_periods": {
+        "value": "תקופות",
+        "description": "Plural for the word 'periods' (will be preceded by number of select periods in the pause screens tool in the classroom monitor)"
+    },
+    "classroomMonitor_studentProgress_totalCompletion": {
+        "value": "סיום סופי:",
+        "description": "Label text for the total student completion display in the classroom monitor"
+    },
+    "classroomMonitor_studentProgress_workgroupOnline": {
+        "value": "צוות מחובר (מקוון)",
+        "description": "Text indicating that workgroup is online in the classroom monitor (only shown to screen readers)"
+    },
+    "classroomMonitor_studentProgress_workgroupOffline": {
+        "value": "צוות לא מחובר",
+        "description": "Text indicating that workgroup is offline in the classroom monitor (only shown to screen readers)"
+    },
+    "classroomMonitor_studentProgress_viewStudentWork": {
+        "value": "צפייה בעבודות תלמידים ותלמידות",
+        "description": "Title text to show on links to view student work in the classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_online": {
+        "value": "מחובר",
+        "description": "Header text for the table column showing whether workgroup is online in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_period": {
+        "value": "תקופה",
+        "description": "Header text for the period table column in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_workgroup": {
+        "value": "צוות",
+        "description": "Header text for the workgroup column in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_currentStep": {
+        "value": "שלב אחרון",
+        "description": "Header text for the column showing current step a workgroup is on in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_timeSpent": {
+        "value": "זמן במערכת",
+        "description": "Header text for the column showing time spent on the current step in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_projectCompletion": {
+        "value": "סיום פרויקט",
+        "description": "Header text for the project completion column in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_headers_nodeTitle": {
+        "value": "כותרת",
+        "description": "Header text for the step title column in the step progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_headers_studentsOnStep": {
+        "value": "בשלב",
+        "description": "Header text for the column column showing current number of students in the step progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_headers_stepCompletion": {
+        "value": "סיום שלב",
+        "description": "Header text for the step completion column in the step progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_totalCompletion": {
+        "value": "סיום סופי:",
+        "description": "Label text for the total step completion display in the classroom monitor"
+    },
+    "classroomMonitor_stepProgress_completionUnavaiable": {
+        "value": "אין מידע לגבי סיום השלב מאחת הסיבות הבאות: הפרויקט לא הורץ על ידי אף אחד מתלמידיך או תלמידותיך;אוההרצה היא מגירסה ישנה שאינה תומכת במעקב אחר התקדמות שלבים",
+        "description": "Tooltip text to show when step completion percentage is not available for a step that can't be graded in the classroom monitor"
+    },
+    "classroomMonitor_stepProgress_completionUnavaiable_gradable": {
+        "value": "אין מידע לגבי סיום השלב מאחת הסיבות הבאות:הפרויקט לא הורץ על ידי אף אחד מתלמידיך או תלמידותיך;אוההרצה היא מגירסה ישנה שאינה תומכת במעקב אחר התקדמות שלבים",
+        "description": "Tooltip text to show when step completion percentage is not available for a step that can be graded in the classroom monitor"
+    },
+    "classroomMonitor_stepProgress_viewStepWork": {
+        "value": "צפייה על עבודה בשלב",
+        "description": "Title text to show on links to view step work in the classroom monitor"
+    },
+    "classroomMonitor_tableInfoText": {
+        "value": "{0} פריטים",
+        "description": "Text for the information display at the bottom of classroom monitor tables ({0} will be replaced with number of items currently being shown)"
+    },
+    "classroomMonitor_grading_search": {
+        "value": "חיפוש עבודות תלמידים ותלמידות",
+        "description": "Placeholder text for the search input in grade by step and grade by student tables of classroom monitor"
+    },
+    "classroomMonitor_grading_noResponse": {
+        "value": "אף צוות לא הגיש עדיין עבודה בשלב זה.",
+        "description": "Text to display when workgroup has not submitted any work for a step in the grading view of the classroom monitor"
+    },
+    "classroomMonitor_grading_latestWork": {
+        "value": "תגובה אחרונה",
+        "description": "Header text for student work that is the most recent revision in the classroom monitor"
+    },
+    "classroomMonitor_grading_workRevision": {
+        "value": "תגובה #{0}",
+        "description": "Header text for student work that is not that most recent revision in the classroom monitor ({0} will be replaced with revision number)"
+    },
+    "classroomMonitor_grading_flag": {
+        "value": "סימון:",
+        "description": "Label for flag checkboxes in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_teacherComment": {
+        "value": "הערה:",
+        "description": "Label for teacher comment inputs in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_teacherScore": {
+        "value": "ציון:",
+        "description": "Label for teacher score inputs in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_addPremadeComments": {
+        "value": "+ הערות מוכנות מראש",
+        "description": "Text for link to add premade comments to teacher feedback inputs in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_revisionsCount": {
+        "value": "{0} גרסאות",
+        "description": "Text for the number of revisions in the grade by student and grade by step tables of classroom monitor ({0} will be replaced with number of student work submissions for a step)"
+    },
+    "classroomMonitor_grading_revisionDate": {
+        "value": "הוגשו: {0}",
+        "description": "Text for student work timestamp displays in grading views of classroom monitor ({0} will be replaced by date/time)"
+    },
+    "classroomMonitor_grading_lastAnnotation": {
+        "value": "משוב אחרון: {0}",
+        "description": "Text for the latest teacher feedback (grade or comment) timestamp display in grading views of classroom monitor ({0} will be replaced by date/time)"
+    },
+    "classroomMonitor_grading_lastAnnotation_none": {
+        "value": "משוב אחרון: -",
+        "description": "Text for when there is no feedback (grade or comment) in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_flagOnly": {
+        "value": "רק פריטים מסומנים",
+        "description": "Text for option to only display flagged items in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_itemsToReview": {
+        "value": "פריטים למשוב/ציון: {0}",
+        "description": "Text for display showing number of new student work items to review in grading views of classroom monitor ({0} will be replaced with number of new items)"
+    },
+    "classroomMonitor_grading_options_select": {
+        "value": "בחירה",
+        "description": "Text for grading display options dropdown when no options are selected in classroom monitor"
+    },
+    "classroomMonitor_grading_options_label": {
+        "value": "אפשרויות הצגה:",
+        "description": "Label text for grading display options dropdown in classroom monitor"
+    },
+    "classroomMonitor_grading_invalidScore": {
+        "value": "{0} הוא ציון לא חוקי, יש לנסות שוב.",
+        "description": "Text to display when user tries to enter an invalid score in grading views of the  classroom monitor ({0} will be replaced with the user's input)"
+    },
+    "classroomMonitor_gradeByStudent_title": {
+        "value": "ציון לפי צוות",
+        "description": "Title text for grade by student section in classroom monitor"
+    },
+    "classroomMonitor_gradeByStudent_headers_studentWork": {
+        "value": "שלב",
+        "description": "Header text for the student work column in the grade by student table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStudent_headers_score": {
+        "value": "ציון",
+        "description": "Header text for the score column in the grade by student table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStudent_headers_feedback": {
+        "value": "ציון ומשוב",
+        "description": "Header text for the teacher feedback column in the grade by student table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStep_title": {
+        "value": "ציון לפי שלב",
+        "description": "Title text for grade by step section in classroom monitor"
+    },
+    "classroomMonitor_gradeByStep_headers_studentWork": {
+        "value": "צוות",
+        "description": "Header text for the student work column in the grade by step table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStep_headers_score": {
+        "value": "ציון",
+        "description": "Header text for the score column in the grade by step table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStep_headers_feedback": {
+        "value": "ציון ומשוב",
+        "description": "Header text for the teacher feedback column in the grade by step table of classroom monitor"
+    },
+    "classroomMonitor_hidePersonalInfo": {
+        "value": "הסתרת מידע אישי",
+        "description": "Text for option to hide personal info in classroom monitor"
+    },
+    "classroomMonitor_newItemsOnly": {
+        "value": "עבודה חדשה בלבד",
+        "description": "Text for option to only show new work in classroom monitor"
+    },
+    "classroomMonitor_saveConfirmation": {
+        "value": "השינויים נשמרו!",
+        "description": "Notification to display when teacher changes (scores, feedback, etc.) have been saved in the classroom monitor"
+    },
+    "classroomMonitor_saving": {
+        "value": "שינויים נשמרים....",
+        "description": "Notification to display when saving changes (scores, feedback, etc.) in the classroom monitor"
     }
 }
