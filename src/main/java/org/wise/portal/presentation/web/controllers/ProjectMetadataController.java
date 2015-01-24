@@ -25,6 +25,7 @@ package org.wise.portal.presentation.web.controllers;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,8 +43,10 @@ import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 
 @Controller
@@ -50,6 +54,9 @@ public class ProjectMetadataController {
 	
 	@Autowired
 	private ProjectService projectService;
+	
+	@Autowired
+	private RunService runService;
 	
 	@RequestMapping("/metadata.html")
 	protected ModelAndView handleRequestInternal(
@@ -122,20 +129,30 @@ public class ProjectMetadataController {
 					if(user == null) {
 						//the user is not logged in
 						response.getWriter().print("ERROR:LoginRequired");
-					} else if(!this.projectService.canAuthorProject(project, user)) {
-						//the user does not have write access to the proejct
-						response.getWriter().print("ERROR:NotAuthorized");
-					} else if(this.projectService.canAuthorProject(project, user)) {
-						if(command.equals("postMaxScore")) {
-							//request is to post a max score
-							handlePostMaxScore(request, response);
-						} else if(command.equals("postLastMinified")) {
-							//request is to post last minified time
-							handlePostLastMinified(request, response);
+					} else {
+						// check to see if user can author project or the run that it's in
+						List<Run> runList = this.runService.getProjectRuns((Long) project.getId());
+						Run run = null;
+						if (!runList.isEmpty()){
+							// since a project can now only be run once, just use the first run in the list
+							run = runList.get(0);
 						}
-					}
+						if(this.projectService.canAuthorProject(project, user) ||
+								(run != null && runService.hasRunPermission(run, user, BasePermission.WRITE))) {	
+							if(command.equals("postMaxScore")) {
+								//request is to post a max score
+								handlePostMaxScore(request, response);
+							} else if(command.equals("postLastMinified")) {
+								//request is to post last minified time
+								handlePostLastMinified(request, response);
+							}
+						} else {
+							//the user does not have write access to the proejct
+							response.getWriter().print("ERROR:NotAuthorized");						
+						}
+					}			
 				}
-			}			
+			}
 		}
 		
 		return null;
@@ -143,7 +160,8 @@ public class ProjectMetadataController {
 
 	/**
 	 * Handles the saving of max score POSTs. Only a user with author permission on the
-	 * project can change max scores.
+	 * project or the run that it's used for can change max scores.
+	 * Assumes that necessary permisison check has been invoked before calling this method
 	 * @param request
 	 * @param response
 	 * @return
@@ -163,9 +181,7 @@ public class ProjectMetadataController {
 					//get the signed in user
 					User user = ControllerUtil.getSignedInUser();
 					
-					//check if the user can author the project
-					if(user != null && this.projectService.canAuthorProject(project, user)) {
-						//the user has permission to author the project
+					if(user != null) {
 						
 						//get the nodeId
 						String nodeId = request.getParameter("nodeId");
@@ -340,7 +356,6 @@ public class ProjectMetadataController {
 			e.printStackTrace();
 		}
 
-		
 		return null;
 	}
 }

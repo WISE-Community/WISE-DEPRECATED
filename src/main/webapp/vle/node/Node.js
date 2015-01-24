@@ -1815,8 +1815,14 @@ Node.prototype.getWorkToImport = function(tagName, functionArgs) {
 /**
  * Returns the criteria value for this node based on student response.
  */
-Node.prototype.getCriteriaValue = function() {
-	// to be overridden by children nodes
+Node.prototype.getCriteriaValue = function(criteriaParam) {
+	var result = null;
+	if (criteriaParam != null) {
+		if (criteriaParam.nodeStatusType) {
+			return this.statusesMatch([{"nodeId":this.id,"statusType":criteriaParam.nodeStatusType,"statusValue":criteriaParam.nodeStatusValue}]);
+		}
+	}
+	return result;
 };
 
 /**

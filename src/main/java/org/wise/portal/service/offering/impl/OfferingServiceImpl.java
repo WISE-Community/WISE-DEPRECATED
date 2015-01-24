@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.module.CurnitDao;
 import org.wise.portal.dao.offering.OfferingDao;
+import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.run.Offering;
 import org.wise.portal.domain.run.impl.OfferingImpl;
@@ -51,14 +52,14 @@ public class OfferingServiceImpl implements OfferingService {
 	@Autowired
 	protected CurnitDao<Curnit> curnitDao;
 
-	protected AclService<Offering> aclService;
+	protected AclService<Persistable> aclService;
 
 	/**
 	 * @param offeringAclService
 	 *            the offeringAclService to set
 	 */
 	@Required
-	public void setAclService(AclService<Offering> aclService) {
+	public void setAclService(AclService<Persistable> aclService) {
 		this.aclService = aclService;
 	}
 

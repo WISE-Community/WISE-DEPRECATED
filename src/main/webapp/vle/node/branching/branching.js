@@ -169,8 +169,6 @@ Branching.prototype.getPathToVisit = function() {
  * previous work the student has submitted when they previously worked on this
  * step, if any.
  * 
- * TODO: rename Branching
- * 
  * note: you do not have to use 'promptDiv' or 'studentResponseTextArea', they
  * are just provided as examples. you may create your own html ui elements in
  * the .html file for this step (look at branching.html).
@@ -184,6 +182,7 @@ Branching.prototype.render = function() {
 		// if the next step is HTML, this gets called. ignore it.
 		return;
 	}
+	this.hideAllExceptBranchStep();
 	if (this.content && !this.content.showBranchSelectionPage) {
 		// if showBranchSelectionPage is false, we immediately run the branchingFunction and go to the first node in the chosen path.
 		var pathToVisitJSONObj = this.getPathToVisit();
