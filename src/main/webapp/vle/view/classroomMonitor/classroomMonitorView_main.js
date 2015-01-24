@@ -4738,8 +4738,6 @@ View.prototype.displayGradeByStep = function(nodeId) {
 	//get the step prompt
 	var prompt = this.getProject().getNodeById(nodeId).getPrompt();
 	
-	// TODO: insert prompt in header
-	
 	//clear the number of items to review because we will count them again for this step
 	this.numberOfItemsToReview = 0;
 	
@@ -4770,6 +4768,14 @@ View.prototype.displayGradeByStep = function(nodeId) {
 	// set the number of items to review value
 	$('#gradeByStepItemsToReview').text(view.getI18NStringWithParams('classroomMonitor_grading_itemsToReview',[this.numberOfItemsToReview]));
 	this.numberOfItemsToReview > 0 ? $('#gradeByStepItemsToReview').fadeIn() : $('#gradeByStepItemsToReview').fadeOut();
+	
+	// insert prompt
+	$('#promptContent').html(prompt);
+	if(prompt && view.utils.isNonWSString(prompt)){
+		$('#gradeByStepPromptWrap, #gradeByStepPromptToggle').show();
+	} else {
+		$('#gradeByStepPromptWrap, #gradeByStepPromptToggle').hide();
+	}
 	
 	// hide loading message
 	$('#loading').hide();
@@ -6826,7 +6832,7 @@ View.prototype.createGradeByStudentDisplay = function() {
 	// add items to review display
 	$workgroupInfo.append('<span id="gradeByStudentItemsToReview" class="review-items label label-success"></span>');
 	
-	$displayTools = $('<div class="pull-right">');
+	/*$displayTools = $('<div class="pull-right">');
 	// add display options multiselect
 	var $displayOptions = $('<select id="gradeByStudentOptions" multiple="multiple" disabled>');
 	$displayOptions.append('<option name="gradeByStudentOptions" value="newOnly">' + view.getI18NString('classroomMonitor_newItemsOnly') + '</option>');
@@ -6846,7 +6852,7 @@ View.prototype.createGradeByStudentDisplay = function() {
 		onChange: function(){
 			
 		}
-	});
+	});*/
 	
 	$('.dataTables_top', $wrapper).append($('<div class="clearfix">'));
 }
@@ -7009,7 +7015,7 @@ View.prototype.createGradeByStepDisplay = function() {
 	// add items to review display
 	$stepInfo.append('<span id="gradeByStepItemsToReview" class="review-items label label-success"></span>');
 	
-	$displayTools = $('<div class="pull-right">');
+	/*$displayTools = $('<div class="pull-right">');
 	// add display options multiselect
 	var $displayOptions = $('<select id="gradeByStepOptions" multiple="multiple"> disabled');
 	$displayOptions.append('<option name="gradeByStepOptions" value="newOnly">' + view.getI18NString('classroomMonitor_newItemsOnly') + '</option>');
@@ -7029,9 +7035,29 @@ View.prototype.createGradeByStepDisplay = function() {
 		onChange: function(){
 			
 		}
-	});
+	});*/
 	
-	$('.dataTables_top', $wrapper).append($('<div class="clearfix">'));
+	var promptTerm = view.getI18NString('promptTerm');
+	$promptToggle  = $('<a href="javascript:void(0);" id="gradeByStepPromptToggle">' + promptTerm + ' +</a>').on('click', function(){
+		$('#gradeByStepPrompt').slideToggle('fast', function(){
+			if($(this).is(':visible')){
+				$promptToggle.text(promptTerm + ' -');
+			} else {
+				$promptToggle.text(promptTerm + ' +');
+			}
+			
+			view.redrawFixedHeaders(true);
+		})
+	});
+	$('#gradeByStepItemsToReview').after($promptToggle);
+	
+	var $promptDisplay = $('<div id="gradeByStepPrompt">');
+	$promptDisplay
+		.append('<div id="gradeByStepPromptWrap" class="well"><div id="promptContent"></div></div>');
+	
+	$('.dataTables_top', $wrapper)
+		.append($('<div class="clearfix">'))
+		.append($promptDisplay);
 }
 
 /**

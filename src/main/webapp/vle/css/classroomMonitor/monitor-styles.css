@@ -8688,6 +8688,18 @@ table.dataTable.grading tbody .no-work .open-comments {
   margin-right: -1px;
   margin-left: -1px;
 }
+#gradeByStepPrompt {
+	display: none;
+	margin: 0 auto;
+}
+#gradeByStepPromptWrap {
+	margin: 0.5em 0.5em 1em;
+    padding: 0.5em 1em;
+    display: none;
+}
+#gradeByStepPromptToggle {
+	margin-left: 0.5em;
+}
 .viewStepWork a,
 .viewStudentWork a {
   display: block;

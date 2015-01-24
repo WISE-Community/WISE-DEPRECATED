@@ -262,7 +262,11 @@
 	"activityTermPlural":{
 		"value":"Activities",
 		"description":"Plural form of the default term for a 'Activity' in a WISE project"
-	},	
+	},
+	"promptTerm":{
+		"value":"Prompt",
+		"description":"Default term for 'Prompt' in a WISE step"
+	},
 	"insertImage":{
 		"value":"Insert Image",
 		"description":"Text 'Insert Image', to use for file upload"
