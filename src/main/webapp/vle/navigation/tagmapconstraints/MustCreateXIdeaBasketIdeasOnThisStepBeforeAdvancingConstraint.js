@@ -39,8 +39,11 @@ MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.prototype.isSatisf
 	var ideaCount = 0;
 	
 	if(this.view.ideaBasket != null) {
+		//include ideas that were created on the step that is constrained but were deleted
+		var includeDeletedIdeas = true;
+		
 		//get the number of ideas that were created on the step that is constrained
-		ideaCount = this.view.ideaBasket.getNumberOfIdeasByNodeId(this.nodeId);
+		ideaCount = this.view.ideaBasket.getNumberOfIdeasByNodeId(this.nodeId, includeDeletedIdeas);
 	}
 	
 	//check if the student has created the required number of ideas on the step that is constrained
@@ -82,10 +85,11 @@ MustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingConstraint.prototype.getConst
 		var ideaCount = 0;
 		
 		if(this.view.ideaBasket != null) {
-			/*
-			 * get the number of ideas that were created on the step that is constrained
-			 */
-			ideaCount = this.view.ideaBasket.getNumberOfIdeasByNodeId(this.nodeId);
+			//include ideas that were created on the step that is constrained but were deleted
+			var includeDeletedIdeas = true;
+			
+			//get the number of ideas that were created on the step that is constrained
+			ideaCount = this.view.ideaBasket.getNumberOfIdeasByNodeId(this.nodeId, includeDeletedIdeas);
 		}
 		
 		/*
