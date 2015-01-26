@@ -380,13 +380,16 @@ GrapherState.prototype.predictionReceived = function(predictionId, x, y, fixed, 
 		this.predictionArray.push({id:predictionId, predictions:[]});
 	}
 	var predictionArray = this.getPredictionObjByPredictionId(predictionId).predictions;
+	
+	//if we are sorting (i.e., non-functional data is not allowed))
 	//remove any existing point with the same x value
-	for(var i=0; i<predictionArray.length; i++) {
-		var predictionPoint = predictionArray[i];
-		
-		if(predictionPoint.x == x) {
-			predictionArray.splice(i, 1);
-			break;
+	if (typeof doSort == "undefined" || doSort){
+		for(var i=0; i<predictionArray.length; i++) {
+			var predictionPoint = predictionArray[i];
+			if(predictionPoint.x == x) {
+				predictionArray.splice(i, 1);
+				break;
+			}
 		}
 	}
 	
@@ -419,18 +422,15 @@ GrapherState.prototype.predictionUpdateByX = function(predictionId, x, y) {
 		return false;
 	}
 	var predictionArray = this.getPredictionObjByPredictionId(predictionId).predictions;
-	//remove any existing point with the same x value
 	var predictionFound = false;
 	for(var i=0; i<predictionArray.length; i++) {
-		var predictionPoint = predictionArray[i];
-		
+		var predictionPoint = predictionArray[i];	
 		if(predictionPoint.x == x) {
 			predictionArray[i].y = y;
 			predictionFound = true;
 			break;
 		}
 	}
-
 	// save 
 	if (predictionFound){
 		this.setPredictionsForPredictionId(predictionId, predictionArray);	
