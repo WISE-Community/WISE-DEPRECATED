@@ -2688,9 +2688,10 @@ IdeaBasket.prototype.processTagMaps = function() {
 /**
  * Get the number of ideas that were created on a specific step
  * @param nodeId the node id of the step
+ * @param includeDeletedIdeas include ideas that were deleted
  * @return the number of ideas created on the given step
  */
-IdeaBasket.prototype.getNumberOfIdeasByNodeId = function(nodeId) {
+IdeaBasket.prototype.getNumberOfIdeasByNodeId = function(nodeId, includeDeletedIdeas) {
 	var count = 0;
 	
 	if(nodeId != null) {
@@ -2714,6 +2715,36 @@ IdeaBasket.prototype.getNumberOfIdeasByNodeId = function(nodeId) {
 						 * will increment the counter
 						 */
 						count++;
+					}
+				}
+			}
+		}
+		
+		if(includeDeletedIdeas) {
+			//get the deleted ideas
+			var deleted = this.deleted;
+			
+			if(deleted != null) {
+				
+				//loop through the deleted ideas
+				for(var y=0; y<deleted.length; y++) {
+					
+					//get a deleted idea
+					var deletedIdea = deleted[y];
+					
+					if(deletedIdea != null) {
+						
+						//get the node id of the deleted idea
+						var deletedIdeaNodeId = deletedIdea.nodeId;
+						
+						//check if the idea was created on the given step
+						if(nodeId == deletedIdeaNodeId) {
+							/*
+							 * the idea was created on the step we are looking for so we
+							 * will increment the counter
+							 */
+							count++;
+						}
 					}
 				}
 			}
