@@ -1408,7 +1408,25 @@ View.prototype.updateStepStatusIcon = function(nodeId, src, tooltip) {
 	}
 };
 
-
+/**
+ * Called when user attempts to visit a step but is blocked (by a constraint, for example)
+ * 
+ * OPTIONAL
+ * 
+ * @param node Node that has been blocked
+ */
+NavigationPanel.prototype.renderNodeBlockedListener = function(node){
+	this.mode = 'nav';
+	var view = this.view;
+	
+	// check if user is currently visiting a node
+	var prevNode = view.getProject().getNodeByPosition(view.model.getCurrentNodePosition());
+	if(!prevNode){
+		// user is not currently visiting a node, so load the start node by default
+		var startPos = view.getProject().getStartNodePosition();
+		view.renderNode(startPos);
+	}
+};
 
 
 /**
@@ -1442,6 +1460,11 @@ View.prototype.navigationDispatcher = function(type,args,obj){
 		obj.unhighlightStepInMenu(args[0]);
 	} else if(type=='updateStepStatusIcon'){
 		obj.updateStepStatusIcon(args[0], args[1], args[2]);
+	} else if(type=='renderNodeBlocked'){
+		if(!obj.navigationPanel){
+			obj.renderNavigationPanel();
+		}
+		obj.navigationPanel.renderNodeBlockedListener(args[0]);
 	}
 };
 
@@ -1462,7 +1485,8 @@ var menuEvents = [
               'highlightStepInMenu',
               'unhighlightStepInMenu',
               'updateStepStatusIcon',
-              'menuCreated'
+              'menuCreated',
+              'renderNodeBlocked'
               ];
 
 /**
