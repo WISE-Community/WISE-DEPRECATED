@@ -4,4 +4,4 @@
 build
 target
 src/main/resources/wise.properties
-src/main/webapp/curriculum
+*.bak
