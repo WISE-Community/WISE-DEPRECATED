@@ -37,7 +37,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.service.user.UserService;
 
 @Controller
-@RequestMapping("/checkforexistingaccount.html")
+@RequestMapping("checkforexistingaccount.html")
 public class CheckForExistingAccountController{
 
 	@Autowired
@@ -119,6 +119,6 @@ public class CheckForExistingAccountController{
 			response.getWriter().write(existingUserNames.toString());
 		}
 		
-		return "checkforexistingaccount";
+		return null;
 	}
 }
