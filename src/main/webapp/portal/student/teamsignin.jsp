@@ -67,26 +67,34 @@
 				<tr id="multiUserSeparatorRow">
 					<td colspan="3"></td>
 				</tr>
-		  		<tr>
 		  		<c:forEach var="teammate_index" begin="2" end="${teamSignInForm.maxWorkgroupSize}" step="1">
-		    		<td><label for="username${teammate_index}"><spring:message code="student.teamsignin.username"/> ${teammate_index}:</label></td>
-		        	<td><form:input path="username${teammate_index}" id="username${teammate_index}"/></td>
-		        	<td class="errorMsgStyle"><form:errors path="username${teammate_index}" /></td>
-		        </tr>
-				<tr>
-		 			<td><label for="password${teammate_index}"><spring:message code="student.teamsignin.password"/></label></td>
-		        	<td><form:password path="password${teammate_index}" id="password${teammate_index}"/></td>
-		        	<td class="errorMsgStyle"><form:errors path="password${teammate_index}" /></td>
-		        </tr>
-		        <tr class="multiUserAbsentRow">
-		        	<td><a href="#" onclick="teammateAbsent(${teammate_index})"><spring:message code="student.teamsignin.absentToday"/></a></td>
-		        	<td></td>
-		        	<td></td>
-		        </tr>
-				<tr id="multiUserSeparatorRow">
-					<td colspan="3"></td>
-				</tr>
-		  </c:forEach>
+			  		<c:set var="thisUsername" value="username${teammate_index}" />
+			  		<tr>
+			    		<td><label for="username${teammate_index}"><spring:message code="student.teamsignin.username"/> ${teammate_index}:</label></td>		    		
+						<c:choose>
+							<c:when test="${empty teamSignInForm[thisUsername]}">
+				    	    	<td><form:input path="username${teammate_index}" id="username${teammate_index}"/></td>
+							</c:when>
+							<c:otherwise>
+				        		<td><form:input readonly="true" path="username${teammate_index}" id="username${teammate_index}"/></td>
+							</c:otherwise>
+						</c:choose>
+		        		<td class="errorMsgStyle"><form:errors path="username${teammate_index}" /></td>
+		        	</tr>
+					<tr>
+		 				<td><label for="password${teammate_index}"><spring:message code="student.teamsignin.password"/></label></td>
+		        		<td><form:password path="password${teammate_index}" id="password${teammate_index}"/></td>
+		        		<td class="errorMsgStyle"><form:errors path="password${teammate_index}" /></td>
+			        </tr>
+			        <tr class="multiUserAbsentRow">
+			        	<td><a href="#" onclick="teammateAbsent(${teammate_index})"><spring:message code="student.teamsignin.absentToday"/></a></td>
+		    	    	<td></td>
+		        		<td></td>
+			        </tr>
+					<tr id="multiUserSeparatorRow">
+						<td colspan="3"></td>
+					</tr>
+		  		</c:forEach>
 			</table>
 			
 	<div><a href="${contextPath}/forgotaccount/student/passwordreminder.html" id="forgotlink"><spring:message code="student.teamsignin.forgotUsernameOrPassword"/></a>  </div>
