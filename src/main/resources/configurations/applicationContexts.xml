@@ -885,7 +885,8 @@
 			<props>
 				<!-- specify when hibernate should release JDBC connections -->
 				<prop key="hibernate.connection.release_mode">auto</prop>
-				<prop key="hibernate.dialect">org.wise.util.MySQL5MyISAMDialect</prop>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
 				<!-- Force Hibernate to order SQL updates by the primary key value of the items being updated. This will result in fewer 
 					transaction deadlocks in highly concurrent systems. -->
 				<prop key="hibernate.order_updates">true</prop>
