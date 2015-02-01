@@ -622,6 +622,10 @@ body#w4_vle {
 
 /* Dialogs and overlays */
 
+.lockscreen {
+  opacity:.6;
+}
+
 #vleOverlay, #ideaBasketOverlay {
 	position:absolute;
 	top:0;

@@ -18,7 +18,9 @@ View.prototype.uicontrolDispatcher = function(type,args,obj){
  */
 View.prototype.renderLockDialog = function(){
 	document.body.appendChild(createElement(document,'div', {id:'lockscreen'}));
-	$('#lockscreen').dialog({autoOpen:false,width:255,draggable:false,modal:true,resizable:false,closeText:'',dialogClass:'no-title'});
+	$('#lockscreen').dialog({autoOpen:false,closeOnEscape:false,width:255,draggable:false,modal:true,resizable:false,closeText:'',dialogClass:'lockscreen',
+		    open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }
+	    });
 };
 
 /**
