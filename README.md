@@ -1,9 +1,11 @@
 Web-based Inquiry Science Education (WISE)
 ====
 
+Setup WISE Local Development
+* Develop WISE without IDE (easy and quick, suitable for most): https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE:-Local-Development-Environment-without-using-IDE
+* Develop WISE with Eclipse (a bit long to set up but provides more debugging options): https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE:-Local-Development-Environment-using-Eclipse
+ 
 Setup WISE on a Server: https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE-on-a-Server
-
-Setup WISE Local Development: https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE:-Local-Development-Environment-using-Eclipse
 
 Other documentation: https://github.com/WISE-Community/WISE/wiki
 

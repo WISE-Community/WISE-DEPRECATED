@@ -1,7 +1,7 @@
 #! /bin/sh
 # Starts WISE in tomcat-embedded mode using hsqldb and default settings stores in $SAMPLE_PROPERTIES_FILE
 # if arg1="setup", wipes out any existing data in database/curriculum/studentupload
-# if arg1="start", keeps existing data and simply starts embedded tomcat server
+# if arg1="run", keeps existing data and simply starts embedded tomcat server
 
 PWD=`pwd`
 PROPERTIES_FILE="src/main/resources/wise.properties"
@@ -9,7 +9,7 @@ SAMPLE_PROPERTIES_FILE="src/main/resources/wise_sample_embedded_tomcat.propertie
 
 if [ $# -eq 0 ]
 then
-    echo "Usage: ./wise.sh {setup|start}"
+    echo "Usage: ./wise.sh {setup|run}"
 else
     if [ $1 == "setup" ]
     then

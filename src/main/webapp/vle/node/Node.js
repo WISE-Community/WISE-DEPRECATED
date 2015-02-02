@@ -507,6 +507,15 @@ Node.prototype.finalize = function(callback) {
 	callback();
 };
 
+
+Node.prototype.lockScreen = function(data) {
+    // this function should be overriden by child classes
+};
+
+Node.prototype.unlockScreen = function() {
+    // this function should be overriden by child classes
+};
+
 /**
  * This is called when a node is exited
  */

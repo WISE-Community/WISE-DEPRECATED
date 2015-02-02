@@ -482,7 +482,13 @@ View.prototype.lockScreen = function(data) {
 			pauseMessage = data.pauseMessage;
 		}
 	}
-	
+
+	//send lock event to node
+	var currentNode = this.getCurrentNode();
+	if (currentNode != null) {
+	    currentNode.lockScreen(data);
+	}
+
 	//the message to display in the modal dialog that will lock the student screen
 	var message = "<table><tr align='center'>" + pauseMessage + "</tr><tr align='center'></tr><table><br/>";
 
@@ -496,6 +502,13 @@ View.prototype.lockScreen = function(data) {
  * Unlock the student screen
  */
 View.prototype.unlockScreen = function() {
+
+	//send unlock event to node
+	var currentNode = this.getCurrentNode();
+	if (currentNode != null) {
+	  currentNode.unlockScreen();
+	}
+
 	//create the lock screen dialog if it does not exist
 	if($('#lockscreen').size()==0){
 		this.renderLockDialog();
