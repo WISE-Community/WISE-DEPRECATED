@@ -441,9 +441,9 @@
 			<version>1.4.7</version>
 		</dependency>
 		<dependency>
-			<groupId>net.tanesha.recaptcha4j</groupId>
+			<groupId>com.google.code.maven-play-plugin.net.tanesha.recaptcha4j</groupId>
 			<artifactId>recaptcha4j</artifactId>
-			<version>0.0.7</version>
+			<version>0.0.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
