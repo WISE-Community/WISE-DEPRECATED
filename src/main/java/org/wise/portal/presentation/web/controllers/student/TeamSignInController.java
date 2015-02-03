@@ -40,6 +40,8 @@ import org.springframework.orm.hibernate4.HibernateOptimisticLockingFailureExcep
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpSessionRequiredException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -385,4 +387,23 @@ public class TeamSignInController {
 		modelMap.put("teamSignInForm", form);
 		return "student/teamsignin";
 	}
+
+	/**
+	 * When the session is expired, send student back to form page
+	 */
+	@ExceptionHandler(HttpSessionRequiredException.class)
+	public ModelAndView handleSessionExpired(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		//get the context path e.g. /wise
+		String contextPath = request.getContextPath();
+		String teamSignInFormPath = contextPath+"/student/teamsignin.html";
+
+		String runIdString = request.getParameter("runId");
+		if(runIdString != null) {
+			teamSignInFormPath += "?runId="+runIdString;
+		}
+
+		mav.setView(new RedirectView(teamSignInFormPath));
+		return mav;
+        }
 }
