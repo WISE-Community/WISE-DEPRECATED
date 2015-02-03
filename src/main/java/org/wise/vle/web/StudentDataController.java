@@ -737,13 +737,13 @@ public class StudentDataController {
 			// check if student's posted data size is under the limit of the specific node type.
 			if (nodesWithLargeStudentWork.contains(nodeType)) {
 				if (request.getContentLength() > studentMaxWorkSizeLarge) {  // posted data must not exceed STUDENT_MAX_WORK_SIZE_LARGE
-					System.err.println("post data: too large (>"+studentMaxWorkSizeLarge+" bytes)");
+					System.err.println("post data ["+nodeType+"]: too large (>"+studentMaxWorkSizeLarge+" bytes)");
 					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "post data: too large (>"+studentMaxWorkSizeLarge+" bytes)");
 					return null;
 				}
 			} else {
 				if (request.getContentLength() > studentMaxWorkSizeDefault) {  // posted data must not exceed STUDENT_MAX_WORK_SIZE_DEFAULT
-					System.err.println("post data: too large (>"+studentMaxWorkSizeDefault+" bytes)");
+					System.err.println("post data ["+nodeType+"]: too large (>"+studentMaxWorkSizeDefault+" bytes)");
 					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "post data: too large (>"+studentMaxWorkSizeDefault+" bytes)");
 					return null;
 				}
