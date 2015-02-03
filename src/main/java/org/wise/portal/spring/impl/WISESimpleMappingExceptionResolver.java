@@ -63,7 +63,7 @@ public class WISESimpleMappingExceptionResolver extends
 
 	private static final String HANDLE_EXCEPTION_PROPERTY_KEY = "handle_exception";
 	
-	private static final String HANDLE_EXCEPTION_MAIL_SUBJECT = "WISE 4.0 Exception Report";
+	private static final String HANDLE_EXCEPTION_MAIL_SUBJECT = "WISE Exception Report";
 	
 	private static final String HANDLE_EXCEPTION_FROM_EMAIL = "telsportal@gmail.com";
 
