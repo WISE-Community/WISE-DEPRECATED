@@ -51,6 +51,7 @@ import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.user.UserService;
@@ -723,54 +724,117 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     	String messageString = message.toString();
     	
     	try {
-			JSONObject messageJSON = new JSONObject(messageString);
-			
-			if(messageJSON.has("messageParticipants")) {
-				/*
-				 * get the message participants which will tell us who is sending
-				 * the message and who should receive the message
-				 */
-				String messageParticipants = messageJSON.getString("messageParticipants");
-				
-				if(messageParticipants == null) {
-					
-				} else if(messageParticipants.equals("studentToStudent")) {
-					//TODO
-				} else if(messageParticipants.equals("studentToTeachers")) {
-					//the student is sending a message to the teachers
-					sendStudentToTeachersMessage(session, messageJSON);
-				} else if(messageParticipants.equals("studentToGroup")) {
-					//TODO
-				} else if(messageParticipants.equals("teacherToStudent")) {
-					//TODO
-				} else if(messageParticipants.equals("teacherToGroup")) {
-					//TODO
-				} else if(messageParticipants.equals("teacherToStudentsInPeriod")) {
-					//the teacher is sending a message to the students in a period
-					sendTeacherToStudentsInPeriodMessage(session, messageJSON);
-				} else if(messageParticipants.equals("teacherToStudentsInRun")) {
-					//the teacher is sending a message to the students in a run
-					sendTeacherToStudentsInRunMessage(session, messageJSON);
-				} else if(messageParticipants.equals("studentToClassmatesInPeriod")) {
-					//the student is sending a message to the classmates in a period
-					sendStudentToClassmatesInPeriodMessage(session, messageJSON);
-				} else {
-					//TODO
-				}
-			}
-			
-			//if this is a student status message we will save it to the database
-			if(messageJSON.has("messageType")) {
-				String messageType = messageJSON.optString("messageType");
-				
-				if(messageType != null && messageType.equals("studentStatus")) {
-					//this is a student status message so we will save the student status to the database
-					saveStudentStatusToDatabase(session, messageJSON);
-				}
-			}
+    		if(messageString != null && !messageString.equals("")) {
+    			//message string is not null and not an empty string
+    			
+    			//create the JSON object from the message
+    			JSONObject messageJSON = new JSONObject(messageString);
+    			
+    			if(messageJSON.has("messageParticipants")) {
+    				/*
+    				 * get the message participants which will tell us who is sending
+    				 * the message and who should receive the message
+    				 */
+    				String messageParticipants = messageJSON.getString("messageParticipants");
+    				
+    				if(messageParticipants == null) {
+    					
+    				} else if(messageParticipants.equals("studentToStudent")) {
+    					//TODO
+    				} else if(messageParticipants.equals("studentToTeachers")) {
+    					//the student is sending a message to the teachers
+    					sendStudentToTeachersMessage(session, messageJSON);
+    				} else if(messageParticipants.equals("studentToGroup")) {
+    					//TODO
+    				} else if(messageParticipants.equals("teacherToStudent")) {
+    					//TODO
+    				} else if(messageParticipants.equals("teacherToGroup")) {
+    					//TODO
+    				} else if(messageParticipants.equals("teacherToStudentsInPeriod")) {
+    					//the teacher is sending a message to the students in a period
+    					sendTeacherToStudentsInPeriodMessage(session, messageJSON);
+    				} else if(messageParticipants.equals("teacherToStudentsInRun")) {
+    					//the teacher is sending a message to the students in a run
+    					sendTeacherToStudentsInRunMessage(session, messageJSON);
+    				} else if(messageParticipants.equals("studentToClassmatesInPeriod")) {
+    					//the student is sending a message to the classmates in a period
+    					sendStudentToClassmatesInPeriodMessage(session, messageJSON);
+    				} else {
+    					//TODO
+    				}
+    			}
+    			
+    			//if this is a student status message we will save it to the database
+    			if(messageJSON.has("messageType")) {
+    				String messageType = messageJSON.optString("messageType");
+    				
+    				if(messageType != null && messageType.equals("studentStatus")) {
+    					//this is a student status message so we will save the student status to the database
+    					saveStudentStatusToDatabase(session, messageJSON);
+    				}
+    			}
+    		} else {
+    			//message string was null or empty string so we will output the session information to System.out
+    			outputSessionInformation(session, messageString);
+    		}
 		} catch (JSONException e) {
 			e.printStackTrace();
+			
+			//an exception occurred so we will output the session information to System.out
+			outputSessionInformation(session, messageString);
 		}
+	}
+	
+	/**
+	 * Output the session information to System.out so we can try to figure out why
+	 * the message was empty
+	 * 
+	 * @param session the web socket session object
+	 * @param message the web socket message string
+	 */
+	private void outputSessionInformation(WebSocketSession session, String message) {
+		String userName = null;
+		String firstName = null;
+    	String lastName = null;
+    	Integer textMessageSizeLimit = null;
+    	URI uri = null;
+    	
+    	System.out.println("Error: a web socket error occurred");
+    	System.out.println("message=" + message);
+    	
+    	if(session != null) {
+    		
+    		//get the session attributes
+        	Map<String, Object> sessionAttributes = session.getAttributes();
+        	
+        	if(sessionAttributes != null) {
+        		
+        		//get the signed in user
+        		Object signedInUserObject = sessionAttributes.get("signedInUser");
+        		
+        		if(signedInUserObject != null && signedInUserObject instanceof UserImpl) {
+        			
+        			//get the user details
+        			MutableUserDetails userDetails = ((UserImpl) signedInUserObject).getUserDetails();
+        			
+        			if(userDetails != null) {
+        				//get the user name, first name and last name
+        				userName = userDetails.getUsername();
+        				firstName = userDetails.getFirstname();
+        				lastName = userDetails.getLastname();
+        			}
+        		}
+        	}
+        	
+        	textMessageSizeLimit = session.getTextMessageSizeLimit();
+        	uri = session.getUri();
+    	}
+    	
+		System.out.println("userName=" + userName);
+		System.out.println("firstName=" + firstName);
+		System.out.println("lastName=" + lastName);
+		System.out.println("textMessageSizeLimit=" + textMessageSizeLimit);
+		System.out.println("uri=" + uri);
 	}
 
 
