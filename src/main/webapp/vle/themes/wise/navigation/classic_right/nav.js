@@ -1512,5 +1512,5 @@ if(typeof eventManager != 'undefined'){
 	 * 
 	 * eventManager.fire('scriptLoaded', 'vle/themes/wise/navigation/classic/nav.js');
 	 */
-	eventManager.fire('scriptLoaded', 'vle/themes/wise/navigation/classic/nav.js');
+	eventManager.fire('scriptLoaded', 'vle/themes/wise/navigation/classic_right/nav.js');
 };
