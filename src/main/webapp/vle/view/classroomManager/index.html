@@ -17,23 +17,11 @@
 </head>
 <body>
 	<h1>Classroom Manager</h1>
-	<div ng-app='classroomManagerApp'>
+	<div ng-view>
 		<div ng-include="'nav.html'"></div>
 		<div ui-view></div>
 	</div>
-	<script src='../../lib/angular/angular.js'></script>
-	<script src='../../lib/angular/angular-ui-router.js'></script>
-	<script src='app.js'></script>
-	<script src='grading/step/stepGradingController.js'></script>
-	<script src='grading/student/studentGradingController.js'></script>
-	<script src='progress/step/stepProgressController.js'></script>
-	<script src='progress/student/studentProgressController.js'></script>
-	<script src='services/annotationService.js'></script>
-	<script src='services/configService.js'></script>
-	<script src='services/projectService.js'></script>
-	<script src='services/projectMetadataService.js'></script>
-	<script src='services/studentStatusService.js'></script>
-	<script src='services/studentWorkService.js'></script>
-	<script src='services/userAndClassInfoService.js'></script>
+	
+	<script data-main='main' src='../../lib/require/require.js'></script>
 </body>
 </html>
