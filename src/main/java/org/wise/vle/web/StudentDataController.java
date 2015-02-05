@@ -115,14 +115,6 @@ public class StudentDataController {
 		String getAllWorkStr = request.getParameter("getAllWork");
 		String getRevisionsStr = request.getParameter("getRevisions");
 		
-		String periodString = request.getParameter("periodId");
-		
-		Long period = null;
-		
-		if(periodString != null) {
-			period = Long.parseLong(periodString);	
-		}
-		
 		if (userIdStr == null) {
 			/*
 			 * this request was most likely caused by a session timeout and the user logging
