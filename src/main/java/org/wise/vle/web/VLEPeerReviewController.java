@@ -262,7 +262,7 @@ public class VLEPeerReviewController {
 			return;
 		}
 		
-		//number of workgroups registered in the period, this is passed in from BridgeController
+		//number of workgroups registered in the period
 		Integer numWorkgroups = null;
 		
 		if(type.equals("peerreview")) {
