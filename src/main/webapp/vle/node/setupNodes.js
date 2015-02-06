@@ -73,6 +73,10 @@ SetupNodes.setupFiles = [
 		nodeSetupPath:"vle/node/outsideurl/setup.js"
 	},
 	{
+		nodeName:"PhETNode",
+		nodeSetupPath:"vle/node/phet/setup.js"
+	},
+	{
 		nodeName:"SensorNode",
 		nodeSetupPath:"vle/node/sensor/setup.js"
 	},
