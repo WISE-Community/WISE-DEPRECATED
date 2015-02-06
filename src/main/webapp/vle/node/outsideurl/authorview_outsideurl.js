@@ -32,7 +32,9 @@ View.prototype.OutsideUrlNode.generatePage = function(view){
  */
 View.prototype.OutsideUrlNode.updateContent = function(){
 	/* update content object */
-	this.view.activeContent.getContentJSON().url = document.getElementById('tInput').value;
+	var content = this.view.activeContent.getContentJSON();
+	content.url = document.getElementById('tInput').value;
+	this.view.activeContent.setContent(content);
 };
 
 /**
