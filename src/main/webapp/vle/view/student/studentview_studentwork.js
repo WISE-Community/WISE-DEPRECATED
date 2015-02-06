@@ -119,6 +119,7 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 			var postParams = {
 				id: stepWorkId, 
 				runId: this.getConfig().getConfigParam('runId'), 
+				periodId: this.getUserAndClassInfo().getPeriodId(),
 				userId: this.getUserAndClassInfo().getWorkgroupId(), 
 				data: nodeVisitData
 			};
@@ -142,6 +143,7 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 			var postParams = {
 				id: stepWorkId, 
 				runId: this.getConfig().getConfigParam('runId'), 
+				periodId: this.getUserAndClassInfo().getPeriodId(),
 				userId: '-2',
 				data: prepareDataForPost(diff)
 			};
