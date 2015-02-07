@@ -298,8 +298,6 @@
 		
 		$('#newsContent').jScrollPane();
 		
-		loadProjectThumbnails();
-		
 		// Set up view project details click action for each project id link
 		$('#projectShowcase').on('click','a.projectDetail',function(){
 			var title = $(this).attr('title');
@@ -320,6 +318,8 @@
 			});
 			$("#projectDetailDialog > #projectIfrm").attr('src',path);
 		});
+		
+		setTimeout("loadProjectThumbnails()",500);		
 	});
 	
 	$(window).load(function() {
@@ -363,6 +363,14 @@
 		$(".projectThumb").each(
 			function() {
 				var thumbUrl = $(this).attr("thumbUrl");
+				
+				try {
+                    if (window.location.protocol == "https:" && thumbUrl.substr(0,5) == "http:") {
+                        thumbUrl = "https:" + thumbUrl.substr(5);
+                    }
+                } catch (exception) {
+                       // do nothing
+                }
 				// check if thumbUrl exists
 				$.ajax({
 					url:thumbUrl,
@@ -370,11 +378,10 @@
 					statusCode: {
 						200:function() {
 				  		    // found, use it
-							$(this).html("<img src='"+$(this).attr("thumbUrl")+"' alt='thumb'></img>");
+							$(this).html("<img src='"+thumbUrl+"' alt='thumb'></img>");
 						},
 						404:function() {
 						    // not found, leave alone
-							//$(this).html("<img src='${contextPath}/<spring:theme code="twitter"/>' alt='thumb'></img>");
 						}
 					}
 				});
