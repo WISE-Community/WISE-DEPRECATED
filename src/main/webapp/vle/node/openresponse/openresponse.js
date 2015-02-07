@@ -841,6 +841,18 @@ OPENRESPONSE.prototype.render = function() {
 	var message = '';
 	var workToImport = [];
 	
+	/*
+	 * clear the text in the response box. if the previous step the student 
+	 * was on was an open response step, the response box textarea will maintain 
+	 * the text from the previous step for some reason. clearing the response
+	 * box here will ensure that the work from the previous step isn't copied
+	 * over to this step. we set the value of the response box later during
+	 * the render process but if there's ever an error it may not get to that
+	 * point which may lead to the work from the previous step being displayed
+	 * to the student. 
+	 */
+	$('#responseBox').val('');
+	
 	//process the tag maps if we are not in authoring mode
 	if(this.view.authoringMode == null || !this.view.authoringMode) {
 		//get the tag map results
@@ -1517,6 +1529,39 @@ OPENRESPONSE.prototype.displayTeacherWork = function() {
 		
 		//set the response if there were previous revisions
 		this.setResponse();
+		
+		/* start the rich text editor if specified */
+		if(this.content.isRichTextEditorAllowed){
+			var context = this;
+			var loc = window.location.toString();
+			var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
+			var contextPath = this.view.getConfig().getConfigParam('contextPath');
+			
+			//set the text editor to be editable by default
+			var readOnly = 0;
+			
+			if(this.locked) {
+				//the text editor should be locked so we will make it read only
+				readOnly = true;
+			}
+			
+
+			tinymce.init({
+			    selector: "#responseBox",
+			    menubar:false,
+			    readonly:readOnly,
+			    statusbar: false,
+			    toolbar: "bold italic underline",
+			    setup : function(ed) {
+		 			// store editor as prototype variable
+		 			context.richTextEditor = ed;
+		 			
+			       ed.on('keyup', function(e) {
+			          context.responseEdited();
+			      });
+			    }		 		    
+			});
+		}
 	}
 	
 	/*
@@ -1691,6 +1736,39 @@ OPENRESPONSE.prototype.displayTeacherReview = function() {
 				document.getElementById('responseBox').value = latestWorkForassociatedStartNode;
 			}
 		};
+		
+		/* start the rich text editor if specified */
+		if(this.content.isRichTextEditorAllowed){
+			var context = this;
+			var loc = window.location.toString();
+			var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
+			var contextPath = this.view.getConfig().getConfigParam('contextPath');
+			
+			//set the text editor to be editable by default
+			var readOnly = 0;
+			
+			if(this.locked) {
+				//the text editor should be locked so we will make it read only
+				readOnly = true;
+			}
+			
+
+			tinymce.init({
+			    selector: "#responseBox",
+			    menubar:false,
+			    readonly:readOnly,
+			    statusbar: false,
+			    toolbar: "bold italic underline",
+			    setup : function(ed) {
+		 			// store editor as prototype variable
+		 			context.richTextEditor = ed;
+		 			
+			       ed.on('keyup', function(e) {
+			          context.responseEdited();
+			      });
+			    }		 		    
+			});
+		}
 	}
 	
 	/*
