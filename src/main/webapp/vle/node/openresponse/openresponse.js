@@ -1864,6 +1864,39 @@ OPENRESPONSE.prototype.retrieveOtherStudentWorkCallback = function(text, xml, ar
 		
 		//set the response if there were previous revisions 
 		thisOr.setResponse();
+		
+		/* start the rich text editor if specified */
+		if(thisOr.content.isRichTextEditorAllowed){
+			var context = thisOr;
+			var loc = window.location.toString();
+			var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
+			var contextPath = thisOr.view.getConfig().getConfigParam('contextPath');
+			
+			//set the text editor to be editable by default
+			var readOnly = 0;
+			
+			if(this.locked) {
+				//the text editor should be locked so we will make it read only
+				readOnly = true;
+			}
+			
+
+			tinymce.init({
+			    selector: "#responseBox",
+			    menubar:false,
+			    readonly:readOnly,
+			    statusbar: false,
+			    toolbar: "bold italic underline",
+			    setup : function(ed) {
+		 			// store editor as prototype variable
+		 			context.richTextEditor = ed;
+		 			
+			       ed.on('keyup', function(e) {
+			          context.responseEdited();
+			      });
+			    }		 		    
+			});
+		}
 	}
 	
 	/*
@@ -2079,14 +2112,14 @@ OPENRESPONSE.prototype.retrieveAnnotationAndWorkCallback = function(text, xml, a
 			//the message that says this is your x revision
 			document.getElementById('responseBox').value = thisOr.states[thisOr.states.length - 1].response;
 			thisOr.setSaveUnavailable();
-			var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_revision_x",[thisOr.states.length+1],"OpenResponseNode");
+			var numberAttemptsMessage = thisOr.view.getI18NStringWithParams("this_is_revision_x",[thisOr.states.length+1],"OpenResponseNode");
 			$("#numberAttemptsDiv").html(numberAttemptsMessage);
 
 			//tell the node that the student has completed it
 			thisOr.node.setCompleted();
 		} else {
 			//the message that says this is your first revision
-			var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_revision_x",[1],"OpenResponseNode");
+			var numberAttemptsMessage = thisOr.view.getI18NStringWithParams("this_is_revision_x",[1],"OpenResponseNode");
 			$("#numberAttemptsDiv").html(numberAttemptsMessage);
 
 			if(latestWork != null && latestWorkText != null) {
@@ -2097,6 +2130,39 @@ OPENRESPONSE.prototype.retrieveAnnotationAndWorkCallback = function(text, xml, a
 					document.getElementById('responseBox').value = latestWorkText;	
 				}
 			}
+		}
+		
+		/* start the rich text editor if specified */
+		if(thisOr.content.isRichTextEditorAllowed){
+			var context = thisOr;
+			var loc = window.location.toString();
+			var vleLoc = loc.substring(0, loc.indexOf('/vle/')) + '/vle/';
+			var contextPath = thisOr.view.getConfig().getConfigParam('contextPath');
+			
+			//set the text editor to be editable by default
+			var readOnly = 0;
+			
+			if(this.locked) {
+				//the text editor should be locked so we will make it read only
+				readOnly = true;
+			}
+			
+
+			tinymce.init({
+			    selector: "#responseBox",
+			    menubar:false,
+			    readonly:readOnly,
+			    statusbar: false,
+			    toolbar: "bold italic underline",
+			    setup : function(ed) {
+		 			// store editor as prototype variable
+		 			context.richTextEditor = ed;
+		 			
+			       ed.on('keyup', function(e) {
+			          context.responseEdited();
+			      });
+			    }		 		    
+			});
 		}
 	}
 	
