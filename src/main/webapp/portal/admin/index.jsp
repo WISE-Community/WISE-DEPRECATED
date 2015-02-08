@@ -120,7 +120,7 @@ function validateForm(type) {
 								<form style="display:inline" id="lookupProjectForm" action="run/manageprojectruns.html" method="GET" onsubmit="return validateForm('run')">								
 									<select name="runLookupType" id="runLookupType">
 										<option value="runId"><spring:message code='run_id' /></option>
-										<!-- <option value="projectId"><spring:message code='project_id' /></option> -->
+										<option value="projectId"><spring:message code='project_id' /></option>
 										<option value="teacherUsername"><spring:message code='student.studentinfo.runTeacherUsername' /></option>
 									</select>
 									<input type="text" name="runLookupValue" id="runLookupValue" size="20"></input>
