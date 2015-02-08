@@ -95,11 +95,11 @@ public class UpdateRunController {
 	protected ModelAndView handlePOST(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		User user = ControllerUtil.getSignedInUser();
 		String runId = request.getParameter("runId");
+		String contextPath = request.getContextPath();
 		Run run = null;
 		if (runId != null) {
 			run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
 			if (!run.getOwners().contains(user) && !user.isAdmin()) {
-				String contextPath = request.getContextPath();
 				return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
 			}
 		}
@@ -134,16 +134,20 @@ public class UpdateRunController {
 			this.runService.updateNotes(Long.parseLong(runId), privateNotes);
 			response.getWriter().write("success");
 		} else if ("saveSurvey".equals(command)) {
-			String survey = request.getParameter("survey");
-			this.runService.updateSurvey(Long.parseLong(runId), survey);
-			
-			// send email to WISE staff with Survey
-			EmailService emailService = 
-					new EmailService("Survey completed [Run ID="+runId+"]: "+run.getName(), survey);
-			Thread thread = new Thread(emailService);
-			thread.start();
-			
-			response.getWriter().write("success");
+			if (run.getOwners().contains(user)) {
+				String survey = request.getParameter("survey");
+				this.runService.updateSurvey(Long.parseLong(runId), survey);
+
+				// send email to WISE staff with Survey
+				String linkToSurvey = wiseProperties.getProperty("wiseBaseURL")+"/teacher/run/survey.html?runId="+runId;
+				String emailBody = user.getUserDetails().getUsername()+ " completed a survey for "+run.getName()+" (Run ID="+runId+").\n\nLink to view survey on WISE: "+linkToSurvey+"\n\n"+survey;
+				EmailService emailService = 
+						new EmailService("Survey completed [Run ID="+runId+"]: "+run.getName(), emailBody);
+				Thread thread = new Thread(emailService);
+				thread.start();
+
+				response.getWriter().write("success");
+			}
 		} else if ("archiveRun".equals(command)) {
 			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwners().contains(user)) {
 				runService.endRun(run);
