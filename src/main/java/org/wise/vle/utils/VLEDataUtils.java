@@ -112,7 +112,7 @@ public class VLEDataUtils {
         		JSONObject nodeState = (JSONObject) jsonArrayElement;
 
         		//check if it has the attribute "submitForPeerReview"
-        		if(nodeState.has("submitForPeerReview")) {
+        		if(nodeState.optBoolean("submitForPeerReview")) {
         			return true;
         		}
     		}
