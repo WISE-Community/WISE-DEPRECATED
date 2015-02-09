@@ -24,7 +24,7 @@
         "description": "The text to notify the student that they've completed the step and that they should move on"
     },
     "correct_feedback": {
-        "value": "מיקמת נכונה {0} מתוך {1} אפשרויות.",
+        "value": "לא מיקמת נכונה {0} מתוך {1} אפשרויות.",
         "description": "Message showing students how many choices they placed correctly"
     },
     "please_review": {
@@ -52,7 +52,7 @@
         "description": "Message to display to student when they've completed the step"
     },
     "you_received_x_points": {
-        "value": "קיבלת {0} נקודותץ",
+        "value": "קיבלת {0} נקודות.",
         "description": "Message to display to student how many points they received"
     },
     "this_is_attempt_x": {
@@ -64,7 +64,7 @@
         "description": "Message to display to student which attempt they were on"
     },
     "autograded_score": {
-        "value": "ציון מחושב ע\"י המערכת: {0}",
+        "value": "ציון מחושב ע\\"י המערכת: {0}",
         "description": "Auto graded score that gets displayed in the teacher grading tool."
     },
     "current_possible_score": {
