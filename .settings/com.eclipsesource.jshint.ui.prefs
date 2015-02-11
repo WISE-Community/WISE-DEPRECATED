@@ -1,0 +1,3 @@
+eclipse.preferences.version=1
+excluded=//*.min.js\:src/main/webapp/curriculum//*.js\:src/main/webapp/vle/node//*.js
+included=//*.js
