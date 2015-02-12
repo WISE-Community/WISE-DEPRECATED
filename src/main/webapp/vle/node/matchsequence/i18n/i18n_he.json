@@ -36,7 +36,7 @@
         "description": "'Step' part of 'Please review Step X before trying again' message asking students to review a step"
     },
     "please_review_before_trying_again": {
-        "value": "לפני נסייון חוזר.",
+        "value": "לפני נסיון חוזר.",
         "description": "'before trying again' part of 'Please review Step X before trying again' message asking students to review a step"
     },
     "correct_box_wrong_order": {
@@ -64,7 +64,7 @@
         "description": "Message to display to student which attempt they were on"
     },
     "autograded_score": {
-        "value": "ציון מחושב ע\\"י המערכת: {0}",
+        "value": "ציון מחושב ע\"י המערכת: {0}",
         "description": "Auto graded score that gets displayed in the teacher grading tool."
     },
     "current_possible_score": {
