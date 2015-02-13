@@ -30,7 +30,6 @@ function startAuthorMode() {
 };
 
 function startWithConfig() {
-	console.log('startWithConfig');
 	var vleConfigUrl = "${vleConfigUrl}";
 	window.frames['topifrm'].eventManager.subscribe('fatalError', notifyFatal);
 	window.frames['topifrm'].view.startVLEFromConfig(vleConfigUrl);
