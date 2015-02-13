@@ -484,8 +484,6 @@ public class CreateRunController {
 			String teacherEmail = null;
 			Serializable projectID = null;
 			String schoolName = null;
-			String schoolCity = null;
-			String schoolState = null;
 			String schoolPeriods = null;
 			Date date = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMMMM d, yyyy");
@@ -498,9 +496,17 @@ public class CreateRunController {
 			teacherEmail = teacherUserDetails.getEmailAddress();
 
 			schoolName = teacherUserDetails.getSchoolname();
-			schoolCity = teacherUserDetails.getCity();
-			schoolState = teacherUserDetails.getState();
-
+			
+			String schoolLocation = "";
+			if (teacherUserDetails.getCity() != null) {
+			    schoolLocation += teacherUserDetails.getCity();
+			}
+			if (teacherUserDetails.getState() != null) {
+			    schoolLocation += " " + teacherUserDetails.getState();
+			}
+			if (teacherUserDetails.getCountry() != null) {
+                schoolLocation += " " + teacherUserDetails.getCountry();
+			}
 
 			schoolPeriods = runParameters.printAllPeriods();
 			Set<String> projectcodes = new TreeSet<String>();
@@ -531,7 +537,7 @@ public class CreateRunController {
 					teacherUserDetails.getUsername(),
 					teacherEmail,
 					schoolName,
-					schoolCity,
+					schoolLocation,
 					schoolPeriods,
 					projectcodes.toString(),
 					run.getProject().getProjectInfo().getName(),
@@ -549,7 +555,7 @@ public class CreateRunController {
 					teacherUserDetails.getUsername(),
 					teacherEmail,
 					schoolName,
-					schoolCity,
+					schoolLocation,
 					schoolPeriods,
 					projectcodes.toString(),
 					run.getProject().getProjectInfo().getName(),
