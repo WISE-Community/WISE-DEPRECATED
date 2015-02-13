@@ -120,7 +120,7 @@ public class GradeWorkController {
 						modelAndView.addObject("vleurl", getClassroomMonitorUrl);
 						modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
 					} else if("classroomManager".equals(gradingType)) {
-						String classroomManagerUrl = wiseBaseURL + "/vle/view/classroomManager/index.html";
+						String classroomManagerUrl = wiseBaseURL + "/vle5/classroomManager/index.html";
 						String classroomManagerConfigUrl = wiseBaseURL + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
 						modelAndView.addObject("vleurl", classroomManagerUrl);
 						modelAndView.addObject("vleConfigUrl", classroomManagerConfigUrl);

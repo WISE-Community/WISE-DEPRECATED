@@ -3,5 +3,9 @@
   "unused": true,
   "browser": true,
   "jquery": true,
-  "predef": [ "view" ]
+  "curly": true,
+  "predef": [ "view" ],
+  
+  "indent":4,
+  "white":true
 }

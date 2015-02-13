@@ -1,0 +1,30 @@
+<style type='text/css'>
+	table {
+		border-collapse: collapse;
+		border: 1px solid black;
+	}
+	table td, table th {
+		border: 1px solid black;
+	}
+</style>
+
+<div>
+{{ stepProgress.title }}
+<br>
+
+<table>
+	<tr>
+		<th>Title</th>
+		<th>On Step</th>
+		<th>Step Completion</th>
+		<th>Max Score</th>		
+	</tr>
+	<tr ng-repeat="node in stepProgress.nodes" ng-click="stepProgress.stepRowClicked(node)">
+		<td>{{stepProgress.getNodeNumberAndTitle(node.identifier)}} ({{node.type}})</td>
+		<td>{{stepProgress.getNumberOfStudentsOnStep(node.identifier)}}</td>
+		<td>{{stepProgress.getStepCompletion(node.identifier)}}</td>
+		<td>{{stepProgress.getMaxScore(node.identifier)}}</td>
+	</tr>
+</table>
+
+</div>

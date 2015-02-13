@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Open Response Application</title>
+<script src="jquery-2.1.3.min.js"></script>
+<script src="http://10.0.1.4:8080/wise/nodes/wiseAPI.js"></script>
+<script src="openResponse.js"></script>
+</head>
+<body onload="stepIsReadyForWISE()">
+<span id="message"></span>
+<div id="studentView" style="display:none">
+<h3 id="title"></h3>
+<div id="prompt"></div>
+<textarea id='responseTextarea'></textarea>
+<button onclick="saveButtonClicked()">Save</button>
+</div>
+<div id="authorView" style="display:none">
+authoring view
+</div>
+
+</body>
+</html>
