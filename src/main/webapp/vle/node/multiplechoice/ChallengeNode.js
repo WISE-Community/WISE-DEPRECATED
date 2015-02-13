@@ -13,7 +13,8 @@ ChallengeNode.prototype.supportedLocales = {
 	"es":"es",
 	"nl":"nl",
 	"nl_GE":"nl",
-	"nl_DE":"nl"	
+	"nl_DE":"nl",
+	"zh_CN":"zh_CN"
 };
 
 /**

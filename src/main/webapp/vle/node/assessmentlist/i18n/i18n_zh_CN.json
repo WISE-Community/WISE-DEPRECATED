@@ -20,7 +20,7 @@
         "description": "The text 'original question' used in peer review steps"
     },
     "show_hide_text": {
-        "value": "现实／隐藏文本",
+        "value": "显示／隐藏文本",
         "description": "The text 'show/hide text' for the button used in peer review steps"
     },
     "text_is_hidden": {
@@ -28,7 +28,7 @@
         "description": "The text 'text is hidden' used in peer review steps"
     },
     "your_original_response...": {
-        "value": "你最初的回答... 这段文本由Javascript生成",
+        "value": "你最初的回答... 这段文本由Javascript覆盖",
         "description": "The text used as a place holder to show the original response in peer review steps"
     },
     "annotation": {
@@ -36,7 +36,7 @@
         "description": "The text 'annotation' used in peer review steps"
     },
     "to_start_this_step_you_must": {
-        "value": "请先发送回答已开始本步骤",
+        "value": "请先发送回答以开始本步骤",
         "description": "The message to tell the student they must submit a response in another step before they can work on this step"
     },
     "link": {
@@ -88,7 +88,7 @@
         "description": "The text to notify the user that the prompt from the first step in the peer review sequence will appear here"
     },
     "work_from_a_random_classmate": {
-        "value": "随机选取的同学的共轴将显示在这里",
+        "value": "随机选取的同学的工作将显示在这里",
         "description": "The text to notify the user that the work from a random classmate will display here"
     },
     "click_ok_to_save": {

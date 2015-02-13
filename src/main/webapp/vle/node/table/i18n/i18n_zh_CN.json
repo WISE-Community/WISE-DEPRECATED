@@ -20,7 +20,7 @@
         "description": "The label for the make graph button"
     },
     "show_starter_sentence": {
-        "value": "现实起始句",
+        "value": "显示起始句",
         "description": "The label for the show starter sentence button"
     },
     "save": {
@@ -32,7 +32,7 @@
         "description": "The message to tell the student to click the make graph button"
     },
     "are_you_sure_you_want_reset": {
-        "value": "你确定想复位表格？",
+        "value": "你确定想要复位表格？",
         "description": "The message to ask the student if they are sure they want to reset the table"
     },
     "table_has_changed_click_make_graph": {
@@ -64,7 +64,7 @@
         "description": "The label for the y max"
     },
     "error_data_in_table_invalid": {
-        "value": "错误：无效的表格数据，请改正表格中的数据并重试",
+        "value": "错误：表格中的数据无效，请改正表格中的数据并重试",
         "description": "The error message that is displayed when the student tries to make the graph with invalid table data"
     },
     "error_unable_to_draw_chart": {

@@ -264,7 +264,7 @@
         "description": "GradingTool: Description next the Export Idea Baskets button"
     },
     "grading_button_export_student_names_description": {
-        "value": "（导出学生姓名、学习阶段、工作组编号、WISE编号以及登陆信息）",
+        "value": "（导出学生姓名、课时、工作组编号、WISE编号以及登陆信息）",
         "description": "GradingTool: Description next the Export Student Names button"
     },
     "grading_button_special_export_description": {
@@ -304,7 +304,7 @@
         "description": "GradingTool: grade by step Avg Class Score table column"
     },
     "grading_grade_by_step_scored_items_only": {
-        "value": "只对已打分的项目",
+        "value": "只对已评分的项目",
         "description": "GradingTool: grade by step scored items only table column"
     },
     "grading_grade_by_step_percent_completed_step": {
@@ -312,7 +312,7 @@
         "description": "GradingTool: grade by step % of Students Who Have Completed This Step table column"
     },
     "grading_grade_by_step_all_periods": {
-        "value": "所有阶段",
+        "value": "所有课时",
         "description": "GradingTool: grade by step All Periods select option when choosing whose work to filter by"
     },
     "grading_grade_by_team_header": {
@@ -340,7 +340,7 @@
         "description": "'Previous Step' button in the grading tool that will show the previous step in the project"
     },
     "grading_previous_step_not_exist": {
-        "value": "前一步不存在：这是可打分的第一步",
+        "value": "前一步不存在：这是可评分的第一步",
         "description": "Text to show when previous step does not exist because this is the first gradable step in the project"
     },
     "grading_change_step": {
@@ -352,11 +352,11 @@
         "description": "'Next Step' button in the grading tool that will show the next step in the project"
     },
     "grading_next_step_not_exist": {
-        "value": "下一步不存在：这是可打分的最后一步",
+        "value": "下一步不存在：这是可评分的最后一步",
         "description": "Text to show when next step does not exist because this is the last gradable step in the project"
     },
     "period": {
-        "value": "阶段",
+        "value": "课时",
         "description": "Period"
     },
     "workgroupId": {
@@ -396,7 +396,7 @@
         "description": "Flag, for flagging student's work using the flagging tool"
     },
     "flag_as_inappropriate": {
-        "value": "标记为不恰当的作品",
+        "value": "标记为不恰当的",
         "description": "\"Flag as inappropriate\" text, for flagging inappropriate student's work using the flagging tool"
     },
     "timestamp": {
@@ -560,7 +560,7 @@
         "description": "the common text 'click here'"
     },
     "student_aggregate_view_intro_text": {
-        "value": "步骤{0}摘要视图",
+        "value": "步骤{0}的摘要视图",
         "description": "Text above where the aggregate view would be displayed"
     },
     "student_aggregate_view_preview_mode_default_text": {
@@ -676,7 +676,7 @@
         "description": "Text for the link to hide the contents of the Deleted Ideas table in the Idea Basket"
     },
     "ideaBasket_ideaTitle": {
-        "value": "单击和拖拽可重新排序，双击进入编辑",
+        "value": "单击和拖拽以重新排序，双击开始编辑",
         "description": "Title/tooltip for an idea in the Idea Basket"
     },
     "ideaBasket_deletedIdeaTitle": {
@@ -836,7 +836,7 @@
         "description": "The label for the teacher feedback"
     },
     "your_teacher_hasnt_graded": {
-        "value": "评分：你的教师还没对你的工作打分",
+        "value": "评分：你的教师还没对你的工作评分",
         "description": "The text to show that there is no feedback from the teacher yet"
     },
     "last_visited_on": {
@@ -1016,7 +1016,7 @@
         "description": "Text to display when user clicks on review work button in preview mode"
     },
     "flagged_preview_mode": {
-        "value": "预览模式下无法显示已标记的作业。在教学中正式使用时，这里将显示教师已经标记的的工作。",
+        "value": "预览模式下无法显示已标记的作业。在课堂运行时，这里将显示教师已经标记的的工作。",
         "description": "Text to display when user clicks on flagged work button in preview mode"
     },
     "student_assets_preview_mode": {
@@ -1152,11 +1152,11 @@
         "description": "Text for show classroom link in classroom monitor"
     },
     "classroomMonitor_allPeriods": {
-        "value": "所有阶段",
+        "value": "所有课时",
         "description": "Text for select all periods option in a period select dropdown in the classroom monitor"
     },
     "classroomMonitor_periodLabel": {
-        "value": "阶段{0}",
+        "value": "课时{0}",
         "description": "Text for period options ({0} will be replaced by period name) in a select dropdown in the classroom monitor"
     },
     "classroomMonitor_pause": {
@@ -1176,7 +1176,7 @@
         "description": "Title text for pause screens tool button in classroom monitor"
     },
     "classroomMonitor_pause_selectPeriods": {
-        "value": "选择阶段",
+        "value": "选择课时",
         "description": "Label text for pause screens select period control in classroom monitor"
     },
     "classroomMonitor_pause_message_label": {
@@ -1192,7 +1192,7 @@
         "description": "Text to show when no periods are selected in the pause screens tool the classroom monitor"
     },
     "classroomMonitor_pause_periods": {
-        "value": "阶段",
+        "value": "课时",
         "description": "Plural for the word 'periods' (will be preceded by number of select periods in the pause screens tool in the classroom monitor)"
     },
     "classroomMonitor_studentProgress_totalCompletion": {
@@ -1216,7 +1216,7 @@
         "description": "Header text for the table column showing whether workgroup is online in the student progress table of classroom monitor"
     },
     "classroomMonitor_studentProgress_headers_period": {
-        "value": "阶段",
+        "value": "课时",
         "description": "Header text for the period table column in the student progress table of classroom monitor"
     },
     "classroomMonitor_studentProgress_headers_workgroup": {
