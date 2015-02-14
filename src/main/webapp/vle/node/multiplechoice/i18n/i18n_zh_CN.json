@@ -48,11 +48,11 @@
         "description": "Message to display to student which attempt they're on"
     },
     "you_received": {
-        "value": "你得到的",
+        "value": "你得到了",
         "description": "The text 'You received' to show you received x points"
     },
     "points": {
-        "value": "分数",
+        "value": "分。",
         "description": "The text 'point(s).' to show you received x points"
     },
     "you_have_selected_too_many_please_select": {
@@ -72,7 +72,7 @@
         "description": "The text that tells the student they have completed this question"
     },
     "please_review": {
-        "value": "请查看",
+        "value": "在你再次尝试这一步之前，请先查看",
         "description": "The beginning of the text that tells the student to please review a previous step before trying again"
     },
     "step": {
@@ -80,11 +80,11 @@
         "description": "The text 'Step'"
     },
     "before_trying_again": {
-        "value": "在你再次尝试这一步之前。",
+        "value": "。",
         "description": "The end of the text that tells the student to please visit a previous step before trying again"
     },
     "you_must_visit": {
-        "value": "你必需先查看",
+        "value": "在你再次尝试这一步之前，你必需先查看",
         "description": "The beginning of the text that tells the student to please visit a previous step before trying again"
     },
     "auto_graded_score": {

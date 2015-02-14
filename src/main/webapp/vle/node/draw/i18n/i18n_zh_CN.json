@@ -24,7 +24,7 @@
         "description": "Message to display when draw tool is loading"
     },
     "stamps_title": {
-        "value": "选择一个邮戳",
+        "value": "选择一个邮戳：",
         "description": "Title for the choose a stamp tool"
     },
     "stamps_button": {

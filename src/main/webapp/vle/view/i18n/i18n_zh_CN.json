@@ -408,7 +408,7 @@
         "description": "the text 'last annotation'"
     },
     "grading_open_premade_comments": {
-        "value": "打开预制的评论",
+        "value": "打开预设评语",
         "description": "the text 'open premade comments' that will open the premade comments window when clicked"
     },
     "not_available": {
@@ -1020,7 +1020,7 @@
         "description": "Text to display when user clicks on flagged work button in preview mode"
     },
     "student_assets_preview_mode": {
-        "value": "预览模式下无法显示［学生资产］。在教学中正式使用时，学生可以在这里上载宝物（如图片），并在回答中使用他们的宝物。",
+        "value": "预览模式下无法显示［学生上载资源］。在教学中正式使用时，学生可以在这里上载宝物（如图片），并在回答中使用他们的宝物。",
         "description": "Message to show users when they click on student assets button in preview mode"
     },
     "grading_button_teacher_run_notes": {
@@ -1296,7 +1296,7 @@
         "description": "Label for teacher score inputs in grading views of classroom monitor"
     },
     "classroomMonitor_grading_addPremadeComments": {
-        "value": "＋预制评论",
+        "value": "＋预设评语",
         "description": "Text for link to add premade comments to teacher feedback inputs in grading views of classroom monitor"
     },
     "classroomMonitor_grading_revisionsCount": {
