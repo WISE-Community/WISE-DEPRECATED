@@ -1,0 +1,28 @@
+{
+    "nodeApplications": [
+        {
+            "name": "OpenResponse",
+            "url": "http: //10.0.1.4/wise/nodes/openResponse/index.html"
+        },
+        {
+            "name": "Echo",
+            "url": "http: //wise4.org/echo/index.html"
+        },
+        {
+            "name": "Discussion",
+            "url": "http: //wise5.org/discussion/index.html"
+        }
+    ],
+    "navigationApplications": [
+        {
+            "name": "starMap",
+            "url": "http: //wise4.org/navigation/index.html"
+        }
+    ],
+    "globalToolsApplications": [
+        {
+            "name": "wiseGlobalTools",
+            "url": "http: //wise4.org/globalTools/index.html"
+        }
+    ]
+}

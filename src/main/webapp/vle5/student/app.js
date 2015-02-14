@@ -27,7 +27,7 @@ define([
 	
 	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', function($urlRouterProvider, $stateProvider, $controllerProvider) {
 		
-		$urlRouterProvider.otherwise('/student');
+		$urlRouterProvider.otherwise('/studentRight');
 		
 		app.$controllerProvider = $controllerProvider;
 		
@@ -46,15 +46,35 @@ define([
 		            }
 		        }
 		    })
-			.state('student', {
-				url: '/student',
+			.state('studentLeft', {
+				url: '/studentLeft',
 				parent: 'root',
-				templateUrl: 'vle5/student/view.html',
-				controller: 'StudentViewController',
-				controllerAs: 'studentView',
+				templateUrl: 'vle5/student/viewLeftNav.html',
+				controller: 'ViewLeftController',
+				controllerAs: 'viewLeft',
 				resolve: {
-					loadController: app.loadController('studentViewController')
+					loadController: app.loadController('viewLeftController')
 				}
+            })
+            .state('studentRight', {
+                url: '/studentRight',
+                parent: 'root',
+                templateUrl: 'vle5/student/viewRightNav.html',
+                controller: 'ViewRightController',
+                controllerAs: 'viewRight',
+                resolve: {
+                    loadController: app.loadController('viewRightController')
+                }
+            })
+            .state('studentMap', {
+                url: '/studentMap',
+                parent: 'root',
+                templateUrl: 'vle5/student/viewMap.html',
+                controller: 'ViewMapController',
+                controllerAs: 'viewMap',
+                resolve: {
+                    loadController: app.loadController('viewMapController')
+                }
             });
 	}]);
 	

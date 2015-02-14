@@ -128,7 +128,5 @@ function navigation_moveToNode(nodeName) {
 	wiseWrapper.postMessage({"messageType":"navigation_moveToNode","nodeName":nodeName}, "http://10.0.1.4:8080");
 }
 
-
-
 window.addEventListener("message", receiveMessage, false);
 
