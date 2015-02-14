@@ -28,6 +28,6 @@ package org.wise.portal.domain.admin;
  * @author patrick lawler
  */
 public enum TeacherFields {
-	FIRSTNAME, LASTNAME, USERNAME, ID, DISPLAYNAME, CITY, STATE, COUNTRY, 
-	SCHOOLNAME, SCHOOLLEVEL, CURRICULUMSUBJECTS
+	firstname, lastname, username, id, displayname, city, state, country, 
+	schoolname, schoollevel, curriculumsubjects, emailAddress
 }

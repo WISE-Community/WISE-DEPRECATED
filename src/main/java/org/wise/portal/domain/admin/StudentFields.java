@@ -28,5 +28,5 @@ package org.wise.portal.domain.admin;
  * @author patrick lawler
  */
 public enum StudentFields {
-	FIRSTNAME, LASTNAME, USERNAME, ID, GENDER
+	firstname, lastname, username, id, gender
 }

@@ -91,8 +91,7 @@ public class LookupUserController {
 			userDetailsType = "studentUserDetails";
 		}
 		
-		List<User> users = this.userService.retrieveByField(param.getLookupField()
-				.toLowerCase(),	param.getLookupCriteria(), term,
+		List<User> users = this.userService.retrieveByField(param.getLookupField(),	param.getLookupCriteria(), term,
 				userDetailsType);
 		
 		ModelAndView modelAndView = new ModelAndView("admin/account/manageusers");
@@ -145,5 +144,4 @@ public class LookupUserController {
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
-	
 }
