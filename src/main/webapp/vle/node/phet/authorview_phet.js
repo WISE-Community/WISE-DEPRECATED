@@ -20,7 +20,7 @@ View.prototype.PhETNode.generatePage = function(view){
 	pageDiv.appendChild(document.createTextNode("Enter a PhET Simulation URL or choose one from below:"));
 	pageDiv.appendChild(createBreak());
 
-	var tInput = createElement(document, 'input', {id:'tInput', type:'text', size:'50', onkeyup:'eventManager.fire("sourceUpdated")'});
+	var tInput = createElement(document, 'input', {id:'tInput', type:'text', size:'75', onkeyup:'eventManager.fire("sourceUpdated")'});
 	var urlText = document.createTextNode("URL: ");
 	
 	parent.appendChild(pageDiv);
