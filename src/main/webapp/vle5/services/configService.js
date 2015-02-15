@@ -1,6 +1,6 @@
 define(['angular'], function(angular) {
 
-	angular.module('ConfigService', [])
+    angular.module('ConfigService', [])
 	
 	.service('ConfigService', ['$http', function($http) {
 		this.config = null;
@@ -18,18 +18,15 @@ define(['angular'], function(angular) {
 		};
 	
 		this.getConfigParam = function(urlName) {
-			var value = null;
-			
-			if(this.config !== null) {
-				value = this.config[urlName];
+			if (this.config !== null) {
+				return this.config[urlName];
+			} else {
+	            return null;
 			}
-			
-			return value;
 		}; 
 		
 		this.getRunId = function() { 
 			return this.getConfigParam('runId');
 		};
 	}]);
-
 });

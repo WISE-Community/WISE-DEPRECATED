@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
 excluded=//*.min.js\://angular*.js\://require.js\:src/main/webapp/curriculum//*.js\:src/main/webapp/vle//*.js
 included=//*.js
+projectSpecificOptions=true

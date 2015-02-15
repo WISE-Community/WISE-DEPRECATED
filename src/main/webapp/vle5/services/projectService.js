@@ -21,7 +21,7 @@ define(['angular'], function(angular) {
 			//see if the node id is for a step and get the title if it is
 			title = this.getStepTitleFromNodeId(nodeId);
 			
-			if(title == null) {
+			if(title === null) {
 				/*
 				 * we couldn't find a step with the node id so we will now
 				 * search the sequences
@@ -36,17 +36,17 @@ define(['angular'], function(angular) {
 			var title = null;
 			var project = this.project;
 			
-			if(project != null) {
+			if(project !== null) {
 				var nodes = project.nodes;
 				
-				if(nodes != null) {
+				if(nodes !== null) {
 					for(var x=0; x<nodes.length; x++) {
 						var node = nodes[x];
 						
-						if(node != null) {
+						if(node !== null) {
 							var tempNodeId = node.identifier;
 							
-							if(nodeId == tempNodeId) {
+							if(nodeId === tempNodeId) {
 								title = node.title;
 								break;
 							}
@@ -63,17 +63,17 @@ define(['angular'], function(angular) {
 			
 			var project = this.project;
 			
-			if(project != null) {
+			if(project !== null) {
 				var sequences = project.sequences;
 				
-				if(sequences != null) {
+				if(sequences !== null) {
 					for(var x=0; x<sequences.length; x++) {
 						var sequence = sequences[x];
 						
-						if(sequence != null) {
+						if(sequence !== null) {
 							var tempNodeId = sequence.identifier;
 							
-							if(nodeId == tempNodeId) {
+							if(nodeId === tempNodeId) {
 								title = sequence.title;
 								break;
 							}
@@ -88,18 +88,18 @@ define(['angular'], function(angular) {
 		this.getNodeFromNodeId = function(nodeId) {
 			var project = this.project;
 			
-			if(project != null) {
+			if(project !== null) {
 				//loop through step nodes
 				var nodes = project.nodes;
 				
-				if(nodes != null) {
+				if(nodes !== null) {
 					for(var x=0; x<nodes.length; x++) {
 						var tempNode = nodes[x];
 						
-						if(tempNode != null) {
+						if(tempNode !== null) {
 							var tempNodeId = tempNode.identifier;
 							
-							if(nodeId == tempNodeId) {
+							if(nodeId === tempNodeId) {
 								return tempNode;
 							}
 						}
@@ -109,14 +109,14 @@ define(['angular'], function(angular) {
 				//loop through activity nodes
 				var sequences = project.sequences;
 				
-				if(sequences != null) {
+				if(sequences !== null) {
 					for(var y=0; y<sequences.length; y++) {
 						var tempSequence = sequences[y];
 						
-						if(tempSequence != null) {
+						if(tempSequence !== null) {
 							var tempNodeId = tempSequence.identifier;
 							
-							if(nodeId == tempNodeId) {
+							if(nodeId === tempNodeId) {
 								return tempSequence;
 							}
 						}
@@ -125,7 +125,7 @@ define(['angular'], function(angular) {
 			}
 			
 			return null;
-		}
+		};
 		
 		this.getStepFromNodeId = function(nodeId) {
 			
@@ -158,7 +158,7 @@ define(['angular'], function(angular) {
 			
 			var project = this.project;
 			
-			if(project != null) {
+			if(project !== null) {
 				var startPointNodeId = project.startPoint;
 				
 				nodes = this.getProjectNodesInTraversalOrderHelper(startPointNodeId, includeSequences, includeSteps);
@@ -175,13 +175,13 @@ define(['angular'], function(angular) {
 			if(node != null) {
 				var type = node.type;
 				
-				if(type == null || type == '') {
+				if(type === null || type === '') {
 					
-				} else if(type == 'sequence') {
+				} else if(type === 'sequence') {
 					//node is a sequence
 					
 					//do not add the master sequence node
-					if(nodeId != 'master') {
+					if(nodeId !== 'master') {
 						if(includeSequences) {
 							//add the sequence node
 							nodes.push(node);						
@@ -249,9 +249,9 @@ define(['angular'], function(angular) {
 			if(node != null) {
 				var type = node.type;
 				
-				if(type == null || type == '') {
+				if(type === null || type === '') {
 					
-				} else if(type == 'sequence') {
+				} else if (type === 'sequence') {
 					nodeNumberAndTitle = 'Activity ' + nodeNumberAndTitle;
 				} else {
 					nodeNumberAndTitle = 'Step ' + nodeNumberAndTitle;
@@ -275,12 +275,12 @@ define(['angular'], function(angular) {
 			if(nodeToSearch != null) {
 				var type = nodeToSearch.type;
 				
-				if(type == null || type == '') {
+				if(type === null || type === '') {
 					/*
 					 * node to search is a step. since steps don't have children,
 					 * we will not be able to find the node id we want in this node.
 					 */
-				} else if(type == 'sequence') {
+				} else if(type === 'sequence') {
 					//node to search is a sequence
 					
 					var refs = nodeToSearch.refs;
@@ -296,7 +296,7 @@ define(['angular'], function(angular) {
 							
 							if(ref != null) {
 								
-								if(nodeIdSearchingFor == ref) {
+								if(nodeIdSearchingFor === ref) {
 									/*
 									 * the current child has the node id we are searching for
 									 * so we will return the node number within the sequence 

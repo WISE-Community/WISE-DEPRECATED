@@ -25,7 +25,8 @@ define([
 		}];
 	};
 	
-	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', function($urlRouterProvider, $stateProvider, $controllerProvider) {
+	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
+	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
 		
 		$urlRouterProvider.otherwise('/studentRight');
 		
@@ -79,5 +80,4 @@ define([
 	}]);
 	
 	return app;
-	
 });
