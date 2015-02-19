@@ -53,7 +53,7 @@ function validateLoginForm() {
 									String reCaptchaPrivateKey = (String) request.getAttribute("reCaptchaPrivateKey");
 									
 									//create the captcha factory
-									ReCaptcha c = ReCaptchaFactory.newReCaptcha(reCaptchaPublicKey, reCaptchaPrivateKey, false);
+									ReCaptcha c = ReCaptchaFactory.newSecureReCaptcha(reCaptchaPublicKey, reCaptchaPrivateKey, false);
 									
 									//make the html that will display the captcha
 									String reCaptchaHtml = c.createRecaptchaHtml(null, null);

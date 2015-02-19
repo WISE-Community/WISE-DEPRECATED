@@ -100,7 +100,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
 		if(reCaptchaPublicKey != null && recaptchaPrivateKey != null) {
 
 			//make a new instace of the captcha so we can make sure th key is valid
-			ReCaptcha c = ReCaptchaFactory.newReCaptcha(reCaptchaPublicKey, recaptchaPrivateKey, false);
+			ReCaptcha c = ReCaptchaFactory.newSecureReCaptcha(reCaptchaPublicKey, recaptchaPrivateKey, false);
 
 			/*
 			 * get the html that will display the captcha
