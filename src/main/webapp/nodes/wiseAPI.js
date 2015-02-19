@@ -1,3 +1,4 @@
+var wiseTargetOrigin = "*";
 
 function sendStateToWISE(stepState) {
 
@@ -7,34 +8,21 @@ function sendStateToWISE(stepState) {
 		// When the popup has fully loaded, if not blocked by a popup blocker:
 
 		// This does nothing, assuming the window hasn't changed its location.
-		wiseWrapper.postMessage({"messageType":"sendStateToWISE","stepState":stepState}, "http://10.0.1.4:8080");
+		wiseWrapper.postMessage({"messageType":"sendStateToWISE","stepState":stepState}, wiseTargetOrigin);
 	}
 }
-
-//respond to events
-window.addEventListener('message',function(event) {
-	console.log('message received:  ' + event.data,event);
-	//event.source.postMessage('holla back youngin!',event.origin);
-},false);
-
-/*
- * In the popup's scripts, running on <http://example.org>:
- */
 
 //Called sometime after postMessage is called
 function receiveMessage(event)
 {
 	var msg = event.data;
 
-	if (msg.viewType == "author") {
-		$('#message').html("author view");
+	if (msg.viewType === 'author') {
+		$('#message').html('author view');
 		$("#authorView").show();
 		$("#studentView").hide();
 	} else if (msg.viewType == "studentNavigation") {
 		setProject(msg.project);
-	} else if (msg.viewType == "studentGlobalTools") { 
-		setGlobalTools(msg.globalTools);
-		setNodeName(msg.nodeName);
 	} else if (msg.viewType == "student") {
 		if (msg.messageType == "requestSendStateToWISE") {
 			sendStateToWISE(getStepState());				
@@ -84,11 +72,12 @@ function receiveMessage(event)
 
 //call this when step is ready to load WISE step content and student step data
 function stepIsReadyForWISE() {
+    console.log('step is ready for WISE');
 	// when they get here, assume iframe has loaded completely and are ready to load content and student data
 	var wiseWrapper = window.parent;
 
 	// This does nothing, assuming the window hasn't changed its location.
-	wiseWrapper.postMessage({"messageType":"requestStepContentAndStateAndAnnotationFromWISE"}, "http://10.0.1.4:8080");
+	wiseWrapper.postMessage({"messageType":"requestStepContentAndStateAndAnnotationFromWISE"}, wiseTargetOrigin);
 }
 
 //call this when step is ready to load WISE step content and student step data
@@ -97,25 +86,7 @@ function navigationIsReadyForWISE() {
 	var wiseWrapper = window.parent;
 
 	// This does nothing, assuming the window hasn't changed its location.
-	wiseWrapper.postMessage({"messageType":"requestNavigationStateFromWISE"}, "http://10.0.1.4:8080");
-}
-
-//call this when step is ready to load WISE step content and student step data
-function globalToolsIsReadyForWISE() {
-	// when they get here, assume iframe has loaded completely and are ready to load content and student data
-	var wiseWrapper = window.parent;
-
-	// This does nothing, assuming the window hasn't changed its location.
-	wiseWrapper.postMessage({"messageType":"requestGlobalToolsStateFromWISE"}, "http://10.0.1.4:8080");
-}
-
-//call this when step is ready to load WISE step content and student step data
-function globalToolsAction(actionName) {
-	// when they get here, assume iframe has loaded completely and are ready to load content and student data
-	var wiseWrapper = window.parent;
-
-	// This does nothing, assuming the window hasn't changed its location.
-	wiseWrapper.postMessage({"messageType":"globalToolsAction","actionName":actionName}, "http://10.0.1.4:8080");
+	wiseWrapper.postMessage({"messageType":"requestNavigationStateFromWISE"}, wiseTargetOrigin);
 }
 
 
@@ -125,8 +96,7 @@ function navigation_moveToNode(nodeName) {
 	var wiseWrapper = window.parent;
 
 	// This does nothing, assuming the window hasn't changed its location.
-	wiseWrapper.postMessage({"messageType":"navigation_moveToNode","nodeName":nodeName}, "http://10.0.1.4:8080");
+	wiseWrapper.postMessage({"messageType":"navigation_moveToNode","nodeName":nodeName}, wiseTargetOrigin);
 }
 
 window.addEventListener("message", receiveMessage, false);
-

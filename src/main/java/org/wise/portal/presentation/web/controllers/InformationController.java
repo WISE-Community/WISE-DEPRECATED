@@ -741,6 +741,12 @@ public class InformationController {
 			} else {
 	        	config.put("userType", "none");
 			}
+			
+			
+			// add node applications and navigation applications for this run
+			//String nodeApplications = "";
+			//String navigationApplications = "";
+			
 		} catch (JSONException e){
 			e.printStackTrace();
 		}

@@ -2,13 +2,17 @@ define([
         'angular',
         'angularUIRouter',
         'configService',
-        'projectService'
+        'projectService',
+        'nodeApplicationService',
+        'nodeService'
         ], function(angular) {
 	
 	var app = angular.module('app', [
 	                                 'ui.router',
 	                                 'ConfigService',
-	                                 'ProjectService'
+	                                 'ProjectService',
+	                                 'NodeApplicationService',
+	                                 'NodeService'
 	                                 ]);
 	
 	app.init = function() {
@@ -28,7 +32,7 @@ define([
 	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
 	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
 		
-		$urlRouterProvider.otherwise('/studentRight');
+		$urlRouterProvider.otherwise('/studentMap');
 		
 		app.$controllerProvider = $controllerProvider;
 		
@@ -44,6 +48,9 @@ define([
 		            },
 		            project: function(ProjectService, config) {
 		                return ProjectService.retrieveProject();
+		            },
+		            nodeApplication: function(NodeApplicationService, config) {
+		                return NodeApplicationService.intializeNodeApplications();
 		            }
 		        }
 		    })
@@ -68,8 +75,8 @@ define([
                 }
             })
             .state('studentMap', {
-                url: '/studentMap',
                 parent: 'root',
+                url: '/studentMap',
                 templateUrl: 'vle5/student/viewMap.html',
                 controller: 'ViewMapController',
                 controllerAs: 'viewMap',

@@ -1,4 +1,4 @@
-define(['angular'], function(angular) {
+define(['angular', 'configService'], function(angular, configService) {
 
 	angular.module('ProjectService', [])
 	
@@ -13,6 +13,32 @@ define(['angular'], function(angular) {
 				this.project = projectJSON;
 				return projectJSON;
 			}));
+		};
+		
+		this.getNodeSrcByNodeId = function(nodeId) {
+		    var nodeSrc = null;
+            var project = this.project;
+            
+            if(project !== null) {
+                var nodes = project.nodes;
+                
+                if(nodes !== null) {
+                    for(var x = 0; x < nodes.length; x++) {
+                        var node = nodes[x];
+                        
+                        if(node !== null) {
+                            var tempNodeId = node.id;
+                            
+                            if(nodeId === tempNodeId) {
+                                nodeSrc = node.src;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return nodeSrc;    
 		};
 		
 		this.getNodeTitleFromNodeId = function(nodeId) {
@@ -32,6 +58,36 @@ define(['angular'], function(angular) {
 			return title;
 		};
 		
+		this.getProjectNodes = function() {
+		    return this.project.nodes;
+		};
+		
+		this.getNodeTypeByNodeId = function(nodeId) {
+            var nodeType = null;
+            var project = this.project;
+            
+            if(project !== null) {
+                var nodes = project.nodes;
+                
+                if(nodes !== null) {
+                    for(var x = 0; x < nodes.length; x++) {
+                        var node = nodes[x];
+                        
+                        if(node !== null) {
+                            var tempNodeId = node.id;
+                            
+                            if(nodeId === tempNodeId) {
+                                nodeType = node.type;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return nodeType;		    
+		};
+		
 		this.getStepTitleFromNodeId = function(nodeId) {
 			var title = null;
 			var project = this.project;
@@ -44,7 +100,7 @@ define(['angular'], function(angular) {
 						var node = nodes[x];
 						
 						if(node !== null) {
-							var tempNodeId = node.identifier;
+							var tempNodeId = node.id;
 							
 							if(nodeId === tempNodeId) {
 								title = node.title;
