@@ -70,14 +70,23 @@ function receiveMessage(event)
 	//                     event.origin);
 }
 
+// gets parameter by name in the url
+function getParameterByName(url, name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(url);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 //call this when step is ready to load WISE step content and student step data
 function stepIsReadyForWISE() {
     console.log('step is ready for WISE');
+    var nodeId = getParameterByName(window.location.href, 'nodeId');
 	// when they get here, assume iframe has loaded completely and are ready to load content and student data
 	var wiseWrapper = window.parent;
 
 	// This does nothing, assuming the window hasn't changed its location.
-	wiseWrapper.postMessage({"messageType":"requestStepContentAndStateAndAnnotationFromWISE"}, wiseTargetOrigin);
+	wiseWrapper.postMessage({"messageType": "requestStepContentAndStateAndAnnotationFromWISE", "nodeId": nodeId}, wiseTargetOrigin);
 }
 
 //call this when step is ready to load WISE step content and student step data

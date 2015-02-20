@@ -1,5 +1,5 @@
 <%@ include file="include.jsp"%>
-<html>
+<html dir='${empty textDirection ? "ltr" : textDirection}'>
 <head>
 </head>
 <body>

@@ -35,7 +35,7 @@ define([
 	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
 	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
 		
-		$urlRouterProvider.otherwise('/studentMap');
+		$urlRouterProvider.otherwise('/vle');
 		
 		app.$controllerProvider = $controllerProvider;
 		
@@ -57,46 +57,16 @@ define([
 		            }
 		        }
 		    })
-			.state('studentLeft', {
-				url: '/studentLeft',
-				parent: 'root',
-				templateUrl: 'vle5/student/viewLeftNav.html',
-				controller: 'ViewLeftController',
-				controllerAs: 'viewLeft',
-				resolve: {
-					loadController: app.loadController('viewLeftController')
-				}
-            })
-            .state('studentRight', {
-                url: '/studentRight',
+            .state('vle', {
                 parent: 'root',
-                templateUrl: 'vle5/student/viewRightNav.html',
-                controller: 'ViewRightController',
-                controllerAs: 'viewRight',
+                url: '/vle',
+                templateUrl: 'vle5/student/vle.html',
+                controller: 'VLEController',
+                controllerAs: 'vle',
                 resolve: {
-                    loadController: app.loadController('viewRightController')
+                    loadController: app.loadController('vleController')
                 }
             })
-            .state('studentMap', {
-                parent: 'root',
-                url: '/studentMap',
-                templateUrl: 'vle5/student/viewMap.html',
-                controller: 'ViewMapController',
-                controllerAs: 'viewMap',
-                resolve: {
-                    loadController: app.loadController('viewMapController')
-                }
-            })
-            .state('studentList', {
-                parent: 'root',
-                url: '/studentList',
-                templateUrl: 'vle5/student/viewList.html',
-                controller: 'ViewListController',
-                controllerAs: 'viewList',
-                resolve: {
-                    loadController: app.loadController('viewListController')
-                }
-            });
 	}]);
 	
 	return app;

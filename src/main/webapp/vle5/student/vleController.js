@@ -1,6 +1,6 @@
 define(['app'], 
         function(app) {
-    app.$controllerProvider.register('ViewMapController', function($scope, ConfigService, NodeApplicationService, ProjectService, NodeService) {
+    app.$controllerProvider.register('VLEController', function($scope, ConfigService, NodeApplicationService, ProjectService, NodeService) {
         this.globalTools = ['hideNavigation', 'showNavigation', 'next', 'prev', 'portfolio', 'home', 'sign out'];
         this.currentNodeId = "hiroki";
         
@@ -30,7 +30,8 @@ define(['app'],
             console.log('in view map controller, received message:'+JSON.stringify(msg));
             
             if (msg.messageType === 'requestStepContentAndStateAndAnnotationFromWISE') {
-                var nodeSrc = ProjectService.getNodeSrcByNodeId(this.currentNodeId);
+                var nodeId = msg.nodeId;
+                var nodeSrc = ProjectService.getNodeSrcByNodeId(nodeId);
                 NodeService.getNodeContentByNodeSrc(nodeSrc).then(function(nodeContent) {
                     var nodeIFrame = document.getElementById('nodeIFrame');
                     nodeIFrame.contentWindow.postMessage(
@@ -57,8 +58,8 @@ define(['app'],
             } else if (msg.messageType === 'navigation_moveToNode') {
                 var nodeId = msg.nodeId;
                 var nodeType = ProjectService.getNodeTypeByNodeId(nodeId);
-
-                $('#nodeIFrame').attr('src',NodeApplicationService.getNodeURL(nodeType));
+                var nodeIFrameSrc = NodeApplicationService.getNodeURL(nodeType) + '?nodeId=' + nodeId;
+                $('#nodeIFrame').attr('src', nodeIFrameSrc);
                 this.currentNodeId = nodeId;
                 $('#navigation').hide();
                 $('#nodeIFrame').show();
@@ -69,7 +70,17 @@ define(['app'],
             this.$emit('$messageOutgoing', angular.toJson({"response": "hi"}))
         };
 
-        $('#navigation').html('<iframe id="navigationIFrame" '+ 
-                'src="http://localhost:8080/wise/navigation/navigationMap/index.html"></iframe>');
+        var knownNavigationApplications = ConfigService.getConfigParam('navigationApplications');
+        var projectNavigationApplications = ProjectService.project.navigationApplications;
+        var defaultNavigationApplication = projectNavigationApplications[0];
+        for (var i = 0; i < knownNavigationApplications.length; i++) {
+            var knownNavigationApplication = knownNavigationApplications[i];
+            if (knownNavigationApplication.name === defaultNavigationApplication) {
+                var navigationApplicationURL = knownNavigationApplication.url;
+                $('#navigation').html('<iframe id="navigationIFrame" ' + 
+                    'src="' + navigationApplicationURL + '"></iframe>');
+            }
+        }
+        
     });
 });

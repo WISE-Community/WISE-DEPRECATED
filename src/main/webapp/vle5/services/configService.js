@@ -8,12 +8,12 @@ define(['angular'], function(angular) {
 		this.retrieveConfig = function(configUrl) {
 			return $http.get(configUrl).then(angular.bind(this, function(result) {
 				var config = result.data;
-				// hard-coding these values here for now
-				config.getContentUrl = "http://localhost:8080/curriculum/wise5project/project.json";
-				config.dir = "rtl";
-				config.nodeApplications = JSON.parse('[{"name":"OpenResponseNode","url":"nodes/openResponse/index.html"},{"name":"EchoNode","url":"http://wise4.org/echo/index.html"},{"name":"HTMLNode","url":"nodes/html/index.html"},{"name":"OutsideURLNode","url":"http://wise4.org/nodes/OutsideURLNode/index.html"},{"name":"DiscussionNode","url":"http://wise5.org/discussion/index.html"}]');
-				config.navigationApplications = JSON.parse('[{"name":"starMap","url":"http://wise4.org/navigationMap/index.html"}]');
-				config.getContentBaseUrl = 'http://localhost:8080/curriculum/wise5project/';
+				// hard-coding these values here for now. They should really come from the server.
+				config.getContentUrl = 'http://localhost:8080/wise/curriculum/1/project.json';
+				config.textDirection = 'rtl';
+				config.nodeApplications = JSON.parse('[{"name":"OpenResponseNode","url":"nodes/openResponse/index.html"},{"name":"EchoNode","url":"http://wise4.org/echo/index.html"},{"name":"HTMLNode","url":"nodes/html/index.html"},{"name":"OutsideURLNode","url":"nodes/outsideURL/index.html"},{"name":"DiscussionNode","url":"http://wise5.org/discussion/index.html"}]');
+				config.navigationApplications = JSON.parse('[{"name":"wiseMap","url":"navigation/navigationMap/index.html"},{"name":"wiseList","url":"navigation/navigationList/index.html"}]');
+				config.getContentBaseUrl = 'http://localhost:8080/wise/curriculum/1/';
 				this.config = config;
 				return config;
 			}));

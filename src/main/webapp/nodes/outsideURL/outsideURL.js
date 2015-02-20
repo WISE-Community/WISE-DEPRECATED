@@ -3,7 +3,7 @@ function getStepState() {
 }
 
 function setContent(content) {
-    $('#outsideURLIFrame').attr('src',JSON.parse(content).url);
+    $('#outsideURLIFrame').attr('src',content.url);
 }
 
 function setStepState(stepState) {

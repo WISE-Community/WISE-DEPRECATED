@@ -28,10 +28,10 @@
 </style>
 </head>
 <body>
-currentNodeId: {{viewMap.currentNodeId}}
+currentNodeId: {{vle.currentNodeId}}
  <div id="globalTools">
-  <button ng-repeat="globalTool in viewMap.globalTools"
-   ng-click="viewMap.globalToolButtonClicked(globalTool)">{{globalTool}}</button>
+  <button ng-repeat="globalTool in vle.globalTools"
+   ng-click="vle.globalToolButtonClicked(globalTool)">{{globalTool}}</button>
  </div>
  <div id="prev">Prev</div>
  <div id="next">Next</div>
