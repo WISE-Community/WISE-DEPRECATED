@@ -1,14 +1,17 @@
 define([
         'angular',
+        'jquery',
         'angularUIRouter',
+        'angularPostMessage',
         'configService',
         'projectService',
         'nodeApplicationService',
         'nodeService'
-        ], function(angular) {
-	
+        ], function(angular, $) {
+
 	var app = angular.module('app', [
 	                                 'ui.router',
+	                                 'ngPostMessage',
 	                                 'ConfigService',
 	                                 'ProjectService',
 	                                 'NodeApplicationService',
@@ -82,6 +85,16 @@ define([
                 controllerAs: 'viewMap',
                 resolve: {
                     loadController: app.loadController('viewMapController')
+                }
+            })
+            .state('studentList', {
+                parent: 'root',
+                url: '/studentList',
+                templateUrl: 'vle5/student/viewList.html',
+                controller: 'ViewListController',
+                controllerAs: 'viewList',
+                resolve: {
+                    loadController: app.loadController('viewListController')
                 }
             });
 	}]);

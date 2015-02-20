@@ -38,6 +38,12 @@ define(['angular', 'configService'], function(angular, configService) {
                 }
             }
             
+            if(nodeSrc != null) {
+                var getContentBaseUrl = ConfigService.getConfigParam('getContentBaseUrl');
+                
+                nodeSrc = getContentBaseUrl + nodeSrc;
+            }
+            
             return nodeSrc;    
 		};
 		

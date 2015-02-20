@@ -1,40 +1,46 @@
+<html ng-app="app">
+<head>
 <style>
 #globalTools {
-  top: 0px;
-  position: absolute;
-  right: 0px;
+ top: 0px;
+ position: absolute;
+ right: 0px;
 }
+
 #prev {
-  height: 36px;
-  bottom: 0px;
-  position: absolute;
-  left: 0px;
+ height: 36px;
+ bottom: 0px;
+ position: absolute;
+ left: 0px;
 }
 
 #next {
-  height: 36px;
-  bottom: 0px;
-  position: absolute;
-  right: 0px;
+ height: 36px;
+ bottom: 0px;
+ position: absolute;
+ right: 0px;
 }
 
 #nodeIFrame, #navigationIFrame {
-  width:99%;
-  height:97%;
+ width: 99%;
+ height: 97%;
 }
 </style>
-Hiroki is: {{viewMap.hiroki}}
-<div id="globalTools">
-    <button ng-repeat="globalTool in viewMap.globalTools" ng-click="viewMap.globalToolButtonClicked(globalTool)">{{globalTool}}</button>
-</div>
-<div id="prev">Prev</div>
-<div id="next">Next</div>
-<div id="ideaBasket"></div>
-<div id="myWork"></div>
-<div id="home"></div>
-<div id="signOut"></div>
-<div id="navigation"></div>
-<div id="nodeDiv">
-    <iframe id="nodeIFrame"></iframe>
-</div>
-
+</head>
+<body ng-controller="ViewMapController">
+ <div id="globalTools">
+  <button ng-repeat="globalTool in viewMap.globalTools"
+   ng-click="viewMap.globalToolButtonClicked(globalTool)">{{globalTool}}</button>
+ </div>
+ <div id="prev">Prev</div>
+ <div id="next">Next</div>
+ <div id="ideaBasket"></div>
+ <div id="myWork"></div>
+ <div id="home"></div>
+ <div id="signOut"></div>
+ <div id="navigation"></div>
+ <div id="nodeDiv">
+  <iframe id="nodeIFrame"></iframe>
+ </div>
+</body>
+</html>

@@ -126,6 +126,7 @@
 	<mvc:resources mapping="/vle5/**" location="/vle5/" order="1" />
 		<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
 	<mvc:resources mapping="/nodes/**" location="/nodes/" order="1" />
+	<mvc:resources mapping="/navigation/**" location="/navigation/" order="1" />
 		
 	<mvc:interceptors>
 	    <ref bean="localeChangeInterceptor"/>

@@ -91,12 +91,12 @@ function navigationIsReadyForWISE() {
 
 
 //call this when step is ready to load WISE step content and student step data
-function navigation_moveToNode(nodeName) {
+function navigation_moveToNode(nodeId) {
 	// when they get here, assume iframe has loaded completely and are ready to load content and student data
 	var wiseWrapper = window.parent;
 
 	// This does nothing, assuming the window hasn't changed its location.
-	wiseWrapper.postMessage({"messageType":"navigation_moveToNode","nodeName":nodeName}, wiseTargetOrigin);
+	wiseWrapper.postMessage({"messageType":"navigation_moveToNode","nodeId":nodeId}, wiseTargetOrigin);
 }
 
 window.addEventListener("message", receiveMessage, false);
