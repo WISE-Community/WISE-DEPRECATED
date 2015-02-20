@@ -2,12 +2,8 @@ define(['app'],
         function(app) {
     app.$controllerProvider.register('ViewMapController', function($scope, ConfigService, NodeApplicationService, ProjectService, NodeService) {
         this.globalTools = ['hideNavigation', 'showNavigation', 'next', 'prev', 'portfolio', 'home', 'sign out'];
-        this.ConfigService = ConfigService;
-        this.ProjectService = ProjectService;
-        this.NodeApplicationService = NodeApplicationService;
-        this.NodeService = NodeService
-
-        var currentNodeId;
+        this.currentNodeId = "hiroki";
+        
         this.receiveMessage = angular.bind(this, function(event) {
             // Do we trust the sender of this message?  (might be
             // different from what we originally opened, for example).
@@ -21,23 +17,21 @@ define(['app'],
                 $('#navigation').hide();
                 $('#nodeIFrame').show();
             } else if (globalToolName === 'showNavigation') {
+                this.currentNodeId = "hello";
                 $('#navigation').show();
                 $('#nodeIFrame').hide();
             }
         }
         var wiseBaseURL = ConfigService.getConfigParam('wiseBaseURL');
-        //angular.element($window).on('messsage',this.receiveMessage);
-        //window.addEventListener('message', this.receiveMessage, false);
         
-        $scope.$on('$messageIncoming', function(event, data) {
+        $scope.$on('$messageIncoming', angular.bind(this, function(event, data) {
             console.log('received message in viewMapController.js');
-            
             var msg = data;
             console.log('in view map controller, received message:'+JSON.stringify(msg));
             
             if (msg.messageType === 'requestStepContentAndStateAndAnnotationFromWISE') {
-                var nodeSrc = this.ProjectService.getNodeSrcByNodeId(currentNodeId);
-                this.NodeService.getNodeContentByNodeSrc(nodeSrc).then(function(nodeContent) {
+                var nodeSrc = ProjectService.getNodeSrcByNodeId(this.currentNodeId);
+                NodeService.getNodeContentByNodeSrc(nodeSrc).then(function(nodeContent) {
                     var nodeIFrame = document.getElementById('nodeIFrame');
                     nodeIFrame.contentWindow.postMessage(
                         {'viewType':'student',
@@ -62,14 +56,14 @@ define(['app'],
                          '*');
             } else if (msg.messageType === 'navigation_moveToNode') {
                 var nodeId = msg.nodeId;
-                var nodeType = this.ProjectService.getNodeTypeByNodeId(nodeId);
+                var nodeType = ProjectService.getNodeTypeByNodeId(nodeId);
 
-                $('#nodeIFrame').attr('src',this.NodeApplicationService.getNodeURL(nodeType));
-                currentNodeId = nodeId;
+                $('#nodeIFrame').attr('src',NodeApplicationService.getNodeURL(nodeType));
+                this.currentNodeId = nodeId;
                 $('#navigation').hide();
                 $('#nodeIFrame').show();
             }
-        });
+        }));
         
         $scope.sendMessage = function() {
             this.$emit('$messageOutgoing', angular.toJson({"response": "hi"}))

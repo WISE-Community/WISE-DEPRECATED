@@ -1,4 +1,4 @@
-<html ng-app="app">
+<html>
 <head>
 <style>
 #globalTools {
@@ -27,7 +27,8 @@
 }
 </style>
 </head>
-<body ng-controller="ViewMapController">
+<body>
+currentNodeId: {{viewMap.currentNodeId}}
  <div id="globalTools">
   <button ng-repeat="globalTool in viewMap.globalTools"
    ng-click="viewMap.globalToolButtonClicked(globalTool)">{{globalTool}}</button>
