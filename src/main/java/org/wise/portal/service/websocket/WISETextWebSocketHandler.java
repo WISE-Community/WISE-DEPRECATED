@@ -42,7 +42,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -102,19 +101,6 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		//handle the new websocket session
 		onOpen(session);
-	}
-	
-	/**
-	 * Called when a message is received
-	 * @param session the websocket session
-	 * @param the message object
-	 */
-	@Override
-	@Transactional
-	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-		//get the message and process it
-		Object payload = message.getPayload();
-		handleMessage(session, payload.toString());
 	}
 	
 	/**
