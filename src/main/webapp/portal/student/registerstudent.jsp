@@ -1,7 +1,7 @@
 <%@ include file="../include.jsp"%>
 
 <!DOCTYPE html>
-<html>
+<html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
@@ -363,7 +363,7 @@ function checkRunCode() {
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}/index.html" title="WISE Homepage"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}/index.html" title="WISE Homepage"></a>
 			</div>
 			
 			<div class="infoContent">

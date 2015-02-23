@@ -1,7 +1,7 @@
  <%@ include file="../../include.jsp"%>
 
 <!DOCTYPE html>
-<html lang="en">
+<html dir="${textDirection}">
 <head>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
