@@ -2,7 +2,6 @@ define(['app'],
         function(app) {
     app.$controllerProvider.register('VLEController', function($scope, ConfigService, NodeApplicationService, ProjectService, NodeService) {
         this.globalTools = ['hideNavigation', 'showNavigation', 'next', 'prev', 'portfolio', 'home', 'sign out'];
-        this.currentNodeId = "hiroki";
         
         this.receiveMessage = angular.bind(this, function(event) {
             // Do we trust the sender of this message?  (might be
@@ -17,7 +16,6 @@ define(['app'],
                 $('#navigation').hide();
                 $('#nodeIFrame').show();
             } else if (globalToolName === 'showNavigation') {
-                this.currentNodeId = "hello";
                 $('#navigation').show();
                 $('#nodeIFrame').hide();
             }
