@@ -14,6 +14,30 @@ define(['angular', 'configService'], function(angular, configService) {
 				return projectJSON;
 			}));
 		};
+
+        this.getNodeByNodeId = function(nodeId) {
+            var project = this.project;
+            
+            if(project !== null) {
+                var nodes = project.nodes;
+                
+                if(nodes !== null) {
+                    for(var x = 0; x < nodes.length; x++) {
+                        var node = nodes[x];
+                        
+                        if(node !== null) {
+                            var tempNodeId = node.id;
+                            
+                            if(nodeId === tempNodeId) {
+                                return node;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return null;
+        };
 		
 		this.getNodeSrcByNodeId = function(nodeId) {
 		    var nodeSrc = null;

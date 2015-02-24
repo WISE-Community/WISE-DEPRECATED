@@ -9,7 +9,8 @@ require.config({
         'configService': '../services/configService',
         'projectService': '../services/projectService',
         'nodeApplicationService': '../services/nodeApplicationService',
-        'nodeService': '../services/nodeService'
+        'nodeService': '../services/nodeService',
+        'studentDataService': '../services/studentDataService'
     },
     shim: {
         'angular': {

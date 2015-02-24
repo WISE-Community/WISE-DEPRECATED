@@ -1,10 +1,11 @@
-function getStepState() {
-        return null;
+function getStudentData() {
+    return null;
 }
 
 function setContent(content) {
     $('body').html(content);
 }
 
-function setStepState(stepState) {
+function setStudentData(studentData) {
+    
 }

@@ -6,7 +6,8 @@ define([
         'configService',
         'projectService',
         'nodeApplicationService',
-        'nodeService'
+        'nodeService',
+        'studentDataService'
         ], function(angular, $) {
 
 	var app = angular.module('app', [
@@ -15,7 +16,8 @@ define([
 	                                 'ConfigService',
 	                                 'ProjectService',
 	                                 'NodeApplicationService',
-	                                 'NodeService'
+	                                 'NodeService',
+	                                 'StudentDataService'
 	                                 ]);
 	
 	app.init = function() {
@@ -52,9 +54,12 @@ define([
 		            project: function(ProjectService, config) {
 		                return ProjectService.retrieveProject();
 		            },
-		            nodeApplication: function(NodeApplicationService, config) {
-		                return NodeApplicationService.intializeNodeApplications();
-		            }
+                    nodeApplication: function(NodeApplicationService, config) {
+                        return NodeApplicationService.intializeNodeApplications();
+                    },
+                    studentData: function(StudentDataService, config) {
+                        return StudentDataService.retrieveStudentData();
+                    }
 		        }
 		    })
             .state('vle', {

@@ -1,36 +1,31 @@
-var wiseTargetOrigin = "*";
+var wiseTargetOrigin = '*';
 
-function sendStateToWISE(stepState) {
-
-	if (stepState) {
-		var wiseWrapper = window.parent;
-
-		// When the popup has fully loaded, if not blocked by a popup blocker:
-
-		// This does nothing, assuming the window hasn't changed its location.
-		wiseWrapper.postMessage({"messageType":"sendStateToWISE","stepState":stepState}, wiseTargetOrigin);
-	}
-}
+var nodeId = getParameterByName(window.location.href, 'nodeId');
 
 //Called sometime after postMessage is called
 function receiveMessage(event)
 {
 	var msg = event.data;
+	var viewType = msg.viewType;
+	var action = msg.action;
 
-	if (msg.viewType === 'author') {
+	if (viewType === 'author') {
 		$('#message').html('author view');
 		$("#authorView").show();
 		$("#studentView").hide();
-	} else if (msg.viewType == "studentNavigation") {
+	} else if (viewType == "studentNavigation") {
 		setProject(msg.project);
-	} else if (msg.viewType == "student") {
-		if (msg.messageType == "requestSendStateToWISE") {
+	} else if (viewType == "student") {
+		if (action == "postWISEDataRequest") {
 			sendStateToWISE(getStepState());				
-		} else {
+		} else if (action === 'getWISEDataResponse') {
+		    var studentData = msg.studentData;
+		    
+		    
 			$("#message").html("student view");
 			$("#authorView").hide();
 			setContent(msg.content);
-			setStepState(msg.stepState);
+			setStudentData(studentData);
 
 			// load global styles
 			if (msg.globalStyle) {
@@ -47,9 +42,37 @@ function receiveMessage(event)
 			}
 
 
-			$("#studentView").show();				
+			$("#studentView").show();
+			
+			var nodeStatus = {};
+			nodeStatus.isContentLoaded = true;
+			nodeStatus.isStudentDataLoaded = true;
+			nodeStatus.isLoadingComplete = true;
+			
+	         var message = {
+                 'action': 'postNodeStatusRequest',
+                 'nodeStatus': nodeStatus,
+                 'nodeId': nodeId
+             };
+             
+             postMessageToWISE(message);
+		} else if (action === 'getWISEStudentDataRequest') {
+		    var studentData = getStudentData();
+		    
+		    studentData.saveTriggeredBy = msg.saveTriggeredBy;
+		    
+		    var wiseData = {};
+		    wiseData.studentData = studentData;
+		    
+	        var message = {
+	            'action': 'getWISEStudentDataResponse',
+	            'wiseData': wiseData,
+	            'nodeId': nodeId
+	        };
+	        
+	        postMessageToWISE(message);
 		}
-	} else if (msg.viewType == "grading") {
+	} else if (viewType == "grading") {
 		document.getElementById("message").appendChild( document.createTextNode("grading view") );
 	}
 
@@ -79,14 +102,51 @@ function getParameterByName(url, name) {
 }
 
 //call this when step is ready to load WISE step content and student step data
-function stepIsReadyForWISE() {
-    console.log('step is ready for WISE');
-    var nodeId = getParameterByName(window.location.href, 'nodeId');
-	// when they get here, assume iframe has loaded completely and are ready to load content and student data
-	var wiseWrapper = window.parent;
+function loadWISEData(loadingParams) {
+    var message = {
+        'action': 'getWISEDataRequest',
+        'nodeId': nodeId,
+        'loadingParams': loadingParams
+    };
+    
+    postMessageToWISE(message);
+}
 
-	// This does nothing, assuming the window hasn't changed its location.
-	wiseWrapper.postMessage({"messageType": "requestStepContentAndStateAndAnnotationFromWISE", "nodeId": nodeId}, wiseTargetOrigin);
+function saveStudentData(studentData) {
+
+    if (studentData) {
+        var wiseData = {};
+        wiseData.studentData = studentData;
+        
+        var message = {
+            'action': 'postWISEStudentDataRequest',
+            'wiseData': wiseData,
+            'nodeId': nodeId
+        };
+        
+        postMessageToWISE(message);
+    }
+}
+
+function postMessageToWISE(message) {
+    var wiseWrapper = window.parent;
+    
+    wiseWrapper.postMessage(message, wiseTargetOrigin);
+};
+
+function saveNodeContent(nodeContent) {
+
+    if (nodeContent) {
+        var wiseWrapper = window.parent;
+
+        // When the popup has fully loaded, if not blocked by a popup blocker:
+
+        var wiseData = {};
+        wiseData.nodeContent = nodeContent;
+        
+        // This does nothing, assuming the window hasn't changed its location.
+        wiseWrapper.postMessage({"action": "postWISENodeContentRequest", "wiseData": wiseData, "nodeId": nodeId}, wiseTargetOrigin);
+    }
 }
 
 //call this when step is ready to load WISE step content and student step data
@@ -95,7 +155,7 @@ function navigationIsReadyForWISE() {
 	var wiseWrapper = window.parent;
 
 	// This does nothing, assuming the window hasn't changed its location.
-	wiseWrapper.postMessage({"messageType":"requestNavigationStateFromWISE"}, wiseTargetOrigin);
+	wiseWrapper.postMessage({'action': 'requestNavigationStateFromWISE'}, wiseTargetOrigin);
 }
 
 
@@ -105,7 +165,7 @@ function navigation_moveToNode(nodeId) {
 	var wiseWrapper = window.parent;
 
 	// This does nothing, assuming the window hasn't changed its location.
-	wiseWrapper.postMessage({"messageType":"navigation_moveToNode","nodeId":nodeId}, wiseTargetOrigin);
+	wiseWrapper.postMessage({"action":"navigation_moveToNode","nodeId":nodeId}, wiseTargetOrigin);
 }
 
 window.addEventListener("message", receiveMessage, false);
