@@ -1,7 +1,7 @@
 <%@ include file="../../include.jsp"%>
 
 <!DOCTYPE html>
-<html>
+<html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>

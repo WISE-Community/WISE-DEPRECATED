@@ -1,7 +1,7 @@
 <%@ include file="../include.jsp"%>
 
 <!DOCTYPE html>
-<html>
+<html dir="${textDirection}">
 <head>
 </head>
 <body>

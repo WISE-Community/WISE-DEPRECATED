@@ -11,7 +11,7 @@ define(['angular'], function(angular) {
 				// hard-coding these values here for now. They should really come from the server.
 				config.getContentUrl = 'http://localhost:8080/wise/curriculum/1/project.json';
 				config.textDirection = 'rtl';
-				config.nodeApplications = JSON.parse('[{"name":"OpenResponseNode","url":"nodes/openResponse/index.html"},{"name":"EchoNode","url":"http://wise4.org/echo/index.html"},{"name":"HTMLNode","url":"nodes/html/index.html"},{"name":"OutsideURLNode","url":"nodes/outsideURL/index.html"},{"name":"DiscussionNode","url":"http://wise5.org/discussion/index.html"}]');
+				config.nodeApplications = JSON.parse('[{"name":"OpenResponseNode","url":"nodes/openResponse/index.html"},{"name":"EchoNode","url":"http://wise4.org/echo/index.html"},{"name":"PhETNode","url":"nodes/phet/index.html"},{"name":"HTMLNode","url":"nodes/html/index.html"},{"name":"OutsideURLNode","url":"nodes/outsideURL/index.html"},{"name":"DiscussionNode","url":"http://wise5.org/discussion/index.html"}]');
 				config.navigationApplications = JSON.parse('[{"name":"wiseMap","url":"navigation/navigationMap/index.html"},{"name":"wiseList","url":"navigation/navigationList/index.html"}]');
 				config.getContentBaseUrl = 'http://localhost:8080/wise/curriculum/1/';
 				config.getStudentDataUrl = 'http://localhost:8080/wise/vle5/student/studentData.json';

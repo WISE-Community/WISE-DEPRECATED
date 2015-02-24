@@ -1,7 +1,7 @@
 <div id="header">
 	<div class="banner">
 		
-		<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
+		<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"></a>
 
 		<sec:authorize ifNotGranted="ROLE_USER">
 			<script type="text/javascript">

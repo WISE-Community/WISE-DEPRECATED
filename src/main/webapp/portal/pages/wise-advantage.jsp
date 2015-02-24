@@ -1,7 +1,7 @@
 <%@ include file="../include.jsp"%>
 
 <!DOCTYPE html>
-<html>
+<html dir="${textDirection}">
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="chrome=1"/>

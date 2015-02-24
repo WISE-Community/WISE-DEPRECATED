@@ -1,7 +1,7 @@
 <%@ include file="../../include.jsp"%>
 
 <!DOCTYPE html>
-<html ng-app="surveyApp">
+<html dir="${textDirection}" ng-app="surveyApp">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />

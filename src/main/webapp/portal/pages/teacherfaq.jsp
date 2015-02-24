@@ -1,7 +1,7 @@
 <%@ include file="../include.jsp"%>
 
 <!DOCTYPE html>
-<html>
+<html dir="${textDirection}">
 <head>
 <meta name=Title content="<spring:message code="pages.teacherfaq.wise4TeacherInformationSheet" />">
 <meta name=Keywords content="">

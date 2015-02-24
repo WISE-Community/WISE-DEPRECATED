@@ -1,7 +1,7 @@
 <%@ include file="../../include.jsp"%>
 
 <!DOCTYPE html>
-<html>
+<html dir="${textDirection}">
 <head>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource" />"></script>
 <link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />

@@ -31,4 +31,7 @@
 
 <!-- $Id$ -->
 
+<c:set var="sessionLocale" value="${sessionScope['org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE']}"/>
+<c:set var="locale" value="${ empty sessionLocale ? pageContext.request.locale : sessionLocale }" />
+<c:set var="textDirection" value="${'iw' == locale ? 'rtl' : 'ltr'}" />
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>

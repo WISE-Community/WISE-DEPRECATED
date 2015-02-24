@@ -1,7 +1,8 @@
 <%@ include file="../../include.jsp"%>
 
 <!DOCTYPE html>
-<html lang="en">
+<html dir="${textDirection}">
+
 
 <title><spring:message code="teacher.run.recentactivity.manageStudents" /></title>
 

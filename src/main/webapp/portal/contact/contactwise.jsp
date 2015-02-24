@@ -3,7 +3,7 @@
 <%@ page import="net.tanesha.recaptcha.ReCaptchaFactory" %>
 
 <!DOCTYPE html>
-<html>
+<html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />

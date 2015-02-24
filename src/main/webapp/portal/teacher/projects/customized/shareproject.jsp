@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+<html dir="${textDirection}">
 <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />

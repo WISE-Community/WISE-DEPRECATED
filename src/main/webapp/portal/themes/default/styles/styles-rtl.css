@@ -1,0 +1,13 @@
+/* if user's session uses rtl direction (ie locale is hebrew, arabic, etc), 
+   this stylesheet will be included after all ltr stylesheets and overrides 
+   styles specifically for rtl direction sessions */
+
+#about {
+	position: absolute;
+	left: 0px;
+}
+
+#news {
+	position: relative;
+	right: none;
+}
