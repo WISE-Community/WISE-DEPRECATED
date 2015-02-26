@@ -6,7 +6,7 @@ define(['angular', 'configService'], function(angular, configService) {
 		this.project = null;
 		
 		this.retrieveProject = function() {
-			var projectFileUrl = ConfigService.getConfigParam('getContentUrl');
+			var projectFileUrl = ConfigService.getConfigParam('projectURL');
 			
 			return $http.get(projectFileUrl).then(angular.bind(this, function(result) {
 				var projectJSON = result.data;
@@ -63,9 +63,8 @@ define(['angular', 'configService'], function(angular, configService) {
             }
             
             if(nodeSrc != null) {
-                var getContentBaseUrl = ConfigService.getConfigParam('getContentBaseUrl');
-                
-                nodeSrc = getContentBaseUrl + nodeSrc;
+                var projectBaseURL = ConfigService.getConfigParam('projectBaseURL');
+                nodeSrc = projectBaseURL + nodeSrc;
             }
             
             return nodeSrc;    

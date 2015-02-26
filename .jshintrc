@@ -24,6 +24,7 @@
     "maxstatements": 40,
     "maxcomplexity": 8,
     "maxlen": 120,
+    "devel": true,
 
     "asi": false,
     "boss": false,

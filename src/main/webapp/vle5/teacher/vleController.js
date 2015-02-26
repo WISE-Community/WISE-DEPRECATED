@@ -2,12 +2,32 @@ define(['app'],
         function(app) {
     app.$controllerProvider.register('VLEController', 
             function($scope, ConfigService, NodeApplicationService, ProjectService, NodeService, StudentDataService) {
-        this.mode = 'student';
+        this.mode = 'author';
+        this.modes = ['student', 'author', 'grade'];
         this.globalTools = ['hideNavigation', 'showNavigation', 'next', 'prev', 'portfolio', 'home', 'sign out'];
         this.currentNode = null;
         this.callbackListeners = [];
         this.wiseMessageId = 0;
 
+        this.modeButtonClicked = function(mode) {
+            this.mode = mode;
+            if (this.currentNode != null) {
+                var nodeId = this.currentNode.id;
+                this.exitNode(nodeId, mode);
+            } else {
+                this.loadNode(nodeId, mode);
+            }
+        }
+        
+        this.exitNode = function(nodeId, mode) {
+            var postMessage = {
+                    'action': 'nodeOnExitRequest'
+                };
+            this.postMessageToNodeIFrame(postMessage, angular.bind(this, function(callbackArgs) {
+                this.loadNode(callbackArgs.nodeId, callbackArgs.mode);
+            }, {nodeId: nodeId, mode: mode}));
+        };
+        
         this.globalToolButtonClicked = function(globalToolName) {
             if (globalToolName === 'hideNavigation') {
                 $('#navigation').hide();
@@ -20,9 +40,8 @@ define(['app'],
         var wiseBaseURL = ConfigService.getConfigParam('wiseBaseURL');
         
         $scope.$on('$messageIncoming', angular.bind(this, function(event, data) {
-            console.log('received message in viewMapController.js');
             var msg = data;
-            console.log('in student vle controller, received message:'+JSON.stringify(msg));
+            console.log('in teacher vle controller, received message:'+JSON.stringify(msg));
             
             //getWISEStudentDataRequest
             //getWISEStudentDataResponse
@@ -47,7 +66,7 @@ define(['app'],
                     }
                 }
             }
-            
+        
             var action = msg.action;
             
             if (action === 'getWISEDataRequest') {
@@ -79,6 +98,14 @@ define(['app'],
                     this.postMessageToNodeIFrame(postMessage);
                 }));
 
+            } else if (action === 'postWISENodeContentRequest') {
+                var nodeMessageId = msg.nodeMessageId;
+                var postMessage = {
+                        'action': 'postWISENodeContentResponse',
+                        'nodeMessageId': nodeMessageId
+                    };
+                    this.postMessageToNodeIFrame(postMessage);
+
             } else if (action === 'getWISEProjectRequest') {
                 var project = ProjectService.project;
 
@@ -94,6 +121,11 @@ define(['app'],
                 
                 this.postMessageToNavigationIFrame(postMessage);
             } else if (action === 'postWISEStudentDataRequest') {
+                //var nodeIFrame = document.getElementById('nodeIFrame');
+                //nodeIFrame.contentWindow
+                //    .postMessage({'viewType':'student','content':null,'globalStyle':null,'stepState':msg}, 
+                //         '*');
+                
                 var nodeId = msg.nodeId;
                 var wiseData = msg.wiseData;
                 var studentData = wiseData.studentData;
@@ -115,7 +147,21 @@ define(['app'],
             } else if (action === 'navigation_moveToNode') {
                 var nodeId = msg.nodeId;
                 var mode = this.mode;
-                this.loadNode(nodeId, mode);
+                
+                var postMessage = {
+                        'viewType': 'student',
+                        'action': 'getWISEStudentDataRequest',
+                        'saveTriggeredBy': 'wiseOnStepExit',
+                        'callbackArgs': {'nodeId':nodeId}
+                    };
+                    
+                    if (this.currentNode != null) {
+                        this.postMessageToNodeIFrame(postMessage, angular.bind(this, function(callbackArgs) {
+                            this.loadNode(callbackArgs.nodeId, callbackArgs.mode);
+                        }, {nodeId: nodeId, mode: mode}));
+                    } else {
+                        this.loadNode(nodeId, mode);
+                    }
             } else if (action === 'postNodeStatusRequest') {
                 var nodeStatus = msg.nodeStatus;
                 var nodeId = msg.nodeId;
@@ -131,7 +177,7 @@ define(['app'],
                             console.log('hello');
                             
                             var postMessage = {
-                                'viewType': 'student',
+                                'viewType': 'teacher',
                                 'action': 'getWISEStudentDataRequest',
                                 'saveTriggeredBy': 'wiseIntermediate'
                             };
@@ -148,58 +194,46 @@ define(['app'],
         $scope.sendMessage = function() {
             this.$emit('$messageOutgoing', angular.toJson({"response": "hi"}))
         };
-        
+       
         this.loadNode = function(nodeId, mode) {
+            
+            var node = ProjectService.getNodeByNodeId(nodeId);
+            
+            if(node !== null) {
+                this.currentNode = node;
+                var nodeType = node.type
+                var nodeIFrameSrc = NodeApplicationService.getNodeURL(nodeType) + '?nodeId=' + nodeId + '&mode=' + mode;
+                $('#nodeIFrame').attr('src', nodeIFrameSrc);
+                $('#navigation').hide();
+                $('#nodeIFrame').show();
+            };
+
             /*
              * wiseOnExit
              * wiseIntermediate
              * node
              */
-            
-            var postMessage = {
-                'viewType': 'student',
-                'action': 'getWISEStudentDataRequest',
-                'saveTriggeredBy': 'wiseOnStepExit',
-                'callbackArgs': {'nodeId':nodeId}
-            };
-            
-            var moveToNode = angular.bind(this, function() {
-                var node = ProjectService.getNodeByNodeId(nodeId);
-                
-                if(node !== null) {
-                    this.currentNode = node;
-                    var nodeType = node.type
-                    var nodeIFrameSrc = NodeApplicationService.getNodeURL(nodeType) + '?nodeId=' + nodeId + '&mode=' + this.mode;
-                    $('#nodeIFrame').attr('src', nodeIFrameSrc);
-                    $('#navigation').hide();
-                    $('#nodeIFrame').show();
-                };
-            });
-            if (this.currentNode != null) {
-                this.postMessageToNodeIFrame(postMessage, moveToNode);
-            } else {
-                moveToNode();
-            }
-            
         };
         
-        this.postMessageToIFrame = function(iFrameId, message, callback) {
+        this.postMessageToIFrame = function(iFrameId, message, callback, callbackArgs) {
+            message.wiseMessageId = this.wiseMessageId;
             if (callback != null) {
-                message.wiseMessageId = this.wiseMessageId;
-                this.callbackListeners.push({wiseMessageId:this.wiseMessageId, callback:callback});
-                this.wiseMessageId++;
+                this.callbackListeners.push({wiseMessageId:this.wiseMessageId, callback:callback, callbackArgs:callbackArgs});
             }
             var iFrame = $('#' + iFrameId);
             iFrame[0].contentWindow.postMessage(message, '*');
+            
+            this.wiseMessageId++;
         };
         
-        this.postMessageToNodeIFrame = function(message, callback) {
-            this.postMessageToIFrame('nodeIFrame', message, callback);
+        this.postMessageToNodeIFrame = function(message, callback, callbackArgs) {
+            this.postMessageToIFrame('nodeIFrame', message, callback, callbackArgs);
         };
         
-        this.postMessageToNavigationIFrame = function(message, callback) {
-            this.postMessageToIFrame('navigationIFrame', message, callback);
+        this.postMessageToNavigationIFrame = function(message, callback, callbackArgs) {
+            this.postMessageToIFrame('navigationIFrame', message, callback, callbackArgs);
         };
+
         var knownNavigationApplications = ConfigService.getConfigParam('navigationApplications');
         var projectNavigationApplications = ProjectService.project.navigationApplications;
         var defaultNavigationApplication = projectNavigationApplications[0];
