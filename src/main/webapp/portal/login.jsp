@@ -34,9 +34,17 @@ function validateLoginForm() {
 					<form id="home" method="post" action="j_acegi_security_check" onsubmit="return validateLoginForm()" autocomplete="off">
 						<div id="signinForm">
 							<div class="errorMsgNoBg">
-								<c:if test="${failed}">
-								  <p><spring:message code="login.failed" /></p>
-								</c:if>
+								<c:choose>
+                                    <c:when test="${reCaptchaEmpty}">
+                                        <p><spring:message code="login.recaptcha.empty" /></p>
+                                    </c:when>
+                                    <c:when test="${reCaptchaFailed}">
+                                        <p><spring:message code="login.recaptcha.incorrect" /></p>
+                                    </c:when>
+                                    <c:when test="${failed}">
+                                        <p><spring:message code="login.failed" /></p>
+                                    </c:when>
+                                </c:choose>
 							</div>
 							<div>
 								<label for="username"><spring:message code="usernameLabel"/></label><input class="dataBoxStyle" type="text" name="j_username" id="j_username" size="18" maxlength="60" <c:if test="${userName != ''}">value="${userName}"</c:if> />
@@ -44,7 +52,7 @@ function validateLoginForm() {
 							<div>
 								<label for="password"><spring:message code="passwordLabel"/></label><input class="dataBoxStyle" type="password" name="j_password" id="j_password" size="18" maxlength="30" />
 							</div>
-							<c:if test="${requireCaptcha && reCaptchaPublicKey != null && reCaptchaPrivateKey != null}">
+							<c:if test="${requireCaptcha && not empty reCaptchaPublicKey && not empty reCaptchaPrivateKey}">
 								<div style="width: 60%; margin:0 auto">
 								<p><spring:message code='login.recaptcha'/></p>
 								<%

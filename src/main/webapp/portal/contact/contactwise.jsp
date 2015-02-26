@@ -120,8 +120,7 @@
 					  </dl>  
 					    
 					     <div id="asterixWarning" class="instructions"><spring:message code="contact.contactwisegeneral.itemsWithStarAreRequired"/></div>  
-					        
-					    	<c:if test="${user == null && reCaptchaPublicKey != null && reCaptchaPrivateKey != null}">
+					    	<c:if test="${user == null && not empty reCaptchaPublicKey && not empty reCaptchaPrivateKey}">
 								<div style="width: 50%; margin:0 auto;">
 								<p><spring:message code='login.recaptcha'/></p>
 								<%

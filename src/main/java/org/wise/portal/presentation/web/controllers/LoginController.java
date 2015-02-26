@@ -53,6 +53,8 @@ public class LoginController {
 		String failed = request.getParameter("failed");
 		String redirectUrl = request.getParameter("redirect");
 		String requireCaptcha = request.getParameter("requireCaptcha");
+		String reCaptchaEmpty = request.getParameter("reCaptchaEmpty");
+		String reCaptchaFailed = request.getParameter("reCaptchaFailed");
 
 		//get the user name that we will use to pre-populate the Username field
 		String userName = request.getParameter("userName");
@@ -73,7 +75,7 @@ public class LoginController {
 			//make the userName available to the jsp page
 			modelMap.put("userName", userName);
 		}
-
+		
 		/*
 		 * all three variables must be available in order for captcha to work
 		 */
@@ -83,6 +85,19 @@ public class LoginController {
 				modelMap.put("requireCaptcha", Boolean.TRUE);
 				modelMap.put("reCaptchaPublicKey", reCaptchaPublicKey);
 				modelMap.put("reCaptchaPrivateKey", reCaptchaPrivateKey);
+				
+		        if(StringUtils.hasText(reCaptchaFailed)) {
+		          //the user has entered the ReCaptcha text incorrectly
+		            modelMap.put("reCaptchaFailed", Boolean.TRUE);
+		        }
+		        
+		        if(StringUtils.hasText(reCaptchaEmpty)) {
+		            /*
+		             * the user is required to enter the ReCaptcha text
+		             * but they have left the field empty
+		             */
+                    modelMap.put("reCaptchaEmpty", Boolean.TRUE);
+                }
 			}
 		}
 

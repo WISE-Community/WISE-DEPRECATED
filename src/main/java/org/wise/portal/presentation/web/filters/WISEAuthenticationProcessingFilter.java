@@ -67,238 +67,312 @@ import org.wise.portal.service.user.UserService;
  */
 public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
 
-	@Autowired
-	protected UserService userService;
+    @Autowired
+    protected UserService userService;
 
-	@Autowired
-	private Properties wiseProperties;
+    @Autowired
+    private Properties wiseProperties;
 
-	public static final String STUDENT_DEFAULT_TARGET_PATH = "/student/index.html";
-	public static final String TEACHER_DEFAULT_TARGET_PATH = "/teacher/index.html";
-	public static final String ADMIN_DEFAULT_TARGET_PATH = "/admin/index.html";
-	public static final String RESEARCHER_DEFAULT_TARGET_PATH = "/teacher/index.html";
-	public static final String LOGOUT_PATH = "/j_spring_security_logout";
-	public static final String LOGIN_DISABLED_MESSGE_PAGE = "/pages/maintenance.html";
+    public static final String STUDENT_DEFAULT_TARGET_PATH = "/student/index.html";
+    public static final String TEACHER_DEFAULT_TARGET_PATH = "/teacher/index.html";
+    public static final String ADMIN_DEFAULT_TARGET_PATH = "/admin/index.html";
+    public static final String RESEARCHER_DEFAULT_TARGET_PATH = "/teacher/index.html";
+    public static final String LOGOUT_PATH = "/j_spring_security_logout";
+    public static final String LOGIN_DISABLED_MESSGE_PAGE = "/pages/maintenance.html";
 
-	public static final Integer recentFailedLoginTimeLimit = 15;
-	public static final Integer recentFailedLoginAttemptsLimit = 5;
-	
-	private static final Log LOGGER = LogFactory
+    public static final Integer recentFailedLoginTimeLimit = 15;
+    public static final Integer recentFailedLoginAttemptsLimit = 5;
+    
+    private static final Log LOGGER = LogFactory
             .getLog(WISEAuthenticationProcessingFilter.class);
-	
-	/**
-	 * Check to make sure the public key is valid. We can only check if the public
-	 * key is valid. If the private key is invalid the admin will have to realize that.
-	 * We also check to make sure the connection to the captcha server is working.
-	 * @param reCaptchaPublicKey the public key
-	 * @param recaptchaPrivateKey the private key
-	 * @return whether the captcha is valid and should be used
-	 */
-	public static boolean isReCaptchaKeyValid(String reCaptchaPublicKey, String recaptchaPrivateKey) {
-		boolean isValid = false;
 
-		if(reCaptchaPublicKey != null && recaptchaPrivateKey != null) {
+    /**
+     * Check if the user is required to enter ReCaptcha text. If the
+     * user is required to enter ReCaptcha text we will check if the
+     * user has entered the correct ReCaptcha text. If ReCaptcha is 
+     * not required or if the ReCaptcha has been entered correctly,
+     * continue on with the authentication process.
+     * 
+     * @param request
+     * @param response
+     */
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+                    throws AuthenticationException {
+        
+        // check if the user is required to enter ReCaptcha text
+        if(isReCaptchaRequired(request, response)) {
+            // the user is required to enter ReCaptcha text
+            
+            String errorMessage = null;
+            
+            if(isReCaptchaResponseEmpty(request, response)) {
+                //the user has left the ReCaptcha field empty
+                errorMessage = "Empty ReCaptcha Text";
+            } else if(!isReCaptchaResponseValid(request, response)) {
+                //the user has entered text into the ReCaptcha field but it is incorrect
+                errorMessage = "Incorrect ReCaptcha Text";
+            }
+            
+            if(errorMessage != null) {
+                try {
+                    /*
+                     * the user has not been authenticated because they did not
+                     * enter the ReCaptcha text correctly
+                     */
+                    unsuccessfulAuthentication(request, response, new AuthenticationException(errorMessage) {});
+                    
+                    return null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ServletException e) {
+                    e.printStackTrace();
+                }                
+            }
+        }
+        
+        return super.attemptAuthentication(request, response);
+}
 
-			//make a new instace of the captcha so we can make sure th key is valid
-			ReCaptcha c = ReCaptchaFactory.newSecureReCaptcha(reCaptchaPublicKey, recaptchaPrivateKey, false);
+    /**
+     * Check if the user is required to answer ReCaptcha. The user is required
+     * to answer ReCaptcha if the ReCaptcha keys are valid and the user has
+     * previously failed to log in 5 or more times in the last 15 minutes.
+     * @param request
+     * @param response
+     * @return whether the user needs to submit text for ReCaptcha
+     */
+    public boolean isReCaptchaRequired(HttpServletRequest request, HttpServletResponse response) {
+        boolean result = false;
+        
+        //get the public and private keys from the wise.properties
+        String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
+        String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+        
+        //check if the public and private ReCaptcha keys are valid
+        boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
+        
+        if(reCaptchaKeyValid) {
+            //the ReCaptcha keys are valid
+            
+            //get the user name that was entered into the user name field
+            String userName = request.getParameter("j_username");
+            
+            //get the user object
+            User user = userService.retrieveUserByUsername(userName);
+            
+            /*
+             * get the user so we can check if they have been failing to login
+             * multiple times recently and if so, we will display a captcha to
+             * make sure they are not a bot. the public and private keys must be set in
+             * the wise.properties otherwise we will not use captcha at all. we
+             * will also check to make sure the captcha keys are valid otherwise
+             * we won't use the captcha at all either.
+             */
+            if(user != null) {
+                //get the user details
+                MutableUserDetails mutableUserDetails = (MutableUserDetails) user.getUserDetails();
 
-			/*
-			 * get the html that will display the captcha
-			 * e.g.
-			 * <script type="text/javascript" src="http://api.recaptcha.net/challenge?k=yourpublickey"></script>
-			 */
-			String recaptchaHtml = c.createRecaptchaHtml(null, null);
+                if(mutableUserDetails != null) {
+                    //get the current time
+                    Date currentTime = new Date();
 
-			/*
-			 * try to retrieve the src url by matching everything between the
-			 * quotes of src=""
-			 * 
-			 * e.g. http://api.recaptcha.net/challenge?k=yourpublickey
-			 */
-			Pattern pattern = Pattern.compile(".*src=\"(.*)\".*");
-			Matcher matcher = pattern.matcher(recaptchaHtml);
-			matcher.find();
-			String match = matcher.group(1);
+                    //get the recent time they failed to log in
+                    Date recentFailedLoginTime = mutableUserDetails.getRecentFailedLoginTime();
 
-			try {
-				/*
-				 * get the response text from the url
-				 */
+                    if(recentFailedLoginTime != null) {
+                        //get the time difference
+                        long timeDifference = currentTime.getTime() - recentFailedLoginTime.getTime();
 
-				URL url = new URL(match);
-				URLConnection urlConnection = url.openConnection();
-				BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                        //check if the time difference is less than 15 minutes
+                        if(timeDifference < (WISEAuthenticationProcessingFilter.recentFailedLoginTimeLimit * 60 * 1000)) {
+                            //get the number of failed login attempts since recentFailedLoginTime
+                            Integer numberOfRecentFailedLoginAttempts = mutableUserDetails.getNumberOfRecentFailedLoginAttempts();
 
-				StringBuffer text = new StringBuffer();
-				String inputLine;
+                            //check if the user failed to log in 5 or more times
+                            if(numberOfRecentFailedLoginAttempts != null &&
+                                    numberOfRecentFailedLoginAttempts >= WISEAuthenticationProcessingFilter.recentFailedLoginAttemptsLimit) {
+                                result = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Check if the user has left the ReCaptcha field empty
+     * @param request
+     * @param response
+     * @return whether the user has left the ReCaptcha field empty
+     */
+    protected boolean isReCaptchaResponseEmpty(HttpServletRequest request, HttpServletResponse response) {
+        Boolean result = true;
+        
+        //get the value of the ReCaptcha field
+        String reCaptchaResponseField = request.getParameter("recaptcha_response_field");
+        
+        if(reCaptchaResponseField != null && !reCaptchaResponseField.equals("")) {
+            //the user has entered something into the ReCaptcha field
+            result = false;
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Check if the user has entered the correct text for ReCaptcha
+     * @param request
+     * @param response
+     * @return whether the user has entered the correct text for ReCaptcha
+     */
+    protected boolean isReCaptchaResponseValid(HttpServletRequest request, HttpServletResponse response) {
+        Boolean result = false;
+        
+      //get the public and private keys from the wise.properties
+        String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
+        String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
 
-				while ((inputLine = in.readLine()) != null) {
-					text.append(inputLine);
-				}
-				in.close();
+        //check if the public key is valid in case the admin entered it wrong
+        boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
 
-				//the response text from the url
-				String responseText = text.toString();
+        if (reCaptchaKeyValid) {
+            String reCaptchaChallengeField = request.getParameter("recaptcha_challenge_field");
+            String reCaptchaResponseField = request.getParameter("recaptcha_response_field");
+            String remoteAddr = request.getRemoteAddr();
+            
+            if(reCaptchaChallengeField != null && reCaptchaResponseField != null && remoteAddr != null) {
+                //the user filled in the ReCaptcha
 
-				/*
-				 * if the public key was invalid the text returned from the url will
-				 * look like
-				 * 
-				 * document.write('Input error: k: Format of site key was invalid\n');
-				 */
-				if(!responseText.contains("Input error")) {
-					//the text from the server does not contain the error so the key is valid
-					isValid = true;
-				}
-			} catch (MalformedURLException e) {
-				/*
-				 * if there was a problem connecting to the server this function will return
-				 * false so that users can still log in and won't be stuck because the
-				 * recaptcha server is down.
-				 */
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+                ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
+                reCaptcha.setPrivateKey(reCaptchaPrivateKey);
+                
+                //check if the user entered the correct ReCaptcha text
+                ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, reCaptchaChallengeField, reCaptchaResponseField);
 
-		return isValid;
-	}
+                if (reCaptchaResponse.isValid()) {
+                    //the user has entered the correct ReCaptcha text
+                    result = true;
+                }
+            }
+        }
+        
+        return result;
+    }
 
-	@Override
-	protected void successfulAuthentication(HttpServletRequest request,
-			HttpServletResponse response, Authentication authentication)
-					throws IOException, ServletException {
-		HttpSession session = request.getSession();
+    /**
+     * Check to make sure the public key is valid. We can only check if the public
+     * key is valid. If the private key is invalid the admin will have to realize that.
+     * We also check to make sure the connection to the ReCaptcha server is working.
+     * @param reCaptchaPublicKey the public key
+     * @param recaptchaPrivateKey the private key
+     * @return whether the ReCaptcha is valid and should be used
+     */
+    public static boolean isReCaptchaKeyValid(String reCaptchaPublicKey, String recaptchaPrivateKey) {
+        boolean isValid = false;
 
-		//get the user
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		User user = userService.retrieveUser(userDetails);
-		session.setAttribute(User.CURRENT_USER_SESSION_KEY, user);
+        if(reCaptchaPublicKey != null && recaptchaPrivateKey != null) {
 
-		/*
-		 * get the user so we can check if they have been failing to login
-		 * multiple times recently and if so, we will display a captcha to
-		 * make sure they are not a bot. the public and private keys must be set in
-		 * the wise.properties otherwise we will not use captcha at all. we
-		 * will also check to make sure the captcha keys are valid otherwise
-		 * we won't use the captcha at all either.
-		 */
-		if(user != null) {
-			//get the user details
-			MutableUserDetails mutableUserDetails = (MutableUserDetails) user.getUserDetails();
+            //make a new instace of the captcha so we can make sure th key is valid
+            ReCaptcha c = ReCaptchaFactory.newSecureReCaptcha(reCaptchaPublicKey, recaptchaPrivateKey, false);
 
-			//get the current time
-			Date currentTime = new Date();
+            /*
+             * get the html that will display the captcha
+             * e.g.
+             * <script type="text/javascript" src="http://api.recaptcha.net/challenge?k=yourpublickey"></script>
+             */
+            String recaptchaHtml = c.createRecaptchaHtml(null, null);
 
-			//get the recent time they failed to log in
-			Date recentFailedLoginTime = mutableUserDetails.getRecentFailedLoginTime();
+            /*
+             * try to retrieve the src url by matching everything between the
+             * quotes of src=""
+             * 
+             * e.g. http://api.recaptcha.net/challenge?k=yourpublickey
+             */
+            Pattern pattern = Pattern.compile(".*src=\"(.*)\".*");
+            Matcher matcher = pattern.matcher(recaptchaHtml);
+            matcher.find();
+            String match = matcher.group(1);
 
-			if(recentFailedLoginTime != null) {
-				//get the time difference
-				long timeDifference = currentTime.getTime() - recentFailedLoginTime.getTime();
+            try {
+                /*
+                 * get the response text from the url
+                 */
 
-				//check if the time difference is less than 15 minutes
-				if(timeDifference < (WISEAuthenticationProcessingFilter.recentFailedLoginTimeLimit * 60 * 1000)) {
-					//get the number of failed login attempts since recentFailedLoginTime
-					Integer numberOfRecentFailedLoginAttempts = mutableUserDetails.getNumberOfRecentFailedLoginAttempts();
+                URL url = new URL(match);
+                URLConnection urlConnection = url.openConnection();
+                BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 
-					//check if the user failed to log in 5 or more times
-					if(numberOfRecentFailedLoginAttempts != null &&
-							numberOfRecentFailedLoginAttempts >= WISEAuthenticationProcessingFilter.recentFailedLoginAttemptsLimit) {
+                StringBuffer text = new StringBuffer();
+                String inputLine;
 
-						//get the public and private keys from the wise.properties
-						String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
-						String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
+                while ((inputLine = in.readLine()) != null) {
+                    text.append(inputLine);
+                }
+                in.close();
 
-						//check if the public key is valid in case the admin entered it wrong
-						boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
+                //the response text from the url
+                String responseText = text.toString();
 
-						if (reCaptchaPrivateKey != null && reCaptchaPublicKey != null && reCaptchaKeyValid) {
-							/*
-							 * the user has failed to log in 5 or more times in the last 15 minutes
-							 * and recaptcha is enabled for this WISE instance,
-							 * so they need to fill in the captcha
-							 */
-							String reCaptchaChallengeField = request.getParameter("recaptcha_challenge_field");
-							String reCaptchaResponseField = request.getParameter("recaptcha_response_field");
-							String remoteAddr = request.getRemoteAddr();
+                /*
+                 * if the public key was invalid the text returned from the url will
+                 * look like
+                 * 
+                 * document.write('Input error: k: Format of site key was invalid\n');
+                 */
+                if(!responseText.contains("Input error")) {
+                    //the text from the server does not contain the error so the key is valid
+                    isValid = true;
+                }
+            } catch (MalformedURLException e) {
+                /*
+                 * if there was a problem connecting to the server this function will return
+                 * false so that users can still log in and won't be stuck because the
+                 * recaptcha server is down.
+                 */
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-							if(reCaptchaChallengeField != null && reCaptchaResponseField != null && remoteAddr != null) {
-								//the user filled in the captcha
+        return isValid;
+    }
 
-								ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-								reCaptcha.setPrivateKey(reCaptchaPrivateKey);
-								ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, reCaptchaChallengeField, reCaptchaResponseField);
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request,
+            HttpServletResponse response, Authentication authentication)
+                    throws IOException, ServletException {
+        HttpSession session = request.getSession();
 
-								if (!reCaptchaResponse.isValid()) {
-									/*
-									 * user did not correctly answer the captcha so we will
-									 * redirect them to the failure page
-									 */
-									try {
-										unsuccessfulAuthentication(request, response, new AuthenticationException(remoteAddr, mutableUserDetails) {});
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									} catch (ServletException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									return;
-								}
-							} else {
-								/*
-								 * there are no captcha params because the user was on the index.html
-								 * page where the captcha does not show up. we will redirect them to
-								 * the login.html page and require the captcha.
-								 * 
-								 * note: if the user has failed to log in 5 or more times in the last
-								 * 15 minutes, we will require them to fill in the captcha. if at that
-								 * point, the user tries to log in from the index.html page (which does
-								 * not display the captcha) and correctly enters their 
-								 * username and password, we will still not allow them
-								 * to log in. we will redirect them to the login.html page and require
-								 * the captcha. this is to prevent the user/bot from always just accessing
-								 * the index.html page to try to log in order to circumvent the captcha.
-								 */
-								try {
-									unsuccessfulAuthentication(request, response, new AuthenticationException(remoteAddr, mutableUserDetails) {});
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} catch (ServletException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								return;
-							}
-						}
-					}        		
-				}
-			}
-		}
-		
+        //get the user
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userService.retrieveUser(userDetails);
+        session.setAttribute(User.CURRENT_USER_SESSION_KEY, user);
+
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("UserDetails logging in: " + userDetails.getUsername());
         }
 
         // add new session in a allLoggedInUsers servletcontext HashMap variable
-		String sessionId = session.getId();
-		HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) session.getServletContext().getAttribute("allLoggedInUsers");
-		if (allLoggedInUsers == null) {
-			allLoggedInUsers = new HashMap<String, User>();
-			session.getServletContext().setAttribute(WISESessionListener.ALL_LOGGED_IN_USERS, allLoggedInUsers);
-		}
-		allLoggedInUsers.put(sessionId, user);
-        
-        super.successfulAuthentication(request, response, authentication);
-	}
+        String sessionId = session.getId();
+        HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) session.getServletContext().getAttribute("allLoggedInUsers");
+        if (allLoggedInUsers == null) {
+            allLoggedInUsers = new HashMap<String, User>();
+            session.getServletContext().setAttribute(WISESessionListener.ALL_LOGGED_IN_USERS, allLoggedInUsers);
+        }
+        allLoggedInUsers.put(sessionId, user);
 
-	@Override
-	protected void unsuccessfulAuthentication(HttpServletRequest request,
-			HttpServletResponse response, AuthenticationException failed)
-					throws IOException, ServletException {
-		super.unsuccessfulAuthentication(request, response, failed);
-	}
+        super.successfulAuthentication(request, response, authentication);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+            HttpServletResponse response, AuthenticationException failed)
+                    throws IOException, ServletException {
+        super.unsuccessfulAuthentication(request, response, failed);
+    }
 }
