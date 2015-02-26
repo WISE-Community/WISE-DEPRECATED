@@ -34,13 +34,16 @@ CurrentNode: "{{vle.currentNode.title}}" ({{vle.currentNode.type}}, {{vle.curren
 <span ng-if="vle.mode">
 Current Mode: {{vle.mode}}
 </span>
-
+<div id='modes'>
+ <div id="modes">
+  <button ng-repeat="mode in vle.modes"
+   ng-click="vle.modeButtonClicked(mode)">{{mode}}</button>
+ </div>
+</div>
  <div id="globalTools">
   <button ng-repeat="globalTool in vle.globalTools"
    ng-click="vle.globalToolButtonClicked(globalTool)">{{globalTool}}</button>
  </div>
- <div id="prev">Prev</div>
- <div id="next">Next</div>
  <div id="ideaBasket"></div>
  <div id="myWork"></div>
  <div id="home"></div>

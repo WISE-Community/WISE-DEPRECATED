@@ -8,11 +8,11 @@ define(['angular', 'configService'], function(angular, configService) {
             return $q(function(resolve, reject) {
                 $http.get(nodeSrc).then(angular.bind(this, function(result) {
                     var nodeContent = result.data;
-                    console.log('nodeContent=' + nodeContent);
+                    console.log('nodeService.getNodeContentByNodeSrc. nodeContent=' + JSON.stringify(nodeContent));
                     this.nodeContent = nodeContent;
                     resolve(nodeContent);
                 }));
-            })
+            });
         };
         
         this.getNodeContentByNodeSrc0 = function(nodeSrc) {
@@ -22,15 +22,8 @@ define(['angular', 'configService'], function(angular, configService) {
                 $http.get(nodeSrc).then(angular.bind(this, function(result) {
                     var nodeContent = result.data;
                     this.nodeContent = nodeContent;
-                    //return nodeContent;
-                    
                     deferred.resolve(nodeContent);
                 }));
-                /*
-                require([controllerName], function() {
-                    deferred.resolve();
-                });
-                */
                 return deferred.promise;
             }];
         };
@@ -44,7 +37,7 @@ define(['angular', 'configService'], function(angular, configService) {
         };
         
         this.retrieveNode = function() {
-            var projectFileUrl = ConfigService.getConfigParam('getContentUrl');
+            var projectFileUrl = ConfigService.getConfigParam('projectURL');
             
             return $http.get(projectFileUrl).then(angular.bind(this, function(result) {
                 var projectJSON = result.data;
@@ -56,7 +49,7 @@ define(['angular', 'configService'], function(angular, configService) {
         this.getNodeTitleFromNodeId = function(nodeId) {
             var title = null;
             
-            //see if the node id is for a step and get the title if it is
+            // see if the node id is for a step and get the title if it is
             title = this.getStepTitleFromNodeId(nodeId);
             
             if(title === null) {

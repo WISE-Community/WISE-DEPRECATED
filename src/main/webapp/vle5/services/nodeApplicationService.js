@@ -4,12 +4,12 @@ define(['angular', 'configService'], function(angular, configService) {
     
     .service('NodeApplicationService', ['ConfigService', function(ConfigService) {
         
-        this.nodeApplications;
+        this.nodeApplications = null;
         
         this.intializeNodeApplications = function() {
             this.nodeApplications = ConfigService.getConfigParam('nodeApplications');
             return this.nodeApplications;
-        }
+        };
         
         this.getNodeURL = function(nodeName) {
             for (var i = 0; i < this.nodeApplications.length; i++) {
@@ -19,6 +19,6 @@ define(['angular', 'configService'], function(angular, configService) {
                 } 
             }
             return null;
-        }
+        };
     }]);
 });
