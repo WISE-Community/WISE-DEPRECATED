@@ -106,6 +106,14 @@ define(['app'],
                     };
                     this.postMessageToNodeIFrame(postMessage);
 
+            } else if (action === 'postWISEProjectContentRequest') {
+                var navMessageId = msg.navMessageId;
+                var postMessage = {
+                        'action': 'postWISEProjectContentResponse',
+                        'navMessageId': navMessageId
+                    };
+                    this.postMessageToNavigationIFrame(postMessage);
+
             } else if (action === 'getWISEProjectRequest') {
                 var project = ProjectService.project;
 
@@ -240,7 +248,7 @@ define(['app'],
         for (var i = 0; i < knownNavigationApplications.length; i++) {
             var knownNavigationApplication = knownNavigationApplications[i];
             if (knownNavigationApplication.name === defaultNavigationApplication) {
-                var navigationApplicationURL = knownNavigationApplication.url;
+                var navigationApplicationURL = knownNavigationApplication.url + '?mode=' + this.mode;
                 $('#navigation').html('<iframe id="navigationIFrame" ' + 
                     'src="' + navigationApplicationURL + '"></iframe>');
             }

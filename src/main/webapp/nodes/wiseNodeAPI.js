@@ -12,7 +12,7 @@ function receiveMessage(event) {
 	var action = msg.action;
 	
     var nodeMessageId = msg.nodeMessageId;
-    if (nodeMessageId) {
+    if (nodeMessageId !== null) {
         for (var i = 0; i < callbackListeners.length; i++) {
             var callbackListener = callbackListeners[i];
             if (callbackListener && callbackListener.nodeMessageId === nodeMessageId) {

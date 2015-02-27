@@ -1,7 +1,8 @@
 var wiseTargetOrigin = '*';
 
-var nodeId = getParameterByName(window.location.href, 'nodeId');
 var mode = getParameterByName(window.location.href, 'mode');
+var callbackListeners = [];
+var navMessageId = 0;
 
 //Called sometime after postMessage is called
 function receiveMessage(event) {
@@ -9,11 +10,23 @@ function receiveMessage(event) {
     var viewType = msg.viewType;
     var action = msg.action;
     
-   if (action == "getWISEProjectResponse") {
-    var wiseData = msg.wiseData;
-    var project = wiseData.project;
-    setProject(project);
-   }
+    var navMessageId = msg.navMessageId;
+    if (navMessageId !== null) {
+        for (var i = 0; i < callbackListeners.length; i++) {
+            var callbackListener = callbackListeners[i];
+            if (callbackListener && callbackListener.navMessageId === navMessageId) {
+                callbackListener.callback(callbackListener.callbackArgs);
+            }
+        }
+    }
+    
+    if (action == "getWISEProjectResponse") {
+        var wiseData = msg.wiseData;
+        var project = wiseData.project;
+        setProject(project);
+    } else if (action === 'postWISEProjectContentResponse') {
+        
+    }
 }
 
 // gets parameter by name in the url
@@ -42,5 +55,31 @@ function navigation_moveToNode(nodeId) {
     // This does nothing, assuming the window hasn't changed its location.
     wiseWrapper.postMessage({"action":"navigation_moveToNode","nodeId":nodeId}, wiseTargetOrigin);
 }
+
+function saveProjectContentToWISE(projectContent, callback, callbackArgs) {
+
+    if (projectContent) {
+        var wiseData = {};
+        wiseData.projectContent = projectContent;
+        
+        var message = {
+            'action': 'postWISEProjectContentRequest', 
+            'wiseData': wiseData
+        };
+        
+        postMessageToWISE(message, callback, callbackArgs);
+    }
+}
+
+function postMessageToWISE(message, callback, callbackArgs) {
+    message.navMessageId = navMessageId;
+    if (callback != null) {
+        callbackListeners.push({navMessageId:navMessageId, callback:callback, callbackArgs:callbackArgs});
+    }
+    navMessageId++;
+    
+    var wiseWrapper = window.parent;
+    wiseWrapper.postMessage(message, wiseTargetOrigin);
+};
 
 window.addEventListener("message", receiveMessage, false);
