@@ -17,7 +17,6 @@ View.prototype.gradingDispatcher = function(type, args, obj) {
 		obj.initializeSession();
 	} else if(type=='loadingProjectCompleted') {
 		obj.getStudentUserInfo();
-		obj.checkAndMinify();
 	} else if(type=='exportButtonClicked') {
 		obj.exportButtonClickedEventListener(args[0], args[1]);
 	} else if(type=='customActivityCheckBoxClicked') {

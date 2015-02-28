@@ -237,7 +237,7 @@ View.prototype.setLastEdited = function(){
 		o.notificationManager.notify("Unable to retrieve timestamp from servlet, cannot update last edited field of project meta.", 3);
 	};
 	
-	this.connectionManager.request('GET', 1, this.minifierUrl, {forward:'minifier', command:'getTimestamp'}, success, this, failure);
+	this.connectionManager.request('GET', 1, this.minifierUrl, {command:'getTimestamp'}, success, this, failure);
 };
 
 /**

@@ -12,7 +12,6 @@ View.prototype.getGradingConfig = function(gradingConfigUrl) {
 	var contextPath = this.getConfig().getConfigParam('contextPath');
 	
 	var base = loc.substring(0, loc.lastIndexOf(contextPath + '/vle/'));
-	this.minifierUrl = base + contextPath + '/router.html';
 };
 
 /**
@@ -46,65 +45,6 @@ View.prototype.getStudentUserInfo = function() {
 
 	eventManager.fire('processUserAndClassInfoCompleted');
 };
-
-/** 
- * If the currently loaded project is not minified, we want to minify it.
- */
-View.prototype.checkAndMinify = function(){
-	/* if project currently loaded exists and is minified, no need
-	 * to do anything otherwise, we should minify it. */
-	if(!this.isLoadedProjectMinified && this.getProject() && this.getConfig() && this.getConfig().getConfigParam('getProjectPath')){
-		var success = function(t,x,o){
-			//do not display any messages
-			
-			/*
-			 * if the project was successfuly minified it will have responded
-			 * with the new last minified time
-			 */
-			var lastMinified = parseInt(t);
-			
-			if(isNaN(lastMinified)) {
-				/*
-				 * the response was not a number which means the response was
-				 * probably the word 'success'. this means the minified project
-				 * is already up to date.
-				 */
-			} else {
-				/*
-				 * the response was a number representing the timestamp at which
-				 * the project was just minified. now we will save the lastMinified
-				 * timestamp to the project_metadata table in the server db
-				 */
-				
-				//set the params to post the last minified timestamp
-				var postLastMinifiedParams = {
-					projectId:o.getConfig().getConfigParam('projectId'),
-					command:'postLastMinified',
-					lastMinified:lastMinified
-				};
-				
-				var updateLastMinifiedSuccess = function(text, xml, obj) {
-					//do nothing
-				};
-				
-				var updateLastMinifiedFailure = function(text, xml, obj) {
-					//do nothing
-				};
-				
-				//make the post to save the lastMinified timestamp
-				o.connectionManager.request('POST', 1, o.getConfig().getConfigParam('projectMetaDataUrl'), postLastMinifiedParams, updateLastMinifiedSuccess, this, updateLastMinifiedFailure);
-			}
-		};
-	
-		var failure = function(t,o){
-			//do not display any messages
-		};
-		
-		this.connectionManager.request('POST', 1, this.minifierUrl, {forward:'minifier', projectId:this.getConfig().getConfigParam('projectId'), runId:this.getConfig().getConfigParam('runId'), command:'minifyProject', path:this.getConfig().getConfigParam('getProjectPath')}, success, this, failure);
-	};
-};
-
-
 
 var studentWorkQueryObject;
 

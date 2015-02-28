@@ -118,13 +118,9 @@ public class AuthorProjectController {
 
 	private final static List<String> filemanagerProjectlessRequests;
 
-	private final static List<String> minifierProjectlessRequests;
 	static {
 		filemanagerProjectlessRequests = new ArrayList<String>();
 		filemanagerProjectlessRequests.add("createProject");
-
-		minifierProjectlessRequests = new ArrayList<String>();
-		minifierProjectlessRequests.add("getTimestamp");
 	}
 
 	@RequestMapping("/author/authorproject.html")
@@ -652,20 +648,18 @@ public class AuthorProjectController {
 				//get the current timestamp on the server and write it to the response
 				response.getWriter().write(String.valueOf(new Date().getTime()));
 				return null;
-			} else if(forward.equals("minifier")){
-				if(this.isProjectlessRequest(request, forward) || this.projectService.canAuthorProject(project, user)){
-					CredentialManager.setRequestCredentials(request, user);
-					 servletContext.getRequestDispatcher("/util/" + forward + ".html").forward(request, response);
-					return null;
-				}
-			}
+			} 
 		}
 
 		String command = request.getParameter(COMMAND);
 		if(command != null && command != ""){
 			if(command.equals("launchAuthoring")){
 				return handleLaunchAuthoring(request, response);
-			} else if(command.equals("createProject")){
+			} else if(command.equals("getTimestamp")) {
+                //get the current timestamp on the server and write it to the response
+                response.getWriter().write(String.valueOf(new Date().getTime()));
+                return null;
+            } else if(command.equals("createProject")){
 				return handleCreateProject(request, response);
 			} else if(command.equals("projectList")){
 				return handleProjectList(request, response);
@@ -1325,10 +1319,6 @@ public class AuthorProjectController {
 	private boolean isProjectlessRequest(HttpServletRequest request, String servlet){
 		if(servlet.equals("filemanager")){
 			return filemanagerProjectlessRequests.contains(request.getParameter("command"));
-		}
-
-		if(servlet.equals("minifier")){
-			return minifierProjectlessRequests.contains(request.getParameter("command"));
 		}
 
 		return false;

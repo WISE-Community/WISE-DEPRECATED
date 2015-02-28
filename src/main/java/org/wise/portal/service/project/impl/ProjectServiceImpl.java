@@ -436,40 +436,6 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#minifyProject(org.wise.portal.domain.project.Project)
-	 */
-	public String minifyProject(Project project) {
-		String curriculumBaseDir = this.wiseProperties.getProperty("curriculum_base_dir");
-		String minifyUrl = this.wiseProperties.getProperty("wiseBaseURL") + "/util/minifier.html";
-		String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-		String params = "command=minifyProject&path=" + curriculumBaseDir + "/" + projectUrl;
-
-		if(projectUrl != null && projectUrl != ""){
-			try{
-				String response = Connector.request(minifyUrl, params);
-
-				/* process the response text */
-				if(response.equals("success")){
-					return "Project has been successfully minified!";
-				} else if(response.equals("current")){
-					return "Project minification is current, no need to minify";
-				} else {
-					return response + " was returned from the minifier, check error and retry if necessary.";
-				}
-			} catch (MalformedURLException e){
-				e.printStackTrace();
-				return "The url to the minifier is invalid, cannot minify the project.";
-			} catch (IOException e){
-				e.printStackTrace();
-				return "Connection to the minifier failed, cannot minify the project.";
-			}
-		} else {
-			return "Unable to retrieve the url of the project, cannot minify the project.";
-		}
-	}
-
-
-	/**
 	 * @see org.wise.portal.service.project.ProjectService#canCreateRun(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
 	 * Project cannot have a "review" tag to it.
 	 */

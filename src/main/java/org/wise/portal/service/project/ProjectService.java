@@ -176,15 +176,6 @@ public interface ProjectService {
 	public Project getById(Serializable projectId) throws ObjectNotFoundException;
 	
 	/**
-	 * Given a <code>Project</code> project, attempts to minify a file and returns
-	 * a <code>String</code> of the final status of the operation.
-	 * 
-	 * @param project
-	 * @return
-	 */
-	public String minifyProject(Project project);
-	
-	/**
 	 * Given a <code>Project</code> project and <code>User</code> user, returns
 	 * <code>boolean</code> true if the user is allowed to create a run from that
 	 * project (ie, project is TELS, owner, sharedOwner), returns false otherwise.
