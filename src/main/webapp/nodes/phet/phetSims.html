@@ -7,7 +7,7 @@
 	  $(".htmlSim a").click(function() {
 		  var simUrl = $(this).attr('href');
 		  if (window.parent != null) {
-		      window.parent.onSimulationSelectedParent("https://phet.colorado.edu"+simUrl);
+		      window.parent.authorViewOnSimulationSelected("https://phet.colorado.edu"+simUrl);
 		  }
 		  return false;
 	  });
