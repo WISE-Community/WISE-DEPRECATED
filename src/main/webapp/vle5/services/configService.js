@@ -13,14 +13,12 @@ define(['angular'], function(angular) {
 				config.textDirection = 'rtl';
 				config.nodeApplications = JSON.parse('[{"name":"OpenResponseNode","url":"nodes/openResponse/index.html"},{"name":"EchoNode","url":"http://wise4.org/echo/index.html"},{"name":"PhETNode","url":"nodes/phet/index.html"},{"name":"HTMLNode","url":"nodes/html/index.html"},{"name":"OutsideURLNode","url":"nodes/outsideURL/index.html"},{"name":"DiscussionNode","url":"http://wise5.org/discussion/index.html"},{"name":"AudioRecorderNode","url":"nodes/audioRecorder/index.html"}]');
 				config.navigationApplications = JSON.parse('[{"name":"wiseMap","url":"navigation/navigationMap/index.html"},{"name":"wiseList","url":"navigation/navigationList/index.html"}]');
-				config.projectURL = 'http://localhost:8080/wise/curriculum/1/project.json';
+				config.projectURL = 'http://localhost:8080/wise/curriculumWISE5/1/project.json';
 				config.projectBaseURL = config.projectURL.replace('project.json','');
                 config.getStudentDataUrl = 'http://localhost:8080/wise/vle5/student/studentData.json';
-				
-				/*
-                config.getContentUrl = 'http://localhost:8080/wise/curriculum/1/project.json';
-				config.getContentBaseUrl = 'http://localhost:8080/wise/curriculum/1/';
-				*/
+                config.projectId = 1;
+                config.authorURL = 'http://localhost:8080/wise/authorWISE5.html';
+                
 				this.config = config;
 				return config;
 			}));
