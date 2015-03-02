@@ -203,11 +203,8 @@ public class ContactWiseController {
 		/* if the user is logged in to the session, auto populate the name and 
 		   email address in the form, if not, the fields will just be blank */
 		if (user != null) {
-			//add the user to the model so that the jsp can check if the user is logged in or not
-			modelMap.put("user", user);
-
+		    //set whether the user is a student
 			contactWISEForm.setIsStudent(user);
-
 
 			MutableUserDetails userDetails = 
 					(MutableUserDetails) user.getUserDetails();
@@ -220,39 +217,6 @@ public class ContactWiseController {
 			   to submit feedback */
 			if(userDetails instanceof TeacherUserDetails) {
 				contactWISEForm.setEmail(userDetails.getEmailAddress());
-			} else if(userDetails instanceof StudentUserDetails) {
-				// user is a student, so we need to retrieve the list of associated teachers 
-
-				//the vector to accumulate the teachers associated with the student
-				Vector<User> teachers = new Vector<User>();
-
-				//get all the runs that this student is in
-				List<Run> runList = runService.getRunList(user);
-				Iterator<Run> runListIterator = runList.iterator();
-
-				//loop through all the runs
-				while(runListIterator.hasNext()) {
-					//get a run
-					Run tempRun = runListIterator.next();
-
-					//get the owners of the run
-					Set<User> owners = tempRun.getOwners();
-					Iterator<User> ownersIterator = owners.iterator();
-
-					//loop through all the owners of the run
-					while(ownersIterator.hasNext()) {
-						//get an owner
-						User owner = ownersIterator.next();
-
-						//add the teacher to the list if they are not already in it
-						if(!teachers.contains(owner)) {
-							//the teacher is not in the list so we will add them
-							teachers.add(owner);
-						}
-					}
-				}
-				//add the list of teachers to the model
-				modelMap.put("teachers", teachers);
 			}
 		}
 
@@ -300,40 +264,149 @@ public class ContactWiseController {
 		OperatingSystem.setProperties(i18nProperties);
 		WebBrowser.setProperties(i18nProperties);
 
-		//places the array of constants into the model so the view can display
-		modelMap.put("issuetypes", IssueType.values());
-		modelMap.put("operatingsystems", OperatingSystem.values());
-		modelMap.put("webbrowsers", WebBrowser.values());
-
-		//get the public and private keys from the wise.properties
-		String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
-		String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
-
-		if(reCaptchaPublicKey != null && reCaptchaPrivateKey != null) {
-			//put the reCaptcha keys into the model so the jsp page 
-			modelMap.addAttribute("reCaptchaPublicKey", reCaptchaPublicKey);
-			modelMap.addAttribute("reCaptchaPrivateKey", reCaptchaPrivateKey);			
-		}
-
-		// if discourse is enabled for this WISE instance, add the link to the model
-		// so the view can display it
-		if (!contactWISEForm.getIsStudent()) {
-			String discourseURL = wiseProperties.getProperty("discourse_url");
-			if (discourseURL != null && !discourseURL.isEmpty()) {
-				String discourseSSOLoginURL = discourseURL + "/session/sso";
-				modelMap.put("discourseSSOLoginURL", discourseSSOLoginURL);
-			}
-		}
-
 		modelMap.put("contactWISEForm", contactWISEForm);
-		// also show WISEVersion
-		try {
-			modelMap.put("wiseVersion", portalService.getWISEVersion());
-		} catch (Exception e) {
-			// do nothing
-		}
+
 		return "contact/contactwise"; 
-	} 
+	}
+	
+    /**
+     * Set the issue types into the model
+     * @return an array of IssueType objects that will be used to populate the
+     * issue types drop down in the contact WISE form
+     */
+    @ModelAttribute("issuetypes")
+    public IssueType[] populateIssueTypes() {
+        return IssueType.values();
+    }
+    
+    /**
+     * Set the ReCaptcha public key
+     * @return a string containing the ReCaptcha public key that will be used
+     * to determine if we should display the ReCaptcha image on the bottom
+     * of the form
+     */
+    @ModelAttribute("reCaptchaPublicKey")
+    public String populateReCaptchaPublicKey() {
+        return wiseProperties.getProperty("recaptcha_public_key");
+    }
+    
+    /**
+     * Set the ReCaptcha private key
+     * @return a string containing the ReCaptcha private key that will be used
+     * to determine if we should display the ReCaptcha image on the bottom
+     * of the form
+     */
+    @ModelAttribute("reCaptchaPrivateKey")
+    public String populateReCaptchaPrivateKey() {
+        return wiseProperties.getProperty("recaptcha_private_key");
+    }
+    
+    /**
+     * Set the user object
+     * @return a user object that will be used by the form
+     */
+    @ModelAttribute("user")
+    public User populateUser() {
+        return ControllerUtil.getSignedInUser();
+    }
+    
+    /**
+     * Set the WISE version
+     * @return a string containing the WISE version
+     */
+    @ModelAttribute("wiseVersion")
+    public Object populateWISEVersion() {
+        String wiseVersion = null;
+        
+        // also show WISEVersion
+        try {
+            wiseVersion = portalService.getWISEVersion();
+        } catch (Exception e) {
+            // do nothing
+        }
+
+        return wiseVersion;
+    }
+    
+    /**
+     * Set the teachers if the user is a student
+     * @return a vector of teacher user objects that will be used to populate
+     * the teacher drop down in the contact WISE form
+     */
+    @ModelAttribute("teachers")
+    public Vector<User> populateTeachers() {
+        //the vector to accumulate the teachers associated with the student
+        Vector<User> teachers = new Vector<User>();
+
+        // get the signed in user
+        User user = ControllerUtil.getSignedInUser();
+        
+        if(user != null) {
+            // get the user details
+            MutableUserDetails userDetails = user.getUserDetails();
+            
+            //check that the user is a student
+            if(userDetails != null && userDetails instanceof StudentUserDetails) {
+                //get all the runs that this student is in
+                List<Run> runList = runService.getRunList(user);
+                Iterator<Run> runListIterator = runList.iterator();
+
+                //loop through all the runs
+                while(runListIterator.hasNext()) {
+                    //get a run
+                    Run tempRun = runListIterator.next();
+
+                    //get the owners of the run
+                    Set<User> owners = tempRun.getOwners();
+                    Iterator<User> ownersIterator = owners.iterator();
+
+                    //loop through all the owners of the run
+                    while(ownersIterator.hasNext()) {
+                        //get an owner
+                        User owner = ownersIterator.next();
+
+                        //add the teacher to the list if they are not already in it
+                        if(!teachers.contains(owner)) {
+                            //the teacher is not in the list so we will add them
+                            teachers.add(owner);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return teachers;
+    }
+    
+    /**
+     * Set the Discourse SSO login url
+     * @return a string containing the Discourse SSO login url that will be
+     * used to display a link to the Discourse page if the user is a teacher
+     */
+    @ModelAttribute("discourseSSOLoginURL")
+    public String populateDiscourseSSOLoginURL() {
+        String discourseSSOLoginURL = null;
+        
+        // get the signed in user
+        User user = ControllerUtil.getSignedInUser();
+        
+        if(user != null) {
+            
+            MutableUserDetails userDetails = user.getUserDetails();
+            
+            // check that the user is a teacher
+            if(userDetails != null && userDetails instanceof TeacherUserDetails) {
+            // if discourse is enabled for this WISE instance, add the link to the model
+            // so the view can display it
+                String discourseURL = wiseProperties.getProperty("discourse_url");
+                if (discourseURL != null && !discourseURL.isEmpty()) {
+                    discourseSSOLoginURL = discourseURL + "/session/sso";
+                }
+            }
+        }
+
+        return discourseSSOLoginURL;
+    }
 
 	/**
 	 * If the user is not logged in, we will check that they answered the reCaptcha correctly.
