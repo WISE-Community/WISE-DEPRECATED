@@ -195,11 +195,6 @@ public final class CredentialManager {
 		String idStr = request.getParameter(PROJECTID);
 		String accessPath = wiseProperties.getProperty("curriculum_base_dir");
 
-		/* catch minify command and set access path to the vle/all */
-		if("minify".equals(request.getParameter("command"))){
-			accessPath = accessPath.replace("curriculum", "vle/all");
-		}
-
 		if("studentAssetUpload".equals(request.getParameter("cmd")) || "studentAssetCopyForReference".equals(request.getParameter("command"))) {
 			accessPath = wiseProperties.getProperty("studentuploads_base_dir");
 		}

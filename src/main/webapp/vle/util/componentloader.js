@@ -27,7 +27,6 @@ var componentloader = function(em, sl){
 				projectMetadata:undefined, 
 				HTML_CONTENT_TEMPLATES:{}, 
 				isLoadedProjectMinified:false, 
-				minifierUrl:'../util/minifier.html',
 				nodeClasses:{},
 				nodeIconPaths:{},
 				activeThemes: [],

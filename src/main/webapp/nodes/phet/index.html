@@ -3,11 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <title>PhET Application</title>
-    <script src="phet.js"></script>
     <script src="jquery-2.1.3.min.js"></script>
     <script src="http://localhost:8080/wise/nodes/wiseNodeAPI.js"></script>
+    <script src="phet.js"></script>
 </head>
-<body onload="stepIsReadyForWISE()">
+<body onload='loadWISEData()'>
+<div id='authorView'>
+<button id='saveNodeContentButton' disabled>Save</button><br/>
+
+PhET Simulation URL: <input type='text' id='phetSimURL' size='75'></input>
+<br/>
+<iframe id='phetSimsIFrame' src='phetSims.html' width='600px' height='800px'></iframe>
+</div>
+<div id='studentView'>
 <iframe id="phetIFrame"></iframe>
+</div>
 </body>
 </html>

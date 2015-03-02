@@ -422,7 +422,7 @@ View.prototype.cleaner.updateProjectMetaFile = function(){
 		o.eventManager.fire('cleanSavingProjectFileComplete', 'true');
 	};
 	
-	var timestampURL = this.view.requestUrl + '?forward=minifier&command=getTimestamp';
+	var timestampURL = this.view.requestUrl + '?command=getTimestamp';
 	
 	var timestampContent = createContent(timestampURL);
 	var ts = timestampContent.getContentString();

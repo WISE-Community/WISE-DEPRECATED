@@ -1,0 +1,59 @@
+{
+    "metadata": {
+        "wiseVersion": 5,
+        "gradeRange": "5-7"
+    },
+    "nodes": [
+        {
+            "id": "node_1",
+            "title": "First Step",
+            "type": "OpenResponseNode",
+            "src": "node_1.json"
+        },
+        {
+            "id": "node_2",
+            "title": "Second Step",
+            "type": "OutsideURLNode",
+            "src": "node_2.json"
+        },
+        {
+            "id": "node_3",
+            "title": "Third Step",
+            "type": "HTMLNode",
+            "src": "node_3.html"
+        },
+        {
+            "id": "node_4",
+            "title": "Branch Path A Step 1",
+            "type": "HTMLNode",
+            "src": "node_4.html"
+        },
+        {
+            "id": "node_5",
+            "title": "Branch Path B Step 1",
+            "type": "HTMLNode",
+            "src": "node_5.html"
+        },
+        {
+            "id": "node_6",
+            "title": "Audio Recorder Step",
+            "type": "AudioRecorderNode",
+            "src": "node_6.json"
+        },
+        {
+            "id": "node_7",
+            "title": "PhET step",
+            "type": "PhETNode",
+            "src": "node_7.json"
+        }        
+    ],
+    "transitions": [
+        {"from": "node_1", "to": "node_2"},
+        {"from": "node_2", "to": "node_3"},
+        {"from": "node_3", "to": "node_4"},
+        {"from": "node_3", "to": "node_5"}
+    ],
+    "tags": [],
+    "navigationMode": "guided",
+    "navigationApplications":["wiseMap", "wiseList"]
+}

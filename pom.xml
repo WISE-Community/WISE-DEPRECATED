@@ -387,7 +387,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.31</version>
+			<version>5.1.34</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -464,11 +464,6 @@
 			<groupId>net.sf.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
 			<version>2.3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.yahoo.platform.yui</groupId>
-			<artifactId>yuicompressor</artifactId>
-			<version>2.4.6</version>
 		</dependency>
 	</dependencies>
 	<reporting>

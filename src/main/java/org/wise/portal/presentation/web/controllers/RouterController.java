@@ -23,8 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
-import java.util.Date;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,11 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.project.ProjectService;
 
 /**
  * @author patrick lawler
@@ -46,13 +41,6 @@ import org.wise.portal.service.project.ProjectService;
 @Controller
 public class RouterController {
 
-	private static ProjectService projectService;
-	
-	@Autowired
-	public void setProjectService(ProjectService projectService){
-		RouterController.projectService = projectService;
-	}
-	
 	@Autowired
 	private ServletContext servletContext;
 
@@ -78,36 +66,7 @@ public class RouterController {
 				return null;
 			} else {
 				CredentialManager.setRequestCredentials(request, user);
-				if(forward.equals("convert") || forward.equals("minifier")){
-					
-					//if this is a minify request we need to set some attributes into the request
-					if(forward.equals("minifier")) {
-						//get the project id
-						String projectId = request.getParameter("projectId");
-						
-						if(projectId != null) {
-							//get the project
-							Project project = projectService.getById(new Long(projectId));
-							
-							if(project != null) {
-								//get the project metadata
-								ProjectMetadata metadata = project.getMetadata();
-								
-								if(metadata != null) {
-									//get the last edited and last modified timestamps
-									Date lastEdited = metadata.getLastEdited();
-									Date lastMinified = metadata.getLastMinified();
-									
-									/*
-									 * set the timestamps into the request so that we
-									 * have access to them in the wise controller 
-									 */
-									request.setAttribute("lastEdited", lastEdited);
-									request.setAttribute("lastMinified", lastMinified);						
-								}
-							}
-						}
-					}
+				if(forward.equals("convert")){
 					servletContext.getRequestDispatcher("/util/" + forward + ".html").forward(request, response);
 					return null;
 				} else if(forward.equals("filemanager")){
