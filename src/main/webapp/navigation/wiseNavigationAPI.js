@@ -1,7 +1,6 @@
 var wiseTargetOrigin = '*';
 
 var mode = getParameterByName(window.location.href, 'mode');
-mode = 'student';
 var callbackListeners = [];
 var navMessageId = 0;
 

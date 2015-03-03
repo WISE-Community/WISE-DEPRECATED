@@ -3,8 +3,8 @@ define(['app'],
     app.$controllerProvider.register('VLEController', 
             function($scope, ConfigService, NodeApplicationService, ProjectService, NodeService, StudentDataService) {
         this.mode = 'author';
-        this.modes = ['student', 'author', 'grade'];
-        this.globalTools = ['hideNavigation', 'showNavigation', 'next', 'prev', 'portfolio', 'home', 'sign out'];
+        this.modes = ['author', 'classroomManager', 'studentManager'];
+        this.globalTools = ['previewProject', 'home', 'sign out'];
         this.currentNode = null;
         this.callbackListeners = [];
         this.wiseMessageId = 0;
@@ -29,12 +29,52 @@ define(['app'],
         };
         
         this.globalToolButtonClicked = function(globalToolName) {
-            if (globalToolName === 'hideNavigation') {
-                $('#navigation').hide();
-                $('#nodeIFrame').show();
-            } else if (globalToolName === 'showNavigation') {
-                $('#navigation').show();
-                $('#nodeIFrame').hide();
+            if (globalToolName === 'previewStep') {
+                var mode = 'student';
+                var nodeId = this.currentNode.id;
+                this.loadNode(nodeId, mode);
+            } else if (globalToolName === 'authorStep') {
+                var mode = 'author';
+                var nodeId = this.currentNode.id;
+                this.loadNode(nodeId, mode);
+                $('#projectDiv').hide();
+                $('#nodeDiv').show();
+            } else if (globalToolName === 'previewProject') {
+                window.open('student.html');
+            } else if (globalToolName === 'advancedAuthorProject') {
+                $('#navigationAdvancedDiv').show();
+                $('#navigationDiv').hide();
+                $('#nodeDiv').hide();
+                
+                $('#projectContentJSON').html(JSON.stringify(this.project, null, 4));
+                $('#projectContentJSON').keyup(function() {
+                    this.projectContentIsDirty = true;
+                    $('#saveProjectContentButton').attr('disabled', false);
+                });
+                
+                $('#saveProjectContentButton').click(function() {
+                    var projectContentJSON = $('#projectContentJSON').val();
+                    
+                    // TODO: implement http POST to authoringToolEndPointURL 
+                    $('#saveProjectContentButton').attr('disabled', true);
+                    this.projectContentIsDirty = false;
+
+                    /*
+                    var callback = function() {
+                        $('#saveProjectContentButton').attr('disabled', true);
+                        this.projectContentIsDirty = false;
+                    };
+                    var callbackArgs = {};
+                    saveProjectContent(projectContentJSON, callback, callbackArgs);
+                    */
+                });
+                
+                
+            } else if (globalToolName === 'authorProject') {
+                $('#projectDiv').show();
+                $('#navigationDiv').show();
+                $('#navigationAdvancedDiv').hide();
+                $('#nodeDiv').hide();
             }
         }
         var wiseBaseURL = ConfigService.getConfigParam('wiseBaseURL');
@@ -116,6 +156,7 @@ define(['app'],
 
             } else if (action === 'getWISEProjectRequest') {
                 var project = ProjectService.project;
+                this.project = project;
 
                 var wiseData = {};
                 wiseData.project = project;
@@ -153,6 +194,9 @@ define(['app'],
                 
                 StudentDataService.addNodeStateToLatestNodeVisit(nodeId, studentData);
             } else if (action === 'navigation_moveToNode') {
+                $('#projectDiv').hide();
+                $('#nodeDiv').show();
+
                 var nodeId = msg.nodeId;
                 var mode = this.mode;
                 
@@ -249,8 +293,7 @@ define(['app'],
             var knownNavigationApplication = knownNavigationApplications[i];
             if (knownNavigationApplication.name === defaultNavigationApplication) {
                 var navigationApplicationURL = knownNavigationApplication.url + '?mode=' + this.mode;
-                $('#navigation').html('<iframe id="navigationIFrame" ' + 
-                    'src="' + navigationApplicationURL + '"></iframe>');
+                $('#navigationIFrame').attr('src', navigationApplicationURL);
             }
         }
     });

@@ -37,7 +37,7 @@ define([
 	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
 	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
 		
-		$urlRouterProvider.otherwise('/vle');
+		$urlRouterProvider.otherwise('/author');
 		
 		app.$controllerProvider = $controllerProvider;
 		
@@ -62,12 +62,12 @@ define([
                     }
 		        }
 		    })
-            .state('vle', {
+            .state('author', {
                 parent: 'root',
-                url: '/vle',
-                templateUrl: 'vle5/teacher/vle.html',
+                url: '/author',
+                templateUrl: 'vle5/teacher/author.html',
                 controller: 'VLEController',
-                controllerAs: 'vle',
+                controllerAs: 'author',
                 resolve: {
                     loadController: app.loadController('vleController')
                 }

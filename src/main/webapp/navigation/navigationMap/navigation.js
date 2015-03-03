@@ -17,6 +17,10 @@ function setProject(projectIn) {
     renderProject();
 }
 
+function addNewNode() {
+    console.log('add new node');
+}
+
 function renderProject() {
     if (mode === 'student') {
         $('#authorView').hide();
@@ -34,21 +38,13 @@ function renderProject() {
         $('#studentView').hide();
         $('#authorView').show();
         
-        $('#projectContentJSON').html(JSON.stringify(project, null, 4));
-        $('#projectContentJSON').keyup(function() {
-            projectContentIsDirty = true;
-            $('#saveProjectContentButton').attr('disabled', false);
-        });
-        
-        $('#saveProjectContentButton').click(function() {
-            saveProjectContent(function() {
-                $('#saveProjectContentButton').attr('disabled', true);
-                projectContentIsDirty = false;
-            })
-        });
-    } else if (mode === 'grade') {
-        
-    }
+        var nodes = project.nodes;
+        for (var i = 0; i < nodes.length; i++) {
+            var node = nodes[i];
+            $('#authorView').append("<button onclick='nodeButtonClicked(\""+node.id+"\")'>" + node.title + " (" + node.type + ")</button>");
+        }
+
+    } 
 }
 
 function saveProjectContent(callback, callbackArgs) {
