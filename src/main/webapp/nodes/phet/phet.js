@@ -1,15 +1,18 @@
 var nodeContentIsDirty = false;
 
 function getStepState() {
-        return null;
+    return null;
 }
 
 function setContent(content) {
     if (mode === 'author') {
-        $('#phetSimURL').html(content.url);
+        $('#phetSimURL').val(content.url);
+        $('#phetSimPreviewIFrame').attr('src', content.url);
         $('#phetSimURL').change(function() {
             nodeContentIsDirty = true;
+            var newPhETSimURL =  $('#phetSimURL').val();
             $('#saveNodeContentButton').attr('disabled', false);
+            $('#phetSimPreviewIFrame').attr('src', newPhETSimURL);
         });
     } else {
         $('#phetIFrame').attr('src', content.url);
