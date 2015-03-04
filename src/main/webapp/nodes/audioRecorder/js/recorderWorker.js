@@ -1,25 +1,7 @@
-/*License (MIT)
-
-Copyright © 2013 Matt Diamond
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation 
-the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and 
-to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of 
-the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO 
-THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-DEALINGS IN THE SOFTWARE.
-*/
-
 var recLength = 0,
   recBuffersL = [],
   recBuffersR = [],
+  bits        = 16,
   sampleRate;
 
 this.onmessage = function(e){
@@ -33,11 +15,8 @@ this.onmessage = function(e){
     case 'exportWAV':
       exportWAV(e.data.type);
       break;
-    case 'exportMonoWAV':
-      exportMonoWAV(e.data.type);
-      break;
-    case 'getBuffers':
-      getBuffers();
+    case 'getBuffer':
+      getBuffer();
       break;
     case 'clear':
       clear();
@@ -51,29 +30,22 @@ function init(config){
 
 function record(inputBuffer){
   recBuffersL.push(inputBuffer[0]);
-  recBuffersR.push(inputBuffer[1]);
+  //recBuffersR.push(inputBuffer[1]);
   recLength += inputBuffer[0].length;
 }
 
 function exportWAV(type){
   var bufferL = mergeBuffers(recBuffersL, recLength);
-  var bufferR = mergeBuffers(recBuffersR, recLength);
-  var interleaved = interleave(bufferL, bufferR);
-  var dataview = encodeWAV(interleaved);
+  //var bufferR = mergeBuffers(recBuffersR, recLength);
+  //var interleaved = interleave(bufferL, bufferR);
+  //var dataview = encodeWAV(interleaved);
+  var dataview = encodeWAV(bufferL);
   var audioBlob = new Blob([dataview], { type: type });
 
   this.postMessage(audioBlob);
 }
 
-function exportMonoWAV(type){
-  var bufferL = mergeBuffers(recBuffersL, recLength);
-  var dataview = encodeWAV(bufferL, true);
-  var audioBlob = new Blob([dataview], { type: type });
-
-  this.postMessage(audioBlob);
-}
-
-function getBuffers() {
+function getBuffer() {
   var buffers = [];
   buffers.push( mergeBuffers(recBuffersL, recLength) );
   buffers.push( mergeBuffers(recBuffersR, recLength) );
@@ -124,7 +96,32 @@ function writeString(view, offset, string){
   }
 }
 
-function encodeWAV(samples, mono){
+/*function encodeLowWAV(samples) {
+    var block_align   = (1 * bits) / 8
+    ,   byte_rate     = sampleRate * block_align
+    ,   data_size     = (samples.length * bits) / 8
+    ,   buffer        = new ArrayBuffer(44 + data_size)
+    ,   view          = new DataView(buffer);
+
+    writeString( view, 0, 'RIFF' );
+    view.setUint32( 4, 32 + data_size, true ); //!!!
+    writeString( view, 8, 'WAVE' );
+    writeString( view, 12, 'fmt' );
+    view.setUint32( 16, 16, true );
+    view.setUint16( 20, 1, true );
+    view.setUint16( 22, 1, true );
+    view.setUint32( 24, sampleRate, true );
+    view.setUint32( 28, byte_rate, true );
+    view.setUint16( 32, block_align, true );
+    view.setUint16( 34, bits, true );
+    writeString( view, 36, 'data' );
+    view.setUint32( 40, data_size, true ); //!!!
+    floatTo16BitPCM( view, 44, samples );
+
+    return view;
+}*/
+
+function encodeWAV(samples){
   var buffer = new ArrayBuffer(44 + samples.length * 2);
   var view = new DataView(buffer);
 
@@ -141,13 +138,16 @@ function encodeWAV(samples, mono){
   /* sample format (raw) */
   view.setUint16(20, 1, true);
   /* channel count */
-  view.setUint16(22, mono?1:2, true);
+  //view.setUint16(22, 2, true); /*STEREO*/
+  view.setUint16(22, 1, true); /*MONO*/
   /* sample rate */
   view.setUint32(24, sampleRate, true);
   /* byte rate (sample rate * block align) */
-  view.setUint32(28, sampleRate * 4, true);
+  //view.setUint32(28, sampleRate * 4, true); /*STEREO*/
+  view.setUint32(28, sampleRate * 2, true); /*MONO*/
   /* block align (channel count * bytes per sample) */
-  view.setUint16(32, 4, true);
+  //view.setUint16(32, 4, true); /*STEREO*/
+  view.setUint16(32, 2, true); /*MONO*/
   /* bits per sample */
   view.setUint16(34, 16, true);
   /* data chunk identifier */
