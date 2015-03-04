@@ -11,3 +11,7 @@
 	position: relative;
 	right: none;
 }
+
+#pageContent {
+    text-align:right;	
+}
