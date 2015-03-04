@@ -6,6 +6,13 @@
     <script src="jquery-2.1.3.min.js"></script>
     <script src="http://localhost:8080/wise/nodes/wiseNodeAPI.js"></script>
     <script src="outsideURL.js"></script>
+    
+    <style type="text/css">
+        #outsideURLIFrame {
+            width: 99%;
+            height: 97%;
+        }
+    </style>
 </head>
 <body onload="loadWISEData()">
 <div id="studentView">
@@ -13,7 +20,11 @@
 </div>
 <div id="authorView" style="display:none">
 authoring view <button id='saveNodeContentButton' disabled>Save</button><br/>
+
+URL: <input id='urlInput' type='text' size='80'></input>
+<!-- 
 <textarea id='nodeContentJSON' rows='50' cols='100'></textarea>
+ -->
 </div>
 </body>
 </html>

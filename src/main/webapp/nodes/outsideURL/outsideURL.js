@@ -1,16 +1,33 @@
+var content = null;
 var nodeContentIsDirty = false;
 
 function getStudentData() {
-        return null;
+    return null;
 }
 
-function setContent(content) {
+function setContent(contentIn) {
+    content = contentIn;
+    
     if (mode === 'author') {
+        
+        if (contentIn !== null) {
+            var url = contentIn.url;
+            
+            $('#urlInput').val(url);
+        }
+        
+        $('#urlInput').keyup(function() {
+            nodeContentIsDirty = true;
+            $('#saveNodeContentButton').attr('disabled', false);
+        });
+        
+        /*
         $('#nodeContentJSON').html(JSON.stringify(content, null, 4));
         $('#nodeContentJSON').keyup(function() {
             nodeContentIsDirty = true;
             $('#saveNodeContentButton').attr('disabled', false);
         });
+        */
     } else {
         $('#outsideURLIFrame').attr('src',content.url);
     }
@@ -21,7 +38,11 @@ function setStudentData(studentData) {
 
 function saveNodeContent(callback, callbackArgs) {
     if (mode === 'author') {
-        var nodeContentJSON = $('#nodeContentJSON').val();
+        var url = $('#urlInput').val();
+        
+        var nodeContentJSON = {};
+        nodeContentJSON.url = url;
+        
         saveNodeContentToWISE(nodeContentJSON, callback, callbackArgs);
     }   
 }

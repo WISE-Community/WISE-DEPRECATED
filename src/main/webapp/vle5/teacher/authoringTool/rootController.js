@@ -1,7 +1,7 @@
-define(['app'], 
-        function(app) {
-    app.$controllerProvider.register('VLEController', 
-            function($scope, ConfigService, NodeApplicationService, ProjectService, NodeService, StudentDataService) {
+define(['app'], function(app) {
+    app.$controllerProvider.register('RootController', 
+        function($scope, $state, ConfigService, NodeApplicationService, ProjectService,
+                NodeService, StudentDataService) {
         this.mode = 'author';
         this.modes = ['author', 'classroomManager', 'studentManager'];
         this.globalTools = ['previewProject', 'home', 'sign out'];
@@ -33,12 +33,18 @@ define(['app'],
                 var mode = 'student';
                 var nodeId = this.currentNode.id;
                 this.loadNode(nodeId, mode);
+                $('#nodeAdvancedDiv').hide();
             } else if (globalToolName === 'authorStep') {
                 var mode = 'author';
                 var nodeId = this.currentNode.id;
                 this.loadNode(nodeId, mode);
                 $('#projectDiv').hide();
+                $('#nodeAdvancedDiv').hide();
                 $('#nodeDiv').show();
+            } else if (globalToolName === 'advancedAuthorStep') {
+                //var mode = 'author';
+                var nodeId = this.currentNode.id;
+                this.loadNodeAdvancedAuthoring(nodeId);
             } else if (globalToolName === 'previewProject') {
                 window.open('student.html');
             } else if (globalToolName === 'advancedAuthorProject') {
@@ -155,7 +161,7 @@ define(['app'],
                     this.postMessageToNavigationIFrame(postMessage);
 
             } else if (action === 'getWISEProjectRequest') {
-                var project = ProjectService.project;
+                var project = ProjectService.getProject();
                 this.project = project;
 
                 var wiseData = {};
@@ -194,6 +200,9 @@ define(['app'],
                 
                 StudentDataService.addNodeStateToLatestNodeVisit(nodeId, studentData);
             } else if (action === 'navigation_moveToNode') {
+                
+                $state.go('root.node.normal', {nodeId: msg.nodeId});
+                /*
                 $('#projectDiv').hide();
                 $('#nodeDiv').show();
 
@@ -214,7 +223,8 @@ define(['app'],
                     } else {
                         this.loadNode(nodeId, mode);
                     }
-            } else if (action === 'postNodeStatusRequest') {
+                */
+            } else if (action === 'xpostNodeStatusRequest') {
                 var nodeStatus = msg.nodeStatus;
                 var nodeId = msg.nodeId;
                 
@@ -267,6 +277,33 @@ define(['app'],
              */
         };
         
+        this.loadNodeAdvancedAuthoring = function(nodeId) {
+            var node = ProjectService.getNodeByNodeId(nodeId);
+            
+            if (node !== null) {
+                var nodeSrc = ProjectService.getNodeSrcByNodeId(nodeId);
+                
+                if (nodeSrc != null) {
+                    var nodeContent = NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
+                        var nodeContentJSONString = JSON.stringify(nodeContent, null, 4);
+                        $('#nodeAdvancedTextarea').val(nodeContentJSONString);
+                        
+                        $('#nodeIFrame').hide();
+                        $('#nodeAdvancedDiv').show();
+                    }));
+                }
+                
+                /*
+                this.currentNode = node;
+                var nodeType = node.type
+                var nodeIFrameSrc = NodeApplicationService.getNodeURL(nodeType) + '?nodeId=' + nodeId + '&mode=' + mode;
+                $('#nodeIFrame').attr('src', nodeIFrameSrc);
+                $('#navigation').hide();
+                $('#nodeIFrame').show();
+                */
+            };
+        };
+        
         this.postMessageToIFrame = function(iFrameId, message, callback, callbackArgs) {
             message.wiseMessageId = this.wiseMessageId;
             if (callback != null) {
@@ -283,18 +320,11 @@ define(['app'],
         };
         
         this.postMessageToNavigationIFrame = function(message, callback, callbackArgs) {
-            this.postMessageToIFrame('navigationIFrame', message, callback, callbackArgs);
+            this.postMessageToIFrame('projectIFrame', message, callback, callbackArgs);
         };
-
-        var knownNavigationApplications = ConfigService.getConfigParam('navigationApplications');
-        var projectNavigationApplications = ProjectService.project.navigationApplications;
-        var defaultNavigationApplication = projectNavigationApplications[0];
-        for (var i = 0; i < knownNavigationApplications.length; i++) {
-            var knownNavigationApplication = knownNavigationApplications[i];
-            if (knownNavigationApplication.name === defaultNavigationApplication) {
-                var navigationApplicationURL = knownNavigationApplication.url + '?mode=' + this.mode;
-                $('#navigationIFrame').attr('src', navigationApplicationURL);
-            }
-        }
+        
+        $('#nodeAdvancedTextarea').keyup(function() {
+            console.log('save advanced author step content');
+        });
     });
 });

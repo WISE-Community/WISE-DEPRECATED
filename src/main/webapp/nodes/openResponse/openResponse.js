@@ -7,11 +7,31 @@ function getStudentData() {
 
 function setContent(content) {
     if (mode === 'author') {
+        if (content !== null) {
+            var prompt = content.prompt;
+            var style = content.style;
+            
+            $('#promptAuthoring').val(prompt);
+            $('#cssAuthoring').val(style);
+        }
+        
+        $('#prompt').keyup(function() {
+            nodeContentIsDirty = true;
+            $('#saveNodeContentButton').attr('disabled', false);
+        });
+        
+        $('#css').keyup(function() {
+            nodeContentIsDirty = true;
+            $('#saveNodeContentButton').attr('disabled', false);
+        });
+        
+        /*
         $('#nodeContentJSON').html(JSON.stringify(content, null, 4));
         $('#nodeContentJSON').keyup(function() {
             nodeContentIsDirty = true;
             $('#saveNodeContentButton').attr('disabled', false);
         });
+        */
     } else {
         $("#title").html(content.title);
         $("#prompt").html(content.prompt);
