@@ -195,6 +195,9 @@ WebApp.prototype.render = function() {
 	if (this.content.url != null && this.content.url != "") {
 		iframe.src = mypath + this.content.url;
 	}
+	
+   //load the external script if this step has one set
+    this.view.loadExternalScript(this);
 };
 
 /**

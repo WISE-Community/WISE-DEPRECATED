@@ -277,6 +277,14 @@ WebAppNode.prototype.isCompleted = function(nodeVisits) {
 	return false;
 };
 
+/**
+ * Returns whether this step type can be special exported
+ * @return a boolean value
+ */
+WebAppNode.prototype.canSpecialExport = function() {
+    return true;
+};
+
 
 /*
  * Add this node to the node factory so the vle knows it exists.
