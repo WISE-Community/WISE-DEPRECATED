@@ -10,6 +10,9 @@
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="flot.js"/>" type="text/javascript"></script>
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 <script type="text/javascript">
 

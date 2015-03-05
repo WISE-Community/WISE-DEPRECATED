@@ -8,6 +8,9 @@
 <title><spring:message code="teacher.termsofuse.termsOfUse"/></title>
  
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<c:if test="${textDirection == 'rtl' }">
+    <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
+</c:if>
 
 </head>
 <body style="background:#FFF;">
