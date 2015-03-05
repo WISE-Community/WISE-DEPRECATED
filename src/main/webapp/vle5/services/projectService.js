@@ -9,6 +9,69 @@ define(['angular', 'configService'], function(angular, configService) {
             return this.project;
         };
         
+        this.getStartNodeId = function() {
+            var startNodeId = null;
+            var project = this.getProject();
+            if (project != null) {
+                startNodeId = project.startNodeId;
+            }
+            return startNodeId;
+        };
+        
+        this.getNavigationMode = function() {
+            var navigationMode = null;
+            var project = this.getProject();
+            if (project != null) {
+                navigationMode = project.navigationMode; 
+            }
+            return navigationMode;
+        };
+        
+        this.getNavigationApplications = function() {
+            var navigationApplications = null;
+            var project = this.getProject();
+            if (project != null) {
+                navigationApplications = project.navigationApplications;
+            }
+            return navigationApplications;
+        };
+        
+        this.getTransitions = function() {
+            var transitions = null;
+            var project = this.getProject();
+            if (project != null) {
+                transitions = project.transitions;
+            }
+            return transitions;
+        };
+
+        this.getTransitionsByFromNodeId = function(fromNodeId) {
+            var transitionsResults = [];
+            if (fromNodeId != null) {
+                var transitions = this.getTransitions();
+                
+                if (transitions != null) {
+                    for (var i = 0; i < transitions.length; i++) {
+                        var transition = transitions[i];
+                        if (transition.from === fromNodeId) {
+                            transitionsResults.push(transition);
+                        }
+                    }
+                }                
+            }
+            
+            return transitionsResults;
+        };
+
+        this.getLayoutLogic = function() {
+            var layoutLogic = null;
+            var project = this.getProject();
+            if (project != null) {
+                layoutLogic = project.layoutLogic;
+            }
+            return layoutLogic;
+        };
+        
         this.retrieveProject = function() {
             var projectFileUrl = ConfigService.getConfigParam('projectURL');
             

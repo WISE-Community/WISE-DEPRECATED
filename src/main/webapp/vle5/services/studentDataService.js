@@ -4,6 +4,7 @@ define(['angular', 'configService'], function(angular, configService) {
     
     .service('StudentDataService', ['$http', 'ConfigService', function($http, ConfigService) {
         this.studentData = null;
+        this.stackHistory = [];  // array of node id's
         
         this.retrieveStudentData = function() {
             var getStudentDataUrl = ConfigService.getConfigParam('getStudentDataUrl');
@@ -11,8 +12,45 @@ define(['angular', 'configService'], function(angular, configService) {
             return $http.get(getStudentDataUrl).then(angular.bind(this, function(result) {
                 this.studentData = result.data;
                 
+                this.populateStackHistory(this.getNodeVisits());
+                
                 return this.studentData;
             }));
+        };
+
+        this.populateStackHistory = function(nodeVisits) {
+            if (nodeVisits != null) {
+                for (var i = 0; i < nodeVisits.length; i++) {
+                    var nodeVisit = nodeVisits[i];
+                    var nodeVisitNodeId = nodeVisit.nodeId;
+                    this.updateStackHistory(nodeVisitNodeId);
+                }
+            }
+        };
+        
+        this.getStackHistoryAtIndex = function(index) {
+            if (index < 0) {
+                index = this.stackHistory.length + index;
+            }
+            var stackHistoryResult = null;
+            if (this.stackHistory != null && this.stackHistory.length > 0) {
+                stackHistoryResult = this.stackHistory[index];
+            }
+            return stackHistoryResult;
+        };
+        
+        this.getStackHistory = function() {
+            return this.stackHistory;
+        };
+        
+        this.updateStackHistory = function(nodeId) {
+            var indexOfNodeId = this.stackHistory.indexOf(nodeId);
+            if (indexOfNodeId === -1) {
+                this.stackHistory.push(nodeId);
+            } else {
+                this.stackHistory.splice(indexOfNodeId + 1, this.stackHistory.length);
+            }
+            console.log(this.stackHistory);
         };
         
         this.getNodeVisits = function() {

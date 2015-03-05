@@ -37,16 +37,45 @@ define([
 	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
 	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
 		
-		$urlRouterProvider.otherwise('/vle');
+		$urlRouterProvider.otherwise('');
 		
 		app.$controllerProvider = $controllerProvider;
 		
 		$stateProvider
+    		.state('vle', {
+                url: '',
+                templateUrl: 'vle5/student/vle.html',
+                controller: 'VLEController',
+                controllerAs: 'vleController',
+                params: {nodeId: null},
+                resolve: {
+                    loadController: app.loadController('vleController'),
+                    config: function(ConfigService) {
+                        var configUrl = window.configUrl;
+                        return ConfigService.retrieveConfig(configUrl);
+                    },
+                    project: function(ProjectService, config) {
+                        return ProjectService.retrieveProject();
+                    },
+                    nodeApplication: function(NodeApplicationService, config) {
+                        return NodeApplicationService.intializeNodeApplications();
+                    },
+                    studentData: function(StudentDataService, config) {
+                        return StudentDataService.retrieveStudentData();
+                    }
+                }              
+            })
+		/*
+		$stateProvider
 		    .state('root', {
 		        url: '',
-		        abstract: true,
-		        template: '<ui-view/>',
+		        abstract:true,
+                templateUrl: 'vle5/student/root.html',
+                controller: 'RootController',
+                controllerAs: 'rootController',
+                params: {nodeId: null},
 		        resolve: {
+                    loadController: app.loadController('rootController'),
 		            config: function(ConfigService) {
 		                var configUrl = window.configUrl;
 		                return ConfigService.retrieveConfig(configUrl);
@@ -60,18 +89,30 @@ define([
                     studentData: function(StudentDataService, config) {
                         return StudentDataService.retrieveStudentData();
                     }
-		        }
+		        }		       
 		    })
-            .state('vle', {
-                parent: 'root',
-                url: '/vle',
-                templateUrl: 'vle5/student/vle.html',
-                controller: 'VLEController',
-                controllerAs: 'vle',
-                resolve: {
-                    loadController: app.loadController('vleController')
-                }
+		    .state('root.vle', {
+                url: '/vle/:nodeId',
+                views: {
+                    'projectView': {
+                        templateUrl: 'vle5/student/project/project.html',
+                        controller: 'ProjectController',
+                        controllerAs: 'projectController',
+                        resolve: {
+                            loadController: app.loadController('projectController'),
+                        }
+                    },
+                    'nodeView': {
+                        templateUrl: 'vle5/student/node/node.html',
+                        controller: 'NodeController',
+                        controllerAs: 'nodeController',
+                        resolve: {
+                            loadController: app.loadController('nodeController'),
+                        }
+                    }
+                }              
             })
+            */
 	}]);
 	
 	return app;

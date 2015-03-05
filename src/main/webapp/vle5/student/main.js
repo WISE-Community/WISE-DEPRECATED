@@ -1,16 +1,17 @@
 require.config({
-    baseUrl: '../wise/vle5/student',
+    baseUrl: '../wise/vle5/',
     paths: {
-        'angular':'../lib/angular/angular',
-        'angularUIRouter':'../lib/angular/angularUIRouter/angular-ui-router',
-        'angularPostMessage':'../lib/angular/angularPostMessage/angular-post-message',
-        'vleController': 'vleController',
-        'jquery': '../lib/jquery/jquery-2.1.3.min',
-        'configService': '../services/configService',
-        'projectService': '../services/projectService',
-        'nodeApplicationService': '../services/nodeApplicationService',
-        'nodeService': '../services/nodeService',
-        'studentDataService': '../services/studentDataService'
+        'angular': 'lib/angular/angular',
+        'angularPostMessage': 'lib/angular/angularPostMessage/angular-post-message',
+        'angularUIRouter': 'lib/angular/angularUIRouter/angular-ui-router',
+        'app': 'student/app',
+        'configService': 'services/configService',
+        'jquery': 'lib/jquery/jquery-2.1.3.min',
+        'nodeApplicationService': 'services/nodeApplicationService',
+        'nodeService': 'services/nodeService',
+        'projectService': 'services/projectService',
+        'studentDataService': 'services/studentDataService',
+        'vleController': 'student/vleController'
     },
     shim: {
         'angular': {

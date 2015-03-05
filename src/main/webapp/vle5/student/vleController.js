@@ -3,20 +3,80 @@ define(['app'],
     app.$controllerProvider.register('VLEController', 
             function($scope, ConfigService, NodeApplicationService, ProjectService, NodeService, StudentDataService) {
         this.mode = 'student';
-        this.globalTools = ['hideNavigation', 'showNavigation', 'next', 'prev', 'portfolio', 'home', 'sign out'];
+        this.layoutLogic = ConfigService.layoutLogic;
+        this.globalTools = ['hideNavigation', 'showNavigation', 'portfolio', 'home', 'sign out'];
         this.currentNode = null;
         this.callbackListeners = [];
         this.wiseMessageId = 0;
+        
+        this.layoutStates = ['layout1', 'layout2', 'layout3', 'layout4'];
+        this.layoutState = this.layoutStates[0];
+        
+        this.showProjectDiv = true;
+        this.showNodeDiv = true;
+
+        this.updateLayout = function() {
+            if (this.project != null) {
+                ProjectService.getProject();
+            }
+            this.projectDivClass = this.layoutState;
+            this.nodeDivClass = this.layoutState;
+        }
+        this.updateLayout();
 
         this.globalToolButtonClicked = function(globalToolName) {
             if (globalToolName === 'hideNavigation') {
-                $('#navigation').hide();
-                $('#nodeIFrame').show();
+                this.layoutState = 'layout3';
             } else if (globalToolName === 'showNavigation') {
-                $('#navigation').show();
-                $('#nodeIFrame').hide();
+                this.layoutState = 'layout3';
+                var layoutLogic = ProjectService.getLayoutLogic();
+                // var layoutLogicFunction = layoutLogicService.getLayoutLogicFunction(layoutLogic);
+                // layoutLogicFunction(this.stateOfVLE)
+                //this.layoutLogicStarMap({state: 'showNavigationClicked'});
             }
         }
+        
+        this.layoutLogicStarMap = function(VLEState) {
+            if (VLEState.state === 'initial') {
+                this.showProjectDiv = true;
+                this.showNodeDiv = false;
+            } else if (VLEState.state === 'showNavigationClicked') {
+                this.showProjectDiv = true;
+                this.showNodeDiv = false;
+            }
+        }
+        
+        this.chooseTransition = function(transitions) {
+            var transitionResult = null;
+            if (transitions.length > 0) {
+                transitionResult = transitions[0];
+            }
+            return transitionResult;
+        }
+        
+        this.goToNextNode = function() {
+            if (this.currentNode != null) {
+                var currentNodeId = this.currentNode.id;
+                var transitions = ProjectService.getTransitionsByFromNodeId(currentNodeId);
+                var transition = this.chooseTransition(transitions);
+                if (transition != null) {
+                    var toNodeId = transition.to;
+                    var mode = this.mode;
+                    this.loadNode(toNodeId, mode);
+                }
+            }
+        } 
+       
+        this.goToPrevNode = function() {
+            var stackHistory = StudentDataService.getStackHistory();
+            var prevNodeId = null;
+            if (stackHistory.length > 1) {
+                prevNodeId = StudentDataService.getStackHistoryAtIndex(-2);
+                var mode = this.mode;
+                this.loadNode(prevNodeId, mode);
+            }
+        }
+        
         var wiseBaseURL = ConfigService.getConfigParam('wiseBaseURL');
         
         $scope.$on('$messageIncoming', angular.bind(this, function(event, data) {
@@ -116,6 +176,7 @@ define(['app'],
                 var nodeId = msg.nodeId;
                 var mode = this.mode;
                 this.loadNode(nodeId, mode);
+                this.updateLayout();
             } else if (action === 'postNodeStatusRequest') {
                 var nodeStatus = msg.nodeStatus;
                 var nodeId = msg.nodeId;
@@ -170,9 +231,8 @@ define(['app'],
                     this.currentNode = node;
                     var nodeType = node.type
                     var nodeIFrameSrc = NodeApplicationService.getNodeURL(nodeType) + '?nodeId=' + nodeId + '&mode=' + this.mode;
-                    $('#nodeIFrame').attr('src', nodeIFrameSrc);
-                    $('#navigation').hide();
-                    $('#nodeIFrame').show();
+                    this.nodeIFrameSrc = nodeIFrameSrc;
+                    StudentDataService.updateStackHistory(nodeId);
                 };
             });
             if (this.currentNode != null) {
@@ -198,18 +258,32 @@ define(['app'],
         };
         
         this.postMessageToNavigationIFrame = function(message, callback) {
-            this.postMessageToIFrame('navigationIFrame', message, callback);
+            this.postMessageToIFrame('projectIFrame', message, callback);
         };
         var knownNavigationApplications = ConfigService.getConfigParam('navigationApplications');
-        var projectNavigationApplications = ProjectService.project.navigationApplications;
-        var defaultNavigationApplication = projectNavigationApplications[0];
-        for (var i = 0; i < knownNavigationApplications.length; i++) {
-            var knownNavigationApplication = knownNavigationApplications[i];
-            if (knownNavigationApplication.name === defaultNavigationApplication) {
-                var navigationApplicationURL = knownNavigationApplication.url + '?mode=' + this.mode;
-                $('#navigation').html('<iframe id="navigationIFrame" ' + 
-                    'src="' + navigationApplicationURL + '"></iframe>');
+        var projectNavigationApplications = ProjectService.getNavigationApplications();
+        if (projectNavigationApplications != null && projectNavigationApplications.length > 0) {
+            var defaultNavigationApplication = projectNavigationApplications[0];
+            for (var i = 0; i < knownNavigationApplications.length; i++) {
+                var knownNavigationApplication = knownNavigationApplications[i];
+                if (knownNavigationApplication.name === defaultNavigationApplication) {
+                    var navigationApplicationURL = knownNavigationApplication.url + '?mode=' + this.mode;
+                    this.projectIFrameSrc = navigationApplicationURL;
+                    break;
+                }
+            }            
+        }
+        
+        var nodeId = ProjectService.getStartNodeId();
+        var stackHistory = StudentDataService.getStackHistory();
+        if (stackHistory != null) {
+            var lastNodeIdFromStackHistory = StudentDataService.getStackHistoryAtIndex(-1);
+            if (lastNodeIdFromStackHistory != null) {
+                nodeId = lastNodeIdFromStackHistory;
             }
         }
+        this.loadNode(nodeId, this.mode);
+        
+        //this.layoutLogicStarMap({"state":"initial"});
     });
 });

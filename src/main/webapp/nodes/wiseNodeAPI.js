@@ -61,7 +61,11 @@ function receiveMessage(event) {
          
          postMessageToWISE(message);
 	} else if (action === 'getWISEStudentDataRequest') {
-	    var studentData = getStudentData();
+	    
+	    var studentData = null;
+	    if (typeof(getStudentData) !== 'undefined' && isFunction(getStudentData)) {
+	        studentData = getStudentData();
+	    }
 	    if (studentData != null) {
             studentData.saveTriggeredBy = msg.saveTriggeredBy;
 	    }
@@ -171,5 +175,9 @@ function postMessageToWISE(message, callback, callbackArgs) {
     var wiseWrapper = window.parent;
     wiseWrapper.postMessage(message, wiseTargetOrigin);
 };
+
+function isFunction(possibleFunction) {
+    return typeof(possibleFunction) === typeof(Function);
+}
 
 window.addEventListener('message', receiveMessage, false);

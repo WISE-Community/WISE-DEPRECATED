@@ -12,7 +12,7 @@ function nodeButtonClicked(nodeId) {
 function setProject(project) {
     console.log('setProject()');
     //$("#nav").html('');
-    $("body").append("starmap navigation");
+    $("body").append("list navigation");
     var nodes = project.nodes;
     for (var i=0;i<nodes.length;i++) {
     var node = nodes[i];

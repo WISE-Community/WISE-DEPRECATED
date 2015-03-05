@@ -18,6 +18,9 @@ define(['angular'], function(angular) {
                 config.getStudentDataUrl = 'http://localhost:8080/wise/vle5/student/studentData.json';
                 config.projectId = 1;
                 config.authorURL = 'http://localhost:8080/wise/authorWISE5.html';
+                config.layoutLogic = function(vle) {
+                    
+                };
                 
 				this.config = config;
 				return config;

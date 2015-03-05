@@ -4,6 +4,10 @@ function getStepState() {
     return null;
 }
 
+function getStudentData() {
+    return null;
+}
+
 function setContent(content) {
     if (mode === 'author') {
         $('#phetSimURL').val(content.url);
