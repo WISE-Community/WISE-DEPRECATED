@@ -13,7 +13,11 @@ NoteNode.prototype.supportedLocales = {
 			"en_US":"en_US",
 			"iw":"he",
 			"ja":"ja",
-			"es":"es"
+			"es":"es",
+			"nl":"nl",
+            "nl_GE":"nl",
+            "nl_DE":"nl",
+            "zh_CN":"zh_CN"
 };
 
 /**

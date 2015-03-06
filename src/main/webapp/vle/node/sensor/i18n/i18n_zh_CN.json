@@ -84,7 +84,7 @@
         "description": "The text for the link that will show the user how to enable Java in their browser"
     },
     "to_enable_applets": {
-        "value": "的指南以允许在你的浏览器中启用小程序。",
+        "value": "的指南以允许在你的浏览器中启用小程序",
         "description": "The end of the error message to display when applets are disabled in the browser"
     },
     "error_x_min_is_not_a_number": {
@@ -126,5 +126,9 @@
     "delete": {
         "value": "删除",
         "description": "The label for the delete button for graph point annotations"
+    },
+    "you_must_make_a_prediction_in_steps": {
+        "value": "你必须在下面的步骤中做出预测",
+        "description": "The beginning of the text that says you must make a prediction in the steps below before you can work on this step"
     }
 }
