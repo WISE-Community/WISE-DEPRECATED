@@ -1,4 +1,5 @@
 var nodeContentIsDirty = false;
+var phetSimURL = null;
 
 function getStepState() {
     return null;
@@ -9,17 +10,20 @@ function getStudentData() {
 }
 
 function setContent(content) {
+    phetSimURL = content.url;
     if (mode === 'author') {
-        $('#phetSimURL').val(content.url);
-        $('#phetSimPreviewIFrame').attr('src', content.url);
+        $('#phetSimURL').val(phetSimURL);
         $('#phetSimURL').change(function() {
             nodeContentIsDirty = true;
-            var newPhETSimURL =  $('#phetSimURL').val();
+            phetSimURL =  $('#phetSimURL').val();
             $('#saveNodeContentButton').attr('disabled', false);
-            $('#phetSimPreviewIFrame').attr('src', newPhETSimURL);
+            $('#phetSimPreviewIFrame').attr('src', phetSimURL);
+            $("#phetSimsIFrame")[0].contentWindow.highlightSelectedPhETSim(phetSimURL);
         });
+        $('#phetSimPreviewIFrame').attr('src', phetSimURL);
+        $("#phetSimsIFrame")[0].contentWindow.highlightSelectedPhETSim(phetSimURL);
     } else {
-        $('#phetIFrame').attr('src', content.url);
+        $('#phetIFrame').attr('src', phetSimURL);
     }
 }
 
@@ -36,6 +40,7 @@ function saveNodeContent(callback, callbackArgs) {
 }
 
 function authorViewOnSimulationSelected(phetSimURL) {
+    phetSimURL = phetSimURL;
     $('#phetSimURL').val(phetSimURL);
     $('#phetSimURL').change();
 }
