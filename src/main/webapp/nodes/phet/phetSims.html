@@ -3,14 +3,24 @@
 <script src="jquery-2.1.3.min.js"></script>
 <base href="https://phet.colorado.edu/" />
 <script type="text/javascript">
+  var phetBaseURL = 'https://phet.colorado.edu';
+  function highlightSelectedPhETSim(phetSimURL) {
+      $("td").removeClass('selectedSim');
+      if (phetSimURL != null) {
+          var phetSimURLPartial = phetSimURL.substr(phetSimURL.indexOf('/sim'));
+          $("a[href='"+phetSimURLPartial+"']").parent("td").addClass('selectedSim');
+      }
+  }
+
   $(document).ready(function() {
 	  $(".htmlSim a").click(function() {
 		  var simUrl = $(this).attr('href');
 		  if (window.parent != null) {
-		      window.parent.authorViewOnSimulationSelected("https://phet.colorado.edu"+simUrl);
+		      window.parent.authorViewOnSimulationSelected(phetBaseURL+simUrl);
 		  }
 		  return false;
 	  });
+	  
   });
 </script>
 <style>
@@ -20,6 +30,10 @@ td {
 
 .simulation-list-thumbnail {
     margin-bottom:5px
+}
+
+.selectedSim {
+  border: 5px solid yellow;
 }
 </style>
 </head>
