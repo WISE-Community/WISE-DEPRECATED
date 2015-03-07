@@ -62,6 +62,24 @@ define(['angular', 'configService'], function(angular, configService) {
             
             return transitionsResults;
         };
+        
+        this.getTransitionsByToNodeId = function(toNodeId) {
+            var transitionsResults = [];
+            if (toNodeId != null) {
+                var transitions = this.getTransitions();
+                
+                if (transitions != null) {
+                    for (var i = 0; i < transitions.length; i++) {
+                        var transition = transitions[i];
+                        if (transition.to === toNodeId) {
+                            transitionsResults.push(transition);
+                        }
+                    }
+                }                
+            }
+            
+            return transitionsResults;
+        };
 
         this.getLayoutLogic = function() {
             var layoutLogic = null;

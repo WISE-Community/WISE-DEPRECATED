@@ -1,5 +1,6 @@
 var project = null;
 var projectContentIsDirty = false;
+//var currentNodeId = null;
 
 function getStepState() {
     return null;
@@ -9,7 +10,7 @@ function setContent(content) {
 }
 
 function nodeButtonClicked(nodeId) {
-    navigation_moveToNode(nodeId);
+    moveToNode(nodeId);
 }
 
 function setProject(projectIn) {
@@ -32,7 +33,8 @@ function renderProject() {
         
         for (var i = 0; i < nodes.length; i++) {
             var node = nodes[i];
-            $('#studentView').append("<button onclick='nodeButtonClicked(\""+node.id+"\")'>" + node.title + " (" + node.type + ")</button>");
+            var nodeId = node.id;
+            $('#studentView').append("<button id='" + nodeId + "' class='nodeButton' onclick='nodeButtonClicked(\""+node.id+"\")'>" + node.title + " (" + node.type + ")</button>");
         }
     } else if (mode === 'author') {
         $('#studentView').hide();
@@ -66,4 +68,9 @@ function setStepState(stepState) {
         
     });
 
+}
+
+function handleCurrentNodeIdChanged(nodeId) {
+      $('.nodeButton').removeClass('currentNode');
+      $('#' + nodeId).addClass('currentNode');
 }

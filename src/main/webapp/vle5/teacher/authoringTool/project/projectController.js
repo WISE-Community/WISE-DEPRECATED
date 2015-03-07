@@ -8,5 +8,6 @@ define(['app'], function(app) {
             this.showAdvanced = function() {
                 $state.go('root.project.advanced');
             };
+            console.log('$scope.$parent.hello=' + $scope.$parent.hello);
         });
 });

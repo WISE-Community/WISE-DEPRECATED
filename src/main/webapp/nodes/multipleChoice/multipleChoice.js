@@ -22,16 +22,6 @@ function setStudentData(studentData) {
 //Called sometime after postMessage is called
 function receiveMessage(event)
 {
-	console.log('event received in multipleChoice.js event.data='+event.data.viewType);
-	
-    if (event.data.viewType == "author") {
-		 document.getElementById("message").appendChild( document.createTextNode("author view") );
-	} else if (event.data.viewType == "student") {
-		 document.getElementById("message").appendChild( document.createTextNode("student view") );
-	} else if (event.data.viewType == "grading") {
-		 document.getElementById("message").appendChild( document.createTextNode("grading view") );
-	}
-
 
   // Do we trust the sender of this message?
   if (event.origin !== "http://example.com:8080")

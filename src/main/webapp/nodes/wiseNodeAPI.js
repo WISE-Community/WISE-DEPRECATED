@@ -8,7 +8,6 @@ var nodeMessageId = 0;
 //Called sometime after postMessage is called
 function receiveMessage(event) {
 	var msg = event.data;
-	var viewType = msg.viewType;
 	var action = msg.action;
 	
     var nodeMessageId = msg.nodeMessageId;

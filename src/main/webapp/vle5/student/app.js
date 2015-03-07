@@ -37,21 +37,23 @@ define([
 	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
 	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
 		
-		$urlRouterProvider.otherwise('');
+		$urlRouterProvider.otherwise('/vle/');
 		
 		app.$controllerProvider = $controllerProvider;
 		
 		$stateProvider
-    		.state('vle', {
+    		.state('root', {
                 url: '',
+                abstract: true,
                 templateUrl: 'vle5/student/vle.html',
+                //template: '<ui-view />',
                 controller: 'VLEController',
                 controllerAs: 'vleController',
-                params: {nodeId: null},
                 resolve: {
                     loadController: app.loadController('vleController'),
                     config: function(ConfigService) {
                         var configUrl = window.configUrl;
+                        
                         return ConfigService.retrieveConfig(configUrl);
                     },
                     project: function(ProjectService, config) {
@@ -62,6 +64,27 @@ define([
                     },
                     studentData: function(StudentDataService, config) {
                         return StudentDataService.retrieveStudentData();
+                    }
+                }              
+            })
+            .state('root.vle', {
+                url: '/vle/:nodeId',
+                views: {
+                    'projectView': {
+                        templateUrl: 'vle5/student/project/project.html',
+                        controller: 'ProjectController',
+                        controllerAs: 'projectController',
+                        resolve: {
+                            loadController: app.loadController('projectController'),
+                        }
+                    },
+                    'nodeView': {
+                        templateUrl: 'vle5/student/node/node.html',
+                        controller: 'NodeController',
+                        controllerAs: 'nodeController',
+                        resolve: {
+                            loadController: app.loadController('nodeController'),
+                        }
                     }
                 }              
             })

@@ -96,11 +96,7 @@
     </div>
     <div id="prev" ng-click="vleController.goToPrevNode()">Prev</div>
     <div id="next" ng-click="vleController.goToNextNode()">Next</div>
-	
-	   <iframe id="projectIFrame" class={{vleController.layoutState}} 
-	       ng-show="vleController.showProjectDiv" ng-src="{{vleController.projectIFrameSrc}}"></iframe>
-
-	   <iframe id="nodeIFrame" class={{vleController.layoutState}}
-	       ng-show="vleController.showNodeDiv" ng-src="{{vleController.nodeIFrameSrc}}"></iframe>
+    <div ui-view="projectView"></div>
+    <div ui-view="nodeView"></div>
 </body>
 </html>

@@ -3,11 +3,11 @@ var wiseTargetOrigin = '*';
 var mode = getParameterByName(window.location.href, 'mode');
 var callbackListeners = [];
 var navMessageId = 0;
+var currentNodeId = null;
 
 //Called sometime after postMessage is called
 function receiveMessage(event) {
     var msg = event.data;
-    var viewType = msg.viewType;
     var action = msg.action;
     
     var navMessageId = msg.navMessageId;
@@ -23,9 +23,24 @@ function receiveMessage(event) {
     if (action == "getWISEProjectResponse") {
         var wiseData = msg.wiseData;
         var project = wiseData.project;
+        var currentNodeId = wiseData.currentNodeId;
         setProject(project);
-    } else if (action === 'postWISEProjectContentResponse') {
+        handleCurrentNodeIdChanged(currentNodeId);
+    } else if (action === 'postMoveToNodeResponse') {
         
+        var wiseData = msg.wiseData;
+        var newCurrentNodeId = wiseData.nodeId;
+        
+        if (currentNodeId !== newCurrentNodeId) {
+            handleCurrentNodeIdChanged(newCurrentNodeId);
+        }
+    } else if (action === 'postMoveToNodeRequest') {
+        var wiseData = msg.wiseData;
+        var newCurrentNodeId = wiseData.nodeId;
+        
+        if (currentNodeId !== newCurrentNodeId) {
+            handleCurrentNodeIdChanged(newCurrentNodeId);
+        }
     }
 }
 
@@ -48,12 +63,12 @@ function navigationIsReadyForWISE() {
 
 
 //call this when step is ready to load WISE step content and student step data
-function navigation_moveToNode(nodeId) {
+function moveToNode(nodeId) {
     // when they get here, assume iframe has loaded completely and are ready to load content and student data
     var wiseWrapper = window.parent;
 
     // This does nothing, assuming the window hasn't changed its location.
-    wiseWrapper.postMessage({"action":"navigation_moveToNode","nodeId":nodeId}, wiseTargetOrigin);
+    wiseWrapper.postMessage({"action":"postMoveToNodeRequest","nodeId":nodeId}, wiseTargetOrigin);
 }
 
 function saveProjectContentToWISE(projectContent, callback, callbackArgs) {

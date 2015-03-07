@@ -6,6 +6,27 @@ define(['angular', 'configService'], function(angular, configService) {
         this.studentData = null;
         this.stackHistory = [];  // array of node id's
         
+        this.currentNode = null;
+        
+        this.getCurrentNode = function() {
+            return this.currentNode;
+        };
+        
+        this.getCurrentNodeId = function() {
+            var currentNodeId = null;
+            var currentNode = this.currentNode;
+            
+            if (currentNode != null) {
+                currentNodeId = currentNode.id;
+            }
+            
+            return currentNodeId;
+        };
+        
+        this.setCurrentNode = function(node) {
+            this.currentNode = node;
+        };
+        
         this.retrieveStudentData = function() {
             var getStudentDataUrl = ConfigService.getConfigParam('getStudentDataUrl');
             
@@ -50,7 +71,6 @@ define(['angular', 'configService'], function(angular, configService) {
             } else {
                 this.stackHistory.splice(indexOfNodeId + 1, this.stackHistory.length);
             }
-            console.log(this.stackHistory);
         };
         
         this.getNodeVisits = function() {

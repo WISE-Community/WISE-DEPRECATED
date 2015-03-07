@@ -8,7 +8,6 @@ define(['angular', 'configService'], function(angular, configService) {
             return $q(function(resolve, reject) {
                 $http.get(nodeSrc).then(angular.bind(this, function(result) {
                     var nodeContent = result.data;
-                    console.log('nodeService.getNodeContentByNodeSrc. nodeContent=' + JSON.stringify(nodeContent));
                     this.nodeContent = nodeContent;
                     resolve(nodeContent);
                 }));

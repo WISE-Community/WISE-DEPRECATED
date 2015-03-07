@@ -6,7 +6,7 @@ function setContent(content) {
 }
 
 function nodeButtonClicked(nodeId) {
-    navigation_moveToNode(nodeId);
+    moveToNode(nodeId);
 }
 
 function setProject(project) {
