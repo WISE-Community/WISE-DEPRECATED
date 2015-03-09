@@ -119,7 +119,9 @@
 	                  						<sec:accesscontrollist domainObject="${run}" hasPermission="2">
 	                  							<c:choose>
 	                  								<c:when test="${isRealTimeEnabled && run.realTimeEnabled}">
+	                  								<!--  
 	                  									<li style="font-size:1.1em; padding-bottom:3px;"><a class="classroomManager" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=classroomManager"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span>Classroom Manager</span></a></li>
+	                  									-->
 	                  									<li style="font-size:1.1em; padding-bottom:3px;"><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
 	                  								</c:when>
 	                  								<c:otherwise>
