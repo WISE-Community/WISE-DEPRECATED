@@ -109,14 +109,6 @@ table.compatibility {
 									</td>
 								</tr>
 								<tr>
-									<td id='quickTimeResource'><spring:message code="pages.check.browser_qt" /></td>
-									<td id='quickTimeStatus'><spring:message code="pages.check.recommended" /></td>
-									<td id='quickTimeRequiredVersion'></td>
-									<td id='quickTimeYourVersion'></td>
-									<td id='quickTimeRequirementSatisfied'></td>
-									<td id='quickTimeAdditionalInfo'><a href='http://www.apple.com/quicktime/download/'><spring:message code="pages.check.browser_upgradeQT" /></a></td>
-								</tr>
-								<tr>
 									<td id='flashResource'><spring:message code="pages.check.browser_flash" /></td>
 									<td id='flashStatus'><spring:message code="pages.check.recommended" /></td>
 									<td id='flashRequiredVersion'></td>

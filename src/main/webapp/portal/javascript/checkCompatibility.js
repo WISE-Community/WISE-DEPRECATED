@@ -10,7 +10,6 @@ var defaultRequirements = {
 	requiredInternetExplorerVersion:'9.0',
 	requiredChromeVersion:'5.0',
 	requiredSafariVersion:'3.0',
-	requiredQuickTimeVersion:'7.0',
 	requiredFlashVersion:'10.0',
 	requiredJavaVersion:'1.6'
 }
@@ -66,11 +65,6 @@ function checkCompatibility(specificRequirements) {
 			combinedRequirements.requiredSafariVersion = specificRequirements.requiredSafariVersion;
 		}
 		
-		if(specificRequirements.requiredQuickTimeVersion != null) {
-			//override the quicktime version requirement
-			combinedRequirements.requiredQuickTimeVersion = specificRequirements.requiredQuickTimeVersion;
-		}
-		
 		if(specificRequirements.requiredFlashVersion != null) {
 			//override the flash version requirement
 			combinedRequirements.requiredFlashVersion = specificRequirements.requiredFlashVersion;
@@ -90,7 +84,6 @@ function checkCompatibility(specificRequirements) {
 	requiredResources = checkBrowser(combinedRequirements) && requiredResources;
 	
 	//check recommended resources
-	recommendedResources = checkQuickTime(combinedRequirements.requiredQuickTimeVersion) && recommendedResources;
 	recommendedResources = checkFlash(combinedRequirements.requiredFlashVersion) && recommendedResources;
 	recommendedResources = checkJava(combinedRequirements.requiredJavaVersion) && recommendedResources;
 	
