@@ -62,7 +62,7 @@ define([
                     nodeApplication: function(NodeApplicationService, config) {
                         return NodeApplicationService.intializeNodeApplications();
                     },
-                    studentData: function(StudentDataService, config) {
+                    studentData: function(StudentDataService, config, project) {
                         return StudentDataService.retrieveStudentData();
                     }
                 }              

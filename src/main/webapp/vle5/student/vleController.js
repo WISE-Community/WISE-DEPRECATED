@@ -15,8 +15,19 @@ define(['app'],
             if (newCurrentNode != null) {
                 var nodeId = newCurrentNode.id;
                 StudentDataService.updateStackHistory(nodeId);
+                StudentDataService.updateVisitedNodesHistory(nodeId);
             }
         });
+        
+        // why does getNodeVisits() not trigger a change
+        $scope.$watch(function() {
+            var nodeVisits = StudentDataService.getNodeVisits();
+            return nodeVisits.length;
+        }, angular.bind(this, function(newNodeVisits, oldNodeVisits) {
+            if (newNodeVisits != null) {
+                StudentDataService.updateNodeStatuses();
+            }
+        }));
         
         this.layoutStates = ['layout1', 'layout2', 'layout3', 'layout4'];
         this.layoutState = this.layoutStates[0];
@@ -134,6 +145,15 @@ define(['app'],
         }));
         
         var nodeId = ProjectService.getStartNodeId();
+        
+        
+        var currentNode = StudentDataService.getCurrentNode();
+        
+        if (currentNode != null) {
+            nodeId = currentNode.id;
+        }
+        
+        /*
         var stackHistory = StudentDataService.getStackHistory();
         if (stackHistory != null) {
             var lastNodeIdFromStackHistory = StudentDataService.getStackHistoryAtIndex(-1);
@@ -141,6 +161,7 @@ define(['app'],
                 nodeId = lastNodeIdFromStackHistory;
             }
         }
+        */
         
         this.setCurrentNodeByNodeId(nodeId);
         

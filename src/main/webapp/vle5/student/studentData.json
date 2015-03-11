@@ -10,7 +10,7 @@
                     "response": "hello world"
                 }
             ],
-            "nodeId": "node_1",
+            "nodeId": "node1",
             "visitEndTime": 1424384691000,
             "stepWorkId": "8752243"
         },
@@ -20,7 +20,7 @@
             "hintStates": [],
             "nodeType": "OutsideURLNode",
             "nodeStates": [],
-            "nodeId": "node_2",
+            "nodeId": "node2",
             "visitEndTime": 1424728224000,
             "stepWorkId": "8752274"
         }

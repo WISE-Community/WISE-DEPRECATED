@@ -34,7 +34,7 @@ function renderProject() {
         for (var i = 0; i < nodes.length; i++) {
             var node = nodes[i];
             var nodeId = node.id;
-            $('#studentView').append("<button id='" + nodeId + "' class='nodeButton' onclick='nodeButtonClicked(\""+node.id+"\")'>" + node.title + " (" + node.type + ")</button>");
+            $('#studentView').append("<button id='nodeIdButton_" + nodeId + "' class='nodeButton' onclick='nodeButtonClicked(\""+node.id+"\")' disabled>" + node.title + " (" + node.type + ")</button>");
         }
     } else if (mode === 'author') {
         $('#studentView').hide();
@@ -71,6 +71,38 @@ function setStepState(stepState) {
 }
 
 function handleCurrentNodeIdChanged(nodeId) {
-      $('.nodeButton').removeClass('currentNode');
-      $('#' + nodeId).addClass('currentNode');
-}
+    $('.nodeButton').removeClass('currentNode');
+    $('#nodeIdButton_' + nodeId).addClass('currentNode');
+};
+
+function handleNodeStatusesChanged(nodeStatuses) {
+    if (nodeStatuses != null) {
+        for (var i = 0; i < nodeStatuses.length; i++) {
+            var nodeStatus = nodeStatuses[i];
+            
+            var nodeId = nodeStatus.nodeId;
+            var statuses = nodeStatus.statuses;
+            
+            if (statuses != null) {
+                for (var j = 0; j < statuses.length; j++) {
+                    var status = statuses[j];
+                    
+                    if (status != null) {
+                        var statusType = status.statusType;
+                        var statusValue = status.statusValue;
+                        
+                        if (statusType != null && statusValue != null) {
+                            if (statusType === 'isVisitable') {
+                                if (statusValue) {
+                                    $('#nodeIdButton_' + nodeId).attr('disabled', false);
+                                } else {
+                                    $('#nodeIdButton_' + nodeId).attr('disabled', true);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+};

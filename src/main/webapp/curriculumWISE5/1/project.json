@@ -5,59 +5,167 @@
     },
     "nodes": [
         {
-            "id": "node_1",
+            "id": "node1",
             "title": "First Step",
-            "type": "OpenResponseNode",
-            "src": "node_1.json"
+            "type": "HTMLNode",
+            "src": "node1.html"
         },
         {
-            "id": "node_2",
+            "id": "node2",
             "title": "Second Step",
+            "type": "OpenResponseNode",
+            "src": "node2.json"
+        },
+        {
+            "id": "node3",
+            "title": "Third A Step",
             "type": "OutsideURLNode",
-            "src": "node_2.json"
+            "src": "node3.json"
         },
         {
-            "id": "node_3",
-            "title": "Third Step",
-            "type": "HTMLNode",
-            "src": "node_3.html"
+            "id": "node13",
+            "title": "Third B Step",
+            "type": "OutsideURLNode",
+            "src": "node13.json"
         },
         {
-            "id": "node_4",
-            "title": "Branch Path A Step 1",
-            "type": "HTMLNode",
-            "src": "node_4.html"
+            "id": "node4",
+            "title": "Fourth Step",
+            "type": "OpenResponseNode",
+            "src": "node4.json"
         },
         {
-            "id": "node_5",
-            "title": "Branch Path B Step 1",
-            "type": "HTMLNode",
-            "src": "node_5.html"
+            "id": "node5",
+            "title": "Fifth Step",
+            "type": "OpenResponseNode",
+            "src": "node5.json"
         },
         {
-            "id": "node_6",
+            "id": "node6",
+            "title": "Sixth Step",
+            "type": "OpenResponseNode",
+            "src": "node6.json"
+        },
+        {
+            "id": "node7",
+            "title": "Seventh Step",
+            "type": "OpenResponseNode",
+            "src": "node7.json"
+        },
+        {
+            "id": "node8",
+            "title": "Eighth Step",
+            "type": "OpenResponseNode",
+            "src": "node8.json"
+        },
+        {
+            "id": "node9",
+            "title": "Ninth Step",
+            "type": "OpenResponseNode",
+            "src": "node9.json"
+        },
+        {
+            "id": "node10",
+            "title": "Tenth Step",
+            "type": "OpenResponseNode",
+            "src": "node10.json"
+        },
+        {
+            "id": "node11",
             "title": "Audio Recorder Step",
             "type": "AudioRecorderNode",
-            "src": "node_6.json"
+            "src": "node11.json"
         },
         {
-            "id": "node_7",
+            "id": "node12",
             "title": "PhET step",
             "type": "PhETNode",
-            "src": "node_7.json"
-        }        
+            "src": "node12.json"
+        }
     ],
     "transitions": [
-        {"from": "node_1", "to": "node_2"},
-        {"from": "node_2", "to": "node_3"},
-        {"from": "node_3", "to": "node_4"},
-        {"from": "node_3", "to": "node_5"},
-        {"from": "node_4", "to": "node_6"},
-        {"from": "node_5", "to": "node_7"}
+        {
+            "from": "node1",
+            "to": "node2"
+        },
+        {
+            "from": "node2",
+            "to": "node3"
+        },
+        {
+            "from": "node2",
+            "to": "node13"
+        },
+        {
+            "from": "node3",
+            "to": "node4"
+        },
+        {
+            "from": "node13",
+            "to": "node4"
+        },
+        {
+            "from": "node4",
+            "to": "node5"
+        },
+        {
+            "from": "node9",
+            "to": "node10"
+        },
+        {
+            "from": "node10",
+            "to": "node11"
+        },
+        {
+            "from": "node11",
+            "to": "node12"
+        }
     ],
-    "startNodeId": "node_1",
-    "tags": [],
+    "startId": "node1",
+    "tags": [
+        {
+            "id": "tag1",
+            "name": "Activity 1",
+            "navigationMode": "guided",
+            "ids": [
+                "node1",
+                "node2",
+                "node3",
+                "node13",
+                "node4"
+            ]
+        },
+        {
+            "id": "tag2",
+            "name": "Activity 2",
+            "navigationMode": "open",
+            "startNodeId": "node5",
+            "ids": [
+                "node5",
+                "node6",
+                "node7",
+                "node8"
+            ]
+        },
+        {
+            "id": "tag3",
+            "name": "Activity 3",
+            "navigationMode": "guided",
+            "startNodeId": "node9",
+            "ids": [
+                "node9",
+                "node10",
+                "node11",
+                "node12"
+            ]
+        }
+    ],
     "navigationMode": "guided",
-    "navigationApplications": ["wiseMap", "wiseList"],
-    "layout": {"template":"starmap|leftNav|rightNav"}
+    "navigationApplications": [
+        "wiseMap",
+        "wiseList"
+    ],
+    "layout": {
+        "template": "starmap|leftNav|rightNav"
+    }
 }

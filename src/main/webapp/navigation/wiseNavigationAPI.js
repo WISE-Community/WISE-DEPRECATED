@@ -24,8 +24,10 @@ function receiveMessage(event) {
         var wiseData = msg.wiseData;
         var project = wiseData.project;
         var currentNodeId = wiseData.currentNodeId;
+        var nodeStatuses = wiseData.nodeStatuses;
         setProject(project);
         handleCurrentNodeIdChanged(currentNodeId);
+        handleNodeStatusesChanged(nodeStatuses);
     } else if (action === 'postMoveToNodeResponse') {
         
         var wiseData = msg.wiseData;
@@ -41,6 +43,10 @@ function receiveMessage(event) {
         if (currentNodeId !== newCurrentNodeId) {
             handleCurrentNodeIdChanged(newCurrentNodeId);
         }
+    } else if (action === 'postStudentDataRequest') {
+        var wiseData = msg.wiseData;
+        var nodeStatuses = wiseData.nodeStatuses;
+        handleNodeStatusesChanged(nodeStatuses);
     }
 }
 

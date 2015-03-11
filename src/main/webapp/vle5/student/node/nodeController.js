@@ -7,7 +7,7 @@ define(['app'], function(app) {
             }, angular.bind(this, function(newCurrentNode, oldCurrentNode) {
                 if (newCurrentNode != null) {
                     var nodeId = newCurrentNode.id;
-                    var mode = 'student';
+                    var mode = $scope.vleController.mode;
                     this.loadNode(nodeId, mode);
                 }
             }));
@@ -31,7 +31,7 @@ define(['app'], function(app) {
                     if(node !== null) {
                         this.currentNode = node;
                         var nodeType = node.type
-                        var nodeIFrameSrc = NodeApplicationService.getNodeURL(nodeType) + '?nodeId=' + nodeId + '&mode=' + this.mode;
+                        var nodeIFrameSrc = NodeApplicationService.getNodeURL(nodeType) + '?nodeId=' + nodeId + '&mode=' + $scope.vleController.mode;
                         this.nodeIFrameSrc = nodeIFrameSrc;
                     };
                 });

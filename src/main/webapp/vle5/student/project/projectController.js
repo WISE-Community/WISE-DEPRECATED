@@ -21,6 +21,26 @@ define(['app'], function(app) {
                 }
             }));
             
+            $scope.$watch(function() {
+                var nodeVisits = StudentDataService.getNodeVisits();
+                return nodeVisits.length;
+            }, angular.bind(this, function(newNodeVisits, oldNodeVisits) {
+                if (newNodeVisits != null) {
+                    StudentDataService.updateNodeStatuses();
+                    
+                    var wiseData = {};
+                    wiseData.nodeId = nodeId;
+                    wiseData.nodeStatuses = StudentDataService.getNodeStatuses();
+                    
+                    var postMessage = {
+                        'action': 'postStudentDataRequest',
+                        'wiseData': wiseData
+                    };
+                    
+                    this.postMessageToProjectIFrame(postMessage);
+                }
+            }));
+            
             $scope.$on('$messageIncoming', angular.bind(this, function(event, data) {
                 var msg = data;
                 
@@ -32,6 +52,7 @@ define(['app'], function(app) {
                     var wiseData = {};
                     wiseData.project = project;
                     wiseData.currentNodeId = StudentDataService.getCurrentNodeId();
+                    wiseData.nodeStatuses = StudentDataService.getNodeStatuses();
                     
                     var postMessage = {
                         'action': 'getWISEProjectResponse',
