@@ -71,16 +71,19 @@ public class LookupUserController {
 
 		Object term = new Object();
 		
+		String lookupField = param.getLookupField();
+		String lookupCriteria = param.getLookupCriteria();
+		
 		// if searching for ID, make the term object in a Long.
-		if ("ID".equals(param.getLookupField())) {
+		if ("id".equals(lookupField)) {
 			term = Long.parseLong(param.getLookupData());
-		} else if(param.getLookupField().equals("GENDER")){
+		} else if ("gender".equals(lookupField)) {
 			term = Gender.valueOf(param.getLookupData().toUpperCase());
-		} else if(param.getLookupCriteria().equals("like")){
+		} else if ("like".equals(lookupCriteria)) {
 			term = "%" + param.getLookupData() + "%";
-		} else if(param.getLookupField().equals("SCHOOLLEVEL")){
+		} else if ("schoollevel".equals(lookupField)) {
 			term = getLevel(param.getLookupData());
-		} else if(param.getLookupCriteria().equals("like")) {
+		} else if ("like".equals(lookupCriteria)) {
 			term = "%" + param.getLookupData() + "%";
 		} else {
 			term = param.getLookupData();
