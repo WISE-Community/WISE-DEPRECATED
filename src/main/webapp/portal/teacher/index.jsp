@@ -27,6 +27,25 @@
 
 <script type='text/javascript'>
 var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
+
+$(document).ready(function() {
+    var goodMorningMsg = '<spring:message code="teacher.index.hopeHavingGoodMorning" />';
+    var goodAfternoonMsg = '<spring:message code="teacher.index.goodAfternoon" />';
+    var goodEveningMsg = '<spring:message code="teacher.index.goodEvening" />';
+
+    var currentDate = new Date();
+    var currentHour = currentDate.getHours();
+    var welcomeMsg = "";
+    if (currentHour >= 0 && currentHour < 12) {
+        welcomeMsg = goodMorningMsg;
+    } else if (currentHour >= 12 && currentHour < 18) {
+        welcomeMsg = goodAfternoonMsg;
+    } else if (currentHour >= 18 && currentHour < 23) {
+        welcomeMsg = goodEveningMsg;
+    }
+
+    $("#welcomeMsg").html(welcomeMsg);    
+});
 </script>
 </head>
 <body>
@@ -34,6 +53,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 
 	<%@ include file="../headermain.jsp"%>
 	
+    <c:set var="current_date" value="<%=new java.util.Date()%>" />
 	<div id="page">
 		
 		<div id="pageContent">
@@ -75,22 +95,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 						<table id="teacherMessageTable">
 							<tr>
 								<td>
-								<div id="welcomeMsg" class="highlight welcomeMsg">
-									<c:set var="current_date" value="<%=new java.util.Date()%>" />
-									<c:choose>
-										<c:when test="${(current_date.hours>=0) && (current_date.hours<12)}">
-											<spring:message code="teacher.index.hopeHavingGoodMorning" />
-										</c:when>
-										<c:when test="${(current_date.hours>=12) && (current_date.hours<18)}">
-											<spring:message code="teacher.index.goodAfternoon" />
-										</c:when>
-										<c:when test="${(current_date.hours>=18) && (current_date.hours<23)}">
-											<spring:message code="teacher.index.goodEvening" />
-										</c:when>
-										<c:otherwise>
-										</c:otherwise>
-									</c:choose>
-								</div>
+								<div id="welcomeMsg" class="highlight welcomeMsg"></div>
 								<div id="newsContent" class="highlight welcomeMsg">
 									<c:forEach var="newsItem" items="${teacherOnlyNewsItems}">
 										<div class="newsItem">
