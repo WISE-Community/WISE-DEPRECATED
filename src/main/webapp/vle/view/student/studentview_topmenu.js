@@ -1642,6 +1642,370 @@ View.prototype.uncopyPublicIdeaCallback = function(responseText, responseXML, ar
 	}
 };
 
+/**
+ * Handles the teacherNotificationUpdated event
+ * @param type
+ * @param args
+ * @param view
+ */
+View.prototype.teacherNotificationHandler = function(type, args, view) {
+    // process the notifications
+    view.processNotifications();
+};
+
+/**
+ * Handles the logo clicked event
+ */
+View.prototype.handleLogoClicked = function() {
+    
+    // populate the notification div
+    this.populateNotificationDiv();
+    
+    // create the options for the dialog popup
+    var notificationDialogOptions = {
+        width: 500,
+        height: 325,
+        autoOpen: false,
+        closeText: '',
+        resizable: true,
+        show: {effect:"fade",duration:200},
+        hide: {effect:"fade",duration:200},
+        title: 'Notifications'
+    };
+    
+    // set the dialog options
+    $("#notificationDiv").dialog(notificationDialogOptions);
+    
+    // open the dialog popup
+    $("#notificationDiv").dialog('open');
+};
+
+/**
+ * Populate the notification div with all the open notifications
+ */
+View.prototype.populateNotificationDiv = function() {
+    
+    // get the open notifications
+    var openNotificationAnnotations = this.getOpenNotificationAnnotations();
+
+    // get the div that will contain all the notifications
+    var notificationDiv = $('#notificationDiv');
+    
+    // clear the notification div 
+    notificationDiv.html('');
+    
+    // keep a counter of the number of open notifications
+    var openNotificationCount = 0;
+    
+    // loop through all the open notifications
+    for (var o = 0; o < openNotificationAnnotations.length; o++) {
+        
+        // get an open notification
+        var openNotificationAnnotation = openNotificationAnnotations[o];
+        
+        if (openNotificationAnnotation != null) {
+            
+            // get the node id
+            var nodeId = openNotificationAnnotation.nodeId;
+            
+            // get the value array
+            var value = openNotificationAnnotation.value;
+            
+            if (value != null) {
+                
+                // loop through all the values
+                for (var v = 0; v < value.length; v++) {
+                    
+                    // get a value
+                    var valueElement = value[v];
+                    
+                    if (valueElement != null) {
+                        
+                        // get the dismiss timestamp
+                        var dismissTimestamp = valueElement.dismissTimestamp;
+                        
+                        if (dismissTimestamp == null) {
+                            /*
+                             * the dismiss timestamp is null which means the
+                             * notification is open
+                             */
+                            
+                            // increment the counter
+                            openNotificationCount++;
+                            
+                            // create the child div for the notification
+                            var openNotificationDiv = this.createChildNotificationDiv(nodeId, openNotificationAnnotation, valueElement);
+                            
+                            // add the child div to the parent notification div
+                            notificationDiv.append(openNotificationDiv);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    if (openNotificationCount == 0) {
+        // there are no open notifications
+        notificationDiv.append('<p>No Open Notifications</p>');
+    }
+};
+
+/**
+ * Create the child notification div
+ * @param nodeId the node id for the notification
+ * @param notificationAnnotation the notification annotation
+ * @param valueElement the notification value
+ */
+View.prototype.createChildNotificationDiv = function(nodeId, notificationAnnotation, valueElement) {
+    // create the div
+    var openNotificationDiv = $('<div></div>');
+    
+    // get the step number and title
+    var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
+    var stepTerm = this.getStepTerm();
+    var stepTitle = stepTerm + ' ' + stepNumberAndTitle;
+    
+    // replace step numbers with a link to the step number
+    stepTitle = this.getAnnotations().insertStepLinks(stepTitle, this);
+    
+    // remove all backslashes otherwise the link that was inserted won't work for some reason
+    stepTitle = stepTitle.replace(/\\/g, '');
+    
+    // create the step title row
+    openNotificationDiv.append('<p>' + stepTitle + '</p>');
+
+    // create the notification message row
+    var message = valueElement.message;
+    openNotificationDiv.append('<p>' + message + '</p>');
+
+    // the args for the dismiss button clicked event
+    var dismissButtonClickedArgs = {
+        thisView: this,
+        notificationAnnotation: notificationAnnotation,
+        notification: valueElement
+    };
+    
+    // create the dismiss code row
+    var dismissRow = $('<p>Dismiss Code: </p>');
+    
+    // create the input where the teacher will type in the dismiss code
+    var dismissInput = $('<input></input>');
+    dismissInput.attr('type', 'password');
+    
+    /*
+     * set a keypress event for the dismiss input so that when the
+     * teacher types in the code and hits enter, it will try to
+     * dismiss the notification
+     */
+    dismissInput.keypress(dismissButtonClickedArgs, function(event) {
+        // check if the the key pressed was 'Enter'
+        if (event.which === 13) {
+            // the keypressed was enter so we will try to dismiss the notification
+            
+            var thisView = event.data.thisView;
+            var notificationAnnotation = event.data.notificationAnnotation;
+            var notification = event.data.notification;
+            var openNotificationDiv = $(this).closest('div');
+            
+            // try to dismiss the notification
+            thisView.dismissNotificationButtonClickedHandler(openNotificationDiv, notificationAnnotation, notification);
+        }
+    });
+    
+    dismissRow.append(dismissInput);
+
+    // create the dismiss button
+    var dismissButton = $('<input></input>');
+    dismissButton.attr('type', 'button');
+    dismissButton.val('Dismiss');
+    dismissButton.click(dismissButtonClickedArgs, this.dismissNotificationButtonClicked);
+    
+    dismissRow.append(dismissButton);
+    
+    /*
+     * create the error message span that will be used to tell the teacher 
+     * that the dismiss code they typed was incorrect
+     */ 
+    var errorMessage = $('<span></span>');
+    errorMessage.css('color', 'red');
+    dismissRow.append(errorMessage);
+    
+    openNotificationDiv.append(dismissRow);
+
+    // display an hr between notifications
+    openNotificationDiv.append('<hr/>');
+    
+    return openNotificationDiv;
+};
+
+/**
+ * The dismiss notification button was clicked
+ * @param event
+ */
+View.prototype.dismissNotificationButtonClicked = function(event) {
+    var thisView = event.data.thisView;
+    var notificationAnnotation = event.data.notificationAnnotation;
+    var notification = event.data.notification;
+    var openNotificationDiv = $(this).closest('div');
+    
+    // try to dismiss the notification
+    thisView.dismissNotificationButtonClickedHandler(openNotificationDiv, notificationAnnotation, notification);
+};
+
+/**
+ * Check if the teacher typed in the correct dismiss code and dismiss
+ * the notification if the code is correct
+ * @param openNotificationDiv the child notification div for the specific
+ * notification
+ * @param notificationAnnotation the notification annotation
+ * @param notificationValue the notification annotation value
+ */
+View.prototype.dismissNotificationButtonClickedHandler = function(openNotificationDiv, notificationAnnotation, notificationValue) {
+    
+    if (notificationValue != null) {
+        
+        // get the correct dismiss code
+        var dismissCode = notificationValue.dismissCode;
+        
+        // get the dismiss code that the teacher typed
+        var typedInCode = openNotificationDiv.find('input[type=password]').val();
+        
+        if (dismissCode === typedInCode) {
+            // the teacher typed the correct dismiss code
+            
+            // dismiss the notification
+            this.dismissNotification(notificationAnnotation, notificationValue);
+            
+            // remove the child notification div
+            openNotificationDiv.remove();
+        } else {
+            /*
+             * the teacher did not type the correct dismiss code so we will
+             * display an error message and clear the dismiss input
+             */
+            openNotificationDiv.find('span').text(' Incorrect Code');
+            openNotificationDiv.find('input[type=password]').val('');
+        }
+    }
+};
+
+/**
+ * Dismiss the notification by setting the dismiss timestamp on the notification
+ * annotation value and saving the whole annotation back to the server
+ * 
+ * Here's an example of a notification annotation value that has been dismissed.
+ * 
+ * {
+ *    "attemptNumber": 2,
+ *    "score": "1",
+ *    "notificationLevel": 5,
+ *    "dismissCode": "pineapple2",
+ *    "dismissTimestamp": 1426553748000,
+ *    "nodeStateId": 1426542353000,
+ *    "id": "I4J3TqcUBG",
+ *    "message": "Your student scored poorly on the second attempt"
+ * }
+ * 
+ * 
+ * Here's an example of an annotation object. Notice how the notification annotation 
+ * value from above is placed into the value array below.
+ * 
+ * {
+ *    "stepWorkId": 7644783,
+ *    "nodeId": "node_186.or",
+ *    "fromWorkgroup": -1,
+ *    "value": [
+ *        {
+ *           "attemptNumber": 1,
+ *           "score": "0-2",
+ *           "notificationLevel": 5,
+ *           "dismissCode": "pineapple1",
+ *           "nodeStateId": 1426542353000,
+ *           "id": "1wBdXcHtH1",
+ *           "message": "Your student scored poorly on the first attempt"
+ *        },
+ *        {
+ *           "attemptNumber": 2,
+ *           "score": "1",
+ *           "notificationLevel": 5,
+ *           "dismissCode": "pineapple2",
+ *           "dismissTimestamp": 1426553748000,
+ *           "nodeStateId": 1426542453000,
+ *           "id": "I4J3TqcUBG",
+ *           "message": "Your student scored poorly on the second attempt"
+ *        }
+ *    ],
+ *    "runId": 6490,
+ *    "type": "notification",
+ *    "toWorkgroup": 156302,
+ *    "postTime": 1409780146000
+ * }
+ * 
+ * @param notificationAnnotation the notification annotation
+ * @param notificationValue the notification value
+ */
+View.prototype.dismissNotification = function(notificationAnnotation, notificationValue) {
+    
+    if (notificationAnnotation != null && notificationValue != null) {
+        
+        // get the notification annotation value array
+        var value = notificationAnnotation.value;
+        
+        // loop through all the values
+        for (var v = 0; v < value.length; v++) {
+            // get a value
+            var valueElement = value[v];
+            
+            // check if we have found the value that was dismissed
+            if (valueElement === notificationValue) {
+                // we have found the notification value that we want to dismiss
+                var date = new Date();
+                
+                // set the dismiss timestamp on the value element
+                valueElement.dismissTimestamp = date.getTime();
+            }
+        }
+        
+        var postAnnotationsURL = this.getConfig().getConfigParam('postAnnotationsUrl');
+        
+        var runId = notificationAnnotation.runId;
+        var toWorkgroup = notificationAnnotation.toWorkgroup;
+        var fromWorkgroup = notificationAnnotation.fromWorkgroup;
+        var annotationType = notificationAnnotation.type;
+        var value = notificationAnnotation.value;
+        var stepWorkId = notificationAnnotation.stepWorkId;
+        var nodeId = notificationAnnotation.nodeId;
+        
+        // create the post annotation params
+        var postAnnotationParams = {
+            runId: runId,
+            toWorkgroup: toWorkgroup,
+            fromWorkgroup: fromWorkgroup,
+            annotationType: annotationType,
+            value: JSON.stringify(value),
+            stepWorkId: stepWorkId,
+            nodeId: nodeId
+        };
+        
+        // the succes callback
+        var postAnnotationCallback = function(responseText, responseXML, args) {
+            var view = args[0];
+            
+            // process the notifications
+            view.processNotifications();
+        };
+        
+        // the failure callback
+        var postAnnotationCallbackFail = function() {
+            
+        };
+        
+        // save notification annotation back to server
+        this.connectionManager.request('POST', 1, postAnnotationsURL, postAnnotationParams, postAnnotationCallback, [this], postAnnotationCallbackFail);
+    }
+};
+
 /* used to notify scriptloader that this script has finished loading */
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_topmenu.js');

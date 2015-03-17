@@ -636,6 +636,7 @@ public class StudentDataController {
 		String periodId = request.getParameter("periodId");
 		String data = request.getParameter("data");
 		String annotationJSONString = request.getParameter("annotation");
+		String annotationsJSONString = request.getParameter("annotations");
 		
 		//obtain the id the represents the id in the step work table
 		String stepWorkId = request.getParameter("id");
@@ -917,6 +918,37 @@ public class StudentDataController {
 					}
 				}
 				
+                //check if there are annotations that we need to save
+                if(annotationsJSONString != null && !annotationsJSONString.equals("null")) {
+                    try {
+                        //get the annotations JSON array
+                        JSONArray annotationsJSONArray = new JSONArray(annotationsJSONString);
+                        
+                        // loop through all the annotations
+                        for (int a = 0; a < annotationsJSONArray.length(); a++) {
+                            // get an annotation JSON object
+                            JSONObject annotationJSONObject = annotationsJSONArray.optJSONObject(a);
+                            
+                            //get the annotation parameters
+                            Long annotationRunId = annotationJSONObject.optLong("runId");
+                            Long toWorkgroup = annotationJSONObject.optLong("toWorkgroup");
+                            Long fromWorkgroup = annotationJSONObject.optLong("fromWorkgroup");
+                            String type = annotationJSONObject.optString("type");
+                            
+                            //add the step work id and post time to the JSON object
+                            annotationJSONObject.put("stepWorkId", stepWork.getId());
+                            annotationJSONObject.put("postTime", postTime.getTime());
+                            
+                            //save the annotation JSON object
+                            saveAnnotationObject(annotationRunId, toWorkgroup, fromWorkgroup, type, annotationJSONObject, stepWork, postTime);
+                            
+                            //set the annotation post time into the response
+                            jsonResponse.put("annotationPostTime", postTime.getTime());
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
 				
 				//send back the json string with step work id and post time
 				response.getWriter().print(jsonResponse.toString());

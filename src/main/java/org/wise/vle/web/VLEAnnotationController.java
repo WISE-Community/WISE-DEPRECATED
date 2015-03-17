@@ -298,6 +298,10 @@ public class VLEAnnotationController {
 				//add all the auto graded annotations
 				List<Annotation> autoGradedAnnotations = vleService.getAnnotationByToUserType(toWorkgroup, "autoGraded");
 				annotationList.addAll(autoGradedAnnotations);
+				
+				//add all the notification annotations
+                List<Annotation> notificationAnnotations = vleService.getAnnotationByToUserType(toWorkgroup, "notification");
+                annotationList.addAll(notificationAnnotations);
 			} else if (fromWorkgroupIdStr != null || toWorkgroupIdStr != null) {
 				UserInfo fromWorkgroup = null;
 				UserInfo toWorkgroup = null;
@@ -794,6 +798,11 @@ public class VLEAnnotationController {
 			}
 		}
 		
+		Long stepWorkIdLong = null;
+		if (stepWorkId != null) {
+		    stepWorkIdLong = new Long(stepWorkId);
+		}
+		
 		boolean allowedAccess = false;
 		
 		/*
@@ -806,7 +815,8 @@ public class VLEAnnotationController {
 		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong)) {
 			//the student is in the run
 			
-			if(SecurityUtils.isUserInWorkgroup(signedInUser, fromWorkgroupId)) {
+			if(SecurityUtils.isUserInWorkgroup(signedInUser, fromWorkgroupId) || 
+			        SecurityUtils.isUserInWorkgroup(signedInUser, toWorkgroupId)) {
 				//the student is in the workgroup so we will allow this request 
 				allowedAccess = true;
 			}
@@ -822,28 +832,46 @@ public class VLEAnnotationController {
 		Timestamp postTime = new Timestamp(now.getTimeInMillis());
 		StepWork stepWork = null;
 		
-		if(stepWorkId != null) {
-			stepWork = (StepWork) vleService.getStepWorkById(new Long(stepWorkId));
+		if(stepWorkIdLong != null) {
+			stepWork = (StepWork) vleService.getStepWorkById(stepWorkIdLong);
 		}
 		
-		UserInfo fromUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(fromWorkgroupId);
+		UserInfo fromUserInfo = null;
+		
+		if (fromWorkgroupId != -1) {
+		    // the from workgroup id is not -1 so we will get the user info
+		    fromUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(fromWorkgroupId);
+		}
+		
 		UserInfo toUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(toWorkgroupId);
 
 		JSONObject annotationEntryJSONObj = new JSONObject();
 		try {
-			annotationEntryJSONObj.put("runId", runId);
+			annotationEntryJSONObj.put("runId", runIdLong);
 			annotationEntryJSONObj.put("nodeId", nodeId);
-			annotationEntryJSONObj.put("toWorkgroup", toWorkgroupIdStr);
-			annotationEntryJSONObj.put("fromWorkgroup", fromWorkgroupIdStr);
-			annotationEntryJSONObj.put("stepWorkId", stepWorkId);
+			annotationEntryJSONObj.put("toWorkgroup", toWorkgroupId);
+			annotationEntryJSONObj.put("fromWorkgroup", fromWorkgroupId);
+			annotationEntryJSONObj.put("stepWorkId", stepWorkIdLong);
 			annotationEntryJSONObj.put("type", type);
 			
 			try {
+			    // try to convert the value into a JSONObject
 				JSONObject valueJSONObject = new JSONObject(value);
 				annotationEntryJSONObj.put("value", valueJSONObject);
 			} catch (JSONException e1) {
-				//e1.printStackTrace();
-				annotationEntryJSONObj.put("value", value);
+			    try {
+			        // try to convert the value into a JSONArray
+		            JSONArray valueJSONObject = new JSONArray(value);
+		            annotationEntryJSONObj.put("value", valueJSONObject);
+			    } catch (JSONException e2) {
+			        //e1.printStackTrace();
+			        
+			        /*
+			         * we were unable to convert the value into a JSONObject 
+			         * or JSONArray so we will just use the unconverted value
+			         */
+	                annotationEntryJSONObj.put("value", value);
+			    }
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

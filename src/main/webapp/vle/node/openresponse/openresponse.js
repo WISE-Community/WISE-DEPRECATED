@@ -406,6 +406,7 @@ OPENRESPONSE.prototype.cRaterRequestSuccessCallback = function(responseText, res
 	var runId = view.getConfig().getConfigParam('runId');
 	var toWorkgroupId = view.getUserAndClassInfo().getWorkgroupId();
 	var suppressFeedback = successArgs.suppressFeedback;
+	var stepContent = view.getProject().getNodeById(nodeId).content.getContentJSON();
 	
 	if (responseJSON != null) {
 		try {
@@ -551,6 +552,12 @@ OPENRESPONSE.prototype.cRaterRequestSuccessCallback = function(responseText, res
 				or.setCheckAnswerAvailable();
 			}
 			
+			/*
+			 * process the student work to see if we need to activate any 
+			 * teacher notifications
+			 */
+			or.processTeacherNotifications(nodeVisit, orState, cRaterResponse);
+			
 			//save the student work to the server immediately
 			view.getProject().getNodeById(nodeId).save(orState);
 		} catch(err) {
@@ -567,6 +574,96 @@ OPENRESPONSE.prototype.cRaterRequestSuccessCallback = function(responseText, res
 	 * for the feedback to be displayed
 	 */
 	eventManager.fire('unlockScreenEvent');
+};
+
+/**
+ * Process the teacher notifications to see if we need to activate any
+ * @param nodeVisit the current node visit
+ * @param orState the current open response state
+ * @param cRaterResponse the cRater response
+ */
+OPENRESPONSE.prototype.processTeacherNotifications = function(nodeVisit, orState, cRaterResponse) {
+    
+    if (nodeVisit != null && orState != null) {
+        // get the step content
+        var stepContent = this.node.content.getContentJSON()
+        
+        // get teacher notifications from the step content
+        var teacherNotifications = stepContent.teacherNotifications;
+            
+        if (teacherNotifications != null) {
+            
+            /*
+             * loop through all the teacher notifications for this step
+             * and check if we need to activate any of them
+             */
+            for (var t = 0; t < teacherNotifications.length; t++) {
+                // get a teacher notification
+                var teacherNotification = teacherNotifications[t];
+                
+                if (teacherNotification != null) {
+                    var teacherNotificationType = teacherNotification.type;
+                    
+                    if (teacherNotificationType === 'cRaterAttemptScore') {
+                        /*
+                         * this is a teacher notification that checks what score
+                         * the student received on a specific attempt number
+                         */
+                        
+                        var cRaterResponseScore = null;
+                        
+                        if (cRaterResponse != null) {
+                            cRaterResponseScore = cRaterResponse.score;
+                        }
+                        
+                        // get the attempt number we want to look at
+                        var attemptNumber = teacherNotification.attemptNumber;
+                        
+                        // get the score that we will try to match with the student score
+                        var score = teacherNotification.score;
+                        
+                        // get the number of times the student has submitted to CRater
+                        var numberOfCRaterSubmits = this.getNumberOfCRaterSubmits();
+                        
+                        if (numberOfCRaterSubmits === attemptNumber) {
+                            // the attempt number matches the one we are looking for
+                            
+                            if (cRaterResponseScore != null && 
+                                    cRaterResponseScore.toString().match("[" + score + "]")) {
+                                // the score matches the score we are looking for
+                                
+                                // get the other values for the teacher notification
+                                var id = teacherNotification.id;
+                                var message = teacherNotification.message;
+                                var notificationLevel = teacherNotification.notificationLevel;
+                                var dismissCode = teacherNotification.dismissCode;
+                                var nodeStateId = orState.timestamp;
+                                
+                                /*
+                                 * create a teacher notification object that will
+                                 * become active
+                                 */
+                                var newTeacherNotification = {};
+                                newTeacherNotification.id = id;
+                                newTeacherNotification.attemptNumber = attemptNumber;
+                                newTeacherNotification.score = score;
+                                newTeacherNotification.message = message;
+                                newTeacherNotification.notificationLevel = notificationLevel;
+                                newTeacherNotification.dismissCode = dismissCode;
+                                newTeacherNotification.nodeStateId = nodeStateId;
+                                
+                                /*
+                                 * create a new notification annotation and associate it
+                                 * with the current node visit
+                                 */
+                                this.view.addNotificationAnnotation(nodeVisit, newTeacherNotification);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 };
 
 /**

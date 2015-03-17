@@ -474,6 +474,325 @@ View.prototype.removeNodeVisitAutoGradedAnnotation = function(nodeVisit) {
 	}
 };
 
+/**
+ * Create a notification annotation with an empty array for the value
+ * @return a notification annotation with an empty array for the value
+ */
+View.prototype.createNotificationAnnotation = function() {
+    //get the run id
+    var runId = parseInt(this.config.getConfigParam('runId'));
+    
+    //get the current node visit
+    var currentNodeVisit = this.getState().getCurrentNodeVisit();
+    
+    //get the node id
+    var nodeId = currentNodeVisit.nodeId;
+    
+    //get the to workgroup
+    var toWorkgroup = this.userAndClassInfo.getWorkgroupId();
+    
+    //the from workgroup will be -1 since this is an auto graded annotation
+    var fromWorkgroup = -1;
+    
+    //get the annotation type
+    var type = 'notification';
+    
+    /*
+     * get the annotation value, the value will be an array that contains
+     * objects. the objects will be annotation values for specific node 
+     * states. the annotation object is related to a single node visit.
+     * the array of values is how we will link annotation values to
+     * specific node states within the node visit.
+     */
+    var value = [];
+    
+    /*
+     * at this point in time the post time and step work id are not generated
+     * yet so we will set them to null
+     */
+    var postTime = null;
+    var stepWorkId = null;
+    
+    //create the annotation object
+    var notificationAnnotation = new Annotation(runId, nodeId, toWorkgroup, fromWorkgroup, type, value, postTime, stepWorkId);
+    
+    return notificationAnnotation;
+};
+
+/**
+ * Add an annotation value to the values array in the notification annotation.
+ * @param nodeVisit the node visit the notification annotation is associated with
+ * @param notificationValue an object containing an annotation for a specific node state
+ * 
+ * Here's an example of a notification value.
+ * 
+ * {
+ *    "attemptNumber": 2,
+ *    "score": "1",
+ *    "notificationLevel": 5,
+ *    "dismissCode": "pineapple2",
+ *    "nodeStateId": 1426542353000,
+ *    "id": "I4J3TqcUBG",
+ *    "message": "Your student scored poorly on the second attempt"
+ * }
+ * 
+ * 
+ * Here's an example of an annotation object. Notice how the notification value from above
+ * is placed into the value array below.
+ * 
+ * {
+ *    "stepWorkId": 7644783,
+ *    "nodeId": "node_186.or",
+ *    "fromWorkgroup": -1,
+ *    "value": [
+ *        {
+ *           "attemptNumber": 1,
+ *           "score": "0-2",
+ *           "notificationLevel": 5,
+ *           "dismissCode": "pineapple1",
+ *           "nodeStateId": 1426542353000,
+ *           "id": "1wBdXcHtH1",
+ *           "message": "Your student scored poorly on the first attempt"
+ *        },
+ *        {
+ *           "attemptNumber": 2,
+ *           "score": "1",
+ *           "notificationLevel": 5,
+ *           "dismissCode": "pineapple2",
+ *           "nodeStateId": 1426542453000,
+ *           "id": "I4J3TqcUBG",
+ *           "message": "Your student scored poorly on the second attempt"
+ *        }
+ *    ],
+ *    "runId": 6490,
+ *    "type": "notification",
+ *    "toWorkgroup": 156302,
+ *    "postTime": 1409780146000
+ * }
+ */
+View.prototype.addNotificationAnnotation = function(nodeVisit, notificationValue) {
+    if(nodeVisit != null && notificationValue != null) {
+        /*
+         * get the notification annotation associated with the node visit if
+         * the notification annotation exists
+         */
+        var currentNotificationAnnotation = this.getNodeVisitNotificationAnnotation(nodeVisit);
+        
+        if(currentNotificationAnnotation == null) {
+            /*
+             * we do not have a notification annotation for the node visit so we will
+             * now make one
+             */
+            currentNotificationAnnotation = this.createNotificationAnnotation();
+            
+            //get the local copy of the annotations
+            var annotations = this.getAnnotations();
+            
+            if(annotations != null) {
+                //add the new annotation to the local copy
+                annotations.addAnnotation(currentNotificationAnnotation);
+            }
+            
+            //add the mapping between the node visit and the notification annotation
+            this.addNodeVisitNotificationAnnotation(nodeVisit, currentNotificationAnnotation);
+        }
+        
+        // add the notification value to the notification annotation
+        this.insertNotificationValueIntoNotificationAnnotation(currentNotificationAnnotation, notificationValue)
+        
+        /*
+         * fire the teacherNotificationUpdated event so that listeners can
+         * perform any necessary actions
+         */
+        eventManager.fire('teacherNotificationUpdated');
+    }
+};
+
+/**
+ * Insert the notification value into the notification annotation. If the
+ * notification value is already in the annotation, we will update the
+ * notification value in the annotation.
+ * @param notificationAnnotation the notification annotation
+ * @param newNotificationValue the notification value
+ */
+View.prototype.insertNotificationValueIntoNotificationAnnotation = function(notificationAnnotation, newNotificationValue) {
+    
+    if (notificationAnnotation != null && newNotificationValue != null) {
+        // get the value array from the notification annotation
+        var notificationAnnotationValueArray = notificationAnnotation.value;
+        
+        // get the value id
+        var newNotificationValueId = newNotificationValue.id;
+        
+        if (notificationAnnotationValueArray != null) {
+            /*
+             * loop through all the values and check if a notification value 
+             * with the same id as the new notification value already exists 
+             * in the value array. if it does, we will remove it from the array
+             * and then add the new notification value. doing this essentially 
+             * updates the notification value in the array.
+             */
+            for (var x = 0; x < notificationAnnotationValueArray.length; x++) {
+                
+                // get a value from the value array
+                var notificationAnnotationValue = notificationAnnotationValueArray[x];
+                
+                if (notificationAnnotationValue != null) {
+                    // get the id of the value
+                    var notificationAnnotationValueId = notificationAnnotationValue.id;
+                    
+                    // check if the id matches
+                    if (notificationAnnotationValueId === newNotificationValueId) {
+                        // the id matches so we will remove this value element
+                        notificationAnnotationValueArray.splice(x, 1);
+                        x--;
+                    }
+                }
+            }
+            
+            // add the value to the array
+            notificationAnnotationValueArray.push(newNotificationValue);
+        }
+    }
+};
+
+/**
+ * Add the mapping between the node visit and the notification annotation
+ * @param nodeVisit the node visit
+ * @param notificationAnnotation the notification annotation
+ */
+View.prototype.addNodeVisitNotificationAnnotation = function(nodeVisit, notificationAnnotation) {
+    //initialize the array of mappings if necessary
+    if(this.nodeVisitToNotificationAnnotationMappings == null) {
+        this.nodeVisitToNotificationAnnotationMappings = [];
+    }
+    
+    if(nodeVisit != null && notificationAnnotation != null) {
+        //create the object to map the node visit to the notification annotation
+        var nodeVisitToNotificationAnnotationMapping = {
+            nodeVisit:nodeVisit,
+            notificationAnnotation:notificationAnnotation
+        }
+        
+        //add the mapping object to the array
+        this.nodeVisitToNotificationAnnotationMappings.push(nodeVisitToNotificationAnnotationMapping);
+    }
+};
+
+/**
+ * Get the notification annotation for a node visit. There should only be
+ * one notification annotation associated with a node visit.
+ * @param nodeVisit the node visit
+ * @return the notification annotation associated with the node visit
+ * or null if one does not exist
+ */
+View.prototype.getNodeVisitNotificationAnnotation = function(nodeVisit) {
+    //initialize the array of mappings if necessary
+    if(this.nodeVisitToNotificationAnnotationMappings == null) {
+        this.nodeVisitToNotificationAnnotationMappings = [];
+    }
+    
+    //get the mappings
+    var nodeVisitToNotificationAnnotationMappings = this.nodeVisitToNotificationAnnotationMappings;
+    
+    var notificationAnnotation = null;
+    
+    if(nodeVisit != null) {
+        //loop through all the mappings
+        for(var x=0; x<nodeVisitToNotificationAnnotationMappings.length; x++) {
+            //get a mapping
+            var nodeVisitToNotificationAnnotationMapping = nodeVisitToNotificationAnnotationMappings[x];
+            
+            if(nodeVisitToNotificationAnnotationMapping != null) {
+                //get the node visit
+                var tempNodeVisit = nodeVisitToNotificationAnnotationMapping.nodeVisit;
+                
+                //compare the node visit with the one we are looking for
+                if(nodeVisit === tempNodeVisit) {
+                    /*
+                     * we have found the node visit we want so we can get the associated
+                     * notification annotation
+                     */
+                    notificationAnnotation = nodeVisitToNotificationAnnotationMapping.notificationAnnotation;
+                    break;
+                }
+            }
+        }
+    }
+    
+    return notificationAnnotation;
+};
+
+/**
+ * Get the open notification annotations. For each notification annotation we
+ * will look at all the values in the annotation. If any of the values in the
+ * annotation are open, we will add the whole annotation to the array of
+ * annotations that will be returned.
+ * @returns an array of open notification annotations
+ */
+View.prototype.getOpenNotificationAnnotations = function() {
+    var openNotifications = [];
+    
+    //get the local copy of the annotations
+    var annotations = this.getAnnotations();
+    
+    if (annotations != null) {
+        // get the notification annotations
+        var notificationAnnotations = annotations.getAnnotationsByType('notification');
+        
+        if (notificationAnnotations != null) {
+            
+            // loop through all the notification annotations
+            for (var n = 0; n < notificationAnnotations.length; n++) {
+                // get a notification annotation
+                var notificationAnnotation = notificationAnnotations[n];
+                
+                if (notificationAnnotation != null) {
+                    var isOpen = false;
+                    
+                    // get the value of the notification annotation
+                    var value = notificationAnnotation.value;
+                    
+                    if (value != null) {
+                        
+                        // loop through all the values in the notification annotation
+                        for (var v = 0; v < value.length; v++) {
+                            // get a value element
+                            var valueElement = value[v];
+                            
+                            if (valueElement != null) {
+                                
+                                // get the dismiss timestamp
+                                var dismissTimestamp = valueElement.dismissTimestamp;
+                                
+                                if (dismissTimestamp == null) {
+                                    /*
+                                     * the dismiss timestamp is null which means
+                                     * the notification is open
+                                     */
+                                    isOpen = true;
+                                    
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (isOpen) {
+                        /*
+                         * there is at least one value in this notification value
+                         * that is open so we will add this notification to the
+                         * array that will be returned
+                         */
+                        openNotifications.push(notificationAnnotation);
+                    }
+                }
+            }
+        }
+    }
+    
+    return openNotifications;
+};
+
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_annotation.js');

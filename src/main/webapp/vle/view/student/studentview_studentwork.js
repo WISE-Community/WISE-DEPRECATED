@@ -95,15 +95,18 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 		url = "postdata.html";
 	};
 	
-	var annotationString = null;
-	
-	//get the auto graded annotation associated with this node visit if it exists
-	var autoGradedAnnotation = this.getNodeVisitAutoGradedAnnotation(currentNodeVisit);
-	
-	if(autoGradedAnnotation != null) {
-		//we have an auto graded annotation so we will convert it to a string
-		annotationString = encodeURIComponent($.stringify(autoGradedAnnotation));
-	}
+    var annotationsString = null;
+    
+    /*
+     * get the annotations for the current node visit that need to be saved to 
+     * the server
+     */
+    var annotations = this.getAnnotationsToPost(currentNodeVisit);
+    
+    if (annotations != null && annotations.length > 0) {
+        // get the stringified value of the annotations
+        annotationsString = encodeURIComponent($.stringify(annotations));
+    }
 
 	//obtain the json string representation of the node visit
 	var nodeVisitData = encodeURIComponent($.stringify(currentNodeVisit));
@@ -124,9 +127,9 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 				data: nodeVisitData
 			};
 			
-			if(annotationString != null) {
+			if(annotationsString != null) {
 				//add the annotation to the params so it will be saved to the server
-				postParams.annotation = annotationString;
+				postParams.annotations = annotationsString;
 			}
 			
 			this.connectionManager.request('POST', 3, url, 
@@ -134,7 +137,7 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 					this.processPostResponse, 
 					{vle: this, 
 					 nodeVisit:currentNodeVisit, 
-					 annotation:autoGradedAnnotation,
+					 annotations:annotations,
 					 successCallback:successCallback,
 					 failureCallback:failureCallback,
 					 additionalData:additionalData},
@@ -238,18 +241,19 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback,
 		additionalData = {vle: this, nodeVisit:nodeVisit};
 	}
 	
-	var annotationString = null;
-	
-	//get the auto graded annotation associated with this node visit if it exists
-	var autoGradedAnnotation = this.getNodeVisitAutoGradedAnnotation(nodeVisit);
-	
-	if(autoGradedAnnotation != null) {
-		//we have an auto graded annotation so we will convert it to a string
-		annotationString = encodeURIComponent($.stringify(autoGradedAnnotation));
-		
-		//add the annotation to the params so it will be saved to the server
-		postStudentDataUrlParams.annotation = annotationString;
-	}
+    /*
+     * get the annotations for the current node visit that need to be saved to 
+     * the server
+     */
+    var annotations = this.getAnnotationsToPost(nodeVisit);
+    
+    if (annotations != null && annotations.length > 0) {
+        // get the stringified value of the annotations
+        var annotationsString = encodeURIComponent($.stringify(annotations));
+        
+        // set the annotations string into the post params
+        postStudentDataUrlParams.annotations = annotationsString;
+    }
 	
 	// Only POST this nodevisit if this nodevisit is not currently being POSTed to the server.
 	if (this.isInPOSTInProgressArray(nodeVisit)) {
@@ -263,6 +267,31 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback,
 	}
 };
 
+/**
+ * Get the annotations for the node visit that need to be saved to the server
+ * @param nodeVisit the node visit we want annotations for
+ * @returns an array of annotations for the node visit that need to be
+ * saved to the server
+ */
+View.prototype.getAnnotationsToPost = function(nodeVisit) {
+    var annotations = [];
+    
+    //get the auto graded annotation associated with this node visit if it exists
+    var autoGradedAnnotation = this.getNodeVisitAutoGradedAnnotation(nodeVisit);
+    
+    if (autoGradedAnnotation != null) {
+        annotations.push(autoGradedAnnotation);
+    }
+    
+    // get the notification annotation associated with this node visit if it exists
+    var notificationAnnotation = this.getNodeVisitNotificationAnnotation(nodeVisit);
+    
+    if (notificationAnnotation != null) {
+        annotations.push(notificationAnnotation);
+    }
+    
+    return annotations;
+};
 
 /**
  * Posts all non-posted node_visits to the server
@@ -298,6 +327,7 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 	var id = responseJSONObj.id;
 	var visitPostTime = responseJSONObj.visitPostTime;
 	var annotationPostTime = responseJSONObj.annotationPostTime;
+	var annotations = args.annotations;
 
 	/*
 	 * set the id for the node visit, this is the same as the id value
@@ -339,12 +369,26 @@ View.prototype.processPostResponse = function(responseText, responseXML, args){
 	}
 	
 	/*
-	 * check if we need to update the annotation post time of the annotation
-	 * that was saved to the server along with the node visit
+	 * check if we need to update the annotation post time of the annotations
+	 * that were saved to the server along with the node visit
 	 */
-	if(args.annotation != null && annotationPostTime != null) {
-		//set the post time of our local copy of the annotation
-		args.annotation.postTime = annotationPostTime;
+	if(annotations != null) {
+	    
+	    // loop through all the annotations and set the post time and step work id
+	    for (var a = 0; a < annotations.length; a++) {
+	        // get an annotation
+	        var annotation = annotations[a];
+	        
+	        if (id != null) {
+	            // set the step work id
+	            annotation.stepWorkId = id;
+	        }
+	        
+	        if (annotationPostTime != null) {
+	            // set the post time
+	            annotation.postTime = annotationPostTime;
+	        }
+	    }
 	}
 
 	//fire the event that says we are done processing the post response

@@ -1145,12 +1145,12 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 		if(user != null && runId != null && periodId != null && workgroupId != null) {
 			try {
 				//get the run
-				Run run = runService.retrieveById(runId);
+				Run run = runService.retrieveById(runId, true);
 				
 				//check if the user is in the run
 				if (run.isStudentAssociatedToThisRun(user)) {
 					//get the workgroup
-					Workgroup workgroup = workgroupService.retrieveById(workgroupId);
+					Workgroup workgroup = workgroupService.retrieveById(workgroupId, true);
 					
 					//check if the user is in the workgroup
 					if(workgroup.getMembers().contains(user)) {

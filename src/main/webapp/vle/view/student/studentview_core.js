@@ -35,6 +35,7 @@ View.prototype.vleDispatcher = function(type,args,obj){
 				obj.checkForNewTeacherAnnotations();
 			}
 		}
+		obj.processNotifications();
 	} else if(type=='retrieveProjectMetaDataCompleted') {
 		obj.setProjectPostLevel();
 	} else if(type=='ifrmLoaded'){
@@ -189,6 +190,17 @@ View.prototype.displayGlobalTools = function() {
 	
 	/* get the mode from the config */
 	var mode = this.config.getConfigParam('mode');
+	
+	/*
+	 * add a click event to the logo. when the logo is clicked we will display
+	 * any notifications.
+	 */
+	$('#logo').click({thisView: this}, function(event) {
+	    var thisView = event.data.thisView;
+	    
+	    // handle the logo clicked event
+	    thisView.handleLogoClicked();
+	});
 };
 
 /**
@@ -1138,6 +1150,72 @@ View.prototype.updateSequenceStatuses = function() {
 		sequenceNode.setStatus('isVisited', isVisited);
 		sequenceNode.setStatus('isVisitable', isVisitable);
 	}
+};
+
+/** 
+ * Process the notifications
+ */
+View.prototype.processNotifications = function() {
+    // get all the open notification annotations
+    var openNotificationAnnotations = this.getOpenNotificationAnnotations();
+    
+    var displayNotification = false;
+    
+    if (openNotificationAnnotations != null && openNotificationAnnotations.length > 0) {
+        
+        // loop through all the open notification annotations
+        for (var n = 0; n < openNotificationAnnotations.length; n++) {
+            
+            // get an open notification annotaiton
+            var openNotificationAnnotation = openNotificationAnnotations[n];
+            
+            if (openNotificationAnnotation != null) {
+                
+                // get the value array from the notification annotation
+                var value = openNotificationAnnotation.value;
+                
+                if (value != null) {
+                    
+                    // loop through all the values
+                    for (var v = 0; v < value.length; v++) {
+                        
+                        // get a value
+                        var valueElement = value[v];
+                        
+                        if (valueElement != null) {
+                            // get the notification level
+                            var notificationLevel = valueElement.notificationLevel;
+                            
+                            if (notificationLevel === 5) {
+                                // the notification level is 5 so we will display this notification
+                                displayNotification = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    if (displayNotification) {
+        // there are open notifications so we will make the header red
+        $('#vle_body header').addClass('notificationLevel5');
+    } else {
+        // there are no open notifications so we will not make the header red
+        $('#vle_body header').removeClass('notificationLevel5');
+        
+        /*
+         * close the notification div if the notification div dialog has been
+         * initialized and the dialog is open. this we be used in the case 
+         * where the teacher opens the notification dialog and there is
+         * only one open notification and the teacher dismisses it leaving
+         * 0 open notifications so we automatically close the notification
+         * dialog.
+         */
+        if ($('#notificationDiv').hasClass('ui-dialog-content') && $('#notificationDiv').dialog('isOpen')) {
+            $('#notificationDiv').dialog('close');
+        }
+    }
 };
 
 //used to notify scriptloader that this script has finished loading

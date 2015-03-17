@@ -269,6 +269,10 @@ body#w4_vle {
 	background:url("../images/header-bg-vle.png") repeat-x scroll 0 0 #5095A2;
 }
 
+#vle_body header.notificationLevel5 {
+    border: 4px solid red;
+}
+
 #vle_body footer {
 	position:absolute;
 	bottom:0;

@@ -486,7 +486,8 @@ var componentloader = function(em, sl){
 				'nodeStatusUpdated':[null,null],
 				'cRaterResponseReceived':[null,null],
 				'renderNodeBlocked':[null,null],
-				'beforeNodeStateSaved':[null,null]
+				'beforeNodeStateSaved':[null,null],
+                'teacherNotificationUpdated':[null,null]
 			},
 			methods:{},
 			initialize:{
@@ -511,6 +512,7 @@ var componentloader = function(em, sl){
 						view.eventManager.subscribe('constraintStatusUpdated', view.vleDispatcher, view);
 						view.eventManager.subscribe('nodeLinkClicked', view.vleDispatcher, view);
 						view.eventManager.subscribe('renderNodeBlocked', view.vleDispatcher, view);
+						view.eventManager.subscribe('teacherNotificationUpdated', view.teacherNotificationHandler, view);
 						view.eventManager.initializeLoading([['loadingProjectStarted','loadingProjectCompleted','Project'],
 						                                     ['getUserAndClassInfoStarted','getUserAndClassInfoCompleted', 'Learner Data'], 
 						                                     ['getUserAndClassInfoStarted', 'renderNodeCompleted', 'Learning Environment']]);
