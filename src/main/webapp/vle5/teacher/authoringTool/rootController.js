@@ -259,7 +259,7 @@ define(['app'], function(app) {
        
         this.loadNode = function(nodeId, mode) {
             
-            var node = ProjectService.getNodeByNodeId(nodeId);
+            var node = ProjectService.getNodeById(nodeId);
             
             if(node !== null) {
                 this.currentNode = node;
@@ -278,7 +278,7 @@ define(['app'], function(app) {
         };
         
         this.loadNodeAdvancedAuthoring = function(nodeId) {
-            var node = ProjectService.getNodeByNodeId(nodeId);
+            var node = ProjectService.getNodeById(nodeId);
             
             if (node !== null) {
                 var nodeSrc = ProjectService.getNodeSrcByNodeId(nodeId);

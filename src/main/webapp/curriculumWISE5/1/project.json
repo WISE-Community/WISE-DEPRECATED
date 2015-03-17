@@ -121,12 +121,22 @@
             "to": "node12"
         }
     ],
-    "startId": "node1",
-    "tags": [
+    "startId": "group0",
+    "groups": [
         {
-            "id": "tag1",
-            "name": "Activity 1",
-            "navigationMode": "guided",
+            "id": "group0",
+            "title": "My First WISE5 Project",
+            "startId": "group1",
+            "ids": [
+                "group1",
+                "group2",
+                "group3"
+            ]
+        },
+        {
+            "id": "group1",
+            "title": "Activity 1",
+            "startId": "node1",
             "ids": [
                 "node1",
                 "node2",
@@ -136,10 +146,9 @@
             ]
         },
         {
-            "id": "tag2",
-            "name": "Activity 2",
-            "navigationMode": "open",
-            "startNodeId": "node5",
+            "id": "group2",
+            "title": "Activity 2",
+            "startId": "node5",
             "ids": [
                 "node5",
                 "node6",
@@ -148,16 +157,27 @@
             ]
         },
         {
-            "id": "tag3",
-            "name": "Activity 3",
-            "navigationMode": "guided",
-            "startNodeId": "node9",
+            "id": "group3",
+            "title": "Activity 3",
+            "startId": "node9",
             "ids": [
                 "node9",
                 "node10",
                 "node11",
                 "node12"
             ]
+        }
+    ],
+    "constraints": [
+        {
+            "id": "constraint1",
+            "constraintLogic": "guidedNavigation",
+            "targetId": "group1"
+        },
+        {
+            "id": "constraint1",
+            "constraintLogic": "guidedNavigation",
+            "targetId": "group3"
         }
     ],
     "navigationMode": "guided",

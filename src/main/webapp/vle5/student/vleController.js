@@ -126,7 +126,7 @@ define(['app'],
         };
         
         this.setCurrentNodeByNodeId = function(nodeId) {
-            var node = ProjectService.getNodeByNodeId(nodeId);
+            var node = ProjectService.getNodeById(nodeId);
             StudentDataService.setCurrentNode(node);
         };
         

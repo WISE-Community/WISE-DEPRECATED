@@ -9,6 +9,127 @@ define(['angular', 'configService'], function(angular, configService) {
             return this.project;
         };
         
+        this.getProjectStartId = function() {
+            var projectStartId = null;
+            var project = this.getProject();
+            
+            if (project != null) {
+                var startId = project.startId;
+                
+                if (startId != null) {
+                    projectStartId = startId;
+                }
+            }
+            
+            return projectStartId;
+        };
+        
+        this.getGroups = function() {
+            var groups = null;
+            var project = this.getProject();
+            
+            if (project != null) {
+                groups = project.groups;
+            }
+            
+            return groups;
+        };
+        
+        this.getGroupById = function(id) {
+            var group = null;
+            var project = this.getProject();
+            
+            if (project != null) {
+                var groups = project.groups;
+                
+                for (var g = 0; g < groups.length; g++) {
+                    var tempGroup = groups[g];
+                    
+                    if (tempGroup != null) {
+                        var tempGroupId = tempGroup.id;
+                        
+                        if (tempGroupId == id) {
+                            group = tempGroup;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            
+            return group;
+        };
+        
+        this.isNodeDescendentOfGroup = function(node, group) {
+            var result = false;
+            
+            if (node != null && group != null) {
+                var descendents = this.getDescendentsOfGroup(group);
+                var nodeId = node.id;
+                
+                if (descendents.indexOf(nodeId) != -1) {
+                    result = true;
+                }
+            }
+            
+            return result;
+        };
+        
+        this.getDescendentsOfGroup = function(group) {
+            var descendents = null;
+            
+            if (group != null) {
+                var childIds = group.ids;
+                
+                descendents = childIds;
+                
+                for (var c = 0; c < childIds.length; c++) {
+                    var childId = childIds[c];
+                    
+                    var group = this.getGroupById(childId);
+                    
+                    if (group != null) {
+                        var childDescendents = this.getDescendentsOfGroup(group);
+                        
+                        descendents = descendents.concat(childDescendents);
+                    }
+                }
+            }
+            
+            return descendents;
+        };
+        
+        this.isStartNode = function(node) {
+            var result = false;
+            
+            if (node != null) {
+                var nodeId = node.id;
+                
+                var projectStartId = this.getProjectStartId();
+                
+                if (nodeId === projectStartId) {
+                    result = true;
+                }
+                
+                var groups = this.getGroups();
+                
+                for (var g = 0; g < groups.length; g++) {
+                    var group = groups[g];
+                    
+                    if (group != null) {
+                        var groupStartId = group.startId;
+                        
+                        if (nodeId === groupStartId) {
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return result;
+        };
+        
         this.getStartNodeId = function() {
             var startNodeId = null;
             var project = this.getProject();
@@ -16,6 +137,64 @@ define(['angular', 'configService'], function(angular, configService) {
                 startNodeId = project.startNodeId;
             }
             return startNodeId;
+        };
+        
+        this.getConstraints = function() {
+            var constraints = null;
+            var project = this.getProject();
+            
+            if (project != null) {
+                constraints = project.constraints;
+            }
+            
+            return constraints;
+        };
+        
+        this.getConstraintsForNode = function(node) {
+            var constraints = [];
+            
+            var allConstraints = this.getConstraints();
+            
+            for (var c = 0; c < allConstraints.length; c++) {
+                var constraint = allConstraints[c];
+                
+                if (this.isNodeAffectedByConstraint(node, constraint)) {
+                    constraints.push(constraint);
+                }
+            }
+            
+            return constraints;
+        };
+        
+        this.isNodeAffectedByConstraint = function(node, constraint) {
+            var result = false;
+            
+            if (node != null && constraint != null) {
+                var nodeId = node.id;
+                var targetId = constraint.targetId;
+                
+                var targetNode = this.getNodeById(targetId);
+                
+                if (targetNode != null) {
+                    // the target is a node
+                    
+                    if (nodeId === targetId) {
+                        result = true;
+                    }
+                } else {
+                    // the target is a group
+                    var targetGroup = this.getGroupById(targetId);
+                    
+                    if (targetGroup != null) {
+                        
+                        if (this.isNodeDescendentOfGroup(node, targetGroup)) {
+                            result = true;
+                        }
+                    }
+                }
+            }
+            
+            return result;
         };
         
         this.getNavigationMode = function() {
@@ -118,7 +297,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }));
         };
 
-        this.getNodeByNodeId = function(nodeId) {
+        this.getNodeById = function(nodeId) {
             var project = this.project;
             
             if(project !== null) {

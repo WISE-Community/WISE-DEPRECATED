@@ -26,7 +26,7 @@ define(['app'], function(app) {
                 };
                 
                 var moveToNode = angular.bind(this, function() {
-                    var node = ProjectService.getNodeByNodeId(nodeId);
+                    var node = ProjectService.getNodeById(nodeId);
                     
                     if(node !== null) {
                         this.currentNode = node;

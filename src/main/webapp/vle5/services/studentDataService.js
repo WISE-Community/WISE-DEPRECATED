@@ -33,7 +33,7 @@ define(['angular', 'configService'], function(angular, configService) {
             if (latestNodeVisit != null) {
                 nodeId = latestNodeVisit.nodeId;
                 
-                var node = ProjectService.getNodeByNodeId(nodeId);
+                var node = ProjectService.getNodeById(nodeId);
                 this.setCurrentNode(node);
             }
         };
@@ -114,50 +114,79 @@ define(['angular', 'configService'], function(angular, configService) {
                 
                 var isNodeVisitableStatus = {};
                 isNodeVisitableStatus.statusType = 'isVisitable';
+
+                // get the constraints that affect this node
+                var constraintsForNode = ProjectService.getConstraintsForNode(node);
                 
-                if (this.isNodeVisited(nodeId)) {
+                if (constraintsForNode == null || constraintsForNode.length == 0) {
+                    // this node does not have any constraints so it is clickable
                     isNodeVisitableStatus.statusValue = true;
                 } else {
-                    var currentNode = this.currentNode;
                     
-                    if (currentNode != null) {
-                        var currentNodeId = currentNode.id;
+                    // loop through all the constraints that affect this node
+                    for (var c = 0; c<constraintsForNode.length; c++) {
+                        var constraintForNode = constraintsForNode[c];
                         
-                        var transitions = ProjectService.getTransitionsByFromNodeId(currentNodeId);
-                        
-                        if (transitions != null) {
-                            var transitionsToNodeId = ProjectService.getTransitionsByFromAndToNodeId(currentNodeId, nodeId);
+                        if (constraintForNode != null) {
+                            var constraintLogic = constraintForNode.constraintLogic;
                             
-                            if (transitions.length > 1) {
-                                // the current node has branches
-                                
-                                // get all the transitions from the current node to the node status node
-                                
-                                
-                                if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
-                                    /*
-                                     * there is a transition between the two nodes so the node status node
-                                     * is not visitable
-                                     */
-                                    isNodeVisitableStatus.statusValue = false;
-                                }
-                            } else {
-                                //the current node does not have branches
-                                if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
-                                    /*
-                                     * there is a transition between the two nodes so the node status node
-                                     * is not visitable
-                                     */
+                            if (constraintLogic == 'guidedNavigation') {
+                                if (this.isNodeVisited(nodeId)) {
+                                    // the node has been visited before so it should be clickable
                                     isNodeVisitableStatus.statusValue = true;
+                                } else {
+                                    /*
+                                     * the node has not been visited before so we will determine
+                                     * if the node is clickable by looking at the transitions
+                                     */
+                                    var currentNode = this.currentNode;
+                                    
+                                    if (currentNode != null) {
+                                        // there is a current node
+                                        var currentNodeId = currentNode.id;
+                                        
+                                        // get the transitions from the current node
+                                        var transitions = ProjectService.getTransitionsByFromNodeId(currentNodeId);
+                                        
+                                        if (transitions != null) {
+                                            
+                                            // get the transitions from the current node to the node status node
+                                            var transitionsToNodeId = ProjectService.getTransitionsByFromAndToNodeId(currentNodeId, nodeId);
+                                            
+                                            if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
+                                                // there is a transition between the current node and the node status node
+                                                
+                                                // check if the current node has branches
+                                                
+                                                if (transitions.length > 1) {
+                                                    // the current node has branches so the node status node is not clickable
+                                                    isNodeVisitableStatus.statusValue = false;
+                                                } else {
+                                                    // the current node does not have branches so the node status node is clickable
+                                                    isNodeVisitableStatus.statusValue = true;
+                                                }
+                                            } else {
+                                                /*
+                                                 * there is no transition between the current node and the node status node
+                                                 * so the node we will set the node to be not clickable
+                                                 */
+                                                isNodeVisitableStatus.statusValue = false;
+                                            }
+                                        }
+                                    } else {
+                                        // there is no current node because the student has just started the project
+                                    }
+                                    
+                                    if (ProjectService.isStartNode(node)) {
+                                        /*
+                                         * the node is the start node of the project or a start node of a group
+                                         * so we will make it clickable
+                                         */
+                                        isNodeVisitableStatus.statusValue = true;
+                                    }
                                 }
                             }
                         }
-                        
-                        /*
-                        if (transitions != null && transitions.length === 1) {
-                            isNodeVisitableStatus.statusValue = true;
-                        }
-                        */
                     }
                 }
                 

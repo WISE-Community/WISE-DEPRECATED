@@ -6,7 +6,7 @@ define(['app'], function(app) {
             
             //console.log('nodeId=' + this.nodeId);
             
-            var node = ProjectService.getNodeByNodeId(this.nodeId);
+            var node = ProjectService.getNodeById(this.nodeId);
             
             if(node !== null) {
                 var nodeType = node.type;

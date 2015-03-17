@@ -27,6 +27,7 @@ define(['app'], function(app) {
             }, angular.bind(this, function(newNodeVisits, oldNodeVisits) {
                 if (newNodeVisits != null) {
                     StudentDataService.updateNodeStatuses();
+                    var nodeId = StudentDataService.getCurrentNodeId();
                     
                     var wiseData = {};
                     wiseData.nodeId = nodeId;
@@ -65,7 +66,7 @@ define(['app'], function(app) {
                     var nodeId = msg.nodeId;
                     var mode = this.mode;
                     
-                    var node = ProjectService.getNodeByNodeId(nodeId);
+                    var node = ProjectService.getNodeById(nodeId);
                     StudentDataService.setCurrentNode(node);
                     
                     var wiseData = {};
