@@ -60,11 +60,11 @@
         "description": "Text for mouse hover title on the Log out button"
     },
     "previous_step_text": {
-        "value": "<前一步",
+        "value": "<上一步",
         "description": "Text on button in the project vle that will show the previous step in the project"
     },
     "previous_step_title": {
-        "value": "跳转到前面一步",
+        "value": "跳转到上一步",
         "description": "Text for mouse hover title on button in the project vle that will show the previous step in the project"
     },
     "next_step_text": {
@@ -336,11 +336,11 @@
         "description": "'hide/show question' link that toggles the question's visibility in the grading tool"
     },
     "grading_previous_step": {
-        "value": "<前一步",
+        "value": "<上一步",
         "description": "'Previous Step' button in the grading tool that will show the previous step in the project"
     },
     "grading_previous_step_not_exist": {
-        "value": "前一步不存在：这是可评分的第一步",
+        "value": "上一步不存在：这是可评分的第一步",
         "description": "Text to show when previous step does not exist because this is the first gradable step in the project"
     },
     "grading_change_step": {

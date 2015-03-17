@@ -36,11 +36,11 @@
         "description": "Text on the Flagged button"
     },
     "flagged_button_title": {
-        "value": "מעבר על עבודות שסומנו ע\\"י המורה",
+        "value": "מעבר על עבודות שסומנו עי המורה",
         "description": "Text for mouse hover title on the Flagged button"
     },
     "flagged_preview_mode": {
-        "value": "סימון אינו פועל בתצוגה מקדימה. בעת הרצת הפרויקט כאן יוצגו פריטים שיסומנו ע\\"י המורה",
+        "value": "סימון אינו פועל בתצוגה מקדימה. בעת הרצת הפרויקט כאן יוצגו פריטים שיסומנו עי המורה",
         "description": "Text to display when user clicks on flagged work button in preview mode"
     },
     "journal_button_text": {
@@ -152,11 +152,11 @@
         "description": "Text for mouse hover title on the Hint button (will be followed by the hint_title, e.g. 'View Hints')"
     },
     "node_annotations_instructions": {
-        "value": "תמיד אפשר לשוב לצפות במשוב ע\\"י לחיצה על האייקון {0}.",
+        "value": "תמיד אפשר לשוב לצפות במשוב עי לחיצה על האייקון {0}.",
         "description": "The message at the bottom of the feedback popup to tell the student they can always bring the popup back up"
     },
     "show_previous_work_message": {
-        "value": "תזכורת, עבודתך מ\\"שלב {0}\\" הייתה {1}",
+        "value": "תזכורת, עבודתך משלב {0} הייתה {1}",
         "description": "The message that shows the step number and title and the work from a previous step."
     },
     "navigation_expand_all": {
@@ -296,7 +296,7 @@
         "description": "Title/tooltip for sortable rows in a table"
     },
     "ideaBasket_empty": {
-        "value": "ה{0} שלך ריק. לחצ/י על \\"{1}\\" כדי להתחיל להוסיף {2}",
+        "value": "ה{0} שלך ריק. לחצ/י על {1} כדי להתחיל להוסיף {2}",
         "description": "Text to display when idea basket is empty"
     },
     "ideaBasket_deletedTableHeader": {
@@ -500,7 +500,7 @@
         "description": "GradingTool: Text 'latest work' to show only the latest student work"
     },
     "grading_button_view_student_uploaded_files": {
-        "value": "קבצים שהועלו ע\\"י תלמידים או תלמידות",
+        "value": "קבצים שהועלו עי תלמידים או תלמידות",
         "description": "GradingTool: Text in the View Student Uploaded Files button"
     },
     "grading_button_export_latest_student_work": {
@@ -612,7 +612,7 @@
         "description": "GradingTool: grade by team page header"
     },
     "grading_grade_by_team_teacher_graded_score": {
-        "value": "ציון שניתן ע\\"י המורה",
+        "value": "ציון שניתן עי המורה",
         "description": "GradingTool: grade by team teacher-graded score"
     },
     "grading_grade_by_team_percentage_project_completed": {
@@ -697,7 +697,7 @@
     },
     "flag_as_inappropriate": {
         "value": "סימון 'אינו מתאים'",
-        "description": "\\"Flag as inappropriate\\" text, for flagging inappropriate student's work using the flagging tool"
+        "description": "Flag as inappropriate text, for flagging inappropriate student's work using the flagging tool"
     },
     "timestamp": {
         "value": "חותמת זמן",
@@ -789,27 +789,27 @@
     },
     "authoring_hint_forceShow": {
         "value": "חובת הצגה",
-        "description": "Text to display for the label of the \\"Force Show: \\" drop down in the step hint authoring panel"
+        "description": "Text to display for the label of the Force Show: drop down in the step hint authoring panel"
     },
     "authoring_hint_option_never": {
         "value": "לעולם לא",
-        "description": "The text \\"Never\\" to display in \\"force show:\\" drop down in the step hint authoring panel"
+        "description": "The text Never to display in force show: drop down in the step hint authoring panel"
     },
     "authoring_hint_option_firstTimeOnly": {
         "value": "רק בפעם הראשונה",
-        "description": "The text \\"First Time Only\\" to display in \\"force show:\\" drop down in the step hint authoring panel"
+        "description": "The text First Time Only to display in force show: drop down in the step hint authoring panel"
     },
     "authoring_hint_option_always": {
         "value": "תמיד",
-        "description": "The text \\"Always\\" to display in \\"force show:\\" drop down in the step hint authoring panel"
+        "description": "The text Always to display in force show: drop down in the step hint authoring panel"
     },
     "authoring_hint_modal": {
         "value": "שיח עזר",
-        "description": "Text to display for the label of the \\"Modal Dialog\\" checkbox in the step hint authoring panel"
+        "description": "Text to display for the label of the Modal Dialog checkbox in the step hint authoring panel"
     },
     "authoring_hint_isMustViewAllPartsBeforeClosing": {
         "value": "יש לצפות בכל החלקים לפני סגירה",
-        "description": "Text to display for the label of the \\"Must View All Parts Before Closing\\" checkbox in the step hint authoring panel"
+        "description": "Text to display for the label of the Must View All Parts Before Closing checkbox in the step hint authoring panel"
     },
     "authoring_hint_options_label": {
         "value": "אפשרויות",
@@ -820,15 +820,15 @@
         "description": "The label for the 'Labels/Terminology' settings in the step hint authoring panel"
     },
     "authoring_hint_terminology_instructions": {
-        "value": "אפציונאלי: התאם אישית את השם שיוצג עבור \\"רמז(ים)\\" בשלב זה",
+        "value": "אפציונאלי: התאם אישית את השם שיוצג עבור רמז(ים) בשלב זה",
         "description": "The instructions for the 'Labels/Terminology' settings in the step hint authoring panel"
     },
     "authoring_hint_term_label": {
-        "value": "המונח עבור \\"רמז\\":",
+        "value": "המונח עבור רמז:",
         "description": "The label for the 'hint' term input field in the step hint authoring panel"
     },
     "authoring_hint_term_plural_label": {
-        "value": "המונח עבור \\"רמזים\\" (ברבים):",
+        "value": "המונח עבור רמזים (ברבים):",
         "description": "The label for the 'hints' term input field in the step hint authoring panel"
     },
     "authoring_hint_add": {
@@ -848,7 +848,7 @@
         "description": ""
     },
     "authoring_imsettings_text_required": {
-        "value": "\\"תכונת ה\\"טקסט\\" היא הרכיב הבסיסי של כל רעיון ולא ניתן לבטלה.",
+        "value": "תכונת הטקסט היא הרכיב הבסיסי של כל רעיון ולא ניתן לבטלה.",
         "description": "The help text in the Idea Manager settings for the lock icon on the 'text' idea attribute."
     },
     "project_error_has_no_steps": {
@@ -932,7 +932,7 @@
         "description": "The text to show that the student hasn't submitted work for the step yet"
     },
     "teacher_flagged_work": {
-        "value": "עבודה מסומנת ע\\"י המורה",
+        "value": "עבודה מסומנת עי המורה",
         "description": "The title for the flagged work window in the student vle"
     },
     "there_are_no_flagged_items": {
