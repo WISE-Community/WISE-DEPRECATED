@@ -11,7 +11,7 @@ define(['angular'], function(angular) {
 				
 				// hard-coding these values here for now. They should really come from the server.
 				config.textDirection = 'rtl';
-				config.nodeApplications = JSON.parse('[{"name":"OpenResponseNode","url":"nodes/openResponse/index.html"},{"name":"EchoNode","url":"http://wise4.org/echo/index.html"},{"name":"PhETNode","url":"nodes/phet/index.html"},{"name":"HTMLNode","url":"nodes/html/index.html"},{"name":"OutsideURLNode","url":"nodes/outsideURL/index.html"},{"name":"DiscussionNode","url":"http://wise5.org/discussion/index.html"},{"name":"AudioRecorderNode","url":"nodes/audioRecorder/index.html"}]');
+				config.nodeApplications = JSON.parse('[{"name":"OpenResponse","url":"nodes/openResponse/index.html"},{"name":"Echo","url":"http://wise4.org/echo/index.html"},{"name":"PhET","url":"nodes/phet/index.html"},{"name":"HTML","url":"nodes/html/index.html"},{"name":"OutsideURL","url":"nodes/outsideURL/index.html"},{"name":"Discussion","url":"http://wise5.org/discussion/index.html"},{"name":"AudioRecorder","url":"nodes/audioRecorder/index.html"}]');
 				config.navigationApplications = JSON.parse('[{"name":"wiseMap","url":"navigation/navigationMap/index.html"},{"name":"wiseList","url":"navigation/navigationList/index.html"}]');
 				config.projectURL = 'http://localhost:8080/wise/curriculumWISE5/1/project.json';
 				config.projectBaseURL = config.projectURL.replace('project.json','');

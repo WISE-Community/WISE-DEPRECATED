@@ -85,7 +85,7 @@ define(['angular', 'configService'], function(angular, configService) {
         
         this.updateNodeStatuses = function() {
             this.nodeStatuses = [];
-            var nodes = ProjectService.getProjectNodes();
+            var nodes = ProjectService.getNodes();
             
             if (nodes != null) {
                 for (var n = 0; n < nodes.length; n++) {

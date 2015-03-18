@@ -73,7 +73,7 @@ function getStartGroup() {
     if (project != null) {
         var startId = project.startId;
         
-        result = getGroupById(startId);
+        result = getNodeById(startId);
     }
     
     return result;
@@ -105,26 +105,28 @@ function renderGroup(parentGroup, group) {
                 
                 var node = getNodeById(childId);
                 
-                if (node == null) {
-                    // child is a group
-                    
-                    var childGroup = getGroupById(childId);
-                    
-                    //
-                    var groupButton = makeGroupButton(childGroup);
-                    groupDiv.append(groupButton);
-                    groupDiv.append('<br/>');
-                    
-                    renderGroup(group, childGroup);
-                } else {
-                    // child is a node
-                    
-                    var nodeButton = makeNodeButton(node);
-                    groupDiv.append(nodeButton);
-                    groupDiv.append('<br/>');
+                if (node != null) {
+                    var nodeType = node.type;
+                    if (nodeType === 'application') {
+                        
+                        // child is a node
+                        
+                        var nodeButton = makeNodeButton(node);
+                        groupDiv.append(nodeButton);
+                        groupDiv.append('<br/>');
+                    } else if (nodeType === 'group') {
+                        // child is a group
+                        
+                        var childGroup = getNodeById(childId);
+                        
+                        //
+                        var groupButton = makeGroupButton(childGroup);
+                        groupDiv.append(groupButton);
+                        groupDiv.append('<br/>');
+                        
+                        renderGroup(group, childGroup);
+                    }
                 }
-                
-                
             }
         }
     }
@@ -185,29 +187,6 @@ function getNodeById(id) {
                 
                 if (nodeId === id) {
                     result = node;
-                    break;
-                }
-            }
-        }
-    }
-    
-    return result;
-};
-
-function getGroupById(id) {
-    var result = null;
-    
-    var groups = project.groups;
-
-    if (groups != null) {
-        for (var g = 0; g < groups.length; g++) {
-            var group = groups[g];
-            
-            if (group != null) {
-                var groupId = group.id;
-                
-                if (groupId === id) {
-                    result = group;
                     break;
                 }
             }

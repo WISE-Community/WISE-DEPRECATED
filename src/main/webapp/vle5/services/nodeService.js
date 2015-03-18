@@ -44,23 +44,6 @@ define(['angular', 'configService'], function(angular, configService) {
                 return projectJSON;
             }));
         };
-        
-        this.getNodeTitleFromNodeId = function(nodeId) {
-            var title = null;
-            
-            // see if the node id is for a step and get the title if it is
-            title = this.getStepTitleFromNodeId(nodeId);
-            
-            if(title === null) {
-                /*
-                 * we couldn't find a step with the node id so we will now
-                 * search the sequences
-                 */
-                title = this.getSequenceTitleFromNodeId(nodeId);
-            }
-            
-            return title;
-        };
     }]);
     
 });

@@ -6,81 +6,142 @@
     "nodes": [
         {
             "id": "node1",
+            "type": "application",
             "title": "First Step",
-            "type": "HTMLNode",
+            "applicationType": "HTML",
             "src": "node1.html"
         },
         {
             "id": "node2",
+            "type": "application",
             "title": "Second Step",
-            "type": "OpenResponseNode",
+            "applicationType": "OpenResponse",
             "src": "node2.json"
         },
         {
             "id": "node3",
+            "type": "application",
             "title": "Third A Step",
-            "type": "OutsideURLNode",
+            "applicationType": "OutsideURL",
             "src": "node3.json"
         },
         {
             "id": "node13",
+            "type": "application",
             "title": "Third B Step",
-            "type": "OutsideURLNode",
+            "applicationType": "OutsideURL",
             "src": "node13.json"
         },
         {
             "id": "node4",
+            "type": "application",
             "title": "Fourth Step",
-            "type": "OpenResponseNode",
+            "applicationType": "OpenResponse",
             "src": "node4.json"
         },
         {
             "id": "node5",
+            "type": "application",
             "title": "Fifth Step",
-            "type": "OpenResponseNode",
+            "applicationType": "OpenResponse",
             "src": "node5.json"
         },
         {
             "id": "node6",
+            "type": "application",
             "title": "Sixth Step",
-            "type": "OpenResponseNode",
+            "applicationType": "OpenResponse",
             "src": "node6.json"
         },
         {
             "id": "node7",
+            "type": "application",
             "title": "Seventh Step",
-            "type": "OpenResponseNode",
+            "applicationType": "OpenResponse",
             "src": "node7.json"
         },
         {
             "id": "node8",
+            "type": "application",
             "title": "Eighth Step",
-            "type": "OpenResponseNode",
+            "applicationType": "OpenResponse",
             "src": "node8.json"
         },
         {
             "id": "node9",
+            "type": "application",
             "title": "Ninth Step",
-            "type": "OpenResponseNode",
+            "applicationType": "OpenResponse",
             "src": "node9.json"
         },
         {
             "id": "node10",
+            "type": "application",
             "title": "Tenth Step",
-            "type": "OpenResponseNode",
+            "applicationType": "OpenResponse",
             "src": "node10.json"
         },
         {
             "id": "node11",
+            "type": "application",
             "title": "Audio Recorder Step",
-            "type": "AudioRecorderNode",
+            "applicationType": "AudioRecorder",
             "src": "node11.json"
         },
         {
             "id": "node12",
+            "type": "application",
             "title": "PhET step",
-            "type": "PhETNode",
+            "applicationType": "PhET",
             "src": "node12.json"
+        },
+        {
+            "id": "group0",
+            "type": "group",
+            "title": "My First WISE5 Project",
+            "startId": "group1",
+            "ids": [
+                "group1",
+                "group2",
+                "group3"
+            ]
+        },
+        {
+            "id": "group1",
+            "type": "group",
+            "title": "Activity 1",
+            "startId": "node1",
+            "ids": [
+                "node1",
+                "node2",
+                "node3",
+                "node13",
+                "node4"
+            ]
+        },
+        {
+            "id": "group2",
+            "type": "group",
+            "title": "Activity 2",
+            "startId": "node5",
+            "ids": [
+                "node5",
+                "node6",
+                "node7",
+                "node8"
+            ]
+        },
+        {
+            "id": "group3",
+            "type": "group",
+            "title": "Activity 3",
+            "startId": "node9",
+            "ids": [
+                "node9",
+                "node10",
+                "node11",
+                "node12"
+            ]
         }
     ],
     "transitions": [
@@ -122,62 +183,11 @@
         }
     ],
     "startId": "group0",
-    "groups": [
-        {
-            "id": "group0",
-            "title": "My First WISE5 Project",
-            "startId": "group1",
-            "ids": [
-                "group1",
-                "group2",
-                "group3"
-            ]
-        },
-        {
-            "id": "group1",
-            "title": "Activity 1",
-            "startId": "node1",
-            "ids": [
-                "node1",
-                "node2",
-                "node3",
-                "node13",
-                "node4"
-            ]
-        },
-        {
-            "id": "group2",
-            "title": "Activity 2",
-            "startId": "node5",
-            "ids": [
-                "node5",
-                "node6",
-                "node7",
-                "node8"
-            ]
-        },
-        {
-            "id": "group3",
-            "title": "Activity 3",
-            "startId": "node9",
-            "ids": [
-                "node9",
-                "node10",
-                "node11",
-                "node12"
-            ]
-        }
-    ],
     "constraints": [
         {
             "id": "constraint1",
             "constraintLogic": "guidedNavigation",
-            "targetId": "group1"
-        },
-        {
-            "id": "constraint1",
-            "constraintLogic": "guidedNavigation",
-            "targetId": "group3"
+            "targetId": "group0"
         }
     ],
     "navigationMode": "guided",
