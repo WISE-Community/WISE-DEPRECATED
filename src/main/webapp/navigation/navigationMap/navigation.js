@@ -1,21 +1,13 @@
 var project = null;
+var applicationNodes = null;
+var groupNodes = null;
+var idToNode = null;
 var projectContentIsDirty = false;
 //var currentNodeId = null;
 
 
 function getProject() {
     return project;
-};
-
-function getGroups() {
-    var groups = null;
-    var project = getProject();
-    
-    if (project != null) {
-        groups = project.groups;
-    }
-    
-    return groups;
 };
 
 function getStepState() {
@@ -33,6 +25,88 @@ function setProject(projectIn) {
     project = projectIn;
     renderProject();
 }
+
+function setApplicationNodes(applicationNodesIn) {
+    applicationNodes = applicationNodesIn;
+};
+
+function setGroupNodes(groupNodesIn) {
+    groupNodes = groupNodesIn;
+};
+
+function getGroupNodes() {
+    return groupNodes;
+};
+
+function setIdToNode(idToNodeIn) {
+    idToNode = idToNodeIn;
+};
+
+function getNodeById(id) {
+    var element = null;
+    
+    if (id != null) {
+        element = idToNode[id];
+    }
+    
+    return element;
+};
+
+function isApplicationNode(id) {
+    var result = false;
+    
+    var applicationNode = getNodeById(id);
+    
+    if (applicationNode != null) {
+        var type = applicationNode.type;
+        
+        if (type === 'application') {
+            result = true;
+        }
+    }
+    
+    return result;
+};
+
+function isGroupNode(id) {
+    var result = false;
+    
+    var groupNode = getNodeById(id);
+    
+    if (groupNode != null) {
+        var type = groupNode.type;
+        
+        if (type === 'group') {
+            result = true;
+        }
+    }
+    
+    return result;
+};
+
+function getParent(id) {
+    var result = null;
+    
+    var groupNodes = getGroupNodes();
+    
+    if (groupNodes != null) {
+        for (var g = 0; g < groupNodes.length; g++) {
+            var group = groupNodes[g];
+            
+            if (group != null) {
+                var groupId = group.id;
+                var ids = group.ids;
+                
+                if (ids != null && ids.indexOf(id) != -1) {
+                    result = group;
+                    break;
+                }
+            }
+        }
+    }
+    
+    return result;
+};
 
 function addNewNode() {
     console.log('add new node');
@@ -145,7 +219,11 @@ function makeGroupButton(group) {
 };
 
 function groupButtonClicked(groupId) {
-    // show the group
+    showGroup(groupId);
+    moveToNode(groupId);
+};
+
+function showGroup(groupId) {
     $('.group').hide();
     $('#' + groupId).show();
 };
@@ -218,12 +296,24 @@ function setStepState(stepState) {
 }
 
 function handleCurrentNodeIdChanged(nodeId) {
+    
     $('.nodeButton').removeClass('currentNode');
-    $('#nodeIdButton_' + nodeId).addClass('currentNode');
+    
+    if (isApplicationNode(nodeId)) {
+        var parent = getParent(nodeId);
+        
+        if (parent != null) {
+            var parentId = parent.id;
+            showGroup(parentId);
+        }
+        
+        $('#nodeIdButton_' + nodeId).addClass('currentNode');
+    } else if (isGroupNode(nodeId)) {
+        showGroup(nodeId);
+    }
 };
 
 function handleNodeStatusesChanged(nodeStatuses) {
-    console.log('nodeStatuses=' + nodeStatuses);
     if (nodeStatuses != null) {
         for (var i = 0; i < nodeStatuses.length; i++) {
             var nodeStatus = nodeStatuses[i];

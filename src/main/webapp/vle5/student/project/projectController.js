@@ -54,6 +54,9 @@ define(['app'], function(app) {
                     wiseData.project = project;
                     wiseData.currentNodeId = StudentDataService.getCurrentNodeId();
                     wiseData.nodeStatuses = StudentDataService.getNodeStatuses();
+                    wiseData.applicationNodes = ProjectService.getApplicationNodes();
+                    wiseData.groupNodes = ProjectService.getGroupNodes();
+                    wiseData.idToNode = ProjectService.getIdToNode();
                     
                     var postMessage = {
                         'action': 'getWISEProjectResponse',

@@ -11,13 +11,25 @@ define(['app'],
             
         $scope.$watch(function() {
             return StudentDataService.getCurrentNode();
-        }, function(newCurrentNode, oldCurrentNode) {
+        }, angular.bind(this, function(newCurrentNode, oldCurrentNode) {
             if (newCurrentNode != null) {
                 var nodeId = newCurrentNode.id;
                 StudentDataService.updateStackHistory(nodeId);
                 StudentDataService.updateVisitedNodesHistory(nodeId);
+
+                var layoutClass = null;
+                
+                if (ProjectService.isApplicationNode(nodeId)) {
+                    layoutClass = ProjectService.getStudentIsOnApplicationNodeClass();
+                } else if (ProjectService.isGroupNode(nodeId)) {
+                    layoutClass = ProjectService.getStudentIsOnGroupNodeClass();
+                }
+                
+                if (layoutClass != null) {
+                    this.layoutState = layoutClass;
+                }
             }
-        });
+        }));
         
         // why does getNodeVisits() not trigger a change
         $scope.$watch(function() {
@@ -39,14 +51,12 @@ define(['app'],
             if (this.project != null) {
                 ProjectService.getProject();
             }
-            this.projectDivClass = this.layoutState;
-            this.nodeDivClass = this.layoutState;
         }
         this.updateLayout();
 
         this.globalToolButtonClicked = function(globalToolName) {
             if (globalToolName === 'hideNavigation') {
-                this.layoutState = 'layout3';
+                this.layoutState = 'layout4';
             } else if (globalToolName === 'showNavigation') {
                 this.layoutState = 'layout3';
                 var layoutLogic = ProjectService.getLayoutLogic();

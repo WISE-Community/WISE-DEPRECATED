@@ -167,7 +167,7 @@
         },
         {
             "from": "node4",
-            "to": "node5"
+            "to": "group2"
         },
         {
             "from": "node9",
@@ -196,6 +196,8 @@
         "wiseList"
     ],
     "layout": {
-        "template": "starmap|leftNav|rightNav"
+        "template": "starmap|leftNav|rightNav",
+        "studentIsOnGroupNode": "layout3",
+        "studentIsOnApplicationNode": "layout4"
     }
 }

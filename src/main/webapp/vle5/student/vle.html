@@ -54,6 +54,10 @@
 }
 
 /* layout3 = project full screen */
+#prev.layout3, #next.layout3 {
+    display:none;
+}
+
 #nodeIFrame.layout3 {
     display: none;
 }
@@ -94,8 +98,8 @@
         <button ng-repeat="globalTool in vleController.globalTools"
             ng-click="vleController.globalToolButtonClicked(globalTool)">{{globalTool}}</button>
     </div>
-    <div id="prev" ng-click="vleController.goToPrevNode()">Prev</div>
-    <div id="next" ng-click="vleController.goToNextNode()">Next</div>
+    <div id="prev" class={{vleController.layoutState}} ng-click="vleController.goToPrevNode()">Prev</div>
+    <div id="next" class={{vleController.layoutState}} ng-click="vleController.goToNextNode()">Next</div>
     <div ui-view="projectView"></div>
     <div ui-view="nodeView"></div>
 </body>

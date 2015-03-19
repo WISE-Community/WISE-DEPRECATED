@@ -19,33 +19,36 @@ define(['app'], function(app) {
                  * node
                  */
                 
-                var postMessage = {
-                    'action': 'getWISEStudentDataRequest',
-                    'saveTriggeredBy': 'wiseOnStepExit',
-                    'callbackArgs': {'nodeId':nodeId}
-                };
-                
-                var moveToNode = angular.bind(this, function() {
-                    var node = ProjectService.getNodeById(nodeId);
-                    
-                    if(node !== null) {
-                        this.currentNode = node;
-                        var applicationType = node.applicationType
-                        var nodeIFrameSrc = NodeApplicationService.getNodeURL(applicationType) + '?nodeId=' + nodeId + '&mode=' + $scope.vleController.mode;
-                        this.nodeIFrameSrc = nodeIFrameSrc;
+                if (ProjectService.isApplicationNode(nodeId)) {
+                    var postMessage = {
+                            'action': 'getWISEStudentDataRequest',
+                            'saveTriggeredBy': 'wiseOnStepExit',
+                            'callbackArgs': {'nodeId':nodeId}
+                        };
                         
-                        /*
-                         * TODO: set a timeout or something to make sure the step has loaded
-                         * or handle it if the step does not load
-                         */
-                    };
-                });
-                if (this.currentNode != null) {
-                    this.postMessageToNodeIFrame(postMessage, moveToNode);
-                } else {
-                    moveToNode();
+                        var moveToNode = angular.bind(this, function() {
+                            var node = ProjectService.getNodeById(nodeId);
+                            
+                            if(node !== null) {
+                                this.currentNode = node;
+                                var applicationType = node.applicationType
+                                var nodeIFrameSrc = NodeApplicationService.getNodeURL(applicationType) + '?nodeId=' + nodeId + '&mode=' + $scope.vleController.mode;
+                                this.nodeIFrameSrc = nodeIFrameSrc;
+                                
+                                /*
+                                 * TODO: set a timeout or something to make sure the step has loaded
+                                 * or handle it if the step does not load
+                                 */
+                            };
+                        });
+                        if (this.currentNode != null) {
+                            this.postMessageToNodeIFrame(postMessage, moveToNode);
+                        } else {
+                            moveToNode();
+                        }
+                } else if (ProjectService.isGroupNode(nodeId)) {
+                    
                 }
-                
             };
             
             $scope.$on('$messageIncoming', angular.bind(this, function(event, data) {

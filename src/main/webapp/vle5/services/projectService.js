@@ -28,6 +28,18 @@ define(['angular', 'configService'], function(angular, configService) {
             return nodes;
         };
         
+        this.getApplicationNodes = function() {
+            return this.applicationNodes;
+        };
+        
+        this.getGroupNodes = function() {
+            return this.groupNodes;
+        };
+        
+        this.getIdToNode = function() {
+            return this.idToNode;
+        };
+        
         this.isNode = function(id) {
             var result = false;
             var nodes = this.getNodes();
@@ -68,15 +80,31 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.isGroup = function(id) {
+        this.isGroupNode = function(id) {
             var result = false;
             
-            var group = this.getNodeById(id);
+            var groupNode = this.getNodeById(id);
             
-            if (group != null) {
-                var type = group.type;
+            if (groupNode != null) {
+                var type = groupNode.type;
                 
                 if (type === 'group') {
+                    result = true;
+                }
+            }
+            
+            return result;
+        };
+        
+        this.isApplicationNode = function(id) {
+            var result = false;
+            
+            var applicationNode = this.getNodeById(id);
+            
+            if (applicationNode != null) {
+                var type = applicationNode.type;
+                
+                if (type === 'application') {
                     result = true;
                 }
             }
@@ -411,6 +439,36 @@ define(['angular', 'configService'], function(angular, configService) {
             }
             
             return title;
+        };
+        
+        this.getStudentIsOnGroupNodeClass = function() {
+            var studentIsOnGroupNodeClass = null;
+            var project = this.getProject();
+            
+            if (project != null) {
+                var layout = project.layout
+                
+                if (layout != null) {
+                    studentIsOnGroupNodeClass = layout.studentIsOnGroupNode;
+                }
+            }
+            
+            return studentIsOnGroupNodeClass;
+        };
+        
+        this.getStudentIsOnApplicationNodeClass = function() {
+            var studentIsOnApplicationNodeClass = null;
+            var project = this.getProject();
+            
+            if (project != null) {
+                var layout = project.layout
+                
+                if (layout != null) {
+                    studentIsOnApplicationNodeClass = layout.studentIsOnApplicationNode;
+                }
+            }
+            
+            return studentIsOnApplicationNodeClass;
         };
     }]);
     

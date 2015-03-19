@@ -9,7 +9,7 @@ var currentNodeId = null;
 function receiveMessage(event) {
     var msg = event.data;
     var action = msg.action;
-    
+
     var navMessageId = msg.navMessageId;
     if (navMessageId !== null) {
         for (var i = 0; i < callbackListeners.length; i++) {
@@ -25,7 +25,13 @@ function receiveMessage(event) {
         var project = wiseData.project;
         var currentNodeId = wiseData.currentNodeId;
         var nodeStatuses = wiseData.nodeStatuses;
+        var applicationNodes = wiseData.applicationNodes;
+        var groupNodes = wiseData.groupNodes;
+        var idToNode = wiseData.idToNode;
         setProject(project);
+        setApplicationNodes(applicationNodes);
+        setGroupNodes(groupNodes);
+        setIdToNode(idToNode);
         handleCurrentNodeIdChanged(currentNodeId);
         handleNodeStatusesChanged(nodeStatuses);
     } else if (action === 'postMoveToNodeResponse') {
