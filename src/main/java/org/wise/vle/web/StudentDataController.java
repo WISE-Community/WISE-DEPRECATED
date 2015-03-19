@@ -83,14 +83,9 @@ public class StudentDataController {
 
 	private static boolean DEBUG = false;
 
-	// max size for all nodes allowed to have default student work size, in bytes. Default:  50K=51200 bytes 
-	private int studentMaxWorkSizeDefault = 51200;
+	// max size for all student work size, in bytes. Default:  500K=512000 bytes 
+    private int studentMaxWorkSize = 512000;
 
-	// max size for all nodes allowed to have large student work size, in bytes. Default: 250K=256000 bytes
-	private int studentMaxWorkSizeLarge = 256000;
-
-	private ArrayList<String> nodesWithLargeStudentWork = null;
-	
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView doGet(HttpServletRequest request,
 			HttpServletResponse response)
@@ -619,14 +614,7 @@ public class StudentDataController {
 
 	@RequestMapping(method=RequestMethod.POST)
 	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		studentMaxWorkSizeDefault = Integer.valueOf(wiseProperties.getProperty("student_max_work_size_default", "51200"));
-		studentMaxWorkSizeLarge = Integer.valueOf(wiseProperties.getProperty("student_max_work_size_large", "256000"));	
-		String nodes_with_large_student_work = wiseProperties.getProperty("nodes_with_large_student_work", "SVGDrawNode,Mysystem2Node");
-		String[] nodes_with_large_student_work_array = nodes_with_large_student_work.split(",");
-		nodesWithLargeStudentWork = new ArrayList<String>();
-		for (int i=0; i < nodes_with_large_student_work_array.length; i++) {
-			nodesWithLargeStudentWork.add(nodes_with_large_student_work_array[i]);
-		}
+		studentMaxWorkSize = Integer.valueOf(wiseProperties.getProperty("student_max_work_size", "512000"));
 		
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -727,20 +715,12 @@ public class StudentDataController {
 				}
 			}
 			
-			// check if student's posted data size is under the limit of the specific node type.
-			if (nodesWithLargeStudentWork.contains(nodeType)) {
-				if (request.getContentLength() > studentMaxWorkSizeLarge) {  // posted data must not exceed STUDENT_MAX_WORK_SIZE_LARGE
-					System.err.println("Post data too large (>"+studentMaxWorkSizeLarge+" bytes). NodeType: "+nodeType+" RunId: "+ runId+ " userId:"+ userId + " nodeId: "+nodeId + " contentLength: "+request.getContentLength());
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "post data: too large (>"+studentMaxWorkSizeLarge+" bytes)");
-					return null;
-				}
-			} else {
-				if (request.getContentLength() > studentMaxWorkSizeDefault) {  // posted data must not exceed STUDENT_MAX_WORK_SIZE_DEFAULT
-					System.err.println("Post data too large (>"+studentMaxWorkSizeLarge+" bytes). NodeType: "+nodeType+" RunId: "+ runId+ " userId:"+ userId + " nodeId: "+nodeId + " contentLength: "+request.getContentLength());
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "post data: too large (>"+studentMaxWorkSizeDefault+" bytes)");
-					return null;
-				}
-			}
+			// check if student's posted data size is under the limit
+            if (request.getContentLength() > studentMaxWorkSize) {  // posted data must not exceed STUDENT_MAX_WORK_SIZE
+                System.err.println("Post data too large (>"+studentMaxWorkSize+" bytes). NodeType: "+nodeType+" RunId: "+ runId+ " userId:"+ userId + " nodeId: "+nodeId + " contentLength: "+request.getContentLength());
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "post data: too large (>"+studentMaxWorkSize+" bytes)");
+                return null;
+            }
 
 			StepWork stepWork = null;
 			
