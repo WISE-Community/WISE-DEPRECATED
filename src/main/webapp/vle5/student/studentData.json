@@ -1,29 +1,6 @@
 {
     "nodeVisits": [
-        {
-            "visitPostTime": 1424384692000,
-            "visitStartTime": 1424384689000,
-            "hintStates": [],
-            "nodeType": "OpenResponseNode",
-            "nodeStates": [
-                {
-                    "response": "hello world"
-                }
-            ],
-            "nodeId": "node1",
-            "visitEndTime": 1424384691000,
-            "stepWorkId": "8752243"
-        },
-        {
-            "visitPostTime": 1424728225000,
-            "visitStartTime": 1424728201000,
-            "hintStates": [],
-            "nodeType": "OutsideURLNode",
-            "nodeStates": [],
-            "nodeId": "node2",
-            "visitEndTime": 1424728224000,
-            "stepWorkId": "8752274"
-        }
+
     ],
     "workgroupId": 183666
 }

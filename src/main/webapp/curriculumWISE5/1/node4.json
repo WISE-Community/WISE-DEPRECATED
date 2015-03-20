@@ -1,4 +1,17 @@
 {
-    "style": "body { background-color: blue }",
-    "prompt": "Fourth Step"
+    "prompt": "Who lives in a pineapple under the sea?",
+    "choices": [
+        {
+            "text": "Spongebob",
+            "id": "aaaaaaaaaa"
+        },
+        {
+            "text": "Patrick",
+            "id": "bbbbbbbbbb"
+        },
+        {
+            "text": "Squidward",
+            "id": "cccccccccc"
+        }
+    ]
 }

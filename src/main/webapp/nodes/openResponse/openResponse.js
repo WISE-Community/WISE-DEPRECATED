@@ -84,6 +84,90 @@ function nodeOnExit(wiseMessageId) {
     }
 }
 
+function callFunction(functionName, functionParams) {
+    var result = null;
+    
+    if (functionName === 'wordCountCompare') {
+        result = wordCountCompare(functionParams);
+    }
+    
+    return result;
+};
+
+function wordCountCompare(params) {
+    var result = false;
+    
+    if (params != null) {
+        var operator = params.operator;
+        var count = params.count;
+        var nodeVisits = params.nodeVisits;
+        
+        var latestNodeState = getLatestNodeState(nodeVisits);
+        
+        var wordCount = 0;
+        
+        if (latestNodeState != null) {
+            var response = latestNodeState.response;
+            
+            if (response != null) {
+                wordCount = getWordCount(response);
+            }
+        }
+        
+        if (operator == '<') {
+            if (wordCount < count) {
+                result = true;
+            }
+        } else if (operator == '>') {
+            if (wordCount > count) {
+                result = true;
+            }
+        }
+    }
+    
+    return result;
+};
+
+function getWordCount(response) {
+    var wordCount = 0;
+    
+    if (response != null) {
+        var regex = /\s+/gi;
+        wordCount = response.trim().replace(regex, ' ').split(' ').length;
+    }
+    
+    return wordCount;
+}
+
+function getLatestNodeState(nodeVisits) {
+    var result = null;
+    
+    if (nodeVisits != null) {
+        for (var nv = nodeVisits.length - 1; nv >= 0; nv--) {
+            var nodeVisit = nodeVisits[nv];
+            
+            if (nodeVisit != null) {
+                var nodeStates = nodeVisit.nodeStates;
+                
+                for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
+                    var nodeState = nodeStates[ns];
+                    
+                    if (nodeState != null) {
+                        result = nodeState;
+                        break;
+                    }
+                }
+                
+                if (result != null) {
+                    break;
+                }
+            }
+        }
+    }
+    
+    return result;
+};
+
 $(document).ready(function() {
     if (mode === 'author') {
         $('#studentView').hide();
@@ -95,6 +179,11 @@ $(document).ready(function() {
             });
         });
         loadWISEData();
+    } else if (mode === 'headless') {
+        //$('#authorView').hide();
+        //$('#studentView').show();  
+        //loadWISEData({loadAllNodeStates:true});
+        console.log('headless');
     } else {
         $('#authorView').hide();
         $('#studentView').show();  

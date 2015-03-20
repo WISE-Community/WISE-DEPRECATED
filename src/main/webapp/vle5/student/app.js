@@ -7,6 +7,7 @@ define([
         'projectService',
         'nodeApplicationService',
         'nodeService',
+        'postMessageService',
         'studentDataService'
         ], function(angular, $) {
 
@@ -17,6 +18,7 @@ define([
 	                                 'ProjectService',
 	                                 'NodeApplicationService',
 	                                 'NodeService',
+	                                 'PostMessageService',
 	                                 'StudentDataService'
 	                                 ]);
 	
@@ -85,8 +87,16 @@ define([
                         resolve: {
                             loadController: app.loadController('nodeController'),
                         }
+                    },
+                    'nodeHelperView': {
+                        templateUrl: 'vle5/student/nodeHelper/nodeHelper.html',
+                        controller: 'NodeHelperController',
+                        controllerAs: 'nodeHelperController',
+                        resolve: {
+                            loadController: app.loadController('nodeHelperController'),
+                        }
                     }
-                }              
+                }
             })
 		/*
 		$stateProvider

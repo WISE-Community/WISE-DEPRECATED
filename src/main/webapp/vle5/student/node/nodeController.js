@@ -1,6 +1,13 @@
 define(['app'], function(app) {
     app.$controllerProvider.register('NodeController', 
-        function($scope, $state, $stateParams, NodeApplicationService, NodeService, ProjectService, StudentDataService) {
+        function($scope, 
+                $state, 
+                $stateParams, 
+                NodeApplicationService, 
+                NodeService, 
+                PostMessageService,
+                ProjectService, 
+                StudentDataService) {
             
             $scope.$watch(function() {
                 return StudentDataService.getCurrentNode();
@@ -77,7 +84,7 @@ define(['app'], function(app) {
                         var wiseData = {};
                         wiseData.nodeContent = nodeContent;
                         wiseData.studentData = studentData;
-                        wiseData.globalStyle = '#title {color:purple;} body {background-color:yellow}';
+                        //wiseData.globalStyle = '#title {color:purple;} body {background-color:yellow}';
                         var postMessage = {
                             'action': 'getWISEDataResponse',
                             'wiseData': wiseData
@@ -102,11 +109,38 @@ define(['app'], function(app) {
                     var studentData = wiseData.studentData;
                     
                     StudentDataService.addNodeStateToLatestNodeVisit(nodeId, studentData);
+                } else if (action === 'postNodeStatusRequest') {
+                    var nodeStatus = msg.nodeStatus;
+                    var nodeId = msg.nodeId;
+                    
+                    var currentNodeId = this.currentNode.id;
+                    
+                    if (nodeId === currentNodeId) {
+                        var isLoadingComplete = nodeStatus.isLoadingComplete;
+                        
+                        if (isLoadingComplete) {
+                            /*
+                            setInterval(angular.bind(this, function() {
+                                console.log('hello');
+                                
+                                var postMessage = {
+                                    'viewType': 'teacher',
+                                    'action': 'getWISEStudentDataRequest',
+                                    'saveTriggeredBy': 'wiseIntermediate'
+                                };
+                                
+                                this.postMessageToNodeIFrame(postMessage);
+                            }), 5000);
+                            */
+                        }
+                    }
+                    
                 }
             }));
             
             this.postMessageToNodeIFrame = function(message, callback) {
-                $scope.vleController.postMessageToIFrame('nodeIFrame', message, callback);
+                //$scope.vleController.postMessageToIFrame('nodeIFrame', message, callback);
+                PostMessageService.postMessageToIFrame('nodeIFrame', message, callback);
             };
         });
 });

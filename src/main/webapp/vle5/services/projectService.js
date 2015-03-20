@@ -7,6 +7,7 @@ define(['angular', 'configService'], function(angular, configService) {
         this.applicationNodes = [];
         this.groupNodes = [];
         this.idToNode = {};
+        this.idToElement = {};
         
         this.getProject = function() {
             return this.project;
@@ -130,12 +131,41 @@ define(['angular', 'configService'], function(angular, configService) {
                             var nodeType = node.type;
                             
                             this.setIdToNode(nodeId, node);
+                            this.setIdToElement(nodeId, node);
                             
                             if (nodeType === 'application') {
                                 this.addApplicationNode(node);
                             } else if (nodeType === 'group') {
                                 this.addGroupNode(node);
                             }
+                        }
+                    }
+                }
+                
+                var transitions = project.transitions;
+                
+                if (transitions != null) {
+                    for (var t = 0; t < transitions.length; t++) {
+                        var transition = transitions[t];
+                        
+                        if (transition != null) {
+                            var transitionId = transition.id;
+                            
+                            this.setIdToElement(transitionId, transition);
+                        }
+                    }
+                }
+                
+                var constraints = project.constraints;
+                
+                if (constraints != null) {
+                    for (var c = 0; c < constraints.length; c++) {
+                        var constraint = constraints[c];
+                        
+                        if (constraint != null) {
+                            var constraintId = constraint.id;
+                            
+                            this.setIdToElement(constraintId, constraint);
                         }
                     }
                 }
@@ -148,11 +178,47 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
+        this.setIdToElement = function(id, element) {
+            if (id != null) {
+                this.idToElement[id] = element;
+            }
+        };
+        
+        this.getElementById = function(id) {
+            var element = null;
+            
+            if (id != null) {
+                element = this.idToElement[id];
+            }
+            
+            return element;
+        }
+        
         this.getNodeById = function(id) {
             var element = null;
             
             if (id != null) {
                 element = this.idToNode[id];
+            }
+            
+            return element;
+        };
+        
+        this.getTransitionById = function(id) {
+            var element = null;
+            
+            if (id != null) {
+                element = this.idToElement[id];
+            }
+            
+            return element;
+        };
+        
+        this.getConstraintById = function(id) {
+            var element = null;
+            
+            if (id != null) {
+                element = this.idToElement[id];
             }
             
             return element;
@@ -305,6 +371,17 @@ define(['angular', 'configService'], function(angular, configService) {
                         if (this.isNodeDescendentOfGroup(node, targetNode)) {
                             result = true;
                         }
+                    }
+                }
+                
+                var targetTransition = this.getTransitionById(targetId);
+                
+                if (targetTransition != null) {
+                    var from = targetTransition.from;
+                    var to = targetTransition.to;
+                    
+                    if (nodeId === to) {
+                        result = true;
                     }
                 }
             }

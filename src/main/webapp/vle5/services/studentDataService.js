@@ -2,7 +2,7 @@ define(['angular', 'configService'], function(angular, configService) {
 
     angular.module('StudentDataService', [])
     
-    .service('StudentDataService', ['$http', 'ConfigService', 'ProjectService', function($http, ConfigService, ProjectService) {
+    .service('StudentDataService', ['$http', 'ConfigService', 'ProjectService', 'PostMessageService', function($http, ConfigService, ProjectService, PostMessageService) {
         this.studentData = null;
         this.stackHistory = null;  // array of node id's
         this.visitedNodesHistory = null;
@@ -185,6 +185,15 @@ define(['angular', 'configService'], function(angular, configService) {
                                         isNodeVisitableStatus.statusValue = true;
                                     }
                                 }
+                            } else if (constraintLogic === 'transition') {
+                                var criteria = constraintForNode.criteria;
+                                
+                                //criteria
+                                
+                                var message = {
+                                    action: 'callFunctionRequest'
+                                };
+                                PostMessageService.postMessageToIFrame(message);
                             }
                         }
                     }

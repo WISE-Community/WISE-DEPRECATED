@@ -1,13 +1,20 @@
 define(['app'], 
         function(app) {
     app.$controllerProvider.register('VLEController', 
-            function($scope, $stateParams, ConfigService, NodeApplicationService, ProjectService, NodeService, StudentDataService) {
+            function($scope, 
+                    $stateParams, 
+                    ConfigService, 
+                    NodeApplicationService,
+                    PostMessageService,
+                    ProjectService, 
+                    NodeService, 
+                    StudentDataService) {
         this.mode = 'student';
         this.layoutLogic = ConfigService.layoutLogic;
         this.globalTools = ['hideNavigation', 'showNavigation', 'portfolio', 'home', 'sign out'];
         this.currentNode = null;
-        this.callbackListeners = [];
-        this.wiseMessageId = 0;
+        //this.callbackListeners = [];
+        //this.wiseMessageId = 0;
             
         $scope.$watch(function() {
             return StudentDataService.getCurrentNode();
@@ -125,6 +132,7 @@ define(['app'],
             }
         }
         
+        /*
         this.postMessageToIFrame = function(iFrameId, message, callback) {
             if (callback != null) {
                 message.wiseMessageId = this.wiseMessageId;
@@ -134,13 +142,16 @@ define(['app'],
             var iFrame = $('#' + iFrameId);
             iFrame[0].contentWindow.postMessage(message, '*');
         };
+        */
         
         this.setCurrentNodeByNodeId = function(nodeId) {
             var node = ProjectService.getNodeById(nodeId);
             StudentDataService.setCurrentNode(node);
         };
         
-        
+        $scope.$on('$messageIncoming', angular.bind(PostMessageService, PostMessageService.handleMessageIncoming));
+                
+        /*
         $scope.$on('$messageIncoming', angular.bind(this, function(event, data) {
             var msg = data;
             var wiseMessageId = msg.wiseMessageId;
@@ -153,6 +164,7 @@ define(['app'],
                 }
             }
         }));
+        */
         
         var nodeId = ProjectService.getStartNodeId();
         

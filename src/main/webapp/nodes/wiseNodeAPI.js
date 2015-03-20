@@ -86,6 +86,19 @@ function receiveMessage(event) {
         var wiseMessageId = msg.wiseMessageId;
 
 	    nodeOnExit(wiseMessageId);
+	} else if (action === 'callFunctionRequest') {
+	    var functionName = msg.functionName;
+	    var functionParams = msg.functionParams;
+	    
+	    var result = callFunction(functionName, functionParams);
+	    
+	    var message = {
+	        'action': 'callFunctionResponse',
+	        'result': result,
+	        'wiseMessageId':wiseMessageId
+	    }
+	    
+	    postMessageToWISE(message);
 	}
 
 	// Do we trust the sender of this message?

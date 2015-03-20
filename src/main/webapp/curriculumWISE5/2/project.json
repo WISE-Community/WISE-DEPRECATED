@@ -36,7 +36,7 @@
             "id": "node4",
             "type": "application",
             "title": "Fourth Step",
-            "applicationType": "MultipleChoice",
+            "applicationType": "OpenResponse",
             "src": "node4.json"
         },
         {
@@ -192,12 +192,12 @@
     ],
     "navigationMode": "guided",
     "navigationApplications": [
-        "wiseMap",
-        "wiseList"
+        "wiseList",
+        "wiseMap"
     ],
     "layout": {
         "template": "starmap|leftNav|rightNav",
-        "studentIsOnGroupNode": "layout3",
-        "studentIsOnApplicationNode": "layout4"
+        "studentIsOnGroupNode": "layout1",
+        "studentIsOnApplicationNode": "layout1"
     }
 }

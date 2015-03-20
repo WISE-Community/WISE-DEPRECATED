@@ -1,0 +1,127 @@
+{
+    "metadata": {
+        "wiseVersion": 5,
+        "gradeRange": "5-7"
+    },
+    "nodes": [
+        {
+            "id": "node1",
+            "type": "application",
+            "title": "Branching Step",
+            "applicationType": "OpenResponse",
+            "src": "node1.json"
+        },
+        {
+            "id": "node2",
+            "type": "application",
+            "title": "Branch Path 1",
+            "applicationType": "OpenResponse",
+            "src": "node2.json"
+        },
+        {
+            "id": "node3",
+            "type": "application",
+            "title": "Branch Path 2",
+            "applicationType": "OpenResponse",
+            "src": "node3.json"
+        },
+        {
+            "id": "node4",
+            "type": "application",
+            "title": "End Step",
+            "applicationType": "OpenResponse",
+            "src": "node4.json"
+        },
+        {
+            "id": "group0",
+            "type": "group",
+            "title": "My First WISE5 Project",
+            "startId": "group1",
+            "ids": [
+                "group1"
+            ]
+        },
+        {
+            "id": "group1",
+            "type": "group",
+            "title": "Activity 1",
+            "startId": "node1",
+            "ids": [
+                "node1",
+                "node2",
+                "node3",
+                "node4"
+            ]
+        }
+    ],
+    "transitions": [
+        {
+            "id": "transition1",
+            "from": "node1",
+            "to": "node2"
+        },
+        {
+            "id": "transition2",
+            "from": "node1",
+            "to": "node3"
+        },
+        {
+            "id": "transition3",
+            "from": "node2",
+            "to": "node4"
+        },
+        {
+            "id": "transition4",
+            "from": "node3",
+            "to": "node4"
+        }
+    ],
+    "startId": "group0",
+    "constraints": [
+        {
+            "id": "constraint1",
+            "constraintLogic": "guidedNavigation",
+            "targetId": "group0"
+        },
+        {
+            "id": "constraint3",
+            "constraintLogic": "transition",
+            "criteria": [
+                {
+                    "nodeId": "node1",
+                    "function": "wordCountCompare",
+                    "params": {
+                        "operator": "<",
+                        "count": 10
+                    }
+                }
+            ],
+            "targetId": "transition1"
+        },
+        {
+            "id": "constraint4",
+            "constraintLogic": "transition",
+            "criteria": [
+                {
+                    "nodeId": "node1",
+                    "function": "wordCountCompare",
+                    "params": {
+                        "operator": ">=",
+                        "count": 10
+                    }
+                }
+            ],
+            "targetId": "transition2"
+        }
+    ],
+    "navigationMode": "guided",
+    "navigationApplications": [
+        "wiseMap",
+        "wiseList"
+    ],
+    "layout": {
+        "template": "starmap|leftNav|rightNav",
+        "studentIsOnGroupNode": "layout3",
+        "studentIsOnApplicationNode": "layout4"
+    }
+}

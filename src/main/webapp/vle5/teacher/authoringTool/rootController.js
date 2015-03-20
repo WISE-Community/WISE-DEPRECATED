@@ -224,7 +224,7 @@ define(['app'], function(app) {
                         this.loadNode(nodeId, mode);
                     }
                 */
-            } else if (action === 'xpostNodeStatusRequest') {
+            } else if (action === 'postNodeStatusRequest') {
                 var nodeStatus = msg.nodeStatus;
                 var nodeId = msg.nodeId;
                 

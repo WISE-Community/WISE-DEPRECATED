@@ -1,6 +1,12 @@
 define(['app'], function(app) {
     app.$controllerProvider.register('ProjectController', 
-        function($scope, $state, $stateParams, ConfigService, ProjectService, StudentDataService) {
+        function($scope, 
+                $state, 
+                $stateParams, 
+                ConfigService, 
+                PostMessageService,
+                ProjectService, 
+                StudentDataService) {
             
             $scope.$watch(function() {
                 return StudentDataService.getCurrentNode();
@@ -87,7 +93,8 @@ define(['app'], function(app) {
             }));
             
             this.postMessageToProjectIFrame = function(message, callback) {
-                $scope.vleController.postMessageToIFrame('projectIFrame', message, callback);
+                //$scope.vleController.postMessageToIFrame('projectIFrame', message, callback);
+                PostMessageService.postMessageToIFrame('projectIFrame', message, callback);
             };
             
             var knownNavigationApplications = ConfigService.getConfigParam('navigationApplications');
