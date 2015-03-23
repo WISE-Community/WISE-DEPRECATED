@@ -38,8 +38,6 @@
  * @constructor
  */
 function WebAppState(response, timestamp ) {
-	console.log("DEBUG: entered constructor in webappstate.js");
-	
 	this.type = "wa";
 
 	this.response = response;

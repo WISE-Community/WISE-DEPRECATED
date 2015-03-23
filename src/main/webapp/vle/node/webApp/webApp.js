@@ -225,7 +225,7 @@ WebApp.prototype.getLatestState = function() {
 				statestr = JSON.stringify(statestr);
 			}
 			console.log("going to load ... " + statestr);
-			latestState = new WebAppState("",statestr,"");
+			latestState = new WebAppState(statestr);
 		}
 	}
 	
