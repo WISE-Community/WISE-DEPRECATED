@@ -7,7 +7,7 @@ define(['angular'], function(angular) {
 		
 		this.retrieveConfig = function(configUrl) {
 			return $http.get(configUrl).then(angular.bind(this, function(result) {
-				var config = result.data;
+				var config = {};
 				
 				// hard-coding these values here for now. They should really come from the server.
 				config.textDirection = 'rtl';

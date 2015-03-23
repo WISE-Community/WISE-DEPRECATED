@@ -13,8 +13,12 @@ define(['angular'], function(angular) {
                 this.callbackListeners.push({wiseMessageId:this.wiseMessageId, callback:callback});
                 this.wiseMessageId++;
             }
-            var iFrame = $('#' + iFrameId);
-            iFrame[0].contentWindow.postMessage(message, '*');
+            try {
+                var iFrame = $('#' + iFrameId);
+                iFrame[0].contentWindow.postMessage(message, '*');
+            } catch (error) {
+                console.log('error on postmessage, iFrameId: '+ iFrameId);
+            }
         };
         
         this.handleMessageIncoming = function(event, data) {
@@ -24,7 +28,7 @@ define(['angular'], function(angular) {
                 for (var i = 0; i < this.callbackListeners.length; i++) {
                     var callbackListener = this.callbackListeners[i];
                     if (callbackListener && callbackListener.wiseMessageId === wiseMessageId) {
-                        callbackListener.callback(callbackListener.callbackArgs);
+                        callbackListener.callback(msg, callbackListener.callbackArgs);
                     }
                 }
             }

@@ -27,12 +27,13 @@ define(['app'], function(app) {
                 }
             }));
             
+            var objectEquality = true;
             $scope.$watch(function() {
-                var nodeVisits = StudentDataService.getNodeVisits();
-                return nodeVisits.length;
-            }, angular.bind(this, function(newNodeVisits, oldNodeVisits) {
-                if (newNodeVisits != null) {
-                    StudentDataService.updateNodeStatuses();
+                var nodeStatuses = StudentDataService.getNodeStatuses();
+                return nodeStatuses;
+            }, angular.bind(this, function(newNodeStatuses, oldNodeStatuses) {
+                console.log('nodeStatus Changed');
+                if (newNodeStatuses != null) {
                     var nodeId = StudentDataService.getCurrentNodeId();
                     
                     var wiseData = {};
@@ -46,7 +47,7 @@ define(['app'], function(app) {
                     
                     this.postMessageToProjectIFrame(postMessage);
                 }
-            }));
+            }), objectEquality);
             
             $scope.$on('$messageIncoming', angular.bind(this, function(event, data) {
                 var msg = data;

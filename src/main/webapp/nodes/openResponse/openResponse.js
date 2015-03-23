@@ -111,16 +111,16 @@ function wordCountCompare(params) {
             
             if (response != null) {
                 wordCount = getWordCount(response);
-            }
-        }
-        
-        if (operator == '<') {
-            if (wordCount < count) {
-                result = true;
-            }
-        } else if (operator == '>') {
-            if (wordCount > count) {
-                result = true;
+                
+                if (operator == '<') {
+                    if (wordCount < count) {
+                        result = true;
+                    }
+                } else if (operator == '>=') {
+                    if (wordCount >= count) {
+                        result = true;
+                    }
+                }
             }
         }
     }

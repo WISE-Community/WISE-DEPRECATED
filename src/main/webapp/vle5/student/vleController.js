@@ -38,15 +38,17 @@ define(['app'],
             }
         }));
         
+        var objectEquality = true;
         // why does getNodeVisits() not trigger a change
         $scope.$watch(function() {
             var nodeVisits = StudentDataService.getNodeVisits();
-            return nodeVisits.length;
+            return nodeVisits;
         }, angular.bind(this, function(newNodeVisits, oldNodeVisits) {
+            console.log('visits changed');
             if (newNodeVisits != null) {
                 StudentDataService.updateNodeStatuses();
             }
-        }));
+        }), objectEquality);
         
         this.layoutStates = ['layout1', 'layout2', 'layout3', 'layout4'];
         this.layoutState = this.layoutStates[0];
@@ -58,7 +60,8 @@ define(['app'],
             if (this.project != null) {
                 ProjectService.getProject();
             }
-        }
+        };
+        
         this.updateLayout();
 
         this.globalToolButtonClicked = function(globalToolName) {
@@ -66,12 +69,8 @@ define(['app'],
                 this.layoutState = 'layout4';
             } else if (globalToolName === 'showNavigation') {
                 this.layoutState = 'layout3';
-                var layoutLogic = ProjectService.getLayoutLogic();
-                // var layoutLogicFunction = layoutLogicService.getLayoutLogicFunction(layoutLogic);
-                // layoutLogicFunction(this.stateOfVLE)
-                //this.layoutLogicStarMap({state: 'showNavigationClicked'});
             }
-        }
+        };
         
         this.layoutLogicStarMap = function(VLEState) {
             if (VLEState.state === 'initial') {
@@ -81,7 +80,7 @@ define(['app'],
                 this.showProjectDiv = true;
                 this.showNodeDiv = false;
             }
-        }
+        };
         
         this.chooseTransition = function(transitions) {
             var transitionResult = null;
@@ -89,7 +88,7 @@ define(['app'],
                 transitionResult = transitions[0];
             }
             return transitionResult;
-        }
+        };
         
         this.goToNextNode = function() {
             var currentNode = StudentDataService.getCurrentNode();
@@ -104,7 +103,7 @@ define(['app'],
                     this.setCurrentNodeByNodeId(toNodeId);
                 }
             }
-        } 
+        };
        
         this.goToPrevNode = function() {
             var currentNode = StudentDataService.getCurrentNode();
@@ -130,19 +129,7 @@ define(['app'],
                     }
                 }
             }
-        }
-        
-        /*
-        this.postMessageToIFrame = function(iFrameId, message, callback) {
-            if (callback != null) {
-                message.wiseMessageId = this.wiseMessageId;
-                this.callbackListeners.push({wiseMessageId:this.wiseMessageId, callback:callback});
-                this.wiseMessageId++;
-            }
-            var iFrame = $('#' + iFrameId);
-            iFrame[0].contentWindow.postMessage(message, '*');
         };
-        */
         
         this.setCurrentNodeByNodeId = function(nodeId) {
             var node = ProjectService.getNodeById(nodeId);
@@ -150,24 +137,8 @@ define(['app'],
         };
         
         $scope.$on('$messageIncoming', angular.bind(PostMessageService, PostMessageService.handleMessageIncoming));
-                
-        /*
-        $scope.$on('$messageIncoming', angular.bind(this, function(event, data) {
-            var msg = data;
-            var wiseMessageId = msg.wiseMessageId;
-            if (wiseMessageId != null) {
-                for (var i = 0; i < this.callbackListeners.length; i++) {
-                    var callbackListener = this.callbackListeners[i];
-                    if (callbackListener && callbackListener.wiseMessageId === wiseMessageId) {
-                        callbackListener.callback(callbackListener.callbackArgs);
-                    }
-                }
-            }
-        }));
-        */
         
         var nodeId = ProjectService.getStartNodeId();
-        
         
         var currentNode = StudentDataService.getCurrentNode();
         
@@ -175,20 +146,6 @@ define(['app'],
             nodeId = currentNode.id;
         }
         
-        /*
-        var stackHistory = StudentDataService.getStackHistory();
-        if (stackHistory != null) {
-            var lastNodeIdFromStackHistory = StudentDataService.getStackHistoryAtIndex(-1);
-            if (lastNodeIdFromStackHistory != null) {
-                nodeId = lastNodeIdFromStackHistory;
-            }
-        }
-        */
-        
         this.setCurrentNodeByNodeId(nodeId);
-        
-        //this.loadNode(nodeId, this.mode);
-        
-        //this.layoutLogicStarMap({"state":"initial"});
     });
 });

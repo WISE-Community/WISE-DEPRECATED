@@ -89,10 +89,11 @@
             "criteria": [
                 {
                     "nodeId": "node1",
-                    "function": "wordCountCompare",
-                    "params": {
+                    "functionName": "wordCountCompare",
+                    "functionParams": {
                         "operator": "<",
-                        "count": 10
+                        "count": 10,
+                        "nodeVisits": null
                     }
                 }
             ],
@@ -104,8 +105,8 @@
             "criteria": [
                 {
                     "nodeId": "node1",
-                    "function": "wordCountCompare",
-                    "params": {
+                    "functionName": "wordCountCompare",
+                    "functionParams": {
                         "operator": ">=",
                         "count": 10
                     }

@@ -87,6 +87,7 @@ function receiveMessage(event) {
 
 	    nodeOnExit(wiseMessageId);
 	} else if (action === 'callFunctionRequest') {
+	    var wiseMessageId = msg.wiseMessageId;
 	    var functionName = msg.functionName;
 	    var functionParams = msg.functionParams;
 	    

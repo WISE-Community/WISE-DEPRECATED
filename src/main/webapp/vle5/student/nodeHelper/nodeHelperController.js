@@ -1,9 +1,7 @@
 define(['app'], function(app) {
     app.$controllerProvider.register('NodeHelperController', 
         function($scope, $state, $stateParams, ConfigService, NodeApplicationService, NodeService, ProjectService, StudentDataService) {
-            //this.nodeApplications = ProjectService.getApplicationNodes();
             
-            /*
             var nodeApplications = ConfigService.getConfigParam('nodeApplications');
             
             for(var x = 0; x < nodeApplications.length; x++) {
@@ -13,6 +11,7 @@ define(['app'], function(app) {
             }
             
             this.nodeApplications = nodeApplications;
-            */
+            
+            //StudentDataService.updateNodeStatuses();
     })
 });

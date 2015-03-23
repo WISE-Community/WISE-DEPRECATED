@@ -2,7 +2,7 @@ define(['angular', 'configService'], function(angular, configService) {
 
     angular.module('StudentDataService', [])
     
-    .service('StudentDataService', ['$http', 'ConfigService', 'ProjectService', 'PostMessageService', function($http, ConfigService, ProjectService, PostMessageService) {
+    .service('StudentDataService', ['$http', '$q', 'ConfigService', 'ProjectService', 'PostMessageService', function($http, $q, ConfigService, ProjectService, PostMessageService) {
         this.studentData = null;
         this.stackHistory = null;  // array of node id's
         this.visitedNodesHistory = null;
@@ -91,9 +91,10 @@ define(['angular', 'configService'], function(angular, configService) {
                 for (var n = 0; n < nodes.length; n++) {
                     var node = nodes[n];
                     
-                    var nodeStatusesByNode = this.getNodeStatusesByNode(node);
-                    
-                    this.nodeStatuses.push(nodeStatusesByNode);
+                    var nodeStatusesByNodePromise = this.getNodeStatusesByNode(node);
+                    nodeStatusesByNodePromise.then(angular.bind(this, function(nodeStatusesByNode) {
+                        this.nodeStatuses.push(nodeStatusesByNode);
+                    }));
                 }
             }
         };
@@ -101,9 +102,12 @@ define(['angular', 'configService'], function(angular, configService) {
         this.getNodeStatuses = function() {
             return this.nodeStatuses;
         };
-        
+
         this.getNodeStatusesByNode = function(node) {
+            return $q(angular.bind(this, function(resolve, reject) {
+                
             var nodeStatuses = null;
+            var allPromises = [];
             
             if (node != null) {
                 var nodeId = node.id;
@@ -187,13 +191,35 @@ define(['angular', 'configService'], function(angular, configService) {
                                 }
                             } else if (constraintLogic === 'transition') {
                                 var criteria = constraintForNode.criteria;
-                                
-                                //criteria
-                                
-                                var message = {
-                                    action: 'callFunctionRequest'
-                                };
-                                PostMessageService.postMessageToIFrame(message);
+                                if (criteria != null && criteria.length > 0) {
+                                    var firstCriteria = criteria[0];
+                                    var criteriaNodeId = firstCriteria.nodeId;
+                                    
+                                    var nodeVisits = this.getNodeVisitsByNodeId(criteriaNodeId);
+                                    if (nodeVisits != null && nodeVisits.length > 0) {
+                                        var functionName = firstCriteria.functionName;
+                                        var functionParams = firstCriteria.functionParams;
+                                        functionParams.nodeVisits = nodeVisits;
+
+                                        var message = {
+                                                action: 'callFunctionRequest',
+                                                functionName:functionName,
+                                                functionParams:functionParams
+                                            };
+                                            
+                                            var nodeApplicationType = node.applicationType;
+                                            var deferred = $q.defer();
+                                            var callbackFunction = function(result) {
+                                                console.log('node callback function for callFunctionRequest, result:' + result);
+                                                if (result.result) {
+                                                    isNodeVisitableStatus.statusValue = true;
+                                                }
+                                                deferred.resolve();
+                                            };
+                                            PostMessageService.postMessageToIFrame(nodeApplicationType, message, callbackFunction);
+                                            allPromises.push(deferred.promise);
+                                    }
+                                }
                             }
                         }
                     }
@@ -201,8 +227,10 @@ define(['angular', 'configService'], function(angular, configService) {
                 
                 nodeStatuses.statuses.push(isNodeVisitableStatus);
             }
-            
-            return nodeStatuses;
+            $q.all(allPromises).then(function() {
+                resolve(nodeStatuses);
+            })
+            }));
         };
 
         this.populateHistories = function(nodeVisits) {
@@ -303,8 +331,8 @@ define(['angular', 'configService'], function(angular, configService) {
             newNodeVisit.visitEndTime = null;
             newNodeVisit.hintStates = null;
             newNodeVisit.nodeType = null;
-            newNodeVisit.nodeStates = null;
-            newNodeVisit.nodeId = null;
+            newNodeVisit.nodeStates = [];
+            newNodeVisit.nodeId = nodeId;
             newNodeVisit.stepWorkId = null;
             
             this.addNodeVisit(newNodeVisit);
@@ -323,7 +351,7 @@ define(['angular', 'configService'], function(angular, configService) {
                     var tempNodeId = nodeVisit.nodeId;
                     
                     if (nodeId === tempNodeId) {
-                        nodeVisitsForNode.append(nodeVisit);
+                        nodeVisitsForNode.push(nodeVisit);
                     }
                 }
             }
