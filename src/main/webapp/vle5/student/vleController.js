@@ -148,7 +148,7 @@ define(['app'],
             StudentDataService.setCurrentNode(node);
         };
         
-        $scope.$on('$messageIncoming', angular.bind(PostMessageService, PostMessageService.handleMessageIncoming));
+        //$scope.$on('$messageIncoming', angular.bind(PostMessageService, PostMessageService.handleMessageIncoming));
         
         var nodeId = $stateParams.nodeId;
         if (nodeId == null || nodeId === '') {

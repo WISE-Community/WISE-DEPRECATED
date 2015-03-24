@@ -2,8 +2,8 @@ define(['angular', 'configService'], function(angular, configService) {
 
     angular.module('StudentDataService', [])
     
-    .service('StudentDataService', ['$http', '$q', 'ConfigService', 'ProjectService', 'PostMessageService', 'OpenResponseService', 
-                                    function($http, $q, ConfigService, ProjectService, PostMessageService, OpenResponseService) {
+    .service('StudentDataService', ['$http', '$q', 'ConfigService', 'ProjectService', 'OpenResponseService', 
+                                    function($http, $q, ConfigService, ProjectService, OpenResponseService) {
         this.studentData = null;
         this.stackHistory = null;  // array of node id's
         this.visitedNodesHistory = null;
@@ -220,27 +220,6 @@ define(['angular', 'configService'], function(angular, configService) {
                                         if (result) {
                                             nodeStatus.isVisitable = true;
                                         }
-                                        /*
-                                        functionParams.nodeVisits = nodeVisits;
-
-                                        var message = {
-                                                action: 'callFunctionRequest',
-                                                functionName:functionName,
-                                                functionParams:functionParams
-                                            };
-                                            
-                                            var nodeApplicationType = node.applicationType;
-                                            var deferred = $q.defer();
-                                            var callbackFunction = function(result) {
-                                                console.log('node callback function for callFunctionRequest, result:' + result);
-                                                if (result.result) {
-                                                    isNodeVisitableStatus.statusValue = true;
-                                                }
-                                                deferred.resolve();
-                                            };
-                                            PostMessageService.postMessageToIFrame(nodeApplicationType, message, callbackFunction);
-                                            allPromises.push(deferred.promise);
-                                            */
                                     }
                                 }
                             }

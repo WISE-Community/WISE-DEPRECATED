@@ -5,7 +5,6 @@ define(['app'], function(app) {
                 $stateParams,
                 $sce,
                 ConfigService, 
-                PostMessageService,
                 ProjectService, 
                 StudentDataService) {
         this.nodeId = $stateParams.nodeId;

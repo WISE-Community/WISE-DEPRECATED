@@ -94,7 +94,7 @@ define(['app'], function(app) {
             
             this.postMessageToProjectIFrame = function(message, callback) {
                 //$scope.vleController.postMessageToIFrame('projectIFrame', message, callback);
-                PostMessageService.postMessageToIFrame('projectIFrame', message, callback);
+                //PostMessageService.postMessageToIFrame('projectIFrame', message, callback);
             };
             
             var knownNavigationApplications = ConfigService.getConfigParam('navigationApplications');
