@@ -1,11 +1,11 @@
 define(['app'], 
         function(app) {
     app.$controllerProvider.register('VLEController', 
-            function($scope,
-                    $state,
+            function($scope, 
                     $stateParams, 
                     ConfigService, 
                     NodeApplicationService,
+                    PostMessageService,
                     ProjectService, 
                     NodeService, 
                     StudentDataService) {
@@ -35,8 +35,6 @@ define(['app'],
                 if (layoutClass != null) {
                     this.layoutState = layoutClass;
                 }
-                
-                $state.go('root.vle', {nodeId:nodeId});
             }
         }));
         
@@ -86,18 +84,8 @@ define(['app'],
         
         this.chooseTransition = function(transitions) {
             var transitionResult = null;
-            if (transitions != null) {
-                for (var t = 0; t < transitions.length; t++) {
-                    var transition = transitions[t];
-                    var toNodeId = transition.to;
-                    if (toNodeId != null) {
-                        var toNodeNodeStatus = StudentDataService.getNodeStatusByNodeId(toNodeId);
-                        if (toNodeNodeStatus != null && toNodeNodeStatus.isVisitable) {
-                            transitionResult = transition;
-                            break;
-                        }
-                    }
-                }
+            if (transitions.length > 0) {
+                transitionResult = transitions[0];
             }
             return transitionResult;
         };
@@ -150,17 +138,14 @@ define(['app'],
         
         $scope.$on('$messageIncoming', angular.bind(PostMessageService, PostMessageService.handleMessageIncoming));
         
-        var nodeId = $stateParams.nodeId;
-        if (nodeId == null || nodeId === '') {
-            nodeId = ProjectService.getStartNodeId();
-        }
+        var nodeId = ProjectService.getStartNodeId();
         
         var currentNode = StudentDataService.getCurrentNode();
         
         if (currentNode != null) {
             nodeId = currentNode.id;
         }
-        console.log('vleController, nodeId:' + nodeId);
+        
         this.setCurrentNodeByNodeId(nodeId);
     });
 });

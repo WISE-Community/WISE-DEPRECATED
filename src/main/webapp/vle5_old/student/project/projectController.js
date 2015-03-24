@@ -4,6 +4,7 @@ define(['app'], function(app) {
                 $state, 
                 $stateParams, 
                 ConfigService, 
+                PostMessageService,
                 ProjectService, 
                 StudentDataService) {
             

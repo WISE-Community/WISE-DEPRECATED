@@ -105,7 +105,7 @@ define(['angular', 'configService'], function(angular, configService) {
             if (applicationNode != null) {
                 var type = applicationNode.type;
                 
-                if (type !== 'group') {
+                if (type === 'application') {
                     result = true;
                 }
             }
@@ -133,10 +133,10 @@ define(['angular', 'configService'], function(angular, configService) {
                             this.setIdToNode(nodeId, node);
                             this.setIdToElement(nodeId, node);
                             
-                            if (nodeType === 'group') {
-                                this.addGroupNode(node);
-                            } else {
+                            if (nodeType === 'application') {
                                 this.addApplicationNode(node);
+                            } else if (nodeType === 'group') {
+                                this.addGroupNode(node);
                             }
                         }
                     }
@@ -487,26 +487,6 @@ define(['angular', 'configService'], function(angular, configService) {
                 this.setProject(projectJSON);
                 return projectJSON;
             }));
-        };
-        
-        this.getNodeTypeByNode = function(node) {
-            var nodeType = null;
-            
-            if (node != null) {
-                nodeType = node.type;
-            }
-            
-            return nodeType;
-        };
-        
-        this.getApplicationTypeByNode = function(node) {
-            var applicationType = null;
-            
-            if (node != null) {
-                applicationType = node.applicationType;
-            }
-            
-            return applicationType;
         };
         
         this.getNodeSrcByNodeId = function(nodeId) {

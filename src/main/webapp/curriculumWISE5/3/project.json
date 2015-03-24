@@ -5,31 +5,33 @@
     },
     "nodes": [
         {
+            "id": "node0",
+            "type": "HTML",
+            "title": "Display page",
+            "src": "node0.html"
+        },
+        {
             "id": "node1",
-            "type": "application",
+            "type": "OpenResponse",
             "title": "Branching Step",
-            "applicationType": "OpenResponse",
             "src": "node1.json"
         },
         {
             "id": "node2",
-            "type": "application",
+            "type": "OpenResponse",
             "title": "Branch Path 1",
-            "applicationType": "OpenResponse",
             "src": "node2.json"
         },
         {
             "id": "node3",
-            "type": "application",
+            "type": "OpenResponse",
             "title": "Branch Path 2",
-            "applicationType": "OpenResponse",
             "src": "node3.json"
         },
         {
             "id": "node4",
-            "type": "application",
+            "type": "OpenResponse",
             "title": "End Step",
-            "applicationType": "OpenResponse",
             "src": "node4.json"
         },
         {
@@ -45,8 +47,9 @@
             "id": "group1",
             "type": "group",
             "title": "Activity 1",
-            "startId": "node1",
+            "startId": "node0",
             "ids": [
+                "node0",
                 "node1",
                 "node2",
                 "node3",
@@ -55,6 +58,11 @@
         }
     ],
     "transitions": [
+        {
+            "id": "transition0",
+            "from": "node0",
+            "to": "node1"
+        },
         {
             "id": "transition1",
             "from": "node1",
@@ -76,7 +84,7 @@
             "to": "node4"
         }
     ],
-    "startId": "group0",
+    "startNodeId": "node0",
     "constraints": [
         {
             "id": "constraint1",

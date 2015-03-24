@@ -2,8 +2,7 @@ define(['angular', 'configService'], function(angular, configService) {
 
     angular.module('StudentDataService', [])
     
-    .service('StudentDataService', ['$http', '$q', 'ConfigService', 'ProjectService', 'PostMessageService', 'OpenResponseService', 
-                                    function($http, $q, ConfigService, ProjectService, PostMessageService, OpenResponseService) {
+    .service('StudentDataService', ['$http', '$q', 'ConfigService', 'ProjectService', 'PostMessageService', function($http, $q, ConfigService, ProjectService, PostMessageService) {
         this.studentData = null;
         this.stackHistory = null;  // array of node id's
         this.visitedNodesHistory = null;
@@ -84,26 +83,6 @@ define(['angular', 'configService'], function(angular, configService) {
             }));
         };
         
-        this.getNodeStatuses = function() {
-            return this.nodeStatuses;
-        };
-        
-        this.getNodeStatusByNodeId = function(nodeId) {
-            var result = null;
-            
-            if (nodeId != null && this.nodeStatuses != null) {
-                for (var n = 0; n < this.nodeStatuses.length; n++) {
-                    var nodeStatus = this.nodeStatuses[n];
-                    if(nodeStatus != null && nodeStatus.nodeId === nodeId) {
-                        result = nodeStatus;
-                        break;
-                    }
-                }
-            }
-            
-            return result;
-        };
-        
         this.updateNodeStatuses = function() {
             this.nodeStatuses = [];
             var nodes = ProjectService.getNodes();
@@ -112,7 +91,7 @@ define(['angular', 'configService'], function(angular, configService) {
                 for (var n = 0; n < nodes.length; n++) {
                     var node = nodes[n];
                     
-                    var nodeStatusesByNodePromise = this.updateNodeStatusesByNode(node);
+                    var nodeStatusesByNodePromise = this.getNodeStatusesByNode(node);
                     nodeStatusesByNodePromise.then(angular.bind(this, function(nodeStatusesByNode) {
                         this.nodeStatuses.push(nodeStatusesByNode);
                     }));
@@ -120,29 +99,36 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.updateNodeStatusesByNode = function(node) {
+        this.getNodeStatuses = function() {
+            return this.nodeStatuses;
+        };
+
+        this.getNodeStatusesByNode = function(node) {
             return $q(angular.bind(this, function(resolve, reject) {
                 
-            var nodeStatus = null;
+            var nodeStatuses = null;
             var allPromises = [];
             
             if (node != null) {
                 var nodeId = node.id;
                 
-                nodeStatus = {};
-                nodeStatus.nodeId = nodeId;
-                nodeStatus.isVisitable = false;
+                nodeStatuses = {};
+                nodeStatuses.nodeId = nodeId;
+                nodeStatuses.statuses = [];
                 
+                var isNodeVisitableStatus = {};
+                isNodeVisitableStatus.statusType = 'isVisitable';
+
                 // get the constraints that affect this node
                 var constraintsForNode = ProjectService.getConstraintsForNode(node);
                 
                 if (constraintsForNode == null || constraintsForNode.length == 0) {
                     // this node does not have any constraints so it is clickable
-                    nodeStatus.isVisitable = true;
+                    isNodeVisitableStatus.statusValue = true;
                 } else {
                     
                     // loop through all the constraints that affect this node
-                    for (var c = 0; c < constraintsForNode.length; c++) {
+                    for (var c = 0; c<constraintsForNode.length; c++) {
                         var constraintForNode = constraintsForNode[c];
                         
                         if (constraintForNode != null) {
@@ -151,7 +137,7 @@ define(['angular', 'configService'], function(angular, configService) {
                             if (constraintLogic == 'guidedNavigation') {
                                 if (this.isNodeVisited(nodeId)) {
                                     // the node has been visited before so it should be clickable
-                                    nodeStatus.isVisitable = true;
+                                    isNodeVisitableStatus.statusValue = true;
                                 } else {
                                     /*
                                      * the node has not been visited before so we will determine
@@ -178,17 +164,17 @@ define(['angular', 'configService'], function(angular, configService) {
                                                 
                                                 if (transitions.length > 1) {
                                                     // the current node has branches so the node status node is not clickable
-                                                    nodeStatus.isVisitable |= false;
+                                                    isNodeVisitableStatus.statusValue = false;
                                                 } else {
                                                     // the current node does not have branches so the node status node is clickable
-                                                    nodeStatus.isVisitable = true;
+                                                    isNodeVisitableStatus.statusValue = true;
                                                 }
                                             } else {
                                                 /*
                                                  * there is no transition between the current node and the node status node
                                                  * so the node we will set the node to be not clickable
                                                  */
-                                                nodeStatus.isVisitable |= false;
+                                                isNodeVisitableStatus.statusValue = false;
                                             }
                                         }
                                     } else {
@@ -200,7 +186,7 @@ define(['angular', 'configService'], function(angular, configService) {
                                          * the node is the start node of the project or a start node of a group
                                          * so we will make it clickable
                                          */
-                                        nodeStatus.isVisitable = true;
+                                        isNodeVisitableStatus.statusValue = true;
                                     }
                                 }
                             } else if (constraintLogic === 'transition') {
@@ -213,14 +199,6 @@ define(['angular', 'configService'], function(angular, configService) {
                                     if (nodeVisits != null && nodeVisits.length > 0) {
                                         var functionName = firstCriteria.functionName;
                                         var functionParams = firstCriteria.functionParams;
-                                        functionParams.nodeVisits = nodeVisits;
-    
-                                        // TODO: replace hard-code below with $injector.get('node.applicationType'+Service);
-                                        var result = OpenResponseService.callFunction(functionName, functionParams);
-                                        if (result) {
-                                            nodeStatus.isVisitable = true;
-                                        }
-                                        /*
                                         functionParams.nodeVisits = nodeVisits;
 
                                         var message = {
@@ -240,16 +218,17 @@ define(['angular', 'configService'], function(angular, configService) {
                                             };
                                             PostMessageService.postMessageToIFrame(nodeApplicationType, message, callbackFunction);
                                             allPromises.push(deferred.promise);
-                                            */
                                     }
                                 }
                             }
                         }
                     }
                 }
+                
+                nodeStatuses.statuses.push(isNodeVisitableStatus);
             }
             $q.all(allPromises).then(function() {
-                resolve(nodeStatus);
+                resolve(nodeStatuses);
             })
             }));
         };
@@ -442,7 +421,6 @@ define(['angular', 'configService'], function(angular, configService) {
                     
                     if (nodeId === tempNodeId) {
                         latestNodeVisit = tempNodeVisit;
-                        break;
                     }
                 }
             }

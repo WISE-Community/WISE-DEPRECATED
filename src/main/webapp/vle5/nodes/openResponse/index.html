@@ -1,0 +1,30 @@
+
+<html>
+<head>
+<style>
+#prompt {
+  font-weight: bold;
+}
+#saveButton {
+  display: block;
+}
+</style>
+</head>
+<body>
+<!--
+vle5/nodes/openResponse/openResponse.html
+
+message begin...
+{{openResponseController.message}}
+...message end
+
+nodeContent begin:
+{{nodeController.nodeContent}}
+nodeContent end
+-->
+<h3 id="title">{{openResponseController.title}}</h3>
+<div id="prompt">{{openResponseController.prompt}}</div>
+<textarea id='responseTextarea' ng-model="openResponseController.studentResponse"></textarea>
+<button id='saveButton' ng-click="openResponseController.saveButtonClicked()">Save</button>
+</body>
+</html>

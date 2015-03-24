@@ -99,7 +99,7 @@
             "id": "group0",
             "type": "group",
             "title": "My First WISE5 Project",
-            "startId": "group1",
+            "startNodeId": "group1",
             "ids": [
                 "group1",
                 "group2",

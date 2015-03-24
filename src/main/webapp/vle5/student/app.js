@@ -7,7 +7,7 @@ define([
         'projectService',
         'nodeApplicationService',
         'nodeService',
-        'postMessageService',
+        'openResponseService',
         'studentDataService'
         ], function(angular, $) {
 
@@ -18,7 +18,7 @@ define([
 	                                 'ProjectService',
 	                                 'NodeApplicationService',
 	                                 'NodeService',
-	                                 'PostMessageService',
+	                                 'OpenResponseService',
 	                                 'StudentDataService'
 	                                 ]);
 	
@@ -39,7 +39,7 @@ define([
 	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
 	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
 		
-		$urlRouterProvider.otherwise('/vle/');
+		$urlRouterProvider.otherwise('/vle/node0');
 		
 		app.$controllerProvider = $controllerProvider;
 		
@@ -61,9 +61,6 @@ define([
                     project: function(ProjectService, config) {
                         return ProjectService.retrieveProject();
                     },
-                    nodeApplication: function(NodeApplicationService, config) {
-                        return NodeApplicationService.intializeNodeApplications();
-                    },
                     studentData: function(StudentDataService, config, project) {
                         return StudentDataService.retrieveStudentData();
                     }
@@ -72,12 +69,12 @@ define([
             .state('root.vle', {
                 url: '/vle/:nodeId',
                 views: {
-                    'projectView': {
-                        templateUrl: 'vle5/student/project/project.html',
-                        controller: 'ProjectController',
-                        controllerAs: 'projectController',
+                    'navigationView': {
+                        templateUrl: 'vle5/student/navigation/navigation.html',
+                        controller: 'NavigationController',
+                        controllerAs: 'navigationController',
                         resolve: {
-                            loadController: app.loadController('projectController'),
+                            navigationController: app.loadController('navigationController')
                         }
                     },
                     'nodeView': {
@@ -85,68 +82,13 @@ define([
                         controller: 'NodeController',
                         controllerAs: 'nodeController',
                         resolve: {
-                            loadController: app.loadController('nodeController'),
-                        }
-                    },
-                    'nodeHelperView': {
-                        templateUrl: 'vle5/student/nodeHelper/nodeHelper.html',
-                        controller: 'NodeHelperController',
-                        controllerAs: 'nodeHelperController',
-                        resolve: {
-                            loadController: app.loadController('nodeHelperController'),
+                            nodeController: app.loadController('nodeController'),
+                            openResponseController: app.loadController('openResponseController'),
+                            htmlController: app.loadController('htmlController')                  
                         }
                     }
                 }
-            })
-		/*
-		$stateProvider
-		    .state('root', {
-		        url: '',
-		        abstract:true,
-                templateUrl: 'vle5/student/root.html',
-                controller: 'RootController',
-                controllerAs: 'rootController',
-                params: {nodeId: null},
-		        resolve: {
-                    loadController: app.loadController('rootController'),
-		            config: function(ConfigService) {
-		                var configUrl = window.configUrl;
-		                return ConfigService.retrieveConfig(configUrl);
-		            },
-		            project: function(ProjectService, config) {
-		                return ProjectService.retrieveProject();
-		            },
-                    nodeApplication: function(NodeApplicationService, config) {
-                        return NodeApplicationService.intializeNodeApplications();
-                    },
-                    studentData: function(StudentDataService, config) {
-                        return StudentDataService.retrieveStudentData();
-                    }
-		        }		       
-		    })
-		    .state('root.vle', {
-                url: '/vle/:nodeId',
-                views: {
-                    'projectView': {
-                        templateUrl: 'vle5/student/project/project.html',
-                        controller: 'ProjectController',
-                        controllerAs: 'projectController',
-                        resolve: {
-                            loadController: app.loadController('projectController'),
-                        }
-                    },
-                    'nodeView': {
-                        templateUrl: 'vle5/student/node/node.html',
-                        controller: 'NodeController',
-                        controllerAs: 'nodeController',
-                        resolve: {
-                            loadController: app.loadController('nodeController'),
-                        }
-                    }
-                }              
-            })
-            */
+            });
 	}]);
-	
 	return app;
 });
