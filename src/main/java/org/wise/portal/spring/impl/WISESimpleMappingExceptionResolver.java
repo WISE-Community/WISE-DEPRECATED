@@ -65,8 +65,6 @@ public class WISESimpleMappingExceptionResolver extends
 	
 	private static final String HANDLE_EXCEPTION_MAIL_SUBJECT = "WISE Exception Report";
 	
-	private static final String HANDLE_EXCEPTION_FROM_EMAIL = "telsportal@gmail.com";
-
 	/**
 	 * @see org.springframework.web.servlet.handler.SimpleMappingExceptionResolver#resolveException(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, java.lang.Exception)
 	 */
@@ -82,7 +80,7 @@ public class WISESimpleMappingExceptionResolver extends
 			String portalName = wiseProperties.getProperty("wise.name");
 			String[] recipients = wiseProperties.getProperty(HANDLE_EXCEPTION_PROPERTY_KEY).split(",");
 			String subject = HANDLE_EXCEPTION_MAIL_SUBJECT + ": (" + portalName + ")";
-			String fromEmail = HANDLE_EXCEPTION_FROM_EMAIL;
+			String fromEmail = wiseProperties.getProperty("mail.from");
 			String message = getHandleExceptionMessage(request, response, handler, exception);
 
 			ExceptionEmailSender emailSender = 
