@@ -26,8 +26,18 @@ define(['angular', 'configService'], function(angular, configService) {
             return currentNodeId;
         };
         
+        this.setCurrentNodeByNodeId = function(nodeId) {
+            if (nodeId != null) {
+                var node = ProjectService.getNodeById(nodeId);
+                
+                this.setCurrentNode(node);
+            }
+        };
+        
         this.setCurrentNode = function(node) {
-            this.currentNode = node;
+            if (node != null) {
+                this.currentNode = node;
+            }
         };
         
         this.updateCurrentNode = function(latestNodeVisit) {
@@ -220,6 +230,17 @@ define(['angular', 'configService'], function(angular, configService) {
                                         if (result) {
                                             nodeStatus.isVisitable = true;
                                         }
+                                    }
+                                }
+                            } else if (constraintLogic === 'lockAfterSubmit') {
+                                var targetId = constraintForNode.targetId;
+                                var nodeVisits = this.getNodeVisitsByNodeId(targetId);
+                                
+                                if (nodeId === targetId) {
+                                    var isWorkSubmitted = OpenResponseService.isWorkSubmitted(nodeVisits);
+                                    
+                                    if (isWorkSubmitted) {
+                                        
                                     }
                                 }
                             }

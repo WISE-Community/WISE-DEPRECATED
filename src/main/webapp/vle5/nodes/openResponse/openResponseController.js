@@ -5,11 +5,15 @@ define(['app'], function(app) {
                     $stateParams, 
                     ConfigService,
                     NodeService,
+                    OpenResponseService,
                     ProjectService, 
                     StudentDataService) {
         
+        this.nodeContent = null;
         this.nodeId = $stateParams.nodeId;
         this.studentResponse = "my response";
+        this.isDisabled = false;
+        
         console.log('openResponseController.js nodeId: ' + this.nodeId);
         
         $scope.$watch(function() {
@@ -17,11 +21,29 @@ define(['app'], function(app) {
             }, angular.bind(this, function(newNodeContent, oldNodeContent) {
                 console.log('nodeController.js nodeContent changed');
                 if (newNodeContent != null) {
-                    this.prompt = newNodeContent.prompt;
-                    this.title = newNodeContent.title;
+                    this.nodeContent = newNodeContent;
+                    this.calculateDisabled();
                     $scope.$parent.nodeController.nodeLoaded(this.nodeId);
                 }
         }));
+        
+        this.calculateDisabled = function() {
+            var nodeContent = this.nodeContent;
+            var nodeId = this.nodeId;
+            
+            if (nodeContent) {
+                var lockAfterSubmit = nodeContent.lockAfterSubmit;
+                
+                if (lockAfterSubmit) {
+                    var nodeVisits = StudentDataService.getNodeVisitsByNodeId(nodeId);
+                    var isSubmitted = OpenResponseService.isWorkSubmitted(nodeVisits);
+                    
+                    if (isSubmitted) {
+                        this.isDisabled = true;
+                    }
+                }
+            }
+        };
         
         this.saveButtonClicked = function() {
             console.log('save clicked. studentResponse: ' + this.studentResponse);
@@ -29,14 +51,19 @@ define(['app'], function(app) {
             var studentData = {'response': this.studentResponse};
             
             StudentDataService.addNodeStateToLatestNodeVisit(this.nodeId, studentData);
+            
+            this.calculateDisabled();
         }
+        
+        this.submitButtonClicked = function() {
+            var studentData = {};
+            studentData.response = this.studentResponse;
+            studentData.isSubmit = true;
+            
+            StudentDataService.addNodeStateToLatestNodeVisit(this.nodeId, studentData);
+            
+            this.calculateDisabled();
+        };
 
-        this.message = 'message from openResponseController';
-        
-        //this.nodeLoaded = function() {
-        //    $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-        //}
-        
-        console.log('openResponseController');
     });
 });

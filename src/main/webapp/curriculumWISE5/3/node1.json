@@ -1,4 +1,6 @@
 {
     "style": "body { background-color: green }",
-    "prompt": "Branch Step. Type words."
+    "prompt": "Branch Step. Type words.",
+    "lockAfterSubmit": true,
+    "showSubmitButton": true
 }

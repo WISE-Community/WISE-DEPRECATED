@@ -89,5 +89,43 @@ define(['angular'], function(angular) {
             return result;
         };
         
+        this.isWorkSubmitted = function(nodeVisits) {
+            var result = false;
+            
+            if (nodeVisits != null) {
+                for (var nv = 0; nv < nodeVisits.length; nv++) {
+                    var nodeVisit = nodeVisits[nv];
+                    
+                    if (nodeVisit != null) {
+                        var nodeStates = nodeVisit.nodeStates;
+                        
+                        if (nodeStates != null) {
+                            for (var ns = 0; ns < nodeStates.length; ns++) {
+                                var nodeState = nodeStates[ns];
+                                
+                                if (nodeState != null) {
+                                    var isSubmit = nodeState.isSubmit;
+                                    
+                                    if (isSubmit != null) {
+                                        result = isSubmit;
+                                        
+                                        if (result) {
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            if (isSubmit != null) {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return result;
+        };
+        
     }]);
 });

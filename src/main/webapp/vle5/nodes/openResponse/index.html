@@ -22,9 +22,9 @@ nodeContent begin:
 {{nodeController.nodeContent}}
 nodeContent end
 -->
-<h3 id="title">{{openResponseController.title}}</h3>
-<div id="prompt">{{openResponseController.prompt}}</div>
-<textarea id='responseTextarea' ng-model="openResponseController.studentResponse"></textarea>
-<button id='saveButton' ng-click="openResponseController.saveButtonClicked()">Save</button>
+<div id='prompt'>{{openResponseController.nodeContent.prompt}}</div>
+<textarea id='responseTextarea' ng-model='openResponseController.studentResponse' ng-disabled='openResponseController.isDisabled'></textarea>
+<button id='saveButton' ng-click='openResponseController.saveButtonClicked()' ng-disabled='openResponseController.isDisabled'>Save</button>
+<button id='submitButton' ng-click='openResponseController.submitButtonClicked()' ng-show='openResponseController.nodeContent.showSubmitButton' ng-disabled='openResponseController.isDisabled'>Submit</button>
 </body>
 </html>
