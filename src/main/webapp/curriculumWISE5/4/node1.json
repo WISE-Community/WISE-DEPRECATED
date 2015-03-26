@@ -1,0 +1,6 @@
+{
+    "style": "body { background-color: green }",
+    "prompt": "Step 1 Prompt",
+    "lockAfterSubmit": true,
+    "showSubmitButton": true
+}

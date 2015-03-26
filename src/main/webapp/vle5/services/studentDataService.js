@@ -380,6 +380,31 @@ define(['angular', 'configService'], function(angular, configService) {
             return nodeVisitsForNode;
         };
         
+        this.getNodeVisitsByNodeType = function(nodeType) {
+            var nodeVisitsByNodeType = [];
+            var nodeVisits = this.getNodeVisits();
+            
+            for (var x = 0; x < nodeVisits.length; x++) {
+                var nodeVisit = nodeVisits[x];
+                
+                if (nodeVisit !== null) {
+                    var nodeId = nodeVisit.nodeId;
+                    
+                    var node = this.getNodeById(nodeId);
+                    
+                    if (node != null) {
+                        var tempNodeType = node.type;
+                        
+                        if (tempNodeType === nodeType) {
+                            nodeVisitsByNodeType.push(nodeVisit);
+                        }
+                    }
+                }
+            }
+            
+            return nodeVisitsByNodeType;
+        };
+        
         this.getLatestNodeStateByNodeId = function(nodeId) {
             var latestNodeState = null;
             var nodeVisits = this.getNodeVisits();

@@ -14,6 +14,8 @@ require.config({
         'nodeService': 'services/nodeService',
         'openResponseController': 'nodes/openResponse/openResponseController',
         'openResponseService': 'nodes/openResponse/openResponseService',
+        'planningController': 'nodes/planning/planningController',
+        'planningService': 'nodes/planning/planningService',
         'projectService': 'services/projectService',
         'studentDataService': 'services/studentDataService',
         'vleController': 'student/vleController'

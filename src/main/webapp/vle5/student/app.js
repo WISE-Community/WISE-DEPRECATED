@@ -84,7 +84,8 @@ define([
                         resolve: {
                             nodeController: app.loadController('nodeController'),
                             openResponseController: app.loadController('openResponseController'),
-                            htmlController: app.loadController('htmlController')                  
+                            htmlController: app.loadController('htmlController'),
+                            planningController: app.loadController('planningController')
                         }
                     }
                 }

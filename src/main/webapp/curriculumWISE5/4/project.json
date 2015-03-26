@@ -1,0 +1,119 @@
+{
+    "metadata": {
+        "wiseVersion": 5,
+        "gradeRange": "5-7"
+    },
+    "nodes": [
+        {
+            "id": "node1",
+            "type": "OpenResponse",
+            "title": "Step 1",
+            "src": "node1.json"
+        },
+        {
+            "id": "node2",
+            "type": "Planning",
+            "title": "Step 2",
+            "src": "node2.json"
+        },
+        {
+            "id": "node3",
+            "type": "OpenResponse",
+            "title": "Step 3",
+            "src": "node3.json"
+        },
+        {
+            "id": "node4",
+            "type": "OpenResponse",
+            "title": "Step 4",
+            "src": "node4.json"
+        },
+        {
+            "id": "studentNode1",
+            "copyOf": "node5",
+            "type": "HTML",
+            "title": "Planning A",
+            "src": "node5.json"
+        },
+        {
+            "id": "node6",
+            "type": "HTML",
+            "title": "Planning B",
+            "src": "node6.json"
+        },
+        {
+            "id": "node7",
+            "type": "HTML",
+            "title": "Planning C",
+            "src": "node7.json"
+        },
+        {
+            "id": "node8",
+            "type": "HTML",
+            "title": "Planning D",
+            "src": "node8.json"
+        },
+        {
+            "id": "node9",
+            "type": "HTML",
+            "title": "Planning E",
+            "src": "node9.json"
+        },
+        {
+            "id": "node10",
+            "type": "HTML",
+            "title": "Planning F",
+            "src": "node10.json"
+        },
+        {
+            "id": "group0",
+            "type": "group",
+            "title": "My First WISE5 Project",
+            "startId": "group1",
+            "ids": [
+                "group1"
+            ]
+        },
+        {
+            "id": "group1",
+            "type": "group",
+            "title": "Activity 1",
+            "startId": "node0",
+            "ids": [
+                "node1",
+                "node2",
+                "node3",
+                "node4"
+            ]
+        }
+    ],
+    "transitions": [
+        {
+            "id": "transition1",
+            "from": "node1",
+            "to": "node2"
+        },
+        {
+            "id": "transition3",
+            "from": "node2",
+            "to": "node3"
+        },
+        {
+            "id": "transition4",
+            "from": "node3",
+            "to": "node4"
+        }
+    ],
+    "startNodeId": "node0",
+    "constraints": [],
+    "navigationMode": "guided",
+    "navigationApplications": [
+        "wiseMap",
+        "wiseList"
+    ],
+    "layout": {
+        "template": "starmap|leftNav|rightNav",
+        "studentIsOnGroupNode": "layout3",
+        "studentIsOnApplicationNode": "layout4"
+    }
+}
