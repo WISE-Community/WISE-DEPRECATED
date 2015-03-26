@@ -390,7 +390,7 @@ define(['angular', 'configService'], function(angular, configService) {
                 if (nodeVisit !== null) {
                     var nodeId = nodeVisit.nodeId;
                     
-                    var node = this.getNodeById(nodeId);
+                    var node = ProjectService.getNodeById(nodeId);
                     
                     if (node != null) {
                         var tempNodeType = node.type;

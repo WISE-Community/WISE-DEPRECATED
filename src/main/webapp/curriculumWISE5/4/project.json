@@ -29,8 +29,7 @@
             "src": "node4.json"
         },
         {
-            "id": "studentNode1",
-            "copyOf": "node5",
+            "id": "node5",
             "type": "HTML",
             "title": "Planning A",
             "src": "node5.json"

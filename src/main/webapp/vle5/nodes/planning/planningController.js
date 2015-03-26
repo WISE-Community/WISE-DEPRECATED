@@ -10,6 +10,7 @@ define(['app'], function(app) {
                     StudentDataService) {
         
         this.nodeContent = null;
+        this.nodeId = $stateParams.nodeId;
         this.planningResults = [];
         
         $scope.$watch(function() {
@@ -29,26 +30,34 @@ define(['app'], function(app) {
             var nodeToCopy = ProjectService.getNodeById(nodeId);
             
             if (nodeToCopy != null) {
+                var nextStudentNodeId = this.getNextStudentNodeId();
                 var studentNode = {};
-                studentNode.id ='';
+                studentNode.id = nextStudentNodeId;
                 studentNode.type = nodeToCopy.type;
                 studentNode.title = nodeToCopy.title;
                 studentNode.src = nodeToCopy.src;
                 studentNode.copyOf = nodeToCopy.id;
+                
+                var latestState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                var latestStateStudentNodes = [];
+                if (latestState != null && latestState.studentNodes != null) {
+                    latestStateStudentNodes = [].concat(latestState.studentNodes);
+                }
+                
+                latestStateStudentNodes.push(studentNode);
+                
+                var studentData = {};
+                studentData.studentNodes = latestStateStudentNodes;
+                
+                StudentDataService.addNodeStateToLatestNodeVisit(this.nodeId, studentData);
+                
+                this.planningResults = latestStateStudentNodes;
             }
-            
-
-            
-            var studentData = {};
-            studentData.nodes = [];
-            
-            
-            
-            
         };
         
         this.getNextStudentNodeId = function() {
-            var studentNodeIdNumbersSoFar = [];
+            var maxStudentNodeIdNumberSoFar = 0;
+            var studentNodePrefix = 'studentNode';
             
             var nodeVisits = StudentDataService.getNodeVisitsByNodeType('Planning');
             
@@ -63,18 +72,20 @@ define(['app'], function(app) {
                             var nodeState = nodeStates[ns];
                             
                             if (nodeState != null) {
-                                var nodes = nodeState.nodes;
+                                var studentNodes = nodeState.studentNodes;
                                 
-                                if (nodes != null) {
-                                    for (var n = 0; n < nodes.length; n++) {
-                                        var node = nodes[n];
+                                if (studentNodes != null) {
+                                    for (var n = 0; n < studentNodes.length; n++) {
+                                        var studentNode = studentNodes[n];
                                         
-                                        if (node != null) {
-                                            var nodeId = node.id;
+                                        if (studentNode != null) {
+                                            var studentNodeId = studentNode.id;
                                             
-                                            if (nodeId != null) {
-                                                var studentNodeNumber = nodeId.replace('studentNode', '');
-                                                studentNodeIdNumbersSoFar.push(studentNodeNumber);
+                                            if (studentNodeId != null) {
+                                                var studentNodeNumber = parseInt(studentNodeId.substring(studentNodePrefix.length));
+                                                if (studentNodeNumber > maxStudentNodeIdNumberSoFar) {
+                                                    maxStudentNodeIdNumberSoFar = studentNodeNumber;
+                                                }
                                             }
                                         }
                                     }
@@ -84,6 +95,7 @@ define(['app'], function(app) {
                     }
                 }
             }
+            return studentNodePrefix + (maxStudentNodeIdNumberSoFar+1);
         };
         
     })
