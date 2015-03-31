@@ -13,7 +13,8 @@ define(['app'], function(app) {
             this.nodeContent = null;
             
             $scope.$watch(function() {
-                return StudentDataService.getCurrentNode();
+                var currentNode = StudentDataService.getCurrentNode();
+                return currentNode;
             }, angular.bind(this, function(newCurrentNode, oldCurrentNode) {
                 console.log('nodeController.js currentNode changed');
                 if (newCurrentNode != null) {

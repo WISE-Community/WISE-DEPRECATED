@@ -32,37 +32,37 @@
             "id": "node5",
             "type": "HTML",
             "title": "Planning A",
-            "src": "node5.json"
+            "src": "node5.html"
         },
         {
             "id": "node6",
             "type": "HTML",
             "title": "Planning B",
-            "src": "node6.json"
+            "src": "node6.html"
         },
         {
             "id": "node7",
             "type": "HTML",
             "title": "Planning C",
-            "src": "node7.json"
+            "src": "node7.html"
         },
         {
             "id": "node8",
             "type": "HTML",
             "title": "Planning D",
-            "src": "node8.json"
+            "src": "node8.html"
         },
         {
             "id": "node9",
             "type": "HTML",
             "title": "Planning E",
-            "src": "node9.json"
+            "src": "node9.html"
         },
         {
             "id": "node10",
             "type": "HTML",
             "title": "Planning F",
-            "src": "node10.json"
+            "src": "node10.html"
         },
         {
             "id": "group0",
@@ -103,7 +103,7 @@
             "to": "node4"
         }
     ],
-    "startNodeId": "node0",
+    "startNodeId": "node1",
     "constraints": [],
     "navigationMode": "guided",
     "navigationApplications": [

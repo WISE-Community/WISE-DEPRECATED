@@ -4,6 +4,7 @@ define(['angular', 'configService'], function(angular, configService) {
 
     .service('ProjectService', ['$http', 'ConfigService', function($http, ConfigService) {
         this.project = null;
+        this.transitions = [];
         this.applicationNodes = [];
         this.groupNodes = [];
         this.idToNode = {};
@@ -63,6 +64,42 @@ define(['angular', 'configService'], function(angular, configService) {
             return result;
         };
         
+        // adds or update transition if exists
+        this.addTransition = function(transition) {
+        
+            var existingTransitions = this.getTransitions();
+            var replaced = false;
+            for (var t = 0; t < existingTransitions.length; t++) {
+                var existingTransition = existingTransitions[t];
+                if (existingTransition.id === transition.id) {
+                    existingTransitions.splice(t, 1, transition);
+                    replaced = true;
+                }
+            }
+            if (!replaced) {
+                existingTransitions.push(transition);
+            }
+        };
+        
+        this.addNode = function(node) {
+            var existingNodes = this.project.nodes;
+            
+            var replaced = false;
+            if (node != null && existingNodes != null) {
+                for (var n = 0; n < existingNodes.length; n++) {
+                    var existingNode = existingNodes[n];
+                    var existingNodeId = existingNode.id;
+                    if (existingNodeId === node.id) {
+                        existingNodes.splice(n, 1, node);
+                        replaced = true;
+                    }
+                }
+            }
+            if (!replaced) {
+                existingNodes.push(node);
+            }
+        };
+        
         this.addApplicationNode = function(node) {
             
             var applicationNodes = this.applicationNodes;
@@ -78,6 +115,23 @@ define(['angular', 'configService'], function(angular, configService) {
             
             if (node != null && groupNodes != null) {
                 groupNodes.push(node);
+            }
+        };
+        
+        this.addNodesToGroupNode = function(groupId, nodeIds) {
+            var group = this.getNodeById(groupId);
+            if (group != null) {
+                var groupChildNodeIds = group.ids;
+                if (groupChildNodeIds != null) {
+                    if (nodeIds != null) {
+                        for (var n = 0; n < nodeIds.length; n++) {
+                            var nodeId = nodeIds[n];
+                            if (groupChildNodeIds.indexOf(nodeId) === -1) {
+                                groupChildNodeIds.push(nodeId);
+                            }
+                        }
+                    }
+                }
             }
         };
         
@@ -117,44 +171,54 @@ define(['angular', 'configService'], function(angular, configService) {
             return this.groupNodes;
         };
         
+        this.loadNodes = function(nodes) {
+            if (nodes != null) {
+                for (var n = 0 ; n < nodes.length; n++) {
+                    var node = nodes[n];
+                    
+                    if (node != null) {
+                        var nodeId = node.id;
+                        var nodeType = node.type;
+                        
+                        this.setIdToNode(nodeId, node);
+                        this.setIdToElement(nodeId, node);
+                        
+                        this.addNode(node);
+
+                        if (nodeType === 'group') {
+                            this.addGroupNode(node);
+                        } else {
+                            this.addApplicationNode(node);
+                        }
+                    }
+                }
+            }
+        };
+        
+        this.loadTransitions = function(transitions) {
+            if (transitions != null) {
+                for (var t = 0; t < transitions.length; t++) {
+                    var transition = transitions[t];
+                    
+                    if (transition != null) {
+                        var transitionId = transition.id;
+                        
+                        this.setIdToElement(transitionId, transition);
+                        
+                        this.addTransition(transition);
+                    }
+                }
+            }
+        };
+        
         this.parseProject = function() {
             var project = this.project;
             if (project != null) {
                 var nodes = project.nodes;
-                
-                if (nodes != null) {
-                    for (var n = 0 ; n < nodes.length; n++) {
-                        var node = nodes[n];
-                        
-                        if (node != null) {
-                            var nodeId = node.id;
-                            var nodeType = node.type;
-                            
-                            this.setIdToNode(nodeId, node);
-                            this.setIdToElement(nodeId, node);
-                            
-                            if (nodeType === 'group') {
-                                this.addGroupNode(node);
-                            } else {
-                                this.addApplicationNode(node);
-                            }
-                        }
-                    }
-                }
+                this.loadNodes(nodes);
                 
                 var transitions = project.transitions;
-                
-                if (transitions != null) {
-                    for (var t = 0; t < transitions.length; t++) {
-                        var transition = transitions[t];
-                        
-                        if (transition != null) {
-                            var transitionId = transition.id;
-                            
-                            this.setIdToElement(transitionId, transition);
-                        }
-                    }
-                }
+                this.loadTransitions(transitions);
                 
                 var constraints = project.constraints;
                 
@@ -424,7 +488,7 @@ define(['angular', 'configService'], function(angular, configService) {
                 if (transitions != null) {
                     for (var i = 0; i < transitions.length; i++) {
                         var transition = transitions[i];
-                        if (transition.from === fromNodeId) {
+                        if (transition.from === fromNodeId && !transition.disabled) {
                             transitionsResults.push(transition);
                         }
                     }

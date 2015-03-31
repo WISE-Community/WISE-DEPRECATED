@@ -31,6 +31,14 @@ define(['app'], function(app) {
             }
         }), objectEquality);
 
+        $scope.$watch(function() {
+           return ProjectService.getGroups(); 
+        }, angular.bind(this, function(newGroups, oldGroups) {
+           if (newGroups != null) {
+               this.groups = newGroups;
+           } 
+        }), objectEquality);
+        
         this.groups = ProjectService.getGroups();
 
         this.nodeClicked = function(nodeId) {

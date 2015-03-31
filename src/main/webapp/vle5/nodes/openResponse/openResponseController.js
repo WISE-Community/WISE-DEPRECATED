@@ -8,7 +8,7 @@ define(['app'], function(app) {
                     OpenResponseService,
                     ProjectService, 
                     StudentDataService) {
-        
+        console.log('OpenResponseController');
         this.nodeContent = null;
         this.nodeId = $stateParams.nodeId;
         this.studentResponse = "my response";
@@ -19,7 +19,7 @@ define(['app'], function(app) {
         $scope.$watch(function() {
                 return $scope.$parent.nodeController.nodeContent;
             }, angular.bind(this, function(newNodeContent, oldNodeContent) {
-                console.log('nodeController.js nodeContent changed');
+                console.log('openRepsponseController.js nodeContent changed');
                 if (newNodeContent != null) {
                     this.nodeContent = newNodeContent;
                     this.calculateDisabled();

@@ -8,5 +8,7 @@
         "node8",
         "node9",
         "node10"
-    ]
+    ],
+    "groupToPlace": "group1",
+    "transitionToReplace": "transition3"
 }
