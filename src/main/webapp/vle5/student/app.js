@@ -79,8 +79,6 @@ define([
                     },
                     'nodeView': {
                         templateUrl: 'vle5/student/node/node.html',
-                        controller: 'NodeController',
-                        controllerAs: 'nodeController',
                         resolve: {
                             nodeController: app.loadController('nodeController'),
                             openResponseController: app.loadController('openResponseController'),

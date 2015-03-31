@@ -12,17 +12,21 @@ define(['app'], function(app) {
         this.nodeContent = null;
         this.nodeId = $stateParams.nodeId;
         this.planningResults = [];
-
+        console.log('PlanningController ppppppppppppppp');
+        
+        /*
         $scope.$watch(function() {
             return $scope.$parent.nodeController.nodeContent;
         }, angular.bind(this, function(newNodeContent, oldNodeContent) {
-            console.log('planningController.js nodeContent changed');
             if (newNodeContent != null) {
                 this.nodeContent = newNodeContent;
                 //this.calculateDisabled();
                 $scope.$parent.nodeController.nodeLoaded(this.nodeId);
             }
         }));
+        */
+        this.nodeContent = $scope.$parent.nodeController.nodeContent;
+        $scope.$parent.nodeController.nodeLoaded(this.nodeId);
 
         this.submit = function() {
             var latestStateStudentNodes = this.planningResults;

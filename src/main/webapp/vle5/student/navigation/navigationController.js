@@ -23,7 +23,6 @@ define(['app'], function(app) {
             var nodeStatuses = StudentDataService.getNodeStatuses();
             return nodeStatuses;
         }, angular.bind(this, function(newNodeStatuses, oldNodeStatuses) {
-            console.log('nodeStatus Changed');
             if (newNodeStatuses != null) {
                 var nodeId = StudentDataService.getCurrentNodeId();
 

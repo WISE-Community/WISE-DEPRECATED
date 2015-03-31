@@ -46,7 +46,6 @@ define(['app'],
             var nodeVisits = StudentDataService.getNodeVisits();
             return nodeVisits;
         }, angular.bind(this, function(newNodeVisits, oldNodeVisits) {
-            console.log('visits changed');
             if (newNodeVisits != null) {
                 StudentDataService.updateNodeStatuses();
             }
@@ -160,7 +159,7 @@ define(['app'],
         if (currentNode != null) {
             nodeId = currentNode.id;
         }
-        console.log('vleController, nodeId:' + nodeId);
+
         this.setCurrentNodeByNodeId(nodeId);
     });
 });

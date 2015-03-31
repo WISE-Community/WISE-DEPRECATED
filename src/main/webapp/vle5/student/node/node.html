@@ -1,16 +1,11 @@
 <!--  
 <iframe id="nodeIFrame" class={{vleController.layoutState}} ng-src="{{nodeController.nodeIFrameSrc}}"></iframe> 
 -->
-
+pineapple
 <!-- <div id="nodeView" ui-view=""></div>  -->
-<div id="nodeIFrame" class={{vleController.layoutState}}  ng-switch on="nodeController.nodeType" >
-    <div ng-switch-when="OpenResponse">
-        <div ng-include="'vle5/nodes/openResponse/index.html'" ng-controller='OpenResponseController as openResponseController'></div>
-    </div>
-    <div ng-switch-when="HTML">
-        <div ng-include="'vle5/nodes/html/index.html'" ng-controller='HTMLController as htmlController'></div>
-    </div>
-    <div ng-switch-when="Planning">
-        <div ng-include="'vle5/nodes/planning/index.html'" ng-controller='PlanningController as planningController'></div>
-    </div>
+<div ng-controller='NodeController as nodeController'>
+<div id="nodeIFrame" class={{vleController.layoutState}}>
+    <p>{{nodeController.nodeHTMLPath}}</p>
+    <div ng-include="nodeController.nodeHTMLPath"></div>
+</div>
 </div>

@@ -8,24 +8,32 @@ define(['app'], function(app) {
                     OpenResponseService,
                     ProjectService, 
                     StudentDataService) {
-        console.log('OpenResponseController');
         this.nodeContent = null;
         this.nodeId = $stateParams.nodeId;
         this.studentResponse = "my response";
         this.isDisabled = false;
         
-        console.log('openResponseController.js nodeId: ' + this.nodeId);
+        console.log('OpenResponseController ooooooooooooooooooooo');
         
+        /*
         $scope.$watch(function() {
+            console.log('openResponseController: Checking nodeContent');
                 return $scope.$parent.nodeController.nodeContent;
             }, angular.bind(this, function(newNodeContent, oldNodeContent) {
-                console.log('openRepsponseController.js nodeContent changed');
+                console.log('openResponseController: nodeContent changed cccccccccccc');
                 if (newNodeContent != null) {
+                    console.log('openResponseController: different');
                     this.nodeContent = newNodeContent;
                     this.calculateDisabled();
                     $scope.$parent.nodeController.nodeLoaded(this.nodeId);
+                } else {
+                    console.log('openResponseController: same');
                 }
         }));
+        */
+        
+        this.nodeContent = $scope.$parent.nodeController.nodeContent;
+        $scope.$parent.nodeController.nodeLoaded(this.nodeId);
         
         this.calculateDisabled = function() {
             var nodeContent = this.nodeContent;
@@ -46,8 +54,6 @@ define(['app'], function(app) {
         };
         
         this.saveButtonClicked = function() {
-            console.log('save clicked. studentResponse: ' + this.studentResponse);
-            
             var studentData = {'response': this.studentResponse};
             
             StudentDataService.addNodeStateToLatestNodeVisit(this.nodeId, studentData);

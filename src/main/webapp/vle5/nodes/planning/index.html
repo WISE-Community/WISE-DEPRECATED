@@ -2,9 +2,12 @@
 <head>
 </head>
 <body>
+abc
+<div ng-controller='PlanningController as planningController'>
 Plan Stuff
 <input type='button' ng-repeat='planningNode in planningController.nodeContent.planningNodes' value='{{planningNode}}' ng-click='planningController.nodeClicked(planningNode)'></input>
 <div ng-repeat='planningResult in planningController.planningResults track by $index'>{{planningResult}}</div>
 <input type='button' ng-click='planningController.submit()' value='submit'></input>
+</div>
 </body>
 </html>

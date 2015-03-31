@@ -2,14 +2,16 @@ define(['angular', 'configService'], function(angular, configService) {
 
     angular.module('StudentDataService', [])
     
-    .service('StudentDataService', ['$http', '$q', 'ConfigService', 'ProjectService', 'OpenResponseService', 
-                                    function($http, $q, ConfigService, ProjectService, OpenResponseService) {
+    .service('StudentDataService', ['$http', '$q', '$rootScope', 'ConfigService', 'ProjectService', 'OpenResponseService', 
+                                    function($http, $q, $rootScope, ConfigService, ProjectService, OpenResponseService) {
         this.studentData = null;
         this.stackHistory = null;  // array of node id's
         this.visitedNodesHistory = null;
         this.nodeStatuses = null;
         
         this.currentNode = null;
+        
+        console.log('$rootScope=' + $rootScope)
         
         this.getCurrentNode = function() {
             return this.currentNode;
@@ -35,9 +37,13 @@ define(['angular', 'configService'], function(angular, configService) {
         };
         
         this.setCurrentNode = function(node) {
+            console.log('setCurrentNode');
+            
             if (node != null) {
                 this.currentNode = node;
             }
+            
+            $rootScope.$broadcast('testEvent');
         };
         
         this.updateCurrentNode = function(latestNodeVisit) {
