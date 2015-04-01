@@ -1552,7 +1552,7 @@ public class VLEGetXLS {
 			JSONObject autoGradedAnnotationForNodeState) {
 		
     	//get the student work columns for this node state if export columns were authored
-    	ArrayList<ArrayList<Object>> columns = getExportColumnDataValues(nodeState, nodeId, autoGradedAnnotationForNodeState);
+    	ArrayList<ArrayList<Object>> columns = getExportColumnDataValues(stepWorkId, nodeState, nodeId);
     	
     	//get the column names of the export columns if they were authored
     	ArrayList<Object> columnNames = getExportColumnNames(nodeId);
@@ -2678,14 +2678,14 @@ public class VLEGetXLS {
 	
 	/**
 	 * Get the student data values for the export column
+	 * @param stepWorkId the step work id
 	 * @param nodeState the node state
 	 * @param nodeId the node if of the step
-	 * @param autoGradedAnnotationForNodeState the auto graded annotation for the node state if it exists
 	 * @return the student data values columns. this is a two dimensional array
 	 * with the first dimension being the columns and the second dimension being
 	 * the rows.
 	 */
-	private ArrayList<ArrayList<Object>> getExportColumnDataValues(JSONObject nodeState, String nodeId, JSONObject autoGradedAnnotationForNodeState) {
+	private ArrayList<ArrayList<Object>> getExportColumnDataValues(Long stepWorkId, JSONObject nodeState, String nodeId) {
 		//holds the columns and values of the columns
 		ArrayList<ArrayList<Object>> columns = new ArrayList<ArrayList<Object>>();
 		
@@ -2734,7 +2734,7 @@ public class VLEGetXLS {
 						}
 						
 						//get the student data values for the field
-						ArrayList<Object> newColumn = getColumnValuesForField(exportColumn, nodeState, nodeId, autoGradedAnnotationForNodeState);
+						ArrayList<Object> newColumn = getColumnValuesForField(exportColumn, stepWorkId, nodeState, nodeId);
 						
 						if(relatedColumnExpandAndMultiplyAmounts == null) {
 							//we did not find any previous columns that referenced the same object
@@ -5613,13 +5613,13 @@ public class VLEGetXLS {
 	/**
 	 * Get the column values for a field in the student data
 	 * @param fieldObject the object that specifies what field to get
+	 * @param stepWorkId the step work id
 	 * @param studentWork the student data
-	 * @param autoGradedAnnotationForNodeState the auto graded annotation for the node state if it exists
 	 * @return an array of objects that are found in the specified field
 	 * in the student data. if the field only contains one value, there
 	 * will only be one element in the array.
 	 */
-	private ArrayList<Object> getColumnValuesForField(JSONObject fieldObject, JSONObject studentWork, String nodeId, JSONObject autoGradedAnnotationForNodeState) {
+	private ArrayList<Object> getColumnValuesForField(JSONObject fieldObject, Long stepWorkId, JSONObject studentWork, String nodeId) {
 		//the array to hold the values
 		ArrayList<Object> values = new ArrayList<Object>();
 		
@@ -5641,69 +5641,62 @@ public class VLEGetXLS {
 					}
 					
 					if(field != null) {
+					    Object value = null;
+					    
+					    if (studentWork.has(field)) {
+					        // get the value from the step work
+					        value = studentWork.opt(field);
+					    } else {
+					        // try to get the value from the annotation
+					        value = getValueFromAnnotation(fieldObject, stepWorkId, studentWork);
+					    }
+					    
 						//check if the student work or the autoGraded annotation has the field we are looking for
-						if(studentWork.has(field) || (autoGradedAnnotationForNodeState != null && autoGradedAnnotationForNodeState.has(field))) {
-							//get the value in the field in the student work
-							Object value = studentWork.opt(field);
-							
-							if(value == null) {
-								/*
-								 * the student work does not have the field we are looking for so we
-								 * will try to find it in the autoGraded annotation
-								 */
-								if(autoGradedAnnotationForNodeState != null) {
-									value = autoGradedAnnotationForNodeState.opt(field);
-								}
-							}
-
-							if(value != null) {
-								if(value instanceof JSONObject) {
-									//the value is a JSONObject
-									JSONObject jsonObjectValue = (JSONObject) value;
-									
-									if(childFieldObject != null) {
-										//there is a childField specified so we will recursively go deeper into the student work
-										values.addAll(getColumnValuesForField(childFieldObject, jsonObjectValue, nodeId, autoGradedAnnotationForNodeState));							
-									} else {
-										//there is no childField so we have traversed as far as we need to and will get this value 
-										values.add(jsonObjectValue.toString());
-									}
-								} else if(value instanceof JSONArray) {
-									//the value is a JSONArray
-									JSONArray jsonArrayValue = (JSONArray) value;
-									
-									if(childFieldObject != null) {
-										//there is a childField specified so we will recursively go deeper into the student work
-										values.addAll(getValueForField(childFieldObject, jsonArrayValue, nodeId, autoGradedAnnotationForNodeState));							
-									} else {
-										/*
-										 * there is no childField so we have traversed as far as we need to and will get this value.
-										 * since this value is an array we will need to get all the values in the array.
-										 */
-										values.add(getArrayValues(jsonArrayValue));
-									}
-								} else if(value instanceof String) {
-									//the value is a string
-									values.add(value);
-								} else if(value instanceof Boolean) {
-									//the value is a boolean
-									values.add(value);
-								} else if(value instanceof Long) {
-									//the value is a long
-									values.add(value);
-								} else if(value instanceof Integer) {
-									//the value is an integer
-									values.add(value);
-								} else if(value instanceof Double) {
-									//the value is a double
-									values.add(value);
-								} else if(value instanceof Float) {
-									//the value is a Float
-									values.add(value);
-								}
-							} else {
-								values.add("");
-							}
+						if(value != null) {
+						    if(value instanceof JSONObject) {
+                                //the value is a JSONObject
+                                JSONObject jsonObjectValue = (JSONObject) value;
+                                
+                                if(childFieldObject != null) {
+                                    //there is a childField specified so we will recursively go deeper into the student work
+                                    values.addAll(getColumnValuesForField(childFieldObject, stepWorkId, jsonObjectValue, nodeId));
+                                } else {
+                                    //there is no childField so we have traversed as far as we need to and will get this value 
+                                    values.add(jsonObjectValue.toString());
+                                }
+                            } else if(value instanceof JSONArray) {
+                                //the value is a JSONArray
+                                JSONArray jsonArrayValue = (JSONArray) value;
+                                
+                                if(childFieldObject != null) {
+                                    //there is a childField specified so we will recursively go deeper into the student work
+                                    values.addAll(getValueForField(childFieldObject, stepWorkId, jsonArrayValue, nodeId));
+                                } else {
+                                    /*
+                                     * there is no childField so we have traversed as far as we need to and will get this value.
+                                     * since this value is an array we will need to get all the values in the array.
+                                     */
+                                    values.add(getArrayValues(jsonArrayValue));
+                                }
+                            } else if(value instanceof String) {
+                                //the value is a string
+                                values.add(value);
+                            } else if(value instanceof Boolean) {
+                                //the value is a boolean
+                                values.add(value);
+                            } else if(value instanceof Long) {
+                                //the value is a long
+                                values.add(value);
+                            } else if(value instanceof Integer) {
+                                //the value is an integer
+                                values.add(value);
+                            } else if(value instanceof Double) {
+                                //the value is a double
+                                values.add(value);
+                            } else if(value instanceof Float) {
+                                //the value is a Float
+                                values.add(value);
+                            }
 						} else {
 							/*
 							 * student work does not have the field so we will try to get the
@@ -5798,6 +5791,130 @@ public class VLEGetXLS {
 		
 		return values;
 	}
+	
+	/**
+	 * Get the value from a specific field in the annotation
+	 * @param fieldObject the field object that specifies what to look for in 
+	 * the annotation
+	 * @param stepWorkId the step work id
+	 * @param studentWork the student work
+	 * @return the value from the field in the annotation or null if the field
+	 * is not found
+	 */
+	private Object getValueFromAnnotation(JSONObject fieldObject, Long stepWorkId, JSONObject studentWork) {
+	    Object result = null;
+	    
+	    // get the node state timestamp
+	    Long timestamp = studentWork.optLong("timestamp");
+	    
+	    if (fieldObject != null && timestamp != null) {
+	        // get the field name
+	        String field = fieldObject.optString("field");
+	        
+	        // get the annotation type
+	        String annotationType = fieldObject.optString("annotationType");
+	        
+	        // get the isTimestamp value
+	        boolean isTimestamp = fieldObject.optBoolean("isTimestamp");
+	        
+	        // get the step work
+	        StepWork stepWork = vleService.getStepWorkById(stepWorkId);
+	        
+	        if (stepWork != null) {
+	            if (annotationType == null || annotationType.equals("")) {
+	                // get all the annotations for the step work
+	                List<Annotation> annotations = vleService.getAnnotationByStepWork(stepWork, Annotation.class);
+	                
+	                /*
+	                 * loop through all the annotations and get the first 
+	                 * result that we find
+	                 */
+	                for (int a = 0; a < annotations.size(); a++) {
+	                    // get an annotation
+	                    Annotation annotation = annotations.get(a);
+	                    
+	                    // get the value from the annotation
+	                    result = getValueFromAnnotationHelper(annotation, timestamp, field);
+	                    
+	                    if (result != null) {
+	                        // we have found a result so we will stop looping
+	                        break;
+	                    }
+	                }
+	            } else {
+	                // get the annotation for the step work that is a specific annotation type
+	                Annotation annotation = vleService.getAnnotationByStepWorkAndAnnotationType(stepWork, annotationType);
+	                
+	                // get the value from the annotation
+	                result = getValueFromAnnotationHelper(annotation, timestamp, field);
+	            }
+	        }
+	        
+	        if (result != null && result instanceof Long && isTimestamp) {
+	            /*
+	             * we want the result as a timestamp so we will convert the 
+	             * result to a human readable timestamp
+	             */
+	            Long longResult = (Long) result;
+	            Timestamp fieldTimestamp = new Timestamp(longResult);
+	            result = timestampToFormattedString(fieldTimestamp);
+	        }
+	    }
+	    
+	    return result;
+	}
+	
+	/**
+	 * Get the value from the field in the annotation
+	 * @param annotation the annotation
+	 * @param timestamp the timestamp
+	 * @param field the field name
+	 * @return the value from the field in the annotation
+	 */
+    private Object getValueFromAnnotationHelper(Annotation annotation, Long timestamp, String field) {
+        Object result = null;
+        
+        if (annotation != null && timestamp != null && field != null) {
+            // get the data from the annotation
+            String data = annotation.getData();
+            
+            if (data != null) {
+                try {
+                    // get the annotation data as a JSONObject
+                    JSONObject annotationData = new JSONObject(data);
+                    
+                    if (annotationData != null) {
+                        // get the value from the annotation
+                        JSONArray value = annotationData.optJSONArray("value");
+                        
+                        // loop through all the value elements
+                        for (int v = 0; v < value.length(); v++) {
+                            // get a value element
+                            JSONObject valueElement = value.optJSONObject(v);
+                            
+                            if (valueElement != null) {
+                                // get the node state id for the value element
+                                Long nodeStateId = valueElement.optLong("nodeStateId");
+                                
+                                // check if the timestamp matches the one we want
+                                if (timestamp.equals(nodeStateId)) {
+                                    /*
+                                     * the timestamp matches so we have found the value
+                                     * element to retrieve the field value from
+                                     */
+                                    result = valueElement.opt(field);
+                                }
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        return result;
+    }
 	
 	/**
 	 * Get the max score from the content
@@ -5944,6 +6061,7 @@ public class VLEGetXLS {
 	/**
 	 * Get the values for the given field from an array
 	 * @param fieldObject the field object that specifies what work to get
+	 * @param stepWorkId step work id
 	 * @param studentWork an array that we will obtain student work values from
 	 * 
 	 * example
@@ -5971,7 +6089,7 @@ public class VLEGetXLS {
 	 * @param autoGradedAnnotationForNodeState the auto graded annotation for the node state if it exists
 	 * @return an array that contains the field value from each element in the array
 	 */
-	private ArrayList<Object> getValueForField(JSONObject fieldObject, JSONArray studentWork, String nodeId, JSONObject autoGradedAnnotationForNodeState) {
+	private ArrayList<Object> getValueForField(JSONObject fieldObject, Long stepWorkId, JSONArray studentWork, String nodeId) {
 		ArrayList<Object> values = new ArrayList<Object>();
 		
 		if(studentWork != null) {
@@ -6007,16 +6125,15 @@ public class VLEGetXLS {
 										//get the field value from the element
 										value = ((JSONObject) arrayElement).get(field);
 									}
-								}
-								
-								if(value == null) {
-									/*
-									 * the student work does not have the field we are looking for so we
-									 * will try to find it in the autoGraded annotation
-									 */
-									if(autoGradedAnnotationForNodeState != null) {
-										value = autoGradedAnnotationForNodeState.opt(field);
-									}
+									
+									if(value == null) {
+	                                    /*
+	                                     * the student work does not have the field we are looking for so we
+	                                     * will try to find it in the annotation
+	                                     */
+	                                    
+	                                    value = getValueFromAnnotation(fieldObject, stepWorkId, arrayElementJSONObject);
+	                                }
 								}
 								
 								if(value != null) {
@@ -6027,7 +6144,7 @@ public class VLEGetXLS {
 										
 										if(childFieldObject != null) {
 											//there is a child field so we will traverse deeper into the student work
-											values.add(getColumnValuesForField(childFieldObject, (JSONObject) value, nodeId, autoGradedAnnotationForNodeState));							
+											values.add(getColumnValuesForField(childFieldObject, stepWorkId, (JSONObject) value, nodeId));							
 										} else {
 											//there is no child field so we will just get the string value of the object
 											values.add(value.toString());
@@ -6035,7 +6152,7 @@ public class VLEGetXLS {
 									} else if(value instanceof JSONArray) {
 										if(childFieldObject != null) {
 											//there is a child field so we will traverse deeper into the student work
-											values.add(getValueForField(childFieldObject, (JSONArray) value, nodeId, autoGradedAnnotationForNodeState));							
+											values.add(getValueForField(childFieldObject, stepWorkId, (JSONArray) value, nodeId));							
 										} else {
 											//there is no child field so we will just get the string value of the array
 											values.add(value.toString());
