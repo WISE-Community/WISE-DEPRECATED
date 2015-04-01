@@ -1255,6 +1255,10 @@
 		"value":"Time Spent",
 		"description":"Header text for the column showing time spent on the current step in the student progress table of classroom monitor"
 	},
+	"classroomMonitor_studentProgress_headers_score":{
+		"value":"Score",
+		"description":"Header text for the total score column in the student progress table of classroom monitor"
+	},
 	"classroomMonitor_studentProgress_headers_projectCompletion":{
 		"value":"Project Completion",
 		"description":"Header text for the project completion column in the student progress table of classroom monitor"
