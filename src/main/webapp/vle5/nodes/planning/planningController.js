@@ -12,19 +12,7 @@ define(['app'], function(app) {
         this.nodeContent = null;
         this.nodeId = $stateParams.nodeId;
         this.planningResults = [];
-        console.log('PlanningController ppppppppppppppp');
         
-        /*
-        $scope.$watch(function() {
-            return $scope.$parent.nodeController.nodeContent;
-        }, angular.bind(this, function(newNodeContent, oldNodeContent) {
-            if (newNodeContent != null) {
-                this.nodeContent = newNodeContent;
-                //this.calculateDisabled();
-                $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-            }
-        }));
-        */
         this.nodeContent = $scope.$parent.nodeController.nodeContent;
         $scope.$parent.nodeController.nodeLoaded(this.nodeId);
 
@@ -247,5 +235,14 @@ define(['app'], function(app) {
             return studentNodePrefix + (maxStudentNodeIdNumberSoFar+1);
         };
 
+        var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
+
+        NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
+            this.nodeContent = nodeContent;
+            //$route.reload();
+            $scope.$parent.nodeController.nodeLoaded(this.nodeId);
+            
+
+        }));
     })
 });

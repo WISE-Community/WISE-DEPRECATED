@@ -11,16 +11,6 @@ define(['app'], function(app) {
         this.nodeId = $stateParams.nodeId;
         this.studentResponse = "my response";
         
-        $scope.$watch(function() {
-                return $scope.$parent.nodeController.nodeContent;
-            }, angular.bind(this, function(newNodeContent, oldNodeContent) {
-                if (newNodeContent != null) {
-                    this.prompt = newNodeContent.prompt;
-                    this.title = newNodeContent.title;
-                    $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-                }
-        }));
-        
         this.saveButtonClicked = function() {
             var studentData = {'response': this.studentResponse};
             
@@ -28,9 +18,5 @@ define(['app'], function(app) {
         };
 
         this.message = 'message from multipleChoiceController';
-        
-        //this.nodeLoaded = function() {
-        //    $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-        //}
     });
 });

@@ -5,19 +5,18 @@ define(['app'], function(app) {
                 $stateParams,
                 $sce,
                 ConfigService, 
+                NodeService,
                 ProjectService, 
                 StudentDataService) {
         this.nodeId = $stateParams.nodeId;
         this.message = 'message from HTMLController';
-        console.log('HTMLController hhhhhhhhhhhhhhhhhhhhh');
-        var objectEquality = true;
-        $scope.$watch(function() {
-            return $scope.$parent.nodeController.nodeContent;
-        }, angular.bind(this, function(newNodeContent, oldNodeContent) {
-            if (newNodeContent != null) {
-                this.htmlContent = $sce.trustAsHtml($scope.$parent.nodeController.nodeContent);
-                $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-            }
-    }), objectEquality);
+        
+        var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
+
+        NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
+            this.nodeContent = nodeContent;
+            this.htmlContent = $sce.trustAsHtml(this.nodeContent);
+            $scope.$parent.nodeController.nodeLoaded(this.nodeId);
+        }));
     });
 });

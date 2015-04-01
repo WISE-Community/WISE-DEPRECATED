@@ -13,46 +13,32 @@ define(['app'],
         this.layoutLogic = ConfigService.layoutLogic;
         this.globalTools = ['hideNavigation', 'showNavigation', 'portfolio', 'home', 'sign out'];
         this.currentNode = null;
-        //this.callbackListeners = [];
-        //this.wiseMessageId = 0;
         
-        console.log('vleController');
         
-        $scope.$watch(function() {
-            return StudentDataService.getCurrentNode();
-        }, angular.bind(this, function(newCurrentNode, oldCurrentNode) {
-            if (newCurrentNode != null) {
-                var nodeId = newCurrentNode.id;
-                StudentDataService.updateStackHistory(nodeId);
-                StudentDataService.updateVisitedNodesHistory(nodeId);
+        $scope.$on('currentNodeChanged', angular.bind(this, function() {
+            var currentNode = StudentDataService.getCurrentNode();
+            var nodeId = currentNode.id;
+            StudentDataService.updateStackHistory(nodeId);
+            StudentDataService.updateVisitedNodesHistory(nodeId);
 
-                var layoutClass = null;
-                
-                if (ProjectService.isApplicationNode(nodeId)) {
-                    layoutClass = ProjectService.getStudentIsOnApplicationNodeClass();
-                } else if (ProjectService.isGroupNode(nodeId)) {
-                    layoutClass = ProjectService.getStudentIsOnGroupNodeClass();
-                }
-                
-                if (layoutClass != null) {
-                    this.layoutState = layoutClass;
-                }
-                
-                console.log('$state.go:' + nodeId);
-                $state.go('root.vle', {nodeId:nodeId});
+            var layoutClass = null;
+            
+            if (ProjectService.isApplicationNode(nodeId)) {
+                layoutClass = ProjectService.getStudentIsOnApplicationNodeClass();
+            } else if (ProjectService.isGroupNode(nodeId)) {
+                layoutClass = ProjectService.getStudentIsOnGroupNodeClass();
             }
+            
+            if (layoutClass != null) {
+                this.layoutState = layoutClass;
+            }
+            
+            $state.go('root.vle', {nodeId:nodeId});
         }));
         
-        var objectEquality = true;
-        // why does getNodeVisits() not trigger a change
-        $scope.$watch(function() {
-            var nodeVisits = StudentDataService.getNodeVisits();
-            return nodeVisits;
-        }, angular.bind(this, function(newNodeVisits, oldNodeVisits) {
-            if (newNodeVisits != null) {
-                StudentDataService.updateNodeStatuses();
-            }
-        }), objectEquality);
+        $scope.$on('nodeVisitsChanged', angular.bind(this, function() {
+            StudentDataService.updateNodeStatuses();
+        }));
         
         this.layoutStates = ['layout1', 'layout2', 'layout3', 'layout4'];
         this.layoutState = this.layoutStates[0];
@@ -151,7 +137,6 @@ define(['app'],
             StudentDataService.setCurrentNode(node);
         };
         
-        //$scope.$on('$messageIncoming', angular.bind(PostMessageService, PostMessageService.handleMessageIncoming));
         
         var nodeId = $stateParams.nodeId;
         if (nodeId == null || nodeId === '') {

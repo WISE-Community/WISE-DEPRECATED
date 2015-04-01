@@ -4,7 +4,7 @@
 Node HTML
 <!-- <div id="nodeView" ui-view=""></div>  -->
 <div ng-controller='NodeController as nodeController'>
-<div id="nodeIFrame" class={{vleController.layoutState}}>
+<div class={{vleController.layoutState}}>
     <p>{{nodeController.nodeHTMLPath}}</p>
     <div ng-include="nodeController.nodeHTMLPath"></div>
 </div>

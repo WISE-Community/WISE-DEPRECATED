@@ -8,41 +8,23 @@ define(['app'], function(app) {
                 StudentDataService) {
 
         this.currentNode = null;
-        
-        $scope.$watch(function() {
-            return StudentDataService.getCurrentNode();
-        }, angular.bind(this, function(newCurrentNode, oldCurrentNode) {
-
-            if (newCurrentNode != null) {
-                this.currentNode = newCurrentNode;
-            }
-        }));
-
-        var objectEquality = true;
-        $scope.$watch(function() {
-            var nodeStatuses = StudentDataService.getNodeStatuses();
-            return nodeStatuses;
-        }, angular.bind(this, function(newNodeStatuses, oldNodeStatuses) {
-            if (newNodeStatuses != null) {
-                var nodeId = StudentDataService.getCurrentNodeId();
-
-                this.nodeStatuses = StudentDataService.getNodeStatuses();
-            }
-        }), objectEquality);
-
-        $scope.$watch(function() {
-           return ProjectService.getGroups(); 
-        }, angular.bind(this, function(newGroups, oldGroups) {
-           if (newGroups != null) {
-               this.groups = newGroups;
-           } 
-        }), objectEquality);
-        
         this.groups = ProjectService.getGroups();
+        
+        $scope.$on('currentNodeChanged', angular.bind(this, function() {
+            
+        }));
+        
+        $scope.$on('nodeStatusesChanged', angular.bind(this, function() {
+            
+        }));
+        
+        $scope.$on('groupsChanged', angular.bind(this, function() {
+            
+        }));
+        
 
         this.nodeClicked = function(nodeId) {
             StudentDataService.setCurrentNodeByNodeId(nodeId);
-            //StudentDataService.goToNode(nodeId);
         };
         
         this.isNodeDisabled = function(nodeId) {

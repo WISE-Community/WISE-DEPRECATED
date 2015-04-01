@@ -2,7 +2,7 @@ define(['angular', 'configService'], function(angular, configService) {
 
     angular.module('ProjectService', [])
 
-    .service('ProjectService', ['$http', 'ConfigService', function($http, ConfigService) {
+    .service('ProjectService', ['$http', '$rootScope', 'ConfigService', function($http, $rootScope, ConfigService) {
         this.project = null;
         this.transitions = [];
         this.applicationNodes = [];
@@ -116,6 +116,8 @@ define(['angular', 'configService'], function(angular, configService) {
             if (node != null && groupNodes != null) {
                 groupNodes.push(node);
             }
+            
+            $rootScope.$broadcast('groupsChanged');
         };
         
         this.addNodesToGroupNode = function(groupId, nodeIds) {

@@ -18,27 +18,6 @@ define(['app'], function(app) {
             this.nodeId = currentNode.id;
         }
         
-        console.log('OpenResponseController ooooooooooooooooooooo');
-        
-        /*
-        $scope.$watch(function() {
-            console.log('openResponseController: Checking nodeContent');
-                return $scope.$parent.nodeController.nodeContent;
-            }, angular.bind(this, function(newNodeContent, oldNodeContent) {
-                console.log('openResponseController: nodeContent changed cccccccccccc');
-                if (newNodeContent != null) {
-                    console.log('openResponseController: different');
-                    this.nodeContent = newNodeContent;
-                    this.calculateDisabled();
-                    $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-                } else {
-                    console.log('openResponseController: same');
-                }
-        }));
-        */
-        
-
-        
         this.calculateDisabled = function() {
             var nodeContent = this.nodeContent;
             var nodeId = this.nodeId;
@@ -76,18 +55,11 @@ define(['app'], function(app) {
         };
 
         
-        //this.nodeId = node.id;
         var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
 
         NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
             this.nodeContent = nodeContent;
-            //$route.reload();
             $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-            
-
         }));
-        
-        
-        //$scope.$parent.nodeController.nodeControllerLoaded(this.nodeId);
     });
 });

@@ -11,8 +11,6 @@ define(['angular', 'configService'], function(angular, configService) {
         
         this.currentNode = null;
         
-        console.log('$rootScope=' + $rootScope)
-        
         this.getCurrentNode = function() {
             return this.currentNode;
         };
@@ -37,17 +35,14 @@ define(['angular', 'configService'], function(angular, configService) {
         };
         
         this.setCurrentNode = function(node) {
-            console.log('setCurrentNode');
+            var previousCurrentNode = this.currentNode;
             
-            if (node != null) {
+            if (previousCurrentNode !== node) {
+                // the current node has changed
                 this.currentNode = node;
+                
+                $rootScope.$broadcast('currentNodeChanged');
             }
-            
-            $rootScope.$broadcast('testEvent');
-        };
-        
-        this.goToNode = function(nodeId) {
-            $rootScope.$broadcast('goToNode');
         };
         
         this.updateCurrentNode = function(latestNodeVisit) {
@@ -138,6 +133,8 @@ define(['angular', 'configService'], function(angular, configService) {
                     }));
                 }
             }
+            
+            $rootScope.$broadcast('nodeStatusesChanged');
         };
         
         this.updateNodeStatusesByNode = function(node) {
@@ -337,6 +334,8 @@ define(['angular', 'configService'], function(angular, configService) {
             
             if (nodeVisits !== null) {
                 nodeVisits.push(nodeVisit);
+                
+                $rootScope.$broadcast('nodeVisitsChanged');
             }
             
             return nodeVisit;

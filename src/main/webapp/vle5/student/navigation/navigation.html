@@ -8,8 +8,10 @@
 }
 </style>
 
+<div ng-controller='NavigationController as navigationController'>
 <div ng-repeat='group in navigationController.groups'>
     {{ group.title }}
     
     <input id='{{childId}}Button' type='button' ng-repeat='childId in group.ids' value='{{childId}}' ng-click='navigationController.nodeClicked(childId)' ng-class='{currentNode: navigationController.currentNode.id === childId, disabledNode: navigationController.isNodeDisabled(childId)}' ng-disabled='navigationController.isNodeDisabled(childId)'></input>
+</div>
 </div>

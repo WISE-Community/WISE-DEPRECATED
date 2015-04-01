@@ -27,7 +27,6 @@ define([
 	};
 	
 	app.loadController = function(controllerName) {
-	    console.log('loadController:' + controllerName);
 		return ['$q', function($q) {
 			var deferred = $q.defer();
 			require([controllerName], function() {
