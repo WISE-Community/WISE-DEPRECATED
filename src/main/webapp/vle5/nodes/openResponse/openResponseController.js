@@ -9,9 +9,14 @@ define(['app'], function(app) {
                     ProjectService, 
                     StudentDataService) {
         this.nodeContent = null;
-        this.nodeId = $stateParams.nodeId;
+        this.nodeId = null;
         this.studentResponse = "my response";
         this.isDisabled = false;
+        
+        var currentNode = StudentDataService.getCurrentNode();
+        if (currentNode != null) {
+            this.nodeId = currentNode.id;
+        }
         
         console.log('OpenResponseController ooooooooooooooooooooo');
         
@@ -32,8 +37,7 @@ define(['app'], function(app) {
         }));
         */
         
-        this.nodeContent = $scope.$parent.nodeController.nodeContent;
-        $scope.$parent.nodeController.nodeLoaded(this.nodeId);
+
         
         this.calculateDisabled = function() {
             var nodeContent = this.nodeContent;
@@ -71,5 +75,19 @@ define(['app'], function(app) {
             this.calculateDisabled();
         };
 
+        
+        //this.nodeId = node.id;
+        var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
+
+        NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
+            this.nodeContent = nodeContent;
+            //$route.reload();
+            $scope.$parent.nodeController.nodeLoaded(this.nodeId);
+            
+
+        }));
+        
+        
+        //$scope.$parent.nodeController.nodeControllerLoaded(this.nodeId);
     });
 });

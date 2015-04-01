@@ -15,7 +15,9 @@ define(['app'],
         this.currentNode = null;
         //this.callbackListeners = [];
         //this.wiseMessageId = 0;
-            
+        
+        console.log('vleController');
+        
         $scope.$watch(function() {
             return StudentDataService.getCurrentNode();
         }, angular.bind(this, function(newCurrentNode, oldCurrentNode) {
@@ -36,6 +38,7 @@ define(['app'],
                     this.layoutState = layoutClass;
                 }
                 
+                console.log('$state.go:' + nodeId);
                 $state.go('root.vle', {nodeId:nodeId});
             }
         }));
@@ -142,6 +145,7 @@ define(['app'],
             }
         };
         
+        
         this.setCurrentNodeByNodeId = function(nodeId) {
             var node = ProjectService.getNodeById(nodeId);
             StudentDataService.setCurrentNode(node);
@@ -161,5 +165,6 @@ define(['app'],
         }
 
         this.setCurrentNodeByNodeId(nodeId);
+        
     });
 });

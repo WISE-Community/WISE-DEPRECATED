@@ -42,6 +42,7 @@ define(['app'], function(app) {
 
         this.nodeClicked = function(nodeId) {
             StudentDataService.setCurrentNodeByNodeId(nodeId);
+            //StudentDataService.goToNode(nodeId);
         };
         
         this.isNodeDisabled = function(nodeId) {

@@ -46,6 +46,10 @@ define(['angular', 'configService'], function(angular, configService) {
             $rootScope.$broadcast('testEvent');
         };
         
+        this.goToNode = function(nodeId) {
+            $rootScope.$broadcast('goToNode');
+        };
+        
         this.updateCurrentNode = function(latestNodeVisit) {
             if (latestNodeVisit != null) {
                 nodeId = latestNodeVisit.nodeId;

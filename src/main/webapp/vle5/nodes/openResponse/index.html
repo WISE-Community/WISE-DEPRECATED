@@ -22,6 +22,7 @@ nodeContent begin:
 {{nodeController.nodeContent}}
 nodeContent end
 -->
+Open Response HTML
 <div ng-controller='OpenResponseController as openResponseController'>
 <div id='prompt'>{{openResponseController.nodeContent.prompt}}</div>
 <textarea id='responseTextarea' ng-model='openResponseController.studentResponse' ng-disabled='openResponseController.isDisabled'></textarea>
