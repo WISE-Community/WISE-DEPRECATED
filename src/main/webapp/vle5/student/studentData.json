@@ -1,6 +1,126 @@
 {
     "nodeVisits": [
-
+        {
+            "visitPostTime": null,
+            "visitStartTime": null,
+            "visitEndTime": null,
+            "hintStates": null,
+            "nodeType": "OpenResponse",
+            "nodeStates": [],
+            "nodeId": "node1",
+            "stepWorkId": null
+        },
+        {
+            "visitPostTime": null,
+            "visitStartTime": null,
+            "visitEndTime": null,
+            "hintStates": null,
+            "nodeType": "OpenResponse",
+            "nodeStates": [
+                {
+                    "response": "my response abc"
+                }
+            ],
+            "nodeId": "node1",
+            "stepWorkId": null
+        },
+        {
+            "visitPostTime": null,
+            "visitStartTime": null,
+            "visitEndTime": null,
+            "hintStates": null,
+            "nodeType": "Planning",
+            "nodeStates": [
+                {
+                    "studentNodes": [
+                        {
+                            "id": "studentNode1",
+                            "type": "HTML",
+                            "title": "Planning B",
+                            "src": "node6.html",
+                            "copyOf": "node6",
+                            "groupId": "group1"
+                        }
+                    ]
+                },
+                {
+                    "studentNodes": [
+                        {
+                            "id": "studentNode1",
+                            "type": "HTML",
+                            "title": "Planning B",
+                            "src": "node6.html",
+                            "copyOf": "node6",
+                            "groupId": "group1"
+                        },
+                        {
+                            "id": "studentNode2",
+                            "type": "HTML",
+                            "title": "Planning A",
+                            "src": "node5.html",
+                            "copyOf": "node5",
+                            "groupId": "group1"
+                        }
+                    ]
+                },
+                {
+                    "studentNodes": [
+                        {
+                            "id": "studentNode1",
+                            "type": "HTML",
+                            "title": "Planning B",
+                            "src": "node6.html",
+                            "copyOf": "node6",
+                            "groupId": "group1"
+                        },
+                        {
+                            "id": "studentNode2",
+                            "type": "HTML",
+                            "title": "Planning A",
+                            "src": "node5.html",
+                            "copyOf": "node5",
+                            "groupId": "group1"
+                        }
+                    ],
+                    "studentTransitions": [
+                        {
+                            "id": "transition3",
+                            "from": "node2",
+                            "to": "node3",
+                            "disabled": true
+                        },
+                        {
+                            "id": "studentTransition1",
+                            "from": "node2",
+                            "to": "studentNode1"
+                        },
+                        {
+                            "id": "studentTransition2",
+                            "from": "studentNode1",
+                            "to": "studentNode2"
+                        },
+                        {
+                            "id": "studentTransition3",
+                            "from": "studentNode2",
+                            "to": "node3"
+                        }
+                    ],
+                    "isSubmit": true
+                }
+            ],
+            "nodeId": "node2",
+            "stepWorkId": null
+        },
+        {
+            "visitPostTime": null,
+            "visitStartTime": null,
+            "visitEndTime": null,
+            "hintStates": null,
+            "nodeType": "OpenResponse",
+            "nodeStates": [],
+            "nodeId": "node3",
+            "stepWorkId": null
+        }
     ],
     "workgroupId": 183666
 }

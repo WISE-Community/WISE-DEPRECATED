@@ -39,6 +39,7 @@ define(['app'], function(app) {
             
             this.nodeLoaded = function(nodeId) {
                 var newNodeVisit = StudentDataService.createNodeVisit(nodeId);
+                newNodeVisit.nodeType = this.nodeType;
                 
                 var nodeVisits = StudentDataService.getNodeVisits();
                 console.log("nodeVisits=" + JSON.stringify(nodeVisits, null, 4));

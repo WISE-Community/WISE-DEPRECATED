@@ -120,17 +120,14 @@ define(['angular', 'configService'], function(angular, configService) {
             $rootScope.$broadcast('groupsChanged');
         };
         
-        this.addNodesToGroupNode = function(groupId, nodeIds) {
-            var group = this.getNodeById(groupId);
-            if (group != null) {
-                var groupChildNodeIds = group.ids;
-                if (groupChildNodeIds != null) {
-                    if (nodeIds != null) {
-                        for (var n = 0; n < nodeIds.length; n++) {
-                            var nodeId = nodeIds[n];
-                            if (groupChildNodeIds.indexOf(nodeId) === -1) {
-                                groupChildNodeIds.push(nodeId);
-                            }
+        this.addNodeToGroupNode = function(groupId, nodeId) {
+            if (groupId != null && nodeId != null) {
+                var group = this.getNodeById(groupId);
+                if (group != null) {
+                    var groupChildNodeIds = group.ids;
+                    if (groupChildNodeIds != null) {
+                        if (groupChildNodeIds.indexOf(nodeId) === -1) {
+                            groupChildNodeIds.push(nodeId);
                         }
                     }
                 }
@@ -191,6 +188,12 @@ define(['angular', 'configService'], function(angular, configService) {
                             this.addGroupNode(node);
                         } else {
                             this.addApplicationNode(node);
+                        }
+                        
+                        var groupId = node.groupId;
+                        
+                        if (groupId != null) {
+                            this.addNodeToGroupNode(groupId, nodeId);
                         }
                     }
                 }

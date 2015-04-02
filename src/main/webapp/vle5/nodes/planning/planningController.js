@@ -38,7 +38,6 @@ define(['app'], function(app) {
                 var latestStateStudentNode = latestStateStudentNodes[sn];
                 latestStateStudentNodeIds.push(latestStateStudentNode.id);
             }
-            ProjectService.addNodesToGroupNode(this.nodeContent.groupToPlace, latestStateStudentNodeIds);
             StudentDataService.updateNodeStatuses();
         };
 
@@ -112,12 +111,14 @@ define(['app'], function(app) {
 
             if (nodeToCopy != null) {
                 var nextStudentNodeId = this.getNextStudentNodeId();
+                var nodeContent = this.nodeContent;
                 var studentNode = {};
                 studentNode.id = nextStudentNodeId;
                 studentNode.type = nodeToCopy.type;
                 studentNode.title = nodeToCopy.title;
                 studentNode.src = nodeToCopy.src;
                 studentNode.copyOf = nodeToCopy.id;
+                studentNode.groupId = nodeContent.groupToPlace;
 
                 var latestState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
                 var latestStateStudentNodes = [];

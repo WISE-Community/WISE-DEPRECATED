@@ -91,12 +91,40 @@ define(['angular', 'configService'], function(angular, configService) {
                 var nodeVisits = this.getNodeVisits();
                 var latestNodeVisit = this.getLatestNodeVisit();
                 
+                this.loadStudentNodes();
+                
                 this.updateCurrentNode(latestNodeVisit);
                 this.populateHistories(nodeVisits);
                 this.updateNodeStatuses();
                 
                 return this.studentData;
             }));
+        };
+        
+        this.loadStudentNodes = function() {
+            var nodes = ProjectService.getApplicationNodes();
+            
+            if (nodes != null) {
+                for (var n = 0; n < nodes.length; n++) {
+                    var node = nodes[n];
+                    
+                    if (node != null) {
+                        if (node.type === 'Planning') {
+                            var nodeId = node.id;
+                            
+                            var latestNodeState = this.getLatestNodeStateByNodeId(nodeId);
+                            
+                            if (latestNodeState != null) {
+                                var latestStateStudentNodes = latestNodeState.studentNodes;
+                                var latestTransitions = latestNodeState.studentTransition;
+                                
+                                ProjectService.loadNodes(latestStateStudentNodes);
+                                ProjectService.loadTransitions(latestTransitions);
+                            }
+                        }
+                    }
+                }
+            }
         };
         
         this.getNodeStatuses = function() {
