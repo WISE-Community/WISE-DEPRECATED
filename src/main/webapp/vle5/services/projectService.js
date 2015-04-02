@@ -308,6 +308,44 @@ define(['angular', 'configService'], function(angular, configService) {
             return projectStartId;
         };
         
+        this.getParentGroup = function(nodeId) {
+            var result = null;
+            
+            if (nodeId != null) {
+                var node = this.getNodeById(nodeId);
+                
+                if (node != null) {
+                    var groupNodes = this.getGroupNodes();
+                    
+                    for (var g = 0; g < groupNodes.length; g++) {
+                        var groupNode = groupNodes[g];
+                        
+                        if (this.isNodeDirectChildOfGroup(node, groupNode)) {
+                            result = groupNode;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return result;
+        };
+        
+        this.isNodeDirectChildOfGroup = function(node, group) {
+            var result = false;
+            
+            if (node != null && group != null) {
+                var nodeId = node.id;
+                var groupIds = group.ids;
+                
+                if (groupIds != null && groupIds.indexOf(nodeId) != -1) {
+                    result = true;
+                }
+            }
+            
+            return result;
+        };
+        
         this.isNodeDescendentOfGroup = function(node, group) {
             var result = false;
             

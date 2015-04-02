@@ -9,9 +9,10 @@
 </style>
 
 <div ng-controller='NavigationController as navigationController'>
-<div ng-repeat='group in navigationController.groups'>
+<div ng-repeat='group in navigationController.groups' ng-show='group.id === navigationController.currentGroupId'>
     {{ group.title }}
     
     <input id='{{childId}}Button' type='button' ng-repeat='childId in group.ids' value='{{childId}}' ng-click='navigationController.nodeClicked(childId)' ng-class='{currentNode: navigationController.currentNode.id === childId, disabledNode: navigationController.isNodeDisabled(childId)}' ng-disabled='navigationController.isNodeDisabled(childId)'></input>
+    <input type='button' value='Go To Parent' ng-click='navigationController.nodeClicked(navigationController.parentGroupId)'></input>
 </div>
 </div>

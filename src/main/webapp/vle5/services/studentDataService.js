@@ -47,6 +47,23 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
+        this.getCurrentParentNode = function() {
+            var currentNode = this.getCurrentNode();
+            
+            if (currentNode != null) {
+                
+            }
+        };
+        
+        this.updateCurrentNode = function(latestNodeVisit) {
+            if (latestNodeVisit != null) {
+                nodeId = latestNodeVisit.nodeId;
+                
+                var node = ProjectService.getNodeById(nodeId);
+                this.setCurrentNode(node);
+            }
+        };
+        
         this.getNodeVisits = function() {
             var nodeVisits = null;
             var studentData = this.studentData;
@@ -82,9 +99,11 @@ define(['angular', 'configService'], function(angular, configService) {
             return $http.get(getStudentDataUrl).then(angular.bind(this, function(result) {
                 this.studentData = result.data;
                 var nodeVisits = this.getNodeVisits();
+                var latestNodeVisit = this.getLatestNodeVisit();
                 
                 this.loadStudentNodes();
                 
+                this.updateCurrentNode(latestNodeVisit);
                 this.populateHistories(nodeVisits);
                 this.updateNodeStatuses();
                 
@@ -373,6 +392,7 @@ define(['angular', 'configService'], function(angular, configService) {
             "stepWorkId": "8752274"
         }
              */
+            
             var newNodeVisit = {};
             newNodeVisit.visitPostTime = null;
             newNodeVisit.visitStartTime = null;
@@ -380,7 +400,7 @@ define(['angular', 'configService'], function(angular, configService) {
             newNodeVisit.hintStates = null;
             newNodeVisit.nodeStates = [];
             newNodeVisit.nodeId = nodeId;
-            var node = ProjectService.getNodeById();
+            var node = ProjectService.getNodeById(nodeId);
             if (node != null) {
                 newNodeVisit.nodeType = node.type;
             }
