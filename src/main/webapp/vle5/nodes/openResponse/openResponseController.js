@@ -8,6 +8,7 @@ define(['app'], function(app) {
                     OpenResponseService,
                     ProjectService, 
                     StudentDataService) {
+        this.autoSaveInterval = 10000; // auto-save interval in milliseconds
         this.nodeContent = null;
         this.nodeId = null;
         this.studentResponse = null;
@@ -42,6 +43,7 @@ define(['app'], function(app) {
                 var studentState = {};
                 studentState.response = this.studentResponse;
                 studentState.saveTriggeredBy = saveTriggeredBy;
+                studentState.timestamp = Date.parse(new Date());
                 if (saveTriggeredBy === 'submitButton') {
                     studentState.isSubmit = true;
                 }
@@ -81,12 +83,22 @@ define(['app'], function(app) {
             $scope.$parent.nodeController.nodeLoaded(this.nodeId);
         }));
         
+        $scope.$on('nodeOnExit', angular.bind(this, function(event, args) {
+            var nodeToExit = args.nodeToExit;
+            if (nodeToExit.id === this.nodeId) {
+                // save and cancel autoSave interval
+                var saveTriggeredBy = 'nodeOnExit';
+                this.saveStudentState(saveTriggeredBy);
+                clearInterval(this.autoSaveIntervalId);
+            }
+        }));
+        
         // auto-save
-        setInterval(angular.bind(this, function() {
+        this.autoSaveIntervalId = setInterval(angular.bind(this, function() {
             if (this.isDirty) {
                 var saveTriggeredBy = 'autoSave';
                 this.saveStudentState(saveTriggeredBy);
             }
-        }), 10000);
+        }), this.autoSaveInterval);
     });
 });

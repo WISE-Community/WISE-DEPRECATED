@@ -6,12 +6,11 @@ define(['app'], function(app) {
                 ConfigService, 
                 ProjectService, 
                 StudentDataService) {
-
         this.currentNode = null;
         this.groups = ProjectService.getGroups();
+        this.currentNode = StudentDataService.getCurrentNode();
         
         $scope.$on('currentNodeChanged', angular.bind(this, function() {
-            
         }));
         
         $scope.$on('nodeStatusesChanged', angular.bind(this, function() {
@@ -21,7 +20,6 @@ define(['app'], function(app) {
         $scope.$on('groupsChanged', angular.bind(this, function() {
             
         }));
-        
 
         this.nodeClicked = function(nodeId) {
             StudentDataService.setCurrentNodeByNodeId(nodeId);
@@ -40,5 +38,6 @@ define(['app'], function(app) {
             
             return result;
         };
+        
     });
 });

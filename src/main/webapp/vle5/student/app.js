@@ -39,7 +39,7 @@ define([
 	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
 	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
 		
-		$urlRouterProvider.otherwise('/vle/node0');
+		$urlRouterProvider.otherwise('/vle/');
 		
 		app.$controllerProvider = $controllerProvider;
 		
@@ -71,8 +71,6 @@ define([
                 views: {
                     'navigationView': {
                         templateUrl: 'vle5/student/navigation/navigation.html',
-                        controller: 'NavigationController',
-                        controllerAs: 'navigationController',
                         resolve: {
                             navigationController: app.loadController('navigationController')
                         }

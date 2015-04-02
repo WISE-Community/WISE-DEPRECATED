@@ -38,19 +38,12 @@ define(['angular', 'configService'], function(angular, configService) {
             var previousCurrentNode = this.currentNode;
             
             if (previousCurrentNode !== node) {
-                // the current node has changed
+                // the current node is about to change
+                $rootScope.$broadcast('nodeOnExit', {nodeToExit: previousCurrentNode});
+                
                 this.currentNode = node;
                 
                 $rootScope.$broadcast('currentNodeChanged');
-            }
-        };
-        
-        this.updateCurrentNode = function(latestNodeVisit) {
-            if (latestNodeVisit != null) {
-                var nodeId = latestNodeVisit.nodeId;
-                
-                var node = ProjectService.getNodeById(nodeId);
-                this.setCurrentNode(node);
             }
         };
         
@@ -89,11 +82,9 @@ define(['angular', 'configService'], function(angular, configService) {
             return $http.get(getStudentDataUrl).then(angular.bind(this, function(result) {
                 this.studentData = result.data;
                 var nodeVisits = this.getNodeVisits();
-                var latestNodeVisit = this.getLatestNodeVisit();
                 
                 this.loadStudentNodes();
                 
-                this.updateCurrentNode(latestNodeVisit);
                 this.populateHistories(nodeVisits);
                 this.updateNodeStatuses();
                 
@@ -382,15 +373,17 @@ define(['angular', 'configService'], function(angular, configService) {
             "stepWorkId": "8752274"
         }
              */
-            
             var newNodeVisit = {};
             newNodeVisit.visitPostTime = null;
             newNodeVisit.visitStartTime = null;
             newNodeVisit.visitEndTime = null;
             newNodeVisit.hintStates = null;
-            newNodeVisit.nodeType = null;
             newNodeVisit.nodeStates = [];
             newNodeVisit.nodeId = nodeId;
+            var node = ProjectService.getNodeById();
+            if (node != null) {
+                newNodeVisit.nodeType = node.type;
+            }
             newNodeVisit.stepWorkId = null;
             
             this.addNodeVisit(newNodeVisit);

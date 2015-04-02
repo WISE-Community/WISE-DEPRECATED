@@ -8,9 +8,9 @@ define(['app'], function(app) {
                 NodeService, 
                 ProjectService, 
                 StudentDataService) {
-            this.nodeId = null;
-            this.nodeType = null;
-            this.nodeContent = null;
+            //this.nodeId = null;
+            //this.nodeType = null;
+            //this.nodeContent = null;
 
             /*
             $scope.$on('currentNodeChanged', angular.bind(this, function() {
@@ -39,7 +39,6 @@ define(['app'], function(app) {
             
             this.nodeLoaded = function(nodeId) {
                 var newNodeVisit = StudentDataService.createNodeVisit(nodeId);
-                newNodeVisit.nodeType = this.nodeType;
                 
                 var nodeVisits = StudentDataService.getNodeVisits();
                 //console.log("nodeVisits=" + JSON.stringify(nodeVisits, null, 4));

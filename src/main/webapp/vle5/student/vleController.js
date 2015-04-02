@@ -14,7 +14,6 @@ define(['app'],
         this.globalTools = ['hideNavigation', 'showNavigation', 'portfolio', 'home', 'sign out'];
         this.currentNode = null;
         
-        
         $scope.$on('currentNodeChanged', angular.bind(this, function() {
             var currentNode = StudentDataService.getCurrentNode();
             var nodeId = currentNode.id;
@@ -143,10 +142,9 @@ define(['app'],
             nodeId = ProjectService.getStartNodeId();
         }
         
-        var currentNode = StudentDataService.getCurrentNode();
-        
-        if (currentNode != null) {
-            nodeId = currentNode.id;
+        var latestNodeVisit = StudentDataService.getLatestNodeVisit();
+        if (latestNodeVisit != null) {
+            var nodeId = latestNodeVisit.nodeId;
         }
 
         this.setCurrentNodeByNodeId(nodeId);
