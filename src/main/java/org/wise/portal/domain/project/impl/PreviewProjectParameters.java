@@ -43,6 +43,8 @@ public class PreviewProjectParameters {
 	
 	private String versionId;
 	
+	private String lang;
+	
 	private String step;
 	
 	private boolean isConstraintsDisabled = false;
@@ -105,6 +107,20 @@ public class PreviewProjectParameters {
 	}
 
 	/**
+     * @return the lang
+     */
+    public String getLang() {
+        return lang;
+    }
+
+    /**
+     * @param lang the lang to set
+     */
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    /**
 	 * @return the step
 	 */
 	public String getStep() {

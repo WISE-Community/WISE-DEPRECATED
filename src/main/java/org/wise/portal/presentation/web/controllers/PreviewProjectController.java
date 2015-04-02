@@ -64,6 +64,8 @@ public class PreviewProjectController {
 
 	private static final String STEP = "step";
 	
+	private static final String LANG = "lang";
+	
 	private static final String IS_CONSTRAINTS_DISABLED = "isConstraintsDisabled";
 
 	@Autowired
@@ -118,6 +120,10 @@ public class PreviewProjectController {
 			params.setHttpServletRequest(request);
 			params.setVersionId(request.getParameter(VERSION_ID));
 			params.setStep(request.getParameter(STEP));
+			String lang = request.getParameter(LANG);
+			if (lang != null) {
+	            params.setLang(lang);
+			}
 
 			String isConstraintsDisabledStr = request.getParameter(IS_CONSTRAINTS_DISABLED);
 			if (isConstraintsDisabledStr != null) {

@@ -402,6 +402,7 @@ public class InformationController {
 		String runId = request.getParameter("runId");
 		String requester = request.getParameter("requester");
 		String step = request.getParameter("step");
+		String userSpecifiedLang = request.getParameter("lang");
 		
 		String portalurl = ControllerUtil.getBaseUrlString(request);
 		String hostName = ControllerUtil.getHostNameFromUrl(portalurl);
@@ -694,7 +695,13 @@ public class InformationController {
 		        	}
 	        	} 
 	        }
+	        // if user specified lang=XX in the url, it will be used instead
+            if (userSpecifiedLang != null) {
+	            locale = new Locale(userSpecifiedLang);
+            }
+
 			config.put("locale", locale);
+			
 			config.put("wiseBaseURL",wiseBaseURL);
 			
 			if(step != null) {

@@ -23,9 +23,7 @@
  */
 package org.wise.portal.service.project.impl;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -66,7 +64,6 @@ import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.presentation.util.http.Connector;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.acl.AclService;
@@ -351,6 +348,11 @@ public class ProjectServiceImpl implements ProjectService {
 				if(step != null) {
 					//this is set if the request is to preview the project and load a specific step such as 1.2
 					vleConfigUrl += "&step=" + step;
+				}
+				
+				String userSpecifiedLang = params.getLang();
+				if (userSpecifiedLang != null) {
+				    vleConfigUrl += "&lang=" + userSpecifiedLang;
 				}
 
 				if (params.isConstraintsDisabled()) {
