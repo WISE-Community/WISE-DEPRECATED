@@ -47,7 +47,7 @@ define(['angular', 'configService'], function(angular, configService) {
         
         this.updateCurrentNode = function(latestNodeVisit) {
             if (latestNodeVisit != null) {
-                nodeId = latestNodeVisit.nodeId;
+                var nodeId = latestNodeVisit.nodeId;
                 
                 var node = ProjectService.getNodeById(nodeId);
                 this.setCurrentNode(node);

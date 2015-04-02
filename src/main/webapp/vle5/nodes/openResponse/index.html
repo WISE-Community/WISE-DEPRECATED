@@ -25,7 +25,7 @@ nodeContent end
 Open Response HTML
 <div ng-controller='OpenResponseController as openResponseController'>
 <div id='prompt'>{{openResponseController.nodeContent.prompt}}</div>
-<textarea id='responseTextarea' ng-model='openResponseController.studentResponse' ng-disabled='openResponseController.isDisabled'></textarea>
+<textarea id='responseTextarea' ng-model='openResponseController.studentResponse' ng-disabled='openResponseController.isDisabled' ng-change='openResponseController.studentResponseChanged()'></textarea>
 <button id='saveButton' ng-click='openResponseController.saveButtonClicked()' ng-disabled='openResponseController.isDisabled'>Save</button>
 <button id='submitButton' ng-click='openResponseController.submitButtonClicked()' ng-show='openResponseController.nodeContent.showSubmitButton' ng-disabled='openResponseController.isDisabled'>Submit</button>
 </div>

@@ -10,8 +10,9 @@ define(['app'], function(app) {
                     StudentDataService) {
         this.nodeContent = null;
         this.nodeId = null;
-        this.studentResponse = "my response";
+        this.studentResponse = null;
         this.isDisabled = false;
+        this.isDirty = false;
         
         var currentNode = StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -36,24 +37,35 @@ define(['app'], function(app) {
             }
         };
         
+        this.saveStudentState = function(saveTriggeredBy) {
+            if (saveTriggeredBy != null) {
+                var studentState = {};
+                studentState.response = this.studentResponse;
+                studentState.saveTriggeredBy = saveTriggeredBy;
+                if (saveTriggeredBy === 'submitButton') {
+                    studentState.isSubmit = true;
+                }
+                StudentDataService.addNodeStateToLatestNodeVisit(this.nodeId, studentState);
+                
+                this.calculateDisabled();
+                console.log('saveStudentState studentState: ' + JSON.stringify(studentState, null, 4));
+                this.isDirty = false;
+            }
+        };
+        
         this.saveButtonClicked = function() {
-            var studentData = {'response': this.studentResponse};
-            
-            StudentDataService.addNodeStateToLatestNodeVisit(this.nodeId, studentData);
-            
-            this.calculateDisabled();
-        }
+            var saveTriggeredBy = 'saveButton';
+            this.saveStudentState(saveTriggeredBy);
+        };
         
         this.submitButtonClicked = function() {
-            var studentData = {};
-            studentData.response = this.studentResponse;
-            studentData.isSubmit = true;
-            
-            StudentDataService.addNodeStateToLatestNodeVisit(this.nodeId, studentData);
-            
-            this.calculateDisabled();
+            var saveTriggeredBy = 'submitButton';
+            this.saveStudentState(saveTriggeredBy);
         };
-
+        
+        this.studentResponseChanged = function() {
+            this.isDirty = true;                    
+        };
         
         var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
 
@@ -68,5 +80,13 @@ define(['app'], function(app) {
             
             $scope.$parent.nodeController.nodeLoaded(this.nodeId);
         }));
+        
+        // auto-save
+        setInterval(angular.bind(this, function() {
+            if (this.isDirty) {
+                var saveTriggeredBy = 'autoSave';
+                this.saveStudentState(saveTriggeredBy);
+            }
+        }), 10000);
     });
 });
