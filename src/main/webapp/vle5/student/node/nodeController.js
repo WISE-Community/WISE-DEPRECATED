@@ -8,16 +8,17 @@ define(['app'], function(app) {
                 NodeService, 
                 ProjectService, 
                 StudentDataService) {
-        
             this.nodeId = null;
             this.nodeType = null;
             this.nodeContent = null;
 
+            /*
             $scope.$on('currentNodeChanged', angular.bind(this, function() {
                 var node = StudentDataService.getCurrentNode();
                 var mode = $scope.vleController.mode;
                 this.loadNode(node, mode);
             }));
+            */
             
             this.loadNode = function(node, mode) {
                 if (node != null) {
@@ -36,16 +37,11 @@ define(['app'], function(app) {
                 }
             };
             
-            this.nodeControllerLoaded = function(nodeId) {
-                var nodeSrc = ProjectService.getNodeSrcByNodeId(nodeId);
-
-                NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
-                    this.nodeContent = nodeContent;
-                }));
-            };
-            
             this.nodeLoaded = function(nodeId) {
                 var newNodeVisit = StudentDataService.createNodeVisit(nodeId);
+                
+                var nodeVisits = StudentDataService.getNodeVisits();
+                console.log("nodeVisits=" + JSON.stringify(nodeVisits, null, 4));
             }
             
             this.setCurrentNodeByNodeId = function(nodeId) {

@@ -8,16 +8,21 @@ define(['app'], function(app) {
                     OpenResponseService,
                     ProjectService, 
                     StudentDataService) {
-
         this.nodeContent = null;
-        this.nodeId = $stateParams.nodeId;
-        this.planningResults = [];
+        this.nodeId = null;
+        this.studentNodes = [];
         
-        this.nodeContent = $scope.$parent.nodeController.nodeContent;
-        $scope.$parent.nodeController.nodeLoaded(this.nodeId);
+        var currentNode = StudentDataService.getCurrentNode();
+        
+        if (currentNode != null) {
+            this.nodeId = currentNode.id;
+        }
+        
+        //this.nodeContent = $scope.$parent.nodeController.nodeContent;
+        //$scope.$parent.nodeController.nodeLoaded(this.nodeId);
 
         this.submit = function() {
-            var latestStateStudentNodes = this.planningResults;
+            var latestStateStudentNodes = this.studentNodes;
             var latestTransitions = this.makeTransitions(latestStateStudentNodes);
             var studentData = {};
             studentData.studentNodes = latestStateStudentNodes;
@@ -101,7 +106,7 @@ define(['app'], function(app) {
         };
 
         this.nodeClicked = function(nodeId) {
-            //this.planningResults.push(nodeId);
+            //this.studentNodes.push(nodeId);
 
             var nodeToCopy = ProjectService.getNodeById(nodeId);
 
@@ -126,7 +131,7 @@ define(['app'], function(app) {
                 studentData.studentNodes = latestStateStudentNodes;
                 StudentDataService.addNodeStateToLatestNodeVisit(this.nodeId, studentData);
 
-                this.planningResults = latestStateStudentNodes;
+                this.studentNodes = latestStateStudentNodes;
             }
         };
 
@@ -239,10 +244,17 @@ define(['app'], function(app) {
 
         NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
             this.nodeContent = nodeContent;
-            //$route.reload();
+            this.populateStudentData();
             $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-            
-
         }));
+        
+        this.populateStudentData = function() {
+            var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+            
+            if (nodeState != null) {
+                var studentNodes = nodeState.studentNodes;
+                this.studentNodes = studentNodes;
+            }
+        };
     })
 });

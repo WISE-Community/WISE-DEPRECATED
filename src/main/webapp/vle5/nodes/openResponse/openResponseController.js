@@ -59,6 +59,13 @@ define(['app'], function(app) {
 
         NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
             this.nodeContent = nodeContent;
+            var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+            
+            if (nodeState != null) {
+                var response = nodeState.response;
+                this.studentResponse = response;
+            }
+            
             $scope.$parent.nodeController.nodeLoaded(this.nodeId);
         }));
     });
