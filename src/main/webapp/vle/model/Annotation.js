@@ -442,7 +442,7 @@ Annotations.prototype.getTotalScoreByToWorkgroupAndFromWorkgroups = function(toW
  */
 Annotations.prototype.getTotalScoreAndTotalPossibleByToWorkgroupAndFromWorkgroups = function(toWorkgroup, fromWorkgroups, maxScores) {
 	var totalScoreAndTotalPossible = {};
-	var annotationsByToWorkgroup=this.getAnnotationsByToWorkgroupAndFromWorkgroups(toWorkgroup, fromWorkgroups);
+	var annotationsByToWorkgroup = this.getAnnotationsByToWorkgroup(toWorkgroup);
 	var totalSoFar = 0;
 	var nodeIdsFoundAlready = new Array();
 	var maxPossible = 0;
@@ -459,7 +459,7 @@ Annotations.prototype.getTotalScoreAndTotalPossibleByToWorkgroupAndFromWorkgroup
 		var tempAnnotation = annotationsByToWorkgroup[x];
 		
 		//check if it is a score annotation
-		if (annotationsByToWorkgroup[x].type == "score") {
+		if (annotationsByToWorkgroup[x].type == "score" || annotationsByToWorkgroup[x].type == "autoGraded") {
 			//get the nodeId for the annotation
 			var nodeId = annotationsByToWorkgroup[x].nodeId;
 			
@@ -505,6 +505,20 @@ Annotations.prototype.getTotalScoreAndTotalPossibleByToWorkgroupAndFromWorkgroup
 				//get the max score possible for this nodeId and add it to our total
 				maxPossible += parseFloat(maxScores.getMaxScoreValueByNodeId(tempNodeId));	
 			}
+		} else {
+		    // the annotation is an auto graded annotation
+		    var value = this.getLatestAnnotationValueFromValueArray(tempAnnotation, 'autoScore');
+		    
+		    if (value != null) {
+		        // get the auto score and max auto score
+		        var autoScore = value.autoScore;
+		        var maxAutoScore = value.maxAutoScore;
+		        
+		        if (autoScore != null && maxAutoScore != null) {
+		            totalSoFar += autoScore;
+		            maxPossible += maxAutoScore;
+		        }
+		    }
 		}
 	}
 
@@ -936,6 +950,74 @@ Annotations.prototype.getNodeIds = function() {
 	}
 	
 	return nodeIds;
+};
+
+/**
+ * Get the latest object in the annotation value array that contains a specific field
+ * 
+ * The value field of the annotation should be an array that looks something
+ * like this
+ * "value": [
+ *    {
+ *       "maxAutoScore": 4,
+ *       "concepts": "",
+ *       "autoScore": 0,
+ *       "nodeStateId": 1412029344000,
+ *       "autoFeedback": "bad 0"
+ *    },
+ *    {
+ *       "maxAutoScore": 4,
+ *       "concepts": "1,2,3,4",
+ *       "autoScore": 4,
+ *       "nodeStateId": 1412029354000,
+ *       "autoFeedback": "good 4"
+ *    }
+ * ]
+ * we will return the latest object in the array that contains the field we want like this
+ *    {
+ *       "maxAutoScore": 4,
+ *       "concepts": "1,2,3,4",
+ *       "autoScore": 4,
+ *       "nodeStateId": 1412029354000,
+ *       "autoFeedback": "good 4"
+ *    }
+ * 
+ * @param annotation the annotation
+ * @param field a field in the annotation value object
+ * @return the latest object in the annotation value array that has the field
+ */
+Annotations.prototype.getLatestAnnotationValueFromValueArray = function(annotation, field) {
+    var result = null;
+    
+    if(annotation != null && field != null) {
+        //get the value
+        var value = annotation.value;
+        
+        if(value != null) {
+            //check that the value is an array
+            if(Array.isArray(value)) {
+                //loop through the values from newest to oldest
+                for(var x=value.length - 1; x>=0; x--) {
+                    //get a value object
+                    var tempValue = value[x];
+                    
+                    if(tempValue != null) {
+                        //check if the value object contains a non-null value for the field
+                        if(tempValue[field] != null) {
+                            /*
+                             * we have found a value object that has a non-null value for 
+                             * the field so we will return that value object
+                             */
+                            result = tempValue;
+                            break;
+                        }
+                    }
+                }
+            }       
+        }
+    }
+    
+    return result;
 };
 
 //used to notify scriptloader that this script has finished loading
