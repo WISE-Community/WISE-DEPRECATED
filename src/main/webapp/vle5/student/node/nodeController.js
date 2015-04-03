@@ -48,6 +48,21 @@ define(['app'], function(app) {
                 }
             };
             
+            this.buttonClicked = function(nodeNumber) {
+                
+                var nodeId = null;
+                
+                if (nodeNumber === '1.1') {
+                    nodeId = 'node1';
+                } else if (nodeNumber === '1.4') {
+                    nodeId = 'node4';
+                }
+                
+                if (nodeId != null) {
+                    StudentDataService.setCurrentNodeByNodeId(nodeId);
+                }
+            };
+            
             var node = StudentDataService.getCurrentNode();
             var mode = $scope.vleController.mode;
             this.loadNode(node, mode);

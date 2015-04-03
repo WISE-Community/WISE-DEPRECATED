@@ -22,6 +22,20 @@ define([
 	                                 'StudentDataService'
 	                                 ]);
 	
+	app.directive('compile', function($compile) {
+        return function(scope, ele, attrs) {
+            scope.$watch(
+                    function(scope) {
+                        return scope.$eval(attrs.compile);
+                    },
+                    function(value) {
+                        ele.html(value);
+                        $compile(ele.contents())(scope);
+                    }
+            );
+        };
+    });
+	
 	app.init = function() {
 		angular.bootstrap(document, ['app']);
 	};

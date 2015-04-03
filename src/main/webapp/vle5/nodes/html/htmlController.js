@@ -14,8 +14,8 @@ define(['app'], function(app) {
         var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
 
         NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
-            this.nodeContent = nodeContent;
-            this.htmlContent = $sce.trustAsHtml(this.nodeContent);
+            //this.htmlContent = $sce.trustAsHtml(this.nodeContent);
+            this.htmlContent = nodeContent;
             $scope.$parent.nodeController.nodeLoaded(this.nodeId);
         }));
     });

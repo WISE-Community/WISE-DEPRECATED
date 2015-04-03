@@ -1,6 +1,6 @@
 {
     "style": "body { background-color: green }",
-    "prompt": "Step 1 Prompt",
+    "prompt": "Step 1 Prompt. Go to {{link|1.4|Node 4}}.",
     "lockAfterSubmit": true,
     "showSubmitButton": true
 }

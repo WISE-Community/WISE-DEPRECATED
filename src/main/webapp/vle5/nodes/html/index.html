@@ -7,7 +7,5 @@ message begin...
 ...message end
 -->
 <div ng-controller='HTMLController as htmlController'>
-<div ng-bind-html="htmlController.htmlContent"></div>
-
-<div id="htmlContent"></div>
+<div compile='htmlController.htmlContent'></div>
 </div>
