@@ -10,7 +10,6 @@ define(['app'],
                     ProjectService, 
                     NodeService, 
                     StudentDataService) {
-        console.log('stateParams.nodeId: ' + $stateParams.nodeId);
         this.mode = 'student';
         this.layoutLogic = ConfigService.layoutLogic;
         this.globalTools = null; //['hideNavigation', 'showNavigation', 'portfolio', 'home', 'sign out'];
@@ -19,8 +18,6 @@ define(['app'],
         $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
             var currentNode = args.currentNode;
-            console.log('currentNodeChanged, previousNode: ' + JSON.stringify(previousNode, null, 4));
-            console.log('currentNodeChanged, currentNode: ' + JSON.stringify(currentNode, null, 4));
             var currentNode = StudentDataService.getCurrentNode();
             var nodeId = currentNode.id;
             StudentDataService.updateStackHistory(nodeId);
@@ -137,7 +134,18 @@ define(['app'],
         };
         
         var nodeId = null;
-        var stateParamNodeId = $stateParams.nodeId;
+        var stateParams = null;
+        var stateParamNodeId = null;
+        
+        if ($state != null) {
+            stateParams = $state.params;
+        }
+        
+        if (stateParams != null) {
+            stateParamNodeId = stateParams.nodeId;
+        }
+        
+        //var stateParamNodeId = $stateParams.nodeId;
         if (stateParamNodeId != null && stateParamNodeId !== '') {
             nodeId = stateParamNodeId;
         } else {

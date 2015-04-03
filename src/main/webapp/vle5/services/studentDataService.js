@@ -38,7 +38,6 @@ define(['angular', 'configService'], function(angular, configService) {
             var previousCurrentNode = this.currentNode;
             
             if (previousCurrentNode !== node) {
-                console.log('current node is about to change');
                 // the current node is about to change
                 $rootScope.$broadcast('nodeOnExit', {nodeToExit: previousCurrentNode});
                 

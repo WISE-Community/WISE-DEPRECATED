@@ -8,7 +8,6 @@ define(['app'], function(app) {
                     OpenResponseService,
                     ProjectService, 
                     StudentDataService) {
-        console.log('openResponseController');
         this.autoSaveInterval = 10000; // auto-save interval in milliseconds
         this.nodeContent = null;
         this.nodeId = null;
@@ -51,7 +50,6 @@ define(['app'], function(app) {
                 StudentDataService.addNodeStateToLatestNodeVisit(this.nodeId, studentState);
                 
                 this.calculateDisabled();
-                console.log('saveStudentState studentState: ' + JSON.stringify(studentState, null, 4));
                 this.isDirty = false;
             }
         };
