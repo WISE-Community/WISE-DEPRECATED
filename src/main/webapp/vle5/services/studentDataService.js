@@ -565,6 +565,14 @@ define(['angular', 'configService'], function(angular, configService) {
             
             return studentWorkAsHTML;
         };
+        
+        this.createNodeState = function() {
+            var nodeState = {};
+            
+            nodeState.timestamp = Date.parse(new Date());
+            
+            return nodeState;
+        };
     }]);
     
 });

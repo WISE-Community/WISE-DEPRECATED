@@ -138,5 +138,21 @@ define(['angular'], function(angular) {
             
             return studentWorkAsHTML;
         };
+        
+        this.populateNodeState = function(nodeStateFromOtherNode, otherNodeType) {
+            var nodeState = null;
+            
+            if (nodeStateFromOtherNode != null && otherNodeType != null) {
+                nodeState = StudentDataService.createNodeState();
+                
+                if (otherNodeType === 'OpenResponse') {
+                    nodeState.response = nodeStateFromOtherNode.response;
+                } else if (otherNodeType === 'Planning') {
+                    nodeState.response = JSON.stringify(nodeStateFromOtherNode.studentNodes);
+                }
+            }
+            
+            return nodeState;
+        };
     }]);
 });

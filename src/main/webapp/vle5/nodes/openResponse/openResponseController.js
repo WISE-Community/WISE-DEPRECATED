@@ -65,7 +65,7 @@ define(['app'], function(app) {
         };
         
         this.studentResponseChanged = function() {
-            this.isDirty = true;                    
+            this.isDirty = true;
         };
         
         var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
@@ -74,13 +74,18 @@ define(['app'], function(app) {
             this.nodeContent = nodeContent;
             var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
             
+            this.setStudentWork(nodeState);
+            this.importWork();
+            
+            $scope.$parent.nodeController.nodeLoaded(this.nodeId);
+        }));
+        
+        this.setStudentWork = function(nodeState) {
             if (nodeState != null) {
                 var response = nodeState.response;
                 this.studentResponse = response;
             }
-            
-            $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-        }));
+        };
         
         $scope.$on('nodeOnExit', angular.bind(this, function(event, args) {
             var nodeToExit = args.nodeToExit;
@@ -100,5 +105,35 @@ define(['app'], function(app) {
                 this.saveStudentState(saveTriggeredBy);
             }
         }), this.autoSaveInterval);
+        
+        this.importWork = function() {
+            var nodeContent = this.nodeContent;
+            
+            if (nodeContent != null) {
+                var importWork = nodeContent.importWork;
+                
+                if (importWork != null) {
+                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                    
+                    if(nodeState == null) {
+                        var importWorkNodeId = importWork.nodeId;
+                        
+                        if (importWorkNodeId != null) {
+                            var importWorkNode = ProjectService.getNodeById(importWorkNodeId);
+                            
+                            if (importWorkNode != null) {
+                                var importWorkNodeType = importWorkNode.type;
+                                
+                                var importWorkNodeState = StudentDataService.getLatestNodeStateByNodeId(importWorkNodeId);
+                                
+                                var populatedNodeState = OpenResponseService.populateNodeState(importWorkNodeState, importWorkNodeType);
+                                
+                                this.setStudentWork(populatedNodeState);
+                            }
+                        }
+                    }
+                }
+            }
+        };
     });
 });
