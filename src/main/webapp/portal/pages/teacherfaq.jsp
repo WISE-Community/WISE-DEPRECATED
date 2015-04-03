@@ -90,7 +90,6 @@
 						    <li><spring:message code="pages.teacherfaq.howChangeStudentTeamAnswerPart5" /></li>
 						    <li><spring:message code="pages.teacherfaq.howChangeStudentTeamAnswerPart6" /></li>
 						    <li><spring:message code="pages.teacherfaq.howChangeStudentTeamAnswerPart7" /></li>
-						    <li><spring:message code="pages.teacherfaq.howChangeStudentTeamAnswerPart8" /></li>
 						</ul>
 					</div>
 					
