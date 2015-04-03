@@ -257,5 +257,12 @@ define(['app'], function(app) {
                 this.studentNodes = studentNodes;
             }
         };
-    })
+
+        $scope.$on('nodeOnExit', angular.bind(this, function(event, args) {
+            var nodeToExit = args.nodeToExit;
+            if (nodeToExit.id === this.nodeId) {
+                $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
+            }
+        }));
+    });
 });

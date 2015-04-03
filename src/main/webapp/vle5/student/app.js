@@ -39,7 +39,7 @@ define([
 	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
 	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
 		
-		$urlRouterProvider.otherwise('/vle/');
+		$urlRouterProvider.otherwise('/vle/node3');
 		
 		app.$controllerProvider = $controllerProvider;
 		
@@ -51,6 +51,7 @@ define([
                 //template: '<ui-view />',
                 controller: 'VLEController',
                 controllerAs: 'vleController',
+                params: {nodeId: null},
                 resolve: {
                     loadController: app.loadController('vleController'),
                     config: function(ConfigService) {
@@ -86,6 +87,7 @@ define([
                     }
                 }
             });
+            
 	}]);
 	return app;
 });

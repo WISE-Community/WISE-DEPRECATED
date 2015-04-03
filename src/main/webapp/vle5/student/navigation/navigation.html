@@ -8,7 +8,7 @@
 }
 </style>
 
-<div ng-controller='NavigationController as navigationController'>
+<div id="navigation" class={{vleController.layoutState}} ng-controller='NavigationController as navigationController'>
 <div ng-repeat='group in navigationController.groups' ng-show='group.id === navigationController.currentGroupId'>
     {{ group.title }}
     

@@ -2,8 +2,8 @@
     "nodeVisits": [
         {
             "visitPostTime": null,
-            "visitStartTime": null,
-            "visitEndTime": null,
+            "visitStartTime": 1428013969169,
+            "visitEndTime": 1428013970169,
             "hintStates": null,
             "nodeType": "OpenResponse",
             "nodeStates": [],
@@ -12,8 +12,8 @@
         },
         {
             "visitPostTime": null,
-            "visitStartTime": null,
-            "visitEndTime": null,
+            "visitStartTime": 1428013971169,
+            "visitEndTime": 1428013972169,
             "hintStates": null,
             "nodeType": "OpenResponse",
             "nodeStates": [
@@ -26,8 +26,8 @@
         },
         {
             "visitPostTime": null,
-            "visitStartTime": null,
-            "visitEndTime": null,
+            "visitStartTime": 1428013973169,
+            "visitEndTime": 1428013974169,
             "hintStates": null,
             "nodeType": "Planning",
             "nodeStates": [
@@ -113,8 +113,8 @@
         },
         {
             "visitPostTime": null,
-            "visitStartTime": null,
-            "visitEndTime": null,
+            "visitStartTime": 1428013975169,
+            "visitEndTime": 1428013976169,
             "hintStates": null,
             "nodeType": "OpenResponse",
             "nodeStates": [],

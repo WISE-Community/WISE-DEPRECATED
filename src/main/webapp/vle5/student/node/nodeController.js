@@ -8,6 +8,7 @@ define(['app'], function(app) {
                 NodeService, 
                 ProjectService, 
                 StudentDataService) {
+        console.log('nodeController, stateParams.nodeId=' + $stateParams.nodeId);
             //this.nodeId = null;
             //this.nodeType = null;
             //this.nodeContent = null;
@@ -21,6 +22,7 @@ define(['app'], function(app) {
             */
             
             this.loadNode = function(node, mode) {
+                console.log('loadNode: '+ JSON.stringify(node, null, 4));
                 if (node != null) {
                     var nodeType = ProjectService.getNodeTypeByNode(node);
                     if (nodeType != null) {
@@ -40,13 +42,26 @@ define(['app'], function(app) {
             this.nodeLoaded = function(nodeId) {
                 var newNodeVisit = StudentDataService.createNodeVisit(nodeId);
                 
-                var nodeVisits = StudentDataService.getNodeVisits();
+                //var nodeVisits = StudentDataService.getNodeVisits();
                 //console.log("nodeVisits=" + JSON.stringify(nodeVisits, null, 4));
+            };
+            
+            this.nodeUnloaded = function(nodeId) {
+                StudentDataService.endNodeVisitByNodeId(nodeId);
             };
             
             this.setCurrentNodeByNodeId = function(nodeId) {
                 var node = ProjectService.getNodeById(nodeId);
                 StudentDataService.setCurrentNode(node);
+            };
+            
+            this.closeNode = function() {
+                var currentNode = StudentDataService.getCurrentNode();
+                if (currentNode != null) {
+                    var currentNodeId = currentNode.id;
+                    var parentNode = ProjectService.getParentGroup(currentNodeId);
+                    StudentDataService.setCurrentNode(parentNode);
+                }
             };
             
             var node = StudentDataService.getCurrentNode();

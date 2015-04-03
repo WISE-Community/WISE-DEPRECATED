@@ -8,6 +8,7 @@ define(['app'], function(app) {
                     OpenResponseService,
                     ProjectService, 
                     StudentDataService) {
+        console.log('openResponseController');
         this.autoSaveInterval = 10000; // auto-save interval in milliseconds
         this.nodeContent = null;
         this.nodeId = null;
@@ -90,6 +91,7 @@ define(['app'], function(app) {
                 var saveTriggeredBy = 'nodeOnExit';
                 this.saveStudentState(saveTriggeredBy);
                 clearInterval(this.autoSaveIntervalId);
+                $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
             }
         }));
         

@@ -2,6 +2,7 @@ define(['app'],
         function(app) {
     app.$controllerProvider.register('VLEController', 
             function($scope,
+                    $rootScope,
                     $state,
                     $stateParams, 
                     ConfigService, 
@@ -9,12 +10,17 @@ define(['app'],
                     ProjectService, 
                     NodeService, 
                     StudentDataService) {
+        console.log('stateParams.nodeId: ' + $stateParams.nodeId);
         this.mode = 'student';
         this.layoutLogic = ConfigService.layoutLogic;
-        this.globalTools = ['hideNavigation', 'showNavigation', 'portfolio', 'home', 'sign out'];
+        this.globalTools = null; //['hideNavigation', 'showNavigation', 'portfolio', 'home', 'sign out'];
         this.currentNode = null;
         
-        $scope.$on('currentNodeChanged', angular.bind(this, function() {
+        $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
+            var previousNode = args.previousNode;
+            var currentNode = args.currentNode;
+            console.log('currentNodeChanged, previousNode: ' + JSON.stringify(previousNode, null, 4));
+            console.log('currentNodeChanged, currentNode: ' + JSON.stringify(currentNode, null, 4));
             var currentNode = StudentDataService.getCurrentNode();
             var nodeId = currentNode.id;
             StudentDataService.updateStackHistory(nodeId);
@@ -99,7 +105,7 @@ define(['app'],
                     var toNodeId = transition.to;
                     //var mode = this.mode;
                     //this.loadNode(toNodeId, mode);
-                    this.setCurrentNodeByNodeId(toNodeId);
+                    StudentDataService.setCurrentNodeByNodeId(toNodeId);
                 }
             }
         };
@@ -115,7 +121,7 @@ define(['app'],
                     
                     if (transition != null) {
                         var fromNodeId = transition.from;
-                        this.setCurrentNodeByNodeId(fromNodeId);
+                        StudentDataService.setCurrentNodeByNodeId(fromNodeId);
                     }
                 } else {
                     var stackHistory = StudentDataService.getStackHistory();
@@ -124,30 +130,29 @@ define(['app'],
                         prevNodeId = StudentDataService.getStackHistoryAtIndex(-2);
                         //var mode = this.mode;
                         //this.loadNode(prevNodeId, mode);
-                        this.setCurrentNodeByNodeId(prevNodeId);
+                        StudentDataService.setCurrentNodeByNodeId(prevNodeId);
                     }
                 }
             }
         };
         
+        var nodeId = null;
+        var stateParamNodeId = $stateParams.nodeId;
+        if (stateParamNodeId != null && stateParamNodeId !== '') {
+            nodeId = stateParamNodeId;
+        } else {
+            var latestNodeVisit = StudentDataService.getLatestNodeVisit();
+            if (latestNodeVisit != null) {
+                nodeId = latestNodeVisit.nodeId;
+            }
+        }
         
-        this.setCurrentNodeByNodeId = function(nodeId) {
-            var node = ProjectService.getNodeById(nodeId);
-            StudentDataService.setCurrentNode(node);
-        };
-        
-        
-        var nodeId = $stateParams.nodeId;
         if (nodeId == null || nodeId === '') {
             nodeId = ProjectService.getStartNodeId();
         }
-        
-        var latestNodeVisit = StudentDataService.getLatestNodeVisit();
-        if (latestNodeVisit != null) {
-            var nodeId = latestNodeVisit.nodeId;
-        }
 
-        this.setCurrentNodeByNodeId(nodeId);
-        
+        StudentDataService.setCurrentNodeByNodeId(nodeId);
+        window.StudentDataService = StudentDataService;
+        window.ProjectService = ProjectService;
     });
 });

@@ -6,12 +6,23 @@ define(['app'], function(app) {
                 ConfigService, 
                 ProjectService, 
                 StudentDataService) {
-        this.currentNode = null;
         this.currentGroup = null;
         this.groups = ProjectService.getGroups();
         this.currentNode = StudentDataService.getCurrentNode();
         
-        $scope.$on('currentNodeChanged', angular.bind(this, function() {
+        $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
+            var previousNode = args.previousNode;
+            var currentNode = args.currentNode;
+            if (previousNode != null && previousNode.type === 'group') {
+                var nodeId = previousNode.id;
+                StudentDataService.endNodeVisitByNodeId(nodeId);
+            }
+            
+            if (currentNode != null && currentNode.type === 'group') {
+                var nodeId = currentNode.id;
+                var newNodeVisit = StudentDataService.createNodeVisit(nodeId);
+                this.updateNavigation();
+            }
             
         }));
         
@@ -25,7 +36,6 @@ define(['app'], function(app) {
         
         this.nodeClicked = function(nodeId) {
             StudentDataService.setCurrentNodeByNodeId(nodeId);
-            this.updateNavigation();
         };
         
         this.isNodeDisabled = function(nodeId) {

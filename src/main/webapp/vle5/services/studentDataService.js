@@ -38,12 +38,13 @@ define(['angular', 'configService'], function(angular, configService) {
             var previousCurrentNode = this.currentNode;
             
             if (previousCurrentNode !== node) {
+                console.log('current node is about to change');
                 // the current node is about to change
                 $rootScope.$broadcast('nodeOnExit', {nodeToExit: previousCurrentNode});
                 
                 this.currentNode = node;
                 
-                $rootScope.$broadcast('currentNodeChanged');
+                $rootScope.$broadcast('currentNodeChanged', {previousNode: previousCurrentNode, currentNode: this.currentNode});
             }
         };
         
@@ -103,7 +104,7 @@ define(['angular', 'configService'], function(angular, configService) {
                 
                 this.loadStudentNodes();
                 
-                this.updateCurrentNode(latestNodeVisit);
+                //this.updateCurrentNode(latestNodeVisit);
                 this.populateHistories(nodeVisits);
                 this.updateNodeStatuses();
                 
@@ -395,7 +396,7 @@ define(['angular', 'configService'], function(angular, configService) {
             
             var newNodeVisit = {};
             newNodeVisit.visitPostTime = null;
-            newNodeVisit.visitStartTime = null;
+            newNodeVisit.visitStartTime = new Date().getTime();
             newNodeVisit.visitEndTime = null;
             newNodeVisit.hintStates = null;
             newNodeVisit.nodeStates = [];
@@ -409,6 +410,13 @@ define(['angular', 'configService'], function(angular, configService) {
             this.addNodeVisit(newNodeVisit);
             
             return newNodeVisit;
+        };
+        
+        this.endNodeVisitByNodeId = function(nodeId) {
+            var latestNodeVisitByNodeId = this.getLatestNodeVisitByNodeId(nodeId);
+            if (latestNodeVisitByNodeId != null) {
+                latestNodeVisitByNodeId.visitEndTime = new Date().getTime();
+            }
         };
         
         this.getNodeVisitsByNodeId = function(nodeId) {
