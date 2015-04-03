@@ -5862,16 +5862,25 @@ View.prototype.updateStudentProgressTimeSpent = function(workgroupId) {
         }
         
         // get DataTable, row, row data for workgroup
-        var table = this.studentProgressTable,
-            row = $('#studentProgress_' + workgroupId),
-            data = table.row(row).data();
-        // update time spent
-        data.time_spent = timeSpentDisplay;
-        // update DataTable
-        table
-            .row( row )
-            .data( data );
-        table.draw();
+        var table = this.studentProgressTable;
+        
+        if (table != null) {
+            var row = $('#studentProgress_' + workgroupId);
+            
+            if (row != null) {
+                var data = table.row(row).data();
+                
+                if (data != null) {
+                    // update time spent
+                    data.time_spent = timeSpentDisplay;
+                    // update DataTable
+                    table
+                        .row( row )
+                        .data( data );
+                    table.draw();
+                }
+            }
+        }
     }
 };
 
