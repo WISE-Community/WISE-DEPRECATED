@@ -548,6 +548,23 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
+        this.getLatestStudentWorkForNodeAsHTML = function(nodeId) {
+            var studentWorkAsHTML = null;
+            
+            var node = ProjectService.getNodeById(nodeId);
+            
+            if (node != null) {
+                var nodeType = node.type;
+                var latestNodeState = this.getLatestNodeStateByNodeId(nodeId);
+                
+                // TODO: make this dynamically call the correct {{nodeType}}Service
+                if (nodeType === 'OpenResponse') {
+                    studentWorkAsHTML = OpenResponseService.getStudentWorkAsHTML(latestNodeState);
+                }
+            }
+            
+            return studentWorkAsHTML;
+        };
     }]);
     
 });

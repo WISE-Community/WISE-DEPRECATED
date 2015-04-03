@@ -9,6 +9,7 @@ define(['angular', 'configService'], function(angular, configService) {
                 $http.get(nodeSrc).then(angular.bind(this, function(result) {
                     var nodeContent = result.data;
                     nodeContent = this.injectNodeLinks(nodeContent);
+                    nodeContent = this.injectStudentData(nodeContent);
                     resolve(nodeContent);
                 }));
             }));
@@ -39,7 +40,7 @@ define(['angular', 'configService'], function(angular, configService) {
                     var contentString = JSON.stringify(content);
                     //contentString = this.replaceWithLink(contentString);
                     if (contentString != null && contentString.indexOf("{{link") >= 0) {
-                        contentString = contentString.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, "<a ng-click=\'nodeController.buttonClicked(\\\"$1\\\")\'>$2</a>")
+                        contentString = contentString.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, "<a ng-click=\'nodeController.buttonClicked(\\\"$1\\\")\'>$2</a>");
                     }
                     
                     content = JSON.parse(contentString);
@@ -47,19 +48,50 @@ define(['angular', 'configService'], function(angular, configService) {
                     //content = this.replaceWithLink(content);
                     
                     if (content != null && content.indexOf("{{link") >= 0) {
-                        content = content.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, "<a ng-click=\'nodeController.buttonClicked(\"$1\")\'>$2</a>")
+                        content = content.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, "<a ng-click=\'nodeController.buttonClicked(\"$1\")\'>$2</a>");
                     }
                 }
             }
             return content;
         };
         
-        this.replaceWithLink = function(text) {
-            if (text != null && text.indexOf("{{link") >= 0) {
-                text = text.replace(/{{link\|([^}}]*)\|([^}}]*)}}/g, "<a ng-click=\'nodeController.buttonClicked(\\\"$1\\\")\'>$2</a>")
+        this.injectStudentData = function(content) {
+            if (content != null) {
+                var regex = /{{work\|([^}}]*)}}/g;
+                
+                if (typeof content === 'object') {
+                    var contentString = JSON.stringify(content);
+                    var matchResult = contentString.match(regex);
+                    
+                    var nodeId = RegExp.$1;
+                    
+                    if (nodeId === '1.1') {
+                        nodeId = 'node1';
+                    }
+                    
+                    var studentWork = StudentDataService.getLatestStudentWorkForNodeAsHTML(nodeId);
+                    
+                    contentString = contentString.replace(regex, studentWork);
+                    
+                    content = JSON.parse(contentString);
+                } else if (typeof content === 'string') {
+                    
+                    if (content != null && content.indexOf("{{work") >= 0) {
+                        var matchResult = content.match(regex);
+                        
+                        var nodeId = RegExp.$1;
+                        
+                        if (nodeId === '1.1') {
+                            nodeId = 'node1';
+                        }
+                        
+                        var studentWork = StudentDataService.getLatestStudentWorkForNodeAsHTML(nodeId);
+                        
+                        content = content.replace(regex, studentWork);
+                    }
+                }
             }
-            
-            return text;
+            return content;
         };
     }]);
     

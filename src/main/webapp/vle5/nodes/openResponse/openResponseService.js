@@ -127,5 +127,16 @@ define(['angular'], function(angular) {
             return result;
         };
         
+        this.getStudentWorkAsHTML = function(nodeState) {
+            var studentWorkAsHTML = null;
+            
+            if (nodeState != null) {
+                var response = nodeState.response;
+                
+                studentWorkAsHTML = '<p>' + response + '</p>';
+            }
+            
+            return studentWorkAsHTML;
+        };
     }]);
 });
