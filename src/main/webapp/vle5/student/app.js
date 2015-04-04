@@ -8,6 +8,7 @@ define([
         'nodeApplicationService',
         'nodeService',
         'openResponseService',
+        'portfolioService',
         'studentDataService'
         ], function(angular, $) {
 
@@ -19,6 +20,7 @@ define([
 	                                 'NodeApplicationService',
 	                                 'NodeService',
 	                                 'OpenResponseService',
+	                                 'PortfolioService',
 	                                 'StudentDataService'
 	                                 ]);
 	
@@ -53,7 +55,7 @@ define([
 	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
 	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
 		
-		$urlRouterProvider.otherwise('/vle/');
+		$urlRouterProvider.otherwise('/vle/node3');
 		
 		app.$controllerProvider = $controllerProvider;
 		
@@ -62,11 +64,9 @@ define([
                 url: '',
                 abstract: true,
                 templateUrl: 'vle5/student/vle.html',
-                //template: '<ui-view />',
-                controller: 'VLEController',
-                controllerAs: 'vleController',
                 resolve: {
-                    loadController: app.loadController('vleController'),
+                    vleController: app.loadController('vleController'),
+                    portfolioController: app.loadController('portfolioController'),
                     config: function(ConfigService) {
                         var configUrl = window.configUrl;
                         

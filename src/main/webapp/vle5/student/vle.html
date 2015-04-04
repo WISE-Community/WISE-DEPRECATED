@@ -79,9 +79,17 @@
     display: none;
 }
 
+#portfolio {
+    position: absolute;
+    right:0px;
+    width:400px;
+    height:500px;
+}
+
 </style>
 </head>
 <body>
+<div ng-controller='VLEController as vleController'>
 	<span ng-if="vleController.currentNode"> CurrentNode:
 		"{{vleController.currentNode.title}}"
 		({{vleController.currentNode.type}}, {{vleController.currentNode.id}})
@@ -100,7 +108,11 @@
     </div>
     <div id="prev" class={{vleController.layoutState}} ng-click="vleController.goToPrevNode()">Prev</div>
     <div id="next" class={{vleController.layoutState}} ng-click="vleController.goToNextNode()">Next</div>
-    <div ui-view="navigationView"></div>
-    <div ui-view="nodeView"></div>
+    <div ui-view='navigationView'></div>
+    <div ui-view='nodeView'></div>
+    <br/>
+    <div ng-include="'vle5/student/portfolio/portfolio.html'"></div>
+</div>
+
 </body>
 </html>

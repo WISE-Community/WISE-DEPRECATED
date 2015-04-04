@@ -1,0 +1,13 @@
+<div id="portfolio" class={{vleController.layoutState}} ng-controller='PortfolioController as portfolioController'>
+<input ng-show='!portfolioController.isVisible' type='button' value='Portfolio' ng-click='portfolioController.open()'></input>
+<div ng-show='portfolioController.isVisible' style='border: 1px dotted'>
+<input type='button' value='X' ng-click='portfolioController.close()'></input>
+<h3>My Portfolio</h3>
+<div ng-repeat='portfolioItem in portfolioController.portfolio.items'>
+  {{portfolioItem}}
+</div>
+<div ondrop="drop(event)" ondragover="allowDrop(event)" style='border:1px dotted blue; width:100px; height: 200px'>
+Drop stuff here
+</div>
+</div>
+</div>

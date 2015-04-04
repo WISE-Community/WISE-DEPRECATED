@@ -6,6 +6,7 @@ define(['app'], function(app) {
                 $stateParams, 
                 NodeApplicationService, 
                 NodeService, 
+                PortfolioService,
                 ProjectService, 
                 StudentDataService) {
             
@@ -37,6 +38,15 @@ define(['app'], function(app) {
             this.setCurrentNodeByNodeId = function(nodeId) {
                 var node = ProjectService.getNodeById(nodeId);
                 StudentDataService.setCurrentNode(node);
+            };
+            
+            this.addItemToPortfolio = function() {
+                var currentNode = StudentDataService.getCurrentNode();
+                if (currentNode != null) {
+                    var portfolioItem = {};
+                    portfolioItem.nodeId = currentNode.id;
+                    PortfolioService.addItem(portfolioItem);
+                }
             };
             
             this.closeNode = function() {

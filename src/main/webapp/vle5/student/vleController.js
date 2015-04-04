@@ -12,7 +12,7 @@ define(['app'],
                     StudentDataService) {
         this.mode = 'student';
         this.layoutLogic = ConfigService.layoutLogic;
-        this.globalTools = null; //['hideNavigation', 'showNavigation', 'portfolio', 'home', 'sign out'];
+        this.globalTools = ['hideNavigation', 'showNavigation', 'home', 'sign out'];
         this.currentNode = null;
         
         $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
