@@ -4,7 +4,8 @@ define(['app'], function(app) {
                 $state, 
                 $stateParams, 
                 ConfigService, 
-                ProjectService, 
+                PortfolioService,
+                ProjectService,
                 StudentDataService) {
         console.log('portfolioController');
         
@@ -18,6 +19,10 @@ define(['app'], function(app) {
         $scope.$on('portfolioChanged', angular.bind(this, function(event, args) {
             this.portfolio = args.portfolio;
         }));
+        
+        this.deleteItem = function(item) {
+            PortfolioService.deleteItem(item);
+        };
         
         this.open = function() {
             this.isVisible = true;

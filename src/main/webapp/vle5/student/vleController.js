@@ -7,6 +7,7 @@ define(['app'],
                     $stateParams, 
                     ConfigService, 
                     NodeApplicationService,
+                    PortfolioService,
                     ProjectService, 
                     NodeService, 
                     StudentDataService) {
@@ -161,6 +162,7 @@ define(['app'],
 
         StudentDataService.setCurrentNodeByNodeId(nodeId);
         window.StudentDataService = StudentDataService;
+        window.PortfolioService = PortfolioService;
         window.ProjectService = ProjectService;
     });
 });

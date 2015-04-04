@@ -3,11 +3,13 @@ require.config({
     paths: {
         'angular': 'lib/angular/angular',
         'angularPostMessage': 'lib/angular/angularPostMessage/angular-post-message',
+        'angularSortable': 'lib/angular/angularSortable/angular-sortable',
         'angularUIRouter': 'lib/angular/angularUIRouter/angular-ui-router',
         'app': 'student/app',
         'configService': 'services/configService',
         'htmlController': 'nodes/html/htmlController',
         'jquery': 'lib/jquery/jquery-2.1.3.min',
+        'jqueryUI': 'lib/jquery/jquery-ui-1.10.4.interactions.min',
         'navigationController': 'student/navigation/navigationController',
         'nodeApplicationService': 'services/nodeApplicationService',
         'nodeController': 'student/node/nodeController',
@@ -37,6 +39,12 @@ require.config({
             'deps': [
                     'angular'
                     ]
+        },
+        'angularSortable': {
+            'exports': 'angularSortable',
+            'deps': [
+                     'angular'
+                     ]
         }
     }
 });

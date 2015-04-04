@@ -1,8 +1,10 @@
 define([
         'angular',
         'jquery',
+        'jqueryUI',
         'angularUIRouter',
         'angularPostMessage',
+        'angularSortable',
         'configService',
         'projectService',
         'nodeApplicationService',
@@ -14,6 +16,7 @@ define([
 
 	var app = angular.module('app', [
 	                                 'ui.router',
+	                                 'ui.sortable',
 	                                 'ngPostMessage',
 	                                 'ConfigService',
 	                                 'ProjectService',
