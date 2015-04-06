@@ -2,9 +2,10 @@ require.config({
     baseUrl: '../wise/vle5/',
     paths: {
         'angular': 'lib/angular/angular',
+        'angularAnimate': 'lib/angular/angularAnimate/angular-animate.min',
         'angularPostMessage': 'lib/angular/angularPostMessage/angular-post-message',
         'angularSortable': 'lib/angular/angularSortable/angular-sortable',
-        'angularUIRouter': 'lib/angular/angularUIRouter/angular-ui-router',
+        'angularUIRouter': 'lib/angular/angularUIRouter/angular-ui-router.min',
         'app': 'student/app',
         'configService': 'services/configService',
         'htmlController': 'nodes/html/htmlController',
@@ -26,10 +27,17 @@ require.config({
     },
     shim: {
         'angular': {
-            'exports':'angular'
+            'exports': 'angular'
+        },
+        'angularAnimate': {
+            'exports': 'angularAnimate',
+            'deps': [
+                    'angular',
+                    'jquery'
+                    ]
         },
         'angularUIRouter': {
-            'exports':'angularUIRouter',
+            'exports': 'angularUIRouter',
             'deps': [
                     'angular'
                     ]
@@ -43,7 +51,14 @@ require.config({
         'angularSortable': {
             'exports': 'angularSortable',
             'deps': [
-                     'angular'
+                     'angular',
+                     'jquery'
+                     ]
+        },
+        'jqueryUI': {
+            'exports': 'jqueryUI',
+            'deps': [
+                     'jquery'
                      ]
         }
     }

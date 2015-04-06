@@ -2,6 +2,7 @@ define([
         'angular',
         'jquery',
         'jqueryUI',
+        'angularAnimate',
         'angularUIRouter',
         'angularPostMessage',
         'angularSortable',
@@ -17,6 +18,7 @@ define([
 	var app = angular.module('app', [
 	                                 'ui.router',
 	                                 'ui.sortable',
+	                                 'ngAnimate',
 	                                 'ngPostMessage',
 	                                 'ConfigService',
 	                                 'ProjectService',
@@ -40,6 +42,12 @@ define([
             );
         };
     });
+	
+	app.filter('sanitizeHTML', ['$sce', function($sce) {
+	    return function(htmlCode) {
+	        return $sce.trustAsHtml(htmlCode);
+	    };
+	}]);
 	
 	app.init = function() {
 		angular.bootstrap(document, ['app']);

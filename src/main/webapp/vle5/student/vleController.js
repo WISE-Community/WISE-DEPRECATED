@@ -15,6 +15,7 @@ define(['app'],
         this.layoutLogic = ConfigService.layoutLogic;
         this.globalTools = ['hideNavigation', 'showNavigation', 'home', 'sign out'];
         this.currentNode = null;
+        this.isPortfolioVisible = false;
         
         $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
@@ -56,6 +57,15 @@ define(['app'],
         };
         
         this.updateLayout();
+        
+        this.showPortfolio = function() {
+            this.isPortfolioVisible = true;
+        };
+        
+
+        this.hidePortfolio = function() {
+            this.isPortfolioVisible = false;
+        };
 
         this.globalToolButtonClicked = function(globalToolName) {
             if (globalToolName === 'hideNavigation') {
