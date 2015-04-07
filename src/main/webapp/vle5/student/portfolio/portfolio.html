@@ -1,6 +1,6 @@
 <link href='vle5/student/portfolio/animation.css' rel="stylesheet"></link>
 <div id="portfolio" class={{vleController.layoutState}} ng-controller='PortfolioController as portfolioController'>
-	<div style='border: 1px dotted; resize: both; overflow: auto; background-color: aliceblue'>
+	<div style='border: 1px dotted; resize: both; background-color: aliceblue'>
 	   {{portfolioController.log()}}
 	   <input type='button' value='Portfolio' ng-click='portfolioController.showPortfolio()'></input>
         <input type='button' value='My Work' ng-click='portfolioController.showMyWork()'></input>
@@ -33,7 +33,13 @@
         <div class="animate-switch" ng-switch-when='myWork'>
             <select ng-model="selection" ng-options="applicationNode.title for applicationNode in portfolioController.applicationNodes">
             </select>
-            <div ng-bind-html='portfolioController.showStudentWorkByNodeId(selection.id) | sanitizeHTML'></div>
+            <div 
+            
+            data-drag='true'
+            data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
+            jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioController.dragStartCallback(selection.id, selection.type)'}"
+                 ng-bind-html='portfolioController.showStudentWorkByNodeId(selection.id) | sanitizeHTML'>
+            </div>
         </div>
 		
 	</div>

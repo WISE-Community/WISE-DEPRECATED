@@ -3,7 +3,7 @@ require.config({
     paths: {
         'angular': 'lib/angular/angular',
         'angularAnimate': 'lib/angular/angularAnimate/angular-animate.min',
-        'angularPostMessage': 'lib/angular/angularPostMessage/angular-post-message',
+        'angularDragDrop': 'lib/angular/angularDragDrop/angular-dragdrop.min',
         'angularSortable': 'lib/angular/angularSortable/angular-sortable',
         'angularUIRouter': 'lib/angular/angularUIRouter/angular-ui-router.min',
         'app': 'student/app',
@@ -33,27 +33,28 @@ require.config({
             'exports': 'angularAnimate',
             'deps': [
                     'angular',
-                    'jquery'
+                    'jqueryUI'
                     ]
         },
-        'angularUIRouter': {
-            'exports': 'angularUIRouter',
+        'angularDragDrop': {
+            'exports': 'angularDragDrop',
             'deps': [
-                    'angular'
-                    ]
-        },
-        'angularPostMessage': {
-            'exports': 'angularPostMessage',
-            'deps': [
-                    'angular'
+                    'angular',
+                    'jqueryUI'
                     ]
         },
         'angularSortable': {
             'exports': 'angularSortable',
             'deps': [
                      'angular',
-                     'jquery'
+                     'jqueryUI'
                      ]
+        },
+        'angularUIRouter': {
+            'exports': 'angularUIRouter',
+            'deps': [
+                    'angular'
+                    ]
         },
         'jqueryUI': {
             'exports': 'jqueryUI',

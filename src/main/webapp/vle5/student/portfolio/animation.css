@@ -1,7 +1,6 @@
 .animate-switch-container {
   position:relative;
   height:400px;
-  overflow:hidden;
 }
 
 .animate-switch {
@@ -21,9 +20,9 @@
 
 .animate-switch.ng-leave.ng-leave-active,
 .animate-switch.ng-enter {
-  top:-50px;
+  opacity: 0;
 }
 .animate-switch.ng-leave,
 .animate-switch.ng-enter.ng-enter-active {
-  top:0;
+  opacity: 1;
 }

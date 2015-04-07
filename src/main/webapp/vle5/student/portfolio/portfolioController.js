@@ -8,7 +8,6 @@ define(['app'], function(app) {
                 PortfolioService,
                 ProjectService,
                 StudentDataService) {
-        console.log('portfolioController');
         
         this.viewType = 'portfolio'; // [portfolio, myWork]
         this.portfolio = null;
@@ -43,13 +42,20 @@ define(['app'], function(app) {
             this.viewType = 'myWork';
         };
         
+        this.dragStartCallback = function(event, ui, nodeId, nodeType) {
+            $(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
+            $(ui.helper.context).data('importWorkNodeType', nodeType);
+        };
+        
         this.log = function() {
-            console.log('hiroki');
+        };
+        
+        this.getLatestNodeStateByNodeId = function(nodeId) {
+            return StudentDataService.getLatestNodeStateByNodeId(nodeId);
         };
         
         this.showStudentWorkByNodeId = function(nodeId) {
             var result = null;
-            console.log('showStudentWorkByNodeId, nodeId: ' + nodeId);
             var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(nodeId);
             if (latestNodeState != null) {
                 var studentWorkHTML = OpenResponseService.getStudentWorkAsHTML(latestNodeState);
