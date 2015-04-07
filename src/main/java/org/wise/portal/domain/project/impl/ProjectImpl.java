@@ -160,6 +160,9 @@ public class ProjectImpl implements Project {
     @Transient
 	private static final String COLUMN_NAME_MAX_TOTAL_ASSETS_SIZE = "maxTotalAssetsSize";
 
+    @Transient
+    private static final String COLUMN_NAME_WISE_VERSION = "wiseVersion";
+
 	@Transient
 	public ProjectInfo projectinfo = new ProjectInfoImpl();
 	
@@ -236,6 +239,9 @@ public class ProjectImpl implements Project {
 
     @Column(name = ProjectImpl.COLUMN_NAME_MAX_TOTAL_ASSETS_SIZE, nullable = true)
     protected Long maxTotalAssetsSize;
+
+    @Column(name = ProjectImpl.COLUMN_NAME_WISE_VERSION, nullable = true)
+    protected Integer wiseVersion;
     
 	/**
 	 * @see org.wise.portal.domain.project.Project#getCurnit()
@@ -659,4 +665,14 @@ public class ProjectImpl implements Project {
 			return result;
 		}
 	}
+
+    @Override
+    public Integer getWISEVersion() {
+        return this.wiseVersion;
+    }
+
+    @Override
+    public void setWISEVersion(Integer wiseVersion) {
+        this.wiseVersion = wiseVersion;
+    }
 }

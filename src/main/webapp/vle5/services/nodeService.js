@@ -71,7 +71,11 @@ define(['angular', 'configService'], function(angular, configService) {
                     
                     var studentWork = StudentDataService.getLatestStudentWorkForNodeAsHTML(nodeId);
                     
-                    contentString = contentString.replace(regex, studentWork);
+                    if (studentWork != null) {
+                        contentString = contentString.replace(regex, studentWork);
+                    } else {
+                        contentString = contentString.replace(regex, '');
+                    }
                     
                     content = JSON.parse(contentString);
                 } else if (typeof content === 'string') {
@@ -87,7 +91,11 @@ define(['angular', 'configService'], function(angular, configService) {
                         
                         var studentWork = StudentDataService.getLatestStudentWorkForNodeAsHTML(nodeId);
                         
-                        content = content.replace(regex, studentWork);
+                        if (studentWork != null) {
+                            content = content.replace(regex, studentWork);
+                        } else {
+                            content = content.replace(regex, '');
+                        }
                     }
                 }
             }

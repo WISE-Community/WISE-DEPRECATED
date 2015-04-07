@@ -316,6 +316,7 @@
         curnit_fk bigint,
         metadata_fk bigint unique,
         run_fk bigint unique,
+        wiseVersion integer,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

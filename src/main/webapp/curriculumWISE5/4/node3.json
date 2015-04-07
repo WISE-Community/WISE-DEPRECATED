@@ -1,6 +1,6 @@
 {
     "style": "body { background-color: red }",
-    "prompt": "Step 3 Prompt<br><div style='border:1px dotted red'>{{work|1.1}}</div>",
+    "prompt": "Step 3 Prompt<br>This is your work from step 1.1: {{work|1.1}}",
     "importWork": {
         "nodeId": "node1"
     }

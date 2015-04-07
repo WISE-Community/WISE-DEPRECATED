@@ -94,19 +94,29 @@ define(['angular', 'configService'], function(angular, configService) {
         };
         
         this.retrieveStudentData = function() {
-            var getStudentDataUrl = ConfigService.getConfigParam('getStudentDataUrl');
-            
-            return $http.get(getStudentDataUrl).then(angular.bind(this, function(result) {
-                this.studentData = result.data;
-                var nodeVisits = this.getNodeVisits();
-                var latestNodeVisit = this.getLatestNodeVisit();
-                
-                this.loadStudentNodes();
-                
-                //this.updateCurrentNode(latestNodeVisit);
-                this.populateHistories(nodeVisits);
-                this.updateNodeStatuses();
-                
+            var studentDataURL = ConfigService.getConfigParam('studentDataURL');
+            var runId = ConfigService.getConfigParam('runId');
+            var workgroupId = ConfigService.getWorkgroupId();
+            var httpParams = {};
+            httpParams.url = studentDataURL;
+            httpParams.method = 'GET';
+            var params = {};
+            params.userId = workgroupId;
+            params.runId = runId;
+            httpParams.params = params;
+            return $http(httpParams).then(angular.bind(this, function(result) {
+                var vleStates = result.data.vleStates;
+                if (vleStates != null) {
+                    this.studentData = vleStates[0];
+                    var nodeVisits = this.getNodeVisits();
+                    var latestNodeVisit = this.getLatestNodeVisit();
+                    
+                    this.loadStudentNodes();
+                    
+                    //this.updateCurrentNode(latestNodeVisit);
+                    this.populateHistories(nodeVisits);
+                    this.updateNodeStatuses();
+                }
                 return this.studentData;
             }));
         };

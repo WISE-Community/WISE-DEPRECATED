@@ -410,7 +410,7 @@ public class StudentDataController {
 								if (nodeList.size() == 0) {
 									nodeList = vleService.getNodesByRunId(runIdStr);
 								}
-								nodeVisitsJSON = getNodeVisitsForStudent(nodeList,nodeTypesList,userInfo, getAllWork, getRevisions);
+								nodeVisitsJSON = getNodeVisitsForStudent(nodeList, nodeTypesList, userInfo, run, getAllWork, getRevisions);
 
 								//save this data to cache for quicker access next time
 								if (cachedWork == null) {
@@ -443,9 +443,31 @@ public class StudentDataController {
 							 */
 							nodeVisitsJSON.put("userName", new Long(userId));
 							nodeVisitsJSON.put("userId", new Long(userId));
-							nodeVisitsJSON.put("visitedNodes", new JSONArray());
+							String nodeVisitKeyName = "visitedNodes";  // used in WISE4
+							if (run != null) {
+							    org.wise.portal.domain.project.Project project = run.getProject();
+							    if (project != null) {
+							        Integer wiseVersion = project.getWISEVersion();
+							        if (wiseVersion != null && wiseVersion == 5) {
+							            nodeVisitKeyName = "nodeVisits";  // used in WISE5
+							        }
+							    }
+							}
+							nodeVisitsJSON.put(nodeVisitKeyName, new JSONArray());
 						}
-						workgroupNodeVisitsJSON.append("vle_states", nodeVisitsJSON);
+						String vleStatesKeyName = "vle_states"; // used in WISE4
+                        if (run != null) {
+                            org.wise.portal.domain.project.Project project = run.getProject();
+                            if (project != null) {
+                                Integer wiseVersion = project.getWISEVersion();
+                                if (wiseVersion != null && wiseVersion == 5) {
+                                    vleStatesKeyName = "vleStates";  // used in WISE5
+                                }
+                            }
+                        }
+						
+						workgroupNodeVisitsJSON.append(vleStatesKeyName, nodeVisitsJSON);
+						//workgroupNodeVisitsJSON.append("vle_states", nodeVisitsJSON);
 					}
 					response.getWriter().write(workgroupNodeVisitsJSON.toString());
 				}
@@ -476,7 +498,7 @@ public class StudentDataController {
 	 * @throws JSONException
 	 */
 	private JSONObject getNodeVisitsForStudent(List<Node> nodeList,
-			List<String> nodeTypesList, UserInfo userInfo, boolean getAllWork, boolean getRevisions) throws JSONException {
+			List<String> nodeTypesList, UserInfo userInfo, Run run, boolean getAllWork, boolean getRevisions) throws JSONException {
 		JSONObject nodeVisitsJSON = new JSONObject();
 		nodeVisitsJSON.put("userName", userInfo.getWorkgroupId());
 		nodeVisitsJSON.put("userId", userInfo.getWorkgroupId());
@@ -537,7 +559,20 @@ public class StudentDataController {
 							//add stepWorkId and visitPostTime attributes to the json obj
 							nodeVisitJSON.put("stepWorkId", stepWorkId);
 							nodeVisitJSON.put("visitPostTime", stepWork.getPostTime().getTime());
-							nodeVisitsJSON.append("visitedNodes", nodeVisitJSON);
+							//nodeVisitsJSON.append("visitedNodes", nodeVisitJSON);
+							
+							
+	                        String nodeVisitKeyName = "visitedNodes";  // used in WISE4
+	                        if (run != null) {
+	                            org.wise.portal.domain.project.Project project = run.getProject();
+	                            if (project != null) {
+	                                Integer wiseVersion = project.getWISEVersion();
+	                                if (wiseVersion != null && wiseVersion == 5) {
+	                                    nodeVisitKeyName = "nodeVisits";  // used in WISE5
+	                                }
+	                            }
+	                        }
+	                        nodeVisitsJSON.append(nodeVisitKeyName, nodeVisitJSON);
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -601,7 +636,20 @@ public class StudentDataController {
 							//add stepWorkId and visitPostTime attributes to the json obj
 							nodeVisitJSON.put("stepWorkId", stepWorkId);
 							nodeVisitJSON.put("visitPostTime", stepWork.getPostTime().getTime());
-							nodeVisitsJSON.append("visitedNodes", nodeVisitJSON);
+							//nodeVisitsJSON.append("visitedNodes", nodeVisitJSON);
+							
+							String nodeVisitKeyName = "visitedNodes";  // used in WISE4
+							if (run != null) {
+							    org.wise.portal.domain.project.Project project = run.getProject();
+							    if (project != null) {
+							        Integer wiseVersion = project.getWISEVersion();
+							        if (wiseVersion != null && wiseVersion == 5) {
+							            nodeVisitKeyName = "nodeVisits";  // used in WISE5
+							        }
+							    }
+							}
+							nodeVisitsJSON.append(nodeVisitKeyName, nodeVisitJSON);
+
 							stepsRetrieved.add(nodeId);
 						}
 					}					
