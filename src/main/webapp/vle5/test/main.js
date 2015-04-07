@@ -4,8 +4,9 @@ require.config({
         'angular': 'angular',
         'angularUIRouter': 'angular-ui-router',
         'app': 'app',
-        'testController': 'TestController',
-        'TestService': 'TestService'
+        'childService': 'ChildService',
+        'parentService': 'ParentService',
+        'testController': 'TestController'
     },
     shim: {
         'angular': {

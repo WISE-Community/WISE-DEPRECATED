@@ -15,10 +15,11 @@ define(['angular', 'angularUIRouter'], function(angular, angularUIRouter) {
         }];
     };
     
-    app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', function($urlRouterProvider, $stateProvider, $controllerProvider) {
+    app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', '$provide', function($urlRouterProvider, $stateProvider, $controllerProvider, $provide) {
         $urlRouterProvider.otherwise('/vle');
         
         app.$controllerProvider = $controllerProvider;
+        app.$provide = $provide;
         
         $stateProvider
             .state('vle', {
