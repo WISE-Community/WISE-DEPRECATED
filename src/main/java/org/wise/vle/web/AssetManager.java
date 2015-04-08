@@ -56,6 +56,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -118,10 +119,8 @@ public class AssetManager {
 			//the user is a student
 
 			if(command.equals("assetList")) {
-				//we are going to list the 
 				User user = ControllerUtil.getSignedInUser();
 
-				//get the run
 				String runId = request.getParameter("runId");
 				Run run = null;
 				try {
@@ -131,21 +130,53 @@ public class AssetManager {
 				} catch (ObjectNotFoundException e) {
 					e.printStackTrace();
 				}
+				
+				String workgroupsParam = request.getParameter("workgroups");
+				if (workgroupsParam != null) {
+				    // this is a request from the teacher of the run or admin who wants to see the run's students' assets
+	                if (user.isAdmin() || runService.hasRunPermission(run, user, BasePermission.READ)) {  // verify that user is the owner of the run
+	                    String[] workgroupIds = workgroupsParam.split(":");
+	                    JSONArray workgroupAssetLists = new JSONArray();
+	                    for (int i = 0; i < workgroupIds.length; i++) {
+	                        String workgroupId = workgroupIds[i];
+	                        JSONObject workgroupAsset = new JSONObject();
+	                        try {
+                                //get the directory name for the workgroup for this run
+                                String dirName = run.getId()+"/"+workgroupId+"/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
 
-				//get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
-				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
-				Long workgroupId = workgroup.getId();
+                                //get the student uploads base directory path
+                                String path = wiseProperties.getProperty("studentuploads_base_dir");
+                                //get a list of file names in this workgroup's upload directory
+                                String assetList = getAssetList(path, dirName);
+                                workgroupAsset.put("workgroupId", workgroupId);
+                                workgroupAsset.put("assets", assetList);
+                                workgroupAssetLists.put(workgroupAsset);
+                            } catch (NumberFormatException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+	                    }
+                        response.getWriter().write(workgroupAssetLists.toString());
+	                }
+				} else {
+				    // this is a request from the student of the run who wants to see their assets
+				    List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
+				    Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
+				    Long workgroupId = workgroup.getId();
 
-				//get the directory name for the workgroup for this run
-				String dirName = run.getId()+"/"+workgroupId+"/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
+				    //get the directory name for the workgroup for this run
+				    String dirName = run.getId()+"/"+workgroupId+"/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
 
-				//get the student uploads base directory path
-				String path = wiseProperties.getProperty("studentuploads_base_dir");
+				    //get the student uploads base directory path
+				    String path = wiseProperties.getProperty("studentuploads_base_dir");
 
-				//get a list of file names in this workgroup's upload directory
-				String assetList = getAssetList(path, dirName);
-				response.getWriter().write(assetList);
+				    //get a list of file names in this workgroup's upload directory
+				    String assetList = getAssetList(path, dirName);
+				    response.getWriter().write(assetList);
+				}
 			} else if(command.equals("getSize")) {
 				User user = ControllerUtil.getSignedInUser();
 
