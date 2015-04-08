@@ -50,6 +50,19 @@ define(['angular'], function(angular) {
 		    return workgroupId;
 		};
 		
+		this.getPeriodId = function() {
+            var periodId = null;
+            var userInfo = this.getConfigParam('userInfo');
+            if (userInfo != null) {
+                var myUserInfo = userInfo.myUserInfo;
+                if (myUserInfo != null) {
+                    periodId = myUserInfo.periodId;
+                }
+            }
+            return periodId;
+        };
+        
+		
 		this.getRunId = function() { 
 			return this.getConfigParam('runId');
 		};

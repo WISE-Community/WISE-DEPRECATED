@@ -95,14 +95,12 @@ define(['angular', 'configService'], function(angular, configService) {
         
         this.retrieveStudentData = function() {
             var studentDataURL = ConfigService.getConfigParam('studentDataURL');
-            var runId = ConfigService.getConfigParam('runId');
-            var workgroupId = ConfigService.getWorkgroupId();
             var httpParams = {};
-            httpParams.url = studentDataURL;
             httpParams.method = 'GET';
+            httpParams.url = studentDataURL;
             var params = {};
-            params.userId = workgroupId;
-            params.runId = runId;
+            params.userId = ConfigService.getWorkgroupId();
+            params.runId = ConfigService.getRunId();
             httpParams.params = params;
             return $http(httpParams).then(angular.bind(this, function(result) {
                 var vleStates = result.data.vleStates;
@@ -112,12 +110,34 @@ define(['angular', 'configService'], function(angular, configService) {
                     var latestNodeVisit = this.getLatestNodeVisit();
                     
                     this.loadStudentNodes();
-                    
-                    //this.updateCurrentNode(latestNodeVisit);
                     this.populateHistories(nodeVisits);
                     this.updateNodeStatuses();
                 }
                 return this.studentData;
+            }));
+        };
+        
+        this.saveNodeVisitToServer = function(nodeVisit) {
+            var studentDataURL = ConfigService.getConfigParam('studentDataURL');
+            var httpParams = {};
+            httpParams.method = 'POST';
+            httpParams.url = studentDataURL;
+            httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+            var params = {};
+            params.userId = ConfigService.getWorkgroupId();
+            params.runId = ConfigService.getRunId();
+            params.periodId = ConfigService.getPeriodId();
+            params.data = JSON.stringify(nodeVisit);
+            params.nodeVisit = nodeVisit;
+            httpParams.data = $.param(params);
+            return $http(httpParams).then(angular.bind(this, function(result) {
+                var postNodeVisitResult = result.data;
+                var visitPostTime = postNodeVisitResult.visitPostTime;
+                var nodeVisitId = postNodeVisitResult.id;
+                
+                var nodeVisit = result.config.params.nodeVisit;
+                nodeVisit.id = nodeVisitId;
+                nodeVisit.visitPostTime = visitPostTime;
             }));
         };
         
@@ -550,11 +570,11 @@ define(['angular', 'configService'], function(angular, configService) {
         
         this.addNodeStateToNodeVisit = function(nodeState, nodeVisit) {
             if (nodeState != null && nodeVisit != null) {
-                var nodeStates = nodeVisit.nodeStates;
-                
-                if(nodeStates != null) {
-                    nodeStates.push(nodeState);
+                if (nodeVisit.nodeStates == null) {
+                    nodeVisit.nodeStates = [];
                 }
+                nodeVisit.nodeStates.push(nodeState);
+                this.saveNodeVisitToServer(nodeVisit);
             }
         };
         
