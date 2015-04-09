@@ -138,14 +138,25 @@ define(['app'], function(app) {
         
         this.startCallback = function(event, ui, title) {
             console.log('You started dragging');
-          };
+        };
         
         this.dropCallback = angular.bind(this, function(event, ui, title, $index) {
             var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
             var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
-            var populatedNodeState = OpenResponseService.populateNodeState(importWorkNodeState, importWorkNodeType);
-            
-            this.setStudentWork(populatedNodeState);
+            if (importWorkNodeState != null && importWorkNodeType != null) {
+                var populatedNodeState = OpenResponseService.populateNodeState(importWorkNodeState, importWorkNodeType);
+
+                // if student already has work, prepend it
+                var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                if (latestNodeState != null) {
+                    var latestResponse = latestNodeState.response;
+                    if (latestResponse != null) {
+                        populatedNodeState.response = latestResponse + populatedNodeState.response;
+                    }
+                }
+                
+                this.setStudentWork(populatedNodeState);
+            }
         });
         
     });

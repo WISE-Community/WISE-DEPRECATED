@@ -25,16 +25,12 @@ nodeContent end
 Open Response HTML
 <div ng-controller='OpenResponseController as openResponseController'>
 <div id='prompt' compile='openResponseController.nodeContent.prompt'></div>
-<div class="btn btn-primary" data-drag="true" 
-    data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
-    jqyoui-draggable="{animate: true, placeholder: 'keep', onStart:'openResponseController.startCallback(item, $index)'}">hello</div>
-<div data-drop="true" 
-    jqyoui-droppable="{onDrop: 'openResponseController.dropCallback(item, $index)'}">
 <textarea id='responseTextarea'
     ng-model='openResponseController.studentResponse'
     ng-disabled='openResponseController.isDisabled' 
-    ng-change='openResponseController.studentResponseChanged()'></textarea>
-</div>
+    ng-change='openResponseController.studentResponseChanged()'
+    data-drop="true" 
+    jqyoui-droppable="{onDrop: 'openResponseController.dropCallback(item, $index)'}"></textarea>
 <button id='saveButton' ng-click='openResponseController.saveButtonClicked()' ng-disabled='openResponseController.isDisabled'>Save</button>
 <button id='submitButton' ng-click='openResponseController.submitButtonClicked()' ng-show='openResponseController.nodeContent.showSubmitButton' ng-disabled='openResponseController.isDisabled'>Submit</button>
 </div>

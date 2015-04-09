@@ -6,6 +6,7 @@ require.config({
         'angularDragDrop': 'lib/angular/angularDragDrop/angular-dragdrop.min',
         'angularSortable': 'lib/angular/angularSortable/angular-sortable',
         'angularUIRouter': 'lib/angular/angularUIRouter/angular-ui-router.min',
+        'angularWebSocket': 'lib/angular/angularWebSocket/angular-websocket.min',
         'app': 'student/app',
         'configService': 'services/configService',
         'htmlController': 'nodes/html/htmlController',
@@ -23,7 +24,8 @@ require.config({
         'portfolioService': 'services/portfolioService',
         'projectService': 'services/projectService',
         'studentDataService': 'services/studentDataService',
-        'vleController': 'student/vleController'
+        'vleController': 'student/vleController',
+        'webSocketService': 'services/webSocketService'
     },
     shim: {
         'angular': {
@@ -52,6 +54,12 @@ require.config({
         },
         'angularUIRouter': {
             'exports': 'angularUIRouter',
+            'deps': [
+                    'angular'
+                    ]
+        },
+        'angularWebSocket': {
+            'exports': 'angularWebSocket',
             'deps': [
                     'angular'
                     ]

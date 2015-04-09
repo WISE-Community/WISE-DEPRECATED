@@ -144,6 +144,21 @@ define(['app'],
             }
         };
         
+        this.portfolioDragStartCallback = function(event, ui) {
+            console.log('vleController.portfolioDragStartCallback');
+            //$(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
+            //$(ui.helper.context).data('importWorkNodeType', nodeType);
+        };
+        
+        this.portfolioDropCallback = angular.bind(this, function(event, ui) {
+            console.log('vleController.portfolioDropCallback');
+            //var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
+            //var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
+            //var populatedNodeState = OpenResponseService.populateNodeState(importWorkNodeState, importWorkNodeType);
+            
+            //this.setStudentWork(populatedNodeState);
+        });
+
         var nodeId = null;
         var stateParams = null;
         var stateParamNodeId = null;

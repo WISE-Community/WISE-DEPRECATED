@@ -564,20 +564,20 @@ public class InformationController {
 			Integer postLevel = run.getPostLevel();
 
 			//get the websocket base url e.g. ws://wise4.berkeley.edu:8080
-			String webSocketBaseUrl = wiseProperties.getProperty("webSocketBaseUrl");
+			String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
 			
-			if(webSocketBaseUrl == null) {
+			if(webSocketBaseURL == null) {
 				/*
 				 * if the websocket base url was not provided in the portal properties
 				 * we will use the default websocket base url.
 				 * e.g.
 				 * ws://localhost:8080/wise
 				 */
-				webSocketBaseUrl = wiseBaseURL.replace("http", "ws");
+				webSocketBaseURL = wiseBaseURL.replace("http", "ws");
 			}
 			
 			//get the url for websocket connections
-			String webSocketUrl = webSocketBaseUrl + "/websocket.html";
+			String webSocketURL = webSocketBaseURL + "/websocket.html";
 			
 			//get the url for sending and receiving student statuses
 			String studentStatusUrl = wiseBaseURL + "/studentStatus.html";
@@ -607,7 +607,7 @@ public class InformationController {
 				config.put("runInfo", run.getInfo());
 				config.put("isRealTimeEnabled", true);  // make this run-specific setting
 				config.put("hostName", hostName);
-				config.put("webSocketUrl", webSocketUrl);
+                config.put("webSocketURL", webSocketURL);   
 				config.put("studentStatusUrl", studentStatusUrl);
 				config.put("runStatusUrl", runStatusUrl);
 				

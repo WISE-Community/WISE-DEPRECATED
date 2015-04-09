@@ -40,12 +40,18 @@ define(['app'], function(app) {
                 StudentDataService.setCurrentNode(node);
             };
             
-            this.addItemToPortfolio = function() {
+            this.addNodeVisitItemToPortfolio = function() {
                 var currentNode = StudentDataService.getCurrentNode();
                 if (currentNode != null) {
-                    var portfolioItem = {};
-                    portfolioItem.nodeId = currentNode.id;
-                    PortfolioService.addItem(portfolioItem);
+                    var currentNodeId = currentNode.id;
+                    var currentNodeVisit = StudentDataService.getLatestNodeVisitByNodeId(currentNodeId)
+                    if (currentNodeVisit != null) {
+                        var portfolioItem = {};
+                        portfolioItem.nodeId = currentNode.id;
+                        portfolioItem.type = nodeVisit;
+                        portfolioItem.nodeVisitId = currentNodeVisit.id;
+                        PortfolioService.addItem(portfolioItem);
+                    }
                 }
             };
             

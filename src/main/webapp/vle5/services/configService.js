@@ -62,6 +62,9 @@ define(['angular'], function(angular) {
             return periodId;
         };
         
+        this.getWebSocketURL = function() {
+          return this.getConfigParam('webSocketURL');  
+        };
 		
 		this.getRunId = function() { 
 			return this.getConfigParam('runId');

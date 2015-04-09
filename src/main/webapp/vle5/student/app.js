@@ -4,15 +4,17 @@ define([
         'jqueryUI',
         'angularAnimate',
         'angularDragDrop',
-        'angularUIRouter',
         'angularSortable',
+        'angularUIRouter',
+        'angularWebSocket',
         'configService',
         'projectService',
         'nodeApplicationService',
         'nodeService',
         'openResponseService',
         'portfolioService',
-        'studentDataService'
+        'studentDataService',
+        'webSocketService'
         ], function(angular, $) {
 
 	var app = angular.module('app', [
@@ -20,13 +22,15 @@ define([
 	                                 'ui.sortable',
 	                                 'ngAnimate',
 	                                 'ngDragDrop',
+	                                 'ngWebSocket',
 	                                 'ConfigService',
 	                                 'ProjectService',
 	                                 'NodeApplicationService',
 	                                 'NodeService',
 	                                 'OpenResponseService',
 	                                 'PortfolioService',
-	                                 'StudentDataService'
+	                                 'StudentDataService',
+	                                 'WebSocketService'
 	                                 ]);
 	
 	app.directive('compile', function($compile) {
@@ -88,6 +92,9 @@ define([
                     },
                     studentData: function(StudentDataService, config, project) {
                         return StudentDataService.retrieveStudentData();
+                    },
+                    webSocket: function(WebSocketService, config) {
+                        return WebSocketService.initialize();
                     }
                 }              
             })

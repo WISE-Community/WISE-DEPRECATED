@@ -116,10 +116,10 @@ View.prototype.startWebSocketConnection = function() {
 	this.webSocketMessageQueue = [];
 	
 	//get the web socket url
-	var webSocketUrl = this.getConfig().getConfigParam('webSocketUrl');
+	var webSocketURL = this.getConfig().getConfigParam('webSocketURL');
 	
 	//add the parameters to the web socket url
-	var host = webSocketUrl + '?runId=' + runId + '&periodId=' + periodId + '&workgroupId=' + workgroupId;
+	var host = webSocketURL + '?runId=' + runId + '&periodId=' + periodId + '&workgroupId=' + workgroupId;
 
 	this.socket = null;
 	

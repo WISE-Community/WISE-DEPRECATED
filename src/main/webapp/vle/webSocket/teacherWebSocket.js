@@ -10,10 +10,10 @@ View.prototype.startWebSocketConnection = function() {
 	var workgroupId = this.getUserAndClassInfo().getWorkgroupId();
 	
 	//get the web socket url
-	var webSocketUrl = this.getConfig().getConfigParam('webSocketUrl');
+	var webSocketURL = this.getConfig().getConfigParam('webSocketURL');
 	
 	//add the parameter to the websocket url
-	var host = webSocketUrl + '?runId=' + runId + '&workgroupId=' + workgroupId;
+	var host = webSocketURL + '?runId=' + runId + '&workgroupId=' + workgroupId;
 	
 	this.socket = null;
 	
