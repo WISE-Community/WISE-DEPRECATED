@@ -18,11 +18,11 @@ define(['app'], function(app) {
                     }
                     
                     if (this.nodeType === 'OpenResponse') {
-                        this.nodeHTMLPath = 'vle5/nodes/openResponse/index.html';
+                        this.nodeHTMLPath = 'wise5/nodes/openResponse/index.html';
                     } else if (this.nodeType === 'HTML') {
-                        this.nodeHTMLPath = 'vle5/nodes/html/index.html';
+                        this.nodeHTMLPath = 'wise5/nodes/html/index.html';
                     } else if (this.nodeType === 'Planning') {
-                        this.nodeHTMLPath = 'vle5/nodes/planning/index.html';
+                        this.nodeHTMLPath = 'wise5/nodes/planning/index.html';
                     }
                 }
             };

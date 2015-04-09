@@ -78,7 +78,7 @@ define([
     		.state('root', {
                 url: '',
                 abstract: true,
-                templateUrl: 'vle5/student/vle.html',
+                templateUrl: 'wise5/vle/vle.html',
                 resolve: {
                     vleController: app.loadController('vleController'),
                     portfolioController: app.loadController('portfolioController'),
@@ -102,13 +102,13 @@ define([
                 url: '/vle/:nodeId',
                 views: {
                     'navigationView': {
-                        templateUrl: 'vle5/student/navigation/navigation.html',
+                        templateUrl: 'wise5/vle/navigation/navigation.html',
                         resolve: {
                             navigationController: app.loadController('navigationController')
                         }
                     },
                     'nodeView': {
-                        templateUrl: 'vle5/student/node/node.html',
+                        templateUrl: 'wise5/vle/node/node.html',
                         resolve: {
                             nodeController: app.loadController('nodeController'),
                             openResponseController: app.loadController('openResponseController'),
