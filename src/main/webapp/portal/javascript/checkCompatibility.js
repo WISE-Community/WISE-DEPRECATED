@@ -668,16 +668,11 @@ function checkContentFiltering() {
  * TODO: internationalize in a more standard way
  */
 function alertBrowserCompatibility() {
-	if (getBrowserName() != "Firefox" && getBrowserName() != "Chrome") {
+	if (getBrowserName() != "Firefox" && getBrowserName() != "Chrome" && getBrowserName() != "Safari") {
 		var userLang = getBrowserLanguage();
-		var useFirefoxMsg = "WISE has detected that you are not using Firefox or Chrome.\n\n" +
+		var useFirefoxMsg = "WISE has detected that you are not using Chrome, Firefox or Safari.\n\n" +
 				"Some things may not work properly. For best results, please use " +
-				"Firefox 3.5 or newer or the latest version of Chrome.";
-		if (userLang == "ja") {
-			useFirefoxMsg = "Firefox\u610f\u5916\u306e\u30d6\u30e9\u30a6\u30b6\u30fc\u306f\u30b5\u30dd\u30fc\u30c8\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002Firefox 3.5\u4ee5\u4e0a\u3092\u304a\u4f7f\u3044\u304f\u3060\u3055\u3044\u3002";
-		} else if (userLang == "zh_TW") {
-			useFirefoxMsg = "Firefox\u610f\u5916\u306e\u30d6\u30e9\u30a6\u30b6\u30fc\u306f\u30b5\u30dd\u30fc\u30c8\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002Firefox 3.5\u4ee5\u4e0a\u3092\u304a\u4f7f\u3044\u304f\u3060\u3055\u3044\u3002";
-		}
+				"the latest version of Chrome, Firefox, or Safari.";
 		alert(useFirefoxMsg);
 	};
 }
