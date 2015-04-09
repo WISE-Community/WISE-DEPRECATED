@@ -158,7 +158,21 @@ Branching.prototype.getPathToVisit = function() {
 				}
 			}
 		}
-	}	
+	} else if (branchingFunction === 'random') {
+	    // get the paths
+	    var paths = this.content.paths;
+	    
+	    if (paths != null) {
+	        //  get the number of possible paths
+	        var numPaths = paths.length;
+	        
+	        // choose one of the paths at random
+	        var pathIndex = Math.floor(Math.random() * numPaths);
+	        
+	        // get the randomly chosen path
+	        pathToVisit = this.content.paths[pathIndex];
+	    }
+	}
 
 	return pathToVisit;
 };
