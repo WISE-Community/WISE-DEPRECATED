@@ -1,0 +1,30 @@
+<style type='text/css'>
+    table {
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+    table td, table th {
+        border: 1px solid black;
+    }
+</style>
+
+<div>
+{{ studentProgress.title }}
+<br>
+
+<table>
+    <tr>
+        <th>Team</th>
+        <th>Latest Step</th>
+        <th>Time Spent</th>
+        <th>Project Completion</th>     
+    </tr>
+    <tr ng-repeat="workgroup in studentProgress.workgroups" ng-click="studentProgress.studentRowClicked(workgroup)">
+        <td>{{workgroup.userName}}</td>
+        <td>{{studentProgress.getCurrentStepForWorkgroupId(workgroup.workgroupId)}}</td>
+        <td></td>
+        <td>{{studentProgress.getStudentProjectCompletion(workgroup.workgroupId)}}</td>
+    </tr>
+</table>
+
+</div>

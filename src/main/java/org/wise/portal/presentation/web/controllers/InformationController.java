@@ -617,7 +617,7 @@ public class InformationController {
 				
 				// add userInfo if this is a WISE5 run
 				Project project = run.getProject();
-				Integer wiseVersion = project.getWISEVersion();
+				Integer wiseVersion = project.getWiseVersion();
 				if (wiseVersion != null && wiseVersion == 5) {
 	                JSONObject userInfo = getUserInfo(request, response);
 	                config.put("userInfo", userInfo);

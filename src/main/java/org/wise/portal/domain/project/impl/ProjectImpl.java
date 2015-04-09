@@ -667,7 +667,7 @@ public class ProjectImpl implements Project {
 	}
 
     @Override
-    public Integer getWISEVersion() {
+    public Integer getWiseVersion() {
         return this.wiseVersion;
     }
 

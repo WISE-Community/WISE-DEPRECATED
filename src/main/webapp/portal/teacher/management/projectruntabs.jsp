@@ -122,10 +122,10 @@
 	                  								<!--  
 	                  									<li style="font-size:1.1em; padding-bottom:3px;"><a class="classroomManager" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=classroomManager"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span>Classroom Manager</span></a></li>
 	                  									-->
-	                  									<li style="font-size:1.1em; padding-bottom:3px;"><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
+	                  									<li style="font-size:1.1em; padding-bottom:3px;"><a class="classroomMonitor" wiseVersion="${run.project.wiseVersion == null ? 4 : run.project.wiseVersion}" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
 	                  								</c:when>
 	                  								<c:otherwise>
-	                  									<li style="font-size:1.1em; padding-bottom:3px;"><a class="classroomMonitor" title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor" style="display:none"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
+	                  									<li style="font-size:1.1em; padding-bottom:3px;"><a class="classroomMonitor" wiseVersion="${run.project.wiseVersion == null ? 4 : run.project.wiseVersion}"  title="<spring:message code="teacher.management.projectruntabs.monitorTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=monitor" style="display:none"><img class="icon" alt="monitor" src="${contextPath}/<spring:theme code="bar_chart"/>" /><span><spring:message code="teacher.management.projectruntabs.gradingTool"/></span></a></li>
 	                  								</c:otherwise>
 	                  							</c:choose>
 	                  						</sec:accesscontrollist>
@@ -501,7 +501,11 @@
 	$('.classroomMonitor').on('click',function(){
 		var settings = $(this).attr('id');
 		var title = $(this).attr('title');
-		var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor.html?" + settings;
+		var wiseVersion = $(this).attr('wiseVersion');
+        var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor.html?" + settings;
+		if (wiseVersion != null && wiseVersion == 5) {
+	         path = "${contextPath}/classroomMonitor.html?" + settings;
+		}
 		window.open(path);
 	});
 	

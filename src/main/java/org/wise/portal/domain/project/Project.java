@@ -272,7 +272,7 @@ public interface Project extends Persistable {
 	 * Returns the WISE version of this project [4, 5, etc]
 	 * @return integer representing WISE version
 	 */
-	public Integer getWISEVersion();
+	public Integer getWiseVersion();
 	
 	/**
 	 * Sets the WISE version of this project [4, 5, etc]

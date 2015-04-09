@@ -180,7 +180,7 @@ public class VLEController {
 		String contentUrl = curriculumBaseWWW + rawProjectUrl;
 
 		Project project = run.getProject();
-		Integer wiseVersion = project.getWISEVersion();
+		Integer wiseVersion = project.getWiseVersion();
 		if ( wiseVersion == null || wiseVersion == 4) {
 	        ModelAndView modelAndView = new ModelAndView("vle");
 	        modelAndView.addObject("run", run);

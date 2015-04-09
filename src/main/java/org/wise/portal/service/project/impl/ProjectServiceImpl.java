@@ -427,7 +427,7 @@ public class ProjectServiceImpl implements ProjectService {
 	public String generateStudentStartProjectUrlString(HttpServletRequest request,
 			Run run, Workgroup workgroup) {
 	    Project project = run.getProject();
-	    Integer wiseVersion = project.getWISEVersion();
+	    Integer wiseVersion = project.getWiseVersion();
 	    if (wiseVersion == null || wiseVersion == 4) {
 	        String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 	        return wiseBaseURL + "/student/vle/vle.html?runId=" + run.getId() + "&workgroupId=" + workgroup.getId();

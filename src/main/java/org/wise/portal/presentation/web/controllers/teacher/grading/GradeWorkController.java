@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -63,7 +64,7 @@ public class GradeWorkController {
 	@Autowired
 	Properties wiseProperties;
 
-	@RequestMapping(value={"/teacher/grading/gradework.html", "/teacher/classroomMonitor/classroomMonitor.html", "/teacher/classroomManager"})
+	@RequestMapping(value={"/classroomMonitor.html", "/teacher/grading/gradework.html", "/teacher/classroomMonitor/classroomMonitor.html", "/teacher/classroomManager"})
 	protected ModelAndView handleRequestInternal(
 			@RequestParam("runId") String runId,
 			HttpServletRequest request,
@@ -113,23 +114,38 @@ public class GradeWorkController {
 						getClassroomMonitorUrl += "?loadScriptsIndividually&permission=read";
 					}
 					
-					ModelAndView modelAndView = new ModelAndView("vle");
-					modelAndView.addObject("runId", runId);
-					modelAndView.addObject("run", run);
-					if ("monitor".equals(gradingType)) {
-						modelAndView.addObject("vleurl", getClassroomMonitorUrl);
-						modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
-					} else if("classroomManager".equals(gradingType)) {
-						String classroomManagerUrl = wiseBaseURL + "/vle5/classroomManager/index.html";
-						String classroomManagerConfigUrl = wiseBaseURL + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
-						modelAndView.addObject("vleurl", classroomManagerUrl);
-						modelAndView.addObject("vleConfigUrl", classroomManagerConfigUrl);
-					} else {
-						modelAndView.addObject("vleurl", getGradeWorkUrl);
-						modelAndView.addObject("vleConfigUrl", getGradingConfigUrl);
-					}
+					Project project = run.getProject();
+					Integer wiseVersion = null;
+					if (project != null) {
+					    wiseVersion = project.getWiseVersion();
+					} 
 					
-					return modelAndView;
+                    if (wiseVersion != null && wiseVersion == 5) {
+                        // WISE5 run
+                        ModelAndView modelAndView = new ModelAndView("classroomMonitor");
+                        modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
+                        return modelAndView;
+                    } else {
+                        // WISE4 run
+                        ModelAndView modelAndView = new ModelAndView("vle");
+                        modelAndView.addObject("runId", runId);
+                        modelAndView.addObject("run", run);
+                        if ("monitor".equals(gradingType)) {
+                            modelAndView.addObject("vleurl", getClassroomMonitorUrl);
+                            modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
+                        } else if("classroomManager".equals(gradingType)) {
+                            String classroomManagerUrl = wiseBaseURL + "/vle5/classroomManager/index.html";
+                            String classroomManagerConfigUrl = wiseBaseURL + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&requester=grading&getRevisions=" + getRevisions;
+                            modelAndView.addObject("vleurl", classroomManagerUrl);
+                            modelAndView.addObject("vleConfigUrl", classroomManagerConfigUrl);
+                        } else {
+                            modelAndView.addObject("vleurl", getGradeWorkUrl);
+                            modelAndView.addObject("vleConfigUrl", getGradingConfigUrl);
+                        }
+                        
+                        return modelAndView;                        
+                    }
+
 				} else {
 					return new ModelAndView(new RedirectView("../../accessdenied.html"));
 				}
