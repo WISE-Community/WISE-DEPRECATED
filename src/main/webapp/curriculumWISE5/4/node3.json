@@ -1,6 +1,8 @@
 {
     "style": "body { background-color: red }",
     "prompt": "Step 3 Prompt<br>This is your work from step 1.1: {{work|1.1}}",
+    "numColumns": 100,
+    "numRows": 5000,
     "importWork": {
         "nodeId": "node1"
     }

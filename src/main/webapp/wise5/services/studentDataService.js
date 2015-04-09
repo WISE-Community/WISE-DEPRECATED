@@ -119,26 +119,26 @@ define(['angular', 'configService'], function(angular, configService) {
         
         this.saveNodeVisitToServer = function(nodeVisit) {
             var studentDataURL = ConfigService.getConfigParam('studentDataURL');
-            var httpParams = {};
-            httpParams.method = 'POST';
-            httpParams.url = studentDataURL;
-            httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+            var httpConfig = {};
+            httpConfig.method = 'POST';
+            httpConfig.url = studentDataURL;
+            httpConfig.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
             var params = {};
             params.userId = ConfigService.getWorkgroupId();
             params.runId = ConfigService.getRunId();
             params.periodId = ConfigService.getPeriodId();
             params.data = JSON.stringify(nodeVisit);
             params.nodeVisit = nodeVisit;
-            httpParams.data = $.param(params);
-            return $http(httpParams).then(angular.bind(this, function(result) {
+            httpConfig.data = $.param(params);
+            return $http(httpConfig).then(angular.bind(this, function(nodeVisit, result) {
                 var postNodeVisitResult = result.data;
                 var visitPostTime = postNodeVisitResult.visitPostTime;
                 var nodeVisitId = postNodeVisitResult.id;
                 
-                var nodeVisit = result.config.params.nodeVisit;
+                //var nodeVisit = result.config.params.nodeVisit;
                 nodeVisit.id = nodeVisitId;
                 nodeVisit.visitPostTime = visitPostTime;
-            }));
+            }, nodeVisit));
         };
         
         this.loadStudentNodes = function() {

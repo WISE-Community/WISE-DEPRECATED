@@ -143,6 +143,21 @@ define(['app'], function(app) {
         this.dropCallback = angular.bind(this, function(event, ui, title, $index) {
             var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
             var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
+            var importPortfolioItem = $(ui.helper.context).data('importPortfolioItem');
+            if (importPortfolioItem != null) {
+                var nodeId = importPortfolioItem.nodeId;
+                var node = ProjectService.getNodeById(nodeId);
+                importWorkNodeType = node.type;
+
+                var nodeVisit = importPortfolioItem.nodeVisit;
+                var nodeStates = nodeVisit.nodeStates;
+                if (nodeStates !== null) {
+                    if (nodeStates.length > 0) {
+                        importWorkNodeState = nodeStates[nodeStates.length - 1];
+                    }
+                }
+                
+            }
             if (importWorkNodeState != null && importWorkNodeType != null) {
                 var populatedNodeState = OpenResponseService.populateNodeState(importWorkNodeState, importWorkNodeType);
 
@@ -156,7 +171,7 @@ define(['app'], function(app) {
                 }
                 
                 this.setStudentWork(populatedNodeState);
-            }
+            } 
         });
         
     });

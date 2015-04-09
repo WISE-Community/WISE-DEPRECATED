@@ -8,8 +8,15 @@
 	        <h3>My Portfolio</h3>
 			
 			Items:<br/>
-			<ul id="portfolioItems" ui-sortable="sortableOptions" ng-model="portfolioController.portfolio.items" ng-show="portfolioController.portfolio.items.length" ng-cloak>
-	            <li ng-repeat="item in portfolioController.portfolio.items track by $index">
+			<ul id="portfolioItems" 
+			    ui-sortable="sortableOptions" 
+			    ng-model="portfolioController.portfolio.items" 
+			    ng-show="portfolioController.portfolio.items.length" ng-cloak>
+	            <li ng-repeat="item in portfolioController.portfolio.items track by $index"
+	                data-drag='true'
+                    data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
+                    jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioController.portfolioItemDragStartCallback(item)'}"
+                 >
 	                <div class="panel panel-default">
 	                    <div class="panel-body">
 	                        <span class="portfolio-index"></span>
@@ -32,7 +39,7 @@
             <div 
             data-drag='true'
             data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
-            jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioController.dragStartCallback(selection.id, selection.type)'}"
+            jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioController.myWorkDragStartCallback(selection.id, selection.type)'}"
                  ng-bind-html='portfolioController.showStudentWorkByNodeId(selection.id) | sanitizeHTML'>
             </div>
         </div>

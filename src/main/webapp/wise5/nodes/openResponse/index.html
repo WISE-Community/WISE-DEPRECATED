@@ -26,6 +26,8 @@ Open Response HTML
 <div ng-controller='OpenResponseController as openResponseController'>
 <div id='prompt' compile='openResponseController.nodeContent.prompt'></div>
 <textarea id='responseTextarea'
+    rows='{{openResponseController.nodeContent.numRows || 20}}'
+    cols='{{openResponseController.nodeContent.numColumns || 100}}'
     ng-model='openResponseController.studentResponse'
     ng-disabled='openResponseController.isDisabled' 
     ng-change='openResponseController.studentResponseChanged()'

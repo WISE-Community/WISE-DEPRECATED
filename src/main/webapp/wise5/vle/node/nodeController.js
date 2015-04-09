@@ -47,9 +47,10 @@ define(['app'], function(app) {
                     var currentNodeVisit = StudentDataService.getLatestNodeVisitByNodeId(currentNodeId)
                     if (currentNodeVisit != null) {
                         var portfolioItem = {};
+                        portfolioItem.type = 'nodeVisit';
                         portfolioItem.nodeId = currentNode.id;
-                        portfolioItem.type = nodeVisit;
                         portfolioItem.nodeVisitId = currentNodeVisit.id;
+                        portfolioItem.nodeVisit = currentNodeVisit;
                         PortfolioService.addItem(portfolioItem);
                     }
                 }

@@ -42,7 +42,12 @@ define(['app'], function(app) {
             this.viewType = 'myWork';
         };
         
-        this.dragStartCallback = function(event, ui, nodeId, nodeType) {
+        
+        this.portfolioItemDragStartCallback = function(event, ui, item) {
+            $(ui.helper.context).data('importPortfolioItem', item);
+        };
+        
+        this.myWorkDragStartCallback = function(event, ui, nodeId, nodeType) {
             $(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
             $(ui.helper.context).data('importWorkNodeType', nodeType);
         };
