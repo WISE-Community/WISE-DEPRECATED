@@ -66,7 +66,7 @@ define([
 	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
 	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
 		
-		$urlRouterProvider.otherwise('/vle/node3');
+		$urlRouterProvider.otherwise('/vle/');
 		
 		app.$controllerProvider = $controllerProvider;
 		

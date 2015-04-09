@@ -7,9 +7,10 @@ define(['angular'], function(angular) {
 		
 		this.retrieveConfig = function(configUrl) {
 			return $http.get(configUrl).then(angular.bind(this, function(result) {
-				var config = {};
+				var config = result.data;
 				
 				// hard-coding these values here for now. They should really come from the server.
+				/*
 				config.textDirection = 'rtl';
 				config.projectURL = 'http://localhost:8080/wise/curriculumWISE5/4/project.json';
 				config.projectBaseURL = config.projectURL.replace('project.json','');
@@ -19,7 +20,7 @@ define(['angular'], function(angular) {
                 config.layoutLogic = function(vle) {
                     
                 };
-                
+                */
 				this.config = config;
 				return config;
 			}));
@@ -36,6 +37,31 @@ define(['angular'], function(angular) {
 	            return null;
 			}
 		}; 
+		
+		this.getWorkgroupId = function() {
+		    var workgroupId = null;
+		    var userInfo = this.getConfigParam('userInfo');
+		    if (userInfo != null) {
+	            var myUserInfo = userInfo.myUserInfo;
+	            if (myUserInfo != null) {
+	                workgroupId = myUserInfo.workgroupId;
+	            }
+		    }
+		    return workgroupId;
+		};
+		
+		this.getPeriodId = function() {
+            var periodId = null;
+            var userInfo = this.getConfigParam('userInfo');
+            if (userInfo != null) {
+                var myUserInfo = userInfo.myUserInfo;
+                if (myUserInfo != null) {
+                    periodId = myUserInfo.periodId;
+                }
+            }
+            return periodId;
+        };
+        
 		
 		this.getRunId = function() { 
 			return this.getConfigParam('runId');

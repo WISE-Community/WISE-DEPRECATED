@@ -9,6 +9,12 @@ View.prototype.classroomMonitorDispatcher = function(type, args, obj) {
             //the idea basket is not enabled for the run so we will hide the idea basket button
             $('#viewIdeaBasketList').hide();
         }
+        
+        //check if student assets is enabled for the run
+        if(!obj.isStudentAssetsEnabled()) {
+            // student assets is not enabled for the run so we will hide the student assets button
+            $('#viewStudentAssets').hide();
+        }
     } else if(type=='premadeCommentWindowLoaded') {
         obj.premadeCommentWindowLoaded();
     }
@@ -242,6 +248,9 @@ View.prototype.setClassroomMonitorView = function(monitorView){
             //show the idea basket list view
             this.showIdeaBasketList();
             break;
+        case 'studentAssets':
+            this.showStudentAssets();
+            break;
         case 'showClassroom':
             //show the show classroom view
             this.showShowClassroomDisplay();
@@ -421,6 +430,52 @@ View.prototype.showExportStudentWorkDisplay = function() {
     
     //fix the height so scrollbars display correctly
     this.fixClassroomMonitorDisplayHeight();
+};
+
+
+/**
+ * Displays all students' uploaded files for this run
+ * @return
+ */
+View.prototype.showStudentAssets = function() {
+
+    // hide all sections
+    this.hideAllDisplays();
+    
+    var displayStudentAssets = function(workgroupAssetListsStr, view) {
+        // clear out the panel
+        $("#studentAssets").html("");
+
+        var getStudentUploadsBaseUrl = view.config.getConfigParam("getStudentUploadsBaseUrl");
+        var runId = view.config.getConfigParam("runId");
+        var workgroupAssetLists = JSON.parse(workgroupAssetListsStr);
+        for (var i=0; i<workgroupAssetLists.length; i++) {
+            var workgroupAssetList = workgroupAssetLists[i];
+            var currWorkgroupId = workgroupAssetList.workgroupId;
+            var htmlForWorkgroup = "<div><h3>" + view.userAndClassInfo.getUserNameByUserId(currWorkgroupId) + "</h3>";
+            if (workgroupAssetList.assets != "") {
+                var workgroupAssetsArr = JSON.parse(workgroupAssetList.assets);
+                htmlForWorkgroup += "<div>";
+                for (var k=0; k < workgroupAssetsArr.length; k++) {
+                    var assetName = workgroupAssetsArr[k];
+                    var fileWWW = getStudentUploadsBaseUrl + "/" + runId + "/" + currWorkgroupId + "/unreferenced/" + assetName;
+                    htmlForWorkgroup += "<a style='padding: 20px' target=_blank href='"+fileWWW+"'><img style='width: auto; height: auto; max-width: 200px; max-height: 200px' src='" + fileWWW + "'></img></a>";
+                }
+                htmlForWorkgroup += "</div>";
+            }
+            htmlForWorkgroup += "</div>";
+            $("#studentAssets").append(htmlForWorkgroup);
+            
+            //show the idea basket list div
+            $('#studentAssets').show();
+            
+            // hide loading message
+            $('#loading').hide();
+        }
+    };
+    
+    var workgroupsInClass = this.userAndClassInfo.getWorkgroupIdsInClass().join(":");
+    this.connectionManager.request('GET', 1, this.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', workgroups:workgroupsInClass, command: 'assetList', type: 'studentAssetManager'}, function(txt,xml,obj){displayStudentAssets(txt,obj);}, this);  
 };
 
 /**
@@ -8587,6 +8642,35 @@ View.prototype.isIdeaBasketEnabled = function() {
                 
                 //check if the idea basket is enabled
                 if(tools.isIdeaManagerEnabled) {
+                    result = true;                  
+                }
+            }
+        }
+    }
+    
+    return result;
+};
+
+/**
+ * Check if this project has the idea basket enabled
+ * @return a boolean value whether the idea basket is
+ * enabled or not
+ */
+View.prototype.isStudentAssetsEnabled = function() {
+    var result = false;
+    
+    //get the project meta data
+    var projectMetaData = this.getProjectMetadata();
+    
+    if(projectMetaData != null) {
+        if(projectMetaData.hasOwnProperty('tools')) {
+            //get the tools
+            var tools = projectMetaData.tools;
+            
+            if(tools.hasOwnProperty('isStudentAssetUploaderEnabled')) {
+                
+                //check if the idea basket is enabled
+                if(tools.isStudentAssetUploaderEnabled) {
                     result = true;                  
                 }
             }

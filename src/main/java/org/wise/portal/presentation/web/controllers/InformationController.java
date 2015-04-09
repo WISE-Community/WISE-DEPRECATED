@@ -124,7 +124,30 @@ public class InformationController {
 			return;
 		}
 		
-		JSONObject userInfo = new JSONObject();
+		JSONObject userInfo = getUserInfo(request, response);
+		
+		if (userInfo == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		}
+		
+		response.setHeader("Cache-Control", "no-cache");
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader ("Expires", 0);
+		response.setContentType("application/json");
+		response.getWriter().write(userInfo.toString());
+	}
+
+    /**
+     * @param request
+     * @param response
+     * @return
+     * @throws ObjectNotFoundException
+     * @throws NumberFormatException
+     */
+    private JSONObject getUserInfo(HttpServletRequest request,
+            HttpServletResponse response) throws ObjectNotFoundException,
+            NumberFormatException {
+        JSONObject userInfo = new JSONObject();
 
 		String runId = request.getParameter("runId");
 		Run run = this.runService.retrieveById(Long.parseLong(runId));
@@ -135,8 +158,7 @@ public class InformationController {
 			workgroup = workgroupService.retrieveById(new Long(workgroupIdStr));
 			// if a workgroup was specified that was not for this run, return BAD_REQUEST
 			if (workgroup.getOffering().getId() != run.getId()) {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				return;
+				return null;
 			}
 		} 
 		
@@ -378,13 +400,8 @@ public class InformationController {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
-		response.setHeader("Cache-Control", "no-cache");
-		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader ("Expires", 0);
-		response.setContentType("application/json");
-		response.getWriter().write(userInfo.toString());
-	}
+        return userInfo;
+    }
 	
 	/**
 	 * Handles the get config request from three possible requesters: grading, preview and run.
@@ -577,6 +594,7 @@ public class InformationController {
 				config.put("postAnnotationsUrl", postAnnotationsUrl);
 				config.put("getStudentDataUrl", getStudentDataUrl);
 				config.put("postStudentDataUrl", postStudentDataUrl);
+				config.put("studentDataURL", getStudentDataUrl);
 				config.put("gradingType", gradingType);
 				config.put("getRevisions", getRevisions);
 				config.put("getPeerReviewUrl", getPeerReviewUrl);
@@ -596,6 +614,14 @@ public class InformationController {
 				if(postLevel!=null){
 					config.put("postLevel", postLevel);
 				};
+				
+				// add userInfo if this is a WISE5 run
+				Project project = run.getProject();
+				Integer wiseVersion = project.getWISEVersion();
+				if (wiseVersion != null && wiseVersion == 5) {
+	                JSONObject userInfo = getUserInfo(request, response);
+	                config.put("userInfo", userInfo);
+				}
 				
 				//add the config fields specific to the teacher grading
 				if(requester != null && requester.equals("grading")) {
@@ -674,7 +700,9 @@ public class InformationController {
 				config.put("getUserInfoUrl", getUserInfoUrl);
 			}
 			config.put("getContentUrl", getContentUrl);
+            config.put("projectURL", getContentUrl);
 			config.put("getContentBaseUrl", getContentBaseUrl);
+            config.put("projectBaseURL", getContentBaseUrl);
 			config.put("getStudentUploadsBaseUrl", studentUploadsBaseWWW);
 			config.put("theme", "WISE");
 			config.put("cRaterRequestUrl", cRaterRequestUrl);

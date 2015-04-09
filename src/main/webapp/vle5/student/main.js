@@ -1,5 +1,5 @@
 require.config({
-    baseUrl: '../wise/vle5/',
+    baseUrl: 'vle5/',
     paths: {
         'angular': 'lib/angular/angular',
         'angularAnimate': 'lib/angular/angularAnimate/angular-animate.min',

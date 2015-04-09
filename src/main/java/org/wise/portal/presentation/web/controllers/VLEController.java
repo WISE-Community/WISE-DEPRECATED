@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
+import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.service.offering.RunService;
 
@@ -66,7 +67,7 @@ public class VLEController {
 
 	private static final String RUNID = "runId";
 
-	@RequestMapping(value={"/student/vle/vle.html","/teacher/vle/vle.html"})
+	@RequestMapping(value={"/student.html", "/student/vle/vle.html", "/teacher/vle/vle.html"})
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
@@ -178,11 +179,19 @@ public class VLEController {
 		String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		String contentUrl = curriculumBaseWWW + rawProjectUrl;
 
-		ModelAndView modelAndView = new ModelAndView("vle");
-    	modelAndView.addObject("run", run);
-    	modelAndView.addObject("vleurl",vleurl);
-    	modelAndView.addObject("vleConfigUrl", vleConfigUrl);
-    	modelAndView.addObject("contentUrl", contentUrl);
-		return modelAndView;
+		Project project = run.getProject();
+		Integer wiseVersion = project.getWISEVersion();
+		if ( wiseVersion == null || wiseVersion == 4) {
+	        ModelAndView modelAndView = new ModelAndView("vle");
+	        modelAndView.addObject("run", run);
+	        modelAndView.addObject("vleurl",vleurl);
+	        modelAndView.addObject("vleConfigUrl", vleConfigUrl);
+	        modelAndView.addObject("contentUrl", contentUrl);
+	        return modelAndView;
+		} else {
+		    ModelAndView modelAndView = new ModelAndView("student");
+		    modelAndView.addObject("vleConfigUrl", vleConfigUrl);
+		    return modelAndView;
+		}
 	}
 }
