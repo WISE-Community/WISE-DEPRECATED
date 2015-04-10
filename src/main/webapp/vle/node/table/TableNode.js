@@ -424,6 +424,7 @@ TableNode.prototype.displayStepGraph = function(nodeId, dom, workgroupIdToWork, 
 		//create the aggregrate graph for the whole class
 		this.createAggregateGraphForStudents(dom, studentsInClass, workgroupIdToWork, graphType, allPeriodsLabel);
 
+		/*
 		//get the periods
 		var periods = this.view.getUserAndClassInfo().getPeriods();
 		
@@ -445,6 +446,7 @@ TableNode.prototype.displayStepGraph = function(nodeId, dom, workgroupIdToWork, 
 				this.createAggregateGraphForStudents(dom, studentsInPeriod, workgroupIdToWork, graphType, periodLabel);
 			}
 		}
+		*/
 	} else {
 		//we will show a single period
 		
@@ -485,13 +487,259 @@ TableNode.prototype.createAggregateGraphForStudents = function(dom, students, wo
 			
 			if(work != null) {
 				//add the work to the array
-				workForPeriod.push(work);						
+				workForPeriod.push(work);
 			}
 		}
 	}
 	
 	//create the aggregate graph for the period
 	this.createAggregateGraph(dom, workForPeriod, graphType, periodLabel);
+};
+
+/**
+ * Render the summary view table into the dom element
+ * @param workgroupIdToWork mapping of workgroup id to student work for the step
+ * @param dom the dom element to render the summary view into
+ * @param functionArgs the function arguments
+ */
+TableNode.prototype.renderSummaryViewTable = function(workgroupIdToWork, dom, functionArgs) {
+    var view = this.view;
+    var nodeId = this.id;
+    if (dom == null) {
+        dom=$("#summaryContent");
+    }
+    
+    var period = functionArgs[0];
+    var showAllPeriods = false;
+    
+    if (period == "all") {
+        showAllPeriods = true;
+    }
+    
+    // display the table in the div
+    this.displayStepTable(nodeId, dom, workgroupIdToWork, functionArgs, showAllPeriods);
+};
+
+/**
+ * Display the table in the div
+ * @param nodeId the node id of the step that the aggregate work is from
+ * @param dom the div to display the table in
+ * @param workgroupIdToWork mapping of workgroup id to student work for the step
+ * @param functionArgs the function arguments
+ * @param showAllPeriods whether to show all periods just the period the student is in
+ */
+TableNode.prototype.displayStepTable = function(nodeId, dom, workgroupIdToWork, functionArgs, showAllPeriods) {
+    if(showAllPeriods) {
+        //we will show all the periods
+        
+        //get all the users in the class as objects
+        var studentsInClass = this.view.getUserAndClassInfo().getUsersInClass();
+        
+        //create the label for all periods
+        var allPeriodsLabel = "All Periods";
+        
+        //create the aggregrate graph for the whole class
+        this.createAggregateTableForStudents(dom, studentsInClass, workgroupIdToWork, functionArgs, allPeriodsLabel);
+    } else {
+        //we will show a single period
+        
+        //get the period id
+        var periodId = this.view.getUserAndClassInfo().getPeriodId();
+        
+        //get the classmates in the period
+        var classmatesInPeriod = this.view.getUserAndClassInfo().getAllStudentsInPeriodId(periodId);
+        
+        //create the aggregate graph for the period
+        this.createAggregateTableForStudents(dom, classmatesInPeriod, workgroupIdToWork, functionArgs);
+    }
+};
+
+/**
+ * Create the aggregate table for a specific group of students
+ * @param dom dom to render the summary into
+ * @param students an array of students to include in the aggregate
+ * @param workgroupIdToWork the id of the workgroup to work mapping
+ * @param functionArgs the function arguments
+ * @param periodLabel (optional) the period label to display above the graph
+ */
+TableNode.prototype.createAggregateTableForStudents = function(dom, students, workgroupIdToWork, functionArgs, periodLabel) {
+    //the array to accumulate the work for the period
+    var workForPeriod = [];
+    
+    if(students != null && workgroupIdToWork != null) {
+        //loop through all the students in the period
+        for(var c=0; c<students.length; c++) {
+            //get a student
+            var student = students[c];
+            
+            //get the student workgroup id and user name
+            var workgroupId = student.workgroupId;
+
+            //get the work for the student for this step
+            var work = workgroupIdToWork[workgroupId];
+            
+            if(work != null) {
+                //add the work to the array
+                workForPeriod.push(work);
+            }
+        }
+    }
+    
+    //create the aggregate graph for the period
+    this.createAggregateTable(dom, workForPeriod, functionArgs, periodLabel);
+};
+
+/**
+ * Create the aggregate table
+ * @param dom the div to display the table in
+ * @param workArray an array of student work for the step
+ * @param functionArgs the function args
+ * @param periodLabel the period label
+ */
+TableNode.prototype.createAggregateTable = function(dom, workArray, functionArgs, periodLabel) {
+    
+    // get the parameters for how to display the table
+    var showFirstRowOnceVal = functionArgs[1];
+    var removeFirstRowFromAllStudentsVal = functionArgs[2];
+    var removeFirstColumnFromAllStudentsVal = functionArgs[3];
+    
+    var showFirstRowOnce = false;
+    var removeFirstRowFromAllStudents = false;
+    var removeFirstColumnFromAllStudents = false;
+    
+    if (showFirstRowOnceVal == 'true') {
+        showFirstRowOnce = true;
+    }
+    
+    if (removeFirstRowFromAllStudentsVal == 'true') {
+        removeFirstRowFromAllStudents = true;
+    }
+    
+    if (removeFirstColumnFromAllStudentsVal == 'true') {
+        removeFirstColumnFromAllStudents = true;
+    }
+    
+    var allRows = [];
+    
+    // loop through all the work and accumulate the data
+    for(var z=0; z<workArray.length; z++) {
+        
+        //get the work
+        var work = workArray[z];
+        
+        if (work != null) {
+            // get the table data from the work
+            var tableData = work.tableData;
+            
+            if (tableData != null) {
+
+                // get the rows from the table data
+                var rows = this.getRowsFromTableData(tableData)
+
+                // check if we need to remove any rows
+                if (showFirstRowOnce || removeFirstRowFromAllStudents) {
+                    if(showFirstRowOnce && allRows.length === 0) {
+                        // we want to show the first row once so we will add the first row
+                        allRows = allRows.concat([rows[0]]);
+                    }
+                    
+                    if (rows.length > 0) {
+                        // we are removing the first row from each student table
+                        rows.splice(0, 1);
+                    }
+                }
+                
+                allRows = allRows.concat(rows);
+            }
+        }
+    }
+    
+    // create the table element
+    var table = $('<table></table>');
+    table.attr('border', 1);
+    
+    // loop through all the rows
+    for (var r = 0; r < allRows.length; r++) {
+        // get a row
+        var row = allRows[r];
+        
+        var tr = $('<tr></tr>');
+        
+        if (row != null) {
+            var c = 0;
+            
+            // check if we need to remove the first column from each student table
+            if (removeFirstColumnFromAllStudents) {
+                // start the counter at 1 so that we don't use the first column
+                c = 1;
+            }
+            
+            for (; c < row.length; c++) {
+                // get the cell value
+                var cell = row[c];
+                
+                // create the td
+                var td = $('<td></td>');
+                td.text(cell);
+                tr.append(td);
+            }
+        }
+        
+        table.append(tr);
+    }
+    
+    dom.append(table);
+    dom.show();
+};
+
+/**
+ * Get the rows from the table data.
+ * @param tabelData
+ * @return an array in which each element is a row in the table.
+ * each row element is also an array that contains the values of
+ * the row. this means the return value is a multi dimension array
+ * where the first dimension is the rows and the second dimension
+ * is the columns.
+ */
+TableNode.prototype.getRowsFromTableData = function(tableData) {
+    var rows = [];
+    
+    if (tableData != null) {
+        var numColumns = tableData.length;
+        var numRows = 0;
+        
+        var firstColumn = tableData[0];
+        
+        if (firstColumn != null) {
+            numRows = firstColumn.length;
+        }
+        
+        // loop through all the rows
+        for (var r = 0; r < numRows; r++) {
+            var row = [];
+            
+            // loop through all the columns
+            for (var c = 0; c < numColumns; c++) {
+                
+                if (tableData[c] != null && tableData[c][r] != null) {
+                    // get a cell
+                    var cell = tableData[c][r];
+                    
+                    var text = cell.text;
+                    
+                    // add the cell to the row
+                    row.push(text);
+                } else {
+                    // add an empty cell
+                    row.push(text);
+                }
+            }
+            
+            rows.push(row);
+        }
+    }
+    
+    return rows;
 };
 
 /**

@@ -474,7 +474,7 @@ View.prototype.tagMapChanged = function(nodeId, tagMapIndex) {
 					}
 					
 					//check if the arg value is a number string
-					if(!isNaN(argValue)) {
+					if(argValue != '' && !isNaN(argValue)) {
 						//the value is a number string so we will convert the string to a number
 						argValue = Number(argValue);
 					}

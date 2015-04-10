@@ -293,6 +293,7 @@ MultipleChoiceNode.prototype.displayStepGraph = function(nodeId, dom, workgroupI
 		//create the aggregrate graph for the whole class
 		this.createAggregateGraphForStudents(dom, studentsInClass, workgroupIdToWork, graphType, allPeriodsLabel);
 
+		/*
 		//get the periods
 		var periods = this.view.getUserAndClassInfo().getPeriods();
 		
@@ -314,6 +315,7 @@ MultipleChoiceNode.prototype.displayStepGraph = function(nodeId, dom, workgroupI
 				this.createAggregateGraphForStudents(dom, studentsInPeriod, workgroupIdToWork, graphType, periodLabel);
 			}
 		}
+		*/
 	} else {
 		//we will show a single period
 		

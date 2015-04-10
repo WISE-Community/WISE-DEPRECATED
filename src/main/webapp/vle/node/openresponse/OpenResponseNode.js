@@ -25,7 +25,8 @@ OpenResponseNode.prototype.supportedLocales = {
 OpenResponseNode.tagMapFunctions = [
 	{functionName:'importWork', functionArgs:[]},
 	{functionName:'showPreviousWork', functionArgs:[]},
-	{functionName:'showAggregateWork', functionArgs:['period|all','bar|pie|barpie']}
+    {functionName:'showAggregateWork', functionArgs:['period|all','bar|pie|barpie']},
+    {functionName:'showAggregateWorkTable', functionArgs:['period|all', 'showFirstRowOnce(true|false)', 'removeFirstRowFromAllStudents(true|false)', 'removeFirstColumnFromAllStudents(true|false)']}
 ];
 
 /**

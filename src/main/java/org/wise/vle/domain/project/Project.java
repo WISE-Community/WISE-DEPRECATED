@@ -275,6 +275,12 @@ public class Project {
 				if (nodesThatHaveTagMapsByTagNameAndTagFunctionName.size() > 0) {
 					return true;
 				}
+				
+				tagMapFunctionName = "showAggregateWorkTable";
+                nodesThatHaveTagMapsByTagNameAndTagFunctionName = getNodesThatHaveTagMapsByTagNameAndTagFunctionName(nodeTagName, tagMapFunctionName);
+                if (nodesThatHaveTagMapsByTagNameAndTagFunctionName.size() > 0) {
+                    return true;
+                }
 			}
 		}
 		} catch (JSONException jsonException) {

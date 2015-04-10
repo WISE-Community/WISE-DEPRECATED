@@ -2027,6 +2027,139 @@ Node.prototype.showAggregateWork = function(aggregateWorkDiv, tagName, functionA
 };
 
 /**
+ * Show the aggregate work for all the steps with the given tag. Show it in the aggregateWorkDiv.
+ * @param aggregateWorkDiv the div that we will display all the aggregate work in
+ * @param tagName we will get all the steps with the given tag and
+ * display work from them
+ * @param functionArgs the arguments to this tag map function
+ */
+Node.prototype.showAggregateWorkTable = function(aggregateWorkDiv, tagName, functionArgs) {
+    //the node ids of the steps that come before the current step and have the given tag
+    var nodeIds = this.view.getProject().getPreviousNodeIdsByTag(tagName, this.id);
+
+    //the signed in workgroup id
+    var workgroupId = this.view.userAndClassInfo.getWorkgroupId();
+
+    //clear out the aggregate work div
+    aggregateWorkDiv.html('');
+    
+    var periodAll = functionArgs[0];  // are we showing just the data of students in the period, or for all periods? period=period only, all=all periods
+    var showAllStudents = false;
+    if (periodAll == "all") {
+        showAllStudents = true;
+    }
+    
+    if(nodeIds != null) {
+        //loop through all the node ids that come before the current step and have the given tag
+        for(var x=0; x<nodeIds.length; x++) {
+            //get a node id
+            var nodeId = nodeIds[x];
+
+            if(nodeId != null) {
+                //get the node object for the step we will retrieve work from
+                var node = this.view.getProject().getNodeById(nodeId);
+
+                //get the step number and title e.g. "Step 1.3: Explain why the sun is hot"
+                var stepNumberAndTitle = this.view.getProject().getStepNumberAndTitle(nodeId);
+
+                if(node != null) {
+                    //get the latest work for the node
+                    var nodeVisit = this.view.getState().getLatestNodeVisitByNodeId(nodeId);
+
+                    //make the id for the div that we will show previous work in for the step
+                    var showAggregateWorkDivId = 'showAggregateWork_' + nodeId;
+
+                    //create the div to display the work for the step
+                    var showAggregateWorkForNodeDiv = $('<div id="' + showAggregateWorkDivId + '"></div>');
+
+                    //put the div into the parent previous work div
+                    aggregateWorkDiv.append(showAggregateWorkForNodeDiv);
+
+                    if (this.view.getConfig().getConfigParam("mode") != "run") {
+                        // if not in run mode, show each of the step titles and also say that aggregate will show up when a run is set up
+                        showAggregateWorkForNodeDiv.append(this.view.getI18NStringWithParams("student_aggregate_view_preview_mode_default_text",[stepNumberAndTitle]));
+                        //make the show aggregate work div visible
+                        aggregateWorkDiv.show();
+                    } else {
+                        showAggregateWorkForNodeDiv.prepend(this.view.getI18NStringWithParams("student_aggregate_view_intro_text", [stepNumberAndTitle]));
+                        
+                        // callback for when classmates' work has been returned.
+                        function getClassmateResponsesCallback(responseText, responseXML, handlerArgs) {
+                            var nodeIdOfAggregateWork = handlerArgs.nodeId;
+                            var vle = handlerArgs.vle;
+                            var nodeOfAggregateWork = vle.getProject().getNodeById(nodeIdOfAggregateWork);
+                            var aggregateWorkDiv = handlerArgs.aggregateWorkDiv;
+
+                            var vleStates = VLE_STATE.prototype.parseDataJSONString(responseText);
+                            var workgroupIdToWork = {}; // maps workgroupId to their latest work.
+                            
+                            if(vleStates.constructor.toString().indexOf("Array") == -1) {
+                                /*
+                                 * if there is only one student in the run, we will need to place the vleState
+                                 * in an array because if we only request the work for a single workgroup id
+                                 * the server will return a JSONObject. if we request the work for multiple
+                                 * workgroup ids, the server will return a JSONArray.
+                                 */
+                                vleStates = [vleStates];
+                            }
+
+                            //loop through all the vleStates, each vleState is for a workgroup
+                            for(var x=0; x<vleStates.length; x++) {
+                                //get a vleState
+                                var vleState = vleStates[x];
+
+                                //get the workgroup id
+                                var workgroupId = vleState.dataId;
+
+                                //get the revisions
+                                var nodeVisitRevisions = vleState.getNodeVisitsWithWorkByNodeId(nodeId);
+
+                                var latestNodeVisit = null;
+
+                                if(nodeVisitRevisions.length > 0) {
+                                    //get the latest work for the current workgroup
+                                    latestNodeVisit = nodeVisitRevisions[nodeVisitRevisions.length - 1];
+                                }
+
+                                //check if the student submitted any work, and add to workgroupIdToWork array
+                                if(latestNodeVisit != null) {
+                                    workgroupIdToWork[workgroupId] = latestNodeVisit.getLatestWork();
+                                }
+                            }
+                            
+                            // now tell the Node to render the summary view.
+                            nodeOfAggregateWork.renderSummaryViewTable(workgroupIdToWork, aggregateWorkDiv, functionArgs);
+                        };
+                        
+                        // make the request to get student work for this specific nodeId.
+                        this.view.connectionManager.request(
+                                'GET', 
+                                2, 
+                                this.view.config.getConfigParam('getStudentDataUrl'), 
+                                {
+                                    type: 'aggregate', 
+                                    periodId: this.view.userAndClassInfo.getPeriodId(), 
+                                    userId: this.view.userAndClassInfo.getWorkgroupId() + ":" + this.view.userAndClassInfo.getClassmateIdsByPeriodId(this.view.userAndClassInfo.getPeriodId()), 
+                                    runId:  this.view.config.getConfigParam('runId'), 
+                                    nodeIds: nodeId,
+                                    allStudents: showAllStudents,
+                                    useCachedWork:false
+                                }, 
+                                getClassmateResponsesCallback, 
+                                {
+                                    vle: this.view,
+                                    nodeId: nodeId,
+                                    aggregateWorkDiv: aggregateWorkDiv
+                                }
+                        );
+                    }
+                }
+            }
+        }
+    }
+};
+
+/**
  * Get the feedback that will be displayed when the student clicks
  * on the Feedback button at the upper right of the vle. Child
  * classes will need to override this to make use of it. This will

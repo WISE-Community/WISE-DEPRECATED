@@ -86,10 +86,51 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 		
 		var getUsersInClass = function() {
 			var allStudentsArray = new Array();
-			for (var i=0; i<classmateUserInfos.length; i++) {
-				allStudentsArray.push(classmateUserInfos[i]);
+			
+			var myUserInfoWorkgroupId = null;
+			var myUserInfoAdded = false;
+			
+			if (myUserInfo != null) {
+			    // get my workgroup id
+			    myUserInfoWorkgroupId = myUserInfo.workgroupId;
 			}
-			allStudentsArray.push(myUserInfo);
+			
+			/*
+			 * Loop through all the classmates and add them to the array
+			 * of user infos. Insert my user info in the appropriate position
+			 * so that the user infos are ordered numerically by workgroup id.
+			 */
+			for (var i=0; i<classmateUserInfos.length; i++) {
+			    var classmateUserInfo = classmateUserInfos[i];
+			    
+			    if (classmateUserInfo != null) {
+			        // get the classmate workgroup id
+			        var classmateUserInfoWorkgroupId = classmateUserInfo.workgroupId;
+			        
+			        /*
+			         * check if we've added my user info to the array and 
+			         * if my workgroup id is less than this classmate
+			         */
+			        if (!myUserInfoAdded && myUserInfoWorkgroupId < classmateUserInfoWorkgroupId) {
+			            /*
+			             * my workgroup id is less than that of this classmate
+			             * so we will add my userinfo now
+			             */
+			            allStudentsArray.push(myUserInfo);
+			            myUserInfoAdded = true;
+			        }
+			        
+			        // add the classmate user info
+			        allStudentsArray.push(classmateUserInfo);
+			    }
+				
+			}
+			
+			if (!myUserInfoAdded) {
+			    // we have not add my user info so we will now
+			    allStudentsArray.push(myUserInfo);
+			}
+			
 			return allStudentsArray;
 		};
 		
@@ -365,8 +406,48 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			var myPeriodId = getPeriodId();
 			
 			if(periodId == myPeriodId) {
-				//add the currently logged in student if they are in the period
-				allStudentsInPeriod.push(myUserInfo);
+			    var myWorkgroupId = null;
+			    var myUserInfoAdded = false;
+			    
+			    if (myUserInfo != null) {
+			        // get my workgroup id
+			        myWorkgroupId = myUserInfo.workgroupId;
+			    }
+			    
+			    if (myWorkgroupId != null) {
+		             /*
+	                 * loop through all the classmates so we can insert my user 
+	                 * info in the appropriate position so that all the user
+	                 * infos are ordered numerically by workgroup id.
+	                 */
+	                for (var x = 0; x < allStudentsInPeriod.length; x++) {
+	                    // get the classmate user info
+	                    var studentInPeriod = allStudentsInPeriod[x];
+
+	                    if (studentInPeriod != null) {
+	                        // get the classmate workgroup id
+	                        var classmateWorkgroupId = studentInPeriod.workgroupId;
+
+	                        if (classmateWorkgroupId != null) {
+	                            /*
+	                             * check if my workgroup id is less than the classmate
+	                             * workgroup id
+	                             */
+	                            if (myWorkgroupId < classmateWorkgroupId) {
+	                                // insert my user info
+	                                allStudentsInPeriod.splice(x, 0, myUserInfo);
+	                                myUserInfoAdded = true;
+	                                break;
+	                            }
+	                        }
+	                    }
+	                }
+	                
+	                if (!myUserInfoAdded) {
+	                    // we have not added my user info so we will now
+	                    allStudentsInPeriod.push(myUserInfo);
+	                }
+			    }
 			}
 			
 			return allStudentsInPeriod;

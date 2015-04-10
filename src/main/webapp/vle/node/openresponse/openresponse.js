@@ -2631,7 +2631,10 @@ OPENRESPONSE.prototype.processTagMaps = function() {
 				} else if(functionName == "showAggregateWork") {
 					//show the previous work in the previousWorkDiv
 					this.node.showAggregateWork($('#aggregateWorkDiv'), tagName, functionArgs);
-				} else if(functionName == "checkCompleted") {
+				} else if(functionName == "showAggregateWorkTable") {
+                    //show the previous work in the previousWorkDiv
+                    this.node.showAggregateWorkTable($('#aggregateWorkDiv'), tagName, functionArgs);
+                } else if(functionName == "checkCompleted") {
 					//we will check that all the steps that are tagged have been completed
 					
 					//get the result of the check
