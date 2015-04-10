@@ -225,6 +225,7 @@ public class StudentDataController {
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Cache-Control", "no-cache");
 		response.setDateHeader("Expires", 0);
+		response.setContentType("application/json");
 
 		// override userIdStr if user is requesting for aggregate and showAllStudents is requested
 		if ("aggregate".equals(type) && Boolean.parseBoolean(request.getParameter("allStudents"))) {
@@ -723,6 +724,9 @@ public class StudentDataController {
 		UserInfo userInfo = (UserInfo) vleService.getUserInfoOrCreateByWorkgroupId(workgroupId);
 
 		JSONObject nodeVisitJSON = null;
+		
+		response.setContentType("application/json");
+		
 		try {
 			nodeVisitJSON = new JSONObject(data);
 

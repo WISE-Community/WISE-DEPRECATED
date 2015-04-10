@@ -13,7 +13,6 @@ require.config({
         'jquery': 'lib/jquery/jquery-2.1.3.min',
         'jqueryUI': 'lib/jquery/jquery-ui-1.10.4.interactions.min',
         'navigationController': 'classroomMonitor/navigation/navigationController',
-        'nodeApplicationService': 'services/nodeApplicationService',
         'nodeController': 'classroomMonitor/node/nodeController',
         'nodeService': 'services/nodeService',
         'openResponseController': 'nodes/openResponse/openResponseController',

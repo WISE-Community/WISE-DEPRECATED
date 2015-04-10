@@ -4,7 +4,6 @@ define(['app'], function(app) {
                 $rootScope,
                 $state, 
                 $stateParams, 
-                NodeApplicationService, 
                 NodeService, 
                 PortfolioService,
                 ProjectService, 
