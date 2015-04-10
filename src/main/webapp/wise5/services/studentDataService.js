@@ -1,21 +1,21 @@
-define(['angular', 'configService'], function(angular, configService) {
+define(['configService', 'projectService'], function(configService, projectService) {
 
-    angular.module('StudentDataService', [])
-    
-    .service('StudentDataService', ['$http', '$q', '$rootScope', 'ConfigService', 'ProjectService', 'OpenResponseService', 
+    var service = ['$http', '$q', '$rootScope', 'ConfigService', 'ProjectService', 'OpenResponseService', 
                                     function($http, $q, $rootScope, ConfigService, ProjectService, OpenResponseService) {
-        this.studentData = null;
-        this.stackHistory = null;  // array of node id's
-        this.visitedNodesHistory = null;
-        this.nodeStatuses = null;
+        var serviceObject = {};
         
-        this.currentNode = null;
+        serviceObject.studentData = null;
+        serviceObject.stackHistory = null;  // array of node id's
+        serviceObject.visitedNodesHistory = null;
+        serviceObject.nodeStatuses = null;
         
-        this.getCurrentNode = function() {
+        serviceObject.currentNode = null;
+        
+        serviceObject.getCurrentNode = function() {
             return this.currentNode;
         };
         
-        this.getCurrentNodeId = function() {
+        serviceObject.getCurrentNodeId = function() {
             var currentNodeId = null;
             var currentNode = this.currentNode;
             
@@ -26,7 +26,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return currentNodeId;
         };
         
-        this.setCurrentNodeByNodeId = function(nodeId) {
+        serviceObject.setCurrentNodeByNodeId = function(nodeId) {
             if (nodeId != null) {
                 var node = ProjectService.getNodeById(nodeId);
                 
@@ -34,7 +34,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.setCurrentNode = function(node) {
+        serviceObject.setCurrentNode = function(node) {
             var previousCurrentNode = this.currentNode;
             
             if (previousCurrentNode !== node) {
@@ -47,7 +47,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.getCurrentParentNode = function() {
+        serviceObject.getCurrentParentNode = function() {
             var currentNode = this.getCurrentNode();
             
             if (currentNode != null) {
@@ -55,7 +55,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.updateCurrentNode = function(latestNodeVisit) {
+        serviceObject.updateCurrentNode = function(latestNodeVisit) {
             if (latestNodeVisit != null) {
                 nodeId = latestNodeVisit.nodeId;
                 
@@ -64,7 +64,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.getNodeVisits = function() {
+        serviceObject.getNodeVisits = function() {
             var nodeVisits = null;
             var studentData = this.studentData;
             
@@ -75,7 +75,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return nodeVisits;
         };
         
-        this.getNodeVisitAtIndex = function(index) {
+        serviceObject.getNodeVisitAtIndex = function(index) {
             var nodeVisitResult = null;
             var nodeVisits = this.getNodeVisits();
             
@@ -89,11 +89,11 @@ define(['angular', 'configService'], function(angular, configService) {
             return nodeVisitResult;
         };
         
-        this.getLatestNodeVisit = function() {
+        serviceObject.getLatestNodeVisit = function() {
             return this.getNodeVisitAtIndex(-1);
         };
         
-        this.retrieveStudentData = function() {
+        serviceObject.retrieveStudentData = function() {
             var studentDataURL = ConfigService.getConfigParam('studentDataURL');
             var httpParams = {};
             httpParams.method = 'GET';
@@ -117,7 +117,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }));
         };
         
-        this.saveNodeVisitToServer = function(nodeVisit) {
+        serviceObject.saveNodeVisitToServer = function(nodeVisit) {
             var studentDataURL = ConfigService.getConfigParam('studentDataURL');
             var httpConfig = {};
             httpConfig.method = 'POST';
@@ -141,7 +141,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }, nodeVisit));
         };
         
-        this.loadStudentNodes = function() {
+        serviceObject.loadStudentNodes = function() {
             var nodes = ProjectService.getApplicationNodes();
             
             if (nodes != null) {
@@ -167,11 +167,11 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.getNodeStatuses = function() {
+        serviceObject.getNodeStatuses = function() {
             return this.nodeStatuses;
         };
         
-        this.getNodeStatusByNodeId = function(nodeId) {
+        serviceObject.getNodeStatusByNodeId = function(nodeId) {
             var result = null;
             
             if (nodeId != null && this.nodeStatuses != null) {
@@ -187,7 +187,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return result;
         };
         
-        this.updateNodeStatuses = function() {
+        serviceObject.updateNodeStatuses = function() {
             this.nodeStatuses = [];
             var nodes = ProjectService.getNodes();
             
@@ -205,7 +205,7 @@ define(['angular', 'configService'], function(angular, configService) {
             $rootScope.$broadcast('nodeStatusesChanged');
         };
         
-        this.updateNodeStatusesByNode = function(node) {
+        serviceObject.updateNodeStatusesByNode = function(node) {
             return $q(angular.bind(this, function(resolve, reject) {
                 
             var nodeStatus = null;
@@ -312,7 +312,7 @@ define(['angular', 'configService'], function(angular, configService) {
                                 var nodeVisits = this.getNodeVisitsByNodeId(targetId);
                                 
                                 if (nodeId === targetId) {
-                                    var isWorkSubmitted = OpenResponseService.isWorkSubmitted(nodeVisits);
+                                    var isWorkSubmitted = NodeService.isWorkSubmitted(nodeVisits);
                                     
                                     if (isWorkSubmitted) {
                                         
@@ -329,7 +329,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }));
         };
 
-        this.populateHistories = function(nodeVisits) {
+        serviceObject.populateHistories = function(nodeVisits) {
             if (nodeVisits != null) {
                 this.stackHistory = [];
                 this.visitedNodesHistory = [];
@@ -343,7 +343,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.getStackHistoryAtIndex = function(index) {
+        serviceObject.getStackHistoryAtIndex = function(index) {
             if (index < 0) {
                 index = this.stackHistory.length + index;
             }
@@ -354,11 +354,11 @@ define(['angular', 'configService'], function(angular, configService) {
             return stackHistoryResult;
         };
         
-        this.getStackHistory = function() {
+        serviceObject.getStackHistory = function() {
             return this.stackHistory;
         };
         
-        this.updateStackHistory = function(nodeId) {
+        serviceObject.updateStackHistory = function(nodeId) {
             var indexOfNodeId = this.stackHistory.indexOf(nodeId);
             if (indexOfNodeId === -1) {
                 this.stackHistory.push(nodeId);
@@ -367,18 +367,18 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.updateVisitedNodesHistory = function(nodeId) {
+        serviceObject.updateVisitedNodesHistory = function(nodeId) {
             var indexOfNodeId = this.visitedNodesHistory.indexOf(nodeId);
             if (indexOfNodeId === -1) {
                 this.visitedNodesHistory.push(nodeId);
             }
         };
         
-        this.getVisitedNodesHistory = function() {
+        serviceObject.getVisitedNodesHistory = function() {
             return this.visitedNodesHistory;
         };
         
-        this.isNodeVisited = function(nodeId) {
+        serviceObject.isNodeVisited = function(nodeId) {
             var result = false;
             var visitedNodesHistory = this.visitedNodesHistory;
             
@@ -393,11 +393,11 @@ define(['angular', 'configService'], function(angular, configService) {
             return result;
         };
         
-        this.getNodeVisits = function() {
+        serviceObject.getNodeVisits = function() {
             return this.studentData.nodeVisits;
         };
         
-        this.addNodeVisit = function(nodeVisit) {
+        serviceObject.addNodeVisit = function(nodeVisit) {
             var nodeVisits = this.getNodeVisits();
             
             if (nodeVisits !== null) {
@@ -409,7 +409,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return nodeVisit;
         };
         
-        this.createNodeVisit = function(nodeId) {
+        serviceObject.createNodeVisit = function(nodeId) {
             /*
              *         {
             "visitPostTime": 1424728225000,
@@ -441,14 +441,14 @@ define(['angular', 'configService'], function(angular, configService) {
             return newNodeVisit;
         };
         
-        this.endNodeVisitByNodeId = function(nodeId) {
+        serviceObject.endNodeVisitByNodeId = function(nodeId) {
             var latestNodeVisitByNodeId = this.getLatestNodeVisitByNodeId(nodeId);
             if (latestNodeVisitByNodeId != null) {
                 latestNodeVisitByNodeId.visitEndTime = new Date().getTime();
             }
         };
         
-        this.getNodeVisitsByNodeId = function(nodeId) {
+        serviceObject.getNodeVisitsByNodeId = function(nodeId) {
             var nodeVisitsForNode = [];
             var nodeVisits = this.getNodeVisits();
             
@@ -467,7 +467,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return nodeVisitsForNode;
         };
         
-        this.getNodeVisitsByNodeType = function(nodeType) {
+        serviceObject.getNodeVisitsByNodeType = function(nodeType) {
             var nodeVisitsByNodeType = [];
             var nodeVisits = this.getNodeVisits();
             
@@ -492,7 +492,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return nodeVisitsByNodeType;
         };
         
-        this.getLatestNodeStateByNodeId = function(nodeId) {
+        serviceObject.getLatestNodeStateByNodeId = function(nodeId) {
             var latestNodeState = null;
             var nodeVisits = this.getNodeVisits();
             
@@ -518,7 +518,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return latestNodeState;
         };
         
-        this.getAllNodeStatesByNodeId = function(nodeId) {
+        serviceObject.getAllNodeStatesByNodeId = function(nodeId) {
             var allNodeStates = [];
             
             var nodeVisits = this.getNodeVisits();
@@ -542,7 +542,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return allNodeStates;
         };
         
-        this.getLatestNodeVisitByNodeId = function(nodeId) {
+        serviceObject.getLatestNodeVisitByNodeId = function(nodeId) {
             var latestNodeVisit = null;
             var nodeVisits = this.getNodeVisits();
             
@@ -562,13 +562,13 @@ define(['angular', 'configService'], function(angular, configService) {
             return latestNodeVisit;
         };
         
-        this.addNodeStateToLatestNodeVisit = function(nodeId, nodeState) {
+        serviceObject.addNodeStateToLatestNodeVisit = function(nodeId, nodeState) {
             var latestNodeVisit = this.getLatestNodeVisitByNodeId(nodeId);
             
             this.addNodeStateToNodeVisit(nodeState, latestNodeVisit);
         };
         
-        this.addNodeStateToNodeVisit = function(nodeState, nodeVisit) {
+        serviceObject.addNodeStateToNodeVisit = function(nodeState, nodeVisit) {
             if (nodeState != null && nodeVisit != null) {
                 if (nodeVisit.nodeStates == null) {
                     nodeVisit.nodeStates = [];
@@ -578,7 +578,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.getLatestStudentWorkForNodeAsHTML = function(nodeId) {
+        serviceObject.getLatestStudentWorkForNodeAsHTML = function(nodeId) {
             var studentWorkAsHTML = null;
             
             var node = ProjectService.getNodeById(nodeId);
@@ -596,13 +596,16 @@ define(['angular', 'configService'], function(angular, configService) {
             return studentWorkAsHTML;
         };
         
-        this.createNodeState = function() {
+        serviceObject.createNodeState = function() {
             var nodeState = {};
             
             nodeState.timestamp = Date.parse(new Date());
             
             return nodeState;
         };
-    }]);
+        
+        return serviceObject;
+    }];
     
+    return service;
 });

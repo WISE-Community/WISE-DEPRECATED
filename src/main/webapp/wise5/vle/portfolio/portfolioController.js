@@ -1,4 +1,4 @@
-define(['app'], function(app) {
+define(['app', 'portfolioService'], function(app, portfolioService) {
     app.$controllerProvider.register('PortfolioController', 
         function($scope, 
                 $state, 

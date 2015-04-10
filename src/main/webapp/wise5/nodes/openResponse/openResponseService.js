@@ -1,11 +1,11 @@
-define(['angular'], function(angular) {
-
-    angular.module('OpenResponseService', [])
+define(['nodeService'], function(nodeService) {
     
-    .service('OpenResponseService', ['$http', function($http) {
-        this.config = null;
+    var service = ['$http', 'NodeService', function($http, NodeService) {
+        var serviceObject = Object.create(NodeService);
         
-        this.callFunction = function(functionName, functionParams) {
+        serviceObject.config = null;
+        
+        serviceObject.callFunction = function(functionName, functionParams) {
             var result = null;
             
             if (functionName === 'wordCountCompare') {
@@ -15,7 +15,7 @@ define(['angular'], function(angular) {
             return result;
         };
         
-        this.wordCountCompare = function(params) {
+        serviceObject.wordCountCompare = function(params) {
             var result = false;
             
             if (params != null) {
@@ -49,7 +49,7 @@ define(['angular'], function(angular) {
             return result;
         };
 
-        this.getWordCount = function(response) {
+        serviceObject.getWordCount = function(response) {
             var wordCount = 0;
             
             if (response != null) {
@@ -60,7 +60,7 @@ define(['angular'], function(angular) {
             return wordCount;
         };
         
-        this.getLatestNodeState = function(nodeVisits) {
+        serviceObject.getLatestNodeState = function(nodeVisits) {
             var result = null;
             
             if (nodeVisits != null) {
@@ -89,45 +89,7 @@ define(['angular'], function(angular) {
             return result;
         };
         
-        this.isWorkSubmitted = function(nodeVisits) {
-            var result = false;
-            
-            if (nodeVisits != null) {
-                for (var nv = 0; nv < nodeVisits.length; nv++) {
-                    var nodeVisit = nodeVisits[nv];
-                    
-                    if (nodeVisit != null) {
-                        var nodeStates = nodeVisit.nodeStates;
-                        
-                        if (nodeStates != null) {
-                            for (var ns = 0; ns < nodeStates.length; ns++) {
-                                var nodeState = nodeStates[ns];
-                                
-                                if (nodeState != null) {
-                                    var isSubmit = nodeState.isSubmit;
-                                    
-                                    if (isSubmit != null) {
-                                        result = isSubmit;
-                                        
-                                        if (result) {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            if (isSubmit != null) {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            return result;
-        };
-        
-        this.getStudentWorkAsHTML = function(nodeState) {
+        serviceObject.getStudentWorkAsHTML = function(nodeState) {
             var studentWorkAsHTML = null;
             
             if (nodeState != null) {
@@ -139,7 +101,7 @@ define(['angular'], function(angular) {
             return studentWorkAsHTML;
         };
         
-        this.populateNodeState = function(nodeStateFromOtherNode, otherNodeType) {
+        serviceObject.populateNodeState = function(nodeStateFromOtherNode, otherNodeType) {
             var nodeState = null;
             
             if (nodeStateFromOtherNode != null && otherNodeType != null) {
@@ -154,5 +116,9 @@ define(['angular'], function(angular) {
             
             return nodeState;
         };
-    }]);
+        
+        return serviceObject;
+    }];
+    
+    return service;
 });

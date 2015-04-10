@@ -1,25 +1,25 @@
-define(['angular', 'configService'], function(angular, configService) {
+define(['configService'], function(configService) {
 
-    angular.module('ProjectService', [])
-
-    .service('ProjectService', ['$http', '$rootScope', 'ConfigService', function($http, $rootScope, ConfigService) {
-        this.project = null;
-        this.transitions = [];
-        this.applicationNodes = [];
-        this.groupNodes = [];
-        this.idToNode = {};
-        this.idToElement = {};
+    var service = ['$http', '$rootScope', 'ConfigService', function($http, $rootScope, ConfigService) {
+        var serviceObject = {};
         
-        this.getProject = function() {
+        serviceObject.project = null;
+        serviceObject.transitions = [];
+        serviceObject.applicationNodes = [];
+        serviceObject.groupNodes = [];
+        serviceObject.idToNode = {};
+        serviceObject.idToElement = {};
+        
+        serviceObject.getProject = function() {
             return this.project;
         };
         
-        this.setProject = function(project) {
+        serviceObject.setProject = function(project) {
             this.project = project;
             this.parseProject();
         };
         
-        this.getNodes = function() {
+        serviceObject.getNodes = function() {
             var nodes = null;
             var project = this.project;
             
@@ -30,19 +30,19 @@ define(['angular', 'configService'], function(angular, configService) {
             return nodes;
         };
         
-        this.getApplicationNodes = function() {
+        serviceObject.getApplicationNodes = function() {
             return this.applicationNodes;
         };
         
-        this.getGroupNodes = function() {
+        serviceObject.getGroupNodes = function() {
             return this.groupNodes;
         };
         
-        this.getIdToNode = function() {
+        serviceObject.getIdToNode = function() {
             return this.idToNode;
         };
         
-        this.isNode = function(id) {
+        serviceObject.isNode = function(id) {
             var result = false;
             var nodes = this.getNodes();
             
@@ -65,7 +65,7 @@ define(['angular', 'configService'], function(angular, configService) {
         };
         
         // adds or update transition if exists
-        this.addTransition = function(transition) {
+        serviceObject.addTransition = function(transition) {
         
             var existingTransitions = this.getTransitions();
             var replaced = false;
@@ -81,7 +81,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.addNode = function(node) {
+        serviceObject.addNode = function(node) {
             var existingNodes = this.project.nodes;
             
             var replaced = false;
@@ -100,7 +100,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.addApplicationNode = function(node) {
+        serviceObject.addApplicationNode = function(node) {
             
             var applicationNodes = this.applicationNodes;
             
@@ -109,7 +109,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.addGroupNode = function(node) {
+        serviceObject.addGroupNode = function(node) {
             
             var groupNodes = this.groupNodes;
             
@@ -120,7 +120,7 @@ define(['angular', 'configService'], function(angular, configService) {
             $rootScope.$broadcast('groupsChanged');
         };
         
-        this.addNodeToGroupNode = function(groupId, nodeId) {
+        serviceObject.addNodeToGroupNode = function(groupId, nodeId) {
             if (groupId != null && nodeId != null) {
                 var group = this.getNodeById(groupId);
                 if (group != null) {
@@ -134,7 +134,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.isGroupNode = function(id) {
+        serviceObject.isGroupNode = function(id) {
             var result = false;
             
             var groupNode = this.getNodeById(id);
@@ -150,7 +150,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return result;
         };
         
-        this.isApplicationNode = function(id) {
+        serviceObject.isApplicationNode = function(id) {
             var result = false;
             
             var applicationNode = this.getNodeById(id);
@@ -166,11 +166,11 @@ define(['angular', 'configService'], function(angular, configService) {
             return result;
         };
         
-        this.getGroups = function() {
+        serviceObject.getGroups = function() {
             return this.groupNodes;
         };
         
-        this.loadNodes = function(nodes) {
+        serviceObject.loadNodes = function(nodes) {
             if (nodes != null) {
                 for (var n = 0 ; n < nodes.length; n++) {
                     var node = nodes[n];
@@ -200,7 +200,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.loadTransitions = function(transitions) {
+        serviceObject.loadTransitions = function(transitions) {
             if (transitions != null) {
                 for (var t = 0; t < transitions.length; t++) {
                     var transition = transitions[t];
@@ -216,7 +216,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.parseProject = function() {
+        serviceObject.parseProject = function() {
             var project = this.project;
             if (project != null) {
                 var nodes = project.nodes;
@@ -241,19 +241,19 @@ define(['angular', 'configService'], function(angular, configService) {
             }
         };
         
-        this.setIdToNode = function(id, element) {
+        serviceObject.setIdToNode = function(id, element) {
             if (id != null) {
                 this.idToNode[id] = element;
             }
         };
         
-        this.setIdToElement = function(id, element) {
+        serviceObject.setIdToElement = function(id, element) {
             if (id != null) {
                 this.idToElement[id] = element;
             }
         };
         
-        this.getElementById = function(id) {
+        serviceObject.getElementById = function(id) {
             var element = null;
             
             if (id != null) {
@@ -263,7 +263,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return element;
         }
         
-        this.getNodeById = function(id) {
+        serviceObject.getNodeById = function(id) {
             var element = null;
             
             if (id != null) {
@@ -273,7 +273,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return element;
         };
         
-        this.getTransitionById = function(id) {
+        serviceObject.getTransitionById = function(id) {
             var element = null;
             
             if (id != null) {
@@ -283,7 +283,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return element;
         };
         
-        this.getConstraintById = function(id) {
+        serviceObject.getConstraintById = function(id) {
             var element = null;
             
             if (id != null) {
@@ -293,7 +293,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return element;
         };
         
-        this.getProjectStartId = function() {
+        serviceObject.getProjectStartId = function() {
             var projectStartId = null;
             var project = this.getProject();
             
@@ -308,7 +308,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return projectStartId;
         };
         
-        this.getParentGroup = function(nodeId) {
+        serviceObject.getParentGroup = function(nodeId) {
             var result = null;
             
             if (nodeId != null) {
@@ -331,7 +331,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return result;
         };
         
-        this.isNodeDirectChildOfGroup = function(node, group) {
+        serviceObject.isNodeDirectChildOfGroup = function(node, group) {
             var result = false;
             
             if (node != null && group != null) {
@@ -346,7 +346,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return result;
         };
         
-        this.isNodeDescendentOfGroup = function(node, group) {
+        serviceObject.isNodeDescendentOfGroup = function(node, group) {
             var result = false;
             
             if (node != null && group != null) {
@@ -361,7 +361,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return result;
         };
         
-        this.getDescendentsOfGroup = function(group) {
+        serviceObject.getDescendentsOfGroup = function(group) {
             var descendents = [];
             
             if (group != null) {
@@ -387,7 +387,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return descendents;
         };
         
-        this.isStartNode = function(node) {
+        serviceObject.isStartNode = function(node) {
             var result = false;
             
             if (node != null) {
@@ -418,7 +418,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return result;
         };
         
-        this.getStartNodeId = function() {
+        serviceObject.getStartNodeId = function() {
             var startNodeId = null;
             var project = this.getProject();
             if (project != null) {
@@ -427,7 +427,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return startNodeId;
         };
         
-        this.getConstraints = function() {
+        serviceObject.getConstraints = function() {
             var constraints = null;
             var project = this.getProject();
             
@@ -438,7 +438,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return constraints;
         };
         
-        this.getConstraintsForNode = function(node) {
+        serviceObject.getConstraintsForNode = function(node) {
             var constraints = [];
             
             var allConstraints = this.getConstraints();
@@ -454,7 +454,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return constraints;
         };
         
-        this.isNodeAffectedByConstraint = function(node, constraint) {
+        serviceObject.isNodeAffectedByConstraint = function(node, constraint) {
             var result = false;
             
             if (node != null && constraint != null) {
@@ -496,7 +496,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return result;
         };
         
-        this.getNavigationMode = function() {
+        serviceObject.getNavigationMode = function() {
             var navigationMode = null;
             var project = this.getProject();
             if (project != null) {
@@ -505,7 +505,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return navigationMode;
         };
         
-        this.getNavigationApplications = function() {
+        serviceObject.getNavigationApplications = function() {
             var navigationApplications = null;
             var project = this.getProject();
             if (project != null) {
@@ -514,7 +514,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return navigationApplications;
         };
         
-        this.getTransitions = function() {
+        serviceObject.getTransitions = function() {
             var transitions = null;
             var project = this.getProject();
             if (project != null) {
@@ -523,7 +523,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return transitions;
         };
 
-        this.getTransitionsByFromNodeId = function(fromNodeId) {
+        serviceObject.getTransitionsByFromNodeId = function(fromNodeId) {
             var transitionsResults = [];
             if (fromNodeId != null) {
                 var transitions = this.getTransitions();
@@ -541,7 +541,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return transitionsResults;
         };
         
-        this.getTransitionsByToNodeId = function(toNodeId) {
+        serviceObject.getTransitionsByToNodeId = function(toNodeId) {
             var transitionsResults = [];
             if (toNodeId != null) {
                 var transitions = this.getTransitions();
@@ -559,7 +559,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return transitionsResults;
         };
         
-        this.getTransitionsByFromAndToNodeId = function(fromNodeId, toNodeId) {
+        serviceObject.getTransitionsByFromAndToNodeId = function(fromNodeId, toNodeId) {
             var transitionsResults = [];
             if (toNodeId != null) {
                 var transitions = this.getTransitions();
@@ -577,7 +577,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return transitionsResults;
         };
 
-        this.getLayoutLogic = function() {
+        serviceObject.getLayoutLogic = function() {
             var layoutLogic = null;
             var project = this.getProject();
             if (project != null) {
@@ -586,7 +586,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return layoutLogic;
         };
         
-        this.retrieveProject = function() {
+        serviceObject.retrieveProject = function() {
             var projectFileUrl = ConfigService.getConfigParam('projectURL');
             
             return $http.get(projectFileUrl).then(angular.bind(this, function(result) {
@@ -596,7 +596,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }));
         };
         
-        this.getNodeTypeByNode = function(node) {
+        serviceObject.getNodeTypeByNode = function(node) {
             var nodeType = null;
             
             if (node != null) {
@@ -606,7 +606,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return nodeType;
         };
         
-        this.getApplicationTypeByNode = function(node) {
+        serviceObject.getApplicationTypeByNode = function(node) {
             var applicationType = null;
             
             if (node != null) {
@@ -616,7 +616,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return applicationType;
         };
         
-        this.getNodeSrcByNodeId = function(nodeId) {
+        serviceObject.getNodeSrcByNodeId = function(nodeId) {
             var nodeSrc = null;
             
             var node = this.getNodeById(nodeId);
@@ -633,7 +633,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return nodeSrc;
         };
         
-        this.getNodeTitleFromNodeId = function(nodeId) {
+        serviceObject.getNodeTitleFromNodeId = function(nodeId) {
             var title = null;
             
             var node = this.getNodeById(nodeId);
@@ -645,7 +645,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return title;
         };
         
-        this.getStudentIsOnGroupNodeClass = function() {
+        serviceObject.getStudentIsOnGroupNodeClass = function() {
             var studentIsOnGroupNodeClass = null;
             var project = this.getProject();
             
@@ -660,7 +660,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return studentIsOnGroupNodeClass;
         };
         
-        this.getStudentIsOnApplicationNodeClass = function() {
+        serviceObject.getStudentIsOnApplicationNodeClass = function() {
             var studentIsOnApplicationNodeClass = null;
             var project = this.getProject();
             
@@ -674,6 +674,9 @@ define(['angular', 'configService'], function(angular, configService) {
             
             return studentIsOnApplicationNodeClass;
         };
-    }]);
+        
+        return serviceObject;
+    }];
     
+    return service;
 });

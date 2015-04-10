@@ -1,10 +1,9 @@
-define(['angular', 'configService'], function(angular, configService) {
-
-    angular.module('NodeService', [])
+define(['configService'], function(configService) {
     
-    .service('NodeService', ['$http', '$q', 'ConfigService', function($http, $q, ConfigService) {
+    var service = ['$http', '$q', 'ConfigService', function($http, $q, ConfigService) {
+        var serviceObject = {};
         
-        this.getNodeContentByNodeSrc = function(nodeSrc) {
+        serviceObject.getNodeContentByNodeSrc = function(nodeSrc) {
             return $q(angular.bind(this, function(resolve, reject) {
                 $http.get(nodeSrc).then(angular.bind(this, function(result) {
                     var nodeContent = result.data;
@@ -15,7 +14,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }));
         };
         
-        this.retrieveNode = function() {
+        serviceObject.retrieveNode = function() {
             var projectFileUrl = ConfigService.getConfigParam('projectURL');
             
             return $http.get(projectFileUrl).then(angular.bind(this, function(result) {
@@ -25,7 +24,7 @@ define(['angular', 'configService'], function(angular, configService) {
             }));
         };
         
-        this.injectNodeLinks = function(content) {
+        serviceObject.injectNodeLinks = function(content) {
             if (content != null) {
                 /*
                 if (text.indexOf("{{studentFirstNames}}") >= 0) {
@@ -55,7 +54,7 @@ define(['angular', 'configService'], function(angular, configService) {
             return content;
         };
         
-        this.injectStudentData = function(content) {
+        serviceObject.injectStudentData = function(content) {
             if (content != null) {
                 var regex = /{{work\|([^}}]*)}}/g;
                 
@@ -101,6 +100,47 @@ define(['angular', 'configService'], function(angular, configService) {
             }
             return content;
         };
-    }]);
+        
+        serviceObject.isWorkSubmitted = function(nodeVisits) {
+            var result = false;
+            
+            if (nodeVisits != null) {
+                for (var nv = 0; nv < nodeVisits.length; nv++) {
+                    var nodeVisit = nodeVisits[nv];
+                    
+                    if (nodeVisit != null) {
+                        var nodeStates = nodeVisit.nodeStates;
+                        
+                        if (nodeStates != null) {
+                            for (var ns = 0; ns < nodeStates.length; ns++) {
+                                var nodeState = nodeStates[ns];
+                                
+                                if (nodeState != null) {
+                                    var isSubmit = nodeState.isSubmit;
+                                    
+                                    if (isSubmit != null) {
+                                        result = isSubmit;
+                                        
+                                        if (result) {
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            if (isSubmit != null) {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return result;
+        };
+        
+        return serviceObject;
+    }];
     
+    return service;
 });

@@ -8,30 +8,47 @@ define([
         'angularUIRouter',
         'angularWebSocket',
         'configService',
-        'projectService',
         'nodeService',
         'openResponseService',
         'portfolioService',
+        'projectService',
         'studentDataService',
         'webSocketService'
-        ], function(angular, $) {
+        ], function(
+                angular,
+                $,
+                jqueryUI,
+                angularAnimate,
+                angularDragDrop,
+                angularSortable,
+                angularUIRouter,
+                angularWebSocket,
+                configService,
+                nodeService,
+                openResponseService,
+                portfolioService,
+                projectService,
+                studentDataService,
+                webSocketService
+                ) {
 
-	var app = angular.module('app', [
-	                                 'ui.router',
-	                                 'ui.sortable',
-	                                 'ngAnimate',
-	                                 'ngDragDrop',
-	                                 'ngWebSocket',
-	                                 'ConfigService',
-	                                 'ProjectService',
-	                                 'NodeService',
-	                                 'OpenResponseService',
-	                                 'PortfolioService',
-	                                 'StudentDataService',
-	                                 'WebSocketService'
-	                                 ]);
-	
-	app.directive('compile', function($compile) {
+    var app = angular.module('app', [
+                                     'ui.router',
+                                     'ui.sortable',
+                                     'ngAnimate',
+                                     'ngDragDrop',
+                                     'ngWebSocket'
+                                     ]);
+    
+    app.factory('ConfigService', configService);
+    app.factory('NodeService', nodeService);
+    app.factory('OpenResponseService', openResponseService);
+    app.factory('PortfolioService', portfolioService);
+    app.factory('ProjectService', projectService);
+    app.factory('StudentDataService', studentDataService);
+    app.factory('WebSocketService', webSocketService);
+    
+    app.directive('compile', function($compile) {
         return function(scope, ele, attrs) {
             scope.$watch(
                     function(scope) {
@@ -44,36 +61,36 @@ define([
             );
         };
     });
-	
-	app.filter('sanitizeHTML', ['$sce', function($sce) {
-	    return function(htmlCode) {
-	        return $sce.trustAsHtml(htmlCode);
-	    };
-	}]);
-	
-	app.init = function() {
-		angular.bootstrap(document, ['app']);
-	};
-	
-	app.loadController = function(controllerName) {
-		return ['$q', function($q) {
-			var deferred = $q.defer();
-			require([controllerName], function() {
-				deferred.resolve();
-			});
-			return deferred.promise;
-		}];
-	};
-	
-	app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
-	            function($urlRouterProvider, $stateProvider, $controllerProvider) {
-		
-		$urlRouterProvider.otherwise('/vle/');
-		
-		app.$controllerProvider = $controllerProvider;
-		
-		$stateProvider
-    		.state('root', {
+    
+    app.filter('sanitizeHTML', ['$sce', function($sce) {
+        return function(htmlCode) {
+            return $sce.trustAsHtml(htmlCode);
+        };
+    }]);
+    
+    app.init = function() {
+        angular.bootstrap(document, ['app']);
+    };
+    
+    app.loadController = function(controllerName) {
+        return ['$q', function($q) {
+            var deferred = $q.defer();
+            require([controllerName], function() {
+                deferred.resolve();
+            });
+            return deferred.promise;
+        }];
+    };
+    
+    app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
+                function($urlRouterProvider, $stateProvider, $controllerProvider) {
+        
+        $urlRouterProvider.otherwise('/vle/');
+        
+        app.$controllerProvider = $controllerProvider;
+        
+        $stateProvider
+            .state('root', {
                 url: '',
                 abstract: true,
                 templateUrl: 'wise5/vle/vle.html',
@@ -117,6 +134,7 @@ define([
                 }
             });
             
-	}]);
-	return app;
+    }]);
+    
+    return app;
 });

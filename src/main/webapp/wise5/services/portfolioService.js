@@ -1,21 +1,21 @@
-define(['angular', 'configService'], function(angular, configService) {
-
-    angular.module('PortfolioService', [])
+define(['configService'], function(configService) {
     
-    .service('PortfolioService', ['$http', '$q', '$rootScope', 'ConfigService',
+    var service = ['$http', '$q', '$rootScope', 'ConfigService',
                                   function($http, $q, $rootScope, ConfigService) {
-        this.portfolio = {};
-        this.portfolio.items = [];
-        this.portfolio.deletedItems = [];
+        var serviceObject = {};
         
-        this.addItem = function(portfolioItem) {
+        serviceObject.portfolio = {};
+        serviceObject.portfolio.items = [];
+        serviceObject.portfolio.deletedItems = [];
+        
+        serviceObject.addItem = function(portfolioItem) {
           this.portfolio.items.push(portfolioItem);
           
           // the current node is about to change
           $rootScope.$broadcast('portfolioChanged', {portfolio: this.portfolio});
         };
         
-        this.deleteItem = function(itemToDelete) {
+        serviceObject.deleteItem = function(itemToDelete) {
             var items = this.portfolio.items;
             var deletedItems = this.portfolio.deletedItems;
             for (var i = 0; i < items.length; i++) {
@@ -26,6 +26,9 @@ define(['angular', 'configService'], function(angular, configService) {
                 }
             }
         };
-    }]);
+        
+        return serviceObject;
+    }];
     
+    return service;
 });

@@ -1,11 +1,11 @@
-define(['angular', 'configService'], function(angular, configService) {
+define(['configService'], function(configService) {
 
-    angular.module('WebSocketService', [])
-
-    .service('WebSocketService', ['$http', '$rootScope', '$websocket', 'ConfigService', function($http, $rootScope, $websocket, ConfigService) {
-        this.dataStream = null;
+    var service = ['$http', '$rootScope', '$websocket', 'ConfigService', function($http, $rootScope, $websocket, ConfigService) {
+        var serviceObject = {};
         
-        this.initialize = function() {
+        serviceObject.dataStream = null;
+        
+        serviceObject.initialize = function() {
             var runId = ConfigService.getRunId();
             var periodId = ConfigService.getPeriodId();
             var workgroupId = ConfigService.getWorkgroupId();
@@ -23,7 +23,8 @@ define(['angular', 'configService'], function(angular, configService) {
             });
         };
         
-        
-    }]);
+        return serviceObject;
+    }];
     
+    return service;
 });
