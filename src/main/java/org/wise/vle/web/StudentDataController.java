@@ -239,6 +239,8 @@ public class StudentDataController {
 				request.setAttribute("userId", workgroupIdStr);
 				
 				userIdStr = workgroupIdStr;
+				
+				userIdArray = userIdStr.split(":");
 			} catch (ObjectNotFoundException e) {
 				
 			}	
