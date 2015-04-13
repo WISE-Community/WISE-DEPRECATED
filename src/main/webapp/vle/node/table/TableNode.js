@@ -657,6 +657,7 @@ TableNode.prototype.createAggregateTable = function(dom, workArray, functionArgs
     // create the table element
     var table = $('<table></table>');
     table.attr('border', 1);
+    table.css('border-collapse', 'collapse');
     
     // loop through all the rows
     for (var r = 0; r < allRows.length; r++) {
