@@ -1,9 +1,15 @@
+
 <link href='wise5/vle/portfolio/animation.css' rel="stylesheet"></link>
+<style>
+.currentView {
+    background-color: yellow;
+}
+</style>
 <div class={{vleController.layoutState}} ng-controller='PortfolioController as portfolioController'>
-	   {{portfolioController.log()}}
-	   <input type='button' value='Portfolio' ng-click='portfolioController.showPortfolio()'></input>
-        <input type='button' value='My Work' ng-click='portfolioController.showMyWork()'></input>
-	   <div class="animate-switch-container" ng-switch on='portfolioController.viewType'>
+	   <input type='button' value='Portfolio' ng-click='portfolioController.showView("portfolio")' ng-class='{currentView: portfolioController.currentView === "portfolio"}'></input>
+       <input type='button' value='My Work' ng-click='portfolioController.showView("myWork")' ng-class='{currentView: portfolioController.currentView === "myWork"}'></input>
+       <input type='button' value='My Files' ng-click='portfolioController.showView("myFiles")' ng-class='{currentView: portfolioController.currentView === "myFiles"}'></input>
+	   <div class="animate-switch-container" ng-switch on='portfolioController.currentView'>
 	       <div class="animate-switch" ng-switch-when='portfolio'>
 	        <h3>My Portfolio</h3>
 			
@@ -35,6 +41,17 @@
         </div>
         <div class="animate-switch" ng-switch-when='myWork'>
             <select ng-model="selection" ng-options="applicationNode.title for applicationNode in portfolioController.applicationNodes">
+            </select>
+            <div 
+            data-drag='true'
+            data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
+            jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioController.myWorkDragStartCallback(selection.id, selection.type)'}"
+                 ng-bind-html='portfolioController.showStudentWorkByNodeId(selection.id, selection.type) | sanitizeHTML'>
+            </div>
+        </div>
+        <div class="animate-switch" ng-switch-when='myFiles'>
+            <div ng-switch on='portfolioController.studentAssets'
+            <select ng-model="selection" ng-options="studentAsset.name for studentAsset in portfolioController.studentAssets">
             </select>
             <div 
             data-drag='true'

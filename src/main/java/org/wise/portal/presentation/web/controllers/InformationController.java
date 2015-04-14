@@ -603,6 +603,7 @@ public class InformationController {
 				config.put("getPortfolioUrl", getPortfolioUrl);
 				config.put("postPortfolioUrl", postPortfolioUrl);
 				config.put("studentAssetManagerUrl", studentAssetManagerUrl);
+                config.put("studentAssetManagerURL", studentAssetManagerUrl);
 				config.put("viewStudentAssetsUrl", viewStudentAssetsUrl);
 				config.put("runInfo", run.getInfo());
 				config.put("isRealTimeEnabled", true);  // make this run-specific setting

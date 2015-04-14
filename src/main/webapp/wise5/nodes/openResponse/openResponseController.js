@@ -43,7 +43,7 @@ define(['app'], function(app) {
         this.saveStudentWork = function(saveTriggeredBy) {
             if (saveTriggeredBy != null) {
                 var doSave = false;
-                if (saveTriggeredBy === 'nodeOnExit') {
+                if (saveTriggeredBy === 'nodeOnExit' || saveTriggeredBy === 'logOut') {
                     StudentDataService.endNodeVisitByNodeId(this.nodeId);
                     doSave = true;
                 }

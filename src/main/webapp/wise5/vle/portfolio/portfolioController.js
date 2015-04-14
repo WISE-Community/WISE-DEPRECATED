@@ -9,16 +9,17 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
                 PortfolioService,
                 ProjectService,
                 SessionService,
+                StudentAssetService,
                 StudentDataService) {
         
-        this.viewType = 'portfolio'; // [portfolio, myWork]
+        this.currentView = 'portfolio'; // [portfolio, myWork]
         this.portfolio = null;
         this.itemId = null;
         this.item = null;
         this.itemSource = false;
         this.isVisible = false;
-        
         this.applicationNodes = ProjectService.getApplicationNodes();
+        this.studentAssets = StudentAssetService.getStudentAssets();
         
         $scope.$on('portfolioChanged', angular.bind(this, function(event, args) {
             this.portfolio = args.portfolio;
@@ -42,14 +43,9 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
             this.isVisible = false;
         };
         
-        this.showPortfolio = function() {
-            this.viewType = 'portfolio';
+        this.showView = function(viewName) {
+            this.currentView = viewName;
         };
-        
-        this.showMyWork = function() {
-            this.viewType = 'myWork';
-        };
-        
         
         this.portfolioItemDragStartCallback = function(event, ui, item) {
             $(ui.helper.context).data('importPortfolioItem', item);
