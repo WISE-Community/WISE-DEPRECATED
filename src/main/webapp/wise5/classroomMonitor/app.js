@@ -8,29 +8,51 @@ define([
         'angularUIRouter',
         'angularWebSocket',
         'configService',
-        'projectService',
         'nodeService',
         'openResponseService',
         'portfolioService',
+        'projectService',
+        'sessionService',
         'studentDataService',
         'webSocketService'
-        ], function(angular, $) {
+        ], function(
+                angular,
+                $, 
+                jqueryUI,
+                angularAnimate,
+                angularDragDrop,
+                angularSortable,
+                angularUIRouter,
+                angularWebSocket,
+                configService,
+                nodeService,
+                openResponseService,
+                portfolioService,
+                projectService,
+                sessionService,
+                studentDataService,
+                webSocketService) {
 
 	var app = angular.module('app', [
 	                                 'ui.router',
 	                                 'ui.sortable',
 	                                 'ngAnimate',
 	                                 'ngDragDrop',
-	                                 'ngWebSocket',
-	                                 'ConfigService',
-	                                 'ProjectService',
-	                                 'NodeService',
-	                                 'OpenResponseService',
-	                                 'PortfolioService',
-	                                 'StudentDataService',
-	                                 'WebSocketService'
+	                                 'ngWebSocket'
 	                                 ]);
 	
+    // core services
+    app.factory('ConfigService', configService);
+    app.factory('NodeService', nodeService);
+    app.factory('PortfolioService', portfolioService);
+    app.factory('ProjectService', projectService);
+    app.factory('SessionService', sessionService);
+    app.factory('StudentDataService', studentDataService);
+    app.factory('WebSocketService', webSocketService);
+    
+    // node services
+    app.factory('OpenResponseService', openResponseService);
+    
 	app.directive('compile', function($compile) {
         return function(scope, ele, attrs) {
             scope.$watch(

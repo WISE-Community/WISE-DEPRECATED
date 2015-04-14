@@ -42,14 +42,17 @@ define([
                                      'ngWebSocket'
                                      ]);
     
+    // core services
     app.factory('ConfigService', configService);
     app.factory('NodeService', nodeService);
-    app.factory('OpenResponseService', openResponseService);
     app.factory('PortfolioService', portfolioService);
     app.factory('ProjectService', projectService);
     app.factory('SessionService', sessionService);
     app.factory('StudentDataService', studentDataService);
     app.factory('WebSocketService', webSocketService);
+    
+    // node services
+    app.factory('OpenResponseService', openResponseService);
     
     app.directive('compile', function($compile) {
         return function(scope, ele, attrs) {
