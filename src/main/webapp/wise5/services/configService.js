@@ -30,14 +30,22 @@ define([], function() {
             return this.config;
         };
     
-        serviceObject.getConfigParam = function(urlName) {
+        serviceObject.getConfigParam = function(paramName) {
             if (this.config !== null) {
-                return this.config[urlName];
+                return this.config[paramName];
             } else {
                 return null;
             }
         }; 
         
+        serviceObject.getSessionLogOutURL = function() {
+            return this.getConfigParam('sessionLogOutURL');
+        };
+
+        serviceObject.getMainHomePageURL = function() {
+            return this.getConfigParam('mainHomePageURL');
+        };
+
         serviceObject.getWorkgroupId = function() {
             var workgroupId = null;
             var userInfo = this.getConfigParam('userInfo');

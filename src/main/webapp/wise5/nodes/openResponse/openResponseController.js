@@ -1,12 +1,14 @@
 define(['app'], function(app) {
     app.$controllerProvider.register('OpenResponseController', 
-            function($scope, 
+            function($scope,
+                    $rootScope,
                     $state, 
                     $stateParams, 
                     ConfigService,
                     NodeService,
                     OpenResponseService,
-                    ProjectService, 
+                    ProjectService,
+                    SessionService,
                     StudentDataService) {
         this.autoSaveInterval = 10000; // auto-save interval in milliseconds
         this.nodeContent = null;
@@ -38,30 +40,45 @@ define(['app'], function(app) {
             }
         };
         
-        this.saveStudentState = function(saveTriggeredBy) {
+        this.saveStudentWork = function(saveTriggeredBy) {
             if (saveTriggeredBy != null) {
-                var studentState = {};
-                studentState.response = this.studentResponse;
-                studentState.saveTriggeredBy = saveTriggeredBy;
-                studentState.timestamp = Date.parse(new Date());
-                if (saveTriggeredBy === 'submitButton') {
-                    studentState.isSubmit = true;
+                var doSave = false;
+                if (saveTriggeredBy === 'nodeOnExit') {
+                    StudentDataService.endNodeVisitByNodeId(this.nodeId);
+                    doSave = true;
                 }
-                StudentDataService.addNodeStateToLatestNodeVisit(this.nodeId, studentState);
                 
-                this.calculateDisabled();
-                this.isDirty = false;
+                if (saveTriggeredBy === 'submitButton' || this.isDirty) {
+                    var studentState = {};
+                    studentState.response = this.studentResponse;
+                    studentState.saveTriggeredBy = saveTriggeredBy;
+                    studentState.timestamp = Date.parse(new Date());
+                    if (saveTriggeredBy === 'submitButton') {
+                        studentState.isSubmit = true;
+                    } 
+                    
+                    StudentDataService.addNodeStateToLatestNodeVisit(this.nodeId, studentState);
+                    doSave = true;
+                }
+                
+                if (doSave) {
+                    var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(this.nodeId);
+                    return StudentDataService.saveNodeVisitToServer(nodeVisit).then(angular.bind(this, function() {
+                                this.calculateDisabled();
+                                this.isDirty = false;
+                            }));
+                }
             }
         };
         
         this.saveButtonClicked = function() {
-            var saveTriggeredBy = 'saveButton';
-            this.saveStudentState(saveTriggeredBy);
+                var saveTriggeredBy = 'saveButton';
+                this.saveStudentWork(saveTriggeredBy);
         };
         
         this.submitButtonClicked = function() {
             var saveTriggeredBy = 'submitButton';
-            this.saveStudentState(saveTriggeredBy);
+            this.saveStudentWork(saveTriggeredBy);
         };
         
         this.studentResponseChanged = function() {
@@ -92,18 +109,28 @@ define(['app'], function(app) {
             if (nodeToExit.id === this.nodeId) {
                 // save and cancel autoSave interval
                 var saveTriggeredBy = 'nodeOnExit';
-                this.saveStudentState(saveTriggeredBy);
-                clearInterval(this.autoSaveIntervalId);
-                $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
+                this.saveStudentWork(saveTriggeredBy).then(angular.bind(this, function() {
+                    clearInterval(this.autoSaveIntervalId);
+                    $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
+                }));
             }
+        }));
+        
+        this.logOutListener = $scope.$on('logOut', angular.bind(this, function(event, args) {
+            console.log('logOut openResponseController this.nodeId: ' + this.nodeId);
+            
+            var saveTriggeredBy = 'logOut';
+            this.saveStudentWork(saveTriggeredBy).then(angular.bind(this, function() {
+                clearInterval(this.autoSaveIntervalId);
+                this.logOutListener();
+                SessionService.logOut();
+            }));
         }));
         
         // auto-save
         this.autoSaveIntervalId = setInterval(angular.bind(this, function() {
-            if (this.isDirty) {
-                var saveTriggeredBy = 'autoSave';
-                this.saveStudentState(saveTriggeredBy);
-            }
+            var saveTriggeredBy = 'autoSave';
+            this.saveStudentWork(saveTriggeredBy);
         }), this.autoSaveInterval);
         
         this.importWork = function() {
@@ -173,6 +200,5 @@ define(['app'], function(app) {
                 this.setStudentWork(populatedNodeState);
             } 
         });
-        
     });
 });

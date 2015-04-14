@@ -31,7 +31,6 @@ define(['app'], function(app) {
             };
             
             this.nodeUnloaded = function(nodeId) {
-                StudentDataService.endNodeVisitByNodeId(nodeId);
             };
             
             this.setCurrentNodeByNodeId = function(nodeId) {

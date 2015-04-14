@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents). 
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -561,6 +561,7 @@ public class StudentDataController {
 
 							//add stepWorkId and visitPostTime attributes to the json obj
 							nodeVisitJSON.put("stepWorkId", stepWorkId);
+							nodeVisitJSON.put("id", Long.valueOf(stepWorkId));
 							nodeVisitJSON.put("visitPostTime", stepWork.getPostTime().getTime());
 							//nodeVisitsJSON.append("visitedNodes", nodeVisitJSON);
 							
@@ -638,6 +639,7 @@ public class StudentDataController {
 
 							//add stepWorkId and visitPostTime attributes to the json obj
 							nodeVisitJSON.put("stepWorkId", stepWorkId);
+							nodeVisitJSON.put("id", Long.valueOf(stepWorkId));
 							nodeVisitJSON.put("visitPostTime", stepWork.getPostTime().getTime());
 							//nodeVisitsJSON.append("visitedNodes", nodeVisitJSON);
 							
@@ -1117,5 +1119,4 @@ public class StudentDataController {
 		
 		return annotation;
 	}
-	
 }

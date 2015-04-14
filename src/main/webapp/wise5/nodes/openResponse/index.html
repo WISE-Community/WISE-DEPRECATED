@@ -24,6 +24,9 @@ nodeContent end
 -->
 Open Response HTML
 <div ng-controller='OpenResponseController as openResponseController'>
+<style>
+{{openResponseController.nodeContent.style}}
+</style>
 <div id='prompt' compile='openResponseController.nodeContent.prompt'></div>
 <textarea id='responseTextarea'
     rows='{{openResponseController.nodeContent.numRows || 20}}'

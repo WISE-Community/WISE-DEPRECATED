@@ -1,12 +1,14 @@
 define(['app', 'portfolioService'], function(app, portfolioService) {
     app.$controllerProvider.register('PortfolioController', 
-        function($scope, 
+        function($scope,
+                $rootScope,
                 $state, 
                 $stateParams, 
                 ConfigService,
                 OpenResponseService,
                 PortfolioService,
                 ProjectService,
+                SessionService,
                 StudentDataService) {
         
         this.viewType = 'portfolio'; // [portfolio, myWork]
@@ -20,6 +22,12 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
         
         $scope.$on('portfolioChanged', angular.bind(this, function(event, args) {
             this.portfolio = args.portfolio;
+        }));
+        
+        this.logOutListener = $scope.$on('logOut', angular.bind(this, function(event, args) {
+            console.log('logOut portfolio');
+            this.logOutListener();
+            SessionService.logOut();
         }));
         
         this.deleteItem = function(item) {

@@ -92,12 +92,27 @@
     background-color: aliceblue;
 }
 
+#homeButton {
+    position: absolute;
+    right: 150px;
+    top: 100px;
+}
+
+#logOutButton {
+    position: absolute;
+    right: 50px;
+    top: 100px;
+}
+
 </style>
 </head>
 <body>
 <div ng-controller='VLEController as vleController'  
     data-drop="true"
     jqyoui-droppable="{onDrop: 'vleController.portfolioDropCallback()'}">
+<style>
+{{vleController.projectStyle}}
+</style>    
 	<span ng-if="vleController.currentNode"> CurrentNode:
 		"{{vleController.currentNode.title}}"
 		({{vleController.currentNode.type}}, {{vleController.currentNode.id}})
@@ -120,6 +135,8 @@
     <div ui-view='navigationView'></div>
     <div ui-view='nodeView'></div>
     <br/>
+    <button id='homeButton' ng-click='vleController.goHome()'>Home</button>
+    <button id='logOutButton' ng-click='vleController.logOut()'>Log Out</button>
     <div id='portfolio'
             data-drag='true'
             data-jqyoui-options="{}"

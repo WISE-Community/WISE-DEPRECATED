@@ -22,6 +22,7 @@ require.config({
         'portfolioController': 'vle/portfolio/portfolioController',
         'portfolioService': 'services/portfolioService',
         'projectService': 'services/projectService',
+        'sessionService': 'services/sessionService',
         'studentDataService': 'services/studentDataService',
         'vleController': 'vle/vleController',
         'webSocketService': 'services/webSocketService'

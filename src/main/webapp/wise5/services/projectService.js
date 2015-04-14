@@ -19,6 +19,15 @@ define(['configService'], function(configService) {
             this.parseProject();
         };
         
+        serviceObject.getProjectStyle = function() {
+            var style = '';
+            var project = this.project;
+            if (project != null) {
+                style = project.style;
+            }
+            return style;
+        };
+        
         serviceObject.getNodes = function() {
             var nodes = null;
             var project = this.project;

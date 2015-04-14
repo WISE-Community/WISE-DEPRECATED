@@ -12,6 +12,7 @@ define([
         'openResponseService',
         'portfolioService',
         'projectService',
+        'sessionService',
         'studentDataService',
         'webSocketService'
         ], function(
@@ -28,6 +29,7 @@ define([
                 openResponseService,
                 portfolioService,
                 projectService,
+                sessionService,
                 studentDataService,
                 webSocketService
                 ) {
@@ -45,6 +47,7 @@ define([
     app.factory('OpenResponseService', openResponseService);
     app.factory('PortfolioService', portfolioService);
     app.factory('ProjectService', projectService);
+    app.factory('SessionService', sessionService);
     app.factory('StudentDataService', studentDataService);
     app.factory('WebSocketService', webSocketService);
     

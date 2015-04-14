@@ -35,6 +35,7 @@ define(['configService', 'projectService'], function(configService, projectServi
         };
         
         serviceObject.setCurrentNode = function(node) {
+            console.log('listeners: ' + $rootScope.$$listeners.nodeOnExit);
             var previousCurrentNode = this.currentNode;
             
             if (previousCurrentNode !== node) {
@@ -124,6 +125,9 @@ define(['configService', 'projectService'], function(configService, projectServi
             httpConfig.url = studentDataURL;
             httpConfig.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
             var params = {};
+            if (nodeVisit != null && nodeVisit.id != null) {
+                params.id = nodeVisit.id;
+            }
             params.userId = ConfigService.getWorkgroupId();
             params.runId = ConfigService.getRunId();
             params.periodId = ConfigService.getPeriodId();
@@ -419,7 +423,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             "nodeStates": [],
             "nodeId": "node_2.json",
             "visitEndTime": 1424728224000,
-            "stepWorkId": "8752274"
+            "id": 123
         }
              */
             
@@ -434,7 +438,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             if (node != null) {
                 newNodeVisit.nodeType = node.type;
             }
-            newNodeVisit.stepWorkId = null;
+            newNodeVisit.id = null;
             
             this.addNodeVisit(newNodeVisit);
             
@@ -565,7 +569,7 @@ define(['configService', 'projectService'], function(configService, projectServi
         serviceObject.addNodeStateToLatestNodeVisit = function(nodeId, nodeState) {
             var latestNodeVisit = this.getLatestNodeVisitByNodeId(nodeId);
             
-            this.addNodeStateToNodeVisit(nodeState, latestNodeVisit);
+            return this.addNodeStateToNodeVisit(nodeState, latestNodeVisit);
         };
         
         serviceObject.addNodeStateToNodeVisit = function(nodeState, nodeVisit) {
@@ -574,7 +578,6 @@ define(['configService', 'projectService'], function(configService, projectServi
                     nodeVisit.nodeStates = [];
                 }
                 nodeVisit.nodeStates.push(nodeState);
-                this.saveNodeVisitToServer(nodeVisit);
             }
         };
         
