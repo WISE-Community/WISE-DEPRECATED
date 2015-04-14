@@ -81,12 +81,12 @@
 
 #portfolio {
     position: absolute;
-    right: 0px;
+    right: 400px;
     min-width: 400px;
     min-height: 0px;
-    max-width: 600px;
+    max-width: 400px;
     max-height: 800px;
-    border: 2px solid black;
+    border: 1px solid black;
     overflow: auto;
     /*resize: both;*/
     background-color: aliceblue;
@@ -141,8 +141,8 @@
             data-drag='true'
             data-jqyoui-options="{}"
             jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'vleController.portfolioDragStartCallback()'}">
-        <button ng-click='vleController.showPortfolio()'>Portfolio Open</button>
-        <button ng-click='vleController.hidePortfolio()'>Portfolio Close</button>
+        <button ng-show='!vleController.isPortfolioVisible' ng-click='vleController.showPortfolio()'>Open Portfolio</button>
+        <button ng-show='vleController.isPortfolioVisible' ng-click='vleController.hidePortfolio()'>Close Portfolio</button>
         <div ng-show='vleController.isPortfolioVisible' ng-include="'wise5/vle/portfolio/portfolio.html'"></div>
     </div>
 </div>

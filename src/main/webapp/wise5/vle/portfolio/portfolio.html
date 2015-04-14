@@ -40,7 +40,7 @@
             data-drag='true'
             data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
             jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioController.myWorkDragStartCallback(selection.id, selection.type)'}"
-                 ng-bind-html='portfolioController.showStudentWorkByNodeId(selection.id) | sanitizeHTML'>
+                 ng-bind-html='portfolioController.showStudentWorkByNodeId(selection.id, selection.type) | sanitizeHTML'>
             </div>
         </div>
 </div>

@@ -101,6 +101,7 @@ define(['app'], function(app) {
             if (nodeState != null) {
                 var response = nodeState.response;
                 this.studentResponse = response;
+                this.calculateDisabled();
             }
         };
         
@@ -168,6 +169,11 @@ define(['app'], function(app) {
         };
         
         this.dropCallback = angular.bind(this, function(event, ui, title, $index) {
+            if (this.isDisabled) {
+                // don't import if step is disabled/locked
+                return;
+            }
+            
             var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
             var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
             var importPortfolioItem = $(ui.helper.context).data('importPortfolioItem');
@@ -198,6 +204,7 @@ define(['app'], function(app) {
                 }
                 
                 this.setStudentWork(populatedNodeState);
+                this.studentResponseChanged()
             } 
         });
     });

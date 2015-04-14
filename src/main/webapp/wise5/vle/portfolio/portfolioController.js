@@ -67,12 +67,16 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
             return StudentDataService.getLatestNodeStateByNodeId(nodeId);
         };
         
-        this.showStudentWorkByNodeId = function(nodeId) {
+        this.showStudentWorkByNodeId = function(nodeId, nodeType) {
             var result = null;
-            var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(nodeId);
-            if (latestNodeState != null) {
-                var studentWorkHTML = OpenResponseService.getStudentWorkAsHTML(latestNodeState);
-                result = studentWorkHTML;
+            if (nodeType === 'OpenResponse') {
+                var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(nodeId);
+                if (latestNodeState != null) {
+                    var studentWorkHTML = OpenResponseService.getStudentWorkAsHTML(latestNodeState);
+                    result = studentWorkHTML;
+                }
+            } else {
+                
             }
             return result;
         };

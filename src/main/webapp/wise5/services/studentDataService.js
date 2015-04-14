@@ -35,7 +35,6 @@ define(['configService', 'projectService'], function(configService, projectServi
         };
         
         serviceObject.setCurrentNode = function(node) {
-            console.log('listeners: ' + $rootScope.$$listeners.nodeOnExit);
             var previousCurrentNode = this.currentNode;
             
             if (previousCurrentNode !== node) {
