@@ -14,6 +14,8 @@ View.prototype.SVGDrawNode.generatePage = function(view){
 	this.content = this.view.activeContent.getContentJSON();
 	
 	this.maxSnaps = 10; // default max allowed snapshots
+	this.width = 600; // default width in pixels
+	this.height = 450; // default height in pixels
 	
 	var parent = document.getElementById('dynamicParent');
 	
@@ -29,6 +31,8 @@ View.prototype.SVGDrawNode.generatePage = function(view){
 	var descriptionOptionDiv = createElement(document, 'div', {id: 'descriptionOptionDiv'});
 	var backgroundLabel = document.createTextNode('Specify a background for the drawing canvas: ');
 	var backgroundDiv = createElement(document, 'div', {id: 'backgroundDiv'});
+	var dimensionsLabel = document.createTextNode('Specify the drawing canvas dimensions: ');
+    var dimensionsDiv = createElement(document, 'div', {id: 'dimensionsDiv'});
 	$(backgroundDiv).addClass('promptContainer');
 	var stampsDiv = createElement(document, 'div', {id:'stampsDiv'});
 	var autoScoringOptionsDiv = createElement(document, 'div', {id:'autoScoringOptionsDiv'});
@@ -49,6 +53,10 @@ View.prototype.SVGDrawNode.generatePage = function(view){
 	pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(backgroundDiv);
 	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(dimensionsLabel);
+    pageDiv.appendChild(createBreak());
+    pageDiv.appendChild(dimensionsDiv);
+    pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(stampsDiv);
 	pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(autoScoringOptionsDiv);
@@ -59,6 +67,7 @@ View.prototype.SVGDrawNode.generatePage = function(view){
 	this.generateSnapshotOption();
 	this.generateDescriptionOption();
 	this.generateBackground();
+	this.generateDimensions();
 	this.generateStamps();
 	this.generateAutoScoringOptions();
 	this.generateAutoScoringFeedbackAuthoringDiv();
@@ -233,6 +242,71 @@ View.prototype.SVGDrawNode.generateDescriptionOption = function(){
 };
 
 /**
+ * Generates the dimensions option for this svg draw
+ */
+View.prototype.SVGDrawNode.generateDimensions = function(){
+    var parent = document.getElementById('dimensionsDiv');
+    
+    /* wipe out old */
+    parent.innerHTML = '';
+    
+    /* create new */
+    var widthText = document.createTextNode('Canvas Width (in pixels; default is ' + this.width + '): ');
+    var heightText = document.createTextNode('Canvas Height (in pixels; default is ' + this.height + '): ');
+    var widthInput = createElement(document, 'input', {type:'text', size:'6', id:'widthInput', value:this.content.width, onchange:'eventManager.fire("svgdrawWidthChanged")'});
+    var heightInput = createElement(document, 'input', {type:'text', size:'6', id:'heightInput', value:this.content.height, onchange:'eventManager.fire("svgdrawHeightChanged")'});
+    
+    parent.appendChild(widthText);
+    parent.appendChild(widthInput);
+    parent.appendChild(createBreak());
+    parent.appendChild(heightText);
+    parent.appendChild(heightInput);
+    parent.appendChild(createBreak());
+    
+    /* set values based on current content */
+    if(!this.content.hasOwnProperty('width') || isNaN(parseInt(this.content.width))){
+        this.content.width = this.width;
+    }
+    $('#widthInput').val(this.content.width);
+    if(!this.content.hasOwnProperty('height') || isNaN(parseInt(this.content.height))){
+        this.content.height = this.height;
+    }
+    $('#heightInput').val(this.content.height);
+};
+
+/**
+ * Updates the width value of the content to the user specified value
+ * and refreshes the preview.
+ */
+View.prototype.SVGDrawNode.widthChanged = function(){
+    var width = $('#widthInput').val();
+    
+    if(isNaN(parseInt(width)) || width <= 0) {
+        alert('Please enter a number greater than 0');
+        $('#widthInput').val(this.content.width);
+        return;
+    }
+    this.content.width = width;
+    this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Updates the height value of the content to the user specified value
+ * and refreshes the preview.
+ */
+View.prototype.SVGDrawNode.heightChanged = function(){
+    var height = $('#heightInput').val();
+    
+    if(isNaN(parseInt(height)) || height <= 0) {
+        alert('Please enter a number greater than 0');
+        $('#heightInput').val(this.content.height);
+        return;
+    }
+    this.content.height = height;
+    this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
  * Generates the background prompt for this svg draw node
  */
 View.prototype.SVGDrawNode.generateBackground = function(){
@@ -261,7 +335,7 @@ View.prototype.SVGDrawNode.generateBackground = function(){
 	
 	//the label for the background url input
 	var backgroundImageUrlLabel = $(document.createTextNode("Image file (this will override any svg xml string specified above): "));
-	var maxImageSizeLabel = $(document.createTextNode(" - drawing dimensions are 600x450 pixels"));
+	var maxImageSizeLabel = $(document.createTextNode(" - drawing dimensions are 600x450 pixels unless otherwise specified above"));
 	//the text input for the background image url input
 	var backgroundImageUrl = $(createElement(document, 'input', {type: 'text', id: 'backgroundImageUrl', name: 'backgroundImageUrl', value: imgBg, size:50, onchange: 'eventManager.fire("svgdrawUpdateBackgroundImageUrl")'}));
 	//create the browse button that allows author to choose swf from project assets

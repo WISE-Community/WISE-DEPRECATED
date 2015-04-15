@@ -67,20 +67,20 @@
 #svg_editor #snapshots div.snap_delete {
 	background:#999999;
 	width:7px;
-	float:right;
-	margin-right:-2px;
-	margin-top:-118px;
-	padding:2px 5px 2px 6px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding:2px 5px 4px 6px;
 	color:#FFFFFF;
 }
 
 #svg_editor #snapshots div.snap_num {
 	background:#999999;
 	color:#FFFFFF;
-	float:left;
 	font-size:1.2em;
-	margin-left:-2px;
-	margin-top:-20px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
 	padding:2px 6px 2px 4px;
 }
 
@@ -101,14 +101,14 @@
 }
 
 #svg_editor #snapshots div.snap_wrapper {
-	float:left;
-	height:115px;
+	/*float:left;
+	height:115px;*/
 }
 
 #svg_editor #snapshots div.snap {
 	background-color:#eeeeee;
 	width:150px;
-	height:112.5px;
+	/*height:112.5px;*/
 	padding:2px;
 	margin:5px auto;
 	border:2px solid #999999;
@@ -119,6 +119,7 @@
 	-ms-transition: background-color .25s, border-color .25s;
 	-o-transition: background-color .25s, border-color .25s;
 	transition: background-color .25s, border-color .25s;
+	position: relative;
 }
 
 #svg_editor #snapshots div.hover {

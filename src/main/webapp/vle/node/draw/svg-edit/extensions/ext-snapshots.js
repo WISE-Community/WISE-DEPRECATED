@@ -238,10 +238,7 @@ svgEditor.addExtension("Snapshots", function(S) {
 	function createThumb(svgString){
 		var res = svgCanvas.getResolution();
 		var multiplier = 150/res.w;
-		var snapHeight = res.h * multiplier;
-		var snapWidth = 150;
-		var text = svgString.replace('<svg width="' + res.w + '" height="' + res.h + '"', '<svg width="' + snapWidth + '" height="' + snapHeight + '"');
-		text = text.replace(/<g>/gi,'<g transform="scale(' + multiplier + ')">');
+		var text = svgString.replace(/<g>/gi,'<g transform="scale(' + multiplier + ')">');
 		return text2xml(text);
 	}
 	
@@ -270,6 +267,10 @@ svgEditor.addExtension("Snapshots", function(S) {
 		var $snap = $("#snap_images .snap:eq(" + num + ")");
 		bindSnapshot($snap); // Bind snap thumbnail to click function that opens corresponding snapshot
 		document.getElementsByClassName("snap_wrapper")[num].appendChild(document.importNode(thumb.documentElement, true)); // add snapshot thumb to snapshots panel
+		
+		var $thumb = $('#snap' + id).find('svg');
+        setSnapDimensions($thumb);
+		
 		var container = $('#snap_images');
 		container.animate({
 			scrollTop: $snap.offset().top - container.offset().top + container.scrollTop() - 5
@@ -283,6 +284,15 @@ svgEditor.addExtension("Snapshots", function(S) {
 		if(!loading){
 			api.changed();
 		}
+	}
+	
+	function setSnapDimensions($thumb){
+	    var res = svgCanvas.getResolution();
+	    console.log(res.h + 'x' + res.w);
+        var snapHeight = 150 * res.h/res.w;
+        var snapWidth = 150;
+        $thumb.attr('width', snapWidth);
+        $thumb.attr('height', snapHeight);
 	}
 	
 	// create a new snapshot
@@ -322,6 +332,9 @@ svgEditor.addExtension("Snapshots", function(S) {
 		
 		$currWrapper.html(''); // clear out exisitng thumbnail
 		$currWrapper.append(document.importNode(thumb.documentElement, true)); // update with new snapshot thumbnail
+		
+		var $thumb = $currWrapper.find('svg');
+        setSnapDimensions($thumb);
 		
 		api.changed(); // call content changed listener
 	}

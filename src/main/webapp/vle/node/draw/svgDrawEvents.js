@@ -77,7 +77,11 @@ View.prototype.svgdrawDispatcher = function(type,args,obj){
 		obj.SVGDrawNode.updateAutoScoringSubmitConfirmationMessageChanged();
 	} else if(type=='svgdrawStartingStateChanged') { // TODO: remove when visual authoring is implemented
 		obj.SVGDrawNode.startingStateChanged();
-	};
+	} else if(type=='svgdrawWidthChanged'){
+        obj.SVGDrawNode.widthChanged();
+    } else if(type=='svgdrawHeightChanged'){
+        obj.SVGDrawNode.heightChanged();
+    };
 };
 
 //this list of events
@@ -117,6 +121,8 @@ var events = [
 	'svgdrawUpdateAutoScoringCheckWorkChancesChanged',
 	'svgdrawUpdateDoNotDisplayFeedbackToStudentOnLastChanceClicked',
 	'svgdrawUpdateAutoScoringSubmitConfirmationMessageChanged',
+	'svgdrawWidthChanged',
+	'svgdrawHeightChanged',
 	'svgdrawStartingStateChanged'  // TODO: remove when visual authoring is implemented
 ];
 
