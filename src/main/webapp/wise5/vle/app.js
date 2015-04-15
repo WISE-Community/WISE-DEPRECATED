@@ -4,6 +4,7 @@ define([
         'jqueryUI',
         'angularAnimate',
         'angularDragDrop',
+        'angularFileUpload',
         'angularSortable',
         'angularUIRouter',
         'angularWebSocket',
@@ -23,6 +24,7 @@ define([
                 jqueryUI,
                 angularAnimate,
                 angularDragDrop,
+                angularFileUpload,
                 angularSortable,
                 angularUIRouter,
                 angularWebSocket,
@@ -39,6 +41,7 @@ define([
                 ) {
 
     var app = angular.module('app', [
+                                     'angularFileUpload',
                                      'ui.router',
                                      'ui.sortable',
                                      'ngAnimate',

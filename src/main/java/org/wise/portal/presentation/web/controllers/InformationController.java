@@ -706,6 +706,7 @@ public class InformationController {
 			config.put("getContentBaseUrl", getContentBaseUrl);
             config.put("projectBaseURL", getContentBaseUrl);
 			config.put("getStudentUploadsBaseUrl", studentUploadsBaseWWW);
+            config.put("studentUploadsBaseURL", studentUploadsBaseWWW);
 			config.put("theme", "WISE");
 			config.put("cRaterRequestUrl", cRaterRequestUrl);
 			config.put("mainHomePageURL", contextPath + "/index.html");

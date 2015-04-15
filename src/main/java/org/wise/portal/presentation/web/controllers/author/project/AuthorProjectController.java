@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -563,14 +562,12 @@ public class AuthorProjectController {
 							}
 
 							DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
-							List<String> fileNames = new ArrayList<String>();
-							Map<String,MultipartFile> fileMap = new TreeMap<String,MultipartFile>();
+							Map<String,MultipartFile> fileMap = multiRequest.getFileMap();
 							
 							//get all the file names and files to be uploaded
 							Iterator<String> iter = multiRequest.getFileNames();
 							while(iter.hasNext()){
 								String filename = (String)iter.next();
-								fileNames.add(filename);
 								MultipartFile oneFile = multiRequest.getFile(filename);
 								String contentType = oneFile.getContentType();
 								if (!allowedProjectAssetContentTypesStr.contains(contentType)) {
@@ -585,7 +582,7 @@ public class AuthorProjectController {
 							}
 							
 							//tell the asset manager to handle the file upload
-							String result = AssetManager.uploadAsset(fileList, fileNames, fileMap, projectFolderPath, dirName, pathToCheckSize, projectMaxTotalAssetsSize);
+							String result = AssetManager.uploadAsset(fileList, fileMap, projectFolderPath, dirName, pathToCheckSize, projectMaxTotalAssetsSize);
 							response.getWriter().write(result);
 						} else if(command.equals("remove")) {
 							//get the project folder path

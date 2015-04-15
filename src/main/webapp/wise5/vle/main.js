@@ -4,6 +4,7 @@ require.config({
         'angular': 'lib/angular/angular',
         'angularAnimate': 'lib/angular/angularAnimate/angular-animate.min',
         'angularDragDrop': 'lib/angular/angularDragDrop/angular-dragdrop.min',
+        'angularFileUpload': 'lib/angular/angularFileUpload/angular-file-upload.min',
         'angularSortable': 'lib/angular/angularSortable/angular-sortable',
         'angularUIRouter': 'lib/angular/angularUIRouter/angular-ui-router.min',
         'angularWebSocket': 'lib/angular/angularWebSocket/angular-websocket.min',
@@ -45,6 +46,12 @@ require.config({
             'deps': [
                     'angular',
                     'jqueryUI'
+                    ]
+        },
+        'angularFileUpload': {
+            'exports': 'angularFileUpload',
+            'deps': [
+                    'angular'
                     ]
         },
         'angularSortable': {

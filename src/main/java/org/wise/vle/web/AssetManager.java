@@ -30,14 +30,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.TreeMap;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -175,7 +174,7 @@ public class AssetManager {
 
 				    //get a list of file names in this workgroup's upload directory
 				    String assetList = getAssetList(path, dirName);
-				    response.getWriter().write(assetList);
+                    response.getWriter().write(assetList);
 				}
 			} else if(command.equals("getSize")) {
 				User user = ControllerUtil.getSignedInUser();
@@ -330,19 +329,10 @@ public class AssetManager {
 				String pathToCheckSize = path + "/" + dirName;
 
 				DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
-				List<String> fileNames = new ArrayList<String>();
-				Map<String,MultipartFile> fileMap = new TreeMap<String,MultipartFile>();
-
-				//get all the file names and files to be uploaded
-				Iterator iter = multiRequest.getFileNames();
-				while(iter.hasNext()){
-					String filename = (String)iter.next();
-					fileNames.add(filename);
-					fileMap.put(filename, multiRequest.getFile(filename));
-				}
+				Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
 
 				//upload the files
-				String result = uploadAsset(fileList, fileNames, fileMap, path, dirName, pathToCheckSize, studentMaxTotalAssetsSize);
+				String result = uploadAsset(fileList, fileMap, path, dirName, pathToCheckSize, studentMaxTotalAssetsSize);
 
 				response.getWriter().write(result);
 			}
@@ -367,7 +357,7 @@ public class AssetManager {
 	 * @return the message of the status of the upload
 	 */
 	@SuppressWarnings("unchecked")
-	public static String uploadAsset(List<?> fileList, List<String> fileNames, Map<String,MultipartFile> fileMap, String path, String dirName, String pathToCheckSize, Long maxTotalAssetsSize) {
+	public static String uploadAsset(List<?> fileList, Map<String,MultipartFile> fileMap, String path, String dirName, String pathToCheckSize, Long maxTotalAssetsSize) {
 		String fullPath = path + "/" + dirName;
 
 		try{
@@ -415,15 +405,18 @@ public class AssetManager {
 					assetsDir.mkdirs();
 				}
 
-				if(SecurityUtils.isAllowedAccess(path, assetsDir)){
+				if (SecurityUtils.isAllowedAccess(path, assetsDir)){
 					String successMessage = "";
 
-					if(fileNames != null && fileNames.size()>0 && fileMap != null && fileMap.size()>0 && fileNames.size()==fileMap.size()){
-						Iterator<String> iter = fileNames.listIterator();
-						while(iter.hasNext()){
-							String filename = iter.next();
+					if (fileMap != null && fileMap.size() > 0){
+					    Set<String> keySet = fileMap.keySet();
+					    Iterator<String> iter = keySet.iterator();
+						while (iter.hasNext()){
+							String key = iter.next();
+							MultipartFile file = fileMap.get(key);
+							String filename = file.getOriginalFilename();
 							File asset = new File(assetsDir, filename);
-							MultipartFile file = fileMap.get(filename);
+							//MultipartFile file = fileMap.get(filename);
 							byte[] content = file.getBytes();
 
 							if(Long.parseLong(getFolderSize(pathToCheckSize)) + content.length > maxTotalAssetsSize){
@@ -753,7 +746,7 @@ public class AssetManager {
 				return "";
 			}				
 		} else {
-			return getAssetListFromFolder(path,dirName);
+			return getAssetListFromFolder(path, dirName);
 		}
 	}
 

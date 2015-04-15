@@ -49,6 +49,10 @@ define([], function() {
             return this.getConfigParam('studentStatusURL');
         };
         
+        serviceObject.getStudentUploadsBaseURL = function() {
+            return this.getConfigParam('studentUploadsBaseURL');
+        };
+        
         serviceObject.getWebSocketURL = function() {
             return this.getConfigParam('webSocketURL');
         };

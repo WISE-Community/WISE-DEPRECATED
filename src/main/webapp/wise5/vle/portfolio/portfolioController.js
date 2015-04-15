@@ -3,7 +3,7 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
         function($scope,
                 $rootScope,
                 $state, 
-                $stateParams, 
+                $stateParams,
                 ConfigService,
                 OpenResponseService,
                 PortfolioService,
@@ -19,7 +19,21 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
         this.itemSource = false;
         this.isVisible = false;
         this.applicationNodes = ProjectService.getApplicationNodes();
-        this.studentAssets = StudentAssetService.getStudentAssets();
+        
+        this.retrieveAssets = function() {
+            StudentAssetService.retrieveAssets().then(angular.bind(this, function(studentAssets) {
+                this.studentAssets = studentAssets;
+            }));
+        };
+        
+        // retrieve assets at the beginning
+        this.retrieveAssets();
+        
+        this.upload = function(files) {
+            StudentAssetService.uploadAssets(files).then(angular.bind(this, function() {
+               this.retrieveAssets();
+            }));
+        };
         
         $scope.$on('portfolioChanged', angular.bind(this, function(event, args) {
             this.portfolio = args.portfolio;
