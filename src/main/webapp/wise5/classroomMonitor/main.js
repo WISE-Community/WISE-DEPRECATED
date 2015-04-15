@@ -8,6 +8,7 @@ require.config({
         'angularUIRouter': 'lib/angular/angularUIRouter/angular-ui-router.min',
         'angularWebSocket': 'lib/angular/angularWebSocket/angular-websocket.min',
         'app': 'classroomMonitor/app',
+        'classroomMonitorController': 'classroomMonitor/classroomMonitorController',
         'configService': 'services/configService',
         'htmlController': 'nodes/html/htmlController',
         'jquery': 'lib/jquery/jquery-2.1.3.min',
@@ -25,8 +26,8 @@ require.config({
         'sessionService': 'services/sessionService',
         'studentDataService': 'services/studentDataService',
         'studentProgressController': 'classroomMonitor/progress/student/studentProgressController',
-        'classroomMonitorController': 'classroomMonitor/classroomMonitorController',
-        'webSocketService': 'services/webSocketService'
+        'studentStatusService': 'services/studentStatusService',
+        'teacherWebSocketService': 'services/teacherWebSocketService'
     },
     shim: {
         'angular': {

@@ -25,8 +25,9 @@ require.config({
         'sessionService': 'services/sessionService',
         'studentAssetService': 'services/studentAssetService',
         'studentDataService': 'services/studentDataService',
-        'vleController': 'vle/vleController',
-        'webSocketService': 'services/webSocketService'
+        'studentStatusService': 'services/studentStatusService',
+        'studentWebSocketService': 'services/studentWebSocketService',
+        'vleController': 'vle/vleController'
     },
     shim: {
         'angular': {

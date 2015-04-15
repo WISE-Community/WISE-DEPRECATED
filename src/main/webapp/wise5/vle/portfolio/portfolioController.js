@@ -12,7 +12,7 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
                 StudentAssetService,
                 StudentDataService) {
         
-        this.currentView = 'portfolio'; // [portfolio, myWork]
+        this.currentView = 'portfolio'; // [portfolio, myWork, myFiles]
         this.portfolio = null;
         this.itemId = null;
         this.item = null;

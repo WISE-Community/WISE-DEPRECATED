@@ -45,6 +45,10 @@ define([], function() {
             return this.getConfigParam('studentAssetManagerURL');
         };
 
+        serviceObject.getStudentStatusURL = function() {
+            return this.getConfigParam('studentStatusURL');
+        };
+        
         serviceObject.getWebSocketURL = function() {
             return this.getConfigParam('webSocketURL');
         };
@@ -59,6 +63,21 @@ define([], function() {
                 }
             }
             return workgroupId;
+        };
+        
+        serviceObject.getClassmateUserInfos = function() {
+            var classmateUserInfos = null;
+            var userInfo = this.getConfigParam('userInfo');
+            if (userInfo != null) {
+                var myUserInfo = userInfo.myUserInfo;
+                if (myUserInfo != null) {
+                    var myClassInfo = myUserInfo.myClassInfo;
+                    if (myClassInfo != null) {
+                        classmateUserInfos = myClassInfo.classmateUserInfos;
+                    }
+                }
+            }
+            return classmateUserInfos;
         };
         
         serviceObject.retrieveConfig = function(configUrl) {

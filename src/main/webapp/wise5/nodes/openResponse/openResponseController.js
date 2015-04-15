@@ -43,12 +43,10 @@ define(['app'], function(app) {
         this.saveStudentWork = function(saveTriggeredBy) {
             if (saveTriggeredBy != null) {
                 var doSave = false;
-                if (saveTriggeredBy === 'nodeOnExit' || saveTriggeredBy === 'logOut') {
-                    StudentDataService.endNodeVisitByNodeId(this.nodeId);
-                    doSave = true;
-                }
                 
-                if (saveTriggeredBy === 'submitButton' || this.isDirty) {
+                if (saveTriggeredBy === 'submitButton' || 
+                        (saveTriggeredBy = 'saveButton' && this.isDirty) || 
+                        (saveTriggeredBy = 'autoSave' && this.isDirty)) {
                     var studentState = {};
                     studentState.response = this.studentResponse;
                     studentState.saveTriggeredBy = saveTriggeredBy;
@@ -62,18 +60,25 @@ define(['app'], function(app) {
                 }
                 
                 if (doSave) {
+                    return $scope.$parent.nodeController.save(this.nodeId).then(angular.bind(this, function() {
+                        this.calculateDisabled();
+                        this.isDirty = false;
+                    }));
+                    
+                    /*
                     var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(this.nodeId);
                     return StudentDataService.saveNodeVisitToServer(nodeVisit).then(angular.bind(this, function() {
                                 this.calculateDisabled();
                                 this.isDirty = false;
                             }));
+                            */
                 }
             }
         };
         
         this.saveButtonClicked = function() {
-                var saveTriggeredBy = 'saveButton';
-                this.saveStudentWork(saveTriggeredBy);
+            var saveTriggeredBy = 'saveButton';
+            this.saveStudentWork(saveTriggeredBy);
         };
         
         this.submitButtonClicked = function() {
@@ -116,6 +121,12 @@ define(['app'], function(app) {
                 }));
             }
         }));
+        
+        this.handleLogOut = function() {
+            // add node state
+            
+            // tell VLE to save
+        };
         
         this.logOutListener = $scope.$on('logOut', angular.bind(this, function(event, args) {
             console.log('logOut openResponseController this.nodeId: ' + this.nodeId);

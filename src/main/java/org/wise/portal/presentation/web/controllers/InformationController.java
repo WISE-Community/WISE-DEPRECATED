@@ -610,6 +610,7 @@ public class InformationController {
 				config.put("hostName", hostName);
                 config.put("webSocketURL", webSocketURL);   
 				config.put("studentStatusUrl", studentStatusUrl);
+                config.put("studentStatusURL", studentStatusUrl);
 				config.put("runStatusUrl", runStatusUrl);
 				
 				if(postLevel!=null){

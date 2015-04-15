@@ -9,7 +9,7 @@
 </style>
 
 <div>
-{{ studentProgress.title }}
+{{ studentProgressController.title }}
 <br>
 
 <table>
@@ -19,12 +19,15 @@
         <th>Time Spent</th>
         <th>Project Completion</th>     
     </tr>
-    <tr ng-repeat="workgroup in studentProgress.workgroups" ng-click="studentProgress.studentRowClicked(workgroup)">
+    <tr ng-repeat="workgroup in studentProgressController.workgroups" ng-click="studentProgressController.studentRowClicked(workgroup)">
         <td>{{workgroup.userName}}</td>
-        <td>{{studentProgress.getCurrentStepForWorkgroupId(workgroup.workgroupId)}}</td>
+        <td>{{studentProgressController.getCurrentNodeForWorkgroupId(workgroup.workgroupId)}}</td>
         <td></td>
-        <td>{{studentProgress.getStudentProjectCompletion(workgroup.workgroupId)}}</td>
+        <!--  
+        <td>{{studentProgressController.getStudentProjectCompletion(workgroup.workgroupId)}}</td>
+        -->
     </tr>
 </table>
 
+<div>new work counter: {{studentProgressController.getNewNodeVisits().length}}</div>
 </div>

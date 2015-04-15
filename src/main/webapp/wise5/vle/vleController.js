@@ -9,7 +9,8 @@ define(['app'],
                     PortfolioService,
                     ProjectService, 
                     NodeService, 
-                    StudentDataService) {
+                    StudentDataService,
+                    StudentWebSocketService) {
         this.mode = 'student';
         this.layoutLogic = ConfigService.layoutLogic;
         this.currentNode = null;
@@ -35,6 +36,7 @@ define(['app'],
                 this.layoutState = layoutClass;
             }
             
+            StudentWebSocketService.sendStudentStatus();
             $state.go('root.vle', {nodeId:nodeId});
         }));
         

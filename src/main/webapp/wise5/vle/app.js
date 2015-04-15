@@ -15,7 +15,8 @@ define([
         'sessionService',
         'studentAssetService',
         'studentDataService',
-        'webSocketService'
+        'studentStatusService',
+        'studentWebSocketService'
         ], function(
                 angular,
                 $,
@@ -33,7 +34,8 @@ define([
                 sessionService,
                 studentAssetService,
                 studentDataService,
-                webSocketService
+                studentStatusService,
+                studentWebSocketService
                 ) {
 
     var app = angular.module('app', [
@@ -52,7 +54,8 @@ define([
     app.factory('SessionService', sessionService);
     app.factory('StudentAssetService', studentAssetService);
     app.factory('StudentDataService', studentDataService);
-    app.factory('WebSocketService', webSocketService);
+    app.factory('StudentStatusService', studentStatusService);
+    app.factory('StudentWebSocketService', studentWebSocketService);
     
     // node services
     app.factory('OpenResponseService', openResponseService);
@@ -117,8 +120,8 @@ define([
                     studentData: function(StudentDataService, config, project) {
                         return StudentDataService.retrieveStudentData();
                     },
-                    webSocket: function(WebSocketService, config) {
-                        return WebSocketService.initialize();
+                    webSocket: function(StudentWebSocketService, config) {
+                        return StudentWebSocketService.initialize();
                     }
                 }              
             })

@@ -14,7 +14,8 @@ define([
         'projectService',
         'sessionService',
         'studentDataService',
-        'webSocketService'
+        'studentStatusService',
+        'teacherWebSocketService'
         ], function(
                 angular,
                 $, 
@@ -31,7 +32,8 @@ define([
                 projectService,
                 sessionService,
                 studentDataService,
-                webSocketService) {
+                studentStatusService,
+                teacherWebSocketService) {
 
 	var app = angular.module('app', [
 	                                 'ui.router',
@@ -48,7 +50,8 @@ define([
     app.factory('ProjectService', projectService);
     app.factory('SessionService', sessionService);
     app.factory('StudentDataService', studentDataService);
-    app.factory('WebSocketService', webSocketService);
+    app.factory('StudentStatusService', studentStatusService);
+    app.factory('TeacherWebSocketService', teacherWebSocketService);
     
     // node services
     app.factory('OpenResponseService', openResponseService);
@@ -113,8 +116,11 @@ define([
                     studentData: function(StudentDataService, config, project) {
                         return StudentDataService.retrieveStudentData();
                     },
-                    webSocket: function(WebSocketService, config) {
-                        return WebSocketService.initialize();
+                    studentStatuses: function(StudentStatusService, config) {
+                        return StudentStatusService.retrieveStudentStatuses();
+                    },
+                    webSocket: function(TeacherWebSocketService, config) {
+                        return TeacherWebSocketService.initialize();
                     }
                 }              
             })
@@ -122,7 +128,7 @@ define([
                 url: '/studentProgress',
                 templateUrl: 'wise5/classroomMonitor/progress/student/studentProgress.html',
                 controller: 'StudentProgressController',
-                controllerAs: 'studentProgress',
+                controllerAs: 'studentProgressController',
                 resolve: {
                     loadController: app.loadController('studentProgressController')
                 }
