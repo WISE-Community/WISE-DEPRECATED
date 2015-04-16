@@ -144,7 +144,13 @@ define(['app'], function(app) {
         // auto-save
         this.autoSaveIntervalId = setInterval(angular.bind(this, function() {
             var saveTriggeredBy = 'autoSave';
-            this.saveStudentWork(saveTriggeredBy);
+            
+            // add the node state to the node visit
+            this.addNodeState(saveTriggeredBy);
+            
+            // save the node visit to the server
+            this.saveNodeVisitToServer();
+            
         }), this.autoSaveInterval);
         
         this.importWork = function() {
