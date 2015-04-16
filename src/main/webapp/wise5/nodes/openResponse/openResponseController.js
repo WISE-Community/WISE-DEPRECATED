@@ -40,10 +40,8 @@ define(['app'], function(app) {
             }
         };
         
-        this.saveStudentWork = function(saveTriggeredBy) {
+        this.addNodeState = function(saveTriggeredBy) {
             if (saveTriggeredBy != null) {
-                var doSave = false;
-                
                 if (saveTriggeredBy === 'submitButton' || 
                         (saveTriggeredBy = 'saveButton' && this.isDirty) || 
                         (saveTriggeredBy = 'autoSave' && this.isDirty)) {
@@ -55,35 +53,36 @@ define(['app'], function(app) {
                         studentState.isSubmit = true;
                     } 
                     
-                    StudentDataService.addNodeStateToLatestNodeVisit(this.nodeId, studentState);
-                    doSave = true;
-                }
-                
-                if (doSave) {
-                    return $scope.$parent.nodeController.save(this.nodeId).then(angular.bind(this, function() {
-                        this.calculateDisabled();
-                        this.isDirty = false;
-                    }));
-                    
-                    /*
-                    var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(this.nodeId);
-                    return StudentDataService.saveNodeVisitToServer(nodeVisit).then(angular.bind(this, function() {
-                                this.calculateDisabled();
-                                this.isDirty = false;
-                            }));
-                            */
+                    $scope.$parent.nodeController.addNodeStateToLatestNodeVisit(this.nodeId, studentState);
                 }
             }
+        }
+        
+        this.saveNodeVisitToServer = function() {
+            $scope.$parent.nodeController.saveNodeVisitToServer(this.nodeId).then(angular.bind(this, function() {
+                this.calculateDisabled();
+                this.isDirty = false;
+            }));;
         };
         
         this.saveButtonClicked = function() {
             var saveTriggeredBy = 'saveButton';
-            this.saveStudentWork(saveTriggeredBy);
+            
+            // add the node state to the node visit
+            this.addNodeState(saveTriggeredBy);
+            
+            // save the node visit to the server
+            this.saveNodeVisitToServer();
         };
         
         this.submitButtonClicked = function() {
             var saveTriggeredBy = 'submitButton';
-            this.saveStudentWork(saveTriggeredBy);
+            
+            // add the node state to the node visit
+            this.addNodeState(saveTriggeredBy);
+            
+            // save the node visit to the server
+            this.saveNodeVisitToServer();
         };
         
         this.studentResponseChanged = function() {
@@ -115,10 +114,10 @@ define(['app'], function(app) {
             if (nodeToExit.id === this.nodeId) {
                 // save and cancel autoSave interval
                 var saveTriggeredBy = 'nodeOnExit';
-                this.saveStudentWork(saveTriggeredBy).then(angular.bind(this, function() {
-                    clearInterval(this.autoSaveIntervalId);
-                    $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
-                }));
+                
+                this.addNodeState(saveTriggeredBy);
+                clearInterval(this.autoSaveIntervalId);
+                $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
             }
         }));
         
@@ -132,11 +131,14 @@ define(['app'], function(app) {
             console.log('logOut openResponseController this.nodeId: ' + this.nodeId);
             
             var saveTriggeredBy = 'logOut';
-            this.saveStudentWork(saveTriggeredBy).then(angular.bind(this, function() {
-                clearInterval(this.autoSaveIntervalId);
-                this.logOutListener();
-                SessionService.logOut();
-            }));
+            
+            this.addNodeState(saveTriggeredBy);
+            clearInterval(this.autoSaveIntervalId);
+            
+            $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
+            
+            this.logOutListener();
+            SessionService.logOut();
         }));
         
         // auto-save

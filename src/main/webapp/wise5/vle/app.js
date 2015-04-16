@@ -9,6 +9,7 @@ define([
         'angularUIRouter',
         'angularWebSocket',
         'configService',
+        'multipleChoiceService',
         'nodeService',
         'openResponseService',
         'portfolioService',
@@ -29,6 +30,7 @@ define([
                 angularUIRouter,
                 angularWebSocket,
                 configService,
+                multipleChoiceService,
                 nodeService,
                 openResponseService,
                 portfolioService,
@@ -62,6 +64,7 @@ define([
     
     // node services
     app.factory('OpenResponseService', openResponseService);
+    app.factory('MultipleChoiceService', multipleChoiceService);
     
     app.directive('compile', function($compile) {
         return function(scope, ele, attrs) {

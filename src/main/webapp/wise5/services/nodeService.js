@@ -139,6 +139,47 @@ define(['configService'], function(configService) {
             return result;
         };
         
+        serviceObject.getLatestNodeState = function(nodeVisits) {
+            var result = null;
+            
+            if (nodeVisits != null) {
+                for (var nv = nodeVisits.length - 1; nv >= 0; nv--) {
+                    var nodeVisit = nodeVisits[nv];
+                    
+                    if (nodeVisit != null) {
+                        var nodeStates = nodeVisit.nodeStates;
+                        
+                        for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
+                            var nodeState = nodeStates[ns];
+                            
+                            if (nodeState != null) {
+                                result = nodeState;
+                                break;
+                            }
+                        }
+                        
+                        if (result != null) {
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return result;
+        };
+        
+        serviceObject.getStudentWorkAsHTML = function(nodeState) {
+            var studentWorkAsHTML = null;
+            
+            if (nodeState != null) {
+                var response = nodeState.response;
+                
+                studentWorkAsHTML = '<p>' + response + '</p>';
+            }
+            
+            return studentWorkAsHTML;
+        };
+        
         return serviceObject;
     }];
     

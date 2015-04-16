@@ -34,6 +34,9 @@ define(['app'], function(app) {
             
             this.nodeUnloaded = function(nodeId) {
                 StudentDataService.endNodeVisitByNodeId(nodeId);
+                
+                // TODO: check if we need to save node visit
+                this.saveNodeVisitToServer(nodeId);
             };
             
             this.setCurrentNodeByNodeId = function(nodeId) {
@@ -83,6 +86,16 @@ define(['app'], function(app) {
             
             this.save = function(nodeId) {
                 var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(nodeId);
+                return StudentDataService.saveNodeVisitToServer(nodeVisit);
+            };
+            
+            this.addNodeStateToLatestNodeVisit = function(nodeId, nodeState) {
+                StudentDataService.addNodeStateToLatestNodeVisit(nodeId, nodeState);
+            };
+            
+            this.saveNodeVisitToServer = function(nodeId) {
+                var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(nodeId);
+                
                 return StudentDataService.saveNodeVisitToServer(nodeVisit);
             };
             

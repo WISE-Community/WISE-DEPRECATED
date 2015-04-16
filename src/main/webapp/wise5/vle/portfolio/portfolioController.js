@@ -1,7 +1,8 @@
 define(['app', 'portfolioService'], function(app, portfolioService) {
     app.$controllerProvider.register('PortfolioController', 
-        function($scope,
+        function($injector,
                 $rootScope,
+                $scope,
                 $state, 
                 $stateParams,
                 ConfigService,
@@ -79,15 +80,29 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
         
         this.showStudentWorkByNodeId = function(nodeId, nodeType) {
             var result = null;
-            if (nodeType === 'OpenResponse') {
-                var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(nodeId);
-                if (latestNodeState != null) {
-                    var studentWorkHTML = OpenResponseService.getStudentWorkAsHTML(latestNodeState);
+            
+            if (nodeId != null && nodeType != null) {
+                var childService = $injector.get(nodeType + 'Service');
+                
+                if (childService != null) {
+                    var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(nodeId);
+                    var studentWorkHTML = childService.getStudentWorkAsHTML(latestNodeState);
                     result = studentWorkHTML;
                 }
-            } else {
                 
+                /*
+                if (nodeType === 'OpenResponse') {
+                    var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(nodeId);
+                    if (latestNodeState != null) {
+                        var studentWorkHTML = OpenResponseService.getStudentWorkAsHTML(latestNodeState);
+                        result = studentWorkHTML;
+                    }
+                } else {
+                    
+                }
+                */
             }
+            
             return result;
         };
     });
