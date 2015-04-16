@@ -65,6 +65,12 @@
             "src": "node10.html"
         },
         {
+            "id": "node11",
+            "type": "MultipleChoice",
+            "title": "Multiple Choice Step",
+            "src": "node11.json"
+        },
+        {
             "id": "group0",
             "type": "group",
             "title": "My First WISE5 Project",
@@ -82,7 +88,8 @@
                 "node1",
                 "node2",
                 "node3",
-                "node4"
+                "node4",
+                "node5"
             ]
         }
     ],
@@ -101,6 +108,11 @@
             "id": "transition4",
             "from": "node3",
             "to": "node4"
+        },
+        {
+            "id": "transition5",
+            "from": "node4",
+            "to": "node5"
         }
     ],
     "startNodeId": "node1",

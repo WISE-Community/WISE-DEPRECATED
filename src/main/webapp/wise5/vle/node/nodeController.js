@@ -22,6 +22,8 @@ define(['app'], function(app) {
                         this.nodeHTMLPath = 'wise5/nodes/html/index.html';
                     } else if (this.nodeType === 'Planning') {
                         this.nodeHTMLPath = 'wise5/nodes/planning/index.html';
+                    } else if (this.nodeType === 'MultipleChoice') {
+                        this.nodeHTMLPath = 'wise5/nodes/multipleChoice/index.html';
                     }
                 }
             };

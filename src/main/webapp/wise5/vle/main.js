@@ -12,6 +12,7 @@ require.config({
         'htmlController': 'nodes/html/htmlController',
         'jquery': 'lib/jquery/jquery-2.1.3.min',
         'jqueryUI': 'lib/jquery/jquery-ui-1.10.4.interactions.min',
+        'multipleChoiceController': 'nodes/multipleChoice/multipleChoiceController',
         'navigationController': 'vle/navigation/navigationController',
         'nodeController': 'vle/node/nodeController',
         'nodeService': 'services/nodeService',

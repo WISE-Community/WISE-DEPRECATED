@@ -133,6 +133,7 @@ define([
                         resolve: {
                             nodeController: app.loadController('nodeController'),
                             openResponseController: app.loadController('openResponseController'),
+                            multipleChoiceController: app.loadController('multipleChoiceController'),
                             htmlController: app.loadController('htmlController'),
                             planningController: app.loadController('planningController')
                         }

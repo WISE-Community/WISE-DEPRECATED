@@ -1,16 +1,26 @@
 
 <body>
-vle5/nodes/openResponse/openResponse.html
+<div ng-controller='MultipleChoiceController as multipleChoiceController'>
+<div id="prompt">{{multipleChoiceController.nodeContent.prompt}}</div>
 
-message begin...
-{{openResponseController.message}}
-...message end
+<div ng-repeat='choice in multipleChoiceController.nodeContent.choices'>
+    <label>
+        <div ng-switch on='multipleChoiceController.nodeContent.choiceType'>
+            <div ng-switch-when='radio'>
+                <input type='radio' name='choice' value='{{choice.id}}' ng-model='multipleChoiceController.studentChoices'></input>
+                {{choice.text}}
+            </div>
+            <div ng-switch-when='checkbox'>
+                <input type='checkbox' name='choice' ng-checked='multipleChoiceController.isChecked(choice.id)' ng-click='multipleChoiceController.toggleSelection(choice.id)'></input>
+                {{choice.text}}
+            </div>
+        </div>
+    </label>
+</div>
 
-nodeContent begin:
-{{nodeController.nodeContent}}
-nodeContent end
-<h3 id="title">{{openResponseController.title}}</h3>
-<div id="prompt">{{openResponseController.prompt}}</div>
-<textarea id='responseTextarea' ng-model="openResponseController.studentResponse"></textarea>
-<button ng-click="openResponseController.saveButtonClicked()">Save</button>
+<button ng-click="multipleChoiceController.saveButtonClicked()">Save</button>
+<div>
+{{multipleChoiceController.studentChoices}}
+</div>
+</div>
 </body>
