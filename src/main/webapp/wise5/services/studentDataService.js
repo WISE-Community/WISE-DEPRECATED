@@ -170,6 +170,34 @@ define(['configService', 'projectService'], function(configService, projectServi
             }
         };
         
+        /**
+         * Get the latest node visit that has non-null visitStartTime and
+         * non-null visitEndTime
+         * @return the latest NODE_VISIT that has a visitStartTime and visitEndTime
+         */
+        serviceObject.getLatestCompletedNodeVisit = function() {
+            var latestCompletedVisit = null;
+            
+            var nodeVisits = this.getNodeVisits();
+
+            //loop through the node visits backwards
+            for (var n = nodeVisits.length - 1; n >= 0; n--) {
+                //get a node visit
+                var nodeVisit = nodeVisits[n];
+
+                //check that visitStartTime and visitEndTime are not null
+                if (nodeVisit.visitStartTime != null && nodeVisit.visitEndTime != null) {
+                    //we found a node visit with visitStartTime and visitEndTime
+                    latestCompletedVisit = nodeVisit;
+
+                    //break out of the for loop since we found what a node visit
+                    break;
+                }
+            }
+
+            return latestCompletedVisit;
+        };
+        
         serviceObject.getNodeStatuses = function() {
             return this.nodeStatuses;
         };

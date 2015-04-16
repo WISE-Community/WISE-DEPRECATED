@@ -3,6 +3,7 @@
         "wiseVersion": 5,
         "gradeRange": "5-7"
     },
+    "style": "#prompt {font-size:3em;} button { width: 100px;}",
     "nodes": [
         {
             "id": "node1",
@@ -124,7 +125,7 @@
     ],
     "layout": {
         "template": "starmap|leftNav|rightNav",
-        "studentIsOnGroupNode": "layout3",
-        "studentIsOnApplicationNode": "layout4"
+        "studentIsOnGroupNode": "layout1",
+        "studentIsOnApplicationNode": "layout1"
     }
 }

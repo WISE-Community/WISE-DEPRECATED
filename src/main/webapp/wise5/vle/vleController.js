@@ -9,10 +9,10 @@ define(['app'],
                     PortfolioService,
                     ProjectService, 
                     NodeService, 
-                    StudentDataService) {
+                    StudentDataService,
+                    StudentWebSocketService) {
         this.mode = 'student';
         this.layoutLogic = ConfigService.layoutLogic;
-        this.globalTools = ['hideNavigation', 'showNavigation'];
         this.currentNode = null;
         this.isPortfolioVisible = false;
         
@@ -36,6 +36,7 @@ define(['app'],
                 this.layoutState = layoutClass;
             }
             
+            StudentWebSocketService.sendStudentStatus();
             $state.go('root.vle', {nodeId:nodeId});
         }));
         
@@ -66,12 +67,8 @@ define(['app'],
             this.isPortfolioVisible = false;
         };
 
-        this.globalToolButtonClicked = function(globalToolName) {
-            if (globalToolName === 'hideNavigation') {
-                this.layoutState = 'layout4';
-            } else if (globalToolName === 'showNavigation') {
-                this.layoutState = 'layout3';
-            }
+        this.showNavigation = function() {
+            this.layoutState = 'layout3';
         };
         
         this.goHome = function() {

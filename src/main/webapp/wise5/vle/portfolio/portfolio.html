@@ -1,9 +1,62 @@
+
 <link href='wise5/vle/portfolio/animation.css' rel="stylesheet"></link>
+<style>
+.currentView {
+    background-color: yellow;
+}
+
+.button {
+    -moz-appearance: button;
+    /* Firefox */
+    -webkit-appearance: button;
+    /* Safari and Chrome */
+    padding: 10px;
+    margin: 10px;
+    width: 70px;
+}
+.drop-box {
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+    width: 90%;
+    height: 100px;
+    text-align: center;
+    padding-top: 50px;
+    margin: 10px;
+    bottom: 0px;
+}
+
+.drop-box:hover {
+    cursor: pointer;
+}
+
+.dragover {
+    border: 5px dashed blue;
+}
+
+.studentAssets {
+    text-align: center;
+    width: 95%;
+    min-height: 50%;
+    max-height: 50%;
+    overflow: auto;
+    border: 5px solid #DDD;
+}
+
+.studentAsset {
+    width: auto;
+    height: auto;
+    max-width: 150px;
+    max-height: 150px;
+    padding: 10px;
+    margin: 5px;
+    border: 3px solid #DDD;
+}
+</style>
 <div class={{vleController.layoutState}} ng-controller='PortfolioController as portfolioController'>
-	   {{portfolioController.log()}}
-	   <input type='button' value='Portfolio' ng-click='portfolioController.showPortfolio()'></input>
-        <input type='button' value='My Work' ng-click='portfolioController.showMyWork()'></input>
-	   <div class="animate-switch-container" ng-switch on='portfolioController.viewType'>
+	   <input type='button' value='Portfolio' ng-click='portfolioController.showView("portfolio")' ng-class='{currentView: portfolioController.currentView === "portfolio"}'></input>
+       <input type='button' value='My Work' ng-click='portfolioController.showView("myWork")' ng-class='{currentView: portfolioController.currentView === "myWork"}'></input>
+       <input type='button' value='My Files' ng-click='portfolioController.showView("myFiles")' ng-class='{currentView: portfolioController.currentView === "myFiles"}'></input>
+	   <div class="animate-switch-container" ng-switch on='portfolioController.currentView'>
 	       <div class="animate-switch" ng-switch-when='portfolio'>
 	        <h3>My Portfolio</h3>
 			
@@ -15,8 +68,7 @@
 	            <li ng-repeat="item in portfolioController.portfolio.items track by $index"
 	                data-drag='true'
                     data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
-                    jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioController.portfolioItemDragStartCallback(item)'}"
-                 >
+                    jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioController.portfolioItemDragStartCallback(item)'}" >
 	                <div class="panel panel-default">
 	                    <div class="panel-body">
 	                        <span class="portfolio-index"></span>
@@ -43,4 +95,14 @@
                  ng-bind-html='portfolioController.showStudentWorkByNodeId(selection.id, selection.type) | sanitizeHTML'>
             </div>
         </div>
+		<div class="animate-switch" ng-switch-when='myFiles'>
+		    <div class='studentAssets'>
+		        <img class='studentAsset' ng-repeat="studentAsset in portfolioController.studentAssets" ng-src='{{studentAsset.url}}'></img>
+		    </div>
+			<div ng-file-drop ng-file-select ng-file-change="portfolioController.upload($files)" class="drop-box"
+					drag-over-class="dragover" ng-multiple="true" allow-dir="false"
+					accept="image/*,application/pdf">Drop images or files here or click to upload!</div>
+		</div>
+	</div>
 </div>
+			

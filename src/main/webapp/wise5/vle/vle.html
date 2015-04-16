@@ -2,11 +2,6 @@
 <head>
 
 <style>
-#globalTools {
-    top: 0px;
-    position: absolute;
-    right: 0px;
-}
 
 #prev {
     height: 36px;
@@ -79,29 +74,44 @@
     display: none;
 }
 
-#portfolio {
-    position: absolute;
-    right: 400px;
-    min-width: 400px;
-    min-height: 0px;
-    max-width: 400px;
-    max-height: 800px;
-    border: 1px solid black;
-    overflow: auto;
-    /*resize: both;*/
-    background-color: aliceblue;
-}
-
 #homeButton {
     position: absolute;
-    right: 150px;
-    top: 100px;
+    right: 100px;
+    top: 0px;
 }
 
 #logOutButton {
     position: absolute;
-    right: 50px;
-    top: 100px;
+    right: 0px;
+    top: 0px;
+}
+
+#showNavigationButton {
+    width: 125px;
+    position: absolute;
+    right: 200px;
+    top: 0px;
+}
+
+
+#portfolioOpenButton {
+    position: absolute;
+    right: 325px;
+    top: 0px;
+}
+
+#portfolio {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    min-width: 500px;
+    min-height: 0px;
+    max-width: 500px;
+    max-height: 1000px;
+    border: 1px solid black;
+    overflow: auto;
+    /*resize: both;*/
+    background-color: aliceblue;
 }
 
 </style>
@@ -137,13 +147,19 @@
     <br/>
     <button id='homeButton' ng-click='vleController.goHome()'>Home</button>
     <button id='logOutButton' ng-click='vleController.logOut()'>Log Out</button>
-    <div id='portfolio'
-            data-drag='true'
-            data-jqyoui-options="{}"
-            jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'vleController.portfolioDragStartCallback()'}">
-        <button ng-show='!vleController.isPortfolioVisible' ng-click='vleController.showPortfolio()'>Open Portfolio</button>
-        <button ng-show='vleController.isPortfolioVisible' ng-click='vleController.hidePortfolio()'>Close Portfolio</button>
-        <div ng-show='vleController.isPortfolioVisible' ng-include="'wise5/vle/portfolio/portfolio.html'"></div>
+    <button id='showNavigationButton' ng-click='vleController.showNavigation()'>Show Navigation</button>
+    <div ng-switch on='vleController.isPortfolioVisible'>
+	    <div ng-switch-when='true'
+	        id='portfolio'
+	            data-drag='true'
+	            data-jqyoui-options="{}"
+	            jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'vleController.portfolioDragStartCallback()'}">
+	        <button ng-click='vleController.hidePortfolio()'>Close Portfolio</button>
+	        <div ng-include="'wise5/vle/portfolio/portfolio.html'"></div>
+	    </div>
+	    <div ng-switch-when='false'>
+	        <button id='portfolioOpenButton' ng-click='vleController.showPortfolio()'>Open Portfolio</button>
+	    </div>
     </div>
 </div>
 

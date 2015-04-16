@@ -33,6 +33,7 @@ define(['app'], function(app) {
             };
             
             this.nodeUnloaded = function(nodeId) {
+                StudentDataService.endNodeVisitByNodeId(nodeId);
             };
             
             this.setCurrentNodeByNodeId = function(nodeId) {
@@ -78,6 +79,11 @@ define(['app'], function(app) {
                 if (nodeId != null) {
                     StudentDataService.setCurrentNodeByNodeId(nodeId);
                 }
+            };
+            
+            this.save = function(nodeId) {
+                var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(nodeId);
+                return StudentDataService.saveNodeVisitToServer(nodeVisit);
             };
             
             var node = StudentDataService.getCurrentNode();

@@ -1,5 +1,5 @@
 {
-    "style": "body { background-color: green }",
+    "style": "#node { background-color: green; } #prompt  {font-size: 5em; color: blue; } #node button { width: 300px;}",
     "prompt": "Step 1 Prompt. Go to {{link|1.4|Node 4}}.",
     "lockAfterSubmit": true,
     "showSubmitButton": true

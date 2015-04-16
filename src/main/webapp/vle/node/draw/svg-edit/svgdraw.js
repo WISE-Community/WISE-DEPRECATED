@@ -35,6 +35,8 @@ function SVGDRAW(node) {
 	this.active = -1; // var to hold last selected snapshot.id
 	this.selected = false; // boolean to specify whether a snapshot is currently selected
 	this.snapTotal = 0; // var to hold total number of snapshots created
+	this.width = 600; // default width
+	this.height = 450; // default height
 	this.lz77 = new LZ77(); // lz77 compression object
 	// json object to hold updated student data for the node
 	this.studentData = {
@@ -124,6 +126,12 @@ SVGDRAW.prototype.loadModules = function(jsonfilename, context) {
 			context.toolbarOptions.importStudentAsset = false;
 		}
 	}
+	if(data.width){
+	    context.width = data.width;
+	}
+	if(data.height){
+	    context.height = data.height;
+	}
 	if(data.img_background && view.utils.isNonWSString(data.img_background)){
 		var bgUrl = data.img_background;
 		var position = 'left-top';
@@ -133,9 +141,9 @@ SVGDRAW.prototype.loadModules = function(jsonfilename, context) {
 			if(data.bg_position){
 				position = data.bg_position;
 			}
-			var rightX = 599-width;
+			var rightX = context.width-1-width;
 			var centerX = (rightX+1)/2;
-			var bottomY = 449-height;
+			var bottomY = context.height-1-height;
 			var middleY = (bottomY+1)/2;
 			if(position=='left-top'){
 				xPos = 1, yPos = 1;
@@ -156,7 +164,7 @@ SVGDRAW.prototype.loadModules = function(jsonfilename, context) {
 			} else if(position=='center-bottom') {
 				xPos = centerX, yPos = bottomY;
 			} 
-			context.defaultBackground = '<svg width="600" height="450" xmlns="http://www.w3.org/2000/svg" ' +
+			context.defaultBackground = '<svg width="' + context.width + '" height="' + context.height + '" xmlns="http://www.w3.org/2000/svg" ' +
 				'xmlns:xlink="http://www.w3.org/1999/xlink"><g><title>teacher</title>' +
 				'<image x="' + xPos + '" y="' + yPos + '" width="' + width + '" height="' + height + '" xlink:href="' + bgUrl + '" /></g></svg>';
 			context.load();   // load preview data, if any, or load default background
@@ -180,8 +188,8 @@ SVGDRAW.prototype.setDataService = function(dataService) {
 
 SVGDRAW.prototype.loadCallback = function(studentWorkJSON, context) {
 		var annotationValue;
-		// set default blank canvas, TODO: perhaps de-hard code dimensions
-		var svgString = '<svg width="600" height="450" xmlns="http://www.w3.org/2000/svg">' +
+		// set default blank canvas
+		var svgString = '<svg width="' + context.width + '" height="' + context.height + '" xmlns="http://www.w3.org/2000/svg">' +
 			'<!-- Created with SVG-edit - http://svg-edit.googlecode.com/ --><g><title>student</title></g></svg>';
 		
 		// check for previous work and load it
