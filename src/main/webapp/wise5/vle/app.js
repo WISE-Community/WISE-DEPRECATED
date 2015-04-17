@@ -123,6 +123,9 @@ define([
                     project: function(ProjectService, config) {
                         return ProjectService.retrieveProject();
                     },
+                    sessionTimers: function(SessionService, config) {
+                        return SessionService.initializeSession();
+                    },
                     studentData: function(StudentDataService, config, project) {
                         return StudentDataService.retrieveStudentData();
                     },

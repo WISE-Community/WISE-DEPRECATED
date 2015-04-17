@@ -4,17 +4,38 @@ define(['app'],
             function($scope,
                     $rootScope,
                     $state,
-                    $stateParams, 
-                    ConfigService, 
+                    $stateParams,
+                    ConfigService,
                     PortfolioService,
-                    ProjectService, 
-                    NodeService, 
+                    ProjectService,
+                    NodeService,
+                    SessionService,
                     StudentDataService,
                     StudentWebSocketService) {
         this.mode = 'student';
         this.layoutLogic = ConfigService.layoutLogic;
         this.currentNode = null;
         this.isPortfolioVisible = false;
+        
+        $scope.$on('showSessionWarning', angular.bind(this, function() {
+            var options = {
+                open: function(event, ui) { $('.ui-dialog-titlebar-close').hide(); },
+                modal: true,
+                width: 500,
+                height: 200
+            };
+            $('#sessionWarningDiv').dialog(options);
+        }));
+        
+        this.renewSession = function() {
+            $('#sessionWarningDiv').dialog('close');
+            SessionService.renewSession();
+        };
+        
+        this.endSession = function() {
+            $('#sessionWarningDiv').dialog('close');
+            SessionService.forceLogOut();
+        };
         
         $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
