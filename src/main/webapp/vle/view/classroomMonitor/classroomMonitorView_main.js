@@ -5932,7 +5932,7 @@ View.prototype.updateStudentProgressTimeSpent = function(workgroupId) {
                     table
                         .row( row )
                         .data( data );
-                    table.draw();
+                    //table.draw();
                 }
             }
         }
