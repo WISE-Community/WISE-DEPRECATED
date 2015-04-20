@@ -18,13 +18,7 @@ define(['app'],
         this.isPortfolioVisible = false;
         
         $scope.$on('showSessionWarning', angular.bind(this, function() {
-            var options = {
-                open: function(event, ui) { $('.ui-dialog-titlebar-close').hide(); },
-                modal: true,
-                width: 500,
-                height: 200
-            };
-            $('#sessionWarningDiv').dialog(options);
+            $('#sessionWarningDiv').dialog('open');
         }));
         
         this.renewSession = function() {

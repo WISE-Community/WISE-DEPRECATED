@@ -80,6 +80,39 @@ define([
         };
     });
     
+    /**
+     * Directive for making an element into a jquery dialog
+     */
+    app.directive('jqueryDialog', function() {
+        return {
+            restrict: 'A',
+            link: function($scope, element, attrs) {
+                
+                var options = {};
+                
+                if (attrs != null) {
+                    // try to get the jquery dialog options if any
+                    jqueryDialogOptions = attrs.jqueryDialogOptions;
+                    
+                    if (jqueryDialogOptions != null) {
+                        // create the options object
+                        options = $scope.$eval(jqueryDialogOptions);
+                        
+                        if (options != null && options.hideTitlebarClose) {
+                            options.open = function(event, ui) {
+                                // hide the close button
+                                $(this).parent().find(".ui-dialog-titlebar-close").hide();
+                            };
+                        }
+                    }
+                }
+                
+                // create the dialog
+                element.dialog(options)
+            }
+        }
+    });
+    
     app.filter('sanitizeHTML', ['$sce', function($sce) {
         return function(htmlCode) {
             return $sce.trustAsHtml(htmlCode);
