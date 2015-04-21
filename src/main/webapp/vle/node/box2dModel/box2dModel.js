@@ -164,7 +164,7 @@ Box2dModel.prototype.render = function() {
 		 * would like from the state object (look at box2dModelState.js)
 		 */
 		var latestResponse = latestState.response;
-		if (typeof latestResponse != "undefined"){
+		if (latestResponse != null && latestResponse != '' && typeof latestResponse != "undefined"){
 		 	previousModels = latestResponse.savedModels.concat(previousModels);
 		 	// remove any models with a repeat id
 		 	var model_ids = [];
