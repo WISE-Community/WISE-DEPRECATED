@@ -355,90 +355,8 @@ Table.prototype.render = function() {
 		}
 	}
 	
-	//loop through all the rows
-	for(var y=0; y<this.numRows; y++) {
-		
-		//make a row
-		var tr = document.createElement('tr');
-		
-		//loop through all the columns in the row
-		for(var x=0; x<this.numColumns; x++) {	
-			
-			//make a cell
-			var td = document.createElement('td');
-			
-			var cellText = '';
-			var cellUneditable = null;
-			var cellSize = null;
-			
-			if(tableData[x] != null && tableData[x][y] != null) {
-				/*
-				 * the cell exists in the step content. it's possible for
-				 * the cell to not exist in the step content if the student
-				 * has added rows or columns.
-				 */
-				var cellData = tableData[x][y];
-				
-				if(cellData != null) {
-					//get the cell data values
-					cellText = cellData.text;
-					cellUneditable = cellData.uneditable;
-					cellSize = cellData.cellSize;
-				}
-			}
-
-			if(cellSize == null || cellSize == '') {
-				//cell size is not defined so we will just use the global cell size
-				cellSize = this.globalCellSize;
-			}
-			
-			if(cellUneditable == null) {
-				//set the default value of being editable
-				cellUneditable = false;
-			}
-			
-			if(latestState != null) {
-				if(latestState.tableData != null) {
-					if(latestState.tableData[x] != null) {
-						if(latestState.tableData[x][y] != null) {
-							/*
-							 * if the student has worked on this step before, the
-							 * student values will be used in the cells instead of
-							 * the values from the content
-							 */
-							cellText = latestState.tableData[x][y].text;							
-						}
-					}
-				}
-			}
-			
-			/*
-			 * create the text input that will represent the cell and
-			 * where the student can edit the text in the cell
-			 */
-			var cellTextInput = document.createElement('input');
-			cellTextInput.id = 'tableCell_' + x + '-' + y;
-			cellTextInput.name = 'tableCell_' + x + '-' + y;
-			cellTextInput.value = cellText;
-			if (y == 0 && typeof this.content.graphOptions !== "undefined" && typeof this.content.graphOptions.autoResizeColumnTitles !== undefined && this.content.graphOptions.autoResizeColumnTitles){
-				cellTextInput.size = Math.max(cellText.length, cellSize);
-			} else {
-				cellTextInput.size = cellSize;
-			}
-			cellTextInput.onchange = studentTableChanged;
-			
-			if(cellUneditable) {
-				//disable the cell if necessary
-				cellTextInput.disabled = true;
-			}
-			
-			//add the elements to the UI
-			td.appendChild(cellTextInput);
-			tr.appendChild(td);
-		}
-		
-		tableDisplay.appendChild(tr);
-	}
+	// generate the new table based on the table data and latest state
+    var tableDisplay = this.generateTable(tableData, latestState);
 	
 	//clear out the existing table
 	$('#tableDiv').html('');
@@ -557,6 +475,104 @@ Table.prototype.render = function() {
 	this.view.loadExternalScript(this);
 	
 	this.node.view.eventManager.fire('contentRenderCompleted', this.node.id, this.node);
+};
+
+/**
+ * Generate the table that will be placed in the DOM
+ * @param tableData the table data
+ * @param latestState (optional) the latest state
+ * @returns a table DOM element based on the table data
+ */
+Table.prototype.generateTable = function(tableData, latestState) {
+    //make a table
+    var tableDisplay = document.createElement('table');
+    
+    //loop through all the rows
+    for(var y=0; y<this.numRows; y++) {
+        
+        //make a row
+        var tr = document.createElement('tr');
+        
+        //loop through all the columns in the row
+        for(var x=0; x<this.numColumns; x++) {  
+            
+            //make a cell
+            var td = document.createElement('td');
+            
+            var cellText = '';
+            var cellUneditable = null;
+            var cellSize = null;
+            
+            if(tableData[x] != null && tableData[x][y] != null) {
+                /*
+                 * the cell exists in the step content. it's possible for
+                 * the cell to not exist in the step content if the student
+                 * has added rows or columns.
+                 */
+                var cellData = tableData[x][y];
+                
+                if(cellData != null) {
+                    //get the cell data values
+                    cellText = cellData.text;
+                    cellUneditable = cellData.uneditable;
+                    cellSize = cellData.cellSize;
+                }
+            }
+
+            if(cellSize == null || cellSize == '') {
+                //cell size is not defined so we will just use the global cell size
+                cellSize = this.globalCellSize;
+            }
+            
+            if(cellUneditable == null) {
+                //set the default value of being editable
+                cellUneditable = false;
+            }
+            
+            if(latestState != null) {
+                if(latestState.tableData != null) {
+                    if(latestState.tableData[x] != null) {
+                        if(latestState.tableData[x][y] != null) {
+                            /*
+                             * if the student has worked on this step before, the
+                             * student values will be used in the cells instead of
+                             * the values from the content
+                             */
+                            cellText = latestState.tableData[x][y].text;
+                        }
+                    }
+                }
+            }
+            
+            /*
+             * create the text input that will represent the cell and
+             * where the student can edit the text in the cell
+             */
+            var cellTextInput = document.createElement('input');
+            cellTextInput.id = 'tableCell_' + x + '-' + y;
+            cellTextInput.name = 'tableCell_' + x + '-' + y;
+            cellTextInput.value = cellText;
+            if (y == 0 && typeof this.content.graphOptions !== "undefined" && typeof this.content.graphOptions.autoResizeColumnTitles !== undefined && this.content.graphOptions.autoResizeColumnTitles){
+                cellTextInput.size = Math.max(cellText.length, cellSize);
+            } else {
+                cellTextInput.size = cellSize;
+            }
+            cellTextInput.onchange = studentTableChanged;
+            
+            if(cellUneditable) {
+                //disable the cell if necessary
+                cellTextInput.disabled = true;
+            }
+            
+            //add the elements to the UI
+            td.appendChild(cellTextInput);
+            tr.appendChild(td);
+        }
+        
+        tableDisplay.appendChild(tr);
+    }
+    
+    return tableDisplay;
 };
 
 /**
@@ -874,12 +890,27 @@ Table.prototype.reset = function() {
 			
 			if(previousWorkState != null && previousWorkState != "") {
 				//use the data from this populatePreviousWorkNodeId to reset the table
-				tableData = previousWorkState.tableData;		
+				tableData = previousWorkState.tableData;
+				
+	            if (tableData != null) {
+	                this.numColumns = tableData.length;
+	                this.numRows = tableData.length > 0 ? tableData[0].length : 0;
+
+	                // generate the new table based on the table data
+	                var tableDisplay = this.generateTable(tableData);
+
+	                //clear out the existing table
+	                $('#tableDiv').html('');
+
+	                //add the newly generated table
+	                $('#tableDiv').append(tableDisplay);
+	            }
 			}
+		} else {
+		    // use the default number of columns and rows from the step content
+		    this.numColumns = this.content.numColumns;
+	        this.numRows = this.content.numRows;
 		}
-		
-		this.numColumns = this.content.numColumns;
-		this.numRows = this.content.numRows;
 		
 		//loop through all the columns
 		for(var x=0; x<this.numColumns; x++) {
@@ -2429,6 +2460,13 @@ Table.prototype.processTagMaps = function() {
 				if(functionName == "importWork") {
 					//get the work to import
 					workToImport = this.node.getWorkToImport(tagName, functionArgs);
+					
+					this.node.populatePreviousWorkNodeId = this.view.getProject().getPreviousNodeIdsByTag(tagName, this.node.id);
+					
+					// only can import one node for now
+					if (this.node.populatePreviousWorkNodeId != null && this.node.populatePreviousWorkNodeId.length > 1){
+					    this.node.populatePreviousWorkNodeId = this.node.populatePreviousWorkNodeId[this.node.populatePreviousWorkNodeId.length-1];
+					}
 				} else if(functionName == "showPreviousWork") {
 					//show the previous work in the previousWorkDiv
 					this.node.showPreviousWork($('#previousWorkDiv'), tagName, functionArgs);
