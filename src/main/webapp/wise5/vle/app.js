@@ -139,7 +139,13 @@ define([
                             var node = ProjectService.getNodeById(childId);
                             
                             if (node != null) {
-                                nodes.push(node);
+                                var dNode = {};
+                                dNode.x = node.x;
+                                dNode.y = node.y;
+                                dNode.r = node.r;
+                                dNode.id = node.id;
+                                dNode.title = node.title;
+                                nodes.push(dNode);
                             }
                         }
                     }
@@ -154,13 +160,47 @@ define([
                                 var from = transition.from;
                                 var to = transition.to;
                                 
-                                var fromNode = ProjectService.getNodeById(from);
-                                var toNode = ProjectService.getNodeById(to);
+                                var fromExists = false;
+                                var toExists = false;
                                 
-                                if (nodes.indexOf(fromNode) != -1 && nodes.indexOf(toNode) != -1) {
+                                for (var n = 0; n < nodes.length; n++) {
+                                    var tempNode = nodes[n];
+                                    
+                                    if (tempNode != null) {
+                                        var tempNodeId = tempNode.id;
+                                        
+                                        if (from == tempNodeId) {
+                                            fromExists = true;
+                                        }
+                                        
+                                        if (to == tempNodeId) {
+                                            toExists = true;
+                                        }
+                                    }
+                                }
+                                
+                                if (fromExists && toExists) {
+                                    var fromNode = ProjectService.getNodeById(from);
+                                    var toNode = ProjectService.getNodeById(to);
+                                    
                                     var link = {};
-                                    link.source = fromNode;
-                                    link.target = toNode;
+                                    
+                                    var dFromNode = {};
+                                    dFromNode.x = fromNode.x;
+                                    dFromNode.y = fromNode.y;
+                                    dFromNode.r = fromNode.r;
+                                    dFromNode.id = fromNode.id;
+                                    dFromNode.title = fromNode.title;
+                                    
+                                    var dToNode = {};
+                                    dToNode.x = toNode.x;
+                                    dToNode.y = toNode.y;
+                                    dToNode.r = toNode.r;
+                                    dToNode.id = toNode.id;
+                                    dToNode.title = toNode.title;
+                                    
+                                    link.source = dFromNode;
+                                    link.target = dToNode;
                                     
                                     links.push(link);
                                 }
@@ -174,13 +214,13 @@ define([
                 if (parentGroupId != null) {
                     var goToParentNode = {};
                     goToParentNode.id = parentGroupId;
-                    goToParentNode.cx = 20;
-                    goToParentNode.cy = 20;
+                    goToParentNode.x = 20;
+                    goToParentNode.y = 20;
                     goToParentNode.r = 20;
+                    goToParentNode.title = 'Parent';
                     
                     nodes.push(goToParentNode);
                 }
-                
                 
                 var svg = d3.select(element[0]).append('svg')
                 .attr('width', width)
@@ -197,39 +237,40 @@ define([
                 .data(links)
                 .enter().append('line')
                 .attr('class', 'link')
-                .attr('x1', function(d) { return d.source.cx; })
-                .attr('y1', function(d) { return d.source.cy; })
-                .attr('x2', function(d) { return d.target.cx; })
-                .attr('y2', function(d) { return d.target.cy; })
+                .attr('x1', function(d) { return d.source.x; })
+                .attr('y1', function(d) { return d.source.y; })
+                .attr('x2', function(d) { return d.target.x; })
+                .attr('y2', function(d) { return d.target.y; })
                 .on('click', function(d) {
-                    console.log('nodeId=' + d.id);
+                    //console.log('nodeId=' + d.id);
                 });
 
-                var node = svg.selectAll('.node')
+                var gnodes = svg.selectAll('g.gnode')
                 .data(nodes)
                 .enter().append('g')
-                .append('circle')
+                .classed('gnode', true);
+                
+                var circles = gnodes.append('circle')
                 .attr('class', 'node')
                 .attr('r', function(d) { return d.r; })
-                .attr('cx', function(d) { return d.cx; })
-                .attr('cy', function(d) { return d.cy; })
                 .on('click', angular.bind(this, function(d) {
                     var nodeId = d.id;
                     
                     StudentDataService.setCurrentNodeByNodeId(nodeId);
                 }));
                 
-                node = svg.selectAll('.node')
-                .data(nodes)
-                .append('text')
-                .attr('dx', 12)
-                .attr('dy', '.35em')
+                var labels = gnodes.append('text')
                 .text(function(d) {
                     var title = d.title;
-                    console.log('title=' + title);
                     return title;
                 });
                 
+                gnodes.attr('transform', function(d) {
+                    var x = d.x;
+                    var y = d.y;
+                    return 'translate(' + [x, y] + ')';
+                });
+
                 force.start();
             }
             
