@@ -101,7 +101,7 @@ define([
     		.state('root', {
                 url: '',
                 abstract: true,
-                template: '<ui-view/>',
+                templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',
                 resolve: {
                     classroomMonitorController: app.loadController('classroomMonitorController'),
                     portfolioController: app.loadController('portfolioController'),
@@ -126,11 +126,29 @@ define([
             })
             .state('root.studentProgress', {
                 url: '/studentProgress',
-                templateUrl: 'wise5/classroomMonitor/progress/student/studentProgress.html',
+                templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
                 controller: 'StudentProgressController',
                 controllerAs: 'studentProgressController',
                 resolve: {
                     loadController: app.loadController('studentProgressController')
+                }
+            })
+            .state('root.nodeProgress', {
+                url: '/nodeProgress',
+                templateUrl: 'wise5/classroomMonitor/nodeProgress/nodeProgress.html',
+                controller: 'NodeProgressController',
+                controllerAs: 'nodeProgressController',
+                resolve: {
+                    loadController: app.loadController('nodeProgressController')
+                }
+            })
+            .state('root.nodeGrading', {
+                url: '/nodeGrading',
+                templateUrl: 'wise5/classroomMonitor/nodeGrading/nodeGrading.html',
+                controller: 'NodeGradingController',
+                controllerAs: 'nodeGradingController',
+                resolve: {
+                    loadController: app.loadController('nodeGradingController')
                 }
             });
             

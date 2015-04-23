@@ -15,6 +15,8 @@ require.config({
         'jqueryUI': 'lib/jquery/jquery-ui-1.10.4.interactions.min',
         'navigationController': 'classroomMonitor/navigation/navigationController',
         'nodeController': 'classroomMonitor/node/nodeController',
+        'nodeGradingController': 'classroomMonitor/nodeGrading/nodeGradingController',
+        'nodeProgressController': 'classroomMonitor/nodeProgress/nodeProgressController',
         'nodeService': 'services/nodeService',
         'openResponseController': 'nodes/openResponse/openResponseController',
         'openResponseService': 'nodes/openResponse/openResponseService',
@@ -25,7 +27,7 @@ require.config({
         'projectService': 'services/projectService',
         'sessionService': 'services/sessionService',
         'studentDataService': 'services/studentDataService',
-        'studentProgressController': 'classroomMonitor/progress/student/studentProgressController',
+        'studentProgressController': 'classroomMonitor/studentProgress/studentProgressController',
         'studentStatusService': 'services/studentStatusService',
         'teacherWebSocketService': 'services/teacherWebSocketService'
     },
