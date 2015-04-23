@@ -10,8 +10,8 @@
             "type": "OpenResponse",
             "title": "Step 1",
             "src": "node1.json",
-            "x": 50,
-            "y": 40,
+            "cx": 50,
+            "cy": 40,
             "r": 20
         },
         {
@@ -19,8 +19,8 @@
             "type": "Planning",
             "title": "Step 2",
             "src": "node2.json",
-            "x": 150,
-            "y": 40,
+            "cx": 150,
+            "cy": 40,
             "r": 20
         },
         {
@@ -28,8 +28,8 @@
             "type": "OpenResponse",
             "title": "Step 3",
             "src": "node3.json",
-            "x": 250,
-            "y": 40,
+            "cx": 250,
+            "cy": 40,
             "r": 20
         },
         {
@@ -37,8 +37,8 @@
             "type": "OpenResponse",
             "title": "Step 4",
             "src": "node4.json",
-            "x": 350,
-            "y": 40,
+            "cx": 350,
+            "cy": 40,
             "r": 20
         },
         {
@@ -46,8 +46,8 @@
             "type": "HTML",
             "title": "Planning A",
             "src": "node5.html",
-            "x": 450,
-            "y": 40,
+            "cx": 450,
+            "cy": 40,
             "r": 20
         },
         {
@@ -55,8 +55,8 @@
             "type": "HTML",
             "title": "Planning B",
             "src": "node6.html",
-            "x": 550,
-            "y": 40,
+            "cx": 550,
+            "cy": 40,
             "r": 20
         },
         {
@@ -64,8 +64,8 @@
             "type": "HTML",
             "title": "Planning C",
             "src": "node7.html",
-            "x": 650,
-            "y": 40,
+            "cx": 650,
+            "cy": 40,
             "r": 20
         },
         {
@@ -73,8 +73,8 @@
             "type": "HTML",
             "title": "Planning D",
             "src": "node8.html",
-            "x": 750,
-            "y": 40,
+            "cx": 750,
+            "cy": 40,
             "r": 20
         },
         {
@@ -82,8 +82,8 @@
             "type": "HTML",
             "title": "Planning E",
             "src": "node9.html",
-            "x": 850,
-            "y": 40,
+            "cx": 850,
+            "cy": 40,
             "r": 20
         },
         {
@@ -91,8 +91,8 @@
             "type": "HTML",
             "title": "Planning F",
             "src": "node10.html",
-            "x": 950,
-            "y": 40,
+            "cx": 950,
+            "cy": 40,
             "r": 20
         },
         {
@@ -100,8 +100,8 @@
             "type": "MultipleChoice",
             "title": "Multiple Choice Step",
             "src": "node11.json",
-            "x": 650,
-            "y": 140,
+            "cx": 650,
+            "cy": 140,
             "r": 20
         },
         {
@@ -109,8 +109,8 @@
             "type": "MultipleChoice",
             "title": "Multiple Choice Step",
             "src": "node12.json",
-            "x": 750,
-            "y": 140,
+            "cx": 750,
+            "cy": 140,
             "r": 20
         },
         {
@@ -118,8 +118,8 @@
             "type": "MultipleChoice",
             "title": "Multiple Choice Step",
             "src": "node13.json",
-            "x": 850,
-            "y": 140,
+            "cx": 850,
+            "cy": 140,
             "r": 20
         },
         {
@@ -127,8 +127,8 @@
             "type": "MultipleChoice",
             "title": "Multiple Choice Step",
             "src": "node14.json",
-            "x": 950,
-            "y": 140,
+            "cx": 950,
+            "cy": 140,
             "r": 20
         },
         {
@@ -139,7 +139,10 @@
             "ids": [
                 "group1",
                 "group2"
-            ]
+            ],
+            "cx": 50,
+            "cy": 50,
+            "r": 20
         },
         {
             "id": "group1",
@@ -152,7 +155,10 @@
                 "node3",
                 "node4",
                 "node5"
-            ]
+            ],
+            "cx": 150,
+            "cy": 140,
+            "r": 20
         },
         {
             "id": "group2",
@@ -169,7 +175,10 @@
                 "node12",
                 "node13",
                 "node14"
-            ]
+            ],
+            "cx": 250,
+            "cy": 140,
+            "r": 20
         }
     ],
     "transitions": [
@@ -248,7 +257,7 @@
     ],
     "layout": {
         "template": "starmap|leftNav|rightNav",
-        "studentIsOnGroupNode": "layout1",
-        "studentIsOnApplicationNode": "layout1"
+        "studentIsOnGroupNode": "layout3",
+        "studentIsOnApplicationNode": "layout4"
     }
 }
