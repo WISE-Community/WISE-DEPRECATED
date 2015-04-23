@@ -1,5 +1,6 @@
 define([
         'angular',
+        'd3',
         'jquery',
         'jqueryUI',
         'angularAnimate',
@@ -21,6 +22,7 @@ define([
         'studentWebSocketService'
         ], function(
                 angular,
+                d3,
                 $,
                 jqueryUI,
                 angularAnimate,
@@ -111,6 +113,127 @@ define([
                 element.dialog(options)
             }
         }
+    });
+    
+    app.directive('group', function() {
+        return {
+            restrict: 'E',
+            link: function($scope, element, attrs) {
+                
+                var width = 1000,
+                height = 480;
+                
+                var nodes = [];
+                var links = [];
+                
+                var group = $scope.navigationController.currentGroup;
+                
+                if (group != null) {
+                    var groupId = group.id;
+                    var childIds = group.ids;
+                    
+                    if (childIds != null) {
+                        for (var c = 0; c < childIds.length; c++) {
+                            var childId = childIds[c];
+                            
+                            var node = ProjectService.getNodeById(childId);
+                            
+                            if (node != null) {
+                                nodes.push(node);
+                            }
+                        }
+                    }
+                    
+                    var transitions = ProjectService.getTransitionsByGroupId(groupId);
+                    
+                    if (transitions != null) {
+                        for (var t = 0; t < transitions.length; t++) {
+                            var transition = transitions[t];
+                            
+                            if (transition != null) {
+                                var from = transition.from;
+                                var to = transition.to;
+                                
+                                var fromNode = ProjectService.getNodeById(from);
+                                var toNode = ProjectService.getNodeById(to);
+                                
+                                if (nodes.indexOf(fromNode) != -1 && nodes.indexOf(toNode) != -1) {
+                                    var link = {};
+                                    link.source = fromNode;
+                                    link.target = toNode;
+                                    
+                                    links.push(link);
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                var parentGroupId = $scope.navigationController.parentGroupId;
+                
+                if (parentGroupId != null) {
+                    var goToParentNode = {};
+                    goToParentNode.id = parentGroupId;
+                    goToParentNode.cx = 20;
+                    goToParentNode.cy = 20;
+                    goToParentNode.r = 20;
+                    
+                    nodes.push(goToParentNode);
+                }
+                
+                
+                var svg = d3.select(element[0]).append('svg')
+                .attr('width', width)
+                .attr('height', height);
+                
+                var force = d3.layout.force()
+                .size([width, height])
+                .nodes(nodes)
+                .links(links);
+                
+                force.linkDistance(width/2);
+                
+                var link = svg.selectAll('.link')
+                .data(links)
+                .enter().append('line')
+                .attr('class', 'link')
+                .attr('x1', function(d) { return d.source.cx; })
+                .attr('y1', function(d) { return d.source.cy; })
+                .attr('x2', function(d) { return d.target.cx; })
+                .attr('y2', function(d) { return d.target.cy; })
+                .on('click', function(d) {
+                    console.log('nodeId=' + d.id);
+                });
+
+                var node = svg.selectAll('.node')
+                .data(nodes)
+                .enter().append('g')
+                .append('circle')
+                .attr('class', 'node')
+                .attr('r', function(d) { return d.r; })
+                .attr('cx', function(d) { return d.cx; })
+                .attr('cy', function(d) { return d.cy; })
+                .on('click', angular.bind(this, function(d) {
+                    var nodeId = d.id;
+                    
+                    StudentDataService.setCurrentNodeByNodeId(nodeId);
+                }));
+                
+                node = svg.selectAll('.node')
+                .data(nodes)
+                .append('text')
+                .attr('dx', 12)
+                .attr('dy', '.35em')
+                .text(function(d) {
+                    var title = d.title;
+                    console.log('title=' + title);
+                    return title;
+                });
+                
+                force.start();
+            }
+            
+        };
     });
     
     app.filter('sanitizeHTML', ['$sce', function($sce) {

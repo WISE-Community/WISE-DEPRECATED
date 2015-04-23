@@ -531,7 +531,45 @@ define(['configService'], function(configService) {
             }
             return transitions;
         };
-
+        
+        serviceObject.getTransitionsByGroupId = function(groupId) {
+            var transitionsInGroup = [];
+            
+            if (groupId != null) {
+                var group = this.getNodeById(groupId);
+                
+                if (group != null) {
+                    var childIds = group.ids;
+                    
+                    if (childIds != null) {
+                        var allTransitions = this.getTransitions();
+                        
+                        // loop through all the transitions
+                        
+                        for (var t = 0; t < allTransitions.length; t++) {
+                            var tempTransition = allTransitions[t];
+                            
+                            if (tempTransition != null) {
+                                var from = tempTransition.from;
+                                var to = tempTransition.to;
+                                
+                                if (childIds.indexOf(from) != -1 || childIds.indexOf(to) != -1) {
+                                    transitionsInGroup.push(tempTransition);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            var project = this.getProject();
+            if (project != null) {
+                
+                
+                transitions = project.transitions;
+            }
+            return transitionsInGroup;
+        };
+        
         serviceObject.getTransitionsByFromNodeId = function(fromNodeId) {
             var transitionsResults = [];
             if (fromNodeId != null) {

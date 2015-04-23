@@ -75,6 +75,8 @@ define(['app'], function(app) {
                         this.parentGroupId = parentGroup.id;
                     }
                 }
+                
+                this.currentGroup = currentGroup;
             }
         };
         

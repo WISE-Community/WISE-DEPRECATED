@@ -1,0 +1,4 @@
+{
+    "style": "#node { background-color: purple }",
+    "prompt": "Step 4 Prompt<br><div style='border:1px dotted red'>{{work|1.1}}</div>"
+}

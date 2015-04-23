@@ -1,0 +1,254 @@
+{
+    "metadata": {
+        "wiseVersion": 5,
+        "gradeRange": "5-7"
+    },
+    "style": "#prompt {font-size:3em;} button { width: 100px;}",
+    "nodes": [
+        {
+            "id": "node1",
+            "type": "OpenResponse",
+            "title": "Step 1",
+            "src": "node1.json",
+            "x": 50,
+            "y": 40,
+            "r": 20
+        },
+        {
+            "id": "node2",
+            "type": "Planning",
+            "title": "Step 2",
+            "src": "node2.json",
+            "x": 150,
+            "y": 40,
+            "r": 20
+        },
+        {
+            "id": "node3",
+            "type": "OpenResponse",
+            "title": "Step 3",
+            "src": "node3.json",
+            "x": 250,
+            "y": 40,
+            "r": 20
+        },
+        {
+            "id": "node4",
+            "type": "OpenResponse",
+            "title": "Step 4",
+            "src": "node4.json",
+            "x": 350,
+            "y": 40,
+            "r": 20
+        },
+        {
+            "id": "node5",
+            "type": "HTML",
+            "title": "Planning A",
+            "src": "node5.html",
+            "x": 450,
+            "y": 40,
+            "r": 20
+        },
+        {
+            "id": "node6",
+            "type": "HTML",
+            "title": "Planning B",
+            "src": "node6.html",
+            "x": 550,
+            "y": 40,
+            "r": 20
+        },
+        {
+            "id": "node7",
+            "type": "HTML",
+            "title": "Planning C",
+            "src": "node7.html",
+            "x": 650,
+            "y": 40,
+            "r": 20
+        },
+        {
+            "id": "node8",
+            "type": "HTML",
+            "title": "Planning D",
+            "src": "node8.html",
+            "x": 750,
+            "y": 40,
+            "r": 20
+        },
+        {
+            "id": "node9",
+            "type": "HTML",
+            "title": "Planning E",
+            "src": "node9.html",
+            "x": 850,
+            "y": 40,
+            "r": 20
+        },
+        {
+            "id": "node10",
+            "type": "HTML",
+            "title": "Planning F",
+            "src": "node10.html",
+            "x": 950,
+            "y": 40,
+            "r": 20
+        },
+        {
+            "id": "node11",
+            "type": "MultipleChoice",
+            "title": "Multiple Choice Step",
+            "src": "node11.json",
+            "x": 650,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node12",
+            "type": "MultipleChoice",
+            "title": "Multiple Choice Step",
+            "src": "node12.json",
+            "x": 750,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node13",
+            "type": "MultipleChoice",
+            "title": "Multiple Choice Step",
+            "src": "node13.json",
+            "x": 850,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node14",
+            "type": "MultipleChoice",
+            "title": "Multiple Choice Step",
+            "src": "node14.json",
+            "x": 950,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "group0",
+            "type": "group",
+            "title": "My First WISE5 Project",
+            "startId": "group1",
+            "ids": [
+                "group1",
+                "group2"
+            ]
+        },
+        {
+            "id": "group1",
+            "type": "group",
+            "title": "Activity 1",
+            "startId": "node0",
+            "ids": [
+                "node1",
+                "node2",
+                "node3",
+                "node4",
+                "node5"
+            ]
+        },
+        {
+            "id": "group2",
+            "type": "group",
+            "title": "Activity 2",
+            "startId": "node0",
+            "ids": [
+                "node6",
+                "node7",
+                "node8",
+                "node9",
+                "node10",
+                "node11",
+                "node12",
+                "node13",
+                "node14"
+            ]
+        }
+    ],
+    "transitions": [
+        {
+            "id": "transition1",
+            "from": "node1",
+            "to": "node2"
+        },
+        {
+            "id": "transition2",
+            "from": "node2",
+            "to": "node3"
+        },
+        {
+            "id": "transition3",
+            "from": "node3",
+            "to": "node4"
+        },
+        {
+            "id": "transition4",
+            "from": "node4",
+            "to": "node5"
+        },
+        {
+            "id": "transition5",
+            "from": "node5",
+            "to": "node6"
+        },
+        {
+            "id": "transition6",
+            "from": "node6",
+            "to": "node7"
+        },
+        {
+            "id": "transition7",
+            "from": "node7",
+            "to": "node8"
+        },
+        {
+            "id": "transition8",
+            "from": "node8",
+            "to": "node9"
+        },
+        {
+            "id": "transition9",
+            "from": "node9",
+            "to": "node10"
+        },
+        {
+            "id": "transition10",
+            "from": "node6",
+            "to": "node11"
+        },
+        {
+            "id": "transition11",
+            "from": "node11",
+            "to": "node12"
+        },
+        {
+            "id": "transition12",
+            "from": "node12",
+            "to": "node13"
+        },
+        {
+            "id": "transition13",
+            "from": "node13",
+            "to": "node14"
+        }
+    ],
+    "startNodeId": "node1",
+    "constraints": [],
+    "navigationMode": "guided",
+    "navigationApplications": [
+        "wiseMap",
+        "wiseList"
+    ],
+    "layout": {
+        "template": "starmap|leftNav|rightNav",
+        "studentIsOnGroupNode": "layout1",
+        "studentIsOnApplicationNode": "layout1"
+    }
+}

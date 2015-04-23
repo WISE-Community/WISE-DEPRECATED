@@ -10,6 +10,7 @@ require.config({
         'angularWebSocket': 'lib/angular/angularWebSocket/angular-websocket.min',
         'app': 'vle/app',
         'configService': 'services/configService',
+        'd3': 'lib/d3/d3',
         'htmlController': 'nodes/html/htmlController',
         'jquery': 'lib/jquery/jquery-2.1.3.min',
         //'jqueryUI': 'lib/jquery/jquery-ui-1.10.4.interactions.min',
