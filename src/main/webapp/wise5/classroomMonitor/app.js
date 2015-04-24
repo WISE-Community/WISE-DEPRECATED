@@ -1,5 +1,7 @@
 define([
         'angular',
+        'd3',
+        'directives',
         'jquery',
         'jqueryUI',
         'angularAnimate',
@@ -18,6 +20,8 @@ define([
         'teacherWebSocketService'
         ], function(
                 angular,
+                d3,
+                directives,
                 $, 
                 jqueryUI,
                 angularAnimate,
@@ -36,6 +40,7 @@ define([
                 teacherWebSocketService) {
 
 	var app = angular.module('app', [
+	                                 'directives',
 	                                 'ui.router',
 	                                 'ui.sortable',
 	                                 'ngAnimate',
@@ -55,20 +60,6 @@ define([
     
     // node services
     app.factory('OpenResponseService', openResponseService);
-    
-	app.directive('compile', function($compile) {
-        return function(scope, ele, attrs) {
-            scope.$watch(
-                    function(scope) {
-                        return scope.$eval(attrs.compile);
-                    },
-                    function(value) {
-                        ele.html(value);
-                        $compile(ele.contents())(scope);
-                    }
-            );
-        };
-    });
 	
 	app.filter('sanitizeHTML', ['$sce', function($sce) {
 	    return function(htmlCode) {

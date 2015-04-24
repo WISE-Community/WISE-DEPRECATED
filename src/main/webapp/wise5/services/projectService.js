@@ -302,21 +302,6 @@ define(['configService'], function(configService) {
             return element;
         };
         
-        serviceObject.getProjectStartId = function() {
-            var projectStartId = null;
-            var project = this.getProject();
-            
-            if (project != null) {
-                var startId = project.startId;
-                
-                if (startId != null) {
-                    projectStartId = startId;
-                }
-            }
-            
-            return projectStartId;
-        };
-        
         serviceObject.getParentGroup = function(nodeId) {
             var result = null;
             
@@ -335,6 +320,20 @@ define(['configService'], function(configService) {
                         }
                     }
                 }
+            }
+            
+            return result;
+        };
+        
+        serviceObject.getRootNode = function(nodeId) {
+            var result = null;
+            
+            var parentGroup = this.getParentGroup(nodeId);
+            
+            if (parentGroup == null) {
+                result = this.getNodeById(nodeId);
+            } else {
+                result = this.getRootNode(parentGroup.id);
             }
             
             return result;
@@ -402,7 +401,7 @@ define(['configService'], function(configService) {
             if (node != null) {
                 var nodeId = node.id;
                 
-                var projectStartId = this.getProjectStartId();
+                var projectStartId = this.getStartNodeId();
                 
                 if (nodeId === projectStartId) {
                     result = true;
