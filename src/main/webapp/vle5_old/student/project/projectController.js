@@ -4,12 +4,13 @@ define(['app'], function(app) {
                 $state, 
                 $stateParams, 
                 ConfigService, 
+                CurrentNodeService, 
                 PostMessageService,
                 ProjectService, 
                 StudentDataService) {
             
             $scope.$watch(function() {
-                return StudentDataService.getCurrentNode();
+                return CurrentNodeService.getCurrentNode();
             }, angular.bind(this, function(newCurrentNode, oldCurrentNode) {
                 
                 if (newCurrentNode != null) {
@@ -34,7 +35,7 @@ define(['app'], function(app) {
             }, angular.bind(this, function(newNodeStatuses, oldNodeStatuses) {
                 console.log('nodeStatus Changed');
                 if (newNodeStatuses != null) {
-                    var nodeId = StudentDataService.getCurrentNodeId();
+                    var nodeId = CurrentNodeService.getCurrentNodeId();
                     
                     var wiseData = {};
                     wiseData.nodeId = nodeId;
@@ -59,7 +60,7 @@ define(['app'], function(app) {
 
                     var wiseData = {};
                     wiseData.project = project;
-                    wiseData.currentNodeId = StudentDataService.getCurrentNodeId();
+                    wiseData.currentNodeId = CurrentNodeService.getCurrentNodeId();
                     wiseData.nodeStatuses = StudentDataService.getNodeStatuses();
                     wiseData.applicationNodes = ProjectService.getApplicationNodes();
                     wiseData.groupNodes = ProjectService.getGroupNodes();

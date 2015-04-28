@@ -248,6 +248,11 @@ public class VLEServiceImpl implements VLEService {
 	}
 	
 	@Override
+    public List<Annotation> getAnnotationsByRunIdAndNodeId(Long runId, String nodeId) {
+        return annotationDao.getAnnotationsByRunIdAndNodeId(runId, nodeId);
+    }
+    
+	@Override
 	public List<Annotation> getAnnotationList() {
 		return annotationDao.getList();
 	}

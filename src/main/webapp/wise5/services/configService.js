@@ -8,7 +8,19 @@ define([], function() {
         serviceObject.getConfig = function() {
             return this.config;
         };
-    
+        
+        serviceObject.retrieveConfig = function(configUrl) {
+            return $http.get(configUrl).then(angular.bind(this, function(result) {
+                var config = result.data;
+                
+                this.config = config;
+                
+                this.sortClassmateUserInfosAlphabeticallyByName();
+                
+                return config;
+            }));
+        };
+        
         serviceObject.getConfigParam = function(paramName) {
             if (this.config !== null) {
                 return this.config[paramName];
@@ -69,6 +81,17 @@ define([], function() {
             return workgroupId;
         };
         
+        serviceObject.getMyUserInfo = function() {
+            var myUserInfo = null;
+            
+            var userInfo = this.getConfigParam('userInfo');
+            if (userInfo != null) {
+                myUserInfo = userInfo.myUserInfo;
+            }
+            
+            return myUserInfo;
+        };
+        
         serviceObject.getClassmateUserInfos = function() {
             var classmateUserInfos = null;
             var userInfo = this.getConfigParam('userInfo');
@@ -84,13 +107,98 @@ define([], function() {
             return classmateUserInfos;
         };
         
-        serviceObject.retrieveConfig = function(configUrl) {
-            return $http.get(configUrl).then(angular.bind(this, function(result) {
-                var config = result.data;
+        serviceObject.getClassmateWorkgroupIds = function() {
+            var workgroupIds = [];
+            
+            var classmateUserInfos = this.getClassmateUserInfos();
+            
+            if (classmateUserInfos != null) {
+                for (var c = 0; c < classmateUserInfos.length; c++) {
+                    var classmateUserInfo = classmateUserInfos[c];
+                    
+                    if (classmateUserInfo != null) {
+                        var workgroupId = classmateUserInfo.workgroupId;
+                        
+                        if (workgroupId != null) {
+                            workgroupIds.push(workgroupId);
+                        }
+                    }
+                }
+            }
+            
+            return workgroupIds;
+        };
+        
+        serviceObject.sortClassmateUserInfosAlphabeticallyByName = function() {
+            var classmateUserInfos = this.getClassmateUserInfos();
+            
+            if (classmateUserInfos != null) {
+                classmateUserInfos.sort(this.sortClassmateUserInfosAlphabeticallyByNameHelper);
+            }
+            
+            return classmateUserInfos;
+        };
+        
+        serviceObject.sortClassmateUserInfosAlphabeticallyByNameHelper = function(a, b) {
+            var aUserName = a.userName;
+            var bUserName = b.userName;
+            var result = 0;
+            
+            if (aUserName < bUserName) {
+                result = -1;
+            } else if (aUserName > bUserName) {
+                result = 1;
+            }
+            
+            return result;
+        };
+        
+        serviceObject.getUserInfoByWorkgroupId = function(workgroupId) {
+            var userInfo = null;
+            
+            if (workgroupId != null) {
                 
-                this.config = config;
-                return config;
-            }));
+                var myUserInfo = this.getMyUserInfo();
+                
+                if (myUserInfo != null) {
+                    var tempWorkgroupId = myUserInfo.workgroupId;
+                    
+                    if (workgroupId === tempWorkgroupId) {
+                        userInfo = myUserInfo;
+                    }
+                };
+                
+                if (userInfo == null) {
+                    var classmateUserInfos = this.getClassmateUserInfos();
+                    
+                    if (classmateUserInfos != null) {
+                        for (var c = 0; c < classmateUserInfos.length; c++) {
+                            var classmateUserInfo = classmateUserInfos[c];
+                            
+                            if (classmateUserInfo != null) {
+                                var tempWorkgroupId = classmateUserInfo.workgroupId;
+                                
+                                if (workgroupId === tempWorkgroupId) {
+                                    userInfo = classmateUserInfo;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return userInfo;
+        };
+        
+        serviceObject.getUserNameByWorkgroupId = function(workgroupId) {
+            var userName = null;
+            
+            if (workgroupId != null) {
+                
+            }
+            
+            return userName;
         };
         
         return serviceObject;

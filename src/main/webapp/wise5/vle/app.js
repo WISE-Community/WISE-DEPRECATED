@@ -11,6 +11,7 @@ define([
         'angularUIRouter',
         'angularWebSocket',
         'configService',
+        'currentNodeService',
         'multipleChoiceService',
         'nodeService',
         'openResponseService',
@@ -34,6 +35,7 @@ define([
                 angularUIRouter,
                 angularWebSocket,
                 configService,
+                currentNodeService,
                 multipleChoiceService,
                 nodeService,
                 openResponseService,
@@ -58,6 +60,7 @@ define([
     
     // core services
     app.factory('ConfigService', configService);
+    app.factory('CurrentNodeService', currentNodeService);
     app.factory('NodeService', nodeService);
     app.factory('PortfolioService', portfolioService);
     app.factory('ProjectService', projectService);

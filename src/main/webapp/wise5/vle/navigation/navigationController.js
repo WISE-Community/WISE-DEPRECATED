@@ -4,11 +4,12 @@ define(['app'], function(app) {
                 $state, 
                 $stateParams, 
                 ConfigService, 
+                CurrentNodeService, 
                 ProjectService, 
                 StudentDataService) {
         this.currentGroup = null;
         this.groups = ProjectService.getGroups();
-        this.currentNode = StudentDataService.getCurrentNode();
+        this.currentNode = CurrentNodeService.getCurrentNode();
         
         $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
@@ -35,7 +36,7 @@ define(['app'], function(app) {
         }));
         
         this.nodeClicked = function(nodeId) {
-            StudentDataService.setCurrentNodeByNodeId(nodeId);
+            CurrentNodeService.setCurrentNodeByNodeId(nodeId);
         };
         
         this.isNodeDisabled = function(nodeId) {
@@ -53,7 +54,7 @@ define(['app'], function(app) {
         };
         
         this.updateNavigation = function() {
-            var currentNode = StudentDataService.getCurrentNode();
+            var currentNode = CurrentNodeService.getCurrentNode();
             
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
@@ -77,6 +78,7 @@ define(['app'], function(app) {
                 }
                 
                 this.currentGroup = currentGroup;
+                this.currentGroupId = this.currentGroup.id;
             }
         };
         

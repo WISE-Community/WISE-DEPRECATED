@@ -78,5 +78,7 @@ public interface AnnotationDao<T extends Annotation> extends SimpleDao<T> {
 	
 	public List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers, UserInfo toUser, List<String> annotationTypes);
 	
+	public List<Annotation> getAnnotationsByRunIdAndNodeId(Long runId, String nodeId);
+	
 	public List<Annotation> getAnnotationList();
 }

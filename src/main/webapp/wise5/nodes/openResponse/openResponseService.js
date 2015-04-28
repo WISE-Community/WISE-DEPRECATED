@@ -66,7 +66,9 @@ define(['nodeService'], function(nodeService) {
             if (nodeState != null) {
                 var response = nodeState.response;
                 
-                studentWorkAsHTML = '<p>' + response + '</p>';
+                if (response != null) {
+                    studentWorkAsHTML = '<p>' + response + '</p>';
+                }
             }
             
             return studentWorkAsHTML;

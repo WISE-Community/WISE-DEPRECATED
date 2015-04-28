@@ -84,8 +84,11 @@ public class Annotation extends PersistableDomain {
 	
 	@Column(name="data", length=512000)
 	private String data = null;
+	
+	@Column(name="nodeId")
+	private String nodeId = null;
 
-	public Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -220,6 +223,22 @@ public class Annotation extends PersistableDomain {
 	}
 	
 	/**
+	 * Returns the node id
+	 * @return
+	 */
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    /**
+     * Sets the node id
+     * @param nodeId
+     */
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
+	
+	/**
 	 * The default constructor for Annotation
 	 */
 	public Annotation() {
@@ -243,7 +262,7 @@ public class Annotation extends PersistableDomain {
 	 * @param type
 	 * @param data
 	 */
-	public Annotation(StepWork stepWork, UserInfo fromUser, UserInfo toUser, Long runId, Timestamp postTime, String type, String data) {
+	public Annotation(StepWork stepWork, UserInfo fromUser, UserInfo toUser, Long runId, Timestamp postTime, String type, String data, String nodeId) {
 		setStepWork(stepWork);
 		setFromUser(fromUser);
 		setToUser(toUser);
@@ -251,6 +270,7 @@ public class Annotation extends PersistableDomain {
 		setPostTime(postTime);
 		setType(type);
 		setData(data);
+		setNodeId(nodeId);
 	}
 
 	public JSONObject getAnnotationForNodeStateId(Long nodeStateId) {

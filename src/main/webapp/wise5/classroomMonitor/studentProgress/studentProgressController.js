@@ -27,31 +27,6 @@ define(['app'], function(app) {
     
             $state.go('studentGrading', {workgroupId:workgroupId});
         };
-        
-        
-
-
-		/*
-		this.studentStatuses = StudentStatusService.getStudentStatuses();
-		
-		this.workgroups = UserAndClassInfoService.getClassmateUserInfos();
-		
-		this.annotations = AnnotationService.getAnnotations();
-		
-		this.getCurrentStepForWorkgroupId = function(workgroupId) {
-			return StudentStatusService.getCurrentStepTitleForWorkgroupId(workgroupId);
-		};
-		
-		this.getStudentProjectCompletion = function(workgroupId) {
-			return StudentStatusService.getStudentProjectCompletion(workgroupId);
-		};
-		
-		this.studentRowClicked = function(workgroup) {
-			var workgroupId = workgroup.workgroupId;
-	
-			$state.go('studentGrading', {workgroupId:workgroupId});
-		};
-		*/
 	}]);
 	
 });

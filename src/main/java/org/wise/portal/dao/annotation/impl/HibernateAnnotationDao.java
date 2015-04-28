@@ -595,6 +595,18 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
         return results;
 	}
 	
+	public List<Annotation> getAnnotationsByRunIdAndNodeId(Long runId, String nodeId) {
+       Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+       
+        List<Annotation> results = 
+            (List<Annotation>) session.createCriteria(Annotation.class)
+                .add( Restrictions.eq("runId", runId))
+                .add( Restrictions.eq("nodeId", nodeId))
+                .list();
+    
+        return results;
+	}
+	
 	@Transactional(readOnly=true)
 	public List<Annotation> getAnnotationList() {
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();

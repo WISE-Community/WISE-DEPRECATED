@@ -504,6 +504,9 @@ public class InformationController {
 	    	//get the url to post annotations
 	    	String postAnnotationsUrl = wiseBaseURL + "/annotation.html?type=annotation&runId=" + run.getId().toString();
 	    	
+	    	// get the url for getting and posting annotations
+	    	String annotationsUrl = wiseBaseURL + "/annotation.html?type=annotation&runId=" + run.getId().toString();
+	    	
 			//get the url to get peer review work
 			String getPeerReviewUrl = wiseBaseURL + "/peerReview.html?type=peerreview";
 			
@@ -592,6 +595,7 @@ public class InformationController {
 				config.put("getInappropriateFlagsUrl", getInappropriateFlagsUrl);
 				config.put("getAnnotationsUrl", getAnnotationsUrl);
 				config.put("postAnnotationsUrl", postAnnotationsUrl);
+				config.put("annotationsURL", annotationsUrl);
 				config.put("getStudentDataUrl", getStudentDataUrl);
 				config.put("postStudentDataUrl", postStudentDataUrl);
 				config.put("studentDataURL", getStudentDataUrl);

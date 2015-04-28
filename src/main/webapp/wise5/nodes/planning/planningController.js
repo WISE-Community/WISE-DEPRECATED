@@ -4,6 +4,7 @@ define(['app'], function(app) {
                     $state, 
                     $stateParams, 
                     ConfigService,
+                    CurrentNodeService,
                     NodeService,
                     OpenResponseService,
                     ProjectService, 
@@ -12,7 +13,7 @@ define(['app'], function(app) {
         this.nodeId = null;
         this.studentNodes = [];
         
-        var currentNode = StudentDataService.getCurrentNode();
+        var currentNode = CurrentNodeService.getCurrentNode();
         
         if (currentNode != null) {
             this.nodeId = currentNode.id;

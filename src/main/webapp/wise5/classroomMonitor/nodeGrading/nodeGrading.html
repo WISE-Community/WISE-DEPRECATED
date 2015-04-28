@@ -1,0 +1,15 @@
+<div>{{nodeGradingController.title}}</div>
+
+<div ng-repeat='workgroupId in nodeGradingController.workgroupIds'>
+    <div>{{nodeGradingController.getUserNameByWorkgroupId(workgroupId)}}</div>
+    <div ng-repeat='nodeVisit in nodeGradingController.getNodeVisitsByWorkgroupIdAndNodeId(workgroupId, nodeGradingController.nodeId)'>
+        <div ng-repeat='nodeState in nodeVisit.nodeStates'>
+            <table border=1>
+                <tr>
+                    <td><nodestatehtml nodestate={{nodeState}} nodetype={{nodeVisit.nodeType}}></nodestatehtml></td>
+                    <td>Score: <input type='text' size=5 ng-model='nodeState' ng-change='nodeGradingController.scoreChanged()'></input><br>Comment: <textarea rows=4 cols=50></textarea></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

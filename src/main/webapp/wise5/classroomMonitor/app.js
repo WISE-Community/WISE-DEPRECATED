@@ -9,7 +9,10 @@ define([
         'angularSortable',
         'angularUIRouter',
         'angularWebSocket',
+        'annotationService',
         'configService',
+        'currentNodeService',
+        'multipleChoiceService',
         'nodeService',
         'openResponseService',
         'portfolioService',
@@ -17,6 +20,7 @@ define([
         'sessionService',
         'studentDataService',
         'studentStatusService',
+        'teacherDataService',
         'teacherWebSocketService'
         ], function(
                 angular,
@@ -29,7 +33,10 @@ define([
                 angularSortable,
                 angularUIRouter,
                 angularWebSocket,
+                annotationService,
                 configService,
+                currentNodeService,
+                multipleChoiceService,
                 nodeService,
                 openResponseService,
                 portfolioService,
@@ -37,6 +44,7 @@ define([
                 sessionService,
                 studentDataService,
                 studentStatusService,
+                teacherDataService,
                 teacherWebSocketService) {
 
 	var app = angular.module('app', [
@@ -49,16 +57,20 @@ define([
 	                                 ]);
 	
     // core services
+	app.factory('AnnotationService', annotationService);
     app.factory('ConfigService', configService);
+    app.factory('CurrentNodeService', currentNodeService);
     app.factory('NodeService', nodeService);
     app.factory('PortfolioService', portfolioService);
     app.factory('ProjectService', projectService);
     app.factory('SessionService', sessionService);
     app.factory('StudentDataService', studentDataService);
     app.factory('StudentStatusService', studentStatusService);
+    app.factory('TeacherDataService', teacherDataService);
     app.factory('TeacherWebSocketService', teacherWebSocketService);
     
     // node services
+    app.factory('MultipleChoiceService', multipleChoiceService);
     app.factory('OpenResponseService', openResponseService);
 	
 	app.filter('sanitizeHTML', ['$sce', function($sce) {
@@ -104,16 +116,13 @@ define([
                     project: function(ProjectService, config) {
                         return ProjectService.retrieveProject();
                     },
-                    studentData: function(StudentDataService, config, project) {
-                        return StudentDataService.retrieveStudentData();
-                    },
                     studentStatuses: function(StudentStatusService, config) {
                         return StudentStatusService.retrieveStudentStatuses();
                     },
                     webSocket: function(TeacherWebSocketService, config) {
                         return TeacherWebSocketService.initialize();
                     }
-                }              
+                }
             })
             .state('root.studentProgress', {
                 url: '/studentProgress',
@@ -139,6 +148,12 @@ define([
                 controller: 'NodeGradingController',
                 controllerAs: 'nodeGradingController',
                 resolve: {
+                    studentData: function(TeacherDataService, config) {
+                        return TeacherDataService.retrieveStudentDataByNodeId();
+                    },
+                    annotations: function(AnnotationService, config) {
+                        return AnnotationService.retrieveAnnotationsByNodeId();
+                    },
                     loadController: app.loadController('nodeGradingController')
                 }
             });

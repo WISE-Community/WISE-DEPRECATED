@@ -9,6 +9,6 @@ define(['app'],
                     PortfolioService,
                     ProjectService, 
                     NodeService, 
-                    StudentDataService) {
+                    TeacherDataService) {
     });
 });

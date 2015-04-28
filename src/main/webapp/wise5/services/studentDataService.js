@@ -25,7 +25,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             
             return currentNodeId;
         };
-        
+        /*
         serviceObject.setCurrentNodeByNodeId = function(nodeId) {
             if (nodeId != null) {
                 var node = ProjectService.getNodeById(nodeId);
@@ -46,7 +46,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                 $rootScope.$broadcast('currentNodeChanged', {previousNode: previousCurrentNode, currentNode: this.currentNode});
             }
         };
-        
+        */
         serviceObject.getCurrentParentNode = function() {
             var currentNode = this.getCurrentNode();
             

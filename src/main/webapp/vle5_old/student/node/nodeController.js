@@ -3,6 +3,7 @@ define(['app'], function(app) {
         function($scope, 
                 $state, 
                 $stateParams, 
+                CurrentNodeService, 
                 NodeApplicationService, 
                 NodeService, 
                 PostMessageService,
@@ -10,7 +11,7 @@ define(['app'], function(app) {
                 StudentDataService) {
             
             $scope.$watch(function() {
-                return StudentDataService.getCurrentNode();
+                return CurrentNodeService.getCurrentNode();
             }, angular.bind(this, function(newCurrentNode, oldCurrentNode) {
                 if (newCurrentNode != null) {
                     var nodeId = newCurrentNode.id;

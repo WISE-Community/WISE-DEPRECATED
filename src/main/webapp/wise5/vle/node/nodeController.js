@@ -4,6 +4,7 @@ define(['app'], function(app) {
                 $rootScope,
                 $state, 
                 $stateParams, 
+                CurrentNodeService, 
                 NodeService, 
                 PortfolioService,
                 ProjectService, 
@@ -41,11 +42,11 @@ define(['app'], function(app) {
             
             this.setCurrentNodeByNodeId = function(nodeId) {
                 var node = ProjectService.getNodeById(nodeId);
-                StudentDataService.setCurrentNode(node);
+                CurrentNodeService.setCurrentNode(node);
             };
             
             this.addNodeVisitItemToPortfolio = function() {
-                var currentNode = StudentDataService.getCurrentNode();
+                var currentNode = CurrentNodeService.getCurrentNode();
                 if (currentNode != null) {
                     var currentNodeId = currentNode.id;
                     var currentNodeVisit = StudentDataService.getLatestNodeVisitByNodeId(currentNodeId)
@@ -61,11 +62,11 @@ define(['app'], function(app) {
             };
             
             this.closeNode = function() {
-                var currentNode = StudentDataService.getCurrentNode();
+                var currentNode = CurrentNodeService.getCurrentNode();
                 if (currentNode != null) {
                     var currentNodeId = currentNode.id;
                     var parentNode = ProjectService.getParentGroup(currentNodeId);
-                    StudentDataService.setCurrentNode(parentNode);
+                    CurrentNodeService.setCurrentNode(parentNode);
                 }
             };
             
@@ -80,7 +81,7 @@ define(['app'], function(app) {
                 }
                 
                 if (nodeId != null) {
-                    StudentDataService.setCurrentNodeByNodeId(nodeId);
+                    CurrentNodeService.setCurrentNodeByNodeId(nodeId);
                 }
             };
             
@@ -99,7 +100,7 @@ define(['app'], function(app) {
                 return StudentDataService.saveNodeVisitToServer(nodeVisit);
             };
             
-            var node = StudentDataService.getCurrentNode();
+            var node = CurrentNodeService.getCurrentNode();
             var mode = $scope.vleController.mode;
             this.loadNode(node, mode);
         });

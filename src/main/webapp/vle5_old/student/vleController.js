@@ -4,6 +4,7 @@ define(['app'],
             function($scope, 
                     $stateParams, 
                     ConfigService, 
+                    CurrentNodeService, 
                     NodeApplicationService,
                     PostMessageService,
                     ProjectService, 
@@ -17,7 +18,7 @@ define(['app'],
         //this.wiseMessageId = 0;
             
         $scope.$watch(function() {
-            return StudentDataService.getCurrentNode();
+            return CurrentNodeService.getCurrentNode();
         }, angular.bind(this, function(newCurrentNode, oldCurrentNode) {
             if (newCurrentNode != null) {
                 var nodeId = newCurrentNode.id;
@@ -91,7 +92,7 @@ define(['app'],
         };
         
         this.goToNextNode = function() {
-            var currentNode = StudentDataService.getCurrentNode();
+            var currentNode = CurrentNodeService.getCurrentNode();
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
                 var transitions = ProjectService.getTransitionsByFromNodeId(currentNodeId);
@@ -106,7 +107,7 @@ define(['app'],
         };
        
         this.goToPrevNode = function() {
-            var currentNode = StudentDataService.getCurrentNode();
+            var currentNode = CurrentNodeService.getCurrentNode();
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
                 var transitions = ProjectService.getTransitionsByToNodeId(currentNodeId);
@@ -140,7 +141,7 @@ define(['app'],
         
         var nodeId = ProjectService.getStartNodeId();
         
-        var currentNode = StudentDataService.getCurrentNode();
+        var currentNode = CurrentNodeService.getCurrentNode();
         
         if (currentNode != null) {
             nodeId = currentNode.id;

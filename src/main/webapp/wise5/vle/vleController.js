@@ -6,6 +6,7 @@ define(['app'],
                     $state,
                     $stateParams,
                     ConfigService,
+                    CurrentNodeService,
                     PortfolioService,
                     ProjectService,
                     NodeService,
@@ -34,7 +35,7 @@ define(['app'],
         $scope.$on('currentNodeChanged', angular.bind(this, function(event, args) {
             var previousNode = args.previousNode;
             var currentNode = args.currentNode;
-            var currentNode = StudentDataService.getCurrentNode();
+            var currentNode = CurrentNodeService.getCurrentNode();
             var nodeId = currentNode.id;
             StudentDataService.updateStackHistory(nodeId);
             StudentDataService.updateVisitedNodesHistory(nodeId);
@@ -145,7 +146,7 @@ define(['app'],
         };
         
         this.goToNextNode = function() {
-            var currentNode = StudentDataService.getCurrentNode();
+            var currentNode = CurrentNodeService.getCurrentNode();
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
                 var transitions = ProjectService.getTransitionsByFromNodeId(currentNodeId);
@@ -154,13 +155,13 @@ define(['app'],
                     var toNodeId = transition.to;
                     //var mode = this.mode;
                     //this.loadNode(toNodeId, mode);
-                    StudentDataService.setCurrentNodeByNodeId(toNodeId);
+                    CurrentNodeService.setCurrentNodeByNodeId(toNodeId);
                 }
             }
         };
        
         this.goToPrevNode = function() {
-            var currentNode = StudentDataService.getCurrentNode();
+            var currentNode = CurrentNodeService.getCurrentNode();
             if (currentNode != null) {
                 var currentNodeId = currentNode.id;
                 var transitions = ProjectService.getTransitionsByToNodeId(currentNodeId);
@@ -170,7 +171,7 @@ define(['app'],
                     
                     if (transition != null) {
                         var fromNodeId = transition.from;
-                        StudentDataService.setCurrentNodeByNodeId(fromNodeId);
+                        CurrentNodeService.setCurrentNodeByNodeId(fromNodeId);
                     }
                 } else {
                     var stackHistory = StudentDataService.getStackHistory();
@@ -179,7 +180,7 @@ define(['app'],
                         prevNodeId = StudentDataService.getStackHistoryAtIndex(-2);
                         //var mode = this.mode;
                         //this.loadNode(prevNodeId, mode);
-                        StudentDataService.setCurrentNodeByNodeId(prevNodeId);
+                        CurrentNodeService.setCurrentNodeByNodeId(prevNodeId);
                     }
                 }
             }
@@ -228,7 +229,7 @@ define(['app'],
         
         this.projectStyle = ProjectService.getProjectStyle();
 
-        StudentDataService.setCurrentNodeByNodeId(nodeId);
+        CurrentNodeService.setCurrentNodeByNodeId(nodeId);
         window.StudentDataService = StudentDataService;
         window.PortfolioService = PortfolioService;
         window.ProjectService = ProjectService;

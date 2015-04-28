@@ -10,6 +10,7 @@ require.config({
         'angularWebSocket': 'lib/angular/angularWebSocket/angular-websocket.min',
         'app': 'vle/app',
         'configService': 'services/configService',
+        'currentNodeService': 'services/currentNodeService',
         'd3': 'lib/d3/d3',
         'directives': 'directives/directives',
         'htmlController': 'nodes/html/htmlController',

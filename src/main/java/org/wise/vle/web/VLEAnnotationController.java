@@ -107,6 +107,7 @@ public class VLEAnnotationController {
 		String annotationType = request.getParameter("annotationType");
 		String nodeStateIdStr = request.getParameter("nodeStateId");
 		String periodIdStr = request.getParameter("periodId");
+		String nodeId = request.getParameter("nodeId");
 		
 		String cRaterScoringUrl = wiseProperties.getProperty("cRater_scoring_url");
 		String cRaterClientId = wiseProperties.getProperty("cRater_client_id");
@@ -314,10 +315,13 @@ public class VLEAnnotationController {
 				
 				List<StepWork> workByToWorkgroup = vleService.getStepWorksByUserInfo(toWorkgroup);
 				annotationList = vleService.getAnnotationByFromWorkgroupAndWorkByToWorkgroup(fromWorkgroup, workByToWorkgroup, Annotation.class);
-			} else if(runId != null) {
-				//get all the annotations for the run id
-				annotationList = (List<Annotation>) vleService.getAnnotationByRunId(longRunId, Annotation.class);
-			} else {
+			} else if(runId != null && nodeId != null) {
+                //get all the annotations for the run id
+                annotationList = (List<Annotation>) vleService.getAnnotationsByRunIdAndNodeId(longRunId, nodeId);
+            } else if(runId != null) {
+                //get all the annotations for the run id
+                annotationList = (List<Annotation>) vleService.getAnnotationByRunId(longRunId, Annotation.class);
+            } else {
 				annotationList = (List<Annotation>) vleService.getAnnotationList();
 				
 			}
@@ -326,12 +330,12 @@ public class VLEAnnotationController {
 			//obtain the parameters
 			Map<String, String[]> map = request.getParameterMap();
 			
-	    	String nodeId = null;
+	    	String mapNodeId = null;
 	    	String type = null;
 	    	
 	    	if(map.containsKey("nodeId")) {
 	    		//get the node id
-	    		nodeId = map.get("nodeId")[0];
+	    		mapNodeId = map.get("nodeId")[0];
 	    	}
 	    	
 	    	if(map.containsKey("type")) {
@@ -343,9 +347,9 @@ public class VLEAnnotationController {
 			 * get the flags based on the parameters that were passed in the request.
 			 * this will return the flag annotations ordered from oldest to newest
 			 */
-	    	if(runId != null && nodeId != null) {
+	    	if(runId != null && mapNodeId != null) {
 	    		//get all the annotations for a run id and node id
-	        	Node node = vleService.getNodeByNodeIdAndRunId(nodeId, runId, true);
+	        	Node node = vleService.getNodeByNodeIdAndRunId(mapNodeId, runId, true);
 	        	List<StepWork> stepWorkList = vleService.getStepWorksByNode(node);
 	        	annotationList = vleService.getAnnotationByStepWorkList(stepWorkList);
 	    	} else if(runId != null && type != null) {
@@ -716,7 +720,7 @@ public class VLEAnnotationController {
 							e.printStackTrace();
 						}
 
-						annotation = new Annotation(stepWork, fromUser, toUser, new Long(runId), postTime, type, dataJSONObj.toString());
+						annotation = new Annotation(stepWork, fromUser, toUser, new Long(runId), postTime, type, dataJSONObj.toString(), nodeId);
 						vleService.saveAnnotation(annotation);
 						
 						// update CRaterRequest table and mark this request as completed.
@@ -911,6 +915,10 @@ public class VLEAnnotationController {
 		if(runId != null) {
 			//set the run id
 			annotation.setRunId(Long.parseLong(runId));
+		}
+		
+		if (nodeId != null) {
+		    annotation.setNodeId(nodeId);
 		}
 		
 		//propagate the row/object to the table
