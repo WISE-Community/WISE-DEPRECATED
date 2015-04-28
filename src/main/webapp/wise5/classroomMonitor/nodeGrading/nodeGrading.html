@@ -7,7 +7,11 @@
             <table border=1>
                 <tr>
                     <td><nodestatehtml nodestate={{nodeState}} nodetype={{nodeVisit.nodeType}}></nodestatehtml></td>
-                    <td>Score: <input type='text' size=5 ng-model='nodeState' ng-change='nodeGradingController.scoreChanged()'></input><br>Comment: <textarea rows=4 cols=50></textarea></td>
+                    <td>
+                    Score: <input type='text' size=5 ng-model='nodeGradingController.annotationMappings[nodeVisit.id + "-score"].value' ng-change='nodeGradingController.scoreChanged(nodeVisit.id)' ng-model-options='{debounce:{"default":1000, "blur":0}}'></input>
+                    <br>
+                    Comment: <textarea rows=4 cols=50 ng-model='nodeGradingController.annotationMappings[nodeVisit.id + "-comment"].value' ng-change='nodeGradingController.commentChanged(nodeVisit.id)' ng-model-options='{debounce:{"default":2000, "blur":0}}'></textarea>
+                    </td>
                 </tr>
             </table>
         </div>

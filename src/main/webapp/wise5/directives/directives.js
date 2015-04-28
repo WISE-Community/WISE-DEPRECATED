@@ -58,19 +58,13 @@ define(['angular', 'projectService', 'currentNodeService'], function(angular, pr
             link: function($scope, element, attrs) {
                 
                 $scope.$watch('currentgroupid', function(newValue, oldValue) {
-                    console.log('currentgroupid changed');
-                    //CurrentNodeService.setCurrentNodeByNodeId(newValue);
-                    //force.start();
-                    
 
-                    console.log($scope.currentgroupid);
                     var width = 1000,
                     height = 480;
                     
                     var nodes = [];
                     var links = [];
                     
-                    //var group = $scope.navigationController.currentGroup;
                     var groupId = attrs.currentgroupid;
                     var group = ProjectService.getNodeById(groupId);
                     
@@ -155,8 +149,6 @@ define(['angular', 'projectService', 'currentNodeService'], function(angular, pr
                         }
                     }
                     
-                    //var parentGroupId = $scope.navigationController.parentGroupId;
-                    //var parentGroupId = attrs.currentgroupid;
                     var parentGroup = ProjectService.getParentGroup(groupId);
                     var parentGroupId = null;
                     
@@ -236,9 +228,6 @@ define(['angular', 'projectService', 'currentNodeService'], function(angular, pr
         return {
             restrict: 'E',
             link: function($scope, element, attrs) {
-                
-                console.log('element=' + element);
-                console.log('attrs=' + attrs);
                 
                 var nodestate = attrs.nodestate;
                 var nodeType = attrs.nodetype;
