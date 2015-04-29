@@ -399,6 +399,15 @@ public interface RunService extends OfferingService {
     public List<Run> getRunsByActivity();
     
     /**
+     * Returns a <code>List<Run></code> list of runs that have a run title similar to the
+     * the specified run title.
+     * 
+     * @param runTitle
+     * @return List<Run> - list of runs with the run title similar to the param
+     */
+    public List<Run> getRunsByTitle(String runTitle);
+    
+    /**
      * Updates the given <code>Run</code> run's statistics which are currently
      * the last time run and the number of times run.
      * 
