@@ -59,7 +59,7 @@ define(['angular', 'projectService', 'currentNodeService'], function(angular, pr
                 
                 $scope.$watch('currentgroupid', function(newValue, oldValue) {
 
-                    var width = 1000,
+                    var width = 1200,
                     height = 480;
                     
                     var nodes = [];

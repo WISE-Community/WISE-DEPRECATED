@@ -8,7 +8,7 @@
         {
             "id": "node1",
             "type": "OpenResponse",
-            "title": "Step 1",
+            "title": "Node 1",
             "src": "node1.json",
             "x": 50,
             "y": 40,
@@ -17,7 +17,7 @@
         {
             "id": "node2",
             "type": "Planning",
-            "title": "Step 2",
+            "title": "Node 2",
             "src": "node2.json",
             "x": 150,
             "y": 40,
@@ -26,7 +26,7 @@
         {
             "id": "node3",
             "type": "OpenResponse",
-            "title": "Step 3",
+            "title": "Node 3",
             "src": "node3.json",
             "x": 250,
             "y": 40,
@@ -35,7 +35,7 @@
         {
             "id": "node4",
             "type": "OpenResponse",
-            "title": "Step 4",
+            "title": "Node 4",
             "src": "node4.json",
             "x": 350,
             "y": 40,
@@ -44,7 +44,7 @@
         {
             "id": "node5",
             "type": "HTML",
-            "title": "Planning A",
+            "title": "Node 5",
             "src": "node5.html",
             "x": 450,
             "y": 40,
@@ -53,81 +53,135 @@
         {
             "id": "node6",
             "type": "HTML",
-            "title": "Planning B",
+            "title": "Node 6",
             "src": "node6.html",
-            "x": 550,
+            "x": 50,
             "y": 40,
             "r": 20
         },
         {
             "id": "node7",
             "type": "HTML",
-            "title": "Planning C",
+            "title": "Node 7",
             "src": "node7.html",
-            "x": 650,
+            "x": 150,
             "y": 40,
             "r": 20
         },
         {
             "id": "node8",
             "type": "HTML",
-            "title": "Planning D",
+            "title": "Node 8",
             "src": "node8.html",
-            "x": 750,
+            "x": 250,
             "y": 40,
             "r": 20
         },
         {
             "id": "node9",
             "type": "HTML",
-            "title": "Planning E",
+            "title": "Node 9",
             "src": "node9.html",
-            "x": 850,
+            "x": 350,
             "y": 40,
             "r": 20
         },
         {
             "id": "node10",
             "type": "HTML",
-            "title": "Planning F",
+            "title": "Node 10",
             "src": "node10.html",
-            "x": 950,
+            "x": 450,
             "y": 40,
             "r": 20
         },
         {
             "id": "node11",
             "type": "MultipleChoice",
-            "title": "Multiple Choice Step",
+            "title": "Node 11",
             "src": "node11.json",
-            "x": 650,
+            "x": 150,
             "y": 140,
             "r": 20
         },
         {
             "id": "node12",
             "type": "MultipleChoice",
-            "title": "Multiple Choice Step",
+            "title": "Node 12",
             "src": "node12.json",
-            "x": 750,
+            "x": 250,
             "y": 140,
             "r": 20
         },
         {
             "id": "node13",
             "type": "MultipleChoice",
-            "title": "Multiple Choice Step",
+            "title": "Node 13",
             "src": "node13.json",
-            "x": 850,
+            "x": 350,
             "y": 140,
             "r": 20
         },
         {
             "id": "node14",
             "type": "MultipleChoice",
-            "title": "Multiple Choice Step",
+            "title": "Node 14",
             "src": "node14.json",
-            "x": 950,
+            "x": 450,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node15",
+            "type": "MultipleChoice",
+            "title": "Node 15",
+            "src": "node15.json",
+            "x": 150,
+            "y": 240,
+            "r": 20
+        },
+        {
+            "id": "node16",
+            "type": "MultipleChoice",
+            "title": "Node 16",
+            "src": "node16.json",
+            "x": 250,
+            "y": 240,
+            "r": 20
+        },
+        {
+            "id": "node17",
+            "type": "MultipleChoice",
+            "title": "Node 17",
+            "src": "node17.json",
+            "x": 350,
+            "y": 240,
+            "r": 20
+        },
+        {
+            "id": "node18",
+            "type": "MultipleChoice",
+            "title": "Node 18",
+            "src": "node18.json",
+            "x": 450,
+            "y": 240,
+            "r": 20
+        },
+        {
+            "id": "node19",
+            "type": "MultipleChoice",
+            "title": "Node 19",
+            "src": "node19.json",
+            "x": 550,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node20",
+            "type": "MultipleChoice",
+            "title": "Node 20",
+            "src": "node20.json",
+            "x": 650,
             "y": 140,
             "r": 20
         },
@@ -174,7 +228,12 @@
                 "node11",
                 "node12",
                 "node13",
-                "node14"
+                "node14",
+                "node15",
+                "node16",
+                "node17",
+                "node19",
+                "node20"
             ],
             "x": 250,
             "y": 140,
@@ -246,8 +305,44 @@
             "id": "transition13",
             "from": "node13",
             "to": "node14"
+        },
+        {
+            "id": "transition14",
+            "from": "node14",
+            "to": "node19"
+        },
+        {
+            "id": "transition15",
+            "from": "node10",
+            "to": "node19"
+        },
+        {
+            "id": "transition16",
+            "from": "node19",
+            "to": "node20"
+        },
+        {
+            "id": "transition17",
+            "from": "node6",
+            "to": "node15"
+        },
+        {
+            "id": "transition18",
+            "from": "node15",
+            "to": "node16"
+        },
+        {
+            "id": "transition19",
+            "from": "node16",
+            "to": "node17"
+        },
+        {
+            "id": "transition20",
+            "from": "node17",
+            "to": "node13"
         }
     ],
+    "startGroupId": "group0",
     "startNodeId": "node1",
     "constraints": [],
     "navigationMode": "guided",

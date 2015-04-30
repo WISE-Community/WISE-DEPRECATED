@@ -51,6 +51,8 @@ define(['app'], function(app) {
             $scope.currentgroupid = this.currentGroupId;
         }
         
+        ProjectService.getFlattenedProjectAsNodeIds();
+        
         //console.log('end');
         /*
         this.nodeClicked = function(node) {

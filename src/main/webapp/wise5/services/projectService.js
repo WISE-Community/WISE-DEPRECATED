@@ -721,6 +721,479 @@ define(['configService'], function(configService) {
             return studentIsOnApplicationNodeClass;
         };
         
+        serviceObject.getStartGroupId = function() {
+            var startGroupId = null;
+            var project = this.getProject();
+            if (project != null) {
+                startGroupId = project.startGroupId;
+            }
+            return startGroupId;
+        };
+        
+        /**
+         * Flatten the project to obtain a list of node ids
+         */
+        serviceObject.getFlattenedProjectAsNodeIds = function() {
+            var nodeIds = [];
+            
+            // get the start node id
+            var startNodeId = this.getStartNodeId();
+            
+            // get all the possible paths through the project
+            var allPaths = this.getAllPaths(startNodeId);
+            
+            // consolidate all the paths to create a single list of node ids
+            nodeIds = this.consolidatePaths(allPaths);
+            //nodeIds = this.consolidatePaths(allPaths.reverse());
+            //console.log(nodeIds);
+            return nodeIds;
+        };
+        
+        /**
+         * Get all the possible paths through the project. This function 
+         * recursively calls itself to traverse the project depth first.
+         * @param nodeId the node id we are want to get the paths from
+         * @return an array of paths. each path is an array of node ids.
+         */
+        serviceObject.getAllPaths = function(nodeId) {
+            var allPaths = [];
+            
+            if (nodeId != null) {
+                if (this.isApplicationNode(nodeId)) {
+                    // the node is an application node
+                    
+                    // get all the transitions from this node
+                    var transitions = this.getTransitionsByFromNodeId(nodeId);
+                    
+                    if (transitions != null) {
+                        if (transitions.length === 0) {
+                            /*
+                             * there are no transitions from the node id so this path
+                             * only contains this node id
+                             */
+                            
+                            var path = [];
+                            
+                            // add the node id to the path
+                            path.push(nodeId);
+                            
+                            // add the path to the all paths array
+                            allPaths.push(path);
+                        } else {
+                            // loop through all the transitions from this node id
+                            for (var t = 0; t < transitions.length; t++) {
+                                var transitionResult = [];
+                                
+                                // get a transition
+                                var transition = transitions[t];
+                                
+                                if (transition != null) {
+                                    // get the to node id
+                                    var toNodeId = transition.to;
+                                    
+                                    /*
+                                     * recursively get the paths by getting all 
+                                     * the paths for the to node
+                                     */
+                                    var allPathsFromToNode = this.getAllPaths(toNodeId);
+                                    
+                                    if (allPathsFromToNode != null) {
+                                        // loop through all the paths for the to node
+                                        for (var a = 0; a<allPathsFromToNode.length; a++) {
+                                            
+                                            // get a path
+                                            var tempPath = allPathsFromToNode[a];
+                                            
+                                            // prepend the current node id to the path
+                                            tempPath.unshift(nodeId);
+                                            
+                                            // add the path to our collection of paths
+                                            allPaths.push(tempPath);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (this.isGroupNode(nodeId)) {
+                    // the node is a group node
+                }
+            }
+            
+            return allPaths;
+        };
+        
+        /**
+         * Consolidate all the paths into a linear list of node ids
+         * @param paths an array of paths. each path is an array of node ids.
+         * @return an array of node ids that have been properly ordered
+         */
+        serviceObject.consolidatePaths = function(paths) {
+            var consolidatedPath = [];
+            
+            if (paths != null) {
+                // start with the first path
+                var currentPath = 0;
+                
+                /*
+                 * continue until all the paths are empty. as we consolidate
+                 * node ids, we will remove them from the paths. once all the
+                 * paths are empty we will be done consolidating the paths.
+                 */
+                while(!this.arePathsEmpty(paths)) {
+                    
+                    // get the first node id in the current path
+                    var nodeId = this.getFirstNodeIdInPathAtIndex(paths, currentPath);
+                    
+                    if (this.areFirstNodeIdsInPathsTheSame(paths)) {
+                        // the first node ids in all the paths are the same
+                        
+                        // remove the node id from all the paths
+                        this.removeNodeIdFromPaths(nodeId, paths);
+                        
+                        // add the node id to our consolidated path
+                        consolidatedPath.push(nodeId);
+                    } else {
+                        // not all the top node ids are the same which means we have branched
+                        
+                        // get all the paths that contain the node id
+                        var pathsThatContainNodeId = this.getPathsThatContainNodeId(nodeId, paths);
+                        
+                        if (pathsThatContainNodeId != null) {
+                            if(pathsThatContainNodeId.length === 1) {
+                                // only the current path we are on has the node id
+                                
+                                // remove the node id from the path
+                                this.removeNodeIdFromPath(nodeId, paths, currentPath);
+                                
+                                // add the node id to our consolidated path
+                                consolidatedPath.push(nodeId);
+                            } else {
+                                // there are multiple paths that have this node id
+                                
+                                // consume all the node ids up to the given node id
+                                var consumedPath = this.consumePathsUntilNodeId(paths, nodeId);
+                                
+                                // remove the node id from the paths
+                                this.removeNodeIdFromPaths(nodeId, paths);
+                                
+                                // add the node id to the end of the consumed path
+                                consumedPath.push(nodeId);
+                                
+                                // add the consumed path to our consolidated path
+                                consolidatedPath = consolidatedPath.concat(consumedPath);
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            
+            return consolidatedPath;
+        };
+        
+        /**
+         * Consume the node ids in the paths until we get to the given node id
+         * @param paths the paths to consume
+         * @param nodeId the node id to stop consuming at
+         * @return an array of node ids that we have consumed
+         */
+        serviceObject.consumePathsUntilNodeId = function(paths, nodeId) {
+            var consumedNodeIds = [];
+            
+            if (paths != null && nodeId != null) {
+                
+                // loop through all the paths
+                for (var p = 0; p < paths.length; p++) {
+                    
+                    // get a path
+                    var path = paths[p];
+                    
+                    // check if the path contains the node id to stop consuming at
+                    if (path != null && path.indexOf(nodeId) != -1) {
+                        /*
+                         * the path does contain the node id to stop consuming at
+                         * so we will consume the node ids in this path until
+                         * we get to the given node id to stop consuming at
+                         */
+                        
+                        // loop through the node ids in the path
+                        for (var x = 0; x < path.length; x++) {
+                            
+                            // get a node id
+                            var tempNodeId = path[x];
+                            
+                            if (nodeId === tempNodeId) {
+                                /*
+                                 * the node id is the same as the one we need to 
+                                 * stop consuming at so we will stop looking
+                                 * at this path
+                                 */
+                                break;
+                            } else {
+                                /*
+                                 * the node id is not the one that we need to stop consuming at
+                                 * so we will consume it
+                                 */
+                                
+                                // get all the paths that contain the node id
+                                var pathsThatContainNodeId = this.getPathsThatContainNodeId(tempNodeId, paths);
+                                
+                                if (pathsThatContainNodeId.length === 1) {
+                                    // there is only one path with this node id
+                                    
+                                    // remove the node id from the path
+                                    this.removeNodeIdFromPath(tempNodeId, paths, p);
+                                    
+                                    // move the counter back one since we have just removed a node id
+                                    x--;
+                                    
+                                    // add the node id to the consumed node ids array
+                                    consumedNodeIds.push(tempNodeId);
+                                } else {
+                                    // there are multiple paths with this node id
+                                    
+                                    /*
+                                     * take the paths that contain the given node id and consume
+                                     * the paths until the given node id
+                                     */
+                                    var tempConsumedNodeIds = this.consumePathsUntilNodeId(pathsThatContainNodeId, tempNodeId);
+                                    
+                                    // remove the node id from the paths that contain it
+                                    this.removeNodeIdFromPaths(tempNodeId, pathsThatContainNodeId);
+                                    
+                                    // add the temp consumed node ids to our consumed node ids array
+                                    consumedNodeIds = consumedNodeIds.concat(tempConsumedNodeIds);
+                                    
+                                    // move the counter back one since we have just removed a node id
+                                    x--;
+                                    
+                                    // add the node id to the consumed node ids array
+                                    consumedNodeIds.push(tempNodeId);
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+
+            return consumedNodeIds;
+        };
+        
+        /**
+         * Get the path at the given index and get the first node id in
+         * the path
+         * @param paths an array of paths. each path is an array of node ids
+         * @param index the index of the path we want
+         * @return the first node in the given path
+         */
+        serviceObject.getFirstNodeIdInPathAtIndex = function(paths, index) {
+            var nodeId = null;
+            
+            if (paths != null && index != null) {
+                // get the path at the given index
+                var path = paths[index];
+                
+                if (path != null && path.length > 0) {
+                    // get the first node id in the path
+                    nodeId = path[0];
+                }
+            }
+            
+            return nodeId;
+        };
+        
+        /**
+         * Remove the node ifrom the paths
+         * @param nodeId the node id to remove
+         * @param paths an array of paths. each path is an array of node ids
+         */
+        serviceObject.removeNodeIdFromPaths = function(nodeId, paths) {
+            
+            if (nodeId != null && paths != null) {
+                // loop through all the paths
+                for (var p = 0; p < paths.length; p++) {
+                    
+                    // get a path
+                    var path = paths[p];
+                    
+                    // loop through all the node ids in the path
+                    for (var x = 0; x < path.length; x++) {
+                        // get a node id
+                        var tempNodeId = path[x];
+                        
+                        /*
+                         * check if the node id matches the one we are looking
+                         * for
+                         */
+                        if (nodeId === tempNodeId) {
+                            /*
+                             * we have found the node id we are looking for so
+                             * we will remove it from the path
+                             */
+                            path.splice(x, 1);
+                            
+                            /*
+                             * move the counter back since we just removed a
+                             * node id. we will continue searching this path
+                             * for the node id in case the path contains it
+                             * multiple times.
+                             */
+                            x--;
+                        }
+                    }
+                }
+            }
+        };
+        
+        /**
+         * Remove the node id from the path
+         * @param nodeId the node id to remove
+         * @param paths an array of paths. each path is an array of node ids
+         * @param pathIndex the path to remove from
+         */
+        serviceObject.removeNodeIdFromPath = function(nodeId, paths, pathIndex) {
+            
+            if (nodeId != null && paths != null && pathIndex != null) {
+                
+                // get the path at the given index
+                var path = paths[pathIndex];
+                
+                if (path != null) {
+                    
+                    // loop through all the node ids in the path
+                    for (var x = 0; x < path.length; x++) {
+                        // get a ndoe id
+                        var tempNodeId = path[x];
+                        
+                        /*
+                         * check if the node id matches the one we are looking
+                         * for
+                         */
+                        if (nodeId === tempNodeId) {
+                            /*
+                             * we have found the node id we are looking for so
+                             * we will remove it from the path
+                             */
+                            path.splice(x, 1);
+                            
+                            /*
+                             * move the counter back since we just removed a
+                             * node id. we will continue searching this path
+                             * for the node id in case the path contains it
+                             * multiple times.
+                             */
+                            x--;
+                        }
+                    }
+                }
+            }
+        };
+        
+        /**
+         * Check if the first node ids in the paths are the same
+         * @param paths an array of paths. each path is an array of node ids
+         * @return whether all the paths have the same first node id
+         */
+        serviceObject.areFirstNodeIdsInPathsTheSame = function(paths) {
+            var result = true;
+            
+            var nodeId = null;
+            
+            if (paths != null) {
+                
+                // loop through all the paths
+                for (var p = 0; p < paths.length; p++) {
+                    
+                    // get a path
+                    var path = paths[p];
+                    
+                    // get the first node id in the path
+                    tempNodeId = path[0];
+                    
+                    if (nodeId == null) {
+                        /*
+                         * this is the first path we have looked at so we will
+                         * remember the node id
+                         */
+                        nodeId = tempNodeId;
+                    } else if (nodeId != tempNodeId) {
+                        /*
+                         * the node id does not match the first node id from a 
+                         * previous path so the paths do not all have the same
+                         * first node id
+                         */ 
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            
+            return result;
+        };
+        
+        /**
+         * Check if all the paths are empty
+         * @param paths an array of paths. each path is an array of node ids
+         * @return whether all the paths are empty
+         */
+        serviceObject.arePathsEmpty = function(paths) {
+            var result = true;
+            
+            if (paths != null) {
+                
+                // loop through all the paths
+                for (var p = 0; p < paths.length; p++) {
+                    
+                    // get a path
+                    var path = paths[p];
+                    
+                    if (path != null) {
+                        
+                        // get the length of the path
+                        if (path.length !== 0) {
+                            // the path is not empty
+                            result = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return result;
+        };
+        
+        /**
+         * Get the paths that contain the node id
+         * @param nodeId the node id we are looking for
+         * @param paths an array of paths. each path is an array of node ids
+         * @return an array of paths that contain the given node id
+         */
+        serviceObject.getPathsThatContainNodeId = function(nodeId, paths) {
+            var pathsThatContainNodeId = [];
+            
+            if (nodeId != null && paths != null) {
+                // loop through all the paths
+                for (var p = 0; p < paths.length; p++) {
+                    
+                    // get a path
+                    var path = paths[p];
+                    
+                    // check if the path contains the node id
+                    if (path.indexOf(nodeId) != -1) {
+                        /*
+                         * add the path to the array of paths that contain 
+                         * the node id
+                         */
+                        pathsThatContainNodeId.push(path);
+                    }
+                }
+            }
+            
+            return pathsThatContainNodeId;
+        };
+        
         return serviceObject;
     }];
     
