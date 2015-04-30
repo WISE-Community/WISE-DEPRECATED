@@ -832,8 +832,6 @@ define(['configService'], function(configService) {
             var consolidatedPath = [];
             
             if (paths != null) {
-                // start with the first path
-                var currentPath = 0;
                 
                 /*
                  * continue until all the paths are empty. as we consolidate
@@ -841,6 +839,9 @@ define(['configService'], function(configService) {
                  * paths are empty we will be done consolidating the paths.
                  */
                 while(!this.arePathsEmpty(paths)) {
+                    
+                    // start with the first path
+                    var currentPath = this.getNonEmptyPathIndex(paths);
                     
                     // get the first node id in the current path
                     var nodeId = this.getFirstNodeIdInPathAtIndex(paths, currentPath);
@@ -1192,6 +1193,33 @@ define(['configService'], function(configService) {
             }
             
             return pathsThatContainNodeId;
+        };
+        
+        /**
+         * Get a non empty path index. It will loop through the paths and
+         * return the index of the first non empty path.
+         * @param paths an array of paths. each path is an array of node ids
+         * @return the index of the path that is not empty
+         */
+        serviceObject.getNonEmptyPathIndex = function(paths) {
+            var index = null;
+            
+            if (paths != null) {
+                // loop through all the paths
+                for (var p = 0; p < paths.length; p++) {
+                    // get a path
+                    var path = paths[p];
+                    
+                    // check the length of the path
+                    if (path.length !== 0) {
+                        // the path is not empty so we will return this index
+                        index = p;
+                        break;
+                    }
+                }
+            }
+            
+            return index;
         };
         
         return serviceObject;

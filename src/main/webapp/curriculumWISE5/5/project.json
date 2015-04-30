@@ -186,6 +186,24 @@
             "r": 20
         },
         {
+            "id": "node21",
+            "type": "MultipleChoice",
+            "title": "Node 21",
+            "src": "node21.json",
+            "x": 750,
+            "y": 40,
+            "r": 20
+        },
+        {
+            "id": "node22",
+            "type": "MultipleChoice",
+            "title": "Node 22",
+            "src": "node20.json",
+            "x": 750,
+            "y": 240,
+            "r": 20
+        },
+        {
             "id": "group0",
             "type": "group",
             "title": "My First WISE5 Project",
@@ -233,7 +251,9 @@
                 "node16",
                 "node17",
                 "node19",
-                "node20"
+                "node20",
+                "node21",
+                "node22"
             ],
             "x": 250,
             "y": 140,
@@ -340,6 +360,16 @@
             "id": "transition20",
             "from": "node17",
             "to": "node13"
+        },
+        {
+            "id": "transition21",
+            "from": "node20",
+            "to": "node21"
+        },
+        {
+            "id": "transition22",
+            "from": "node20",
+            "to": "node22"
         }
     ],
     "startGroupId": "group0",
