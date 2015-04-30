@@ -56,7 +56,7 @@ import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.portal.PortalService;
 
 /**
- * Services for WISE's Run Domain Object
+ * Services for WISE Run
  * 
  * @author Hiroki Terashima
  * @version $Id$
@@ -532,6 +532,13 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	public List<Run> getRunsByActivity(){
 		return this.runDao.getRunsByActivity();
 	}
+	
+	/**
+	 * @see org.wise.portal.service.offering.RunService#getRunsByTitle(java.lang.String)
+	 */
+    public List<Run> getRunsByTitle(String runTitle) {
+        return this.runDao.retrieveByField("name", "like", "%" + runTitle + "%");
+    }
 	
 	/**
 	 * @see org.wise.portal.service.offering.RunService#updateRunStatistics(org.wise.portal.domain.Run)

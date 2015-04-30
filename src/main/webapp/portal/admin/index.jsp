@@ -122,6 +122,7 @@ function validateForm(type) {
 										<option value="runId"><spring:message code='run_id' /></option>
 										<option value="projectId"><spring:message code='project_id' /></option>
 										<option value="teacherUsername"><spring:message code='student.studentinfo.runTeacherUsername' /></option>
+                                        <option value="runTitle"><spring:message code='title' /></option>
 									</select>
 									<input type="text" name="runLookupValue" id="runLookupValue" size="20"></input>
 									<input type="Submit" value="Go"></input>

@@ -82,6 +82,8 @@ public class FindProjectRunsController {
 				runList = this.getRunListByProjectId(Long.parseLong(runLookupValue));
 			} else if ("teacherUsername".equals(runLookupType)) {
 				runList = this.getRunListByUsername(runLookupValue);
+			} else if ("runTitle".equals(runLookupType)) {
+			    runList = this.getRunListByRunTitle(runLookupValue);
 			}
 		}
 		
@@ -101,12 +103,12 @@ public class FindProjectRunsController {
      * @param Long - projectId
      * @return List<Run> - list of runs associated with the projectId
      */
-    private List<Run> getRunListByProjectId(Long projectId){
+    private List<Run> getRunListByProjectId(Long projectId) {
 		List<Run> runList = new ArrayList<Run>();
     	List<Run> run_list = runService.getAllRunList();
     	List<Project> projectCopies = projectService.getProjectCopies(projectId);
-		for(Run run: run_list){
-			if(run.getProject().getId().equals(projectId)) {
+		for (Run run: run_list) {
+			if (run.getProject().getId().equals(projectId)) {
 				runList.add(run);
 			} else {
 				for (Project project : projectCopies) {
@@ -121,14 +123,19 @@ public class FindProjectRunsController {
     
     /**
      * Returns a <code>List<Run></code> list of runs that are associated
-     * with the given <code>String</code> username.
+     * with the given <code>String</code> username using the LIKE operator
      * 
      * @param String - username
-     * @return List<Run> - list of runs associated with username
+     * @return List<Run> - list of runs associated with username using the LIKE operator
      */
-    private List<Run> getRunListByUsername(String username){
-    	User user = userService.retrieveUserByUsername(username);
-    	return runService.getRunListByOwner(user);
+    private List<Run> getRunListByUsername(String username) {
+        List<Run> allRuns = new ArrayList<Run>();
+    	List<User> users = userService.retrieveUsersByUsername(username);
+    	for (User user : users) {
+    	    List<Run> runListByOwner = runService.getRunListByOwner(user);
+    	    allRuns.addAll(runListByOwner);
+    	}
+    	return allRuns;
     }
     
     /**
@@ -138,19 +145,30 @@ public class FindProjectRunsController {
      * @param Long - runId
      * @return List<Run> - list of runs associated with the runId
      */
-    private List<Run> getRunListByRunId(Long runId){
+    private List<Run> getRunListByRunId(Long runId) {
     	List<Run> runList = new ArrayList<Run>();
     	
     	try{
     		Run run = this.runService.retrieveById(runId);
     		
-    		if(run != null){
+    		if (run != null) {
         		runList.add(run);
         	}
-    	} catch(ObjectNotFoundException e){
+    	} catch(ObjectNotFoundException e) {
     		e.printStackTrace();
     	}
     	
     	return runList;
+    }
+    
+    /**
+     * Returns a <code>List<Run></code> list of runs that have
+     * the given run title using the LIKE operator
+     * 
+     * @param String runTitle
+     * @return List<Run> - list of runs associated with the runTitle
+     */
+    private List<Run> getRunListByRunTitle(String runTitle) {
+        return this.runService.getRunsByTitle(runTitle);
     }
 }

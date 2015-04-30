@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Transactional(readOnly = true)
 	public List<User> retrieveUsersByUsername(String username) {
-		return retrieveByField("username", "like", username, "UserDetails");
+		return retrieveByField("username", "like", "%" + username + "%", "teacherUserDetails");
 	}
 	
 
