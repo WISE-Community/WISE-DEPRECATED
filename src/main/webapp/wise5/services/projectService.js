@@ -679,7 +679,7 @@ define(['configService'], function(configService) {
             return nodeSrc;
         };
         
-        serviceObject.getNodeTitleFromNodeId = function(nodeId) {
+        serviceObject.getNodeTitleByNodeId = function(nodeId) {
             var title = null;
             
             var node = this.getNodeById(nodeId);

@@ -151,6 +151,44 @@ define([], function() {
             }));
         };
         
+        serviceObject.populateAnnotationMappings = function(annotationMappings, workgroupId, nodeVisits) {
+            
+            if (annotationMappings != null && workgroupId != null && nodeVisits != null) {
+                for (var nv = 0; nv < nodeVisits.length; nv++) {
+                    var nodeVisit = nodeVisits[nv];
+                    
+                    if (nodeVisit != null) {
+                        var nodeVisitId = nodeVisit.id;
+                        
+                        var scoreAnnotation = this.getAnnotationByStepWorkIdAndType(nodeVisitId, 'score');
+                        var commentAnnotation = this.getAnnotationByStepWorkIdAndType(nodeVisitId, 'comment');
+                        
+                        var nodeId = this.nodeId;
+                        var value = '';
+                        var stepWorkId = nodeVisitId;
+                        var runId = ConfigService.getRunId();
+                        var fromWorkgroup = ConfigService.getWorkgroupId();
+                        var toWorkgroup = workgroupId;
+                        
+                        if (scoreAnnotation == null) {
+                            var type = 'score';
+                            scoreAnnotation = this.createAnnotation(type, nodeId, value, stepWorkId, runId, fromWorkgroup, toWorkgroup);
+                        }
+                        
+                        if (commentAnnotation == null) {
+                            var type = 'comment';
+                            commentAnnotation = this.createAnnotation(type, nodeId, value, stepWorkId, runId, fromWorkgroup, toWorkgroup);
+                        }
+                        
+                        annotationMappings[nodeVisitId + '-score'] = scoreAnnotation;
+                        annotationMappings[nodeVisitId + '-comment'] = commentAnnotation;
+                    }
+                }
+            }
+            
+            return annotationMappings;
+        };
+        
         return serviceObject;
     }];
     

@@ -38,7 +38,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             
             if(studentStatus != null) {
                 var currentNodeId = studentStatus.currentNodeId;
-                nodeTitle = ProjectService.getNodeTitleFromNodeId(currentNodeId);
+                nodeTitle = ProjectService.getNodeTitleByNodeId(currentNodeId);
             }
             
             return nodeTitle;

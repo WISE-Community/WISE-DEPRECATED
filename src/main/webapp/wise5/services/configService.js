@@ -195,7 +195,11 @@ define([], function() {
             var userName = null;
             
             if (workgroupId != null) {
+                var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
                 
+                if (userInfo != null) {
+                    userName = userInfo.userName;
+                }
             }
             
             return userName;

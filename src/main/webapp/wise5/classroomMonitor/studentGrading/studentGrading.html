@@ -1,0 +1,23 @@
+{{studentGradingController.title}}
+<br/>
+User Name: {{studentGradingController.userName}}
+<br/>
+WorkgroupId: {{studentGradingController.workgroupId}}
+<br/>
+<div ng-repeat='nodeId in studentGradingController.nodeIds'>
+    <div>{{studentGradingController.getNodeTitleByNodeId(nodeId)}}</div>
+    <div ng-repeat='nodeVisit in studentGradingController.getNodeVisitsByWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId)'>
+        <div ng-repeat='nodeState in nodeVisit.nodeStates'>
+            <table border=1>
+                <tr>
+                    <td><nodestatehtml nodestate={{nodeState}} nodetype={{nodeVisit.nodeType}}></nodestatehtml></td>
+                    <td>
+                    Score: <input type='text' size=5 ng-model='studentGradingController.annotationMappings[nodeVisit.id + "-score"].value' ng-change='studentGradingController.scoreChanged(nodeVisit.id)' ng-model-options='{debounce:{"default":1000, "blur":0}}'></input>
+                    <br>
+                    Comment: <textarea rows=4 cols=50 ng-model='studentGradingController.annotationMappings[nodeVisit.id + "-comment"].value' ng-change='studentGradingController.commentChanged(nodeVisit.id)' ng-model-options='{debounce:{"default":2000, "blur":0}}'></textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

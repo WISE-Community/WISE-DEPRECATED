@@ -32,6 +32,7 @@ require.config({
         'projectService': 'services/projectService',
         'sessionService': 'services/sessionService',
         'studentDataService': 'services/studentDataService',
+        'studentGradingController': 'classroomMonitor/studentGrading/studentGradingController',
         'studentProgressController': 'classroomMonitor/studentProgress/studentProgressController',
         'studentStatusService': 'services/studentStatusService',
         'teacherDataService': 'services/teacherDataService',

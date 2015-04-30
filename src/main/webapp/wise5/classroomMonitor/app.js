@@ -156,6 +156,21 @@ define([
                     },
                     loadController: app.loadController('nodeGradingController')
                 }
+            })
+            .state('root.studentGrading', {
+                url: '/studentGrading/:workgroupId',
+                templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
+                controller: 'StudentGradingController',
+                controllerAs: 'studentGradingController',
+                resolve: {
+                    studentData: function(TeacherDataService, config) {
+                        return TeacherDataService.retrieveStudentDataByNodeId();
+                    },
+                    annotations: function(AnnotationService, config) {
+                        return AnnotationService.retrieveAnnotationsByNodeId();
+                    },
+                    loadController: app.loadController('studentGradingController')
+                }
             });
             
 	}]);
