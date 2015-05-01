@@ -67,8 +67,14 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
         };
         
         this.myWorkDragStartCallback = function(event, ui, nodeId, nodeType) {
+            $(ui.helper.context).data('importType', 'NodeState');  
             $(ui.helper.context).data('importWorkNodeState', StudentDataService.getLatestNodeStateByNodeId(nodeId));
             $(ui.helper.context).data('importWorkNodeType', nodeType);
+        };
+        
+        this.studentAssetDragStartCallback = function(event, ui, studentAsset) {
+            $(ui.helper.context).data('objectType', 'StudentAsset');  
+            $(ui.helper.context).data('objectData', studentAsset);
         };
         
         this.log = function() {
