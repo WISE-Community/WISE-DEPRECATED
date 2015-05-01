@@ -10,6 +10,7 @@ define(['app'], function(app) {
                     OpenResponseService,
                     ProjectService,
                     SessionService,
+                    StudentAssetService,
                     StudentDataService) {
         this.autoSaveInterval = 10000; // auto-save interval in milliseconds
         this.nodeContent = null;
@@ -99,7 +100,7 @@ define(['app'], function(app) {
             this.setStudentWork(nodeState);
             this.importWork();
             
-            $scope.$parent.nodeController.nodeLoaded(this.nodeId);
+            $scope.$parent.nodeController.nodeLoaded(this, this.nodeId);
         }));
         
         this.setStudentWork = function(nodeState) {
@@ -194,6 +195,7 @@ define(['app'], function(app) {
                 return;
             }
             
+            var objectType = $(ui.helper.context).data('objectType');
             var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
             var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
             var importPortfolioItem = $(ui.helper.context).data('importPortfolioItem');
@@ -225,7 +227,38 @@ define(['app'], function(app) {
                 
                 this.setStudentWork(populatedNodeState);
                 this.studentResponseChanged()
-            } 
+            } else if (objectType === 'StudentAsset') {
+                var studentAsset = $(ui.helper.context).data('objectData');
+                StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAssetURL) {
+                    if (copiedAssetURL != null && copiedAssetURL != '') {
+                        var nodeState = StudentDataService.createNodeState();
+                        var copiedAssetImg = '<img class="studentAssetReference" src="' + copiedAssetURL + '"></img>';
+                        // if student already has work, prepend it
+                        var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                        if (latestNodeState != null && latestNodeState.response != null) {
+                            nodeState.response = latestNodeState.response + copiedAssetImg;
+                        } else {
+                            nodeState.response = copiedAssetImg;
+                        }
+                        this.setStudentWork(nodeState);
+                        this.studentResponseChanged()
+                    }
+                }));
+                /*
+                nodeState.response = "image";
+                // if student already has work, prepend it
+                var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                if (latestNodeState != null) {
+                    var latestResponse = latestNodeState.response;
+                    if (latestResponse != null) {
+                        nodeState.response = latestResponse + nodeState.response;
+                    }
+                }
+                console.log('nodeState: ' + nodeState);
+                */
+                //this.setStudentWork(nodeState);
+                //this.studentResponseChanged()
+            }
         });
     });
 });

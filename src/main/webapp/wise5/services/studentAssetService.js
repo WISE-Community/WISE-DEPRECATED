@@ -51,6 +51,57 @@ define(['configService'], function(configService) {
             return $q.all(promises);
         };
         
+        // given asset, makes a copy of it so steps can use for reference. Returns new asset url
+        serviceObject.copyAssetForReference = function(studentAsset) {
+            var studentAssetFilename = studentAsset.name;
+            var runId = ConfigService.getRunId();
+            var config = {};
+            config.method = 'POST';
+            config.url = ConfigService.getStudentAssetManagerURL();
+            config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+            var params = {};
+            params.command = 'studentAssetCopyForReference';
+            params.type = 'studentAssetManager';
+            params.runId = runId;
+            params.forward = 'assetmanager';
+            params.assetFilename = studentAssetFilename;
+            config.data = $.param(params);
+            
+            return $http(config).then(angular.bind(this, function(result) {
+                var copiedAssetURL = null;
+                var copyAssetResultData = result.data;
+                if (copyAssetResultData != null && copyAssetResultData.result === 'SUCCESS') {
+                    if (copyAssetResultData.newFilename != null) {
+                        var newFilename = copyAssetResultData.newFilename;
+                        var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
+                        var runId = ConfigService.getRunId();
+                        var workgroupId = ConfigService.getWorkgroupId();
+                        var assetBaseURL = studentUploadsBaseURL + '/' + runId + '/' + workgroupId + '/referenced/';
+                        copiedAssetURL = assetBaseURL + newFilename;
+                    }
+                }
+                return copiedAssetURL;
+            }));
+
+            /*
+            return $upload.upload({
+                    url: studentAssetManagerURL,
+                    fields: {
+                        'type': 'studentAssetManager',
+                        'runId': runId,
+                        'forward': 'assetmanager',
+                        'assetFilename': studentAssetFilename
+                    },
+                    file: file
+             }).progress(function (evt) {
+                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                    //console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+             }).success(function (data, status, headers, config) {
+                    //console.log('file ' + config.file.name + 'uploaded. Response: ' + JSON.stringify(data));
+             });
+             */
+        };
+        
         return serviceObject;
     }];
     

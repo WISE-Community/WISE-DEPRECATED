@@ -36,8 +36,8 @@
 .studentAssets {
     text-align: center;
     width: 95%;
-    min-height: 50%;
-    max-height: 50%;
+    min-height: 60%;
+    max-height: 60%;
     overflow: auto;
     border: 5px solid #DDD;
 }
@@ -50,6 +50,9 @@
     padding: 10px;
     margin: 5px;
     border: 3px solid #DDD;
+}
+.studentAsset:hover {
+    cursor: pointer;
 }
 </style>
 <div class={{vleController.layoutState}} ng-controller='PortfolioController as portfolioController'>
@@ -90,14 +93,17 @@
             </select>
             <div 
             data-drag='true'
-            data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
+            data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
             jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioController.myWorkDragStartCallback(selection.id, selection.type)'}"
                  ng-bind-html='portfolioController.showStudentWorkByNodeId(selection.id, selection.type) | sanitizeHTML'>
             </div>
         </div>
 		<div class="animate-switch" ng-switch-when='myFiles'>
 		    <div class='studentAssets'>
-		        <img class='studentAsset' ng-repeat="studentAsset in portfolioController.studentAssets" ng-src='{{studentAsset.url}}'></img>
+		        <img class='studentAsset' ng-repeat="studentAsset in portfolioController.studentAssets" ng-src='{{studentAsset.url}}'
+		        data-drag='true'
+                data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
+                jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioController.studentAssetDragStartCallback(studentAsset)'}"></img>
 		    </div>
 			<div ng-file-drop ng-file-select ng-file-change="portfolioController.upload($files)" class="drop-box"
 					drag-over-class="dragover" ng-multiple="true" allow-dir="false"

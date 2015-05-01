@@ -1,12 +1,34 @@
 
 <html>
 <head>
+    <link data-require="bootstrap-css@3.1.1" data-semver="3.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <link data-require="font-awesome@*" data-semver="4.3.0" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+    <link data-require="bootstrap@*" data-semver="3.3.2" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+<link rel='stylesheet' href='/wise/wise5/lib/angular/angularTextAngular/textAngular.css'>
 <style>
 #prompt {
   font-weight: bold;
 }
 #saveButton {
   display: block;
+}
+.ta-editor {
+    min-height: 300px;
+    height: auto;
+    overflow: auto;
+    font-family: inherit;
+    font-size: 100%;
+    margin:20px 0;
+}
+
+.studentAssetReference {
+    width: auto;
+    height: auto;
+    max-width: 200px;
+    max-height: 200px;
+    padding: 10px;
+    margin: 5px;
+    border: 3px solid #DDD;
 }
 </style>
 </head>
@@ -28,14 +50,16 @@ Open Response HTML
 {{openResponseController.nodeContent.style}}
 </style>
 <div id='prompt' compile='openResponseController.nodeContent.prompt'></div>
-<textarea id='responseTextarea'
+<!--  for styling textAngular (wysiwyg), see here: https://github.com/fraywing/textAngular/wiki/Getting-Started -->
+<div text-angular id='responseTextarea'
     rows='{{openResponseController.nodeContent.numRows || 20}}'
     cols='{{openResponseController.nodeContent.numColumns || 100}}'
     ng-model='openResponseController.studentResponse'
     ng-disabled='openResponseController.isDisabled' 
     ng-change='openResponseController.studentResponseChanged()'
     data-drop="true" 
-    jqyoui-droppable="{onDrop: 'openResponseController.dropCallback(item, $index)'}"></textarea>
+    jqyoui-droppable="{onDrop: 'openResponseController.dropCallback(item, $index)'}">
+    </div>
 <button id='saveButton' ng-click='openResponseController.saveButtonClicked()' ng-disabled='openResponseController.isDisabled'>Save</button>
 <button id='submitButton' ng-click='openResponseController.submitButtonClicked()' ng-show='openResponseController.nodeContent.showSubmitButton' ng-disabled='openResponseController.isDisabled'>Submit</button>
 </div>

@@ -84,7 +84,7 @@ define(['nodeService'], function(nodeService) {
                     nodeState.response = nodeStateFromOtherNode.response;
                 } else if (otherNodeType === 'Planning') {
                     nodeState.response = JSON.stringify(nodeStateFromOtherNode.studentNodes);
-                }
+                } 
             }
             
             return nodeState;

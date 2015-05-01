@@ -6,9 +6,13 @@ require.config({
         'angularDragDrop': 'lib/angular/angularDragDrop/angular-dragdrop.min',
         'angularFileUpload': 'lib/angular/angularFileUpload/angular-file-upload.min',
         'angularSortable': 'lib/angular/angularSortable/angular-sortable',
+        'angularTextAngular': 'lib/angular/angularTextAngular/textAngular.min',
+        'angularTextAngularRangy': 'lib/angular/angularTextAngular/textAngular-rangy.min',
+        'angularTextAngularSanitize': 'lib/angular/angularTextAngular/textAngular-sanitize.min',
         'angularUIRouter': 'lib/angular/angularUIRouter/angular-ui-router.min',
         'angularWebSocket': 'lib/angular/angularWebSocket/angular-websocket.min',
         'app': 'vle/app',
+        'bootstrap': 'lib/bootstrap/bootstrap.min',
         'configService': 'services/configService',
         'currentNodeService': 'services/currentNodeService',
         'd3': 'lib/d3/d3',
@@ -67,6 +71,27 @@ require.config({
                      'jqueryUI'
                      ]
         },
+        'angularTextAngular': {
+            'exports': 'angularTextAngular',
+            'deps': [
+                     'angular',
+                     'bootstrap',
+                     'angularTextAngularRangy',
+                     'angularTextAngularSanitize'
+                     ]
+        },
+        'angularTextAngularRangy': {
+            'exports': 'angularTextAngularRangy',
+            'deps': [
+                    'angular'
+                    ]
+        },
+        'angularTextAngularSanitize': {
+            'exports': 'angularTextAngularSanitize',
+            'deps': [
+                    'angular'
+                    ]
+        },
         'angularUIRouter': {
             'exports': 'angularUIRouter',
             'deps': [
@@ -77,6 +102,12 @@ require.config({
             'exports': 'angularWebSocket',
             'deps': [
                     'angular'
+                    ]
+        },
+        'bootstrap': {
+            'exports': 'bootstrap',
+            'deps': [
+                    'jquery'
                     ]
         },
         'jqueryUI': {

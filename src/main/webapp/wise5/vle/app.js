@@ -1,5 +1,6 @@
 define([
         'angular',
+        'bootstrap',
         'd3',
         'directives',
         'jquery',
@@ -8,6 +9,7 @@ define([
         'angularDragDrop',
         'angularFileUpload',
         'angularSortable',
+        'angularTextAngular',
         'angularUIRouter',
         'angularWebSocket',
         'configService',
@@ -24,6 +26,7 @@ define([
         'studentWebSocketService'
         ], function(
                 angular,
+                bootstrap,
                 d3,
                 directives,
                 $,
@@ -32,6 +35,7 @@ define([
                 angularDragDrop,
                 angularFileUpload,
                 angularSortable,
+                angularTextAngular,
                 angularUIRouter,
                 angularWebSocket,
                 configService,
@@ -55,7 +59,8 @@ define([
                                      'ui.sortable',
                                      'ngAnimate',
                                      'ngDragDrop',
-                                     'ngWebSocket'
+                                     'ngWebSocket',
+                                     'textAngular'
                                      ]);
     
     // core services
