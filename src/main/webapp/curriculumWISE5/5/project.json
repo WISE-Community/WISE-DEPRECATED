@@ -198,8 +198,44 @@
             "id": "node22",
             "type": "MultipleChoice",
             "title": "Node 22",
-            "src": "node20.json",
+            "src": "node22.json",
             "x": 750,
+            "y": 240,
+            "r": 20
+        },
+        {
+            "id": "node23",
+            "type": "MultipleChoice",
+            "title": "Node 23",
+            "src": "node23.json",
+            "x": 150,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node24",
+            "type": "MultipleChoice",
+            "title": "Node 24",
+            "src": "node24.json",
+            "x": 250,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node25",
+            "type": "MultipleChoice",
+            "title": "Node 25",
+            "src": "node25.json",
+            "x": 350,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node26",
+            "type": "MultipleChoice",
+            "title": "Node 26",
+            "src": "node26.json",
+            "x": 450,
             "y": 240,
             "r": 20
         },
@@ -210,7 +246,8 @@
             "startId": "group1",
             "ids": [
                 "group1",
-                "group2"
+                "group2",
+                "group3"
             ],
             "x": 50,
             "y": 50,
@@ -228,7 +265,7 @@
                 "node4",
                 "node5"
             ],
-            "x": 150,
+            "x": 50,
             "y": 140,
             "r": 20
         },
@@ -236,7 +273,7 @@
             "id": "group2",
             "type": "group",
             "title": "Activity 2",
-            "startId": "node0",
+            "startId": "node6",
             "ids": [
                 "node6",
                 "node7",
@@ -254,6 +291,21 @@
                 "node20",
                 "node21",
                 "node22"
+            ],
+            "x": 150,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "group3",
+            "type": "group",
+            "title": "Activity 3",
+            "startId": "node23",
+            "ids": [
+                "node23",
+                "node24",
+                "node25",
+                "node26"
             ],
             "x": 250,
             "y": 140,
@@ -370,6 +422,26 @@
             "id": "transition22",
             "from": "node20",
             "to": "node22"
+        },
+        {
+            "id": "transition23",
+            "from": "node22",
+            "to": "node23"
+        },
+        {
+            "id": "transition24",
+            "from": "node23",
+            "to": "node24"
+        },
+        {
+            "id": "transition25",
+            "from": "node24",
+            "to": "node25"
+        },
+        {
+            "id": "transition26",
+            "from": "node25",
+            "to": "node26"
         }
     ],
     "startGroupId": "group0",
