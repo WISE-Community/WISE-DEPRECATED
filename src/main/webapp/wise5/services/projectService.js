@@ -739,8 +739,15 @@ define(['configService'], function(configService) {
             // get the start node id
             var startNodeId = this.getStartNodeId();
             
+            /*
+             * an array to keep track of the node ids in the path that
+             * we are currently on as we traverse the nodes in the project
+             * depth first
+             */
+            var pathsSoFar = [];
+            
             // get all the possible paths through the project
-            var allPaths = this.getAllPaths(startNodeId);
+            var allPaths = this.getAllPaths(pathsSoFar, startNodeId);
             
             // consolidate all the paths to create a single list of node ids
             nodeIds = this.consolidatePaths(allPaths);
@@ -752,10 +759,13 @@ define(['configService'], function(configService) {
         /**
          * Get all the possible paths through the project. This function 
          * recursively calls itself to traverse the project depth first.
+         * @param pathSoFar the node ids in the path so far. the node ids
+         * in this array are referenced to make sure we don't loop back
+         * on the path.
          * @param nodeId the node id we are want to get the paths from
          * @return an array of paths. each path is an array of node ids.
          */
-        serviceObject.getAllPaths = function(nodeId) {
+        serviceObject.getAllPaths = function(pathSoFar, nodeId) {
             var allPaths = [];
             
             if (nodeId != null) {
@@ -766,6 +776,10 @@ define(['configService'], function(configService) {
                     var transitions = this.getTransitionsByFromNodeId(nodeId);
                     
                     if (transitions != null) {
+                        
+                        // add the node id to the path so far
+                        pathSoFar.push(nodeId);
+                        
                         if (transitions.length === 0) {
                             /*
                              * there are no transitions from the node id so this path
@@ -791,29 +805,53 @@ define(['configService'], function(configService) {
                                     // get the to node id
                                     var toNodeId = transition.to;
                                     
-                                    /*
-                                     * recursively get the paths by getting all 
-                                     * the paths for the to node
-                                     */
-                                    var allPathsFromToNode = this.getAllPaths(toNodeId);
-                                    
-                                    if (allPathsFromToNode != null) {
-                                        // loop through all the paths for the to node
-                                        for (var a = 0; a<allPathsFromToNode.length; a++) {
-                                            
-                                            // get a path
-                                            var tempPath = allPathsFromToNode[a];
-                                            
-                                            // prepend the current node id to the path
-                                            tempPath.unshift(nodeId);
-                                            
-                                            // add the path to our collection of paths
-                                            allPaths.push(tempPath);
+                                    if (pathSoFar.indexOf(toNodeId) == -1) {
+                                        /*
+                                         * recursively get the paths by getting all 
+                                         * the paths for the to node
+                                         */
+                                        var allPathsFromToNode = this.getAllPaths(pathSoFar, toNodeId);
+                                        
+                                        if (allPathsFromToNode != null) {
+                                            // loop through all the paths for the to node
+                                            for (var a = 0; a<allPathsFromToNode.length; a++) {
+                                                
+                                                // get a path
+                                                var tempPath = allPathsFromToNode[a];
+                                                
+                                                // prepend the current node id to the path
+                                                tempPath.unshift(nodeId);
+                                                
+                                                // add the path to our collection of paths
+                                                allPaths.push(tempPath);
+                                            }
                                         }
+                                    } else {
+                                        /*
+                                         * the node is already in the path so far which means
+                                         * the transition is looping back to a previous node.
+                                         * we do not want to take this transition because
+                                         * it will lead to an infinite loop. we will just
+                                         * add the current node id to the path and not take
+                                         * the transition which essentially ends the path.
+                                         */
+                                        var path = [];
+                                        
+                                        // add the node id to the path
+                                        path.push(nodeId);
+                                        
+                                        // add the path to the all paths array
+                                        allPaths.push(path);
                                     }
                                 }
                             }
                         }
+                        
+                        /*
+                         * remove the latest node id since we are moving back 
+                         * up the path as we traverse the nodes depth first
+                         */
+                        pathSoFar.pop();
                     }
                 } else if (this.isGroupNode(nodeId)) {
                     // the node is a group node
@@ -954,11 +992,53 @@ define(['configService'], function(configService) {
                                 } else {
                                     // there are multiple paths with this node id
                                     
+                                    // tempNodeId must come before nodeId
+                                    
+                                    var pathsToConsume = [];
+                                    
+                                    // loop through all the paths that contain the node id
+                                    for (var g = 0; g < pathsThatContainNodeId.length; g++) {
+                                        
+                                        // get a path that contains the node id
+                                        var pathThatContainsNodeId = pathsThatContainNodeId[g];
+                                        
+                                        // get the index of the node id we want to remove
+                                        var tempNodeIdIndex = pathThatContainsNodeId.indexOf(tempNodeId);
+                                        
+                                        // get the index of the node id we want to stop consuming at
+                                        var nodeIdIndex = pathThatContainsNodeId.indexOf(nodeId);
+                                        
+                                        /*
+                                         * check if the node id we want to remove comes before
+                                         * the node id we want to stop consuming at. we need to
+                                         * do this to prevent an infinite loop. an example of 
+                                         * when this can happen is if there are two paths
+                                         * 
+                                         * path1 = 1, 2, 3, 4, 5
+                                         * path2 = 1, 2, 4, 3, 5
+                                         * 
+                                         * as we consume path1 we will need to consume 3. in order to
+                                         * consume 3, we must consume consume up to 3 in path2.
+                                         * in order to consume up to 3 in path2 we must consume 4.
+                                         * in order to consume 4, we must consume everything before
+                                         * 4 in path1. everything before 4 in path1 is 1, 2, 3.
+                                         * this means we need to consume 3 which brings us back up
+                                         * to the top of this paragraph creating an infinite loop.
+                                         * 
+                                         * this check below will prevent infinite loops by only
+                                         * adding paths that have the tempNodeId come before the
+                                         * nodeId to stop consuming at.
+                                         */
+                                        if (tempNodeIdIndex < nodeIdIndex) {
+                                            pathsToConsume.push(pathThatContainsNodeId);
+                                        }
+                                    }
+                                    
                                     /*
                                      * take the paths that contain the given node id and consume
                                      * the paths until the given node id
                                      */
-                                    var tempConsumedNodeIds = this.consumePathsUntilNodeId(pathsThatContainNodeId, tempNodeId);
+                                    var tempConsumedNodeIds = this.consumePathsUntilNodeId(pathsToConsume, tempNodeId);
                                     
                                     // remove the node id from the paths that contain it
                                     this.removeNodeIdFromPaths(tempNodeId, pathsThatContainNodeId);
