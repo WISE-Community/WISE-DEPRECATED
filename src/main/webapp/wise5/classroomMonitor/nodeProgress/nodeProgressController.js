@@ -51,7 +51,11 @@ define(['app'], function(app) {
             $scope.currentgroupid = this.currentGroupId;
         }
         
-        ProjectService.getFlattenedProjectAsNodeIds();
+        var flattenedProjectNodeIds = ProjectService.getFlattenedProjectAsNodeIds();
+        //console.log(JSON.stringify(flattenedProjectNodeIds, null, 4));
+        
+        var branches = ProjectService.getBranches();
+        //console.log(JSON.stringify(branches, null, 4));
         
         //console.log('end');
         /*

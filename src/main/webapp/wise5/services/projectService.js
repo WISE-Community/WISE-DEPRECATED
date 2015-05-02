@@ -750,9 +750,9 @@ define(['configService'], function(configService) {
             var allPaths = this.getAllPaths(pathsSoFar, startNodeId);
             
             // consolidate all the paths to create a single list of node ids
-            nodeIds = this.consolidatePaths(allPaths);
-            //nodeIds = this.consolidatePaths(allPaths.reverse());
-            //console.log(nodeIds);
+            //nodeIds = this.consolidatePaths(allPaths);
+            nodeIds = this.consolidatePaths(allPaths.reverse());
+            
             return nodeIds;
         };
         
@@ -1300,6 +1300,340 @@ define(['configService'], function(configService) {
             }
             
             return index;
+        };
+        
+        /**
+         * Get the branches in the project
+         */
+        serviceObject.getBranches = function() {
+            
+            // get the start node id
+            var startNodeId = this.getStartNodeId();
+            
+            /*
+             * an array to keep track of the node ids in the path that
+             * we are currently on as we traverse the nodes in the project
+             * depth first
+             */
+            var pathsSoFar = [];
+            
+            // get all the paths in the project
+            var allPaths = this.getAllPaths(pathsSoFar, startNodeId);
+            
+            // find the branches in the project from the paths
+            var branches = this.findBranches(allPaths);
+            
+            return branches;
+        };
+        
+        /**
+         * Find the branches in the project
+         * @param paths all the possible paths through the project
+         * @return an array of branch objects. each branch object contains
+         * the branch start point, the branch paths, and the branch
+         * end point
+         */
+        serviceObject.findBranches = function(paths) {
+            var branches = [];
+            
+            var previousNodeId = null;
+            
+            /*
+             * continue until all the paths are empty. we will remove
+             * node ids from the paths as we traverse the paths to find
+             * the branches
+             */
+            while(!this.arePathsEmpty(paths)) {
+                
+                // get the first node id in the first path
+                var nodeId = this.getFirstNodeIdInPathAtIndex(paths, 0);
+                
+                if (this.areFirstNodeIdsInPathsTheSame(paths)) {
+                    // the first node ids in all the paths are the same
+                    
+                    // remove the node id from all the paths
+                    this.removeNodeIdFromPaths(nodeId, paths);
+                    
+                    // remember this node id for the next iteration of the loop
+                    previousNodeId = nodeId;
+                } else {
+                    // not all the top node ids are the same which means we have branched
+                    
+                    // create a branch object
+                    var branchMetaObject = this.createBranchMetaObject(previousNodeId);
+                    branchMetaObject.branchStartPoint = previousNodeId;
+                    
+                    // find the branch end point
+                    var nextCommonNodeId = this.findNextCommonNodeId(paths);
+                    branchMetaObject.branchEndPoint = nextCommonNodeId;
+                    
+                    // get the branch paths
+                    var branchPaths = this.extractPathsUpToNodeId(paths, nextCommonNodeId);
+                    branchPaths = this.removeDuplicatePaths(branchPaths);
+                    branchMetaObject.branchPaths = branchPaths;
+                    
+                    // add the branch object to our array
+                    branches.push(branchMetaObject);
+                    
+                    // trim the paths so that they start at the branch end point
+                    this.trimPathsUpToNodeId(paths, nextCommonNodeId);
+                    
+                    // remember this node id for the next iteration of the loop
+                    previousNodeId = nextCommonNodeId;
+                }
+            }
+            
+            return branches;
+        };
+        
+        /**
+         * Create a branch meta object that will contain the branch start
+         * point, branch paths, and branch end point
+         * @return an object that contains a branch start point, branch paths,
+         * and a branch end point
+         */
+        serviceObject.createBranchMetaObject = function() {
+            var branchMetaObject = {};
+            
+            branchMetaObject.branchStartPoint = null;
+            branchMetaObject.branchPaths = [];
+            branchMetaObject.branchEndPoint = null;
+            
+            return branchMetaObject;
+        };
+        
+        /**
+         * Find the next common node id in all the paths
+         * @param paths the paths to find the common node id in
+         * @return a node id that is in all the paths or null
+         * if there is no node id that is in all the paths
+         */
+        serviceObject.findNextCommonNodeId = function(paths) {
+            var nextCommonNodeId = null;
+            var subPaths = [];
+            
+            if (paths != null) {
+                if (paths.length > 0) {
+                    // get the first path
+                    var path = paths[0];
+                    
+                    // loop through all the node ids in the first path
+                    for (var x = 0; x < path.length; x++) {
+                        // get a node id
+                        var tempNodeId = path[x];
+                        
+                        // check if the node id is in all the paths
+                        if (this.allPathsContainNodeId(paths, tempNodeId)) {
+                            /*
+                             * the node id is in all the paths so we have found
+                             * what we were looking for
+                             */
+                            nextCommonNodeId = tempNodeId;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return nextCommonNodeId;
+        };
+        
+        /**
+         * Check if all the paths contain the node id
+         * @param paths an array of paths. each path contains an array of node ids
+         * @param nodeId the node id that we will check is in all the paths
+         * @return whether the node id is in all the paths
+         */
+        serviceObject.allPathsContainNodeId = function(paths, nodeId) {
+            var result = false;
+            
+            if (paths != null) {
+                
+                // loop through all the paths
+                for (var p = 0; p < paths.length; p++) {
+                    // get a path
+                    var path = paths[p];
+                    
+                    // get the index of the node id in the path
+                    var index = path.indexOf(nodeId);
+                    
+                    if (index == -1) {
+                        // the node id is not in the path
+                        result = false;
+                        break;
+                    } else {
+                        // the node id is in the path
+                        result = true;
+                    }
+                }
+            }
+            
+            return result;
+        };
+        
+        /**
+         * Trim the paths up to the given node id so that the paths will contain
+         * the given node id and all the node ids after it. This function will
+         * modify the paths.
+         * @param paths the paths to trim
+         * @param nodeId the node id to trim up to
+         */
+        serviceObject.trimPathsUpToNodeId = function(paths, nodeId) {
+            if (paths != null) {
+                // loop through all the paths
+                for (var p = 0; p < paths.length; p++) {
+                    // get a path
+                    var path = paths[p];
+                    
+                    if (path != null) {
+                        // get the index of the node id in the path
+                        var index = path.indexOf(nodeId);
+                        
+                        if (index == -1) {
+                            /*
+                             * the node id is not in the path so we will
+                             * trim the path to the end which will make
+                             * the path empty
+                             */
+                            index = path.length;
+                        }
+                        
+                        /*
+                         * trim the path up to the node id index. this will
+                         * modify the path array.
+                         */
+                        path.splice(0, index);
+                    }
+                }
+            }
+        };
+        
+        
+        /**
+         * Extract the paths up to a given node id. This will be used to
+         * obtain branch paths.
+         * @param paths the paths to extract from
+         * @param nodeId the node id to extract up to
+         * @return paths that go up to but do not include the node id
+         */
+        serviceObject.extractPathsUpToNodeId = function(paths, nodeId) {
+            var extractedPaths = [];
+            
+            if (paths != null) {
+                // loop through the paths
+                for (var p = 0; p < paths.length; p++) {
+                    
+                    // get a path
+                    var path = paths[p];
+                    
+                    if (path != null) {
+                        
+                        // get the index of the node id in the path
+                        var index = path.indexOf(nodeId);
+                        
+                        if (index == -1) {
+                            /*
+                             * the node id is not in the path so we will
+                             * extract up to the end of the path
+                             */
+                            index = path.length;
+                        }
+                        
+                        /*
+                         * get the path up to the node id index. this does
+                         * not modify the path array.
+                         */
+                        var extractedPath = path.slice(0, index);
+                        
+                        // add the 
+                        extractedPaths.push(extractedPath);
+                    }
+                }
+            }
+            
+            return extractedPaths;
+        };
+        
+        /**
+         * Removes duplicate paths
+         * @param paths an array of paths. each path contains an array of node ids
+         * @return an array of unique paths
+         */
+        serviceObject.removeDuplicatePaths = function(paths) {
+            var uniquePaths = [];
+            
+            if (paths != null) {
+                // loop through all the paths
+                for (var p = 0; p < paths.length; p++) {
+                    // get a path
+                    var path = paths[p];
+                    
+                    var isPathInUniquePaths = false;
+                    
+                    // loop through all the unique paths so far
+                    for (var u = 0; u < uniquePaths.length; u++) {
+                        // get a unique path
+                        var uniquePath = uniquePaths[u];
+                        
+                        // check if the paths are equal
+                        if (this.pathsEqual(path, uniquePath)) {
+                            // the paths are equal
+                            isPathInUniquePaths = true;
+                        }
+                    }
+                    
+                    if (!isPathInUniquePaths) {
+                        /*
+                         * the path is not equal to any paths in the unique 
+                         * paths array so we will add it to the unique paths
+                         * array
+                         */ 
+                        uniquePaths.push(path);
+                    }
+                }
+            }
+            
+            return uniquePaths;
+        };
+        
+        /**
+         * Check if two paths are equal
+         * @param path1 an array of node ids
+         * @param path2 an array of node ids
+         * @return whether the two paths contain the same node ids
+         * in the same order
+         */
+        serviceObject.pathsEqual = function(path1, path2) {
+            var result = false;
+            
+            if (path1 != null && path2 != null) {
+                
+                // check if the paths are the same length
+                if (path1.length === path2.length) {
+                    result = true;
+                    
+                    // loop through each element of the first path
+                    for (var x = 0; x < path1.length; x++) {
+                        // get the node id from the first path
+                        var path1NodeId = path1[x];
+                        
+                        // get the node id from the second path
+                        var path2NodeId = path2[x];
+                        
+                        // check if the node ids are the same
+                        if (path1NodeId !== path2NodeId) {
+                            /*
+                             * the node ids are not the same to the paths
+                             * are not equal
+                             */ 
+                            result = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return result;
         };
         
         return serviceObject;
