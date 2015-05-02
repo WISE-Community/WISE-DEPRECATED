@@ -750,8 +750,8 @@ define(['configService'], function(configService) {
             var allPaths = this.getAllPaths(pathsSoFar, startNodeId);
             
             // consolidate all the paths to create a single list of node ids
-            //nodeIds = this.consolidatePaths(allPaths);
-            nodeIds = this.consolidatePaths(allPaths.reverse());
+            nodeIds = this.consolidatePaths(allPaths);
+            //nodeIds = this.consolidatePaths(allPaths.reverse());
             
             return nodeIds;
         };
