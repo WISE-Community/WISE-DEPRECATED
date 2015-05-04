@@ -4,7 +4,7 @@ User Name: {{studentGradingController.userName}}
 <br/>
 WorkgroupId: {{studentGradingController.workgroupId}}
 <br/>
-<div ng-repeat='nodeId in studentGradingController.nodeIds'>
+<div ng-repeat='nodeId in studentGradingController.nodeIds' ng-show='studentGradingController.showNodeIdForStudent(nodeId)'>
     <div>{{studentGradingController.getNodeTitleByNodeId(nodeId)}}</div>
     <div ng-repeat='nodeVisit in studentGradingController.getNodeVisitsByWorkgroupIdAndNodeId(studentGradingController.workgroupId, nodeId)'>
         <div ng-repeat='nodeState in nodeVisit.nodeStates'>

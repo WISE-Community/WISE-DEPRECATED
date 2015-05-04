@@ -1636,6 +1636,107 @@ define(['configService'], function(configService) {
             return result;
         };
         
+        /**
+         * Check if a node id is in any branch
+         * @param branches an array of branch objects
+         * @param nodeId the node id to check
+         * @return whether the node id is in any branch
+         */
+        serviceObject.isNodeIdInABranch = function(branches, nodeId) {
+            
+            if (branches != null && nodeId != null) {
+                
+                // loop through all the branch objects
+                for (var b = 0; b < branches.length; b++) {
+                    
+                    // get a branch object
+                    var branch = branches[b];
+                    
+                    if (branch != null) {
+                        
+                        // get the branch paths for this branch object
+                        var branchPaths = branch.branchPaths;
+                        
+                        if (branchPaths != null) {
+                            
+                            // loop through all the branch paths
+                            for (var bp = 0; bp < branchPaths.length; bp++) {
+                                
+                                // get a branch path
+                                var branchPath = branchPaths[bp];
+                                
+                                if (branchPath != null) {
+                                    
+                                    // check if the node id is in the branch path
+                                    var index = branchPath.indexOf(nodeId);
+                                    
+                                    if (index != -1) {
+                                        // the node id is in this branch path
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return false;
+        };
+        
+        /**
+         * Get the branch paths that a node id is in
+         * @param branches an array of branch objects
+         * @param nodeId the node id to check
+         * @return an array of the branch paths that the node id is in
+         */
+        serviceObject.getBranchPathsByNodeId = function(branches, nodeId) {
+            var branchPathsIn = [];
+            
+            if (branches != null && nodeId != null) {
+                
+                // loop throught all the branches
+                for (var b = 0; b < branches.length; b++) {
+                    
+                    // get a branch
+                    var branch = branches[b];
+                    
+                    if (branch != null) {
+                        
+                        // get the branch paths
+                        var branchPaths = branch.branchPaths;
+                        
+                        if (branchPaths != null) {
+                            
+                            // loop through all the branch paths
+                            for (var bp = 0; bp < branchPaths.length; bp++) {
+                                
+                                // get a branch path
+                                var branchPath = branchPaths[bp];
+                                
+                                if (branchPath != null) {
+                                    
+                                    // get the index of the node id in the branch path
+                                    var index = branchPath.indexOf(nodeId);
+                                    
+                                    if (index != -1) {
+                                        /*
+                                         * the node is in this branch path so we will
+                                         * add the branch path to our array
+                                         */
+                                        branchPathsIn.push(branchPath);
+                                        
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return branchPathsIn;
+        }
+        
         return serviceObject;
     }];
     
