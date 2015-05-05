@@ -101,6 +101,7 @@
 		<div class="animate-switch" ng-switch-when='myFiles'>
 		    <div class='studentAssets'>
 		        <img class='studentAsset' ng-repeat="studentAsset in portfolioController.studentAssets" ng-src='{{studentAsset.url}}'
+		        title='Drag and drop this item to use in your project!'
 		        data-drag='true'
                 data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
                 jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'portfolioController.studentAssetDragStartCallback(studentAsset)'}"></img>

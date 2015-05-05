@@ -234,7 +234,18 @@ define(['app'], function(app) {
                         var nodeState = StudentDataService.createNodeState();
                         var copiedAssetImg = '<img class="studentAssetReference" src="' + copiedAssetURL + '"></img>';
                         // if student already has work, prepend it
-                        var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                        var latestNodeState = null;
+                        
+                        if (this.isDirty) {
+                            // if student has edited but not saved yet, append student asset to the unsaved work
+                            var studentState = {};
+                            studentState.response = this.studentResponse;
+                            studentState.timestamp = Date.parse(new Date());
+                            latestNodeState = studentState;
+                        } else {
+                            latestNodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);                            
+                        }
+                        
                         if (latestNodeState != null && latestNodeState.response != null) {
                             nodeState.response = latestNodeState.response + copiedAssetImg;
                         } else {
@@ -244,20 +255,6 @@ define(['app'], function(app) {
                         this.studentResponseChanged()
                     }
                 }));
-                /*
-                nodeState.response = "image";
-                // if student already has work, prepend it
-                var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
-                if (latestNodeState != null) {
-                    var latestResponse = latestNodeState.response;
-                    if (latestResponse != null) {
-                        nodeState.response = latestResponse + nodeState.response;
-                    }
-                }
-                console.log('nodeState: ' + nodeState);
-                */
-                //this.setStudentWork(nodeState);
-                //this.studentResponseChanged()
             }
         });
     });
