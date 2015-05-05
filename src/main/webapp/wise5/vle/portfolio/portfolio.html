@@ -100,7 +100,7 @@
         </div>
 		<div class="animate-switch" ng-switch-when='myFiles'>
 		    <div class='studentAssets'>
-		        <img class='studentAsset' ng-repeat="studentAsset in portfolioController.studentAssets" ng-src='{{studentAsset.url}}'
+		        <img class='studentAsset' ng-repeat="studentAsset in portfolioController.studentAssets" ng-src='{{studentAsset.iconURL}}'
 		        title='Drag and drop this item to use in your project!'
 		        data-drag='true'
                 data-jqyoui-options="{revert: 'invalid', helper: 'clone', stack: 'div' }"
