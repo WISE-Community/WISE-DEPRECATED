@@ -255,6 +255,122 @@ Mysystem2.prototype.save = function(isSubmit) {
     this.mostRecentSavedState.isSubmit = isSubmit;
   }
 
+  if (response != null) {
+    // get the latest node visit
+    var nodeVisit = this.view.getState().getCurrentNodeVisit();
+    
+    // get the response as a JSON object
+    var responseJSON = JSON.parse(response);
+    
+    // process any teacher notifications if necessary
+    this.processTeacherNotifications(nodeVisit, state, responseJSON);
+  }
+};
+
+/**
+ * Process any teacher notificaions if necessary
+ * @param nodeVisit the node visit
+ * @param state the node state
+ * @param response the response that is saved in the node state
+ */
+Mysystem2.prototype.processTeacherNotifications = function(nodeVisit, state, response) {
+    
+    if (nodeVisit != null && state != null && response != null) {
+        
+        // get the step content
+        var stepContent = this.node.content.getContentJSON()
+        
+        // get teacher notifications from the step content
+        var teacherNotifications = stepContent.teacherNotifications;
+            
+        if (teacherNotifications != null) {
+            
+            /*
+             * loop through all the teacher notifications for this step
+             * and check if we need to activate any of them
+             */
+            for (var t = 0; t < teacherNotifications.length; t++) {
+                // get a teacher notification
+                var teacherNotification = teacherNotifications[t];
+                
+                if (teacherNotification != null) {
+                    var teacherNotificationType = teacherNotification.type;
+                    
+                    if (teacherNotificationType === 'attemptScore') {
+                        /*
+                         * this teacher notification becomes active when the
+                         * student gets a certain score on a certain attempt
+                         * number
+                         */
+                        
+                        var score = null;
+                        var attemptNumber = null;
+                        
+                        var rubricScore = response['MySystem.RubricScore'];
+                        var ruleFeedback = response['MySystem.RuleFeedback'];
+                        
+                        if (rubricScore != null && ruleFeedback != null) {
+                            
+                            // get the score the student received
+                            var lastScoreId = rubricScore['LAST_SCORE_ID'];
+                            if (lastScoreId != null) {
+                                score = lastScoreId['score'];
+                            }
+                            
+                            // get the student's number of attempts
+                            var lastFeedback = ruleFeedback['LAST_FEEDBACK'];
+                            if (lastFeedback != null) {
+                                attemptNumber = lastFeedback['numOfSubmits'];
+                            }
+                        }
+                        
+                        if (score != null && attemptNumber != null) {
+                            /*
+                             * get the number of attempts and score that
+                             * will activate the teacher notification
+                             */
+                            var teacherNotificationAttemptNumber = teacherNotification.attemptNumber;
+                            var teacherNotificationScore = teacherNotification.score;
+                            
+                            if (attemptNumber === teacherNotificationAttemptNumber) {
+                                // the attempt number matches
+                                
+                                if (score != null && score.toString().match("[" + teacherNotificationScore + "]")) {
+                                    // the score matches the score we are looking for
+                                    
+                                    // get the other values for the teacher notification
+                                    var id = teacherNotification.id;
+                                    var message = teacherNotification.message;
+                                    var notificationLevel = teacherNotification.notificationLevel;
+                                    var dismissCode = teacherNotification.dismissCode;
+                                    var nodeStateId = state.timestamp;
+                                    
+                                    /*
+                                     * create a teacher notification object that will
+                                     * become active
+                                     */
+                                    var newTeacherNotification = {};
+                                    newTeacherNotification.id = id;
+                                    newTeacherNotification.attemptNumber = attemptNumber;
+                                    newTeacherNotification.score = score;
+                                    newTeacherNotification.message = message;
+                                    newTeacherNotification.notificationLevel = notificationLevel;
+                                    newTeacherNotification.dismissCode = dismissCode;
+                                    newTeacherNotification.nodeStateId = nodeStateId;
+                                    
+                                    /*
+                                     * create a new notification annotation and associate it
+                                     * with the current node visit
+                                     */
+                                    this.view.addNotificationAnnotation(nodeVisit, newTeacherNotification);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 };
 
 Mysystem2.prototype.wise4InitiatedSave = function() {

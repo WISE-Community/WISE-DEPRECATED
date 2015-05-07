@@ -9,7 +9,7 @@
  * is just used as an example. you can add any variables that will help you 
  * represent the student's work for your step type.
  */
-function MYSYSTEM2STATE(response, isSubmit) {
+function MYSYSTEM2STATE(response, isSubmit, timestamp) {
   //remember the type to avoid corruption (i.e., loading a state saved by an openresponse WISE4 step)
   this.type = "mysystem2";
   
@@ -22,6 +22,10 @@ function MYSYSTEM2STATE(response, isSubmit) {
 	}
 	
 	this.isSubmit = isSubmit;
+	
+	if (timestamp == null) {
+	    this.timestamp = Date.parse(new Date());
+	}
 }
 
 /**
@@ -46,6 +50,11 @@ MYSYSTEM2STATE.prototype.parseDataJSONObj = function(stateJSONObj) {
 	//populate the isSubmit field if it exists
 	if(stateJSONObj.isSubmit != null) {
 		mysystemState.isSubmit = stateJSONObj.isSubmit;
+	}
+	
+	// populate the timestamp if it exists
+	if(stateJSONObj.timestamp != null) {
+	    mysystemState.timestamp = stateJSONObj.timestamp;
 	}
 	
 	//return the state object
