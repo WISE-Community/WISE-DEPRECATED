@@ -107,14 +107,16 @@
 	font-weight:bold;
 }
 
+#radiobuttondiv .selectedChoice {
+    font-weight: bold;
+}
+
 #radiobuttondiv .correct {
 	color: green;
-	font-weight: bold;
 }
 
 #radiobuttondiv .incorrect {
 	color: red;
-	font-weight: bold;
 }
 
 #radiobuttondiv table td:first-child {
