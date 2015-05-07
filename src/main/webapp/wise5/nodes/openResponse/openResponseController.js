@@ -452,5 +452,21 @@ define(['app'], function(app) {
                 }));
             }
         });
+        
+        $('.openResponse').off('dragover').off('drop');
+        
+        /*
+        $('.openResponse').unbind('dragover').unbind('drop');
+
+        $('.openResponse').bind('dragover', function(e) {
+            return true;
+        });
+        
+        $('.openResponse').bind('drop', function(e) {
+            return true;
+        });
+        */
+
+        
     });
 });

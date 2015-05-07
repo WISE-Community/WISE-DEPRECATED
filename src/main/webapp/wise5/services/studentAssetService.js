@@ -27,6 +27,8 @@ define(['configService'], function(configService) {
                         asset.url = assetBaseURL + filename;
                         if (this.isImage(asset)) {
                             asset.iconURL = asset.url;
+                        } else if (this.isAudio(asset)) {
+                            asset.iconURL = 'wise5/vle/portfolio/audio.png';
                         } else {
                             asset.iconURL = 'wise5/vle/portfolio/file.png';
                         }
@@ -39,14 +41,32 @@ define(['configService'], function(configService) {
         
         serviceObject.isImage = function(asset) {
             var isImage = false;
+            var imageFileExtensions = ['png', 'jpg'];
             if (asset != null) {
                 var assetURL = asset.url;
-                if (assetURL != null && 
-                        (assetURL.toLowerCase().indexOf(".png") != -1 || assetURL.toLowerCase().indexOf(".jpg") != -1)) {
-                    isImage = true;
+                if (assetURL != null && assetURL.lastIndexOf('.') != -1) {
+                    var assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
+                    if (imageFileExtensions.indexOf(assetExtension.toLowerCase()) != -1) {
+                        isImage = true;
+                    }
                 }
             }
             return isImage;
+        };
+        
+        serviceObject.isAudio = function(asset) {
+            var isAudio = false;
+            var imageFileExtensions = ['wav', 'mp3', 'ogg'];
+            if (asset != null) {
+                var assetURL = asset.url;
+                if (assetURL != null && assetURL.lastIndexOf('.') != -1) {
+                    var assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
+                    if (imageFileExtensions.indexOf(assetExtension.toLowerCase()) != -1) {
+                        isAudio = true;
+                    }
+                }
+            }
+            return isAudio;
         };
         
         serviceObject.uploadAssets = function(files) {
@@ -100,6 +120,8 @@ define(['configService'], function(configService) {
                         copiedAsset.url = assetBaseURL + newFilename;
                         if (this.isImage(copiedAsset)) {
                             copiedAsset.iconURL = copiedAsset.url;
+                        } else if (this.isAudio(copiedAsset)) {
+                            copiedAsset.iconURL = 'wise5/vle/portfolio/audio.png';
                         } else {
                             copiedAsset.iconURL = 'wise5/vle/portfolio/file.png';
                         }

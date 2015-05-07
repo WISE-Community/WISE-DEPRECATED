@@ -230,8 +230,17 @@ define(['app'],
         this.projectStyle = ProjectService.getProjectStyle();
 
         CurrentNodeService.setCurrentNodeByNodeId(nodeId);
-        window.StudentDataService = StudentDataService;
-        window.PortfolioService = PortfolioService;
-        window.ProjectService = ProjectService;
+                
+        // Make sure if we drop something on the page we don't navigate away
+        // https://developer.mozilla.org/En/DragDrop/Drag_Operations#drop
+        $(document.body).bind('dragover', function(e) {
+            e.preventDefault();
+            return false;
+       });
+
+       $(document.body).bind('drop', function(e){
+            e.preventDefault();
+            return false;
+        });
     });
 });
