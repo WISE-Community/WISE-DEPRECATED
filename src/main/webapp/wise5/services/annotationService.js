@@ -5,40 +5,39 @@ define([], function() {
         
         serviceObject.annotations;
         
+        serviceObject.retrieveAnnotationsForStudent = function() {
+            var params = {};
+            params.toWorkgroup = ConfigService.getWorkgroupId();
+            params.fromWorkgroups = ConfigService.getTeacherWorkgroupId();
+            params.periodId = ConfigService.getPeriodId();
+            return this.retrieveAnnotations(params);    
+        };
+        
         serviceObject.retrieveAnnotationsByNodeId = function() {
             var nodeId = null;
             var workgroupIds = null;
             
+            var params = {};
             var currentNodeId = CurrentNodeService.getCurrentNodeId();
             if (currentNodeId != null) {
                 nodeId = currentNodeId;
             }
-            /*
-            var classmateWorkgroupIds = ConfigService.getClassmateWorkgroupIds();
             
-            if (classmateWorkgroupIds != null) {
-                workgroupIds = classmateWorkgroupIds;
-            }
-            */
-            return this.retrieveAnnotations(nodeId, workgroupIds);
-        };
-        
-        serviceObject.retrieveAnnotations = function(nodeId, workgroupIds) {
-            var annotationsURL = ConfigService.getConfigParam('annotationsURL');
-            
-            var httpParams = {};
-            httpParams.method = 'GET';
-            httpParams.url = annotationsURL;
-            var params = {};
-            
-            if (nodeId != null) {
-                params.nodeId = nodeId;
-            }
+            params.nodeId = nodeId;
             
             if (workgroupIds != null) {
                 params.userId = workgroupIds.join(':');
             }
             
+            return this.retrieveAnnotations(params);
+        };
+        
+        serviceObject.retrieveAnnotations = function(params) {
+            var annotationsURL = ConfigService.getConfigParam('annotationsURL');
+            
+            var httpParams = {};
+            httpParams.method = 'GET';
+            httpParams.url = annotationsURL;
             httpParams.params = params;
             return $http(httpParams).then(angular.bind(this, function(result) {
                 

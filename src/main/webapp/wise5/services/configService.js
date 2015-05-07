@@ -29,6 +29,10 @@ define([], function() {
             }
         }; 
         
+        serviceObject.getCRaterRequestURL = function() {
+            return this.getConfigParam('cRaterRequestURL');    
+        };
+        
         serviceObject.getMainHomePageURL = function() {
             return this.getConfigParam('mainHomePageURL');
         };
@@ -105,6 +109,27 @@ define([], function() {
                 }
             }
             return classmateUserInfos;
+        };
+        
+        serviceObject.getTeacherWorkgroupId = function() {
+            var teacherWorkgroupId = null;
+            var teacherUserInfo = this.getTeacherUserInfo();
+            if (teacherUserInfo != null) {
+                teacherWorkgroupId = teacherUserInfo.workgroupId;
+            }
+            return teacherWorkgroupId;
+        };
+        
+        serviceObject.getTeacherUserInfo = function() {
+            var teacherUserInfo = null;
+            var myUserInfo = this.getMyUserInfo();
+            if (myUserInfo != null) {
+                var myClassInfo = myUserInfo.myClassInfo;
+                if (myClassInfo != null) {
+                    teacherUserInfo = myClassInfo.teacherUserInfo;
+                }
+            }
+            return teacherUserInfo;
         };
         
         serviceObject.getClassmateWorkgroupIds = function() {
