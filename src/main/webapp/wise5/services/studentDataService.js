@@ -141,6 +141,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                 //var nodeVisit = result.config.params.nodeVisit;
                 nodeVisit.id = nodeVisitId;
                 nodeVisit.visitPostTime = visitPostTime;
+                return nodeVisit;
             }, nodeVisit));
         };
         

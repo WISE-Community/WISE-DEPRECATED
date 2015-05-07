@@ -95,18 +95,6 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
                     var studentWorkHTML = childService.getStudentWorkAsHTML(latestNodeState);
                     result = studentWorkHTML;
                 }
-                
-                /*
-                if (nodeType === 'OpenResponse') {
-                    var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(nodeId);
-                    if (latestNodeState != null) {
-                        var studentWorkHTML = OpenResponseService.getStudentWorkAsHTML(latestNodeState);
-                        result = studentWorkHTML;
-                    }
-                } else {
-                    
-                }
-                */
             }
             
             return result;

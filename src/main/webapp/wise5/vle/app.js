@@ -12,8 +12,10 @@ define([
         'angularTextAngular',
         'angularUIRouter',
         'angularWebSocket',
+        'annotationService',
         'configService',
         'currentNodeService',
+        'cRaterService',
         'multipleChoiceService',
         'nodeService',
         'openResponseService',
@@ -38,8 +40,10 @@ define([
                 angularTextAngular,
                 angularUIRouter,
                 angularWebSocket,
+                annotationService,
                 configService,
                 currentNodeService,
+                cRaterService,
                 multipleChoiceService,
                 nodeService,
                 openResponseService,
@@ -64,8 +68,10 @@ define([
                                      ]);
     
     // core services
+    app.factory('AnnotationService', annotationService);
     app.factory('ConfigService', configService);
     app.factory('CurrentNodeService', currentNodeService);
+    app.factory('CRaterService', cRaterService);
     app.factory('NodeService', nodeService);
     app.factory('PortfolioService', portfolioService);
     app.factory('ProjectService', projectService);
@@ -129,6 +135,9 @@ define([
                     },
                     studentData: function(StudentDataService, config, project) {
                         return StudentDataService.retrieveStudentData();
+                    },
+                    annotations: function(AnnotationService, config) {
+                        return AnnotationService.retrieveAnnotationsForStudent();
                     },
                     webSocket: function(StudentWebSocketService, config) {
                         return StudentWebSocketService.initialize();
