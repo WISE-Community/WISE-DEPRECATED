@@ -292,6 +292,14 @@ AssessmentListNode.prototype.getHTMLContentTemplate = function() {
 	return createContent('node/assessmentlist/assessmentlist.html');
 };
 
+/**
+ * Returns whether this step type can be special exported
+ * @return a boolean value
+ */
+AssessmentListNode.prototype.canSpecialExport = function() {
+    return true;
+};
+
 NodeFactory.addNode('AssessmentListNode', AssessmentListNode);
 
 //used to notify scriptloader that this script has finished loading
