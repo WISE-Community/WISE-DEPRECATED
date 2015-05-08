@@ -122,6 +122,23 @@ Mysystem2Node.prototype.renderGradingView = function(displayStudentWorkDiv, node
 	// get content
     var contentString = this.getContent().getContentString();
     var contentJSON = this.getContent().getContentJSON();
+    
+    // get the content as a JSON object
+    var contentJSONWithoutHTML = JSON.parse(contentString);
+    
+    /*
+     * clear out all the fields that can contain html. the html
+     * fields were preventing the mysystem student work from
+     * showing up in the grading tool.
+     */
+    contentJSONWithoutHTML.prompt = '';
+    contentJSONWithoutHTML.hints = '';
+    contentJSONWithoutHTML.customRuleEvaluator = '';
+    contentJSONWithoutHTML.rubricExpression = '';
+    contentJSONWithoutHTML.feedbackRules = '';
+    
+    // get the string version of the content without html
+    contentString = JSON.stringify(contentJSONWithoutHTML);
 
 	// get content baseurl (e.g. 'http://localhost:8080/curriculum/897')
 	var contentBaseUrl = this.view.config.getConfigParam('getContentBaseUrl');	
