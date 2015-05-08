@@ -59,9 +59,20 @@
 			expression=".*?Test.*?" />
 	</context:component-scan>
 
+	<!-- this allows key/value pairs in wise.properties to be used to create beans. see dataSource bean for example -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:wise.properties</value>
+            </list>
+        </property>
+    </bean>
+	
 	<!-- Switch locales according to the user's browser -->
 	<bean id="localeResolver"
-		class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="${defaultLocale}" />
+	</bean>
 
 	<!-- Use a default fixed theme -->
 	<bean id="themeResolver"
