@@ -220,11 +220,8 @@ MC.prototype.render = function() {
 		// and don't show the number of attempts.
 		
 		//the text for the save answer and edit answer buttons
-		var save_answer = this.view.getI18NString('save_answer', 'MultipleChoiceNode');
-		var edit_answer = this.view.getI18NString('edit_answer', 'MultipleChoiceNode');
-		
-		document.getElementById("checkAnswerButton").innerHTML = save_answer;
-		document.getElementById("tryAgainButton").innerHTML = edit_answer;
+		$("#checkAnswerButton").val(this.view.getI18NString('save_answer', 'MultipleChoiceNode'));
+	    $("#tryAgainButton").val(this.view.getI18NString('edit_answer', 'MultipleChoiceNode'));
 	} else {
 		//the text that shows this is your x attempt
 		var numberAttemptsMessage = this.view.getI18NStringWithParams("this_is_attempt_x",[this.attempts.length+1],"MultipleChoiceNode");
@@ -388,13 +385,19 @@ if(!Array.shuffle){
 };
 
 /**
+ * Return true iff the step has at least one correct answer
+ */
+MC.prototype.hasCorrectAnswer = function() {
+    if(this.content.assessmentItem.responseDeclaration.correctResponse.length > 0){
+      return true;
+    };
+    return false;
+};
+
+/**
  * Returns true if the choice with the given id is correct, false otherwise.
  */
 MC.prototype.isCorrect = function(id){
-	/* if no correct answers specified by author, then always return true */
-	if(this.content.assessmentItem.responseDeclaration.correctResponse.length==0){
-		return true;
-	};
 	
 	/* otherwise, return true if the given id is specified as a correct response */
 	for(var h=0;h<this.content.assessmentItem.responseDeclaration.correctResponse.length;h++){
@@ -461,11 +464,15 @@ MC.prototype.checkAnswer = function() {
 				}
 				
 				var choiceTextDiv = document.getElementById("choicetext:" + choiceIdentifier);
-				if (this.isCorrect(choice.identifier)) {
-					choiceTextDiv.setAttribute("class", "correct");
+				if (this.hasCorrectAnswer()) {
+	                if (this.isCorrect(choice.identifier)) {
+	                    choiceTextDiv.setAttribute("class", "correct selectedChoice");
+	                } else {
+	                    choiceTextDiv.setAttribute("class", "incorrect selectedChoice");
+	                    isCorrect = false;
+	                }
 				} else {
-					choiceTextDiv.setAttribute("class", "incorrect");
-					isCorrect = false;
+                    choiceTextDiv.setAttribute("class", "selectedChoice");
 				}
 				
 				mcState.addChoice(choice.identifier);
