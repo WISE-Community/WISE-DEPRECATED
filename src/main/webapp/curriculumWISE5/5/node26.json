@@ -1,24 +1,37 @@
 {
-    "style": "body { background-color: blue }",
-    "prompt": "Who lives in a pineapple under the sea?",
-    "choices": [
+    "style": "body { background-color: yellow }",
+    "prompt": "Complete this Questionnaire",
+    "parts": [
         {
-            "text": "Patrick",
-            "id": "4j6v8m3jc9",
-            "feedback": "Incorrect, Patrick lives under a rock."
+            "id": "1ypeBUXgfv",
+            "partType": "openResponse",
+            "prompt": "What is your favorite color?"
         },
         {
-            "text": "Spongebob",
-            "id": "78de39me19",
-            "feedback": "Correct, Spongebob lives in a pineapple."
-        },
-        {
-            "text": "Squidward",
-            "id": "n8s6v3k2h6",
-            "feedback": "Incorrect, Squidward lives in an Easter Island Head."
+            "id": "GsUnnAlJnB",
+            "partType": "multipleChoice",
+            "prompt": "Who lives in a pineapple under the sea?",
+            "choiceType": "radio",
+            "correctChoice": "78de39me19",
+            "choices": [
+                    {
+                    "text": "Patrick",
+                    "id": "4j6v8m3jc9",
+                    "feedback": "Incorrect, Patrick lives under a rock."
+                },
+                {
+                    "text": "Spongebob",
+                    "id": "78de39me19",
+                    "feedback": "Correct, Spongebob lives in a pineapple."
+                },
+                {
+                    "text": "Squidward",
+                    "id": "n8s6v3k2h6",
+                    "feedback": "Incorrect, Squidward lives in an Easter Island Head."
+                }
+            ]
         }
     ],
-    "choiceType": "radio",
-    "lockAfterSubmit": true,
-    "showSubmitButton": true
+    "lockAfterSubmit": false,
+    "showSubmitButton": false
 }

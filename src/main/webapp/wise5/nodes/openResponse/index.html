@@ -33,35 +33,29 @@
 </style>
 </head>
 <body>
-<!--
-vle5/nodes/openResponse/openResponse.html
-
-message begin...
-{{openResponseController.message}}
-...message end
-
-nodeContent begin:
-{{nodeController.nodeContent}}
-nodeContent end
--->
-Open Response HTML
 <div class='openResponse' ng-controller='OpenResponseController as openResponseController'>
 <style>
 {{openResponseController.nodeContent.style}}
 </style>
-<div id='prompt' compile='openResponseController.nodeContent.prompt'></div>
+<div id='prompt' compile='openResponseController.getPrompt()'></div>
 <!--  for styling textAngular (wysiwyg), see here: https://github.com/fraywing/textAngular/wiki/Getting-Started -->
 <div text-angular id='responseTextarea'
-    rows='{{openResponseController.nodeContent.numRows || 20}}'
-    cols='{{openResponseController.nodeContent.numColumns || 100}}'
+    rows='{{openResponseController.getNumRows() || 20}}'
+    cols='{{openResponseController.getNumColumns() || 100}}'
     ng-model='openResponseController.studentResponse'
     ng-disabled='openResponseController.isDisabled' 
     ng-change='openResponseController.studentResponseChanged()'
     data-drop="true" 
     jqyoui-droppable="{onDrop: 'openResponseController.dropCallback(item, $index)'}">
     </div>
-<button id='saveButton' ng-click='openResponseController.saveButtonClicked()' ng-disabled='openResponseController.isDisabled'>Save</button>
-<button id='submitButton' ng-click='openResponseController.submitButtonClicked()' ng-show='openResponseController.nodeContent.showSubmitButton' ng-disabled='openResponseController.isDisabled'>Submit</button>
+<button id='saveButton' 
+    ng-click='openResponseController.saveButtonClicked()' 
+    ng-disabled='openResponseController.isDisabled' 
+    ng-show='openResponseController.showSaveButton()'>Save</button>
+<button id='submitButton' 
+    ng-click='openResponseController.submitButtonClicked()' 
+    ng-disabled='openResponseController.isDisabled' 
+    ng-show='openResponseController.showSubmitButton()'>Submit</button>
 </div>
 </body>
 </html>

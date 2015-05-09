@@ -1,7 +1,7 @@
 define(['configService', 'projectService'], function(configService, projectService) {
 
-    var service = ['$http', '$q', '$rootScope', 'ConfigService', 'ProjectService', 'OpenResponseService', 
-                                    function($http, $q, $rootScope, ConfigService, ProjectService, OpenResponseService) {
+    var service = ['$http', '$q', '$rootScope', 'ConfigService', 'ProjectService',
+                                    function($http, $q, $rootScope, ConfigService, ProjectService) {
         var serviceObject = {};
         
         serviceObject.studentData = null;
@@ -333,7 +333,8 @@ define(['configService', 'projectService'], function(configService, projectServi
                                         functionParams.nodeVisits = nodeVisits;
     
                                         // TODO: replace hard-code below with $injector.get('node.applicationType'+Service);
-                                        var result = OpenResponseService.callFunction(functionName, functionParams);
+                                        //var result = OpenResponseService.callFunction(functionName, functionParams);
+                                        var result = null;
                                         if (result) {
                                             nodeStatus.isVisitable = true;
                                         }
@@ -620,7 +621,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                 
                 // TODO: make this dynamically call the correct {{nodeType}}Service
                 if (nodeType === 'OpenResponse') {
-                    studentWorkAsHTML = OpenResponseService.getStudentWorkAsHTML(latestNodeState);
+                    //studentWorkAsHTML = OpenResponseService.getStudentWorkAsHTML(latestNodeState);
                 }
             }
             

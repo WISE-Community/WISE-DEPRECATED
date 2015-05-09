@@ -232,7 +232,7 @@
         },
         {
             "id": "node26",
-            "type": "MultipleChoice",
+            "type": "Questionnaire",
             "title": "Node 26",
             "src": "node26.json",
             "x": 450,

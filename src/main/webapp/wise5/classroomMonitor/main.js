@@ -30,6 +30,8 @@ require.config({
         'portfolioController': 'classroomMonitor/portfolio/portfolioController',
         'portfolioService': 'services/portfolioService',
         'projectService': 'services/projectService',
+        'questionnaireController': 'nodes/questionnaire/questionnaireController',
+        'questionnaireService': 'nodes/questionnaire/questionnaireService',
         'sessionService': 'services/sessionService',
         'studentDataService': 'services/studentDataService',
         'studentGradingController': 'classroomMonitor/studentGrading/studentGradingController',

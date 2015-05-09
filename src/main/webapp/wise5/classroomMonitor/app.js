@@ -17,6 +17,7 @@ define([
         'openResponseService',
         'portfolioService',
         'projectService',
+        'questionnaireService',
         'sessionService',
         'studentDataService',
         'studentStatusService',
@@ -41,6 +42,7 @@ define([
                 openResponseService,
                 portfolioService,
                 projectService,
+                questionnaireService,
                 sessionService,
                 studentDataService,
                 studentStatusService,
@@ -72,6 +74,7 @@ define([
     // node services
     app.factory('MultipleChoiceService', multipleChoiceService);
     app.factory('OpenResponseService', openResponseService);
+    app.factory('QuestionnaireService', questionnaireService);
 	
 	app.filter('sanitizeHTML', ['$sce', function($sce) {
 	    return function(htmlCode) {

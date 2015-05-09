@@ -1,6 +1,7 @@
-define(['configService'], function(configService) {
+define(['configService', 'studentDataService'], function(configService, studentDataService) {
     
-    var service = ['$http', '$q', 'ConfigService', function($http, $q, ConfigService) {
+    var service = ['$http', '$q', 'ConfigService', 'StudentDataService',
+                   function($http, $q, ConfigService, StudentDataService) {
         var serviceObject = {};
         
         serviceObject.getNodeContentByNodeSrc = function(nodeSrc) {
@@ -178,6 +179,19 @@ define(['configService'], function(configService) {
             }
             
             return studentWorkAsHTML;
+        };
+        
+        /**
+         * Create a new empty node state
+         * @return a new empty node state
+         */
+        serviceObject.createNewNodeState = function() {
+            var nodeState = {};
+            
+            // set the timestamp
+            nodeState.timestamp = Date.parse(new Date());
+            
+            return nodeState;
         };
         
         return serviceObject;

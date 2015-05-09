@@ -34,6 +34,8 @@ require.config({
         'portfolioController': 'vle/portfolio/portfolioController',
         'portfolioService': 'services/portfolioService',
         'projectService': 'services/projectService',
+        'questionnaireController': 'nodes/questionnaire/questionnaireController',
+        'questionnaireService': 'nodes/questionnaire/questionnaireService',
         'sessionService': 'services/sessionService',
         'studentAssetService': 'services/studentAssetService',
         'studentDataService': 'services/studentDataService',

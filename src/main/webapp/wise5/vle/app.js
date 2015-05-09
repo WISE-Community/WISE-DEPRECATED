@@ -21,6 +21,7 @@ define([
         'openResponseService',
         'portfolioService',
         'projectService',
+        'questionnaireService',
         'sessionService',
         'studentAssetService',
         'studentDataService',
@@ -49,6 +50,7 @@ define([
                 openResponseService,
                 portfolioService,
                 projectService,
+                questionnaireService,
                 sessionService,
                 studentAssetService,
                 studentDataService,
@@ -84,7 +86,7 @@ define([
     // node services
     app.factory('OpenResponseService', openResponseService);
     app.factory('MultipleChoiceService', multipleChoiceService);
-    
+    app.factory('QuestionnaireService', questionnaireService);
 
     
     app.filter('sanitizeHTML', ['$sce', function($sce) {
@@ -142,7 +144,7 @@ define([
                     webSocket: function(StudentWebSocketService, config) {
                         return StudentWebSocketService.initialize();
                     }
-                }              
+                }
             })
             .state('root.vle', {
                 url: '/vle/:nodeId',
@@ -160,7 +162,8 @@ define([
                             openResponseController: app.loadController('openResponseController'),
                             multipleChoiceController: app.loadController('multipleChoiceController'),
                             htmlController: app.loadController('htmlController'),
-                            planningController: app.loadController('planningController')
+                            planningController: app.loadController('planningController'),
+                            questionnaireController: app.loadController('questionnaireController')
                         }
                     }
                 }

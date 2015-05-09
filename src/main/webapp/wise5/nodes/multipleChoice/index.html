@@ -3,24 +3,37 @@
 <div ng-controller='MultipleChoiceController as multipleChoiceController'>
 <div id="prompt">{{multipleChoiceController.nodeContent.prompt}}</div>
 
-<div ng-repeat='choice in multipleChoiceController.nodeContent.choices'>
+<div ng-repeat='choice in multipleChoiceController.getChoices()'>
     <label>
-        <div ng-switch on='multipleChoiceController.nodeContent.choiceType'>
+        <div ng-switch on='multipleChoiceController.getChoiceType()'>
             <div ng-switch-when='radio'>
-                <input type='radio' name='choice' value='{{choice.id}}' ng-model='multipleChoiceController.studentChoices'></input>
+                <input type='radio' 
+                    name='choice' 
+                    value='{{choice.id}}' 
+                    ng-model='multipleChoiceController.studentChoices' 
+                    ng-change='multipleChoiceController.studentChoiceChanged()' 
+                    ng-disabled='multipleChoiceController.isDisabled'></input>
                 {{choice.text}}
             </div>
             <div ng-switch-when='checkbox'>
-                <input type='checkbox' name='choice' ng-checked='multipleChoiceController.isChecked(choice.id)' ng-click='multipleChoiceController.toggleSelection(choice.id)'></input>
+                <input type='checkbox' 
+                    name='choice' 
+                    ng-checked='multipleChoiceController.isChecked(choice.id)' 
+                    ng-click='multipleChoiceController.toggleSelection(choice.id)' 
+                    ng-change='multipleChoiceController.studentChoiceChanged()' 
+                    ng-disabled='multipleChoiceController.isDisabled'></input>
                 {{choice.text}}
             </div>
         </div>
     </label>
 </div>
 
-<button ng-click="multipleChoiceController.saveButtonClicked()">Save</button>
-<div>
-{{multipleChoiceController.studentChoices}}
-</div>
+<button ng-click='multipleChoiceController.saveButtonClicked()' 
+    ng-show='multipleChoiceController.showSaveButton()' 
+    ng-disabled='multipleChoiceController.isDisabled'>Save</button>
+    
+<button ng-click='multipleChoiceController.submitButtonClicked()' 
+    ng-show='multipleChoiceController.showSubmitButton()' 
+    ng-disabled='multipleChoiceController.isDisabled'>Submit</button>
 </div>
 </body>
