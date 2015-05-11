@@ -1,7 +1,7 @@
 define(['app'], function(app) {
     app.$controllerProvider.register('OpenResponseController', 
-        function($scope,
-            $rootScope,
+        function($rootScope,
+            $scope,
             $state, 
             $stateParams,
             AnnotationService,
@@ -98,6 +98,9 @@ define(['app'], function(app) {
                     
                     // start the auto save interval
                     this.startAutoSaveInterval();
+                    
+                    // register this controller to listen for the logOut event
+                    this.registerLogOutListener();
                 }));
             }
             
@@ -174,6 +177,13 @@ define(['app'], function(app) {
                  */
                 $scope.$emit('isDirty');
             }
+        };
+        
+        /**
+         * Get the student response
+         */
+        this.getStudentResponse = function() {
+            return this.studentResponse;
         };
         
         /**
@@ -769,44 +779,51 @@ define(['app'], function(app) {
         }));
         
         /**
-         * Listen for the 'logOut' event which is fired when the student logs
-         * out of the VLE. This will perform saving when 
+         * Register the the listener that will listen for the log out event
+         * so that we can perform saving before logging out.
          */
-        this.logOutListener = $scope.$on('logOut', angular.bind(this, function(event, args) {
+        this.registerLogOutListener = function() {
             
             /*
-             * Check if this node is part of another node such as a
-             * Questionnaire node. If this is part of another node we do
-             * not need to perform any saving because the parent will
-             * handle the saving.
+             * Listen for the 'logOut' event which is fired when the student logs
+             * out of the VLE. This will perform saving before the VLE logs out.
              */
-            if (!this.isNodePart) {
-                // this is a standalone node so we will save
-                
-                var saveTriggeredBy = 'logOut';
-                
-                // create and add a node state to the latest node visit
-                this.createAndAddNodeState(saveTriggeredBy);
-                
-                // stop the auto save interval for this node
-                this.stopAutoSaveInterval();
+            this.logOutListener = $scope.$on('logOut', angular.bind(this, function(event, args) {
                 
                 /*
-                 * tell the parent that this node is done performing
-                 * everything it needs to do before logging out
+                 * Check if this node is part of another node such as a
+                 * Questionnaire node. If this is part of another node we do
+                 * not need to perform any saving because the parent will
+                 * handle the saving.
                  */
-                $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
-                
-                // call this function to remove the listener
-                this.logOutListener();
-                
-                /*
-                 * tell the session service that this listener is done
-                 * performing everything it needs to do before logging out
-                 */
-                SessionService.logOut();
-            }
-        }));
+                if (!this.isNodePart) {
+                    // this is a standalone node so we will save
+                    
+                    var saveTriggeredBy = 'logOut';
+                    
+                    // create and add a node state to the latest node visit
+                    this.createAndAddNodeState(saveTriggeredBy);
+                    
+                    // stop the auto save interval for this node
+                    this.stopAutoSaveInterval();
+                    
+                    /*
+                     * tell the parent that this node is done performing
+                     * everything it needs to do before logging out
+                     */
+                    $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
+                    
+                    // call this function to remove the listener
+                    this.logOutListener();
+                    
+                    /*
+                     * tell the session service that this listener is done
+                     * performing everything it needs to do before logging out
+                     */
+                    $rootScope.$broadcast('componentDoneUnloading');
+                }
+            }));
+        };
         
         // perform setup of this node
         this.setup();

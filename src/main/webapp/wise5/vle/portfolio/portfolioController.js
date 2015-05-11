@@ -43,7 +43,7 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
         this.logOutListener = $scope.$on('logOut', angular.bind(this, function(event, args) {
             console.log('logOut portfolio');
             this.logOutListener();
-            SessionService.logOut();
+            $rootScope.$broadcast('componentDoneUnloading');
         }));
         
         this.deleteItem = function(item) {
