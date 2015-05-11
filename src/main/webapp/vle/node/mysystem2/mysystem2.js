@@ -268,7 +268,7 @@ Mysystem2.prototype.save = function(isSubmit) {
 };
 
 /**
- * Process any teacher notificaions if necessary
+ * Process any teacher notifications if necessary
  * @param nodeVisit the node visit
  * @param state the node state
  * @param response the response that is saved in the node state
@@ -277,92 +277,96 @@ Mysystem2.prototype.processTeacherNotifications = function(nodeVisit, state, res
     
     if (nodeVisit != null && state != null && response != null) {
         
-        // get the step content
-        var stepContent = this.node.content.getContentJSON()
-        
-        // get teacher notifications from the step content
-        var teacherNotifications = stepContent.teacherNotifications;
+        if (state.isSubmit) {
+            // the student is submitting their work
             
-        if (teacherNotifications != null) {
+            // get the step content
+            var stepContent = this.node.content.getContentJSON()
             
-            /*
-             * loop through all the teacher notifications for this step
-             * and check if we need to activate any of them
-             */
-            for (var t = 0; t < teacherNotifications.length; t++) {
-                // get a teacher notification
-                var teacherNotification = teacherNotifications[t];
+            // get teacher notifications from the step content
+            var teacherNotifications = stepContent.teacherNotifications;
                 
-                if (teacherNotification != null) {
-                    var teacherNotificationType = teacherNotification.type;
+            if (teacherNotifications != null) {
+                
+                /*
+                 * loop through all the teacher notifications for this step
+                 * and check if we need to activate any of them
+                 */
+                for (var t = 0; t < teacherNotifications.length; t++) {
+                    // get a teacher notification
+                    var teacherNotification = teacherNotifications[t];
                     
-                    if (teacherNotificationType === 'attemptScore') {
-                        /*
-                         * this teacher notification becomes active when the
-                         * student gets a certain score on a certain attempt
-                         * number
-                         */
+                    if (teacherNotification != null) {
+                        var teacherNotificationType = teacherNotification.type;
                         
-                        var score = null;
-                        var attemptNumber = null;
-                        
-                        var rubricScore = response['MySystem.RubricScore'];
-                        var ruleFeedback = response['MySystem.RuleFeedback'];
-                        
-                        if (rubricScore != null && ruleFeedback != null) {
-                            
-                            // get the score the student received
-                            var lastScoreId = rubricScore['LAST_SCORE_ID'];
-                            if (lastScoreId != null) {
-                                score = lastScoreId['score'];
-                            }
-                            
-                            // get the student's number of attempts
-                            var lastFeedback = ruleFeedback['LAST_FEEDBACK'];
-                            if (lastFeedback != null) {
-                                attemptNumber = lastFeedback['numOfSubmits'];
-                            }
-                        }
-                        
-                        if (score != null && attemptNumber != null) {
+                        if (teacherNotificationType === 'attemptScore') {
                             /*
-                             * get the number of attempts and score that
-                             * will activate the teacher notification
+                             * this teacher notification becomes active when the
+                             * student gets a certain score on a certain attempt
+                             * number
                              */
-                            var teacherNotificationAttemptNumber = teacherNotification.attemptNumber;
-                            var teacherNotificationScore = teacherNotification.score;
                             
-                            if (attemptNumber === teacherNotificationAttemptNumber) {
-                                // the attempt number matches
+                            var score = null;
+                            var attemptNumber = null;
+                            
+                            var rubricScore = response['MySystem.RubricScore'];
+                            var ruleFeedback = response['MySystem.RuleFeedback'];
+                            
+                            if (rubricScore != null && ruleFeedback != null) {
                                 
-                                if (score != null && score.toString().match("[" + teacherNotificationScore + "]")) {
-                                    // the score matches the score we are looking for
+                                // get the score the student received
+                                var lastScoreId = rubricScore['LAST_SCORE_ID'];
+                                if (lastScoreId != null) {
+                                    score = lastScoreId['score'];
+                                }
+                                
+                                // get the student's number of attempts
+                                var lastFeedback = ruleFeedback['LAST_FEEDBACK'];
+                                if (lastFeedback != null) {
+                                    attemptNumber = lastFeedback['numOfSubmits'];
+                                }
+                            }
+                            
+                            if (score != null && attemptNumber != null) {
+                                /*
+                                 * get the number of attempts and score that
+                                 * will activate the teacher notification
+                                 */
+                                var teacherNotificationAttemptNumber = teacherNotification.attemptNumber;
+                                var teacherNotificationScore = teacherNotification.score;
+                                
+                                if (attemptNumber === teacherNotificationAttemptNumber) {
+                                    // the attempt number matches
                                     
-                                    // get the other values for the teacher notification
-                                    var id = teacherNotification.id;
-                                    var message = teacherNotification.message;
-                                    var notificationLevel = teacherNotification.notificationLevel;
-                                    var dismissCode = teacherNotification.dismissCode;
-                                    var nodeStateId = state.timestamp;
-                                    
-                                    /*
-                                     * create a teacher notification object that will
-                                     * become active
-                                     */
-                                    var newTeacherNotification = {};
-                                    newTeacherNotification.id = id;
-                                    newTeacherNotification.attemptNumber = attemptNumber;
-                                    newTeacherNotification.score = score;
-                                    newTeacherNotification.message = message;
-                                    newTeacherNotification.notificationLevel = notificationLevel;
-                                    newTeacherNotification.dismissCode = dismissCode;
-                                    newTeacherNotification.nodeStateId = nodeStateId;
-                                    
-                                    /*
-                                     * create a new notification annotation and associate it
-                                     * with the current node visit
-                                     */
-                                    this.view.addNotificationAnnotation(nodeVisit, newTeacherNotification);
+                                    if (score != null && score.toString().match("[" + teacherNotificationScore + "]")) {
+                                        // the score matches the score we are looking for
+                                        
+                                        // get the other values for the teacher notification
+                                        var id = teacherNotification.id;
+                                        var message = teacherNotification.message;
+                                        var notificationLevel = teacherNotification.notificationLevel;
+                                        var dismissCode = teacherNotification.dismissCode;
+                                        var nodeStateId = state.timestamp;
+                                        
+                                        /*
+                                         * create a teacher notification object that will
+                                         * become active
+                                         */
+                                        var newTeacherNotification = {};
+                                        newTeacherNotification.id = id;
+                                        newTeacherNotification.attemptNumber = attemptNumber;
+                                        newTeacherNotification.score = score;
+                                        newTeacherNotification.message = message;
+                                        newTeacherNotification.notificationLevel = notificationLevel;
+                                        newTeacherNotification.dismissCode = dismissCode;
+                                        newTeacherNotification.nodeStateId = nodeStateId;
+                                        
+                                        /*
+                                         * create a new notification annotation and associate it
+                                         * with the current node visit
+                                         */
+                                        this.view.addNotificationAnnotation(nodeVisit, newTeacherNotification);
+                                    }
                                 }
                             }
                         }

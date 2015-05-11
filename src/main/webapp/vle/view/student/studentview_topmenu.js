@@ -1988,21 +1988,30 @@ View.prototype.dismissNotification = function(notificationAnnotation, notificati
             nodeId: nodeId
         };
         
-        // the succes callback
-        var postAnnotationCallback = function(responseText, responseXML, args) {
-            var view = args[0];
+        if (this.getConfig().getConfigParam('mode') === 'portalpreview') {
+            // we are in preview mode so we will not save the updated annotation to the server
             
             // process the notifications
-            view.processNotifications();
-        };
-        
-        // the failure callback
-        var postAnnotationCallbackFail = function() {
+            this.processNotifications();
+        } else {
+            // we are in run mode so we will save the updated annotation to the server
             
-        };
-        
-        // save notification annotation back to server
-        this.connectionManager.request('POST', 1, postAnnotationsURL, postAnnotationParams, postAnnotationCallback, [this], postAnnotationCallbackFail);
+            // the succes callback
+            var postAnnotationCallback = function(responseText, responseXML, args) {
+                var view = args[0];
+                
+                // process the notifications
+                view.processNotifications();
+            };
+            
+            // the failure callback
+            var postAnnotationCallbackFail = function() {
+                
+            };
+            
+            // save notification annotation back to server
+            this.connectionManager.request('POST', 1, postAnnotationsURL, postAnnotationParams, postAnnotationCallback, [this], postAnnotationCallbackFail);
+        }
     }
 };
 
