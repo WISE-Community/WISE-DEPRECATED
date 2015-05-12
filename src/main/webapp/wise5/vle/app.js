@@ -21,6 +21,7 @@ define([
         'multipleChoiceService',
         'nodeService',
         'openResponseService',
+        'outsideURLService',
         'portfolioService',
         'projectService',
         'questionnaireService',
@@ -52,6 +53,7 @@ define([
                 multipleChoiceService,
                 nodeService,
                 openResponseService,
+                outsideURLService,
                 portfolioService,
                 projectService,
                 questionnaireService,
@@ -90,8 +92,9 @@ define([
     
     // node services
     app.factory('AudioRecorderService', audioRecorderService);
-    app.factory('OpenResponseService', openResponseService);
     app.factory('MultipleChoiceService', multipleChoiceService);
+    app.factory('OpenResponseService', openResponseService);
+    app.factory('OutsideURLService', outsideURLService);
     app.factory('QuestionnaireService', questionnaireService);
     
     app.filter('sanitizeHTML', ['$sce', function($sce) {
@@ -168,6 +171,7 @@ define([
                             multipleChoiceController: app.loadController('multipleChoiceController'),
                             nodeController: app.loadController('nodeController'),
                             openResponseController: app.loadController('openResponseController'),
+                            outsideURLController: app.loadController('outsideURLController'),
                             planningController: app.loadController('planningController'),
                             questionnaireController: app.loadController('questionnaireController')
                         }

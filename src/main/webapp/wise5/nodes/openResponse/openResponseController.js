@@ -61,9 +61,6 @@ define(['app'], function(app) {
                 // check if we need to lock this node
                 this.calculateDisabled();
                 
-                // check if we need to lock this node
-                this.calculateDisabled();
-                
                 // get the part
                 var part = $scope.part;
                 
