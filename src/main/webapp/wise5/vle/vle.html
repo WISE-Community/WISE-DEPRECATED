@@ -120,7 +120,8 @@
 <body>
 <div ng-controller='VLEController as vleController'  
     data-drop="true"
-    jqyoui-droppable="{onDrop: 'vleController.portfolioDropCallback()'}">
+    jqyoui-droppable="{onDrop: 'vleController.portfolioDropCallback()'}"
+    ng-mousemove='vleController.mouseMoved()'>
 <style>
 {{vleController.projectStyle}}
 </style>    

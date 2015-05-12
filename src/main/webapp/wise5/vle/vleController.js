@@ -230,6 +230,17 @@ define(['app'],
         this.projectStyle = ProjectService.getProjectStyle();
 
         CurrentNodeService.setCurrentNodeByNodeId(nodeId);
+        
+        /**
+         * The user has moved the mouse on the page
+         */
+        this.mouseMoved = function() {
+            /*
+             * tell the session service a mouse event occurred so it
+             * can reset the session timeout timers
+             */
+            SessionService.mouseEventOccurred();
+        };
                 
         // Make sure if we drop something on the page we don't navigate away
         // https://developer.mozilla.org/En/DragDrop/Drag_Operations#drop
