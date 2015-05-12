@@ -3,6 +3,7 @@ require.config({
     paths: {
         'angular': 'lib/angular/angular',
         'angularAnimate': 'lib/angular/angularAnimate/angular-animate.min',
+        'angularAudio': 'lib/angular/angularAudio/angular-audio',
         'angularDragDrop': 'lib/angular/angularDragDrop/angular-dragdrop.min',
         'angularFileUpload': 'lib/angular/angularFileUpload/angular-file-upload.min',
         'angularSortable': 'lib/angular/angularSortable/angular-sortable',
@@ -13,6 +14,8 @@ require.config({
         'angularWebSocket': 'lib/angular/angularWebSocket/angular-websocket.min',
         'annotationService': 'services/annotationService',
         'app': 'vle/app',
+        'audioRecorderController': 'nodes/audioRecorder/audioRecorderController',
+        'audioRecorderService': 'nodes/audioRecorder/audioRecorderService',
         'bootstrap': 'lib/bootstrap/bootstrap.min',
         'configService': 'services/configService',
         'currentNodeService': 'services/currentNodeService',
@@ -52,6 +55,13 @@ require.config({
             'deps': [
                     'angular',
                     'jqueryUI'
+                    ]
+        },
+        'angularAudio': {
+            'exports': 'angularAudio',
+            'deps': [
+                    'angular',
+                    'jquery'
                     ]
         },
         'angularDragDrop': {

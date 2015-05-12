@@ -240,6 +240,15 @@
             "r": 20
         },
         {
+            "id": "node27",
+            "type": "AudioRecorder",
+            "title": "Audio Recorder",
+            "src": "node27.json",
+            "x": 550,
+            "y": 240,
+            "r": 20
+        },
+        {
             "id": "group0",
             "type": "group",
             "title": "My First WISE5 Project",
@@ -305,7 +314,8 @@
                 "node23",
                 "node24",
                 "node25",
-                "node26"
+                "node26",
+                "node27"
             ],
             "x": 250,
             "y": 140,
@@ -442,6 +452,11 @@
             "id": "transition26",
             "from": "node25",
             "to": "node26"
+        },
+        {
+            "id": "transition27",
+            "from": "node26",
+            "to": "node27"
         }
     ],
     "startGroupId": "group0",

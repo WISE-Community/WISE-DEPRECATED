@@ -1,0 +1,14 @@
+<script src="wise5/nodes/audioRecorder/recordmp3.js"></script>
+
+<div ng-controller='AudioRecorderController as audioRecorderController'>
+    <div id="prompt">{{audioRecorderController.nodeContent.prompt}}</div>
+    
+    <button id='startRecordingButton' ng-click="audioRecorderController.startRecording(this);">record</button>
+    <button id='stopRecordingButton' ng-click="audioRecorderController.stopRecording(this);" disabled>stop</button>
+
+    <h2>Recordings</h2>
+    <ul id="recordingslist"></ul>
+
+    <h2>Log</h2>
+    <pre id="log"></pre>
+</div>

@@ -6,6 +6,7 @@ define([
         'jquery',
         'jqueryUI',
         'angularAnimate',
+        'angularAudio',
         'angularDragDrop',
         'angularFileUpload',
         'angularSortable',
@@ -13,6 +14,7 @@ define([
         'angularUIRouter',
         'angularWebSocket',
         'annotationService',
+        'audioRecorderService',
         'configService',
         'currentNodeService',
         'cRaterService',
@@ -35,6 +37,7 @@ define([
                 $,
                 jqueryUI,
                 angularAnimate,
+                angularAudio,
                 angularDragDrop,
                 angularFileUpload,
                 angularSortable,
@@ -42,6 +45,7 @@ define([
                 angularUIRouter,
                 angularWebSocket,
                 annotationService,
+                audioRecorderService,
                 configService,
                 currentNodeService,
                 cRaterService,
@@ -64,6 +68,7 @@ define([
                                      'ui.router',
                                      'ui.sortable',
                                      'ngAnimate',
+                                     'ngAudio',
                                      'ngDragDrop',
                                      'ngWebSocket',
                                      'textAngular'
@@ -84,10 +89,10 @@ define([
     app.factory('StudentWebSocketService', studentWebSocketService);
     
     // node services
+    app.factory('AudioRecorderService', audioRecorderService);
     app.factory('OpenResponseService', openResponseService);
     app.factory('MultipleChoiceService', multipleChoiceService);
     app.factory('QuestionnaireService', questionnaireService);
-
     
     app.filter('sanitizeHTML', ['$sce', function($sce) {
         return function(htmlCode) {
@@ -158,10 +163,11 @@ define([
                     'nodeView': {
                         templateUrl: 'wise5/vle/node/node.html',
                         resolve: {
+                            audioRecorderController: app.loadController('audioRecorderController'),
+                            htmlController: app.loadController('htmlController'),
+                            multipleChoiceController: app.loadController('multipleChoiceController'),
                             nodeController: app.loadController('nodeController'),
                             openResponseController: app.loadController('openResponseController'),
-                            multipleChoiceController: app.loadController('multipleChoiceController'),
-                            htmlController: app.loadController('htmlController'),
                             planningController: app.loadController('planningController'),
                             questionnaireController: app.loadController('questionnaireController')
                         }

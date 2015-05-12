@@ -26,10 +26,13 @@ define(['configService'], function(configService) {
                         asset.name = filename;
                         asset.url = assetBaseURL + filename;
                         if (this.isImage(asset)) {
+                            asset.type = 'image';
                             asset.iconURL = asset.url;
                         } else if (this.isAudio(asset)) {
+                            asset.type = 'audio';
                             asset.iconURL = 'wise5/vle/portfolio/audio.png';
                         } else {
+                            asset.type = 'file';
                             asset.iconURL = 'wise5/vle/portfolio/file.png';
                         }
                         assets.push(asset);
