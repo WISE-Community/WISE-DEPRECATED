@@ -388,9 +388,6 @@ define(['app'], function(app) {
             // get the feedback for the given concepts the student satisfied
             var feedbackTextObject = CRaterService.getCRaterFeedback(scoringRules, concepts, score, cRaterItemType);
 
-            console.log(response);
-            console.log(feedbackTextObject);
-            
             // get the feedback text and feedback id
             var feedbackText = feedbackTextObject.feedbackText;
             var feedbackId = feedbackTextObject.feedbackId;
@@ -452,36 +449,35 @@ define(['app'], function(app) {
             var annotation = AnnotationService.createAnnotation(annotationType, nodeId, annotationValue, nodeVisitId, runId, fromWorkgroup, toWorkgroup, postTime);
             AnnotationService.saveAnnotation(annotation);
             
-            /*
-            //check if we need to display the auto score or auto feedback to the student
+            // check if we need to display the auto score or auto feedback to the student
             var displayCRaterScoreToStudent = cRaterStepContent.displayCRaterScoreToStudent;
             var displayCRaterFeedbackToStudent = cRaterStepContent.displayCRaterFeedbackToStudent;
 
             if (displayCRaterScoreToStudent || displayCRaterFeedbackToStudent) {
-                //we will display the score or feedback (or both) to the student
+                // we will display the score or feedback (or both) to the student
 
                 var hasScore = false;
                 var hasFeedback = false;
                 
                 var cRaterFeedbackStringSoFar = "<span class='nodeAnnotationsCRater'>";
 
-                if(displayCRaterScoreToStudent) {
-                    if(score != null && score != "") {
-                        //the student has received a score
+                if (displayCRaterScoreToStudent) {
+                    if (score != null && score != "") {
+                        // the student has received a score
                         hasScore = true;
                     }
                 }
 
                 if(displayCRaterFeedbackToStudent) {
-                    if(feedbackText != null && feedbackText != "") {
-                        //the student has received feedback
+                    if (feedbackText != null && feedbackText != "") {
+                        // the student has received feedback
                         hasFeedback = true;
                     }
                 }
 
                 if (hasScore || hasFeedback) {
                     if (!suppressFeedback) {
-                        //popup the auto graded annotation to the student
+                        // popup the auto graded annotation to the student
                         eventManager.fire("showNodeAnnotations", [nodeId]);                      
                     }
                 }
@@ -493,7 +489,7 @@ define(['app'], function(app) {
                     
                     if (studentAction == null) {
                         //do nothing
-                    } else if(studentAction == 'rewrite') {
+                    } else if (studentAction == 'rewrite') {
                         //
                         // move the current work to the previous work response box
                         // because we want to display the previous work to the student
@@ -504,7 +500,7 @@ define(['app'], function(app) {
                         
                         //clear the response box so they will need to write a new response
                         $('#responseBox').val('');
-                    } else if(studentAction == 'revise') {
+                    } else if (studentAction == 'revise') {
                         //
                         // the student will need to revise their work so we will hide the
                         // previous response display
@@ -528,11 +524,11 @@ define(['app'], function(app) {
             
             // process the student work to see if we need to activate any 
             // teacher notifications
-            or.processTeacherNotifications(nodeVisit, orState, cRaterResponse);
+            // or.processTeacherNotifications(nodeVisit, nodeState, cRaterResponse);
             
-            //save the student work to the server immediately
-            view.getProject().getNodeById(nodeId).save(orState);            
-            */
+            // save the student work to the server immediately
+            view.getProject().getNodeById(nodeId).save(nodeState);            
+            
         };
         
         
