@@ -66,8 +66,8 @@ define(['app'], function(app) {
                 // start the auto save interval
                 this.startAutoSaveInterval();
                 
-                // register this controller to listen for the logOut event
-                this.registerLogOutListener();
+                // register this controller to listen for the exit event
+                this.registerExitListener();
             }));
         };
         
@@ -447,17 +447,17 @@ define(['app'], function(app) {
         }));
         
         /**
-         * Register the the listener that will listen for the log out event
-         * so that we can perform saving before logging out.
+         * Register the the listener that will listen for the exit event
+         * so that we can perform saving before exiting.
          */
-        this.registerLogOutListener = function() {
+        this.registerExitListener = function() {
             /**
-             * Listen for the 'logOut' event which is fired when the student logs
-             * out of the VLE. This will perform saving when 
+             * Listen for the 'exit' event which is fired when the student exits
+             * the VLE. This will perform saving before exiting.
              */
-            this.logOutListener = $scope.$on('logOut', angular.bind(this, function(event, args) {
+            this.logOutListener = $scope.$on('exit', angular.bind(this, function(event, args) {
                 
-                var saveTriggeredBy = 'logOut';
+                var saveTriggeredBy = 'exit';
                 
                 // create and add a node state to the latest node visit
                 this.createAndAddNodeState(saveTriggeredBy);
@@ -467,7 +467,7 @@ define(['app'], function(app) {
                 
                 /*
                  * tell the parent that this node is done performing
-                 * everything it needs to do before logging out
+                 * everything it needs to do before exiting
                  */
                 $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
                 
@@ -476,9 +476,9 @@ define(['app'], function(app) {
                 
                 /*
                  * tell the session service that this listener is done
-                 * performing everything it needs to do before logging out
+                 * performing everything it needs to do before exiting
                  */
-                $rootScope.$broadcast('componentDoneUnloading');
+                $rootScope.$broadcast('doneExiting');
             }));
         };
         

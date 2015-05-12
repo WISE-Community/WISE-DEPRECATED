@@ -31,6 +31,13 @@ define(['configService'], function(configService) {
         // the id for the setTimeout of the automatic log out
         serviceObject.logOutId = null;
         
+        /*
+         * boolean value used to determine if we need to log out the
+         * user or just bring them back to the home page when we exit
+         * the VLE
+         */
+        serviceObject.performLogOut = false;
+        
         /**
          * Start the timers
          */
@@ -159,38 +166,65 @@ define(['configService'], function(configService) {
         };
         
         /**
-         * Check if there are components that are not ready to log out
+         * Check if there are components that are not ready to exit
          * because they have not saved their data yet. If there are no
-         * components left to wait for, we can then log out.
+         * components left to wait for, we can then exit.
          */
-        serviceObject.attemptLogOut = function() {
+        serviceObject.attemptExit = function() {
             
-            // get all the components listening for the logOut event
-            var logOutListenerCount = $rootScope.$$listenerCount.logOut;
+            // get all the components listening for the exit event
+            var exitListenerCount = $rootScope.$$listenerCount.exit;
             
             /*
-             * Check how many log out listeners are still listening for the
-             * logOut event. This logOutListenerCount will always be 1 or 
-             * more because this SessionService also listens for the logOut
-             * event but is never removed from the count. Components such as
-             * nodes will finish saving their data and then be removed from
-             * the listener count.
+             * Check how many exit listeners are still listening for the
+             * exit event. Components such as nodes will finish saving their 
+             * data and then be removed from the listener count.
              */
-            if (logOutListenerCount != null && logOutListenerCount > 1) {
+            if (exitListenerCount != null && exitListenerCount > 0) {
                 // don't log out yet because there are still listeners
             } else {
-                // there are no more listeners so we will log out
+                // there are no more listeners so we will exit
                 
-                // get the url that will log out the user
-                var sessionLogOutURL = ConfigService.getSessionLogOutURL();
-                
-                // make a request to the log out url
-                $http.get(sessionLogOutURL).then(function() {
+                if(this.performLogOut) {
+                    // log out the user and bring them to the home page
                     
-                    // bring the user back to the home page
-                    var mainHomePageURL = ConfigService.getMainHomePageURL();
-                    window.location.href = mainHomePageURL;
-                });
+                    // get the url that will log out the user
+                    var sessionLogOutURL = ConfigService.getSessionLogOutURL();
+                    
+                    // make a request to the log out url
+                    $http.get(sessionLogOutURL).then(function() {
+                        
+                        // bring the user back to the home page
+                        var mainHomePageURL = ConfigService.getMainHomePageURL();
+                        window.location.href = mainHomePageURL;
+                    });
+                } else {
+                    /*
+                     * bring the user to the student or teacher home page but 
+                     * do not log them out
+                     */
+                    
+                    //get the context path e.g. /wise
+                    var contextPath = ConfigService.getConfigParam('contextPath');
+                    
+                    var homePageURL = '';
+                    
+                    // get the user type
+                    var userType = ConfigService.getConfigParam('userType');
+                    
+                    if (userType == 'student'){
+                        // send the user to the student home page
+                        homePageURL = contextPath + '/student/index.html';
+                    } else if (userType == 'teacher') {
+                        // send the user to the teacher home page
+                        homePageURL = contextPath + '/teacher/index.html';
+                    } else {
+                        // send the user to the main home page
+                        homePageURL = ConfigService.getMainHomePageURL();
+                    }
+                    
+                    window.location.href = homePageURL;
+                }
             }
         };
         
@@ -203,10 +237,27 @@ define(['configService'], function(configService) {
          * for this event and when there are no more components left to wait
          * for, we will then log out.
          */
-        $rootScope.$on('componentDoneUnloading', angular.bind(serviceObject, function() {
+        $rootScope.$on('doneExiting', angular.bind(serviceObject, function() {
             
-            // check if all components are done unloading so we can log out
-            this.attemptLogOut();
+            // check if all components are done unloading so we can exit
+            this.attemptExit();
+        }));
+        
+        /**
+         * Listen for the 'goHome' event. We will attempt to go home when
+         * the 'goHome' even is fired. There may be components that have not
+         * saved their data yet so we may not be able to go home right away.
+         * If there are components that have not saved their data yet, we 
+         * will wait for those components to fire the 'componentDoneUnloading'
+         * event and then try to go home again.
+         */
+        $rootScope.$on('goHome', angular.bind(serviceObject, function() {
+            
+            // let other components know that we are exiting
+            $rootScope.$broadcast('exit');
+            
+            // check if all components are done unloading so we can exit
+            this.attemptExit();
         }));
         
         /**
@@ -219,8 +270,17 @@ define(['configService'], function(configService) {
          */
         $rootScope.$on('logOut', angular.bind(serviceObject, function() {
             
-            // check if all components are done unloading so we can log out
-            this.attemptLogOut();
+            /*
+             * set the perform log out boolean to true so that we know to
+             * log out the user later
+             */
+            this.performLogOut = true;
+            
+            // let other components know that we are exiting
+            $rootScope.$broadcast('exit');
+            
+            // check if all components are done unloading so we can exit
+            this.attemptExit();
         }));
         
         return serviceObject;

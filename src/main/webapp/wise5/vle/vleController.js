@@ -88,33 +88,11 @@ define(['app'],
         };
         
         this.goHome = function() {
-          //get the context path e.g. /wise
-            var contextPath = ConfigService.getConfigParam('contextPath');
-            
-            // Insert sign out and exit to home links
-            var goHomeHref = contextPath + "/student/index.html";
-            var userType = ConfigService.getConfigParam('userType');
-            if (userType && userType == "teacher") {
-                goHomeHref = contextPath + "/teacher/index.html";
-            }
-            window.location.href = goHomeHref;
+            $rootScope.$broadcast('goHome');
         };
         
         this.logOut = function() {
             $rootScope.$broadcast('logOut');
-            
-            /*
-            //get the context path e.g. /wise
-              var contextPath = ConfigService.getConfigParam('contextPath');
-              
-              // Insert sign out and exit to home links
-              var goHomeHref = contextPath + "/student/index.html";
-              var userType = ConfigService.getConfigParam('userType');
-              if (userType && userType == "teacher") {
-                  goHomeHref = contextPath + "/teacher/index.html";
-              }
-              window.location.href = goHomeHref;
-              */
         };
           
         this.layoutLogicStarMap = function(VLEState) {

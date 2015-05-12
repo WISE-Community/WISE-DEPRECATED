@@ -1,6 +1,7 @@
 define(['app'], function(app) {
     app.$controllerProvider.register('PlanningController', 
-            function($scope, 
+            function($rootScope,
+                    $scope, 
                     $state, 
                     $stateParams, 
                     ConfigService,
@@ -12,6 +13,13 @@ define(['app'], function(app) {
         this.nodeContent = null;
         this.nodeId = null;
         this.studentNodes = [];
+        
+        this.setup = function() {
+            
+            
+            // register this controller to listen for the exit event
+            this.registerExitListener();
+        };
         
         var currentNode = CurrentNodeService.getCurrentNode();
         
@@ -258,12 +266,64 @@ define(['app'], function(app) {
                 this.studentNodes = studentNodes;
             }
         };
-
+        
+        /*
         $scope.$on('nodeOnExit', angular.bind(this, function(event, args) {
             var nodeToExit = args.nodeToExit;
             if (nodeToExit.id === this.nodeId) {
                 $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
             }
         }));
+        */
+        
+        /**
+         * Register the the listener that will listen for the exit event
+         * so that we can perform saving before exiting.
+         */
+        this.registerExitListener = function() {
+            
+            /*
+             * Listen for the 'exit' event which is fired when the student exits
+             * the VLE. This will perform saving before the VLE exits.
+             */
+            this.exitListener = $scope.$on('exit', angular.bind(this, function(event, args) {
+                
+                /*
+                 * Check if this node is part of another node such as a
+                 * Questionnaire node. If this is part of another node we do
+                 * not need to perform any saving because the parent will
+                 * handle the saving.
+                 */
+                if (!this.isNodePart) {
+                    // this is a standalone node so we will save
+                    
+                    var saveTriggeredBy = 'exit';
+                    
+                    // create and add a node state to the latest node visit
+                    //this.createAndAddNodeState(saveTriggeredBy);
+                    
+                    // stop the auto save interval for this node
+                    //this.stopAutoSaveInterval();
+                    
+                    /*
+                     * tell the parent that this node is done performing
+                     * everything it needs to do before exiting
+                     */
+                    $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
+                    
+                    // call this function to remove the listener
+                    this.exitListener();
+                    
+                    /*
+                     * tell the session service that this listener is done
+                     * performing everything it needs to do before exiting
+                     */
+                    $rootScope.$broadcast('doneExiting');
+                }
+            }));
+        };
+        
+        // perform setup of this node
+        this.setup();
     });
 });
