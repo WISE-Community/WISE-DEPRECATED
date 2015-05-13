@@ -41,9 +41,6 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
             this.studentAssets.usagePercentage = this.roundToDecimal(this.studentAssets.totalSize / this.studentAssets.totalSizeMax * 100, 0);
         };
         
-        // retrieve assets at the beginning
-        this.retrieveAssets();
-        
         this.upload = function(files) {
             StudentAssetService.uploadAssets(files).then(angular.bind(this, function() {
                this.retrieveAssets();
@@ -57,6 +54,10 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
                 this.calculateTotalUsage();
             }));
         };
+        
+        $scope.$on('studentAssetsUpdated', angular.bind(this, function() {
+            this.retrieveAssets();
+        }));
         
         $scope.$on('portfolioChanged', angular.bind(this, function(event, args) {
             this.portfolio = args.portfolio;
@@ -150,5 +151,7 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
             return Math.round(num*rounder) / rounder;
         };
 
+        // retrieve assets at the beginning
+        this.retrieveAssets();
     });
 });

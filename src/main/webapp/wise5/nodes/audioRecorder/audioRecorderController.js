@@ -40,18 +40,7 @@ define(['app'], function(app) {
         };
         
         this.startUserMedia = function(stream) {
-            var input = audioContext.createMediaStreamSource(stream);
-            this.__log('Media stream created.' );
-            this.__log("input sample rate " +input.context.sampleRate);
-            
-            //input.connect(audioContext.destination);
-            //__log('Input connected to audio context destination.');
-            var config = {};
-            config.callback = function() { 
-                alert('callback!'); 
-            };
-            this.recorder = new Recorder(input, this, config);
-            this.__log('Recorder initialised.');
+            this.recorder = new Recorder(stream, this);
         };
         
         this.startRecording = function(button) {
@@ -67,32 +56,25 @@ define(['app'], function(app) {
             startRecordingButton.disabled = false;
             this.__log('Stopped recording.');
             
-            // create WAV download link using audio data blob
-            this.createDownloadLink();
+            // convert audio to mp3 and upload to student assets
+            this.recorder && this.recorder.exportMP3(angular.bind(this, function(blob) {
+                var now = new Date().getTime();
+
+                var mp3Name = encodeURIComponent('audio_recording_' + now + '.mp3');
+                var mp3file = new File([blob], mp3Name, {
+                    lastModified: now, // optional - default = now
+                    type: 'audio/mp3' // optional - default = ''
+                })
+                this.uploadAudioAsset(mp3file).then(function() {
+                    $rootScope.$broadcast('studentAssetsUpdated');
+                });
+            }));
             
             this.recorder.clear();
         };
         
-        this.createDownloadLink = function() {
-            this.recorder && this.recorder.exportMP3(function(blob) {
-                /*var url = URL.createObjectURL(blob);
-                var li = document.createElement('li');
-                var au = document.createElement('audio');
-                var hf = document.createElement('a');
-                
-                au.controls = true;
-                au.src = url;
-                hf.href = url;
-                hf.download = new Date().toISOString() + '.wav';
-                hf.innerHTML = hf.download;
-                li.appendChild(au);
-                li.appendChild(hf);
-                recordingslist.appendChild(li);*/
-            });
-        };
-        
         this.uploadAudioAsset = function(mp3blob) {
-            StudentAssetService.uploadAssets([mp3blob]);
+            return StudentAssetService.uploadAssets([mp3blob]);
         };
         
         /**
@@ -163,17 +145,14 @@ define(['app'], function(app) {
                                  navigator.msGetUserMedia);
                 window.URL = window.URL || window.webkitURL;
                 
-                audioContext = new AudioContext;
                 this.__log('Audio context set up.');
                 this.__log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+                navigator.getUserMedia({audio: true}, angular.bind(this,this.startUserMedia), function(e) {
+                    this.__log('No live audio input: ' + e);
+                });
             } catch (e) {
                 alert('No web audio support in this browser!');
             }
-
-            
-            navigator.getUserMedia({audio: true}, angular.bind(this,this.startUserMedia), function(e) {
-                this.__log('No live audio input: ' + e);
-            });
             
         };
         
@@ -377,45 +356,6 @@ define(['app'], function(app) {
         };
         
         /**
-         * Get the number of rows for the textarea
-         */
-        this.getNumRows = function() {
-            var numRows = null;
-            
-            if (this.nodeContent != null) {
-                numRows = this.nodeContent.numRows;
-            }
-            
-            return numRows;
-        };
-        
-        /**
-         * Get the number of columns for the textarea
-         */
-        this.getNumColumns = function() {
-            var numColumns = null;
-            
-            if (this.nodeContent != null) {
-                numColumns = this.nodeContent.numColumns;
-            }
-            
-            return numColumns;
-        };
-        
-        /**
-         * Get the text the student typed
-         */
-        this.getResponse = function() {
-            var response = null;
-            
-            if (this.studentResponse != null) {
-                response = this.studentResponse;
-            }
-            
-            return response;
-        };
-        
-        /**
          * Import work from another node
          */
         this.importWork = function() {
@@ -503,7 +443,7 @@ define(['app'], function(app) {
          */
         $scope.$on('nodeOnExit', angular.bind(this, function(event, args) {
             
-            audioContext.close();
+            this.recorder.close();
             
             /*
              * Check if this node is part of another node such as a
