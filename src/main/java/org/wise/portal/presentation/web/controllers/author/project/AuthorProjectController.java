@@ -132,7 +132,7 @@ public class AuthorProjectController {
 		String forward = request.getParameter(FORWARD);
 
 		Project project;
-		if(projectIdStr != null && !projectIdStr.equals("") && !projectIdStr.equals("none")){
+		if (projectIdStr != null && !projectIdStr.equals("") && !projectIdStr.equals("none")) {
 			//project = projectService.getProjectWithoutMetadata(Long.parseLong(projectIdStr));
 			project = projectService.getById(Long.parseLong(projectIdStr));
 		} else {
@@ -140,39 +140,39 @@ public class AuthorProjectController {
 		}
 
 		/* catch forwarding requests, authenticate and forward request upon successful authentication */
-		if(forward != null && !forward.equals("")){
+		if (forward != null && !forward.equals("")) {
 			//get the command
 			String command = request.getParameter("command");
 
-			if(forward.equals("filemanager") || forward.equals("assetmanager")){
+			if (forward.equals("filemanager") || forward.equals("assetmanager")) {
 
-				if((this.isProjectlessRequest(request, forward) || this.projectService.canAuthorProject(project, user)) ||
+				if ((this.isProjectlessRequest(request, forward) || this.projectService.canAuthorProject(project, user)) ||
 						("copyProject".equals(command) && project.getFamilytag().equals(FamilyTag.TELS)) ||
-						("retrieveFile".equals(command) && project.getFamilytag().equals(FamilyTag.TELS))){
+						("retrieveFile".equals(command) && project.getFamilytag().equals(FamilyTag.TELS))) {
 
-					if("createProject".equals(command) && !this.hasAuthorPermissions(user)){
+					if ("createProject".equals(command) && !this.hasAuthorPermissions(user)) {
 						return new ModelAndView(new RedirectView("accessdenied.html"));
 					}
 
-					if("copyProject".equals(command) && 
+					if ("copyProject".equals(command) && 
 							(project == null || 
-							(!project.getFamilytag().equals(FamilyTag.TELS) && !this.projectService.canAuthorProject(project, user)))){
+							(!project.getFamilytag().equals(FamilyTag.TELS) && !this.projectService.canAuthorProject(project, user)))) {
 						return new ModelAndView(new RedirectView("accessdenied.html"));
 					}
 
 					CredentialManager.setRequestCredentials(request, user);
 					
-					if(forward.equals("filemanager")) {
-						if(command!=null){
+					if (forward.equals("filemanager")) {
+						if (command!=null) {
 							String pathAllowedToAccess = CredentialManager.getAllowedPathAccess(request);
 							
-							if(command.equals("createProject")){
+							if (command.equals("createProject")) {
 								String projectName = request.getParameter("projectName");
 								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 								
 								String result = "";
 								
-								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, curriculumBaseDir)) {
+								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, curriculumBaseDir)) {
 									result = FileManager.createProject(curriculumBaseDir, projectName);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -180,14 +180,14 @@ public class AuthorProjectController {
 								}
 								
 								response.getWriter().write(result);
-							} else if(command.equals("projectList")){
+							} else if (command.equals("projectList")) {
 								String projectPaths = request.getParameter("projectPaths");
 								String projectExt = ".project.json";
 								
 								String result = FileManager.getProjectList(projectPaths, projectExt);
 								
 								response.getWriter().write(result);
-							} else if(command.equals("retrieveFile")){
+							} else if (command.equals("retrieveFile")) {
 								//get the file name
 								String fileName = request.getParameter("fileName");
 
@@ -204,7 +204,7 @@ public class AuthorProjectController {
 								}
 								
 								response.getWriter().write(result);
-							} else if(command.equals("updateFile")){
+							} else if (command.equals("updateFile")) {
 								/*
 								 * get the project folder path
 								 * e.g.
@@ -220,7 +220,7 @@ public class AuthorProjectController {
 								
 								String result = "";
 								
-								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
+								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
 									result = FileManager.updateFile(projectFolderPath, fileName, data);									
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -228,7 +228,7 @@ public class AuthorProjectController {
 								}
 								
 								response.getWriter().write(result);
-							} else if(command.equals("createNode")){
+							} else if (command.equals("createNode")) {
 								/*
 								 * get the project file path
 								 * e.g.
@@ -252,7 +252,7 @@ public class AuthorProjectController {
 								}
 								
 								response.getWriter().write(result);
-							} else if(command.equals("createSequence")){
+							} else if (command.equals("createSequence")) {
 								/*
 								 * get the project file name
 								 * e.g.
@@ -271,7 +271,7 @@ public class AuthorProjectController {
 								
 								String result = "";
 								
-								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
+								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
 									result = FileManager.createSequence(projectFileName, name, id, projectFolderPath);
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -279,7 +279,7 @@ public class AuthorProjectController {
 								}
 								
 								response.getWriter().write(result);
-							} else if(command.equals("removeFile")){
+							} else if (command.equals("removeFile")) {
 								/*
 								 * get the project folder path
 								 * e.g.
@@ -303,7 +303,7 @@ public class AuthorProjectController {
 								}
 								
 								response.getWriter().write(result);
-							} else if(command.equals("copyNode")){
+							} else if (command.equals("copyNode")) {
 								//get the parameters for the node
 								String data = request.getParameter("data");
 								String type = request.getParameter("type");
@@ -327,14 +327,14 @@ public class AuthorProjectController {
 								
 								String result = "";
 								
-								if(SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)){
+								if (SecurityUtils.isAllowedAccess(pathAllowedToAccess, projectFolderPath)) {
 									result = FileManager.copyNode(projectFolderPath, projectFileName, data, type, title, nodeClass, contentFile);									
 								} else {
 									response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 								}
 								
 								response.getWriter().write(result);
-							} else if(command.equals("createSequenceFromJSON")){
+							} else if (command.equals("createSequenceFromJSON")) {
 								/*
 								 * get the project file name
 								 * e.g.
@@ -361,13 +361,13 @@ public class AuthorProjectController {
 								}
 								
 								response.getWriter().write(result);
-							} else if(command.equals("getScripts")){
+							} else if (command.equals("getScripts")) {
 								String data = request.getParameter("param1");
 								
 								String result = FileManager.getScripts(servletContext, data);
 								
 								response.getWriter().write(result);
-							} else if(command.equals("copyProject")){
+							} else if (command.equals("copyProject")) {
 								/*
 								 * get the project folder path
 								 * e.g.
@@ -392,7 +392,7 @@ public class AuthorProjectController {
 								}
 								
 								response.getWriter().write(result);
-							} else if(command.equals("createFile")){
+							} else if (command.equals("createFile")) {
 								/*
 								 * get the file name
 								 * e.g.
@@ -417,7 +417,7 @@ public class AuthorProjectController {
 								}
 								
 								response.getWriter().write(result);
-							} else if(command.equals("reviewUpdateProject")) {
+							} else if (command.equals("reviewUpdateProject")) {
 								//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
 								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 								
@@ -465,7 +465,7 @@ public class AuthorProjectController {
 								}
 								
 								response.getWriter().write(result);
-							} else if(command.equals("importSteps")) {
+							} else if (command.equals("importSteps")) {
 								//get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
 								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 								
@@ -509,7 +509,7 @@ public class AuthorProjectController {
 								}
 								
 								response.getWriter().write(result);
-							} else if(command.equals("getProjectUsageAndMax")) {
+							} else if (command.equals("getProjectUsageAndMax")) {
 								//get the path to the folder
 								String path = FileManager.getProjectFolderPath(project);
 								
@@ -527,9 +527,9 @@ public class AuthorProjectController {
 							/* no command was provided */
 							response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 						}
-					} else if(forward.equals("assetmanager")) {
+					} else if (forward.equals("assetmanager")) {
 
-						if(command == null && ServletFileUpload.isMultipartContent(request)) {
+						if (command == null && ServletFileUpload.isMultipartContent(request)) {
 							//user is uploading a file
 							
 							ServletFileUpload uploader = new ServletFileUpload(new DiskFileItemFactory());
@@ -607,7 +607,7 @@ public class AuthorProjectController {
 							//tell the asset manager to get the size of the assets folder
 							String result = AssetManager.getSize(path, dirName);
 							response.getWriter().write(result);
-						} else if(command.equals("assetList")) {
+						} else if (command.equals("assetList")) {
 							//get the project folder path
 							String path = FileManager.getProjectFolderPath(project);
 							
@@ -615,16 +615,16 @@ public class AuthorProjectController {
 							String dirName = "assets";
 							
 							//get the file names for all the assets in the assets folder
-							String assetList = AssetManager.getAssetList(path, dirName);
-							response.getWriter().write(assetList);
-						} else if(command.equals("studentAssetCopyForReference")) {
+							JSONArray assetList = AssetManager.getAssetList(path, dirName);
+							response.getWriter().write(assetList.toString());
+						} else if (command.equals("studentAssetCopyForReference")) {
 							//AssetManager.copyAssetForReference();
 						} else {
 							response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 						}
 					}
 
-					if("updateFile".equals(command)) {
+					if ("updateFile".equals(command)) {
 						//we have updated a file in a project so we will update the project edited timestamp
 
 						/*
@@ -641,7 +641,7 @@ public class AuthorProjectController {
 				} else {
 					return new ModelAndView(new RedirectView("accessdenied.html"));
 				}
-			} else if(command.equals("getTimestamp")) {
+			} else if (command.equals("getTimestamp")) {
 				//get the current timestamp on the server and write it to the response
 				response.getWriter().write(String.valueOf(new Date().getTime()));
 				return null;

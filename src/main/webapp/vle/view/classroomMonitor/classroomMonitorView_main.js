@@ -449,15 +449,15 @@ View.prototype.showStudentAssets = function() {
         var getStudentUploadsBaseUrl = view.config.getConfigParam("getStudentUploadsBaseUrl");
         var runId = view.config.getConfigParam("runId");
         var workgroupAssetLists = JSON.parse(workgroupAssetListsStr);
-        for (var i=0; i<workgroupAssetLists.length; i++) {
+        for (var i = 0; i < workgroupAssetLists.length; i++) {
             var workgroupAssetList = workgroupAssetLists[i];
             var currWorkgroupId = workgroupAssetList.workgroupId;
             var htmlForWorkgroup = "<div><h3>" + view.userAndClassInfo.getUserNameByUserId(currWorkgroupId) + "</h3>";
-            if (workgroupAssetList.assets != "") {
-                var workgroupAssetsArr = JSON.parse(workgroupAssetList.assets);
+            if (workgroupAssetList.assets != null) {
+                var workgroupAssetsArr = workgroupAssetList.assets;
                 htmlForWorkgroup += "<div>";
-                for (var k=0; k < workgroupAssetsArr.length; k++) {
-                    var assetName = workgroupAssetsArr[k];
+                for (var k = 0; k < workgroupAssetsArr.length; k++) {
+                    var assetName = workgroupAssetsArr[k].fileName;
                     var fileWWW = getStudentUploadsBaseUrl + "/" + runId + "/" + currWorkgroupId + "/unreferenced/" + assetName;
                     htmlForWorkgroup += "<a style='padding: 20px' target=_blank href='"+fileWWW+"'><img style='width: auto; height: auto; max-width: 200px; max-height: 200px' src='" + fileWWW + "'></img></a>";
                 }
