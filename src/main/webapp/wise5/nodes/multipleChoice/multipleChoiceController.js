@@ -219,6 +219,9 @@ define(['app'], function(app) {
                         studentChoices.splice(index, 1);
                     }
                 }
+                
+                // notify this node that the student choice has changed
+                this.studentChoiceChanged();
             }
         };
         
@@ -290,6 +293,102 @@ define(['app'], function(app) {
         };
         
         /**
+         * Check if the student has answered correctly
+         * @return whether the student has answered correctly
+         */
+        this.isCorrect = function() {
+            var result = false;
+            
+            if (this.isRadio()) {
+                // get the correct choice
+                var correctChoice = this.getCorrectChoice();
+                
+                // check if the correct choice is chosen
+                if (this.isChecked(correctChoice)) {
+                    // the student has checked the correct choice
+                    result = true;
+                }
+            } else if (this.isCheckbox()) {
+                // get the correct choices
+                var correctChoices = this.getCorrectChoices();
+                
+                // get all the choices
+                var choices = this.getChoices();
+                
+                if (choices != null) {
+                    
+                    var correctSoFar = true;
+                    
+                    // check if only the correct choices are chosen
+                    for (var c = 0; c < choices.length; c++) {
+                        var choice = choices[c];
+                        
+                        if (choice != null) {
+                            var choiceId = choice.id;
+                            
+                            var isChoiceCorrect = false;
+                            
+                            // check if the choice is correct
+                            if (correctChoices.indexOf(choiceId) != -1) {
+                                isChoiceCorrect = true;
+                            }
+                            
+                            // check if the student checked the choice
+                            var isChecked = this.isChecked(choiceId);
+                            
+                            if ((isChecked && isChoiceCorrect) ||
+                                    (!isChecked && !isChoiceCorrect)) {
+                                /*
+                                 * the choice is correct and the student has checked it or
+                                 * the choice is incorrect and the student has not checked it
+                                 */
+                            } else {
+                                /*
+                                 * the choice is correct and the student has not checked it or
+                                 * the choice is incorrect and the student has checked it
+                                 */
+                                correctSoFar = false;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    result = correctSoFar;
+                }
+            }
+            
+            return result;
+        };
+        
+        /**
+         * Get the correct choice for a radio button node
+         * @return a choice id string
+         */
+        this.getCorrectChoice = function() {
+            var correctChoice = null;
+            
+            if (this.nodeContent != null) {
+                correctChoice = this.nodeContent.correctChoice;
+            }
+            
+            return correctChoice;
+        };
+        
+        /**
+         * Get the correct choices for a checkbox node
+         * @return an array of correct choice ids
+         */
+        this.getCorrectChoices = function() {
+            var correctChoices = null;
+            
+            if (this.nodeContent != null) {
+                correctChoices = this.nodeContent.correctChoices;
+            }
+            
+            return correctChoices;
+        };
+        
+        /**
          * Called when the student changes a choice
          */
         this.studentChoiceChanged = function() {
@@ -354,12 +453,14 @@ define(['app'], function(app) {
                         } 
                         
                         if (hasCorrect) {
-                            //TODO
                             /*
                              * check if the student has chosen all the correct
                              * choices
                              */
-                            //nodeState.isCorrect = false;
+                            var isCorrect = this.isCorrect();
+                            
+                            // set the isCorrect value into the node state
+                            nodeState.isCorrect = isCorrect;
                         }
                         
                         // add the node state to the latest node visit

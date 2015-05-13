@@ -1,24 +1,28 @@
 {
     "style": "body { background-color: blue }",
-    "prompt": "Who lives in a pineapple under the sea?",
+    "prompt": "Who works at the Krusty Krab?",
     "choices": [
         {
             "text": "Patrick",
             "id": "4j6v8m3jc9",
-            "feedback": "Incorrect, Patrick lives under a rock."
+            "feedback": "Incorrect, Patrick does not have a job."
         },
         {
             "text": "Spongebob",
             "id": "78de39me19",
-            "feedback": "Correct, Spongebob lives in a pineapple."
+            "feedback": "Correct, Spongebob is the fry cook at the Krusty Krab"
         },
         {
             "text": "Squidward",
             "id": "n8s6v3k2h6",
-            "feedback": "Incorrect, Squidward lives in an Easter Island Head."
+            "feedback": "Correct, Squidward is the cashier at the Krusty Krab."
         }
     ],
-    "choiceType": "radio",
-    "lockAfterSubmit": true,
+    "correctChoices": [
+        "78de39me19",
+        "n8s6v3k2h6"
+    ],
+    "choiceType": "checkbox",
+    "lockAfterSubmit": false,
     "showSubmitButton": true
 }

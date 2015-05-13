@@ -18,7 +18,8 @@
             "feedback": "Incorrect, Squidward lives in an Easter Island Head."
         }
     ],
+    "correctChoice": "78de39me19",
     "choiceType": "radio",
-    "lockAfterSubmit": true,
+    "lockAfterSubmit": false,
     "showSubmitButton": true
 }

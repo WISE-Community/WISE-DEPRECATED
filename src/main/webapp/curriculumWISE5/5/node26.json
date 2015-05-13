@@ -30,6 +30,11 @@
                     "feedback": "Incorrect, Squidward lives in an Easter Island Head."
                 }
             ]
+        },
+        {
+            "id": "7gxet7gj35",
+            "partType": "outsideURL",
+            "url": "http://www.berkeley.edu/"
         }
     ],
     "lockAfterSubmit": false,
