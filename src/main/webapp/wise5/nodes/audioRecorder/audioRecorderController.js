@@ -32,9 +32,6 @@ define(['app'], function(app) {
         // whether this is part of another node such as a Questionnaire node
         this.isNodePart = false;
         
-        // context for the audio
-        this.audio_context;
-        
         // recorder object
         this.recorder;
         
@@ -43,11 +40,11 @@ define(['app'], function(app) {
         };
         
         this.startUserMedia = function(stream) {
-            var input = audio_context.createMediaStreamSource(stream);
+            var input = audioContext.createMediaStreamSource(stream);
             this.__log('Media stream created.' );
             this.__log("input sample rate " +input.context.sampleRate);
             
-            //input.connect(audio_context.destination);
+            //input.connect(audioContext.destination);
             //__log('Input connected to audio context destination.');
             var config = {};
             config.callback = function() { 
@@ -166,7 +163,7 @@ define(['app'], function(app) {
                                  navigator.msGetUserMedia);
                 window.URL = window.URL || window.webkitURL;
                 
-                audio_context = new AudioContext;
+                audioContext = new AudioContext;
                 this.__log('Audio context set up.');
                 this.__log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
             } catch (e) {
@@ -505,6 +502,8 @@ define(['app'], function(app) {
          * the node.
          */
         $scope.$on('nodeOnExit', angular.bind(this, function(event, args) {
+            
+            audioContext.close();
             
             /*
              * Check if this node is part of another node such as a

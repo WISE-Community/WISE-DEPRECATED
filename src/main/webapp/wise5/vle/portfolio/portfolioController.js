@@ -24,7 +24,21 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
         this.retrieveAssets = function() {
             StudentAssetService.retrieveAssets().then(angular.bind(this, function(studentAssets) {
                 this.studentAssets = studentAssets;
+                this.calculateTotalUsage();
             }));
+        };
+        
+        this.calculateTotalUsage = function() {
+            // get the total size
+            var totalSizeSoFar = 0;
+            for (var i = 0; i < this.studentAssets.length; i++) {
+                var studentAsset = this.studentAssets[i];
+                var studentAssetSize = studentAsset.fileSize;
+                totalSizeSoFar += studentAssetSize;
+            }
+            this.studentAssets.totalSize = totalSizeSoFar;
+            this.studentAssets.totalSizeMax = ConfigService.getStudentMaxTotalAssetsSize();
+            this.studentAssets.usagePercentage = this.roundToDecimal(this.studentAssets.totalSize / this.studentAssets.totalSizeMax * 100, 0);
         };
         
         // retrieve assets at the beginning
@@ -33,6 +47,14 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
         this.upload = function(files) {
             StudentAssetService.uploadAssets(files).then(angular.bind(this, function() {
                this.retrieveAssets();
+            }));
+        };
+        
+        this.deleteStudentAsset = function(studentAsset) {
+            StudentAssetService.deleteAsset(studentAsset).then(angular.bind(this, function(deletedStudentAsset) {
+                // remove studentAsset
+                this.studentAssets.splice(this.studentAssets.indexOf(deletedStudentAsset), 1);
+                this.calculateTotalUsage();
             }));
         };
         
@@ -99,5 +121,34 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
             
             return result;
         };
+        
+        /**
+         * Given a string of a number of bytes, returns a string of the size
+         * in either: bytes, kilobytes or megabytes depending on the size.
+         */
+        this.appropriateSizeText = function(bytes) {
+            if (bytes > 1048576) {
+                return this.roundToDecimal(((bytes/1024) / 1024), 1) + ' mb';
+            } else if (bytes > 1024) {
+                return this.roundToDecimal((bytes/1024), 1) + ' kb';
+            } else {
+                return bytes + ' b';
+            };
+        };
+        
+        /**
+         * Returns the given number @param num to the nearest
+         * given decimal place @param decimal. (e.g if called 
+         * roundToDecimal(4.556, 1) it will return 4.6.
+         */
+        this.roundToDecimal = function(num, decimal) {
+            var rounder = 1;
+            if (decimal) {
+                rounder = Math.pow(10, decimal);
+            };
+
+            return Math.round(num*rounder) / rounder;
+        };
+
     });
 });

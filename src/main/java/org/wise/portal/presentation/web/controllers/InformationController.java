@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents). 
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -62,7 +62,9 @@ import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
- * @author patrick lawler
+ * @author Patrick Lawler
+ * @author Geoffrey Kwan
+ * @author Hiroki Terashima
  * @version $Id:$
  */
 @Controller
@@ -93,9 +95,9 @@ public class InformationController {
 			HttpServletResponse response) throws Exception {
 		String action = request.getParameter("action");
 		
-		if(action.equals("getVLEConfig")){
+		if (action.equals("getVLEConfig")) {
 			this.handleGetConfig(request, response);
-		} else if(action.equals("getUserInfo")){
+		} else if (action.equals("getUserInfo")) {
 			this.handleGetUserInfo(request, response);
 		} else {
 			throw new Exception("I do not understand the request.");
@@ -177,17 +179,17 @@ public class InformationController {
 		Long workgroupId = null;
 
 		//get the period
-		if(workgroup instanceof WISEWorkgroup && !((WISEWorkgroup) workgroup).isTeacherWorkgroup()) {
+		if (workgroup instanceof WISEWorkgroup && !((WISEWorkgroup) workgroup).isTeacherWorkgroup()) {
 			//the logged in user is a student
 			Group periodGroup = ((WISEWorkgroup) workgroup).getPeriod();
 			periodName = periodGroup.getName();
 			periodId = periodGroup.getId().toString();
 			workgroupId = workgroup.getId();
-		} else if( (workgroup != null && ((WISEWorkgroup) workgroup).isTeacherWorkgroup())
+		} else if ((workgroup != null && ((WISEWorkgroup) workgroup).isTeacherWorkgroup())
 				|| (workgroup == null && loggedInUser.isAdmin())) {
 			//the logged in user is a teacher or is of admin-role
 			// if teacher, include workgroupId:
-			if(workgroup != null && ((WISEWorkgroup) workgroup).isTeacherWorkgroup()) {
+			if (workgroup != null && ((WISEWorkgroup) workgroup).isTeacherWorkgroup()) {
 				workgroupId = workgroup.getId();
 			}
 			
@@ -204,12 +206,12 @@ public class InformationController {
 				Group next = periodIter.next();
 				
 				//if this is not the first period add a :
-				if(periodIds.length() != 0) {
+				if (periodIds.length() != 0) {
 					periodIds.append(":");
 				}
 				
 				//if this is not the first period add a :
-				if(periodNames.length() != 0) {
+				if (periodNames.length() != 0) {
 					periodNames.append(":");
 				}
 				
@@ -242,7 +244,7 @@ public class InformationController {
 		//get all the periods in the run
 		Set<Group> periodsSet = run.getPeriods();
 		
-		if(periodsSet != null) {
+		if (periodsSet != null) {
 			Iterator<Group> periodsIterator = periodsSet.iterator();
 			
 			//loop through all the periods in the run
@@ -359,7 +361,7 @@ public class InformationController {
 			 * owner has multiple workgroups for this run due to a bug which
 			 * created multiple workgroups for a shared teacher
 			 */
-			for(Workgroup sharedTeacherWorkgroup: sharedTeacherWorkgroups) {
+			for (Workgroup sharedTeacherWorkgroup: sharedTeacherWorkgroups) {
 				//make a JSONObject for this shared owner
 				JSONObject sharedTeacherUserInfo = new JSONObject();
 				
@@ -371,13 +373,13 @@ public class InformationController {
 					//get the shared teacher role
 					String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedOwner);
 
-					if(sharedTeacherRole == null) {
+					if (sharedTeacherRole == null) {
 						//shared teacher does not have a role
 						sharedTeacherUserInfo.put("role", "");
-					} else if(sharedTeacherRole.equals(UserDetailsService.RUN_READ_ROLE)) {
+					} else if (sharedTeacherRole.equals(UserDetailsService.RUN_READ_ROLE)) {
 						//shared teacher can view the run
 						sharedTeacherUserInfo.put("role", "read");
-					} else if(sharedTeacherRole.equals(UserDetailsService.RUN_GRADE_ROLE)) {
+					} else if (sharedTeacherRole.equals(UserDetailsService.RUN_GRADE_ROLE)) {
 						//shared teacher can grade the run
 						sharedTeacherUserInfo.put("role", "grade");
 					}
@@ -413,7 +415,8 @@ public class InformationController {
 	 * @throws ObjectNotFoundException
 	 * @throws IOException
 	 */
-	private void handleGetConfig(HttpServletRequest request, HttpServletResponse response) throws ObjectNotFoundException, IOException{
+	private void handleGetConfig(HttpServletRequest request, HttpServletResponse response) 
+	        throws ObjectNotFoundException, IOException {
 		JSONObject config = new JSONObject();
 		String projectIdStr = request.getParameter("projectId");
 		String runId = request.getParameter("runId");
@@ -438,14 +441,14 @@ public class InformationController {
 		String rawProjectUrl = null;
 		
 		// if projectId provided, this is a request for preview
-		if(projectIdStr != null){
+		if (projectIdStr != null) {
 			Project project = projectService.getById(projectIdStr);
 			rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		}
 		
 		/* if no projectId String provided, try getting project url from run also add gradework
 		 * specific config to the config */
-		if(runId != null){
+		if (runId != null) {
 			Run run = this.runService.retrieveById(Long.parseLong(runId));
 			rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 
@@ -453,7 +456,7 @@ public class InformationController {
 			Workgroup workgroup = getWorkgroup(request, run);
 			Long workgroupId = null;
 
-			if(workgroup == null) {
+			if (workgroup == null) {
 				/*
 				 * the user is not in a workgroup for the run so they should not be
 				 * allowed to access the config, unless the user is an admin
@@ -463,7 +466,7 @@ public class InformationController {
 					//user is not signed in or is not admin so we will not let them proceed
 					return;
 				}
-			} else if(((WISEWorkgroup) workgroup).isTeacherWorkgroup()) {
+			} else if (((WISEWorkgroup) workgroup).isTeacherWorkgroup()) {
 				//workgroup is a teacher
 				workgroupId = workgroup.getId();
 
@@ -528,7 +531,7 @@ public class InformationController {
 	    	//get the url to post idea basket data
 	    	String postIdeaBasketUrl = wiseBaseURL + "/ideaBasket.html?runId=" + run.getId().toString() + "&projectId=" + run.getProject().getId().toString();
 
-	    	if(periodId != null) {
+	    	if (periodId != null) {
 	    		//add the period id if it is available
 	    		getIdeaBasketUrl += "&periodId=" + periodId;
 	    		postIdeaBasketUrl += "&periodId=" + periodId;
@@ -545,7 +548,7 @@ public class InformationController {
 	    	//get the url to post portfolio data
 	    	String postPortfolioUrl = wiseBaseURL + "/portfolio.html?runId=" + run.getId().toString() + "&projectId=" + run.getProject().getId().toString();
 
-	    	if(periodId != null) {
+	    	if (periodId != null) {
 	    		//add the period id if it is available
 	    		getPortfolioUrl += "&periodId=" + periodId;
 	    		postPortfolioUrl += "&periodId=" + periodId;
@@ -569,7 +572,7 @@ public class InformationController {
 			//get the websocket base url e.g. ws://wise4.berkeley.edu:8080
 			String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
 			
-			if(webSocketBaseURL == null) {
+			if (webSocketBaseURL == null) {
 				/*
 				 * if the websocket base url was not provided in the portal properties
 				 * we will use the default websocket base url.
@@ -617,7 +620,7 @@ public class InformationController {
                 config.put("studentStatusURL", studentStatusUrl);
 				config.put("runStatusUrl", runStatusUrl);
 				
-				if(postLevel!=null){
+				if (postLevel != null) {
 					config.put("postLevel", postLevel);
 				};
 				
@@ -630,7 +633,7 @@ public class InformationController {
 				}
 				
 				//add the config fields specific to the teacher grading
-				if(requester != null && requester.equals("grading")) {
+				if (requester != null && requester.equals("grading")) {
 					config.put("getPremadeCommentsUrl", getPremadeCommentsUrl);
 					config.put("postPremadeCommentsUrl", postPremadeCommentsUrl);
 					config.put("postFlagsUrl", postFlagsUrl);
@@ -650,7 +653,7 @@ public class InformationController {
 
 		// get location of last separator in url 
 		int lastIndexOfSlash = getContentUrl.lastIndexOf("/");
-		if(lastIndexOfSlash==-1){ 
+		if (lastIndexOfSlash == -1) { 
 			lastIndexOfSlash = getContentUrl.lastIndexOf("\\");
 		}
 		
@@ -661,7 +664,7 @@ public class InformationController {
 		String getContentBaseUrl = getContentUrl.substring(0, lastIndexOfSlash) + "/";
 		
 		String getUserInfoUrl = infourl + "?action=getUserInfo";
-		if(requester == null || !requester.equals("portalpreview")){
+		if (requester == null || !requester.equals("portalpreview")) {
 			getUserInfoUrl += "&runId=" + runId;
 		} 
 		
@@ -669,17 +672,17 @@ public class InformationController {
 			String parentProjectId = "";
 			String runName = "";
 			
-			if(projectIdStr == null) {
+			if (projectIdStr == null) {
 				//look for the project id in the run if project id was not provided in the request
 				Run run = runService.retrieveById(new Long(runId));
 				
-				if(run != null) {
+				if (run != null) {
 					//get the run name
 					runName = run.getName();
 					
 					//get the project
 					Project project = run.getProject();
-					if(project != null) {
+					if (project != null) {
 						//get the project id as a string
 						projectIdStr = project.getId() + "";
 						
@@ -739,7 +742,6 @@ public class InformationController {
             }
 
 			config.put("locale", locale);
-			
 			config.put("wiseBaseURL",wiseBaseURL);
 			
 			if(step != null) {
@@ -755,8 +757,12 @@ public class InformationController {
 				sessionTimeoutCheckInterval = 60000;
 			}
 			config.put("sessionTimeoutCheckInterval", sessionTimeoutCheckInterval); // how often session should be checked...check every minute (1 min=60sec=60000 milliseconds)			
+			
+			// max size for all assets combined uploaded by student, in bytes
+            Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "5242880"));
+            config.put("studentMaxTotalAssetsSize", studentMaxTotalAssetsSize);
 
-			if(runId==null){
+			if (runId == null) {
 				config.put("runId", "");
 			} else {
 				config.put("runId", runId);
@@ -765,7 +771,7 @@ public class InformationController {
 			config.put("runName", runName);
 			
 			// add preview project specific settings
-			if(requester != null && requester.equals("portalpreview")){
+			if (requester != null && requester.equals("portalpreview")) {
 				String isConstraintsDisabledStr = request.getParameter("isConstraintsDisabled");
 				if (isConstraintsDisabledStr != null && Boolean.parseBoolean(isConstraintsDisabledStr)) {
 					config.put("isConstraintsDisabled", true);
@@ -786,11 +792,6 @@ public class InformationController {
 			} else {
 	        	config.put("userType", "none");
 			}
-			
-			
-			// add node applications and navigation applications for this run
-			//String nodeApplications = "";
-			//String navigationApplications = "";
 			
 		} catch (JSONException e){
 			e.printStackTrace();

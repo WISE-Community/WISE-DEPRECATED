@@ -676,7 +676,7 @@ View.prototype.viewStudentAssets = function(params) {
 	 * @param names the names of the student asset files
 	 * @param args additional args passed to this function
 	 */
-	var studentAssetsPopulateOptions = function(names, args){
+	var studentAssetsPopulateOptions = function(assets, args){
 		var thisView = args.thisView;
 		
 		/*
@@ -685,12 +685,19 @@ View.prototype.viewStudentAssets = function(params) {
 		 */
 		var filename = args.filename;
 
-		if(names && names!=''){
+		if (assets && assets!='') {
 			var parent = $('#assetSelect');
 			parent.html('');
 
-			//create a JSON array
-			names = JSON.parse(names);
+			//create a JSON array containing just the asset names
+			var assets = JSON.parse(assets);
+			
+			var names = [];
+			for (var a = 0; a < assets.length; a++) {
+			    var asset = assets[a];
+			    var assetFilename = asset.fileName;
+			    names.push(assetFilename);
+			}
 
 			//sort the file names alphabetically
 			names.sort(view.sortAlphabetically);

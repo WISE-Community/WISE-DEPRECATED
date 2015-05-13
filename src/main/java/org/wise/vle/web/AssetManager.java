@@ -75,6 +75,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  * 
  * @author Patrick Lawler
  * @author Geoffrey Kwan
+ * @author Hiroki Terashima
  */
 @Controller
 @RequestMapping("/assetManager.html")
@@ -108,16 +109,17 @@ public class AssetManager {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	@RequestMapping(method=RequestMethod.GET)
-	protected ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected ModelAndView doGet(HttpServletRequest request, HttpServletResponse response) 
+	        throws ServletException, IOException {
 
-		//get the command such as assetList or getSize 
+		// get the command such as assetList or getSize 
 		String command = request.getParameter("command");
 		String type = request.getParameter("type");
 
-		if(type.equals("studentAssetManager")) {
-			//the user is a student
+		if ("studentAssetManager".equals(type)) {
+			// the user is a student
 
-			if(command.equals("assetList")) {
+			if ("assetList".equals(command)) {
 				User user = ControllerUtil.getSignedInUser();
 
 				String runId = request.getParameter("runId");
@@ -146,7 +148,7 @@ public class AssetManager {
                                 //get the student uploads base directory path
                                 String path = wiseProperties.getProperty("studentuploads_base_dir");
                                 //get a list of file names in this workgroup's upload directory
-                                String assetList = getAssetList(path, dirName);
+                                JSONArray assetList = getAssetList(path, dirName);
                                 workgroupAsset.put("workgroupId", workgroupId);
                                 workgroupAsset.put("assets", assetList);
                                 workgroupAssetLists.put(workgroupAsset);
@@ -167,19 +169,19 @@ public class AssetManager {
 				    Long workgroupId = workgroup.getId();
 
 				    //get the directory name for the workgroup for this run
-				    String dirName = run.getId()+"/"+workgroupId+"/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
+				    String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
 
 				    //get the student uploads base directory path
 				    String path = wiseProperties.getProperty("studentuploads_base_dir");
 
 				    //get a list of file names in this workgroup's upload directory
-				    String assetList = getAssetList(path, dirName);
-                    response.getWriter().write(assetList);
+				    JSONArray assetList = getAssetList(path, dirName);
+                    response.getWriter().write(assetList.toString());
 				}
-			} else if(command.equals("getSize")) {
+			} else if (command.equals("getSize")) {
 				User user = ControllerUtil.getSignedInUser();
 
-				//get the run
+				// get the run
 				String runId = request.getParameter("runId");
 				Run run = null;
 				try {
@@ -190,18 +192,18 @@ public class AssetManager {
 					e.printStackTrace();
 				}
 
-				//get the workgroup id
+				// get the workgroup id
 				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
-				//get the directory name for the workgroup for this run
+				// get the directory name for the workgroup for this run
 				String dirName = run.getId()+"/"+workgroupId+"/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
 
-				//get the student uploads base directory path
+				// get the student uploads base directory path
 				String path = wiseProperties.getProperty("studentuploads_base_dir");
 
-				//get the disk space usage of the workgroup's upload directory
+				// get the disk space usage of the workgroup's upload directory
 				String result = getSize(path, dirName);
 				response.getWriter().write(result);
 			}
@@ -214,19 +216,20 @@ public class AssetManager {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	@RequestMapping(method=RequestMethod.POST)
-	protected ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) 
+	        throws ServletException, IOException {
 		String command = request.getParameter("command");
 		String type = request.getParameter("type");
 
-		if(type.equals("studentAssetManager")) {
-			//the user is a student
+		if ("studentAssetManager".equals(type)) {
+			// the user is a student
 
-			if(command.equals("remove")) {
-				//the student is removing an asset
+			if ("remove".equals(command)) {
+				// the student is removing an asset
 
 				User user = ControllerUtil.getSignedInUser();
 
-				//get the run
+				// get the run
 				String runId = request.getParameter("runId");
 				Run run = null;
 				try {
@@ -237,28 +240,28 @@ public class AssetManager {
 					e.printStackTrace();
 				}
 
-				//get the workgroup id
+				// get the workgroup id
 				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
-				//get the directory name for the workgroup for this run
+				// get the directory name for the workgroup for this run
 				String dirName = run.getId()+"/"+workgroupId+"/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
 
-				//get the student uploads base directory path
+				// get the student uploads base directory path
 				String path = wiseProperties.getProperty("studentuploads_base_dir");
 
-				//get the file name the student wants to remove
+				// get the file name the student wants to remove
 				String assetFileName = request.getParameter("asset");
 
-				//remove the file from the student asset folder
+				// remove the file from the student asset folder
 				String result = removeAsset(path, dirName, assetFileName);
 
 				response.getWriter().write(result);
-			} else if(command.equals("studentAssetCopyForReference")) {
+			} else if ("studentAssetCopyForReference".equals(command)) {
 				User user = ControllerUtil.getSignedInUser();
 
-				//get the run
+				// get the run
 				String runId = request.getParameter("runId");
 				Run run = null;
 				try {
@@ -269,7 +272,7 @@ public class AssetManager {
 					e.printStackTrace();
 				}
 
-				//get the workgroup id
+				// get the workgroup id
 				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
@@ -284,19 +287,19 @@ public class AssetManager {
 					referencedDirName = run.getId()+"/"+workgroupId+"/referenced";
 				}
 
-				//get the file name to copy
+				// get the file name to copy
 				String fileName = request.getParameter("assetFilename");
 
 				String result = copyAssetForReference(dirName, referencedDirName, fileName);
 
 				response.getWriter().write(result);
-			} else if(command.equals("uploadAsset")) {
-				//the student is uploading an asset
+			} else if ("uploadAsset".equals(command)) {
+				// the student is uploading an asset
 
 				ServletFileUpload uploader = new ServletFileUpload(new DiskFileItemFactory());
 				List<?> fileList = null;
 				try {
-					//get a list of the files that are being uploaded
+					// get a list of the files that are being uploaded
 					fileList = uploader.parseRequest(request);
 				} catch (FileUploadException e) {
 					e.printStackTrace();
@@ -304,7 +307,7 @@ public class AssetManager {
 
 				User user = ControllerUtil.getSignedInUser();
 
-				//get the run
+				// get the run
 				String runId = request.getParameter("runId");
 				Run run = null;
 				try {
@@ -315,32 +318,30 @@ public class AssetManager {
 					e.printStackTrace();
 				}
 
-				//get the workgroup id
+				// get the workgroup id
 				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
 				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
-				//get the directory name for the workgroup for this run
+				// get the directory name for the workgroup for this run
 				String dirName = run.getId()+"/"+workgroupId+"/unreferenced";
 
-				//get the student uploads base directory path
+				// get the student uploads base directory path
 				String path = wiseProperties.getProperty("studentuploads_base_dir");
-				Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "2097152"));
+				Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "5242880"));
 				String pathToCheckSize = path + "/" + dirName;
 
 				DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
 				Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
 
-				//upload the files
+				// upload the files
 				String result = uploadAsset(fileList, fileMap, path, dirName, pathToCheckSize, studentMaxTotalAssetsSize);
 
 				response.getWriter().write(result);
 			}
 		}
-
 		return null;
 	}
-
 
 	/**
 	 * Uploads the specified file to the given path.
@@ -357,33 +358,33 @@ public class AssetManager {
 	 * @return the message of the status of the upload
 	 */
 	@SuppressWarnings("unchecked")
-	public static String uploadAsset(List<?> fileList, Map<String,MultipartFile> fileMap, String path, String dirName, String pathToCheckSize, Long maxTotalAssetsSize) {
-		String fullPath = path + "/" + dirName;
+	public static String uploadAsset(List<?> fileList, Map<String,MultipartFile> fileMap,
+	        String path, String dirName, String pathToCheckSize, Long maxTotalAssetsSize) {
 
 		try{
 			/* if request was forwarded from the portal, the fileList will be empty because
 			 * Spring already retrieved the list (it can only be done once). But Spring wrapped
 			 * the request so we can get the file another way now */
-			if(fileList.size()>0){
+			if (fileList.size() > 0) {
 				Iterator<?> fileIterator = fileList.iterator();
-				while(fileIterator.hasNext()){
-					FileItem item = (FileItem)fileIterator.next();
-					if(item.isFormField()){ //get path and set var
-						if(item.getFieldName().equals(PATH)){
+				while(fileIterator.hasNext()) {
+					FileItem item = (FileItem) fileIterator.next();
+					if (item.isFormField()) { //get path and set var
+						if (item.getFieldName().equals(PATH)) {
 							path = item.getString();
-						} else if(item.getFieldName().equals("forward") || item.getFieldName().equals("projectId")){
+						} else if (item.getFieldName().equals("forward") || item.getFieldName().equals("projectId")) {
 							// do nothing
 						} else {
 							throw new ServletException("I do not know what to do with multipart form field of name: " + item.getFieldName() + ". Cannot upload asset.");
 						}
 					} else { //do upload
-						if(path!=null){
-							if(!ensureAssetPath(path, dirName)){
+						if (path != null) {
+							if (!ensureAssetPath(path, dirName)) {
 								throw new ServletException("Unable to find or setup path to upload file. Operation aborted.");
 							} else {
 								File projectDir = new File(path);
 								File assetsDir = new File(projectDir, dirName);
-								if(Long.parseLong(getFolderSize(pathToCheckSize)) + item.getSize() > maxTotalAssetsSize){
+								if (Long.parseLong(getFolderSize(pathToCheckSize)) + item.getSize() > maxTotalAssetsSize) {
 									return "Uploading " + item.getName() + " of size " + appropriateSize(item.getSize()) + " would exceed maximum storage capacity of " + appropriateSize(maxTotalAssetsSize) + ". Operation aborted.";
 								}
 								File asset = new File(assetsDir, item.getName());
@@ -401,17 +402,17 @@ public class AssetManager {
 				 */
 				File projectDir = new File(path);
 				File assetsDir = new File(projectDir, dirName);
-				if(!assetsDir.exists()){
+				if (!assetsDir.exists()) {
 					assetsDir.mkdirs();
 				}
 
-				if (SecurityUtils.isAllowedAccess(path, assetsDir)){
+				if (SecurityUtils.isAllowedAccess(path, assetsDir)) {
 					String successMessage = "";
 
-					if (fileMap != null && fileMap.size() > 0){
+					if (fileMap != null && fileMap.size() > 0) {
 					    Set<String> keySet = fileMap.keySet();
 					    Iterator<String> iter = keySet.iterator();
-						while (iter.hasNext()){
+						while (iter.hasNext()) {
 							String key = iter.next();
 							MultipartFile file = fileMap.get(key);
 							String filename = file.getOriginalFilename();
@@ -419,10 +420,10 @@ public class AssetManager {
 							//MultipartFile file = fileMap.get(filename);
 							byte[] content = file.getBytes();
 
-							if(Long.parseLong(getFolderSize(pathToCheckSize)) + content.length > maxTotalAssetsSize){
+							if (Long.parseLong(getFolderSize(pathToCheckSize)) + content.length > maxTotalAssetsSize) {
 								successMessage += "Uploading " + filename + " of size " + appropriateSize(content.length) + " would exceed your maximum storage capacity of "  + appropriateSize(maxTotalAssetsSize) + ". Operation aborted.";
 							} else {
-								if(!asset.exists()){
+								if (!asset.exists()) {
 									asset.createNewFile();
 								}
 
@@ -467,7 +468,7 @@ public class AssetManager {
 					return "Access to path is denied.";
 				}
 			}
-		} catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
@@ -497,14 +498,14 @@ public class AssetManager {
 		 */
 		File studentUploadsBaseDir = new File(studentUploadsBaseDirStr);
 		File unreferencedAssetsFullDir = new File(studentUploadsBaseDir, unreferencedAssetsDirName);
-		if(!unreferencedAssetsFullDir.exists()){
+		if (!unreferencedAssetsFullDir.exists()) {
 			System.err.println("Unreferenced Directory Does Not Exist.");  // the unreferenced directory must exist.
 			return "ERROR";
 		}
 
 		// if the referenced directory does not exist, make it.
 		File referencedAssetsFullDir = new File(studentUploadsBaseDir, referencedAssetsDirName);
-		if(!referencedAssetsFullDir.exists()){
+		if (!referencedAssetsFullDir.exists()) {
 			referencedAssetsFullDir.mkdirs();
 		}
 
@@ -542,14 +543,14 @@ public class AssetManager {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void copy(File src, File dest) throws FileNotFoundException, IOException{
-		if(src.isDirectory()){
-			if(!dest.exists()){
+	public void copy(File src, File dest) throws FileNotFoundException, IOException {
+		if (src.isDirectory()) {
+			if (!dest.exists()) {
 				dest.mkdir();
 			}
 
 			String[] files = src.list();
-			for(int a=0;a<files.length;a++){
+			for (int a=0;a<files.length;a++) {
 				copy(new File(src, files[a]), new File(dest, files[a]));
 			}
 		} else {
@@ -558,7 +559,7 @@ public class AssetManager {
 
 			byte[] buffer = new byte[2048];
 			int len;
-			while((len = in.read(buffer)) > 0){
+			while((len = in.read(buffer)) > 0) {
 				out.write(buffer, 0, len);
 			}
 
@@ -579,9 +580,9 @@ public class AssetManager {
 	 */
 	public static boolean ensureAssetPath(String path, String dirName) {
 		File projectDir = new File(path);
-		if(projectDir.exists()){
+		if (projectDir.exists()) {
 			File assetsDir = new File(projectDir, dirName);
-			if(assetsDir.exists() && assetsDir.isDirectory()){
+			if (assetsDir.exists() && assetsDir.isDirectory()) {
 				return true;
 			} else {
 				return assetsDir.mkdir();
@@ -597,18 +598,18 @@ public class AssetManager {
 	 * @param dirName the directory name 
 	 * @return the disk space usage of the folder
 	 */
-	public static String getSize(String path, String dirName){
-		if(path==null){
+	public static String getSize(String path, String dirName) {
+		if (path==null) {
 			return "No project path specified";
 		} else {
 			File projectDir = new File(path);
-			if(projectDir.exists()){
+			if (projectDir.exists()) {
 				File assetsDir = new File(projectDir, dirName);
-				if(assetsDir.exists() && assetsDir.isDirectory()){
+				if (assetsDir.exists() && assetsDir.isDirectory()) {
 					long total = 0;
 					//get all file sizes and add to total
 					File[] files = assetsDir.listFiles();
-					for(int q=0;q<files.length;q++){
+					for (int q=0;q<files.length;q++) {
 						total += files[q].length();
 					}
 					return String.valueOf(total);
@@ -630,12 +631,12 @@ public class AssetManager {
 	public static String getFolderSize(String folderPath) {
 		String folderSize = "";
 
-		if(folderPath != null) {
+		if (folderPath != null) {
 			//get a handle on the folder
 			File folder = new File(folderPath);
 
 			//make sure the folder exists and is a folder
-			if(folder.exists() && folder.isDirectory()) {
+			if (folder.exists() && folder.isDirectory()) {
 				//get the size of the folder
 				long sizeOfDirectory = FileUtils.sizeOfDirectory(folder);
 
@@ -661,24 +662,25 @@ public class AssetManager {
 	 * @return a string that specifies whether the removal was successful or not
 	 * @throws IOException
 	 */
-	public static String removeAsset(String path, String dirName, String assetFileName) throws IOException{
+	public static String removeAsset(String path, String dirName, String assetFileName) 
+	        throws IOException {
 		String result = "";
 
 		File projectDir = new File(path);
-		if(path==null || !(projectDir.exists()) || !(projectDir.isDirectory())){
+		if (path==null || !(projectDir.exists()) || !(projectDir.isDirectory())) {
 			result = "Bad Request";
 		} else {
 			File assetDir = new File(projectDir, dirName);
-			if(!assetDir.exists() || !assetDir.isDirectory()){
+			if (!assetDir.exists() || !assetDir.isDirectory()) {
 				result = "Bad Request";
 			} else {
-				if(assetFileName==null){
+				if (assetFileName==null) {
 					result = "Bad Request";
 				} else {
 					File assetFile = new File(assetDir, assetFileName);
-					if(assetFile.exists() && assetFile.isFile()){
-						if(SecurityUtils.isAllowedAccess(path, assetFile.getCanonicalPath())) {
-							if(assetFile.delete()){
+					if (assetFile.exists() && assetFile.isFile()) {
+						if (SecurityUtils.isAllowedAccess(path, assetFile.getCanonicalPath())) {
+							if (assetFile.delete()) {
 								result = "Asset " + assetFileName + " successfully deleted from server.";
 							} else {
 								result = "Server Error";
@@ -724,30 +726,30 @@ public class AssetManager {
 	 * @param dirName the name of the folder
 	 * @return a JSONArray string containing the file names 
 	 */
-	public static String getAssetList(String path, String dirName) {
+	public static JSONArray getAssetList(String path, String dirName) {
+	    JSONArray result = null;
 		// if dirname is : separated, get asset list for each dir and return concatenated result
 		String[] dirNames = dirName.split(":");
 		if (dirNames.length > 1) {
-			JSONArray jsonArr = new JSONArray();
+			result = new JSONArray();
 			try {
-				for (int i=0; i<dirNames.length; i++) {
+				for (int i = 0; i < dirNames.length; i++) {
 					String currDirName = dirNames[i];
-					String currAssetList = getAssetListFromFolder(path,currDirName);
+					JSONArray currAssetList = getAssetListFromFolder(path,currDirName);
 					if (!"".equals(currAssetList)) {
 						JSONObject jsonObj = new JSONObject();
 						jsonObj.put("workgroupId", currDirName);
 						jsonObj.put("assets", currAssetList);
-						jsonArr.put(jsonObj);
+						result.put(jsonObj);
 					}
 				}
-				return jsonArr.toString();
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				return "";
+			    e.printStackTrace();
 			}				
 		} else {
-			return getAssetListFromFolder(path, dirName);
+			result = getAssetListFromFolder(path, dirName);
 		}
+		return result;
 	}
 
 	/**
@@ -756,29 +758,33 @@ public class AssetManager {
 	 * @param dirName the folder name
 	 * @return the disk usage of the folder
 	 */
-	public static String getAssetListFromFolder(String path, String dirName) {
+	public static JSONArray getAssetListFromFolder(String path, String dirName) {
+	    JSONArray result = new JSONArray();
 		File projectDir = new File(path);
-		if(projectDir.exists()){
+		if (projectDir.exists()) {
 			File assetsDir = new File(projectDir, dirName);
-			if(assetsDir.exists() && assetsDir.isDirectory()){
+			if (assetsDir.exists() && assetsDir.isDirectory()) {
 				File[] files = assetsDir.listFiles();
 
-				JSONArray fileNames = new JSONArray();
-
-				if(files==null){//no files in this dir
-					return "";
-				} else {
-					for(int v=0;v<files.length;v++){
-						fileNames.put(files[v].getName());
-					}
-					return fileNames.toString();
+				
+				if (files != null) {
+                    for (int v = 0; v < files.length; v++) {
+                        try {
+                            File file = files[v];
+                            String fileName = file.getName();
+                            JSONObject fileObject = new JSONObject();
+                            fileObject.put("fileName", fileName);
+                            long fileSize = file.length();
+                            fileObject.put("fileSize", fileSize);
+                            result.put(fileObject);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
 				}
-			} else {
-				return "";
 			}
-		} else {
-			return "Given project path does not exist";
-		}
+		} 
+		return result;
 	}
 
 	/**
@@ -789,10 +795,10 @@ public class AssetManager {
 	 * @param <code>long</code> size
 	 * @return <code>String</code>
 	 */
-	public static String appropriateSize(long size){
-		if(size>1048576){
+	public static String appropriateSize(long size) {
+		if (size>1048576) {
 			return String.valueOf(Math.round(((size/1024)/1024)*10)/10) + " mb";
-		} else if (size>1024){
+		} else if (size>1024) {
 			return String.valueOf(Math.round((size/1024)*10)/10) + " kb";
 		} else {
 			return String.valueOf(size) + " b";

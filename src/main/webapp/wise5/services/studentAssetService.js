@@ -12,19 +12,19 @@ define(['configService'], function(configService) {
             config.params.command = 'assetList';
             return $http(config).then(angular.bind(this, function(response) {
                 // loop through the assets and make them into JSON object with more details
-                var assets = [];
-                var filenames = response.data;
+                var result = [];
+                var assets = response.data;
                 var config = response.config;
                 var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
                 var runId = ConfigService.getRunId();
                 var workgroupId = ConfigService.getWorkgroupId();
                 var assetBaseURL = studentUploadsBaseURL + '/' + runId + '/' + workgroupId + '/unreferenced/';
-                for (var f = 0; f < filenames.length; f++) {
-                    var filename = filenames[f];
-                    if (filename != '.DS_Store') {
-                        var asset = {};
-                        asset.name = filename;
-                        asset.url = assetBaseURL + filename;
+                for (var a = 0; a < assets.length; a++) {
+                    var asset = assets[a];
+                    var assetFilename = asset.fileName;
+                    if (assetFilename != '.DS_Store') {
+                        asset.name = assetFilename;
+                        asset.url = assetBaseURL + assetFilename;
                         if (this.isImage(asset)) {
                             asset.type = 'image';
                             asset.iconURL = asset.url;
@@ -35,10 +35,10 @@ define(['configService'], function(configService) {
                             asset.type = 'file';
                             asset.iconURL = 'wise5/vle/portfolio/file.png';
                         }
-                        assets.push(asset);
+                        result.push(asset);
                     }
                 }
-                return assets;
+                return result;
             }));
         };
         
@@ -133,6 +133,49 @@ define(['configService'], function(configService) {
                 return copiedAsset;
             }));
         };
+        
+        serviceObject.deleteAsset = function(asset) {
+            
+            var runId = ConfigService.getRunId();
+            var config = {};
+            config.method = 'POST';
+            config.url = ConfigService.getStudentAssetManagerURL();
+            config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+            var params = {};
+            params.command = 'remove';
+            params.type = 'studentAssetManager';
+            params.runId = runId;
+            params.forward = 'assetmanager';
+            params.asset =  asset.name;
+            config.data = $.param(params);
+            
+            return $http(config).then(function() {
+                return asset; 
+            });
+        };
+            
+            /*
+            var remove = function(){
+                var parent = document.getElementById('assetSelect');
+                var ndx = parent.selectedIndex;
+                if(ndx!=-1){
+                    var opt = parent.options[parent.selectedIndex];
+                    var name = opt.value;
+
+                    var success = function(text, xml, o) {
+                        if(text.status==401){
+                            xml.notificationManager.notify(this.getI18NString("student_assets_remove_file_warning"),3, 'uploadMessage', 'notificationDiv');
+                        } else {
+                            parent.removeChild(opt);
+                            o.notificationManager.notify(text, 3, 'uploadMessage', 'notificationDiv');
+
+                            o.checkStudentAssetSizeLimit();
+                        }
+                    };
+                    view.connectionManager.request('POST', 1, view.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'remove', asset: name, cmd: 'studentAssetUpload'}, success, view, success);
+                }
+            };
+            */
         
         return serviceObject;
     }];

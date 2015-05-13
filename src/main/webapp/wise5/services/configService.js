@@ -65,6 +65,10 @@ define([], function() {
             return this.getConfigParam('studentStatusURL');
         };
         
+        serviceObject.getStudentMaxTotalAssetsSize = function() {
+            return this.getConfigParam('studentMaxTotalAssetsSize');
+        };
+        
         serviceObject.getStudentUploadsBaseURL = function() {
             return this.getConfigParam('studentUploadsBaseURL');
         };
