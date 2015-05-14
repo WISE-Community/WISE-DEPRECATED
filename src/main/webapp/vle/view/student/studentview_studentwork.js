@@ -1215,6 +1215,80 @@ View.prototype.updateConstraints = function() {
 	this.updateSequenceStatuses();
 };
 
+/**
+ * Get the time spent on a node id
+ * @param nodeId the node id
+ * @returns the number of seconds spent on the node id
+ */
+View.prototype.getTimeSpentOnNodeId = function(nodeId) {
+    var timeSpentOnNodeId = 0;
+    
+    // get all the node visits for a node id
+    var nodeVisitsByNodeId = this.getState().getNodeVisitsByNodeId(nodeId);
+    
+    if (nodeVisitsByNodeId != null) {
+        
+        // loop through all the node visits
+        for (var n = 0; n < nodeVisitsByNodeId.length; n++) {
+            var nodeVisit = nodeVisitsByNodeId[n];
+            
+            if (nodeVisit != null) {
+                // get the start and end time
+                var visitStartTime = nodeVisit.visitStartTime;
+                var visitEndTime = nodeVisit.visitEndTime;
+                
+                if (visitStartTime != null && visitEndTime != null) {
+                    
+                    // get the time difference
+                    var nodeVisitTimeSpent = visitEndTime - visitStartTime;
+                    
+                    if (nodeVisitTimeSpent != null) {
+                        
+                        // accumulate the total time spent
+                        timeSpentOnNodeId += nodeVisitTimeSpent;
+                    }
+                }
+            }
+        }
+    }
+    
+    // get the current node visit
+    var currentNodeVisit = this.getState().getCurrentNodeVisit();
+    
+    if (currentNodeVisit != null) {
+        if (nodeId === currentNodeVisit.nodeId) {
+            // the current node visit is for the node id we are looking for
+            
+            // get the start and end time
+            var visitStartTime = currentNodeVisit.visitStartTime;
+            var visitEndTime = currentNodeVisit.visitEndTime;
+            
+            /*
+             * we will only add the current node visit time if it does not have
+             * an end time. if it has an end time, it would have already been
+             * added in the for loop above
+             */
+            if (visitEndTime == null) {
+                
+                // get the current time
+                var date = new Date();
+                var currentTime = date.getTime();
+                
+                // find the time the student has spent on the current node visit
+                var currentNodeVisitTime = currentTime - visitStartTime;
+                
+                // add the time to the total
+                timeSpentOnNodeId += currentNodeVisitTime;
+            }
+        }
+    }
+    
+    // get the time spent in seconds
+    timeSpentOnNodeId = Math.floor(timeSpentOnNodeId / 1000);
+    
+    return timeSpentOnNodeId;
+};
+
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_studentwork.js');

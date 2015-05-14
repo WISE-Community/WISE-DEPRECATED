@@ -793,6 +793,105 @@ View.prototype.getOpenNotificationAnnotations = function() {
     return openNotifications;
 };
 
+/**
+ * Create a teacher notification annotation value that will be used
+ * to create an annotation
+ * @param teacherNotification the teacher notification object from
+ * the step content
+ * @return a new teacher notification annotation value that will be
+ * used to create an annotation
+ */
+View.prototype.createTeacherNotificationAnnotationValue = function(teacherNotification, nodeState) {
+    
+    var newTeacherNotificationAnnotationValue = null;
+    
+    if (teacherNotification != null) {
+        // get the values from the teacher notification
+        var id = teacherNotification.id;
+        var message = teacherNotification.message;
+        var notificationLevel = teacherNotification.notificationLevel;
+        var dismissCode = teacherNotification.dismissCode;
+        var type = teacherNotification.type;
+        var nodeStateId = nodeState.timestamp;
+        
+        /*
+         * create a teacher notification annotation value object
+         * that will become active
+         */
+        newTeacherNotificationAnnotationValue = {};
+        newTeacherNotificationAnnotationValue.id = id;
+        newTeacherNotificationAnnotationValue.message = message;
+        newTeacherNotificationAnnotationValue.notificationLevel = notificationLevel;
+        newTeacherNotificationAnnotationValue.dismissCode = dismissCode;
+        newTeacherNotificationAnnotationValue.type = type;
+        newTeacherNotificationAnnotationValue.nodeStateId = nodeStateId;
+    }
+    
+    return newTeacherNotificationAnnotationValue;
+};
+
+/**
+ * Get the teacher notification values by node id and teacher notification id
+ * @param nodeId the node id
+ * @param teacherNotificationId the teacher notification id
+ * @returns an array of annotation values
+ */
+View.prototype.getTeacherNotificationsByNodeIdAndId = function(nodeId, teacherNotificationId) {
+    
+    var values = [];
+    
+    //get the local copy of the annotations
+    var annotations = this.getAnnotations();
+    
+    if (annotations != null) {
+        // get the notification annotations
+        var notificationAnnotations = annotations.getAnnotationsByType('notification');
+        
+        if (notificationAnnotations != null) {
+            
+            // loop through all the notification annotations
+            for (var n = 0; n < notificationAnnotations.length; n++) {
+                
+                // get a notification annotation
+                var notificationAnnotation = notificationAnnotations[n];
+                
+                if (notificationAnnotation != null) {
+                    //var isOpen = false;
+                    
+                    var notificationAnnotationNodeId = notificationAnnotation.nodeId;
+                    
+                    if (notificationAnnotationNodeId != null && 
+                            nodeId === notificationAnnotationNodeId) {
+                        
+                        // get the value of the notification annotation
+                        var value = notificationAnnotation.value;
+                        
+                        if (value != null) {
+                            
+                            // loop through all the values in the notification annotation
+                            for (var v = 0; v < value.length; v++) {
+                                // get a value element
+                                var valueElement = value[v];
+                                
+                                if (valueElement != null) {
+                                    var valueElementId = valueElement.id;
+                                    
+                                    if (teacherNotificationId === valueElementId) {
+                                        // the teacher notification id matches the one we want
+                                        values.push(valueElement);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    return values;
+};
+
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_annotation.js');

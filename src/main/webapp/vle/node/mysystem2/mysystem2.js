@@ -253,6 +253,7 @@ Mysystem2.prototype.save = function(isSubmit) {
   } else {
     this.mostRecentSavedState.response = response;
     this.mostRecentSavedState.isSubmit = isSubmit;
+    state = this.mostRecentSavedState;
   }
 
   if (response != null) {
@@ -273,11 +274,11 @@ Mysystem2.prototype.save = function(isSubmit) {
  * @param state the node state
  * @param response the response that is saved in the node state
  */
-Mysystem2.prototype.processTeacherNotifications = function(nodeVisit, state, response) {
+Mysystem2.prototype.processTeacherNotifications = function(nodeVisit, nodeState, response) {
     
-    if (nodeVisit != null && state != null && response != null) {
+    if (nodeVisit != null && nodeState != null && response != null) {
         
-        if (state.isSubmit) {
+        if (nodeState.isSubmit) {
             // the student is submitting their work
             
             // get the step content
@@ -341,30 +342,95 @@ Mysystem2.prototype.processTeacherNotifications = function(nodeVisit, state, res
                                     if (score != null && score.toString().match("[" + teacherNotificationScore + "]")) {
                                         // the score matches the score we are looking for
                                         
-                                        // get the other values for the teacher notification
-                                        var id = teacherNotification.id;
-                                        var message = teacherNotification.message;
-                                        var notificationLevel = teacherNotification.notificationLevel;
-                                        var dismissCode = teacherNotification.dismissCode;
-                                        var nodeStateId = state.timestamp;
-                                        
                                         /*
-                                         * create a teacher notification object that will
-                                         * become active
+                                         * create a new notification annotation and associate it
+                                         * with the current node visit
                                          */
-                                        var newTeacherNotification = {};
-                                        newTeacherNotification.id = id;
+                                        var newTeacherNotification = this.view.createTeacherNotificationAnnotationValue(teacherNotification, nodeState);
                                         newTeacherNotification.attemptNumber = attemptNumber;
                                         newTeacherNotification.score = score;
-                                        newTeacherNotification.message = message;
-                                        newTeacherNotification.notificationLevel = notificationLevel;
-                                        newTeacherNotification.dismissCode = dismissCode;
-                                        newTeacherNotification.nodeStateId = nodeStateId;
+                                        this.view.addNotificationAnnotation(nodeVisit, newTeacherNotification);
+                                    }
+                                }
+                            }
+                        } else if (teacherNotificationType === 'minTotalTimeSpentOnStep') {
+                            var timeSpent = this.view.getTimeSpentOnNodeId(this.node.id);
+                            
+                            var minTime = teacherNotification.minTime;
+                            var onlyActivateOnce = teacherNotification.onlyActivateOnce;
+                            
+                            if (minTime != null) {
+                                if (timeSpent < minTime) {
+                                    /*
+                                     * the student has spent less than the minimum time
+                                     * so we will create a teacher notification
+                                     */
+                                    
+                                    var activate = true;
+                                    
+                                    if (onlyActivateOnce) {
+                                        // we should only activate this teacher notification once
+                                        
+                                        // get all the annotations for this node id and teacher notification id
+                                        var teacherNotificationValues = this.view.getTeacherNotificationsByNodeIdAndId(this.node.id, teacherNotification.id);
+                                        
+                                        if (teacherNotificationValues != null && teacherNotificationValues.length > 0) {
+                                            /*
+                                             * we have activated this teacher notification previously
+                                             * so we will not activate it again
+                                             */
+                                            activate = false;
+                                        }
+                                    }
+                                    
+                                    if (activate) {
+                                        /*
+                                         * create a new notification annotation and associate it
+                                         * with the current node visit
+                                         */
+                                        var newTeacherNotification = this.view.createTeacherNotificationAnnotationValue(teacherNotification, nodeState);
+                                        newTeacherNotification.timeSpent = timeSpent;
+                                        newTeacherNotification.minTime = minTime;
+                                        this.view.addNotificationAnnotation(nodeVisit, newTeacherNotification);
+                                    }
+                                }
+                            }
+                        } else if (teacherNotificationType === 'maxTotalTimeSpentOnStep') {
+                            var timeSpent = this.view.getTimeSpentOnNodeId(this.node.id);
+                            
+                            var maxTime = teacherNotification.maxTime;
+                            var onlyActivateOnce = teacherNotification.onlyActivateOnce;
+                            
+                            if (maxTime != null) {
+                                if (timeSpent > maxTime) {
+                                    // the student has spent more than the maximum time
+                                    
+                                    var activate = true;
+                                    
+                                    if (onlyActivateOnce) {
+                                        // we should only activate this teacher notification once
+                                        
+                                        // get all the annotations for this node id and teacher notification id
+                                        var teacherNotificationValues = this.view.getTeacherNotificationsByNodeIdAndId(this.node.id, teacherNotification.id);
+                                        
+                                        if (teacherNotificationValues != null && teacherNotificationValues.length > 0) {
+                                            /*
+                                             * we have activated this teacher notification previously
+                                             * so we will not activate it again
+                                             */
+                                            activate = false;
+                                        }
+                                    }
+                                    
+                                    if (activate) {
                                         
                                         /*
                                          * create a new notification annotation and associate it
                                          * with the current node visit
                                          */
+                                        var newTeacherNotification = this.view.createTeacherNotificationAnnotationValue(teacherNotification, nodeState);
+                                        newTeacherNotification.timeSpent = timeSpent;
+                                        newTeacherNotification.maxTime = maxTime;
                                         this.view.addNotificationAnnotation(nodeVisit, newTeacherNotification);
                                     }
                                 }
