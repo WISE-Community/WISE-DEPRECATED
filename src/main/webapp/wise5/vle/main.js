@@ -34,6 +34,8 @@ require.config({
         'openResponseService': 'nodes/openResponse/openResponseService',
         'outsideURLController': 'nodes/outsideURL/outsideURLController',
         'outsideURLService': 'nodes/outsideURL/outsideURLService',
+        'photoBoothController': 'nodes/photoBooth/photoBoothController',
+        'photoBoothService': 'nodes/photoBooth/photoBoothService',
         'planningController': 'nodes/planning/planningController',
         'planningService': 'nodes/planning/planningService',
         'portfolioController': 'vle/portfolio/portfolioController',

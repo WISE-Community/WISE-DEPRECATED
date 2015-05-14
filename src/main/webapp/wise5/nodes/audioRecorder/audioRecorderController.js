@@ -64,7 +64,7 @@ define(['app'], function(app) {
                 var mp3file = new File([blob], mp3Name, {
                     lastModified: now, // optional - default = now
                     type: 'audio/mp3' // optional - default = ''
-                })
+                });
                 this.uploadAudioAsset(mp3file).then(function() {
                     $rootScope.$broadcast('studentAssetsUpdated');
                 });
@@ -73,8 +73,8 @@ define(['app'], function(app) {
             this.recorder.clear();
         };
         
-        this.uploadAudioAsset = function(mp3blob) {
-            return StudentAssetService.uploadAssets([mp3blob]);
+        this.uploadAudioAsset = function(mp3File) {
+            return StudentAssetService.uploadAssets([mp3File]);
         };
         
         /**
@@ -122,7 +122,7 @@ define(['app'], function(app) {
                     // get the latest node state
                     var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
                     
-                    // popualte the student work into this node
+                    // populate the student work into this node
                     this.setStudentWork(nodeState);
                     
                     // import any work if necessary

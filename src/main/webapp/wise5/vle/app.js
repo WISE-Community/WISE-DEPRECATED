@@ -22,6 +22,7 @@ define([
         'nodeService',
         'openResponseService',
         'outsideURLService',
+        'photoBoothService',
         'portfolioService',
         'projectService',
         'questionnaireService',
@@ -54,6 +55,7 @@ define([
                 nodeService,
                 openResponseService,
                 outsideURLService,
+                photoBoothService,
                 portfolioService,
                 projectService,
                 questionnaireService,
@@ -93,6 +95,7 @@ define([
     // node services
     app.factory('AudioRecorderService', audioRecorderService);
     app.factory('MultipleChoiceService', multipleChoiceService);
+    app.factory('PhotoBoothService', photoBoothService);
     app.factory('OpenResponseService', openResponseService);
     app.factory('OutsideURLService', outsideURLService);
     app.factory('QuestionnaireService', questionnaireService);
@@ -172,6 +175,7 @@ define([
                             nodeController: app.loadController('nodeController'),
                             openResponseController: app.loadController('openResponseController'),
                             outsideURLController: app.loadController('outsideURLController'),
+                            photoBoothController: app.loadController('photoBoothController'),
                             planningController: app.loadController('planningController'),
                             questionnaireController: app.loadController('questionnaireController')
                         }

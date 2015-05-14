@@ -1,0 +1,51 @@
+
+<style>
+    body{font-family:Sans-Serif;}
+    canvas{position:absolute; left: -9999em;}
+    #button{background-color: Red; color: #fff; padding: 3px 10px; cursor:pointer; display: inline-block; border-radius: 5px;}
+    #sidebar{float:right; width: 45%;}
+    #main{float:left; width: 45%;}
+    #imageToForm{width:100%;}
+    #preview{margin: 20px 0;}
+    label{display: block;}
+    
+    #video {
+        transform: rotateY(180deg); /* flip on y-axis */
+        -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+        -moz-transform:rotateY(180deg); /* Firefox */
+    }
+</style>
+
+<div ng-controller='PhotoBoothController as photoBoothController'>
+<div id='prompt'>prompt: {{photoBoothController.nodeContent.prompt}}</div>
+<div id="main">
+        <video id="video"></video>
+        <h1>Instructions</h1>
+        <ul>
+            <li>Above: Live video stream from your computer's camera.</li>
+            <li>Press "Camera button" (left in RED) until you are happy with the photo captured.</li>
+            <li>Copy and paste the "big text string" into the address bar of your browser.</li>
+            <li>What do you see?</li>
+            <li>What applications can you imagine for this UI?</li>
+        </ul>
+
+    </div>
+    
+    <div id="sidebar">
+        <a id="button" ng-click='photoBoothController.takePicture()'>Take Picture!</a>
+
+        <!-- target for the canvas-->
+        <div id="canvasHolder"></div>
+
+        <!--preview image captured from canvas-->
+        <img id="preview" src="wise5/nodes/photoBooth/placeholder.png" width="160" height="120" />
+
+        <label>base64 image:</label>
+        <input id="imageToForm" type="text" />
+    </div>
+
+    <script>
+        var video;
+        var dataURL;
+    </script>
+</div>
