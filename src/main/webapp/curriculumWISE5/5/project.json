@@ -258,6 +258,15 @@
             "r": 20
         },
         {
+            "id": "node29",
+            "type": "PhotoBooth",
+            "title": "Photo Booth",
+            "src": "node29.json",
+            "x": 750,
+            "y": 240,
+            "r": 20
+        },
+        {
             "id": "group0",
             "type": "group",
             "title": "My First WISE5 Project",
@@ -325,7 +334,8 @@
                 "node25",
                 "node26",
                 "node27",
-                "node28"
+                "node28",
+                "node29"
             ],
             "x": 250,
             "y": 140,
@@ -472,6 +482,11 @@
             "id": "transition28",
             "from": "node27",
             "to": "node28"
+        },
+        {
+            "id": "transition29",
+            "from": "node28",
+            "to": "node29"
         }
     ],
     "startGroupId": "group0",
