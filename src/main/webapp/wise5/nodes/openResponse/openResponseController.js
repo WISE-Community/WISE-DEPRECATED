@@ -352,7 +352,7 @@ define(['app'], function(app) {
                 var cRaterItemId = cRaterSettings.cRaterItemId;
                 var cRaterRequestType = 'scoring';
                 var cRaterResponseId = new Date().getTime();
-                var studentData = nodeState.response;
+                var studentData = nodeState.studentData;
                 var nodeState = nodeState;
                 var nodeVisit = nodeVisit;
                 CRaterService
@@ -563,9 +563,9 @@ define(['app'], function(app) {
                 // if student already has work, prepend it
                 var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
                 if (latestNodeState != null) {
-                    var latestResponse = latestNodeState.response;
+                    var latestResponse = latestNodeState.studentData;
                     if (latestResponse != null) {
-                        populatedNodeState.response = latestResponse + populatedNodeState.response;
+                        populatedNodeState.studentData = latestResponse + populatedNodeState.studentData;
                     }
                 }
                 
@@ -580,15 +580,15 @@ define(['app'], function(app) {
                         
                         var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
                         
-                        if (this.isDirty) {
+                        if (this.isDirty && this.studentResponse != null) {
                             // if student has edited but not saved yet, append student asset to the unsaved work
-                            nodeState.response = this.studentResponse + copiedAssetImg;
-                        } else if (latestNodeState != null) {
+                            nodeState.studentData = this.studentResponse + copiedAssetImg;
+                        } else if (latestNodeState != null && latestNodeState.studentData != null) {
                             // if student already has saved work, prepend it
-                            nodeState.response = latestNodeState.response + copiedAssetImg;
+                            nodeState.studentData = latestNodeState.studentData + copiedAssetImg;
                         } else {
                             // otherwise, just use the asset image
-                            nodeState.response = copiedAssetImg;
+                            nodeState.studentData = copiedAssetImg;
                         }
                         this.setStudentWork(nodeState);
                         this.studentResponseChanged()
