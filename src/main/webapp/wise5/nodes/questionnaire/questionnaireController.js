@@ -217,6 +217,9 @@ define(['app'], function(app) {
          */
         this.getPartTypeHTML = function(partType) {
             
+            // get the part type in camel case
+            partType = NodeService.toCamelCase(partType);
+            
             var partTypeHTML = 'wise5/nodes/' + partType + '/index.html';
             
             return partTypeHTML;

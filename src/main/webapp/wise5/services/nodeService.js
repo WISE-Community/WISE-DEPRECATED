@@ -194,6 +194,59 @@ define(['configService', 'studentDataService'], function(configService, studentD
             return nodeState;
         };
         
+        
+        /**
+         * Get the node type in camel case
+         * @param nodeType the node type e.g. OpenResponse
+         * @return the node type in camel case
+         * e.g.
+         * openResponse
+         */
+        serviceObject.toCamelCase = function(nodeType) {
+            var nodeTypeCamelCased = null;
+            
+            if (nodeType != null && nodeType.length > 0) {
+                
+                // get the first character
+                var firstChar = nodeType.charAt(0);
+                
+                if(firstChar != null) {
+                    
+                    // make the first character lower case
+                    var firstCharLowerCase = firstChar.toLowerCase();
+                    
+                    if (firstCharLowerCase != null) {
+                        
+                        /*
+                         * replace the first character with the lower case 
+                         * character
+                         */
+                        nodeTypeCamelCased = firstCharLowerCase + nodeType.substr(1);
+                    }
+                }
+            }
+            
+            return nodeTypeCamelCased;
+        };
+        
+        /**
+         * Check if the string is in all uppercase
+         * @param str the string to check
+         * @return whether the string is in all uppercase
+         */
+        serviceObject.isStringUpperCase = function(str) {
+            var result = false;
+            
+            if (str != null) {
+                if (str === str.toUpperCase()) {
+                    // the string is in all uppercase
+                    result = true;
+                }
+            }
+            
+            return result;
+        };
+        
         return serviceObject;
     }];
     

@@ -30,7 +30,7 @@ define(['app'], function(app) {
                     
                     if (nodeType != 'group') {
                         
-                        if (this.isStringUpperCase(nodeType)) {
+                        if (NodeService.isStringUpperCase(nodeType)) {
                             // the node type is all uppercase e.g. HTML
                             
                             // get the node type in lower case e.g. html
@@ -49,7 +49,7 @@ define(['app'], function(app) {
                              */
                             
                             // get the node type in camel case e.g. openResponse
-                            var nodeTypeCamelCased = this.toCamelCase(nodeType);
+                            var nodeTypeCamelCased = NodeService.toCamelCase(nodeType);
                             
                             if (nodeTypeCamelCased != null) {
                                 // set the node html path e.g. wise5/nodes/openResponse/index.html
@@ -58,58 +58,6 @@ define(['app'], function(app) {
                         }
                     }
                 }
-            };
-            
-            /**
-             * Get the node type in camel case
-             * @param nodeType the node type e.g. OpenResponse
-             * @return the node type in camel case
-             * e.g.
-             * openResponse
-             */
-            this.toCamelCase = function(nodeType) {
-                var nodeTypeCamelCased = null;
-                
-                if (nodeType != null && nodeType.length > 0) {
-                    
-                    // get the first character
-                    var firstChar = nodeType.charAt(0);
-                    
-                    if(firstChar != null) {
-                        
-                        // make the first character lower case
-                        var firstCharLowerCase = firstChar.toLowerCase();
-                        
-                        if (firstCharLowerCase != null) {
-                            
-                            /*
-                             * replace the first character with the lower case 
-                             * character
-                             */
-                            nodeTypeCamelCased = firstCharLowerCase + nodeType.substr(1);
-                        }
-                    }
-                }
-                
-                return nodeTypeCamelCased;
-            };
-            
-            /**
-             * Check if the string is in all uppercase
-             * @param str the string to check
-             * @return whether the string is in all uppercase
-             */
-            this.isStringUpperCase = function(str) {
-                var result = false;
-                
-                if (str != null) {
-                    if (str === str.toUpperCase()) {
-                        // the string is in all uppercase
-                        result = true;
-                    }
-                }
-                
-                return result;
             };
             
             this.nodeLoaded = function(nodeId) {

@@ -4,12 +4,12 @@
     "parts": [
         {
             "id": "1ypeBUXgfv",
-            "partType": "openResponse",
+            "partType": "OpenResponse",
             "prompt": "What is your favorite color?"
         },
         {
             "id": "GsUnnAlJnB",
-            "partType": "multipleChoice",
+            "partType": "MultipleChoice",
             "prompt": "Who lives in a pineapple under the sea?",
             "choiceType": "radio",
             "correctChoice": "78de39me19",
@@ -33,7 +33,7 @@
         },
         {
             "id": "7gxet7gj35",
-            "partType": "outsideURL",
+            "partType": "OutsideURL",
             "url": "http://www.berkeley.edu/"
         }
     ],
