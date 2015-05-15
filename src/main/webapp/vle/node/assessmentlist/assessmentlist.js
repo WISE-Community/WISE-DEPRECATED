@@ -725,6 +725,12 @@ ASSESSMENTLIST.prototype.save = function(isSubmit) {
 		$('#saveConfirmation').html(confMSG).delay(5000).fadeOut('medium');
 
 		
+		// get the current node visit
+		var nodeVisit = this.view.getState().getCurrentNodeVisit();
+		
+		// process any teacher notifications if necessary
+		this.processTeacherNotifications(nodeVisit, alState);
+		
 		this.stateChanged = false;
 	}
 };
@@ -1179,6 +1185,56 @@ ASSESSMENTLIST.prototype.processTagMaps = function() {
 	
 	return returnObject;
 };
+
+/**
+ * Process any teacher notifications if necessary
+ * @param nodeVisit the node visit
+ * @param state the node state
+ */
+ASSESSMENTLIST.prototype.processTeacherNotifications = function(nodeVisit, nodeState) {
+    
+    if (nodeVisit != null && nodeState != null) {
+        
+        if (nodeState.isSubmit) {
+            // the student is submitting their work
+            
+            // get the step content
+            var stepContent = this.node.content.getContentJSON()
+            
+            // get teacher notifications from the step content
+            var teacherNotifications = stepContent.teacherNotifications;
+                
+            if (teacherNotifications != null) {
+                
+                /*
+                 * loop through all the teacher notifications for this step
+                 * and check if we need to activate any of them
+                 */
+                for (var t = 0; t < teacherNotifications.length; t++) {
+                    // get a teacher notification
+                    var teacherNotification = teacherNotifications[t];
+                    
+                    if (teacherNotification != null) {
+                        var teacherNotificationType = teacherNotification.type;
+                        
+                        if (teacherNotificationType === 'minTotalTimeSpentOnStep') {
+                            
+                            this.view.handleMinTotalTimeSpentOnStepTeacherNotification(
+                                    this.node.id, teacherNotification, nodeVisit, nodeState);
+                            
+                        } else if (teacherNotificationType === 'maxTotalTimeSpentOnStep') {
+                            
+                            this.view.handleMaxTotalTimeSpentOnStepTeacherNotification(
+                                    this.node.id, teacherNotification, nodeVisit, nodeState);
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+};
+
 
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){

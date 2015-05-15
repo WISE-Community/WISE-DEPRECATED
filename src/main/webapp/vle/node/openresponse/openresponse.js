@@ -659,6 +659,12 @@ OPENRESPONSE.prototype.processTeacherNotifications = function(nodeVisit, orState
                                 this.view.addNotificationAnnotation(nodeVisit, newTeacherNotification);
                             }
                         }
+                    } else if (teacherNotificationType === 'minTotalTimeSpentOnStep') {
+                        this.view.handleMinTotalTimeSpentOnStepTeacherNotification(
+                                this.node.id, teacherNotification, nodeVisit, orState);
+                    } else if (teacherNotificationType === 'maxTotalTimeSpentOnStep') {
+                        this.view.handleMaxTotalTimeSpentOnStepTeacherNotification(
+                                this.node.id, teacherNotification, nodeVisit, orState);
                     }
                 }
             }

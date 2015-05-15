@@ -892,6 +892,114 @@ View.prototype.getTeacherNotificationsByNodeIdAndId = function(nodeId, teacherNo
     return values;
 };
 
+/**
+ * Determine if we need to activate a minTotalTimeSpentOnStep teacher
+ * notification
+ * @param nodeId the node id
+ * @param teacherNotification the teacher notification from the step content
+ * @param nodeVisit the node visit
+ * @param nodeState the node state
+ */
+View.prototype.handleMinTotalTimeSpentOnStepTeacherNotification = function(nodeId, teacherNotification, nodeVisit, nodeState) {
+    
+    if (nodeId != null && teacherNotification != null && nodeState != null && nodeVisit != null) {
+        var timeSpent = this.getTimeSpentOnNodeId(nodeId);
+        
+        var minTime = teacherNotification.minTime;
+        var onlyActivateOnce = teacherNotification.onlyActivateOnce;
+        
+        if (minTime != null) {
+            if (timeSpent < minTime) {
+                /*
+                 * the student has spent less than the minimum time
+                 * so we will create a teacher notification
+                 */
+                
+                var activate = true;
+                
+                if (onlyActivateOnce) {
+                    // we should only activate this teacher notification once
+                    
+                    // get all the annotations for this node id and teacher notification id
+                    var teacherNotificationValues = this.getTeacherNotificationsByNodeIdAndId(nodeId, teacherNotification.id);
+                    
+                    if (teacherNotificationValues != null && teacherNotificationValues.length > 0) {
+                        /*
+                         * we have activated this teacher notification previously
+                         * so we will not activate it again
+                         */
+                        activate = false;
+                    }
+                }
+                
+                if (activate) {
+                    /*
+                     * create a new notification annotation and associate it
+                     * with the current node visit
+                     */
+                    var newTeacherNotification = this.createTeacherNotificationAnnotationValue(teacherNotification, nodeState);
+                    newTeacherNotification.timeSpent = timeSpent;
+                    newTeacherNotification.minTime = minTime;
+                    this.addNotificationAnnotation(nodeVisit, newTeacherNotification);
+                }
+            }
+        }
+    }
+};
+
+/**
+ * Determine if we need to activate a maxTotalTimeSpentOnStep teacher
+ * notification
+ * @param nodeId the node id
+ * @param teacherNotification the teacher notification from the step content
+ * @param nodeVisit the node visit
+ * @param nodeState the node state
+ */
+View.prototype.handleMaxTotalTimeSpentOnStepTeacherNotification = function(nodeId, teacherNotification, nodeVisit, nodeState) {
+    
+    if (nodeId != null && teacherNotification != null && nodeState != null && nodeVisit != null) {
+        var timeSpent = this.getTimeSpentOnNodeId(nodeId);
+        
+        var maxTime = teacherNotification.maxTime;
+        var onlyActivateOnce = teacherNotification.onlyActivateOnce;
+        
+        if (maxTime != null) {
+            if (timeSpent > maxTime) {
+                // the student has spent more than the maximum time
+                
+                var activate = true;
+                
+                if (onlyActivateOnce) {
+                    // we should only activate this teacher notification once
+                    
+                    // get all the annotations for this node id and teacher notification id
+                    var teacherNotificationValues = this.getTeacherNotificationsByNodeIdAndId(nodeId, teacherNotification.id);
+                    
+                    if (teacherNotificationValues != null && teacherNotificationValues.length > 0) {
+                        /*
+                         * we have activated this teacher notification previously
+                         * so we will not activate it again
+                         */
+                        activate = false;
+                    }
+                }
+                
+                if (activate) {
+                    
+                    /*
+                     * create a new notification annotation and associate it
+                     * with the current node visit
+                     */
+                    var newTeacherNotification = this.createTeacherNotificationAnnotationValue(teacherNotification, nodeState);
+                    newTeacherNotification.timeSpent = timeSpent;
+                    newTeacherNotification.maxTime = maxTime;
+                    this.addNotificationAnnotation(nodeVisit, newTeacherNotification);
+                }
+            }
+        }
+    }
+}
+
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/student/studentview_annotation.js');

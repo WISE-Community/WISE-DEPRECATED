@@ -354,87 +354,15 @@ Mysystem2.prototype.processTeacherNotifications = function(nodeVisit, nodeState,
                                 }
                             }
                         } else if (teacherNotificationType === 'minTotalTimeSpentOnStep') {
-                            var timeSpent = this.view.getTimeSpentOnNodeId(this.node.id);
                             
-                            var minTime = teacherNotification.minTime;
-                            var onlyActivateOnce = teacherNotification.onlyActivateOnce;
-                            
-                            if (minTime != null) {
-                                if (timeSpent < minTime) {
-                                    /*
-                                     * the student has spent less than the minimum time
-                                     * so we will create a teacher notification
-                                     */
-                                    
-                                    var activate = true;
-                                    
-                                    if (onlyActivateOnce) {
-                                        // we should only activate this teacher notification once
-                                        
-                                        // get all the annotations for this node id and teacher notification id
-                                        var teacherNotificationValues = this.view.getTeacherNotificationsByNodeIdAndId(this.node.id, teacherNotification.id);
-                                        
-                                        if (teacherNotificationValues != null && teacherNotificationValues.length > 0) {
-                                            /*
-                                             * we have activated this teacher notification previously
-                                             * so we will not activate it again
-                                             */
-                                            activate = false;
-                                        }
-                                    }
-                                    
-                                    if (activate) {
-                                        /*
-                                         * create a new notification annotation and associate it
-                                         * with the current node visit
-                                         */
-                                        var newTeacherNotification = this.view.createTeacherNotificationAnnotationValue(teacherNotification, nodeState);
-                                        newTeacherNotification.timeSpent = timeSpent;
-                                        newTeacherNotification.minTime = minTime;
-                                        this.view.addNotificationAnnotation(nodeVisit, newTeacherNotification);
-                                    }
-                                }
-                            }
+                            this.view.handleMinTotalTimeSpentOnStepTeacherNotification(
+                                    this.node.id, teacherNotification, nodeVisit, nodeState);
+
                         } else if (teacherNotificationType === 'maxTotalTimeSpentOnStep') {
-                            var timeSpent = this.view.getTimeSpentOnNodeId(this.node.id);
                             
-                            var maxTime = teacherNotification.maxTime;
-                            var onlyActivateOnce = teacherNotification.onlyActivateOnce;
+                            this.view.handleMaxTotalTimeSpentOnStepTeacherNotification(
+                                    this.node.id, teacherNotification, nodeVisit, nodeState);
                             
-                            if (maxTime != null) {
-                                if (timeSpent > maxTime) {
-                                    // the student has spent more than the maximum time
-                                    
-                                    var activate = true;
-                                    
-                                    if (onlyActivateOnce) {
-                                        // we should only activate this teacher notification once
-                                        
-                                        // get all the annotations for this node id and teacher notification id
-                                        var teacherNotificationValues = this.view.getTeacherNotificationsByNodeIdAndId(this.node.id, teacherNotification.id);
-                                        
-                                        if (teacherNotificationValues != null && teacherNotificationValues.length > 0) {
-                                            /*
-                                             * we have activated this teacher notification previously
-                                             * so we will not activate it again
-                                             */
-                                            activate = false;
-                                        }
-                                    }
-                                    
-                                    if (activate) {
-                                        
-                                        /*
-                                         * create a new notification annotation and associate it
-                                         * with the current node visit
-                                         */
-                                        var newTeacherNotification = this.view.createTeacherNotificationAnnotationValue(teacherNotification, nodeState);
-                                        newTeacherNotification.timeSpent = timeSpent;
-                                        newTeacherNotification.maxTime = maxTime;
-                                        this.view.addNotificationAnnotation(nodeVisit, newTeacherNotification);
-                                    }
-                                }
-                            }
                         }
                     }
                 }
