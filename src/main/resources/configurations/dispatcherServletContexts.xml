@@ -109,6 +109,14 @@
 		<property name="defaultEncoding" value="UTF-8" />
 		<property name="fallbackToSystemLocale" value="false" />
 	</bean>
+	
+	<bean class="org.springframework.web.context.support.ServletContextAttributeExporter">
+        <property name="attributes">
+            <map>
+                <entry key="google_analytics_id" value="${google_analytics_id}" />
+            </map>
+        </property>
+    </bean>
 
 	<!-- The real exceptions are logged to the tomcat/logs/catalina.out file. 
 		Look there if you've got a problem. -->
