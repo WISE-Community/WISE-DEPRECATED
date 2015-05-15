@@ -47,7 +47,6 @@
 				</div>
 				<div style="clear:both; padding:0;"></div>
 				<c:if test="${!empty(applicationScope.google_analytics_id)}">
-				    hi
 				    <script>
 				    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 			             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -58,7 +57,6 @@
 			         ga('send', 'pageview');
 
 			         </script>
-			         bye
 				</c:if>
 	 		</div>
 		</div>
