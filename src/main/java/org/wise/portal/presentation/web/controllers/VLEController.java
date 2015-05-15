@@ -71,8 +71,16 @@ public class VLEController {
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
-    	Long runId = Long.parseLong(request.getParameter(RUNID));
-		Run run = this.runService.retrieveById(runId);
+	    String runIdString = request.getParameter(RUNID);
+	    
+	    Long runId = null;
+        Run run = null;
+	    
+	    if (runIdString != null) {
+	        // get the run
+	        runId = Long.parseLong(runIdString);
+	        run = this.runService.retrieveById(runId);
+	    }
 		
 		String action = request.getParameter("action");
 		if (action != null) {
@@ -86,6 +94,9 @@ public class VLEController {
 				// shouldn't get here
 				throw new RuntimeException("should not get here");
 			}
+		} else if(run == null) {
+		    // the run id was not provided so we will launch the preview project
+		    return handleLaunchPreviewVLE(request);
 		} else {
 			return handleLaunchVLE(request, run);
 		}
@@ -194,4 +205,24 @@ public class VLEController {
 		    return modelAndView;
 		}
 	}
+	
+    /**
+     * Launch the preview project
+     * @param request the http request
+     * @return the view to launch the vle in preview mode
+     */
+    private ModelAndView handleLaunchPreviewVLE(HttpServletRequest request) {
+        
+        // get the project id
+        String projectId = request.getParameter("projectId");
+        
+        // get the vle config url
+        String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+        String vleConfigUrl = wiseBaseURL + "/request/info.html?projectId=" + projectId + "&action=getVLEConfig";
+        
+        // set the view to the student vle
+        ModelAndView modelAndView = new ModelAndView("student");
+        modelAndView.addObject("vleConfigUrl", vleConfigUrl);
+        return modelAndView;
+    }
 }

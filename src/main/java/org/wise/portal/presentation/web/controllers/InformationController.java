@@ -700,6 +700,10 @@ public class InformationController {
 				}
 			}
 			
+			if (requester == null) {
+			    requester = "preview";
+			}
+			
 			config.put("contextPath", contextPath);
 			config.put("mode", requester);
 			config.put("projectId", projectIdStr);

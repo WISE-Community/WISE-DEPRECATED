@@ -56,7 +56,7 @@ define(['app'],
             $state.go('root.vle', {nodeId:nodeId});
         }));
         
-        $scope.$on('nodeVisitsChanged', angular.bind(this, function() {
+        $scope.$on('studentDataChanged', angular.bind(this, function() {
             StudentDataService.updateNodeStatuses();
         }));
         

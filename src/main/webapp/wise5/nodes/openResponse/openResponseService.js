@@ -28,7 +28,7 @@ define(['nodeService'], function(nodeService) {
                 var wordCount = 0;
                 
                 if (latestNodeState != null) {
-                    var response = latestNodeState.response;
+                    var response = latestNodeState.studentData;
                     
                     if (response != null) {
                         wordCount = this.getWordCount(response);
@@ -64,7 +64,7 @@ define(['nodeService'], function(nodeService) {
             var studentWorkAsHTML = null;
             
             if (nodeState != null) {
-                var response = nodeState.response;
+                var response = nodeState.studentData;
                 
                 if (response != null) {
                     studentWorkAsHTML = '<p>' + response + '</p>';
@@ -81,9 +81,9 @@ define(['nodeService'], function(nodeService) {
                 nodeState = StudentDataService.createNodeState();
                 
                 if (otherNodeType === 'OpenResponse') {
-                    nodeState.response = nodeStateFromOtherNode.response;
+                    nodeState.studentData = nodeStateFromOtherNode.studentData;
                 } else if (otherNodeType === 'Planning') {
-                    nodeState.response = JSON.stringify(nodeStateFromOtherNode.studentNodes);
+                    nodeState.studentData = JSON.stringify(nodeStateFromOtherNode.studentNodes);
                 } 
             }
             

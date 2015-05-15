@@ -1,7 +1,17 @@
 define(['configService', 'projectService'], function(configService, projectService) {
 
-    var service = ['$http', '$q', '$rootScope', 'ConfigService', 'ProjectService',
-                                    function($http, $q, $rootScope, ConfigService, ProjectService) {
+    var service = ['$http', 
+                   '$injector', 
+                   '$q', 
+                   '$rootScope', 
+                   'ConfigService', 
+                   'ProjectService',
+                       function($http, 
+                               $injector, 
+                               $q, 
+                               $rootScope, 
+                               ConfigService, 
+                               ProjectService) {
         var serviceObject = {};
         
         serviceObject.studentData = null;
@@ -93,56 +103,135 @@ define(['configService', 'projectService'], function(configService, projectServi
             return this.getNodeVisitAtIndex(-1);
         };
         
+        /**
+         * Retrieve the student data from the server
+         */
         serviceObject.retrieveStudentData = function() {
-            var studentDataURL = ConfigService.getConfigParam('studentDataURL');
-            var httpParams = {};
-            httpParams.method = 'GET';
-            httpParams.url = studentDataURL;
-            var params = {};
-            params.userId = ConfigService.getWorkgroupId();
-            params.runId = ConfigService.getRunId();
-            httpParams.params = params;
-            return $http(httpParams).then(angular.bind(this, function(result) {
-                var vleStates = result.data.vleStates;
-                if (vleStates != null) {
-                    this.studentData = vleStates[0];
-                    var nodeVisits = this.getNodeVisits();
-                    var latestNodeVisit = this.getLatestNodeVisit();
-                    
-                    this.loadStudentNodes();
-                    this.populateHistories(nodeVisits);
-                    this.updateNodeStatuses();
-                }
-                return this.studentData;
-            }));
+            
+            // get the mode
+            var mode = ConfigService.getConfigParam('mode');
+            
+            if (mode === 'preview') {
+                // we are previewing the project
+                
+                // initialize dummy student data
+                this.studentData = {};
+                this.studentData.nodeVisits = [];
+                this.studentData.userName = 'Preview Student';
+                this.studentData.userId = '0';
+                
+                // populate the student history
+                this.populateHistories(this.studentData.nodeVisits);
+                
+                // update the node statuses
+                this.updateNodeStatuses();
+            } else {
+                // we are in a run
+                
+                // get the url to get the student data
+                var studentDataURL = ConfigService.getConfigParam('studentDataURL');
+                
+                var httpParams = {};
+                httpParams.method = 'GET';
+                httpParams.url = studentDataURL;
+                
+                // set the workgroup id and run id
+                var params = {};
+                params.userId = ConfigService.getWorkgroupId();
+                params.runId = ConfigService.getRunId();
+                httpParams.params = params;
+                
+                // make the request for the student data
+                return $http(httpParams).then(angular.bind(this, function(result) {
+                    var vleStates = result.data.vleStates;
+                    if (vleStates != null) {
+                        
+                        // obtain the student data
+                        this.studentData = vleStates[0];
+                        
+                        // get the node visits
+                        var nodeVisits = this.getNodeVisits();
+                        var latestNodeVisit = this.getLatestNodeVisit();
+                        
+                        // load the student planning nodes
+                        this.loadStudentNodes();
+                        
+                        // populate the student history
+                        this.populateHistories(nodeVisits);
+                        
+                        // update the node statuses
+                        this.updateNodeStatuses();
+                    }
+                    return this.studentData;
+                }));
+            }
         };
         
+        /**
+         * Save the node visit to the server
+         * @param nodeVisit the node visit to save to the server
+         */
         serviceObject.saveNodeVisitToServer = function(nodeVisit) {
-            var studentDataURL = ConfigService.getConfigParam('studentDataURL');
-            var httpConfig = {};
-            httpConfig.method = 'POST';
-            httpConfig.url = studentDataURL;
-            httpConfig.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-            var params = {};
-            if (nodeVisit != null && nodeVisit.id != null) {
-                params.id = nodeVisit.id;
-            }
-            params.userId = ConfigService.getWorkgroupId();
-            params.runId = ConfigService.getRunId();
-            params.periodId = ConfigService.getPeriodId();
-            params.data = JSON.stringify(nodeVisit);
-            params.nodeVisit = nodeVisit;
-            httpConfig.data = $.param(params);
-            return $http(httpConfig).then(angular.bind(this, function(nodeVisit, result) {
-                var postNodeVisitResult = result.data;
-                var visitPostTime = postNodeVisitResult.visitPostTime;
-                var nodeVisitId = postNodeVisitResult.id;
+            
+            // get the mode
+            var mode = ConfigService.getConfigParam('mode');
+            
+            if (mode === 'preview') {
+                // we are in preview mode
                 
-                //var nodeVisit = result.config.params.nodeVisit;
-                nodeVisit.id = nodeVisitId;
-                nodeVisit.visitPostTime = visitPostTime;
-                return nodeVisit;
-            }, nodeVisit));
+                var deferred = $q.defer();
+                
+                // create a fake node visit
+                var date = new Date();
+                
+                nodeVisit.id = 1; // TODO: update this id with a counter
+                nodeVisit.visitPostTime = date.getTime();
+                
+                deferred.resolve(nodeVisit);
+                
+                return deferred.promise;
+            } else {
+                // we are in a run
+                
+                // get the student data url used to save the student data
+                var studentDataURL = ConfigService.getConfigParam('studentDataURL');
+                
+                var httpConfig = {};
+                httpConfig.method = 'POST';
+                httpConfig.url = studentDataURL;
+                httpConfig.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+                
+                // set the params for the request
+                var params = {};
+                if (nodeVisit != null && nodeVisit.id != null) {
+                    params.id = nodeVisit.id;
+                }
+                params.userId = ConfigService.getWorkgroupId();
+                params.runId = ConfigService.getRunId();
+                params.periodId = ConfigService.getPeriodId();
+                params.data = JSON.stringify(nodeVisit);
+                params.nodeVisit = nodeVisit;
+                httpConfig.data = $.param(params);
+                
+                // make the request to save the student data
+                return $http(httpConfig).then(angular.bind(this, function(nodeVisit, result) {
+                    
+                    // get the response from saving the student data
+                    var postNodeVisitResult = result.data;
+                    
+                    // get the node visit post time
+                    var visitPostTime = postNodeVisitResult.visitPostTime;
+                    
+                    // get the node visit id
+                    var nodeVisitId = postNodeVisitResult.id;
+                    
+                    // save the values to our local node visit
+                    nodeVisit.id = nodeVisitId;
+                    nodeVisit.visitPostTime = visitPostTime;
+                    
+                    return nodeVisit;
+                }, nodeVisit));
+            }
         };
         
         serviceObject.loadStudentNodes = function() {
@@ -331,10 +420,21 @@ define(['configService', 'projectService'], function(configService, projectServi
                                         var functionName = firstCriteria.functionName;
                                         var functionParams = firstCriteria.functionParams;
                                         functionParams.nodeVisits = nodeVisits;
-    
-                                        // TODO: replace hard-code below with $injector.get('node.applicationType'+Service);
-                                        //var result = OpenResponseService.callFunction(functionName, functionParams);
+                                        
                                         var result = null;
+                                        
+                                        // get the node type
+                                        var nodeType = node.type;
+                                        
+                                        // get the service for the node type
+                                        var service = $injector.get(nodeType + 'Service');
+                                        
+                                        if (service != null) {
+                                            
+                                            // call the function in the service
+                                            result = service.callFunction(functionName, functionParams);
+                                        }
+                                        
                                         if (result) {
                                             nodeStatus.isVisitable = true;
                                         }
@@ -436,7 +536,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             if (nodeVisits !== null) {
                 nodeVisits.push(nodeVisit);
                 
-                $rootScope.$broadcast('nodeVisitsChanged');
+                $rootScope.$broadcast('studentDataChanged');
             }
             
             return nodeVisit;
@@ -607,6 +707,8 @@ define(['configService', 'projectService'], function(configService, projectServi
                     nodeVisit.nodeStates = [];
                 }
                 nodeVisit.nodeStates.push(nodeState);
+                
+                $rootScope.$broadcast('studentDataChanged');
             }
         };
         

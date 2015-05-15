@@ -3,14 +3,14 @@ define([], function() {
     var service = ['$http', 'ConfigService', 'CurrentNodeService', function($http, ConfigService, CurrentNodeService) {
         var serviceObject = {};
         
-        serviceObject.annotations;
+        serviceObject.annotations = null;
         
         serviceObject.retrieveAnnotationsForStudent = function() {
             var params = {};
             params.toWorkgroup = ConfigService.getWorkgroupId();
             params.fromWorkgroups = ConfigService.getTeacherWorkgroupId();
             params.periodId = ConfigService.getPeriodId();
-            return this.retrieveAnnotations(params);    
+            return this.retrieveAnnotations(params);
         };
         
         serviceObject.retrieveAnnotationsByNodeId = function() {
@@ -33,25 +33,40 @@ define([], function() {
         };
         
         serviceObject.retrieveAnnotations = function(params) {
-            var annotationsURL = ConfigService.getConfigParam('annotationsURL');
             
-            var httpParams = {};
-            httpParams.method = 'GET';
-            httpParams.url = annotationsURL;
-            httpParams.params = params;
-            return $http(httpParams).then(angular.bind(this, function(result) {
+            // get the mode
+            var mode = ConfigService.getConfigParam('mode');
+            
+            if (mode === 'preview') {
+                // we are previewing the project
+                this.annotations = [];
+            } else {
+                // we are in a run
                 
-                if (result != null && result.data != null) {
+                // get the annotations url
+                var annotationsURL = ConfigService.getConfigParam('annotationsURL');
+                
+                var httpParams = {};
+                httpParams.method = 'GET';
+                httpParams.url = annotationsURL;
+                httpParams.params = params;
+                
+                // make the request for the annotations
+                return $http(httpParams).then(angular.bind(this, function(result) {
                     
-                    var annotationsArray = result.data.annotationsArray;
-                    
-                    if (annotationsArray == null) {
-                        this.annotations = [];
-                    } else {
-                        this.annotations = annotationsArray;
+                    if (result != null && result.data != null) {
+                        
+                        // get the annotations array
+                        var annotationsArray = result.data.annotationsArray;
+                        
+                        if (annotationsArray == null) {
+                            this.annotations = [];
+                        } else {
+                            this.annotations = annotationsArray;
+                        }
                     }
-                }
-            }));
+                }));
+            }
         };
         
         serviceObject.getAnnotationByStepWorkIdAndType = function(stepWorkId, type) {

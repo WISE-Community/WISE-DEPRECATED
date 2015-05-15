@@ -22,7 +22,7 @@ define(['app'], function(app) {
         this.nodeContent = null;
         
         // holds the text that the student has typed
-        this.studentResponse = null;
+        this.studentResponse = '';
         
         // whether the step should be disabled
         this.isDisabled = false;
@@ -132,7 +132,7 @@ define(['app'], function(app) {
             var saveTriggeredBy = 'saveButton';
             
             // create and add the node state to the node visit
-            this.createAndAddNodeState(saveTriggeredBy);
+            var nodeState = this.createAndAddNodeState(saveTriggeredBy);
             
             // save the node visit to the server
             this.saveNodeVisitToServer().then(angular.bind(this, function(nodeState, nodeVisit) {
@@ -148,7 +148,7 @@ define(['app'], function(app) {
             var saveTriggeredBy = 'submitButton';
             
             // create and add the node state to the node visit
-            this.createAndAddNodeState(saveTriggeredBy);
+            var nodeState = this.createAndAddNodeState(saveTriggeredBy);
             
             // save the node visit to the server
             this.saveNodeVisitToServer().then(angular.bind(this, function(nodeState, nodeVisit) {

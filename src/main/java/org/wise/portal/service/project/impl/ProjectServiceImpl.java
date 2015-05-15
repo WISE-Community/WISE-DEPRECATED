@@ -370,13 +370,25 @@ public class ProjectServiceImpl implements ProjectService {
 				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 				String contentUrl = curriculumBaseWWW + rawProjectUrl;
 
-				String vleurl = wiseBaseURL + "/vle/vle.html";
+                String vleurl = null;
+                
+                // get the wise version
+                Integer wiseVersion = project.getWiseVersion();
+                
+                if (wiseVersion == null || wiseVersion == 4) {
+                    // load WISE4
+                    vleurl = wiseBaseURL + "/vle/vle.html";
+                } else if (wiseVersion == 5) {
+                    // load WISE5
+                    String wise5URL = wiseBaseURL + "/student.html?projectId=" + project.getId();
+                    return new ModelAndView(new RedirectView(wise5URL));
+                }
 
 				ModelAndView modelAndView = new ModelAndView("vle");
 				modelAndView.addObject("vleurl",vleurl);
 				modelAndView.addObject("vleConfigUrl", vleConfigUrl);
 				modelAndView.addObject("contentUrl", contentUrl);
-
+				
 				return modelAndView;
 			} else {
 				return new ModelAndView(new RedirectView("../accessdenied.html"));
