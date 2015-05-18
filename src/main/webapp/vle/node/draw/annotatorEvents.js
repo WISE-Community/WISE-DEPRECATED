@@ -39,7 +39,9 @@ View.prototype.annotatorDispatcher = function(type,args,obj){
 		obj.AnnotatorNode.updateDoNotDisplayFeedbackToStudentOnLastChance();
 	} else if(type==='annotatorUpdateAutoScoringSubmitConfirmationMessageChanged') {
 		obj.AnnotatorNode.updateAutoScoringSubmitConfirmationMessageChanged();
-	};
+	} else if(type==='annotatorUpdateEnableImport') {
+        obj.AnnotatorNode.updateEnableImport();
+    };
 };
 
 //this list of events
@@ -60,7 +62,8 @@ var events = [
 	'annotatorUpdateAutoScoringDisplayFeedbackToStudentClicked',
 	'annotatorUpdateAutoScoringCheckWorkChancesChanged',
 	'annotatorUpdateDoNotDisplayFeedbackToStudentOnLastChanceClicked',
-	'annotatorUpdateAutoScoringSubmitConfirmationMessageChanged'
+	'annotatorUpdateAutoScoringSubmitConfirmationMessageChanged',
+	'annotatorUpdateEnableImport'
 ];
 
 /*

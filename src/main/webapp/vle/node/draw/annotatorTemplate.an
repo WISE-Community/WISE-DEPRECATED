@@ -8,6 +8,7 @@
    "labels_min": 1,
    "labels_default": [],
    "backgroundImg": "",
+   "enableImport": false,
    "colorDefault": "ff0000",
    "type": "Annotator",
    "exportColumns": [

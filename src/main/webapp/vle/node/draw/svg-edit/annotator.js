@@ -22,12 +22,16 @@ function ANNOTATOR(node) {
 	
 	this.initTries = 0;
 	this.svgCanvas = null;
-	this.height = 600,
-	this.width = 450,
+	this.height = 450,
+	this.width = 600,
 	//this.teacherAnnotation = "";
-	this.backgroundDefault = ""; // svg string to hold background svg image
+	this.svgString = '<svg width="' + this.width + '" height="' + this.height + '" xmlns="http://www.w3.org/2000/svg" ' +
+        'xmlns:xlink="http://www.w3.org/1999/xlink"><g><title>background</title></g>' +
+	    '<g><title>student</title></g></svg>'; // default svg content
+	this.bg = ''; // svg string to hold background layer
 	this.bgRatio = 1,
 	this.bgPadding = 25,
+	this.importedBg = null;
 	this.instructions = ""; // string to hold prompt/instructions text
 	this.instructionsModal;
 	this.labelTotal = 0; // var to hold total number of snapshots created
@@ -39,6 +43,11 @@ function ANNOTATOR(node) {
 		"labels": [],
 		"total": 0
 	};
+	this.labelContent = {
+        "labels": [],
+        "total": 0 
+	};
+	this.enableImport = false;
 	
 	svgEditor.changed = false, // boolean to specify whether student data has changed and should be saved on exit
 	svgEditor.loadedWISE = false; // boolean to specify whether WISE components have finished loading
@@ -118,51 +127,101 @@ ANNOTATOR.prototype.loadModules = function(jsonfilename, context) {
 	if(data.enableAutoScoring){
 		context.enableAutoScoring = data.enableAutoScoring;
 	}
-	
 	if(data.backgroundImg && view.utils.isNonWSString(data.backgroundImg)){
-		var bgUrl = data.backgroundImg;
-		var xPos = 1, yPos = 1;
-		view.utils.getImageDimensions(data.backgroundImg, function(dimensions){
-			var height = dimensions.height,
-				width = dimensions.width,
-				ratio = height/width,
-				maxH = 600,
-				maxW = 600;
-			
-			if(height > width || height === width){
-				if(height > maxH){
-					context.bgRatio = maxH/height;
-					height = maxH;
-					width = height/ratio;
-				}
-			} else {
-				if(width > maxW){
-					context.bgRatio = maxW/width;
-					width = maxW;
-					height = width*ratio;
-				}
-			}
-			
-			context.height = height;
-			context.width = width;
-			var padding = context.bgPadding*2,
-				h = height + padding,
-				w = width + padding,
-				rightX = w-width-1,
-				centerX = (rightX+1)/2,
-				bottomY = h-height-1,
-				middleY = (bottomY+1)/2;
-			xPos = centerX, yPos = middleY;
-			context.backgroundDefault = '<svg width="' + w + '" height="' + h + '" xmlns="http://www.w3.org/2000/svg" ' +
-				'xmlns:xlink="http://www.w3.org/1999/xlink"><g><title>teacher</title>' +
-				'<image x="' + xPos + '" y="' + yPos + '" width="' + width + '" height="' + height + '" xlink:href="' + bgUrl + '" /></g></svg>';
-			context.load();   // load preview data, if any, or load default background
-		});
-	} else {
-		context.load();   // load preview data, if any, or load default background
+	    context.bg = data.backgroundImg;
 	}
+	if(data.hasOwnProperty('enableImport') && data.enableImport){
+	    context.enableImport = data.enableImport;
+	}
+	
+	context.load(); // load student data, if any, or load default contents
 };
 
+ANNOTATOR.prototype.setBg = function(imgSrc, isImport, callback){
+    var context = this;
+    var bgUrl = imgSrc;
+    var xPos = 1, yPos = 1;
+    var svgString = context.svgString;
+    var h = context.height, w = context.width;
+    
+    function setContent(dimensions){
+        
+    }
+    
+    view.utils.getImageDimensions(bgUrl, function(dimensions){
+        if(dimensions){
+            //context.bg = imgSrc;
+            var height = dimensions.height,
+                width = dimensions.width,
+                ratio = height/width,
+                maxH = 600,
+                maxW = 600;
+            
+            if(height > width || height === width){
+                if(height > maxH){
+                    context.bgRatio = maxH/height;
+                    height = maxH;
+                    width = height/ratio;
+                }
+            } else {
+                if(width > maxW){
+                    context.bgRatio = maxW/width;
+                    width = maxW;
+                    height = width*ratio;
+                }
+            }
+            
+            context.height = height;
+            context.width = width;
+            
+            var padding = context.bgPadding*2;
+            h = height + padding;
+            w = width + padding;
+            var rightX = w-width-1,
+                centerX = (rightX+1)/2,
+                bottomY = h-height-1,
+                middleY = (bottomY+1)/2;
+            xPos = centerX, yPos = middleY;
+            var bg = '<image x="' + xPos + '" y="' + yPos + '" width="' + width + '" height="' + height + '" xlink:href="' + bgUrl + '" />';
+            
+            // clear background img and insert new one
+            //var svgString = svgCanvas.getSvgString();
+            svgString = svgString.replace(/<title>background<\/title>((.*?\n\s)*?)<\/g>/g, "<title>background</title>$1"+bg+"</g>");
+            
+            // xmlns:xlink="http://www.w3.org/1999/xlink" <- make sure this is in xml namespace.
+            //if (svgString.indexOf('xmlns:xlink="http://www.w3.org/1999/xlink"') == -1) {
+                //svgString = svgString.replace("<svg ", "<svg " + 'xmlns:xlink="http://www.w3.org/1999/xlink" ');
+            //}
+            
+            if(isImport){
+                svgEditor.changed = true;
+                context.bg = context.importedBg = imgSrc;
+            }
+        } else {
+            if(isImport){
+                alert(this.view.getI18NString('annotator_importFailed', 'AnnotatorNode'));
+            }
+        }
+        
+        var success = svgCanvas.setSvgString(svgString) !== false;
+        if (success) {
+            // re-initialize labels
+            svgEditor.ext_labels.content(context.labelContent);
+            $('#workarea').css('opacity', 1);
+            // reset svg content dimensions
+            svgCanvas.setResolution(w, h);
+            svgEditor.resizeCanvas();
+            
+            if(callback){ callback(); }
+        } else {
+            alert(this.view.getI18NString('annotator_loadFailed', 'AnnotatorNode'));
+        }
+    });
+};
+
+ANNOTATOR.prototype.importFile = function(imgSrc){
+    this.setBg(imgSrc, true);
+};
 
 ANNOTATOR.prototype.setDataService = function(dataService) {
 	// register VLE Data Service to the annotator object so that
@@ -173,31 +232,6 @@ ANNOTATOR.prototype.setDataService = function(dataService) {
 
 
 ANNOTATOR.prototype.loadCallback = function(studentWorkJSON, context, noInit) {
-		var annotationValue;
-		// set default blank canvas
-		var defaultSvgString = '<svg width="' + context.width + '" height="' + context.height + '" xmlns="http://www.w3.org/2000/svg">' +
-			'<!-- Created with SVG-edit - http://svg-edit.googlecode.com/ --><g><title>student</title></g></svg>';
-		
-		// check for previous work and load it
-		var svgString;
-		if (context.backgroundDefault){ // if no previous work and no default labels, load default background drawing
-			svgString = context.backgroundDefault.replace("</svg>", "<g><title>student</title></g></svg>"); // add blank student layer
-			svgEditor.loadFromString(svgString);
-		} else { // create blank student layer
-			svgEditor.loadFromString(defaultSvgString);
-		}
-		
-		if(noInit) {
-			var content = {
-				"labels": studentWorkJSON.labels,
-				"total": studentWorkJSON.labelTotal
-			};
-			svgEditor.ext_labels.content(content);
-			svgEditor.resizeCanvas();
-			$('#workarea').css('opacity', '1');
-			return;
-		}
-		
 		context.initDisplay(studentWorkJSON,context); // initiate labels and description
 };
 
@@ -217,11 +251,15 @@ ANNOTATOR.prototype.saveToVLE = function(isExit, forceSave) {
 		this.studentData.explanation = $('#explanationInput').val();
 		this.studentData.labels = svgEditor.ext_labels.content().labels;
 		this.studentData.total = svgEditor.ext_labels.total();
+		this.studentData.importedBg = this.importedBg;
 		if(isExit){
 			svgEditor.loadedWISE = false;
 		} else {
 			$('#save').prop('disabled', true);
-			this.loadCallback(this.studentData, this, true);
+			//svgEditor.loadFromString(this.svgString);
+            this.setBg(this.bg);
+			//$('#svgCanvas').css('opacity', 1);
+			//this.loadCallback(this.studentData, this, true);
 		}
 		this.save();
 	}
@@ -278,7 +316,7 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 	var ready = true,
 		node = this.node,
 		view = this.view,
-		wiseExtensions = ['ext-wise.js', 'ext-prompt.js', 'ext-labels.js', 'ext-description.js', 'ext-importstudentasset.js', 'ext-clearlayer.js'];
+		wiseExtensions = ['ext-wise.js', 'ext-prompt.js', 'ext-labels.js', 'ext-description.js', 'ext-clearlayer.js'];
 	var e = node.extensions.length-1;
 	for(; e>-1; --e){
 		var ext = node.extensions[e];
@@ -297,6 +335,9 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 	}
 	
 	if(ready){
+	    // load default svg content
+	    //svgEditor.loadFromString(context.svgString);
+	    
 		var labelsExt = svgEditor.ext_labels,
 			importExt = svgEditor.ext_importstudentasset;
 		
@@ -348,10 +389,6 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 		}
 		
 		// insert i18n text elements
-		if(importExt){
-			$('#tool_import_student_asset').attr('title', view.getI18NString('importStudentAsset_button','SVGDrawNode'));
-			// TODO: customize import student asset tool for annotator
-		}
 		/*if(clearExt){
 			$('#tool_erase').attr('title', view.getI18NString('eraseDrawing_button','SVGDrawNode'));
 			$('#revert_confirm > .ui-button-text').html(view.getI18NString('OK','SVGDrawNode'));
@@ -386,14 +423,14 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 			}
 			if(data && data.labels && data.labels.length){
 				// load existing snapshots
-				labelsExt.content(data);
+			    context.labelContent = data;
+				//labelsExt.content(data);
 			} else if(context.labelsDefault && context.labelsDefault.length){
-				var content = {
-					"labels": context.labelsDefault,
-					"total": context.labelsDefault.length
-				};
+				//var content = {
+			    context.labelContent.labels = context.labelsDefault;
+			    context.labelContent.total = context.labelsDefault.length;
 				// load default labels
-				labelsExt.content(content);
+				//labelsExt.content(content);
 			}
 			context.toggleInstructions();
 			
@@ -422,6 +459,17 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 				checkMinLabels();
 			}
 		}
+		
+		// initiate import tool
+		if(context.enableImport){
+            $('#import > .button-text').text(view.getI18NString('annotator_import','SVGDrawNode'));
+            $('#import')
+                .off('click')
+                .on('click', function(){
+                    eventManager.fire("viewStudentAssets", null);
+                })
+                .show();
+        }
 		
 		// initiate student text area
 		if(context.enableStudentTextArea) {
@@ -523,14 +571,20 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 			});
 		}
 		
-		setTimeout(function(){
-			//svgCanvas.undoMgr.resetUndoStack(); // reset undo stack to prevent users from deleting stored starting image
-			//$("#tool_undo").addClass("tool_button_disabled").addClass("disabled");
-			this.node.view.eventManager.fire('contentRenderCompleted', this.node.id, this.node);
-			svgEditor.resizeCanvas();
-			$('#loading_overlay').fadeOut();
-			svgEditor.loadedWISE = true;
-		},500);
+		if(data.hasOwnProperty('importedBg') && view.utils.isNonWSString(data.importedBg) && context.enableImport){
+		    context.importedBg = context.bg = data.importedBg;
+		}
+		
+		context.setBg(context.bg, false, function(){
+		    //setTimeout(function(){
+	            //svgCanvas.undoMgr.resetUndoStack(); // reset undo stack to prevent users from deleting stored starting image
+	            //$("#tool_undo").addClass("tool_button_disabled").addClass("disabled");
+	            this.node.view.eventManager.fire('contentRenderCompleted', this.node.id, this.node);
+	            //svgEditor.resizeCanvas();
+	            $('#loading_overlay').fadeOut();
+	            svgEditor.loadedWISE = true;
+	        //},500); 
+		});
 	}
 	else {
 		setTimeout(function(){
@@ -560,12 +614,14 @@ ANNOTATOR.prototype.setLabelMode = function(enable){
 		$('#newLabel').hide();
 		$('#newLabelInstructions').show();
 		$('#editLabelInstructions').hide();
+		$('#import').hide();
 	} else {
 		//svgCanvas.setMode('ext-panning');
 		svgCanvas.setMode('select');
 		$('#newLabelInstructions').hide();
 		$('#newLabel').show();
 		$('#workarea').css('cursor','normal');
+		if(this.enableImport){ $('#import').show(); }
 		this.toggleInstructions();
 	}
 };

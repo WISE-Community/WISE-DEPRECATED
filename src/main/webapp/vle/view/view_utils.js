@@ -1140,12 +1140,19 @@ View.prototype.utils.getImageDimensions = function(url,callback){
 		callback(dimensions);
 	}
 	
-	var myImage = new Image();
-	myImage.name = url;
-	myImage.onload = findHHandWW;
-	myImage.src = url;
+	function notFound(){
+	    callback(null);
+	}
 	
-	//return dimensions;
+	if(this.isNonWSString(url)){
+	    var myImage = new Image();
+	    myImage.name = url;
+	    myImage.onload = findHHandWW;
+	    myImage.onerror = notFound;
+	    myImage.src = url;
+	} else {
+	    callback(null);
+	}
 };
 
 /**

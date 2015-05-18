@@ -37,8 +37,17 @@ View.prototype.AnnotatorNode.generatePage = function(view){
 	var backgroundImageUrlLabel = document.createTextNode(view.getI18NString('annotator_authoring_imageLabel','SVGDrawNode'));
 	//the text input for the background url
 	var backgroundImageUrl = createElement(document, 'input', {type: 'text', id: 'backgroundImageUrl', name: 'backgroundImageUrl', value: backgroundImg, size:50, onchange: 'eventManager.fire("annotatorUpdateBackgroundImageUrl")'});
-	//create the browse button that allows author to choose swf from project assets
+	//create the browse button that allows author to choose file from project assets
 	var backgroundBrowseButton = $(createElement(document, 'button', {id: 'backgroundBrowseButton', onclick:'eventManager.fire("annotatorBrowseClicked")'})).text(view.getI18NString('annotator_authoring_imageBrowse','SVGDrawNode'));
+	
+	//get the existing enable import value
+    var enableImport = this.content.enableImport ? this.content.enableImport : false;
+    //create the label and helper text for the enable import checkbox
+    var enableImportLabel = document.createTextNode(view.getI18NString('annotator_authoring_importLabel','SVGDrawNode'));
+    var enableImportText = document.createTextNode(view.getI18NString('annotator_authoring_importText','SVGDrawNode'));
+    //create the checkbox allowing students to import images to annotate
+    var enableImportToggle = createElement(document, 'input', {id: 'enableImportToggle', type: 'checkbox', onchange: 'eventManager.fire("annotatorUpdateEnableImport")'});
+    enableImportToggle.checked = this.content.enableImport ? true : false;
 	
 	var colorDiv = createElement(document, 'div', {id: 'colorDiv'});
 	
@@ -103,6 +112,13 @@ View.prototype.AnnotatorNode.generatePage = function(view){
 	pageDiv.appendChild(backgroundImageUrl);
 	$(pageDiv).append(backgroundBrowseButton);
 	pageDiv.appendChild(createBreak());
+	
+	pageDiv.appendChild(createBreak());
+	pageDiv.appendChild(enableImportLabel);
+    pageDiv.appendChild(enableImportToggle);
+    pageDiv.appendChild(createBreak());
+    pageDiv.appendChild(enableImportText);
+    pageDiv.appendChild(createBreak());
 	
 	pageDiv.appendChild(createBreak());
 	pageDiv.appendChild(colorDiv);
@@ -1968,6 +1984,17 @@ View.prototype.AnnotatorNode.updateWorkRequired = function() {
 	
 	// fire source updated event, which will update the preview
 	this.view.eventManager.fire('sourceUpdated');
+};
+
+/**
+ * Update whether to allow students to import their own image files
+ */
+View.prototype.AnnotatorNode.updateEnableImport = function() {
+    // update the content
+    this.content.enableImport = $('#enableImportToggle').prop('checked');
+    
+    // fire source updated event, which will update the preview
+    this.view.eventManager.fire('sourceUpdated');
 };
 
 /**

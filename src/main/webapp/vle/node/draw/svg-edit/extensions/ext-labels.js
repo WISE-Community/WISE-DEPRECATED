@@ -789,7 +789,7 @@ svgEditor.addExtension('labels', function() {'use strict';
 	}
 	
 	return {
-		svgicons: svgEditor.curConfig.extPath + 'ext-labels.xml',
+		//svgicons: svgEditor.curConfig.extPath + 'ext-labels.xml',
 		buttons: [{
 			id: 'tool_label',
 			type: 'mode',

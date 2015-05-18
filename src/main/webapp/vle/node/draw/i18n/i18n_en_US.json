@@ -267,6 +267,14 @@
 		"value":"Browse",
 		"description":"Label for button in authoring to select image file to annotate in annotator step authoring"
 	},
+	"annotator_authoring_importLabel":{
+		"value":"Allow students to import their own image:",
+		"description":"Label for control in authoring to import their own image file to annotate in annotator step authoring"
+	},
+	"annotator_authoring_importText":{
+		"value":"(Note: Student imports will override any default image that is set above.)",
+		"description":"Helper text for control in authoring to import their own image file to annotate in annotator step authoring"
+	},
 	"annotator_authoring_maxLabel":{
 		"value":"Maximum number of labels allowed (0 means no limit): ",
 		"description":"Label for maximum number of allowed labels input in annotator step authoring"
@@ -354,5 +362,17 @@
 	"annotator_grading_header":{
 		"value":"Student Work for Step {0}: ",
 		"description":"Header text for the annotator grading view"
+	},
+	"annotator_import":{
+		"value":"Import File",
+		"description":"Text for the import file button in an annotator step"
+	},
+	"annotator_importFailed":{
+		"value":"Import file failed. Try selecting a different image file.",
+		"description":"Error message to display when importing a file failed in an annotator step"
+	},
+	"annotator_loadFailed":{
+		"value":"Loading failed. Please ask your teacher or an administrator to check the step content.",
+		"description":"Error message to display when loading content failed in an annotator step"
 	}
 }

@@ -18,6 +18,8 @@ function AnnotatorNode(nodeType, view) {
 	this.view = view;
 	this.type = nodeType;
 	this.prevWorkNodeIds = [];
+	this.importableFileExtensions = new Array(
+	        "jpg", "jpeg", "png", "gif", "svg");
 }
 
 /**
@@ -384,6 +386,34 @@ AnnotatorNode.prototype.getFeedbackFromScoringCriteriaResults = function(scoring
 	}
 	
 	return feedback;
+};
+
+/**
+ * Returns true iff the given file can be imported 
+ * into this step's work.
+ */
+AnnotatorNode.prototype.canImportFile = function(filename) {
+    if (filename.indexOf(".") != -1) {
+        var fileExt = filename.substr(filename.lastIndexOf(".")+1); 
+        if (this.importableFileExtensions.indexOf(fileExt.toLowerCase()) != -1) {
+            return true;
+        }
+    }
+    return false;
+};
+
+/**
+ * Imports and inserts the specified file into current drawing.
+ * @param file to insert into current canvas
+ * @return true if import is successful
+ */
+AnnotatorNode.prototype.importFile = function(filename) {
+    if (this.canImportFile(filename)) {
+        this.contentPanel.annotator.importFile(filename);
+        
+        return true;
+    }
+    return false;
 };
 
 /**

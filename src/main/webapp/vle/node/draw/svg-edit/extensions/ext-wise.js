@@ -34,13 +34,9 @@ svgEditor.addExtension("WISE", function(S) {
 		}
 	};
 	
-	// fit drawing canvas to workarea (accessible vie svgEditor object)
+	// fit drawing canvas to workarea (accessible via svgEditor object)
 	svgEditor.resizeCanvas = function() {
-		if(nodeType === 'annotator'){
-			$('#fit_to_all').mouseup();
-		} else {
-			$('#fit_to_canvas').mouseup();
-		}
+	    $('#fit_to_canvas').mouseup();
 	};
 	
 	// TODO: remove (convert to Bootbox)
