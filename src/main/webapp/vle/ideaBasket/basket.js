@@ -2012,6 +2012,18 @@ IdeaBasket.prototype.saveIdeaBasket = function(thisView, action, workgroupId, id
 		//we are on the idea basket popup or explanation builder step
 		thisView.ideaBasketChanged();
 	}
+	
+	// get all the node visits for the node
+	var nodeVisits = thisView.getState().getNodeVisitsByNodeId(this.node.id);
+
+	// process the student work in case we need to change the node's status
+	this.node.processStudentWork(nodeVisits);
+
+	/*
+	* fire the studentWorkUpdated event and pass in the node id and node visit
+	* so listeners will know which step the student work was updated for
+	*/ 
+	eventManager.fire('studentWorkUpdated', [this.node.id, nodeVisits[nodeVisits.length - 1]]);
 };
 
 /**

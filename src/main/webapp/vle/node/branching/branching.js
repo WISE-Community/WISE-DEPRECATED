@@ -259,6 +259,26 @@ Branching.prototype.showBranchPage = function() {
 	});
 };
 
+// Fisher-Yates (aka Knuth) Shuffle, based on https://github.com/coolaj86/knuth-shuffle
+Branching.prototype.shuffleArray = function(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex ;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+};
+
 /**
  * Returns an ordered array of visible path ids at this time.
  * This is dependent of maxPathVisible count and any ordering that is specified in the branchPathOrderCriteriaMapping for the step
@@ -269,23 +289,32 @@ Branching.prototype.getOrderedVisiblePathIds = function() {
 
 	// check to see if this branch step's branch path ordering is determined by another step. If not, use default
 	if (this.content.branchPathOrderCriteria != null) {
-		var branchPathOrderCriteriaNodeId = this.content.branchPathOrderCriteria.criteriaNodeId;
-		var branchPathOrderCriteriaNode = this.view.getProject().getNodeById(branchPathOrderCriteriaNodeId);		
-		var branchPathOrderValues = branchPathOrderCriteriaNode.getBranchPathOrderValues(allPathsJSONArray);
-		var branchPathOrderCriteriaMappingArray = this.content.branchPathOrderCriteria.criteriaMappingArray;
-		for (var i=0; i<branchPathOrderValues.length; i++) {
-			var branchPathOrderValue = branchPathOrderValues[i];
-			for (var j=0; j<branchPathOrderCriteriaMappingArray.length; j++) {
-				var branchPathOrderCriteria = branchPathOrderCriteriaMappingArray[j];
-				if (branchPathOrderCriteria.criteriaValue == branchPathOrderValue) {
-					branchPathOrder.push(branchPathOrderCriteria.pathIdentifier);
-				}
-			}
-		}
+	    if (this.content.branchPathOrderCriteria === 'random') {
+	        // use the path order specified in the allPathsJSONArray
+	        for (var i = 0; i < allPathsJSONArray.length; i++) {
+	            var pathJSONObj = allPathsJSONArray[i];
+	            branchPathOrder.push(pathJSONObj.identifier);
+	        }
+	        branchPathOrder = this.shuffleArray(branchPathOrder);
+	    } else {
+    		var branchPathOrderCriteriaNodeId = this.content.branchPathOrderCriteria.criteriaNodeId;
+    		var branchPathOrderCriteriaNode = this.view.getProject().getNodeById(branchPathOrderCriteriaNodeId);		
+    		var branchPathOrderValues = branchPathOrderCriteriaNode.getBranchPathOrderValues(allPathsJSONArray);
+    		var branchPathOrderCriteriaMappingArray = this.content.branchPathOrderCriteria.criteriaMappingArray;
+    		for (var i = 0; i < branchPathOrderValues.length; i++) {
+    			var branchPathOrderValue = branchPathOrderValues[i];
+    			for (var j = 0; j < branchPathOrderCriteriaMappingArray.length; j++) {
+    				var branchPathOrderCriteria = branchPathOrderCriteriaMappingArray[j];
+    				if (branchPathOrderCriteria.criteriaValue == branchPathOrderValue) {
+    					branchPathOrder.push(branchPathOrderCriteria.pathIdentifier);
+    				}
+    			}
+    		}
+	    }
 
 	} else {
-		// use the path order specfied in the allPathsJSONArray
-		for (var i=0; i<allPathsJSONArray.length; i++) {
+		// use the path order specified in the allPathsJSONArray
+		for (var i = 0; i < allPathsJSONArray.length; i++) {
 			var pathJSONObj = allPathsJSONArray[i];
 			branchPathOrder.push(pathJSONObj.identifier);
 		}
@@ -295,7 +324,7 @@ Branching.prototype.getOrderedVisiblePathIds = function() {
 	var maxPathsVisible = (this.content.maxPathVisible != null) ? this.content.maxPathVisible : allPathsJSONArray.length; // determine how many paths are visible at this time. defaults to all paths.
 	var orderedVisiblePaths = [];
 	var numPathsVisibleSoFar = 0;
-	for (var i=0; i<branchPathOrder.length; i++) {
+	for (var i = 0; i < branchPathOrder.length; i++) {
 		if (numPathsVisibleSoFar < maxPathsVisible) {
 			branchPathIdentifier = branchPathOrder[i];
 			orderedVisiblePaths.push(branchPathIdentifier);

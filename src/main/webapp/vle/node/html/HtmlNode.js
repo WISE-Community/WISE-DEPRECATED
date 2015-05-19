@@ -70,6 +70,26 @@ HtmlNode.prototype.isCompleted = function(nodeVisits) {
 /**
  * This is called when a node is exited
  */
+HtmlNode.prototype.render = function(contentPanel,studentWork, disable) {
+    /* call super */
+    Node.prototype.render.call(this, contentPanel, studentWork, disable);
+    
+  //get all the node visits for the node
+    var nodeVisits = this.view.getState().getNodeVisitsByNodeId(this.id);
+
+    //process the student work in case we need to change the node's status
+    this.processStudentWork(nodeVisits);
+
+    /*
+    * fire the studentWorkUpdated event and pass in the node id and node visit
+    * so listeners will know which step the student work was updated for
+    */
+    eventManager.fire('studentWorkUpdated', [this.id, nodeVisits[nodeVisits.length - 1]]);
+};
+
+/**
+ * This is called when a node is exited
+ */
 HtmlNode.prototype.onExit = function() {
 	//set this node as completed
 	this.setStatus('isCompleted', true);
