@@ -591,7 +591,7 @@ define(['app'], function(app) {
                             nodeState.studentData = copiedAssetImg;
                         }
                         this.setStudentWork(nodeState);
-                        this.studentResponseChanged()
+                        this.studentResponseChanged();
                     }
                 }));
             }
