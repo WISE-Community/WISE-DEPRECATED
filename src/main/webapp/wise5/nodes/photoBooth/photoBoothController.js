@@ -139,7 +139,7 @@ define(['app'], function(app) {
         }
         
         this.uploadPictureAsset = function(pngFile) {
-            return StudentAssetService.uploadAssets([pngFile]);
+            return StudentAssetService.uploadAsset(pngFile);
         };
 
                 

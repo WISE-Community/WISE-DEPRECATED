@@ -34,13 +34,14 @@
 }
 
 .studentAssets {
-    text-align: center;
     height: auto;
     width: auto;
     max-height: 400px;
-    max-width: 400px;
+    max-width: 450px;
     border: 5px solid #DDD;
     overflow:auto;
+    list-style-type: none;
+    padding:0px;
 }
 
 .studentAsset {
@@ -59,18 +60,16 @@
 .studentAssetParent {
     word-wrap: break-word;
     width: auto;
-    max-width: 130px;
+    max-width: 350px;
 }
 
 .studentAssetOverlay {
-    position: absolute;
     top: 0;
     left: 0;
     max-width: 100%;
 }
 
 .studentAssetRemoveImage {
-    float: left;
 }
 
 .studentAssetRemoveImage, .studentAssetOverlay:hover {
@@ -125,8 +124,8 @@
         </div>
 		<div class="animate-switch" ng-switch-when='myFiles'>
             You are using {{portfolioController.appropriateSizeText(portfolioController.studentAssets.totalSize)}} out of {{portfolioController.appropriateSizeText(portfolioController.studentAssets.totalSizeMax)}} ({{portfolioController.studentAssets.usagePercentage}}%)
-		    <div class='studentAssets'>
-		        <div ng-repeat="studentAsset in portfolioController.studentAssets" class='studentAssetParent'>
+		    <ul class='studentAssets'>
+		        <li ng-repeat="studentAsset in portfolioController.studentAssets" class='studentAssetParent'>
 		        <img ng-src='{{studentAsset.iconURL}}'
 		        class='studentAsset'
 		        title='Drag and drop this item to use in your project!'
@@ -137,8 +136,8 @@
                 <img ng-click='portfolioController.deleteStudentAsset(studentAsset)' src='wise5/vle/portfolio/trash.png' class='studentAssetRemoveImage'></img>
                 <span ng-show='{{studentAsset.type === "audio"}}' ng-audio='{{studentAsset.url}}' volume='0.5'><img class='studentAssetOverlay' src='wise5/vle/portfolio/play.png'></img></span>
                 <!-- <span class='studentAssetname'>{{studentAsset.name}}</span> -->
-                </div>
-		    </div>
+                </li>
+		    </ul>
 			<div ng-file-drop ng-file-select ng-file-change="portfolioController.upload($files)" class="drop-box"
 					drag-over-class="dragover" ng-multiple="true" allow-dir="false"
 					accept="image/*,application/pdf">Drop images or files here or click to upload!</div>

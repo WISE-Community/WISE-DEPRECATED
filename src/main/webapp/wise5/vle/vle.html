@@ -115,6 +115,14 @@
     background-color: aliceblue;
 }
 
+#closePortfolio {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    font-weight: bold;
+    width: initial;
+}
+
 </style>
 </head>
 <body>
@@ -156,7 +164,7 @@
 	            data-drag='true'
 	            data-jqyoui-options="{}"
 	            jqyoui-draggable="{animate:true, placeholder: 'keep', onStart:'vleController.portfolioDragStartCallback()'}">
-	        <button ng-click='vleController.hidePortfolio()'>Close Portfolio</button>
+	        <button id='closePortfolio' ng-click='vleController.hidePortfolio()'>X</button>
 	        <div ng-include="'wise5/vle/portfolio/portfolio.html'"></div>
 	    </div>
 	    <div ng-switch-when='false'>

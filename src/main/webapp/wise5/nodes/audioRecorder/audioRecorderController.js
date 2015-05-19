@@ -35,46 +35,74 @@ define(['app'], function(app) {
         // recorder object
         this.recorder;
         
+        // are we currently recording?
+        this.isRecording = false;
+        
         this.__log = function(e, data) {
-            log.innerHTML += '\n' + e + ' ' + (data || '');
+            //log.innerHTML += '\n' + e + ' ' + (data || '');
         };
         
         this.startUserMedia = function(stream) {
             this.recorder = new Recorder(stream, this);
         };
         
-        this.startRecording = function(button) {
-            this.recorder && this.recorder.record();
-            startRecordingButton.disabled = true;
-            stopRecordingButton.disabled = false;
-            this.__log('Recording...');
-        };
+        this.toggleRecording = function() {
+            if (!this.isRecording) {
+                // start recording requested
+                this.recorder && this.recorder.record();
+                this.__log('Recording...');
+                toggleRecordingButton.innerHTML = 'Stop Recording';
+                recordingMsg.style.display = 'initial';
+                this.isRecording = true;
+            } else {
+                // stop recording requested
+                this.recorder && this.recorder.stop();
+                this.__log('Stopped recording.');
+                
+                // convert audio to mp3 and upload to student assets
+                this.recorder && this.recorder.exportMP3(angular.bind(this, function(blob) {
+                    var now = new Date().getTime();
 
-        this.stopRecording = function(button) {
-            this.recorder && this.recorder.stop();
-            stopRecordingButton.disabled = true;
-            startRecordingButton.disabled = false;
-            this.__log('Stopped recording.');
-            
-            // convert audio to mp3 and upload to student assets
-            this.recorder && this.recorder.exportMP3(angular.bind(this, function(blob) {
-                var now = new Date().getTime();
-
-                var mp3Name = encodeURIComponent('audio_recording_' + now + '.mp3');
-                var mp3file = new File([blob], mp3Name, {
-                    lastModified: now, // optional - default = now
-                    type: 'audio/mp3' // optional - default = ''
-                });
-                this.uploadAudioAsset(mp3file).then(function() {
-                    $rootScope.$broadcast('studentAssetsUpdated');
-                });
-            }));
-            
-            this.recorder.clear();
+                    var mp3Name = encodeURIComponent('audio_recording_' + now + '.mp3');
+                    var mp3file = new File([blob], mp3Name, {
+                        lastModified: now, // optional - default = now
+                        type: 'audio/mp3' // optional - default = ''
+                    });
+                    this.uploadAudioAsset(mp3file).then(angular.bind(this, function(mp3file) {
+                        // make a request to copy asset for reference and save for current node visit
+                        var mp3filename = mp3file.name;
+                        var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
+                        var runId = ConfigService.getRunId();
+                        var workgroupId = ConfigService.getWorkgroupId();
+                        var assetBaseURL = studentUploadsBaseURL + '/' + runId + '/' + workgroupId + '/unreferenced/';
+                        var asset = {};
+                        asset.name = mp3filename;
+                        asset.url = assetBaseURL + mp3filename;
+                        asset.type = 'audio';
+                        asset.iconURL = asset.url;
+                        
+                        StudentAssetService.copyAssetForReference(asset).then(angular.bind(this, function(copiedAsset) {
+                            if (copiedAsset != null) {
+                                if (this.studentResponse == null) {
+                                    this.studentResponse = [];
+                                }
+                                this.studentResponse.push(copiedAsset);
+                                this.studentResponseChanged();
+                            }
+                        }));
+                        $rootScope.$broadcast('studentAssetsUpdated');
+                    }, mp3file));                    
+                }));
+                
+                this.recorder.clear();
+                toggleRecordingButton.innerHTML = 'Start Recording';
+                recordingMsg.style.display = 'none';
+                this.isRecording = false;
+            }
         };
         
         this.uploadAudioAsset = function(mp3File) {
-            return StudentAssetService.uploadAssets([mp3File]);
+            return StudentAssetService.uploadAsset(mp3File);
         };
         
         /**
@@ -221,6 +249,14 @@ define(['app'], function(app) {
                 $scope.$emit('isDirty');
             }
         };
+        
+        /**
+         * Get the student response
+         */
+        this.getStudentResponse = function() {
+            return this.studentResponse;
+        };
+        
         
         /**
          * Create a node state and add it to the latest node visit

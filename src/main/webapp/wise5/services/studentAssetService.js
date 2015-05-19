@@ -21,6 +21,7 @@ define(['configService'], function(configService) {
                 var assetBaseURL = studentUploadsBaseURL + '/' + runId + '/' + workgroupId + '/unreferenced/';
                 for (var a = 0; a < assets.length; a++) {
                     var asset = assets[a];
+                    asset.isReferenced = false;
                     var assetFilename = asset.fileName;
                     if (assetFilename != '.DS_Store') {
                         asset.name = assetFilename;
@@ -72,6 +73,17 @@ define(['configService'], function(configService) {
             return isAudio;
         };
         
+        serviceObject.uploadAsset = function(file) {
+            var studentAssetManagerURL = ConfigService.getStudentAssetManagerURL();
+            return $upload.upload({
+                url: studentAssetManagerURL,
+                fields: {
+                    'command': 'uploadAsset'
+                },
+                file: file
+            });
+        };
+        
         serviceObject.uploadAssets = function(files) {
             var studentAssetManagerURL = ConfigService.getStudentAssetManagerURL();
             var promises = files.map(function(file) {
@@ -119,6 +131,7 @@ define(['configService'], function(configService) {
                         var assetBaseURL = studentUploadsBaseURL + '/' + runId + '/' + workgroupId + '/referenced/';
                         
                         var copiedAsset = {};
+                        copiedAsset.isReferenced = true;
                         copiedAsset.name = newFilename;
                         copiedAsset.url = assetBaseURL + newFilename;
                         if (this.isImage(copiedAsset)) {
