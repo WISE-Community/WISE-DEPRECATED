@@ -22,6 +22,10 @@ require.config({
         'cRaterService': 'services/cRaterService',
         'd3': 'lib/d3/d3',
         'directives': 'directives/directives',
+        'graphController': 'nodes/graph/graphController',
+        'graphService': 'nodes/graph/graphService',
+        'highcharts': 'lib/highcharts/highcharts.src',
+        'highcharts-ng': 'lib/highcharts/highcharts-ng',
         'htmlController': 'nodes/html/htmlController',
         'jquery': 'lib/jquery/jquery-2.1.3.min',
         'jqueryUI': 'lib/jquery/jquery-ui.min',
@@ -125,6 +129,20 @@ require.config({
             'exports': 'bootstrap',
             'deps': [
                     'jquery'
+                    ]
+        },
+        'highcharts': {
+            'exports': 'highcharts',
+            'deps': [
+                    'angular',
+                    'jquery'
+                    ]
+        },
+        'highcharts-ng': {
+            'exports': 'highcharts-ng',
+            'deps': [
+                    'angular',
+                    'highcharts'
                     ]
         },
         'jqueryUI': {

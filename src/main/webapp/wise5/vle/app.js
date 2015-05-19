@@ -18,6 +18,8 @@ define([
         'configService',
         'currentNodeService',
         'cRaterService',
+        'graphService',
+        'highcharts-ng',
         'multipleChoiceService',
         'nodeService',
         'openResponseService',
@@ -51,6 +53,8 @@ define([
                 configService,
                 currentNodeService,
                 cRaterService,
+                graphService,
+                highchartsng,
                 multipleChoiceService,
                 nodeService,
                 openResponseService,
@@ -69,6 +73,7 @@ define([
     var app = angular.module('app', [
                                      'angularFileUpload',
                                      'directives',
+                                     'highcharts-ng',
                                      'ui.router',
                                      'ui.sortable',
                                      'ngAnimate',
@@ -94,6 +99,7 @@ define([
     
     // node services
     app.factory('AudioRecorderService', audioRecorderService);
+    app.factory('GraphService', graphService);
     app.factory('MultipleChoiceService', multipleChoiceService);
     app.factory('PhotoBoothService', photoBoothService);
     app.factory('OpenResponseService', openResponseService);
@@ -170,6 +176,7 @@ define([
                         templateUrl: 'wise5/vle/node/node.html',
                         resolve: {
                             audioRecorderController: app.loadController('audioRecorderController'),
+                            graphController: app.loadController('graphController'),
                             htmlController: app.loadController('htmlController'),
                             multipleChoiceController: app.loadController('multipleChoiceController'),
                             nodeController: app.loadController('nodeController'),
