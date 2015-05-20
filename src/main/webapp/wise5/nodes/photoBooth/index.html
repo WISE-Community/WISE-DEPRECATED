@@ -19,29 +19,21 @@
 <div ng-controller='PhotoBoothController as photoBoothController'>
 <div id='prompt'>prompt: {{photoBoothController.nodeContent.prompt}}</div>
 <div id="main">
-        <video id="video"></video>
-        <h1>Instructions</h1>
-        <ul>
-            <li>Above: Live video stream from your computer's camera.</li>
-            <li>Press "Camera button" (left in RED) until you are happy with the photo captured.</li>
-            <li>Copy and paste the "big text string" into the address bar of your browser.</li>
-            <li>What do you see?</li>
-            <li>What applications can you imagine for this UI?</li>
-        </ul>
-
+        <div style='text-align:center'>
+            <video id="video"></video>
+            <a style='margin-top:5px' ng-show='photoBoothController.isCameraReady' id="button" ng-click='photoBoothController.takePicture()'>Take Picture!</a>
+        </div>
     </div>
     
     <div id="sidebar">
-        <a id="button" ng-click='photoBoothController.takePicture()'>Take Picture!</a>
-
-        <!-- target for the canvas-->
+        <!-- target for the canvas -->
         <div id="canvasHolder"></div>
-
-        <!--preview image captured from canvas-->
-        <img id="preview" src="wise5/nodes/photoBooth/placeholder.png" width="160" height="120" />
-
-        <label>base64 image:</label>
-        <input id="imageToForm" type="text" />
+        <h2>Pictures</h2>
+        <ul id="picturelist">
+            <li ng-repeat='imgAsset in photoBoothController.studentResponse'>
+                <img src='{{imgAsset.url}}'></img>
+            </li>
+        </ul>
     </div>
 
     <script>

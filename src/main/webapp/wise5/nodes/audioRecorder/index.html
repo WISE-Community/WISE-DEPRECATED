@@ -9,7 +9,7 @@
     <h2>Recordings</h2>
     <ul id="recordingslist">
         <li ng-repeat='audioAsset in audioRecorderController.studentResponse'>
-        {{audioAsset}}
+            <audio controls="controls" src='{{audioAsset.url}}'></audio>
         </li>
     </ul>
     

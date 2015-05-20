@@ -33,6 +33,9 @@ define(['app'], function(app) {
         // whether this is part of another node such as a Questionnaire node
         this.isNodePart = false;
         
+        // whether camera is ready for use
+        this.isCameraReady = false;
+        
         /**
          * Perform setup of the node
          */
@@ -56,7 +59,7 @@ define(['app'], function(app) {
                 var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
                 
                 // populate the student work into this node
-                //this.setStudentWork(nodeState);
+                this.setStudentWork(nodeState);
                 
                 // tell the parent controller that this node has loaded
                 $scope.$parent.nodeController.nodeLoaded(this.nodeId);
@@ -70,7 +73,7 @@ define(['app'], function(app) {
                 navigator.webkitGetUserMedia ||
                 navigator.mozGetUserMedia ||
                 navigator.msGetUserMedia);
-            navigator.myGetMedia({ video: true }, this.connect, function(e) {
+            navigator.myGetMedia({ video: true }, angular.bind(this, this.connect), function(e) {
                 console.log('No live audio input: ' + e);
             });
         };
@@ -79,6 +82,7 @@ define(['app'], function(app) {
             video = document.getElementById("video");
             video.src = window.URL ? window.URL.createObjectURL(stream) : stream;
             video.play();
+            window.setTimeout(angular.bind(this, function() {this.isCameraReady = true;}), 1000);  // wait for video stream to display
         };
         
         this.takePicture = function() {
@@ -95,9 +99,10 @@ define(['app'], function(app) {
             ctx.scale(-1, 1);  // flip on Y-axis
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             //save canvas image as data url
-            dataURL = canvas.toDataURL();
+            //dataURL = canvas.toDataURL();
+            
             //set preview image src to dataURL
-            document.getElementById('preview').src = dataURL;
+            //document.getElementById('preview').src = dataURL;
             // place the image value in the text box
             //document.getElementById('imageToForm').value = dataURL;
             
@@ -112,9 +117,31 @@ define(['app'], function(app) {
                 lastModified: now, // optional - default = now
                 type: 'image/png' // optional - default = ''
             });
-            this.uploadPictureAsset(pngFile).then(function() {
+            this.uploadPictureAsset(pngFile).then(angular.bind(this, function(pngFile) {
+                // make a request to copy asset for reference and save for current node visit
+                var pngFilename = pngFile.name;
+                var studentUploadsBaseURL = ConfigService.getStudentUploadsBaseURL();
+                var runId = ConfigService.getRunId();
+                var workgroupId = ConfigService.getWorkgroupId();
+                var assetBaseURL = studentUploadsBaseURL + '/' + runId + '/' + workgroupId + '/unreferenced/';
+                var asset = {};
+                asset.name = pngFilename;
+                asset.url = assetBaseURL + pngFilename;
+                asset.type = 'image';
+                asset.iconURL = asset.url;
+                
+                StudentAssetService.copyAssetForReference(asset).then(angular.bind(this, function(copiedAsset) {
+                    if (copiedAsset != null) {
+                        if (this.studentResponse == null) {
+                            this.studentResponse = [];
+                        }
+                        this.studentResponse.push(copiedAsset);
+                        this.studentResponseChanged();
+                    }
+                }));
+
                 $rootScope.$broadcast('studentAssetsUpdated');
-            });
+            }, pngFile));
         };
         
         // http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
@@ -141,7 +168,6 @@ define(['app'], function(app) {
         this.uploadPictureAsset = function(pngFile) {
             return StudentAssetService.uploadAsset(pngFile);
         };
-
                 
         /**
          * Get the prompt to show to the student
@@ -154,6 +180,112 @@ define(['app'], function(app) {
             }
             
             return prompt;
+        };
+        
+        /**
+         * Called when the student changes their text response
+         */
+        this.studentResponseChanged = function() {
+            /*
+             * set the dirty flag so we will know we need to save the 
+             * student work later
+             */
+            this.isDirty = true;
+            
+            if (this.isNodePart) {
+                /*
+                 * this step is a node part so we will tell its parent that
+                 * the student work is dirty and will need to be saved
+                 */
+                $scope.$emit('isDirty');
+            }
+        };
+        
+        /**
+         * Populate the student work into the node
+         * @param nodeState the node state to populate into the node
+         */
+        this.setStudentWork = function(nodeState) {
+            
+            /*
+             * check if the part student data has been passed. this will be
+             * used when the node is part of a Questionnaire node
+             */
+            if ($scope.partStudentData != null) {
+                // set the part student data as the node state
+                nodeState = $scope.partStudentData;
+            }
+            
+            if (nodeState != null) {
+                // populate the text the student previously typed
+                this.studentResponse = nodeState.studentData;
+            }
+        };
+        
+        /**
+         * Save the node visit to the server
+         */
+        this.saveNodeVisitToServer = function() {
+            // save the node visit to the server
+            return $scope.$parent.nodeController.saveNodeVisitToServer(this.nodeId).then(angular.bind(this, function(nodeVisit) {
+                
+                /*
+                 * set the isDirty flag to false because the student work has 
+                 * been saved to the server
+                 */
+                this.isDirty = false;
+            }));
+        };
+        
+        /**
+         * Create a node state and add it to the latest node visit
+         * @param saveTriggeredBy the reason why we are saving a new node state
+         * e.g.
+         * 'autoSave'
+         * 'saveButton'
+         * 'submitButton'
+         * 'nodeOnExit'
+         * 'logOut'
+         */
+        this.createAndAddNodeState = function(saveTriggeredBy) {
+            
+            var nodeState = null;
+            
+            /*
+             * check if this node is part of another node such as a
+             * Questionnaire node. if it is part of a Questionnaire node
+             * we do not need to create a node state or save anything
+             * since the parent Questionnaire node will handle that.
+             */
+            if (!this.isNodePart) {
+                // this is a standalone node
+                
+                if (saveTriggeredBy != null) {
+                    
+                    /*
+                     * check if the save was triggered by the submit button
+                     * or if the student data is dirty
+                     */
+                    if (saveTriggeredBy === 'submitButton' || this.isDirty) {
+                        
+                        // create the node state
+                        nodeState = NodeService.createNewNodeState();
+                        
+                        // set the values into the node state
+                        nodeState.studentData = this.studentResponse;
+                        nodeState.saveTriggeredBy = saveTriggeredBy;
+                        
+                        if (saveTriggeredBy === 'submitButton') {
+                            nodeState.isSubmit = true;
+                        } 
+                        
+                        // add the node state to the latest node visit
+                        $scope.$parent.nodeController.addNodeStateToLatestNodeVisit(this.nodeId, nodeState);
+                    }
+                }
+            }
+            
+            return nodeState;
         };
         
         /**
@@ -171,6 +303,14 @@ define(['app'], function(app) {
              * this node
              */
             if (nodeToExit.id === this.nodeId) {
+                var saveTriggeredBy = 'nodeOnExit';
+
+                // create and add a node state to the latest node visit
+                this.createAndAddNodeState(saveTriggeredBy);
+                
+                // save the node visit to the server
+                this.saveNodeVisitToServer();
+
                 /*
                  * tell the parent that this node is done performing
                  * everything it needs to do before exiting
@@ -191,6 +331,14 @@ define(['app'], function(app) {
              */
             this.exitListener = $scope.$on('exit', angular.bind(this, function(event, args) {
                
+                var saveTriggeredBy = 'exit';
+                
+                // create and add a node state to the latest node visit
+                this.createAndAddNodeState(saveTriggeredBy);
+
+                // save the node visit to the server
+                this.saveNodeVisitToServer();
+                
                     $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
                     
                     // call this function to remove the listener
