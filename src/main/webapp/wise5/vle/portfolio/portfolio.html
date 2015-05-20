@@ -124,7 +124,7 @@
         </div>
 		<div class="animate-switch" ng-switch-when='myFiles'>
             You are using {{portfolioController.appropriateSizeText(portfolioController.studentAssets.totalSize)}} out of {{portfolioController.appropriateSizeText(portfolioController.studentAssets.totalSizeMax)}} ({{portfolioController.studentAssets.usagePercentage}}%)
-		    <ul class='studentAssets'>
+		    <ul class='studentAssets' ng-show="portfolioController.studentAssets.length" >
 		        <li ng-repeat="studentAsset in portfolioController.studentAssets" class='studentAssetParent'>
 		        <img ng-src='{{studentAsset.iconURL}}'
 		        class='studentAsset'
