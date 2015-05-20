@@ -34,68 +34,13 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
         // whether this is part of another node such as a Questionnaire node
         this.isNodePart = false;
         
-        this.setup = function() {
-            $scope.addPoints = function () {
-                var seriesArray = $scope.chartConfig.series
-                var rndIdx = Math.floor(Math.random() * seriesArray.length);
-                seriesArray[rndIdx].data = seriesArray[rndIdx].data.concat([1, 10, 20])
-            };
-
-            $scope.addSeries = function () {
-                var rnd = []
-                for (var i = 0; i < 10; i++) {
-                    rnd.push(Math.floor(Math.random() * 20) + 1)
-                }
-                $scope.chartConfig.series.push({
-                    data: rnd
-                })
-            };
-
-            $scope.removeRandomSeries = function () {
-                var seriesArray = $scope.chartConfig.series
-                var rndIdx = Math.floor(Math.random() * seriesArray.length);
-                seriesArray.splice(rndIdx, 1)
-            };
-
-            $scope.swapChartType = function () {
-                if (this.chartConfig.options.chart.type === 'line') {
-                    this.chartConfig.options.chart.type = 'bar'
-                } else {
-                    this.chartConfig.options.chart.type = 'line'
-                    this.chartConfig.options.chart.zoomType = 'x'
-                }
-            };
-
-            $scope.toggleLoading = function () {
-                this.chartConfig.loading = !this.chartConfig.loading
-            };
-
-            $scope.chartConfig = {
-                options: {
-                    chart: {
-                        type: 'bar',
-                        events: {
-                            click: function(e) {
-                                console.log('clicked=' + e);
-                            }
-                        }
-                    }
-                },
-                series: [{
-                    data: [10, 15, 12, 8, 7]
-                }],
-                title: {
-                    text: 'Hello'
-                },
-
-                loading: false
-            };
-        };
+        // holds all the series
+        this.series = null;
         
         /**
          * Perform setup of the node
          */
-        this.setup0 = function() {
+        this.setup = function() {
             
             // get the current node and node id
             var currentNode = CurrentNodeService.getCurrentNode();
@@ -116,6 +61,9 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                 
                 // populate the student work into this node
                 this.setStudentWork(nodeState);
+                
+                // setup the graph
+                this.setupGraph();
                 
                 // check if we need to lock this node
                 this.calculateDisabled();
@@ -143,6 +91,9 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                     // popualte the student work into this node
                     this.setStudentWork(nodeState);
                     
+                    // setup the graph
+                    this.setupGraph();
+                    
                     // check if we need to lock this node
                     this.calculateDisabled();
                     
@@ -159,8 +110,256 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                     this.registerExitListener();
                 }));
             }
+        };
+        
+        /**
+         * Setup the graph
+         */
+        this.setupGraph = function() {
             
-            $('.openResponse').off('dragover').off('drop');
+            // get the title
+            var title = this.nodeContent.title;
+            
+            // get the graph type
+            var graphType = this.nodeContent.graphType;
+            
+            // get the x and y axis attributes from the student data
+            var xAxis = this.xAxis;
+            var yAxis = this.yAxis;
+            
+            if (this.xAxis == null && this.nodeContent.xAxis != null) {
+                /*
+                 * the student does not have x axis data so we will use the
+                 * x axis from the node content
+                 */
+                xAxis = this.nodeContent.xAxis;
+            }
+            
+            if (this.yAxis == null && this.nodeContent.yAxis != null) {
+                /*
+                 * the student does not have y axis data so we will use the
+                 * y axis from the node content
+                 */
+                yAxis = this.nodeContent.yAxis;
+            }
+            
+            /*
+             * remember this graph controller so we can access it in the click
+             * event for the graph
+             */
+            thisGraphController = this;
+            
+            // get all the series from the student data
+            var series = this.series;
+            
+            if (this.series == null && this.nodeContent.series != null) {
+                /*
+                 * use the series from the step content if the student does not
+                 * have any series data
+                 */
+                series = this.nodeContent.series;
+            }
+            
+            this.chartConfig = {
+                options: {
+                    chart: {
+                        type: graphType,
+                        zoomType: 'xy',
+                        events: {
+                            click: function(e) {
+                                
+                                /*
+                                 * check if the student can click to add data
+                                 * on the graph
+                                 */
+                                if (thisGraphController.canClickToAddData()) {
+                                    
+                                    // TODO: check for point with existing x value
+                                    
+                                    // get the x and y positions that were clicked
+                                    var x = e.xAxis[0].value;
+                                    var y = e.yAxis[0].value;
+                                    
+                                    // get the series for the graph, there should only be one in this case
+                                    var series = this.series[0];
+                                    
+                                    // round the values to the nearest hundredth
+                                    x = Math.round(x * 100) / 100;
+                                    y = Math.round(y * 100) / 100;
+                                    
+                                    // add the point to the series
+                                    series.addPoint([x, y]);
+                                    
+                                    /*
+                                     * notify the controller that the student 
+                                     * data has changed
+                                     */
+                                    thisGraphController.studentDataChanged();
+                                }
+                            }
+                        }
+                    }
+                },
+                series: series,
+                title: {
+                    text: title
+                },
+                xAxis: xAxis,
+                yAxis: yAxis,
+                loading: false
+            };
+            
+            this.studentDataChanged();
+        };
+        
+        /**
+         * Check whether the student is allowed to click on the graph to
+         * add data
+         */
+        this.canClickToAddData = function() {
+            var result = false;
+            
+            if (this.nodeContent.canClickToAddData) {
+                result = this.nodeContent.canClickToAddData;
+            }
+            
+            return result;
+        };
+        
+        /**
+         * Get the series object from the graph
+         */
+        this.getSeries = function() {
+            
+            // get the highcharts object
+            var highchartsObject = $('#chart1').highcharts();
+            
+            var series = null;
+            
+            if (highchartsObject != null && highchartsObject.series != null) {
+                
+                // get the series
+                highchartsObjectSeries = highchartsObject.series;
+                
+                /*
+                 * get all the plain series data and not any of the extra
+                 * attributes that highcharts adds to the data
+                 */
+                series = this.getAllPlainSeriesData(highchartsObjectSeries);
+            }
+            
+            return series;
+        };
+        
+        /**
+         * Get all the plain series data
+         * @param allSeries an array of series
+         */
+        this.getAllPlainSeriesData = function(allSeries) {
+            var allPlainSeriesData = [];
+            
+            if (allSeries) {
+                
+                // loop through all the series
+                for (var x = 0 ; x < allSeries.length; x++) {
+                    var series = allSeries[x];
+                    
+                    // get the plain data for a single series
+                    var plainSeriesData = this.getPlainSeriesData(series);
+                    
+                    // add the plain series data to our array
+                    allPlainSeriesData.push(plainSeriesData);
+                }
+            }
+            
+            return allPlainSeriesData;
+        };
+        
+        /**
+         * Get the plain series data for a single series
+         * @param series a single series
+         */
+        this.getPlainSeriesData = function(series) {
+            
+            // the series object
+            var plainSeriesData = {};
+            
+            // the array that will hold our data points
+            plainSeriesData.data = [];
+            
+            if (series != null) {
+                
+                // get the data from the series
+                var seriesData = series.data;
+                
+                if (seriesData != null) {
+                    
+                    // loop through all the points
+                    for (var p = 0; p < seriesData.length; p++) {
+                        
+                        // get a point
+                        var point = seriesData[p];
+                        
+                        if (point != null) {
+                            
+                            // get the x and y values
+                            var x = point.x;
+                            var y = point.y;
+                            
+                            if (x != null && y != null) {
+                                
+                                // create an array to hold the x and y values
+                                var dataPoint = [x , y];
+                                
+                                // add the data point array to our data array
+                                plainSeriesData.data.push(dataPoint);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return plainSeriesData;
+        };
+        
+        /**
+         * Get the xAxis object
+         * @return the xAxis object that can be used to render the graph
+         */
+        this.getXAxis = function() {
+            var xAxis = null;
+            
+            /*
+            var highchartsObject = $('#chart1').highcharts();
+            
+            if (highchartsObject != null) {
+                var highchartsObjectXAxis = highchartsObject.xAxis;
+                
+                if (highchartsObjectXAxis != null && highchartsObjectXAxis.length > 0) {
+                    var tempXAxis = highchartsObjectXAxis[0];
+                    
+                    if (tempXAxis != null) {
+                        var min = tempXAxis.min;
+                        var max = tempXAxis.max;
+                        
+                        xAxis.min = min;
+                        xAxis.max = max;
+                    }
+                }
+            }
+            */
+            
+            return xAxis;
+        };
+        
+        /**
+         * Get the yAxis object
+         * @return the yAxis object that can be used to render the graph
+         */
+        this.getYAxis = function() {
+            var yAxis = null;
+            
+            return yAxis;
         };
         
         /**
@@ -179,8 +378,10 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
             }
             
             if (nodeState != null) {
-                // populate the text the student previously typed
-                this.studentResponse = nodeState.studentData;
+                // populate the student data into the node
+                this.series = nodeState.series;
+                this.xAxis = nodeState.xAxis;
+                this.yAxis = nodeState.yAxis;
             }
         };
         
@@ -217,9 +418,9 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
         };
         
         /**
-         * Called when the student changes their text response
+         * Called when the student changes their work
          */
-        this.studentResponseChanged = function() {
+        this.studentDataChanged = function() {
             /*
              * set the dirty flag so we will know we need to save the 
              * student work later
@@ -277,7 +478,8 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                         nodeState = NodeService.createNewNodeState();
                         
                         // set the values into the node state
-                        nodeState.studentData = this.getStudentResponse();
+                        nodeState = this.populateNodeState(nodeState);
+                        
                         nodeState.saveTriggeredBy = saveTriggeredBy;
                         
                         if (saveTriggeredBy === 'submitButton') {
@@ -288,6 +490,28 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                         $scope.$parent.nodeController.addNodeStateToLatestNodeVisit(this.nodeId, nodeState);
                     }
                 }
+            }
+            
+            return nodeState;
+        };
+        
+        /**
+         * Get the student data and populate it into the node state
+         * @param nodeState the node state to populate
+         * @return the nodeState after it has been populated
+         */
+        this.populateNodeState = function(nodeState) {
+            
+            if (nodeState != null) {
+                
+                // insert the series data
+                nodeState.series = this.getSeries();
+                
+                // insert the x axis data
+                nodeState.xAxis = this.getXAxis();
+                
+                // insert the y axis data
+                nodeState.yAxis = this.getYAxis();
             }
             
             return nodeState;
@@ -402,260 +626,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
             clearInterval(this.autoSaveIntervalId);
         };
         
-        this.makeCRaterRequest = function(nodeState, nodeVisit) {
-            var nodeContent = this.nodeContent;
-            
-            if (nodeContent != null && nodeContent.cRater != null) {
-                var cRaterSettings = nodeContent.cRater;
-                var cRaterItemType = cRaterSettings.cRaterItemType;
-                var cRaterItemId = cRaterSettings.cRaterItemId;
-                var cRaterRequestType = 'scoring';
-                var cRaterResponseId = new Date().getTime();
-                var studentData = nodeState.studentData;
-                var nodeState = nodeState;
-                var nodeVisit = nodeVisit;
-                CRaterService
-                    .makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData, nodeState, nodeVisit)
-                    .then(angular.bind(this, function(response) {
-                        this.handleCRaterResponse(response);
-                    }));
-            }
-        };
-        
-        this.handleCRaterResponse = function(response) {
-            var nodeId = this.nodeId;
-            var nodeState = response.nodeState;
-            var nodeVisit = response.nodeVisit;
-            var nodeVisitId = nodeVisit.id;
-            var runId = ConfigService.getRunId();
-            var cRaterItemId = response.config.params.itemId;
-            var cRaterItemType = response.config.params.cRaterItemType;
-
-            // get the score and concepts the student received
-            var cRaterResponse = response.data;
-            var score = cRaterResponse.score;
-            var concepts = cRaterResponse.concepts;
-
-            // now find the feedback that the student should see
-            var cRaterStepContent = this.nodeContent.cRater;
-            var scoringRules = cRaterStepContent.cRaterScoringRules;
-            var maxScore = cRaterStepContent.cRaterMaxScore;
-
-            // get the feedback for the given concepts the student satisfied
-            var feedbackTextObject = CRaterService.getCRaterFeedback(scoringRules, concepts, score, cRaterItemType);
-
-            // get the feedback text and feedback id
-            var feedbackText = feedbackTextObject.feedbackText;
-            var feedbackId = feedbackTextObject.feedbackId;
-
-            //handle multipleAttemptFeedback, if this step has it enabled
-            /*
-            if (cRaterStepContent.enableMultipleAttemptFeedbackRules && 
-                cRaterStepContent.multipleAttemptFeedbackRules != null &&
-                cRaterStepContent.multipleAttemptFeedbackRules.rules != null &&
-                cRaterStepContent.multipleAttemptFeedbackRules.rules.length > 0) {
-                
-                var authoredScoreSequenceRules = cRaterStepContent.multipleAttemptFeedbackRules.rules;
-                var fromWorkgroups = [-1];
-                var type = "autoGraded";
-            
-                // get the last annotation, if exists
-                var latestCRaterAnnotation = view.model.annotations.getLatestAnnotation(runId, nodeId, toWorkgroupId, fromWorkgroups, type);
-                if (latestCRaterAnnotation != null && latestCRaterAnnotation.value.length > 0) {
-                    var lastCRaterAnnotation = latestCRaterAnnotation.value[latestCRaterAnnotation.value.length-1];
-                    if (lastCRaterAnnotation != null && lastCRaterAnnotation.autoScore) {
-                        var lastCRaterScore = lastCRaterAnnotation.autoScore;
-                                                    
-                        // test against authored scoreSequences
-                        for (var ruleIndex = 0; ruleIndex < authoredScoreSequenceRules.length; ruleIndex++) {
-                            var ruleScoreSequenceLastScore = authoredScoreSequenceRules[ruleIndex].scoreSequence[0];
-                            var ruleScoreSequenceCurrentScore = authoredScoreSequenceRules[ruleIndex].scoreSequence[1];
-                            
-                            if (lastCRaterScore.toString().match("["+ruleScoreSequenceLastScore+"]") &&
-                                    score.toString().match("["+ruleScoreSequenceCurrentScore+"]")) {
-                                feedbackText = authoredScoreSequenceRules[ruleIndex].feedback;
-                                feedbackId = authoredScoreSequenceRules[ruleIndex].id;
-                                break;
-                            }
-                        }                       
-                    }
-                }
-            }
-            */
-            
-            // get the node state timestamp which we will use as the node state id
-            var nodeStateId = nodeState.timestamp;            
-            
-            //create the auto graded annotation value
-            var annotationValue = {
-                autoScore: score,
-                maxAutoScore: maxScore,
-                autoFeedback: feedbackText,
-                concepts: concepts,
-                nodeStateId:nodeStateId
-            }
-            
-            var annotationType = 'autoGraded';
-            
-            // add the auto graded annotation value to the auto graded annotation for this step current node visit
-            var fromWorkgroup = -1;
-            var toWorkgroup = ConfigService.getWorkgroupId();;
-            var postTime = null;
-                
-            var annotation = AnnotationService.createAnnotation(annotationType, nodeId, annotationValue, nodeVisitId, runId, fromWorkgroup, toWorkgroup, postTime);
-            AnnotationService.saveAnnotation(annotation);
-            
-            // check if we need to display the auto score or auto feedback to the student
-            var displayCRaterScoreToStudent = cRaterStepContent.displayCRaterScoreToStudent;
-            var displayCRaterFeedbackToStudent = cRaterStepContent.displayCRaterFeedbackToStudent;
-
-            if (displayCRaterScoreToStudent || displayCRaterFeedbackToStudent) {
-                // we will display the score or feedback (or both) to the student
-
-                var hasScore = false;
-                var hasFeedback = false;
-                
-                var cRaterFeedbackStringSoFar = "<span class='nodeAnnotationsCRater'>";
-
-                if (displayCRaterScoreToStudent) {
-                    if (score != null && score != "") {
-                        // the student has received a score
-                        hasScore = true;
-                    }
-                }
-
-                if(displayCRaterFeedbackToStudent) {
-                    if (feedbackText != null && feedbackText != "") {
-                        // the student has received feedback
-                        hasFeedback = true;
-                    }
-                }
-
-                if (hasScore || hasFeedback) {
-                    if (!suppressFeedback) {
-                        // popup the auto graded annotation to the student
-                        eventManager.fire("showNodeAnnotations", [nodeId]);                      
-                    }
-                }
-                
-                // handle rewrite/revise
-                if (score != null) {
-                    //get the student action for the given score
-                    var studentAction = or.getStudentAction(score);
-                    
-                    if (studentAction == null) {
-                        //do nothing
-                    } else if (studentAction == 'rewrite') {
-                        //
-                        // move the current work to the previous work response box
-                        // because we want to display the previous work to the student
-                        // and have them re-write another response after they
-                        // receive the immediate CRater feedback
-                        //
-                        or.showPreviousWorkThatHasAnnotation(studentData);
-                        
-                        //clear the response box so they will need to write a new response
-                        $('#responseBox').val('');
-                    } else if (studentAction == 'revise') {
-                        //
-                        // the student will need to revise their work so we will hide the
-                        // previous response display
-                        //
-                        $('#previousResponseDisplayDiv').hide();
-                    }
-                }
-            }
-            
-            // this student work was graded by CRater
-            nodeState.checkWork = true;
-            
-            // check if we need to disable the check answer button
-            if ((or.content.cRater != null && or.content.cRater.maxCheckAnswers != null && or.isCRaterMaxCheckAnswersUsedUp()) || or.isLocked()) {
-                //student has used up all of their CRater check answer submits so we will disable the check answer button
-                or.setCheckAnswerUnavailable();
-            } else {
-                //the student still has check answer submits available
-                or.setCheckAnswerAvailable();
-            }
-            
-            // process the student work to see if we need to activate any 
-            // teacher notifications
-            // or.processTeacherNotifications(nodeVisit, nodeState, cRaterResponse);
-            
-            // save the student work to the server immediately
-            view.getProject().getNodeById(nodeId).save(nodeState);            
-            
-        };
-        
-        
-        this.startCallback = function(event, ui, title) {
-            console.log('You started dragging');
-        };
-        
-        this.dropCallback = angular.bind(this, function(event, ui, title, $index) {
-            if (this.isDisabled) {
-                // don't import if step is disabled/locked
-                return;
-            }
-            
-            var objectType = $(ui.helper.context).data('objectType');
-            var importWorkNodeState = $(ui.helper.context).data('importWorkNodeState');
-            var importWorkNodeType = $(ui.helper.context).data('importWorkNodeType');
-            var importPortfolioItem = $(ui.helper.context).data('importPortfolioItem');
-            if (importPortfolioItem != null) {
-                var nodeId = importPortfolioItem.nodeId;
-                var node = ProjectService.getNodeById(nodeId);
-                importWorkNodeType = node.type;
-
-                var nodeVisit = importPortfolioItem.nodeVisit;
-                var nodeStates = nodeVisit.nodeStates;
-                if (nodeStates !== null) {
-                    if (nodeStates.length > 0) {
-                        importWorkNodeState = nodeStates[nodeStates.length - 1];
-                    }
-                }
-                
-            }
-            if (importWorkNodeState != null && importWorkNodeType != null) {
-                var populatedNodeState = OpenResponseService.populateNodeState(importWorkNodeState, importWorkNodeType);
-
-                // if student already has work, prepend it
-                var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
-                if (latestNodeState != null) {
-                    var latestResponse = latestNodeState.studentData;
-                    if (latestResponse != null) {
-                        populatedNodeState.studentData = latestResponse + populatedNodeState.studentData;
-                    }
-                }
-                
-                this.setStudentWork(populatedNodeState);
-                this.studentResponseChanged()
-            } else if (objectType === 'StudentAsset') {
-                var studentAsset = $(ui.helper.context).data('objectData');
-                StudentAssetService.copyAssetForReference(studentAsset).then(angular.bind(this, function(copiedAsset) {
-                    if (copiedAsset != null) {
-                        var nodeState = StudentDataService.createNodeState();
-                        var copiedAssetImg = '<img id="' + copiedAsset.url + '" class="studentAssetReference" src="' + copiedAsset.iconURL + '"></img>';
-                        
-                        var latestNodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
-                        
-                        if (this.isDirty && this.studentResponse != null) {
-                            // if student has edited but not saved yet, append student asset to the unsaved work
-                            nodeState.studentData = this.studentResponse + copiedAssetImg;
-                        } else if (latestNodeState != null && latestNodeState.studentData != null) {
-                            // if student already has saved work, prepend it
-                            nodeState.studentData = latestNodeState.studentData + copiedAssetImg;
-                        } else {
-                            // otherwise, just use the asset image
-                            nodeState.studentData = copiedAssetImg;
-                        }
-                        this.setStudentWork(nodeState);
-                        this.studentResponseChanged()
-                    }
-                }));
-            }
-        });
-        
         /**
          * Get the prompt to show to the student
          */
@@ -752,7 +722,7 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                                      * populate a new node state with the work from the 
                                      * imported node state
                                      */
-                                    var populatedNodeState = OpenResponseService.populateNodeState(importWorkNodeState, importWorkNodeType);
+                                    var populatedNodeState = GraphService.populateNodeState(importWorkNodeState, importWorkNodeType);
                                     
                                     // populate the node state into this node
                                     this.setStudentWork(populatedNodeState);
@@ -775,16 +745,8 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
         $scope.getStudentWorkObject = function() {
             var studentWork = {};
             
-            // get the text the student typed
-            var studentResponse = $scope.openResponseController.studentResponse;
-            
-            if (studentResponse != null) {
-                /*
-                 * set the student response into the student data field in the
-                 * student work
-                 */
-                studentWork.studentData = studentResponse;
-            }
+            // insert the student data into the student data object
+            studentWork = $scope.graphController.populateNodeState(studentWork);
             
             return studentWork;
         };

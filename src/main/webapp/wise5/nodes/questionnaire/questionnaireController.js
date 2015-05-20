@@ -232,7 +232,9 @@ define(['app'], function(app) {
         this.showSaveButton = function() {
             var result = false;
             
-            result = true;
+            if (this.nodeContent != null && this.nodeContent.showSaveButton) {
+                result = true;
+            }
             
             return result;
         };
@@ -244,7 +246,9 @@ define(['app'], function(app) {
         this.showSubmitButton = function() {
             var result = false;
             
-            result = true;
+            if (this.nodeContent != null && this.nodeContent.showSubmitButton) {
+                result = true;
+            }
             
             return result;
         };

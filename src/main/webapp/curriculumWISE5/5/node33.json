@@ -1,0 +1,9 @@
+{
+    "title": "Pie Chart",
+    "graphType": "pie",
+    "series": [
+        {
+            "data": [["Pepperoni", 5], ["Sausage", 3], ["Mushroom", 2], ["Olive", 1]]
+        }
+    ]
+}

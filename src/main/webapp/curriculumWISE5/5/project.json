@@ -267,6 +267,51 @@
             "r": 20
         },
         {
+            "id": "node30",
+            "type": "Graph",
+            "title": "Node 30",
+            "src": "node30.json",
+            "x": 50,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node31",
+            "type": "Graph",
+            "title": "Node 31",
+            "src": "node31.json",
+            "x": 150,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node32",
+            "type": "Graph",
+            "title": "Node 32",
+            "src": "node32.json",
+            "x": 250,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node33",
+            "type": "Graph",
+            "title": "Node 33",
+            "src": "node33.json",
+            "x": 350,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node34",
+            "type": "Questionnaire",
+            "title": "Node 34",
+            "src": "node34.json",
+            "x": 450,
+            "y": 140,
+            "r": 20
+        },
+        {
             "id": "group0",
             "type": "group",
             "title": "My First WISE5 Project",
@@ -274,7 +319,8 @@
             "ids": [
                 "group1",
                 "group2",
-                "group3"
+                "group3",
+                "group4"
             ],
             "x": 50,
             "y": 50,
@@ -338,6 +384,22 @@
                 "node29"
             ],
             "x": 250,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "group4",
+            "type": "group",
+            "title": "Activity 4",
+            "startId": "node30",
+            "ids": [
+                "node30",
+                "node31",
+                "node32",
+                "node33",
+                "node34"
+            ],
+            "x": 350,
             "y": 140,
             "r": 20
         }
@@ -487,6 +549,31 @@
             "id": "transition29",
             "from": "node28",
             "to": "node29"
+        },
+        {
+            "id": "transition30",
+            "from": "node29",
+            "to": "node30"
+        },
+        {
+            "id": "transition31",
+            "from": "node30",
+            "to": "node31"
+        },
+        {
+            "id": "transition32",
+            "from": "node31",
+            "to": "node32"
+        },
+        {
+            "id": "transition33",
+            "from": "node32",
+            "to": "node33"
+        },
+        {
+            "id": "transition34",
+            "from": "node33",
+            "to": "node34"
         }
     ],
     "startGroupId": "group0",

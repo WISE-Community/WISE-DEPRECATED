@@ -11,6 +11,10 @@ define(['nodeService'], function(nodeService) {
             return result;
         };
         
+        /**
+         * Get the student work as html
+         * @param nodeState the node state
+         */
         serviceObject.getStudentWorkAsHTML = function(nodeState) {
             var studentWorkAsHTML = null;
             
@@ -31,11 +35,9 @@ define(['nodeService'], function(nodeService) {
             if (nodeStateFromOtherNode != null && otherNodeType != null) {
                 nodeState = StudentDataService.createNodeState();
                 
-                if (otherNodeType === 'OpenResponse') {
+                if (otherNodeType === 'Graph') {
                     nodeState.studentData = nodeStateFromOtherNode.studentData;
-                } else if (otherNodeType === 'Planning') {
-                    nodeState.studentData = JSON.stringify(nodeStateFromOtherNode.studentNodes);
-                } 
+                }
             }
             
             return nodeState;

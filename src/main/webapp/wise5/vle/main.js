@@ -25,6 +25,7 @@ require.config({
         'graphController': 'nodes/graph/graphController',
         'graphService': 'nodes/graph/graphService',
         'highcharts': 'lib/highcharts/highcharts.src',
+        'highcharts-more': 'lib/highcharts/highcharts-more',
         'highcharts-ng': 'lib/highcharts/highcharts-ng',
         'htmlController': 'nodes/html/htmlController',
         'jquery': 'lib/jquery/jquery-2.1.3.min',
@@ -136,6 +137,13 @@ require.config({
             'deps': [
                     'angular',
                     'jquery'
+                    ]
+        },
+        'highcharts-more': {
+            'exports': 'highcharts-more',
+            'deps': [
+                    'angular',
+                    'highcharts'
                     ]
         },
         'highcharts-ng': {
