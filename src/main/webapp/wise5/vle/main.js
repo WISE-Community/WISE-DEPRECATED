@@ -53,6 +53,8 @@ require.config({
         'studentDataService': 'services/studentDataService',
         'studentStatusService': 'services/studentStatusService',
         'studentWebSocketService': 'services/studentWebSocketService',
+        'tableController': 'nodes/table/tableController',
+        'tableService': 'nodes/table/tableService',
         'vleController': 'vle/vleController'
     },
     shim: {

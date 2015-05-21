@@ -1,3 +1,11 @@
 <div ng-controller='GraphController as graphController'>
 <highchart id="chart1" config="graphController.chartConfig" class="span10"></highchart>
+<button id='saveButton' 
+    ng-click='graphController.saveButtonClicked()' 
+    ng-disabled='graphController.isDisabled' 
+    ng-show='graphController.showSaveButton()'>Save</button>
+<button id='submitButton' 
+    ng-click='graphController.submitButtonClicked()' 
+    ng-disabled='graphController.isDisabled' 
+    ng-show='graphController.showSubmitButton()'>Submit</button>
 </div>

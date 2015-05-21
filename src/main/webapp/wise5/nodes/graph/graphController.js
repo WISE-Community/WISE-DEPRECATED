@@ -88,7 +88,7 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                     // get the latest node state
                     var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
                     
-                    // popualte the student work into this node
+                    // populate the student work into this node
                     this.setStudentWork(nodeState);
                     
                     // setup the graph

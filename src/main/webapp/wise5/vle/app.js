@@ -33,7 +33,8 @@ define([
         'studentAssetService',
         'studentDataService',
         'studentStatusService',
-        'studentWebSocketService'
+        'studentWebSocketService',
+        'tableService'
         ], function(
                 angular,
                 bootstrap,
@@ -69,7 +70,8 @@ define([
                 studentAssetService,
                 studentDataService,
                 studentStatusService,
-                studentWebSocketService
+                studentWebSocketService,
+                tableService
                 ) {
 
     var app = angular.module('app', [
@@ -107,6 +109,7 @@ define([
     app.factory('OpenResponseService', openResponseService);
     app.factory('OutsideURLService', outsideURLService);
     app.factory('QuestionnaireService', questionnaireService);
+    app.factory('TableService', tableService);
     
     app.filter('sanitizeHTML', ['$sce', function($sce) {
         return function(htmlCode) {
@@ -186,7 +189,8 @@ define([
                             outsideURLController: app.loadController('outsideURLController'),
                             photoBoothController: app.loadController('photoBoothController'),
                             planningController: app.loadController('planningController'),
-                            questionnaireController: app.loadController('questionnaireController')
+                            questionnaireController: app.loadController('questionnaireController'),
+                            tableController: app.loadController('tableController')
                         }
                     }
                 }

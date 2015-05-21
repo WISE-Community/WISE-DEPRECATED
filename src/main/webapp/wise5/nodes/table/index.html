@@ -1,0 +1,23 @@
+<div ng-controller='TableController as tableController'>
+    <div>{{tableController.getPrompt()}}</div>
+    <button ng-click='tableController.resetTable()'>Reset Table</button>
+    <table>
+        <tr ng-repeat='row in tableController.getTableDataRows()'>
+            <td ng-repeat='cell in row'>
+                <input type='text' 
+                    ng-model='cell.text' 
+                    ng-change='tableController.studentDataChanged()'
+                    size='{{cell.size}}' 
+                    ng-disabled='{{cell.uneditable}}'></input>
+            </td>
+        </tr>
+    </table>
+    <button id='saveButton' 
+        ng-click='tableController.saveButtonClicked()' 
+        ng-disabled='tableController.isDisabled' 
+        ng-show='tableController.showSaveButton()'>Save</button>
+    <button id='submitButton' 
+        ng-click='tableController.submitButtonClicked()' 
+        ng-disabled='tableController.isDisabled' 
+        ng-show='tableController.showSubmitButton()'>Submit</button>
+</div>

@@ -312,6 +312,24 @@
             "r": 20
         },
         {
+            "id": "node35",
+            "type": "Table",
+            "title": "Node 35",
+            "src": "node35.json",
+            "x": 550,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node36",
+            "type": "Questionnaire",
+            "title": "Node 36",
+            "src": "node36.json",
+            "x": 650,
+            "y": 140,
+            "r": 20
+        },
+        {
             "id": "group0",
             "type": "group",
             "title": "My First WISE5 Project",
@@ -397,7 +415,9 @@
                 "node31",
                 "node32",
                 "node33",
-                "node34"
+                "node34",
+                "node35",
+                "node36"
             ],
             "x": 350,
             "y": 140,
@@ -574,6 +594,16 @@
             "id": "transition34",
             "from": "node33",
             "to": "node34"
+        },
+        {
+            "id": "transition35",
+            "from": "node34",
+            "to": "node35"
+        },
+        {
+            "id": "transition36",
+            "from": "node35",
+            "to": "node36"
         }
     ],
     "startGroupId": "group0",
