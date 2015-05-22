@@ -44,7 +44,7 @@
     cols='{{openResponseController.getNumColumns() || 100}}'
     ng-model='openResponseController.studentResponse'
     ng-disabled='openResponseController.isDisabled' 
-    ng-change='openResponseController.studentResponseChanged()'
+    ng-change='openResponseController.studentDataChanged()'
     data-drop="true" 
     jqyoui-droppable="{onDrop: 'openResponseController.dropCallback(item, $index)'}">
     </div>

@@ -160,6 +160,38 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                 series = this.nodeContent.series;
             }
             
+            if (this.canClickToAddData()) {
+                /*
+                 * the student can click to add a point so we will also allow
+                 * them to click to remove a point
+                 */
+                
+                if (series != null) {
+                    
+                    // loop through all the series
+                    for (var s = 0; s < series.length; s++) {
+                        
+                        /*
+                         * create a point click event to remove a point when
+                         * it is clicked
+                         */
+                        var point = {
+                            events: {
+                                click: function (e) {
+                                    this.remove();
+                                    
+                                    thisGraphController.studentDataChanged();
+                                    
+                                    $scope.$apply();
+                                }
+                            }
+                        };
+                        
+                        series[s].point = point;
+                    }
+                }
+            }
+            
             this.chartConfig = {
                 options: {
                     chart: {
@@ -195,6 +227,8 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                                      * data has changed
                                      */
                                     thisGraphController.studentDataChanged();
+                                    
+                                    $scope.$apply();
                                 }
                             }
                         }
@@ -208,8 +242,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                 yAxis: yAxis,
                 loading: false
             };
-            
-            this.studentDataChanged();
         };
         
         /**
@@ -430,9 +462,25 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
             if (this.isNodePart) {
                 /*
                  * this step is a node part so we will tell its parent that
-                 * the student work is dirty and will need to be saved
+                 * the student work has changed and will need to be saved
                  */
-                $scope.$emit('isDirty');
+                
+                // get this part id
+                var partId = this.getPartId();
+                
+                // get the current student data for this node
+                var nodeState = NodeService.createNewNodeState();
+                
+                // set the values into the node state
+                nodeState = this.populateNodeState(nodeState);
+                
+                /*
+                 * this step is a node part so we will tell its parent that
+                 * the student work has changed and will need to be saved.
+                 * this will also notify connected parts that this part's
+                 * student data has changed.
+                 */
+                $scope.$emit('partStudentDataChanged', {partId: partId, nodeState: nodeState});
             }
         };
         
@@ -732,6 +780,174 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                     }
                 }
             }
+        };
+        
+        /**
+         * A connected part has changed its student data so we will
+         * perform any necessary changes to this part
+         * @param connectedPart the connected part parameters
+         * @param nodeState the student data from the connected part 
+         * that has changed
+         */
+        $scope.handleConnectedPartStudentDataChanged = function(connectedPart, nodeState) {
+            
+            if (connectedPart != null && nodeState != null) {
+                
+                // get the part type that has changed
+                var partType = connectedPart.partType;
+                
+                if (partType === 'Table') {
+                    
+                    // convert the table data to series data
+                    var data = $scope.graphController.convertTableDataToSeriesData(nodeState, connectedPart);
+                    
+                    // create a new series object
+                    var series = {};
+                    
+                    // set the data into the series
+                    series.data = data;
+                    
+                    if ($scope.graphController.series == null) {
+                        // initialize the series in the controller
+                        $scope.graphController.series = [];
+                    }
+                    
+                    // set the series into the array of series
+                    $scope.graphController.series[0] = series;
+                    
+                    // render the graph
+                    $scope.graphController.setupGraph();
+                }
+            }
+        }
+        
+        /**
+         * Convert the table data into series data
+         * @param nodeState the node state to get table data from
+         * @param params (optional) the params to specify what columns
+         * and rows to use from the table data
+         */
+        this.convertTableDataToSeriesData = function(nodeState, params) {
+            var data = [];
+            
+            /*
+             * the default is set to not skip the first row and for the
+             * x column to be the first column and the y column to be the
+             * second column
+             */
+            var skipFirstRow = false;
+            var xColumn = 0;
+            var yColumn = 1;
+            
+            if (params != null) {
+                
+                if (params.skipFirstRow != null) {
+                    // determine whether to skip the first row
+                    skipFirstRow = params.skipFirstRow;
+                }
+                
+                if (params.xColumn != null) {
+                    // get the x column
+                    xColumn = params.xColumn;
+                }
+                
+                if (params.yColumn != null) {
+                    // get the y column
+                    yColumn = params.yColumn;
+                }
+            }
+            
+            if (nodeState != null) {
+                
+                // get the rows in the table
+                var rows = nodeState.tableData;
+                
+                // loop through all the rows
+                for (var r = 0; r < rows.length; r++) {
+                    
+                    if (skipFirstRow && r === 0) {
+                        // skip the first row
+                        continue;
+                    }
+                    
+                    // get the row
+                    var row = rows[r];
+                    
+                    // get the x cell and y cell from the row
+                    var xCell = row[xColumn];
+                    var yCell = row[yColumn];
+                    
+                    if (xCell != null && yCell != null) {
+                        
+                        /*
+                         * the point array where the 0 index will contain the
+                         * x value and the 1 index will contain the y value
+                         */
+                        var point = [];
+                        
+                        // get the x text and y text
+                        var xText = xCell.text;
+                        var yText = yCell.text;
+                        
+                        if (xText != null &&
+                                xText !== '' &&
+                                yText != null &&
+                                yText !== '') {
+                            
+                            // try to convert the text values into numbers
+                            var xNumber = Number(xText);
+                            var yNumber = Number(yText);
+                            
+                            if (!isNaN(xNumber)) {
+                                /*
+                                 * we were able to convert the value into a
+                                 * number so we will add that
+                                 */
+                                point.push(xNumber);
+                            } else {
+                                /*
+                                 * we were unable to convert the value into a
+                                 * number so we will add the text
+                                 */
+                                point.push(xText);
+                            }
+                            
+                            if (!isNaN(yNumber)) {
+                                /*
+                                 * we were able to convert the value into a
+                                 * number so we will add that
+                                 */
+                                point.push(yNumber);
+                            } else {
+                                /*
+                                 * we were unable to convert the value into a
+                                 * number so we will add the text
+                                 */
+                                point.push(yText);
+                            }
+                            
+                            // add the point to our data
+                            data.push(point);
+                        }
+                    }
+                }
+            }
+            
+            return data;
+        };
+        
+        /**
+         * Get the part id if this node is part of a Questionnaire node
+         * @return the part id
+         */
+        this.getPartId = function() {
+            var partId = null;
+            
+            if (this.isNodePart) {
+                partId = this.nodeContent.id;
+            }
+            
+            return partId;
         };
         
         /**

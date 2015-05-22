@@ -211,6 +211,42 @@ define(['app'], function(app) {
         };
         
         /**
+         * Get the part given the part id
+         * @param partId the part id we want
+         * @return the part object with the given part id
+         */
+        this.getPartByPartId = function(partId) {
+            
+            var part = null;
+            
+            if (partId != null) {
+                
+                // get all the parts
+                var parts = this.getParts();
+                
+                // loop through all the parts
+                for (var p = 0; p < parts.length; p ++) {
+                    
+                    // get a part
+                    var tempPart = parts[p];
+                    
+                    if (tempPart != null) {
+                        var tempPartId = tempPart.id;
+                        
+                        // check if the part id matches the one we want
+                        if (tempPartId === partId) {
+                            // the part id matches
+                            part = tempPart;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return part;
+        };
+        
+        /**
          * Get the html template for the node part
          * @param partType the node type
          * @return the path to the html template for the node part
@@ -345,16 +381,118 @@ define(['app'], function(app) {
         }
         
         /**
-         * Listen for the isDirty event that will come from child part scopes
+         * Listen for the partStudentDataChanged event that will come from 
+         * child part scopes
+         * @param event
+         * @param args the arguments provided when the event is fired
          */
-        $scope.$on('isDirty', angular.bind(this, function() {
-            
+        $scope.$on('partStudentDataChanged', angular.bind(this, function(event, args) {
             /*
              * the student data in one of our child scopes has changed so
              * we will need to save
              */
             this.isDirty = true;
+            
+            if (args != null) {
+                
+                // get the part id
+                var partId = args.partId;
+                
+                // get the new node state
+                var nodeState = args.nodeState;
+                
+                if (partId != null && nodeState != null) {
+                    
+                    /*
+                     * notify the parts that are connected that the student 
+                     * data has changed
+                     */
+                    this.notifyConnectedParts(partId, nodeState);
+                }
+            }
         }));
+        
+        /**
+         * Notify any connected parts that the student data has changed
+         * @param partId the part id that has changed
+         * @param nodeState the new student data
+         */
+        this.notifyConnectedParts = function(changedPartId, nodeState) {
+            
+            if (changedPartId != null && nodeState != null) {
+                
+                // get all the parts
+                var parts = this.getParts();
+                
+                if (parts != null) {
+                    
+                    /*
+                     * loop through all the parts and look for parts that
+                     * are listening for the given part id to change.
+                     * only notify parts that are listening for changes
+                     * from the specific part id.
+                     */
+                    for (var p = 0; p < parts.length; p ++) {
+                        
+                        // get a part
+                        var part = parts[p];
+                        
+                        if (part != null) {
+                            
+                            // get this part id
+                            var partId = part.id;
+                            
+                            /*
+                             * get the connected parts that this part is 
+                             * listening for
+                             */
+                            var connectedParts = part.connectedParts;
+                            
+                            if (connectedParts != null) {
+                                
+                                // loop through all the connected parts
+                                for (var c = 0; c < connectedParts.length; c++) {
+                                    
+                                    // get a connected part
+                                    var connectedPart = connectedParts[c];
+                                    
+                                    if (connectedPart != null) {
+                                        
+                                        // get the connected part id
+                                        var connectedPartId = connectedPart.id;
+                                        
+                                        // check if the part id matches the one that has changed
+                                        if (connectedPartId === changedPartId) {
+                                            
+                                            // get the scope for the listening part
+                                            var partScope = $scope.partToScope[partId];
+                                            
+                                            // check if the listening part has a handler function
+                                            if (partScope.handleConnectedPartStudentDataChanged != null) {
+                                                
+                                                // get the part object that has changed
+                                                var partObject = this.getPartByPartId(changedPartId);
+                                                
+                                                if (partObject != null) {
+                                                    /*
+                                                     * inject the part type so we will know what type of
+                                                     * node the student data is coming from
+                                                     */
+                                                    connectedPart.partType = partObject.partType;
+                                                }
+                                                
+                                                // tell the listening part to handle the student data changing
+                                                partScope.handleConnectedPartStudentDataChanged(connectedPart, nodeState);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
         
         /**
          * Get the student data for a specific part

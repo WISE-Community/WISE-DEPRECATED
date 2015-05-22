@@ -2,7 +2,15 @@
     "prompt": "Fill out the table and look at the graph.",
     "parts": [
         {
-            "id": "8g826fo2ga",
+            "id": "wgfh6fo2ga",
+            "connectedParts": [
+                {
+                    "id": "g827g29hg8",
+                    "skipFirstRow": true,
+                    "xColumn": 1,
+                    "yColumn": 2
+                }
+            ],
             "partType": "Table",
             "prompt": "Fill out the table.",
             "tableData": [
@@ -28,7 +36,7 @@
                         "uneditable": false
                     },
                     {
-                        "text": "1",
+                        "text": "0",
                         "uneditable": false,
                         "size": 10
                     },
@@ -44,7 +52,7 @@
                         "uneditable": false
                     },
                     {
-                        "text": "2",
+                        "text": "1",
                         "uneditable": false,
                         "size": 10
                     },
@@ -60,12 +68,60 @@
                         "uneditable": false
                     },
                     {
-                        "text": "3",
+                        "text": "2",
                         "uneditable": false,
                         "size": 10
                     },
                     {
                         "text": "9",
+                        "uneditable": false,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "",
+                        "uneditable": false
+                    },
+                    {
+                        "text": "",
+                        "uneditable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "",
+                        "uneditable": false,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "",
+                        "uneditable": false
+                    },
+                    {
+                        "text": "",
+                        "uneditable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "",
+                        "uneditable": false,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "",
+                        "uneditable": false
+                    },
+                    {
+                        "text": "",
+                        "uneditable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "",
                         "uneditable": false,
                         "size": 10
                     }
@@ -77,9 +133,17 @@
         },
         {
             "id": "g827g29hg8",
+            "connectedParts": [
+                {
+                    "id": "wgfh6fo2ga",
+                    "skipFirstRow": true,
+                    "xColumn": 1,
+                    "yColumn": 2
+                }
+            ],
             "partType": "Graph",
-            "title": "Scatter Plot",
-            "graphType": "scatter",
+            "title": "Line Graph",
+            "graphType": "line",
             "xAxis": {
                 "title": {
                     "text": "time (seconds)"
@@ -96,13 +160,10 @@
             },
             "series": [
                 {
-                    "data": [[0, 0], [5, 1], [10, 2], [15, 3]]
-                },
-                {
-                    "data": [[0, 0], [5, 10], [10, 20], [16, 30]]
+                    "data": []
                 }
             ],
-            "canClickToAddData": false
+            "canClickToAddData": true
         }
     ],
     "lockAfterSubmit": false,

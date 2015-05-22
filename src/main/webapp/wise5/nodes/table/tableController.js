@@ -223,9 +223,25 @@ define(['app'], function(app) {
             if (this.isNodePart) {
                 /*
                  * this step is a node part so we will tell its parent that
-                 * the student work is dirty and will need to be saved
+                 * the student work has changed and will need to be saved
                  */
-                $scope.$emit('isDirty');
+                
+                // get this part id
+                var partId = this.getPartId();
+                
+                // get the current student data for this node
+                var nodeState = NodeService.createNewNodeState();
+                
+                // set the values into the node state
+                nodeState = this.populateNodeState(nodeState);
+                
+                /*
+                 * this step is a node part so we will tell its parent that
+                 * the student work has changed and will need to be saved.
+                 * this will also notify connected parts that this part's
+                 * student data has changed.
+                 */
+                $scope.$emit('partStudentDataChanged', {partId: partId, nodeState: nodeState});
             }
         };
         
@@ -519,6 +535,169 @@ define(['app'], function(app) {
                 }
             }
         };
+        
+        /**
+         * A connected part has changed its student data so we will
+         * perform any necessary changes to this part
+         * @param connectedPart the connected part parameters
+         * @param nodeState the student data from the connected part 
+         * that has changed
+         */
+        $scope.handleConnectedPartStudentDataChanged = function(connectedPart, nodeState) {
+            
+            if (connectedPart != null && nodeState != null) {
+                
+                // get the part type that has changed
+                var partType = connectedPart.partType;
+                
+                if (partType === 'Graph') {
+                    
+                    $scope.tableController.setGraphDataIntoTableData(nodeState, connectedPart);
+                }
+            }
+        }
+        
+        /**
+         * Set the graph data into the table data
+         * @param nodeState the node state to get the graph data from
+         * @param params (optional) the params to specify what columns
+         * and rows to overwrite in the table data
+         */
+        this.setGraphDataIntoTableData = function(nodeState, params) {
+            
+            /*
+             * the default is set to not skip the first row and for the
+             * x column to be the first column and the y column to be the
+             * second column
+             */
+            var skipFirstRow = false;
+            var xColumn = 0;
+            var yColumn = 1;
+            
+            if (params != null) {
+                
+                if (params.skipFirstRow != null) {
+                    // determine whether to skip the first row
+                    skipFirstRow = params.skipFirstRow;
+                }
+                
+                if (params.xColumn != null) {
+                    // get the x column
+                    xColumn = params.xColumn;
+                }
+                
+                if (params.yColumn != null) {
+                    // get the y column
+                    yColumn = params.yColumn;
+                }
+            }
+            
+            if (nodeState != null) {
+                
+                // get the table data rows
+                var tableDataRows = this.getTableDataRows();
+                
+                if (tableDataRows != null) {
+                    
+                    var data = null;
+                    
+                    // get the series
+                    var series = nodeState.series;
+                    
+                    if (series != null && series.length > 0) {
+                        
+                        // get the first series
+                        var tempSeries = series[0];
+                        
+                        if (tempSeries != null) {
+                            
+                            // get the data from the series
+                            data = tempSeries.data;
+                            
+                            if (data != null) {
+                                
+                                // our counter for traversing the data rows
+                                var dataRowCounter = 0;
+                                
+                                // loop through all the table data rows
+                                for (var r = 0; r < tableDataRows.length; r++) {
+                                    
+                                    if (skipFirstRow && r === 0) {
+                                        // skip the first table data row
+                                        continue;
+                                    }
+                                    
+                                    var x = '';
+                                    var y = '';
+                                    
+                                    // get the data row
+                                    var dataRow = data[dataRowCounter];
+                                    
+                                    if (dataRow != null) {
+                                        // get the x and y values from the data row
+                                        x = dataRow[0];
+                                        y = dataRow[1];
+                                        
+                                    }
+                                    
+                                    // set the x and y values into the table data
+                                    this.setTableDataCellValue(xColumn, r, x);
+                                    this.setTableDataCellValue(yColumn, r, y);
+                                    
+                                    // increment the data row counter
+                                    dataRowCounter++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        
+        /**
+         * Set the table data cell value
+         * @param x the x index (0 indexed)
+         * @param y the y index (0 indexed)
+         * @param value the value to set in the cell
+         */
+        this.setTableDataCellValue = function(x, y, value) {
+            
+            // get the table data rows
+            var tableDataRows = this.getTableDataRows();
+            
+            if (tableDataRows != null) {
+                
+                // get the row we want
+                var row = tableDataRows[y];
+                
+                if (row != null) {
+                    
+                    // get the cell we want
+                    var cell = row[x];
+                    
+                    if (cell != null) {
+                        
+                        // set the value into the cell
+                        cell.text = value;
+                    }
+                }
+            }
+        };
+        
+        /**
+         * Get the part id if this node is part of a Questionnaire node
+         * @return the part id
+         */
+        this.getPartId = function() {
+            var partId = null;
+            
+            if (this.isNodePart) {
+                partId = this.nodeContent.id;
+            }
+            
+            return partId;
+        };
+        
         
         /**
          * Get the student work object that will contain the student

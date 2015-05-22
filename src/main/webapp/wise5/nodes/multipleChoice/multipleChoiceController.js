@@ -221,7 +221,7 @@ define(['app'], function(app) {
                 }
                 
                 // notify this node that the student choice has changed
-                this.studentChoiceChanged();
+                this.studentDataChanged();
             }
         };
         
@@ -389,9 +389,9 @@ define(['app'], function(app) {
         };
         
         /**
-         * Called when the student changes a choice
+         * Called when the student changes their work
          */
-        this.studentChoiceChanged = function() {
+        this.studentDataChanged = function() {
             /*
              * set the dirty flag so we will know we need to save the 
              * student work later
@@ -401,9 +401,25 @@ define(['app'], function(app) {
             if (this.isNodePart) {
                 /*
                  * this step is a node part so we will tell its parent that
-                 * the student work is dirty and will need to be saved
+                 * the student work has changed and will need to be saved
                  */
-                $scope.$emit('isDirty');
+                
+                // get this part id
+                var partId = this.getPartId();
+                
+                // get the current student data for this node
+                var nodeState = NodeService.createNewNodeState();
+                
+                // set the values into the node state
+                nodeState = this.populateNodeState(nodeState);
+                
+                /*
+                 * this step is a node part so we will tell its parent that
+                 * the student work has changed and will need to be saved.
+                 * this will also notify connected parts that this part's
+                 * student data has changed.
+                 */
+                $scope.$emit('partStudentDataChanged', {partId: partId, nodeState: nodeState});
             }
         };
         
@@ -438,14 +454,11 @@ define(['app'], function(app) {
                         // check if the student has answered correctly
                         var hasCorrect = this.hasCorrectChoices();
                         
-                        // get the choices the student chose
-                        var studentChoices = this.getStudentChoiceObjects();
-                        
                         // create the node state
                         var nodeState = NodeService.createNewNodeState();
                         
                         //set the values into the node state
-                        nodeState.studentData = studentChoices;
+                        nodeState = this.populateNodeState(nodeState);
                         nodeState.saveTriggeredBy = saveTriggeredBy;
                         
                         if (saveTriggeredBy === 'submitButton') {
@@ -468,6 +481,25 @@ define(['app'], function(app) {
                     }
                 }
             }
+        };
+        
+        /**
+         * Get the student data and populate it into the node state
+         * @param nodeState the node state to populate
+         * @return the nodeState after it has been populated
+         */
+        this.populateNodeState = function(nodeState) {
+            
+            if (nodeState != null) {
+                
+                // get the choices the student chose
+                var studentChoices = this.getStudentChoiceObjects();
+                
+                // set the student choices into the node state
+                nodeState.studentData = studentChoices;
+            }
+            
+            return nodeState;
         };
         
         /**
@@ -748,6 +780,21 @@ define(['app'], function(app) {
          */
         this.stopAutoSaveInterval = function() {
             clearInterval(this.autoSaveIntervalId);
+        };
+        
+        
+        /**
+         * Get the part id if this node is part of a Questionnaire node
+         * @return the part id
+         */
+        this.getPartId = function() {
+            var partId = null;
+            
+            if (this.isNodePart) {
+                partId = this.nodeContent.id;
+            }
+            
+            return partId;
         };
         
         /**
