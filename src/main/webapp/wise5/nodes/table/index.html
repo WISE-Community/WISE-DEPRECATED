@@ -8,7 +8,7 @@
                     ng-model='cell.text' 
                     ng-change='tableController.studentDataChanged()'
                     size='{{cell.size}}' 
-                    ng-disabled='{{cell.uneditable}}'></input>
+                    ng-disabled='{{cell.uneditable || tableController.isDisabled}}'></input>
             </td>
         </tr>
     </table>

@@ -86,6 +86,19 @@ define(['app'], function(app) {
         };
         
         /**
+         * Get the prompt to show to the student
+         */
+        this.getPrompt = function() {
+            var prompt = null;
+            
+            if (this.nodeContent != null) {
+                prompt = this.nodeContent.prompt;
+            }
+            
+            return prompt;
+        };
+        
+        /**
          * Import work from another node
          */
         this.importWork = function() {

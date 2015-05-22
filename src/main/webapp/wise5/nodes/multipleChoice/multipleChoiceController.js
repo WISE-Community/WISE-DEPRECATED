@@ -26,6 +26,9 @@ define(['app'], function(app) {
         // whether this is part of another node such as a Questionnaire node
         this.isNodePart = false;
         
+        // whether this part is showing previous work
+        this.isShowPreviousWork = false;
+        
         /**
          * Perform setup of the node
          */
@@ -44,23 +47,74 @@ define(['app'], function(app) {
                 // set the content
                 this.nodeContent = $scope.part;
                 
-                // get the latest node state
-                var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                // get the show previous work node id if it is provided
+                var showPreviousWorkNodeId = this.nodeContent.showPreviousWorkNodeId;
                 
-                // populate the student work into this node
-                this.setStudentWork(nodeState);
-                
-                // check if we need to lock this node
-                this.calculateDisabled();
-                
-                // get the part
-                var part = $scope.part;
-                
-                /*
-                 * register this node with the parent node which will most  
-                 * likely be a Questionnaire node
-                 */
-                $scope.$parent.registerPartController($scope, part);
+                if (showPreviousWorkNodeId != null) {
+                    // this part is showing previous work
+                    this.isShowPreviousWork = true;
+                    
+                    // get the node src for the node we want previous work from
+                    var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
+                    
+                    // get the show previous work part id if it is provided
+                    var showPreviousWorkPartId = this.nodeContent.showPreviousWorkPartId;
+                    
+                    // get the node content for the show previous work node
+                    NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
+                        
+                        var nodeState = StudentDataService.getLatestNodeStateByNodeId(showPreviousWorkNodeId);
+                        
+                        // check if we are show previous work from a part
+                        if (showPreviousWorkPartId != null) {
+                            // we are showing previous work from a part
+                            
+                            // get the part from the node content
+                            this.nodeContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkPartId);
+                            
+                            // get the part from the node state
+                            nodeState = NodeService.getNodeStateByPartId(nodeState, showPreviousWorkPartId);
+                        } else {
+                            // set the show previous work node content
+                            this.nodeContent = showPreviousWorkNodeContent;
+                        }
+                        
+                        // populate the student work into this node
+                        this.setStudentWork(nodeState);
+                        
+                        // disable the node since we are just showing previous work
+                        this.isDisabled = true;
+                        
+                        // get the part
+                        var part = $scope.part;
+                        
+                        /*
+                         * register this node with the parent node which will most  
+                         * likely be a Questionnaire node
+                         */
+                        $scope.$parent.registerPartController($scope, part);
+                    }));
+                } else {
+                    // this is a node part
+                    
+                    // get the latest node state
+                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                    
+                    // populate the student work into this node
+                    this.setStudentWork(nodeState);
+                    
+                    // check if we need to lock this node
+                    this.calculateDisabled();
+                    
+                    // get the part
+                    var part = $scope.part;
+                    
+                    /*
+                     * register this node with the parent node which will most  
+                     * likely be a Questionnaire node
+                     */
+                    $scope.$parent.registerPartController($scope, part);
+                }
             } else {
                 // this is a regular standalone node
                 var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
@@ -568,13 +622,15 @@ define(['app'], function(app) {
                     // get the choice object
                     var choiceObject = this.getChoiceById(studentChoices);
                     
-                    // create a student choice object and set the id and text
-                    var studentChoiceObject = {};
-                    studentChoiceObject.id = choiceObject.id;
-                    studentChoiceObject.text = choiceObject.text;
-                    
-                    // add the student choice object to our array
-                    studentChoiceObjects.push(studentChoiceObject)
+                    if (choiceObject != null) {
+                        // create a student choice object and set the id and text
+                        var studentChoiceObject = {};
+                        studentChoiceObject.id = choiceObject.id;
+                        studentChoiceObject.text = choiceObject.text;
+                        
+                        // add the student choice object to our array
+                        studentChoiceObjects.push(studentChoiceObject);
+                    }
                 } else if (this.isCheckbox()) {
                     // this is a checkbox node
                     
@@ -587,13 +643,15 @@ define(['app'], function(app) {
                         // get the choice object
                         var choiceObject = this.getChoiceById(studentChoiceId);
                         
-                        // create a student choice object and set the id and text
-                        var studentChoiceObject = {};
-                        studentChoiceObject.id = choiceObject.id;
-                        studentChoiceObject.text = choiceObject.text;
-                        
-                        // add the student choice object to our array
-                        studentChoiceObjects.push(studentChoiceObject)
+                        if (choiceObject != null) {
+                            // create a student choice object and set the id and text
+                            var studentChoiceObject = {};
+                            studentChoiceObject.id = choiceObject.id;
+                            studentChoiceObject.text = choiceObject.text;
+                            
+                            // add the student choice object to our array
+                            studentChoiceObjects.push(studentChoiceObject);
+                        }
                     }
                 }
             }
@@ -804,8 +862,21 @@ define(['app'], function(app) {
          */
         $scope.getStudentWorkObject = function() {
             
-            // create a node state populated with the student data
-            var nodeState = $scope.multipleChoiceController.createNodeState();
+            var nodeState = {};
+            
+            /*
+             * if this node is showing previous work we do not need to save the
+             * student work
+             */
+            if (!this.isShowPreviousWork) {
+                /*
+                 * this is not a show previous work node so we will save the
+                 * student work
+                 */
+                
+                // create a node state populated with the student data
+                nodeState = $scope.multipleChoiceController.createNodeState();
+            }
             
             return nodeState;
         };

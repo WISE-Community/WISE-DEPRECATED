@@ -1,4 +1,5 @@
 <div ng-controller='QuestionnaireController as questionnaireController'>
+<div compile='questionnaireController.getPrompt()'></div>
 <div ng-repeat='part in questionnaireController.getParts()' 
     ng-include='questionnaireController.getPartTypeHTML(part.partType)' 
     ng-init='partStudentData = questionnaireController.getPartStudentData(part)'></div>

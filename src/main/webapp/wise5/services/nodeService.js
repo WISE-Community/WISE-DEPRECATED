@@ -247,6 +247,79 @@ define(['configService', 'studentDataService'], function(configService, studentD
             return result;
         };
         
+        /**
+         * Get the node content part
+         * @param nodeContent the node content
+         * @param partId the part id
+         * @return the node content part
+         */
+        serviceObject.getNodeContentPartById = function(nodeContent, partId) {
+            var nodeContentPart = null;
+            
+            if (nodeContent != null && partId != null) {
+                
+                // get the parts
+                var parts = nodeContent.parts;
+                
+                if (parts != null) {
+                    
+                    // loop through the parts
+                    for (var p = 0; p < parts.length; p++) {
+                        var tempPart = parts[p];
+                        
+                        if (tempPart != null) {
+                            var tempPartId = tempPart.id;
+                            
+                            if (tempPartId === partId) {
+                                // we have found the part with the part id we want
+                                nodeContentPart = tempPart;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return nodeContentPart;
+        };
+        
+        /**
+         * Get the node state part
+         * @param nodeState the node state
+         * @param partId the part id
+         * @return the node state part
+         */
+        serviceObject.getNodeStateByPartId = function(nodeState, partId) {
+            
+            var nodeStatePart = null;
+            
+            if (nodeState != null && partId != null) {
+                
+                // get the parts
+                var parts = nodeState.parts;
+                
+                if (parts != null) {
+                    
+                    // loop through the parts
+                    for (var p = 0; p < parts.length; p++) {
+                        var tempPart = parts[p];
+                        
+                        if (tempPart != null) {
+                            var tempPartId = tempPart.id;
+                            
+                            if (tempPartId === partId) {
+                                // we have found the part with the part id we want
+                                nodeStatePart = tempPart;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return nodeStatePart;
+        };
+        
         return serviceObject;
     }];
     
