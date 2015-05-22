@@ -407,11 +407,8 @@ define(['app'], function(app) {
                 // get this part id
                 var partId = this.getPartId();
                 
-                // get the current student data for this node
-                var nodeState = NodeService.createNewNodeState();
-                
-                // set the values into the node state
-                nodeState = this.populateNodeState(nodeState);
+                // create a node state populated with the student data
+                var nodeState = this.createNodeState();
                 
                 /*
                  * this step is a node part so we will tell its parent that
@@ -432,8 +429,12 @@ define(['app'], function(app) {
          * 'submitButton'
          * 'nodeOnExit'
          * 'logOut'
+         * @return the node state
          */
         this.createAndAddNodeState = function(saveTriggeredBy) {
+            
+            var nodeState = null;
+            
             /*
              * check if this node is part of another node such as a
              * Questionnaire node. if it is part of a Questionnaire node
@@ -454,11 +455,9 @@ define(['app'], function(app) {
                         // check if the student has answered correctly
                         var hasCorrect = this.hasCorrectChoices();
                         
-                        // create the node state
-                        var nodeState = NodeService.createNewNodeState();
+                        // create a node state populated with the student data
+                        nodeState = this.createNodeState();
                         
-                        //set the values into the node state
-                        nodeState = this.populateNodeState(nodeState);
                         nodeState.saveTriggeredBy = saveTriggeredBy;
                         
                         if (saveTriggeredBy === 'submitButton') {
@@ -481,23 +480,21 @@ define(['app'], function(app) {
                     }
                 }
             }
+            
+            return nodeState;
         };
         
         /**
-         * Get the student data and populate it into the node state
-         * @param nodeState the node state to populate
+         * Create a new node state populated with the student data
          * @return the nodeState after it has been populated
          */
-        this.populateNodeState = function(nodeState) {
+        this.createNodeState = function() {
             
-            if (nodeState != null) {
-                
-                // get the choices the student chose
-                var studentChoices = this.getStudentChoiceObjects();
-                
-                // set the student choices into the node state
-                nodeState.studentData = studentChoices;
-            }
+            // create a new node state
+            var nodeState = NodeService.createNewNodeState();
+            
+            // set the student choices into the node state
+            nodeState.studentData = this.getStudentChoiceObjects();
             
             return nodeState;
         };
@@ -806,18 +803,11 @@ define(['app'], function(app) {
          * @return an object containing the student work
          */
         $scope.getStudentWorkObject = function() {
-            var studentWork = {};
             
-            // get the choice objects the student chose
-            var studentChoices = $scope.multipleChoiceController.getStudentChoiceObjects();
+            // create a node state populated with the student data
+            var nodeState = $scope.multipleChoiceController.createNodeState();
             
-            /*
-             * set the choice objects into the student data field in the
-             * student work
-             */
-            studentWork.studentData = studentChoices;
-            
-            return studentWork;
+            return nodeState;
         };
         
         /**

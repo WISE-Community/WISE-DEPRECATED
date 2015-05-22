@@ -468,11 +468,8 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                 // get this part id
                 var partId = this.getPartId();
                 
-                // get the current student data for this node
-                var nodeState = NodeService.createNewNodeState();
-                
-                // set the values into the node state
-                nodeState = this.populateNodeState(nodeState);
+                // create a node state populated with the student data
+                var nodeState = this.createNodeState();
                 
                 /*
                  * this step is a node part so we will tell its parent that
@@ -500,6 +497,7 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
          * 'submitButton'
          * 'nodeOnExit'
          * 'logOut'
+         * @return the node state
          */
         this.createAndAddNodeState = function(saveTriggeredBy) {
             
@@ -522,11 +520,8 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
                      */
                     if (saveTriggeredBy === 'submitButton' || this.isDirty) {
                         
-                        // create the node state
-                        nodeState = NodeService.createNewNodeState();
-                        
-                        // set the values into the node state
-                        nodeState = this.populateNodeState(nodeState);
+                        // create a node state populated with the student data
+                        nodeState = this.createNodeState();
                         
                         nodeState.saveTriggeredBy = saveTriggeredBy;
                         
@@ -544,23 +539,22 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
         };
         
         /**
-         * Get the student data and populate it into the node state
-         * @param nodeState the node state to populate
+         * Create a new node state populated with the student data
          * @return the nodeState after it has been populated
          */
-        this.populateNodeState = function(nodeState) {
+        this.createNodeState = function() {
             
-            if (nodeState != null) {
-                
-                // insert the series data
-                nodeState.series = this.getSeries();
-                
-                // insert the x axis data
-                nodeState.xAxis = this.getXAxis();
-                
-                // insert the y axis data
-                nodeState.yAxis = this.getYAxis();
-            }
+            // create a new node state
+            var nodeState = NodeService.createNewNodeState();
+            
+            // insert the series data
+            nodeState.series = this.getSeries();
+            
+            // insert the x axis data
+            nodeState.xAxis = this.getXAxis();
+            
+            // insert the y axis data
+            nodeState.yAxis = this.getYAxis();
             
             return nodeState;
         };
@@ -959,12 +953,11 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng'], function(app, bootst
          * @return an object containing the student work
          */
         $scope.getStudentWorkObject = function() {
-            var studentWork = {};
             
-            // insert the student data into the student data object
-            studentWork = $scope.graphController.populateNodeState(studentWork);
+            // create a node state populated with the student data
+            var nodeState = $scope.graphController.createNodeState();
             
-            return studentWork;
+            return nodeState;
         };
         
         /**
