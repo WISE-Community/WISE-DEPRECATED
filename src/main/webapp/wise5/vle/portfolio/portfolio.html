@@ -123,7 +123,7 @@
             </div>
         </div>
 		<div class="animate-switch" ng-switch-when='myFiles'>
-            You are using {{portfolioController.appropriateSizeText(portfolioController.studentAssets.totalSize)}} out of {{portfolioController.appropriateSizeText(portfolioController.studentAssets.totalSizeMax)}} ({{portfolioController.studentAssets.usagePercentage}}%)
+            You are using {{portfolioController.studentAssets.totalSize | appropriateSizeText }} out of {{portfolioController.studentAssets.totalSizeMax | appropriateSizeText}} ({{portfolioController.studentAssets.usagePercentage | roundToDecimal:0 }}%)
 		    <ul class='studentAssets' ng-show="portfolioController.studentAssets.length" >
 		        <li ng-repeat="studentAsset in portfolioController.studentAssets" class='studentAssetParent'>
 		        <img ng-src='{{studentAsset.iconURL}}'

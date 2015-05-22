@@ -2,6 +2,7 @@ define([
         'angular',
         'd3',
         'directives',
+        'filters',
         'jquery',
         'jqueryUI',
         'angularAnimate',
@@ -27,6 +28,7 @@ define([
                 angular,
                 d3,
                 directives,
+                filters,
                 $, 
                 jqueryUI,
                 angularAnimate,
@@ -51,6 +53,7 @@ define([
 
 	var app = angular.module('app', [
 	                                 'directives',
+	                                 'filters',
 	                                 'ui.router',
 	                                 'ui.sortable',
 	                                 'ngAnimate',
@@ -75,13 +78,7 @@ define([
     app.factory('MultipleChoiceService', multipleChoiceService);
     app.factory('OpenResponseService', openResponseService);
     app.factory('QuestionnaireService', questionnaireService);
-	
-	app.filter('sanitizeHTML', ['$sce', function($sce) {
-	    return function(htmlCode) {
-	        return $sce.trustAsHtml(htmlCode);
-	    };
-	}]);
-	
+		
 	app.init = function() {
 		angular.bootstrap(document, ['app']);
 	};

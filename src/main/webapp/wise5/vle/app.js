@@ -3,6 +3,7 @@ define([
         'bootstrap',
         'd3',
         'directives',
+        'filters',
         'jquery',
         'jqueryUI',
         'angularAnimate',
@@ -40,6 +41,7 @@ define([
                 bootstrap,
                 d3,
                 directives,
+                filters,
                 $,
                 jqueryUI,
                 angularAnimate,
@@ -77,6 +79,7 @@ define([
     var app = angular.module('app', [
                                      'angularFileUpload',
                                      'directives',
+                                     'filters',
                                      'highcharts-ng',
                                      'ui.router',
                                      'ui.sortable',
@@ -110,12 +113,6 @@ define([
     app.factory('OutsideURLService', outsideURLService);
     app.factory('QuestionnaireService', questionnaireService);
     app.factory('TableService', tableService);
-    
-    app.filter('sanitizeHTML', ['$sce', function($sce) {
-        return function(htmlCode) {
-            return $sce.trustAsHtml(htmlCode);
-        };
-    }]);
     
     app.init = function() {
         angular.bootstrap(document, ['app']);
