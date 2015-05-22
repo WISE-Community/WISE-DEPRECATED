@@ -38,7 +38,7 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
             }
             this.studentAssets.totalSize = totalSizeSoFar;
             this.studentAssets.totalSizeMax = ConfigService.getStudentMaxTotalAssetsSize();
-            this.studentAssets.usagePercentage = this.roundToDecimal(this.studentAssets.totalSize / this.studentAssets.totalSizeMax * 100, 0);
+            this.studentAssets.usagePercentage = this.studentAssets.totalSize / this.studentAssets.totalSizeMax * 100;
         };
         
         this.upload = function(files) {
@@ -123,34 +123,6 @@ define(['app', 'portfolioService'], function(app, portfolioService) {
             return result;
         };
         
-        /**
-         * Given a string of a number of bytes, returns a string of the size
-         * in either: bytes, kilobytes or megabytes depending on the size.
-         */
-        this.appropriateSizeText = function(bytes) {
-            if (bytes > 1048576) {
-                return this.roundToDecimal(((bytes/1024) / 1024), 1) + ' mb';
-            } else if (bytes > 1024) {
-                return this.roundToDecimal((bytes/1024), 1) + ' kb';
-            } else {
-                return bytes + ' b';
-            };
-        };
-        
-        /**
-         * Returns the given number @param num to the nearest
-         * given decimal place @param decimal. (e.g if called 
-         * roundToDecimal(4.556, 1) it will return 4.6.
-         */
-        this.roundToDecimal = function(num, decimal) {
-            var rounder = 1;
-            if (decimal) {
-                rounder = Math.pow(10, decimal);
-            };
-
-            return Math.round(num*rounder) / rounder;
-        };
-
         // retrieve assets at the beginning
         this.retrieveAssets();
     });

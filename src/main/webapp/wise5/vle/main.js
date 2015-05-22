@@ -22,6 +22,7 @@ require.config({
         'cRaterService': 'services/cRaterService',
         'd3': 'lib/d3/d3',
         'directives': 'directives/directives',
+        'filters': 'filters/filters',
         'graphController': 'nodes/graph/graphController',
         'graphService': 'nodes/graph/graphService',
         'highcharts': 'lib/highcharts/highcharts.src',
