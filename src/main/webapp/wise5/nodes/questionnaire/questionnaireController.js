@@ -266,8 +266,18 @@ define(['app'], function(app) {
          */
         this.getPartTypeHTML = function(partType) {
             
-            // get the part type in camel case
-            partType = NodeService.toCamelCase(partType);
+            if (partType == null) {
+                // error
+            } else if (NodeService.isStringUpperCase(partType)) {
+                /*
+                 * the part type is all uppercase so we will convert it to all
+                 * lowercase
+                 */
+                partType = partType.toLowerCase();
+            } else {
+                // get the part type in camel case
+                partType = NodeService.toCamelCase(partType);
+            }
             
             var partTypeHTML = 'wise5/nodes/' + partType + '/index.html';
             

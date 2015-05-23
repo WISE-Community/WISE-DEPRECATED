@@ -164,6 +164,11 @@
                 }
             ],
             "canClickToAddData": true
+        },
+        {
+            "id": "v84b419ub8",
+            "partType": "HTML",
+            "html": "<p>This is from an HTML part.</p>"
         }
     ],
     "lockAfterSubmit": false,
