@@ -56,7 +56,8 @@ function Branching(node) {
 Branching.prototype.translateOperand = function(operand) {
 	if (operand == "WISE_WORKGROUP_ID") {
 		if (this.view.getConfig().getConfigParam("mode") == "portalpreview") {
-			return 0;
+		    // generate a random integer for the workgroup id
+			return Math.floor(Math.random() * 100000);
 		} else {
 			return this.view.getUserAndClassInfo().getWorkgroupId();
 		}
