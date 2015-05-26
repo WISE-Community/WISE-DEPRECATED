@@ -633,6 +633,20 @@ a#name {
 	margin-right: 0;
 }
 
+#signOut {
+    position:absolute;
+    top:0;
+    right:0;
+    margin-right: 0;
+}
+
+#switchBack {
+    position:absolute;
+    top:0px;
+    right:75px;
+    margin-right: 0;
+}
+
 #adminTools, #researchTools {
 	position:absolute;
 	bottom:0;
@@ -760,7 +774,7 @@ li.welcome > a {
 	display:inline-block !important;
 }
 
-/* This little trick solves a problem with Safari getting confused by a call for "c:url value="/j_spring_security_logout"/>" 
+/* This little trick solves a problem with Safari getting confused by a call for "c:url value="/logout"/>" 
 .styleOverRideSafari1 {
 	color:#FFFF66;
 	font-size:.7em;

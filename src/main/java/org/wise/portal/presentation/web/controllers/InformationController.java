@@ -722,7 +722,7 @@ public class InformationController {
 			config.put("cRaterRequestUrl", cRaterRequestUrl);
             config.put("cRaterRequestURL", cRaterRequestUrl);
 			config.put("mainHomePageURL", contextPath + "/index.html");
-            config.put("sessionLogOutURL", contextPath + "/j_spring_security_logout");
+            config.put("sessionLogOutURL", contextPath + "/logout");
 
 			User signedInUser = ControllerUtil.getSignedInUser();
 			

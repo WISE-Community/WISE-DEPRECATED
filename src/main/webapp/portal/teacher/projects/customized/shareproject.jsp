@@ -124,12 +124,12 @@ function removeSharedUserClicked() {
 									onclick="javscript:this.form.submit();" value="ROLE_READ_PROJECT" /><spring:message code="teacher.projects.customized.shareproject.canView"/><br />
 								<form:radiobutton path="permission"
 									onclick="javscript:this.form.submit();" value="ROLE_WRITE_PROJECT" /><spring:message code="teacher.projects.customized.shareproject.canEdit"/><br />
-								<sec:authorize ifAnyGranted="ROLE_USER">
-								   <sec:authorize ifAnyGranted="ROLE_ADMINISTRATOR">
+								<sec:authorize access="hasRole('ROLE_USER')">
+								   <sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
 									<form:radiobutton path="permission"
 										onclick="javscript:this.form.submit();" value="ROLE_SHARE_PROJECT" /><spring:message code="teacher.projects.customized.shareproject.canShare"/><br />
 									</sec:authorize>
-								   <sec:authorize ifNotGranted="ROLE_ADMINISTRATOR">
+								   <sec:authorize access="!hasAnyRole('ROLE_ADMINISTRATOR')">
 										<sec:accesscontrollist domainObject="${project}" hasPermission="16">												
 								        	<form:radiobutton path="permission"
 									    	    onclick="javscript:this.form.submit();" value="ROLE_SHARE_PROJECT" /><spring:message code="teacher.projects.customized.shareproject.canShare"/><br />								

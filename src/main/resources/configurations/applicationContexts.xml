@@ -21,11 +21,15 @@
  -->
 
 <!-- $Id$ -->
-
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:sec="http://www.springframework.org/schema/security"
+<beans 
+    xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:sec="http://www.springframework.org/schema/security"
 	xmlns:cache="http://www.springframework.org/schema/cache"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
       http://www.springframework.org/schema/beans 
@@ -43,7 +47,7 @@
       http://www.springframework.org/schema/cache
       http://www.springframework.org/schema/cache/spring-cache-4.0.xsd
       http://www.springframework.org/schema/security
-      http://www.springframework.org/schema/security/spring-security-3.2.xsd      
+      http://www.springframework.org/schema/security/spring-security-4.0.xsd      
       ">
       
 	<!-- ======================== FILTER CHAIN ======================= -->
@@ -68,15 +72,16 @@
 	</bean>
 
 	<!-- ======================== AUTHENTICATION ======================= -->
+	
 
 	<bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
-		<property name="providers">
-			<list>
-				<ref bean="daoAuthenticationProvider" />
-				<ref bean="anonymousAuthenticationProvider" />
-				<ref bean="runAsAuthenticationProvider" />
-			</list>
-		</property>
+	    <constructor-arg>
+	        <list>
+                <ref bean="daoAuthenticationProvider" />
+                <ref bean="anonymousAuthenticationProvider" />
+                <ref bean="runAsAuthenticationProvider" />
+	        </list>
+	    </constructor-arg>
 	</bean>
 
 	<bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
@@ -95,16 +100,15 @@
 	<bean id="loggerListener" class="org.springframework.security.access.event.LoggerListener" />
 
 	<bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-		<property name="loginFormUrl" value="/login.html" />
+		<constructor-arg value="/login.html" />
 	</bean>
 
 	<bean id="anonymousProcessingFilter" class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
-		<property name="key" value="fubar" />
-		<property name="userAttribute" value="Anonymous User,ROLE_ANONYMOUS" />
+        <constructor-arg value="key" />
 	</bean>
 
 	<bean id="anonymousAuthenticationProvider" class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
-		<property name="key" value="fubar" />
+		<constructor-arg value="fubar" />
 	</bean>
 
 	<bean id="httpSessionContextIntegrationFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
@@ -123,15 +127,9 @@
 
 	<bean id="switchUserProcessingFilter" class="org.springframework.security.web.authentication.switchuser.SwitchUserFilter">
 		<property name="userDetailsService" ref="userDetailsService" />
-		<property name="switchUserUrl">
-			<value>/j_acegi_switch_user</value>
-		</property>
-		<property name="exitUserUrl">
-			<value>/j_acegi_exit_user</value>
-		</property>
-		<property name="targetUrl">
-			<value>/index.html</value>
-		</property>
+		<property name="switchUserUrl" value="/login/impersonate" />
+		<property name="exitUserUrl" value="/logout/impersonate" />
+		<property name="targetUrl" value="/index.html" />
 	</bean>
 
 	<!-- =================== Encoding ==================== -->
@@ -164,18 +162,18 @@
 	<!-- ===================== HTTP REQUEST SECURITY ==================== -->
 
 	<bean id="exceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
-		<property name="authenticationEntryPoint" ref="authenticationEntryPoint" />
+		<constructor-arg ref="authenticationEntryPoint" />
 	</bean>
 
 	<bean id="roleVoter" class="org.springframework.security.access.vote.RoleVoter" />
 
 	<bean id="urlAccessDecisionManager" class="org.springframework.security.access.vote.ConsensusBased">
 		<property name="allowIfAllAbstainDecisions" value="false" />
-		<property name="decisionVoters">
-			<list>
-				<ref bean="roleVoter" />
-			</list>
-		</property>
+		<constructor-arg>
+		    <list>
+		      <ref bean="roleVoter" />
+		    </list>
+		</constructor-arg>
 	</bean>
 
 	<!-- ~~~~~~~~~~~~~~~~~~ "BEFORE INVOCATION" AUTHORIZATION DEFINITIONS ~~~~~~~~~~~~~~~~ -->
@@ -185,7 +183,7 @@
 		<property name="allowIfAllAbstainDecisions">
 			<value>false</value>
 		</property>
-		<property name="decisionVoters">
+		<constructor-arg>
 			<list>
 				<ref bean="roleVoter" />
 				<ref bean="aclGroupAdminVoter" />
@@ -194,7 +192,7 @@
 				<ref bean="aclGroupCreateVoter" />
 				<ref bean="aclGroupDeleteVoter" />
 			</list>
-		</property>
+		</constructor-arg>
 	</bean>
 
 	<!-- An access decision manager used by the business objects -->
@@ -202,7 +200,7 @@
 		<property name="allowIfAllAbstainDecisions">
 			<value>false</value>
 		</property>
-		<property name="decisionVoters">
+		<constructor-arg>
 			<list>
 				<ref bean="roleVoter" />
 				<ref bean="aclOfferingAdminVoter" />
@@ -211,14 +209,14 @@
 				<ref bean="aclOfferingCreateVoter" />
 				<ref bean="aclOfferingDeleteVoter" />
 			</list>
-		</property>
+		</constructor-arg>
 	</bean>
 
 	<bean id="projectAccessDecisionManager" class="org.springframework.security.access.vote.ConsensusBased">
 		<property name="allowIfAllAbstainDecisions">
 			<value>false</value>
 		</property>
-		<property name="decisionVoters">
+		<constructor-arg>
 			<list>
 				<ref bean="roleVoter" />
 				<ref bean="aclProjectAdminVoter" />
@@ -227,14 +225,14 @@
 				<ref bean="aclProjectCreateVoter" />
 				<ref bean="aclProjectDeleteVoter" />
 			</list>
-		</property>
+		</constructor-arg>
 	</bean>
 
 	<bean id="workgroupAccessDecisionManager" class="org.springframework.security.access.vote.ConsensusBased">
 		<property name="allowIfAllAbstainDecisions">
 			<value>false</value>
 		</property>
-		<property name="decisionVoters">
+		<constructor-arg>
 			<list>
 				<ref bean="roleVoter" />
 				<ref bean="aclWorkgroupAdminVoter" />
@@ -243,7 +241,7 @@
 				<ref bean="aclWorkgroupCreateVoter" />
 				<ref bean="aclWorkgroupDeleteVoter" />
 			</list>
-		</property>
+		</constructor-arg>
 	</bean>
 
 	<!-- ACL permission masks used by this application -->
@@ -632,6 +630,24 @@
 				<property name="cacheManager" ref="ehcache" />
 			</bean>
 		</constructor-arg>
+		<constructor-arg>
+		    <bean class="org.springframework.security.acls.domain.DefaultPermissionGrantingStrategy">
+		        <constructor-arg>
+		            <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
+		        </constructor-arg>
+		    </bean>
+		</constructor-arg>
+		<constructor-arg>
+		    <bean class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
+		        <constructor-arg>
+		            <list>
+		                <bean class="org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority">
+		                    <constructor-arg value="ROLE_ADMINISTRATOR"/>
+		                </bean>
+		            </list>
+		        </constructor-arg>
+		    </bean>
+		</constructor-arg>		
 	</bean>
 
 	<bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
@@ -961,7 +977,7 @@
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="accessDecisionManager" ref="urlAccessDecisionManager" />
 		<property name="securityMetadataSource">
-			<sec:filter-security-metadata-source>
+			<sec:filter-security-metadata-source use-expressions="false">
 				<sec:intercept-url pattern="/portal/javascript/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/portal/themes/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/index.html" access="ROLE_ANONYMOUS,ROLE_USER" />
@@ -984,7 +1000,8 @@
 				<sec:intercept-url pattern="/contact/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/forgotaccount/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/admin/**/*.html" access="ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
-				<sec:intercept-url pattern="/j_acegi_switch_user*" access="ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
+				<sec:intercept-url pattern="/login/impersonate" access="ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
+                <sec:intercept-url pattern="/logout/impersonate" access="ROLE_PREVIOUS_ADMINISTRATOR" />
 				<sec:intercept-url pattern="/authorize.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/errors/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/project/exportproject.html" access="ROLE_ANONYMOUS,ROLE_USER" />
@@ -996,6 +1013,9 @@
 			</sec:filter-security-metadata-source>
 		</property>
 	</bean>
+	
+	<!-- enabled web expressions (e.g. hasRole() ) -->
+	<bean id="webexpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" /> 
 
 	<!-- i18n default properties file (english) -->
 	<util:properties id="i18nProperties" location="classpath:i18n/i18n.properties" />

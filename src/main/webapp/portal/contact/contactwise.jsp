@@ -57,32 +57,32 @@
 					  
 					  <dl>
 					  
-					    <sec:authorize ifAllGranted="ROLE_ANONYMOUS">
+					    <sec:authorize access="hasRole('ROLE_ANONYMOUS')">
 					  	<dt><label for="NameContact" id="NameContact"><span class="asterix">* </span><spring:message code="contact.contactwisegeneral.name"/></label></dt>
 					    <dd><form:input path="name"  id="name" size="50" tabindex="1"/></dd>
 					    </sec:authorize>
 					    
-					  	<sec:authorize ifAllGranted="ROLE_TEACHER">
+					  	<sec:authorize access="hasRole('ROLE_TEACHER')">
 					  	<dt><label for="NameContact" id="NameContact"><span class="asterix">* </span><spring:message code="contact.contactwisegeneral.name"/></label></dt>
 					    <dd><form:input path="name"  id="name" size="50" tabindex="1"/></dd>
 					    </sec:authorize>
 					    
-					  	<sec:authorize ifAllGranted="ROLE_STUDENT">
+					  	<sec:authorize access="hasRole('ROLE_STUDENT')">
 					  	<dt><label for="NameContact" id="NameContact"><span class="asterix">* </span><spring:message code="contact.contactwisegeneral.name"/></label></dt>
 					    <dd><form:input path="name"  id="name" size="50" tabindex="1" disabled="true"/></dd>
 					    </sec:authorize>
 					
-						<sec:authorize ifAllGranted="ROLE_ANONYMOUS">
+						<sec:authorize access="hasRole('ROLE_ANONYMOUS')">
 							<dt><label for="emailContact" id="emailContact"><span class="asterix">* </span><spring:message code="contact.contactwisegeneral.email"/></label></dt>
 							<dd><form:input path="email" id="email" size="50" tabindex="2"/> </dd>
 						</sec:authorize>
 					
-						<sec:authorize ifAllGranted="ROLE_TEACHER">
+						<sec:authorize access="hasRole('ROLE_TEACHER')">
 							<dt><label for="emailContact" id="emailContact"><span class="asterix">* </span><spring:message code="contact.contactwisegeneral.email"/></label></dt>
 							<dd><form:input path="email" id="email" size="50" tabindex="2"/> </dd>
 						</sec:authorize>
 						
-						<sec:authorize ifAllGranted="ROLE_STUDENT">
+						<sec:authorize access="hasRole('ROLE_STUDENT')">
 							<dt><label for="teacher" id="teacher"><span class="asterix">* </span><spring:message code="contact.contactwisegeneral.teacher"/></label> </dt>
 							<dd>
 								<form:select path="teacherId" id="teacherId"  tabindex="3">

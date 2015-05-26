@@ -52,7 +52,7 @@ table, tr, td {
 								items="${openedProjectsToSessions[openedProjectId]}">
 								<c:set var="username" value="${loggedInTeachers[sessionOpeningThisProject].userDetails.username}"></c:set>
 								<c:out value="${username}" /> | 
-							<a href="../../j_acegi_switch_user?j_username=${username}">Log in as this user</a> |
+							<a href="../../login/impersonate?username=${username}">Log in as this user</a> |
 							<a href="#" onclick="javascript:popup640('../../teacherinfo.html?userName=${username}');">info</a>
 							</c:forEach>
 						</td>

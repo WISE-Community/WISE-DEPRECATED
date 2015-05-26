@@ -32,7 +32,7 @@
 					<div>
 						<form:form method="post" action="changepassword.html" commandName="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
 						<table style="margin:0 auto;">
-							<sec:authorize ifNotGranted="ROLE_ADMINISTRATOR">
+							<sec:authorize access="!hasAnyRole('ROLE_ADMINISTRATOR')">
 								<tr>
 									<td><label for="changestudentpassword"><spring:message code="changePassword_current" /></label></td>
 					      			<td><form:password path="passwd0" /></td>

@@ -49,7 +49,7 @@ th {
 				<td>${run.name}</td>
 				<td>
 					<c:forEach var="owner" items="${run.owners}">
-						<a href="${contextPath}/j_acegi_switch_user?j_username=${owner.userDetails.username}">${owner.userDetails.username}</a><br/>
+						<a href="${contextPath}/login/impersonate?username=${owner.userDetails.username}">${owner.userDetails.username}</a><br/>
 						(${owner.userDetails.schoolname}, ${owner.userDetails.city}, ${owner.userDetails.state},${owner.userDetails.country})
 					</c:forEach>
 				</td>
@@ -59,7 +59,7 @@ th {
 				<td>${run.timesRun}</td>
 			    <td>
 			    	<ul>
-			    		<sec:authorize ifAnyGranted="ROLE_ADMINISTRATOR">
+			    		<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
 			    		  <li><a href="${contextPath}/teacher/run/shareprojectrun.html?runId=${run.id}"><spring:message code="admin.run.manageSharedTeachers" /></a></li>
 			    		  <li><a href="${contextPath}/teacher/management/viewmystudents.html?runId=${run.id}"><spring:message code="admin.run.manageStudents" /></a></li>
 			    		</sec:authorize>

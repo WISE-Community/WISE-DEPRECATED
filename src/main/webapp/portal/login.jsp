@@ -14,8 +14,8 @@
 
 <script type="text/javascript">
 function validateLoginForm() {
-	var username=document.getElementById("j_username").value;
-	var password=document.getElementById("j_password").value;
+	var username=document.getElementById("username").value;
+	var password=document.getElementById("password").value;
 	if (username==null || username=="" || password==null || password=="") {
 	  	window.location="login.html?failed=true";
 	  	return false;
@@ -24,7 +24,7 @@ function validateLoginForm() {
 }
 </script>
 </head>
-<body onload="document.getElementById('j_username').focus();">
+<body onload="document.getElementById('username').focus();">
 
 <div id="pageWrapper" style="min-width:550px; background:transparent;">
 			
@@ -47,10 +47,10 @@ function validateLoginForm() {
                                 </c:choose>
 							</div>
 							<div>
-								<label for="username"><spring:message code="usernameLabel"/></label><input class="dataBoxStyle" type="text" name="j_username" id="j_username" size="18" maxlength="60" <c:if test="${userName != ''}">value="${userName}"</c:if> />
+								<label for="username"><spring:message code="usernameLabel"/></label><input class="dataBoxStyle" type="text" name="username" id="username" size="18" maxlength="60" <c:if test="${userName != ''}">value="${userName}"</c:if> />
 							</div>
 							<div>
-								<label for="password"><spring:message code="passwordLabel"/></label><input class="dataBoxStyle" type="password" name="j_password" id="j_password" size="18" maxlength="30" />
+								<label for="password"><spring:message code="passwordLabel"/></label><input class="dataBoxStyle" type="password" name="password" id="password" size="18" maxlength="30" />
 							</div>
 							<c:if test="${requireCaptcha && not empty reCaptchaPublicKey && not empty reCaptchaPrivateKey}">
 								<div style="width: 60%; margin:0 auto">

@@ -221,7 +221,7 @@ $(document).ready(function() {
 									<a id="changePasswordLink" class="wisebutton altbutton-small"><spring:message code="changePassword" /></a>
 								</li>
 								<li>
-									<a class="wisebutton altbutton-small" href="<c:url value="/j_spring_security_logout"/>" id="studentsignout"><spring:message code="signOut" /></a>
+									<a class="wisebutton altbutton-small" href="<c:url value="/logout"/>" id="studentsignout"><spring:message code="signOut" /></a>
 								</li>
 							</ul>
 						</div>

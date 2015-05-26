@@ -239,7 +239,7 @@ View.prototype.saveMaxScore = function(nodeId, maxScoreValue) {
 				var contextPath = thisView.getConfig().getConfigParam('contextPath');
 				
 				//redirect the user to the login page
-				window.top.location = contextPath + "/j_spring_security_logout";
+				window.top.location = contextPath + "/logout";
 			} else {
 				//there was a server error
 				
@@ -415,7 +415,7 @@ View.prototype.forceLogout = function() {
 	var contextPath = this.getConfig().getConfigParam('contextPath');
 	
 	alert("You have been inactive for too long and have been logged out. Please log back in to continue.");
-	parent.window.location = contextPath + "/j_spring_security_logout";
+	parent.window.location = contextPath + "/logout";
 };
 
 /**

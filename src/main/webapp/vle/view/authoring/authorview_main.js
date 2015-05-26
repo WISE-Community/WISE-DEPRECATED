@@ -2098,7 +2098,7 @@ View.prototype.onWindowUnload = function(logout){
 		var contextPath = this.getConfig().getConfigParam('contextPath');
 		
 		//log out the user
-		window.top.location = contextPath + "/j_spring_security_logout";		
+		window.top.location = contextPath + "/logout";		
 	}
 };
 

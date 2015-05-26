@@ -526,7 +526,7 @@ View.prototype.onWindowUnload = function(logout){
 		var contextPath = this.getConfig().getConfigParam('contextPath');
 		
 		//logout the user
-		this.connectionManager.request('GET',1, contextPath + "/j_spring_security_logout", null, function(){},null,null,true);
+		this.connectionManager.request('GET',1, contextPath + "/logout", null, function(){},null,null,true);
 		window.top.location = contextPath + "/index.html"; // redirect the top level window to the login page
 	}
 

@@ -304,8 +304,8 @@
 	$(document).ready(function(){
 		
 		//focus cursor into the First Name field on page ready 
-		if($('#j_username').length){
-			$('#j_username').focus();
+		if($('#username').length){
+			$('#username').focus();
 		}
 		
 		$('#newsContent').jScrollPane();

@@ -84,7 +84,7 @@ public class WISEAuthenticationFailureHandler extends
             javax.servlet.ServletException {
 	    
 	    //get the user name the user has entered
-		String userName = request.getParameter("j_username");
+		String userName = request.getParameter("username");
 		
 		if(userName != null) {
 		    //get the user
@@ -197,7 +197,7 @@ public class WISEAuthenticationFailureHandler extends
             //the ReCaptcha keys are valid
             
             //get the user name that was entered into the user name field
-            String userName = request.getParameter("j_username");
+            String userName = request.getParameter("username");
             
             //get the user object
             User user = userService.retrieveUserByUsername(userName);

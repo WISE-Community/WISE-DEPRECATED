@@ -35,6 +35,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -77,7 +78,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
     public static final String TEACHER_DEFAULT_TARGET_PATH = "/teacher/index.html";
     public static final String ADMIN_DEFAULT_TARGET_PATH = "/admin/index.html";
     public static final String RESEARCHER_DEFAULT_TARGET_PATH = "/teacher/index.html";
-    public static final String LOGOUT_PATH = "/j_spring_security_logout";
+    public static final String LOGOUT_PATH = "/logout";
     public static final String LOGIN_DISABLED_MESSGE_PAGE = "/pages/maintenance.html";
 
     public static final Integer recentFailedLoginTimeLimit = 15;
@@ -156,7 +157,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
             //the ReCaptcha keys are valid
             
             //get the user name that was entered into the user name field
-            String userName = request.getParameter("j_username");
+            String userName = request.getParameter("username");
             
             //get the user object
             User user = userService.retrieveUserByUsername(userName);
@@ -343,8 +344,11 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-            HttpServletResponse response, Authentication authentication)
+    protected void successfulAuthentication(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain chain,
+            Authentication authentication)
                     throws IOException, ServletException {
         HttpSession session = request.getSession();
 
@@ -366,7 +370,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
         }
         allLoggedInUsers.put(sessionId, user);
 
-        super.successfulAuthentication(request, response, authentication);
+        super.successfulAuthentication(request, response, chain, authentication);
     }
 
     @Override

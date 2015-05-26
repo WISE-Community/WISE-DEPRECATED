@@ -59,7 +59,7 @@ function validateForm(type) {
 						<div class="sectionContent">
 							<h5>
 								<spring:message code='admin.index.list' />
-								<sec:authorize ifAnyGranted="ROLE_ADMINISTRATOR">
+								<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
 									<spring:message code='admin.index.allUsersWhoLoggedIn' />
 									<a href="account/manageusers.html?onlyShowLoggedInUser=true">
 										<spring:message code='now' /> (${numCurrentlyLoggedInUsers})</a> | 
@@ -132,7 +132,7 @@ function validateForm(type) {
 						</div>
 
 
-						<sec:authorize ifAnyGranted="ROLE_ADMINISTRATOR">
+						<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
 							<div class="sectionHead">
 								<spring:message code='admin.index.projectManagement' />
 							</div>
@@ -163,7 +163,7 @@ function validateForm(type) {
 							</div>
 						</sec:authorize>
 
-						<sec:authorize ifAnyGranted="ROLE_ADMINISTRATOR">
+						<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
 							<div class="sectionHead">
 								<spring:message code='admin.index.newsManagement' />
 							</div>

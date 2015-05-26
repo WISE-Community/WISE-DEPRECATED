@@ -140,7 +140,7 @@ View.prototype.saveAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, typ
 					var contextPath = thisView.getConfig().getConfigParam('contextPath');
 					
 					//redirect the user to the login page
-					window.top.location = contextPath + "/j_spring_security_logout";					
+					window.top.location = contextPath + "/logout";					
 				} else {
 					//there was a server error so we will revert the annotation back to its previous value
 					var fromWorkgroupIds = thisView.getUserAndClassInfo().getAllTeacherWorkgroupIds();

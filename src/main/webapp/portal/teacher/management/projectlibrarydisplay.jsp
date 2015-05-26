@@ -5,7 +5,7 @@
 
 <%@ page buffer="100kb" %>
 
-<sec:authorize ifAnyGranted="ROLE_TEACHER">
+<sec:authorize access="hasRole('ROLE_TEACHER')">
 <script type="text/javascript">
 	// is teacher viewing this page, or anonymous?
 	var isTeacher = true;
