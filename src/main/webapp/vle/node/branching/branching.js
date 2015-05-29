@@ -389,6 +389,24 @@ Branching.prototype.doBranch = function(pathToVisitJSONObj) {
 
 	// render the next node, which should be the first node of the branched path
 	this.view.renderNextNode();	
+	
+    // get all the branch node ids
+    var branchingNodeIds = this.view.getProject().getNodeIdsByNodeType('BranchingNode');
+    
+    // loop through all the branch nodes
+    for (var b = 0; b < branchingNodeIds.length; b++) {
+        var branchingNodeId = branchingNodeIds[b];
+        var branchingNode = this.view.getProject().getNodeById(branchingNodeId);
+        
+        if (branchingNode != null) {
+            
+            /*
+             * show or hide the paths for the branch node depending on whether 
+             * they have been visited or not
+             */
+            branchingNode.processPathVisibility();
+        }
+    }
 };
 
 /**

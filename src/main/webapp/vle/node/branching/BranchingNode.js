@@ -290,6 +290,132 @@ BranchingNode.prototype.onBeforeCreateNavigationHtml = function() {
 	}
 };
 
+/**
+ * Process the paths and show or hide them depending on whether the student
+ * has visited the branch node and whether a branch path has been assigned
+ */
+BranchingNode.prototype.processPathVisibility = function() {
+    
+    // get the latest node visit for this branch node
+    var canBeEmpty = true;
+    var latestNodeVisit = this.view.getState().getLatestNodeVisitByNodeId(this.id, canBeEmpty);
+    
+    if (latestNodeVisit == null) {
+        // student has not visited this branch node
+        
+        // get all the paths for this branch node
+        var paths = this.getPathsJSON();
+        
+        // loop through all the branch paths
+        for (var p = 0; p < paths.length; p++) {
+            var path = paths[p];
+            
+            var pathSequence = this.view.getProject().getNodeById(path.sequenceRef);
+            
+            // hide the nodes in the branch path
+            this.setPathVisibility(pathSequence.id, false);
+        }
+    } else {
+        // student has visited this branch node
+        
+        // get the latest state for the branch node
+        var latestState = this.view.getState().getLatestWorkByNodeId(this.id);
+        
+        if (latestState != null && latestState.response != null && latestState.response.chosenPathId != null) {
+            // the student has been to this branch and has been assigned a path
+            
+            // get the assigned path id
+            var chosenPathId = latestState.response.chosenPathId;
+            
+            // get all the paths for this branch node
+            var paths = this.getPathsJSON();
+            
+            // loop through all the branch paths
+            for (var p = 0; p < paths.length; p++) {
+                var path = paths[p];
+                
+                var pathSequence = this.view.getProject().getNodeById(path.sequenceRef);
+                
+                if (chosenPathId === path.identifier) {
+                    /*
+                     * show the nodes in the branch path since this is the
+                     * path the student was assigned to
+                     */
+                    this.setPathVisibility(pathSequence.id, true);
+                } else {
+                    // hide the nodes in the branch path
+                    this.setPathVisibility(pathSequence.id, false);
+                }
+            }
+            
+            if (!this.content.getContentJSON().showBranchNodeAfterBranching) {
+                /*
+                 * do not show this branch node after the student has been
+                 * assigned to a path
+                 */
+                this.setPathVisibility(this.id, false);
+            }
+        } else {
+            // the student has visited the branch node but has not been assigned a path
+            
+            // get all the paths for this branch node
+            var paths = this.getPathsJSON();
+            
+            // loop through all the branch paths
+            for (var p = 0; p < paths.length; p++) {
+                var path = paths[p];
+                
+                var pathSequence = this.view.getProject().getNodeById(path.sequenceRef);
+                
+                // hide the nodes in the branch path
+                this.setPathVisibility(pathSequence.id, true);
+            }
+        }
+    }
+};
+
+/**
+ * Show or hide the step nodes in a path
+ * Note: this only affects step node visibility and does not affect
+ * sequence node visibility
+ * @param nodeId the node id for a sequence or node
+ * @param isVisible whether to show or hide the node
+ */
+BranchingNode.prototype.setPathVisibility = function(nodeId, isVisible) {
+    
+    var node = this.view.getProject().getNodeById(nodeId);
+    
+    if (node != null) {
+        var nodeType = node.type;
+        
+        if (nodeType === 'sequence') {
+            // the node is an activity
+            
+            var children = node.children;
+            
+            // loop through all the children
+            for (var c = 0; c < children.length; c++) {
+                var child = children[c];
+                
+                // set the visibility for the child
+                this.setPathVisibility(child.id, isVisible);
+            }
+        } else {
+            // the node is a step
+            
+            var position = view.getProject().getPositionById(nodeId);
+            var positionEscaped = view.escapeIdForJquery(position);
+            
+            if (isVisible) {
+                // show the node in the navigation
+                $('#node_' + positionEscaped).removeClass('hidden');
+            } else {
+                // hide the node in the navigation
+                $('#node_' + positionEscaped).addClass('hidden');
+            }
+        }
+    }
+};
 
 /**
  * Make this node hidden. If this node is a sequence, also make the children
