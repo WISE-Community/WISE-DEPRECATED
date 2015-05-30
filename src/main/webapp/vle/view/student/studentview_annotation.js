@@ -825,6 +825,10 @@ View.prototype.createTeacherNotificationAnnotationValue = function(teacherNotifi
         newTeacherNotificationAnnotationValue.dismissCode = dismissCode;
         newTeacherNotificationAnnotationValue.type = type;
         newTeacherNotificationAnnotationValue.nodeStateId = nodeStateId;
+        
+        // get the current timestamp
+        var date = new Date();
+        newTeacherNotificationAnnotationValue.activationTimestamp = date.getTime();
     }
     
     return newTeacherNotificationAnnotationValue;

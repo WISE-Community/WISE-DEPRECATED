@@ -1964,6 +1964,18 @@ View.prototype.dismissNotification = function(notificationAnnotation, notificati
                 
                 // set the dismiss timestamp on the value element
                 valueElement.dismissTimestamp = date.getTime();
+                
+                /*
+                 * get the current node the student is on when the notification
+                 * is dismissed
+                 */
+                var currentNode = this.getCurrentNode();
+                
+                if (currentNode != null) {
+                    // get the current node id
+                    var currentNodeId = currentNode.id;
+                    valueElement.dismissNodeId = currentNodeId;
+                }
             }
         }
         
