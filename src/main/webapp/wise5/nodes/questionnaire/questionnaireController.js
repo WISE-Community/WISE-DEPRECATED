@@ -371,8 +371,12 @@ define(['app'], function(app) {
                         // get the scope for the part
                         var childScope = $scope.partToScope[partId];
                         
-                        // get the student work object from the child scope
-                        studentWorkObject = childScope.getStudentWorkObject();
+                        var studentWorkObject = {};
+                        
+                        if (childScope.getStudentWorkObject != null) {
+                            // get the student work object from the child scope
+                            studentWorkObject = childScope.getStudentWorkObject();
+                        }
                         
                         // set the part id into the student work object
                         studentWorkObject.id = partId;

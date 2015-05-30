@@ -26,6 +26,11 @@
             "showPreviousWorkPartId": "g827g29hg8"
         },
         {
+            "id": "j09278x2s3",
+            "partType": "OpenResponse",
+            "prompt": "Revise your response from Node 1."
+        },
+        {
             "id": "23jam3b9yg",
             "partType": "HTML",
             "showPreviousWorkNodeId": "node5"
@@ -37,9 +42,8 @@
             "showPreviousWorkPartId": "v84b419ub8"
         },
         {
-            "id": "j09278x2s3",
-            "partType": "OpenResponse",
-            "prompt": "Revise your response from Node 1."
+            "id": "18n29dgabh",
+            "partType": "Draw"
         }
     ],
     "lockAfterSubmit": false,

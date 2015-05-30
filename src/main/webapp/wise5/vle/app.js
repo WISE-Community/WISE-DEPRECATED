@@ -19,6 +19,7 @@ define([
         'configService',
         'currentNodeService',
         'cRaterService',
+        'drawService',
         'graphService',
         'highcharts-more',
         'highcharts-ng',
@@ -57,6 +58,7 @@ define([
                 configService,
                 currentNodeService,
                 cRaterService,
+                drawService,
                 graphService,
                 highchartsmore,
                 highchartsng,
@@ -106,6 +108,7 @@ define([
     
     // node services
     app.factory('AudioRecorderService', audioRecorderService);
+    app.factory('DrawService', drawService);
     app.factory('GraphService', graphService);
     app.factory('MultipleChoiceService', multipleChoiceService);
     app.factory('PhotoBoothService', photoBoothService);
@@ -178,6 +181,7 @@ define([
                         templateUrl: 'wise5/vle/node/node.html',
                         resolve: {
                             audioRecorderController: app.loadController('audioRecorderController'),
+                            drawController: app.loadController('drawController'),
                             graphController: app.loadController('graphController'),
                             htmlController: app.loadController('htmlController'),
                             multipleChoiceController: app.loadController('multipleChoiceController'),

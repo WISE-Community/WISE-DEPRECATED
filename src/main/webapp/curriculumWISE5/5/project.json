@@ -339,6 +339,15 @@
             "r": 20
         },
         {
+            "id": "node38",
+            "type": "Draw",
+            "title": "Node 38",
+            "src": "node38.json",
+            "x": 850,
+            "y": 140,
+            "r": 20
+        },
+        {
             "id": "group0",
             "type": "group",
             "title": "My First WISE5 Project",
@@ -427,7 +436,8 @@
                 "node34",
                 "node35",
                 "node36",
-                "node37"
+                "node37",
+                "node38"
             ],
             "x": 350,
             "y": 140,
@@ -619,6 +629,11 @@
             "id": "transition37",
             "from": "node36",
             "to": "node37"
+        },
+        {
+            "id": "transition38",
+            "from": "node37",
+            "to": "node38"
         }
     ],
     "startGroupId": "group0",

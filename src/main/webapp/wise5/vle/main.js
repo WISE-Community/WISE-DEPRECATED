@@ -21,7 +21,10 @@ require.config({
         'currentNodeService': 'services/currentNodeService',
         'cRaterService': 'services/cRaterService',
         'd3': 'lib/d3/d3',
+        'drawingTool': 'lib/drawingTool/drawing-tool',
         'directives': 'directives/directives',
+        'drawController': 'nodes/draw/drawController',
+        'drawService': 'nodes/draw/drawService',
         'filters': 'filters/filters',
         'graphController': 'nodes/graph/graphController',
         'graphService': 'nodes/graph/graphService',
@@ -56,6 +59,7 @@ require.config({
         'studentWebSocketService': 'services/studentWebSocketService',
         'tableController': 'nodes/table/tableController',
         'tableService': 'nodes/table/tableService',
+        'vendor': 'lib/drawingTool/vendor',
         'vleController': 'vle/vleController'
     },
     shim: {
@@ -133,6 +137,12 @@ require.config({
             'exports': 'bootstrap',
             'deps': [
                     'jquery'
+                    ]
+        },
+        'drawingTool': {
+            'exports': 'drawingTool',
+            'deps': [
+                    'vendor'
                     ]
         },
         'highcharts': {

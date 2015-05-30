@@ -1,6 +1,5 @@
-define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(app, bootstrap, highcharts, highchartsng, $) {
-    
-    app.$controllerProvider.register('GraphController', 
+define(['app', 'drawingTool', 'vendor'], function(app) {
+    app.$controllerProvider.register('DrawController', 
         function($rootScope,
             $scope,
             $state, 
@@ -9,8 +8,8 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
             ConfigService,
             CurrentNodeService,
             CRaterService,
+            DrawService,
             NodeService,
-            OpenResponseService,
             ProjectService,
             SessionService,
             StudentAssetService,
@@ -22,8 +21,8 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
         // field that will hold the node content
         this.nodeContent = null;
         
-        // holds the text that the student has typed
-        this.studentResponse = '';
+        // holds the draw student data
+        this.studentData = null;
         
         // whether the step should be disabled
         this.isDisabled = false;
@@ -33,9 +32,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
         
         // whether this is part of another node such as a Questionnaire node
         this.isNodePart = false;
-        
-        // holds all the series
-        this.series = null;
         
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
@@ -97,9 +93,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                         // disable the node since we are just showing previous work
                         this.isDisabled = true;
                         
-                        // setup the graph
-                        this.setupGraph();
-                        
                         // get the part
                         var part = $scope.part;
                         
@@ -117,9 +110,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                     
                     // populate the student work into this node
                     this.setStudentWork(nodeState);
-                    
-                    // setup the graph
-                    this.setupGraph();
                     
                     // check if we need to lock this node
                     this.calculateDisabled();
@@ -148,9 +138,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                     // populate the student work into this node
                     this.setStudentWork(nodeState);
                     
-                    // setup the graph
-                    this.setupGraph();
-                    
                     // check if we need to lock this node
                     this.calculateDisabled();
                     
@@ -170,288 +157,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
         };
         
         /**
-         * Setup the graph
-         */
-        this.setupGraph = function() {
-            
-            // get the title
-            var title = this.nodeContent.title;
-            
-            // get the graph type
-            var graphType = this.nodeContent.graphType;
-            
-            // get the x and y axis attributes from the student data
-            var xAxis = this.xAxis;
-            var yAxis = this.yAxis;
-            
-            if (this.xAxis == null && this.nodeContent.xAxis != null) {
-                /*
-                 * the student does not have x axis data so we will use the
-                 * x axis from the node content
-                 */
-                xAxis = this.nodeContent.xAxis;
-            }
-            
-            if (this.yAxis == null && this.nodeContent.yAxis != null) {
-                /*
-                 * the student does not have y axis data so we will use the
-                 * y axis from the node content
-                 */
-                yAxis = this.nodeContent.yAxis;
-            }
-            
-            /*
-             * remember this graph controller so we can access it in the click
-             * event for the graph
-             */
-            thisGraphController = this;
-            
-            // get all the series from the student data
-            var series = this.series;
-            
-            if (this.series == null && this.nodeContent.series != null) {
-                /*
-                 * use the series from the step content if the student does not
-                 * have any series data
-                 */
-                series = this.nodeContent.series;
-            }
-            
-            if (this.canClickToAddData() && !this.isDisabled) {
-                /*
-                 * the student can click to add a point so we will also allow
-                 * them to click to remove a point
-                 */
-                
-                if (series != null) {
-                    
-                    // loop through all the series
-                    for (var s = 0; s < series.length; s++) {
-                        
-                        /*
-                         * create a point click event to remove a point when
-                         * it is clicked
-                         */
-                        var point = {
-                            events: {
-                                click: function (e) {
-                                    this.remove();
-                                    
-                                    thisGraphController.studentDataChanged();
-                                    
-                                    $scope.$apply();
-                                }
-                            }
-                        };
-                        
-                        series[s].point = point;
-                    }
-                }
-            }
-            
-            this.chartConfig = {
-                options: {
-                    chart: {
-                        type: graphType,
-                        zoomType: 'xy',
-                        events: {
-                            click: function(e) {
-                                
-                                /*
-                                 * check if the student can click to add data
-                                 * on the graph
-                                 */
-                                if (thisGraphController.canClickToAddData() && !thisGraphController.isDisabled) {
-                                    
-                                    // TODO: check for point with existing x value
-                                    
-                                    // get the x and y positions that were clicked
-                                    var x = e.xAxis[0].value;
-                                    var y = e.yAxis[0].value;
-                                    
-                                    // get the series for the graph, there should only be one in this case
-                                    var series = this.series[0];
-                                    
-                                    // round the values to the nearest hundredth
-                                    x = Math.round(x * 100) / 100;
-                                    y = Math.round(y * 100) / 100;
-                                    
-                                    // add the point to the series
-                                    series.addPoint([x, y]);
-                                    
-                                    /*
-                                     * notify the controller that the student 
-                                     * data has changed
-                                     */
-                                    thisGraphController.studentDataChanged();
-                                    
-                                    $scope.$apply();
-                                }
-                            }
-                        }
-                    }
-                },
-                series: series,
-                title: {
-                    text: title
-                },
-                xAxis: xAxis,
-                yAxis: yAxis,
-                loading: false
-            };
-        };
-        
-        /**
-         * Check whether the student is allowed to click on the graph to
-         * add data
-         */
-        this.canClickToAddData = function() {
-            var result = false;
-            
-            if (this.nodeContent.canClickToAddData) {
-                result = this.nodeContent.canClickToAddData;
-            }
-            
-            return result;
-        };
-        
-        /**
-         * Get the series object from the graph
-         */
-        this.getSeries = function() {
-            
-            // get the highcharts object
-            var highchartsObject = $('#chart1').highcharts();
-            
-            var series = null;
-            
-            if (highchartsObject != null && highchartsObject.series != null) {
-                
-                // get the series
-                highchartsObjectSeries = highchartsObject.series;
-                
-                /*
-                 * get all the plain series data and not any of the extra
-                 * attributes that highcharts adds to the data
-                 */
-                series = this.getAllPlainSeriesData(highchartsObjectSeries);
-            }
-            
-            return series;
-        };
-        
-        /**
-         * Get all the plain series data
-         * @param allSeries an array of series
-         */
-        this.getAllPlainSeriesData = function(allSeries) {
-            var allPlainSeriesData = [];
-            
-            if (allSeries) {
-                
-                // loop through all the series
-                for (var x = 0 ; x < allSeries.length; x++) {
-                    var series = allSeries[x];
-                    
-                    // get the plain data for a single series
-                    var plainSeriesData = this.getPlainSeriesData(series);
-                    
-                    // add the plain series data to our array
-                    allPlainSeriesData.push(plainSeriesData);
-                }
-            }
-            
-            return allPlainSeriesData;
-        };
-        
-        /**
-         * Get the plain series data for a single series
-         * @param series a single series
-         */
-        this.getPlainSeriesData = function(series) {
-            
-            // the series object
-            var plainSeriesData = {};
-            
-            // the array that will hold our data points
-            plainSeriesData.data = [];
-            
-            if (series != null) {
-                
-                // get the data from the series
-                var seriesData = series.data;
-                
-                if (seriesData != null) {
-                    
-                    // loop through all the points
-                    for (var p = 0; p < seriesData.length; p++) {
-                        
-                        // get a point
-                        var point = seriesData[p];
-                        
-                        if (point != null) {
-                            
-                            // get the x and y values
-                            var x = point.x;
-                            var y = point.y;
-                            
-                            if (x != null && y != null) {
-                                
-                                // create an array to hold the x and y values
-                                var dataPoint = [x , y];
-                                
-                                // add the data point array to our data array
-                                plainSeriesData.data.push(dataPoint);
-                            }
-                        }
-                    }
-                }
-            }
-            
-            return plainSeriesData;
-        };
-        
-        /**
-         * Get the xAxis object
-         * @return the xAxis object that can be used to render the graph
-         */
-        this.getXAxis = function() {
-            var xAxis = null;
-            
-            /*
-            var highchartsObject = $('#chart1').highcharts();
-            
-            if (highchartsObject != null) {
-                var highchartsObjectXAxis = highchartsObject.xAxis;
-                
-                if (highchartsObjectXAxis != null && highchartsObjectXAxis.length > 0) {
-                    var tempXAxis = highchartsObjectXAxis[0];
-                    
-                    if (tempXAxis != null) {
-                        var min = tempXAxis.min;
-                        var max = tempXAxis.max;
-                        
-                        xAxis.min = min;
-                        xAxis.max = max;
-                    }
-                }
-            }
-            */
-            
-            return xAxis;
-        };
-        
-        /**
-         * Get the yAxis object
-         * @return the yAxis object that can be used to render the graph
-         */
-        this.getYAxis = function() {
-            var yAxis = null;
-            
-            return yAxis;
-        };
-        
-        /**
          * Populate the student work into the node
          * @param nodeState the node state to populate into the node
          */
@@ -467,10 +172,12 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
             }
             
             if (nodeState != null) {
-                // populate the student data into the node
-                this.series = nodeState.series;
-                this.xAxis = nodeState.xAxis;
-                this.yAxis = nodeState.yAxis;
+                // populate the text the student previously typed
+                this.studentData = nodeState.studentData;
+            }
+            
+            if (this.studentData != null) {
+                drawingTool.load(this.studentData);
             }
         };
         
@@ -539,13 +246,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
         };
         
         /**
-         * Get the student response
-         */
-        this.getStudentResponse = function() {
-            return this.studentResponse;
-        };
-        
-        /**
          * Create a node state and add it to the latest node visit
          * @param saveTriggeredBy the reason why we are saving a new node state
          * e.g.
@@ -575,7 +275,7 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                      * check if the save was triggered by the submit button
                      * or if the student data is dirty
                      */
-                    if (saveTriggeredBy === 'submitButton' || this.isDirty) {
+                    if (saveTriggeredBy === 'submitButton' || this.isDirty || true) {
                         
                         // create a node state populated with the student data
                         nodeState = this.createNodeState();
@@ -604,14 +304,9 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
             // create a new node state
             var nodeState = NodeService.createNewNodeState();
             
-            // insert the series data
-            nodeState.series = this.getSeries();
-            
-            // insert the x axis data
-            nodeState.xAxis = this.getXAxis();
-            
-            // insert the y axis data
-            nodeState.yAxis = this.getYAxis();
+            // get the draw JSON string
+            var studentDataJSONString = drawingTool.save();
+            nodeState.studentData = studentDataJSONString;
             
             return nodeState;
         };
@@ -765,16 +460,16 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
         };
         
         /**
-         * Get the text the student typed
+         * Get the draw data
          */
-        this.getResponse = function() {
-            var response = null;
+        this.getStudentData = function() {
+            var studentData = null;
             
-            if (this.studentResponse != null) {
-                response = this.studentResponse;
+            if (this.studentData != null) {
+                studentData = this.studentData;
             }
             
-            return response;
+            return studentData;
         };
         
         /**
@@ -821,7 +516,7 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                                      * populate a new node state with the work from the 
                                      * imported node state
                                      */
-                                    var populatedNodeState = GraphService.populateNodeState(importWorkNodeState, importWorkNodeType);
+                                    var populatedNodeState = DrawService.populateNodeState(importWorkNodeState, importWorkNodeType);
                                     
                                     // populate the node state into this node
                                     this.setStudentWork(populatedNodeState);
@@ -831,160 +526,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                     }
                 }
             }
-        };
-        
-        /**
-         * A connected part has changed its student data so we will
-         * perform any necessary changes to this part
-         * @param connectedPart the connected part parameters
-         * @param nodeState the student data from the connected part 
-         * that has changed
-         */
-        $scope.handleConnectedPartStudentDataChanged = function(connectedPart, nodeState) {
-            
-            if (connectedPart != null && nodeState != null) {
-                
-                // get the part type that has changed
-                var partType = connectedPart.partType;
-                
-                if (partType === 'Table') {
-                    
-                    // convert the table data to series data
-                    var data = $scope.graphController.convertTableDataToSeriesData(nodeState, connectedPart);
-                    
-                    // create a new series object
-                    var series = {};
-                    
-                    // set the data into the series
-                    series.data = data;
-                    
-                    if ($scope.graphController.series == null) {
-                        // initialize the series in the controller
-                        $scope.graphController.series = [];
-                    }
-                    
-                    // set the series into the array of series
-                    $scope.graphController.series[0] = series;
-                    
-                    // render the graph
-                    $scope.graphController.setupGraph();
-                }
-            }
-        }
-        
-        /**
-         * Convert the table data into series data
-         * @param nodeState the node state to get table data from
-         * @param params (optional) the params to specify what columns
-         * and rows to use from the table data
-         */
-        this.convertTableDataToSeriesData = function(nodeState, params) {
-            var data = [];
-            
-            /*
-             * the default is set to not skip the first row and for the
-             * x column to be the first column and the y column to be the
-             * second column
-             */
-            var skipFirstRow = false;
-            var xColumn = 0;
-            var yColumn = 1;
-            
-            if (params != null) {
-                
-                if (params.skipFirstRow != null) {
-                    // determine whether to skip the first row
-                    skipFirstRow = params.skipFirstRow;
-                }
-                
-                if (params.xColumn != null) {
-                    // get the x column
-                    xColumn = params.xColumn;
-                }
-                
-                if (params.yColumn != null) {
-                    // get the y column
-                    yColumn = params.yColumn;
-                }
-            }
-            
-            if (nodeState != null) {
-                
-                // get the rows in the table
-                var rows = nodeState.tableData;
-                
-                // loop through all the rows
-                for (var r = 0; r < rows.length; r++) {
-                    
-                    if (skipFirstRow && r === 0) {
-                        // skip the first row
-                        continue;
-                    }
-                    
-                    // get the row
-                    var row = rows[r];
-                    
-                    // get the x cell and y cell from the row
-                    var xCell = row[xColumn];
-                    var yCell = row[yColumn];
-                    
-                    if (xCell != null && yCell != null) {
-                        
-                        /*
-                         * the point array where the 0 index will contain the
-                         * x value and the 1 index will contain the y value
-                         */
-                        var point = [];
-                        
-                        // get the x text and y text
-                        var xText = xCell.text;
-                        var yText = yCell.text;
-                        
-                        if (xText != null &&
-                                xText !== '' &&
-                                yText != null &&
-                                yText !== '') {
-                            
-                            // try to convert the text values into numbers
-                            var xNumber = Number(xText);
-                            var yNumber = Number(yText);
-                            
-                            if (!isNaN(xNumber)) {
-                                /*
-                                 * we were able to convert the value into a
-                                 * number so we will add that
-                                 */
-                                point.push(xNumber);
-                            } else {
-                                /*
-                                 * we were unable to convert the value into a
-                                 * number so we will add the text
-                                 */
-                                point.push(xText);
-                            }
-                            
-                            if (!isNaN(yNumber)) {
-                                /*
-                                 * we were able to convert the value into a
-                                 * number so we will add that
-                                 */
-                                point.push(yNumber);
-                            } else {
-                                /*
-                                 * we were unable to convert the value into a
-                                 * number so we will add the text
-                                 */
-                                point.push(yText);
-                            }
-                            
-                            // add the point to our data
-                            data.push(point);
-                        }
-                    }
-                }
-            }
-            
-            return data;
         };
         
         /**
@@ -1024,7 +565,7 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                  */
                 
                 // create a node state populated with the student data
-                nodeState = $scope.graphController.createNodeState();
+                nodeState = $scope.drawController.createNodeState();
             }
             
             return nodeState;
