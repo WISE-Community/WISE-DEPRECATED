@@ -122,6 +122,9 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                      * likely be a Questionnaire node
                      */
                     $scope.$parent.registerPartController($scope, part);
+                    
+                    // listen for the drawing changed event
+                    drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
                 }
             } else {
                 // this is a regular standalone node
@@ -152,6 +155,9 @@ define(['app', 'drawingTool', 'vendor'], function(app) {
                     
                     // register this controller to listen for the exit event
                     this.registerExitListener();
+                    
+                    // listen for the drawing changed event
+                    drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
                 }));
             }
         };
