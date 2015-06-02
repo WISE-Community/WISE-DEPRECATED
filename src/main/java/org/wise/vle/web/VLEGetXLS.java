@@ -5887,22 +5887,24 @@ public class VLEGetXLS {
                         // get the value from the annotation
                         JSONArray value = annotationData.optJSONArray("value");
                         
-                        // loop through all the value elements
-                        for (int v = 0; v < value.length(); v++) {
-                            // get a value element
-                            JSONObject valueElement = value.optJSONObject(v);
-                            
-                            if (valueElement != null) {
-                                // get the node state id for the value element
-                                Long nodeStateId = valueElement.optLong("nodeStateId");
+                        if (value != null) {
+                            // loop through all the value elements
+                            for (int v = 0; v < value.length(); v++) {
+                                // get a value element
+                                JSONObject valueElement = value.optJSONObject(v);
                                 
-                                // check if the timestamp matches the one we want
-                                if (timestamp.equals(nodeStateId)) {
-                                    /*
-                                     * the timestamp matches so we have found the value
-                                     * element to retrieve the field value from
-                                     */
-                                    result = valueElement.opt(field);
+                                if (valueElement != null) {
+                                    // get the node state id for the value element
+                                    Long nodeStateId = valueElement.optLong("nodeStateId");
+                                    
+                                    // check if the timestamp matches the one we want
+                                    if (timestamp.equals(nodeStateId)) {
+                                        /*
+                                         * the timestamp matches so we have found the value
+                                         * element to retrieve the field value from
+                                         */
+                                        result = valueElement.opt(field);
+                                    }
                                 }
                             }
                         }
