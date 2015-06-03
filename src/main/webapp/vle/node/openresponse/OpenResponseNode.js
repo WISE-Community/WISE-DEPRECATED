@@ -268,6 +268,9 @@ OpenResponseNode.prototype.renderGradingView = function(displayStudentWorkDiv, n
 		//get the node states
 		var nodeStates = nodeVisit.nodeStates;
 		
+		// get the vle mode
+		var mode = this.view.getConfig().getConfigParam('mode');
+		
 		/*
 		 * Get the number of submits up until this step work id. this is used
 		 * so that we can display the Check Answer #X on node states that
@@ -308,15 +311,29 @@ OpenResponseNode.prototype.renderGradingView = function(displayStudentWorkDiv, n
 					tempStudentWork += response;
 					tempStudentWork += '<br>';
 					
-					//get the node state timestamp
-					var nodeStateTimestamp = nodeState.timestamp;
+					var showAutoGradedAnnotation = false;
 					
-					//get the auto graded annotation text if any
-					var autoGradedAnnotationText = this.getAutoGradedAnnotationText(stepWorkId, nodeStateTimestamp);
+					// check if we want to show the auto graded annotation to the student
 					
-					if(autoGradedAnnotationText != null && autoGradedAnnotationText != '') {
-						//add the auto graded annotation text
-						tempStudentWork += autoGradedAnnotationText;
+					if (mode === 'run') {
+					    // do not show the auto graded annotation in the student vle
+					    showAutoGradedAnnotation = false;
+					} else {
+					    // show the auto graded annotation in the other views like the grading tool
+					    showAutoGradedAnnotation = true;
+					}
+					
+					if (showAutoGradedAnnotation) {
+                        //get the node state timestamp
+                        var nodeStateTimestamp = nodeState.timestamp;
+                        
+                        //get the auto graded annotation text if any
+                        var autoGradedAnnotationText = this.getAutoGradedAnnotationText(stepWorkId, nodeStateTimestamp);
+                        
+                        if(autoGradedAnnotationText != null && autoGradedAnnotationText != '') {
+                            //add the auto graded annotation text
+                            tempStudentWork += autoGradedAnnotationText;
+                        }
 					}
 					
 					if(studentWork != '') {
