@@ -50,9 +50,9 @@ import javax.servlet.http.HttpServletResponse;
  * Each sheet must contain exactly one common column. We'll refer to this as the "mergeColumn", and the values
  * in the mergeColumn will be called "mergeColumnValue".
  *
- * If there are multiple mergeColumnValues in a sheet, the resulting merged file will contain copies of the header
- * of that sheet. So if sheet X has headers {headerA, headerB, header C}, the resulting merged file might contain
- * header {headerA sheetX 1, headerB sheetX 1, headerC sheetX 1, headerA sheetX 2, headerB sheetX 2, headerC sheetX 3}
+ * If there are multiple mergeColumnValue rows in a sheet, the resulting merged file will contain copies of the header
+ * of that sheet. So if sheet X has headers {headerA, headerB, header C}, the resulting merged file would contain
+ * headers {headerA sheetX 1, headerB sheetX 1, headerC sheetX 1, headerA sheetX 2, headerB sheetX 2, headerC sheetX 3}
  *
  * @author Hiroki Terashima
  * @version $Id:$
@@ -131,7 +131,7 @@ public class MergeSpreadsheetsController {
                     // 2. populate mergeColumnValueToSheetRows
                     // 3. calculate sheetIndexToMaxSheetRowCount
                     Cell mergeColumnValueCell = row.getCell(mergeColumnIndex);
-                    if (!mergeColumnValueCell.toString().isEmpty()) {
+                    if (mergeColumnValueCell != null && !mergeColumnValueCell.toString().isEmpty()) {
 
                         objFormulaEvaluator.evaluate(mergeColumnValueCell);
                         String mergeColumnValueString = objDefaultFormat.formatCellValue(mergeColumnValueCell, objFormulaEvaluator);
