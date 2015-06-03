@@ -40,34 +40,49 @@ define(['configService', 'studentDataService'], function(configService, studentD
             
             if (content != null) {
                 
-                // get the content base url e.g. http://wise.berkeley.edu/curriculum/123456
-                var contentBaseUrl = ConfigService.getConfigParam('getContentBaseUrl');
-                
                 if (typeof content === 'object') {
                     
                     var contentString = JSON.stringify(content);
                     
                     if (contentString != null) {
                         
-                        // replace instances of 'assets/myimage.jpg' with 'http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg'
-                        contentString = contentString.replace(new RegExp('\'(\\.)*(/)*assets', 'g'), '\''+contentBaseUrl + 'assets');
-                        
-                        // replace instances of "assets/myimage.jpg" with "http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg"
-                        contentString = contentString.replace(new RegExp('\"(\\.)*(/)*assets', 'g'), '\"'+contentBaseUrl + 'assets');
+                        // replace the relative asset paths with the absolute paths
+                        contentString = this.replaceAssetPaths(contentString);
                         
                         content = JSON.parse(contentString);
                     }
                 } else if (typeof content === 'string') {
                     
-                    // replace instances of 'assets/myimage.jpg' with 'http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg'
-                    content = content.replace(new RegExp('\'(\\.)*(/)*assets', 'g'), '\''+contentBaseUrl + 'assets');
-                    
-                    // replace instances of "assets/myimage.jpg" with "http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg"
-                    content = content.replace(new RegExp('\"(\\.)*(/)*assets', 'g'), '\"'+contentBaseUrl + 'assets');
+                    // replace the relative asset paths with the absolute paths
+                    content = this.replaceAssetPaths(content);
                 }
             }
             
             return content;
+        };
+        
+        /**
+         * Replace the relative asset paths with absolute paths
+         * @param contentString the content string
+         * @return the content string with relative asset paths replaced
+         * with absolute asset paths
+         */
+        serviceObject.replaceAssetPaths = function(contentString) {
+            
+            if (contentString != null) {
+                
+                // get the content base url e.g. http://wise.berkeley.edu/curriculum/123456
+                var contentBaseUrl = ConfigService.getConfigParam('getContentBaseUrl');
+                
+                // replace instances of 'assets/myimage.jpg' with 'http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg'
+                contentString = contentString.replace(new RegExp('\'(\\.)*(/)*assets', 'g'), '\''+contentBaseUrl + 'assets');
+                
+                // replace instances of "assets/myimage.jpg" with "http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg"
+                contentString = contentString.replace(new RegExp('\"(\\.)*(/)*assets', 'g'), '\"'+contentBaseUrl + 'assets');
+                
+            }
+            
+            return contentString
         };
         
         serviceObject.injectNodeLinks = function(content) {
