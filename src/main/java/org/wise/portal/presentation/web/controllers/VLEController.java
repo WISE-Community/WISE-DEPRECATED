@@ -218,7 +218,7 @@ public class VLEController {
         
         // get the vle config url
         String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-        String vleConfigUrl = wiseBaseURL + "/request/info.html?projectId=" + projectId + "&action=getVLEConfig";
+        String vleConfigUrl = wiseBaseURL + "/request/info.html?projectId=" + projectId + "&action=getVLEConfig&requester=portalpreview";
         
         // set the view to the student vle
         ModelAndView modelAndView = new ModelAndView("student");

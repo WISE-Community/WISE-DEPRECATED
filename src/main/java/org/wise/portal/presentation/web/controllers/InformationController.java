@@ -706,6 +706,20 @@ public class InformationController {
 			
 			config.put("contextPath", contextPath);
 			config.put("mode", requester);
+
+			// mode=portalpreview in WISE4. mode=preview in WISE5.
+			if ("portalpreview".equals(requester)) {
+				if (projectIdStr != null) {
+					Project project = projectService.getById(projectIdStr);
+					if (project != null) {
+						Integer wiseVersion = project.getWiseVersion();
+						if (wiseVersion != null && wiseVersion == 5) {
+							config.put("mode", "preview");
+						}
+					}
+				}
+			}
+
 			config.put("projectId", projectIdStr);
 			config.put("parentProjectId", parentProjectId);
 			config.put("projectMetaDataUrl", projectMetaDataUrl);
