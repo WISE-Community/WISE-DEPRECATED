@@ -35843,6 +35843,7 @@ return jQuery;
       if (forceRepaint) setTimeout(function() { document.body.offsetHeight; }, 25);
     }
   };
+  /*
   var port = ar.port || 9485;
   var host = br.server || window.location.hostname || 'localhost';
 
@@ -35861,6 +35862,8 @@ return jQuery;
       window.setTimeout(connect, 1000);
     };
   };
+
   connect();
+  */
 })();
 
