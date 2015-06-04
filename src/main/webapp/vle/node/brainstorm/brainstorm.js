@@ -950,7 +950,7 @@ BRAINSTORM.prototype.showStarter = function(){
  * @param frameDoc
  */
 BRAINSTORM.prototype.refreshResponses = function(frameDoc) {
-	if (this.node.view.config.getConfigParam('mode') == "portalpreview") {
+	if (this.node.view.config.getConfigParam('mode') === "preview") {
 	   alert(this.node.view.getI18NString("check_for_new_responses_preview_mode","BrainstormNode"));
 	   return;
 	}

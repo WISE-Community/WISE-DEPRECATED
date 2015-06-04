@@ -556,7 +556,7 @@ ANNOTATOR.prototype.initDisplay = function(data,context) {
 			$('#prompt').hide();
 		}
 		
-		if(view.config.getConfigParam('mode') === "portalpreview"){
+		if (view.config.getConfigParam('mode') === "preview"){
 			// we're in preview so add link to export data for authoring tool
 			// TODO: remove once visual authoring has been implemented
 			var exportLink = $('<a href="#">Export Labels</a>');

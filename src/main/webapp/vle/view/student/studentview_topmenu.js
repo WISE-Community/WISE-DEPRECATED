@@ -333,7 +333,7 @@ View.prototype.showAllWork = function(){
  * from the teacher.
  */
 View.prototype.retrieveAnnotations = function(callerId) {
-	if (this.config.getConfigParam("mode") == "portalpreview") {
+	if (this.config.getConfigParam("mode") === "preview") {
 		// no annotations in preview mode
 		return;
 	}
@@ -361,7 +361,7 @@ View.prototype.retrieveAnnotations = function(callerId) {
  * Retrieve the flagged work and display it
  */
 View.prototype.getFlaggedWork = function() {
-	if (this.config.getConfigParam("mode") == "portalpreview") {
+	if (this.config.getConfigParam("mode") === "preview") {
 		alert(this.getI18NString("flagged_preview_mode"));
 		return;
 	}
@@ -2000,7 +2000,7 @@ View.prototype.dismissNotification = function(notificationAnnotation, notificati
             nodeId: nodeId
         };
         
-        if (this.getConfig().getConfigParam('mode') === 'portalpreview') {
+        if (this.getConfig().getConfigParam('mode') === 'preview') {
             // we are in preview mode so we will not save the updated annotation to the server
             
             // process the notifications

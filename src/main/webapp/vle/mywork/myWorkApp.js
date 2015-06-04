@@ -18,7 +18,7 @@ myWorkApp
 			scope.totalScoreForWorkgroup = 0;
 
 			//do not retrieve annotations in preview
-			if(view.config.getConfigParam("mode") != "portalpreview") {
+			if (view.config.getConfigParam("mode") != "preview") {
 				//we are not in preview so we will obtain the annotations
 
 				var workgroupId = view.getUserAndClassInfo().getWorkgroupId();
@@ -69,7 +69,7 @@ myWorkApp
 
 			var showGrades = true; // always show annotations/grades if we're not in preview mode
 
-			if(view.config.getConfigParam("mode") == "portalpreview") {
+			if (view.config.getConfigParam("mode") == "preview") {
 				showGrades = false;
 			}
 

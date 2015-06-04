@@ -2,6 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2b78445-4a96-4124-b20b-a960e3c13308" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/wise/vle/web/CRaterController.java" afterPath="$PROJECT_DIR$/src/main/java/org/wise/vle/web/CRaterController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/InformationController.java" afterPath="$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/InformationController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/wise/portal/service/project/impl/ProjectServiceImpl.java" afterPath="$PROJECT_DIR$/src/main/java/org/wise/portal/service/project/impl/ProjectServiceImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/util/SessionManager.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/util/SessionManager.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/VLEController.java" afterPath="$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/VLEController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/node/draw/svg-edit/annotator.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/node/draw/svg-edit/annotator.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/ideaBasket/basket.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/ideaBasket/basket.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/node/brainstorm/brainstorm.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/node/brainstorm/brainstorm.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/node/branching/branching.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/node/branching/branching.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/wise5/services/cRaterService.js" afterPath="$PROJECT_DIR$/src/main/webapp/wise5/services/cRaterService.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/model/content.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/model/content.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/mywork/myWorkApp.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/mywork/myWorkApp.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/themes/starmap/navigation/map/nav.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/themes/starmap/navigation/map/nav.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/node/openresponse/openresponse.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/node/openresponse/openresponse.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/model/portfolio.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/model/portfolio.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_core.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_core.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_studentwork.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_studentwork.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_topmenu.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_topmenu.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/vle/node/draw/svg-edit/svgdraw.js" afterPath="$PROJECT_DIR$/src/main/webapp/vle/node/draw/svg-edit/svgdraw.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/webapp/wise5/lib/drawingTool/vendor.js" afterPath="$PROJECT_DIR$/src/main/webapp/wise5/lib/drawingTool/vendor.js" />
     </list>
     <ignored path="wise.iws" />
@@ -28,11 +47,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="PreviewProjectController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/PreviewProjectController.java">
+      <file leaf-file-name="studentview_topmenu.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_topmenu.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="86" column="0" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
+              <caret line="2002" column="57" selection-start-line="2002" selection-start-column="57" selection-end-line="2002" selection-end-column="57" />
+              <folding>
+                <marker date="1433433510000" expanded="true" signature="4845:4860" placeholder="..." />
+                <marker date="1433433510000" expanded="true" signature="19735:19750" placeholder="..." />
+                <marker date="1433433510000" expanded="true" signature="22723:22735" placeholder="..." />
+                <marker date="1433433510000" expanded="true" signature="23580:23592" placeholder="..." />
+                <marker date="1433433510000" expanded="true" signature="24221:24235" placeholder="..." />
+                <marker date="1433433510000" expanded="true" signature="24250:24287" placeholder="..." />
+                <marker date="1433433510000" expanded="true" signature="24468:24505" placeholder="..." />
+                <marker date="1433433510000" expanded="true" signature="24687:24724" placeholder="..." />
+                <marker date="1433433510000" expanded="true" signature="35042:35055" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cRaterService.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/services/cRaterService.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="55" column="31" selection-start-line="55" selection-start-column="31" selection-end-line="55" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -41,58 +80,8 @@
       <file leaf-file-name="VLEController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/VLEController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="4.0552325">
-              <caret line="222" column="42" selection-start-line="222" selection-start-column="42" selection-end-line="222" selection-end-column="42" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/app.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="150" column="24" selection-start-line="150" selection-start-column="24" selection-end-line="150" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="studentDataService.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/services/studentDataService.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="119" column="62" selection-start-line="119" selection-start-column="62" selection-end-line="119" selection-end-column="62" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="vle.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/vle.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.833333">
-              <caret line="177" column="65" selection-start-line="177" selection-start-column="65" selection-end-line="177" selection-end-column="65" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="vendor.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/lib/drawingTool/vendor.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="35584" column="29" selection-start-line="35584" selection-start-column="29" selection-end-line="35584" selection-end-column="29" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InformationController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/InformationController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.851852">
-              <caret line="709" column="17" selection-start-line="709" selection-start-column="17" selection-end-line="709" selection-end-column="17" />
+            <state vertical-scroll-proportion="0.6835443">
+              <caret line="206" column="36" selection-start-line="206" selection-start-column="36" selection-end-line="206" selection-end-column="36" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="imports" expanded="true" />
@@ -101,12 +90,84 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="configService.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/services/configService.js">
+      <file leaf-file-name="basket.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/ideaBasket/basket.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="9" column="10" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
+              <caret line="1998" column="5" selection-start-line="1998" selection-start-column="5" selection-end-line="1998" selection-end-column="5" />
+              <folding>
+                <marker date="1433433631000" expanded="true" signature="18432:18446" placeholder="..." />
+                <marker date="1433433631000" expanded="true" signature="31425:31443" placeholder="..." />
+                <marker date="1433433631000" expanded="true" signature="31532:31550" placeholder="..." />
+                <marker date="1433433631000" expanded="true" signature="54642:54660" placeholder="..." />
+                <marker date="1433433631000" expanded="true" signature="54752:54770" placeholder="..." />
+                <marker date="1433433631000" expanded="true" signature="78055:78073" placeholder="..." />
+                <marker date="1433433631000" expanded="true" signature="78174:78192" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="portfolio.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/model/portfolio.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="126" column="7" selection-start-line="126" selection-start-column="7" selection-end-line="126" selection-end-column="7" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="myWorkApp.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/mywork/myWorkApp.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="brainstorm.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/node/brainstorm/brainstorm.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="952" column="56" selection-start-line="952" selection-start-column="56" selection-end-line="952" selection-end-column="56" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="branching.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/node/branching/branching.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="57" column="59" selection-start-line="57" selection-start-column="59" selection-end-line="57" selection-end-column="59" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="annotator.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/node/draw/svg-edit/annotator.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="558" column="11" selection-start-line="558" selection-start-column="11" selection-end-line="558" selection-end-column="11" />
+              <folding>
+                <marker date="1433433732000" expanded="true" signature="19340:19367" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="svgdraw.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/node/draw/svg-edit/svgdraw.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="573" column="11" selection-start-line="573" selection-start-column="11" selection-end-line="573" selection-end-column="11" />
+              <folding>
+                <marker date="1433433746000" expanded="true" signature="9123:9150" placeholder="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -152,7 +213,6 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/test/java/org/wise/portal/presentation/web/controllers/teacher/management/StudentListControllerTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/wise/portal/presentation/web/controllers/LoginControllerTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/VLEController.java" />
         <option value="$PROJECT_DIR$/src/main/webapp/wise5/lib/drawingTool/vendor.js" />
         <option value="$PROJECT_DIR$/src/main/resources/configurations/applicationContexts.xml" />
         <option value="$PROJECT_DIR$/src/main/webapp/wise5/vle/app.js" />
@@ -161,6 +221,24 @@
         <option value="$PROJECT_DIR$/src/main/webapp/wise5/services/studentDataService.js" />
         <option value="$PROJECT_DIR$/src/main/webapp/wise5/services/configService.js" />
         <option value="$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/InformationController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/wise/portal/service/project/impl/ProjectServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/wise/vle/web/CRaterController.java" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/model/content.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/node/openresponse/openresponse.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/themes/starmap/navigation/map/nav.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/util/SessionManager.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_core.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_studentwork.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_topmenu.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/wise5/services/cRaterService.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/ideaBasket/basket.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/model/portfolio.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/mywork/myWorkApp.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/node/brainstorm/brainstorm.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/node/branching/branching.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/node/draw/svg-edit/annotator.js" />
+        <option value="$PROJECT_DIR$/src/main/webapp/vle/node/draw/svg-edit/svgdraw.js" />
+        <option value="$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/VLEController.java" />
       </list>
     </option>
   </component>
@@ -191,10 +269,9 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="61" />
-    <option name="y" value="-1012" />
-    <option name="width" value="1600" />
-    <option name="height" value="978" />
+    <option name="y" value="23" />
+    <option name="width" value="1440" />
+    <option name="height" value="873" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -1223,15 +1300,15 @@
       <workItem from="1432936014438" duration="49029000" />
       <workItem from="1433304319525" duration="9793000" />
       <workItem from="1433371235060" duration="515000" />
-      <workItem from="1433374084236" duration="2301000" />
+      <workItem from="1433374084236" duration="5641000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="61638000" />
+    <option name="totallyTimeSpent" value="64978000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="61" y="-1012" width="1600" height="978" extended-state="0" />
+    <frame x="0" y="23" width="1440" height="873" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1239,22 +1316,22 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295711" sideWeight="0.48973042" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290653" sideWeight="0.481402" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1918736" sideWeight="0.44223362" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1918736" sideWeight="0.5577664" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32266325" sideWeight="0.4334764" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32266325" sideWeight="0.5665236" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31376976" sideWeight="0.27727857" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31370038" sideWeight="0.27539343" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24967907" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928476" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32413352" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21316166" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31241998" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1279,7 +1356,7 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="22" />
+      <option name="time" value="25" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory">
@@ -1292,131 +1369,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/VLEController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/services/studentWebSocketService.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="32" selection-start-line="19" selection-start-column="32" selection-end-line="19" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="158" column="22" selection-start-line="158" selection-start-column="22" selection-end-line="158" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/lib/drawingTool/vendor.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="35856" column="6" selection-start-line="35856" selection-start-column="6" selection-end-line="35856" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/InformationController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="419" column="0" selection-start-line="419" selection-start-column="0" selection-end-line="419" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/services/configService.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="141" column="28" selection-start-line="141" selection-start-column="28" selection-end-line="141" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/wise_sample.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.72639227">
-          <caret line="30" column="22" selection-start-line="30" selection-start-column="22" selection-end-line="30" selection-end-column="22" />
-        </state>
-      </provider>
-      <provider editor-type-id="ResourceBundle">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/wise.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.346247">
-          <caret line="180" column="32" selection-start-line="180" selection-start-column="32" selection-end-line="180" selection-end-column="32" />
-        </state>
-      </provider>
-      <provider editor-type-id="ResourceBundle">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/portal/admin/account/batchcreateuseraccounts.jsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="9.166667">
-          <caret line="12" column="57" selection-start-line="12" selection-start-column="57" selection-end-line="12" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/portal/admin/index.jsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-17.25">
-          <caret line="247" column="43" selection-start-line="247" selection-start-column="43" selection-end-line="247" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml/3.7/poi-ooxml-3.7.jar!/org/apache/poi/xssf/usermodel/XSSFSheet.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35421687">
-          <caret line="752" column="0" selection-start-line="752" selection-start-column="0" selection-end-line="752" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/portal/themes/default/images/features/wise-research.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/admin/AdminIndexController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/vle/web/CRaterController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="52" selection-start-line="10" selection-start-column="52" selection-end-line="10" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/domain/AccountQuestion.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="34" column="17" selection-start-line="34" selection-start-column="4" selection-end-line="34" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/teacher/management/ListStudentNamesController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="260" column="8" selection-start-line="260" selection-start-column="8" selection-end-line="260" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/vle/web/VLEGetXLS.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-5.7777777">
@@ -1569,22 +1521,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/service/project/impl/ProjectServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="367" column="24" selection-start-line="367" selection-start-column="24" selection-end-line="367" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/PreviewProjectController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="86" column="0" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-webmvc/4.1.6.RELEASE/spring-webmvc-4.1.6.RELEASE.jar!/org/springframework/web/servlet/mvc/method/annotation/ServletInvocableHandlerMethod.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.34717607">
@@ -1639,30 +1575,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="150" column="24" selection-start-line="150" selection-start-column="24" selection-end-line="150" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/services/configService.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="9" column="10" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/InformationController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.851852">
-          <caret line="709" column="17" selection-start-line="709" selection-start-column="17" selection-end-line="709" selection-end-column="17" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1674,11 +1591,215 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="150" column="24" selection-start-line="150" selection-start-column="24" selection-end-line="150" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/PreviewProjectController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="86" column="0" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/InformationController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.7777777">
+          <caret line="778" column="55" selection-start-line="778" selection-start-column="55" selection-end-line="778" selection-end-column="55" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/service/project/impl/ProjectServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="345" column="141" selection-start-line="345" selection-start-column="141" selection-end-line="345" selection-end-column="141" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/vle/web/CRaterController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="139" column="21" selection-start-line="139" selection-start-column="21" selection-end-line="139" selection-end-column="21" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/model/content.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="75" column="94" selection-start-line="75" selection-start-column="94" selection-end-line="75" selection-end-column="94" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/node/openresponse/openresponse.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1166" column="55" selection-start-line="1166" selection-start-column="55" selection-end-line="1166" selection-end-column="55" />
+          <folding>
+            <marker date="1433433333000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1433433333000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1433433333000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1433433333000" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/themes/starmap/navigation/map/nav.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="402" column="52" selection-start-line="402" selection-start-column="52" selection-end-line="402" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/util/SessionManager.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="85" column="7" selection-start-line="85" selection-start-column="7" selection-end-line="85" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_core.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="683" column="25" selection-start-line="683" selection-start-column="25" selection-end-line="683" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_studentwork.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1026" column="25" selection-start-line="1026" selection-start-column="25" selection-end-line="1026" selection-end-column="25" />
+          <folding>
+            <marker date="1433433484000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1433433484000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1433433484000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1433433484000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1433433484000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1433433484000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1433433484000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1433433484000" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/view/student/studentview_topmenu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="2002" column="57" selection-start-line="2002" selection-start-column="57" selection-end-line="2002" selection-end-column="57" />
+          <folding>
+            <marker date="1433433510000" expanded="true" signature="4845:4860" placeholder="..." />
+            <marker date="1433433510000" expanded="true" signature="19735:19750" placeholder="..." />
+            <marker date="1433433510000" expanded="true" signature="22723:22735" placeholder="..." />
+            <marker date="1433433510000" expanded="true" signature="23580:23592" placeholder="..." />
+            <marker date="1433433510000" expanded="true" signature="24221:24235" placeholder="..." />
+            <marker date="1433433510000" expanded="true" signature="24250:24287" placeholder="..." />
+            <marker date="1433433510000" expanded="true" signature="24468:24505" placeholder="..." />
+            <marker date="1433433510000" expanded="true" signature="24687:24724" placeholder="..." />
+            <marker date="1433433510000" expanded="true" signature="35042:35055" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/wise5/services/cRaterService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="55" column="31" selection-start-line="55" selection-start-column="31" selection-end-line="55" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/ideaBasket/basket.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1998" column="5" selection-start-line="1998" selection-start-column="5" selection-end-line="1998" selection-end-column="5" />
+          <folding>
+            <marker date="1433433631000" expanded="true" signature="18432:18446" placeholder="..." />
+            <marker date="1433433631000" expanded="true" signature="31425:31443" placeholder="..." />
+            <marker date="1433433631000" expanded="true" signature="31532:31550" placeholder="..." />
+            <marker date="1433433631000" expanded="true" signature="54642:54660" placeholder="..." />
+            <marker date="1433433631000" expanded="true" signature="54752:54770" placeholder="..." />
+            <marker date="1433433631000" expanded="true" signature="78055:78073" placeholder="..." />
+            <marker date="1433433631000" expanded="true" signature="78174:78192" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/model/portfolio.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="126" column="7" selection-start-line="126" selection-start-column="7" selection-end-line="126" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/mywork/myWorkApp.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/node/brainstorm/brainstorm.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="952" column="56" selection-start-line="952" selection-start-column="56" selection-end-line="952" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/node/branching/branching.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="57" column="59" selection-start-line="57" selection-start-column="59" selection-end-line="57" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/node/draw/svg-edit/annotator.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="558" column="11" selection-start-line="558" selection-start-column="11" selection-end-line="558" selection-end-column="11" />
+          <folding>
+            <marker date="1433433732000" expanded="true" signature="19340:19367" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/vle/node/draw/svg-edit/svgdraw.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="573" column="11" selection-start-line="573" selection-start-column="11" selection-end-line="573" selection-end-column="11" />
+          <folding>
+            <marker date="1433433746000" expanded="true" signature="9123:9150" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/wise/portal/presentation/web/controllers/VLEController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="4.0552325">
-          <caret line="222" column="42" selection-start-line="222" selection-start-column="42" selection-end-line="222" selection-end-column="42" />
-          <folding />
+        <state vertical-scroll-proportion="0.6835443">
+          <caret line="206" column="36" selection-start-line="206" selection-start-column="36" selection-end-line="206" selection-end-column="36" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -76,7 +76,7 @@ View.prototype.postCurrentStep = function(currentNode) {
  * @return
  */
 View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback, additionalData) {
-	if (this.getConfig().getConfigParam('mode') == "portalpreview" ||
+	if (this.getConfig().getConfigParam('mode') === "preview" ||
 			this.getConfig().getConfigParam('isRunActive') === false) {
 		// no need to post data if we're in preview mode or the run is not active and the user is reviewing the run
 		return;
@@ -179,7 +179,7 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback, failureCallback, additionalData) {
 	if (!this.getConfig() 
 			|| !this.getConfig().getConfigParam('mode') 
-			|| this.getConfig().getConfigParam('mode') == "portalpreview"
+			|| this.getConfig().getConfigParam('mode') === "preview"
 						|| this.getConfig().getConfigParam('isRunActive') === false) {
 		// no need to post data if we're in preview mode
 
@@ -554,7 +554,7 @@ View.prototype.getStudentAsset = function(assetURL, callbackFunc, callbackArgs) 
  * @param params Object (optional) specifying asset editor options (type, extensions to show, optional text for new button, callback function)
  */
 View.prototype.viewStudentAssets = function(params) {
-	if (this.config.getConfigParam("mode") == "portalpreview") {
+	if (this.config.getConfigParam("mode") === "preview") {
 		alert(this.getI18NString("student_assets_preview_mode"));
 		return;
 	}
@@ -1024,7 +1024,7 @@ View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,
 			cRaterRequestType:cRaterRequestType,
 			responseId:cRaterResponseId,
 			studentData:studentData,
-			wiseRunMode:"portalpreview"
+			wiseRunMode:"preview"
 	};
 	
 	//make the call to GET the annotation

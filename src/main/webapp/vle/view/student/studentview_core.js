@@ -541,7 +541,7 @@ View.prototype.onThemeLoad = function(){
 	if (this.config.getConfigParam('mode') == "run") {
 		this.notificationManager.notify('vleConfig.mode is run, getUserInfoUrl:' + this.config.getConfigParam('getUserInfoUrl'), 4);
 		this.loadLearnerData(this.config.getConfigParam('getUserInfoUrl'));
-	} else if (this.config.getConfigParam('mode') == "portalpreview") {
+	} else if (this.config.getConfigParam('mode') === "preview") {
 		//if preview mode, only get the user and class info and not learner data
 		this.loadUserAndClassInfo(null);  // in preview mode, user and class info object is an empty object.
 		
@@ -564,7 +564,7 @@ View.prototype.onThemeLoad = function(){
 		this.eventManager.fire('startVLECompleted');
 	}
 	
-	if(this.config.getConfigParam('mode') == "portalpreview") {
+	if (this.config.getConfigParam('mode') === "preview") {
 		//we are previewing the project so we will create a dummy idea basket
 		var imSettings = null;
 		if(this.getProjectMetadata().tools && 'ideaManagerSettings' in this.getProjectMetadata().tools){
@@ -622,7 +622,7 @@ View.prototype.renderStartNode = function(){
 			if(startPos == null) {
 				startPos = this.getProject().getStartNodePosition();
 			}
-		} else if(mode == 'portalpreview') {
+		} else if (mode === 'preview') {
 			//we are previewing a project
 			
 			//try obtain a step to load for the preview if any
@@ -681,7 +681,7 @@ View.prototype.renderStartNode = function(){
 View.prototype.canRenderStartNode = function(mode){
 	if (mode == "run") {
 		return this.getProject() != null && this.userAndClassInfoLoaded && this.viewStateLoaded;
-	} else if (mode == "portalpreview") {
+	} else if (mode === "preview") {
 		return this.getProject() != null && this.userAndClassInfoLoaded;
 	} else {
 		alert("Provided MODE is not supported. Unable to continue.");

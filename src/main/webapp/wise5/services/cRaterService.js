@@ -52,7 +52,7 @@ define(['configService'], function(configService) {
                                 cRaterRequestType: cRaterRequestType,
                                 responseId: cRaterResponseId,
                                 studentData: studentData,
-                                wiseRunMode: 'portalpreview'
+                                wiseRunMode: 'preview'
                             }; 
             
             // GET the annotation

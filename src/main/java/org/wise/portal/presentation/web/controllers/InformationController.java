@@ -664,7 +664,7 @@ public class InformationController {
 		String getContentBaseUrl = getContentUrl.substring(0, lastIndexOfSlash) + "/";
 		
 		String getUserInfoUrl = infourl + "?action=getUserInfo";
-		if (requester == null || !requester.equals("portalpreview")) {
+		if (requester == null || !requester.equals("preview")) {
 			getUserInfoUrl += "&runId=" + runId;
 		} 
 		
@@ -707,23 +707,10 @@ public class InformationController {
 			config.put("contextPath", contextPath);
 			config.put("mode", requester);
 
-			// mode=portalpreview in WISE4. mode=preview in WISE5.
-			if ("portalpreview".equals(requester)) {
-				if (projectIdStr != null) {
-					Project project = projectService.getById(projectIdStr);
-					if (project != null) {
-						Integer wiseVersion = project.getWiseVersion();
-						if (wiseVersion != null && wiseVersion == 5) {
-							config.put("mode", "preview");
-						}
-					}
-				}
-			}
-
 			config.put("projectId", projectIdStr);
 			config.put("parentProjectId", parentProjectId);
 			config.put("projectMetaDataUrl", projectMetaDataUrl);
-			if (!"portalpreview".equals(requester)) {
+			if (!"preview".equals(requester)) {
 				config.put("getUserInfoUrl", getUserInfoUrl);
 			}
 			config.put("getContentUrl", getContentUrl);
@@ -789,7 +776,7 @@ public class InformationController {
 			config.put("runName", runName);
 			
 			// add preview project specific settings
-			if (requester != null && requester.equals("portalpreview")) {
+			if (requester != null && requester.equals("preview")) {
 				String isConstraintsDisabledStr = request.getParameter("isConstraintsDisabled");
 				if (isConstraintsDisabledStr != null && Boolean.parseBoolean(isConstraintsDisabledStr)) {
 					config.put("isConstraintsDisabled", true);
