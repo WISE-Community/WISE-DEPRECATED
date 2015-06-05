@@ -322,20 +322,6 @@ public class StepWork extends PersistableDomain {
         
         return stepWorkJSONObject;
     }
-	
-	/**
-	 * @return the duplicateId
-	 */
-	public String getDuplicateId() {
-		return duplicateId;
-	}
-
-	/**
-	 * @param duplicateId the duplicateId to set
-	 */
-	public void setDuplicateId(String duplicateId) {
-		this.duplicateId = duplicateId;
-	}
 
 	/*
     public Long getRunId() {
