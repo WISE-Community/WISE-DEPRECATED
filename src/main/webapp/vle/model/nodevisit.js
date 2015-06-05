@@ -7,7 +7,6 @@ function NODE_VISIT(nodeId, nodeType, nodeStates, visitStartTime, visitEndTime) 
 	this.nodeId = nodeId;
 	this.nodeType = nodeType;
 	this.visitPostTime = null;
-	this.duplicateId;
 	this.hintStates = [];  // hint actions {hintsopened,hintpartselected,hintsclosed}
 	
 	if (arguments.length == 2) {
@@ -52,8 +51,7 @@ NODE_VISIT.prototype.parseDataJSONObj = function(nodeVisitJSONObj, view, nodeObj
 	nodeVisit.visitStartTime = nodeVisitJSONObj.visitStartTime;
 	nodeVisit.visitEndTime = nodeVisitJSONObj.visitEndTime;
 	nodeVisit.visitPostTime = nodeVisitJSONObj.visitPostTime;
-	nodeVisit.duplicateId = nodeVisitJSONObj.duplicateId;
-	
+
 	if(nodeObj == null) {
 		//var nodeObj = null;
 		

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -73,10 +73,7 @@ public class StepWork extends PersistableDomain {
 
 	@Column(name="endTime")
 	private Timestamp endTime;
-	
-	@Column(name="duplicateId")
-	private String duplicateId;
-	
+
 	@Column(name="data", length=5120000)
 	private String data;
 
@@ -290,19 +287,5 @@ public class StepWork extends PersistableDomain {
 		}
 
 		return timestamp;
-	}
-	
-	/**
-	 * @return the duplicateId
-	 */
-	public String getDuplicateId() {
-		return duplicateId;
-	}
-
-	/**
-	 * @param duplicateId the duplicateId to set
-	 */
-	public void setDuplicateId(String duplicateId) {
-		this.duplicateId = duplicateId;
 	}
 }

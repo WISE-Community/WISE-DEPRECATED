@@ -601,16 +601,9 @@ View.prototype.renderStartNode = function(){
 		 * the position of the last step they visited, otherwise, just render the first node
 		 * in the project. */
 		if(mode == 'run' && (typeof this.getState() != 'undefined') && currentNodeVisit){
-			
-			/* check to see if the currentNodeVisit has a duplicateId - meaning that
-			 * it was last rendered by a DuplicateNode so we would want to render at
-			 * the position of the duplicate node instead */
-			if(currentNodeVisit.duplicateId){
-				var node = this.getProject().getNodeById(currentNodeVisit.duplicateId);
-			} else {
-				var node = this.getProject().getNodeById(currentNodeVisit.nodeId);
-			}
-			
+
+			var node = this.getProject().getNodeById(currentNodeVisit.nodeId);
+
 			startPos = this.getProject().getPositionById(node.id);
 			
 			/*

@@ -120,17 +120,4 @@ public class VLEDataUtils {
     	
     	return false;
     }
-    
-    public static String getDuplicateId(JSONObject nodeVisitJSON){
-    	try{
-    		String duplicateId = null;
-    		if(nodeVisitJSON.has("duplicateId")) {
-    			nodeVisitJSON.getString("duplicateId");
-    		}
-    		return duplicateId;
-    	} catch (JSONException e){
-    		e.printStackTrace();
-    		return null;
-    	}
-    }
 }
