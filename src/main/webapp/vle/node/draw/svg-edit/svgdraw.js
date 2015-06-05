@@ -571,7 +571,7 @@ SVGDRAW.prototype.initDisplay = function(data,context) {
 			descriptionExt.toggle().toggle(true);  // hack to position description holder correctly in Chrome; TODO: fix
 		}
 		
-		if(view.config.getConfigParam('mode') === "portalpreview"){
+		if (view.config.getConfigParam('mode') === "preview") {
 			// we're in preview so add link to export data for authoring tool
 			// TODO: remove once visual authoring has been implemented
 			var exportLink = $('<a href="#">Export State</a>');

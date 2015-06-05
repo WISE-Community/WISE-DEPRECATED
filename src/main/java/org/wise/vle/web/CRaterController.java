@@ -69,7 +69,7 @@ public class CRaterController {
 		 * teachers can make all CRater requests
 		 * students can only make CRater scoring requests
 		 */
-		if ("portalpreview".equals(request.getParameter("wiseRunMode"))) {
+		if ("preview".equals(request.getParameter("wiseRunMode"))) {
 			allowedAccess = true;
 		} else if (signedInUser == null) {
 			allowedAccess = false;
@@ -137,7 +137,7 @@ public class CRaterController {
 		
 		if(responseString != null) {
 			try {
-				if ("portalpreview".equals(request.getParameter("wiseRunMode"))) {	
+				if ("preview".equals(request.getParameter("wiseRunMode"))) {
 					if(responseString != null) {
 						JSONObject studentNodeStateResponse = null;
 						Long nodeStateId = null;

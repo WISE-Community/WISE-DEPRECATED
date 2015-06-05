@@ -83,7 +83,7 @@ SessionManager.prototype.renewSession = function() {
  */
 SessionManager.prototype.checkSession = function() {
 	var view = this.view;
-	if(view.config.getConfigParam("mode") == "portalpreview") {
+	if (view.config.getConfigParam("mode") === "preview") {
 		// no session for preview
 		return;
 	}

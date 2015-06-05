@@ -124,7 +124,7 @@ Portfolio.prototype.saveToServerCallback = function(responseText, responseXML, a
 };
 
 Portfolio.prototype.saveToServer = function(callback,callbackArgs) {
-	if(this.view.config.getConfigParam('mode') !== "portalpreview") {
+	if (this.view.config.getConfigParam('mode') !== "preview") {
 		//we are not in preview mode so we will post the portfolio back to the server to be saved
 		this.runId = this.view.getConfig().getConfigParam('runId');
 		this.workgroupId = this.view.getUserAndClassInfo().getWorkgroupId();

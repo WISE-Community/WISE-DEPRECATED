@@ -400,7 +400,7 @@ NavigationPanel.prototype.render = function(forceReRender) {
 		// TODO: make more flexible - programmatically add repellent regions in d3 force layout for each tag map display item
 		//map.margin({top: 50, right: 50, bottom: 50, left: 220});
 		
-		if(view.config.getConfigParam('mode') === "portalpreview"){
+		if (view.config.getConfigParam('mode') === "preview") {
 			// we're in preview mode, so allow position editing and item position export
 			map.editable(true);
 			$('#export').show();

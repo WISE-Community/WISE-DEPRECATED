@@ -55,7 +55,7 @@ function Branching(node) {
  */
 Branching.prototype.translateOperand = function(operand) {
 	if (operand == "WISE_WORKGROUP_ID") {
-		if (this.view.getConfig().getConfigParam("mode") == "portalpreview") {
+		if (this.view.getConfig().getConfigParam("mode") === "preview") {
 		    // generate a random integer for the workgroup id
 			return Math.floor(Math.random() * 100000);
 		} else {
@@ -116,7 +116,7 @@ Branching.prototype.getPathToVisit = function() {
 			}
 		}
 	} else if (branchingFunction == "annotationLookup") {
-		if (this.view.getConfig().getConfigParam("mode") == "portalpreview") {
+		if (this.view.getConfig().getConfigParam("mode") === "preview") {
 			// choose the first path for preview
 			pathToVisit = this.content.paths[0];			
 		} else {

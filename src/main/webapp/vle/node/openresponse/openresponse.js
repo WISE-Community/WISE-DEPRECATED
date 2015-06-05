@@ -1164,7 +1164,7 @@ OPENRESPONSE.prototype.render = function() {
 		 * show the previous work that has a teacher comment annotation.
 		 * this is not available for note steps.
 		 */
-		if (this.view.config.getConfigParam("mode") != "portalpreview") {
+		if (this.view.config.getConfigParam("mode") !== "preview") {
 			this.showPreviousWorkThatHasAnnotation(null, 'comment');
 		}
 	}

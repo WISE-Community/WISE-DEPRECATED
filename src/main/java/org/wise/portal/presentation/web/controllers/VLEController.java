@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -41,9 +41,10 @@ import org.wise.portal.service.offering.RunService;
 
 /**
  * Controller for handling student VLE-portal interactions.
- * - launch vle, pass in contentbaseurl, load student data url, etc.
+ * - launch preview, load student data url, etc.
  * 
- * @author hirokiterashima
+ * @author Hiroki Terashima
+ * @author Geoffrey Kwan
  * @version $Id$
  */
 @Controller
@@ -54,24 +55,12 @@ public class VLEController {
 	
 	@Autowired
 	Properties wiseProperties;
-	
-	protected final static String CURRENT_STUDENTRUNINFO_LIST_KEY = "current_run_list";
-
-	protected final static String ENDED_STUDENTRUNINFO_LIST_KEY = "ended_run_list";
-
-	protected final static String HTTP_TRANSPORT_KEY = "http_transport";
-
-	protected final static String WORKGROUP_MAP_KEY = "workgroup_map";
-	
-	static final String DEFAULT_PREVIEW_WORKGROUP_NAME = "Your test workgroup";
-
-	private static final String RUNID = "runId";
 
 	@RequestMapping(value={"/student.html", "/student/vle/vle.html", "/teacher/vle/vle.html"})
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
-	    String runIdString = request.getParameter(RUNID);
+	    String runIdString = request.getParameter("runId");
 	    
 	    Long runId = null;
         Run run = null;
@@ -91,10 +80,9 @@ public class VLEController {
 			} else if (action.equals("getRunExtras")) {
 				return handleGetRunExtras(request, response, run);
 			} else {
-				// shouldn't get here
 				throw new RuntimeException("should not get here");
 			}
-		} else if(run == null) {
+		} else if (run == null) {
 		    // the run id was not provided so we will launch the preview project
 		    return handleLaunchPreviewVLE(request);
 		} else {
@@ -130,8 +118,6 @@ public class VLEController {
 	 * @param request
 	 * @param response
 	 * @param run
-	 * @param user
-	 * @param workgroup
 	 * @return
 	 */
 	private ModelAndView handlePostData(HttpServletRequest request,
@@ -149,8 +135,6 @@ public class VLEController {
 	 * @param request
 	 * @param response
 	 * @param run
-	 * @param user
-	 * @param workgroup
 	 * @return
 	 */
 	private ModelAndView handleGetData(HttpServletRequest request,
@@ -166,9 +150,7 @@ public class VLEController {
 
 	/**
 	 * @param request
-	 * @param modelAndView
 	 * @param run
-	 * @param workgroup
 	 * @return
 	 * @throws ObjectNotFoundException 
 	 */
@@ -180,7 +162,7 @@ public class VLEController {
 
 		String previewRequest = request.getParameter("preview");
 		if (previewRequest != null && Boolean.valueOf(previewRequest)) {
-			vleConfigUrl += "&requester=portalpreview";
+			vleConfigUrl += "&requester=preview";
 		} else {
 			vleConfigUrl += "&requester=run";
 		}
@@ -207,7 +189,8 @@ public class VLEController {
 	}
 	
     /**
-     * Launch the preview project
+     * Launches the project in preview mode
+	 *
      * @param request the http request
      * @return the view to launch the vle in preview mode
      */
@@ -218,7 +201,7 @@ public class VLEController {
         
         // get the vle config url
         String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-        String vleConfigUrl = wiseBaseURL + "/request/info.html?projectId=" + projectId + "&action=getVLEConfig";
+        String vleConfigUrl = wiseBaseURL + "/request/info.html?projectId=" + projectId + "&action=getVLEConfig&requester=preview";
         
         // set the view to the student vle
         ModelAndView modelAndView = new ModelAndView("student");
