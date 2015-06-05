@@ -1151,6 +1151,14 @@
 		"value":"Idea Baskets",
 		"description":"Text for idea baskets title"
 	},
+    "classroomMonitor_summary_report_title":{
+        "value":"Summary Report",
+        "description":"Text for summary report title"
+    },
+    "classroomMonitor_summary_report":{
+        "value":"Summary Report",
+        "description":"Text for summary report"
+    },
 	"classroomMonitor_tools":{
 		"value":"Tools",
 		"description":"Text for tools button in classroom monitor"

@@ -222,6 +222,7 @@ View.prototype.createClassroomMonitorDisplays = function() {
     
     this.createPremadeCommentsDiv();
     this.createShowClassroomDisplay();
+    this.createSummaryReportDisplay();
     // set the default view
     this.setClassroomMonitorView(this.currentMonitorView);
 };
@@ -254,6 +255,10 @@ View.prototype.setClassroomMonitorView = function(monitorView){
         case 'showClassroom':
             //show the show classroom view
             this.showShowClassroomDisplay();
+            break;
+        case 'summaryReport':
+            //show the summary report view
+            this.showShowSummaryReportDisplay();
             break;
         default:
             // student progress is the default view
@@ -10358,6 +10363,371 @@ View.prototype.getLocalStorageValue = function(key) {
     }
     
     return value;
+};
+
+View.prototype.createSummaryReportDisplay = function() {
+    //get the show classroom div
+    var summaryReportDiv = $('#summaryReportDiv');
+    
+    //create a div wrapper that will contain all the show classroom UI elements
+    var summaryReportWrapper = $('<div>');
+    summaryReportWrapper.attr('id', 'summaryReportWrapper');
+    summaryReportWrapper.addClass('dataTables_wrapper');
+    summaryReportDiv.append(summaryReportWrapper);
+    
+    var revisitsDiv = $('<div>')
+    revisitsDiv.attr('id', 'revisitsDiv');
+    summaryReportWrapper.append(revisitsDiv);
+    
+    var timeSpentDiv = $('<div>')
+    timeSpentDiv.attr('id', 'timeSpentDiv');
+    summaryReportWrapper.append(timeSpentDiv);
+    
+    summaryReportDiv.hide();
+};
+
+/**
+ * Show the summary report display
+ */
+View.prototype.showShowSummaryReportDisplay = function() {
+    //hide all the other display views
+    this.hideAllDisplays();
+    
+    //hide the table headers
+    $('.fixedHeader').hide();
+    
+    //clear the nodeIdClicked and workgroupIdClicked values; TODO: revise/remove
+    this.clearNodeIdClickedAndWorkgroupIdClicked();
+    
+    this.getSummaryReportData();
+    
+    //show the show classroom div
+    $('#summaryReportDiv').show();
+};
+
+View.prototype.getSummaryReportData = function() {
+    //get the url for retrieving student data
+    var getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl');
+    
+    var nodeIds = this.getProject().getNodeIds().join(':');
+    
+    var runId = this.getConfig().getConfigParam('runId'),
+        grading = true,
+        getRevisions = true,
+        //get the workgroup ids in the run
+        workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIds(),
+        //join the workgroup ids into a single string delimited by ':'
+        userIds = workgroupIds.join(':');
+    
+    var getStudentDataParams = {
+        nodeIds:nodeIds,
+        userId:userIds,
+        grading:true,
+        runId:runId,
+        getRevisions:true,
+        useCachedWork:false
+    }
+    
+    //make the request to retrieve the student data
+    this.connectionManager.request('GET', 1, getStudentDataUrl, getStudentDataParams, this.getSummaryReportDataCallback, {thisView: this}, this.getSummaryReportDataCallbackFail);
+
+};
+
+View.prototype.getSummaryReportDataCallback = function(text, xml, args) {
+    var thisView = args.thisView;
+    
+    thisView.getSummaryReportDataCallbackHandler(text);
+};
+
+View.prototype.getSummaryReportDataCallbackHandler = function(text) {
+    
+    //get the student work as an array of node visits
+    var vleStates = VLE_STATE.prototype.parseDataJSONString(text, true);
+    
+    if (vleStates != null) {
+        for (var v = 0; v < vleStates.length; v++) {
+            var vleState = vleStates[v];
+            
+            var workgroupId = vleState.workgroupId;
+            
+            this.model.addWorkByStudent(workgroupId, vleState);
+        }
+    }
+    
+    var summaryReport = this.calculateSummaryReports();
+    
+    var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIds();
+    var nodeIds = this.getProject().getNodeIds();
+    var nodeCount = nodeIds.length;
+    var numberToShow = 3;
+    
+    if (nodeCount < 3) {
+        numberToShow = nodeCount;
+    }
+    
+    
+    
+    var nodesArraySortedByNodeVisitCount = summaryReport.nodesArraySortedByNodeVisitCount;
+    var nodesArraySortedByTimeSpent = summaryReport.nodesArraySortedByTimeSpent;
+    
+    $('#revisitsDiv').append('<h5>Average Revisits</h5>')
+    //$('#revisitsDiv').append('<br>');
+    $('#revisitsDiv').append('MOST revisited steps');
+    
+    for (var x = 0; x < numberToShow; x++) {
+        var node = nodesArraySortedByNodeVisitCount[nodesArraySortedByNodeVisitCount.length - 1 - x];
+        
+        if (node != null) {
+            var nodeId = node.nodeId;
+            var averageRevisitsPerStudent = node.averageRevisitsPerStudent;
+            
+            var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
+            
+            $('#revisitsDiv').append('<br>');
+            
+            $('#revisitsDiv').append(averageRevisitsPerStudent + ' - ' + stepNumberAndTitle);
+        }
+    }
+    
+    $('#timeSpentDiv').append('<h5>Average Time Spent</h5>');
+    //$('#timeSpentDiv').append('<br>');
+    $('#timeSpentDiv').append('MOST time spent');
+    
+    for (var x = 0; x < numberToShow; x++) {
+        var node = nodesArraySortedByTimeSpent[nodesArraySortedByTimeSpent.length - 1 - x];
+        
+        if (node != null) {
+            var nodeId = node.nodeId;
+            var averageTimeSpentPerStudent = node.averageTimeSpentPerStudent;
+            
+            var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
+            
+            $('#timeSpentDiv').append('<br>');
+            
+            $('#timeSpentDiv').append(this.secondsToMinutesAndSeconds(averageTimeSpentPerStudent) + ' - ' + stepNumberAndTitle);
+        }
+    }
+};
+
+View.prototype.secondsToMinutesAndSeconds = function(seconds) {
+    
+    var minutesAndSeconds = '';
+    
+    var minutes = Math.floor(seconds / 60);
+    
+    var seconds = seconds % 60;
+    
+    if (minutes > 0) {
+        minutesAndSeconds = minutes + 'm ' + seconds + 's';
+    } else {
+        minutesAndSeconds = seconds + 's';
+    }
+    
+    return minutesAndSeconds;
+};
+
+View.prototype.intializeSummaryReport = function() {
+    
+    var summaryReport = {};
+    summaryReport.nodes = {};
+    summaryReport.workgroups = {};
+    
+    
+};
+
+View.prototype.calculateSummaryReports = function() {
+    
+    var summaryReport = {};
+    summaryReport.nodes = {};
+    summaryReport.workgroups = {};
+    
+    var classroomMonitorPeriodSelected = this.classroomMonitorPeriodSelected;
+    
+    var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIds();
+    var numberOfWorkgroups = workgroupIds.length;
+    
+    for (var w = 0; w < workgroupIds.length; w++) {
+        var workgroupId = workgroupIds[w];
+        
+        var vleState = this.model.getWorkByStudent(workgroupId);
+        
+        if (vleState != null) {
+            var nodeVisits = vleState.visitedNodes;
+            
+            if (nodeVisits != null) {
+                for (var nv = 0; nv < nodeVisits.length; nv++) {
+                    var nodeVisit = nodeVisits[nv];
+                    
+                    if (nodeVisit != null) {
+                        
+                        this.updateSummaryReport(summaryReport, workgroupId, nodeVisit);
+                    }
+                }
+            }
+        }
+    }
+    
+    var nodeIds = this.getProject().getNodeIds();
+    var nodesArraySortedByNodeVisitCount = [];
+    var nodesArraySortedByTimeSpent = [];
+    
+    if (nodeIds != null) {
+        var nodes = summaryReport.nodes;
+        
+        for (var n = 0; n < nodeIds.length; n++) {
+            var nodeId = nodeIds[n];
+            
+            var node = nodes[nodeId];
+            
+            if (node == null) {
+                node = {};
+                node.nodeId = nodeId;
+                
+                node.timeSpent = 0;
+                node.averageTimeSpentPerStudent = 0;
+                node.averageTimePerVisit = 0;
+                
+                node.nodeVisitCount = 0;
+                node.revisitCount = 0;
+                node.averageVisitsPerStudent = 0;
+                node.averageRevisitsPerStudent = 0;
+                
+            } else {
+                var nodeVisitCount = node.nodeVisitCount;
+                var timeSpent = node.timeSpent;
+                
+                if (nodeVisitCount != null && timeSpent != null) {
+                    var averageTimePerVisit = Math.floor(timeSpent / nodeVisitCount);
+                    node.averageTimePerVisit = averageTimePerVisit;
+                    
+                    var averageTimeSpentPerStudent = Math.floor(timeSpent / workgroupIds.length);
+                    node.averageTimeSpentPerStudent = averageTimeSpentPerStudent;
+                }
+                
+                if (nodeVisitCount != null) {
+                    var revisitCount = nodeVisitCount -1;
+                    node.revisitCount = revisitCount;
+                    
+                    node.averageVisitsPerStudent = Math.floor(nodeVisitCount / numberOfWorkgroups);
+                    node.averageRevisitsPerStudent = Math.floor(revisitCount / numberOfWorkgroups);
+                }
+            }
+            
+            nodesArraySortedByNodeVisitCount.push(node);
+            nodesArraySortedByTimeSpent.push(node);
+        }
+    }
+    
+    nodesArraySortedByNodeVisitCount = nodesArraySortedByNodeVisitCount.sort(this.sortNodesByNodeVisitCount);
+    summaryReport.nodesArraySortedByNodeVisitCount = nodesArraySortedByNodeVisitCount;
+    
+    nodesArraySortedByTimeSpent = nodesArraySortedByTimeSpent.sort(this.sortNodesByTimeSpent);
+    summaryReport.nodesArraySortedByTimeSpent = nodesArraySortedByTimeSpent;
+    
+    return summaryReport;
+};
+
+View.prototype.sortNodesByNodeVisitCount = function(nodeA, nodeB) {
+    var result = 0;
+    
+    var aNodeVisitCount = nodeA.nodeVisitCount;
+    var bNodeVisitCount = nodeB.nodeVisitCount;
+    
+    if (aNodeVisitCount < bNodeVisitCount) {
+        result = -1;
+    } else if (aNodeVisitCount > bNodeVisitCount) {
+        result = 1;
+    }
+    
+    return result;
+};
+
+View.prototype.sortNodesByTimeSpent = function(nodeA, nodeB) {
+    var result = 0;
+    
+    var aTimeSpent = nodeA.timeSpent;
+    var bTimeSpent = nodeB.timeSpent;
+    
+    if (aTimeSpent < bTimeSpent) {
+        result = -1;
+    } else if (aTimeSpent > bTimeSpent) {
+        result = 1;
+    }
+    
+    return result;
+};
+
+View.prototype.updateSummaryReport = function(summaryReport, workgroupId, nodeVisit) {
+    
+    if (summaryReport != null && workgroupId != null && nodeVisit != null) {
+        
+        var nodeId = nodeVisit.nodeId;
+        
+        var nodeSummaryReport = summaryReport.nodes[nodeId];
+        var workgroupSummaryReport = summaryReport.workgroups[workgroupId];
+        
+        if (nodeSummaryReport == null) {
+            nodeSummaryReport = {};
+            nodeSummaryReport.nodeId = nodeId;
+            nodeSummaryReport.nodeVisitCount = 0;
+            nodeSummaryReport.timeSpent = 0;
+            nodeSummaryReport.workgroups = {};
+            summaryReport.nodes[nodeId] = nodeSummaryReport;
+        }
+        
+        if (workgroupSummaryReport == null) {
+            workgroupSummaryReport = {};
+            workgroupSummaryReport.nodeVisitCount = 0;
+            workgroupSummaryReport.timeSpent = 0;
+            workgroupSummaryReport.nodes = {};
+            summaryReport.workgroups[workgroupId] = workgroupSummaryReport;
+        }
+        
+        var timeSpent = 0;
+        var visitStartTime = nodeVisit.visitStartTime;
+        var visitEndTime = nodeVisit.visitEndTime;
+        
+        if (visitStartTime != null && visitEndTime != null) {
+            timeSpent = Math.floor((visitEndTime - visitStartTime) / 1000);
+        }
+        
+        nodeSummaryReport.nodeVisitCount++;
+        workgroupSummaryReport.nodeVisitCount++;
+        
+        if (timeSpent != null) {
+            nodeSummaryReport.timeSpent += timeSpent;
+            workgroupSummaryReport.timeSpent += timeSpent;
+        }
+        
+        var workgroupAndNode = workgroupSummaryReport.nodes[nodeId];
+        var nodeAndWorkgroup = nodeSummaryReport.workgroups[workgroupId];
+        
+        if (workgroupAndNode == null) {
+            workgroupAndNode = {};
+            workgroupAndNode.timeSpent = 0;
+            workgroupAndNode.revisions = 0;
+            workgroupSummaryReport.nodes[nodeId] = workgroupAndNode;
+        }
+        
+        if (nodeAndWorkgroup == null) {
+            nodeAndWorkgroup = {};
+            nodeAndWorkgroup.timeSpent = 0;
+            nodeAndWorkgroup.revisions = 0;
+            nodeSummaryReport.workgroups[workgroupId] = nodeAndWorkgroup;
+        }
+        
+        var nodeStates = nodeVisit.nodeStates;
+        
+        if (nodeStates != null) {
+            workgroupAndNode.revisions += nodeStates.length;
+            nodeAndWorkgroup.revisions += nodeStates.length;
+        }
+        
+        workgroupAndNode.timeSpent += timeSpent;
+        nodeAndWorkgroup.timeSpent += timeSpent;
+    }
+    
+    return summaryReport;
 };
 
 //used to notify scriptloader that this script has finished loading
