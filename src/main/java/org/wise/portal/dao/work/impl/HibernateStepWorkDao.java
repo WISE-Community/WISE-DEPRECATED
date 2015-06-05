@@ -194,6 +194,18 @@ public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> impleme
           return session.createCriteria(StepWork.class).add(createUserInfoOrCriterion(userInfos, 0)).add(Restrictions.eq("node", node)).addOrder(Order.asc("id")).list();
 	}
 	
+    /**
+     * Returns a list of StepWork objects from the users in the list of UserInfos
+     * @param userInfos a list of UserInfo objects
+     * @return a list of StepWork objects
+     */
+    @SuppressWarnings("unchecked")
+    @Transactional(readOnly=true)
+    public List<StepWork> getStepWorksByUserInfos(List<UserInfo> userInfos) {
+        Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        return session.createCriteria(StepWork.class).add(Restrictions.in("userInfo", userInfos)).list();
+    }
+	
 	/**
 	 * A recursive function that chains "or" restrictions of userInfos together
 	 * @param userInfos a list of UserInfo objects, the list must not be empty
@@ -277,4 +289,9 @@ public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> impleme
         return (StepWork) session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).add(Restrictions.eq("data",data)).uniqueResult();
 	}
 
+	@Transactional(readOnly=true)
+	public List<StepWork> getStepWorksByRunId(Long runId) {
+	    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+	    return session.createCriteria(StepWork.class).add(Restrictions.eq("runId", runId)).list();
+	}
 }

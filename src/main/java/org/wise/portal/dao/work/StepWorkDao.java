@@ -48,10 +48,13 @@ public interface StepWorkDao<T extends StepWork> extends SimpleDao<T> {
 	
 	public List<StepWork> getStepWorksByUserInfosAndNode(List<UserInfo> userInfos, Node node);
 	
+	public List<StepWork> getStepWorksByUserInfos(List<UserInfo> userInfos);
+	
 	public List<StepWork> getStepWorksByNode(Node node);
 	
 	public StepWork getStepWorkByStepWorkId(Long id);
 	
 	public StepWork getStepWorkByUserIdAndData(UserInfo userInfo,String data);
 	
+	public List<StepWork> getStepWorksByRunId(Long runId);
 }

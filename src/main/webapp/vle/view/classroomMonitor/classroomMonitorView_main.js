@@ -10383,6 +10383,14 @@ View.prototype.createSummaryReportDisplay = function() {
     timeSpentDiv.attr('id', 'timeSpentDiv');
     summaryReportWrapper.append(timeSpentDiv);
     
+    var revisionsDiv = $('<div>')
+    revisionsDiv.attr('id', 'revisionsDiv');
+    summaryReportWrapper.append(revisionsDiv);
+    
+    var autoScoreDiv = $('<div>')
+    autoScoreDiv.attr('id', 'autoScoreDiv');
+    summaryReportWrapper.append(autoScoreDiv);
+    
     summaryReportDiv.hide();
 };
 
@@ -10425,7 +10433,8 @@ View.prototype.getSummaryReportData = function() {
         grading:true,
         runId:runId,
         getRevisions:true,
-        useCachedWork:false
+        useCachedWork:false,
+        getAllStepWorks:true
     }
     
     //make the request to retrieve the student data
@@ -10441,6 +10450,7 @@ View.prototype.getSummaryReportDataCallback = function(text, xml, args) {
 
 View.prototype.getSummaryReportDataCallbackHandler = function(text) {
     
+    /*
     //get the student work as an array of node visits
     var vleStates = VLE_STATE.prototype.parseDataJSONString(text, true);
     
@@ -10453,6 +10463,10 @@ View.prototype.getSummaryReportDataCallbackHandler = function(text) {
             this.model.addWorkByStudent(workgroupId, vleState);
         }
     }
+    */
+    
+    var allRawWork = JSON.parse(text);
+    this.allRawWork = allRawWork;
     
     var summaryReport = this.calculateSummaryReports();
     
@@ -10465,11 +10479,12 @@ View.prototype.getSummaryReportDataCallbackHandler = function(text) {
         numberToShow = nodeCount;
     }
     
-    
-    
     var nodesArraySortedByNodeVisitCount = summaryReport.nodesArraySortedByNodeVisitCount;
     var nodesArraySortedByTimeSpent = summaryReport.nodesArraySortedByTimeSpent;
+    var nodesArraySortedByRevisionCount = summaryReport.nodesArraySortedByRevisionCount;
+    var nodesArraySortedByAutoScore = summaryReport.nodesArraySortedByAutoScore;
     
+    $('#revisitsDiv').html('');
     $('#revisitsDiv').append('<h5>Average Revisits</h5>')
     //$('#revisitsDiv').append('<br>');
     $('#revisitsDiv').append('MOST revisited steps');
@@ -10489,6 +10504,7 @@ View.prototype.getSummaryReportDataCallbackHandler = function(text) {
         }
     }
     
+    $('#timeSpentDiv').html('');
     $('#timeSpentDiv').append('<h5>Average Time Spent</h5>');
     //$('#timeSpentDiv').append('<br>');
     $('#timeSpentDiv').append('MOST time spent');
@@ -10507,6 +10523,49 @@ View.prototype.getSummaryReportDataCallbackHandler = function(text) {
             $('#timeSpentDiv').append(this.secondsToMinutesAndSeconds(averageTimeSpentPerStudent) + ' - ' + stepNumberAndTitle);
         }
     }
+    
+    $('#revisionsDiv').html('');
+    $('#revisionsDiv').append('<h5>Average Revisions</h5>');
+    //$('#revisionsDiv').append('<br>');
+    $('#revisionsDiv').append('MOST revised steps');
+    
+    for (var x = 0; x < numberToShow; x++) {
+        var node = nodesArraySortedByRevisionCount[nodesArraySortedByRevisionCount.length - 1 - x];
+        
+        if (node != null) {
+            var nodeId = node.nodeId;
+            var averageRevisionsPerStudent = node.averageRevisionsPerStudent;
+            
+            var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
+            
+            $('#revisionsDiv').append('<br>');
+            
+            $('#revisionsDiv').append(averageRevisionsPerStudent + ' - ' + stepNumberAndTitle);
+        }
+    }
+    
+    $('#autoScoreDiv').html('');
+    $('#autoScoreDiv').append('<h5>Average Auto Score</h5>');
+    //$('#revisionsDiv').append('<br>');
+    $('#autoScoreDiv').append('LOWEST scoring steps');
+    
+    for (var x = 0; x < numberToShow; x++) {
+        var node = nodesArraySortedByAutoScore[x];
+        
+        if (node != null) {
+            var nodeId = node.nodeId;
+            //var averageAutoScore = node.averageAutoScore.toFixed(2);
+            var averageAutoScore = Math.round(node.averageAutoScore * 100) / 100;
+            
+            var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
+            
+            $('#autoScoreDiv').append('<br>');
+            
+            $('#autoScoreDiv').append(averageAutoScore + ' - ' + stepNumberAndTitle);
+        }
+    }
+    
+    //nodesArraySortedByAutoScore
 };
 
 View.prototype.secondsToMinutesAndSeconds = function(seconds) {
@@ -10546,6 +10605,7 @@ View.prototype.calculateSummaryReports = function() {
     var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIds();
     var numberOfWorkgroups = workgroupIds.length;
     
+    /*
     for (var w = 0; w < workgroupIds.length; w++) {
         var workgroupId = workgroupIds[w];
         
@@ -10566,10 +10626,38 @@ View.prototype.calculateSummaryReports = function() {
             }
         }
     }
+    */
+    
+    var allRawWork = this.allRawWork;
+    
+    for (var w = 0; w < allRawWork.length; w++) {
+        var rawWork = allRawWork[w];
+        
+        if (rawWork != null) {
+            var nodeVisitId = rawWork.id;
+            var workgroupId = rawWork.workgroupId;
+            var nodeVisit = rawWork.data;
+            
+            nodeVisit.id = nodeVisitId;
+            
+            this.updateSummaryReport(summaryReport, workgroupId, nodeVisit);
+        }
+    }
+    
+    var annotations = this.model.getAnnotations();
+    var autoGradedNodeIds = [];
+    
+    if (annotations != null) {
+        autoGradedNodeIds = this.getAutoGradedNodeIds(annotations.annotationsArray);
+        
+        //console.log('autoGradedNodeIds=' + autoGradedNodeIds);
+    }
     
     var nodeIds = this.getProject().getNodeIds();
     var nodesArraySortedByNodeVisitCount = [];
     var nodesArraySortedByTimeSpent = [];
+    var nodesArraySortedByRevisionCount = [];
+    var nodesArraySortedByAutoScore = [];
     
     if (nodeIds != null) {
         var nodes = summaryReport.nodes;
@@ -10589,12 +10677,15 @@ View.prototype.calculateSummaryReports = function() {
                 
                 node.nodeVisitCount = 0;
                 node.revisitCount = 0;
+                node.revisionCount = 0;
                 node.averageVisitsPerStudent = 0;
                 node.averageRevisitsPerStudent = 0;
+                node.averageRevisionsPerStudent = 0;
                 
             } else {
                 var nodeVisitCount = node.nodeVisitCount;
                 var timeSpent = node.timeSpent;
+                var revisionCount = node.revisionCount;
                 
                 if (nodeVisitCount != null && timeSpent != null) {
                     var averageTimePerVisit = Math.floor(timeSpent / nodeVisitCount);
@@ -10611,10 +10702,64 @@ View.prototype.calculateSummaryReports = function() {
                     node.averageVisitsPerStudent = Math.floor(nodeVisitCount / numberOfWorkgroups);
                     node.averageRevisitsPerStudent = Math.floor(revisitCount / numberOfWorkgroups);
                 }
+                
+                if (revisionCount != null) {
+                    
+                    var averageRevisionsPerStudent = Math.floor(revisionCount / numberOfWorkgroups);
+                    node.averageRevisionsPerStudent = averageRevisionsPerStudent;
+                }
+                
+                if (autoGradedNodeIds.indexOf(nodeId) != -1) {
+                    // this node was auto graded
+                    
+                    var autoGradedScoreTotal = 0;
+                    var autoGradedScoreCount = 0;
+                    
+                    var workgroupIdsWithAutoGradedAnnotation = [];
+                    
+                    var autoGradedAnnotations = this.getAnnotations().getAnnotationsByNodeIdType(nodeId, 'autoGraded');
+                    
+                    if (autoGradedAnnotations != null) {
+                        for (var a = autoGradedAnnotations.length - 1; a >= 0; a--) {
+                            var autoGradedAnnotation = autoGradedAnnotations[a];
+                            
+                            var toWorkgroup = autoGradedAnnotation.toWorkgroup;
+                            
+                            if (workgroupIdsWithAutoGradedAnnotation.indexOf(toWorkgroup)) {
+                                
+                                var value = autoGradedAnnotation.value;
+                                
+                                for (var v = value.length - 1; v >= 0; v++) {
+                                    var tempValue = value[v];
+                                    
+                                    var autoScore = tempValue.autoScore;
+                                    
+                                    if (autoScore != null) {
+                                        
+                                        autoGradedScoreTotal += autoScore;
+                                        autoGradedScoreCount++;
+                                        
+                                        workgroupIdsWithAutoGradedAnnotation.push(toWorkgroup);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (autoGradedScoreCount != 0) {
+                        node.averageAutoScore = autoGradedScoreTotal / autoGradedScoreCount;
+                    } else {
+                        node.averageAutoScore = null;
+                    }
+                    
+                    nodesArraySortedByAutoScore.push(node);
+                }
             }
             
             nodesArraySortedByNodeVisitCount.push(node);
             nodesArraySortedByTimeSpent.push(node);
+            nodesArraySortedByRevisionCount.push(node);
         }
     }
     
@@ -10624,7 +10769,37 @@ View.prototype.calculateSummaryReports = function() {
     nodesArraySortedByTimeSpent = nodesArraySortedByTimeSpent.sort(this.sortNodesByTimeSpent);
     summaryReport.nodesArraySortedByTimeSpent = nodesArraySortedByTimeSpent;
     
+    nodesArraySortedByRevisionCount = nodesArraySortedByRevisionCount.sort(this.sortNodesByRevisionCount);
+    summaryReport.nodesArraySortedByRevisionCount = nodesArraySortedByRevisionCount;
+    
+    nodesArraySortedByAutoScore = nodesArraySortedByAutoScore.sort(this.sortNodesByAutoGradedScore);
+    summaryReport.nodesArraySortedByAutoScore = nodesArraySortedByAutoScore;
+    
     return summaryReport;
+};
+
+View.prototype.getAutoGradedNodeIds = function(annotations) {
+    var autoGradedNodeIds = [];
+    
+    if (annotations != null) {
+        for (var a = 0; a < annotations.length; a++) {
+            var annotation = annotations[a];
+            
+            if (annotation != null) {
+                var type = annotation.type;
+                
+                if (type === 'autoGraded') {
+                    var nodeId = annotation.nodeId;
+                    
+                    if (autoGradedNodeIds.indexOf(nodeId) == -1) {
+                        autoGradedNodeIds.push(nodeId);
+                    }
+                }
+            }
+        }
+    }
+    
+    return autoGradedNodeIds;
 };
 
 View.prototype.sortNodesByNodeVisitCount = function(nodeA, nodeB) {
@@ -10657,6 +10832,36 @@ View.prototype.sortNodesByTimeSpent = function(nodeA, nodeB) {
     return result;
 };
 
+View.prototype.sortNodesByRevisionCount = function(nodeA, nodeB) {
+    var result = 0;
+    
+    var aRevisionCount = nodeA.revisionCount;
+    var bRevisionCount = nodeB.revisionCount;
+    
+    if (aRevisionCount < bRevisionCount) {
+        result = -1;
+    } else if (aRevisionCount > bRevisionCount) {
+        result = 1;
+    }
+    
+    return result;
+};
+
+View.prototype.sortNodesByAutoGradedScore = function(nodeA, nodeB) {
+    var result = 0;
+    
+    var aAverageAutoScore = nodeA.averageAutoScore;
+    var bAverageAutoScore = nodeB.averageAutoScore;
+    
+    if (aAverageAutoScore < bAverageAutoScore) {
+        result = -1;
+    } else if (aAverageAutoScore > bAverageAutoScore) {
+        result = 1;
+    }
+    
+    return result;
+};
+
 View.prototype.updateSummaryReport = function(summaryReport, workgroupId, nodeVisit) {
     
     if (summaryReport != null && workgroupId != null && nodeVisit != null) {
@@ -10671,6 +10876,7 @@ View.prototype.updateSummaryReport = function(summaryReport, workgroupId, nodeVi
             nodeSummaryReport.nodeId = nodeId;
             nodeSummaryReport.nodeVisitCount = 0;
             nodeSummaryReport.timeSpent = 0;
+            nodeSummaryReport.revisionCount = 0;
             nodeSummaryReport.workgroups = {};
             summaryReport.nodes[nodeId] = nodeSummaryReport;
         }
@@ -10679,6 +10885,7 @@ View.prototype.updateSummaryReport = function(summaryReport, workgroupId, nodeVi
             workgroupSummaryReport = {};
             workgroupSummaryReport.nodeVisitCount = 0;
             workgroupSummaryReport.timeSpent = 0;
+            workgroupSummaryReport.revisionCount = 0;
             workgroupSummaryReport.nodes = {};
             summaryReport.workgroups[workgroupId] = workgroupSummaryReport;
         }
@@ -10705,22 +10912,25 @@ View.prototype.updateSummaryReport = function(summaryReport, workgroupId, nodeVi
         if (workgroupAndNode == null) {
             workgroupAndNode = {};
             workgroupAndNode.timeSpent = 0;
-            workgroupAndNode.revisions = 0;
+            workgroupAndNode.revisionCount = 0;
             workgroupSummaryReport.nodes[nodeId] = workgroupAndNode;
         }
         
         if (nodeAndWorkgroup == null) {
             nodeAndWorkgroup = {};
             nodeAndWorkgroup.timeSpent = 0;
-            nodeAndWorkgroup.revisions = 0;
+            nodeAndWorkgroup.revisionCount = 0;
             nodeSummaryReport.workgroups[workgroupId] = nodeAndWorkgroup;
         }
         
         var nodeStates = nodeVisit.nodeStates;
         
         if (nodeStates != null) {
-            workgroupAndNode.revisions += nodeStates.length;
-            nodeAndWorkgroup.revisions += nodeStates.length;
+            var nodeStateCount = nodeStates.length;
+            nodeSummaryReport.revisionCount += nodeStateCount;
+            workgroupSummaryReport.revisionCount += nodeStateCount;
+            workgroupAndNode.revisionCount += nodeStateCount;
+            nodeAndWorkgroup.revisionCount += nodeStateCount;
         }
         
         workgroupAndNode.timeSpent += timeSpent;

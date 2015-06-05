@@ -127,6 +127,11 @@ public class VLEServiceImpl implements VLEService {
 	public List<UserInfo> getUserInfoByWorkgroupIds(List<String> workgroupIds) {
 		return userInfoDao.getUserInfoByWorkgroupIds(workgroupIds);
 	}
+	
+    @Override
+    public List<UserInfo> getUserInfosByWorkgroupIds(List<Long> workgroupIds) {
+        return userInfoDao.getUserInfosByWorkgroupIds(workgroupIds);
+    }
 
 	@Override
 	public List<UserInfo> getUserInfosThatHaveWorkedToday(List<UserInfo> userInfos) {
@@ -448,10 +453,20 @@ public class VLEServiceImpl implements VLEService {
 	public List<StepWork> getStepWorksByUserInfosAndNode(List<UserInfo> userInfos, Node node) {
 		return stepWorkDao.getStepWorksByUserInfosAndNode(userInfos, node);
 	}
+	
+	@Override
+	public List<StepWork> getStepWorksByUserInfos(List<UserInfo> userInfos) {
+	    return stepWorkDao.getStepWorksByUserInfos(userInfos);
+	}
 
 	@Override
 	public List<StepWork> getStepWorksByNode(Node node) {
 		return stepWorkDao.getStepWorksByNode(node);
+	}
+	
+	@Override
+	public List<StepWork> getStepWorksByRunId(Long runId) {
+	    return stepWorkDao.getStepWorksByRunId(runId);
 	}
 
 	@Override

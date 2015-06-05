@@ -57,6 +57,8 @@ public interface VLEService {
 	
 	public List<UserInfo> getUserInfoByWorkgroupIds(List<String> workgroupIds);
 	
+	public List<UserInfo> getUserInfosByWorkgroupIds(List<Long> workgroupIds);
+	
 	public List<UserInfo> getUserInfosThatHaveWorkedToday(List<UserInfo> userInfos);
 	
 	//Annotation functions
@@ -195,7 +197,11 @@ public interface VLEService {
 	
 	public List<StepWork> getStepWorksByUserInfosAndNode(List<UserInfo> userInfos, Node node);
 	
+	public List<StepWork> getStepWorksByUserInfos(List<UserInfo> userInfos);
+	
 	public List<StepWork> getStepWorksByNode(Node node);
+	
+	public List<StepWork> getStepWorksByRunId(Long runId);
 	
 	public StepWork getStepWorkByStepWorkId(Long id);
 	

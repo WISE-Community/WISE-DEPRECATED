@@ -79,7 +79,12 @@ public class StepWork extends PersistableDomain {
 	
 	@Column(name="data", length=5120000)
 	private String data;
-
+	
+	/*
+	@Column(name="runId")
+	private Long runId;
+    */
+	
     public Long getId() {
         return id;
     }
@@ -292,6 +297,35 @@ public class StepWork extends PersistableDomain {
 		return timestamp;
 	}
 	
+    /**
+     * Get the JSON representation of the StepWork
+     * @return a JSONObject with the values from the StepWork
+     */
+    public JSONObject toJSON() {
+        JSONObject stepWorkJSONObject = new JSONObject();
+        
+        try {
+            
+            // set the id
+            stepWorkJSONObject.put("id", getId());
+            
+            // set the workgroup id
+            UserInfo userInfo = getUserInfo();
+            Long workgroupId = userInfo.getWorkgroupId();
+            stepWorkJSONObject.put("workgroupId", workgroupId);
+            
+            // set the node visit
+            String data = getData();
+            JSONObject dataJSON = new JSONObject(data);
+            stepWorkJSONObject.put("data", dataJSON);
+            
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        
+        return stepWorkJSONObject;
+    }
+	
 	/**
 	 * @return the duplicateId
 	 */
@@ -305,4 +339,14 @@ public class StepWork extends PersistableDomain {
 	public void setDuplicateId(String duplicateId) {
 		this.duplicateId = duplicateId;
 	}
+
+	/*
+    public Long getRunId() {
+        return runId;
+    }
+
+    public void setRunId(Long runId) {
+        this.runId = runId;
+    }
+    */
 }

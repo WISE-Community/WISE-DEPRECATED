@@ -362,6 +362,26 @@ Annotations.prototype.getAnnotationsByNodeId = function(nodeId) {
 };
 
 /**
+ * Retrieves all the annotations for a nodeId and type
+ * @param nodeId the nodeId to retrieve annotations for
+ * @param type the annotation type to retrieve annotations for
+ * @return an array containing the annotations with the given node id and type
+ */
+Annotations.prototype.getAnnotationsByNodeIdType = function(nodeId, type) {
+    var annotations = new Array();
+    
+    for(var x=0; x<this.annotationsArray.length; x++) {
+        var annotation = this.annotationsArray[x];
+        
+        if(annotation.nodeId === nodeId && annotation.type === type) {
+            annotations.push(annotation);
+        }
+    }
+    
+    return annotations;
+};
+
+/**
  * Retrieves all the annotations for the toWorkgroup (student workgroup)
  * @param toWorkgroup the student workgroup id
  * @return an array containing the annotations for the toWorkgroup

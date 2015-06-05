@@ -44,6 +44,8 @@ public interface UserInfoDao<T extends UserInfo> extends SimpleDao<T> {
 	
 	public List<UserInfo> getUserInfoByWorkgroupIds(List<String> workgroupIds);
 	
+	public List<UserInfo> getUserInfosByWorkgroupIds(List<Long> workgroupIds);
+	
 	public List<UserInfo> getUserInfosThatHaveWorkedToday(List<UserInfo> userInfos);
 	
 }

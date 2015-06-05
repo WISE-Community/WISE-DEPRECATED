@@ -29,6 +29,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -109,6 +110,7 @@ public class StudentDataController {
 		String nodeIds = request.getParameter("nodeIds");
 		String getAllWorkStr = request.getParameter("getAllWork");
 		String getRevisionsStr = request.getParameter("getRevisions");
+		String getAllStepWorks = request.getParameter("getAllStepWorks");
 		
 		if (userIdStr == null) {
 			/*
@@ -131,6 +133,43 @@ public class StudentDataController {
 				e.printStackTrace();
 			}
 		}
+		
+        if (getAllStepWorks != null && getAllStepWorks.equals("true")) {
+            // get all the raw work
+            
+            JSONArray allStepWorkJSONObjects = new JSONArray();
+            
+            long currentTimeMillis1 = System.currentTimeMillis();
+            
+            // get all the StepWork from the users
+            List<StepWork> allStepWorks = getAllStepWorks(userIdArray);
+            //List<StepWork> allRawWork = vleService.getStepWorksByRunId(runId);
+            
+            long currentTimeMillis2 = System.currentTimeMillis();
+            System.out.println("Query Database Time=" + (currentTimeMillis2 - currentTimeMillis1));
+            System.out.println("Number of Rows=" + allStepWorks.size());
+            
+            Iterator<StepWork> allWorkIterator = allStepWorks.iterator();
+            
+            // loop through all the StepWorks
+            while(allWorkIterator.hasNext()) {
+                StepWork stepWork = allWorkIterator.next();
+                JSONObject stepWorkJSONObject = stepWork.toJSON();
+                allStepWorkJSONObjects.put(stepWorkJSONObject);
+            }
+            
+            long currentTimeMillis3 = System.currentTimeMillis();
+            System.out.println("Create JSONObjects Time=" + (currentTimeMillis3 - currentTimeMillis2));
+            
+            // write the step work JSON objects to the response
+            response.setContentType("application/json");
+            response.getWriter().write(allStepWorkJSONObjects.toString());
+            
+            long currentTimeMillis4 = System.currentTimeMillis();
+            System.out.println("Write Response Time=" + (currentTimeMillis4 - currentTimeMillis3));
+            
+            return null;
+        }
 		
 		Run run = null;
 		if(runId != null) {
@@ -821,6 +860,7 @@ public class StudentDataController {
 				stepWork.setStartTime(startTime);
 				stepWork.setEndTime(endTime);
 				stepWork.setDuplicateId(duplicateId);
+				//stepWork.setRunId(runIdLong);
 				vleService.saveStepWork(stepWork);
 				
 				//get the step work id so we can send it back to the client
@@ -1119,4 +1159,32 @@ public class StudentDataController {
 		
 		return annotation;
 	}
+	
+    /*
+     * Get all the StepWorks for the workgroup ids
+     * @param userIdArray a list of workgroup ids
+     * @return a list of StepWork objects
+     */
+    private List<StepWork> getAllStepWorks(String[] userIdArray) {
+        
+        ArrayList<Long> workgroupIds = new ArrayList<Long>(userIdArray.length);
+
+        // loop through all the workgroup ids
+        for(int x = 0; x < userIdArray.length; x++) {
+            String userId = userIdArray[x];
+            
+            // convert the string to a Long
+            Long workgroupId = new Long(userId);
+            workgroupIds.add(workgroupId);
+        }
+        
+        
+        // get all the UserInfos for the workgroup ids
+        List<UserInfo> userInfos = vleService.getUserInfosByWorkgroupIds(workgroupIds);
+        
+        // get all the StepWorks for the UserInfos
+        List<StepWork> stepWorks = vleService.getStepWorksByUserInfos(userInfos);
+        
+        return stepWorks;
+    }
 }

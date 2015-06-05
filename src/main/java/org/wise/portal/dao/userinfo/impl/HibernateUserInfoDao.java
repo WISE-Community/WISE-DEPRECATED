@@ -135,6 +135,20 @@ public class HibernateUserInfoDao extends AbstractHibernateDao<UserInfo> impleme
 		
 		return userInfos;
 	}
+    
+    /**
+     * Get a list of UserInfo objects given a list of workgroup ids
+     * @param workgroupIds a list of workgroup ids
+     * @return a list of UserInfo objects
+     */
+    public List<UserInfo> getUserInfosByWorkgroupIds(List<Long> workgroupIds) {
+        
+        Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        
+        List<UserInfo> userInfos = session.createCriteria(UserInfo.class).add(Restrictions.in("workgroupId", workgroupIds)).list();
+        
+        return userInfos;
+    }
 	
 	/**
 	 * Create a query criterion of 'or' statements recursively
