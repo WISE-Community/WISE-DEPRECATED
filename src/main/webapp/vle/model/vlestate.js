@@ -232,12 +232,11 @@ VLE_STATE.prototype.setCurrentNodeVisit = function(node) {
 	
 	/* if this is a duplicate node, we need to swap the duplicate with the node that it represents */
 	if(node.type=='DuplicateNode'){
+		// TODO: remove DuplicateNode from WISE
 		var realNode = node.getNode();
 		var newNodeVisit = new NODE_VISIT(realNode.id, realNode.type);
-		newNodeVisit.duplicateId = node.id;
 	} else {
 		var newNodeVisit = new NODE_VISIT(node.id, node.type);
-		newNodeVisit.duplicateId = undefined;
 	}
 
 	this.visitedNodes.push(newNodeVisit);

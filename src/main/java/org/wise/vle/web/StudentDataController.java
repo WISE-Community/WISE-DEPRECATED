@@ -400,11 +400,6 @@ public class StudentDataController {
 					data.put("visitPostTime", stepWork.getPostTime());
 					String stepWorkId = stepWork.getId().toString();
 
-					/* add the duplicateId if one is found for this stepWork */
-					if(stepWork.getDuplicateId() != null && !stepWork.getDuplicateId().equals("")){
-						data.put("duplicateId", stepWork.getDuplicateId());
-					}
-
 					JSONObject userIdAndData = new JSONObject();
 					userIdAndData.put("userId", userId);
 					userIdAndData.put("data", data);
@@ -593,10 +588,6 @@ public class StudentDataController {
 						if (getAllWork || (nodeStates != null && nodeStates.length() > 0 || x == (stepWorkList.size() - 1)) ||
 								("HtmlNode".equals(nodeType) || "OutsideUrlNode".equals(nodeType) || "IdeaBasketNode".equals(nodeType))
 								|| "FlashNode".equals(nodeType)) {
-							/* add the duplicateId if one is found for this stepWork */
-							if(stepWork.getDuplicateId() != null && !stepWork.getDuplicateId().equals("")){
-								nodeVisitJSON.put("duplicateId", stepWork.getDuplicateId());
-							}
 
 							//add stepWorkId and visitPostTime attributes to the json obj
 							nodeVisitJSON.put("stepWorkId", stepWorkId);
@@ -671,10 +662,6 @@ public class StudentDataController {
 						 */
 						if(nodeStates != null && nodeStates.length() > 0 ||
 								("HtmlNode".equals(nodeType) || "OutsideUrlNode".equals(nodeType) || "IdeaBasketNode".equals(nodeType))) {
-							/* add the duplicateId if one is found for this stepWork */
-							if(stepWork.getDuplicateId() != null && !stepWork.getDuplicateId().equals("")){
-								nodeVisitJSON.put("duplicateId", stepWork.getDuplicateId());
-							}
 
 							//add stepWorkId and visitPostTime attributes to the json obj
 							nodeVisitJSON.put("stepWorkId", stepWorkId);
@@ -779,8 +766,6 @@ public class StudentDataController {
 			String nodeId = VLEDataUtils.getNodeId(nodeVisitJSON);
 			Timestamp startTime = new Timestamp(new Long(VLEDataUtils.getVisitStartTime(nodeVisitJSON)));
 			
-			String duplicateId = VLEDataUtils.getDuplicateId(nodeVisitJSON);
-			
 			//get the end time
 			String visitEndTime = VLEDataUtils.getVisitEndTime(nodeVisitJSON);
 			Timestamp endTime = null;
@@ -859,8 +844,6 @@ public class StudentDataController {
 				stepWork.setPostTime(postTime);
 				stepWork.setStartTime(startTime);
 				stepWork.setEndTime(endTime);
-				stepWork.setDuplicateId(duplicateId);
-				//stepWork.setRunId(runIdLong);
 				vleService.saveStepWork(stepWork);
 				
 				//get the step work id so we can send it back to the client

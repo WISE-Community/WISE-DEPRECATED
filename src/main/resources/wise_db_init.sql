@@ -402,7 +402,6 @@
     create table stepwork (
         id bigint not null auto_increment,
         data mediumtext,
-        duplicateId varchar(255),
         endTime datetime,
         postTime datetime,
         startTime datetime,

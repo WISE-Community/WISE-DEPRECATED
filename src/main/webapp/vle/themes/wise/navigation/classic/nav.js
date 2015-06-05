@@ -714,19 +714,7 @@ NavigationPanel.prototype.getNavigationHtml = function(node, depth, position) {
 
 	var stepId = 'node_' + position;
 
-	/* this might be rendered from duplicate node, so check the nodeVisit for this
-	 * node to see if it has a duplicateId, if so do not set this one as the current
-	 * node */
-	if (node.id == this.view.getState().getCurrentNodeVisit().getNodeId() && !this.view.getState().getCurrentNodeVisit().duplicateId) {
-		classString += " currentNode";
-	}
-
-	/* if this node is a duplicate node, it might have rendered the current node, so check
-	 * its real node to see if it is the one being rendered but then set this duplicate node
-	 * as the current node in the html */
-	if(node.type=='DuplicateNode' && 
-			node.getNode().id == this.view.getState().getCurrentNodeVisit().getNodeId() && 
-			this.view.getState().getCurrentNodeVisit().duplicateId == node.id){
+	if (node.id == this.view.getState().getCurrentNodeVisit().getNodeId()) {
 		classString += " currentNode";
 	}
 
