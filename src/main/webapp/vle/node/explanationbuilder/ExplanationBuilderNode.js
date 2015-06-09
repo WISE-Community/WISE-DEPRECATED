@@ -520,6 +520,14 @@ ExplanationBuilderNode.prototype.getStudentWorkHtmlView = function(work) {
 	return html;
 };
 
+/**
+ * Returns whether this step type can be special exported
+ * @return a boolean value
+ */
+ExplanationBuilderNode.prototype.canSpecialExport = function() {
+    return true;
+};
+
 /*
  * Add this node to the node factory so the vle knows it exists.
  * xTODO: rename both occurrences of TemplateNode
