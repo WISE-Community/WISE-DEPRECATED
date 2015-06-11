@@ -72,6 +72,30 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			return periods;
 		};
 		
+		/**
+		 * Get the period ids
+		 */
+        var getPeriodIds = function() {
+            var periodIds = [];
+            
+            var periods = getPeriods();
+            
+            if (periods != null) {
+                
+                for (var p = 0; p < periods.length; p++) {
+                    var period = periods[p];
+                    
+                    if (period != null) {
+                        var periodId = period.periodId;
+                        
+                        periodIds.push(periodId);
+                    }
+                }
+            }
+            
+            return periodIds;
+        };
+		
 		var getClassmateUserInfos = function() {
 			return classmateUserInfos;
 		};
@@ -666,9 +690,12 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			getClassmateWorkgroupIds:function() {
 				return getClassmateWorkgroupIds();
 			},
-			getPeriods:function() {
-				return getPeriods();
-			},
+            getPeriods:function() {
+                return getPeriods();
+            },
+            getPeriodIds:function() {
+                return getPeriodIds();
+            },
 			getClassmatesInPeriodId:function(periodId) {
 				return getClassmatesInPeriodId(periodId);
 			},
