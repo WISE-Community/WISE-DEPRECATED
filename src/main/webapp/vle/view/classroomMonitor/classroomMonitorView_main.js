@@ -10445,6 +10445,28 @@ View.prototype.createSummaryReportDisplay = function() {
     mainSummaryReportDiv.hide();
     summaryReportWrapper.append(mainSummaryReportDiv);
     
+    var workgroupCompletionDiv = $('<div>')
+    workgroupCompletionDiv.attr('id', 'workgroupCompletionDiv');
+    workgroupCompletionDiv.addClass('reportSummaryDiv');
+    workgroupCompletionDiv.css('cursor', 'pointer');
+    workgroupCompletionDiv.click({thisView: this}, function(event) {
+        var thisView = event.data.thisView;
+        
+        thisView.showWorkgroupCompletionDetailedDiv();
+    });
+    mainSummaryReportDiv.append(workgroupCompletionDiv);
+    
+    var workgroupTotalScoreDiv = $('<div>')
+    workgroupTotalScoreDiv.attr('id', 'workgroupTotalScoreDiv');
+    workgroupTotalScoreDiv.addClass('reportSummaryDiv');
+    workgroupTotalScoreDiv.css('cursor', 'pointer');
+    workgroupTotalScoreDiv.click({thisView: this}, function(event) {
+        var thisView = event.data.thisView;
+        
+        thisView.showWorkgroupTotalScoreDetailedDiv();
+    });
+    mainSummaryReportDiv.append(workgroupTotalScoreDiv);
+    
     var revisitsDiv = $('<div>')
     revisitsDiv.attr('id', 'revisitsDiv');
     revisitsDiv.addClass('reportSummaryDiv');
@@ -10485,6 +10507,16 @@ View.prototype.createSummaryReportDisplay = function() {
         thisView.showAutoScoreDetailedDiv();
     });
     mainSummaryReportDiv.append(autoScoreDiv);
+    
+    var workgroupCompletionDetailedDiv = $('<div>');
+    workgroupCompletionDetailedDiv.attr('id', 'workgroupCompletionDetailedDiv');
+    workgroupCompletionDetailedDiv.hide();
+    summaryReportWrapper.append(workgroupCompletionDetailedDiv);
+    
+    var workgroupTotalScoreDetailedDiv = $('<div>');
+    workgroupTotalScoreDetailedDiv.attr('id', 'workgroupTotalScoreDetailedDiv');
+    workgroupTotalScoreDetailedDiv.hide();
+    summaryReportWrapper.append(workgroupTotalScoreDetailedDiv);
     
     var revisitsDetailedDiv = $('<div>');
     revisitsDetailedDiv.attr('id', 'revisitsDetailedDiv');
@@ -10561,6 +10593,10 @@ View.prototype.refreshCurrentSummaryReportView = function() {
     
     if (currentSummaryReportDiv === 'mainSummaryReportDiv') {
         this.showMainSummaryReportDiv();
+    } else if(currentSummaryReportDiv === 'workgroupCompletionDetailedDiv') {
+        this.showWorkgroupCompletionDetailedDiv();
+    } else if(currentSummaryReportDiv === 'workgroupTotalScoreDetailedDiv') {
+        this.showWorkgroupTotalScoreDetailedDiv();
     } else if(currentSummaryReportDiv === 'revisitsDetailedDiv') {
         this.showRevisitsDetailedDiv();
     } else if(currentSummaryReportDiv === 'timeSpentDetailedDiv') {
@@ -10583,6 +10619,9 @@ View.prototype.refreshCurrentSummaryReportView = function() {
 View.prototype.showSummaryReportDiv = function(divId) {
     
     $('#mainSummaryReportDiv').hide();
+    
+    $('#workgroupCompletionDetailedDiv').hide();
+    $('#workgroupTotalScoreDetailedDiv').hide();
     $('#revisitsDetailedDiv').hide();
     $('#timeSpentDetailedDiv').hide();
     $('#revisionsDetailedDiv').hide();
@@ -10595,6 +10634,146 @@ View.prototype.showSummaryReportDiv = function(divId) {
     
     $('#' + divId).show();
     this.currentSummaryReportDiv = divId;
+};
+
+View.prototype.showWorkgroupCompletionDetailedDiv = function() {
+    
+    this.currentSummaryReportNodeId = null;
+    
+    var classroomMonitorPeriodIdSelected = this.classroomMonitorPeriodIdSelected;
+    
+    $('#workgroupCompletionDetailedDiv').html('');
+    
+    var backButton = $('<input>');
+    backButton.attr('type', 'button');
+    backButton.val('Back');
+    backButton.click({thisView: this}, function(event) {
+        var thisView = event.data.thisView;
+        thisView.showSummaryReportDiv('mainSummaryReportDiv');
+    });
+    
+    $('#workgroupCompletionDetailedDiv').append(backButton);
+    
+    $('#workgroupCompletionDetailedDiv').append('<h5>Student Completion</h5>');
+    
+    var summaryReportPeriods = this.summaryReport.periods;
+    
+    if (summaryReportPeriods != null) {
+        var summaryReportPeriod = summaryReportPeriods[classroomMonitorPeriodIdSelected];
+        
+        var workgroupsSortedByCompletion = summaryReportPeriod.workgroupsSortedByCompletion;
+        
+        for (var w = 0; w < workgroupsSortedByCompletion.length; w++) {
+            var workgroup = workgroupsSortedByCompletion[w];
+            
+            if (workgroup != null) {
+                var workgroupId = workgroup.workgroupId;
+                var userName = this.getUserAndClassInfo().getUserNameByUserId(workgroupId);
+                var studentCompletion = workgroup.completion;
+                
+                if (x != 0) {
+                    //$('#workgroupCompletionDetailedDiv').append('<br>');
+                }
+                
+                var workgroupDiv = $('<div>');
+                workgroupDiv.html(studentCompletion + '% - ' + userName);
+                
+                /*
+                workgroupDiv.css('cursor', 'pointer');
+                workgroupDiv.click({thisView: this, workgroupId: workgroupId}, function(event) {
+                    var thisView = event.data.thisView;
+                    var nodeId = event.data.nodeId;
+                    
+                    thisView.showNodeCompletionForWorkgroupDetailedDiv(workgroupId);
+                });
+                */
+                
+                $('#workgroupCompletionDetailedDiv').append(workgroupDiv);
+            }
+        }
+    }
+    
+    this.showSummaryReportDiv('workgroupCompletionDetailedDiv');
+};
+
+View.prototype.showWorkgroupTotalScoreDetailedDiv = function() {
+    
+    this.currentSummaryReportNodeId = null;
+    
+    var classroomMonitorPeriodIdSelected = this.classroomMonitorPeriodIdSelected;
+    
+    $('#workgroupTotalScoreDetailedDiv').html('');
+    
+    var backButton = $('<input>');
+    backButton.attr('type', 'button');
+    backButton.val('Back');
+    backButton.click({thisView: this}, function(event) {
+        var thisView = event.data.thisView;
+        thisView.showSummaryReportDiv('mainSummaryReportDiv');
+    });
+    
+    $('#workgroupTotalScoreDetailedDiv').append(backButton);
+    
+    $('#workgroupTotalScoreDetailedDiv').append('<h5>Student Score</h5>');
+    
+    var summaryReportPeriods = this.summaryReport.periods;
+    
+    if (summaryReportPeriods != null) {
+        var summaryReportPeriod = summaryReportPeriods[classroomMonitorPeriodIdSelected];
+        
+        var workgroupsSortedByTotalScore = summaryReportPeriod.workgroupsSortedByTotalScore;
+        
+        for (var w = 0; w < workgroupsSortedByTotalScore.length; w++) {
+            var workgroup = workgroupsSortedByTotalScore[w];
+            
+            if (workgroup != null) {
+                var workgroupId = workgroup.workgroupId;
+                var userName = this.getUserAndClassInfo().getUserNameByUserId(workgroupId);
+                var totalScore = null;
+                
+                if (x != 0) {
+                    //$('#workgroupCompletionDetailedDiv').append('<br>');
+                }
+                
+                if (workgroup.totalScore != null) {
+                    totalScore = workgroup.totalScore;
+                }
+                
+                var maxProjectScore = null;
+                
+                if (workgroup.maxProjectScore != null) {
+                    maxProjectScore = workgroup.maxProjectScore;
+                }
+                
+                var totalScoreDisplay = 'N/A';
+                
+                if (totalScore != null) {
+                    totalScoreDisplay = totalScore;
+                }
+                
+                if (maxProjectScore != null) {
+                    totalScoreDisplay += '/' + maxProjectScore;
+                }
+                
+                var workgroupDiv = $('<div>');
+                workgroupDiv.html(totalScoreDisplay + ' - ' + userName);
+                
+                /*
+                workgroupDiv.css('cursor', 'pointer');
+                workgroupDiv.click({thisView: this, workgroupId: workgroupId}, function(event) {
+                    var thisView = event.data.thisView;
+                    var nodeId = event.data.nodeId;
+                    
+                    thisView.showNodeScoresForWorkgroupDetailedDiv(workgroupId);
+                });
+                */
+                
+                $('#workgroupTotalScoreDetailedDiv').append(workgroupDiv);
+            }
+        }
+    }
+    
+    this.showSummaryReportDiv('workgroupTotalScoreDetailedDiv');
 };
 
 View.prototype.showRevisitsDetailedDiv = function() {
@@ -10618,7 +10797,7 @@ View.prototype.showRevisitsDetailedDiv = function() {
     
     $('#revisitsDetailedDiv').append(backButton);
     
-    $('#revisitsDetailedDiv').append('<h5>Average Revisits</h5>')
+    $('#revisitsDetailedDiv').append('<h5>Average Revisits</h5>');
     
     var summaryReportPeriods = this.summaryReport.periods;
     
@@ -10678,7 +10857,7 @@ View.prototype.showWorkgroupRevisitsDetailedDiv = function(nodeId) {
     
     $('#workgroupRevisitsDetailedDiv').append(backButton);
     
-    $('#workgroupRevisitsDetailedDiv').append('<h5>Revisits on ' + stepNumberAndTitle + ' by Workgroup</h5>')
+    $('#workgroupRevisitsDetailedDiv').append('<h5>Revisits on ' + stepNumberAndTitle + ' by Workgroup</h5>');
     
     var nodes = this.summaryReport.nodes;
     
@@ -10740,7 +10919,7 @@ View.prototype.showTimeSpentDetailedDiv = function() {
     
     $('#timeSpentDetailedDiv').append(backButton);
     
-    $('#timeSpentDetailedDiv').append('<h5>Average Time Spent</h5>')
+    $('#timeSpentDetailedDiv').append('<h5>Average Time Spent</h5>');
     
     var summaryReportPeriods = this.summaryReport.periods;
     
@@ -10800,7 +10979,7 @@ View.prototype.showWorkgroupTimeSpentDetailedDiv = function(nodeId) {
     
     $('#workgroupTimeSpentDetailedDiv').append(backButton);
     
-    $('#workgroupTimeSpentDetailedDiv').append('<h5>Time Spent on ' + stepNumberAndTitle + ' by Workgroup</h5>')
+    $('#workgroupTimeSpentDetailedDiv').append('<h5>Time Spent on ' + stepNumberAndTitle + ' by Workgroup</h5>');
     
     var nodes = this.summaryReport.nodes;
     
@@ -10857,7 +11036,7 @@ View.prototype.showRevisionsDetailedDiv = function() {
     
     $('#revisionsDetailedDiv').append(backButton);
     
-    $('#revisionsDetailedDiv').append('<h5>Average Revisions</h5>')
+    $('#revisionsDetailedDiv').append('<h5>Average Revisions</h5>');
     
     var summaryReportPeriods = this.summaryReport.periods;
     
@@ -10917,7 +11096,7 @@ View.prototype.showWorkgroupRevisionsDetailedDiv = function(nodeId) {
     
     $('#workgroupRevisionsDetailedDiv').append(backButton);
     
-    $('#workgroupRevisionsDetailedDiv').append('<h5>Revisions on ' + stepNumberAndTitle + ' by Workgroup</h5>')
+    $('#workgroupRevisionsDetailedDiv').append('<h5>Revisions on ' + stepNumberAndTitle + ' by Workgroup</h5>');
     
     var nodes = this.summaryReport.nodes;
     
@@ -10974,7 +11153,7 @@ View.prototype.showAutoScoreDetailedDiv = function() {
     
     $('#autoScoreDetailedDiv').append(backButton);
     
-    $('#autoScoreDetailedDiv').append('<h5>Average Auto Score</h5>')
+    $('#autoScoreDetailedDiv').append('<h5>Average Auto Score</h5>');
     
     var summaryReportPeriods = this.summaryReport.periods;
     
@@ -11042,7 +11221,7 @@ View.prototype.showWorkgroupAutoScoreDetailedDiv = function(nodeId) {
     
     $('#workgroupAutoScoreDetailedDiv').append(backButton);
     
-    $('#workgroupAutoScoreDetailedDiv').append('<h5>Auto Score on ' + stepNumberAndTitle + ' by Workgroup</h5>')
+    $('#workgroupAutoScoreDetailedDiv').append('<h5>Auto Score on ' + stepNumberAndTitle + ' by Workgroup</h5>');
     
         var nodes = this.summaryReport.nodes;
     
@@ -11180,13 +11359,73 @@ View.prototype.showMainSummaryReportDiv = function() {
     var summaryReportPeriod = this.summaryReport.periods[classroomMonitorPeriodIdSelected];
     
     if (summaryReportPeriod != null) {
+        var workgroupsSortedByCompletion = summaryReportPeriod.workgroupsSortedByCompletion;
+        var workgroupsSortedByTotalScore = summaryReportPeriod.workgroupsSortedByTotalScore;
         var nodesSortedByVisitCount = summaryReportPeriod.nodesSortedByVisitCount;
         var nodesSortedByTimeSpent = summaryReportPeriod.nodesSortedByTimeSpent;
         var nodesSortedByRevisionCount = summaryReportPeriod.nodesSortedByRevisionCount;
         var nodesSortedByAutoScore = summaryReportPeriod.nodesSortedByAutoScore;
         
+        $('#workgroupCompletionDiv').html('');
+        $('#workgroupCompletionDiv').append('<h5>Student Completion</h5>')
+        $('#workgroupCompletionDiv').append('LOWEST student completion');
+        
+        for (var x = 0; x < numberToShow; x++) {
+            var workgroup = workgroupsSortedByCompletion[x];
+            
+            if (workgroup != null) {
+                var workgroupId = workgroup.workgroupId;
+                
+                var userName = this.getUserAndClassInfo().getUserNameByUserId(workgroupId);
+                var completion = workgroup.completion;
+                
+                $('#workgroupCompletionDiv').append('<br>');
+                
+                $('#workgroupCompletionDiv').append(completion + '% - ' + userName);
+            }
+        }
+        
+        $('#workgroupTotalScoreDiv').html('');
+        $('#workgroupTotalScoreDiv').append('<h5>Student Score</h5>')
+        $('#workgroupTotalScoreDiv').append('LOWEST student score');
+        
+        for (var x = 0; x < numberToShow; x++) {
+            var workgroup = workgroupsSortedByTotalScore[x];
+            
+            if (workgroup != null) {
+                var workgroupId = workgroup.workgroupId;
+                
+                var userName = this.getUserAndClassInfo().getUserNameByUserId(workgroupId);
+                var totalScore = null;
+                
+                if (workgroup.totalScore != null) {
+                    totalScore = workgroup.totalScore;
+                }
+                
+                var maxProjectScore = null;
+                
+                if (workgroup.maxProjectScore != null) {
+                    maxProjectScore = workgroup.maxProjectScore;
+                }
+                
+                $('#workgroupTotalScoreDiv').append('<br>');
+                
+                var totalScoreDisplay = 'N/A';
+                
+                if (totalScore != null) {
+                    totalScoreDisplay = totalScore;
+                }
+                
+                if (maxProjectScore != null) {
+                    totalScoreDisplay += '/' + maxProjectScore;
+                }
+                
+                $('#workgroupTotalScoreDiv').append(totalScoreDisplay + ' - ' + userName);
+            }
+        }
+        
         $('#revisitsDiv').html('');
-        $('#revisitsDiv').append('<h5>Average Revisits</h5>')
+        $('#revisitsDiv').append('<h5>Average Revisits</h5>');
         $('#revisitsDiv').append('MOST revisited steps');
         
         for (var x = 0; x < numberToShow; x++) {
@@ -11352,6 +11591,52 @@ View.prototype.getAutoGradedNodeIds = function(annotations) {
     }
     
     return autoGradedNodeIds;
+};
+
+View.prototype.sortByCompletion = function(objectA, objectB) {
+    var result = 0;
+    
+    var aCompletion = objectA.completion;
+    var bCompletion = objectB.completion;
+    
+    if (aCompletion == null) {
+        aCompletion = 0;
+    }
+    
+    if (bCompletion == null) {
+        bCompletion = 0;
+    }
+    
+    if (aCompletion < bCompletion) {
+        result = -1;
+    } else if (aCompletion > bCompletion) {
+        result = 1;
+    }
+    
+    return result;
+};
+
+View.prototype.sortByTotalScore = function(objectA, objectB) {
+    var result = 0;
+    
+    var aTotalScore = objectA.totalScore;
+    var bTotalScore = objectB.totalScore;
+    
+    if (aTotalScore == null) {
+        aTotalScore = 0;
+    }
+    
+    if (bTotalScore == null) {
+        bTotalScore = 0;
+    }
+    
+    if (aTotalScore < bTotalScore) {
+        result = -1;
+    } else if (aTotalScore > bTotalScore) {
+        result = 1;
+    }
+    
+    return result;
 };
 
 View.prototype.sortByVisitCount = function(objectA, objectB) {
@@ -11567,6 +11852,16 @@ View.prototype.createSummaryReportNode = function(nodeId) {
                         workgroup.visitCount = 0;
                         workgroup.timeSpent = 0;
                         workgroup.revisionCount = 0;
+
+                        workgroup.completion = this.calculateStudentCompletionForWorkgroupId(workgroupId);
+                        
+                        var studentScore = this.calculateStudentScoreForWorkgroupId(workgroupId);
+                        
+                        if (studentScore != null) {
+                            workgroup.totalScore = studentScore.total;
+                            workgroup.gradedScore = studentScore.gradedTotal;
+                            workgroup.maxProjectScore = studentScore.projectTotal;
+                        }
                         
                         periodForNode.workgroups[workgroupId] = workgroup;
                     }
@@ -11803,6 +12098,7 @@ View.prototype.calculateSortedNodesArrays = function(summaryReport) {
         // loop through all the periods
         for (var p = 0; p < periodIds.length; p++) {
             var periodId = periodIds[p];
+            var workgroupIds = this.getUserAndClassInfo().getClassmateWorkgroupIdsInPeriodId(periodId);
             
             if (summaryReport.periods[periodId] == null) {
                 summaryReport.periods[periodId] = {};
@@ -11813,6 +12109,9 @@ View.prototype.calculateSortedNodesArrays = function(summaryReport) {
             var nodesSortedByTimeSpent = [];
             var nodesSortedByRevisionCount = [];
             var nodesSortedByAutoScore = [];
+            
+            var workgroupsSortedByCompletion = [];
+            var workgroupsSortedByTotalScore = [];
             
             if (nodeIds != null) {
                 
@@ -11858,6 +12157,18 @@ View.prototype.calculateSortedNodesArrays = function(summaryReport) {
                 }
             }
             
+            if (workgroupIds != null) {
+                for (var w = 0; w < workgroupIds.length; w++) {
+                    var workgroupId = workgroupIds[w];
+                    var workgroup = periodForNode.workgroups[workgroupId];
+                    
+                    workgroupsSortedByCompletion.push(workgroup);
+                    workgroupsSortedByTotalScore.push(workgroup);
+                }
+            }
+            
+            summaryReportPeriod.workgroupsSortedByCompletion = workgroupsSortedByCompletion.sort(this.sortByCompletion);
+            summaryReportPeriod.workgroupsSortedByTotalScore = workgroupsSortedByTotalScore.sort(this.sortByTotalScore);
             summaryReportPeriod.nodesSortedByVisitCount = nodesSortedByVisitCount.sort(this.sortByVisitCount);
             summaryReportPeriod.nodesSortedByTimeSpent = nodesSortedByTimeSpent.sort(this.sortByTimeSpent);
             summaryReportPeriod.nodesSortedByRevisionCount = nodesSortedByRevisionCount.sort(this.sortByRevisionCount);
