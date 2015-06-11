@@ -451,7 +451,7 @@ View.prototype.showStudentAssets = function() {
         // clear out the panel
         $("#studentAssets").html("");
 
-        var getStudentUploadsBaseUrl = view.config.getConfigParam("getStudentUploadsBaseUrl");
+        var studentUploadsBaseURL = view.config.getConfigParam("studentUploadsBaseURL");
         var runId = view.config.getConfigParam("runId");
         var workgroupAssetLists = JSON.parse(workgroupAssetListsStr);
         for (var i = 0; i < workgroupAssetLists.length; i++) {
@@ -463,7 +463,7 @@ View.prototype.showStudentAssets = function() {
                 htmlForWorkgroup += "<div>";
                 for (var k = 0; k < workgroupAssetsArr.length; k++) {
                     var assetName = workgroupAssetsArr[k].fileName;
-                    var fileWWW = getStudentUploadsBaseUrl + "/" + runId + "/" + currWorkgroupId + "/unreferenced/" + assetName;
+                    var fileWWW = studentUploadsBaseURL + "/" + runId + "/" + currWorkgroupId + "/unreferenced/" + assetName;
                     htmlForWorkgroup += "<a style='padding: 20px' target=_blank href='"+fileWWW+"'><img style='width: auto; height: auto; max-width: 200px; max-height: 200px' src='" + fileWWW + "'></img></a>";
                 }
                 htmlForWorkgroup += "</div>";
@@ -3640,7 +3640,7 @@ View.prototype.getCommentTextAreaValue = function(stepWorkId, nodeId, workgroupI
  * @param stepWorkId the step work id
  */
 View.prototype.postAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, type, value, runId, stepWorkId, mode) {
-    var postAnnotationsURL = this.getConfig().getConfigParam('postAnnotationsUrl');
+    var annotationsURL = this.getConfig().getConfigParam('annotationsURL');
     
     //encode the value in case it contains special characters
     value = encodeURIComponent(value);
@@ -3660,7 +3660,7 @@ View.prototype.postAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, typ
     
     // Show saving message
     notificationManager.notify(view.getI18NString('classroomMonitor_saving'), 3);
-    this.connectionManager.request('POST', 1, postAnnotationsURL, postAnnotationParams, this.postAnnotationCallbackSuccess, [this, stepWorkId, type, value, nodeId, toWorkgroup, mode], this.postAnnotationCallbackFailure);
+    this.connectionManager.request('POST', 1, annotationsURL, postAnnotationParams, this.postAnnotationCallbackSuccess, [this, stepWorkId, type, value, nodeId, toWorkgroup, mode], this.postAnnotationCallbackFailure);
 };
 
 /**
@@ -7244,7 +7244,7 @@ View.prototype.createGradeByStepDisplay = function() {
  */
 View.prototype.retrieveAnnotations = function(mode, id) {
     var async = (mode === 'progress') ? true : false;
-    this.connectionManager.request('GET', 1, this.getConfig().getConfigParam('getAnnotationsUrl'), null, this.retrieveAnnotationsCallback, [this, mode, id], null, async);
+    this.connectionManager.request('GET', 1, this.getConfig().getConfigParam('annotationsURL'), null, this.retrieveAnnotationsCallback, [this, mode, id], null, async);
 };
 
 /**

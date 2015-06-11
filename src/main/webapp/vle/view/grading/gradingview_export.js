@@ -726,7 +726,7 @@ View.prototype.getExplanationTD = function(tdText) {
  */
 function refresh() {
 	lock();	
-	render(this.contentURL, this.userURL, this.getDataUrl, this.contentBaseUrl, this.getAnnotationsUrl, this.postAnnotationsUrl, this.runId, this.getFlagsUrl, this.postFlagsUrl);
+	render(this.contentURL, this.userURL, this.getDataUrl, this.contentBaseUrl, this.annotationsURL, this.annotationsURL, this.runId, this.getFlagsUrl, this.postFlagsUrl);
 }
 
 /**

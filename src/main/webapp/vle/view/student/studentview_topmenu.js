@@ -354,7 +354,7 @@ View.prototype.retrieveAnnotations = function(callerId) {
 				fromWorkgroups: this.getUserAndClassInfo().getAllTeacherWorkgroupIds(),
 				periodId:this.getUserAndClassInfo().getPeriodId()
 			};
-	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('getAnnotationsUrl'), annotationsUrlParams, processGetAnnotationResponse, [this, callerId], null, true);
+	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('annotationsURL'), annotationsUrlParams, processGetAnnotationResponse, [this, callerId], null, true);
 };
 
 /**
@@ -1979,7 +1979,7 @@ View.prototype.dismissNotification = function(notificationAnnotation, notificati
             }
         }
         
-        var postAnnotationsURL = this.getConfig().getConfigParam('postAnnotationsUrl');
+        var annotationsURL = this.getConfig().getConfigParam('annotationsURL');
         
         var runId = notificationAnnotation.runId;
         var toWorkgroup = notificationAnnotation.toWorkgroup;
@@ -2022,7 +2022,7 @@ View.prototype.dismissNotification = function(notificationAnnotation, notificati
             };
             
             // save notification annotation back to server
-            this.connectionManager.request('POST', 1, postAnnotationsURL, postAnnotationParams, postAnnotationCallback, [this], postAnnotationCallbackFail);
+            this.connectionManager.request('POST', 1, annotationsURL, postAnnotationParams, postAnnotationCallback, [this], postAnnotationCallbackFail);
         }
     }
 };

@@ -118,7 +118,7 @@ View.prototype.saveAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, typ
 	//alert("nodeId: " + nodeId + "\ntoWorkgroup: " + toWorkgroup + "\nfromWorkgroup: " + fromWorkgroup + "\ntype: " + type + "\nvalue: " + value);
 
 	//build the post annotation url with get arguments
-	var postAnnotationsURL = this.getConfig().getConfigParam('postAnnotationsUrl');
+	var annotationsURL = this.getConfig().getConfigParam('annotationsURL');
 	
 	var postAnnotationCallback = function(text, xml, args) {
 			var thisView = args[0];
@@ -214,7 +214,7 @@ View.prototype.saveAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, typ
 	}
 	
 	//make the call to post the annotation
-	this.connectionManager.request('POST', 1, postAnnotationsURL, postAnnotationParams, postAnnotationCallback, [this, nodeId, toWorkgroup, fromWorkgroup, type, value, runId, stepWorkId], postAnnotationCallbackFail, sync);
+	this.connectionManager.request('POST', 1, annotationsURL, postAnnotationParams, postAnnotationCallback, [this, nodeId, toWorkgroup, fromWorkgroup, type, value, runId, stepWorkId], postAnnotationCallbackFail, sync);
 };
 
 /**
@@ -455,7 +455,7 @@ View.prototype.retrieveAnnotations = function() {
 		eventManager.fire("retrieveAnnotationsCompleted");
 	};
 	
-	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam('getAnnotationsUrl'), null, getAnnotationsCallback, [this]);
+	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam('annotationsURL'), null, getAnnotationsCallback, [this]);
 };
 
 

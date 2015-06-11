@@ -4,8 +4,8 @@
  */
 View.prototype.getAbsoluteRemoteStudentUnreferencedUploadsPath = function() {
 	var workgroupId = this.userAndClassInfo.getWorkgroupId();
-	var getStudentUploadsBaseUrl = this.config.getConfigParam("getStudentUploadsBaseUrl");
-	return getStudentUploadsBaseUrl + "/" + this.config.getConfigParam("runId") + "/" + workgroupId + "/unreferenced/";
+	var studentUploadsBaseURL = this.config.getConfigParam("studentUploadsBaseURL");
+	return studentUploadsBaseURL + "/" + this.config.getConfigParam("runId") + "/" + workgroupId + "/unreferenced/";
 };
 
 /**
@@ -14,8 +14,8 @@ View.prototype.getAbsoluteRemoteStudentUnreferencedUploadsPath = function() {
  */
 View.prototype.getAbsoluteRemoteStudentReferencedUploadsPath = function() {
 	var workgroupId = this.userAndClassInfo.getWorkgroupId();
-	var getStudentUploadsBaseUrl = this.config.getConfigParam("getStudentUploadsBaseUrl");
-	return getStudentUploadsBaseUrl + "/" + this.config.getConfigParam("runId") + "/" + workgroupId + "/referenced/";
+	var studentUploadsBaseURL = this.config.getConfigParam("studentUploadsBaseURL");
+	return studentUploadsBaseURL + "/" + this.config.getConfigParam("runId") + "/" + workgroupId + "/referenced/";
 };
 
 /**

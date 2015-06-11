@@ -162,9 +162,9 @@ public class VLEController {
 
 		String previewRequest = request.getParameter("preview");
 		if (previewRequest != null && Boolean.valueOf(previewRequest)) {
-			vleConfigUrl += "&requester=preview";
+			vleConfigUrl += "&mode=preview";
 		} else {
-			vleConfigUrl += "&requester=run";
+			vleConfigUrl += "&mode=run";
 		}
 		
 		//get the path to the project file
@@ -201,7 +201,7 @@ public class VLEController {
         
         // get the vle config url
         String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-        String vleConfigUrl = wiseBaseURL + "/request/info.html?projectId=" + projectId + "&action=getVLEConfig&requester=preview";
+        String vleConfigUrl = wiseBaseURL + "/request/info.html?projectId=" + projectId + "&action=getVLEConfig&mode=preview";
         
         // set the view to the student vle
         ModelAndView modelAndView = new ModelAndView("student");

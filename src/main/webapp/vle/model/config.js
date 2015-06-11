@@ -16,8 +16,7 @@
  * postStudentDataUrl - where to post student work
  * getFlagsUrl - where to get flags
  * postFlagsUrl - where to post flags
- * getAnnotationsUrl - where to get annotations
- * postAnnotationsUrl - where to post annotations
+ * annotationsURL - where to get/post annotations
  * getCurrentStepUrl - where to get the current step
  * postCurrentStepUrl - where to post the current step
  * postLevel - how often to post back student work

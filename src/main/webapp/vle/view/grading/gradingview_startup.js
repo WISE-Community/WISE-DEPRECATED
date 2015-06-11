@@ -53,7 +53,7 @@ var studentWorkQueryObject;
  */
 function afterScriptsLoad(){
 	//after all the js files have been loaded, render the gradebystep display
-	render(contentUrl, userUrl, getDataUrl, contentBaseUrl, getAnnotationsUrl, postAnnotationsUrl, runId);
+	render(contentUrl, userUrl, getDataUrl, contentBaseUrl, annotationsURL, annotationsURL, runId);
 }
 
 /**
@@ -110,14 +110,13 @@ function popUp(strURL, strType, strHeight, strWidth) {
  * We will just remember all the url arguments to use them later when
  * in afterScriptsLoad() when we call render().
  */
-function load_old(contentUrl, userUrl, getDataUrl, contentBaseUrl, getAnnotationsUrl, postAnnotationsUrl, runId, getFlagsUrl, postFlagsUrl) {
-	//alert("contentURL: " + contentUrl + "\n\nuserURL: " + userUrl + "\n\ngetDataUrl: " + getDataUrl + "\n\ncontentBaseUrl: " + contentBaseUrl + "\n\ngetAnnotationsUrl: " + getAnnotationsUrl + "\n\npostAnnotationsUrl: " + postAnnotationsUrl);
+function load_old(contentUrl, userUrl, getDataUrl, contentBaseUrl, annotationsURL, annotationsURL, runId, getFlagsUrl, postFlagsUrl) {
+	//alert("contentURL: " + contentUrl + "\n\nuserURL: " + userUrl + "\n\ngetDataUrl: " + getDataUrl + "\n\ncontentBaseUrl: " + contentBaseUrl + "\n\nannotationsURL: " + annotationsURL + "\n\nannotationsURL: " + annotationsURL);
 	this.contentUrl = contentUrl;
 	this.userUrl = userUrl;
 	this.getDataUrl = getDataUrl;
 	this.contentBaseUrl = contentBaseUrl;
-	this.getAnnotationsUrl = getAnnotationsUrl;
-	this.postAnnotationsUrl = postAnnotationsUrl; 
+	this.annotationsURL = annotationsURL;
 	this.runId = runId;
 	this.getFlagsUrl = getFlagsUrl;
 	this.postFlagsUrl = postFlagsUrl;
@@ -150,7 +149,7 @@ function expandMenu(menuId) {
  * @param userURL a url to the user info, we will use a get request
  *		to obtain the user info 
  */
-function render(contentURL, userURL, getDataUrl, contentBaseUrl, getAnnotationsUrl, postAnnotationsUrl, runId, getFlagsUrl, postFlagsUrl) {
+function render(contentURL, userURL, getDataUrl, contentBaseUrl, annotationsURL, annotationsURL, runId, getFlagsUrl, postFlagsUrl) {
 	vle = new VLE(true);
 	vle.runId = runId;
 

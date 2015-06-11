@@ -1016,7 +1016,7 @@ View.prototype.removeFromPOSTInProgressArray = function(nodeVisit) {
  * @param timeout the timeout for the request in milliseconds
  */
 View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,cRaterRequestType,cRaterResponseId,studentData,successCallback,failureCallback,callbackData, sync, timeout) {
-	var cRaterRequestURL = this.getConfig().getConfigParam('cRaterRequestUrl');
+	var cRaterRequestURL = this.getConfig().getConfigParam('cRaterRequestURL');
 
 	var cRaterArgs = {
 			cRaterItemType:cRaterItemType,
@@ -1038,7 +1038,7 @@ View.prototype.invokeCRaterInPreviewMode = function(cRaterItemType,cRaterItemId,
  * @param nodeStateId
  */
 View.prototype.getCRaterResponse = function(stepWorkId, nodeStateId, cRaterItemType) {
-	var postAnnotationsURL = this.getConfig().getConfigParam('getAnnotationsUrl');
+	var annotationsURL = this.getConfig().getConfigParam('annotationsURL');
 
 	var getCRaterResponseArgs = {
 			stepWorkId:stepWorkId,
@@ -1048,7 +1048,7 @@ View.prototype.getCRaterResponse = function(stepWorkId, nodeStateId, cRaterItemT
 	};
 
 	//make the call to GET the annotation
-	this.connectionManager.request('GET', 1, postAnnotationsURL, getCRaterResponseArgs, this.getCRaterResponseCallback, [this, stepWorkId, nodeStateId], this.getCRaterResponseCallbackFail);
+	this.connectionManager.request('GET', 1, annotationsURL, getCRaterResponseArgs, this.getCRaterResponseCallback, [this, stepWorkId, nodeStateId], this.getCRaterResponseCallbackFail);
 };
 
 /**

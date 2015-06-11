@@ -1391,7 +1391,7 @@ public class AuthorProjectController {
 		String projectMetaDataUrl = wiseBaseURL + "/metadata.html";
 
 		//get the url to make CRater requests
-		String cRaterRequestUrl = wiseBaseURL + "/cRater.html?type=cRater";
+		String cRaterRequestURL = wiseBaseURL + "/cRater.html?type=cRater";
 
 		//get the curriculum_base_www variable from the wise.properties file
 		String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
@@ -1428,7 +1428,7 @@ public class AuthorProjectController {
 				sessionTimeoutCheckInterval = 60000;
 			}
 			config.put("sessionTimeoutCheckInterval", sessionTimeoutCheckInterval); // how often session should be checked...check every minute (1 min=60sec=60000 milliseconds)
-			config.put("cRaterRequestUrl", cRaterRequestUrl);
+			config.put("cRaterRequestURL", cRaterRequestURL);
 			config.put("locale", request.getLocale());
 			config.put("previewProjectUrl", previewProjectUrl);
 			config.put("deleteProjectUrl", deleteProjectUrl);

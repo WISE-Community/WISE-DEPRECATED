@@ -175,7 +175,7 @@ function createBreak(){
  */
 View.prototype.makeCRaterVerifyRequest = function(itemId,cRaterItemType) {
 	//get the url to our servlet that will make the request to the CRater server for us
-	var cRaterRequestUrl = this.config.getConfigParam('cRaterRequestUrl');
+	var cRaterRequestURL = this.config.getConfigParam('cRaterRequestURL');
 	
 	var requestArgs = {
 		cRaterRequestType:'verify',
@@ -183,7 +183,7 @@ View.prototype.makeCRaterVerifyRequest = function(itemId,cRaterItemType) {
 		cRaterItemType:cRaterItemType
 	};
 	
-	var responseText = this.connectionManager.request('GET', 1, cRaterRequestUrl, requestArgs, this.makeCRaterVerifyRequestCallback, {vle:this}, this.makeCRaterVerifyRequestCallbackFail, true);
+	var responseText = this.connectionManager.request('GET', 1, cRaterRequestURL, requestArgs, this.makeCRaterVerifyRequestCallback, {vle:this}, this.makeCRaterVerifyRequestCallbackFail, true);
 };
 
 /**

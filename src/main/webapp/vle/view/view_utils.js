@@ -819,7 +819,7 @@ View.prototype.getAnnotationsByType = function(annotationType) {
 			};
 	var fHArgs = null;
 	var synchronous = true;	
-	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('getAnnotationsUrl'), 
+	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('annotationsURL'),
 					annotationsUrlParams, processGetAnnotationResponse, [this], fHArgs, synchronous);
 
 	// lookup the annotationKey in the runAnnotations obj. runAnnotationsObj should be set by this point.

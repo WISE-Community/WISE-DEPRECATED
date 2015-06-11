@@ -6,9 +6,9 @@ define(['angular'], function(angular) {
 		this.annotations = null;
 	
 		this.retrieveAnnotations = function() {
-			var getAnnotationsUrl = ConfigService.getConfigParam('getAnnotationsUrl');
+			var annotationsURL = ConfigService.getConfigParam('annotationsURL');
 			
-			return $http.get(getAnnotationsUrl).then(angular.bind(this, function(result) {
+			return $http.get(annotationsURL).then(angular.bind(this, function(result) {
 				var annotations = result.data;
 				this.annotations = annotations;
 				return annotations;

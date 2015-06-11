@@ -713,10 +713,10 @@ OPENRESPONSE.prototype.postAnnotation = function(response) {
 	var periodId = this.view.getUserAndClassInfo().getPeriodId();
 	
 	//get the url
-	var postAnnotationsUrl = this.view.getConfig().getConfigParam('postAnnotationsUrl');
+	var annotationsURL = this.view.getConfig().getConfigParam('annotationsURL');
 	
 	//compile the args into an object for cleanliness
-	var postAnnotationsUrlArgs = {runId:runId,
+	var annotationsURLArgs = {runId:runId,
 								  nodeId: nodeId,
 								  toWorkgroup:toWorkgroup,
 								  fromWorkgroup:fromWorkgroup,
@@ -741,7 +741,7 @@ OPENRESPONSE.prototype.postAnnotation = function(response) {
 	var postAnnotationsCallback = function(text, xml, args) {};
 	
 	//post the annotation to the server
-	this.view.connectionManager.request('POST', 1, postAnnotationsUrl, postAnnotationsUrlArgs, postAnnotationsCallback);
+	this.view.connectionManager.request('POST', 1, annotationsURL, annotationsURLArgs, postAnnotationsCallback);
 };
 
 /**

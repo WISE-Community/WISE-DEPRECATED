@@ -96,8 +96,6 @@ View.prototype.initiateGradingDisplay = function() {
 		}
 	}
 	
-	this.excelExportRestriction = this.getConfig().getConfigParam('excelExportRestriction');
-	
 	//the array to store the original order of the row ids
 	this.originalStudentWorkRowOrder = [];
 	
@@ -192,57 +190,6 @@ View.prototype.displayResearcherToolsPage = function() {
 	 */
 	var getResearcherToolsHtml = "<div class='gradingContent'><div id='exportCenterButtons'>";
 	getResearcherToolsHtml += "<table>";
-	
-	//check if we want to display the excel export restriction message
-	if(this.excelExportRestriction) {
-		//get the current time in the PST timezone
-		var pstTime = this.getPSTTime();
-		
-		//get the hours (0-23)
-		var pstHours = pstTime.getHours();
-		
-		//get the minutes (0-59)
-		var pstMinutes = pstTime.getMinutes();
-		
-		//am or pm
-		var meridian = "am";
-		
-		if(pstMinutes < 10) {
-			//add a leading 0
-			pstMinutes = "0" + pstMinutes;
-		}
-		
-		//the start and end time for school hours
-		var schoolStartTime = 800;
-		var schoolEndTime = 1500;
-		
-		//get the current time in 24 hour format e.g. 1049
-		var pst24HourTime = pstHours + "" + pstMinutes;
-
-		//get the current time in 24 hour format as a number
-		var pst24HourTimeNumber = Number(pst24HourTime);
-		
-		if(pst24HourTimeNumber > schoolStartTime && pst24HourTimeNumber < schoolEndTime) {
-			//school is currently in session so we will display the caution message
-			
-			if(pstHours > 12) {
-				//hours is greater than 12 so we will subtract 12 and change to pm
-				pstHours = pstHours - 12;
-				meridian = "pm";
-			}
-			
-			//create the current PST clock time e.g. 10:49am
-			var pstClockTime = pstHours + ":" + pstMinutes + meridian;
-			
-			//create the message
-			getResearcherToolsHtml += "<tr><td colspan='2'>";
-			getResearcherToolsHtml += "<p style='color:red'>";
-			getResearcherToolsHtml += "Caution: Please try not to generate Excel export files between 8am-3pm PST to minimize server load during school hours. It is currently " + pstClockTime + " PST.<br>";
-			getResearcherToolsHtml += "If you urgently need to generate excel export files, you may still do so. If you do not need them right away, we would appreciate it if you waited until after 3pm PST.";
-			getResearcherToolsHtml += "</p>";
-			getResearcherToolsHtml += "</td></tr>";
-		}
-	}
 	
 	//create row for export latest student work
 	getResearcherToolsHtml += "<tr>";
@@ -855,7 +802,7 @@ View.prototype.displayStudentUploadedFiles = function() {
 		$('#studentAssetsDiv').dialog('open');
 		$('#studentAssetEditorDialog').show();
 
-		var getStudentUploadsBaseUrl = view.config.getConfigParam("getStudentUploadsBaseUrl");
+		var studentUploadsBaseURL = view.config.getConfigParam("studentUploadsBaseURL");
 		var workgroupAssetLists = JSON.parse(workgroupAssetListsStr);
 		for (var i=0; i<workgroupAssetLists.length; i++) {
 			var workgroupAssetList = workgroupAssetLists[i];
@@ -865,7 +812,7 @@ View.prototype.displayStudentUploadedFiles = function() {
 					+ "<ul>";
 			for (var k = 0; k < workgroupAssetsArr.length; k++) {
 				var assetName = workgroupAssetsArr[k].fileName;
-				var fileWWW = getStudentUploadsBaseUrl + "/" + currWorkgroupId + "/" + assetName;
+				var fileWWW = studentUploadsBaseURL + "/" + currWorkgroupId + "/" + assetName;
 				htmlForWorkgroup += "<li><a target=_blank href='"+fileWWW+"'>" + assetName + "</a></li>";
 			}
 			htmlForWorkgroup += "</ul></div>";
@@ -6287,7 +6234,7 @@ function enlargeMS(divId){
  */
 function refresh() {
 	lock();	
-	render(this.contentURL, this.userURL, this.getDataUrl, this.contentBaseUrl, this.getAnnotationsUrl, this.postAnnotationsUrl, this.runId, this.getFlagsUrl, this.postFlagsUrl);
+	render(this.contentURL, this.userURL, this.getDataUrl, this.contentBaseUrl, this.annotationsURL, this.annotationsURL, this.runId, this.getFlagsUrl, this.postFlagsUrl);
 }
 
 function removejscssfile(filename, filetype){

@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -111,9 +111,6 @@ public class InformationController {
 	 * Otherwise, lookup userInfo for the currently-logged-in user.
 	 * @param request
 	 * @param response
-	 * @param user Currently-logged in user
-	 * @param workgroup workgroup that the currently-logged in user is in for the run
-	 * @return
 	 * @throws IOException
 	 * @throws ObjectNotFoundException 
 	 * @throws NumberFormatException 
@@ -406,7 +403,7 @@ public class InformationController {
     }
 	
 	/**
-	 * Handles the get config request from three possible requesters: grading, preview and run.
+	 * Handles the get config request from three possible modes: grading, preview and run.
 	 * The run and grading requests are almost identical, the preview request is largely handled
 	 * when the projectId is found.
 	 * 
@@ -420,21 +417,17 @@ public class InformationController {
 		JSONObject config = new JSONObject();
 		String projectIdStr = request.getParameter("projectId");
 		String runId = request.getParameter("runId");
-		String requester = request.getParameter("requester");
+		String mode = request.getParameter("mode");
 		String step = request.getParameter("step");
 		String userSpecifiedLang = request.getParameter("lang");
-		
-		String portalurl = ControllerUtil.getBaseUrlString(request);
-		String hostName = ControllerUtil.getHostNameFromUrl(portalurl);
-		
+		String portalURL = ControllerUtil.getBaseUrlString(request);
+
 		String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 		String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-    	String cRaterRequestUrl = wiseBaseURL + "/cRater.html?type=cRater";  // the url to make CRater requests
-		String infourl = wiseBaseURL + "/request/info.html";
-		
-		String excelExportRestriction = wiseProperties.getProperty("excelExportRestriction");
-		
+    	String cRaterRequestURL = wiseBaseURL + "/cRater.html?type=cRater";  // the url to make CRater requests
+		String getUserInfoUrl = wiseBaseURL + "/request/info.html?action=getUserInfo";
+
 		//get the context path e.g. /wise
 		String contextPath = request.getContextPath();
 		
@@ -488,43 +481,13 @@ public class InformationController {
 			
 			//get the url to post student data
 			String postStudentDataUrl = wiseBaseURL + "/studentData.html";
-			
-			//get the url to get flags
-			String getFlagsUrl = wiseBaseURL + "/annotation.html?type=flag&runId=" + run.getId().toString();
-			
-			//get the url to post flags
-			String postFlagsUrl = wiseBaseURL + "/annotation.html?type=flag&runId=" + run.getId().toString();
-			
-			//get the url to get inappropriate flags
-			String getInappropriateFlagsUrl = wiseBaseURL + "/annotation.html?type=inappropriateFlag&runId=" + run.getId().toString();
-			
-			//get the url to post inappropriate flags
-			String postInappropriateFlagsUrl = wiseBaseURL + "/annotation.html?type=inappropriateFlag&runId=" + run.getId().toString();
 
-			//get the url to get annotations
-	    	String getAnnotationsUrl = wiseBaseURL + "/annotation.html?type=annotation&runId=" + run.getId().toString();
-	    	
-	    	//get the url to post annotations
-	    	String postAnnotationsUrl = wiseBaseURL + "/annotation.html?type=annotation&runId=" + run.getId().toString();
-	    	
-	    	// get the url for getting and posting annotations
-	    	String annotationsUrl = wiseBaseURL + "/annotation.html?type=annotation&runId=" + run.getId().toString();
-	    	
+			// URL to get/post annotations
+	    	String annotationsURL = wiseBaseURL + "/annotation.html?type=annotation&runId=" + run.getId().toString();
+
 			//get the url to get peer review work
 			String getPeerReviewUrl = wiseBaseURL + "/peerReview.html?type=peerreview";
-			
-			//get the url for xls export
-	    	String getXLSExportUrl = wiseBaseURL + "/getExport.html?type=xlsexport&runId=" + run.getId().toString();
-	    	
-	    	//get the url for special export
-	    	String getSpecialExportUrl = wiseBaseURL + "/getSpecialExport.html?type=specialExport&runId=" + run.getId().toString();
-	    	
-	    	//get the url for premade comments
-	    	String getPremadeCommentsUrl = wiseBaseURL + "/teacher/grading/premadeComments.html?action=getData";
-	    	
-	    	//get the url for premade comments
-	    	String postPremadeCommentsUrl = wiseBaseURL + "/teacher/grading/premadeComments.html?action=postData";
-			
+
 	    	//get the url to get idea basket data
 	    	String getIdeaBasketUrl = wiseBaseURL + "/ideaBasket.html?runId=" + run.getId().toString();
 	    	
@@ -563,10 +526,8 @@ public class InformationController {
 	    	String studentAssetManagerUrl = wiseBaseURL + "/assetManager.html?type=studentAssetManager&runId=" + run.getId().toString();
 
 	    	String viewStudentAssetsUrl = wiseBaseURL + "/assetManager.html?type=viewStudentAssets&runId=" + run.getId().toString();
-	    	
-	    	String getStudentListUrl = wiseBaseURL + "/teacher/management/studentlistexcel.html?runId=" + run.getId().toString();
-	    	
-			/* Set the post level if specified in the run */
+
+			// Set the post level if specified in the run
 			Integer postLevel = run.getPostLevel();
 
 			//get the websocket base url e.g. ws://wise4.berkeley.edu:8080
@@ -590,15 +551,19 @@ public class InformationController {
 			
 			//get the url for sending and receiving run statuses
 			String runStatusUrl = wiseBaseURL + "/runStatus.html";
-			
-	    	//put all the config params into the json object
+
+            //get the url to get flags
+            String getFlagsUrl = wiseBaseURL + "/annotation.html?type=flag&runId=" + run.getId().toString();
+
+            //get the url to get inappropriate flags
+            String getInappropriateFlagsUrl = wiseBaseURL + "/annotation.html?type=inappropriateFlag&runId=" + run.getId().toString();
+
+            //put all the config params into the json object
 			try {
 				config.put("contextPath", contextPath);
 				config.put("getFlagsUrl", getFlagsUrl);
 				config.put("getInappropriateFlagsUrl", getInappropriateFlagsUrl);
-				config.put("getAnnotationsUrl", getAnnotationsUrl);
-				config.put("postAnnotationsUrl", postAnnotationsUrl);
-				config.put("annotationsURL", annotationsUrl);
+				config.put("annotationsURL", annotationsURL);
 				config.put("getStudentDataUrl", getStudentDataUrl);
 				config.put("postStudentDataUrl", postStudentDataUrl);
 				config.put("studentDataURL", getStudentDataUrl);
@@ -613,9 +578,8 @@ public class InformationController {
                 config.put("studentAssetManagerURL", studentAssetManagerUrl);
 				config.put("viewStudentAssetsUrl", viewStudentAssetsUrl);
 				config.put("runInfo", run.getInfo());
-				config.put("isRealTimeEnabled", true);  // make this run-specific setting
-				config.put("hostName", hostName);
-                config.put("webSocketURL", webSocketURL);   
+				config.put("isRealTimeEnabled", true);  // TODO: make this run-specific setting
+                config.put("webSocketURL", webSocketURL);
 				config.put("studentStatusUrl", studentStatusUrl);
                 config.put("studentStatusURL", studentStatusUrl);
 				config.put("runStatusUrl", runStatusUrl);
@@ -633,15 +597,34 @@ public class InformationController {
 				}
 				
 				//add the config fields specific to the teacher grading
-				if (requester != null && requester.equals("grading")) {
-					config.put("getPremadeCommentsUrl", getPremadeCommentsUrl);
+				if (mode != null && mode.equals("grading")) {
+                    //get the url for premade comments
+                    String getPremadeCommentsUrl = wiseBaseURL + "/teacher/grading/premadeComments.html?action=getData";
+                    config.put("getPremadeCommentsUrl", getPremadeCommentsUrl);
+
+                    //get the url for premade comments
+                    String postPremadeCommentsUrl = wiseBaseURL + "/teacher/grading/premadeComments.html?action=postData";
 					config.put("postPremadeCommentsUrl", postPremadeCommentsUrl);
-					config.put("postFlagsUrl", postFlagsUrl);
+
+
+                    //get the url to post flags
+                    String postFlagsUrl = wiseBaseURL + "/annotation.html?type=flag&runId=" + run.getId().toString();
+                    config.put("postFlagsUrl", postFlagsUrl);
+
+                    //get the url to post inappropriate flags
+                    String postInappropriateFlagsUrl = wiseBaseURL + "/annotation.html?type=inappropriateFlag&runId=" + run.getId().toString();
 					config.put("postInappropriateFlagsUrl", postInappropriateFlagsUrl);
-					config.put("getXLSExportUrl", getXLSExportUrl);
-					config.put("getSpecialExportUrl", getSpecialExportUrl);
+
+                    //get the url for xls export
+                    String getXLSExportUrl = wiseBaseURL + "/getExport.html?type=xlsexport&runId=" + run.getId().toString();
+                    config.put("getXLSExportUrl", getXLSExportUrl);
+
+                    //get the url for special export
+                    String getSpecialExportUrl = wiseBaseURL + "/getSpecialExport.html?type=specialExport&runId=" + run.getId().toString();
+                    config.put("getSpecialExportUrl", getSpecialExportUrl);
+
+                    String getStudentListUrl = wiseBaseURL + "/teacher/management/studentlistexcel.html?runId=" + run.getId().toString();
 					config.put("getStudentListUrl", getStudentListUrl);
-					config.put("excelExportRestriction", excelExportRestriction);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -663,10 +646,14 @@ public class InformationController {
 		// set the contentbase based on the contenturl 
 		String getContentBaseUrl = getContentUrl.substring(0, lastIndexOfSlash) + "/";
 		
-		String getUserInfoUrl = infourl + "?action=getUserInfo";
-		if (requester == null || !requester.equals("preview")) {
+		if (mode == null || !mode.equals("preview")) {
 			getUserInfoUrl += "&runId=" + runId;
-		} 
+		}
+
+        if (mode == null) {
+            mode = "preview";
+        }
+
 		
 		try {
 			String parentProjectId = "";
@@ -700,28 +687,21 @@ public class InformationController {
 				}
 			}
 			
-			if (requester == null) {
-			    requester = "preview";
-			}
-			
 			config.put("contextPath", contextPath);
-			config.put("mode", requester);
-
+			config.put("mode", mode);
 			config.put("projectId", projectIdStr);
 			config.put("parentProjectId", parentProjectId);
 			config.put("projectMetaDataUrl", projectMetaDataUrl);
-			if (!"preview".equals(requester)) {
+			if (!"preview".equals(mode)) {
 				config.put("getUserInfoUrl", getUserInfoUrl);
 			}
 			config.put("getContentUrl", getContentUrl);
             config.put("projectURL", getContentUrl);
 			config.put("getContentBaseUrl", getContentBaseUrl);
             config.put("projectBaseURL", getContentBaseUrl);
-			config.put("getStudentUploadsBaseUrl", studentUploadsBaseWWW);
             config.put("studentUploadsBaseURL", studentUploadsBaseWWW);
 			config.put("theme", "WISE");
-			config.put("cRaterRequestUrl", cRaterRequestUrl);
-            config.put("cRaterRequestURL", cRaterRequestUrl);
+            config.put("cRaterRequestURL", cRaterRequestURL);
 			config.put("mainHomePageURL", contextPath + "/index.html");
             config.put("sessionLogOutURL", contextPath + "/logout");
 
@@ -776,7 +756,7 @@ public class InformationController {
 			config.put("runName", runName);
 			
 			// add preview project specific settings
-			if (requester != null && requester.equals("preview")) {
+			if (mode != null && mode.equals("preview")) {
 				String isConstraintsDisabledStr = request.getParameter("isConstraintsDisabled");
 				if (isConstraintsDisabledStr != null && Boolean.parseBoolean(isConstraintsDisabledStr)) {
 					config.put("isConstraintsDisabled", true);
@@ -814,7 +794,6 @@ public class InformationController {
 	 * view the VLE.
 	 * @param request
 	 * @param run
-	 * @param user
 	 * @return
 	 * @throws ObjectNotFoundException
 	 */
