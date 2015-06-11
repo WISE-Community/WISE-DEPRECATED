@@ -10448,6 +10448,7 @@ View.prototype.createSummaryReportDisplay = function() {
     var revisitsDiv = $('<div>')
     revisitsDiv.attr('id', 'revisitsDiv');
     revisitsDiv.addClass('reportSummaryDiv');
+    revisitsDiv.css('cursor', 'pointer');
     revisitsDiv.click({thisView: this}, function(event) {
         var thisView = event.data.thisView;
         
@@ -10458,6 +10459,7 @@ View.prototype.createSummaryReportDisplay = function() {
     var timeSpentDiv = $('<div>')
     timeSpentDiv.attr('id', 'timeSpentDiv');
     timeSpentDiv.addClass('reportSummaryDiv');
+    timeSpentDiv.css('cursor', 'pointer');
     timeSpentDiv.click({thisView: this}, function(event) {
         var thisView = event.data.thisView;
         thisView.showTimeSpentDetailedDiv();
@@ -10467,6 +10469,7 @@ View.prototype.createSummaryReportDisplay = function() {
     var revisionsDiv = $('<div>')
     revisionsDiv.attr('id', 'revisionsDiv');
     revisionsDiv.addClass('reportSummaryDiv');
+    revisionsDiv.css('cursor', 'pointer');
     revisionsDiv.click({thisView: this}, function(event) {
         var thisView = event.data.thisView;
         thisView.showRevisionsDetailedDiv();
@@ -10476,6 +10479,7 @@ View.prototype.createSummaryReportDisplay = function() {
     var autoScoreDiv = $('<div>')
     autoScoreDiv.attr('id', 'autoScoreDiv');
     autoScoreDiv.addClass('reportSummaryDiv');
+    autoScoreDiv.css('cursor', 'pointer');
     autoScoreDiv.click({thisView: this}, function(event) {
         var thisView = event.data.thisView;
         thisView.showAutoScoreDetailedDiv();
@@ -10638,6 +10642,7 @@ View.prototype.showRevisitsDetailedDiv = function() {
                 
                 var nodeDiv = $('<div>');
                 nodeDiv.html(averageRevisitsPerStudent + ' - ' + stepNumberAndTitle);
+                nodeDiv.css('cursor', 'pointer');
                 nodeDiv.click({thisView: this, nodeId: nodeId}, function(event) {
                     var thisView = event.data.thisView;
                     var nodeId = event.data.nodeId;
@@ -10759,6 +10764,7 @@ View.prototype.showTimeSpentDetailedDiv = function() {
                 
                 var nodeDiv = $('<div>');
                 nodeDiv.html(this.secondsToMinutesAndSeconds(averageTimeSpentPerStudent) + ' - ' + stepNumberAndTitle);
+                nodeDiv.css('cursor', 'pointer');
                 nodeDiv.click({thisView: this, nodeId: nodeId}, function(event) {
                     var thisView = event.data.thisView;
                     var nodeId = event.data.nodeId;
@@ -10875,6 +10881,7 @@ View.prototype.showRevisionsDetailedDiv = function() {
                 
                 var nodeDiv = $('<div>');
                 nodeDiv.html(averageRevisionsPerStudent + ' - ' + stepNumberAndTitle);
+                nodeDiv.css('cursor', 'pointer');
                 nodeDiv.click({thisView: this, nodeId: nodeId}, function(event) {
                     var thisView = event.data.thisView;
                     var nodeId = event.data.nodeId;
@@ -10999,6 +11006,7 @@ View.prototype.showAutoScoreDetailedDiv = function() {
                 
                 var nodeDiv = $('<div>');
                 nodeDiv.html(averageAutoScore + ' (' + Math.floor(averageAutoScorePercentage * 100) + '%) - ' + stepNumberAndTitle);
+                nodeDiv.css('cursor', 'pointer');
                 nodeDiv.click({thisView: this, nodeId: nodeId}, function(event) {
                     var thisView = event.data.thisView;
                     var nodeId = event.data.nodeId;
