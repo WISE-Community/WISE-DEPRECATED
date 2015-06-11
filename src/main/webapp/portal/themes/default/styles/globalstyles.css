@@ -643,7 +643,9 @@ a#name {
 #switchBack {
     position:absolute;
     top:0px;
-    right:75px;
+    right:0px;
+	width:20px;
+	height:20px;
     margin-right: 0;
 }
 
