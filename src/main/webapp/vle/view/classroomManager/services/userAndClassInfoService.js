@@ -7,7 +7,7 @@ define(['angular'], function(angular) {
 		this.userAndClassInfo = null;
 		
 		this.retrieveUserAndClassInfo = function(update) {
-			var userAndClassInfoUrl = ConfigService.getConfigParam('getUserInfoUrl');
+			var userAndClassInfoUrl = ConfigService.getConfigParam('getUserInfoURL');
 			
 			return $http.get(userAndClassInfoUrl).then(angular.bind(this, function(result) {
 				var userAndClassInfo = result.data;

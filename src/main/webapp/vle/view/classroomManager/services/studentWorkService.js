@@ -7,7 +7,7 @@ define(['angular'], function(angular) {
 		this.nodeIdToWork = {};
 		
 		this.retrieveStudentWorkForWorkgroupId = function(workgroupId) {
-			var getStudentDataUrl = ConfigService.getConfigParam('getStudentDataUrl');
+			var studentDataURL = ConfigService.getConfigParam('studentDataURL');
 			var runId = ConfigService.getConfigParam('runId');
 			var nodeIds = ProjectService.getStepNodeIdsInTraversalOrder();
 			
@@ -20,7 +20,7 @@ define(['angular'], function(angular) {
 				}
 			};
 			
-			return $http.get(getStudentDataUrl, requestConfig).then(angular.bind(this, function(result) {
+			return $http.get(studentDataURL, requestConfig).then(angular.bind(this, function(result) {
 				var studentWork = result.data;
 				
 				if(studentWork != null) {
@@ -43,7 +43,7 @@ define(['angular'], function(angular) {
 		};
 		
 		this.retrieveStudentWorkForNodeId = function(nodeId) {
-			var getStudentDataUrl = ConfigService.getConfigParam('getStudentDataUrl');
+			var studentDataURL = ConfigService.getConfigParam('studentDataURL');
 			var runId = ConfigService.getConfigParam('runId');
 			var workgroupIds = UserAndClassInfoService.getStudentWorkgroupIds();
 			var workgroupIdsJoin = workgroupIds.join(':');
@@ -57,7 +57,7 @@ define(['angular'], function(angular) {
 				}
 			};
 			
-			return $http.get(getStudentDataUrl, requestConfig).then(angular.bind(this, function(result, status, headers, config) {
+			return $http.get(studentDataURL, requestConfig).then(angular.bind(this, function(result, status, headers, config) {
 				var studentWork = result.data;
 				
 				if(studentWork != null) {

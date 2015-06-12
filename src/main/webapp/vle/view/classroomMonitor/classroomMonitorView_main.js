@@ -36,7 +36,7 @@ View.prototype.getClassroomMonitorConfig = function(classroomMonitorConfigUrl) {
     this.retrieveLocales("main");
     
     //load the user and class info
-    this.loadUserAndClassInfo(createContent(this.config.getConfigParam('getUserInfoUrl')));
+    this.loadUserAndClassInfo(createContent(this.config.getConfigParam('getUserInfoURL')));
     
     //start the classroom monitor
     this.startClassroomMonitor();
@@ -480,7 +480,7 @@ View.prototype.showStudentAssets = function() {
     };
     
     var workgroupsInClass = this.userAndClassInfo.getWorkgroupIdsInClass().join(":");
-    this.connectionManager.request('GET', 1, this.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', workgroups:workgroupsInClass, command: 'assetList', type: 'studentAssetManager'}, function(txt,xml,obj){displayStudentAssets(txt,obj);}, this);  
+    this.connectionManager.request('GET', 1, this.getConfig().getConfigParam("studentAssetManagerURL"), {forward:'assetmanager', workgroups:workgroupsInClass, command: 'assetList', type: 'studentAssetManager'}, function(txt,xml,obj){displayStudentAssets(txt,obj);}, this);
 };
 
 /**
@@ -1535,7 +1535,7 @@ View.prototype.studentRowClickedHandler = function(workgroupId) {
     $('#loading').show();
     
     //get the url for retrieving student data
-    var getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl'),
+    var studentDataURL = this.getConfig().getConfigParam('studentDataURL'),
         runId = this.getConfig().getConfigParam('runId'),
         grading = true,
         getRevisions = true,
@@ -1553,7 +1553,7 @@ View.prototype.studentRowClickedHandler = function(workgroupId) {
     };
     
     //make the request to retrieve the student data
-    this.connectionManager.request('GET', 1, getStudentDataUrl, getStudentDataParams, this.getGradeByStudentWorkInClassroomMonitorCallback, [this, workgroupId], this.getGradeByStudentWorkInClassroomMonitorCallbackFail);
+    this.connectionManager.request('GET', 1, studentDataURL, getStudentDataParams, this.getGradeByStudentWorkInClassroomMonitorCallback, [this, workgroupId], this.getGradeByStudentWorkInClassroomMonitorCallbackFail);
 };
 
 /**
@@ -1618,10 +1618,10 @@ View.prototype.ideaBasketClickedHandler = function(workgroupId) {
     var runId = this.getConfig().getConfigParam('runId');
     
     //get the url for requesting idea baskets
-    var getIdeaBasketUrl = this.getConfig().getConfigParam('getIdeaBasketUrl');
+    var ideaBasketURL = this.getConfig().getConfigParam('ideaBasketURL');
     
     //remove any GET parameters from the url since we will be using our own parameters
-    getIdeaBasketUrl = getIdeaBasketUrl.substring(0, getIdeaBasketUrl.indexOf('?'));
+    ideaBasketURL = ideaBasketURL.substring(0, ideaBasketURL.indexOf('?'));
     
     var getIdeaBasketParams = {
         action:'getIdeaBasket',
@@ -1630,7 +1630,7 @@ View.prototype.ideaBasketClickedHandler = function(workgroupId) {
     }
     
     //retrieve the student idea basket
-    this.connectionManager.request('GET', 1, getIdeaBasketUrl, getIdeaBasketParams, this.getIdeaBasketCallback, [this, workgroupId], this.getIdeaBasketFailCallback);
+    this.connectionManager.request('GET', 1, ideaBasketURL, getIdeaBasketParams, this.getIdeaBasketCallback, [this, workgroupId], this.getIdeaBasketFailCallback);
 };
 
 /**
@@ -3329,7 +3329,7 @@ View.prototype.flagCheckBoxClicked = function(nodeId, workgroupId, stepWorkId, m
     }
     
     //get the url for saving the flag annotation
-    var postFlagsUrl = this.getConfig().getConfigParam('postFlagsUrl');
+    var flagsURL = this.getConfig().getConfigParam('flagsURL');
     
     var value = '';
     
@@ -3361,7 +3361,7 @@ View.prototype.flagCheckBoxClicked = function(nodeId, workgroupId, stepWorkId, m
     // Show saving message
     notificationManager.notify(view.getI18NString('classroomMonitor_saving'), 3);
     //make the call to post the annotation
-    this.connectionManager.request('POST', 1, postFlagsUrl, postFlagArgs, this.postFlagCallbackSuccess, [this, stepWorkId, annotationType, isChecked, nodeId, toWorkgroup, mode], this.postFlagCallbackFail);
+    this.connectionManager.request('POST', 1, flagsURL, postFlagArgs, this.postFlagCallbackSuccess, [this, stepWorkId, annotationType, isChecked, nodeId, toWorkgroup, mode], this.postFlagCallbackFail);
 };
 
 /**
@@ -4704,7 +4704,7 @@ View.prototype.stepRowClickedHandler = function(nodeId) {
     this.nodeIdClicked = nodeId;
     
     //get the url for retrieving student data
-    var getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl');
+    var studentDataURL = this.getConfig().getConfigParam('studentDataURL');
     
     var runId = this.getConfig().getConfigParam('runId'),
         grading = true,
@@ -4724,7 +4724,7 @@ View.prototype.stepRowClickedHandler = function(nodeId) {
     }
     
     //make the request to retrieve the student data
-    this.connectionManager.request('GET', 1, getStudentDataUrl, getStudentDataParams, this.getGradeByStepWorkInClassroomMonitorCallback, [this, nodeId], this.getStepWorkInClassroomMonitorCallbackFail);
+    this.connectionManager.request('GET', 1, studentDataURL, getStudentDataParams, this.getGradeByStepWorkInClassroomMonitorCallback, [this, nodeId], this.getStepWorkInClassroomMonitorCallbackFail);
 };
 
 /**
@@ -9051,7 +9051,7 @@ View.prototype.retrievePremadeComments = function() {
         //we have not retrieved premade comments before so we need to retrieve them
         
         //get the url that will retrieve the premade comments
-        var getPremadeCommentsUrl = this.getConfig().getConfigParam('getPremadeCommentsUrl');
+        var premadeCommentsURL = this.getConfig().getConfigParam('premadeCommentsURL');
         
         //callback when we have received the premade comments from the server
         var getPremadeCommentsCallback = function(text, xml, args) {
@@ -9069,7 +9069,7 @@ View.prototype.retrievePremadeComments = function() {
         var getPremadeCommentsArgs = {};
         
         //make the request for the premade comments
-        this.connectionManager.request('GET', 1, getPremadeCommentsUrl, getPremadeCommentsArgs, getPremadeCommentsCallback, [this], getPremadeCommentsCallbackFail);
+        this.connectionManager.request('GET', 1, premadeCommentsURL, getPremadeCommentsArgs, getPremadeCommentsCallback, [this], getPremadeCommentsCallbackFail);
     }
 };
 
@@ -9429,7 +9429,7 @@ View.prototype.createPremadeCommentsListDiv = function(premadeCommentList, signe
  */
 View.prototype.postPremadeComments = function(premadeCommentAction, postPremadeCommentsCallback, premadeCommentListId, premadeCommentListLabel, premadeCommentId, premadeComment, isGlobal, premadeCommentListPositions, projectId) {
     //get the url that will post the premade comment to the server
-    var postPremadeCommentsUrl = this.getConfig().getConfigParam('postPremadeCommentsUrl');
+    var premadeCommentsURL = this.getConfig().getConfigParam('premadeCommentsURL');
     
     //called when we fail to send the premade comment data to the server
     var postPremadeCommentsCallbackFail = function(text, args) {
@@ -9449,7 +9449,7 @@ View.prototype.postPremadeComments = function(premadeCommentAction, postPremadeC
     };
     
     //make the post to the server
-    this.connectionManager.request('POST', 1, postPremadeCommentsUrl, postPremadeCommentsArgs, postPremadeCommentsCallback, [this, postPremadeCommentsArgs], postPremadeCommentsCallbackFail);
+    this.connectionManager.request('POST', 1, premadeCommentsURL, postPremadeCommentsArgs, postPremadeCommentsCallback, [this, postPremadeCommentsArgs], postPremadeCommentsCallbackFail);
 };
 
 /**
@@ -11101,7 +11101,7 @@ View.prototype.showShowSummaryReportDisplay = function() {
 
 View.prototype.getSummaryReportData = function() {
     //get the url for retrieving student data
-    var getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl');
+    var studentDataURL = this.getConfig().getConfigParam('studentDataURL');
     
     var nodeIds = this.getProject().getNodeIds().join(':');
     
@@ -11124,7 +11124,7 @@ View.prototype.getSummaryReportData = function() {
     }
     
     //make the request to retrieve the student data
-    this.connectionManager.request('GET', 1, getStudentDataUrl, getStudentDataParams, this.getSummaryReportDataCallback, {thisView: this}, this.getSummaryReportDataCallbackFail);
+    this.connectionManager.request('GET', 1, studentDataURL, getStudentDataParams, this.getSummaryReportDataCallback, {thisView: this}, this.getSummaryReportDataCallbackFail);
 
 };
 

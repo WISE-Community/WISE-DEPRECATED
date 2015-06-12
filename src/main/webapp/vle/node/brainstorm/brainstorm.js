@@ -252,7 +252,7 @@ BRAINSTORM.prototype.showClassmateResponses = function(frameDoc){
 		this.node.view.connectionManager.request(
 				'GET', 
 				2, 
-				this.node.view.config.getConfigParam('getStudentDataUrl'), 
+				this.node.view.config.getConfigParam('studentDataURL'),
 				{type: 'brainstorm', periodId: this.node.view.userAndClassInfo.getPeriodId(), 
 					inOrder: true, 
 					userId: this.node.view.userAndClassInfo.getWorkgroupId() + ":" + this.node.view.userAndClassInfo.getClassmateIdsByPeriodId(this.node.view.userAndClassInfo.getPeriodId()), 

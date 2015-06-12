@@ -2002,7 +2002,7 @@ Node.prototype.showAggregateWork = function(aggregateWorkDiv, tagName, functionA
 						this.view.connectionManager.request(
 								'GET', 
 								2, 
-								this.view.config.getConfigParam('getStudentDataUrl'), 
+								this.view.config.getConfigParam('studentDataURL'),
 								{
 									type: 'aggregate', 
 									periodId: this.view.userAndClassInfo.getPeriodId(), 
@@ -2135,7 +2135,7 @@ Node.prototype.showAggregateWorkTable = function(aggregateWorkDiv, tagName, func
                         this.view.connectionManager.request(
                                 'GET', 
                                 2, 
-                                this.view.config.getConfigParam('getStudentDataUrl'), 
+                                this.view.config.getConfigParam('studentDataURL'),
                                 {
                                     type: 'aggregate', 
                                     periodId: this.view.userAndClassInfo.getPeriodId(), 

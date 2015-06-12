@@ -89,8 +89,8 @@ View.prototype.postCurrentNodeVisit = function(successCallback, failureCallback,
 	var stepWorkId = currentNodeVisit.id;
 
 	var url;
-	if(this.getConfig().getConfigParam('postStudentDataUrl')){
-		url = this.getConfig().getConfigParam('postStudentDataUrl');
+	if(this.getConfig().getConfigParam('studentDataURL')){
+		url = this.getConfig().getConfigParam('studentDataURL');
 	} else {
 		url = "postdata.html";
 	};
@@ -209,7 +209,7 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback,
 		return;
 	}
 
-	var url = this.getConfig().getConfigParam('postStudentDataUrl');
+	var url = this.getConfig().getConfigParam('studentDataURL');
 
 	/* check the post level to determine, what if anything needs to be posted */
 	if(this.getProject().getPostLevel()==1){
@@ -225,7 +225,7 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback,
 		var postData = encodeURIComponent($.stringify(nodeVisit));
 	};
 
-	var postStudentDataUrlParams = {id: nodeVisit.id,
+	var studentDataURLParams = {id: nodeVisit.id,
 			runId: this.getConfig().getConfigParam('runId'),
 			periodId: this.getUserAndClassInfo().getPeriodId(),
 			userId: this.getUserAndClassInfo().getWorkgroupId(),
@@ -252,7 +252,7 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback,
         var annotationsString = encodeURIComponent($.stringify(annotations));
         
         // set the annotations string into the post params
-        postStudentDataUrlParams.annotations = annotationsString;
+        studentDataURLParams.annotations = annotationsString;
     }
 	
 	// Only POST this nodevisit if this nodevisit is not currently being POSTed to the server.
@@ -263,7 +263,7 @@ View.prototype.postUnsavedNodeVisit = function(nodeVisit, sync, successCallback,
 		var timeout = null;
 		// add  this nodevisit to postInProgress array
 		this.addToPOSTInProgressArray(nodeVisit);
-		this.connectionManager.request('POST', 3, url, postStudentDataUrlParams, successCallback, additionalData, failureCallback, sync, null);		
+		this.connectionManager.request('POST', 3, url, studentDataURLParams, successCallback, additionalData, failureCallback, sync, null);
 	}
 };
 
@@ -602,7 +602,7 @@ View.prototype.viewStudentAssets = function(params) {
 					o.checkStudentAssetSizeLimit();
 				}
 			};
-			view.connectionManager.request('POST', 1, view.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'remove', asset: name, cmd: 'studentAssetUpload'}, success, view, success);
+			view.connectionManager.request('POST', 1, view.getConfig().getConfigParam("studentAssetManagerURL"), {forward:'assetmanager', command: 'remove', asset: name, cmd: 'studentAssetUpload'}, success, view, success);
 		}
 	};
 	
@@ -614,7 +614,7 @@ View.prototype.viewStudentAssets = function(params) {
 				var opt = parent.options[parent.selectedIndex];
 				var filename = opt.value;
 
-				var postStudentAssetUrl = view.getConfig().getConfigParam("studentAssetManagerUrl");
+				var postStudentAssetUrl = view.getConfig().getConfigParam("studentAssetManagerURL");
 				// need to get rid of the ?type=StudentAssets&runId=X from the url because we're doing a POST and it will be syntactically incorrect.
 				if (postStudentAssetUrl.indexOf("?") != -1) {
 					postStudentAssetUrl = postStudentAssetUrl.substr(0,postStudentAssetUrl.indexOf("?"));
@@ -754,7 +754,7 @@ View.prototype.viewStudentAssets = function(params) {
 		filename = params.filename;		
 	}
 	
-	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'assetList', type: 'studentAssetManager'}, function(txt,xml,args){studentAssetsPopulateOptions(txt,args);}, {thisView:this,filename:filename});	
+	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam("studentAssetManagerURL"), {forward:'assetmanager', command: 'assetList', type: 'studentAssetManager'}, function(txt,xml,args){studentAssetsPopulateOptions(txt,args);}, {thisView:this,filename:filename});
 };
 
 /**
@@ -786,7 +786,7 @@ View.prototype.saImport = function(params) {
 				filename = opt.value;
 			}
 
-			var postStudentAssetUrl = view.getConfig().getConfigParam("studentAssetManagerUrl");
+			var postStudentAssetUrl = view.getConfig().getConfigParam("studentAssetManagerURL");
 			// need to get rid of the ?type=StudentAssets&runId=X from the url because we're doing a POST and it will be syntactically incorrect.
 			if (postStudentAssetUrl.indexOf("?") != -1) {
 				postStudentAssetUrl = postStudentAssetUrl.substr(0,postStudentAssetUrl.indexOf("?"));
@@ -841,7 +841,7 @@ View.prototype.checkStudentAssetSizeLimit = function(){
 			$('#sizeDiv').html(o.getI18NStringWithParams("student_assets_student_usage_message",[studentUsage,maxUsageLimit]));
 		} 
 	};
-	this.connectionManager.request('GET', 1,  this.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'getSize', type: 'studentAssetManager'}, callback, this);
+	this.connectionManager.request('GET', 1,  this.getConfig().getConfigParam("studentAssetManagerURL"), {forward:'assetmanager', command: 'getSize', type: 'studentAssetManager'}, callback, this);
 };
 
 /**
@@ -864,24 +864,21 @@ View.prototype.studentAssetSubmitUpload = function() {
 		} else {
 			var frameId = 'assetUploadTarget_' + Math.floor(Math.random() * 1000001);
 			var frame = createElement(document, 'iframe', {id:frameId, type:'student', name:frameId, src:'about:blank', style:'display:none;'});
-			var postStudentAssetUrl = this.getConfig().getConfigParam("studentAssetManagerUrl");
+			var studentAssetManagerURL = this.getConfig().getConfigParam("studentAssetManagerURL");
 			// need to get rid of the ?type=StudentAssets&runId=X from the url because we're doing a POST and it will be syntactically incorrect.
-			if (postStudentAssetUrl.indexOf("?") != -1) {
-				postStudentAssetUrl = postStudentAssetUrl.substr(0,postStudentAssetUrl.indexOf("?"));
+			if (studentAssetManagerURL.indexOf("?") != -1) {
+				studentAssetManagerURL = studentAssetManagerURL.substr(0,studentAssetManagerURL.indexOf("?"));
 			}
-			var form = createElement(document, 'form', {id:'assetUploaderFrm', method:'POST', enctype:'multipart/form-data', action:postStudentAssetUrl, target:frameId, style:'display:none;'});
-			//var assetPath = view.utils.getContentPath(view.authoringBaseUrl,view.project.getContentBase());
+			var form = createElement(document, 'form', {id:'assetUploaderFrm', method:'POST', enctype:'multipart/form-data', action:studentAssetManagerURL, target:frameId, style:'display:none;'});
 
 			/* create and append elements */
 			document.body.appendChild(frame);
 			document.body.appendChild(form);
 
-			//form.appendChild(createElement(document,'input',{type:'hidden', name:'path', value:assetPath}));
-			form.appendChild(createElement(document,'input',{type:'hidden', name:'type', value:'studentAssetManager'}));			
+			form.appendChild(createElement(document,'input',{type:'hidden', name:'type', value:'studentAssetManager'}));
 			form.appendChild(createElement(document,'input',{type:'hidden', name:'runId', value:this.config.getConfigParam("runId")}));
 			form.appendChild(createElement(document,'input',{type:'hidden', name:'forward', value:'assetmanager'}));
 			form.appendChild(createElement(document,'input',{type:'hidden', name:'command', value:'uploadAsset'}));
-			//form.appendChild(createElement(document,'input',{type:'hidden', name:'projectId', value:view.portalProjectId}));
 
 			/* set up the event and callback when the response comes back to the frame */
 			frame.addEventListener('load', function () { eventManager.fire('assetUploaded', [frame, view, filename]); }, false);

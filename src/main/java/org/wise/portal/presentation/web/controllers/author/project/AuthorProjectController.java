@@ -1405,12 +1405,9 @@ public class AuthorProjectController {
 		//get the url to make analyze project requests
 		String analyzeProjectUrl = wiseBaseURL + "/teacher/projects/analyzeproject.html";
 
-		//the get url for premade comments
-		String getPremadeCommentsUrl = wiseBaseURL + "/teacher/grading/premadeComments.html?action=getData";
+		//the get/post url for premade comments
+		String premadeCommentsURL = wiseBaseURL + "/teacher/grading/premadeComments.html";
 
-		//the post url for premade comments
-		String postPremadeCommentsUrl = wiseBaseURL + "/teacher/grading/premadeComments.html?action=postData";
-		
 		//create a JSONObject to contain the config params
 		JSONObject config = new JSONObject();
 
@@ -1433,8 +1430,7 @@ public class AuthorProjectController {
 			config.put("previewProjectUrl", previewProjectUrl);
 			config.put("deleteProjectUrl", deleteProjectUrl);
 			config.put("analyzeProjectUrl", analyzeProjectUrl);
-			config.put("getPremadeCommentsUrl", getPremadeCommentsUrl);
-			config.put("postPremadeCommentsUrl", postPremadeCommentsUrl);
+			config.put("premadeCommentsURL", premadeCommentsURL);
 			config.put("wiseBaseURL", wiseBaseURL);
 			config.put("contextPath", contextPath);
 			

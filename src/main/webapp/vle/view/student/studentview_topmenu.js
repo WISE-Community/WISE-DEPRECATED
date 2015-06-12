@@ -411,7 +411,7 @@ View.prototype.getFlaggedWork = function() {
 				isStudent:true
 	};
 	
-	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('getFlagsUrl'), flaggedWorkUrlParams, processGetFlaggedWorkResponse, [this]);
+	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('flagsURL'), flaggedWorkUrlParams, processGetFlaggedWorkResponse, [this]);
 
 };
 
@@ -775,7 +775,7 @@ View.prototype.getIdeaBasket = function() {
 	};
 	
 	//request the idea basket from the server
-	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('getIdeaBasketUrl'), ideaBasketParams, this.getIdeaBasketCallback, {thisView:this}, this.getIdeaBasketFailureCallback, true);
+	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('ideaBasketURL'), ideaBasketParams, this.getIdeaBasketCallback, {thisView:this}, this.getIdeaBasketFailureCallback, true);
 };
 
 /**
@@ -829,7 +829,7 @@ View.prototype.getPublicIdeaBasket = function(basket, displayPublicIdeaBasket) {
 	};
 	
 	//request the public idea basket from the server
-	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('getIdeaBasketUrl'), ideaBasketParams, this.getPublicIdeaBasketCallback, {thisView:this, basket:basket, displayPublicIdeaBasket:displayPublicIdeaBasket});
+	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('ideaBasketURL'), ideaBasketParams, this.getPublicIdeaBasketCallback, {thisView:this, basket:basket, displayPublicIdeaBasket:displayPublicIdeaBasket});
 };
 
 /**
@@ -1099,7 +1099,7 @@ View.prototype.getFlaggedIdeaBaskets = function() {
 	};
 	
 	//request the idea basket from the server
-	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('getIdeaBasketUrl'), ideaBasketParams, this.getIdeaBasketsByWorkgroupIdCallback, {thisView:this});
+	this.connectionManager.request('GET', 3, this.getConfig().getConfigParam('ideaBasketURL'), ideaBasketParams, this.getIdeaBasketsByWorkgroupIdCallback, {thisView:this});
 };
 
 /**
@@ -1223,7 +1223,7 @@ View.prototype.makeIdeaPublic = function(basket, ideaId) {
 	};
 	
 	//make the request to add this idea as a public idea
-	this.connectionManager.request('POST', 3, this.getConfig().getConfigParam('postIdeaBasketUrl'), ideaBasketParams, this.makeIdeaPublicCallback, {thisView:this, basket:basket, ideaId:ideaId});	
+	this.connectionManager.request('POST', 3, this.getConfig().getConfigParam('ideaBasketURL'), ideaBasketParams, this.makeIdeaPublicCallback, {thisView:this, basket:basket, ideaId:ideaId});
 };
 
 /**
@@ -1292,7 +1292,7 @@ View.prototype.makeIdeaPrivate = function(basket, ideaId) {
 	};
 	
 	//make the request to make this idea private
-	this.connectionManager.request('POST', 3, this.getConfig().getConfigParam('postIdeaBasketUrl'), ideaBasketParams, this.makeIdeaPrivateCallback, {thisView:this, basket:basket, ideaId:ideaId});	
+	this.connectionManager.request('POST', 3, this.getConfig().getConfigParam('ideaBasketURL'), ideaBasketParams, this.makeIdeaPrivateCallback, {thisView:this, basket:basket, ideaId:ideaId});
 };
 
 /**
@@ -1382,7 +1382,7 @@ View.prototype.copyPublicIdea = function(basket, ideaWorkgroupId, ideaId) {
 		};
 			
 		//make the request to copy the public idea
-		this.connectionManager.request('POST', 3, this.getConfig().getConfigParam('postIdeaBasketUrl'), ideaBasketParams, this.copyPublicIdeaCallback, {thisView:this, basket:basket, ideaWorkgroupId:ideaWorkgroupId, ideaId:ideaId});	
+		this.connectionManager.request('POST', 3, this.getConfig().getConfigParam('ideaBasketURL'), ideaBasketParams, this.copyPublicIdeaCallback, {thisView:this, basket:basket, ideaWorkgroupId:ideaWorkgroupId, ideaId:ideaId});
 	}
 };
 
@@ -1509,7 +1509,7 @@ View.prototype.addWorkgroupToWorkgroupIdsThatHaveCopied = function(basket, ideaW
 	};
 		
 	//make the request to copy the public idea
-	this.connectionManager.request('POST', 3, this.getConfig().getConfigParam('postIdeaBasketUrl'), ideaBasketParams, this.addWorkgroupToWorkgroupIdsThatHaveCopiedCallback, {thisView:this, basket:basket, ideaWorkgroupId:ideaWorkgroupId, ideaId:ideaId});	
+	this.connectionManager.request('POST', 3, this.getConfig().getConfigParam('ideaBasketURL'), ideaBasketParams, this.addWorkgroupToWorkgroupIdsThatHaveCopiedCallback, {thisView:this, basket:basket, ideaWorkgroupId:ideaWorkgroupId, ideaId:ideaId});
 };
 
 /**
@@ -1604,7 +1604,7 @@ View.prototype.uncopyPublicIdea = function(basket, ideaId) {
 		};
 
 		//make the request to uncopy the idea
-		this.connectionManager.request('POST', 3, this.getConfig().getConfigParam('postIdeaBasketUrl'), ideaBasketParams, this.uncopyPublicIdeaCallback, {thisView:this, basket:basket, workgroupId:workgroupId, ideaId:ideaId});	
+		this.connectionManager.request('POST', 3, this.getConfig().getConfigParam('ideaBasketURL'), ideaBasketParams, this.uncopyPublicIdeaCallback, {thisView:this, basket:basket, workgroupId:workgroupId, ideaId:ideaId});
 	}
 };
 

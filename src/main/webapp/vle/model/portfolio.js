@@ -133,7 +133,7 @@ Portfolio.prototype.saveToServer = function(callback,callbackArgs) {
 				"portfolio":JSON.stringify(this),
 		};
 		this.view.connectionManager.request('POST', 3, 
-				this.view.getConfig().getConfigParam('postPortfolioUrl'), 
+				this.view.getConfig().getConfigParam('portfolioURL'),
 				portfolioParams, 
 				callback, 
 				callbackArgs);

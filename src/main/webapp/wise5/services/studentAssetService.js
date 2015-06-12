@@ -167,7 +167,7 @@ define(['configService'], function(configService) {
             });
         };
             
-            /*
+            /*  TODO: REMOVE ME
             var remove = function(){
                 var parent = document.getElementById('assetSelect');
                 var ndx = parent.selectedIndex;
@@ -185,7 +185,7 @@ define(['configService'], function(configService) {
                             o.checkStudentAssetSizeLimit();
                         }
                     };
-                    view.connectionManager.request('POST', 1, view.getConfig().getConfigParam("studentAssetManagerUrl"), {forward:'assetmanager', command: 'remove', asset: name, cmd: 'studentAssetUpload'}, success, view, success);
+                    view.connectionManager.request('POST', 1, view.getConfig().getConfigParam("studentAssetManagerURL"), {forward:'assetmanager', command: 'remove', asset: name, cmd: 'studentAssetUpload'}, success, view, success);
                 }
             };
             */

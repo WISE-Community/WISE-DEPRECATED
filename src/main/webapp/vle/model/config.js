@@ -9,13 +9,11 @@
  * runId - the id of the run
  * theme - currently only WISE is allowed
  * runInfoUrl - where to get run info
- * getUserInfoUrl - where to get user information
+ * getUserInfoURL - where to get user information
  * getContentUrl - where the .project file is
  * getContentBaseUrl - base url of content
- * getStudentDataUrl - where to get student work
- * postStudentDataUrl - where to post student work
- * getFlagsUrl - where to get flags
- * postFlagsUrl - where to post flags
+ * studentDataUrl - where to get/post student work
+ * flagsUrl - where to get/post flags
  * annotationsURL - where to get/post annotations
  * getCurrentStepUrl - where to get the current step
  * postCurrentStepUrl - where to post the current step
@@ -37,7 +35,7 @@ View.prototype.createConfig = function(contentObject) {
 		 * note: all the json keys should be named exactly the same
 		 * as the config parameter. e.g.
 		 * getDataUrl param should be named getDataUrl and not
-		 * anything different like dataUrl or getStudentDataUrl, etc.
+		 * anything different like dataUrl or studentDataURL, etc.
 		 * that way when we try to obtain that config param
 		 * we can actually retrieve it
 		 */

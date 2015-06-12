@@ -1995,7 +1995,7 @@ IdeaBasket.prototype.saveIdeaBasket = function(thisView, action, workgroupId, id
 	//check if we are in preview mode
 	if (thisView.config.getConfigParam('mode') !== "preview") {
 		//we are not in preview mode so we will post the idea basket back to the server to be saved
-		thisView.connectionManager.request('POST', 3, thisView.getConfig().getConfigParam('postIdeaBasketUrl'), ideaBasketParams, this.saveIdeaBasketCallback, {thisView:thisView, basket:this});
+		thisView.connectionManager.request('POST', 3, thisView.getConfig().getConfigParam('ideaBasketURL'), ideaBasketParams, this.saveIdeaBasketCallback, {thisView:thisView, basket:this});
 	}
 	
 	//set the updated ideaBasket back into the view

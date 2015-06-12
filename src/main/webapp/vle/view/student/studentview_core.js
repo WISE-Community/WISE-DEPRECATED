@@ -262,9 +262,9 @@ View.prototype.showToolsBasedOnConfigs = function(metadata, runInfo) {
 	//Portfolio
 	if (metadata != null && metadata.isPortfolioEnabled) {
 		// fetch portfolio and display the portfolio links 
-		var getPortfolioUrl = this.getConfig().getConfigParam('getPortfolioUrl');
+		var portfolioURL = this.getConfig().getConfigParam('portfolioURL');
 		var extraParams = null;
-		this.connectionManager.request('GET', 2, getPortfolioUrl, extraParams, 
+		this.connectionManager.request('GET', 2, portfolioURL, extraParams,
 				function(responseText, responseXML, view) {
 					if (responseText) {
 						view.portfolio = new Portfolio(view,responseText);
@@ -355,9 +355,9 @@ View.prototype.loadVLEState = function(){
 	}
 	
 	if (this.userAndClassInfo && this.userAndClassInfo.getWorkgroupId()) {  
-		this.connectionManager.request('GET', 2, this.config.getConfigParam('getStudentDataUrl'), {userId: this.userAndClassInfo.getWorkgroupId(),runId:this.config.getConfigParam('runId'), getAllWork:getAllWork}, this.processLoadViewStateResponse, this);
+		this.connectionManager.request('GET', 2, this.config.getConfigParam('studentDataURL'), {userId: this.userAndClassInfo.getWorkgroupId(),runId:this.config.getConfigParam('runId'), getAllWork:getAllWork}, this.processLoadViewStateResponse, this);
 	} else {
-		this.connectionManager.request('GET', 2, this.config.getConfigParam('getStudentDataUrl'), null, this.processLoadViewStateResponse, this);
+		this.connectionManager.request('GET', 2, this.config.getConfigParam('studentDataURL'), null, this.processLoadViewStateResponse, this);
 	}
 };
 
@@ -539,8 +539,8 @@ View.prototype.onThemeLoad = function(){
 	
 	/* load learner data based on config object parameters */
 	if (this.config.getConfigParam('mode') == "run") {
-		this.notificationManager.notify('vleConfig.mode is run, getUserInfoUrl:' + this.config.getConfigParam('getUserInfoUrl'), 4);
-		this.loadLearnerData(this.config.getConfigParam('getUserInfoUrl'));
+		this.notificationManager.notify('vleConfig.mode is run, getUserInfoURL:' + this.config.getConfigParam('getUserInfoURL'), 4);
+		this.loadLearnerData(this.config.getConfigParam('getUserInfoURL'));
 	} else if (this.config.getConfigParam('mode') === "preview") {
 		//if preview mode, only get the user and class info and not learner data
 		this.loadUserAndClassInfo(null);  // in preview mode, user and class info object is an empty object.

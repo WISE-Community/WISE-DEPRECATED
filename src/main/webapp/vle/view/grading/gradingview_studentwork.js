@@ -150,7 +150,7 @@ View.prototype.getStudentWork = function() {
 			var thisView = args[0];
 			
 			//get the url we requested for
-			var getStudentDataUrl = args[1];
+			var studentDataURL = args[1];
 
 			//parse all the vlestates for all the students
 			var alwaysReturnArray = true;
@@ -170,16 +170,16 @@ View.prototype.getStudentWork = function() {
 			 * loop through all the urls in the array that represents the
 			 * requests that have not returned yet
 			 */
-			for(var x=0; x<thisView.getStudentDataUrlArray.length; x++) {
+			for(var x=0; x<thisView.studentDataURLArray.length; x++) {
 				//find the url that this request is returning
-				if(thisView.getStudentDataUrlArray[x] == getStudentDataUrl) {
+				if(thisView.studentDataURLArray[x] == studentDataURL) {
 					//remove the url from the array since we have received the response
-					thisView.getStudentDataUrlArray.splice(x, 1);
+					thisView.studentDataURLArray.splice(x, 1);
 				}
 			}
 
 			//check if we have received all the student work
-			if(thisView.getStudentDataUrlArray.length == 0) {
+			if(thisView.studentDataURLArray.length == 0) {
 				//we have received all the student work
 				eventManager.fire("retrieveStudentWorkCompleted");
 			}
@@ -190,13 +190,13 @@ View.prototype.getStudentWork = function() {
 		var thisView = args[0];
 		
 		//get the request url that failed
-		var getStudentDataUrl = args[1];
+		var studentDataURL = args[1];
 		
 		//try to make the request again
-		thisView.connectionManager.request('GET', 1, getStudentDataUrl, null, studentWorkCallback, [thisView, getStudentDataUrl], studentWorkCallbackFail);
+		thisView.connectionManager.request('GET', 1, studentDataURL, null, studentWorkCallback, [thisView, studentDataURL], studentWorkCallbackFail);
 	};
 
-	var getStudentDataUrl = null;
+	var studentDataURL = null;
 
 	var getRevisions = false;
 	
@@ -204,8 +204,8 @@ View.prototype.getStudentWork = function() {
 		getRevisions = this.getRevisions;
 	}
 	
-	//an array to store all the getStudentDataUrls
-	this.getStudentDataUrlArray = [];
+	//an array to store all the studentDataURLs
+	this.studentDataURLArray = [];
 
 	//loop through each set of workgroup ids
 	for(var x=0; x<workgroupsArray.length; x++) {
@@ -216,22 +216,22 @@ View.prototype.getStudentWork = function() {
 		var workgroupSet = workgroupsArray[x];
 
 		//create the url to get the student data for this set of workgroups
-		getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl') + "?userId=" + workgroupSet + "&grading=true" + "&runId=" + this.getConfig().getConfigParam('runId') + "&nodeIds=" + nodeIdsString + "&getRevisions=" + getRevisions;
+		studentDataURL = this.getConfig().getConfigParam('studentDataURL') + "?userId=" + workgroupSet + "&grading=true" + "&runId=" + this.getConfig().getConfigParam('runId') + "&nodeIds=" + nodeIdsString + "&getRevisions=" + getRevisions;
 
 		//add the url to our array
-		this.getStudentDataUrlArray.push(getStudentDataUrl);
+		this.studentDataURLArray.push(studentDataURL);
 	}
 	
 	//loop through the array of urls
-	for(var y=0; y<this.getStudentDataUrlArray.length; y++) {
+	for(var y=0; y<this.studentDataURLArray.length; y++) {
 		//get a url
-		getStudentDataUrl = this.getStudentDataUrlArray[y];
+		studentDataURL = this.studentDataURLArray[y];
 		
 		//make the request for the url
-		this.connectionManager.request('GET', 1, getStudentDataUrl, null, studentWorkCallback, [this, getStudentDataUrl], studentWorkCallbackFail);
+		this.connectionManager.request('GET', 1, studentDataURL, null, studentWorkCallback, [this, studentDataURL], studentWorkCallbackFail);
 	}
 
-	if(this.getStudentDataUrlArray.length == 0) {
+	if(this.studentDataURLArray.length == 0) {
 		eventManager.fire("retrieveStudentWorkCompleted");
 	}
 };
@@ -345,7 +345,7 @@ View.prototype.getIdeaBaskets = function() {
 	};
 
 	//make the request for the idea baskets
-	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam('getIdeaBasketUrl'), getIdeaBasketParams, getIdeaBasketsCallback, [this]);
+	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam('ideaBasketURL'), getIdeaBasketParams, getIdeaBasketsCallback, [this]);
 };
 
 //used to notify scriptloader that this script has finished loading

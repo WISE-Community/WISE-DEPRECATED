@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -31,10 +31,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
-
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
@@ -62,28 +59,11 @@ import org.wise.portal.service.premadecomment.PremadeCommentService;
  * @version $Id:$
  */
 @Controller
+@RequestMapping("/teacher/grading/premadeComments.html")
 public class PremadeCommentsController {
 
 	@Autowired
 	private PremadeCommentService premadeCommentService;
-
-	@RequestMapping("/teacher/grading/premadeComments.html")
-	protected ModelAndView handleRequestInternal(
-			HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-
-		String action = request.getParameter("action");
-
-		if (action != null) {
-			if (action.equals("getData")) {
-				return handleGetData(request, response);
-			} else  if (action.equals("postData")) {
-				return handlePostData(request, response);
-			}
-		}
-
-		return null;
-	}
 
 	/**
 	 * Handles changes to premade comments
@@ -91,6 +71,7 @@ public class PremadeCommentsController {
 	 * @param response
 	 * @return
 	 */
+	@RequestMapping(method=RequestMethod.POST)
 	private ModelAndView handlePostData(HttpServletRequest request,
 			HttpServletResponse response) {
 
@@ -384,6 +365,7 @@ public class PremadeCommentsController {
 	 * @param response
 	 * @return
 	 */
+	@RequestMapping(method=RequestMethod.GET)
 	private ModelAndView handleGetData(HttpServletRequest request,
 			HttpServletResponse response) {
 

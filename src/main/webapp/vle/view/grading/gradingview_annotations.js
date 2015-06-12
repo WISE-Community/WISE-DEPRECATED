@@ -278,7 +278,7 @@ View.prototype.inappropriateFlagCheckboxClickedEventListener = function(nodeId, 
 	 // override deleteFlag with whether Flag Work checkbox is checked or not
 	deleteFlag = !document.getElementById("inappropriateFlagButton_" + stepWorkId).checked;
 		 
-	var postFlagsUrl = this.getConfig().getConfigParam('postInappropriateFlagsUrl');
+	var flagsURL = this.getConfig().getConfigParam('postInappropriateFlagsUrl');
 	
 	var value = '';
 	
@@ -345,7 +345,7 @@ View.prototype.inappropriateFlagCheckboxClickedEventListener = function(nodeId, 
 	};
 
 	//make the call to post the annotation
-	this.connectionManager.request('POST', 1, postFlagsUrl, postFlagArgs, postFlagCallback, [this, nodeId, toWorkgroup, fromWorkgroup, runId, stepWorkId], postFlagCallbackFail);
+	this.connectionManager.request('POST', 1, flagsURL, postFlagArgs, postFlagCallback, [this, nodeId, toWorkgroup, fromWorkgroup, runId, stepWorkId], postFlagCallbackFail);
 };
 
 
@@ -374,7 +374,7 @@ View.prototype.flagCheckboxClickedEventListener = function(nodeId, toWorkgroup, 
 	 // override deleteFlag with whether Flag Work checkbox is checked or not
 	deleteFlag = !document.getElementById("flagButton_" + stepWorkId).checked;
 		 
-	var postFlagsUrl = this.getConfig().getConfigParam('postFlagsUrl');
+	var flagsURL = this.getConfig().getConfigParam('flagsURL');
 	
 	var value = '';
 	
@@ -441,7 +441,7 @@ View.prototype.flagCheckboxClickedEventListener = function(nodeId, toWorkgroup, 
 	};
 
 	//make the call to post the annotation
-	this.connectionManager.request('POST', 1, postFlagsUrl, postFlagArgs, postFlagCallback, [this, nodeId, toWorkgroup, fromWorkgroup, runId, stepWorkId], postFlagCallbackFail);
+	this.connectionManager.request('POST', 1, flagsURL, postFlagArgs, postFlagCallback, [this, nodeId, toWorkgroup, fromWorkgroup, runId, stepWorkId], postFlagCallbackFail);
 };
 
 
@@ -468,7 +468,7 @@ View.prototype.getFlags = function() {
 		thisView.flags = Annotations.prototype.parseDataJSONString(text);
 		eventManager.fire("getFlagsCompleted");
 	};
-	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam('getFlagsUrl'), null, getFlagsCallback, [this]);
+	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam('flagsURL'), null, getFlagsCallback, [this]);
 };
 
 /**

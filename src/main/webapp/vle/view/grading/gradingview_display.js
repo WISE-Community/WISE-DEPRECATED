@@ -821,7 +821,7 @@ View.prototype.displayStudentUploadedFiles = function() {
 	};
 	
 	var workgroupsInClass = this.userAndClassInfo.getWorkgroupIdsInClass().join(":");
-	this.connectionManager.request('POST', 1, this.getConfig().getConfigParam("viewStudentAssetsUrl"), {forward:'assetmanager', workgroups:workgroupsInClass, command: 'assetList'}, function(txt,xml,obj){displayStudentAssets(txt,obj);}, this);	
+	this.connectionManager.request('GET', 1, this.getConfig().getConfigParam("studentAssetManagerURL"), {forward:'assetmanager', workgroups:workgroupsInClass, command: 'assetList'}, function(txt,xml,obj){displayStudentAssets(txt,obj);}, this);
 };
 
 /**
@@ -1226,7 +1226,7 @@ View.prototype.displayGradeByStepGradingPage = function(stepNumber, nodeId) {
  */
 View.prototype.getWorkForNodeId = function(nodeId) {
 	//get the url for retrieving student data
-	var getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl');
+	var studentDataURL = this.getConfig().getConfigParam('studentDataURL');
 	
 	var runId = this.getConfig().getConfigParam('runId');
 	var grading = true;
@@ -1239,7 +1239,7 @@ View.prototype.getWorkForNodeId = function(nodeId) {
 	userIds = workgroupIds.join(':');
 	
 	//create the GET params for retrieving the student data
-	var getStudentDataUrlWithParams = getStudentDataUrl + 
+	var studentDataURLWithParams = studentDataURL +
 		"?nodeIds=" + nodeId +
 		"&userId=" + userIds + 
 		"&grading=true" + 
@@ -1248,7 +1248,7 @@ View.prototype.getWorkForNodeId = function(nodeId) {
 		"&useCachedWork=false";
 	
 	//make the request to retrieve the student data
-	this.connectionManager.request('GET', 1, getStudentDataUrlWithParams, null, this.getWorkForNodeIdCallback, [this, nodeId], this.getWorkForNodeIdCallbackFail);
+	this.connectionManager.request('GET', 1, studentDataURLWithParams, null, this.getWorkForNodeIdCallback, [this, nodeId], this.getWorkForNodeIdCallbackFail);
 
 };
 
@@ -3251,7 +3251,7 @@ View.prototype.displayGradeByTeamGradingPage = function(workgroupId) {
  */
 View.prototype.getWorkForWorkgroupId = function(workgroupId) {
 	//get the url for retrieving student data
-	var getStudentDataUrl = this.getConfig().getConfigParam('getStudentDataUrl');
+	var studentDataURL = this.getConfig().getConfigParam('studentDataURL');
 	
 	var runId = this.getConfig().getConfigParam('runId');
 	var grading = true;
@@ -3262,7 +3262,7 @@ View.prototype.getWorkForWorkgroupId = function(workgroupId) {
 	nodeIds = nodeIds.join(':');
 	
 	//create the GET params for retrieving the student data
-	var getStudentDataUrlWithParams = getStudentDataUrl + 
+	var studentDataURLWithParams = studentDataURL +
 		"?userId=" + workgroupId + 
 		"&grading=true" + 
 		"&runId=" + runId + 
@@ -3271,7 +3271,7 @@ View.prototype.getWorkForWorkgroupId = function(workgroupId) {
 		"&useCachedWork=false";
 	
 	//make the request to retrieve the student data
-	this.connectionManager.request('GET', 1, getStudentDataUrlWithParams, null, this.getWorkForWorkgroupIdCallback, [this, workgroupId], this.getWorkForWorkgroupIdCallbackFail);
+	this.connectionManager.request('GET', 1, studentDataURLWithParams, null, this.getWorkForWorkgroupIdCallback, [this, workgroupId], this.getWorkForWorkgroupIdCallbackFail);
 };
 
 /**
@@ -6234,7 +6234,7 @@ function enlargeMS(divId){
  */
 function refresh() {
 	lock();	
-	render(this.contentURL, this.userURL, this.getDataUrl, this.contentBaseUrl, this.annotationsURL, this.annotationsURL, this.runId, this.getFlagsUrl, this.postFlagsUrl);
+	render(this.contentURL, this.userURL, this.getDataUrl, this.contentBaseUrl, this.annotationsURL, this.annotationsURL, this.runId, this.flagsURL, this.flagsURL);
 }
 
 function removejscssfile(filename, filetype){

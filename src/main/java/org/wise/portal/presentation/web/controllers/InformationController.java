@@ -426,7 +426,7 @@ public class InformationController {
 		String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
     	String cRaterRequestURL = wiseBaseURL + "/cRater.html?type=cRater";  // the url to make CRater requests
-		String getUserInfoUrl = wiseBaseURL + "/request/info.html?action=getUserInfo";
+		String getUserInfoURL = wiseBaseURL + "/request/info.html?action=getUserInfo";
 
 		//get the context path e.g. /wise
 		String contextPath = request.getContextPath();
@@ -469,63 +469,48 @@ public class InformationController {
 				periodId = periodGroup.getId();
 				workgroupId = workgroup.getId();
 			}
-			
+
 			//get the grading type (step or team)
 			String gradingType = request.getParameter("gradingType");
 			
 			//get the boolean whether to get revisions
 			String getRevisions = request.getParameter("getRevisions");
 			
-			//get the url to get student data
-			String getStudentDataUrl = wiseBaseURL + "/studentData.html";
+			// the url to get/post student data
+			String studentDataURL = wiseBaseURL + "/studentData.html";
 			
-			//get the url to post student data
-			String postStudentDataUrl = wiseBaseURL + "/studentData.html";
-
 			// URL to get/post annotations
-	    	String annotationsURL = wiseBaseURL + "/annotation.html?type=annotation&runId=" + run.getId().toString();
+	    	String annotationsURL = wiseBaseURL + "/annotation.html?type=annotation&runId=" + runId;
 
 			//get the url to get peer review work
 			String getPeerReviewUrl = wiseBaseURL + "/peerReview.html?type=peerreview";
 
-	    	//get the url to get idea basket data
-	    	String getIdeaBasketUrl = wiseBaseURL + "/ideaBasket.html?runId=" + run.getId().toString();
+	    	//get the url to get/post idea basket data
+	    	String ideaBasketURL = wiseBaseURL + "/ideaBasket.html?runId=" + runId + "&projectId=" + run.getProject().getId().toString();
 	    	
-	    	//get the url to post idea basket data
-	    	String postIdeaBasketUrl = wiseBaseURL + "/ideaBasket.html?runId=" + run.getId().toString() + "&projectId=" + run.getProject().getId().toString();
-
 	    	if (periodId != null) {
 	    		//add the period id if it is available
-	    		getIdeaBasketUrl += "&periodId=" + periodId;
-	    		postIdeaBasketUrl += "&periodId=" + periodId;
+	    		ideaBasketURL += "&periodId=" + periodId;
 	    	}
 
 	    	if (workgroupId != null) {
-	    		getIdeaBasketUrl += "&workgroupId=" + workgroupId;
-	    		postIdeaBasketUrl += "&workgroupId=" + workgroupId;
+	    		ideaBasketURL += "&workgroupId=" + workgroupId;
 	    	}
 
-	    	//get the url to get portfolio data
-	    	String getPortfolioUrl = wiseBaseURL + "/portfolio.html?runId=" + run.getId().toString();
-	    	
-	    	//get the url to post portfolio data
-	    	String postPortfolioUrl = wiseBaseURL + "/portfolio.html?runId=" + run.getId().toString() + "&projectId=" + run.getProject().getId().toString();
+            //get the url to get/post portfolio data
+            String portfolioURL = wiseBaseURL + "/portfolio.html?runId=" + runId;
 
 	    	if (periodId != null) {
 	    		//add the period id if it is available
-	    		getPortfolioUrl += "&periodId=" + periodId;
-	    		postPortfolioUrl += "&periodId=" + periodId;
+                portfolioURL += "&periodId=" + periodId;
 	    	}
 
 	    	if (workgroupId != null) {
-	    		getPortfolioUrl += "&workgroupId=" + workgroupId;
-	    		postPortfolioUrl += "&workgroupId=" + workgroupId;
+                portfolioURL += "&periodId=" + periodId;
 	    	}
 	    	
 	    	//get the url to get student assets
-	    	String studentAssetManagerUrl = wiseBaseURL + "/assetManager.html?type=studentAssetManager&runId=" + run.getId().toString();
-
-	    	String viewStudentAssetsUrl = wiseBaseURL + "/assetManager.html?type=viewStudentAssets&runId=" + run.getId().toString();
+	    	String studentAssetManagerURL = wiseBaseURL + "/assetManager.html?type=studentAssetManager&runId=" + runId;
 
 			// Set the post level if specified in the run
 			Integer postLevel = run.getPostLevel();
@@ -553,30 +538,24 @@ public class InformationController {
 			String runStatusUrl = wiseBaseURL + "/runStatus.html";
 
             //get the url to get flags
-            String getFlagsUrl = wiseBaseURL + "/annotation.html?type=flag&runId=" + run.getId().toString();
+            String flagsURL = wiseBaseURL + "/annotation.html?type=flag&runId=" + runId;
 
             //get the url to get inappropriate flags
-            String getInappropriateFlagsUrl = wiseBaseURL + "/annotation.html?type=inappropriateFlag&runId=" + run.getId().toString();
+            String getInappropriateFlagsUrl = wiseBaseURL + "/annotation.html?type=inappropriateFlag&runId=" + runId;
 
             //put all the config params into the json object
 			try {
 				config.put("contextPath", contextPath);
-				config.put("getFlagsUrl", getFlagsUrl);
+				config.put("flagsURL", flagsURL);
 				config.put("getInappropriateFlagsUrl", getInappropriateFlagsUrl);
 				config.put("annotationsURL", annotationsURL);
-				config.put("getStudentDataUrl", getStudentDataUrl);
-				config.put("postStudentDataUrl", postStudentDataUrl);
-				config.put("studentDataURL", getStudentDataUrl);
+				config.put("studentDataURL", studentDataURL);
 				config.put("gradingType", gradingType);
 				config.put("getRevisions", getRevisions);
 				config.put("getPeerReviewUrl", getPeerReviewUrl);
-				config.put("getIdeaBasketUrl", getIdeaBasketUrl);
-				config.put("postIdeaBasketUrl", postIdeaBasketUrl);
-				config.put("getPortfolioUrl", getPortfolioUrl);
-				config.put("postPortfolioUrl", postPortfolioUrl);
-				config.put("studentAssetManagerUrl", studentAssetManagerUrl);
-                config.put("studentAssetManagerURL", studentAssetManagerUrl);
-				config.put("viewStudentAssetsUrl", viewStudentAssetsUrl);
+				config.put("ideaBasketURL", ideaBasketURL);
+				config.put("portfolioURL", portfolioURL);
+                config.put("studentAssetManagerURL", studentAssetManagerURL);
 				config.put("runInfo", run.getInfo());
 				config.put("isRealTimeEnabled", true);  // TODO: make this run-specific setting
                 config.put("webSocketURL", webSocketURL);
@@ -598,32 +577,23 @@ public class InformationController {
 				
 				//add the config fields specific to the teacher grading
 				if (mode != null && mode.equals("grading")) {
-                    //get the url for premade comments
-                    String getPremadeCommentsUrl = wiseBaseURL + "/teacher/grading/premadeComments.html?action=getData";
-                    config.put("getPremadeCommentsUrl", getPremadeCommentsUrl);
-
-                    //get the url for premade comments
-                    String postPremadeCommentsUrl = wiseBaseURL + "/teacher/grading/premadeComments.html?action=postData";
-					config.put("postPremadeCommentsUrl", postPremadeCommentsUrl);
-
-
-                    //get the url to post flags
-                    String postFlagsUrl = wiseBaseURL + "/annotation.html?type=flag&runId=" + run.getId().toString();
-                    config.put("postFlagsUrl", postFlagsUrl);
+                    // URL for get/post premade comments
+                    String premadeCommentsURL = wiseBaseURL + "/teacher/grading/premadeComments.html";
+                    config.put("premadeCommentsURL", premadeCommentsURL);
 
                     //get the url to post inappropriate flags
-                    String postInappropriateFlagsUrl = wiseBaseURL + "/annotation.html?type=inappropriateFlag&runId=" + run.getId().toString();
+                    String postInappropriateFlagsUrl = wiseBaseURL + "/annotation.html?type=inappropriateFlag&runId=" + runId;
 					config.put("postInappropriateFlagsUrl", postInappropriateFlagsUrl);
 
                     //get the url for xls export
-                    String getXLSExportUrl = wiseBaseURL + "/getExport.html?type=xlsexport&runId=" + run.getId().toString();
+                    String getXLSExportUrl = wiseBaseURL + "/getExport.html?type=xlsexport&runId=" + runId;
                     config.put("getXLSExportUrl", getXLSExportUrl);
 
                     //get the url for special export
-                    String getSpecialExportUrl = wiseBaseURL + "/getSpecialExport.html?type=specialExport&runId=" + run.getId().toString();
+                    String getSpecialExportUrl = wiseBaseURL + "/getSpecialExport.html?type=specialExport&runId=" + runId;
                     config.put("getSpecialExportUrl", getSpecialExportUrl);
 
-                    String getStudentListUrl = wiseBaseURL + "/teacher/management/studentlistexcel.html?runId=" + run.getId().toString();
+                    String getStudentListUrl = wiseBaseURL + "/teacher/management/studentlistexcel.html?runId=" + runId;
 					config.put("getStudentListUrl", getStudentListUrl);
 				}
 			} catch (JSONException e) {
@@ -647,7 +617,7 @@ public class InformationController {
 		String getContentBaseUrl = getContentUrl.substring(0, lastIndexOfSlash) + "/";
 		
 		if (mode == null || !mode.equals("preview")) {
-			getUserInfoUrl += "&runId=" + runId;
+			getUserInfoURL += "&runId=" + runId;
 		}
 
         if (mode == null) {
@@ -693,7 +663,7 @@ public class InformationController {
 			config.put("parentProjectId", parentProjectId);
 			config.put("projectMetaDataUrl", projectMetaDataUrl);
 			if (!"preview".equals(mode)) {
-				config.put("getUserInfoUrl", getUserInfoUrl);
+				config.put("getUserInfoURL", getUserInfoURL);
 			}
 			config.put("getContentUrl", getContentUrl);
             config.put("projectURL", getContentUrl);

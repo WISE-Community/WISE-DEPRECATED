@@ -100,7 +100,7 @@ View.prototype.getPremadeComments = function() {
 		//we have not retrieved premade comments before so we need to retrieve them
 		
 		//get the url that will retrieve the premade comments
-		var getPremadeCommentsUrl = this.getConfig().getConfigParam('getPremadeCommentsUrl');
+		var premadeCommentsURL = this.getConfig().getConfigParam('premadeCommentsURL');
 		
 		//callback when we have received the premade comments from the server
 		var getPremadeCommentsCallback = function(text, xml, args) {
@@ -133,7 +133,7 @@ View.prototype.getPremadeComments = function() {
 		}
 		
 		//make the request for the premade comments
-		this.connectionManager.request('GET', 1, getPremadeCommentsUrl, getPremadeCommentsArgs, getPremadeCommentsCallback, [this], getPremadeCommentsCallbackFail);
+		this.connectionManager.request('GET', 1, premadeCommentsURL, getPremadeCommentsArgs, getPremadeCommentsCallback, [this], getPremadeCommentsCallbackFail);
 	}
 };
 
@@ -163,7 +163,7 @@ View.prototype.getPremadeComments = function() {
  */
 View.prototype.postPremadeComments = function(premadeCommentAction, postPremadeCommentsCallback, premadeCommentListId, premadeCommentListLabel, premadeCommentId, premadeComment, isGlobal, premadeCommentListPositions, premadeCommentLabels, projectId) {
 	//get the url that will post the premade comment to the server
-	var postPremadeCommentsUrl = this.getConfig().getConfigParam('postPremadeCommentsUrl');
+	var premadeCommentsURL = this.getConfig().getConfigParam('premadeCommentsURL');
 	
 	//called when we fail to send the premade comment data to the server
 	var postPremadeCommentsCallbackFail = function(text, args) {
@@ -184,7 +184,7 @@ View.prototype.postPremadeComments = function(premadeCommentAction, postPremadeC
 	};
 	
 	//make the post to the server
-	this.connectionManager.request('POST', 1, postPremadeCommentsUrl, postPremadeCommentsArgs, postPremadeCommentsCallback, [this, postPremadeCommentsArgs], postPremadeCommentsCallbackFail);
+	this.connectionManager.request('POST', 1, premadeCommentsURL, postPremadeCommentsArgs, postPremadeCommentsCallback, [this, postPremadeCommentsArgs], postPremadeCommentsCallbackFail);
 };
 
 /**
