@@ -2197,6 +2197,43 @@ View.prototype.getLatestAnnotationValueFromValueArray = function(annotation, fie
 	return result;
 };
 
+View.prototype.getLatestMySystem2Score = function(nodeVisit) {
+    var score = null;
+    
+    if (nodeVisit != null) {
+        var nodeStates = nodeVisit.nodeStates;
+        
+        if (nodeStates != null) {
+            for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
+                var nodeState = nodeStates[ns];
+                
+                if (nodeState != null) {
+                    var response = nodeState.response;
+                    
+                    if (response != null) {
+                        var responseJSON = JSON.parse(response);
+                        
+                        if (responseJSON != null) {
+                            var rubricScore = responseJSON['MySystem.RubricScore'];
+                            
+                            if (rubricScore != null) {
+                                var lastScoreId = rubricScore['LAST_SCORE_ID'];
+                                
+                                if (lastScoreId != null) {
+                                    score = lastScoreId.score;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    return score;
+};
+
 /* used to notify scriptloader that this script has finished loading */
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/view/view_utils.js');

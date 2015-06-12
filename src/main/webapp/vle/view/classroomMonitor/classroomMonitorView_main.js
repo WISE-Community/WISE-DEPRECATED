@@ -11179,7 +11179,13 @@ View.prototype.showAutoScoreDetailedDiv = function() {
                 }
                 
                 var nodeDiv = $('<div>');
-                nodeDiv.html(averageAutoScore + ' (' + Math.floor(averageAutoScorePercentage * 100) + '%) - ' + stepNumberAndTitle);
+                
+                if (averageAutoScorePercentage == null) {
+                    nodeDiv.html(averageAutoScore + ' (N/A) - ' + stepNumberAndTitle);
+                } else {
+                    nodeDiv.html(averageAutoScore + ' (' + Math.floor(averageAutoScorePercentage * 100) + '%) - ' + stepNumberAndTitle);
+                }
+                
                 nodeDiv.css('cursor', 'pointer');
                 nodeDiv.click({thisView: this, nodeId: nodeId}, function(event) {
                     var thisView = event.data.thisView;
@@ -11498,7 +11504,11 @@ View.prototype.showMainSummaryReportDiv = function() {
                     averageAutoScore = averageAutoScore + '/' + maxAutoScore;
                 }
                 
-                $('#autoScoreDiv').append(averageAutoScore + ' (' + Math.floor(averageAutoScorePercentage * 100) + '%) - ' + stepNumberAndTitle);
+                if (averageAutoScorePercentage == null) {
+                    $('#autoScoreDiv').append(averageAutoScore + ' (N/A) - ' + stepNumberAndTitle);
+                } else {
+                    $('#autoScoreDiv').append(averageAutoScore + ' (' + Math.floor(averageAutoScorePercentage * 100) + '%) - ' + stepNumberAndTitle);
+                }
             }
         }
     }
@@ -11709,18 +11719,27 @@ View.prototype.sortByAverageAutoScorePercentage = function(objectA, objectB) {
     var aAverageAutoScorePercentage = objectA.averageAutoScorePercentage;
     var bAverageAutoScorePercentage = objectB.averageAutoScorePercentage;
     
-    if (aAverageAutoScorePercentage == null) {
-        aAverageAutoScorePercentage = 0;
-    }
-    
-    if (bAverageAutoScorePercentage == null) {
-        bAverageAutoScorePercentage = 0;
-    }
-    
-    if (aAverageAutoScorePercentage < bAverageAutoScorePercentage) {
-        result = -1;
-    } else if (aAverageAutoScorePercentage > bAverageAutoScorePercentage) {
+    if (aAverageAutoScorePercentage == null && bAverageAutoScorePercentage == null) {
+        
+        var aAverageAutoScore = objectA.averageAutoScore;
+        var bAverageAutoScore = objectB.averageAutoScore;
+        
+        if (aAverageAutoScore < bAverageAutoScore) {
+            result = -1;
+        } else if (aAverageAutoScore > bAverageAutoScore) {
+            result = 1;
+        }
+    } else if(aAverageAutoScorePercentage != null && bAverageAutoScorePercentage == null) {
         result = 1;
+    } else if(aAverageAutoScorePercentage == null && bAverageAutoScorePercentage != null) {
+        result = -1;
+    } else if(aAverageAutoScorePercentage != null && bAverageAutoScorePercentage != null) {
+        
+        if (aAverageAutoScorePercentage < bAverageAutoScorePercentage) {
+            result = -1;
+        } else if (aAverageAutoScorePercentage > bAverageAutoScorePercentage) {
+            result = 1;
+        }
     }
     
     return result;
@@ -11980,6 +11999,14 @@ View.prototype.calculateAutoScoreForNode = function(summaryReport, nodeId) {
             autoGradedNodeIds = this.getAutoGradedNodeIds(annotations.annotationsArray);
         }
         
+        var nodeType = null;
+        
+        var projectNode = this.getProject().getNodeById(nodeId);
+        
+        if (projectNode != null) {
+            nodeType = projectNode.type;
+        }
+        
         var periodIds = this.getUserAndClassInfo().getPeriodIds();
         periodIds.unshift('all');
         
@@ -12047,10 +12074,77 @@ View.prototype.calculateAutoScoreForNode = function(summaryReport, nodeId) {
                                             }
                                             */
                                             
-                                            workgroup.autoScore = autoScore;
+                                            if (workgroup != null) {
+                                                workgroup.autoScore = autoScore;
+                                            }
                                         }
                                         
                                         break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (autoGradedScoreCount != 0) {
+                    periodForNode.averageAutoScore = autoGradedScoreTotal / autoGradedScoreCount;
+                    
+                    if (periodForNode.maxAutoScore != null && periodForNode.maxAutoScore != null) {
+                        periodForNode.averageAutoScorePercentage = periodForNode.averageAutoScore / periodForNode.maxAutoScore;
+                    }
+                } else {
+                    periodForNode.averageAutoScore = null;
+                    periodForNode.maxAutoScore = null;
+                }
+            } else if(nodeType === 'Mysystem2Node') {
+                
+                var rawWorkForNodeId = this.getAllRawWorkByNodeId(nodeId);
+                
+                var autoGradedScoreTotal = 0;
+                var autoGradedScoreCount = 0;
+                
+                var workgroupIdsWithAutoGradedMySystem2 = [];
+                
+                for (var m = rawWorkForNodeId.length - 1; m >= 0; m--) {
+                    var work = rawWorkForNodeId[m];
+                    
+                    if (work != null) {
+                        var workgroupId = work.workgroupId;
+                        
+                        if (workgroupIdsWithAutoGradedMySystem2.indexOf(workgroupId) == -1) {
+                            
+                            var data = work.data;
+                            
+                            if (data != null) {
+                                var autoScore = this.getLatestMySystem2Score(data);
+                                
+                                if (autoScore != null) {
+                                    
+                                    autoGradedScoreTotal += autoScore;
+                                    autoGradedScoreCount++;
+                                    
+                                    workgroupIdsWithAutoGradedMySystem2.push(workgroupId);
+                                    
+                                    var workgroups = periodForNode.workgroups;
+                                    
+                                    if (workgroups != null) {
+                                        var workgroup = workgroups[workgroupId];
+                                        
+                                        /*
+                                        if (workgroup == null) {
+                                            // make a workgroup object
+                                            workgroup = {};
+                                            workgroup.workgroupId = toWorkgroup;
+                                            workgroup.nodeVisitCount = 0;
+                                            workgroup.revisionCount = 0;
+                                            workgroup.timeSpent = 0;
+                                        }
+                                        */
+                                        
+                                        if (workgroup != null) {
+                                            workgroup.autoScore = autoScore;
+                                        }
                                     }
                                 }
                             }
@@ -12172,6 +12266,33 @@ View.prototype.calculateSortedNodesArrays = function(summaryReport) {
     }
     
     return summaryReport;
+};
+
+View.prototype.getAllRawWorkByNodeId = function(nodeId) {
+    
+    var rawWorkByNodeId = [];
+    
+    var allRawWork = this.allRawWork;
+    
+    if (allRawWork != null) {
+        for (var w = 0; w < allRawWork.length; w++) {
+            var rawWork = allRawWork[w];
+            
+            if (rawWork != null) {
+                var data = rawWork.data;
+                
+                if (data != null) {
+                    var rawWorkNodeId = data.nodeId;
+                    
+                    if (nodeId === rawWorkNodeId) {
+                        rawWorkByNodeId.push(rawWork);
+                    }
+                }
+            }
+        }
+    }
+    
+    return rawWorkByNodeId;
 };
 
 //used to notify scriptloader that this script has finished loading
