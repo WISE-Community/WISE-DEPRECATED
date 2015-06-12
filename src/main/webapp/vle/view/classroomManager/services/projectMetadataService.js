@@ -7,7 +7,7 @@ define(['angular'], function(angular) {
 		this.maxScores = null;
 		
 		this.retrieveProjectMetadata = function() {
-			var projectMetaDataUrl = ConfigService.getConfigParam('projectMetaDataUrl');
+			var projectMetadataURL = ConfigService.getConfigParam('projectMetadataURL');
 			var projectId = ConfigService.getConfigParam('projectId');
 			
 			var requestConfig = {
@@ -17,19 +17,19 @@ define(['angular'], function(angular) {
 				}
 			};
 			
-			return $http.get(projectMetaDataUrl, requestConfig).then(angular.bind(this, function(result) {
+			return $http.get(projectMetadataURL, requestConfig).then(angular.bind(this, function(result) {
 				var projectJSON = result.data;
 				this.projectMetadata = projectJSON;
 				
 				var projectMetadata = this.projectMetadata;
 				
-				if(projectMetadata != null) {
+				if (projectMetadata != null) {
 					var maxScoresString = projectMetadata.maxScores;
 					
-					if(maxScoresString != null) {
+					if (maxScoresString != null) {
 						var maxScores = angular.fromJson(maxScoresString);
 						
-						if(maxScores != null) {
+						if (maxScores != null) {
 							this.maxScores = maxScores;
 						}				
 					}
@@ -44,15 +44,15 @@ define(['angular'], function(angular) {
 			
 			var maxScores = this.maxScores;
 			
-			if(maxScores != null) {
-				for(var x=0; x<maxScores.length; x++) {
+			if (maxScores != null) {
+				for (var x = 0; x < maxScores.length; x++) {
 					var tempMaxScore = maxScores[x];
 					
-					if(tempMaxScore != null) {
+					if (tempMaxScore != null) {
 						var tempMaxScoreValue = tempMaxScore.maxScoreValue;
 						var tempNodeId = tempMaxScore.nodeId;
 						
-						if(nodeId == tempNodeId) {
+						if (nodeId == tempNodeId) {
 							maxScore = tempMaxScoreValue;
 							break;
 						}

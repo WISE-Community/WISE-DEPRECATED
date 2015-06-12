@@ -1904,7 +1904,7 @@ OPENRESPONSE.prototype.retrieveTeacherReview = function() {
  */
 OPENRESPONSE.prototype.retrieveOtherStudentWork = function() {
 	//get the url
-	var getPeerReviewUrl = this.view.getConfig().getConfigParam('getPeerReviewUrl');
+	var peerReviewURL = this.view.getConfig().getConfigParam('peerReviewURL');
 	
 	//get the parameters to retrieve the other student work
 	var action = "studentRequest";
@@ -1919,7 +1919,7 @@ OPENRESPONSE.prototype.retrieveOtherStudentWork = function() {
 	var classmateWorkgroupIds = this.view.getUserAndClassInfo().getClassmateIdsByPeriodId(periodId).split(':').toString();
 	
 	//compile the parameters into an object for cleanliness
-	var getPeerReviewUrlArgs = {
+	var peerReviewURLArgs = {
 			action:action,
 			runId:runId,
 			workgroupId:workgroupId,
@@ -1933,7 +1933,7 @@ OPENRESPONSE.prototype.retrieveOtherStudentWork = function() {
 	};
 	
 	//make the request
-	this.view.connectionManager.request('GET', 1, getPeerReviewUrl, getPeerReviewUrlArgs, this.retrieveOtherStudentWorkCallback, [this]);
+	this.view.connectionManager.request('GET', 1, peerReviewURL, peerReviewURLArgs, this.retrieveOtherStudentWorkCallback, [this]);
 };
 
 /**
@@ -2092,7 +2092,7 @@ OPENRESPONSE.prototype.retrieveOtherStudentWorkCallback = function(text, xml, ar
  */
 OPENRESPONSE.prototype.retrieveAnnotationAndWork = function() {
 	//get the url
-	var getPeerReviewUrl = this.view.getConfig().getConfigParam('getPeerReviewUrl');
+	var peerReviewURL = this.view.getConfig().getConfigParam('peerReviewURL');
 	
 	//get the parameters
 	var action = "studentRequest";
@@ -2104,7 +2104,7 @@ OPENRESPONSE.prototype.retrieveAnnotationAndWork = function() {
 	var classmateWorkgroupIds = this.view.getUserAndClassInfo().getWorkgroupIdsInClass().toString();
 	
 	//compile the parameters into an object for cleanliness
-	var getPeerReviewUrlArgs = {
+	var peerReviewURLArgs = {
 			action:action,
 			runId:runId,
 			workgroupId:workgroupId,
@@ -2115,7 +2115,7 @@ OPENRESPONSE.prototype.retrieveAnnotationAndWork = function() {
 	};
 	
 	//make the request
-	this.view.connectionManager.request('GET', 1, getPeerReviewUrl, getPeerReviewUrlArgs, this.retrieveAnnotationAndWorkCallback, [this]);
+	this.view.connectionManager.request('GET', 1, peerReviewURL, peerReviewURLArgs, this.retrieveAnnotationAndWorkCallback, [this]);
 };
 
 /**

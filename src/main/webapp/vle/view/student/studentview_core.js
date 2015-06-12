@@ -122,7 +122,7 @@ View.prototype.startVLE = function(){
 	this.setAnnotations(new Annotations());
 	
 	/* load the project based on new config object parameters, lazy load */
-	this.loadProject(this.config.getConfigParam('getContentUrl'), this.config.getConfigParam('getContentBaseUrl'), true);
+	this.loadProject(this.config.getConfigParam('projectURL'), this.config.getConfigParam('projectBaseURL'), true);
 	
 	//check if real time is enabled
 	this.isRealTimeEnabled = this.checkRealTimeEnabled();
@@ -539,8 +539,8 @@ View.prototype.onThemeLoad = function(){
 	
 	/* load learner data based on config object parameters */
 	if (this.config.getConfigParam('mode') == "run") {
-		this.notificationManager.notify('vleConfig.mode is run, getUserInfoURL:' + this.config.getConfigParam('getUserInfoURL'), 4);
-		this.loadLearnerData(this.config.getConfigParam('getUserInfoURL'));
+		this.notificationManager.notify('vleConfig.mode is run, userInfoURL:' + this.config.getConfigParam('userInfoURL'), 4);
+		this.loadLearnerData(this.config.getConfigParam('userInfoURL'));
 	} else if (this.config.getConfigParam('mode') === "preview") {
 		//if preview mode, only get the user and class info and not learner data
 		this.loadUserAndClassInfo(null);  // in preview mode, user and class info object is an empty object.

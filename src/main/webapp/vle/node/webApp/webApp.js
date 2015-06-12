@@ -189,7 +189,7 @@ WebApp.prototype.render = function() {
 	iframe.width = "100%"; //this.content.width;
 	iframe.height = "100%";//this.content.height;
 	
-	var mypath = this.view.config.getConfigParam("getContentBaseUrl") + "assets/";
+	var mypath = this.view.config.getConfigParam("projectBaseURL") + "assets/";
 	
 	//NOTE: I do this last in proof of concept to detect if there were any surprise crashes in the above 
 	if (this.content.url != null && this.content.url != "") {

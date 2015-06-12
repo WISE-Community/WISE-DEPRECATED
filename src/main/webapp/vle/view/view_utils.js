@@ -32,9 +32,9 @@ View.prototype.getMaxScoresSum = function(nodeIds) {
  */
 View.prototype.retrieveProjectMetaData = function() {
 	//get the url to retrieve the project meta data
-	var projectMetaDataUrl = this.getConfig().getConfigParam('projectMetaDataUrl');
+	var projectMetadataURL = this.getConfig().getConfigParam('projectMetadataURL');
 	
-	if(projectMetaDataUrl && projectMetaDataUrl != ""){
+	if(projectMetadataURL && projectMetadataURL != ""){
 		var projectMetaDataCallbackSuccess = function(text, xml, args) {
 			var thisView = args[0];
 			
@@ -58,11 +58,11 @@ View.prototype.retrieveProjectMetaData = function() {
 			eventManager.fire("retrieveProjectMetaDataCompleted");
 		};
 		
-		var projectMetaDataUrlParams = {
+		var projectMetadataURLParams = {
 				command:"getProjectMetaData",
 				projectId:this.getConfig().getConfigParam("projectId")
 		};
-		this.connectionManager.request('GET', 1, projectMetaDataUrl, projectMetaDataUrlParams, projectMetaDataCallbackSuccess, [this], projectMetaDataCallbackFailure);
+		this.connectionManager.request('GET', 1, projectMetadataURL, projectMetadataURLParams, projectMetaDataCallbackSuccess, [this], projectMetaDataCallbackFailure);
 	};
 };
 
@@ -289,7 +289,7 @@ View.prototype.saveMaxScore = function(nodeId, maxScoreValue) {
 	var postMaxScoreParams = {command: "postMaxScore", projectId: this.getProjectId(), nodeId: nodeId, maxScoreValue: maxScoreValue};
 	
 	//send the new max score data back to the server
-	this.connectionManager.request('POST', 1, this.getConfig().getConfigParam('projectMetaDataUrl'), postMaxScoreParams, postMaxScoreCallback, [this, nodeId], postMaxScoreCallbackFail);
+	this.connectionManager.request('POST', 1, this.getConfig().getConfigParam('projectMetadataURL'), postMaxScoreParams, postMaxScoreCallback, [this, nodeId], postMaxScoreCallbackFail);
 };
 
 /**

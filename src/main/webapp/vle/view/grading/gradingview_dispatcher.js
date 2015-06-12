@@ -13,7 +13,7 @@ View.prototype.gradingDispatcher = function(type, args, obj) {
 		obj.getGradingConfig(args[0]);
 	} else if(type=='getGradingConfigCompleted') {
 		obj.retrieveLocales("main");		
-		obj.loadProject(obj.config.getConfigParam('getContentUrl'), obj.config.getConfigParam('getContentBaseUrl'), true);
+		obj.loadProject(obj.config.getConfigParam('projectURL'), obj.config.getConfigParam('projectBaseURL'), true);
 		obj.initializeSession();
 	} else if(type=='loadingProjectCompleted') {
 		obj.getStudentUserInfo();

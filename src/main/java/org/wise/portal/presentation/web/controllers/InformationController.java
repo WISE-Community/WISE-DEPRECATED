@@ -98,8 +98,9 @@ public class InformationController {
 	 * @throws ObjectNotFoundException 
 	 * @throws NumberFormatException 
 	 */
-    @RequestMapping("/request/info.html?action=getUserInfo")
-	private void handleGetUserInfo(HttpServletRequest request, HttpServletResponse response) throws IOException, NumberFormatException, ObjectNotFoundException{
+    @RequestMapping("/userinfo.html")
+	private void handleGetUserInfo(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, NumberFormatException, ObjectNotFoundException{
 		// make sure that the user is logged in
 		// check if user is logged in
 		if (ControllerUtil.getSignedInUser() == null) {
@@ -396,7 +397,7 @@ public class InformationController {
 	 * @throws ObjectNotFoundException
 	 * @throws IOException
 	 */
-    @RequestMapping("/request/info.html?action=getVLEConfig")
+    @RequestMapping("/vleconfig.html")
 	private void handleGetConfig(HttpServletRequest request, HttpServletResponse response)
 	        throws ObjectNotFoundException, IOException {
 		JSONObject config = new JSONObject();
@@ -410,7 +411,6 @@ public class InformationController {
 		String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
     	String cRaterRequestURL = wiseBaseURL + "/cRater.html?type=cRater";  // the url to make CRater requests
-		String getUserInfoURL = wiseBaseURL + "/request/info.html?action=getUserInfo";
 
 		//get the context path e.g. /wise
 		String contextPath = request.getContextPath();
@@ -467,7 +467,7 @@ public class InformationController {
 	    	String annotationsURL = wiseBaseURL + "/annotation.html?type=annotation&runId=" + runId;
 
 			//get the url to get peer review work
-			String getPeerReviewUrl = wiseBaseURL + "/peerReview.html?type=peerreview";
+			String peerReviewURL = wiseBaseURL + "/peerReview.html?type=peerreview";
 
 	    	//get the url to get/post idea basket data
 	    	String ideaBasketURL = wiseBaseURL + "/ideaBasket.html?runId=" + runId + "&projectId=" + run.getProject().getId().toString();
@@ -512,7 +512,7 @@ public class InformationController {
 			String studentStatusURL = wiseBaseURL + "/studentStatus.html";
 			
 			//get the url for sending and receiving run statuses
-			String runStatusUrl = wiseBaseURL + "/runStatus.html";
+			String runStatusURL = wiseBaseURL + "/runStatus.html";
 
             //get the url to get flags
             String flagsURL = wiseBaseURL + "/annotation.html?type=flag&runId=" + runId;
@@ -529,7 +529,7 @@ public class InformationController {
 				config.put("studentDataURL", studentDataURL);
 				config.put("gradingType", gradingType);
 				config.put("getRevisions", getRevisions);
-				config.put("getPeerReviewUrl", getPeerReviewUrl);
+				config.put("peerReviewURL", peerReviewURL);
 				config.put("ideaBasketURL", ideaBasketURL);
 				config.put("portfolioURL", portfolioURL);
                 config.put("studentAssetManagerURL", studentAssetManagerURL);
@@ -537,7 +537,7 @@ public class InformationController {
 				config.put("isRealTimeEnabled", true);  // TODO: make this run-specific setting
                 config.put("webSocketURL", webSocketURL);
 				config.put("studentStatusURL", studentStatusURL);
-				config.put("runStatusUrl", runStatusUrl);
+				config.put("runStatusURL", runStatusURL);
 				
 				if (postLevel != null) {
 					config.put("postLevel", postLevel);
@@ -574,23 +574,21 @@ public class InformationController {
 		}
 		
 		// set the content url 
-		String getContentUrl = curriculumBaseWWW + rawProjectUrl;
+		String projectURL = curriculumBaseWWW + rawProjectUrl;
 
 		// get location of last separator in url 
-		int lastIndexOfSlash = getContentUrl.lastIndexOf("/");
+		int lastIndexOfSlash = projectURL.lastIndexOf("/");
 		if (lastIndexOfSlash == -1) { 
-			lastIndexOfSlash = getContentUrl.lastIndexOf("\\");
+			lastIndexOfSlash = projectURL.lastIndexOf("\\");
 		}
+
+        // set the projectBaseURL based on the projectURL
+        String projectBaseURL = projectURL.substring(0, lastIndexOfSlash) + "/";
+
+
+        // get the url for the *.project.meta.json file
+		String projectMetadataURL = wiseBaseURL + "/metadata.html";
 		
-		// get the url for the *.project.meta.json file 
-		String projectMetaDataUrl = wiseBaseURL + "/metadata.html";
-		
-		// set the contentbase based on the contenturl 
-		String getContentBaseUrl = getContentUrl.substring(0, lastIndexOfSlash) + "/";
-		
-		if (mode == null || !mode.equals("preview")) {
-			getUserInfoURL += "&runId=" + runId;
-		}
 
         if (mode == null) {
             mode = "preview";
@@ -633,14 +631,14 @@ public class InformationController {
 			config.put("mode", mode);
 			config.put("projectId", projectIdStr);
 			config.put("parentProjectId", parentProjectId);
-			config.put("projectMetaDataUrl", projectMetaDataUrl);
-			if (!"preview".equals(mode)) {
-				config.put("getUserInfoURL", getUserInfoURL);
+			config.put("projectMetadataURL", projectMetadataURL);
+			if (mode == null || !"preview".equals(mode)) {
+                String userInfoURL = wiseBaseURL + "/userinfo.html?runId=" + runId;
+				config.put("userInfoURL", userInfoURL);
 			}
-			config.put("getContentUrl", getContentUrl);
-            config.put("projectURL", getContentUrl);
-			config.put("getContentBaseUrl", getContentBaseUrl);
-            config.put("projectBaseURL", getContentBaseUrl);
+
+            config.put("projectURL", projectURL);
+            config.put("projectBaseURL", projectBaseURL);
             config.put("studentUploadsBaseURL", studentUploadsBaseWWW);
 			config.put("theme", "WISE");
             config.put("cRaterRequestURL", cRaterRequestURL);

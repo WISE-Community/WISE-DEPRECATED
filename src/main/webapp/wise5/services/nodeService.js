@@ -72,7 +72,7 @@ define(['configService', 'studentDataService'], function(configService, studentD
             if (contentString != null) {
                 
                 // get the content base url e.g. http://wise.berkeley.edu/curriculum/123456
-                var contentBaseUrl = ConfigService.getConfigParam('getContentBaseUrl');
+                var contentBaseUrl = ConfigService.getConfigParam('projectBaseURL');
                 
                 // replace instances of 'assets/myimage.jpg' with 'http://wise.berkeley.edu/curriculum/123456/assets/myimage.jpg'
                 contentString = contentString.replace(new RegExp('\'(\\.)*(/)*assets', 'g'), '\''+contentBaseUrl + 'assets');

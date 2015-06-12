@@ -142,7 +142,7 @@ View.prototype.displayHint = function(){
 	    var hintsStringPart2 = "";   // second part will be the content within each tab
 	    var hintsArr = hints.hintsArray;
 	    
-	    var contentBaseUrl = this.config.getConfigParam("getContentBaseUrl");
+	    var contentBaseUrl = this.config.getConfigParam("projectBaseURL");
 	    for (var i=0; i< hintsArr.length; i++) {
 	    	var currentHint = hintsArr[i];
 	    	var nextLink = '<span class="tabNext">'+this.getI18NString("hint_next")+'</span>';

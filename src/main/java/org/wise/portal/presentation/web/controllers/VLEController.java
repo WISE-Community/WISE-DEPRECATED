@@ -158,7 +158,7 @@ public class VLEController {
 			Run run) throws ObjectNotFoundException {
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 		String vleurl = wiseBaseURL + "/vle/vle.html";
-		String vleConfigUrl = wiseBaseURL + "/request/info.html?runId=" + run.getId() + "&action=getVLEConfig";
+		String vleConfigUrl = wiseBaseURL + "/vleconfig.html?runId=" + run.getId();
 
 		String previewRequest = request.getParameter("preview");
 		if (previewRequest != null && Boolean.valueOf(previewRequest)) {
@@ -201,7 +201,7 @@ public class VLEController {
         
         // get the vle config url
         String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-        String vleConfigUrl = wiseBaseURL + "/request/info.html?projectId=" + projectId + "&action=getVLEConfig&mode=preview";
+        String vleConfigUrl = wiseBaseURL + "/vleconfig.html?projectId=" + projectId + "&mode=preview";
         
         // set the view to the student vle
         ModelAndView modelAndView = new ModelAndView("student");

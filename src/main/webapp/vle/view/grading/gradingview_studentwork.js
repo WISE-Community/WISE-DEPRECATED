@@ -113,14 +113,14 @@ View.prototype.getPeerReviewWork = function() {
 	var action = "teacherRequest";
 	var runId = this.getConfig().getConfigParam('runId');
 	
-	var getPeerReviewUrlArgs = {
+	var peerReviewURLArgs = {
 			action:action,
 			runId:runId
 	};
 	
-	var getPeerReviewUrl = this.getConfig().getConfigParam('getPeerReviewUrl');
+	var peerReviewURL = this.getConfig().getConfigParam('peerReviewURL');
 	
-	this.connectionManager.request('GET', 1, getPeerReviewUrl, getPeerReviewUrlArgs, peerReviewCallback, [this]);
+	this.connectionManager.request('GET', 1, peerReviewURL, peerReviewURLArgs, peerReviewCallback, [this]);
 };
 
 /**

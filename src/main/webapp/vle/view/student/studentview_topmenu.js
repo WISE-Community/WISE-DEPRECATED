@@ -216,12 +216,12 @@ View.prototype.displayFlaggedWorkForNodeId = function(nodeId) {
 			flaggedWorkAnswers += "<div class='sectionHead'>" + team + " " + (y + 1) + " (" + anonymous + "):</div>";
 			flaggedWorkAnswers += "<div class='sectionContent'>";
 			if (node.type == "MySystemNode") {
-				var contentBaseUrl = this.config.getConfigParam('getContentBaseUrl');
+				var contentBaseUrl = this.config.getConfigParam('projectBaseURL');
 				var divId = "mysystemDiagram_"+flaggedWorkPostTime;
 				flaggedWorkAnswers += "<div id='"+divId+"' contentBaseUrl='"+contentBaseUrl+"' class='mysystem showallLatestWork' style=\"height:350px;\">" + flaggedWork + "</div>";
 			} else if (node.type == "SVGDrawNode") {
 				// TODO: remove (move to SVGDrawNode.js)
-	    		var contentBaseUrl = this.config.getConfigParam('getContentBaseUrl');
+	    		var contentBaseUrl = this.config.getConfigParam('projectBaseURL');
 				var divId = "svgDraw_"+flaggedWorkPostTime;
 				flaggedWork = node.translateStudentWork(flaggedWork);
 				var divStyle = "height:275px; width:375px; border:1px solid #aaa; background-color:#fff;";

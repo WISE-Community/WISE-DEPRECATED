@@ -9,9 +9,9 @@
  * runId - the id of the run
  * theme - currently only WISE is allowed
  * runInfoUrl - where to get run info
- * getUserInfoURL - where to get user information
- * getContentUrl - where the .project file is
- * getContentBaseUrl - base url of content
+ * userInfoURL - where to get user information
+ * projectURL - where the .project file is
+ * projectBaseURL - base url of content, directory containing project files
  * studentDataUrl - where to get/post student work
  * flagsUrl - where to get/post flags
  * annotationsURL - where to get/post annotations

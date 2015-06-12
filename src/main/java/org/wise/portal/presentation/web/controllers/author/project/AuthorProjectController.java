@@ -1388,7 +1388,7 @@ public class AuthorProjectController {
 		String contextPath = request.getContextPath();
 		
 		//get the url to get and post metadata
-		String projectMetaDataUrl = wiseBaseURL + "/metadata.html";
+		String projectMetadataURL = wiseBaseURL + "/metadata.html";
 
 		//get the url to make CRater requests
 		String cRaterRequestURL = wiseBaseURL + "/cRater.html?type=cRater";
@@ -1414,7 +1414,7 @@ public class AuthorProjectController {
 		try {
 			//set the config variables
 			config.put("username", username);
-			config.put("projectMetaDataUrl", projectMetaDataUrl);
+			config.put("projectMetadataURL", projectMetadataURL);
 			config.put("curriculumBaseUrl", curriculumBaseUrl);
 			config.put("indexURL", wiseBaseURL + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 			int maxInactiveInterval = request.getSession().getMaxInactiveInterval() * 1000;
@@ -1441,18 +1441,17 @@ public class AuthorProjectController {
 				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 				// set the content url 
-				String getContentUrl = curriculumBaseWWW + rawProjectUrl;
+				String projectURL = curriculumBaseWWW + rawProjectUrl;
 				
 				// get location of last separator in url 
-				int lastIndexOfSlash = getContentUrl.lastIndexOf("/");
+				int lastIndexOfSlash = projectURL.lastIndexOf("/");
 				if(lastIndexOfSlash==-1){ 
-					lastIndexOfSlash = getContentUrl.lastIndexOf("\\");
+					lastIndexOfSlash = projectURL.lastIndexOf("\\");
 				}
 				
-				// set the contentbase based on the contenturl 
-				String getContentBaseUrl = getContentUrl.substring(0, lastIndexOfSlash) + "/";
-
-				config.put("getContentBaseUrl", getContentBaseUrl);
+				// set the projectBaseURL based on the projectURL
+				String projectBaseURL = projectURL.substring(0, lastIndexOfSlash) + "/";
+				config.put("projectBaseURL", projectBaseURL);
 			}			
 		} catch (JSONException e) {
 			e.printStackTrace();

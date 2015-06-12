@@ -32,7 +32,7 @@ MW.prototype.loadApplet = function(jsonfilename, context){
 
 	//$.getJSON(jsonfilename, 
 	//	function(data){
-			//var activityPath = context.node.view.getConfig().getConfigParam('getContentBaseUrl') + data.activity_uri;
+			//var activityPath = context.node.view.getConfig().getConfigParam('projectBaseURL') + data.activity_uri;
 	//	}
 	//);
 

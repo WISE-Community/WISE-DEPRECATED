@@ -223,7 +223,7 @@ ExplanationBuilderNode.prototype.renderGradingView = function(displayStudentWork
 			backgroundPath = explanationBuilder.background;
 		} else {
 			//background image is relative so we need to create the full path to the background image
-			backgroundPath = this.view.getConfig().getConfigParam('getContentBaseUrl') + explanationBuilder.background;			
+			backgroundPath = this.view.getConfig().getConfigParam('projectBaseURL') + explanationBuilder.background;
 		}
 	}
 

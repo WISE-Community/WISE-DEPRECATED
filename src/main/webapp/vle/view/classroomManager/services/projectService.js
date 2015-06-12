@@ -6,7 +6,7 @@ define(['angular'], function(angular) {
 		this.project = null;
 		
 		this.retrieveProject = function() {
-			var projectFileUrl = ConfigService.getConfigParam('getContentUrl');
+			var projectFileUrl = ConfigService.getConfigParam('projectURL');
 			
 			return $http.get(projectFileUrl).then(angular.bind(this, function(result) {
 				var projectJSON = result.data;

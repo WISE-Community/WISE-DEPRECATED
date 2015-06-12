@@ -203,7 +203,7 @@ SVGDrawNode.prototype.renderGradingView = function(displayStudentWorkDiv, nodeVi
 		
 		// if the work is for a SVGDrawNode, embed the svg
 		var innerDivId = "svgDraw_"+stepWorkId+"_"+timestamp;
-		var contentBaseUrl = this.view.config.getConfigParam('getContentBaseUrl');
+		var contentBaseUrl = this.view.config.getConfigParam('projectBaseURL');
 		// if studentData has been compressed, decompress it and parse (for legacy compatibility)
 		if (typeof studentData == "string") {
 			if (studentData.match(/^--lz77--/)) {

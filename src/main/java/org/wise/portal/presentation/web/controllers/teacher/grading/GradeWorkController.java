@@ -99,11 +99,11 @@ public class GradeWorkController {
 					String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 
 			    	String getGradeWorkUrl = wiseBaseURL + "/vle/gradework.html";
-					String getGradingConfigUrl = wiseBaseURL + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
+					String getGradingConfigUrl = wiseBaseURL + "/vleconfig.html?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
 					
 					//get the classroom monitor urls
 					String getClassroomMonitorUrl = wiseBaseURL + "/vle/classroomMonitor.html";
-					String getClassroomMonitorConfigUrl = wiseBaseURL + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
+					String getClassroomMonitorConfigUrl = wiseBaseURL + "/vleconfig.html?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
 					
 					//set the permission variable so that we can access it in the .jsp
 					if(this.runService.hasRunPermission(run, user, BasePermission.WRITE)) {
@@ -135,7 +135,7 @@ public class GradeWorkController {
                             modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
                         } else if("classroomManager".equals(gradingType)) {
                             String classroomManagerUrl = wiseBaseURL + "/vle5/classroomManager/index.html";
-                            String classroomManagerConfigUrl = wiseBaseURL + "/request/info.html?action=getVLEConfig&runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
+                            String classroomManagerConfigUrl = wiseBaseURL + "/vleconfig.html?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
                             modelAndView.addObject("vleurl", classroomManagerUrl);
                             modelAndView.addObject("vleConfigUrl", classroomManagerConfigUrl);
                         } else {

@@ -141,7 +141,7 @@ Mysystem2Node.prototype.renderGradingView = function(displayStudentWorkDiv, node
     contentString = JSON.stringify(contentJSONWithoutHTML);
 
 	// get content baseurl (e.g. 'http://localhost:8080/curriculum/897')
-	var contentBaseUrl = this.view.config.getConfigParam('getContentBaseUrl');	
+	var contentBaseUrl = this.view.config.getConfigParam('projectBaseURL');
 
     // prepend contentbaseurl in front of "assets" to content
     contentString = this.view.utils.prependContentBaseUrlToAssets(contentBaseUrl,contentString);

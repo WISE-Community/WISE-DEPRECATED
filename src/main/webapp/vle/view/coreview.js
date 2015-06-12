@@ -82,20 +82,20 @@ View.prototype.loadProject = function(url, contentBase, lazyLoading){
 	};
 	
 	//get the url that we will use to retrieve the metadata
-	var projectMetaDataUrl = this.getConfig().getConfigParam('projectMetaDataUrl');
+	var projectMetadataURL = this.getConfig().getConfigParam('projectMetadataURL');
 	
-	if (projectMetaDataUrl) {
+	if (projectMetadataURL) {
 		//get the project id
 		var projectId = this.getProjectId();
 
 		//set the params for the request
-		var projectMetaDataUrlParams = {
+		var projectMetadataURLParams = {
 				command:"getProjectMetaData",
 				projectId:projectId
 		};
 		
 		//make the request for the project meta data
-		this.connectionManager.request('GET',1,projectMetaDataUrl,projectMetaDataUrlParams,success, this, failure);					
+		this.connectionManager.request('GET',1,projectMetadataURL,projectMetadataURLParams,success, this, failure);
 	} else {
 		// project metadata does not exist and metadataurl is unspecified so start project normally
 		this.eventManager.fire('loadingProjectStarted');
@@ -130,7 +130,7 @@ View.prototype.loadProjectCSS = function(url, contentBase, lazyLoading){
 	
 	this.getConfig().setConfigParam("wiseStyleOverrideEnabled", false);  // disabled CSS override by default
 	this.projectCSS = null;
-	this.projectStyleOverrideCSSURL=this.config.getConfigParam("getContentBaseUrl")+"/assets/wise_styles_override.css";
+	this.projectStyleOverrideCSSURL=this.config.getConfigParam("projectBaseURL")+"/assets/wise_styles_override.css";
 	var extraParams = null;
 	this.connectionManager.request('GET', 2, this.projectStyleOverrideCSSURL, extraParams, 
 			function(responseText, responseXML, view) {

@@ -56,7 +56,7 @@ AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, node
 		
 		// if the work is for a AnnotaotrNode, embed the svg
 		var innerDivId = "annotator_"+stepWorkId+"_"+timestamp,
-			contentBaseUrl = this.view.config.getConfigParam('getContentBaseUrl');
+			contentBaseUrl = this.view.config.getConfigParam('projectBaseURL');
 		// if studentData has been compressed, decompress it and parse (for legacy compatibility)
 		/*if (typeof studentWork == "string") {
 			if (studentWork.match(/^--lz77--/)) {

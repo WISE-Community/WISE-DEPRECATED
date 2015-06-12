@@ -1728,8 +1728,8 @@ View.prototype.onProjectLoaded = function(){
 		this.retrieveProjectRunStatus();
 		
 		//add these two params to the config
-		this.getConfig().setConfigParam('getContentUrl', this.getProject().getUrl());
-		this.getConfig().setConfigParam('getContentBaseUrl', this.getProject().getContentBase());
+		this.getConfig().setConfigParam('projectURL', this.getProject().getUrl());
+		this.getConfig().setConfigParam('projectBaseURL', this.getProject().getContentBase());
 	
 		if(this.placeNode){
 			this.placeNewNode(this.placeNodeId);

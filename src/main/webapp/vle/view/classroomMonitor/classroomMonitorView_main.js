@@ -36,7 +36,7 @@ View.prototype.getClassroomMonitorConfig = function(classroomMonitorConfigUrl) {
     this.retrieveLocales("main");
     
     //load the user and class info
-    this.loadUserAndClassInfo(createContent(this.config.getConfigParam('getUserInfoURL')));
+    this.loadUserAndClassInfo(createContent(this.config.getConfigParam('userInfoURL')));
     
     //start the classroom monitor
     this.startClassroomMonitor();
@@ -113,7 +113,7 @@ View.prototype.startClassroomMonitor = function() {
      * get the student statuses, get the students online list, and then
      * start the websocket connection 
      */
-    this.loadProject(this.config.getConfigParam('getContentUrl'), this.config.getConfigParam('getContentBaseUrl'), true);
+    this.loadProject(this.config.getConfigParam('projectURL'), this.config.getConfigParam('projectBaseURL'), true);
 };
 
 /**
@@ -5129,7 +5129,7 @@ View.prototype.getStudentStatusesFail = function(responseText, responseXML, view
  */
 View.prototype.getRunStatus = function() {
     //get the run status url we will use to make the request
-    var runStatusUrl = this.getConfig().getConfigParam('runStatusUrl');
+    var runStatusURL = this.getConfig().getConfigParam('runStatusURL');
     
     //get the run id
     var runId = this.getConfig().getConfigParam('runId');
@@ -5139,9 +5139,9 @@ View.prototype.getRunStatus = function() {
         runId:runId
     }
     
-    if(runStatusUrl != null) {
+    if(runStatusURL != null) {
         //make the request to the server for the student statuses
-        this.connectionManager.request('GET', 3, runStatusUrl, runStatusParams, this.getRunStatusCallback, this, this.getRunStatusFail, false, null);
+        this.connectionManager.request('GET', 3, runStatusURL, runStatusParams, this.getRunStatusCallback, this, this.getRunStatusFail, false, null);
     }
 };
 
@@ -6611,7 +6611,7 @@ View.prototype.isStudentOnline = function(workgroupId) {
  */
 View.prototype.sendRunStatus = function(pauseMessage) {
     //get the run status url we will use to make the request
-    var runStatusUrl = this.getConfig().getConfigParam('runStatusUrl');
+    var runStatusURL = this.getConfig().getConfigParam('runStatusURL');
     
     //get the run id
     var runId = this.getConfig().getConfigParam('runId');
@@ -6633,9 +6633,9 @@ View.prototype.sendRunStatus = function(pauseMessage) {
         status:runStatus
     }
     
-    if(runStatusUrl != null) {
+    if(runStatusURL != null) {
         //make the request to the server for the student statuses
-        this.connectionManager.request('POST', 3, runStatusUrl, runStatusParams, this.sendRunStatusCallback, this, this.sendRunStatusFail, false, null);
+        this.connectionManager.request('POST', 3, runStatusURL, runStatusParams, this.sendRunStatusCallback, this, this.sendRunStatusFail, false, null);
     }
 };
 

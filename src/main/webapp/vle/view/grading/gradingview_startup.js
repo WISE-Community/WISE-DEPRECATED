@@ -18,7 +18,7 @@ View.prototype.getGradingConfig = function(gradingConfigUrl) {
  * Retrieve the student workgroupIds
  */
 View.prototype.getStudentUserInfo = function() {
-	var userInfoContent = createContent(this.config.getConfigParam('getUserInfoURL'));
+	var userInfoContent = createContent(this.config.getConfigParam('userInfoURL'));
 
 	//parse and load the xml that contains the workgroup ids
 	//vle.loadUserAndClassInfo(o.responseXML);

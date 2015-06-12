@@ -2709,7 +2709,7 @@ View.prototype.getStudentWorkTdHtml = function(studentWork, node, stepWorkId, st
 		
 		//var divId = "mysystemDiagram_"+workgroupId;
 		var divId = "mysystemDiagram_"+stepWorkId+"_"+latestNodeVisitPostTime;
-		var contentBaseUrl = this.config.getConfigParam('getContentBaseUrl');
+		var contentBaseUrl = this.config.getConfigParam('projectBaseURL');
 		// if the work is for a mysystem node we need to call the print function to print the image in the cell
         var content = node.getContent().getContentString();
         // prepent contentbaseurl to urls

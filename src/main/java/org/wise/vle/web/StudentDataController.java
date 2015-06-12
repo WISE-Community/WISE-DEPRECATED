@@ -88,8 +88,7 @@ public class StudentDataController {
     private int studentMaxWorkSize = 512000;
 
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView doGet(HttpServletRequest request,
-			HttpServletResponse response)
+	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response)
 					throws ServletException, IOException {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -125,11 +124,11 @@ public class StudentDataController {
 		String[] userIdArray = userIdStr.split(":");
 		
 		Long runId = null;
-		if(runIdStr != null) {
+		if (runIdStr != null) {
 			try {
 				//get the run id as a Long
 				runId = new Long(runIdStr);
-			} catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				e.printStackTrace();
 			}
 		}
@@ -139,13 +138,13 @@ public class StudentDataController {
             
             JSONArray allStepWorkJSONObjects = new JSONArray();
             
-            long currentTimeMillis1 = System.currentTimeMillis();
+            //long currentTimeMillis1 = System.currentTimeMillis();
             
             // get all the StepWork from the users
             List<StepWork> allStepWorks = getAllStepWorks(userIdArray);
             //List<StepWork> allRawWork = vleService.getStepWorksByRunId(runId);
             
-            long currentTimeMillis2 = System.currentTimeMillis();
+            //long currentTimeMillis2 = System.currentTimeMillis();
             //System.out.println("Query Database Time=" + (currentTimeMillis2 - currentTimeMillis1));
             //System.out.println("Number of Rows=" + allStepWorks.size());
             
@@ -158,21 +157,21 @@ public class StudentDataController {
                 allStepWorkJSONObjects.put(stepWorkJSONObject);
             }
             
-            long currentTimeMillis3 = System.currentTimeMillis();
+            //long currentTimeMillis3 = System.currentTimeMillis();
             //System.out.println("Create JSONObjects Time=" + (currentTimeMillis3 - currentTimeMillis2));
             
             // write the step work JSON objects to the response
             response.setContentType("application/json");
             response.getWriter().write(allStepWorkJSONObjects.toString());
             
-            long currentTimeMillis4 = System.currentTimeMillis();
+            //long currentTimeMillis4 = System.currentTimeMillis();
             //System.out.println("Write Response Time=" + (currentTimeMillis4 - currentTimeMillis3));
             
             return null;
         }
 		
 		Run run = null;
-		if(runId != null) {
+		if (runId != null) {
 			try {
 				//get the run object
 				run = runService.retrieveById(runId);				
@@ -188,16 +187,16 @@ public class StudentDataController {
 		 * students that are accessing their own work can make a request
 		 * students that are accessing aggregate data for a step can make a request
 		 */
-		if(SecurityUtils.isAdmin(signedInUser)) {
+		if (SecurityUtils.isAdmin(signedInUser)) {
 			//the user is an admin so we will allow this request
 			allowedAccess = true;
-		} else if(SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+		} else if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
 			//the teacher is an owner or shared owner of the run so we will allow this request
 			allowedAccess = true;
-		} else if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId)) {
+		} else if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId)) {
 			//the user is a student
 			
-			if(type == null) {
+			if (type == null) {
 				//the student is trying to access their own work
 				
 				Long workgroupId = null;
@@ -205,16 +204,16 @@ public class StudentDataController {
 				try {
 					//get the workgroup id
 					workgroupId = new Long(userIdStr);
-				} catch(NumberFormatException e) {
+				} catch (NumberFormatException e) {
 					
 				}
 				
 				//check if the signed in user is really in the workgroup
-				if(SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
+				if (SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
 					//the signed in user is really in the workgroup so we will allow this request
 					allowedAccess = true;
 				}
-			} else if(type.equals("brainstorm") || type.equals("aggregate")) {
+			} else if (type.equals("brainstorm") || type.equals("aggregate")) {
 				//the student is trying to access work from their classmates
 				
 				/*
@@ -226,19 +225,19 @@ public class StudentDataController {
 				boolean allWorkgroupIdsInRun = true;
 				
 				//loop through all the classmate workgroup ids
-				for(int x=0; x<userIdArray.length; x++) {
+				for (int x = 0; x < userIdArray.length; x++) {
 					//get a workgroup id
 					String classmateWorkgroupIdString = userIdArray[x];
 
 					Long classmateWorkgroupId = null;
 					try {
 						classmateWorkgroupId = new Long(classmateWorkgroupIdString);					
-					} catch(NumberFormatException e) {
+					} catch (NumberFormatException e) {
 						
 					}
 					
 					//check if the workgroup id is in the run
-					if(!SecurityUtils.isWorkgroupInRun(classmateWorkgroupId, runId)) {
+					if (!SecurityUtils.isWorkgroupInRun(classmateWorkgroupId, runId)) {
 						//the workgroup id is not in the run
 						allWorkgroupIdsInRun = false;
 						break;
@@ -246,13 +245,13 @@ public class StudentDataController {
 				}
 				
 				//only allow access if all the workgroup ids are in the run
-				if(allWorkgroupIdsInRun) {
+				if (allWorkgroupIdsInRun) {
 					allowedAccess = true;
 				}
 			}
 		}
 		
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//the user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -291,7 +290,7 @@ public class StudentDataController {
 		//whether to get the latest revision or all revisions with nodestates
 		boolean getRevisions = true;
 
-		if(DEBUG) {
+		if (DEBUG) {
 			System.out.println("userIdStr: " + userIdStr);
 			System.out.println("nodeId: " + nodeId);
 			System.out.println("runId: " + runId);
@@ -300,18 +299,18 @@ public class StudentDataController {
 			System.out.println("nodeIds: " + nodeIds);
 		}
 
-		if(getAllWorkStr != null) {
+		if (getAllWorkStr != null) {
 			getAllWork = Boolean.parseBoolean(getAllWorkStr);
 		}
 
-		if(getRevisionsStr != null) {
+		if (getRevisionsStr != null) {
 			getRevisions = Boolean.parseBoolean(getRevisionsStr);
 		}
 
 		//the list that contains the types of nodes we want to return
 		List<String> nodeTypesList = null;
 
-		if(nodeTypes != null) {
+		if (nodeTypes != null) {
 			//break the nodeTypes parameter into an array
 			String[] nodeTypesArray = nodeTypes.split(":");
 
@@ -321,16 +320,16 @@ public class StudentDataController {
 
 		//the list that will contain the Node objects we want
 		List<Node> nodeList = new ArrayList<Node>();
-		if(nodeIds != null) {
+		if (nodeIds != null) {
 			//split up the nodeIds which are delimited by :
 			String[] nodeIdsArray = nodeIds.split(":");
 
 			//loop through the node ids
-			for(int x=0; x<nodeIdsArray.length; x++) {
+			for (int x=0; x < nodeIdsArray.length; x++) {
 				//obtain a handle on the Node with the node id
 				Node tempNode = vleService.getNodeByNodeIdAndRunId(nodeIdsArray[x], runIdStr);
 
-				if(tempNode != null) {
+				if (tempNode != null) {
 					//add the Node to our list
 					nodeList.add(tempNode);					
 				}
@@ -371,7 +370,7 @@ public class StudentDataController {
 			//this case is when userId is passed in as a GET argument
 			// this is currently only being used for brainstorm steps and aggregate steps
 
-			if(nodeId != null && !nodeId.equals("")) {
+			if (nodeId != null && !nodeId.equals("")) {
 				/*
 				 * return an array of node visits for a specific node id.
 				 * this case uses userIdStr and nodeId.
@@ -381,10 +380,10 @@ public class StudentDataController {
 
 				List<UserInfo> userInfos = new ArrayList<UserInfo>();
 
-				for(int x=0; x<userIdArray.length; x++) {
+				for (int x = 0; x < userIdArray.length; x++) {
 					UserInfo userInfo = vleService.getUserInfoByWorkgroupId(new Long(userIdArray[x]));
 
-					if(userInfo != null) {
+					if (userInfo != null) {
 						userInfos.add(userInfo);
 					}
 				}
@@ -393,7 +392,7 @@ public class StudentDataController {
 
 				JSONArray stepWorks = new JSONArray();
 
-				for(StepWork stepWork : stepWorkList) {
+				for (StepWork stepWork : stepWorkList) {
 					Long userId = stepWork.getUserInfo().getWorkgroupId();
 					String dataString = stepWork.getData();
 					JSONObject data = new JSONObject(dataString);
@@ -416,16 +415,15 @@ public class StudentDataController {
 				 */
 
 				//multiple user ids were passed in
-				if(userIdArray != null && userIdArray.length > 0){
+				if (userIdArray != null && userIdArray.length > 0) {
 					//the parent json object that will contain all the vle states
 					JSONObject workgroupNodeVisitsJSON = new JSONObject();
 
 					//retrieve data for each of the ids
-					for(int x = 0; x < userIdArray.length; x++) {
+					for (int x = 0; x < userIdArray.length; x++) {
 						String userId = userIdArray[x];
 
 						// obtain all the data for this student
-						//UserInfo userInfo = UserInfo.getByWorkgroupId(new Long(userId));
 						UserInfo userInfo = vleService.getUserInfoByWorkgroupId(new Long(userId));
 						JSONObject nodeVisitsJSON = new JSONObject();  // to store nodeVisits for this student.
 
@@ -464,7 +462,7 @@ public class StudentDataController {
 									if (useCachedWork) {												
 										vleService.saveStepWorkCache(cachedWork); // save cachedWork if we're in useCacheMode
 									}
-								} catch(Exception e) {
+								} catch (Exception e) {
 									/*
 									 * when the student's cached work is too large, an exception will be thrown.
 									 * if this exception is not caught, the student will not receive any of
@@ -544,7 +542,7 @@ public class StudentDataController {
 		List<StepWork> stepWorkList = null;
 
 		//check if a list of nodes were passed in
-		if(nodeList != null && nodeList.size() > 0) {
+		if (nodeList != null && nodeList.size() > 0) {
 			//get all the work for the user and that are for the nodes in the node list
 			stepWorkList = vleService.getStepWorksByUserInfoAndNodeList(userInfo, nodeList);
 		} else {
@@ -552,11 +550,11 @@ public class StudentDataController {
 			stepWorkList = vleService.getStepWorksByUserInfo(userInfo);	
 		}
 
-		if(getRevisions) {
+		if (getRevisions) {
 			//get all revisions
 
 			//loop through all the rows that were returned, each row is a node_visit
-			for(int x=0; x<stepWorkList.size(); x++) {
+			for (int x = 0; x < stepWorkList.size(); x++) {
 				StepWork stepWork = stepWorkList.get(x);
 
 				String data = stepWork.getData();
@@ -570,7 +568,7 @@ public class StudentDataController {
 				 * desired node types was provided. if there is no list of
 				 * node types, we will accept all node types
 				 */
-				if(nodeTypesList == null || (nodeTypesList != null && nodeTypesList.contains(nodeType))) {
+				if (nodeTypesList == null || (nodeTypesList != null && nodeTypesList.contains(nodeType))) {
 					//the node type is accepted
 					try {
 						JSONObject nodeVisitJSON = new JSONObject(data);
@@ -623,7 +621,7 @@ public class StudentDataController {
 			 * because we are only looking for the latest revision for each
 			 * step
 			 */
-			for(int x=stepWorkList.size() - 1; x>=0; x--) {
+			for (int x = stepWorkList.size() - 1; x >= 0; x--) {
 				StepWork stepWork = stepWorkList.get(x);
 
 				String data = stepWork.getData();
@@ -640,7 +638,7 @@ public class StudentDataController {
 				String nodeId = stepWork.getNode().getNodeId();
 
 				//check if we have retrieved work for this step already
-				if(!stepsRetrieved.contains(nodeId)) {
+				if (!stepsRetrieved.contains(nodeId)) {
 					//we have not retrieved work for this step yet
 
 					/*
@@ -648,7 +646,7 @@ public class StudentDataController {
 					 * desired node types was provided. if there is no list of
 					 * node types, we will accept all node types
 					 */
-					if(nodeTypesList == null || (nodeTypesList != null && nodeTypesList.contains(nodeType))) {
+					if (nodeTypesList == null || (nodeTypesList != null && nodeTypesList.contains(nodeType))) {
 						//the node type is accepted
 
 						JSONObject nodeVisitJSON = new JSONObject(data);
@@ -660,7 +658,7 @@ public class StudentDataController {
 						 * we will add the node visit since those step types never have
 						 * node states. 
 						 */
-						if(nodeStates != null && nodeStates.length() > 0 ||
+						if (nodeStates != null && nodeStates.length() > 0 ||
 								("HtmlNode".equals(nodeType) || "OutsideUrlNode".equals(nodeType) || "IdeaBasketNode".equals(nodeType))) {
 
 							//add stepWorkId and visitPostTime attributes to the json obj
@@ -715,20 +713,20 @@ public class StudentDataController {
 		}
 		
 		Long runIdLong = null;
-		if(runId != null) {
+		if (runId != null) {
 			runIdLong = new Long(runId);
 		}
 		
 		Long periodIdLong = null;
-		if(periodId != null) {
+		if (periodId != null) {
 			periodIdLong = new Long(periodId);
 		}
 		
 		Long workgroupId = null;
-		if(userId != null) {
+		if (userId != null) {
 			try {
 				workgroupId = new Long(userId);
-			} catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				
 			}
 		}
@@ -739,13 +737,13 @@ public class StudentDataController {
 		 * teachers can not make a request
 		 * students can make a request if they are in the run and in the workgroup
 		 */
-		if(SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong) &&
+		if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong) &&
 				SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
 			//the student is in the run and the workgroup so we will allow the request
 			allowedAccess = true;
 		}
 		
-		if(!allowedAccess) {
+		if (!allowedAccess) {
 			//the user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -771,7 +769,7 @@ public class StudentDataController {
 			Timestamp endTime = null;
 			
 			//check that a non null end time was given to us
-			if(visitEndTime != null && !visitEndTime.equals("null") && !visitEndTime.equals("")) {
+			if (visitEndTime != null && !visitEndTime.equals("null") && !visitEndTime.equals("")) {
 				//create the timestamp
 				endTime = new Timestamp(new Long(visitEndTime));
 			}
@@ -783,12 +781,12 @@ public class StudentDataController {
 			JSONArray nodeStates = VLEDataUtils.getNodeStates(nodeVisitJSON);
 			
 			//loop through all the node states
-			for(int x=0; x<nodeStates.length(); x++) {
+			for (int x = 0; x < nodeStates.length(); x++) {
 				//get an element in the node states array
 				Object nodeStateObject = nodeStates.get(x);
 				
 				//check that the element in the array is a JSONObject
-				if(!(nodeStateObject instanceof JSONObject)) {
+				if (!(nodeStateObject instanceof JSONObject)) {
 					//the element in the array is not a JSONObject so we will respond with an error
 					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Element in nodeStates array is not an object");
 					return null;
@@ -811,7 +809,7 @@ public class StudentDataController {
 				//create a JSONObject to contain the step work id and post time
 				JSONObject jsonResponse = new JSONObject();
 				jsonResponse.put("id", stepWork.getId());
-				if(endTime != null) {
+				if (endTime != null) {
 					//end time is set so we can send back a post time
 					if (stepWork.getPostTime() != null) {
 						jsonResponse.put("visitPostTime", stepWork.getPostTime().getTime());
@@ -823,13 +821,13 @@ public class StudentDataController {
 			}
 				
 			//check if the step work id was passed in. if it was, then it's an update to a nodevisit.
-			if(stepWorkId != null && !stepWorkId.equals("") && !stepWorkId.equals("undefined")) {
+			if (stepWorkId != null && !stepWorkId.equals("") && !stepWorkId.equals("undefined")) {
 				//step work id was passed in so we will obtain the id in long format
 				long stepWorkIdLong = Long.parseLong(stepWorkId);
 				
 				//obtain the StepWork with the given id
 				stepWork = (StepWork) vleService.getStepWorkById(stepWorkIdLong);
-			} else if(nodeType != null && nodeType !=""){
+			} else if (nodeType != null && nodeType !="") {
 				//step work id was not passed in so we will create a new StepWork object
 				stepWork = new StepWork();
 			}
@@ -864,7 +862,7 @@ public class StudentDataController {
 				 * is just an intermediate post we do not want to complete
 				 * the visit because the user has not exited the step.
 				 */
-				if(endTime != null) {
+				if (endTime != null) {
 					//end time is set so we can send back a post time
 					jsonResponse.put("visitPostTime", newPostTime);
 				}
@@ -881,12 +879,12 @@ public class StudentDataController {
 							if (nodeStateArray.length() > 0) {
 								JSONObject nodeStateObj = nodeStateArray.getJSONObject(nodeStateArray.length()-1);
 								
-								if(nodeStateObj.has("cRaterItemId")) {
+								if (nodeStateObj.has("cRaterItemId")) {
 									cRaterItemId = nodeStateObj.getString("cRaterItemId");
 									if (nodeStateObj.has("isCRaterSubmit")) {
 										isCRaterSubmit = nodeStateObj.getBoolean("isCRaterSubmit");
 									}
-									if(nodeStateObj.has("cRaterItemType")) {
+									if (nodeStateObj.has("cRaterItemType")) {
 										cRaterItemType = nodeStateObj.getString("cRaterItemType");
 									}																	
 								}
@@ -897,7 +895,7 @@ public class StudentDataController {
 					e.printStackTrace();
 				}
 				/*
-				if(cRaterItemId != null) {
+				if (cRaterItemId != null) {
 					// Send back the cRater item id to the student in the response
 					// student VLE would get this cRaterItemId and make a GET to
 					// VLEAnnotationController to get the CRater Annotation
@@ -924,13 +922,13 @@ public class StudentDataController {
 				*/
 				try {
 					//if this post is a peerReviewSubmit, add an entry into the peerreviewwork table
-					if(VLEDataUtils.isSubmitForPeerReview(nodeVisitJSON)) {
+					if (VLEDataUtils.isSubmitForPeerReview(nodeVisitJSON)) {
 						PeerReviewWork peerReviewWork = null;
 
 						//see if the user has already submitted peer review work for this step
 						peerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runIdLong, periodIdLong, node, userInfo);
 						
-						if(peerReviewWork == null) {
+						if (peerReviewWork == null) {
 							/*
 							 * the user has not submitted peer review work for this step yet
 							 * so we will create it
@@ -947,12 +945,12 @@ public class StudentDataController {
 						//create an entry for the peerreviewgate table if one does not exist already
 						vleService.getOrCreatePeerReviewGateByRunIdPeriodIdNodeId(runIdLong, periodIdLong, node);
 					}
-				} catch(JSONException e) {
+				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				
 				//check if there is an annotation that we need to save
-				if(annotationJSONString != null && !annotationJSONString.equals("null")) {
+				if (annotationJSONString != null && !annotationJSONString.equals("null")) {
 					try {
 						//get the annotation JSON object
 						JSONObject annotationJSONObject = new JSONObject(annotationJSONString);
@@ -978,7 +976,7 @@ public class StudentDataController {
 				}
 				
                 //check if there are annotations that we need to save
-                if(annotationsJSONString != null && !annotationsJSONString.equals("null")) {
+                if (annotationsJSONString != null && !annotationsJSONString.equals("null")) {
                     try {
                         //get the annotations JSON array
                         JSONArray annotationsJSONArray = new JSONArray(annotationsJSONString);
@@ -1013,14 +1011,14 @@ public class StudentDataController {
 				response.getWriter().print(jsonResponse.toString());
 				
 				//check if this node visit should be sent to other users using websockets
-				if(isSendToWebSockets(nodeVisitJSON)) {
+				if (isSendToWebSockets(nodeVisitJSON)) {
 					//inject the step work id into the node visit JSON
 					nodeVisitJSON.put("id", newStepWorkId);
 					
-					if(webSocketHandler != null) {
+					if (webSocketHandler != null) {
 						WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
 						
-						if(wiseWebSocketHandler != null) {
+						if (wiseWebSocketHandler != null) {
 							//send this message to websockets
 							wiseWebSocketHandler.handleMessage(signedInUser, nodeVisitJSON.toString());							
 						}
@@ -1045,14 +1043,14 @@ public class StudentDataController {
 	private boolean isSendToWebSockets(JSONObject nodeVisit) {
 		boolean result = false;
 		
-		if(nodeVisit != null) {
+		if (nodeVisit != null) {
 			//check if there is a messageType field
 			String messageType = nodeVisit.optString("messageType");
 			
 			//check if there is a messageParticipants field
 			String messageParticipants = nodeVisit.optString("messageParticipants");
 			
-			if(messageType != null && !messageType.equals("") && messageParticipants != null && !messageParticipants.equals("")) {
+			if (messageType != null && !messageType.equals("") && messageParticipants != null && !messageParticipants.equals("")) {
 				/*
 				 * the node visit has a messageType and messageParticipants so we will
 				 * send it to websockets
@@ -1104,14 +1102,14 @@ public class StudentDataController {
 		
 		//get the from user
 		UserInfo fromUserInfo = null;
-		if(fromWorkgroup != null && fromWorkgroup != -1) {
+		if (fromWorkgroup != null && fromWorkgroup != -1) {
 			fromUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(toWorkgroup);
 		}
 		
 		//check if there is an existing annotation
 		annotation = vleService.getAnnotationByFromUserInfoToUserInfoStepWorkType(fromUserInfo, toUserInfo, stepWork, type);
 		
-		if(annotation == null) {
+		if (annotation == null) {
 			//the annotation for the fromUser, toUser, StepWork, and type does not exist so we will create one
 			
 			//create the new annotation
@@ -1153,7 +1151,7 @@ public class StudentDataController {
         ArrayList<Long> workgroupIds = new ArrayList<Long>(userIdArray.length);
 
         // loop through all the workgroup ids
-        for(int x = 0; x < userIdArray.length; x++) {
+        for (int x = 0; x < userIdArray.length; x++) {
             String userId = userIdArray[x];
             
             // convert the string to a Long

@@ -289,7 +289,7 @@ Node.prototype.preloadContent = function(){
 
 			/* change filename url for the modules if this is a MySystemNode */
 			if(this.type == 'MySystemNode'){
-				this.baseHtmlContent.setContent(this.updateJSONContentPath(this.view.getConfig().getConfigParam('getContentBaseUrl'), this.baseHtmlContent.getContentString()));
+				this.baseHtmlContent.setContent(this.updateJSONContentPath(this.view.getConfig().getConfigParam('projectBaseURL'), this.baseHtmlContent.getContentString()));
 			};
 
 			/* call one of the getContent methods so it retrieves the content */
@@ -372,7 +372,7 @@ Node.prototype.render = function(contentPanel, studentWork, disable) {
 
 			/* change filename url for the modules if this is a MySystemNode */
 			if(this.type == 'MySystemNode'){
-				this.baseHtmlContent.setContent(this.updateJSONContentPath(this.view.getConfig().getConfigParam('getContentBaseUrl'), this.baseHtmlContent.getContentString()));
+				this.baseHtmlContent.setContent(this.updateJSONContentPath(this.view.getConfig().getConfigParam('projectBaseURL'), this.baseHtmlContent.getContentString()));
 			}
 		}
 
@@ -409,7 +409,7 @@ Node.prototype.render = function(contentPanel, studentWork, disable) {
 	
 	// load project-specific style overrides, if it's enabled
 	if (this.view.getConfig().getConfigParam("wiseStyleOverrideEnabled")) {
-		this.contentPanel.document.getElementsByTagName('head')[0].appendChild(createElement(document, 'link', {rel: 'stylesheet', type: 'text/css', href: this.view.config.getConfigParam("getContentBaseUrl")+"/assets/wise_styles_override.css"}));
+		this.contentPanel.document.getElementsByTagName('head')[0].appendChild(createElement(document, 'link', {rel: 'stylesheet', type: 'text/css', href: this.view.config.getConfigParam("projectBaseURL")+"/assets/wise_styles_override.css"}));
 	}
 };
 
@@ -681,7 +681,7 @@ Node.prototype.injectBaseRef = function(content) {
 				cbu = this.getAuthoringModeContentBaseUrl();
 			} else {
 				//we are in the student vle
-				cbu = this.view.getConfig().getConfigParam('getContentBaseUrl');					
+				cbu = this.view.getConfig().getConfigParam('projectBaseURL');
 			}
 		} else {
 			//set the content base url to the step type folder path 
@@ -984,7 +984,7 @@ Node.prototype.getAuthoringModeContentBaseUrl = function() {
 	 * e.g.
 	 * http://localhost:8080/wise/author/authorproject.html?forward=filemanager&projectId=96&command=retrieveFile&fileName=
 	 */
-	var contentBaseUrlString = this.view.getConfig().getConfigParam('getContentBaseUrl');
+	var contentBaseUrlString = this.view.getConfig().getConfigParam('projectBaseURL');
 
 	var lastSlashIndex = -1;
 
@@ -1350,7 +1350,7 @@ Node.prototype.getShowAllWorkHtml = function(vle, divIdPrefix){
 			}
 			//create the div id for where we will display the student work
 			var divId = divIdPrefix + "latestWork_"+latestNodeVisitWithWork.id;
-			var contentBaseUrl = this.view.getConfig().getConfigParam('getContentBaseUrl');
+			var contentBaseUrl = this.view.getConfig().getConfigParam('projectBaseURL');
 
 			var latest_work = vle.getI18NString('latest_work');
 			
