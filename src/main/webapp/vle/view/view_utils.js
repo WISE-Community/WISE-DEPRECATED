@@ -460,9 +460,17 @@ View.prototype.getMaxScoreForProject = function() {
 	//get all the node ids in the project
 	var nodeIdsInProject = this.getProject().getNodeIds();
 	
-	if(this.maxScores != null) {
+    if(this.maxScores != null) {
+        
+        var annotations = null;
+        
+        // try to get the annotations from the model
+        if (this.model != null && this.model.annotations != null) {
+            annotations = this.model.annotations;
+        }
+        
 		//get the max scores sum for all the node ids 
-		maxScoreForProject = this.maxScores.getMaxScoresSum(nodeIdsInProject);
+		maxScoreForProject = this.maxScores.getMaxScoresSum(nodeIdsInProject, annotations);
 	}
 	
 	return maxScoreForProject;

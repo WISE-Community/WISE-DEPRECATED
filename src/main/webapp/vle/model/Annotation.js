@@ -1040,6 +1040,50 @@ Annotations.prototype.getLatestAnnotationValueFromValueArray = function(annotati
     return result;
 };
 
+/**
+ * Get the max auto score for a node id by looking at the annotations
+ * @param nodeId the node id
+ * @return the max auto score or null
+ */
+Annotations.prototype.getMaxAutoScoreForNodeId = function(nodeId) {
+    
+    if (this.annotationsArray != null) {
+        
+        // loop through all the annotations
+        for (var a = this.annotationsArray.length - 1; a >= 0; a--) {
+            var annotation = this.annotationsArray[a];
+            
+            if (annotation != null) {
+                var annotationNodeId = annotation.nodeId;
+                var annotationType = annotation.type;
+                
+                if (nodeId === annotationNodeId && annotationType === 'autoGraded') {
+                    // the node id matches the one we are looking for
+                    
+                    var value = annotation.value;
+                    
+                    if (value != null) {
+                        
+                        // loop through all the values
+                        for (var v = value.length - 1; v >= 0; v--) {
+                            var tempValue = value[v];
+                            
+                            if (tempValue != null) {
+                                if (tempValue.maxAutoScore != null) {
+                                    // return the max auto score
+                                    return tempValue.maxAutoScore;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    return null;
+};
+
 //used to notify scriptloader that this script has finished loading
 if(typeof eventManager != 'undefined'){
 	eventManager.fire('scriptLoaded', 'vle/model/Annotation.js');

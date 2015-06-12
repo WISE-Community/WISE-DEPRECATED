@@ -95,16 +95,35 @@ MaxScores.prototype.updateMaxScore = function(nodeId, maxScoreValue) {
  * Gets the max score value for a given nodeId or 0 as the default
  * value if there is no entry for that nodeId
  * @param nodeId
+ * @param annotations (optional) annotations to look for the auto graded
+ * max score
  */
-MaxScores.prototype.getMaxScoreValueByNodeId = function(nodeId) {
-	for(var x=0; x<this.maxScoresArray.length; x++) {
-		if(nodeId == this.maxScoresArray[x].nodeId) {
-			return this.maxScoresArray[x].maxScoreValue;
-		}
-	}
-	
-	//return 0 as the default value if there is no max score entry for the nodeId
-	return 0;
+MaxScores.prototype.getMaxScoreValueByNodeId = function(nodeId, annotations) {
+    var maxScore = 0;
+    var foundMaxScore = false;
+    
+    // try to get the max score from the metadata
+    for(var x=0; x<this.maxScoresArray.length; x++) {
+        if(nodeId == this.maxScoresArray[x].nodeId) {
+            maxScore = this.maxScoresArray[x].maxScoreValue;
+            foundMaxScore = true;
+        }
+    }
+    
+    if (!foundMaxScore && annotations != null) {
+        /*
+         * try to get the max score from the annotations since we weren't able
+         * to get it from the metadata
+         */
+        
+        var maxAutoScore = annotations.getMaxAutoScoreForNodeId(nodeId);
+        
+        if (maxAutoScore != null) {
+            maxScore = maxAutoScore;
+        }
+    }
+    
+    return maxScore;
 };
 
 /**
@@ -150,7 +169,7 @@ MaxScores.prototype.mergeMaxScores = function(newMaxScores) {
  * @return an integer containing the sum of all the max
  * scores specified by the teacher for the project
  */
-MaxScores.prototype.getMaxScoresSum = function(nodeIds) {
+MaxScores.prototype.getMaxScoresSum = function(nodeIds, annotations) {
 	var maxScoresSum = 0;
 	
 	//check if nodeIds were passed in
@@ -174,7 +193,7 @@ MaxScores.prototype.getMaxScoresSum = function(nodeIds) {
 			var nodeId = nodeIds[x];
 			
 			//get the max score for the node id
-			var maxScoreValue = this.getMaxScoreValueByNodeId(nodeId);
+			var maxScoreValue = this.getMaxScoreValueByNodeId(nodeId, annotations);
 			
 			//add it to the cumulative sum
 			maxScoresSum += maxScoreValue;
