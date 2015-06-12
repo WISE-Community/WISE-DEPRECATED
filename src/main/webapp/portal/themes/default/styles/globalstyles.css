@@ -640,15 +640,6 @@ a#name {
     margin-right: 0;
 }
 
-#switchBack {
-    position:absolute;
-    top:0px;
-    right:0px;
-	width:20px;
-	height:20px;
-    margin-right: 0;
-}
-
 #adminTools, #researchTools {
 	position:absolute;
 	bottom:0;
