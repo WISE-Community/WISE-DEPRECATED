@@ -146,8 +146,8 @@ public class StudentDataController {
             //List<StepWork> allRawWork = vleService.getStepWorksByRunId(runId);
             
             long currentTimeMillis2 = System.currentTimeMillis();
-            System.out.println("Query Database Time=" + (currentTimeMillis2 - currentTimeMillis1));
-            System.out.println("Number of Rows=" + allStepWorks.size());
+            //System.out.println("Query Database Time=" + (currentTimeMillis2 - currentTimeMillis1));
+            //System.out.println("Number of Rows=" + allStepWorks.size());
             
             Iterator<StepWork> allWorkIterator = allStepWorks.iterator();
             
@@ -159,14 +159,14 @@ public class StudentDataController {
             }
             
             long currentTimeMillis3 = System.currentTimeMillis();
-            System.out.println("Create JSONObjects Time=" + (currentTimeMillis3 - currentTimeMillis2));
+            //System.out.println("Create JSONObjects Time=" + (currentTimeMillis3 - currentTimeMillis2));
             
             // write the step work JSON objects to the response
             response.setContentType("application/json");
             response.getWriter().write(allStepWorkJSONObjects.toString());
             
             long currentTimeMillis4 = System.currentTimeMillis();
-            System.out.println("Write Response Time=" + (currentTimeMillis4 - currentTimeMillis3));
+            //System.out.println("Write Response Time=" + (currentTimeMillis4 - currentTimeMillis3));
             
             return null;
         }
