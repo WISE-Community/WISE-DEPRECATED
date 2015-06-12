@@ -1416,7 +1416,7 @@ public class AuthorProjectController {
 			config.put("username", username);
 			config.put("projectMetaDataUrl", projectMetaDataUrl);
 			config.put("curriculumBaseUrl", curriculumBaseUrl);
-			config.put("indexUrl", wiseBaseURL + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+			config.put("indexURL", wiseBaseURL + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 			int maxInactiveInterval = request.getSession().getMaxInactiveInterval() * 1000;
 			config.put("sessionTimeoutInterval", maxInactiveInterval);			// add sessiontimeout interval, in milleseconds
 			int sessionTimeoutCheckInterval = maxInactiveInterval / 20;         // check 20 times during the session.

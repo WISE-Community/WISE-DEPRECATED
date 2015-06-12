@@ -64,7 +64,7 @@ SessionManager.prototype.renewSession = function() {
 	var contextPath = this.view.getConfig().getConfigParam('contextPath');
 	
 	// make a request to renew the session
-	var renewSessionUrl = this.view.config.getConfigParam('indexUrl');
+	var renewSessionUrl = this.view.config.getConfigParam('indexURL');
 	if (renewSessionUrl == null || renewSessionUrl == 'undefined') {
 		renewSessionUrl = contextPath + "/index.html";
 	}

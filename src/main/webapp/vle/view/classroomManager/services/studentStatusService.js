@@ -6,7 +6,7 @@ define(['angular'], function(angular) {
 		this.studentStatuses = null;
 	
 		this.retrieveStudentStatuses = function(config) {
-			var studentStatusUrl = ConfigService.getConfigParam('studentStatusUrl');
+			var studentStatusURL = ConfigService.getConfigParam('studentStatusURL');
 			var runId = ConfigService.getConfigParam('runId');
 	
 			var requestConfig = {
@@ -15,7 +15,7 @@ define(['angular'], function(angular) {
 				}
 			};
 			
-			return $http.get(studentStatusUrl, requestConfig).then(angular.bind(this, function(result) {
+			return $http.get(studentStatusURL, requestConfig).then(angular.bind(this, function(result) {
 				var studentStatuses = result.data;
 		
 				this.studentStatuses = studentStatuses;

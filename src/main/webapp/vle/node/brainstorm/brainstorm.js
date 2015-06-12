@@ -571,7 +571,7 @@ BRAINSTORM.prototype.filterInappropriatePosts = function(vle){
 	vle.connectionManager.request(
 			'GET', 
 			2, 
-			vle.config.getConfigParam('getInappropriateFlagsUrl'), 
+			vle.config.getConfigParam('inappropriateFlagsURL'),
 			{
 				userId:vle.getUserAndClassInfo().getWorkgroupId(),
 				periodId:vle.getUserAndClassInfo().getPeriodId()

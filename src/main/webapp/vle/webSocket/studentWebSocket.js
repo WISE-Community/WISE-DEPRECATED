@@ -381,11 +381,11 @@ View.prototype.sendStudentStatusToServer = function() {
  */
 View.prototype.sendStudentStatusToServerHelper = function(studentStatusParams) {
 	//get the url for the StudentStatusController
-	var studentStatusUrl = this.getConfig().getConfigParam('studentStatusUrl');
+	var studentStatusURL = this.getConfig().getConfigParam('studentStatusURL');
 	
-	if(studentStatusUrl != null) {
+	if (studentStatusURL != null) {
 		//make the request to save the student status to the database
-		this.connectionManager.request('POST', 3, studentStatusUrl, studentStatusParams, this.sendStudentStatusToServerCallback, this);
+		this.connectionManager.request('POST', 3, studentStatusURL, studentStatusParams, this.sendStudentStatusToServerCallback, this);
 	}
 };
 

@@ -5059,7 +5059,7 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
  */
 View.prototype.getStudentStatuses = function() {
     //get the student status url we will use to make the request
-    var studentStatusUrl = this.getConfig().getConfigParam('studentStatusUrl');
+    var studentStatusURL = this.getConfig().getConfigParam('studentStatusURL');
     
     //get the run id
     var runId = this.getConfig().getConfigParam('runId');
@@ -5077,9 +5077,9 @@ View.prototype.getStudentStatuses = function() {
         runId:runId
     }
     
-    if(studentStatusUrl != null) {
+    if (studentStatusURL != null) {
         //make the request to the server for the student statuses
-        this.connectionManager.request('GET', 3, studentStatusUrl, studentStatusParams, this.getStudentStatusesCallback, this, this.getStudentStatusesFail, false, null);
+        this.connectionManager.request('GET', 3, studentStatusURL, studentStatusParams, this.getStudentStatusesCallback, this, this.getStudentStatusesFail, false, null);
     }
 };
 

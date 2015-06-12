@@ -184,7 +184,8 @@ define(['configService'], function(configService) {
                 // don't log out yet because there are still listeners
             } else {
                 // there are no more listeners so we will exit
-                
+                var mainHomePageURL = ConfigService.getMainHomePageURL();
+
                 if(this.performLogOut) {
                     // log out the user and bring them to the home page
                     
@@ -195,7 +196,6 @@ define(['configService'], function(configService) {
                     $http.get(sessionLogOutURL).then(function() {
                         
                         // bring the user back to the home page
-                        var mainHomePageURL = ConfigService.getMainHomePageURL();
                         window.location.href = mainHomePageURL;
                     });
                 } else {
@@ -220,7 +220,7 @@ define(['configService'], function(configService) {
                         homePageURL = contextPath + '/teacher/index.html';
                     } else {
                         // send the user to the main home page
-                        homePageURL = ConfigService.getMainHomePageURL();
+                        homePageURL = mainHomePageURL;
                     }
                     
                     window.location.href = homePageURL;

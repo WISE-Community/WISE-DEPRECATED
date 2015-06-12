@@ -278,12 +278,12 @@ View.prototype.inappropriateFlagCheckboxClickedEventListener = function(nodeId, 
 	 // override deleteFlag with whether Flag Work checkbox is checked or not
 	deleteFlag = !document.getElementById("inappropriateFlagButton_" + stepWorkId).checked;
 		 
-	var flagsURL = this.getConfig().getConfigParam('postInappropriateFlagsUrl');
+	var flagsURL = this.getConfig().getConfigParam('inappropriateFlagsURL');
 	
 	var value = '';
 	
 	//check if we are flagging or unflagging the flag
-	if(deleteFlag) {
+	if (deleteFlag) {
 		//we are deleting/unflagging the flag
 		value = 'unflagged';
 	} else {
