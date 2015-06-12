@@ -1,3 +1,6 @@
+<sec:authorize access="hasRole('ROLE_PREVIOUS_ADMINISTRATOR')">
+    <a id="switchBack" href='<c:url value="/logout/impersonate" />'></a>
+</sec:authorize>
 <div id="header">
 	<div class="banner">
 		
@@ -50,9 +53,6 @@
 
 		<sec:authorize access="hasRole('ROLE_USER')">
 			<div id="userInfoBlock" class="userInfo">
-				<sec:authorize access="hasRole('ROLE_PREVIOUS_ADMINISTRATOR')">
-				        <a id="switchBack" class="wisebutton minibutton" href='<c:url value="/logout/impersonate" />'><spring:message code="switchBack" /></a>
-				</sec:authorize>
                 <a id="signOut" class="wisebutton minibutton" href="<c:url value="/logout"/>" title="<spring:message code="signOutTitle"/>"><spring:message code="signOut" /></a>
 				<div id="userName">
 					<c:set var="firstName">
