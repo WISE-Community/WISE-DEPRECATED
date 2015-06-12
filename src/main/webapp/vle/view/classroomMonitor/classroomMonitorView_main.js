@@ -10467,16 +10467,16 @@ View.prototype.createSummaryReportDisplay = function() {
     });
     mainSummaryReportDiv.append(workgroupTotalScoreDiv);
     
-    var revisitsDiv = $('<div>')
-    revisitsDiv.attr('id', 'revisitsDiv');
-    revisitsDiv.addClass('reportSummaryDiv');
-    revisitsDiv.css('cursor', 'pointer');
-    revisitsDiv.click({thisView: this}, function(event) {
+    var visitsDiv = $('<div>')
+    visitsDiv.attr('id', 'visitsDiv');
+    visitsDiv.addClass('reportSummaryDiv');
+    visitsDiv.css('cursor', 'pointer');
+    visitsDiv.click({thisView: this}, function(event) {
         var thisView = event.data.thisView;
         
-        thisView.showRevisitsDetailedDiv();
+        thisView.showVisitsDetailedDiv();
     });
-    mainSummaryReportDiv.append(revisitsDiv);
+    mainSummaryReportDiv.append(visitsDiv);
     
     var timeSpentDiv = $('<div>')
     timeSpentDiv.attr('id', 'timeSpentDiv');
@@ -10518,10 +10518,10 @@ View.prototype.createSummaryReportDisplay = function() {
     workgroupTotalScoreDetailedDiv.hide();
     summaryReportWrapper.append(workgroupTotalScoreDetailedDiv);
     
-    var revisitsDetailedDiv = $('<div>');
-    revisitsDetailedDiv.attr('id', 'revisitsDetailedDiv');
-    revisitsDetailedDiv.hide();
-    summaryReportWrapper.append(revisitsDetailedDiv);
+    var visitsDetailedDiv = $('<div>');
+    visitsDetailedDiv.attr('id', 'visitsDetailedDiv');
+    visitsDetailedDiv.hide();
+    summaryReportWrapper.append(visitsDetailedDiv);
     
     var timeSpentDetailedDiv = $('<div>');
     timeSpentDetailedDiv.attr('id', 'timeSpentDetailedDiv');
@@ -10538,10 +10538,10 @@ View.prototype.createSummaryReportDisplay = function() {
     autoScoreDetailedDiv.hide();
     summaryReportWrapper.append(autoScoreDetailedDiv);
     
-    var workgroupRevisitsDetailedDiv = $('<div>');
-    workgroupRevisitsDetailedDiv.attr('id', 'workgroupRevisitsDetailedDiv');
-    workgroupRevisitsDetailedDiv.hide();
-    summaryReportWrapper.append(workgroupRevisitsDetailedDiv);
+    var workgroupVisitsDetailedDiv = $('<div>');
+    workgroupVisitsDetailedDiv.attr('id', 'workgroupVisitsDetailedDiv');
+    workgroupVisitsDetailedDiv.hide();
+    summaryReportWrapper.append(workgroupVisitsDetailedDiv);
     
     var workgroupTimeSpentDetailedDiv = $('<div>');
     workgroupTimeSpentDetailedDiv.attr('id', 'workgroupTimeSpentDetailedDiv');
@@ -10597,16 +10597,16 @@ View.prototype.refreshCurrentSummaryReportView = function() {
         this.showWorkgroupCompletionDetailedDiv();
     } else if(currentSummaryReportDiv === 'workgroupTotalScoreDetailedDiv') {
         this.showWorkgroupTotalScoreDetailedDiv();
-    } else if(currentSummaryReportDiv === 'revisitsDetailedDiv') {
-        this.showRevisitsDetailedDiv();
+    } else if(currentSummaryReportDiv === 'visitsDetailedDiv') {
+        this.showVisitsDetailedDiv();
     } else if(currentSummaryReportDiv === 'timeSpentDetailedDiv') {
         this.showTimeSpentDetailedDiv();
     } else if(currentSummaryReportDiv === 'revisionsDetailedDiv') {
         this.showRevisionsDetailedDiv();
     } else if(currentSummaryReportDiv === 'autoScoreDetailedDiv') {
         this.showAutoScoreDetailedDiv();
-    } else if(currentSummaryReportDiv === 'workgroupRevisitsDetailedDiv') {
-        this.showWorkgroupRevisitsDetailedDiv(nodeId);
+    } else if(currentSummaryReportDiv === 'workgroupVisitsDetailedDiv') {
+        this.showWorkgroupVisitsDetailedDiv(nodeId);
     } else if(currentSummaryReportDiv === 'workgroupTimeSpentDetailedDiv') {
         this.showWorkgroupTimeSpentDetailedDiv(nodeId);
     } else if(currentSummaryReportDiv === 'workgroupRevisionsDetailedDiv') {
@@ -10622,12 +10622,12 @@ View.prototype.showSummaryReportDiv = function(divId) {
     
     $('#workgroupCompletionDetailedDiv').hide();
     $('#workgroupTotalScoreDetailedDiv').hide();
-    $('#revisitsDetailedDiv').hide();
+    $('#visitsDetailedDiv').hide();
     $('#timeSpentDetailedDiv').hide();
     $('#revisionsDetailedDiv').hide();
     $('#autoScoreDetailedDiv').hide();
     
-    $('#workgroupRevisitsDetailedDiv').hide();
+    $('#workgroupVisitsDetailedDiv').hide();
     $('#workgroupTimeSpentDetailedDiv').hide();
     $('#workgroupRevisionsDetailedDiv').hide();
     $('#workgroupAutoScoreDetailedDiv').hide();
@@ -10776,7 +10776,7 @@ View.prototype.showWorkgroupTotalScoreDetailedDiv = function() {
     this.showSummaryReportDiv('workgroupTotalScoreDetailedDiv');
 };
 
-View.prototype.showRevisitsDetailedDiv = function() {
+View.prototype.showVisitsDetailedDiv = function() {
     
     this.currentSummaryReportNodeId = null;
     
@@ -10785,7 +10785,7 @@ View.prototype.showRevisitsDetailedDiv = function() {
     
     var classroomMonitorPeriodIdSelected = this.classroomMonitorPeriodIdSelected;
     
-    $('#revisitsDetailedDiv').html('');
+    $('#visitsDetailedDiv').html('');
     
     var backButton = $('<input>');
     backButton.attr('type', 'button');
@@ -10795,9 +10795,9 @@ View.prototype.showRevisitsDetailedDiv = function() {
         thisView.showSummaryReportDiv('mainSummaryReportDiv');
     });
     
-    $('#revisitsDetailedDiv').append(backButton);
+    $('#visitsDetailedDiv').append(backButton);
     
-    $('#revisitsDetailedDiv').append('<h5>Average Revisits</h5>');
+    $('#visitsDetailedDiv').append('<h5>Average Visits</h5>');
     
     var summaryReportPeriods = this.summaryReport.periods;
     
@@ -10811,33 +10811,33 @@ View.prototype.showRevisitsDetailedDiv = function() {
             
             if (node != null) {
                 var nodeId = node.nodeId;
-                var averageRevisitsPerStudent = node.averageRevisitsPerStudent;
+                var averageVisitsPerStudent = node.averageVisitsPerStudent;
                 
                 var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
                 
                 if (x != 0) {
-                    //$('#revisitsDetailedDiv').append('<br>');
+                    //$('#visitsDetailedDiv').append('<br>');
                 }
                 
                 var nodeDiv = $('<div>');
-                nodeDiv.html(averageRevisitsPerStudent + ' - ' + stepNumberAndTitle);
+                nodeDiv.html(averageVisitsPerStudent + ' - ' + stepNumberAndTitle);
                 nodeDiv.css('cursor', 'pointer');
                 nodeDiv.click({thisView: this, nodeId: nodeId}, function(event) {
                     var thisView = event.data.thisView;
                     var nodeId = event.data.nodeId;
                     
-                    thisView.showWorkgroupRevisitsDetailedDiv(nodeId);
+                    thisView.showWorkgroupVisitsDetailedDiv(nodeId);
                 });
                 
-                $('#revisitsDetailedDiv').append(nodeDiv);
+                $('#visitsDetailedDiv').append(nodeDiv);
             }
         }
     }
     
-    this.showSummaryReportDiv('revisitsDetailedDiv');
+    this.showSummaryReportDiv('visitsDetailedDiv');
 };
 
-View.prototype.showWorkgroupRevisitsDetailedDiv = function(nodeId) {
+View.prototype.showWorkgroupVisitsDetailedDiv = function(nodeId) {
     
     this.currentSummaryReportNodeId = nodeId;
     
@@ -10845,19 +10845,19 @@ View.prototype.showWorkgroupRevisitsDetailedDiv = function(nodeId) {
     
     var classroomMonitorPeriodIdSelected = this.classroomMonitorPeriodIdSelected;
     
-    $('#workgroupRevisitsDetailedDiv').html('');
+    $('#workgroupVisitsDetailedDiv').html('');
     
     var backButton = $('<input>');
     backButton.attr('type', 'button');
     backButton.val('Back');
     backButton.click({thisView: this}, function(event) {
         var thisView = event.data.thisView;
-        thisView.showSummaryReportDiv('revisitsDetailedDiv');
+        thisView.showSummaryReportDiv('visitsDetailedDiv');
     });
     
-    $('#workgroupRevisitsDetailedDiv').append(backButton);
+    $('#workgroupVisitsDetailedDiv').append(backButton);
     
-    $('#workgroupRevisitsDetailedDiv').append('<h5>Revisits on ' + stepNumberAndTitle + ' by Workgroup</h5>');
+    $('#workgroupVisitsDetailedDiv').append('<h5>Visits on ' + stepNumberAndTitle + ' by Workgroup</h5>');
     
     var nodes = this.summaryReport.nodes;
     
@@ -10875,25 +10875,20 @@ View.prototype.showWorkgroupRevisitsDetailedDiv = function(nodeId) {
                 var userName = this.getUserAndClassInfo().getUserNameByUserId(workgroupId);
                 
                 var visitCount = workgroup.visitCount;
-                var revisitCount = 0;
-                
-                if (visitCount > 0) {
-                    revisitCount = visitCount - 1;
-                }
                 
                 if (w != workgroupsSortedByVisitCount.length - 1) {
-                    //$('#workgroupRevisitsDetailedDiv').append('<br>');
+                    //$('#workgroupVisitsDetailedDiv').append('<br>');
                 }
                 
                 var workgroupDiv = $('<div>');
-                workgroupDiv.html(revisitCount + ' - ' + userName);
+                workgroupDiv.html(visitCount + ' - ' + userName);
                 
-                $('#workgroupRevisitsDetailedDiv').append(workgroupDiv);
+                $('#workgroupVisitsDetailedDiv').append(workgroupDiv);
             }
         }
     }
     
-    this.showSummaryReportDiv('workgroupRevisitsDetailedDiv');
+    this.showSummaryReportDiv('workgroupVisitsDetailedDiv');
 };
 
 View.prototype.showTimeSpentDetailedDiv = function() {
@@ -11036,7 +11031,7 @@ View.prototype.showRevisionsDetailedDiv = function() {
     
     $('#revisionsDetailedDiv').append(backButton);
     
-    $('#revisionsDetailedDiv').append('<h5>Average Revisions</h5>');
+    $('#revisionsDetailedDiv').append('<h5>Average Submissions</h5>');
     
     var summaryReportPeriods = this.summaryReport.periods;
     
@@ -11096,7 +11091,7 @@ View.prototype.showWorkgroupRevisionsDetailedDiv = function(nodeId) {
     
     $('#workgroupRevisionsDetailedDiv').append(backButton);
     
-    $('#workgroupRevisionsDetailedDiv').append('<h5>Revisions on ' + stepNumberAndTitle + ' by Workgroup</h5>');
+    $('#workgroupRevisionsDetailedDiv').append('<h5>Submissions on ' + stepNumberAndTitle + ' by Workgroup</h5>');
     
     var nodes = this.summaryReport.nodes;
     
@@ -11424,22 +11419,22 @@ View.prototype.showMainSummaryReportDiv = function() {
             }
         }
         
-        $('#revisitsDiv').html('');
-        $('#revisitsDiv').append('<h5>Average Revisits</h5>');
-        $('#revisitsDiv').append('MOST revisited steps');
+        $('#visitsDiv').html('');
+        $('#visitsDiv').append('<h5>Average Visits</h5>');
+        $('#visitsDiv').append('MOST visited steps');
         
         for (var x = 0; x < numberToShow; x++) {
             var node = nodesSortedByVisitCount[nodesSortedByVisitCount.length - 1 - x];
             
             if (node != null) {
                 var nodeId = node.nodeId;
-                var averageRevisitsPerStudent = node.averageRevisitsPerStudent;
+                var averageVisitsPerStudent = node.averageVisitsPerStudent;
                 
                 var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
                 
-                $('#revisitsDiv').append('<br>');
+                $('#visitsDiv').append('<br>');
                 
-                $('#revisitsDiv').append(averageRevisitsPerStudent + ' - ' + stepNumberAndTitle);
+                $('#visitsDiv').append(averageVisitsPerStudent + ' - ' + stepNumberAndTitle);
             }
         }
         
@@ -11463,8 +11458,8 @@ View.prototype.showMainSummaryReportDiv = function() {
         }
         
         $('#revisionsDiv').html('');
-        $('#revisionsDiv').append('<h5>Average Revisions</h5>');
-        $('#revisionsDiv').append('MOST revised steps');
+        $('#revisionsDiv').append('<h5>Average Submissions</h5>');
+        $('#revisionsDiv').append('MOST submitted steps');
         
         for (var x = 0; x < numberToShow; x++) {
             var node = nodesSortedByRevisionCount[nodesSortedByRevisionCount.length - 1 - x];
