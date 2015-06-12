@@ -1,6 +1,3 @@
-<sec:authorize access="hasRole('ROLE_PREVIOUS_ADMINISTRATOR')">
-    <a id="switchBack" href='<c:url value="/logout/impersonate" />'></a>
-</sec:authorize>
 <div id="header">
 	<div class="banner">
 		

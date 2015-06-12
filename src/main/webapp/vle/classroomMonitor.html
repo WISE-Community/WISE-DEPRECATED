@@ -6,6 +6,7 @@
         <title>Classroom Monitor</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap-custom.css">
         <link rel="stylesheet" type="text/css" href="css/classroomMonitor/monitor-styles.css">
 
         <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
@@ -57,23 +58,23 @@
 						<label class="btn btn-default" id="viewStepProgress" data-i18n-title="classroomMonitor_stepProgress_title">
 							<input type="radio" name="monitorView" value="stepProgress"><span class="fa fa-sitemap"></span><span class="btn-text" data-i18n="classroomMonitor_progress">Progress</span>
 						</label>
-						<label class="btn btn-default disabled" id="viewManageStudents" data-i18n-title="classroomMonitor_manage_title">
+						<!--<label class="btn btn-default disabled" id="viewManageStudents" data-i18n-title="classroomMonitor_manage_title">
 							<input type="radio" name="monitorView" value="manageStudents"><span class="fa fa-users"></span><span class="btn-text" data-i18n="classroomMonitor_manage">Manage</span>
-						</label>
+						</label>-->
 						<label class="btn btn-default" id="viewIdeaBasketList" data-i18n-title="classroomMonitor_idea_baskets_title">
 							<input type="radio" name="monitorView" value="ideaBasketList"><span class="fa fa-lightbulb-o"></span><span class="btn-text" data-i18n="classroomMonitor_idea_baskets">Idea Baskets</span>
 						</label>
                         <label class="btn btn-default" id="viewStudentAssets" data-i18n-title="grading_button_view_student_uploaded_files">
-                            <input type="radio" name="monitorView" value="studentAssets"><span class="fa fa-lightbulb-o"></span><span class="btn-text" data-i18n="grading_button_view_student_uploaded_files">Student Files</span>
+                            <input type="radio" name="monitorView" value="studentAssets"><span class="fa fa-archive"></span><span class="btn-text" data-i18n="grading_button_view_student_uploaded_files">Student Files</span>
                         </label>
                         <label class="btn btn-default" id="viewSummaryReport" data-i18n-title="classroomMonitor_summary_report_title">
-                            <input type="radio" name="monitorView" value="summaryReport"><span class="fa fa-lightbulb-o"></span><span class="btn-text" data-i18n="classroomMonitor_summary_report">Summary Report</span>
+                            <input type="radio" name="monitorView" value="summaryReport"><span class="fa fa-line-chart"></span><span class="btn-text" data-i18n="classroomMonitor_summary_report">Summary Report</span>
                         </label>
 					</div>
 				</div>
 				
 				<div class="btn-toolbar pull-right" role="toolbar">
-					<div id="runTools" class="btn-group btn-group-sm">
+					<!--<div id="runTools" class="btn-group btn-group-sm">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" disabled>
 					    	<span class="fa fa-gears"></span> <span class="btn-text" data-i18n="classroomMonitor_tools">Tools</span> <span class="caret"></span>
 					  	</button>
@@ -84,7 +85,7 @@
 					    	<li><a id="runSettings" href="#"><span class="fa fa-gear"></span><span data-i18n="classroomMonitor_runSettings">Run Settings</span></a></li>
 					    	<li><a id="showClassroomMenuItem" href="#"><span class="fa fa-file-image-o"></span><span data-i18n="classroomMonitor_showClassroom">Show Classroom</span></a></li>
 					    </ul>
-					</div>
+					</div>-->
 					<div class="btn-group btn-group-sm">
 						<button id="pauseControls" type="button" class="btn btn-default dropdown-toggle" data-toggle="popover">
 							<span class="fa fa-pause"></span><span id="pauseState" class="btn-text" data-i18n="classroomMonitor_pause">Screens</span>
@@ -132,6 +133,7 @@
 			        	<tr>
 			        		<th colspan="6" style="text-align:right"  data-i18n="classroomMonitor_stepProgress_totalCompletion">Total Completion:</th>
 			                <th></th>
+							<th></th>
 			        	</tr>
 			        </tfoot>
 			        <tbody></tbody>

@@ -8865,11 +8865,80 @@ table.dataTable.grading tbody .no-work .open-comments {
   color: #574229;
 }
 
-.reportSummaryDiv {
-    border-radius: 25px;
-    border: 2px solid #000000;
-    padding-left: 20px;
-    padding: 10px;
+#mainSummaryReportDiv .jumbotron {
+  margin: 0;
+  min-height: 210px;
+  padding: 2em;
+  cursor: pointer;
+  -webkit-transition: background-color 250ms;
+  -moz-transition: background-color 250ms;
+  -o-transition: background-color 250ms;
+  transition: background-color 250ms;
+}
+
+#mainSummaryReportDiv .jumbotron:hover {
+  background-color: rgba(221,221,221,0.8);
+}
+
+#mainSummaryReportDiv > div:nth-of-type(5n+1) .jumbotron {
+  background-color: #1c8ca8;
+  color: #fff;
+}
+
+#mainSummaryReportDiv > div:nth-of-type(5n+1) .jumbotron:hover {
+  background-color: rgba(24,140,168,0.8);
+}
+
+#mainSummaryReportDiv > div:nth-of-type(5n+2) .jumbotron {
+  background-color: #cad266;
+}
+
+#mainSummaryReportDiv > div:nth-of-type(5n+2) .jumbotron:hover {
+  background-color: rgba(202,210,102, 0.8);
+}
+
+#mainSummaryReportDiv div:nth-of-type(5n+3) .jumbotron {
+  background-color: #795c3a;
+  color: #fff;
+}
+
+#mainSummaryReportDiv div:nth-of-type(5n+3) .jumbotron:hover {
+  background-color: rgba(121,92,58, 0.8);
+}
+
+#mainSummaryReportDiv div:nth-of-type(5n+4) .jumbotron {
+  background-color: #ff563f;
+  color: #fff;
+}
+
+#mainSummaryReportDiv div:nth-of-type(5n+4) .jumbotron:hover {
+  background-color: rgba(255,86,63,0.8);
+}
+
+#mainSummaryReportDiv .jumbotron h4 {
+  margin-bottom: 0.25em;
+}
+
+#mainSummaryReportDiv .jumbotron h3 {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.summaryItem {
+  padding: 1em;
+  background-color: #ffffff;
+}
+
+#summaryBreadcrumb {
+  display: none;
+}
+
+#summaryNav2 {
+  display: none;
+}
+
+table.dataTable tr.gradable > td {
+  vertical-align: middle;
 }
 
 /**** EDIT/REMOVE ****/
