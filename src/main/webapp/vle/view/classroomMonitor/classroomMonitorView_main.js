@@ -6171,7 +6171,7 @@ View.prototype.calculateStudentScoreForWorkgroupId = function(workgroupId) {
         //get the max total score for this project
         this.totalPossibleForProject = view.getMaxScoreForProject();
     }
-    
+
     result.total = totalScoreForWorkgroup;
     result.gradedTotal = totalPossibleForWorkgroup;
     result.projectTotal = this.totalPossibleForProject;
@@ -11299,7 +11299,7 @@ View.prototype.showAutoScoreDetailedDiv = function() {
                 var averageSutoScoreDisplay = averageAutoScore;
                 var scoreRatio = 0;
                 if (averageAutoScorePercentage == null) {
-                    averageSutoScoreDisplay += ' (0%)';
+                    averageSutoScoreDisplay += ' (N/A%)';
                 } else {
                     scoreRatio = Math.floor(averageAutoScorePercentage * 100);
                     averageSutoScoreDisplay += ' (' + scoreRatio + '%)';
@@ -11323,7 +11323,7 @@ View.prototype.showAutoScoreDetailedDiv = function() {
         'language': {
             'info': view.getI18NStringWithParams('classroomMonitor_tableInfoText', ['_TOTAL_'])
         },
-        'order': [[ 0, 'desc' ]]
+        'order': [[ 0, 'asc' ]]
     });
     $('.stepRow', $autoScoreTable).on('click', function(){
         view.showWorkgroupAutoScoreDetailedDiv($(this).data('nodeid'));
@@ -11407,7 +11407,7 @@ View.prototype.showWorkgroupAutoScoreDetailedDiv = function(nodeId) {
         'language': {
             'info': view.getI18NStringWithParams('classroomMonitor_tableInfoText', ['_TOTAL_'])
         },
-        'order': [[ 0, 'desc' ]]
+        'order': [[ 0, 'asc' ]]
     });
     $('.workgroupRow', $workgroupAutoScoreTable).on('click', function(){
         view.studentRowClickedHandler($(this).data('workgroupid'));
@@ -11673,7 +11673,7 @@ View.prototype.showMainSummaryReportDiv = function() {
                 }
                 
                 if (averageAutoScorePercentage == null) {
-                    $('#autoScoreDiv').append(averageAutoScore + ' (N/A) - ' + stepNumberAndTitle);
+                    $('#autoScoreDiv').append(averageAutoScore + ' (N/A%) - ' + stepNumberAndTitle);
                 } else {
                     $('#autoScoreDiv').append(averageAutoScore + ' (' + Math.floor(averageAutoScorePercentage * 100) + '%) - ' + stepNumberAndTitle);
                 }
