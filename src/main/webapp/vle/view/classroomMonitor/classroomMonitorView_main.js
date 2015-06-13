@@ -6167,12 +6167,14 @@ View.prototype.calculateStudentScoreForWorkgroupId = function(workgroupId) {
     //get the max total score for the steps that were graded for this workgroup
     var totalPossibleForWorkgroup = totalScoreAndTotalPossible.totalPossible;
 
-    //get the max total score for this project
-    var totalPossibleForProject = view.getMaxScoreForProject();
-
+    if (this.totalPossibleForProject == null) {
+        //get the max total score for this project
+        this.totalPossibleForProject = view.getMaxScoreForProject();
+    }
+    
     result.total = totalScoreForWorkgroup;
     result.gradedTotal = totalPossibleForWorkgroup;
-    result.projectTotal = totalPossibleForProject;
+    result.projectTotal = this.totalPossibleForProject;
 
     return result;
 };
