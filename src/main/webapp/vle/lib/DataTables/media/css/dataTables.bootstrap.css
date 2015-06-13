@@ -296,7 +296,7 @@ table.dataTable thead, table.dataTable tfoot {
 }
 
 table.dataTable.no-footer {
-	border-bottom-width: 0;
+	/*border-bottom-width: 0;*/
 }
 
 .dataTables_top .panel-header {
