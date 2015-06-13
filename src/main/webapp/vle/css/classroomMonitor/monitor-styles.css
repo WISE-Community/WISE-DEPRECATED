@@ -8701,7 +8701,8 @@ table.dataTable.grading tbody .no-work .open-comments {
 	margin-left: 0.5em;
 }
 .viewStepWork a,
-.viewStudentWork a {
+.viewStudentWork a,
+.viewSummaryWork a {
   display: block;
   font-weight: bold;
   padding: 0.6153846153846154rem 0.7692307692307693rem;
@@ -8709,20 +8710,25 @@ table.dataTable.grading tbody .no-work .open-comments {
 .viewStepWork a:hover,
 .viewStudentWork a:hover,
 .viewStepWork a:active,
-.viewStudentWork a:active {
+.viewStudentWork a:active,
+.viewSummaryWork a:hover,
+.viewSummaryWork a:active {
   text-decoration: none;
 }
 .viewStepWork a .fa,
-.viewStudentWork a .fa {
+.viewStudentWork a .fa,
+.viewSummaryWork a .fa{
   margin-left: 0.38461538461538464rem;
 }
 .viewStepWork .label,
-.viewStudentWork .label {
+.viewStudentWork .label,
+.viewSummaryWork .label {
   margin-left: 0.15384615384615385rem;
 }
 @media (min-width: 992px) {
   .viewStepWork .label,
-  .viewStudentWork .label {
+  .viewStudentWork .label,
+  .viewSummaryWork .label {
     float: right !important;
     float: right;
     margin-top: 0.15384615384615385rem;
@@ -8865,9 +8871,26 @@ table.dataTable.grading tbody .no-work .open-comments {
   color: #574229;
 }
 
+#mainSummaryReportDiv {
+  -moz-column-width: 25em;
+  -webkit-column-width: 25em;
+  -moz-column-gap: 1.5em;
+  -webkit-column-gap: 1.5em;
+  margin: 0 0.5em;
+}
+
+#mainSummaryReportDiv .summaryItem {
+  display: inline-block;
+  padding: 0;
+  margin: 1em 0 0.5em;
+  width: 100%;
+  float: none;
+}
+
 #mainSummaryReportDiv .jumbotron {
+  position:relative;
+  display: block;
   margin: 0;
-  min-height: 210px;
   padding: 2em;
   cursor: pointer;
   -webkit-transition: background-color 250ms;
@@ -8927,6 +8950,15 @@ table.dataTable.grading tbody .no-work .open-comments {
 .summaryItem {
   padding: 1em;
   background-color: #ffffff;
+}
+
+.viewSummaryWork {
+  padding: 0 !important;
+}
+
+.viewSummaryWork a:hover {
+  color: #000000;
+  background-color: #eeeeee;
 }
 
 #summaryBreadcrumb {
