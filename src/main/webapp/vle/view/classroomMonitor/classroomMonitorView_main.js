@@ -11530,10 +11530,11 @@ View.prototype.showMainSummaryReportDiv = function() {
         var nodesSortedByAutoScore = summaryReportPeriod.nodesSortedByAutoScore;
 
         $('#workgroupCompletionDiv').html('');
-        $('#workgroupCompletionDiv').append('<h3>Average Completion</h3>');
+        $('#workgroupCompletionDiv').append('<h3 id="averageCompletion">Average Completion:</h3>');
         $('#workgroupCompletionDiv').append('<h4>LOWEST team completion</h4>');
+        var periodCompletion = 0, numWorkgroups = 0;
 
-        for (var x = 0; x < numberToShow; x++) {
+        for (var x = 0; x < workgroupsSortedByCompletion.length; x++) {
             var workgroup = workgroupsSortedByCompletion[x];
 
             if (workgroup != null) {
@@ -11541,18 +11542,29 @@ View.prototype.showMainSummaryReportDiv = function() {
 
                 var userName = this.getUserAndClassInfo().getUserNameByUserId(workgroupId);
                 var completion = workgroup.completion;
+                periodCompletion += completion;
+                numWorkgroups++;
 
-                if (x>0) { $('#workgroupCompletionDiv').append('<br>'); }
+                if(x<numberToShow) {
+                    if (x > 0) {
+                        $('#workgroupCompletionDiv').append('<br>');
+                    }
 
-                $('#workgroupCompletionDiv').append(completion + '% - ' + userName);
+                    $('#workgroupCompletionDiv').append(completion + '% - ' + userName);
+                }
             }
         }
 
-        $('#workgroupTotalScoreDiv').html('');
-        $('#workgroupTotalScoreDiv').append('<h3>Average Total Score</h3>');
-        $('#workgroupTotalScoreDiv').append('<h4>LOWEST scoring teams</h4>');
+        periodCompletion = periodCompletion / numWorkgroups + '%';
+        $('#averageCompletion').append(' <strong>' + periodCompletion + '</strong>');
 
-        for (var x = 0; x < numberToShow; x++) {
+        $('#workgroupTotalScoreDiv').html('');
+        $('#workgroupTotalScoreDiv').append('<h3 id="averageTotalScore">Average Project Score:</h3>');
+        $('#workgroupTotalScoreDiv').append('<h4>LOWEST scoring teams</h4>');
+        var averageTotalScore = 0;
+        numWorkgroups = 0;
+
+        for (var x = 0; x < workgroupsSortedByTotalScore.length; x++) {
             var workgroup = workgroupsSortedByTotalScore[x];
 
             if (workgroup != null) {
@@ -11571,29 +11583,44 @@ View.prototype.showMainSummaryReportDiv = function() {
                     maxProjectScore = workgroup.maxProjectScore;
                 }
 
-                if (x>0) { $('#workgroupTotalScoreDiv').append('<br>'); }
+                if(x<numberToShow) {
+                    if (x > 0) {
+                        $('#workgroupTotalScoreDiv').append('<br>');
+                    }
 
-                var totalScoreDisplay = 'N/A';
+                    var totalScoreDisplay = 'N/A';
 
-                if (totalScore != null) {
-                    totalScoreDisplay = totalScore;
+                    if (totalScore != null) {
+                        totalScoreDisplay = totalScore;
+                    }
+
+                    if (maxProjectScore > 0) {
+                        var scorePercent = Math.round(totalScore / maxProjectScore * 100);
+                        totalScoreDisplay += '/' + maxProjectScore + ' (' + scorePercent + '%)';
+                        averageTotalScore += scorePercent;
+                        numWorkgroups++;
+                    } else {
+                        totalScoreDisplay += '/0 (N/A%)';
+                    }
+
+                    $('#workgroupTotalScoreDiv').append(totalScoreDisplay + ' - ' + userName);
                 }
-
-                if (maxProjectScore > 0) {
-                    totalScoreDisplay += '/' + maxProjectScore + ' (' + Math.round(totalScore/maxProjectScore*100) + '%)';
-                } else {
-                    totalScoreDisplay += '/0 (0%)';
-                }
-
-                $('#workgroupTotalScoreDiv').append(totalScoreDisplay + ' - ' + userName);
             }
         }
 
-        $('#visitsDiv').html('');
-        $('#visitsDiv').append('<h3>Average Visits Per Step</h3>')
-        $('#visitsDiv').append('<h4>MOST visited steps</h4>');
+        if(numWorkgroups > 0) {
+            averageTotalScore = averageTotalScore / numWorkgroups + '%';
+        } else {
+            averageTotalScore = 'N/A';
+        }
+        $('#averageTotalScore').append(' <strong>' + averageTotalScore + '</strong>');
 
-        for (var x = 0; x < numberToShow; x++) {
+        $('#visitsDiv').html('');
+        $('#visitsDiv').append('<h3 id="averageNodeVisits">Average Visits Per Step:</h3>')
+        $('#visitsDiv').append('<h4>MOST visited steps</h4>');
+        var averageNodeVisits = 0;
+
+        for (var x = 0; x < nodesSortedByVisitCount.length; x++) {
             var node = nodesSortedByVisitCount[nodesSortedByVisitCount.length - 1 - x];
 
             if (node != null) {
@@ -11601,19 +11628,26 @@ View.prototype.showMainSummaryReportDiv = function() {
                 var averageVisitsPerStudent = node.averageVisitsPerStudent;
                 var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
 
-                if (x > 0) {
-                    $('#visitsDiv').append('<br>');
-                }
+                if(x<numberToShow) {
+                    if (x > 0) {
+                        $('#visitsDiv').append('<br>');
+                    }
 
-                $('#visitsDiv').append(averageVisitsPerStudent + ' - ' + stepNumberAndTitle);
+                    $('#visitsDiv').append(averageVisitsPerStudent + ' - ' + stepNumberAndTitle);
+                }
+                averageNodeVisits += averageVisitsPerStudent;
             }
         }
 
-        $('#timeSpentDiv').html('');
-        $('#timeSpentDiv').append('<h3>Average Time Per Step</h3>');
-        $('#timeSpentDiv').append('<h4>MOST time spent</h4>');
+        averageNodeVisits = (averageNodeVisits/nodesSortedByVisitCount.length).toFixed(2);
+        $('#averageNodeVisits').append(' <strong>' + averageNodeVisits + '</strong>');
 
-        for (var x = 0; x < numberToShow; x++) {
+        $('#timeSpentDiv').html('');
+        $('#timeSpentDiv').append('<h3 id="averageTimeSpent">Average Time Per Step:</h3>');
+        $('#timeSpentDiv').append('<h4>MOST time spent</h4>');
+        var averageTimeSpent = 0;
+
+        for (var x = 0; x < nodesSortedByTimeSpent.length; x++) {
             var node = nodesSortedByTimeSpent[nodesSortedByTimeSpent.length - 1 - x];
 
             if (node != null) {
@@ -11621,39 +11655,55 @@ View.prototype.showMainSummaryReportDiv = function() {
                 var averageTimeSpentPerStudent = node.averageTimeSpentPerStudent;
                 var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
 
-                if (x > 0) {
-                    $('#timeSpentDiv').append('<br>');
-                }
+                if(x<numberToShow) {
+                    if (x > 0) {
+                        $('#timeSpentDiv').append('<br>');
+                    }
 
-                $('#timeSpentDiv').append(this.secondsToMinutesAndSeconds(averageTimeSpentPerStudent) + ' - ' + stepNumberAndTitle);
+                    $('#timeSpentDiv').append(this.secondsToMinutesAndSeconds(averageTimeSpentPerStudent) + ' - ' + stepNumberAndTitle);
+                }
+                averageTimeSpent += averageTimeSpentPerStudent;
             }
         }
 
-        $('#submissionsDiv').html('');
-        $('#submissionsDiv').append('<h3>Average Submissions Per Step</h3>');
-        $('#submissionsDiv').append('<h4>MOST revised steps</h4>');
+        averageTimeSpent = this.secondsToMinutesAndSeconds(averageTimeSpent/nodesSortedByTimeSpent.length);
+        $('#averageTimeSpent').append(' <strong>' + averageTimeSpent + '</strong>');
 
-        for (var x = 0; x < numberToShow; x++) {
+        $('#submissionsDiv').html('');
+        $('#submissionsDiv').append('<h3 id="averageSubmissions">Average Submissions Per Step:</h3>');
+        $('#submissionsDiv').append('<h4>MOST revised steps</h4>');
+        var averageSubmissions = 0, numSteps = 0;
+
+        for (var x = 0; x < nodesSortedByRevisionCount.length; x++) {
             var node = nodesSortedByRevisionCount[nodesSortedByRevisionCount.length - 1 - x];
 
             if (node != null) {
                 var nodeId = node.nodeId;
-                var averageRevisionsPerStudent = node.averageRevisionsPerStudent;
-                var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
+                if(this.getProject().getNodeById(nodeId).hasGradingView()) {
+                    var averageRevisionsPerStudent = node.averageRevisionsPerStudent;
+                    var stepNumberAndTitle = this.getProject().getStepNumberAndTitle(nodeId);
 
-                if (x > 0) {
-                    $('#submissionsDiv').append('<br>');
+                    if(x<numberToShow) {
+                        if (x > 0) {
+                            $('#submissionsDiv').append('<br>');
+                        }
+
+                        $('#submissionsDiv').append(averageRevisionsPerStudent + ' - ' + stepNumberAndTitle);
+                    }
+                    averageSubmissions += averageRevisionsPerStudent;
+                    numSteps++;
                 }
-
-                $('#submissionsDiv').append(averageRevisionsPerStudent + ' - ' + stepNumberAndTitle);
             }
         }
 
-        $('#autoScoreDiv').html('');
-        $('#autoScoreDiv').append('<h3>Average Auto Score</h3>');
-        $('#autoScoreDiv').append('<h4>LOWEST auto-scored steps</h4>');
+        $('#averageSubmissions').append(' <strong>' + (averageSubmissions/numSteps).toFixed(2) + '</strong>');
 
-        for (var x = 0; x < numberToShow; x++) {
+        $('#autoScoreDiv').html('');
+        $('#autoScoreDiv').append('<h3 id="averageTotalAutoScore">Average Auto Score:</h3>');
+        $('#autoScoreDiv').append('<h4>LOWEST auto-scored steps</h4>');
+        var averageTotalAutoScore = 0, numSteps = 0;
+
+        for (var x = 0; x < nodesSortedByAutoScore.length; x++) {
             var node = nodesSortedByAutoScore[x];
 
             if (node != null) {
@@ -11671,14 +11721,27 @@ View.prototype.showMainSummaryReportDiv = function() {
                 if (maxAutoScore != null) {
                     averageAutoScore = averageAutoScore + '/' + maxAutoScore;
                 }
-                
-                if (averageAutoScorePercentage == null) {
-                    $('#autoScoreDiv').append(averageAutoScore + ' (N/A%) - ' + stepNumberAndTitle);
-                } else {
-                    $('#autoScoreDiv').append(averageAutoScore + ' (' + Math.floor(averageAutoScorePercentage * 100) + '%) - ' + stepNumberAndTitle);
+
+                if(x<numberToShow) {
+                    if (averageAutoScorePercentage == null) {
+                        $('#autoScoreDiv').append(averageAutoScore + ' (N/A%) - ' + stepNumberAndTitle);
+                    } else {
+                        $('#autoScoreDiv').append(averageAutoScore + ' (' + Math.floor(averageAutoScorePercentage * 100) + '%) - ' + stepNumberAndTitle);
+                    }
+                }
+
+                if (averageAutoScorePercentage != null){
+                    averageTotalAutoScore += averageAutoScorePercentage;
+                    numSteps++;
                 }
             }
         }
+
+        var averageAutoScoreDisplay = 'N/A';
+        if(numSteps > 0) {
+            averageAutoScoreDisplay = Math.floor(averageAutoScorePercentage / numSteps * 100) + '%';
+        }
+        $('#averageTotalAutoScore').append(' <strong>' + averageAutoScoreDisplay + '</strong>');
     }
 
     this.showSummaryReportDiv('mainSummaryReportDiv');
@@ -11690,7 +11753,7 @@ View.prototype.secondsToMinutesAndSeconds = function(seconds) {
 
     var minutes = Math.floor(seconds / 60);
 
-    var seconds = seconds % 60;
+    var seconds = Math.round(seconds % 60);
 
     if (minutes > 0) {
         minutesAndSeconds = minutes + 'm ' + seconds + 's';
