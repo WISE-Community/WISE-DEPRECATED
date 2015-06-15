@@ -2013,17 +2013,19 @@ IdeaBasket.prototype.saveIdeaBasket = function(thisView, action, workgroupId, id
 		thisView.ideaBasketChanged();
 	}
 	
-	// get all the node visits for the node
-	var nodeVisits = thisView.getState().getNodeVisitsByNodeId(this.node.id);
+	// get all the node visits for the node if this is for an ideabasket or explanation builder step
+	if (this.node != null) {
+		var nodeVisits = thisView.getState().getNodeVisitsByNodeId(this.node.id);
 
-	// process the student work in case we need to change the node's status
-	this.node.processStudentWork(nodeVisits);
+		// process the student work in case we need to change the node's status
+		this.node.processStudentWork(nodeVisits);
 
-	/*
-	* fire the studentWorkUpdated event and pass in the node id and node visit
-	* so listeners will know which step the student work was updated for
-	*/ 
-	eventManager.fire('studentWorkUpdated', [this.node.id, nodeVisits[nodeVisits.length - 1]]);
+		/*
+		 * fire the studentWorkUpdated event and pass in the node id and node visit
+		 * so listeners will know which step the student work was updated for
+		 */
+		eventManager.fire('studentWorkUpdated', [this.node.id, nodeVisits[nodeVisits.length - 1]]);
+	}
 };
 
 /**

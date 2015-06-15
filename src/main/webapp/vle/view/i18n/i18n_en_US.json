@@ -540,7 +540,7 @@
 		"description":"GradingTool: Text 'latest work' to show only the latest student work"
 	},
 	"grading_button_view_student_uploaded_files":{
-		"value":"View Student Uploaded Files",
+		"value":"Student Files",
 		"description":"GradingTool: Text in the View Student Uploaded Files button"
 	},
 	"grading_button_export_latest_student_work":{
@@ -1084,7 +1084,7 @@
 		"description":"Title text for the session timeout alert."
 	},
 	"classroomMonitor_title":{
-		"value":"Run Manager",
+		"value":"Classroom Manager",
 		"description":"Title for the classroom monitor"
 	},
 	"classroomMonitor_run":{
