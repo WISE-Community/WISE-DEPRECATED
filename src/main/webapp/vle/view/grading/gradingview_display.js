@@ -1284,7 +1284,7 @@ View.prototype.getWorkForNodeIdCallbackHandler = function(text, nodeId) {
 		var workForNodeId = [];
 		
 		//get the vle states array
-		var vleStates = vleStatesForNodeId.vle_states;
+		var vleStates = vleStatesForNodeId.vleStates;
 		
 		//loop through all the vle states JSON objects
 		for(var x=0; x<vleStates.length; x++) {

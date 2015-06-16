@@ -176,8 +176,8 @@ VLE_STATE.prototype.parseDataJSONString = function(vleStateJSONString, alwaysRet
 	var vleStatesJSONObj = $.parseJSON(vleStateJSONString);
 
 	var vleStatesArray = new Array();
-	for (var i=0; i < vleStatesJSONObj.vle_states.length; i++) {
-		var vleStateJSONObj = vleStatesJSONObj.vle_states[i];
+	for (var i=0; i < vleStatesJSONObj.vleStates.length; i++) {
+		var vleStateJSONObj = vleStatesJSONObj.vleStates[i];
 		vleStatesArray.push(VLE_STATE.prototype.parseDataJSONObj(vleStateJSONObj));
 	}
 

@@ -24,7 +24,7 @@ define(['angular'], function(angular) {
 				var studentWork = result.data;
 				
 				if(studentWork != null) {
-					var vleStates = studentWork.vle_states;
+					var vleStates = studentWork.vleStates;
 					
 					if(vleStates != null) {
 						for(var x=0; x<vleStates.length; x++) {
@@ -61,7 +61,7 @@ define(['angular'], function(angular) {
 				var studentWork = result.data;
 				
 				if(studentWork != null) {
-					var vleStates = studentWork.vle_states;
+					var vleStates = studentWork.vleStates;
 					
 					if(vleStates != null) {
 						if(nodeId != null) {

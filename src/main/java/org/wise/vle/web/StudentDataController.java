@@ -132,7 +132,7 @@ public class StudentDataController {
 			}
 		}
 		
-        if (getAllStepWorks != null && getAllStepWorks.equals("true")) {
+        if ("true".equals(getAllStepWorks)) {
             // get all the raw work
             
             JSONArray allStepWorkJSONObjects = new JSONArray();
@@ -150,7 +150,7 @@ public class StudentDataController {
             Iterator<StepWork> allWorkIterator = allStepWorks.iterator();
             
             // loop through all the StepWorks
-            while(allWorkIterator.hasNext()) {
+            while (allWorkIterator.hasNext()) {
                 StepWork stepWork = allWorkIterator.next();
                 JSONObject stepWorkJSONObject = stepWork.toJSON();
                 allStepWorkJSONObjects.put(stepWorkJSONObject);
@@ -452,19 +452,8 @@ public class StudentDataController {
 							}
 							nodeVisitsJSON.put(nodeVisitKeyName, new JSONArray());
 						}
-						String vleStatesKeyName = "vle_states"; // used in WISE4
-                        if (run != null) {
-                            org.wise.portal.domain.project.Project project = run.getProject();
-                            if (project != null) {
-                                Integer wiseVersion = project.getWiseVersion();
-                                if (wiseVersion != null && wiseVersion == 5) {
-                                    vleStatesKeyName = "vleStates";  // used in WISE5
-                                }
-                            }
-                        }
-						
-						workgroupNodeVisitsJSON.append(vleStatesKeyName, nodeVisitsJSON);
-						//workgroupNodeVisitsJSON.append("vle_states", nodeVisitsJSON);
+
+						workgroupNodeVisitsJSON.append("vleStates", nodeVisitsJSON);
 					}
 					response.getWriter().write(workgroupNodeVisitsJSON.toString());
 				}
