@@ -7691,7 +7691,7 @@ View.prototype.createExportStudentWorkRow = function(exportName, exportType) {
  */
 View.prototype.exportStudentWorkButtonClicked = function(exportType, fileType) {
     //get the parameters for the download export file request
-    var getXLSExportUrl = this.getConfig().getConfigParam('getXLSExportUrl');
+    var getXLSexportURL = this.getConfig().getConfigParam('getXLSexportURL');
     var runId = this.getConfig().getConfigParam('runId');
     var projectId = this.getConfig().getConfigParam('projectId');
     var parentProjectId = this.getConfig().getConfigParam('parentProjectId');
@@ -7714,7 +7714,7 @@ View.prototype.exportStudentWorkButtonClicked = function(exportType, fileType) {
     }
 
     //set the action url
-    $('#exportForm').attr('action', getXLSExportUrl);
+    $('#exportForm').attr('action', getXLSexportURL);
 
     //submit the form to request the export file
     $('#exportForm').submit();
@@ -7727,7 +7727,7 @@ View.prototype.exportStudentWorkButtonClicked = function(exportType, fileType) {
  */
 View.prototype.specialExportStepButtonClicked = function(nodeId) {
     //get the parameters for the download export file request
-    var getXLSExportUrl = this.getConfig().getConfigParam('getSpecialExportUrl');
+    var getXLSexportURL = this.getConfig().getConfigParam('getSpecialExportURL');
     var runId = this.getConfig().getConfigParam('runId');
     var projectId = this.getConfig().getConfigParam('projectId');
     var parentProjectId = this.getConfig().getConfigParam('parentProjectId');
@@ -7744,7 +7744,7 @@ View.prototype.specialExportStepButtonClicked = function(nodeId) {
     $('#exportForm input[name=exportType]').val('specialExport');
 
     //set the action url
-    $('#exportForm').attr('action', getXLSExportUrl);
+    $('#exportForm').attr('action', getXLSexportURL);
 
     //submit the form to request the export file
     $('#exportForm').submit();

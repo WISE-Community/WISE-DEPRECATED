@@ -39,10 +39,10 @@ View.prototype.specialExportButtonClickedEventListener = function(nodeId) {
  * Request the student names export
  */
 View.prototype.getStudentNamesExport = function() {
-	var getStudentListUrl = this.getConfig().getConfigParam("getStudentListUrl");
+	var getStudentListURL = this.getConfig().getConfigParam("getStudentListURL");
 	
 	document.getElementById('runId').value = this.getConfig().getConfigParam('runId');
-	document.getElementById('getStudentXLSExport').action = getStudentListUrl;
+	document.getElementById('getStudentXLSExport').action = getStudentListURL;
 	
 	$('#getStudentXLSExport').submit();
 };
@@ -163,7 +163,7 @@ View.prototype.setParamsForXLSExport = function() {
 	/*
 	 * set the url for where to get the xls
 	 */
-	document.getElementById('getStudentXLSExport').action = this.getConfig().getConfigParam('getXLSExportUrl');
+	document.getElementById('getStudentXLSExport').action = this.getConfig().getConfigParam('getXLSexportURL');
 };
 
 /**
@@ -199,7 +199,7 @@ View.prototype.setParamsForSpecialExport = function() {
 	/*
 	 * set the url for where to get the xls
 	 */
-	document.getElementById('getStudentXLSExport').action = this.getConfig().getConfigParam('getSpecialExportUrl');
+	document.getElementById('getStudentXLSExport').action = this.getConfig().getConfigParam('getSpecialExportURL');
 };
 
 /**
