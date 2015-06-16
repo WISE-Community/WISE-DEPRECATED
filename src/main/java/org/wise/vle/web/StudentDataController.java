@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -63,7 +63,6 @@ import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.project.Project;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
-import org.wise.vle.domain.work.StepWorkCache;
 import org.wise.vle.utils.VLEDataUtils;
 
 @Controller
@@ -256,8 +255,6 @@ public class StudentDataController {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
-		
-		boolean useCachedWork = false;  // disables using cache always
 
 		/* set headers so that browsers don't cache the data (due to ie problem */
 		response.setHeader("Pragma", "no-cache");
@@ -427,50 +424,15 @@ public class StudentDataController {
 						UserInfo userInfo = vleService.getUserInfoByWorkgroupId(new Long(userId));
 						JSONObject nodeVisitsJSON = new JSONObject();  // to store nodeVisits for this student.
 
-						// here we check if we have retrieved and cached this workgroup's data before.
-
 						//Get student's last stepwork.
 						StepWork latestWork = vleService.getLatestStepWorkByUserInfo(userInfo);
 						if (latestWork != null && latestWork.getPostTime() != null) {
-							// Get student's cachedWork, if exists.
-							StepWorkCache cachedWork = vleService.getStepWorkCacheByUserInfoGetRevisions(userInfo, getRevisions);
 
-							if (useCachedWork && cachedWork != null 
-									&& cachedWork.getCacheTime() != null
-									&& latestWork.getPostTime().before(cachedWork.getCacheTime())) {
-								// lastPostTime happened before lastCachedTime, so cache is still valid.
-								nodeVisitsJSON = new JSONObject(cachedWork.getData()); 
-							} else {
-								// lastPostTime happened before lastCachedTime or we never cached, so we need to retrieve student data
-								if (nodeList.size() == 0) {
-									nodeList = vleService.getNodesByRunId(runIdStr);
-								}
-								nodeVisitsJSON = getNodeVisitsForStudent(nodeList, nodeTypesList, userInfo, run, getAllWork, getRevisions);
-
-								//save this data to cache for quicker access next time
-								if (cachedWork == null) {
-									cachedWork = new StepWorkCache();
-									cachedWork.setUserInfo(userInfo);
-								}
-								Calendar now = Calendar.getInstance();
-								Timestamp cacheTime = new Timestamp(now.getTimeInMillis());
-								cachedWork.setCacheTime(cacheTime);
-								cachedWork.setData(nodeVisitsJSON.toString());
-								cachedWork.setGetRevisions(getRevisions);
-
-								try {
-									if (useCachedWork) {												
-										vleService.saveStepWorkCache(cachedWork); // save cachedWork if we're in useCacheMode
-									}
-								} catch (Exception e) {
-									/*
-									 * when the student's cached work is too large, an exception will be thrown.
-									 * if this exception is not caught, the student will not receive any of
-									 * their student data.
-									 */
-								}
-
+							if (nodeList.size() == 0) {
+								nodeList = vleService.getNodesByRunId(runIdStr);
 							}
+							nodeVisitsJSON = getNodeVisitsForStudent(nodeList, nodeTypesList, userInfo, run, getAllWork, getRevisions);
+
 						} else {
 							/*
 							 * the user does not have any work so we will just set the userName and

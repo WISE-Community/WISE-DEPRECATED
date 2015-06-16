@@ -410,15 +410,6 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table stepwork_cache (
-        id bigint not null auto_increment,
-        cacheTime datetime,
-        data longtext,
-        getRevisions bit,
-        userInfo_id bigint,
-        primary key (id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
     create table student_attendance (
         id bigint not null auto_increment,
         absentUserIds varchar(255),
@@ -841,12 +832,6 @@
     alter table stepwork 
         add index FK553587DDF572C312 (userInfo_id), 
         add constraint FK553587DDF572C312 
-        foreign key (userInfo_id) 
-        references userinfo (id);
-
-    alter table stepwork_cache 
-        add index FK953280A0F572C312 (userInfo_id), 
-        add constraint FK953280A0F572C312 
         foreign key (userInfo_id) 
         references userinfo (id);
 

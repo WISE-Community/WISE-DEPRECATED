@@ -39,7 +39,6 @@ import org.wise.portal.dao.statistics.VLEStatisticsDao;
 import org.wise.portal.dao.status.RunStatusDao;
 import org.wise.portal.dao.status.StudentStatusDao;
 import org.wise.portal.dao.userinfo.UserInfoDao;
-import org.wise.portal.dao.work.StepWorkCacheDao;
 import org.wise.portal.dao.work.StepWorkDao;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.annotation.Annotation;
@@ -54,7 +53,6 @@ import org.wise.vle.domain.status.RunStatus;
 import org.wise.vle.domain.status.StudentStatus;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
-import org.wise.vle.domain.work.StepWorkCache;
 
 /**
  * @author Geoffrey Kwan
@@ -81,10 +79,7 @@ public class VLEServiceImpl implements VLEService {
 	
 	@Autowired
 	private StepWorkDao<StepWork> stepWorkDao;
-	
-	@Autowired
-	private StepWorkCacheDao<StepWorkCache> stepWorkCacheDao;
-	
+
 	@Autowired
 	private VLEStatisticsDao<VLEStatistics> vleStatisticsDao;
 	
@@ -479,26 +474,6 @@ public class VLEServiceImpl implements VLEService {
 		return stepWorkDao.getStepWorkByUserIdAndData(userInfo, data);
 	}
 	
-	@Override
-	public StepWorkCache getStepWorkCacheById(Long id) {
-		return stepWorkCacheDao.getStepWorkCacheById(id);
-	}
-	
-	@Override
-	public void saveStepWorkCache(StepWorkCache stepWorkCache) {
-		stepWorkCacheDao.saveStepWorkCache(stepWorkCache);
-	}
-
-	@Override
-	public StepWorkCache getStepWorkCacheByUserInfo(UserInfo userInfo) {
-		return stepWorkCacheDao.getStepWorkCacheByUserInfo(userInfo);
-	}
-
-	@Override
-	public StepWorkCache getStepWorkCacheByUserInfoGetRevisions(UserInfo userInfo, boolean getRevisions) {
-		return stepWorkCacheDao.getStepWorkCacheByUserInfoGetRevisions(userInfo, getRevisions);
-	}
-
 	@Override
 	public VLEStatistics getVLEStatisticsById(Long id) {
 		return vleStatisticsDao.getVLEStatisticsById(id);

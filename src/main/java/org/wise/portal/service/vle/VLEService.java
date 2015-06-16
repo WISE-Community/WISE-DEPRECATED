@@ -37,7 +37,6 @@ import org.wise.vle.domain.status.RunStatus;
 import org.wise.vle.domain.status.StudentStatus;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
-import org.wise.vle.domain.work.StepWorkCache;
 
 /**
  * @author Hiroki Terashima
@@ -206,16 +205,6 @@ public interface VLEService {
 	public StepWork getStepWorkByStepWorkId(Long id);
 	
 	public StepWork getStepWorkByUserIdAndData(UserInfo userInfo,String data);
-	
-	//StepWorkCache functions
-	
-	public StepWorkCache getStepWorkCacheById(Long id);
-	
-	public void saveStepWorkCache(StepWorkCache stepWorkCache);
-	
-	public StepWorkCache getStepWorkCacheByUserInfo(UserInfo userInfo);
-	
-	public StepWorkCache getStepWorkCacheByUserInfoGetRevisions(UserInfo userInfo, boolean getRevisions);
 	
 	//VLEStatistics functions
 	
