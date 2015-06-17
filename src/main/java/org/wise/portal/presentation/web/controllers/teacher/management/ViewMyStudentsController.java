@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -52,13 +52,11 @@ import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.offering.RunService;
 
-
 /**
  * Controller for displaying students in the run
  * 
- * @author patricklawler
+ * @author Patrick Lawler
  * @author Hiroki Terashima
- * @version $Id:$
  */
 @Controller
 public class ViewMyStudentsController {
@@ -69,21 +67,9 @@ public class ViewMyStudentsController {
 	@Autowired
 	private AclService<Run> aclService;
 
-	protected static final String FALSE = "FALSE";
-
-	protected final static String HTTP_TRANSPORT_KEY = "http_transport";
-
 	protected final static String CURRENT_RUN_LIST_KEY = "current_run_list";
 	
-	protected static final String CURRENT_RUN = "current_run";
-
 	protected final static String WORKGROUP_MAP_KEY = "workgroup_map";
-	
-	protected final static String GRADING_PARAM = "gradingParam";
-	
-	protected final static String NON_WORKGROUP_STUDENT_LIST = "grouplessStudents";
-
-	static final String DEFAULT_PREVIEW_WORKGROUP_NAME = "Preview";
 	
 	private static final String VIEWMYSTUDENTS_KEY = "viewmystudentsallperiods";
 
@@ -104,7 +90,7 @@ public class ViewMyStudentsController {
 			HttpServletResponse servletResponse) throws Exception {
 		
     	ModelAndView modelAndView = new ModelAndView();
-    	ControllerUtil.addUserToModelAndView(servletRequest, modelAndView);
+    	ControllerUtil.addUserToModelAndView(modelAndView);
  
 		User user = ControllerUtil.getSignedInUser();
 
@@ -114,11 +100,11 @@ public class ViewMyStudentsController {
 		Long runId = Long.valueOf(runIdStr);
 		Run run = runService.retrieveById(runId);
 
-		/* Ensure that the user has permission for this run */
-		if(user.isAdmin() || 
+		// Check that the user has permission for this run
+		if (user.isAdmin() ||
 				user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
 				this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
-				this.aclService.hasPermission(run, BasePermission.READ, user)){
+				this.aclService.hasPermission(run, BasePermission.READ, user)) {
 			Set<Workgroup> allworkgroups = this.runService.getWorkgroups(runId);
 			String workgroupsWithoutPeriod = "";
 			Set<ViewMyStudentsPeriod> viewmystudentsallperiods = new TreeSet<ViewMyStudentsPeriod>();
@@ -139,7 +125,7 @@ public class ViewMyStudentsController {
 				Set<Workgroup> periodworkgroups = new TreeSet<Workgroup>();
 				Set<User> grouplessStudents = new HashSet<User>();
 				grouplessStudents.addAll(period.getMembers());
-				for(Workgroup workgroup : allworkgroups){
+				for (Workgroup workgroup : allworkgroups) {
 					grouplessStudents.removeAll(workgroup.getMembers());
 					try {
 						if (workgroup.getMembers().size() > 0    // don't include workgroups with no members.
@@ -159,7 +145,7 @@ public class ViewMyStudentsController {
 				viewmystudentsallperiods.add(viewmystudentsperiod);
 				
 				//determines which period tab to show in the AJAX tab object
-				if(periodName != null && periodName.equals(period.getName())) {
+				if (periodName != null && periodName.equals(period.getName())) {
 					tabIndex = periodCounter;
 				}
 				periodCounter++;

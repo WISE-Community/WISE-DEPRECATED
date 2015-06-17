@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -45,7 +45,6 @@ import org.wise.portal.service.offering.RunService;
  * 
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
- * @version $Id$
  */
 @Controller
 public class VLEController {
@@ -62,23 +61,22 @@ public class VLEController {
 		
 	    String runIdString = request.getParameter("runId");
 	    
-	    Long runId = null;
         Run run = null;
 	    
 	    if (runIdString != null) {
 	        // get the run
-	        runId = Long.parseLong(runIdString);
+	        Long runId = Long.parseLong(runIdString);
 	        run = this.runService.retrieveById(runId);
 	    }
 		
 		String action = request.getParameter("action");
 		if (action != null) {
 			if (action.equals("getData")) {
-				return handleGetData(request, response, run);
+				return handleGetData(request);
 			} else  if (action.equals("postData")) {
-				return handlePostData(request, response, run);
+				return handlePostData(request);
 			} else if (action.equals("getRunExtras")) {
-				return handleGetRunExtras(request, response, run);
+				return handleGetRunExtras(response, run);
 			} else {
 				throw new RuntimeException("should not get here");
 			}
@@ -93,13 +91,12 @@ public class VLEController {
 	/**
 	 * Retrns the RunExtras JSON string containing information like
 	 * the maxscores that teacher defines
-	 * @param request
 	 * @param response
 	 * @param run
 	 * @return
 	 * @throws IOException 
 	 */
-	private ModelAndView handleGetRunExtras(HttpServletRequest request,
+	private ModelAndView handleGetRunExtras(
 			HttpServletResponse response, Run run) throws IOException {
 		response.setHeader("Cache-Control", "no-cache");
 		response.setHeader("Pragma", "no-cache");
@@ -116,12 +113,9 @@ public class VLEController {
 
 	/**
 	 * @param request
-	 * @param response
-	 * @param run
 	 * @return
 	 */
-	private ModelAndView handlePostData(HttpServletRequest request,
-			HttpServletResponse response, Run run) {
+	private ModelAndView handlePostData(HttpServletRequest request) {
 		String baseurl = ControllerUtil.getBaseUrlString(request);
 		
 		//get the context path e.g. /wise
@@ -133,12 +127,9 @@ public class VLEController {
 
 	/**
 	 * @param request
-	 * @param response
-	 * @param run
 	 * @return
 	 */
-	private ModelAndView handleGetData(HttpServletRequest request,
-			HttpServletResponse response, Run run) {
+	private ModelAndView handleGetData(HttpServletRequest request) {
 		String baseurl = ControllerUtil.getBaseUrlString(request);
 		
 		//get the context path e.g. /wise

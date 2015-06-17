@@ -114,7 +114,7 @@ public class ClassroomRunListController {
 			gradingParam = FALSE;
 		
     	ModelAndView modelAndView = new ModelAndView();
-    	ControllerUtil.addUserToModelAndView(servletRequest, modelAndView);
+    	ControllerUtil.addUserToModelAndView(modelAndView);
  
 		User user = ControllerUtil.getSignedInUser();
 		

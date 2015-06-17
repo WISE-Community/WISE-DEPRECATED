@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -23,7 +23,6 @@ package org.wise.portal.presentation.web.controllers;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,7 +47,6 @@ public class LoginController {
 	@RequestMapping(method=RequestMethod.GET)
 	public String handleGET(
 			HttpServletRequest request,
-			HttpServletResponse response,
 			ModelMap modelMap) throws Exception {
 		String failed = request.getParameter("failed");
 		String redirectUrl = request.getParameter("redirect");

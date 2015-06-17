@@ -57,7 +57,6 @@ import org.wise.portal.service.project.ProjectService;
  * were forwarded to.
  * 
  * @author patrick lawler
- * @version $Id:$
  */
 @Controller
 public final class CredentialManager {

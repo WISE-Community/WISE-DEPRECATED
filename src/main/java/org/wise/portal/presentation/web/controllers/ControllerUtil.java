@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -34,16 +34,13 @@ import org.wise.portal.service.user.UserService;
 /**
  * @author Laurel Williams
  *
- * @version $Id$
- * 
  * A utility class for use by all controllers.
- * 
  */
 @Component
 public class ControllerUtil {
 
 	public final static String USER_KEY = "user";
-	
+
 	private static UserService userService;
 
 	@Autowired
@@ -51,8 +48,7 @@ public class ControllerUtil {
 		ControllerUtil.userService = userService;
 	}
 
-	public static void addUserToModelAndView(HttpServletRequest request,
-			ModelAndView modelAndView) {
+	public static void addUserToModelAndView(ModelAndView modelAndView) {
 		User user = getSignedInUser();
 		modelAndView.addObject(USER_KEY, user);
 	}
@@ -97,63 +93,5 @@ public class ControllerUtil {
 		String portalUrl = ControllerUtil.getBaseUrlString(request) + request.getContextPath();
 		
 		return portalUrl;
-	}
-	
-	/**
-	 * Get the url without the port
-	 * @param url the url to remove the port from e.g.
-	 * https://wise4.berkeley.edu:5285
-	 * @return the url without the port e.g.
-	 * https://wise4.berkeley.edu
-	 */
-	public static String getBaseUrlWithoutPort(String url) {
-		String baseUrlWithoutPort = "";
-		int endOfHttpColonSlashes = 0;
-		String http = "://";
-
-		if(url != null) {
-			if(url.indexOf("://") != -1) {
-				//get the location of the end of the "://"
-				endOfHttpColonSlashes = url.indexOf(http) + http.length();
-			}
-			
-			//get the location of the ":" after the "://" which should be the ":" before the port if any
-			int lastIndexOfColon = url.indexOf(":", endOfHttpColonSlashes);
-			
-			if(lastIndexOfColon != -1) {
-				//get the xmmpp server without the port e.g https://wise4.berkeley.edu
-				baseUrlWithoutPort = url.substring(0, lastIndexOfColon);
-			} else {
-				//there is no port so we will just return the unmodified url
-				baseUrlWithoutPort = url;
-			}
-		}
-		
-		return baseUrlWithoutPort;
-	}
-	
-	/**
-	 * Get the host name from the url
-	 * @param url the url e.g.
-	 * http://wise4.berkeley.edu:5285
-	 * @return the host name of the url e.g.
-	 * wise4.berkeley.edu
-	 */
-	public static String getHostNameFromUrl(String url) {
-		String hostName = "";
-		
-		//remove the port
-		String urlWithoutPort = getBaseUrlWithoutPort(url);
-		
-		//remove the protocol if any
-		if(urlWithoutPort.indexOf("//") != -1) {
-			//url contains a protocol e.g. http://wise4.berkeley.edu
-			hostName = urlWithoutPort.substring(urlWithoutPort.indexOf("//") + "//".length());
-		} else {
-			//url does not contain a protocol e.g. wise4.berkeley.edu
-			hostName = urlWithoutPort;
-		}
-		
-		return hostName;
 	}
 }

@@ -65,6 +65,10 @@ import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.utils.VLEDataUtils;
 
+/**
+ * @author Geoffrey Kwan
+ * @author Hiroki Terashima
+ */
 @Controller
 @RequestMapping("/studentData.html")
 public class StudentDataController {
@@ -480,7 +484,7 @@ public class StudentDataController {
 	 * if there is a nodeTypesList and getAllWork is true, we will get all the work
 	 * (including work with empty states) only for the node types in the nodeTypesList
 	 * 
-	 * @return
+	 * @return node visits json object containing node visits for student
 	 * @throws JSONException
 	 */
 	private JSONObject getNodeVisitsForStudent(List<Node> nodeList,
@@ -542,8 +546,6 @@ public class StudentDataController {
 							nodeVisitJSON.put("stepWorkId", stepWorkId);
 							nodeVisitJSON.put("id", Long.valueOf(stepWorkId));
 							nodeVisitJSON.put("visitPostTime", stepWork.getPostTime().getTime());
-							//nodeVisitsJSON.append("visitedNodes", nodeVisitJSON);
-							
 							
 	                        String nodeVisitKeyName = "visitedNodes";  // used in WISE4
 	                        if (run != null) {
@@ -616,8 +618,7 @@ public class StudentDataController {
 							nodeVisitJSON.put("stepWorkId", stepWorkId);
 							nodeVisitJSON.put("id", Long.valueOf(stepWorkId));
 							nodeVisitJSON.put("visitPostTime", stepWork.getPostTime().getTime());
-							//nodeVisitsJSON.append("visitedNodes", nodeVisitJSON);
-							
+
 							String nodeVisitKeyName = "visitedNodes";  // used in WISE4
 							if (run != null) {
 							    org.wise.portal.domain.project.Project project = run.getProject();
@@ -681,7 +682,8 @@ public class StudentDataController {
 				
 			}
 		}
-		
+
+		// test if user is allowed to make this request.
 		boolean allowedAccess = false;
 		
 		/*
@@ -778,7 +780,7 @@ public class StudentDataController {
 				
 				//obtain the StepWork with the given id
 				stepWork = (StepWork) vleService.getStepWorkById(stepWorkIdLong);
-			} else if (nodeType != null && nodeType !="") {
+			} else if (nodeType != null && nodeType != "") {
 				//step work id was not passed in so we will create a new StepWork object
 				stepWork = new StepWork();
 			}
@@ -1109,14 +1111,12 @@ public class StudentDataController {
             Long workgroupId = new Long(userId);
             workgroupIds.add(workgroupId);
         }
-        
-        
+
         // get all the UserInfos for the workgroup ids
         List<UserInfo> userInfos = vleService.getUserInfosByWorkgroupIds(workgroupIds);
         
-        // get all the StepWorks for the UserInfos
-        List<StepWork> stepWorks = vleService.getStepWorksByUserInfos(userInfos);
-        
-        return stepWorks;
+        // get and return all the StepWorks for the UserInfos
+
+        return vleService.getStepWorksByUserInfos(userInfos);
     }
 }

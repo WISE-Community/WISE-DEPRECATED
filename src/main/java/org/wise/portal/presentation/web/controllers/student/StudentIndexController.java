@@ -88,7 +88,7 @@ public class StudentIndexController {
 			HttpServletResponse response) throws Exception {
 
     	ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
-    	ControllerUtil.addUserToModelAndView(request, modelAndView);
+    	ControllerUtil.addUserToModelAndView(modelAndView);
 		User user = ControllerUtil.getSignedInUser();
     	
 		List<Run> runlist = runService.getRunList(user);

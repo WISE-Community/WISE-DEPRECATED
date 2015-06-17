@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -31,7 +31,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
@@ -103,8 +102,7 @@ public class ContactWiseController {
 	public String onSubmit(
 			@ModelAttribute("contactWISEForm")ContactWISEForm contactWISEForm, 
 			BindingResult result,
-			HttpServletRequest request,
-			HttpServletResponse response)
+			HttpServletRequest request)
 					throws Exception {
 		contactWISEValidator.validate(contactWISEForm, result);
 		checkRecaptcha(request, result);
@@ -122,7 +120,7 @@ public class ContactWiseController {
 		String message = contactWISEForm.getMailMessage();
 
 		//fromEmail will be null if the signed in user is a student
-		if(fromEmail == null) {
+		if (fromEmail == null) {
 			/*
 			 * set the fromEmail to a non null and non empty string otherwise
 			 * an exception will be thrown
@@ -139,7 +137,7 @@ public class ContactWiseController {
 		 * runId will not be set. this is ok because the teacher is the run
 		 * owner and their email is already in the cc array
 		 */
-		if(runId != null) {
+		if (runId != null) {
 			Run run = runService.retrieveById(runId);
 			Set<User> runOwners = run.getOwners();
 
@@ -147,23 +145,23 @@ public class ContactWiseController {
 			Vector<String> runOwnerEmailAddresses = new Vector<String>();
 
 			//loop through the run owners
-			while(runOwnersIterator.hasNext()) {
+			while (runOwnersIterator.hasNext()) {
 				User runOwner = runOwnersIterator.next();
 				MutableUserDetails userDetails = runOwner.getUserDetails();
 
 				//get the run owner email address
 				String emailAddress = userDetails.getEmailAddress();
 
-				if(emailAddress != null) {
+				if (emailAddress != null) {
 					runOwnerEmailAddresses.add(emailAddress);				
 				}
 			}
 
-			if(!runOwnerEmailAddresses.isEmpty()) {
+			if (!runOwnerEmailAddresses.isEmpty()) {
 				//we have run owner email addresses
 
-				for(int x=0; x<cc.length; x++) {
-					if(!runOwnerEmailAddresses.contains(cc[x])) {
+				for (int x = 0; x < cc.length; x++) {
+					if (!runOwnerEmailAddresses.contains(cc[x])) {
 						//add the cc emails to the run owner emails to merge them
 						runOwnerEmailAddresses.add(cc[x]);						
 					}
@@ -173,14 +171,14 @@ public class ContactWiseController {
 				cc = new String[runOwnerEmailAddresses.size()];
 
 				//put all the email addresses back into the cc array
-				for(int x=0; x<runOwnerEmailAddresses.size(); x++) {
+				for (int x = 0; x < runOwnerEmailAddresses.size(); x++) {
 					cc[x] = runOwnerEmailAddresses.get(x);			
 				}			
 			}			
 		}		
 
 		//for testing out the email functionality without spamming the groups
-		if(DEBUG) {
+		if (DEBUG) {
 			cc = new String[1];
 			cc[0] = fromEmail;
 			recipients[0] = DEBUG_EMAIL;
@@ -193,7 +191,8 @@ public class ContactWiseController {
 	}
 
 	@RequestMapping(method=RequestMethod.GET) 
-	public String initializeForm(ModelMap modelMap, HttpServletRequest request) throws NumberFormatException, ObjectNotFoundException { 
+	public String initializeForm(ModelMap modelMap, HttpServletRequest request)
+			throws NumberFormatException, ObjectNotFoundException {
 
 		ContactWISEForm contactWISEForm = new ContactWISEForm();
 
@@ -215,17 +214,17 @@ public class ContactWiseController {
 			//if user is a teacher, retrieve their email
 			/* NOTE: this check may be removed later if we never allow students
 			   to submit feedback */
-			if(userDetails instanceof TeacherUserDetails) {
+			if (userDetails instanceof TeacherUserDetails) {
 				contactWISEForm.setEmail(userDetails.getEmailAddress());
 			}
 		}
 
 		//tries to retrieve the project ID number from the request
-		if(request.getParameter("projectId") != null) {
+		if (request.getParameter("projectId") != null) {
 			Project project = projectService.getById(Long.parseLong(
 					request.getParameter("projectId")));
 
-			if(project != null) {
+			if (project != null) {
 				//sets the project and project name
 				contactWISEForm.setProjectName(
 						project.getName());
@@ -236,7 +235,7 @@ public class ContactWiseController {
 
 		String runId = request.getParameter("runId");
 
-		if(runId != null) {
+		if (runId != null) {
 			//set the run id into the object so we can access it later
 			contactWISEForm.setRunId(new Long(runId));
 
@@ -247,7 +246,7 @@ public class ContactWiseController {
 			Set<User> owners = run.getOwners();
 			Iterator<User> ownersIterator = owners.iterator();
 
-			if(ownersIterator.hasNext()) {
+			if (ownersIterator.hasNext()) {
 				//get the first owner of the run
 				User owner = ownersIterator.next();
 
@@ -341,18 +340,18 @@ public class ContactWiseController {
         // get the signed in user
         User user = ControllerUtil.getSignedInUser();
         
-        if(user != null) {
+        if (user != null) {
             // get the user details
             MutableUserDetails userDetails = user.getUserDetails();
             
             //check that the user is a student
-            if(userDetails != null && userDetails instanceof StudentUserDetails) {
+            if (userDetails != null && userDetails instanceof StudentUserDetails) {
                 //get all the runs that this student is in
                 List<Run> runList = runService.getRunList(user);
                 Iterator<Run> runListIterator = runList.iterator();
 
                 //loop through all the runs
-                while(runListIterator.hasNext()) {
+                while (runListIterator.hasNext()) {
                     //get a run
                     Run tempRun = runListIterator.next();
 
@@ -361,12 +360,12 @@ public class ContactWiseController {
                     Iterator<User> ownersIterator = owners.iterator();
 
                     //loop through all the owners of the run
-                    while(ownersIterator.hasNext()) {
+                    while (ownersIterator.hasNext()) {
                         //get an owner
                         User owner = ownersIterator.next();
 
                         //add the teacher to the list if they are not already in it
-                        if(!teachers.contains(owner)) {
+                        if (!teachers.contains(owner)) {
                             //the teacher is not in the list so we will add them
                             teachers.add(owner);
                         }
@@ -390,12 +389,12 @@ public class ContactWiseController {
         // get the signed in user
         User user = ControllerUtil.getSignedInUser();
         
-        if(user != null) {
+        if (user != null) {
             
             MutableUserDetails userDetails = user.getUserDetails();
             
             // check that the user is a teacher
-            if(userDetails != null && userDetails instanceof TeacherUserDetails) {
+            if (userDetails != null && userDetails instanceof TeacherUserDetails) {
             // if discourse is enabled for this WISE instance, add the link to the model
             // so the view can display it
                 String discourseURL = wiseProperties.getProperty("discourse_url");
@@ -416,7 +415,7 @@ public class ContactWiseController {
 		//get the signed in user or null if not signed in
 		User user = ControllerUtil.getSignedInUser();
 
-		if(user == null) {
+		if (user == null) {
 			//get the public and private keys from the wise.properties
 			String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
 			String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
@@ -424,7 +423,7 @@ public class ContactWiseController {
 			//check if the public key is valid in case the admin entered it wrong
 			boolean reCaptchaKeyValid = WISEAuthenticationProcessingFilter.isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
 
-			if(reCaptchaPrivateKey != null && reCaptchaPublicKey != null && reCaptchaKeyValid) {
+			if (reCaptchaPrivateKey != null && reCaptchaPublicKey != null && reCaptchaKeyValid) {
 				//get the reCaptcha challenge
 				String reCaptchaChallengeField = request.getParameter("recaptcha_challenge_field");
 
@@ -434,7 +433,7 @@ public class ContactWiseController {
 				//get the client's IP address
 				String remoteAddr = request.getRemoteAddr();
 
-				if(reCaptchaChallengeField != null && reCaptchaResponseField != null && remoteAddr != null) {
+				if (reCaptchaChallengeField != null && reCaptchaResponseField != null && remoteAddr != null) {
 					//the user filled in the captcha
 
 					ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
@@ -443,18 +442,18 @@ public class ContactWiseController {
 					//check if the user answer the reCaptcha correctly
 					ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(remoteAddr, reCaptchaChallengeField, reCaptchaResponseField);
 
-					if(!reCaptchaResponse.isValid()) {
+					if (!reCaptchaResponse.isValid()) {
 						//the user did not answer the reCaptcha correctly so we will throw an error and display a message
 
 						String reCaptchaError = "";
 
-						if(i18nProperties != null) {
+						if (i18nProperties != null) {
 							//get the invalid reCaptcha message
 							reCaptchaError = i18nProperties.getProperty("error.contactwise-recaptcha");
 						}
 
 						//if the error.contactwise-recaptcha key is not in the properties, the value will be null
-						if(reCaptchaError == null) {
+						if (reCaptchaError == null) {
 							reCaptchaError = "";
 						}
 
@@ -473,7 +472,7 @@ public class ContactWiseController {
 		String contactEmail = wiseProperties.getProperty("contact_email");
 		recipients = contactEmail.split(",");
 
-		if(recipients.length == 0) {
+		if (recipients.length == 0) {
 			/*
 			 * we did not have an email address for the issue type so we will try
 			 * to use the uber_admin email address
@@ -482,7 +481,7 @@ public class ContactWiseController {
 			//get the uber_admin email address
 			String uberAdminEmailAddress = wiseProperties.getProperty("uber_admin");
 
-			if(uberAdminEmailAddress != null && !uberAdminEmailAddress.equals("")) {
+			if (uberAdminEmailAddress != null && !uberAdminEmailAddress.equals("")) {
 				//set the uber_admin email address into the recipients
 				recipients = uberAdminEmailAddress.split(",");
 			}
@@ -501,7 +500,7 @@ public class ContactWiseController {
 		String[] cc = {};
 		List<String> list = new ArrayList<String>();
 
-		if(emailToCC != null) {
+		if (emailToCC != null) {
 			//add the email to cc to the list
 			list.add(emailToCC);
 		}
@@ -517,7 +516,7 @@ public class ContactWiseController {
 		//get the teacher email
 		String teacherEmail = getTeacherEmail(tempTeacherId);
 
-		if(teacherEmail != null) {
+		if (teacherEmail != null) {
 			//add the teacher email to the list of emails to cc
 			list.add(teacherEmail);
 		}
@@ -535,12 +534,12 @@ public class ContactWiseController {
 	protected String getTeacherEmail(Long userId) {
 		String email = null;
 
-		if(userId != null) {
+		if (userId != null) {
 			try {
 				//get the user
 				User user = userService.retrieveById(userId);
 
-				if(user != null) {
+				if (user != null) {
 					//get the user details
 					MutableUserDetails userDetails = user.getUserDetails();
 
@@ -563,16 +562,16 @@ public class ContactWiseController {
 	protected void getTeacherNameAndSetInForm(ContactWISEForm contactWISEForm) {
 		String name = null;
 
-		if(contactWISEForm.getTeacherId() != null) {
+		if (contactWISEForm.getTeacherId() != null) {
 			try {
 				//get the user
 				User user = userService.retrieveById(contactWISEForm.getTeacherId());
 
-				if(user != null) {
+				if (user != null) {
 					//get the user details
 					MutableUserDetails userDetails = user.getUserDetails();
 
-					if(userDetails instanceof TeacherUserDetails) {
+					if (userDetails instanceof TeacherUserDetails) {
 						//get the first and last name of the teacher
 						String firstName = ((TeacherUserDetails) userDetails).getFirstname();
 						String lastName = ((TeacherUserDetails) userDetails).getLastname();
@@ -585,5 +584,4 @@ public class ContactWiseController {
 		}
 		contactWISEForm.setTeacherName(name);
 	}
-
 }

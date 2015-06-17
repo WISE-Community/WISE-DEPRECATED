@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -43,17 +43,15 @@ import org.wise.vle.domain.PersistableDomain;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.user.UserInfo;
 
-
 /**
  * Domain representing work for a step
- * @author hirokiterashima
+ * @author Hiroki Terashima
+ * @author Geoffrey Kwan
  */
 @Entity
 @Table(name="stepwork")
 @Inheritance(strategy=InheritanceType.JOINED)
 public class StepWork extends PersistableDomain {
-
-	protected static String fromQuery = "from StepWork";
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -164,10 +162,6 @@ public class StepWork extends PersistableDomain {
 		this.data = data;
 	}
 
-	public void populateData(String nodeVisit) {
-		this.data = nodeVisit;
-	}
-	
 	public void populateData(JSONObject nodeVisitJSON) {
 		this.data = nodeVisitJSON.toString();
 	}
@@ -183,7 +177,7 @@ public class StepWork extends PersistableDomain {
 	/**
 	 * Returns the node state object within this stepwork with the specified timestamp
 	 * or null if does not exist.
-	 * @param timestamp
+	 * @param timestampIn
 	 * @return
 	 */
 	public JSONObject getNodeStateByTimestamp(Long timestampIn) {
@@ -211,7 +205,7 @@ public class StepWork extends PersistableDomain {
 	/**
 	 * If this StepWork contains response for a CRater item, return the
 	 * CRaterItemId. Otherwise, return null.
-	 * @return
+	 * @return CRater Item Id if this StepWork contains a response for CRater Item or NULL otherwise.
 	 */
 	public String getCRaterItemId() {
 		String cRaterItemId = null;

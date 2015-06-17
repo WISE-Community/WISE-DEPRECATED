@@ -538,6 +538,7 @@ public class InformationController {
 				};
 				
 				// add userInfo if this is a WISE5 run
+				// TODO: MAKE THIS WORK FOR WISE4 RUNS AS WELL
 				Project project = run.getProject();
 				Integer wiseVersion = project.getWiseVersion();
 				if (wiseVersion != null && wiseVersion == 5) {
@@ -578,16 +579,13 @@ public class InformationController {
         // set the projectBaseURL based on the projectURL
         String projectBaseURL = projectURL.substring(0, lastIndexOfSlash) + "/";
 
-
         // get the url for the *.project.meta.json file
 		String projectMetadataURL = wiseBaseURL + "/metadata.html";
-		
 
         if (mode == null) {
             mode = "preview";
         }
 
-		
 		try {
 			String parentProjectId = "";
 			String runName = "";
@@ -616,7 +614,6 @@ public class InformationController {
 					} else {
 						config.put("isRunActive", false);						
 					}
-
 				}
 			}
 			
@@ -727,7 +724,7 @@ public class InformationController {
 	 * view the VLE.
 	 * @param request
 	 * @param run
-	 * @return
+	 * @return Workgroup for the currently-logged in user
 	 * @throws ObjectNotFoundException
 	 */
 	private Workgroup getWorkgroup(HttpServletRequest request, Run run)
