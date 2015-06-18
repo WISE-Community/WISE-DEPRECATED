@@ -2814,8 +2814,10 @@ Node.prototype.populateNodeStatusDependencies = function() {
 		//get the node
 		var node = this.view.getProject().getNodeById(nodeId);
 		
-		//add this node id to that node's array of nodeIdsListening
-		node.nodeIdsListening.push(this.id);
+		if (node != null) {
+		    //add this node id to that node's array of nodeIdsListening
+	        node.nodeIdsListening.push(this.id);
+		}
 	}
 };
 
