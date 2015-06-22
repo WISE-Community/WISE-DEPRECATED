@@ -19,6 +19,7 @@ define([
         'configService',
         'currentNodeService',
         'cRaterService',
+        'discussionService',
         'drawService',
         'graphService',
         'highcharts-more',
@@ -58,6 +59,7 @@ define([
                 configService,
                 currentNodeService,
                 cRaterService,
+                discussionService,
                 drawService,
                 graphService,
                 highchartsmore,
@@ -108,6 +110,7 @@ define([
     
     // node services
     app.factory('AudioRecorderService', audioRecorderService);
+    app.factory('DiscussionService', discussionService);
     app.factory('DrawService', drawService);
     app.factory('GraphService', graphService);
     app.factory('MultipleChoiceService', multipleChoiceService);
@@ -131,12 +134,19 @@ define([
         }];
     };
     
-    app.config(['$urlRouterProvider', '$stateProvider', '$controllerProvider', 
-                function($urlRouterProvider, $stateProvider, $controllerProvider) {
+    app.config(['$urlRouterProvider',
+                '$stateProvider',
+                '$compileProvider',
+                '$controllerProvider',
+                function($urlRouterProvider,
+                        $stateProvider,
+                        $compileProvider,
+                        $controllerProvider) {
         
         $urlRouterProvider.otherwise('/vle/');
         
         app.$controllerProvider = $controllerProvider;
+        app.$compileProvider = $compileProvider;
         
         $stateProvider
             .state('root', {
@@ -181,6 +191,7 @@ define([
                         templateUrl: 'wise5/vle/node/node.html',
                         resolve: {
                             audioRecorderController: app.loadController('audioRecorderController'),
+                            discussionController: app.loadController('discussionController'),
                             drawController: app.loadController('drawController'),
                             graphController: app.loadController('graphController'),
                             htmlController: app.loadController('htmlController'),

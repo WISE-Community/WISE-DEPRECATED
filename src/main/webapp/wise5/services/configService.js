@@ -30,7 +30,7 @@ define([], function() {
         }; 
         
         serviceObject.getCRaterRequestURL = function() {
-            return this.getConfigParam('cRaterRequestURL');    
+            return this.getConfigParam('cRaterRequestURL');
         };
         
         serviceObject.getMainHomePageURL = function() {
@@ -75,6 +75,10 @@ define([], function() {
         
         serviceObject.getWebSocketURL = function() {
             return this.getConfigParam('webSocketURL');
+        };
+        
+        serviceObject.getMode = function() {
+            return this.getConfigParam('mode');
         };
         
         serviceObject.getWorkgroupId = function() {
@@ -136,8 +140,12 @@ define([], function() {
             return teacherUserInfo;
         };
         
-        serviceObject.getClassmateWorkgroupIds = function() {
+        serviceObject.getClassmateWorkgroupIds = function(includeSelf) {
             var workgroupIds = [];
+            
+            if (includeSelf) {
+                workgroupIds.push(this.getWorkgroupId());
+            }
             
             var classmateUserInfos = this.getClassmateUserInfos();
             
@@ -232,6 +240,18 @@ define([], function() {
             }
             
             return userName;
+        };
+        
+        serviceObject.isPreview = function() {
+            var result = false;
+            
+            var mode = this.getMode();
+            
+            if (mode != null && mode === 'preview') {
+                result = true;
+            }
+            
+            return result;
         };
         
         return serviceObject;

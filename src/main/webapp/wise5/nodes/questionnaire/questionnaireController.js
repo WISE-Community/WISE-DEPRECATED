@@ -407,6 +407,14 @@ define(['app'], function(app) {
             }
         }
         
+        $scope.$on('partSaveClicked', angular.bind(this, function(event, args) {
+            this.saveButtonClicked();
+        }));
+        
+        $scope.$on('partSubmitClicked', angular.bind(this, function(event, args) {
+            this.submitButtonClicked();
+        }));
+        
         /**
          * Listen for the partStudentDataChanged event that will come from 
          * child part scopes

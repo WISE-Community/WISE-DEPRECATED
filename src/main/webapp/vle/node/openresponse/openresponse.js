@@ -604,7 +604,8 @@ OPENRESPONSE.prototype.processTeacherNotifications = function(nodeVisit, orState
                 if (teacherNotification != null) {
                     var teacherNotificationType = teacherNotification.type;
                     
-                    if (teacherNotificationType === 'cRaterAttemptScore') {
+                    if (teacherNotificationType === 'cRaterAttemptScore' || 
+                            teacherNotificationType === 'attemptScore') {
                         /*
                          * this is a teacher notification that checks what score
                          * the student received on a specific attempt number
@@ -632,25 +633,10 @@ OPENRESPONSE.prototype.processTeacherNotifications = function(nodeVisit, orState
                                     cRaterResponseScore.toString().match("[" + score + "]")) {
                                 // the score matches the score we are looking for
                                 
-                                // get the other values for the teacher notification
-                                var id = teacherNotification.id;
-                                var message = teacherNotification.message;
-                                var notificationLevel = teacherNotification.notificationLevel;
-                                var dismissCode = teacherNotification.dismissCode;
-                                var nodeStateId = orState.timestamp;
-                                
-                                /*
-                                 * create a teacher notification object that will
-                                 * become active
-                                 */
-                                var newTeacherNotification = {};
-                                newTeacherNotification.id = id;
+                                // create a new teacher notification object
+                                var newTeacherNotification = this.view.createTeacherNotificationAnnotationValue(teacherNotification, orState);
                                 newTeacherNotification.attemptNumber = attemptNumber;
                                 newTeacherNotification.score = score;
-                                newTeacherNotification.message = message;
-                                newTeacherNotification.notificationLevel = notificationLevel;
-                                newTeacherNotification.dismissCode = dismissCode;
-                                newTeacherNotification.nodeStateId = nodeStateId;
                                 
                                 /*
                                  * create a new notification annotation and associate it
