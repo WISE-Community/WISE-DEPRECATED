@@ -404,6 +404,7 @@ public class StudentDataController {
 					userIdAndData.put("userId", userId);
 					userIdAndData.put("data", data);
 					userIdAndData.put("stepWorkId", stepWorkId);
+					userIdAndData.put("id", stepWork.getId());
 
 					stepWorks.put(userIdAndData);
 				}

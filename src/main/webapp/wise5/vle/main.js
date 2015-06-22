@@ -23,6 +23,8 @@ require.config({
         'd3': 'lib/d3/d3',
         'drawingTool': 'lib/drawingTool/drawing-tool',
         'directives': 'directives/directives',
+        'discussionController': 'nodes/discussion/discussionController',
+        'discussionService': 'nodes/discussion/discussionService',
         'drawController': 'nodes/draw/drawController',
         'drawService': 'nodes/draw/drawService',
         'filters': 'filters/filters',

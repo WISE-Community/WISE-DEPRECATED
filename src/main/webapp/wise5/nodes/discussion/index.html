@@ -1,0 +1,42 @@
+
+<head>
+    <link data-require="bootstrap-css@3.1.1" data-semver="3.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <link data-require="font-awesome@*" data-semver="4.3.0" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+    <link data-require="bootstrap@*" data-semver="3.3.2" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <link rel='stylesheet' href='/wise/wise5/lib/angular/angularTextAngular/textAngular.css'>
+</head>
+<body>
+<div ng-controller='DiscussionController as discussionController'>
+<div id="prompt">{{discussionController.getPrompt()}}</div>
+<div text-angular id='responseTextarea'
+    rows='{{discussionController.getNumRows() || 10}}'
+    cols='{{discussionController.getNumColumns() || 100}}'
+    ng-model='discussionController.newResponse'
+    ng-disabled='discussionController.isDisabled'
+    ta-disabled='discussionController.isDisabled'
+    ng-change='discussionController.studentDataChanged()'
+    data-drop="true" 
+    jqyoui-droppable="{onDrop: 'discussionController.dropCallback(item, $index)'}">
+</div>
+<button ng-click='discussionController.saveButtonClicked()' 
+    ng-show='discussionController.showSaveButton()' 
+    ng-disabled='discussionController.isDisabled'>Save</button>
+<button ng-click='discussionController.submitButtonClicked()' 
+    ng-show='discussionController.showSubmitButton()' 
+    ng-disabled='discussionController.isDisabled'>Submit</button>
+<!-- 
+<div ng-repeat='response in discussionController.getClassResponses()'>
+    <span style='display:inline-block'>{{response.userName}}: </span><span ng-bind-html='response.studentData' style='display:inline-block'></span>
+    <button ng-click='discussionController.replyButtonClicked(response, response.nodeVisitId, response.timestamp)'>Reply</button>
+    <br/>
+    <div ng-show='response.showResponseTextarea'>
+        <textarea ng-model='response.replyText'></textarea><button ng-click='discussionController.sendButtonClicked(response, response.nodeVisitId, response.timestamp, response.replyText)'>Send</button>
+    </div>
+</div>
+ -->
+<div ng-repeat='response in discussionController.getClassResponses()'>
+    <classresponse response='response' replybuttonclicked='replybuttonclicked(r)'></classresponse>
+</div>
+<div>chocolate</div>
+</div>
+</body>
