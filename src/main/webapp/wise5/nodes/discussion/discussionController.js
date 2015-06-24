@@ -23,6 +23,8 @@ define(['app', 'angular'], function(app, angular) {
         // holds the text that the student has typed
         this.studentResponse = '';
         
+        this.newResponse = '';
+        
         // whether the step should be disabled
         this.isDisabled = false;
         
@@ -211,6 +213,7 @@ define(['app', 'angular'], function(app, angular) {
             
             // get the text from the top textarea
             this.studentResponse = this.newResponse;
+            this.newResponse = '';
             
             // get this part id
             var partId = this.getPartId();
@@ -336,13 +339,17 @@ define(['app', 'angular'], function(app, angular) {
             
             // set the response into the node state
             nodeState.studentData = this.getStudentResponse();
+            this.studentResponse = '';
+            
             
             if (this.nodeVisitIdReplyingTo) {
                 nodeState.nodeVisitIdReplyingTo = this.nodeVisitIdReplyingTo;
+                this.nodeVisitIdReplyingTo = null;
             }
             
             if (this.nodeStateIdReplyingTo) {
                 nodeState.nodeStateIdReplyingTo = this.nodeStateIdReplyingTo;
+                this.nodeStateIdReplyingTo = null;
             }
             
             return nodeState;
@@ -678,8 +685,67 @@ define(['app', 'angular'], function(app, angular) {
             
         };
         
+        this.addClassResponse = function(workgroupId, nodeVisitId, nodeState) {
+            
+            if (workgroupId != null && nodeVisitId != null && nodeState != null) {
+                
+                var isSubmit = nodeState.isSubmit;
+                
+                if (isSubmit) {
+                    nodeState = NodeService.getNodeStateByPartId(nodeState, this.getPartId());
+                    
+                    nodeState.workgroupId = workgroupId;
+                    nodeState.userName = ConfigService.getUserNameByWorkgroupId(workgroupId);
+                    nodeState.nodeVisitId = nodeVisitId;
+                    nodeState.replies = [];
+                    
+                    this.classResponses.push(nodeState);
+                    
+                    var nodeStateId = nodeState.timestamp;
+                    
+                    var key = nodeVisitId + '-' + nodeStateId;
+                    
+                    this.responsesMap[key] = nodeState;
+                    
+                    var nodeVisitIdReplyingTo = nodeState.nodeVisitIdReplyingTo;
+                    var nodeStateIdReplyingTo = nodeState.nodeStateIdReplyingTo;
+                    
+                    if (nodeVisitIdReplyingTo != null && nodeStateIdReplyingTo != null) {
+                        var replyKey = nodeVisitIdReplyingTo + '-' + nodeStateIdReplyingTo;
+                        
+                        if (this.responsesMap[replyKey] != null &&
+                                this.responsesMap[replyKey].replies != null) {
+                            this.responsesMap[replyKey].replies.push(nodeState);
+                        }
+                    }
+                }
+            }
+        };
+        
         this.getClassResponses = function() {
             return this.classResponses;
+        };
+        
+        this.getLevel1Responses = function() {
+            var level1Responses = [];
+            var classResponses = this.classResponses;
+            
+            if (classResponses != null) {
+                for (var r = 0; r < classResponses.length; r++) {
+                    var tempClassResponse = classResponses[r];
+                    
+                    if (tempClassResponse != null) {
+                        var nodeVisitIdReplyingTo = tempClassResponse.nodeVisitIdReplyingTo;
+                        var nodeStateIdReplyingTo = tempClassResponse.nodeStateIdReplyingTo;
+                        
+                        if (nodeVisitIdReplyingTo == null && nodeStateIdReplyingTo == null) {
+                            level1Responses.push(tempClassResponse);
+                        }
+                    }
+                }
+            }
+            
+            return level1Responses;
         };
         
         this.replyButtonClicked = function(nodeState, nodeVisitId, nodeStateId) {
@@ -707,6 +773,44 @@ define(['app', 'angular'], function(app, angular) {
             var nodeState = this.createAndAddNodeState(saveTriggeredBy);
             
             $scope.$emit('partSubmitClicked', {partId: partId, nodeState: nodeState});
+        };
+        
+        $scope.sendbuttonclicked = function(response) {
+            
+            if (response != null) {
+                var nodeState = response;
+                var nodeVisitId = response.nodeVisitId;
+                var nodeStateId = response.timestamp;
+                
+                //, response.nodeVisitId, response.timestamp, response.replyText
+                
+                $scope.discussionController.studentResponse = nodeState.replyText;
+                $scope.discussionController.nodeVisitIdReplyingTo = nodeVisitId;
+                $scope.discussionController.nodeStateIdReplyingTo = nodeStateId;
+                
+                /*
+                this.nodeVisitIdReplyingTo = nodeState.nodeVisitId;
+                this.nodeStateIdReplyingTo = nodeState.timestamp;
+                
+                // get this part id
+                var partId = $scope.discussionController.getPartId();
+                
+                var saveTriggeredBy = 'submitButton';
+                
+                // create and add the node state to the node visit
+                var nodeState = $scope.discussionController.createAndAddNodeState(saveTriggeredBy);
+                */
+                $scope.$emit('partSubmitClicked');
+                
+                
+                //$scope.discussionController.newResponse
+                
+                // clear the reply textarea
+                response.replyText = null;
+                
+                // hide the reply textarea and send button
+                $scope.replybuttonclicked(response);
+            }
         };
         
         
@@ -780,6 +884,27 @@ define(['app', 'angular'], function(app, angular) {
             }
         }));
         
+        $scope.$on('nodeVisitSavedToServer', angular.bind(this, function(event, args) {
+            console.log('nodeVisitSavedToServer');
+            
+            var nodeVisit = args.nodeVisit;
+            
+            console.log('nodeVisit=' + nodeVisit);
+            
+            if (nodeVisit != null) {
+                
+                var workgroupId = ConfigService.getWorkgroupId();
+                var nodeVisitId = nodeVisit.id;
+                var nodeStates = nodeVisit.nodeStates;
+                
+                if (nodeStates != null && nodeStates.length > 0) {
+                    var nodeState = nodeStates[nodeStates.length - 1];
+                    
+                    this.addClassResponse(workgroupId, nodeVisitId, nodeState);
+                }
+            }
+        }));
+        
         /**
          * Register the the listener that will listen for the exit event
          * so that we can perform saving before exiting.
@@ -831,16 +956,73 @@ define(['app', 'angular'], function(app, angular) {
         this.setup();
     });
     
-    app.$compileProvider.directive('classresponse', function($compile) {
+    app.$compileProvider.directive('classResponse', function($compile) {
         return {
             restrict: 'E',
             scope: {
                 response: '=',
-                replybuttonclicked: '&'
+                replybuttonclicked: '&',
+                sendbuttonclicked: '&'
+            },
+            link: function($scope, element, attrs) {
+                
+                var response = $scope.response;
+                var replybuttonclicked = $scope.replybuttonclicked;
+                var sendbuttonclicked = $scope.sendbuttonclicked;
+                
+                if (response != null) {
+                    var studentData = response.studentData;
+                    
+                    var html = '';
+                    
+                    if (studentData != null) {
+                        html += "<hr/>";
+                        html += "<span style='display:inline-block'>{{response.userName}}: </span><span ng-bind-html='response.studentData' style='display:inline-block'></span>";
+                        
+                        var replies = response.replies;
+                        
+                        if (replies != null && replies.length > 0) {
+                            html += "<div ng-repeat='reply in response.replies' style='margin-left: 50px'><span style='display:inline-block'>{{reply.userName}}: </span><span ng-bind-html='reply.studentData' style='display:inline-block'></span></div>";
+                        }
+                        
+                        html += "<br/>";
+                        html += "<button ng-click='replyButtonClicked(response)'>Reply</button>";
+                        html += "<br/>";
+                        html += "<div ng-show='response.showResponseTextarea'>";
+                        html += "<textarea ng-model='response.replyText'></textarea>";
+                        html += "<br/>";
+                        html += "<button ng-click='sendButtonClicked(response)'>Send</button>";
+                        html += "</div>";
+                        
+                        $scope.replyButtonClicked = function(response) {
+                            replybuttonclicked({r: response});
+                        };
+                        
+                        $scope.sendButtonClicked = function(response) {
+                            sendbuttonclicked({r: response});
+                        }
+                    }
+                    
+                    var angularHTML = angular.element(html);
+                    $compile(angularHTML)($scope);
+                    element.replaceWith(angularHTML);
+                }
+            }
+        };
+    });
+    
+    app.$compileProvider.directive('classresponse2', function($compile) {
+        return {
+            restrict: 'E',
+            scope: {
+                response: '=',
+                replybuttonclicked: '&',
+                sendbuttonclicked: '&'
             },
             link: function($scope, element, attrs, discussionController) {
                 var response = $scope.response;
                 var replybuttonclicked = $scope.replybuttonclicked;
+                var sendbuttonclicked = $scope.sendbuttonclicked;
                 
                 if (response != null) {
                     var studentData = response.studentData;
@@ -851,17 +1033,21 @@ define(['app', 'angular'], function(app, angular) {
                         html += "<button ng-click='replyButtonClicked(response)'>Reply</button>";
                         html += "<br/>";
                         html += "<div ng-show='response.showResponseTextarea'>";
-                        html += "<textarea ng-model='response.replyText'></textarea><button ng-click='discussionController.sendButtonClicked(response, response.nodeVisitId, response.timestamp, response.replyText)'>Send</button>";
+                        html += "<textarea ng-model='response.replyText'></textarea><button ng-click='sendButtonClicked(response)'>Send</button>";
                         html += "</div>";
                         
                         $scope.replyButtonClicked = function(response) {
                             replybuttonclicked({r: response});
                         };
                         
+                        $scope.sendButtonClicked = function(response) {
+                            sendbuttonclicked({r: response});
+                        }
+                        
                         var replies = response.replies;
                         
                         if (replies != null && replies.length > 0) {
-                            html += "<div ng-repeat='reply in response.replies' style='margin-left: 50px'><classresponse response='reply' replybuttonclicked='replyButtonClicked(r)'></classresponse></div>";
+                            html += "<div ng-repeat='reply in response.replies' style='margin-left: 50px'><classresponse response='reply' replybuttonclicked='replyButtonClicked(r)' sendbuttonclicked='sendbuttonclicked(r)'></classresponse></div>";
                         }
                         
                         var angularHTML = angular.element(html);

@@ -229,6 +229,8 @@ define(['configService', 'projectService'], function(configService, projectServi
                     nodeVisit.id = nodeVisitId;
                     nodeVisit.visitPostTime = visitPostTime;
                     
+                    $rootScope.$broadcast('nodeVisitSavedToServer', {nodeVisit: nodeVisit});
+                    
                     return nodeVisit;
                 }, nodeVisit));
             }

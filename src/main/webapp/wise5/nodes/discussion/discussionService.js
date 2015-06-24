@@ -104,7 +104,7 @@ define(['nodeService'], function(nodeService) {
                     
                     var httpParams = {};
                     httpParams.method = 'GET';
-                    httpParams.url = ConfigService.getConfigParam('getStudentDataUrl');
+                    httpParams.url = ConfigService.getConfigParam('studentDataURL');
                     
                     var classmateWorkgroupIds = workgroupIds.join(':');
                     

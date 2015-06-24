@@ -34,9 +34,8 @@
     </div>
 </div>
  -->
-<div ng-repeat='response in discussionController.getClassResponses()'>
-    <classresponse response='response' replybuttonclicked='replybuttonclicked(r)'></classresponse>
+<div ng-repeat='response in discussionController.getLevel1Responses()'>
+    <class-response response='response' replybuttonclicked='replybuttonclicked(r)' sendbuttonclicked='sendbuttonclicked(r)'></class-response>
 </div>
-<div>chocolate</div>
 </div>
 </body>
