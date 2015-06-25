@@ -1,0 +1,10 @@
+{% extends "base.template.html" %}
+
+{% block content %}
+<h1>
+  {% if doc.title %}{$ doc.title | marked $}{% else %}{$ doc.name | code $}{% endif %}
+</h1>
+
+{$ doc.description | marked $}
+
+{% endblock %}

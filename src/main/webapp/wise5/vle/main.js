@@ -1,11 +1,20 @@
 require.config({
     baseUrl: 'wise5/',
+    waitSeconds: 0,
     paths: {
-        'angular': 'lib/angular/angular',
+        'angular': [
+            '//ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min',
+            'lib/angular/angular'
+            ],
         'angularAnimate': 'lib/angular/angularAnimate/angular-animate.min',
+        'angularAria': 'lib/angular/angularAria/angular-aria.min',
         'angularAudio': 'lib/angular/angularAudio/angular-audio',
         'angularDragDrop': 'lib/angular/angularDragDrop/angular-dragdrop.min',
         'angularFileUpload': 'lib/angular/angularFileUpload/angular-file-upload.min',
+        'angularMaterial': [
+            '//ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min',
+            'lib/angular/angularMaterial/dist/angular-material.min',
+            ],
         'angularSortable': 'lib/angular/angularSortable/angular-sortable',
         'angularTextAngular': 'lib/angular/angularTextAngular/textAngular.min',
         'angularTextAngularRangy': 'lib/angular/angularTextAngular/textAngular-rangy.min',
@@ -16,7 +25,10 @@ require.config({
         'app': 'vle/app',
         'audioRecorderController': 'nodes/audioRecorder/audioRecorderController',
         'audioRecorderService': 'nodes/audioRecorder/audioRecorderService',
-        'bootstrap': 'lib/bootstrap/bootstrap.min',
+        'bootstrap': [
+            '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min',
+            'lib/bootstrap/bootstrap.min'
+            ],
         'configService': 'services/configService',
         'currentNodeService': 'services/currentNodeService',
         'cRaterService': 'services/cRaterService',
@@ -34,8 +46,14 @@ require.config({
         'highcharts-more': 'lib/highcharts/highcharts-more',
         'highcharts-ng': 'lib/highcharts/highcharts-ng',
         'htmlController': 'nodes/html/htmlController',
-        'jquery': 'lib/jquery/jquery-2.1.3.min',
-        'jqueryUI': 'lib/jquery/jquery-ui.min',
+        'jquery': [
+            '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min',
+            'lib/jquery/jquery-2.1.3.min'
+            ],
+        'jqueryUI': [
+            '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min',
+            'lib/jquery/jquery-ui.min'
+            ],
         'multipleChoiceController': 'nodes/multipleChoice/multipleChoiceController',
         'multipleChoiceService': 'nodes/multipleChoice/multipleChoiceService',
         'navigationController': 'vle/navigation/navigationController',
@@ -62,7 +80,12 @@ require.config({
         'tableController': 'nodes/table/tableController',
         'tableService': 'nodes/table/tableService',
         'vendor': 'lib/drawingTool/vendor',
-        'vleController': 'vle/vleController'
+        'vleController': 'vle/vleController',
+        'webfont': [
+            '//ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont',
+            'lib/webfontloader/webfontloader'
+            ],
+        'webfonts': 'js/webfonts'
     },
     shim: {
         'angular': {
@@ -71,8 +94,7 @@ require.config({
         'angularAnimate': {
             'exports': 'angularAnimate',
             'deps': [
-                    'angular',
-                    'jqueryUI'
+                    'angular'
                     ]
         },
         'angularAudio': {
@@ -173,6 +195,28 @@ require.config({
             'deps': [
                      'jquery'
                      ]
+        },
+        'angularAria': {
+            'exports': 'angularAria',
+            'deps': [
+                'angular'
+            ]
+        },
+        'angularMaterial': {
+            'exports': 'angularMaterial',
+            'deps': [
+                'angularAnimate',
+                'angularAria'
+            ]
+        },
+        'webfont': {
+            'exports': 'webfont'
+        },
+        'webfonts': {
+            'exports': 'webfonts',
+            'deps': [
+                'webfont'
+            ]
         }
     }
 });

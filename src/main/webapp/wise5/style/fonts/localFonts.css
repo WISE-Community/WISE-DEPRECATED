@@ -1,0 +1,13 @@
+/* hind-regular - latin */
+@font-face {
+    font-family: 'Hind';
+    font-style: normal;
+    font-weight: 400;
+    src: url('hind/hind-v5-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local('Hind Regular'), local('Hind-Regular'),
+    url('hind/hind-v5-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('hind/hind-v5-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+    url('hind/hind-v5-latin-regular.woff') format('woff'), /* Modern Browsers */
+    url('hind/hind-v5-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+    url('hind/hind-v5-latin-regular.svg#Hind') format('svg'); /* Legacy iOS */
+}
