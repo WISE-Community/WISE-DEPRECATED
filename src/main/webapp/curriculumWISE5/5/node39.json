@@ -1,0 +1,13 @@
+{
+    "prompt": "Work on this discussion step.",
+    "parts": [
+        {
+            "id": "74rxg2i2qg",
+            "partType": "Discussion",
+            "numRows": 5,
+            "showSubmitButton": true
+        }
+    ],
+    "lockAfterSubmit": false,
+    "showSubmitButton": false
+}

@@ -1,5 +1,5 @@
 {
-    "prompt": "Draw stuff.",
+    "prompt": "Draw stuff.<br><img src='assets/spongebob_assert.jpg'/>",
     "lockAfterSubmit": false,
     "showSaveButton": true,
     "showSubmitButton": false
