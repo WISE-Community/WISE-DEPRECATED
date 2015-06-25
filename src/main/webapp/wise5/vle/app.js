@@ -39,9 +39,10 @@ define([
     'studentDataService',
     'studentStatusService',
     'studentWebSocketService',
-        'tableService'
-        ], function(
-                angular,
+    'tableService',
+    'webfont',
+    'webfonts'
+], function (angular,
              bootstrap,
              d3,
              directives,
@@ -81,8 +82,9 @@ define([
              studentDataService,
              studentStatusService,
              studentWebSocketService,
-                tableService
-                ) {
+             tableService,
+             webfont,
+             webfonts) {
 
     var app = angular.module('app', [
         'angularFileUpload',

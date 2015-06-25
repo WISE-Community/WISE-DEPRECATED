@@ -68,7 +68,12 @@ require.config({
         'tableController': 'nodes/table/tableController',
         'tableService': 'nodes/table/tableService',
         'vendor': 'lib/drawingTool/vendor',
-        'vleController': 'vle/vleController'
+        'vleController': 'vle/vleController',
+        'webfont': [
+            '//ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont',
+            'lib/webfontloader/webfontloader'
+            ],
+        'webfonts': 'js/webfonts'
     },
     shim: {
         'angular': {
@@ -190,6 +195,15 @@ require.config({
             'deps': [
                 'angularAnimate',
                 'angularAria'
+            ]
+        },
+        'webfont': {
+            'exports': 'webfont'
+        },
+        'webfonts': {
+            'exports': 'webfonts',
+            'deps': [
+                'webfont'
             ]
         }
     }
