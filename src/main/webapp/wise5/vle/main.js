@@ -1,11 +1,17 @@
 require.config({
     baseUrl: 'wise5/',
+    waitSeconds: 0,
     paths: {
         'angular': 'lib/angular/angular',
         'angularAnimate': 'lib/angular/angularAnimate/angular-animate.min',
+        'angularAria': 'lib/angular/angularAria/angular-aria.min',
         'angularAudio': 'lib/angular/angularAudio/angular-audio',
         'angularDragDrop': 'lib/angular/angularDragDrop/angular-dragdrop.min',
         'angularFileUpload': 'lib/angular/angularFileUpload/angular-file-upload.min',
+        'angularMaterial': [
+            '//ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min',
+            'lib/angular/angularMaterial/dist/angular-material.min',
+            ],
         'angularSortable': 'lib/angular/angularSortable/angular-sortable',
         'angularTextAngular': 'lib/angular/angularTextAngular/textAngular.min',
         'angularTextAngularRangy': 'lib/angular/angularTextAngular/textAngular-rangy.min',
@@ -71,8 +77,7 @@ require.config({
         'angularAnimate': {
             'exports': 'angularAnimate',
             'deps': [
-                    'angular',
-                    'jqueryUI'
+                    'angular'
                     ]
         },
         'angularAudio': {
@@ -173,6 +178,19 @@ require.config({
             'deps': [
                      'jquery'
                      ]
+        },
+        'angularAria': {
+            'exports': 'angularAria',
+            'deps': [
+                'angular'
+            ]
+        },
+        'angularMaterial': {
+            'exports': 'angularMaterial',
+            'deps': [
+                'angularAnimate',
+                'angularAria'
+            ]
         }
     }
 });

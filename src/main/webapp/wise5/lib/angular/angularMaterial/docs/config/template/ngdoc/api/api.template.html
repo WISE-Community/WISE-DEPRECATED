@@ -1,0 +1,46 @@
+{% extends "base.template.html" %}
+
+{% block content %}
+
+{% block header %}
+<header class="api-profile-header">
+  <h2 class="md-display-1" style="margin: 0;">&lt;{{menu.currentPage|humanizeDoc}} /&gt;</h2>
+  {% block related_components %}{% endblock %}
+</header>
+
+{% endblock %}
+
+<div layout="row" class="api-options-bar with-icon"></div>
+
+{% block description %}
+<div class="api-profile-description">
+  {$ doc.description | marked $}
+</div>
+{% endblock %}
+
+<div>
+  {% block dependencies %}
+  {%- if doc.requires %}
+  <section class="api-section">
+    <h2 id="dependencies">Dependencies</h2>
+    <ul>{% for require in doc.requires %}<li>{$ require | link $}</li>{% endfor %}</ul>
+  </section>
+  {% endif -%}
+  {% endblock %}
+
+  {% block additional %}
+  {% endblock %}
+
+  {% block examples %}
+  {%- if doc.examples %}
+  <section class="api-section">
+    <h2 id="example">Example</h2>
+    {%- for example in doc.examples -%}
+    {$ example | marked $}
+    {%- endfor -%}
+  </section>
+  {% endif -%}
+  {% endblock %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,99 @@
+{% macro typeList(types) -%}
+{%- set sep = joiner('|') %}
+{% for typeName in types %}<code class="api-type {$ typeName | typeClass $}">{$ typeName | escape $}</code>{% endfor %}
+{%- endmacro -%}
+
+{%- macro paramList(params) %}
+  {% for param in params %}
+    {%if not param.type.optional %}
+      <tr class="api-params-item">
+        <td style="white-space: nowrap;">
+          <b>* {$ param.name $}</b>
+          {% if param.alias %}| {$ param.alias $}{% endif %}
+          <span hide show-sm>{$ typeList(param.typeList) $}</span>
+        </td>
+        <td style="white-space: nowrap;">{$ typeList(param.typeList) $}</td>
+        <td class="description">
+          {$ param.description | marked $}
+          {% if param.default %}<p><em>(default: {$ param.default $})</em></p>{% endif %}
+        </td>
+      </tr>
+    {% endif %}
+  {% endfor %}
+  {% for param in params %}
+    {%if param.type.optional %}
+      <tr class="api-params-item">
+        <td style="white-space: nowrap;">
+          {$ param.name $}
+          {% if param.alias %}| {$ param.alias $}{% endif %}
+          <span hide show-sm>{$ typeList(param.typeList) $}</span>
+        </td>
+        <td style="white-space: nowrap;">{$ typeList(param.typeList) $}</td>
+        <td class="description">
+          {$ param.description | marked $}
+          {% if param.default %}<p><em>(default: {$ param.default $})</em></p>{% endif %}
+        </td>
+      </tr>
+    {% endif %}
+  {% endfor %}
+{% endmacro -%}
+
+{%- macro paramTable(params) %}
+<table class="no-style">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+  {$ paramList(params) $}
+  </tbody>
+</table>
+{% endmacro -%}
+
+
+
+{%- macro directiveParam(name, type, join, sep) %}
+  {%- if type.optional %}[{% endif -%}
+  {$ name | dashCase $}{$ join $}{$ type.description $}{$ sep $}
+  {%- if type.optional %}]{% endif -%}
+{% endmacro -%}
+
+{%- macro functionOptionSyntax(fn) %}
+  {%- set sep = joiner(', ') -%}
+  <code>{$ fn.name $}({</code>
+    {%- for param in fn.params %}
+    <br/>&nbsp;&nbsp;<code>{%- if param.type.optional %}[{% endif -%}
+    {$ param.name $}: {$ param.type.name $}
+    {%- if param.type.optional %}]{% endif -%},</code>
+    {% endfor %}
+  <br/><code>});</code>
+{% endmacro -%}
+
+{%- macro functionSyntax(fn) %}
+  {%- set sep = joiner(', ') -%}
+  {$ fn.name $}({%- for param in fn.params %}{$ sep() $}
+    {%- if param.type.optional %}[{% endif -%}
+    {$ param.name $}
+    {%- if param.type.optional %}]{% endif -%}
+    {% endfor %});
+{% endmacro -%}
+
+{%- macro returnTable(fn) -%}
+<table class="no-style">
+  <thead>
+  <tr>
+    <th>Returns</th>
+    <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>{$ typeList(fn.typeList) $}</td>
+    <td class="description">{$ fn.description | marked $}</td>
+  </tr>
+  </tbody>
+</table>
+{%- endmacro -%}
