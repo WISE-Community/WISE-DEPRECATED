@@ -37,6 +37,10 @@
                 code="returnToMainAdminPage"/></a></h5>
         <br/>
 
+        <c:if test="${!empty(errorMsg)}">
+            <div style="color:red; font-weight:bold; border:red 1px dotted; padding:5px;"><c:out value="${errorMsg}" /></div><br/>
+        </c:if>
+
         <div>Instructions:</div>
         <ol>
             <li>1. Choose and upload a spreadsheet.</li>
