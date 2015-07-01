@@ -120,7 +120,14 @@ public class MergeSpreadsheetsController {
                         }
                         if (!topRowCellString.isEmpty() && topRowCellString.equals(mergeColumnTitle)) {
                             // this is the mergeColumn. Remember the column index
-                            mergeColumnIndex = rowCellIteratorIndex;
+                            if (mergeColumnIndex == -1) {
+                                mergeColumnIndex = rowCellIteratorIndex;
+                            } else {
+                                // there are multiple mergeColumnTitles in this sheet. Let the user know and exit
+                                ModelAndView mav = new ModelAndView("/admin/run/mergespreadsheets");
+                                mav.addObject("errorMsg", "You have multiple columns titled \"" + mergeColumnTitle + "\" in worksheet #" + (sheetIndex + 1) + ". You can have only one merge column per worksheet. Please fix and try again.");
+                                return mav;
+                            }
                         }
                         rowCellIteratorIndex++;
                     }
