@@ -2,7 +2,218 @@
     "prompt": "Work on this discussion step.",
     "parts": [
         {
+            "id": "3b0ag28as8",
+            "prompt": "Match the things.",
+            "partType": "Match",
+            "choices": [
+                {
+                    "id": 1,
+                    "value": "Spongebob",
+                    "type": "choice"
+                },
+                {
+                    "id": 2,
+                    "value": "Patrick",
+                    "type": "choice"
+                },
+                {
+                    "id": 3,
+                    "value": "Squidward",
+                    "type": "choice"
+                }
+            ],
+            "buckets": [
+                {
+                    "id": 1,
+                    "value": "Rock",
+                    "type": "bucket"
+                },
+                {
+                    "id": 2,
+                    "value": "Easter Island Head",
+                    "type": "bucket"
+                },
+                {
+                    "id": 3,
+                    "value": "Pineapple",
+                    "type": "bucket"
+                }
+            ],
+            "feedback": [
+                {
+                    "bucketId": 0,
+                    "choiceId": 1,
+                    "position": null,
+                    "isCorrect": false,
+                    "feedback": "Incorrect, Spongebob lives somewhere.",
+                    "incorrectPositionFeedback": ""
+                },
+                {
+                    "bucketId": 0,
+                    "choiceId": 2,
+                    "position": null,
+                    "isCorrect": false,
+                    "feedback": "Incorrect, Patrick lives somewhere.",
+                    "incorrectPositionFeedback": ""
+                },
+                {
+                    "bucketId": 0,
+                    "choiceId": 3,
+                    "position": null,
+                    "isCorrect": false,
+                    "feedback": "Incorrect, Squidward lives somewhere.",
+                    "incorrectPositionFeedback": ""
+                },
+                {
+                    "bucketId": 1,
+                    "choiceId": 1,
+                    "position": null,
+                    "isCorrect": false,
+                    "feedback": "Incorrect, Spongebob does not live in a rock.",
+                    "incorrectPositionFeedback": ""
+                },
+                {
+                    "bucketId": 1,
+                    "choiceId": 2,
+                    "position": null,
+                    "isCorrect": true,
+                    "feedback": "Correct, Patrick lives under a rock.",
+                    "incorrectPositionFeedback": ""
+                },
+                {
+                    "bucketId": 1,
+                    "choiceId": 3,
+                    "position": null,
+                    "isCorrect": false,
+                    "feedback": "Incorrect, Squidward does not live in a rock.",
+                    "incorrectPositionFeedback": ""
+                },
+                {
+                    "bucketId": 2,
+                    "choiceId": 1,
+                    "position": null,
+                    "isCorrect": false,
+                    "feedback": "Incorrect, Spongebob does not live in an Easter Island Head.",
+                    "incorrectPositionFeedback": ""
+                },
+                {
+                    "bucketId": 2,
+                    "choiceId": 2,
+                    "position": null,
+                    "isCorrect": false,
+                    "feedback": "Incorrect, Patrick does not live in an Easter Island Head.",
+                    "incorrectPositionFeedback": ""
+                },
+                {
+                    "bucketId": 2,
+                    "choiceId": 3,
+                    "position": null,
+                    "isCorrect": true,
+                    "feedback": "Correct! Squidward lives in an Easter Island Head.",
+                    "incorrectPositionFeedback": ""
+                },
+                {
+                    "bucketId": 3,
+                    "choiceId": 1,
+                    "position": null,
+                    "isCorrect": true,
+                    "feedback": "Correct! Spongebob lives in a pineapple under the sea.",
+                    "incorrectPositionFeedback": ""
+                },
+                {
+                    "bucketId": 3,
+                    "choiceId": 2,
+                    "position": null,
+                    "isCorrect": false,
+                    "feedback": "Incorrect, Patrick does not live in a pineapple.",
+                    "incorrectPositionFeedback": ""
+                },
+                {
+                    "bucketId": 3,
+                    "choiceId": 3,
+                    "position": null,
+                    "isCorrect": false,
+                    "feedback": "Incorrect, Squidward does not live in a pineapple.",
+                    "incorrectPositionFeedback": ""
+                }
+            ],
+            "showSubmitButton": true
+        },
+        {
+            "id": "7tma230f8w",
+            "partType": "Table",
+            "prompt": "Fill out the table below.",
+            "tableData": [
+                [
+                    {
+                        "text": "",
+                        "uneditable": true
+                    },
+                    {
+                        "text": "time",
+                        "uneditable": true,
+                        "size": 10
+                    },
+                    {
+                        "text": "distance",
+                        "uneditable": true,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "House",
+                        "uneditable": false
+                    },
+                    {
+                        "text": "1",
+                        "uneditable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "7",
+                        "uneditable": false,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "Supermarket",
+                        "uneditable": false
+                    },
+                    {
+                        "text": "2",
+                        "uneditable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "3",
+                        "uneditable": false,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "Gas Station",
+                        "uneditable": false
+                    },
+                    {
+                        "text": "3",
+                        "uneditable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "9",
+                        "uneditable": false,
+                        "size": 10
+                    }
+                ]
+            ],
+            "showSubmitButton": false
+        },
+        {
             "id": "74rxg2i2qg",
+            "prompt": "Post a response to the thread.",
             "partType": "Discussion",
             "numRows": 5,
             "showSubmitButton": true
