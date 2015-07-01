@@ -15,8 +15,6 @@
     ng-disabled='discussionController.isDisabled'
     ta-disabled='discussionController.isDisabled'
     ng-change='discussionController.studentDataChanged()'
-    data-drop="true" 
-    jqyoui-droppable="{onDrop: 'discussionController.dropCallback(item, $index)'}">
 </div>
 <button ng-click='discussionController.saveButtonClicked()' 
     ng-show='discussionController.showSaveButton()' 
@@ -24,16 +22,6 @@
 <button ng-click='discussionController.submitButtonClicked()' 
     ng-show='discussionController.showSubmitButton()' 
     ng-disabled='discussionController.isDisabled'>Submit</button>
-<!-- 
-<div ng-repeat='response in discussionController.getClassResponses()'>
-    <span style='display:inline-block'>{{response.userName}}: </span><span ng-bind-html='response.studentData' style='display:inline-block'></span>
-    <button ng-click='discussionController.replyButtonClicked(response, response.nodeVisitId, response.timestamp)'>Reply</button>
-    <br/>
-    <div ng-show='response.showResponseTextarea'>
-        <textarea ng-model='response.replyText'></textarea><button ng-click='discussionController.sendButtonClicked(response, response.nodeVisitId, response.timestamp, response.replyText)'>Send</button>
-    </div>
-</div>
- -->
 <div ng-repeat='response in discussionController.getLevel1Responses()'>
     <class-response response='response' replybuttonclicked='replybuttonclicked(r)' submitbuttonclicked='submitbuttonclicked(r)'></class-response>
 </div>

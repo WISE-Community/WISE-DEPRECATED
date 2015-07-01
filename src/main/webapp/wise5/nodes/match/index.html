@@ -1,0 +1,69 @@
+
+<head>
+    <link rel='stylesheet' href='wise5/lib/angular/angularUITree/angular-ui-tree.min.css'>
+    <style>
+    
+.btn {
+    margin-right: 8px;
+}
+
+.angular-ui-tree-handle {
+    background: #f8faff;
+    border: 1px solid #dae2ea;
+    color: #7c9eb2;
+    padding: 10px 10px;
+}
+
+.angular-ui-tree-handle:hover {
+    color: #438eb9;
+    background: #f4f6f7;
+    border-color: #dce2e8;
+}
+
+.angular-ui-tree-placeholder {
+    background: #f0f9ff;
+    border: 2px dashed #bed2db;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+.group-title {
+    background-color: #687074 !important;
+    color: #FFF !important;
+}
+
+.bucket {
+    height: 150px;
+}
+    </style>
+</head>
+<body>
+<div ng-controller='MatchController as matchController'>
+<div id="prompt">{{matchController.getPrompt()}}</div>
+<div ui-tree='options'>
+    <ol ui-tree-nodes data-type='bucket' ng-model='matchController.buckets'>
+        <li ui-tree-node ng-repeat='bucket in matchController.buckets' class='bucket'>
+            <div class='group-title angular-ui-tree-handle' data-nodrag>
+                <div>{{bucket.value}}</div>
+            </div>
+            <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
+                <li ui-tree-node ng-repeat='item in bucket.items'>
+                    <div class='category-title angular-ui-tree-handle'>
+                        <div>{{item.value}}</div>
+                        <div>{{item.feedback}}</div>
+                    </div>
+                </li>
+            </ol>
+        </li>
+    </ol>
+</div>
+<button ng-click='matchController.saveButtonClicked()' 
+    ng-show='matchController.showSaveButton()' 
+    ng-disabled='matchController.isDisabled'>Save</button>
+<button ng-click='matchController.submitButtonClicked()' 
+    ng-show='matchController.showSubmitButton()' 
+    ng-disabled='matchController.isDisabled'>Submit</button>
+</div>
+</body>

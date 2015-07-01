@@ -15,6 +15,7 @@ define([
     'angularSortable',
     'angularTextAngular',
     'angularUIRouter',
+    'angularUITree',
     'angularWebSocket',
     'annotationService',
     'audioRecorderService',
@@ -26,6 +27,7 @@ define([
     'graphService',
     'highcharts-more',
     'highcharts-ng',
+    'matchService',
     'multipleChoiceService',
     'nodeService',
     'openResponseService',
@@ -58,6 +60,7 @@ define([
              angularSortable,
              angularTextAngular,
              angularUIRouter,
+             angularUITree,
              angularWebSocket,
              annotationService,
              audioRecorderService,
@@ -69,6 +72,7 @@ define([
              graphService,
              highchartsmore,
              highchartsng,
+             matchService,
              multipleChoiceService,
              nodeService,
              openResponseService,
@@ -93,6 +97,7 @@ define([
         'highcharts-ng',
         'ui.router',
         'ui.sortable',
+        'ui.tree',
         'ngAnimate',
         'ngAudio',
         'ngAria',
@@ -121,6 +126,7 @@ define([
     app.factory('DiscussionService', discussionService);
     app.factory('DrawService', drawService);
     app.factory('GraphService', graphService);
+    app.factory('MatchService', matchService);
     app.factory('MultipleChoiceService', multipleChoiceService);
     app.factory('PhotoBoothService', photoBoothService);
     app.factory('OpenResponseService', openResponseService);
@@ -205,6 +211,7 @@ define([
                                 drawController: app.loadController('drawController'),
                                 graphController: app.loadController('graphController'),
                                 htmlController: app.loadController('htmlController'),
+                                matchController: app.loadController('matchController'),
                                 multipleChoiceController: app.loadController('multipleChoiceController'),
                                 nodeController: app.loadController('nodeController'),
                                 openResponseController: app.loadController('openResponseController'),

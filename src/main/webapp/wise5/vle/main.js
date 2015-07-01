@@ -20,6 +20,7 @@ require.config({
         'angularTextAngularRangy': 'lib/angular/angularTextAngular/textAngular-rangy.min',
         'angularTextAngularSanitize': 'lib/angular/angularTextAngular/textAngular-sanitize.min',
         'angularUIRouter': 'lib/angular/angularUIRouter/angular-ui-router.min',
+        'angularUITree': 'lib/angular/angularUITree/angular-ui-tree.min',
         'angularWebSocket': 'lib/angular/angularWebSocket/angular-websocket.min',
         'annotationService': 'services/annotationService',
         'app': 'vle/app',
@@ -54,6 +55,8 @@ require.config({
             '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min',
             'lib/jquery/jquery-ui.min'
             ],
+        'matchController': 'nodes/match/matchController',
+        'matchService': 'nodes/match/matchService',
         'multipleChoiceController': 'nodes/multipleChoice/multipleChoiceController',
         'multipleChoiceService': 'nodes/multipleChoice/multipleChoiceService',
         'navigationController': 'vle/navigation/navigationController',
@@ -147,6 +150,12 @@ require.config({
         },
         'angularUIRouter': {
             'exports': 'angularUIRouter',
+            'deps': [
+                    'angular'
+                    ]
+        },
+        'angularUITree': {
+            'exports': 'angularUITree',
             'deps': [
                     'angular'
                     ]
