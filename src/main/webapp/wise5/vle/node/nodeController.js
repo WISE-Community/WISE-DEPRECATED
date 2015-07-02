@@ -37,7 +37,7 @@ define(['app'], function(app) {
                             var nodeTypeLowerCased = nodeType.toLowerCase();
                             
                             // set the node html path e.g. wise5/nodes/html/index.html
-                            this.nodeHTMLPath = 'wise5/nodes/' + nodeTypeLowerCased + '/index.html';
+                            this.nodeHTMLPath = 'wise5/components/' + nodeTypeLowerCased + '/index.html';
                         } else {
                             /*
                              * the node type is not all uppercase so it is 
@@ -53,7 +53,7 @@ define(['app'], function(app) {
                             
                             if (nodeTypeCamelCased != null) {
                                 // set the node html path e.g. wise5/nodes/openResponse/index.html
-                                this.nodeHTMLPath = 'wise5/nodes/' + nodeTypeCamelCased + '/index.html';
+                                this.nodeHTMLPath = 'wise5/components/' + nodeTypeCamelCased + '/index.html';
                             }
                         }
                     }

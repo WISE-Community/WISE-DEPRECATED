@@ -279,7 +279,7 @@ define(['app'], function(app) {
                 partType = NodeService.toCamelCase(partType);
             }
             
-            var partTypeHTML = 'wise5/nodes/' + partType + '/index.html';
+            var partTypeHTML = 'wise5/components/' + partType + '/index.html';
             
             return partTypeHTML;
         };
