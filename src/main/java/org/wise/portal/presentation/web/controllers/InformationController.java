@@ -385,7 +385,10 @@ public class InformationController {
 	 * Handles the get config request from three possible modes: grading, preview and run.
 	 * The run and grading requests are almost identical, the preview request is largely handled
 	 * when the projectId is found.
-	 * 
+	 *
+	 * projectId is found == preview mode
+	 * runId is found == run mode
+	 *
 	 * @param request
 	 * @param response
 	 * @throws ObjectNotFoundException
@@ -394,34 +397,56 @@ public class InformationController {
     @RequestMapping("/vleconfig.html")
 	private void handleGetConfig(HttpServletRequest request, HttpServletResponse response)
 	        throws ObjectNotFoundException, IOException {
-		JSONObject config = new JSONObject();
-		String projectIdStr = request.getParameter("projectId");
+        String contextPath = request.getContextPath(); //get the context path e.g. /wise
+		String projectId = request.getParameter("projectId");
 		String runId = request.getParameter("runId");
 		String mode = request.getParameter("mode");
 		String step = request.getParameter("step");
 		String userSpecifiedLang = request.getParameter("lang");
+		String parentProjectId = "";
+		String runName = "";
 
-		String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+        if (mode == null) {
+            mode = "preview";
+        }
+
+        String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 		String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
     	String cRaterRequestURL = wiseBaseURL + "/cRater.html?type=cRater";  // the url to make CRater requests
 
-		//get the context path e.g. /wise
-		String contextPath = request.getContextPath();
-		
 		String rawProjectUrl = null;
-		
+		JSONObject config = new JSONObject();
+
 		// if projectId provided, this is a request for preview
-		if (projectIdStr != null) {
-			Project project = projectService.getById(projectIdStr);
+		if (projectId != null) {
+			Project project = projectService.getById(projectId);
+
+			parentProjectId = project.getParentProjectId() + ""; // get the parent project id as a string
+
 			rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-		}
-		
-		/* if no projectId String provided, try getting project url from run also add gradework
-		 * specific config to the config */
-		if (runId != null) {
+			try {
+				config.put("runId", "");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} else if (runId != null) {
+			/* if no projectId String provided, try getting project url from run also add gradework
+			 * specific config to the config */
 			Run run = this.runService.retrieveById(Long.parseLong(runId));
 			rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+
+			// get the run name
+			runName = run.getName();
+
+			// get the project
+			Project project = run.getProject();
+			if (project != null) {
+				// get the project id as a string
+				projectId = project.getId() + "";
+
+				parentProjectId = project.getParentProjectId() + ""; // get the parent project id as a string
+			}
 
 			Long periodId = null;
 			Workgroup workgroup = getWorkgroup(request, run);
@@ -450,7 +475,7 @@ public class InformationController {
 
 			//get the grading type (step or team)
 			String gradingType = request.getParameter("gradingType");
-			
+
 			//get the boolean whether to get revisions
 			String getRevisions = request.getParameter("getRevisions");
 			
@@ -483,9 +508,6 @@ public class InformationController {
 	    	//get the url to get student assets
 	    	String studentAssetManagerURL = wiseBaseURL + "/assetManager.html?type=studentAssetManager&runId=" + runId;
 
-			// Set the post level if specified in the run
-			Integer postLevel = run.getPostLevel();
-
 			//get the websocket base url e.g. ws://wise4.berkeley.edu:8080
 			String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
 			
@@ -514,8 +536,10 @@ public class InformationController {
             // URL to get/post inappropriate flags
             String inappropriateFlagsURL = wiseBaseURL + "/annotation.html?type=inappropriateFlag&runId=" + runId;
 
-            //put all the config params into the json object
+            // put all the config params into the json object
 			try {
+				config.put("runId", runId);
+				config.put("isRunActive", !run.isEnded());
 				config.put("contextPath", contextPath);
 				config.put("flagsURL", flagsURL);
                 config.put("inappropriateFlagsURL", inappropriateFlagsURL);
@@ -532,26 +556,21 @@ public class InformationController {
                 config.put("webSocketURL", webSocketURL);
 				config.put("studentStatusURL", studentStatusURL);
 				config.put("runStatusURL", runStatusURL);
-				
-				if (postLevel != null) {
-					config.put("postLevel", postLevel);
-				};
-				
-				// add userInfo if this is a WISE5 run
-				// TODO: MAKE THIS WORK FOR WISE4 RUNS AS WELL
-				Project project = run.getProject();
+				config.put("postLevel", run.getPostLevel());
+
+				// add userInfo if this is a WISE5 run. TODO: MAKE THIS WORK FOR WISE4 RUNS AS WELL
 				Integer wiseVersion = project.getWiseVersion();
 				if (wiseVersion != null && wiseVersion == 5) {
 	                config.put("userInfo", getUserInfo(request));
 				}
 				
-				//add the config fields specific to the teacher grading
-				if (mode != null && mode.equals("grading")) {
+				// add the config fields specific to the teacher grading
+				if ("grading".equals(mode)) {
                     // URL for get/post premade comments
                     String premadeCommentsURL = wiseBaseURL + "/teacher/grading/premadeComments.html";
                     config.put("premadeCommentsURL", premadeCommentsURL);
 
-                    //get the url for xls export
+                    // get the url for xls export
                     String getXLSExportURL = wiseBaseURL + "/getExport.html?type=xlsexport&runId=" + runId;
                     config.put("getXLSExportURL", getXLSExportURL);
 
@@ -582,51 +601,13 @@ public class InformationController {
         // get the url for the *.project.meta.json file
 		String projectMetadataURL = wiseBaseURL + "/metadata.html";
 
-        if (mode == null) {
-            mode = "preview";
-        }
-
 		try {
-			String parentProjectId = "";
-			String runName = "";
-			
-			if (projectIdStr == null) {
-				//look for the project id in the run if project id was not provided in the request
-				Run run = runService.retrieveById(new Long(runId));
-				
-				if (run != null) {
-					//get the run name
-					runName = run.getName();
-					
-					//get the project
-					Project project = run.getProject();
-					if (project != null) {
-						//get the project id as a string
-						projectIdStr = project.getId() + "";
-						
-						//get the parent project id as a string
-						parentProjectId = project.getParentProjectId() + "";
-					}
-					
-					// check if run is active 
-					if (!run.isEnded()) {
-						config.put("isRunActive", true);
-					} else {
-						config.put("isRunActive", false);						
-					}
-				}
-			}
-			
+			config.put("runName", runName);
 			config.put("contextPath", contextPath);
 			config.put("mode", mode);
-			config.put("projectId", projectIdStr);
+			config.put("projectId", projectId);
 			config.put("parentProjectId", parentProjectId);
 			config.put("projectMetadataURL", projectMetadataURL);
-			if (mode == null || !"preview".equals(mode)) {
-                String userInfoURL = wiseBaseURL + "/userinfo.html?runId=" + runId;
-				config.put("userInfoURL", userInfoURL);
-			}
-
             config.put("projectURL", projectURL);
             config.put("projectBaseURL", projectBaseURL);
             config.put("studentUploadsBaseURL", studentUploadsBaseWWW);
@@ -635,7 +616,19 @@ public class InformationController {
 			config.put("mainHomePageURL", contextPath + "/index.html");
             config.put("sessionLogOutURL", contextPath + "/logout");
 
-			User signedInUser = ControllerUtil.getSignedInUser();
+            if ("preview".equals(mode)) {
+                // add preview project specific settings
+                String isConstraintsDisabledStr = request.getParameter("isConstraintsDisabled");
+                if (isConstraintsDisabledStr != null && Boolean.parseBoolean(isConstraintsDisabledStr)) {
+                    config.put("isConstraintsDisabled", true);
+                }
+            } else {
+                // add non-preview project specific settings
+                String userInfoURL = wiseBaseURL + "/userinfo.html?runId=" + runId;
+                config.put("userInfoURL", userInfoURL);
+            }
+
+            User signedInUser = ControllerUtil.getSignedInUser();
 			
 	        // set user's locale
 	        Locale locale = request.getLocale();
@@ -677,22 +670,6 @@ public class InformationController {
             Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "5242880"));
             config.put("studentMaxTotalAssetsSize", studentMaxTotalAssetsSize);
 
-			if (runId == null) {
-				config.put("runId", "");
-			} else {
-				config.put("runId", runId);
-			}
-			
-			config.put("runName", runName);
-			
-			// add preview project specific settings
-			if ("preview".equals(mode)) {
-				String isConstraintsDisabledStr = request.getParameter("isConstraintsDisabled");
-				if (isConstraintsDisabledStr != null && Boolean.parseBoolean(isConstraintsDisabledStr)) {
-					config.put("isConstraintsDisabled", true);
-				}
-			}
-			
 			// add userType {teacher, student, null}
 			if (signedInUser != null) {
 		        UserDetails userDetails = (UserDetails) signedInUser.getUserDetails();

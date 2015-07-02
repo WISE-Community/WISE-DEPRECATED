@@ -219,7 +219,7 @@ public class RunImpl extends OfferingImpl implements Run {
     @Column(name = RunImpl.COLUMN_NAME_LOGGING_LEVEL)
     private Integer loggingLevel;
     
-    @Column(name = RunImpl.COLUMN_NAME_POST_LEVEL)
+    @Column(name = RunImpl.COLUMN_NAME_POST_LEVEL, nullable = false)
     private Integer postLevel;
     
     @Column(name = RunImpl.COLUMN_NAME_VERSION_ID)
