@@ -44,6 +44,9 @@ define(['app', 'angular'], function(app, angular) {
         // the number of times the student has submitted
         this.numberOfSubmits = 0;
         
+        // whether the student has correctly placed the choices
+        this.isCorrect = null;
+        
         /**
          * Perform setup of the node
          */
@@ -257,10 +260,10 @@ define(['app', 'angular'], function(app, angular) {
             var buckets = this.getBuckets();
             
             // get a JSON string representation of the buckets
-            var bucketsJSONString = JSON.stringify(buckets);
+            var bucketsJSONString = angular.toJson(buckets);
             
             // turn the JSON string back into a JSON array
-            var copyOfBuckets = JSON.parse(bucketsJSONString);
+            var copyOfBuckets = angular.fromJson(bucketsJSONString);
             
             return copyOfBuckets;
         };
@@ -290,7 +293,7 @@ define(['app', 'angular'], function(app, angular) {
          * Check if the student has answered correctly
          */
         this.checkAnswer = function() {
-            var isCorrect = false;
+            var isCorrect = true;
             
             // get the buckets
             var buckets = this.getBuckets();
@@ -312,6 +315,7 @@ define(['app', 'angular'], function(app, angular) {
                             // loop through all the items in the bucket
                             for (var i = 0; i < items.length; i++) {
                                 var item = items[i];
+                                var position = i + 1;
                                 
                                 if (item != null) {
                                     var choiceId = item.id;
@@ -322,8 +326,75 @@ define(['app', 'angular'], function(app, angular) {
                                     if (feedbackObject != null) {
                                         var feedback = feedbackObject.feedback;
                                         
-                                        // set the feedback into the item
-                                        item.feedback = feedback;
+                                        var feedbackPosition = feedbackObject.position;
+                                        var feedbackIsCorrect = feedbackObject.isCorrect;
+                                        
+                                        if (feedbackPosition == null) {
+                                            /*
+                                             * position does not matter and the choice may be
+                                             * in the correct or incorrect bucket
+                                             */
+                                            
+                                            // set the feedback into the item
+                                            item.feedback = feedback;
+                                            
+                                            // set whether the choice is in the correct bucket
+                                            item.isCorrect = feedbackIsCorrect;
+                                            
+                                            /*
+                                             * there is no feedback position in the feeback object so
+                                             * position doesn't matter
+                                             */
+                                            item.isIncorrectPosition = false;
+                                            
+                                            // update whether the student has answered the step correctly
+                                            isCorrect = isCorrect && feedbackIsCorrect;
+                                        } else {
+                                            /*
+                                             * position does matter and the choice is in a correct
+                                             * bucket. we know this because a feedback object will
+                                             * only have a non-null position value if the choice is
+                                             * in the correct bucket. if the feedback object is for
+                                             * a choice that is in an incorrect bucket, the position
+                                             * value will be null.
+                                             */
+                                            
+                                            if (position === feedbackPosition) {
+                                                // the item is in the correct position
+                                                
+                                                // set the feedback into the item
+                                                item.feedback = feedback;
+                                                
+                                                // set whether the choice is in the correct bucket
+                                                item.isCorrect = feedbackIsCorrect;
+                                                
+                                                // the choice is in the correct position
+                                                item.isIncorrectPosition = false;
+                                                
+                                                // update whether the student has answered the step correctly
+                                                isCorrect = isCorrect && feedbackIsCorrect;
+                                            } else {
+                                                // item is in the correct bucket but wrong position
+                                                
+                                                /*
+                                                 * get the feedback for when the choice is in the correct
+                                                 * bucket but wrong position
+                                                 */
+                                                var incorrectPositionFeedback = feedbackObject.incorrectPositionFeedback;
+                                                item.feedback = incorrectPositionFeedback;
+                                                
+                                                /*
+                                                 * the choice is in the incorrect position so it isn't correct
+                                                 */
+                                                item.isCorrect = false;
+                                                
+                                                // the choice is in the incorrect position
+                                                item.isIncorrectPosition = true;
+                                                
+                                                // the student has answered incorrectly
+                                                isCorrect = false;
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -331,6 +402,12 @@ define(['app', 'angular'], function(app, angular) {
                     }
                 }
             }
+            
+            /*
+             * set the isCorrect value into the controller 
+             * so we can read it later
+             */
+            this.isCorrect = isCorrect;
         };
         
         /**
@@ -424,6 +501,10 @@ define(['app', 'angular'], function(app, angular) {
             var studentData = {};
             studentData.buckets = this.getCopyOfBuckets();
             studentData.numberOfSubmits = this.numberOfSubmits;
+            
+            if (this.isCorrect != null) {
+                studentData.isCorrect = this.isCorrect;
+            }
             
             nodeState.studentData = studentData;
             

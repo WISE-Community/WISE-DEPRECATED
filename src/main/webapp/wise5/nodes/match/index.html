@@ -34,9 +34,18 @@
     color: #FFF !important;
 }
 
-.bucket {
-    height: 150px;
+.correct {
+    background-color: greenyellow;
 }
+
+.incorrect {
+    background-color: red;
+}
+
+.incorrectPosition {
+    background-color: yellow;
+}
+
     </style>
 </head>
 <body>
@@ -51,8 +60,8 @@
             <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
                 <li ui-tree-node ng-repeat='item in bucket.items'>
                     <div class='category-title angular-ui-tree-handle'>
-                        <div>{{item.value}}</div>
-                        <div>{{item.feedback}}</div>
+                        <div compile='item.value'></div>
+                        <div ng-class='{"correct": item.isCorrect, "incorrectPosition": item.isIncorrectPosition, "incorrect": !item.isCorrect}'>{{item.feedback}}</div>
                     </div>
                 </li>
             </ol>

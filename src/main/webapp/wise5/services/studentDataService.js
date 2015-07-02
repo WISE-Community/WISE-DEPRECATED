@@ -209,7 +209,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                 params.userId = ConfigService.getWorkgroupId();
                 params.runId = ConfigService.getRunId();
                 params.periodId = ConfigService.getPeriodId();
-                params.data = JSON.stringify(nodeVisit);
+                params.data = angular.toJson(nodeVisit);
                 params.nodeVisit = nodeVisit;
                 httpConfig.data = $.param(params);
                 
