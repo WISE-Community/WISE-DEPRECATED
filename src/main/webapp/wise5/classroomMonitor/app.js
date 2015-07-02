@@ -13,15 +13,21 @@ define([
         'annotationService',
         'configService',
         'currentNodeService',
+        'discussionService',
+        'drawService',
+        'graphService',
+        'matchService',
         'multipleChoiceService',
         'nodeService',
         'openResponseService',
+        'outsideURLService',
+        'photoBoothService',
         'portfolioService',
         'projectService',
-        'questionnaireService',
         'sessionService',
         'studentDataService',
         'studentStatusService',
+        'tableService',
         'teacherDataService',
         'teacherWebSocketService'
         ], function(
@@ -39,15 +45,21 @@ define([
                 annotationService,
                 configService,
                 currentNodeService,
+                discussionService,
+                drawService,
+                graphService,
+                matchService,
                 multipleChoiceService,
                 nodeService,
                 openResponseService,
+                outsideURLService,
+                photoBoothService,
                 portfolioService,
                 projectService,
-                questionnaireService,
                 sessionService,
                 studentDataService,
                 studentStatusService,
+                tableService,
                 teacherDataService,
                 teacherWebSocketService) {
 
@@ -75,9 +87,15 @@ define([
     app.factory('TeacherWebSocketService', teacherWebSocketService);
     
     // node services
+    app.factory('DiscussionService', discussionService);
+    app.factory('DrawService', drawService);
+    app.factory('GraphService', graphService);
+    app.factory('MatchService', matchService);
     app.factory('MultipleChoiceService', multipleChoiceService);
     app.factory('OpenResponseService', openResponseService);
-    app.factory('QuestionnaireService', questionnaireService);
+    app.factory('OutsideURLService', outsideURLService);
+    app.factory('PhotoBoothService', photoBoothService);
+    app.factory('TableService', tableService);
 		
 	app.init = function() {
 		angular.bootstrap(document, ['app']);

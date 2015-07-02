@@ -35,7 +35,6 @@ define([
     'photoBoothService',
     'portfolioService',
     'projectService',
-    'questionnaireService',
     'sessionService',
     'studentAssetService',
     'studentDataService',
@@ -80,7 +79,6 @@ define([
              photoBoothService,
              portfolioService,
              projectService,
-             questionnaireService,
              sessionService,
              studentAssetService,
              studentDataService,
@@ -131,7 +129,6 @@ define([
     app.factory('PhotoBoothService', photoBoothService);
     app.factory('OpenResponseService', openResponseService);
     app.factory('OutsideURLService', outsideURLService);
-    app.factory('QuestionnaireService', questionnaireService);
     app.factory('TableService', tableService);
 
     app.init = function() {
@@ -204,7 +201,7 @@ define([
                             }
                         },
                         'nodeView': {
-                            templateUrl: 'wise5/vle/node/node.html',
+                            templateUrl: 'wise5/node/index.html',
                             resolve: {
                                 audioRecorderController: app.loadController('audioRecorderController'),
                                 discussionController: app.loadController('discussionController'),
@@ -218,7 +215,6 @@ define([
                                 outsideURLController: app.loadController('outsideURLController'),
                                 photoBoothController: app.loadController('photoBoothController'),
                                 planningController: app.loadController('planningController'),
-                                questionnaireController: app.loadController('questionnaireController'),
                                 tableController: app.loadController('tableController')
                             }
                         }

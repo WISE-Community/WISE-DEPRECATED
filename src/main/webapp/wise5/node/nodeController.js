@@ -1,5 +1,5 @@
 define(['app'], function(app) {
-    app.$controllerProvider.register('QuestionnaireController', 
+    app.$controllerProvider.register('NodeController', 
             function($rootScope,
                     $scope,
                     $state, 
@@ -12,6 +12,9 @@ define(['app'], function(app) {
                     SessionService,
                     StudentAssetService,
                     StudentDataService) {
+        
+        // the auto save interval in milliseconds
+        this.autoSaveInterval = 10000;
         
         // the node id of the current node
         this.nodeId = null;
@@ -61,7 +64,7 @@ define(['app'], function(app) {
                 //this.importWork();
                 
                 // tell the parent controller that this node has loaded
-                $scope.$parent.nodeController.nodeLoaded(this.nodeId);
+                this.nodeLoaded(this.nodeId);
                 
                 // start the auto save interval
                 this.startAutoSaveInterval();
@@ -156,7 +159,7 @@ define(['app'], function(app) {
                         nodeState.isSubmit = true;
                     } 
                     // add the node state to the latest node visit
-                    $scope.$parent.nodeController.addNodeStateToLatestNodeVisit(this.nodeId, nodeState);
+                    this.addNodeStateToLatestNodeVisit(this.nodeId, nodeState);
                 }
             }
         };
@@ -166,7 +169,7 @@ define(['app'], function(app) {
          */
         this.saveNodeVisitToServer = function() {
             // save the node visit to the server
-            return $scope.$parent.nodeController.saveNodeVisitToServer(this.nodeId).then(angular.bind(this, function() {
+            return this.saveNodeVisitToServer(this.nodeId).then(angular.bind(this, function() {
                 
                 // check if we need to lock this node
                 this.calculateDisabled();
@@ -329,7 +332,7 @@ define(['app'], function(app) {
                     // save the node visit to the server
                     this.saveNodeVisitToServer();
                 }
-            }), $scope.$parent.nodeController.autoSaveInterval);
+            }), this.autoSaveInterval);
         };
         
         /**
@@ -595,6 +598,77 @@ define(['app'], function(app) {
             return partFromNodeState;
         };
         
+        this.nodeLoaded = function(nodeId) {
+            var newNodeVisit = StudentDataService.createNodeVisit(nodeId);
+        };
+        
+        this.nodeUnloaded = function(nodeId) {
+            StudentDataService.endNodeVisitByNodeId(nodeId);
+            
+            // TODO: check if we need to save node visit
+            this.saveNodeVisitToServer(nodeId);
+        };
+        
+        this.setCurrentNodeByNodeId = function(nodeId) {
+            var node = ProjectService.getNodeById(nodeId);
+            CurrentNodeService.setCurrentNode(node);
+        };
+        
+        this.addNodeVisitItemToPortfolio = function() {
+            var currentNode = CurrentNodeService.getCurrentNode();
+            if (currentNode != null) {
+                var currentNodeId = currentNode.id;
+                var currentNodeVisit = StudentDataService.getLatestNodeVisitByNodeId(currentNodeId)
+                if (currentNodeVisit != null) {
+                    var portfolioItem = {};
+                    portfolioItem.type = 'nodeVisit';
+                    portfolioItem.nodeId = currentNode.id;
+                    portfolioItem.nodeVisitId = currentNodeVisit.id;
+                    portfolioItem.nodeVisit = currentNodeVisit;
+                    PortfolioService.addItem(portfolioItem);
+                }
+            }
+        };
+        
+        this.closeNode = function() {
+            var currentNode = CurrentNodeService.getCurrentNode();
+            if (currentNode != null) {
+                var currentNodeId = currentNode.id;
+                var parentNode = ProjectService.getParentGroup(currentNodeId);
+                CurrentNodeService.setCurrentNode(parentNode);
+            }
+        };
+        
+        this.buttonClicked = function(nodeNumber) {
+            
+            var nodeId = null;
+            
+            if (nodeNumber === '1.1') {
+                nodeId = 'node1';
+            } else if (nodeNumber === '1.4') {
+                nodeId = 'node4';
+            }
+            
+            if (nodeId != null) {
+                CurrentNodeService.setCurrentNodeByNodeId(nodeId);
+            }
+        };
+        
+        this.save = function(nodeId) {
+            var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(nodeId);
+            return StudentDataService.saveNodeVisitToServer(nodeVisit);
+        };
+        
+        this.addNodeStateToLatestNodeVisit = function(nodeId, nodeState) {
+            StudentDataService.addNodeStateToLatestNodeVisit(nodeId, nodeState);
+        };
+        
+        this.saveNodeVisitToServer = function(nodeId) {
+            var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(nodeId);
+            
+            return StudentDataService.saveNodeVisitToServer(nodeVisit);
+        };
+        
         /**
          * Listen for the 'nodeOnExit' event which is fired when the student
          * exits the node. This will perform saving when the student exits
@@ -622,7 +696,7 @@ define(['app'], function(app) {
                  * tell the parent that this node is done performing
                  * everything it needs to do before exiting
                  */
-                $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
+                this.nodeUnloaded(this.nodeId);
             }
         }));
         
@@ -649,7 +723,7 @@ define(['app'], function(app) {
                  * tell the parent that this node is done performing
                  * everything it needs to do before exiting
                  */
-                $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
+                this.nodeUnloaded(this.nodeId);
                 
                 // call this function to remove the listener
                 this.logOutListener();

@@ -21,7 +21,7 @@ define(['nodeService'], function(nodeService) {
             if (nodeState != null) {
                 var studentData = nodeState.studentData;
                 
-                if (response != null) {
+                if (studentData != null) {
                     studentWorkAsHTML = '<p>' + studentData + '</p>';
                 }
             }
