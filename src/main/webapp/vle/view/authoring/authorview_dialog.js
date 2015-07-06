@@ -683,7 +683,7 @@ View.prototype.initializeConstraintAuthoringDialog = function(){
  * Initializes the open project dialog.
  */
 View.prototype.initializeOpenProjectDialog = function(){
-	$('#openProjectDialog').dialog({autoOpen:false, draggable:false, width:650, modal:true, title:'Open a Project', buttons: {'Open': function(){eventManager.fire('projectSelected');}, 'Cancel': function(){$(this).dialog("close");}}, open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }});
+	$('#openProjectDialog').dialog({autoOpen:false, draggable:false, width:650, modal:true, title:'Open a Project', buttons: {'Open': function(){eventManager.fire('projectSelected');}, 'Cancel': function(){$(this).dialog("close");}}});
 };
 
 /**
