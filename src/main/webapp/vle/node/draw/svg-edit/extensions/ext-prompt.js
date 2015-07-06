@@ -85,7 +85,7 @@ svgEditor.addExtension("Prompt", function(S) {
 		// setup jQuery UI dialog to view prompt content
 		$('#prompt_dialog').dialog({
 			open: function() {
-				$(".ui-dialog-title").append("<span data-i18n='prompt_link' class='title'>Instructions</span>");
+				$(".ui-dialog-title").html("<span data-i18n='prompt_link' class='title'>Instructions</span>");
 			},
 			resizable: false,
 			modal: true,
