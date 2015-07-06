@@ -70,7 +70,7 @@ View.prototype.initializeCreateProjectDialog = function(){
 		$('#projectInput').val('');
 	};
 	
-	$('#createProjectDialog').dialog({autoOpen:false, modal:true, draggable:false, title:'Create a New Project', width:650, buttons: {'Submit':{id:'createProjectDialogSubmitButton', text:'Submit', click:submit}, 'Cancel': function(){$(this).dialog("close");}}});
+	$('#createProjectDialog').dialog({autoOpen:false, modal:true, draggable:false, title:'Create a New Project', width:650, buttons: {'Submit':{id:'createProjectDialogSubmitButton', text:'Submit', click:submit}, 'Cancel': function(){$(this).dialog("close");}}, open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }});
 };
 
 /**
@@ -129,7 +129,7 @@ View.prototype.initializeCreateSequenceDialog = function(){
 		$('#createSequenceInput').val('');
 	};
 	
-	$('#createSequenceDialog').dialog({autoOpen:false, draggable:true, resizable:false, title:'Add a New Activity', width:650, buttons: {'Submit':{id:'createActivityDialogSubmitButton', text:'Submit', click:submit}, close: cancel}});
+	$('#createSequenceDialog').dialog({autoOpen:false, draggable:true, resizable:false, title:'Add a New Activity', width:650, buttons: {'Submit':{id:'createActivityDialogSubmitButton', text:'Submit', click:submit}, 'Cancel': function(){$(this).dialog("close");}}, open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); },});
 };
 
 /**
@@ -221,7 +221,7 @@ View.prototype.initializeCreateNodeDialog = function (){
 	this.populateCreateNodeChoices();
 	
 	//this should have height set to auto resize but it doesn't work so I just set it to 260
-	$('#createNodeDialog').dialog({autoOpen:false, draggable:false, resizable:false, width:650, height:260, title:'Add a New Step', buttons: {'Submit':{id:'createStepDialogSubmitButton', text:'Submit', click:submit}}, close: cancel});
+	$('#createNodeDialog').dialog({autoOpen:false, draggable:false, resizable:false, width:650, height:260, title:'Add a New Step', buttons: {'Submit':{id:'createStepDialogSubmitButton', text:'Submit', click:submit}, 'Cancel': function(){$(this).dialog("close");}},  open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }});
 };
 
 /**
@@ -468,7 +468,7 @@ View.prototype.initializeCopyProjectDialog = function (){
 		$('#copyProjectDialog').dialog('close');
 	};
 	
-	$('#copyProjectDialog').dialog({autoOpen:false, modal: true, draggable:false, title:'Copy a Project', width:650, buttons: {'Cancel': cancel, 'Copy':{id:'copyProjectDialogSubmitButton', text:'Copy', click:submit}}});
+	$('#copyProjectDialog').dialog({autoOpen:false, modal: true, draggable:false, title:'Copy a Project', width:650, buttons: {'Copy':{id:'copyProjectDialogSubmitButton', text:'Copy', click:submit}, 'Cancel': cancel}, open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }});
 };
 
 /**
@@ -587,7 +587,7 @@ View.prototype.initializeEditProjectMetadataDialog = function(){
 		$('#editProjectMetadataDialog').dialog('close');
 	};
 	
-	$('#editProjectMetadataDialog').dialog({autoOpen:false, draggable:false, modal:true, title:'Edit Project Information', width:850, buttons: {'Close': cancel, 'Revert To Last Save': undoProjectMetadata, 'Save Changes': updateProjectMetadata}});
+	$('#editProjectMetadataDialog').dialog({autoOpen:false, draggable:false, modal:true, title:'Edit Project Information', width:850, buttons: {'Close': cancel, 'Revert To Last Save': undoProjectMetadata, 'Save Changes': updateProjectMetadata}, open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }});
 };
 
 /**
@@ -683,7 +683,7 @@ View.prototype.initializeConstraintAuthoringDialog = function(){
  * Initializes the open project dialog.
  */
 View.prototype.initializeOpenProjectDialog = function(){
-	$('#openProjectDialog').dialog({autoOpen:false, draggable:false, width:650, modal:true, title:'Open a Project', buttons: {'Open': function(){eventManager.fire('projectSelected');}, 'Cancel': function(){$(this).dialog("close");}}});
+	$('#openProjectDialog').dialog({autoOpen:false, draggable:false, width:650, modal:true, title:'Open a Project', buttons: {'Open': function(){eventManager.fire('projectSelected');}, 'Cancel': function(){$(this).dialog("close");}}, open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }});
 };
 
 /**
