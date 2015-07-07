@@ -41,8 +41,8 @@
 	<artifactId>wise</artifactId>
 	<packaging>war</packaging>
 	<name>Web-based Inquiry Science Environment</name>
-	<version>4.10</version>
-	<url>http://wise4.org</url>
+	<version>5.0</version>
+	<url>http://wise5.org</url>
 	<developers>
 		<developer>
 			<id>hiroki</id>
@@ -212,7 +212,8 @@
 				</executions>
 				<configuration>
 					<executable>java</executable>
-					<mainClass>org.wise.WISE</mainClass>
+					<!--<mainClass>org.wise.WISE</mainClass>-->
+					<mainClass>org.wise.util.DBInitExporter</mainClass>
 					<includePluginDependencies>true</includePluginDependencies>
 					<classpathScope>compile</classpathScope>
 				</configuration>
@@ -387,7 +388,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.34</version>
+			<version>5.1.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -486,7 +487,7 @@
 	<properties>
 		<org.springframework.version>4.1.6.RELEASE</org.springframework.version>
 		<org.springframework.security.version>4.0.1.RELEASE</org.springframework.security.version>
-		<org.hibernate.version>4.3.7.Final</org.hibernate.version>
+		<org.hibernate.version>4.3.10.Final</org.hibernate.version>
 		<startup.listeners>
 		</startup.listeners>
 	</properties>
