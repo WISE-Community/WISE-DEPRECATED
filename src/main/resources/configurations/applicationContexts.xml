@@ -742,6 +742,7 @@
 		<constructor-arg ref="dataSource" />
 		<constructor-arg ref="lookupStrategy" />
 		<constructor-arg ref="aclCache" />
+		<constructor-arg ref="wiseProperties" />
 	</bean>
 
 	<bean id="aclServiceImpl" class="org.wise.portal.service.acl.impl.AclServiceImpl">
@@ -892,7 +893,7 @@
 
 	<bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" />
 
-	<bean id="sessionFactory" class="org.wise.portal.spring.impl.WISESessionFactoryBean">
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="hibernateProperties">
 			<props>
