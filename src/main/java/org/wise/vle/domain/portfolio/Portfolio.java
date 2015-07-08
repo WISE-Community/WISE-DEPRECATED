@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). Created
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3.
@@ -11,7 +11,7 @@
  *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  *
@@ -26,12 +26,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Index;
 import org.json.JSONException;
@@ -67,13 +62,13 @@ public class Portfolio extends PersistableDomain implements Serializable {
 	@Column(name="workgroupId")
 	private Long workgroupId = null;
 
-	@Column(name="metadata", length=512000)
+	@Column(name="metadata", columnDefinition = "mediumtext")
 	private String metadata = null;
 
-	@Column(name="items", length=512000)
+	@Column(name="items", length=512000, columnDefinition = "mediumtext")
 	private String items = null;
 
-	@Column(name="deletedItems", length=512000)
+	@Column(name="deletedItems", length=512000, columnDefinition = "mediumtext")
 	private String deletedItems = null;
 
 	//whether this portfolio is a public portfolio

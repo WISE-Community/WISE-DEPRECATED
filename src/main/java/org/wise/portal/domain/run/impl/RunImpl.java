@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -66,7 +66,6 @@ import org.wise.portal.domain.user.impl.UserImpl;
  * such as starttime, stoptime, runcode
  * 
  * @author Hiroki Terashima
- * @version $Id$
  */
 @Entity
 @Table(name = RunImpl.DATA_STORE_NAME)
@@ -205,7 +204,7 @@ public class RunImpl extends OfferingImpl implements Run {
     @Column(name = COLUMN_NAME_MAX_WORKGROUP_SIZE, nullable = true)
     private Integer maxWorkgroupSize;
 
-    @Column(name = COLUMN_NAME_EXTRAS, length=5120000)
+    @Column(name = COLUMN_NAME_EXTRAS, length=5120000, columnDefinition = "mediumtext")
     private String extras;
 
 	//@OneToOne(cascade = CascadeType.ALL, targetEntity = RunStatusImpl.class)
@@ -225,10 +224,10 @@ public class RunImpl extends OfferingImpl implements Run {
     @Column(name = RunImpl.COLUMN_NAME_VERSION_ID)
     private String versionId;
     
-	@Column(name = COLUMN_NAME_PRIVATE_NOTES, length = 32768)
+	@Column(name = COLUMN_NAME_PRIVATE_NOTES, length = 32768, columnDefinition = "text")
 	private String privateNotes;   // text (blob) 2^15
 
-	@Column(name = COLUMN_NAME_SURVEY, length = 32768)
+	@Column(name = COLUMN_NAME_SURVEY, length = 32768, columnDefinition = "text")
 	private String survey;   // text (blob) 2^15
 
     /**

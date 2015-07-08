@@ -43,11 +43,11 @@ import org.wise.vle.domain.PersistableDomain;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 
-
 /**
  * Domain representing Annotation.
  * Annotations are what users annotate on other
  * user's work, such as Comments, Scores, Flags.
+ *
  * @author Hiroki Terashima
  */
 @Entity
@@ -80,7 +80,7 @@ public class Annotation extends PersistableDomain {
 	@Column(name="type")
 	private String type = null;
 	
-	@Column(name="data", length=512000)
+	@Column(name="data", length=512000, columnDefinition = "mediumtext")
 	private String data = null;
 	
 	@Column(name="nodeId")
