@@ -3,7 +3,7 @@
     <link data-require="bootstrap-css@3.1.1" data-semver="3.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
     <link data-require="font-awesome@*" data-semver="4.3.0" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
     <link data-require="bootstrap@*" data-semver="3.3.2" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
-    <link rel='stylesheet' href='/wise/wise5/lib/angular/angularTextAngular/textAngular.css'>
+    <link rel='stylesheet' href='wise5/lib/angular/angularTextAngular/textAngular.css'>
 </head>
 <body>
 <div ng-controller='DiscussionController as discussionController'>
@@ -14,7 +14,7 @@
     ng-model='discussionController.newResponse'
     ng-disabled='discussionController.isDisabled'
     ta-disabled='discussionController.isDisabled'
-    ng-change='discussionController.studentDataChanged()'
+    ng-change='discussionController.studentDataChanged()'>
 </div>
 <button ng-click='discussionController.saveButtonClicked()' 
     ng-show='discussionController.showSaveButton()' 
@@ -22,8 +22,8 @@
 <button ng-click='discussionController.submitButtonClicked()' 
     ng-show='discussionController.showSubmitButton()' 
     ng-disabled='discussionController.isDisabled'>Submit</button>
-<div ng-repeat='response in discussionController.getLevel1Responses()'>
-    <class-response response='response' replybuttonclicked='replybuttonclicked(r)' submitbuttonclicked='submitbuttonclicked(r)'></class-response>
+<div ng-repeat='componentState in discussionController.getLevel1Responses()'>
+    <class-response response='componentState' replybuttonclicked='replybuttonclicked(r)' submitbuttonclicked='submitbuttonclicked(r)' studentdatachanged='studentdatachanged()'></class-response>
 </div>
 </div>
 </body>

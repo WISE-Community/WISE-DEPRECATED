@@ -1,0 +1,12 @@
+{
+    "prompt": "",
+    "parts": [
+        {
+            "id": "42a31a2g6j1m",
+            "partType": "PhotoBooth",
+            "prompt": "Work on this photo booth step."
+        }
+    ],
+    "lockAfterSubmit": false,
+    "showSubmitButton": false
+}

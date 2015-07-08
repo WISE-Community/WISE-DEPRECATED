@@ -153,11 +153,12 @@ define(['app'], function(app) {
                 if (saveTriggeredBy === 'submitButton' || this.isDirty) {
                     
                     // create the node state
-                    var nodeState = this.createNodeState();
+                    var nodeState = this.createNodeState(saveTriggeredBy);
                     
                     if (saveTriggeredBy === 'submitButton') {
                         nodeState.isSubmit = true;
-                    } 
+                    }
+                    
                     // add the node state to the latest node visit
                     this.addNodeStateToLatestNodeVisit(this.nodeId, nodeState);
                 }
@@ -168,18 +169,28 @@ define(['app'], function(app) {
          * Save the node visit to the server
          */
         this.saveNodeVisitToServer = function() {
-            // save the node visit to the server
-            return this.saveNodeVisitToServer(this.nodeId).then(angular.bind(this, function() {
+            
+            if (this.nodeId != null) {
+                var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(this.nodeId);
                 
-                // check if we need to lock this node
-                this.calculateDisabled();
-                
-                /*
-                 * set the isDirty flag to false because the student work has 
-                 * been saved to the server
-                 */
-                this.isDirty = false;
-            }));
+                if (nodeVisit != null) {
+                    return StudentDataService.saveNodeVisitToServer(nodeVisit).then(angular.bind(this, function() {
+                        
+                        // check if we need to lock this node
+                        this.calculateDisabled();
+                        
+                        /*
+                         * set the isDirty flag to false because the student work has 
+                         * been saved to the server
+                         */
+                        this.isDirty = false;
+                    }));
+                }
+            }
+            
+            var deferred = $q.defer();
+            deferred.resolve();
+            return deferred.promise;
         };
         
         /**
@@ -344,9 +355,10 @@ define(['app'], function(app) {
         
         /**
          * Create a new node state and populate with the student data
+         * @param saveTriggeredBy what triggered the save
          * @return a node state that contains the student data
          */
-        this.createNodeState = function() {
+        this.createNodeState = function(saveTriggeredBy) {
             
             // create a new empty node state
             var nodeState = StudentDataService.createNodeState();
@@ -365,7 +377,7 @@ define(['app'], function(app) {
                     // get a part
                     var part = parts[p];
                     
-                    var studentWorkObject = {};
+                    var studentWorkObject = null;
                     
                     if (part != null) {
                         // get the part id
@@ -374,19 +386,23 @@ define(['app'], function(app) {
                         // get the scope for the part
                         var childScope = $scope.partToScope[partId];
                         
-                        var studentWorkObject = {};
+                        var studentWorkObject = null;
                         
                         if (childScope.getStudentWorkObject != null) {
                             // get the student work object from the child scope
                             studentWorkObject = childScope.getStudentWorkObject();
                         }
                         
-                        // set the part id into the student work object
-                        studentWorkObject.id = partId;
+                        if (studentWorkObject != null) {
+                            // set the part id into the student work object
+                            studentWorkObject.id = partId;
+                            
+                            studentWorkObject.saveTriggeredBy = saveTriggeredBy;
+                            
+                            // add the student work object to our parts array
+                            nodeState.parts.push(studentWorkObject);
+                        }
                     }
-                    
-                    // add the student work object to our parts array
-                    nodeState.parts.push(studentWorkObject);
                 }
             }
             
@@ -410,11 +426,11 @@ define(['app'], function(app) {
             }
         }
         
-        $scope.$on('partSaveClicked', angular.bind(this, function(event, args) {
+        $scope.$on('componentSaveClicked', angular.bind(this, function(event, args) {
             this.saveButtonClicked();
         }));
         
-        $scope.$on('partSubmitClicked', angular.bind(this, function(event, args) {
+        $scope.$on('componentSubmitClicked', angular.bind(this, function(event, args) {
             this.submitButtonClicked();
         }));
         
@@ -434,18 +450,18 @@ define(['app'], function(app) {
             if (args != null) {
                 
                 // get the part id
-                var partId = args.partId;
+                var componentId = args.componentId;
                 
-                // get the new node state
-                var nodeState = args.nodeState;
+                // get the new component state
+                var componentState = args.componentState;
                 
-                if (partId != null && nodeState != null) {
+                if (componentId != null && componentState != null) {
                     
                     /*
                      * notify the parts that are connected that the student 
                      * data has changed
                      */
-                    this.notifyConnectedParts(partId, nodeState);
+                    this.notifyConnectedParts(componentId, componentState);
                 }
             }
         }));
@@ -606,7 +622,7 @@ define(['app'], function(app) {
             StudentDataService.endNodeVisitByNodeId(nodeId);
             
             // TODO: check if we need to save node visit
-            this.saveNodeVisitToServer(nodeId);
+            this.saveNodeVisitToServer();
         };
         
         this.setCurrentNodeByNodeId = function(nodeId) {
@@ -663,10 +679,19 @@ define(['app'], function(app) {
             StudentDataService.addNodeStateToLatestNodeVisit(nodeId, nodeState);
         };
         
-        this.saveNodeVisitToServer = function(nodeId) {
-            var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(nodeId);
+        this.saveLatestNodeVisitToServer0 = function(nodeId) {
             
-            return StudentDataService.saveNodeVisitToServer(nodeVisit);
+            if (nodeId != null) {
+                var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(nodeId);
+                
+                if (nodeVisit != null) {
+                    return StudentDataService.saveNodeVisitToServer(nodeVisit);
+                }
+            }
+            
+            var deferred = $q.defer();
+            deferred.resolve();
+            return deferred.promise;
         };
         
         /**

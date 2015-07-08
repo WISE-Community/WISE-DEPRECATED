@@ -1,0 +1,39 @@
+{
+    "prompt": "",
+    "parts": [
+        {
+            "id": "85vygf6abh2",
+            "partType": "Graph",
+            "prompt": "Work on this graph step.",
+            "title": "Scatter Plot",
+            "graphType": "scatter",
+            "xAxis": {
+                "title": {
+                    "text": "time (seconds)"
+                },
+                "min": 0,
+                "max": 20
+            },
+            "yAxis": {
+                "title": {
+                    "text": "distance (meters)"
+                },
+                "min": 0,
+                "max": 50
+            },
+            "series": [
+                {
+                    "data": [[0, 0], [5, 1], [10, 2], [15, 3]]
+                },
+                {
+                    "data": [[0, 0], [5, 10], [10, 20], [16, 30]]
+                }
+            ],
+            "canClickToAddData": true,
+            "showSaveButton": true,
+            "showSubmitButton": true
+        }
+    ],
+    "lockAfterSubmit": false,
+    "showSubmitButton": false
+}

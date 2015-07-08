@@ -241,19 +241,6 @@ define(['configService', 'studentDataService'], function(configService, studentD
             return studentWorkAsHTML;
         };
         
-        /**
-         * Create a new empty node state
-         * @return a new empty node state
-         */
-        serviceObject.createNewNodeState = function() {
-            var nodeState = {};
-            
-            // set the timestamp
-            nodeState.timestamp = Date.parse(new Date());
-            
-            return nodeState;
-        };
-        
         
         /**
          * Get the node type in camel case

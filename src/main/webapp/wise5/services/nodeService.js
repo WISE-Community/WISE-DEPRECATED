@@ -245,7 +245,7 @@ define(['configService', 'studentDataService'], function(configService, studentD
          * Create a new empty node state
          * @return a new empty node state
          */
-        serviceObject.createNewNodeState = function() {
+        serviceObject.createNewComponentState = function() {
             var nodeState = {};
             
             // set the timestamp

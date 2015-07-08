@@ -20,9 +20,6 @@ define(['app', 'angular'], function(app, angular) {
         // field that will hold the node content
         this.nodeContent = null;
         
-        // holds the text that the student has typed
-        this.studentResponse = '';
-        
         // whether the step should be disabled
         this.isDisabled = false;
         
@@ -124,6 +121,11 @@ define(['app', 'angular'], function(app, angular) {
                 // get the latest node state
                 var nodeState = StudentDataService.getLatestNodeStateByNodeId(showPreviousWorkNodeId);
                 
+                if ($scope.partStudentData != null) {
+                    // set the part student data as the node state
+                    nodeState = $scope.partStudentData;
+                }
+                
                 // populate the student work into this node
                 this.setStudentWork(nodeState);
                 
@@ -146,15 +148,6 @@ define(['app', 'angular'], function(app, angular) {
          * @param nodeState the node state to populate into the node
          */
         this.setStudentWork = function(nodeState) {
-            
-            /*
-             * check if the part student data has been passed. this will be
-             * used when the node is part of a Questionnaire node
-             */
-            if ($scope.partStudentData != null) {
-                // set the part student data as the node state
-                nodeState = $scope.partStudentData;
-            }
             
             if (nodeState != null) {
                 // populate the previous student work
@@ -467,10 +460,10 @@ define(['app', 'angular'], function(app, angular) {
              */
             
             // get this part id
-            var partId = this.getPartId();
+            var componentId = this.getComponentId();
             
             // create a node state populated with the student data
-            var nodeState = this.createNodeState();
+            var componentState = this.createComponentState();
             
             /*
              * this step is a node part so we will tell its parent that
@@ -478,37 +471,37 @@ define(['app', 'angular'], function(app, angular) {
              * this will also notify connected parts that this part's
              * student data has changed.
              */
-            $scope.$emit('partStudentDataChanged', {partId: partId, nodeState: nodeState});
+            $scope.$emit('partStudentDataChanged', {componentId: componentId, componentState: componentState});
         };
         
         /**
-         * Get the student response
+         * Create a new component state populated with the student data
+         * @return the componentState after it has been populated
          */
-        this.getStudentResponse = function() {
-            return this.studentResponse;
-        };
-        
-        /**
-         * Create a new node state populated with the student data
-         * @return the nodeState after it has been populated
-         */
-        this.createNodeState = function() {
+        this.createComponentState = function() {
             
             // create a new node state
-            var nodeState = NodeService.createNewNodeState();
+            var componentState = NodeService.createNewComponentState();
             
-            // set the response into the node state
-            var studentData = {};
-            studentData.buckets = this.getCopyOfBuckets();
-            studentData.numberOfSubmits = this.numberOfSubmits;
-            
-            if (this.isCorrect != null) {
-                studentData.isCorrect = this.isCorrect;
+            if (componentState != null) {
+                // set the response into the node state
+                var studentData = {};
+                studentData.buckets = this.getCopyOfBuckets();
+                studentData.numberOfSubmits = this.numberOfSubmits;
+                
+                if (this.isCorrect != null) {
+                    studentData.isCorrect = this.isCorrect;
+                }
+                
+                componentState.studentData = studentData;
+                
+                if(this.saveTriggeredBy != null) {
+                    // set the saveTriggeredBy value
+                    componentState.saveTriggeredBy = this.saveTriggeredBy;
+                }
             }
             
-            nodeState.studentData = studentData;
-            
-            return nodeState;
+            return componentState;
         };
         
         /**
@@ -548,10 +541,12 @@ define(['app', 'angular'], function(app, angular) {
         this.showSaveButton = function() {
             var show = false;
             
-            // check if this is a node part
-            if (!this.isNodePart) {
-                // this is not a node part so we will show the save button
-                show = true;
+            if (this.nodeContent != null) {
+                
+                // check the showSaveButton field in the node content
+                if (this.nodeContent.showSaveButton) {
+                    show = true;
+                }
             }
             
             return show;
@@ -645,17 +640,13 @@ define(['app', 'angular'], function(app, angular) {
         };
         
         /**
-         * Get the part id if this node is part of a Questionnaire node
-         * @return the part id
+         * Get the component id
+         * @return the component id
          */
-        this.getPartId = function() {
-            var partId = null;
+        this.getComponentId = function() {
+            var componentId = this.nodeContent.id;
             
-            if (this.isNodePart) {
-                partId = this.nodeContent.id;
-            }
-            
-            return partId;
+            return componentId;
         };
         
         $scope.options = {
@@ -698,23 +689,17 @@ define(['app', 'angular'], function(app, angular) {
          */
         $scope.getStudentWorkObject = function() {
             
-            var nodeState = {};
+            var componentState = null;
             
-            /*
-             * if this node is showing previous work we do not need to save the
-             * student work
-             */
-            if (!this.isShowPreviousWork) {
-                /*
-                 * this is not a show previous work node so we will save the
-                 * student work
-                 */
+            if ($scope.matchController.isDirty) {
+                // create a component state populated with the student data
+                componentState = $scope.matchController.createComponentState();
                 
-                // create a node state populated with the student data
-                nodeState = $scope.matchController.createNodeState();
+                // set isDirty to false since this student work is about to be saved
+                $scope.matchController.isDirty = false;
             }
             
-            return nodeState;
+            return componentState;
         };
         
         /**

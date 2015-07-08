@@ -1,0 +1,15 @@
+{
+    "prompt": "",
+    "parts": [
+        {
+            "id": "2mb2892l6q",
+            "partType": "OpenResponse",
+            "prompt": "Work on this open response step.",
+            "numRows": 5,
+            "showSaveButton": true,
+            "showSubmitButton": true
+        }
+    ],
+    "lockAfterSubmit": false,
+    "showSubmitButton": false
+}

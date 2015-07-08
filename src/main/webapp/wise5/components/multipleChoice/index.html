@@ -1,4 +1,11 @@
 
+<head>
+<style>
+.feedbackToShow {
+    margin-left: 20px;
+}
+</style>
+</head>
 <body>
 <div ng-controller='MultipleChoiceController as multipleChoiceController'>
 <div id="prompt">{{multipleChoiceController.nodeContent.prompt}}</div>
@@ -13,7 +20,7 @@
                     ng-model='multipleChoiceController.studentChoices' 
                     ng-change='multipleChoiceController.studentDataChanged()' 
                     ng-disabled='multipleChoiceController.isDisabled'></input>
-                {{choice.text}}
+                <span>{{choice.text}}</span><span ng-show='choice.showFeedback' class='feedbackToShow'>{{choice.feedbackToShow}}</span>
             </div>
             <div ng-switch-when='checkbox'>
                 <input type='checkbox' 
@@ -21,12 +28,15 @@
                     ng-checked='multipleChoiceController.isChecked(choice.id)' 
                     ng-click='multipleChoiceController.toggleSelection(choice.id)' 
                     ng-disabled='multipleChoiceController.isDisabled'></input>
-                {{choice.text}}
+                <span>{{choice.text}}</span><span ng-show='choice.showFeedback' class='feedbackToShow'>{{choice.feedbackToShow}}</span>
             </div>
         </div>
     </label>
 </div>
 
+<div ng-show='multipleChoiceController.numberOfAttempts != null'>Number of Attempts: {{multipleChoiceController.numberOfAttempts}}</div>
+<div ng-show='multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect'>Correct!</div>
+<div ng-show='multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect'>Incorrect</div>
 <button ng-click='multipleChoiceController.saveButtonClicked()' 
     ng-show='multipleChoiceController.showSaveButton()' 
     ng-disabled='multipleChoiceController.isDisabled'>Save</button>

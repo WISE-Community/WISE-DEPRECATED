@@ -22,9 +22,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
         // field that will hold the node content
         this.nodeContent = null;
         
-        // holds the text that the student has typed
-        this.studentResponse = '';
-        
         // whether the step should be disabled
         this.isDisabled = false;
         
@@ -51,78 +48,57 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                 this.nodeId = currentNode.id;
             }
             
-            // check if the node is part of another node
-            if ($scope.part != null) {
-                // the node is part of another node
-                this.isNodePart = true;
+            // the node is part of another node
+            this.isNodePart = true;
+            
+            // set the content
+            this.nodeContent = $scope.part;
+            
+            // get the show previous work node id if it is provided
+            var showPreviousWorkNodeId = this.nodeContent.showPreviousWorkNodeId;
+            
+            if (showPreviousWorkNodeId != null) {
+                // this part is showing previous work
+                this.isShowPreviousWork = true;
                 
-                // set the content
-                this.nodeContent = $scope.part;
+                // get the node src for the node we want previous work from
+                var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
                 
-                // get the show previous work node id if it is provided
-                var showPreviousWorkNodeId = this.nodeContent.showPreviousWorkNodeId;
+                // get the show previous work part id if it is provided
+                var showPreviousWorkPartId = this.nodeContent.showPreviousWorkPartId;
                 
-                if (showPreviousWorkNodeId != null) {
-                    // this part is showing previous work
-                    this.isShowPreviousWork = true;
+                // get the node content for the show previous work node
+                NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                     
-                    // get the node src for the node we want previous work from
-                    var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
+                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(showPreviousWorkNodeId);
                     
-                    // get the show previous work part id if it is provided
-                    var showPreviousWorkPartId = this.nodeContent.showPreviousWorkPartId;
+                    if ($scope.partStudentData != null) {
+                        // set the part student data as the node state
+                        nodeState = $scope.partStudentData;
+                    }
                     
-                    // get the node content for the show previous work node
-                    NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
+                    // check if we are show previous work from a part
+                    if (showPreviousWorkPartId != null) {
+                        // we are showing previous work from a part
                         
-                        var nodeState = StudentDataService.getLatestNodeStateByNodeId(showPreviousWorkNodeId);
+                        // get the part from the node content
+                        this.nodeContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkPartId);
                         
-                        // check if we are show previous work from a part
-                        if (showPreviousWorkPartId != null) {
-                            // we are showing previous work from a part
-                            
-                            // get the part from the node content
-                            this.nodeContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkPartId);
-                            
-                            // get the part from the node state
-                            nodeState = NodeService.getNodeStateByPartId(nodeState, showPreviousWorkPartId);
-                        } else {
-                            // set the show previous work node content
-                            this.nodeContent = showPreviousWorkNodeContent;
-                        }
-                        
-                        // populate the student work into this node
-                        this.setStudentWork(nodeState);
-                        
-                        // disable the node since we are just showing previous work
-                        this.isDisabled = true;
-                        
-                        // setup the graph
-                        this.setupGraph();
-                        
-                        // get the part
-                        var part = $scope.part;
-                        
-                        /*
-                         * register this node with the parent node which will most  
-                         * likely be a Questionnaire node
-                         */
-                        $scope.$parent.registerPartController($scope, part);
-                    }));
-                } else {
-                    // this is a node part
-                    
-                    // get the latest node state
-                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                        // get the part from the node state
+                        nodeState = NodeService.getNodeStateByPartId(nodeState, showPreviousWorkPartId);
+                    } else {
+                        // set the show previous work node content
+                        this.nodeContent = showPreviousWorkNodeContent;
+                    }
                     
                     // populate the student work into this node
                     this.setStudentWork(nodeState);
                     
+                    // disable the node since we are just showing previous work
+                    this.isDisabled = true;
+                    
                     // setup the graph
                     this.setupGraph();
-                    
-                    // check if we need to lock this node
-                    this.calculateDisabled();
                     
                     // get the part
                     var part = $scope.part;
@@ -132,40 +108,35 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                      * likely be a Questionnaire node
                      */
                     $scope.$parent.registerPartController($scope, part);
-                }
-            } else {
-                // this is a regular standalone node
-                var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
-                
-                // get the node content for this node
-                NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
-                    
-                    this.nodeContent = nodeContent;
-                    
-                    // get the latest node state
-                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
-                    
-                    // populate the student work into this node
-                    this.setStudentWork(nodeState);
-                    
-                    // setup the graph
-                    this.setupGraph();
-                    
-                    // check if we need to lock this node
-                    this.calculateDisabled();
-                    
-                    // import any work if necessary
-                    this.importWork();
-                    
-                    // tell the parent controller that this node has loaded
-                    $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-                    
-                    // start the auto save interval
-                    this.startAutoSaveInterval();
-                    
-                    // register this controller to listen for the exit event
-                    this.registerExitListener();
                 }));
+            } else {
+                // this is a node part
+                
+                // get the latest node state
+                var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                
+                if ($scope.partStudentData != null) {
+                    // set the part student data as the node state
+                    nodeState = $scope.partStudentData;
+                }
+                
+                // populate the student work into this node
+                this.setStudentWork(nodeState);
+                
+                // setup the graph
+                this.setupGraph();
+                
+                // check if we need to lock this node
+                this.calculateDisabled();
+                
+                // get the part
+                var part = $scope.part;
+                
+                /*
+                 * register this node with the parent node which will most  
+                 * likely be a Questionnaire node
+                 */
+                $scope.$parent.registerPartController($scope, part);
             }
         };
         
@@ -453,24 +424,19 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
         
         /**
          * Populate the student work into the node
-         * @param nodeState the node state to populate into the node
+         * @param componentState the component state to populate into the node
          */
-        this.setStudentWork = function(nodeState) {
+        this.setStudentWork = function(componentState) {
             
-            /*
-             * check if the part student data has been passed. this will be
-             * used when the node is part of a Questionnaire node
-             */
-            if ($scope.partStudentData != null) {
-                // set the part student data as the node state
-                nodeState = $scope.partStudentData;
-            }
-            
-            if (nodeState != null) {
-                // populate the student data into the node
-                this.series = nodeState.series;
-                this.xAxis = nodeState.xAxis;
-                this.yAxis = nodeState.yAxis;
+            if (componentState != null) {
+                var studentData = componentState.studentData;
+                
+                if (studentData != null) {
+                    // populate the student data into the node
+                    this.series = studentData.series;
+                    this.xAxis = studentData.xAxis;
+                    this.yAxis = studentData.yAxis;
+                }
             }
         };
         
@@ -478,32 +444,18 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
          * Called when the student clicks the save button
          */
         this.saveButtonClicked = function() {
-            var saveTriggeredBy = 'saveButton';
+            this.saveTriggeredBy = 'saveButton';
             
-            // create and add the node state to the node visit
-            var nodeState = this.createAndAddNodeState(saveTriggeredBy);
-            
-            // save the node visit to the server
-            this.saveNodeVisitToServer().then(angular.bind(this, function(nodeState, nodeVisit) {
-                // if this is a CRater step, score it
-                this.makeCRaterRequest(nodeState, nodeVisit);
-            }, nodeState));
+            $scope.$emit('componentSaveClicked');
         };
         
         /**
          * Called when the student clicks the submit button
          */
         this.submitButtonClicked = function() {
-            var saveTriggeredBy = 'submitButton';
+            this.saveTriggeredBy = 'submitButton';
             
-            // create and add the node state to the node visit
-            var nodeState = this.createAndAddNodeState(saveTriggeredBy);
-            
-            // save the node visit to the server
-            this.saveNodeVisitToServer().then(angular.bind(this, function(nodeState, nodeVisit) {
-                // if this is a CRater step, score it
-                this.makeCRaterRequest(nodeState, nodeVisit);
-            }, nodeState));
+            $scope.$emit('componentSubmitClicked');
         };
         
         /**
@@ -516,122 +468,51 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
              */
             this.isDirty = true;
             
-            if (this.isNodePart) {
-                /*
-                 * this step is a node part so we will tell its parent that
-                 * the student work has changed and will need to be saved
-                 */
-                
-                // get this part id
-                var partId = this.getPartId();
-                
-                // create a node state populated with the student data
-                var nodeState = this.createNodeState();
-                
-                /*
-                 * this step is a node part so we will tell its parent that
-                 * the student work has changed and will need to be saved.
-                 * this will also notify connected parts that this part's
-                 * student data has changed.
-                 */
-                $scope.$emit('partStudentDataChanged', {partId: partId, nodeState: nodeState});
-            }
-        };
-        
-        /**
-         * Get the student response
-         */
-        this.getStudentResponse = function() {
-            return this.studentResponse;
-        };
-        
-        /**
-         * Create a node state and add it to the latest node visit
-         * @param saveTriggeredBy the reason why we are saving a new node state
-         * e.g.
-         * 'autoSave'
-         * 'saveButton'
-         * 'submitButton'
-         * 'nodeOnExit'
-         * 'logOut'
-         * @return the node state
-         */
-        this.createAndAddNodeState = function(saveTriggeredBy) {
+            // get this part id
+            var componentId = this.getComponentId();
             
-            var nodeState = null;
+            // create a node state populated with the student data
+            var componentState = this.createComponentState();
             
             /*
-             * check if this node is part of another node such as a
-             * Questionnaire node. if it is part of a Questionnaire node
-             * we do not need to create a node state or save anything
-             * since the parent Questionnaire node will handle that.
+             * this step is a node part so we will tell its parent that
+             * the student work has changed and will need to be saved.
+             * this will also notify connected parts that this part's
+             * student data has changed.
              */
-            if (!this.isNodePart) {
-                // this is a standalone node
+            $scope.$emit('partStudentDataChanged', {componentId: componentId, componentState: componentState});
+        };
+        
+        /**
+         * Create a new component state populated with the student data
+         * @return the componentState after it has been populated
+         */
+        this.createComponentState = function() {
+            
+            // create a new node state
+            var componentState = NodeService.createNewComponentState();
+            
+            if (componentState != null) {
+                var studentData = {};
                 
-                if (saveTriggeredBy != null) {
-                    
-                    /*
-                     * check if the save was triggered by the submit button
-                     * or if the student data is dirty
-                     */
-                    if (saveTriggeredBy === 'submitButton' || this.isDirty) {
-                        
-                        // create a node state populated with the student data
-                        nodeState = this.createNodeState();
-                        
-                        nodeState.saveTriggeredBy = saveTriggeredBy;
-                        
-                        if (saveTriggeredBy === 'submitButton') {
-                            nodeState.isSubmit = true;
-                        } 
-                        
-                        // add the node state to the latest node visit
-                        $scope.$parent.nodeController.addNodeStateToLatestNodeVisit(this.nodeId, nodeState);
-                    }
+                // insert the series data
+                studentData.series = this.getSeries();
+                
+                // insert the x axis data
+                studentData.xAxis = this.getXAxis();
+                
+                // insert the y axis data
+                studentData.yAxis = this.getYAxis();
+                
+                componentState.studentData = studentData;
+                
+                if(this.saveTriggeredBy != null) {
+                    // set the saveTriggeredBy value
+                    componentState.saveTriggeredBy = this.saveTriggeredBy;
                 }
             }
             
-            return nodeState;
-        };
-        
-        /**
-         * Create a new node state populated with the student data
-         * @return the nodeState after it has been populated
-         */
-        this.createNodeState = function() {
-            
-            // create a new node state
-            var nodeState = NodeService.createNewNodeState();
-            
-            // insert the series data
-            nodeState.series = this.getSeries();
-            
-            // insert the x axis data
-            nodeState.xAxis = this.getXAxis();
-            
-            // insert the y axis data
-            nodeState.yAxis = this.getYAxis();
-            
-            return nodeState;
-        };
-        
-        /**
-         * Save the node visit to the server
-         */
-        this.saveNodeVisitToServer = function() {
-            // save the node visit to the server
-            return $scope.$parent.nodeController.saveNodeVisitToServer(this.nodeId).then(angular.bind(this, function(nodeVisit) {
-                
-                // check if we need to lock this node
-                this.calculateDisabled();
-                
-                /*
-                 * set the isDirty flag to false because the student work has 
-                 * been saved to the server
-                 */
-                this.isDirty = false;
-            }));
+            return componentState;
         };
         
         /**
@@ -671,10 +552,12 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
         this.showSaveButton = function() {
             var show = false;
             
-            // check if this is a node part
-            if (!this.isNodePart) {
-                // this is not a node part so we will show the save button
-                show = true;
+            if (this.nodeContent != null) {
+                
+                // check the showSaveButton field in the node content
+                if (this.nodeContent.showSaveButton) {
+                    show = true;
+                }
             }
             
             return show;
@@ -699,33 +582,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
         };
         
         /**
-         * Start the auto save interval for this node
-         */
-        this.startAutoSaveInterval = function() {
-            this.autoSaveIntervalId = setInterval(angular.bind(this, function() {
-                // check if the student work is dirty
-                if (this.isDirty) {
-                    // the student work is dirty so we will save
-                    
-                    var saveTriggeredBy = 'autoSave';
-                    
-                    // create and add a node state to the node visit
-                    this.createAndAddNodeState(saveTriggeredBy);
-                    
-                    // save the node visit to the server
-                    this.saveNodeVisitToServer();
-                }
-            }), $scope.$parent.nodeController.autoSaveInterval);
-        };
-        
-        /**
-         * Stop the auto save interval for this node
-         */
-        this.stopAutoSaveInterval = function() {
-            clearInterval(this.autoSaveIntervalId);
-        };
-        
-        /**
          * Get the prompt to show to the student
          */
         this.getPrompt = function() {
@@ -736,45 +592,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
             }
             
             return prompt;
-        };
-        
-        /**
-         * Get the number of rows for the textarea
-         */
-        this.getNumRows = function() {
-            var numRows = null;
-            
-            if (this.nodeContent != null) {
-                numRows = this.nodeContent.numRows;
-            }
-            
-            return numRows;
-        };
-        
-        /**
-         * Get the number of columns for the textarea
-         */
-        this.getNumColumns = function() {
-            var numColumns = null;
-            
-            if (this.nodeContent != null) {
-                numColumns = this.nodeContent.numColumns;
-            }
-            
-            return numColumns;
-        };
-        
-        /**
-         * Get the text the student typed
-         */
-        this.getResponse = function() {
-            var response = null;
-            
-            if (this.studentResponse != null) {
-                response = this.studentResponse;
-            }
-            
-            return response;
         };
         
         /**
@@ -988,17 +805,13 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
         };
         
         /**
-         * Get the part id if this node is part of a Questionnaire node
-         * @return the part id
+         * Get the component id
+         * @return the component id
          */
-        this.getPartId = function() {
-            var partId = null;
+        this.getComponentId = function() {
+            var componentId = this.nodeContent.id;
             
-            if (this.isNodePart) {
-                partId = this.nodeContent.id;
-            }
-            
-            return partId;
+            return componentId;
         };
         
         /**
@@ -1011,23 +824,17 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
          */
         $scope.getStudentWorkObject = function() {
             
-            var nodeState = {};
+            var componentState = null;
             
-            /*
-             * if this node is showing previous work we do not need to save the
-             * student work
-             */
-            if (!this.isShowPreviousWork) {
-                /*
-                 * this is not a show previous work node so we will save the
-                 * student work
-                 */
-                
+            if ($scope.graphController.isDirty) {
                 // create a node state populated with the student data
-                nodeState = $scope.graphController.createNodeState();
+                componentState = $scope.graphController.createComponentState();
+                
+                // set isDirty to false since this student work is about to be saved
+                $scope.graphController.isDirty = false;
             }
             
-            return nodeState;
+            return componentState;
         };
         
         /**
@@ -1037,38 +844,6 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
          */
         $scope.$on('nodeOnExit', angular.bind(this, function(event, args) {
             
-            /*
-             * Check if this node is part of another node such as a
-             * Questionnaire node. If this is part of another node we do
-             * not need to perform any saving because the parent will
-             * handle the saving.
-             */
-            if (!this.isNodePart) {
-                // this is a standalone node so we will save
-                
-                // get the node that is exiting
-                var nodeToExit = args.nodeToExit;
-                
-                /*
-                 * make sure the node id of the node that is exiting is
-                 * this node
-                 */
-                if (nodeToExit.id === this.nodeId) {
-                    var saveTriggeredBy = 'nodeOnExit';
-                    
-                    // create and add a node state to the latest node visit
-                    this.createAndAddNodeState(saveTriggeredBy);
-                    
-                    // stop the auto save interval for this node
-                    this.stopAutoSaveInterval();
-                    
-                    /*
-                     * tell the parent that this node is done performing
-                     * everything it needs to do before exiting
-                     */
-                    $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
-                }
-            }
         }));
         
         /**
@@ -1083,38 +858,7 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
              */
             this.exitListener = $scope.$on('exit', angular.bind(this, function(event, args) {
                 
-                /*
-                 * Check if this node is part of another node such as a
-                 * Questionnaire node. If this is part of another node we do
-                 * not need to perform any saving because the parent will
-                 * handle the saving.
-                 */
-                if (!this.isNodePart) {
-                    // this is a standalone node so we will save
-                    
-                    var saveTriggeredBy = 'exit';
-                    
-                    // create and add a node state to the latest node visit
-                    this.createAndAddNodeState(saveTriggeredBy);
-                    
-                    // stop the auto save interval for this node
-                    this.stopAutoSaveInterval();
-                    
-                    /*
-                     * tell the parent that this node is done performing
-                     * everything it needs to do before exiting
-                     */
-                    $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
-                    
-                    // call this function to remove the listener
-                    this.exitListener();
-                    
-                    /*
-                     * tell the session service that this listener is done
-                     * performing everything it needs to do before exiting
-                     */
-                    $rootScope.$broadcast('doneExiting');
-                }
+                $rootScope.$broadcast('doneExiting');
             }));
         };
         

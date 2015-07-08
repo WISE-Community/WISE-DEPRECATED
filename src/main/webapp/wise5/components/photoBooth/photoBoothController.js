@@ -269,7 +269,7 @@ define(['app'], function(app) {
                     if (saveTriggeredBy === 'submitButton' || this.isDirty) {
                         
                         // create the node state
-                        nodeState = NodeService.createNewNodeState();
+                        nodeState = NodeService.createNewComponentState();
                         
                         // set the values into the node state
                         nodeState.studentData = this.studentResponse;

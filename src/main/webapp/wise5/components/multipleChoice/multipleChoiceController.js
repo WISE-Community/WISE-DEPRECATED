@@ -23,11 +23,17 @@ define(['app'], function(app) {
         // holds the ids of the choices the student has chosen
         this.studentChoices = [];
         
-        // whether this is part of another node such as a Questionnaire node
-        this.isNodePart = false;
-        
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
+        
+        // holds whether the student answered correctly if there is a correct answer
+        this.isCorrect = null;
+        
+        // keep track of the number of submits
+        this.numberOfAttempts = 0;
+        
+        // whether the latest work was submitted or not
+        this.isSubmit = null;
         
         /**
          * Perform setup of the node
@@ -39,72 +45,46 @@ define(['app'], function(app) {
                 this.nodeId = currentNode.id;
             }
             
-            // check if the node is part of another node
-            if ($scope.part != null) {
-                // the node is part of another node
-                this.isNodePart = true;
+            // set the content
+            this.nodeContent = $scope.part;
+            
+            // get the show previous work node id if it is provided
+            var showPreviousWorkNodeId = this.nodeContent.showPreviousWorkNodeId;
+            
+            if (showPreviousWorkNodeId != null) {
+                // this part is showing previous work
+                this.isShowPreviousWork = true;
                 
-                // set the content
-                this.nodeContent = $scope.part;
+                // get the node src for the node we want previous work from
+                var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
                 
-                // get the show previous work node id if it is provided
-                var showPreviousWorkNodeId = this.nodeContent.showPreviousWorkNodeId;
+                // get the show previous work part id if it is provided
+                var showPreviousWorkPartId = this.nodeContent.showPreviousWorkPartId;
                 
-                if (showPreviousWorkNodeId != null) {
-                    // this part is showing previous work
-                    this.isShowPreviousWork = true;
+                // get the node content for the show previous work node
+                NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                     
-                    // get the node src for the node we want previous work from
-                    var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
+                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(showPreviousWorkNodeId);
                     
-                    // get the show previous work part id if it is provided
-                    var showPreviousWorkPartId = this.nodeContent.showPreviousWorkPartId;
-                    
-                    // get the node content for the show previous work node
-                    NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
+                    // check if we are show previous work from a part
+                    if (showPreviousWorkPartId != null) {
+                        // we are showing previous work from a part
                         
-                        var nodeState = StudentDataService.getLatestNodeStateByNodeId(showPreviousWorkNodeId);
+                        // get the part from the node content
+                        this.nodeContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkPartId);
                         
-                        // check if we are show previous work from a part
-                        if (showPreviousWorkPartId != null) {
-                            // we are showing previous work from a part
-                            
-                            // get the part from the node content
-                            this.nodeContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkPartId);
-                            
-                            // get the part from the node state
-                            nodeState = NodeService.getNodeStateByPartId(nodeState, showPreviousWorkPartId);
-                        } else {
-                            // set the show previous work node content
-                            this.nodeContent = showPreviousWorkNodeContent;
-                        }
-                        
-                        // populate the student work into this node
-                        this.setStudentWork(nodeState);
-                        
-                        // disable the node since we are just showing previous work
-                        this.isDisabled = true;
-                        
-                        // get the part
-                        var part = $scope.part;
-                        
-                        /*
-                         * register this node with the parent node which will most  
-                         * likely be a Questionnaire node
-                         */
-                        $scope.$parent.registerPartController($scope, part);
-                    }));
-                } else {
-                    // this is a node part
-                    
-                    // get the latest node state
-                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                        // get the part from the node state
+                        nodeState = NodeService.getNodeStateByPartId(nodeState, showPreviousWorkPartId);
+                    } else {
+                        // set the show previous work node content
+                        this.nodeContent = showPreviousWorkNodeContent;
+                    }
                     
                     // populate the student work into this node
                     this.setStudentWork(nodeState);
                     
-                    // check if we need to lock this node
-                    this.calculateDisabled();
+                    // disable the node since we are just showing previous work
+                    this.isDisabled = true;
                     
                     // get the part
                     var part = $scope.part;
@@ -114,66 +94,91 @@ define(['app'], function(app) {
                      * likely be a Questionnaire node
                      */
                     $scope.$parent.registerPartController($scope, part);
-                }
-            } else {
-                // this is a regular standalone node
-                var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
-                
-                // get the node content for this node
-                NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
-                    
-                    this.nodeContent = nodeContent;
-                    
-                    // get the latest node state
-                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
-                    
-                    // populate the student work into this node
-                    this.setStudentWork(nodeState);
-                    
-                    // check if we need to lock this node
-                    this.calculateDisabled();
-                    
-                    //this.importWork();
-                    
-                    // tell the parent controller that this node has loaded
-                    $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-                    
-                    // start the auto save interval
-                    this.startAutoSaveInterval();
-                    
-                    // register this controller to listen for the exit event
-                    this.registerExitListener();
                 }));
+            } else {
+                // this is a regular node part
+                
+                // get the latest node state
+                var componentState = null;
+                
+                /*
+                 * check if the part student data has been passed. this will be
+                 * used when the node is part of a Questionnaire node
+                 */
+                if ($scope.partStudentData != null) {
+                    // set the part student data as the node state
+                    componentState = $scope.partStudentData;
+                }
+                
+                // populate the student work into this node
+                this.setStudentWork(componentState);
+                
+                // check if we need to lock this node
+                this.calculateDisabled();
+                
+                // get the part
+                var part = $scope.part;
+                
+                /*
+                 * register this node with the parent node which will most  
+                 * likely be a Questionnaire node
+                 */
+                $scope.$parent.registerPartController($scope, part);
             }
         };
         
         /**
          * Populate the student work into the node
-         * @param nodeState the node state to populate into the node
+         * @param componentState the component state to populate into the node
          */
-        this.setStudentWork = function(nodeState) {
+        this.setStudentWork = function(componentState) {
             
-            /*
-             * check if the part student data has been passed. this will be
-             * used when the node is part of a Questionnaire node
-             */
-            if ($scope.partStudentData != null) {
-                // set the part student data as the node state
-                nodeState = $scope.partStudentData;
-            }
-            
-            if (nodeState != null) {
+            if (componentState != null) {
                 // get the student data
-                var studentData = nodeState.studentData;
+                var studentData = componentState.studentData;
                 
-                // get the choice ids the student previously chose
-                var choiceIds = this.getChoiceIdsFromStudentData(studentData);
-                
-                // set the choice(s) the student previously chose
-                if (this.isRadio()) {
-                    this.studentChoices = choiceIds[0];
-                } else if (this.isCheckbox()) {
-                    this.studentChoices = choiceIds;
+                if (studentData != null) {
+                    // get the choice ids the student previously chose
+                    var choiceIds = this.getChoiceIdsFromStudentData(studentData);
+                    
+                    // set the choice(s) the student previously chose
+                    if (this.isRadio()) {
+                        this.studentChoices = choiceIds[0];
+                    } else if (this.isCheckbox()) {
+                        this.studentChoices = choiceIds;
+                    }
+                    
+                    if (studentData.isCorrect != null) {
+                        this.isCorrect = studentData.isCorrect;
+                    }
+                    
+                    if (studentData.isSubmit) {
+                        // the previous work was a submit so we will show the feedback
+                        this.showFeedbackForChoiceIds(choiceIds);
+                    }
+                    
+                    var numberOfAttempts = studentData.numberOfAttempts;
+                    
+                    if (numberOfAttempts != null) {
+                        // show the number of attempts
+                        this.numberOfAttempts = numberOfAttempts;
+                    }
+                }
+            }
+        };
+        
+        this.showFeedbackForChoiceIds = function(choiceIds) {
+            
+            if (choiceIds != null) {
+                for (var c = 0; c < choiceIds.length; c++) {
+                    var choiceId = choiceIds[c];
+                    
+                    var choiceObject = this.getChoiceById(choiceId);
+                    
+                    if (choiceObject != null) {
+                        choiceObject.showFeedback = true;
+                        choiceObject.feedbackToShow = choiceObject.feedback;
+                    }
                 }
             }
         };
@@ -219,12 +224,15 @@ define(['app'], function(app) {
         this.getChoiceIdsFromStudentData = function(studentData) {
             var choiceIds = [];
             
-            if (studentData != null) {
+            if (studentData != null && studentData.studentChoices != null) {
+                
+                // get the choices the student chose
+                var studentChoices = studentData.studentChoices;
                 
                 // loop through all the choice objects in the student data
-                for (var x = 0; x < studentData.length; x++) {
+                for (var x = 0; x < studentChoices.length; x++) {
                     // get a choice object
-                    var studentDataChoice = studentData[x];
+                    var studentDataChoice = studentChoices[x];
                     
                     if (studentDataChoice != null) {
                         // get the choice id
@@ -324,45 +332,91 @@ define(['app'], function(app) {
          * Called when the student clicks the save button
          */
         this.saveButtonClicked = function() {
-            var saveTriggeredBy = 'saveButton';
+            this.saveTriggeredBy = 'saveButton';
             
-            // create and add the node state to the node visit
-            this.createAndAddNodeState(saveTriggeredBy);
+            this.isSubmit = false;
             
-            // save the node visit to the server
-            this.saveNodeVisitToServer();
+            $scope.$emit('componentSaveClicked');
         };
         
         /**
          * Called when the student clicks the submit button
          */
         this.submitButtonClicked = function() {
-            var saveTriggeredBy = 'submitButton';
+            this.saveTriggeredBy = 'submitButton';
             
-            // create and add the node state to the node visit
-            this.createAndAddNodeState(saveTriggeredBy);
+            this.isSubmit = true;
             
-            // save the node visit to the server
-            this.saveNodeVisitToServer();
+            this.checkAnswer();
+            
+            $scope.$emit('componentSubmitClicked');
         };
         
         /**
-         * Check if the student has answered correctly
-         * @return whether the student has answered correctly
+         * Hide all the feedback
          */
-        this.isCorrect = function() {
-            var result = false;
+        this.hideAllFeedback = function() {
+            
+            // get all the choices
+            var choices = this.getChoices();
+            
+            // loop through all the choices
+            for (var c = 0; c < choices.length; c++) {
+                var choice = choices[c];
+                
+                if (choice != null) {
+                    // hide all the feedback
+                    choice.showFeedback = false;
+                }
+            }
+        };
+        
+        /**
+         * Increment the number of attempts the student has made
+         */
+        this.incrementNumberOfAttempts = function() {
+            
+            if (this.numberOfAttempts == null) {
+                this.numberOfAttempts = 0;
+            }
+            
+            this.numberOfAttempts++;
+        };
+        
+        /**
+         * Check the answer the student has submitted and display feedback
+         * for the choices the student has checked
+         */
+        this.checkAnswer = function() {
+            var isCorrect = false;
+            
+            this.incrementNumberOfAttempts();
+            this.hideAllFeedback();
             
             if (this.isRadio()) {
+                
+                // get the choice the student chose
+                var studentChoice = this.studentChoices;
+                
+                var choiceObject = this.getChoiceById(studentChoice);
+                
+                // show the feedback for the choice if there is any
+                if (choiceObject.feedback != null && choiceObject !== '') {
+                    choiceObject.showFeedback = true;
+                    choiceObject.feedbackToShow = choiceObject.feedback;
+                }
+                
                 // get the correct choice
                 var correctChoice = this.getCorrectChoice();
                 
                 // check if the correct choice is chosen
                 if (this.isChecked(correctChoice)) {
                     // the student has checked the correct choice
-                    result = true;
+                    isCorrect = true;
                 }
+                
             } else if (this.isCheckbox()) {
+                
                 // get the correct choices
                 var correctChoices = this.getCorrectChoices();
                 
@@ -390,6 +444,12 @@ define(['app'], function(app) {
                             // check if the student checked the choice
                             var isChecked = this.isChecked(choiceId);
                             
+                            // show the feedback if it exists and the student checked it
+                            if (isChecked && choice.feedback != null && choice.feedback !== '') {
+                                choice.showFeedback = true;
+                                choice.feedbackToShow = choice.feedback;
+                            }
+                            
                             if ((isChecked && isChoiceCorrect) ||
                                     (!isChecked && !isChoiceCorrect)) {
                                 /*
@@ -402,16 +462,15 @@ define(['app'], function(app) {
                                  * the choice is incorrect and the student has checked it
                                  */
                                 correctSoFar = false;
-                                break;
                             }
                         }
                     }
                     
-                    result = correctSoFar;
+                    isCorrect = correctSoFar;
                 }
             }
             
-            return result;
+            this.isCorrect = isCorrect;
         };
         
         /**
@@ -452,123 +511,79 @@ define(['app'], function(app) {
              */
             this.isDirty = true;
             
-            if (this.isNodePart) {
-                /*
-                 * this step is a node part so we will tell its parent that
-                 * the student work has changed and will need to be saved
-                 */
-                
-                // get this part id
-                var partId = this.getPartId();
-                
-                // create a node state populated with the student data
-                var nodeState = this.createNodeState();
-                
-                /*
-                 * this step is a node part so we will tell its parent that
-                 * the student work has changed and will need to be saved.
-                 * this will also notify connected parts that this part's
-                 * student data has changed.
-                 */
-                $scope.$emit('partStudentDataChanged', {partId: partId, nodeState: nodeState});
-            }
+            /*
+             * reset these values so that they don't accidentally persist
+             * between component states
+             */
+            this.isSubmit = null;
+            this.isCorrect = null;
+            
+            /*
+             * this step is a node part so we will tell its parent that
+             * the student work has changed and will need to be saved
+             */
+            
+            // get this component id
+            var componentId = this.getComponentId();
+            
+            // create a node state populated with the student data
+            var componentState = this.createComponentState();
+            
+            /*
+             * this step is a node part so we will tell its parent that
+             * the student work has changed and will need to be saved.
+             * this will also notify connected parts that this part's
+             * student data has changed.
+             */
+            $scope.$emit('partStudentDataChanged', {componentId: componentId, componentState: componentState});
         };
         
         /**
-         * Create a node state and add it to the latest node visit
-         * @param saveTriggeredBy the reason why we are saving a new node state
-         * e.g.
-         * 'autoSave'
-         * 'saveButton'
-         * 'submitButton'
-         * 'nodeOnExit'
-         * 'logOut'
-         * @return the node state
+         * Create a new component state populated with the student data
+         * @return the nodeState after it has been populated
          */
-        this.createAndAddNodeState = function(saveTriggeredBy) {
+        this.createComponentState = function() {
             
-            var nodeState = null;
+            // create a new node state
+            var componentState = NodeService.createNewComponentState();
             
-            /*
-             * check if this node is part of another node such as a
-             * Questionnaire node. if it is part of a Questionnaire node
-             * we do not need to create a node state or save anything
-             * since the parent Questionnaire node will handle that.
-             */
-            if (!this.isNodePart) {
-                // this is a standalone node
+            if (componentState != null) {
                 
-                if (saveTriggeredBy != null) {
-                    
+                var studentData = {};
+                
+                // set the student choices into the node state
+                studentData.studentChoices = this.getStudentChoiceObjects();
+                
+                // check if the student has answered correctly
+                var hasCorrect = this.hasCorrectChoices();
+                
+                if (hasCorrect) {
                     /*
-                     * check if the save was triggered by the submit button
-                     * or if the student data is dirty
+                     * check if the student has chosen all the correct
+                     * choices
                      */
-                    if (saveTriggeredBy === 'submitButton' || this.isDirty) {
-                        
-                        // check if the student has answered correctly
-                        var hasCorrect = this.hasCorrectChoices();
-                        
-                        // create a node state populated with the student data
-                        nodeState = this.createNodeState();
-                        
-                        nodeState.saveTriggeredBy = saveTriggeredBy;
-                        
-                        if (saveTriggeredBy === 'submitButton') {
-                            nodeState.isSubmit = true;
-                        } 
-                        
-                        if (hasCorrect) {
-                            /*
-                             * check if the student has chosen all the correct
-                             * choices
-                             */
-                            var isCorrect = this.isCorrect();
-                            
-                            // set the isCorrect value into the node state
-                            nodeState.isCorrect = isCorrect;
-                        }
-                        
-                        // add the node state to the latest node visit
-                        $scope.$parent.nodeController.addNodeStateToLatestNodeVisit(this.nodeId, nodeState);
+                    var isCorrect = this.isCorrect;
+                    
+                    // set the isCorrect value into the node state
+                    studentData.isCorrect = isCorrect;
+                    
+                    if (this.isSubmit != null) {
+                        studentData.isSubmit = this.isSubmit;
                     }
+                    
+                    // set the number of attempts the student has made
+                    studentData.numberOfAttempts = this.numberOfAttempts;
+                }
+                
+                componentState.studentData = studentData;
+                
+                if(this.saveTriggeredBy != null) {
+                    // set the saveTriggeredBy value
+                    componentState.saveTriggeredBy = this.saveTriggeredBy;
                 }
             }
             
-            return nodeState;
-        };
-        
-        /**
-         * Create a new node state populated with the student data
-         * @return the nodeState after it has been populated
-         */
-        this.createNodeState = function() {
-            
-            // create a new node state
-            var nodeState = NodeService.createNewNodeState();
-            
-            // set the student choices into the node state
-            nodeState.studentData = this.getStudentChoiceObjects();
-            
-            return nodeState;
-        };
-        
-        /**
-         * Save the node visit to the server
-         */
-        this.saveNodeVisitToServer = function() {
-            // save the node visit to the server
-            return $scope.$parent.nodeController.saveNodeVisitToServer(this.nodeId).then(angular.bind(this, function() {
-                
-                // check if we need to lock this node
-                this.calculateDisabled();
-                
-                /*
-                 * set the isDirty flag to false because the student work has 
-                 * been saved to the server
-                 */
-                this.isDirty = false;
-            }));
+            return componentState;
         };
         
         /**
@@ -783,9 +798,8 @@ define(['app'], function(app) {
         this.showSaveButton = function() {
             var show = false;
             
-            // check if this is a node part
-            if (!this.isNodePart) {
-                // this is not a node part so we will show the save button
+            // check the showSaveButton field in the node content
+            if (this.nodeContent.showSaveButton) {
                 show = true;
             }
             
@@ -811,45 +825,13 @@ define(['app'], function(app) {
         };
         
         /**
-         * Start the auto save interval for this node
+         * Get the component id
+         * @return the component id
          */
-        this.startAutoSaveInterval = function() {
-            this.autoSaveIntervalId = setInterval(angular.bind(this, function() {
-                // check if the student work is dirty
-                if (this.isDirty) {
-                    // the student work is dirty so we will save
-                    
-                    var saveTriggeredBy = 'autoSave';
-                    
-                    // create and add a node state to the node visit
-                    this.createAndAddNodeState(saveTriggeredBy);
-                    
-                    // save the node visit to the server
-                    this.saveNodeVisitToServer();
-                }
-            }), $scope.$parent.nodeController.autoSaveInterval);
-        };
-        
-        /**
-         * Stop the auto save interval for this node
-         */
-        this.stopAutoSaveInterval = function() {
-            clearInterval(this.autoSaveIntervalId);
-        };
-        
-        
-        /**
-         * Get the part id if this node is part of a Questionnaire node
-         * @return the part id
-         */
-        this.getPartId = function() {
-            var partId = null;
+        this.getComponentId = function() {
+            var componentId = this.nodeContent.id;
             
-            if (this.isNodePart) {
-                partId = this.nodeContent.id;
-            }
-            
-            return partId;
+            return componentId;
         };
         
         /**
@@ -862,23 +844,17 @@ define(['app'], function(app) {
          */
         $scope.getStudentWorkObject = function() {
             
-            var nodeState = {};
+            var componentState = null;
             
-            /*
-             * if this node is showing previous work we do not need to save the
-             * student work
-             */
-            if (!this.isShowPreviousWork) {
-                /*
-                 * this is not a show previous work node so we will save the
-                 * student work
-                 */
+            if ($scope.multipleChoiceController.isDirty || $scope.multipleChoiceController.isSubmit) {
+                // create a component state populated with the student data
+                componentState = $scope.multipleChoiceController.createComponentState();
                 
-                // create a node state populated with the student data
-                nodeState = $scope.multipleChoiceController.createNodeState();
+                // set isDirty to false since this student work is about to be saved
+                $scope.multipleChoiceController.isDirty = false;
             }
             
-            return nodeState;
+            return componentState;
         };
         
         /**
@@ -888,38 +864,6 @@ define(['app'], function(app) {
          */
         $scope.$on('nodeOnExit', angular.bind(this, function(event, args) {
             
-            /*
-             * Check if this node is part of another node such as a
-             * Questionnaire node. If this is part of another node we do
-             * not need to perform any saving because the parent will
-             * handle the saving.
-             */
-            if (!this.isNodePart) {
-                // this is a standalone node so we will save
-                
-                // get the node that is exiting
-                var nodeToExit = args.nodeToExit;
-                
-                /*
-                 * make sure the node id of the node that is exiting is
-                 * this node
-                 */
-                if (nodeToExit.id === this.nodeId) {
-                    var saveTriggeredBy = 'nodeOnExit';
-                    
-                    // create and add a node state to the latest node visit
-                    this.createAndAddNodeState(saveTriggeredBy);
-                    
-                    // stop the auto save interval for this node
-                    this.stopAutoSaveInterval();
-                    
-                    /*
-                     * tell the parent that this node is done performing
-                     * everything it needs to do before exiting
-                     */
-                    $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
-                }
-            }
         }));
         
         /**
@@ -934,38 +878,6 @@ define(['app'], function(app) {
              */
             this.exitListener = $scope.$on('exit', angular.bind(this, function(event, args) {
                 
-                /*
-                 * Check if this node is part of another node such as a
-                 * Questionnaire node. If this is part of another node we do
-                 * not need to perform any saving because the parent will
-                 * handle the saving.
-                 */
-                if (!this.isNodePart) {
-                    // this is a standalone node so we will save
-                    
-                    var saveTriggeredBy = 'exit';
-                    
-                    // create and add a node state to the latest node visit
-                    this.createAndAddNodeState(saveTriggeredBy);
-                    
-                    // stop the auto save interval for this node
-                    this.stopAutoSaveInterval();
-                    
-                    /*
-                     * tell the parent that this node is done performing
-                     * everything it needs to do before exiting
-                     */
-                    $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
-                    
-                    // call this function to remove the listener
-                    this.exitListener();
-                    
-                    /*
-                     * tell the session service that this listener is done
-                     * performing everything it needs to do before exiting
-                     */
-                    $rootScope.$broadcast('doneExiting');
-                }
             }));
         };
         

@@ -1,0 +1,252 @@
+{
+    "metadata": {
+        "wiseVersion": 5,
+        "gradeRange": "5-7"
+    },
+    "style": "#prompt {font-size:3em;} button { width: 100px;}",
+    "nodes": [
+        {
+            "id": "node1",
+            "type": "Node",
+            "title": "Open Response",
+            "src": "node1.json",
+            "x": 50,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node2",
+            "type": "Node",
+            "title": "Discussion",
+            "src": "node2.json",
+            "x": 150,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node3",
+            "type": "Node",
+            "title": "Draw",
+            "src": "node3.json",
+            "x": 250,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node4",
+            "type": "Node",
+            "title": "Graph",
+            "src": "node4.json",
+            "x": 350,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node5",
+            "type": "Node",
+            "title": "HTML",
+            "src": "node5.json",
+            "x": 450,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node6",
+            "type": "Node",
+            "title": "Match",
+            "src": "node6.json",
+            "x": 550,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node7",
+            "type": "Node",
+            "title": "Multiple Choice Radio",
+            "src": "node7.json",
+            "x": 650,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node8",
+            "type": "Node",
+            "title": "Multiple Choice Checkbox",
+            "src": "node8.json",
+            "x": 750,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node9",
+            "type": "Node",
+            "title": "Outside URL",
+            "src": "node9.json",
+            "x": 850,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node10",
+            "type": "Node",
+            "title": "Table",
+            "src": "node10.json",
+            "x": 950,
+            "y": 140,
+            "r": 20
+        },
+        {
+            "id": "node11",
+            "type": "Node",
+            "title": "Audio Recorder",
+            "src": "node11.json",
+            "x": 50,
+            "y": 240,
+            "r": 20
+        },
+        {
+            "id": "node12",
+            "type": "Node",
+            "title": "Photo Booth",
+            "src": "node12.json",
+            "x": 150,
+            "y": 240,
+            "r": 20
+        },
+        {
+            "id": "node13",
+            "type": "Node",
+            "title": "Planning",
+            "src": "node13.json",
+            "x": 250,
+            "y": 240,
+            "r": 20
+        },
+        {
+            "id": "node14",
+            "type": "Node",
+            "title": "Multi Component Step",
+            "src": "node14.json",
+            "x": 350,
+            "y": 240,
+            "r": 20
+        },
+        {
+            "id": "group0",
+            "type": "group",
+            "title": "My First WISE5 Project",
+            "startId": "group1",
+            "ids": [
+                "group1"
+            ],
+            "x": 150,
+            "y": 150,
+            "r": 20
+        },
+        {
+            "id": "group1",
+            "type": "group",
+            "title": "Activity 1",
+            "startId": "node1",
+            "ids": [
+                "node1",
+                "node2",
+                "node3",
+                "node4",
+                "node5",
+                "node6",
+                "node7",
+                "node8",
+                "node9",
+                "node10",
+                "node11",
+                "node12",
+                "node13",
+                "node14"
+            ],
+            "x": 50,
+            "y": 140,
+            "r": 20
+        }
+    ],
+    "transitions": [
+        {
+            "id": "transition1",
+            "from": "node1",
+            "to": "node2"
+        },
+        {
+            "id": "transition2",
+            "from": "node2",
+            "to": "node3"
+        },
+        {
+            "id": "transition3",
+            "from": "node3",
+            "to": "node4"
+        },
+        {
+            "id": "transition4",
+            "from": "node4",
+            "to": "node5"
+        },
+        {
+            "id": "transition5",
+            "from": "node5",
+            "to": "node6"
+        },
+        {
+            "id": "transition6",
+            "from": "node6",
+            "to": "node7"
+        },
+        {
+            "id": "transition7",
+            "from": "node7",
+            "to": "node8"
+        },
+        {
+            "id": "transition8",
+            "from": "node8",
+            "to": "node9"
+        },
+        {
+            "id": "transition9",
+            "from": "node9",
+            "to": "node10"
+        },
+        {
+            "id": "transition10",
+            "from": "node10",
+            "to": "node11"
+        },
+        {
+            "id": "transition11",
+            "from": "node11",
+            "to": "node12"
+        },
+        {
+            "id": "transition12",
+            "from": "node12",
+            "to": "node13"
+        },
+        {
+            "id": "transition13",
+            "from": "node13",
+            "to": "node14"
+        }
+    ],
+    "startGroupId": "group0",
+    "startNodeId": "node1",
+    "constraints": [],
+    "navigationMode": "guided",
+    "navigationApplications": [
+        "wiseMap",
+        "wiseList"
+    ],
+    "layout": {
+        "template": "starmap|leftNav|rightNav",
+        "studentIsOnGroupNode": "layout3",
+        "studentIsOnApplicationNode": "layout4"
+    }
+}

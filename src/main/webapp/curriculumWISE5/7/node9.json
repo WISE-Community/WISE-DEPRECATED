@@ -1,0 +1,12 @@
+{
+    "prompt": "Work on this outside url step.",
+    "parts": [
+        {
+            "id": "72dav923gy",
+            "partType": "OutsideURL",
+            "url": "http://www.berkeley.edu/"
+        }
+    ],
+    "lockAfterSubmit": false,
+    "showSubmitButton": false
+}

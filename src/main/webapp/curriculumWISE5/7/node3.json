@@ -1,0 +1,14 @@
+{
+    "prompt": "",
+    "parts": [
+        {
+            "id": "9h4wxy737r",
+            "partType": "Draw",
+            "prompt": "Work on this draw step.",
+            "showSaveButton": true,
+            "showSubmitButton": true
+        }
+    ],
+    "lockAfterSubmit": false,
+    "showSubmitButton": false
+}

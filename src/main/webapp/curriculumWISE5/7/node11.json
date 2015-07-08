@@ -1,0 +1,12 @@
+{
+    "prompt": "",
+    "parts": [
+        {
+            "id": "4j72bdiy3b",
+            "partType": "AudioRecorder",
+            "prompt": "Work on this audio recorder step."
+        }
+    ],
+    "lockAfterSubmit": false,
+    "showSubmitButton": false
+}

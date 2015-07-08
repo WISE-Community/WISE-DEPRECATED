@@ -1,4 +1,5 @@
 <div ng-controller='GraphController as graphController'>
+<div>{{graphController.getPrompt()}}</div>
 <highchart id="chart1" config="graphController.chartConfig" class="span10"></highchart>
 <button id='saveButton' 
     ng-click='graphController.saveButtonClicked()' 
