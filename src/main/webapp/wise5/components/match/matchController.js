@@ -266,7 +266,7 @@ define(['app', 'angular'], function(app, angular) {
          */
         this.saveButtonClicked = function() {
             
-            $scope.$emit('partSaveClicked');
+            $scope.$emit('componentSaveClicked');
         };
         
         /**
@@ -279,7 +279,7 @@ define(['app', 'angular'], function(app, angular) {
             this.numberOfSubmits++;
             
             // notify the parent that this child node has clicked submit
-            $scope.$emit('partSubmitClicked');
+            $scope.$emit('componentSubmitClicked');
         };
         
         /**

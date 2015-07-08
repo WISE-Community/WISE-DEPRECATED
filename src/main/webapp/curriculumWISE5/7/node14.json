@@ -306,7 +306,39 @@
                     "id": "n8s6v3k2h6",
                     "feedback": "Incorrect, Squidward lives in an Easter Island Head."
                 }
-            ]
+            ],
+            "showSaveButton": true,
+            "showSubmitButton": true
+        },
+        {
+            "id": "l92uy23boi2",
+            "partType": "MultipleChoice",
+            "prompt": "Who works at the Krusty Krab?",
+            "choices": [
+                {
+                    "text": "Patrick",
+                    "id": "4j6v8m3jc9",
+                    "feedback": "Incorrect, Patrick does not have a job."
+                },
+                {
+                    "text": "Spongebob",
+                    "id": "78de39me19",
+                    "feedback": "Correct, Spongebob is the fry cook at the Krusty Krab"
+                },
+                {
+                    "text": "Squidward",
+                    "id": "n8s6v3k2h6",
+                    "feedback": "Correct, Squidward is the cashier at the Krusty Krab."
+                }
+            ],
+            "correctChoices": [
+                "78de39me19",
+                "n8s6v3k2h6"
+            ],
+            "choiceType": "checkbox",
+            "lockAfterSubmit": false,
+            "showSaveButton": true,
+            "showSubmitButton": true
         },
         {
             "id": "82da3923gy",
@@ -383,7 +415,9 @@
                     }
                 ]
             ],
-            "showSubmitButton": false
+            "showSubmitButton": false,
+            "showSaveButton": true,
+            "showSubmitButton": true
         }
     ],
     "lockAfterSubmit": false,

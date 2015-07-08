@@ -52,11 +52,8 @@ define(['app'], function(app) {
             NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
                 this.nodeContent = nodeContent;
                 
-                // get the latest node state
-                var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
-                
                 // populate the student work into this node
-                this.setStudentWork(nodeState);
+                //this.setStudentWork();
                 
                 // check if we need to lock this node
                 this.calculateDisabled();
@@ -76,16 +73,9 @@ define(['app'], function(app) {
         
         /**
          * Populate the student work into the node
-         * @param nodeState the node state to populate into the node
          */
-        this.setStudentWork = function(nodeState) {
-            if (nodeState != null) {
-                /*
-                 * remember the node state so that we can use it later
-                 * when we call getPartStudentData()
-                 */
-                this.nodeState = nodeState;
-            }
+        this.setStudentWork = function() {
+            
         };
         
         /**
@@ -557,17 +547,14 @@ define(['app'], function(app) {
             
             var partStudentData = null;
             
-            // get the node state
-            var nodeState = this.nodeState;
-            
             if (part != null) {
                 // get the part id
                 var partId = part.id;
                 
                 if (partId != null) {
                     
-                    // get the part from the node state
-                    partStudentData = this.getPartFromNodeState(nodeState, partId)
+                    // get the latest component state for the part
+                    partStudentData = StudentDataService.getLatestComponentState(this.nodeId, partId);
                 }
             }
             

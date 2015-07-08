@@ -156,8 +156,10 @@ define(['app'], function(app) {
                 if (studentData != null) {
                     var response = studentData.response;
                     
-                    // populate the text the student previously typed
-                    this.studentResponse = response;
+                    if (response != null) {
+                        // populate the text the student previously typed
+                        this.studentResponse = response;
+                    }
                 }
             }
         };

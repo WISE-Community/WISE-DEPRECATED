@@ -740,6 +740,76 @@ define(['configService', 'projectService'], function(configService, projectServi
             return nodeState;
         };
         
+        /**
+         * Get the latest component state for the given node id and component id
+         * @param nodeId the node id to look for
+         * @param componentId the component id to look for
+         */
+        serviceObject.getLatestComponentState = function(nodeId, componentId) {
+            
+            if (nodeId != null && componentId != null) {
+                
+                // get all the node visits
+                var nodeVisits = this.getNodeVisits();
+                
+                if (nodeVisits != null) {
+                    
+                    // loop through all the node visits from newest to oldest
+                    for (var nv = nodeVisits.length - 1; nv >= 0; nv--) {
+                        var tempNodeVisit = nodeVisits[nv];
+                        
+                        if (tempNodeVisit !== null) {
+                            var tempNodeId = tempNodeVisit.nodeId;
+                            
+                            // check if the node id matches the one we want
+                            if (nodeId === tempNodeId) {
+                                
+                                var nodeStates = tempNodeVisit.nodeStates;
+                                
+                                if (nodeStates != null) {
+                                    
+                                    // loop through all the node states
+                                    for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
+                                        var nodeState = nodeStates[ns];
+                                        
+                                        if (nodeState != null) {
+                                            var parts = nodeState.parts;
+                                            
+                                            if (parts != null) {
+                                                
+                                                // loop through all the parts
+                                                for (var p = parts.length - 1; p >= 0; p--) {
+                                                    var part = parts[p];
+                                                    
+                                                    if (part != null) {
+                                                        var partId = part.id;
+                                                        
+                                                        // check if the component id matches the one we want
+                                                        if (componentId == partId) {
+                                                            
+                                                            // get the student data from the part
+                                                            var studentData = part.studentData;
+                                                            
+                                                            if (studentData != null) {
+                                                                // we have found the latest component state that we want
+                                                                return part;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return null;
+        };
+        
         return serviceObject;
     }];
     

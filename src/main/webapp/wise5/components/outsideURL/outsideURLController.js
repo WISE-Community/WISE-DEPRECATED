@@ -127,7 +127,7 @@ define(['app'], function(app) {
          * @return an object containing the student work
          */
         $scope.getStudentWorkObject = function() {
-            var studentWork = {};
+            var studentWork = null;
             
             return studentWork;
         };
