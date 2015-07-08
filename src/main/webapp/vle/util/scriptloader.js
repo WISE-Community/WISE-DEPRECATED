@@ -368,7 +368,9 @@ var scriptloader = function(){
 			      'vle/navigation/GlobalTagMap.js',
 	              'vle/util/swfobject/swfobject.js'],
 	    studentWebSocket: ['vle/webSocket/studentWebSocket.js'],
-        author: [jqueryUISrc,
+        author: [
+			     bootstrapSrc,
+			     jqueryUISrc,
    		      	 'vle/lib/jquery/js/jquery.ui.touch-punch.min.js',
                  'vle/lib/tinymce4/js/tinymce/tinymce.min.js',
                  'vle/lib/jquery/miniTip/jquery.miniTip.min.js',

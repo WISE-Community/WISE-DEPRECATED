@@ -353,7 +353,7 @@
         loggingLevel integer,
         maxWorkgroupSize integer,
         name varchar(255),
-        postLevel integer,
+        postLevel integer not null,
         private_notes text,
         survey text,
         run_code varchar(255) not null unique,

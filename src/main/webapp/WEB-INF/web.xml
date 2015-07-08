@@ -41,7 +41,7 @@
 
 	<!-- Filters -->
 	<filter>
-		<filter-name>Acegi Filter Chain Proxy</filter-name>
+		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy
 		</filter-class>
 		<init-param>
@@ -50,10 +50,9 @@
 		</init-param>
 	</filter>
 
-
 	<!-- Filter Mappings -->
 	<filter-mapping>
-		<filter-name>Acegi Filter Chain Proxy</filter-name>
+		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
