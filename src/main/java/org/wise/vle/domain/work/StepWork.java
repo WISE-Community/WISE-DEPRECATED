@@ -72,7 +72,7 @@ public class StepWork extends PersistableDomain {
 	@Column(name="endTime")
 	private Timestamp endTime;
 
-	@Column(name="data", length=5120000)
+	@Column(name="data", length=5120000, columnDefinition = "mediumtext")
 	private String data;
 	
 	/*

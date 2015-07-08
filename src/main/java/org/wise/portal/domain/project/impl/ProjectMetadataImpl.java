@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -39,12 +39,11 @@ import org.json.JSONObject;
 import org.wise.portal.domain.project.ProjectMetadata;
 
 /**
- * @author patrick lawler
- * @version $Id:$
+ * @author Patrick Lawler
  */
 @Entity
 @Table(name = ProjectMetadataImpl.DATA_STORE_NAME)
-public class ProjectMetadataImpl implements ProjectMetadata, Serializable{
+public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 	
 	public final static String DATA_STORE_NAME = "project_metadata";
 	
@@ -151,13 +150,13 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable{
 	@Column(name = COLUMN_NAME_TECH_REQS)
 	private String techReqs;
 
-	@Column(name = COLUMN_NAME_TOOLS, length = 32768)
+	@Column(name = COLUMN_NAME_TOOLS, length = 32768, columnDefinition = "text")
 	private String tools;   // text (blob) 2^15
 
-	@Column(name = COLUMN_NAME_LESSON_PLAN, length = 5120000)
+	@Column(name = COLUMN_NAME_LESSON_PLAN, length = 5120000, columnDefinition = "mediumtext")
 	private String lessonPlan;
 
-	@Column(name = COLUMN_NAME_STANDARDS, length = 5120000)
+	@Column(name = COLUMN_NAME_STANDARDS, length = 5120000, columnDefinition = "mediumtext")
 	private String standards;
 
 	@Column(name = COLUMN_NAME_KEYWORDS)
@@ -184,7 +183,7 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable{
 	@Column(name = COLUMN_NAME_POST_LEVEL)
 	private Long postLevel;
 	
-	@Column(name = COLUMN_NAME_MAX_SCORES, length = 5120000)
+	@Column(name = COLUMN_NAME_MAX_SCORES, length = 5120000, columnDefinition = "mediumtext")
 	private String maxScores;
 	
 	@Column(name = COLUMN_NAME_THEME)

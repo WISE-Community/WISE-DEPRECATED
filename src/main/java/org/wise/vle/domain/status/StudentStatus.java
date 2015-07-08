@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -36,7 +36,9 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Index;
 import org.wise.vle.domain.PersistableDomain;
 
-
+/**
+ * @author Geoffrey Kwan
+ */
 @Entity
 @Table(name="studentstatus")
 public class StudentStatus extends PersistableDomain {
@@ -59,7 +61,7 @@ public class StudentStatus extends PersistableDomain {
 	@Column(name="timestamp")
 	private Timestamp timestamp = null;
 	
-	@Column(name="status", length=5120000)
+	@Column(name="status", length=5120000, columnDefinition = "mediumtext")
 	private String status = null;
 	
 	/**

@@ -77,7 +77,7 @@ public class CRaterRequest extends PersistableDomain {
 	@Column(name="failCount")
 	private int failCount = 0;  // number of unsuccessful cRater requests
 	
-	@Column(name="cRaterResponse", length=2048)
+	@Column(name="cRaterResponse", length=2048, columnDefinition = "text")
 	private String cRaterResponse = null;
 	
 	/**
