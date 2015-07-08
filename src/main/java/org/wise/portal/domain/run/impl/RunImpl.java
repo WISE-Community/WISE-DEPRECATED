@@ -57,7 +57,6 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.domain.run.OfferingVisitor;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.run.RunStatus;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 
@@ -207,11 +206,6 @@ public class RunImpl extends OfferingImpl implements Run {
     @Column(name = COLUMN_NAME_EXTRAS, length=5120000, columnDefinition = "mediumtext")
     private String extras;
 
-	//@OneToOne(cascade = CascadeType.ALL, targetEntity = RunStatusImpl.class)
-    //@JoinColumn(name = COLUMN_NAME_RUNSTATUS, unique = true)
-    @Transient
-    private RunStatus runStatus;
-    
     @Transient
     private List<StudentAttendance> studentAttendance;
     
@@ -419,20 +413,6 @@ public class RunImpl extends OfferingImpl implements Run {
 		this.announcements = announcements;
 	}
 
-	/**
-	 * @see org.wise.portal.domain.Run#getRunStatus()
-	 */
-	public RunStatus getRunStatus() {
-		return this.runStatus;
-	}
-
-	/**
-	 * @param runStatus the runStatus to set
-	 */
-	public void setRunStatus(RunStatus runStatus) {
-		this.runStatus = runStatus;
-	}
-	
     /**
 	 * @return the isPaused
 	 */
@@ -447,13 +427,6 @@ public class RunImpl extends OfferingImpl implements Run {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * @param isPaused the isPaused to set
-	 */
-	public void setPaused(boolean isPaused) {
-		this.runStatus.setPaused(isPaused);
 	}
 
 	/**
