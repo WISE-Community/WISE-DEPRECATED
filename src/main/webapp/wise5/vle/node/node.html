@@ -1,8 +1,0 @@
-<div id='node' class={{vleController.layoutState}} ng-controller='NodeController as nodeController' >
-    <input type='button' value='X' ng-click='nodeController.closeNode()'></input>
-    <input type='button' value='+Portfolio' ng-click='nodeController.addNodeVisitItemToPortfolio()'></input>
-<div>
-    <!-- <p>{{nodeController.nodeHTMLPath}}</p>  -->
-    <div ng-include="nodeController.nodeHTMLPath"></div>
-</div>
-</div>
