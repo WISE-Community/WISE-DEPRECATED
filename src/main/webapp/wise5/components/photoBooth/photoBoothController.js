@@ -30,9 +30,6 @@ define(['app'], function(app) {
         // whether the student work is dirty and needs saving
         this.isDirty = false;
         
-        // whether this is part of another node such as a Questionnaire node
-        this.isNodePart = false;
-        
         // whether camera is ready for use
         this.isCameraReady = false;
         
@@ -47,26 +44,27 @@ define(['app'], function(app) {
                 this.nodeId = currentNode.id;
             }
             
-            // this is a regular standalone node
-            var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
+            // set the content
+            this.nodeContent = $scope.part;
             
-            // get the node content for this node
-            NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
-                
-                this.nodeContent = nodeContent;
-                
-                // get the latest node state
-                var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
-                
-                // populate the student work into this node
-                this.setStudentWork(nodeState);
-                
-                // tell the parent controller that this node has loaded
-                $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-                
-                // register this controller to listen for the exit event
-                this.registerExitListener();
-            }));
+            var componentState = null;
+            
+            if ($scope.partStudentData != null) {
+                // set the part student data as the component state
+                componentState = $scope.partStudentData;
+            }
+            
+            // populate the student work into this node
+            this.setStudentWork(componentState);
+            
+            // get the part
+            var part = $scope.part;
+            
+            /*
+             * register this node with the parent node which will most  
+             * likely be a Questionnaire node
+             */
+            $scope.$parent.registerPartController($scope, part);
             
             //http://coderthoughts.blogspot.co.uk/2013/03/html5-video-fun.html - thanks :)
             navigator.myGetMedia = (navigator.getUserMedia ||
@@ -136,7 +134,7 @@ define(['app'], function(app) {
                             this.studentResponse = [];
                         }
                         this.studentResponse.push(copiedAsset);
-                        this.studentResponseChanged();
+                        this.studentDataChanged();
                     }
                 }));
 
@@ -185,107 +183,112 @@ define(['app'], function(app) {
         /**
          * Called when the student changes their text response
          */
-        this.studentResponseChanged = function() {
+        this.studentDataChanged = function() {
             /*
              * set the dirty flag so we will know we need to save the 
              * student work later
              */
             this.isDirty = true;
             
-            if (this.isNodePart) {
-                /*
-                 * this step is a node part so we will tell its parent that
-                 * the student work is dirty and will need to be saved
-                 */
-                $scope.$emit('isDirty');
-            }
+            /*
+             * this step is a node part so we will tell its parent that
+             * the student work has changed and will need to be saved
+             */
+            
+            // get this part id
+            var componentId = this.getComponentId();
+            
+            // create a component state populated with the student data
+            var componentState = this.createComponentState();
+            
+            /*
+             * this step is a node part so we will tell its parent that
+             * the student work has changed and will need to be saved.
+             * this will also notify connected parts that this part's
+             * student data has changed.
+             */
+            $scope.$emit('partStudentDataChanged', {componentId: componentId, componentState: componentState});
         };
         
         /**
          * Populate the student work into the node
-         * @param nodeState the node state to populate into the node
+         * @param componentState the node state to populate into the node
          */
-        this.setStudentWork = function(nodeState) {
+        this.setStudentWork = function(componentState) {
             
-            /*
-             * check if the part student data has been passed. this will be
-             * used when the node is part of a Questionnaire node
-             */
-            if ($scope.partStudentData != null) {
-                // set the part student data as the node state
-                nodeState = $scope.partStudentData;
-            }
-            
-            if (nodeState != null) {
-                // populate the text the student previously typed
-                this.studentResponse = nodeState.studentData;
-            }
-        };
-        
-        /**
-         * Save the node visit to the server
-         */
-        this.saveNodeVisitToServer = function() {
-            // save the node visit to the server
-            return $scope.$parent.nodeController.saveNodeVisitToServer(this.nodeId).then(angular.bind(this, function(nodeVisit) {
+            if (componentState != null) {
+                var studentData = componentState.studentData;
                 
-                /*
-                 * set the isDirty flag to false because the student work has 
-                 * been saved to the server
-                 */
-                this.isDirty = false;
-            }));
-        };
-        
-        /**
-         * Create a node state and add it to the latest node visit
-         * @param saveTriggeredBy the reason why we are saving a new node state
-         * e.g.
-         * 'autoSave'
-         * 'saveButton'
-         * 'submitButton'
-         * 'nodeOnExit'
-         * 'logOut'
-         */
-        this.createAndAddNodeState = function(saveTriggeredBy) {
-            
-            var nodeState = null;
-            
-            /*
-             * check if this node is part of another node such as a
-             * Questionnaire node. if it is part of a Questionnaire node
-             * we do not need to create a node state or save anything
-             * since the parent Questionnaire node will handle that.
-             */
-            if (!this.isNodePart) {
-                // this is a standalone node
-                
-                if (saveTriggeredBy != null) {
-                    
-                    /*
-                     * check if the save was triggered by the submit button
-                     * or if the student data is dirty
-                     */
-                    if (saveTriggeredBy === 'submitButton' || this.isDirty) {
-                        
-                        // create the node state
-                        nodeState = NodeService.createNewComponentState();
-                        
-                        // set the values into the node state
-                        nodeState.studentData = this.studentResponse;
-                        nodeState.saveTriggeredBy = saveTriggeredBy;
-                        
-                        if (saveTriggeredBy === 'submitButton') {
-                            nodeState.isSubmit = true;
-                        } 
-                        
-                        // add the node state to the latest node visit
-                        $scope.$parent.nodeController.addNodeStateToLatestNodeVisit(this.nodeId, nodeState);
-                    }
+                if (studentData != null) {
+                    this.studentResponse = studentData.response;
                 }
             }
+        };
+        
+        /**
+         * Get the student response
+         */
+        this.getStudentResponse = function() {
+            return this.studentResponse;
+        };
+        
+        /**
+         * Create a new component state populated with the student data
+         * @return the componentState after it has been populated
+         */
+        this.createComponentState = function() {
             
-            return nodeState;
+            // create a new node state
+            var componentState = NodeService.createNewComponentState();
+            
+            // get the text the student typed
+            var response = this.getStudentResponse();
+            
+            // set the response into the node state
+            var studentData = {}
+            studentData.response = response;
+            
+            // set the student data into the component state
+            componentState.studentData = studentData;
+            
+            if(this.saveTriggeredBy != null) {
+                // set the saveTriggeredBy value
+                componentState.saveTriggeredBy = this.saveTriggeredBy;
+            }
+            
+            return componentState;
+        };
+        
+        /**
+         * Get the component id
+         * @return the component id
+         */
+        this.getComponentId = function() {
+            var componentId = this.nodeContent.id;
+            
+            return componentId;
+        };
+        
+        /**
+         * Get the student work object that will contain the student
+         * work for the node. This is only used when this node is
+         * part of another node such as a Questionnaire node.
+         * The Questionnaire node will call this function to obtain
+         * the student work.
+         * @return an object containing the student work
+         */
+        $scope.getStudentWorkObject = function() {
+            var componentState = null;
+            
+            if ($scope.photoBoothController.isDirty) {
+                // create a component state populated with the student data
+                componentState = $scope.photoBoothController.createComponentState();
+                
+                // set isDirty to false since this student work is about to be saved
+                $scope.photoBoothController.isDirty = false;
+            }
+            
+            return componentState;
         };
         
         /**
@@ -294,29 +297,7 @@ define(['app'], function(app) {
          * the node.
          */
         $scope.$on('nodeOnExit', angular.bind(this, function(event, args) {
-        
-            // get the node that is exiting
-            var nodeToExit = args.nodeToExit;
             
-            /*
-             * make sure the node id of the node that is exiting is
-             * this node
-             */
-            if (nodeToExit.id === this.nodeId) {
-                var saveTriggeredBy = 'nodeOnExit';
-
-                // create and add a node state to the latest node visit
-                this.createAndAddNodeState(saveTriggeredBy);
-                
-                // save the node visit to the server
-                this.saveNodeVisitToServer();
-
-                /*
-                 * tell the parent that this node is done performing
-                 * everything it needs to do before exiting
-                 */
-                $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
-            }
         }));
         
         /**
@@ -331,20 +312,6 @@ define(['app'], function(app) {
              */
             this.exitListener = $scope.$on('exit', angular.bind(this, function(event, args) {
                
-                var saveTriggeredBy = 'exit';
-                
-                // create and add a node state to the latest node visit
-                this.createAndAddNodeState(saveTriggeredBy);
-
-                // save the node visit to the server
-                this.saveNodeVisitToServer();
-                
-                    $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
-                    
-                    // call this function to remove the listener
-                    this.exitListener();
-                    
-                    $rootScope.$broadcast('doneExiting');
             }));
         };
         
