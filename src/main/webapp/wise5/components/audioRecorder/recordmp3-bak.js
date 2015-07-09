@@ -1,7 +1,7 @@
 (function(window){
 
-  var WORKER_PATH = 'wise5/nodes/audioRecorder/recorderWorker.js';
-  var encoderWorker = new Worker('wise5/nodes/audioRecorder/mp3Worker.js');
+  var WORKER_PATH = 'wise5/components/audioRecorder/recorderWorker.js';
+  var encoderWorker = new Worker('wise5/components/audioRecorder/mp3Worker.js');
 
   var Recorder = function(source, audioRecorderController, cfg) {
     this.audioRecorderController = audioRecorderController;

@@ -1,6 +1,6 @@
 (function(window){
 
-  var WORKER_PATH = 'wise5/nodes/audioRecorder/recorderWorker.js';
+  var WORKER_PATH = 'wise5/components/audioRecorder/recorderWorker.js';
 
   var Recorder = function(stream) {
     var context, audioInput, processor, gain, gainFunction, processorFunction;
