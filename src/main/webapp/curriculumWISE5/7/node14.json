@@ -349,64 +349,64 @@
                 [
                     {
                         "text": "",
-                        "uneditable": true
+                        "editable": false
                     },
                     {
                         "text": "time",
-                        "uneditable": true,
+                        "editable": false,
                         "size": 10
                     },
                     {
                         "text": "distance",
-                        "uneditable": true,
+                        "editable": false,
                         "size": 10
                     }
                 ],
                 [
                     {
                         "text": "House",
-                        "uneditable": false
+                        "editable": true
                     },
                     {
                         "text": "1",
-                        "uneditable": false,
+                        "editable": true,
                         "size": 10
                     },
                     {
                         "text": "7",
-                        "uneditable": false,
+                        "editable": true,
                         "size": 10
                     }
                 ],
                 [
                     {
                         "text": "Supermarket",
-                        "uneditable": false
+                        "editable": true
                     },
                     {
                         "text": "2",
-                        "uneditable": false,
+                        "editable": true,
                         "size": 10
                     },
                     {
                         "text": "3",
-                        "uneditable": false,
+                        "editable": true,
                         "size": 10
                     }
                 ],
                 [
                     {
                         "text": "Gas Station",
-                        "uneditable": false
+                        "editable": true
                     },
                     {
                         "text": "3",
-                        "uneditable": false,
+                        "editable": true,
                         "size": 10
                     },
                     {
                         "text": "9",
-                        "uneditable": false,
+                        "editable": true,
                         "size": 10
                     }
                 ]
