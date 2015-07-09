@@ -167,7 +167,11 @@ define(['app'], function(app) {
          * Reset the table data to its initial state from the node content
          */
         this.resetTable = function() {
+            // get the original table from the step content
             this.tableData = this.getCopyOfTableData(this.nodeContent.tableData);
+            
+            // the table has changed so we will perform additional processing
+            this.studentDataChanged();
         };
         
         /**
@@ -409,18 +413,22 @@ define(['app'], function(app) {
                 
                 if (partType === 'Graph') {
                     
+                    // set the graph data into the table
                     $scope.tableController.setGraphDataIntoTableData(nodeState, connectedPart);
+                    
+                    // the table has changed
+                    $scope.tableController.isDirty = true;
                 }
             }
         }
         
         /**
          * Set the graph data into the table data
-         * @param nodeState the node state to get the graph data from
+         * @param componentState the component state to get the graph data from
          * @param params (optional) the params to specify what columns
          * and rows to overwrite in the table data
          */
-        this.setGraphDataIntoTableData = function(nodeState, params) {
+        this.setGraphDataIntoTableData = function(componentState, params) {
             
             /*
              * the default is set to not skip the first row and for the
@@ -449,7 +457,7 @@ define(['app'], function(app) {
                 }
             }
             
-            if (nodeState != null && nodeState.studentData != null) {
+            if (componentState != null && componentState.studentData != null) {
                 
                 // get the table data rows
                 var tableDataRows = this.getTableDataRows();
@@ -458,7 +466,7 @@ define(['app'], function(app) {
                     
                     var data = null;
                     
-                    var studentData = nodeState.studentData;
+                    var studentData = componentState.studentData;
                     
                     // get the series
                     var series = studentData.series;

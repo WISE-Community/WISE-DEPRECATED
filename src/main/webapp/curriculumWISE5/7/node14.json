@@ -51,10 +51,6 @@
             "canClickToAddData": true
         },
         {
-            "id": "62jg83athi",
-            "partType": "HTML"
-        },
-        {
             "id": "73h3c0h98s",
             "partType": "Match",
             "prompt": "Work on this match step.",

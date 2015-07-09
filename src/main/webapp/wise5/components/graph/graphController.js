@@ -685,17 +685,20 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                     
                     // render the graph
                     $scope.graphController.setupGraph();
+                    
+                    // the graph has changed
+                    $scope.graphController.isDirty = true;
                 }
             }
         }
         
         /**
          * Convert the table data into series data
-         * @param nodeState the node state to get table data from
+         * @param componentState the component state to get table data from
          * @param params (optional) the params to specify what columns
          * and rows to use from the table data
          */
-        this.convertTableDataToSeriesData = function(nodeState, params) {
+        this.convertTableDataToSeriesData = function(componentState, params) {
             var data = [];
             
             /*
@@ -725,77 +728,83 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                 }
             }
             
-            if (nodeState != null) {
+            if (componentState != null) {
                 
-                // get the rows in the table
-                var rows = nodeState.tableData;
+                // get the student data
+                var studentData = componentState.studentData;
                 
-                // loop through all the rows
-                for (var r = 0; r < rows.length; r++) {
+                if (studentData != null && studentData.tableData != null) {
                     
-                    if (skipFirstRow && r === 0) {
-                        // skip the first row
-                        continue;
-                    }
+                    // get the rows in the table
+                    var rows = studentData.tableData;
                     
-                    // get the row
-                    var row = rows[r];
-                    
-                    // get the x cell and y cell from the row
-                    var xCell = row[xColumn];
-                    var yCell = row[yColumn];
-                    
-                    if (xCell != null && yCell != null) {
+                    // loop through all the rows
+                    for (var r = 0; r < rows.length; r++) {
                         
-                        /*
-                         * the point array where the 0 index will contain the
-                         * x value and the 1 index will contain the y value
-                         */
-                        var point = [];
+                        if (skipFirstRow && r === 0) {
+                            // skip the first row
+                            continue;
+                        }
                         
-                        // get the x text and y text
-                        var xText = xCell.text;
-                        var yText = yCell.text;
+                        // get the row
+                        var row = rows[r];
                         
-                        if (xText != null &&
-                                xText !== '' &&
-                                yText != null &&
-                                yText !== '') {
+                        // get the x cell and y cell from the row
+                        var xCell = row[xColumn];
+                        var yCell = row[yColumn];
+                        
+                        if (xCell != null && yCell != null) {
                             
-                            // try to convert the text values into numbers
-                            var xNumber = Number(xText);
-                            var yNumber = Number(yText);
+                            /*
+                             * the point array where the 0 index will contain the
+                             * x value and the 1 index will contain the y value
+                             */
+                            var point = [];
                             
-                            if (!isNaN(xNumber)) {
-                                /*
-                                 * we were able to convert the value into a
-                                 * number so we will add that
-                                 */
-                                point.push(xNumber);
-                            } else {
-                                /*
-                                 * we were unable to convert the value into a
-                                 * number so we will add the text
-                                 */
-                                point.push(xText);
+                            // get the x text and y text
+                            var xText = xCell.text;
+                            var yText = yCell.text;
+                            
+                            if (xText != null &&
+                                    xText !== '' &&
+                                    yText != null &&
+                                    yText !== '') {
+                                
+                                // try to convert the text values into numbers
+                                var xNumber = Number(xText);
+                                var yNumber = Number(yText);
+                                
+                                if (!isNaN(xNumber)) {
+                                    /*
+                                     * we were able to convert the value into a
+                                     * number so we will add that
+                                     */
+                                    point.push(xNumber);
+                                } else {
+                                    /*
+                                     * we were unable to convert the value into a
+                                     * number so we will add the text
+                                     */
+                                    point.push(xText);
+                                }
+                                
+                                if (!isNaN(yNumber)) {
+                                    /*
+                                     * we were able to convert the value into a
+                                     * number so we will add that
+                                     */
+                                    point.push(yNumber);
+                                } else {
+                                    /*
+                                     * we were unable to convert the value into a
+                                     * number so we will add the text
+                                     */
+                                    point.push(yText);
+                                }
+                                
+                                // add the point to our data
+                                data.push(point);
                             }
-                            
-                            if (!isNaN(yNumber)) {
-                                /*
-                                 * we were able to convert the value into a
-                                 * number so we will add that
-                                 */
-                                point.push(yNumber);
-                            } else {
-                                /*
-                                 * we were unable to convert the value into a
-                                 * number so we will add the text
-                                 */
-                                point.push(yText);
-                            }
-                            
-                            // add the point to our data
-                            data.push(point);
                         }
                     }
                 }

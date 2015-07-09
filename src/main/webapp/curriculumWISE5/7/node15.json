@@ -1,0 +1,168 @@
+{
+    "prompt": "Work on this linked table and graph step.",
+    "parts": [
+        {
+            "id": "2b9db2q0am",
+            "partType": "Table",
+            "prompt": "Fill out the table.",
+            "tableData": [
+                [
+                    {
+                        "text": "",
+                        "uneditable": true
+                    },
+                    {
+                        "text": "time",
+                        "uneditable": true,
+                        "size": 10
+                    },
+                    {
+                        "text": "distance",
+                        "uneditable": true,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "House",
+                        "uneditable": false
+                    },
+                    {
+                        "text": "1",
+                        "uneditable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "7",
+                        "uneditable": false,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "Supermarket",
+                        "uneditable": false
+                    },
+                    {
+                        "text": "2",
+                        "uneditable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "3",
+                        "uneditable": false,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "Gas Station",
+                        "uneditable": false
+                    },
+                    {
+                        "text": "3",
+                        "uneditable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "9",
+                        "uneditable": false,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "",
+                        "uneditable": false
+                    },
+                    {
+                        "text": "",
+                        "uneditable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "",
+                        "uneditable": false,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "",
+                        "uneditable": false
+                    },
+                    {
+                        "text": "",
+                        "uneditable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "",
+                        "uneditable": false,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "",
+                        "uneditable": false
+                    },
+                    {
+                        "text": "",
+                        "uneditable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "",
+                        "uneditable": false,
+                        "size": 10
+                    }
+                ]
+            ],
+            "showSubmitButton": false,
+            "showSaveButton": true,
+            "showSubmitButton": true,
+            "connectedParts": [
+                {
+                    "id": "adb3a92fak",
+                    "skipFirstRow": true,
+                    "xColumn": 1,
+                    "yColumn": 2
+                }
+            ]
+        },
+        {
+            "id": "adb3a92fak",
+            "partType": "Graph",
+            "prompt": "Your table data points will automatically show up in the graph. You may also change the points on the graph to automatically change the table.",
+            "title": "Scatter Plot",
+            "graphType": "scatter",
+            "xAxis": {
+                "title": {
+                    "text": "time (seconds)"
+                },
+                "min": 0,
+                "max": 20
+            },
+            "yAxis": {
+                "title": {
+                    "text": "distance (meters)"
+                },
+                "min": 0,
+                "max": 50
+            },
+            "series": [],
+            "canClickToAddData": true,
+            "connectedParts": [
+                {
+                    "id": "2b9db2q0am",
+                    "skipFirstRow": true,
+                    "xColumn": 1,
+                    "yColumn": 2
+                }
+            ]
+        }
+    ],
+    "lockAfterSubmit": false,
+    "showSubmitButton": false
+}
