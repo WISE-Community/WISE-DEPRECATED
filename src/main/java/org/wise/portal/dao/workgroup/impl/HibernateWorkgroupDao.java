@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -40,7 +40,6 @@ import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
  */
 @Repository
 public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
@@ -57,8 +56,9 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
     }
 
 	/**
-	 * @see org.wise.portal.dao.workgroup.WorkgroupDao#getListByOfferingAndUser(net.sf.sail.webapp.domain.Offering,
-	 *      net.sf.sail.webapp.domain.User)
+	 * @param offering
+	 * @param user
+	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Workgroup> getListByOfferingAndUser(Offering offering, User user) {
@@ -78,9 +78,10 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
 		return sqlQuery.list();
 	}
 
-	/**
-	 * @see org.wise.portal.dao.workgroup.WorkgroupDao#getListByUser(net.sf.sail.webapp.domain.User)
-	 */
+    /**
+     * @param user
+     * @return
+     */
 	@SuppressWarnings("unchecked")
 	public List<Workgroup> getListByUser(User user) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
@@ -109,7 +110,7 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
 	public WISEWorkgroupImpl getById(Long workgroupId, boolean doEagerFetch) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 
-		WISEWorkgroupImpl result = null;
+		WISEWorkgroupImpl result;
 		if (doEagerFetch) {
 			result = (WISEWorkgroupImpl) session.createCriteria(WISEWorkgroupImpl.class)
 					.add( Restrictions.eq("id", workgroupId))

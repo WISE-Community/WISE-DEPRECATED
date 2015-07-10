@@ -25,16 +25,7 @@ package org.wise.vle.domain.work;
 
 import java.sql.Timestamp;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,12 +49,14 @@ public class StepWork extends PersistableDomain {
 	private Long id = null;
 
 	@ManyToOne(cascade = {CascadeType.PERSIST})
+	@JoinColumn(name = "userInfo_id", nullable = false)
 	private UserInfo userInfo;
 	
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
+	@JoinColumn(name = "node_id", nullable = false)
 	private Node node;
 
-	@Column(name="postTime")
+	@Column(name="postTime", nullable = false)
 	private Timestamp postTime;
 
 	@Column(name="startTime")
@@ -72,7 +65,7 @@ public class StepWork extends PersistableDomain {
 	@Column(name="endTime")
 	private Timestamp endTime;
 
-	@Column(name="data", length=5120000, columnDefinition = "mediumtext")
+	@Column(name="data", length=5120000, columnDefinition = "mediumtext", nullable = false)
 	private String data;
 	
     public Long getId() {

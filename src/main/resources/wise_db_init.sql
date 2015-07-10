@@ -63,14 +63,14 @@
 
     create table componentState (
         id integer not null auto_increment,
-        componentId varchar(255),
-        componentType varchar(255),
-        nodeId varchar(255),
-        postTime datetime,
-        studentData mediumtext,
-        periodId bigint,
-        runId bigint,
-        workgroupId bigint,
+        componentId varchar(255) not null,
+        componentType varchar(255) not null,
+        nodeId varchar(255) not null,
+        postTime datetime not null,
+        studentData mediumtext not null,
+        periodId bigint not null,
+        runId bigint not null,
+        workgroupId bigint not null,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -387,12 +387,12 @@
 
     create table stepwork (
         id bigint not null auto_increment,
-        data mediumtext,
+        data mediumtext not null,
         endTime datetime,
-        postTime datetime,
+        postTime datetime not null,
         startTime datetime,
-        node_id bigint,
-        userInfo_id bigint,
+        node_id bigint not null,
+        userInfo_id bigint not null,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

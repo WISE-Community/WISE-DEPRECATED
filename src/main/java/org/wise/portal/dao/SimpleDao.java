@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -23,15 +23,11 @@ package org.wise.portal.dao;
 import java.io.Serializable;
 import java.util.List;
 
-
 /**
  * Data Access Object (DAO) interface that defines simple generic operations for
  * dealing with a persistent store.
  * 
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 public interface SimpleDao<T> {
 
