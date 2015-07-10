@@ -48,30 +48,30 @@ public class ComponentState extends PersistableDomain {
 	private Integer id = null;
 
 	@ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "runId")
+	@JoinColumn(name = "runId", nullable = false)
 	private Run run;
 
     @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "periodId")
+    @JoinColumn(name = "periodId", nullable = false)
     private Group period;
 
     @ManyToOne(targetEntity = WISEWorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "workgroupId")
+	@JoinColumn(name = "workgroupId", nullable = false)
 	private WISEWorkgroup workgroup;
 
-    @Column(name = "nodeId")
+    @Column(name = "nodeId", nullable = false)
     private String nodeId;
 
-	@Column(name = "componentId")
+	@Column(name = "componentId", nullable = false)
 	private String componentId;
 
-	@Column(name = "componentType")
+	@Column(name = "componentType", nullable = false)
 	private String componentType;
 
-	@Column(name = "postTime")
+	@Column(name = "postTime", nullable = false)
 	private Timestamp postTime;
 
-	@Column(name = "studentData", length = 5120000, columnDefinition = "mediumtext")
+	@Column(name = "studentData", length = 5120000, columnDefinition = "mediumtext", nullable = false)
 	private String studentData;
 
 	@Override
