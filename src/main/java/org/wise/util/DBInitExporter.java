@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -41,8 +41,6 @@ import org.wise.portal.spring.SpringConfiguration;
  * 
  * @author Cynick Young
  * @author Hiroki Terashima
- * 
- * @version $Id$
  */
 public class DBInitExporter {
 	
@@ -93,9 +91,9 @@ public class DBInitExporter {
     		BufferedReader initialDataFileReader = new BufferedReader(new InputStreamReader(initialDataFileInputStream));
     		
     		boolean doAppend = true;
-            BufferedWriter outputFileWriter = new BufferedWriter( new FileWriter(outputFilename, doAppend));
+            BufferedWriter outputFileWriter = new BufferedWriter(new FileWriter(outputFilename, doAppend));
             
-    		String aLine = null;
+    		String aLine;
     		while ((aLine = initialDataFileReader.readLine()) != null) {
     			// Process each line and add append to output file, unless it's a hsqldb-specific line
     			if (!aLine.contains("SET DATABASE REFERENTIAL INTEGRITY")) {

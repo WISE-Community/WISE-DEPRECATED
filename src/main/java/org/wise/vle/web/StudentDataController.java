@@ -66,6 +66,7 @@ import org.wise.vle.domain.work.StepWork;
 import org.wise.vle.utils.VLEDataUtils;
 
 /**
+ * Controller for handling WISE4 student data
  * @author Geoffrey Kwan
  * @author Hiroki Terashima
  */

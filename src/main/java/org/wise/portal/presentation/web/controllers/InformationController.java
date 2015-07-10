@@ -481,7 +481,14 @@ public class InformationController {
 			
 			// the url to get/post student data
 			String studentDataURL = wiseBaseURL + "/studentData.html";
-			
+
+			// url to get/post component state (WISE5 only)
+			// TODO: hiroki remove .html from end of get/post request
+			String componentStateURL = wiseBaseURL + "/wise5/studentData/componentState.html";
+
+			// url to get/post action log (WISE5 only)
+			String actionLogURL = wiseBaseURL + "/wise5/studentData/actionLog.html";
+
 			// URL to get/post annotations
 	    	String annotationsURL = wiseBaseURL + "/annotation.html?type=annotation&runId=" + runId;
 
@@ -562,6 +569,8 @@ public class InformationController {
 				Integer wiseVersion = project.getWiseVersion();
 				if (wiseVersion != null && wiseVersion == 5) {
 	                config.put("userInfo", getUserInfo(request));
+					config.put("componentStateURL", componentStateURL);
+					config.put("actionLogURL", actionLogURL);
 				}
 				
 				// add the config fields specific to the teacher grading

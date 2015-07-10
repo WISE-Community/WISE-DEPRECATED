@@ -71,9 +71,6 @@ public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> impleme
 	/**
 	 * Returns a list of StepWork done by the specified workgroup with the specified id or null
 	 * if no such StepWork exists. The list will be ordered oldest to newest.
-	 * @param id
-	 * @param clazz 
-	 * @return 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")

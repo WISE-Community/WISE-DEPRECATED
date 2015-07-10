@@ -39,8 +39,8 @@ import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 
 /**
+ * Services for the WISE Virtual Learning Environment (WISE VLE v4)
  * @author Hiroki Terashima
- * @version $Id:$
  */
 public interface VLEService {
 

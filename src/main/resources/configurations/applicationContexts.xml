@@ -940,6 +940,7 @@
 				<!-- vle mappings -->
 				<value>org.wise.vle.domain.user.UserInfo</value>
 				<value>org.wise.vle.domain.node.Node</value>
+				<value>org.wise.vle.domain.work.ComponentState</value>
 				<value>org.wise.vle.domain.work.StepWork</value>
 				<value>org.wise.vle.domain.annotation.Annotation</value>
 				<value>org.wise.vle.domain.cRater.CRaterRequest</value>

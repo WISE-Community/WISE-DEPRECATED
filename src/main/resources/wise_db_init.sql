@@ -61,6 +61,19 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+    create table componentState (
+        id integer not null auto_increment,
+        componentId varchar(255),
+        componentType varchar(255),
+        nodeId varchar(255),
+        postTime datetime,
+        studentData mediumtext,
+        periodId bigint,
+        runId bigint,
+        workgroupId bigint,
+        primary key (id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
     create table craterrequest (
         id bigint not null auto_increment,
         cRaterItemId varchar(255) not null,
@@ -601,6 +614,21 @@
         foreign key (toUser_id) 
         references userinfo (id);
 
+    alter table componentState 
+        add constraint FK_e33hlmfvdbycehx6kosedo0gs 
+        foreign key (periodId) 
+        references groups (id);
+
+    alter table componentState 
+        add constraint FK_qhe19ei4dyjpfnux2eujb575w 
+        foreign key (runId) 
+        references runs (id);
+
+    alter table componentState 
+        add constraint FK_j2bpj63byky1tlkx346b6osq4 
+        foreign key (workgroupId) 
+        references wiseworkgroups (id);
+
     alter table craterrequest 
         add constraint FK_rx43blmi6te4f1ttt3j1s9vr1 
         foreign key (stepWorkId) 
@@ -855,7 +883,8 @@
         add constraint FK_sy995385kq0w6liidq3fidpvx 
         foreign key (offering_fk) 
         references offerings (id);
--- initial data for wise
+
+-- initial data for wise below
 
 
 INSERT INTO granted_authorities VALUES (1,'ROLE_USER',0),(2,'ROLE_ADMINISTRATOR',0),(3,'ROLE_TEACHER',0),(4,'ROLE_STUDENT',0),(5,'ROLE_AUTHOR',0),(6,'ROLE_RESEARCHER',0),(7,'ROLE_TRUSTED_AUTHOR',0);

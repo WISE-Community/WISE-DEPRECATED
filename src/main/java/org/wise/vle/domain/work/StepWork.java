@@ -44,7 +44,7 @@ import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.user.UserInfo;
 
 /**
- * Domain representing work for a step
+ * Domain representing work for a step (used in WISE4)
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  */
@@ -74,11 +74,6 @@ public class StepWork extends PersistableDomain {
 
 	@Column(name="data", length=5120000, columnDefinition = "mediumtext")
 	private String data;
-	
-	/*
-	@Column(name="runId")
-	private Long runId;
-    */
 	
     public Long getId() {
         return id;
@@ -316,14 +311,4 @@ public class StepWork extends PersistableDomain {
         
         return stepWorkJSONObject;
     }
-
-	/*
-    public Long getRunId() {
-        return runId;
-    }
-
-    public void setRunId(Long runId) {
-        this.runId = runId;
-    }
-    */
 }

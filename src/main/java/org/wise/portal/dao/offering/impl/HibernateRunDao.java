@@ -190,10 +190,10 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	@Override
 	@Transactional(readOnly=true)
 	public Run getById(Long runId, boolean doEagerFetch) {
-		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 
         Run result = null;
         if (doEagerFetch) {
+			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         	result = (Run) session.createCriteria(RunImpl.class)
 			.setFetchMode("project", FetchMode.EAGER)
 			.setFetchMode("periods", FetchMode.JOIN)
@@ -203,9 +203,8 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 			.add( Restrictions.eq("id", runId))
 			.uniqueResult();
         } else {
-        	result = (Run) session.createCriteria(RunImpl.class)
-        			.add( Restrictions.eq("id", runId))
-        			.uniqueResult();        	
+			result = (Run) this.getHibernateTemplate().get(
+					this.getDataObjectClass(), runId);
         }
         return result;
      }

@@ -42,6 +42,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.FetchMode;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.Sort;
 import org.hibernate.annotations.SortType;
 import org.json.JSONException;

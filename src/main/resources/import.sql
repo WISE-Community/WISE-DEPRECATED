@@ -1,4 +1,5 @@
--- initial data for wise
+
+-- initial data for wise below
 
 SET DATABASE REFERENTIAL INTEGRITY FALSE;
 
