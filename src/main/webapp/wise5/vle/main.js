@@ -46,6 +46,7 @@ require.config({
         'highcharts': 'lib/highcharts/highcharts.src',
         'highcharts-more': 'lib/highcharts/highcharts-more',
         'highcharts-ng': 'lib/highcharts/highcharts-ng',
+        'highcharts-regression': 'lib/highcharts/plugins/highchartsRegression/highcharts-regression',
         'htmlController': 'components/html/htmlController',
         'jquery': [
             '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min',
@@ -192,6 +193,13 @@ require.config({
         },
         'highcharts-ng': {
             'exports': 'highcharts-ng',
+            'deps': [
+                    'angular',
+                    'highcharts'
+                    ]
+        },
+        'highcharts-regression': {
+            'exports': 'highcharts-regression',
             'deps': [
                     'angular',
                     'highcharts'

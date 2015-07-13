@@ -141,6 +141,15 @@
             "r": 20
         },
         {
+            "id": "node16",
+            "type": "Node",
+            "title": "Review Table and Graph Step",
+            "src": "node16.json",
+            "x": 550,
+            "y": 240,
+            "r": 20
+        },
+        {
             "id": "group0",
             "type": "group",
             "title": "My First WISE5 Project",
@@ -172,7 +181,8 @@
                 "node12",
                 "node13",
                 "node14",
-                "node15"
+                "node15",
+                "node16"
             ],
             "x": 50,
             "y": 140,
@@ -249,6 +259,11 @@
             "id": "transition14",
             "from": "node14",
             "to": "node15"
+        },
+        {
+            "id": "transition15",
+            "from": "node15",
+            "to": "node16"
         }
     ],
     "startGroupId": "group0",

@@ -23,10 +23,22 @@
             },
             "series": [
                 {
-                    "data": [[0, 0], [5, 1], [10, 2], [15, 3]]
+                    "data": [[0, 0], [5, 1], [10, 2], [15, 3]],
+                    "color": "red",
+                    "regression": true,
+                    "regressionSettings": {
+                        "type": "linear",
+                        "color": "red"
+                    }
                 },
                 {
-                    "data": [[0, 0], [5, 10], [10, 20], [16, 30]]
+                    "data": [[0, 0], [5, 10], [10, 15], [16, 45]],
+                    "color": "blue",
+                    "regression": true,
+                    "regressionSettings": {
+                        "type": "exponential",
+                        "color": "blue"
+                    }
                 }
             ],
             "canClickToAddData": true,

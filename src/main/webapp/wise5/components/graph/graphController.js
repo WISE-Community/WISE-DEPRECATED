@@ -1,4 +1,17 @@
-define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(app, bootstrap, highcharts, highchartsng, $) {
+define(['app', 
+        'bootstrap', 
+        'highcharts', 
+        'highcharts-more',
+        'highcharts-ng', 
+        'highcharts-regression', 
+        'jquery'], 
+        function(app, 
+                bootstrap, 
+                highcharts, 
+                highchartsMore, 
+                highchartsng, 
+                highchartsRegression, 
+                $) {
     
     app.$controllerProvider.register('GraphController', 
         function($rootScope,
@@ -8,9 +21,8 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
             AnnotationService,
             ConfigService,
             CurrentNodeService,
-            CRaterService,
+            GraphService,
             NodeService,
-            OpenResponseService,
             ProjectService,
             SessionService,
             StudentAssetService,
@@ -220,6 +232,8 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                 }
             }
             
+            series = GraphService.generateRegressionSeries(series);
+            
             this.chartConfig = {
                 options: {
                     chart: {
@@ -377,6 +391,28 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                         }
                     }
                 }
+                
+                if (series.color != null) {
+                    plainSeriesData.color = series.color;
+                }
+                
+                if (series.regression) {
+                    plainSeriesData.regression = series.regression;
+                    plainSeriesData.regressionSettings = series.regressionSettings;
+                }
+                
+                if (series.options != null && series.options.regressionGenerated) {
+                    var regressionGenerated = series.options.regressionGenerated;
+                    plainSeriesData.regressionGenerated = true;
+                }
+                
+                if (series.options.isRegressionLine) {
+                    plainSeriesData.isRegressionLine = series.options.isRegressionLine;
+                    plainSeriesData.name = series.options.name;
+                    plainSeriesData.regressionOutputs = series.options.regressionOutputs;
+                    plainSeriesData.type = series.options.type;
+                    //plainSeriesData.lineWidth = series.options.lineWidth;
+                }
             }
             
             return plainSeriesData;
@@ -420,6 +456,20 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
             var yAxis = null;
             
             return yAxis;
+        };
+        
+        /**
+         * Reset the table data to its initial state from the node content
+         */
+        this.resetGraph = function() {
+            // get the original series from the step content
+            this.series = this.nodeContent.series;
+            
+            // redraw the graph
+            //this.setupGraph();
+            
+            // the graph has changed so we will perform additional processing
+            this.studentDataChanged();
         };
         
         /**
@@ -468,6 +518,15 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
              */
             this.isDirty = true;
             
+            //var series = this.getSeries();
+            //this.series = this.updateSeriesFromHighcharts(this.series);
+            
+            //
+            //this.series = this.removeRegressionLines(this.series);
+            
+            // redraw the graph
+            this.setupGraph();
+            
             // get this part id
             var componentId = this.getComponentId();
             
@@ -481,6 +540,44 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
              * student data has changed.
              */
             $scope.$emit('partStudentDataChanged', {componentId: componentId, componentState: componentState});
+        };
+        
+        this.removeRegressionLines = function(series) {
+            
+            if (series != null) {
+                for (var s = 0; s < series.length; s++) {
+                    var tempSeries = series[s];
+                    
+                    if (tempSeries != null) {
+                        if (tempSeries.isRegressionLine) {
+                            series.splice(s, 1);
+                            s--;
+                        } else if (tempSeries.regressionGenerated) {
+                            tempSeries.regressionGenerated = false;
+                        }
+                    }
+                }
+            }
+            
+            return series;
+        };
+        
+        this.updateSeriesFromHighcharts = function(series) {
+            
+            if (series != null) {
+                var highchartsSeries = this.getSeries();
+                
+                for (var s = 0; s < series.length; s++) {
+                    if (highchartsSeries[s] != null) {
+                        var tempHighchartsSeries = highchartsSeries[s];
+                        var tempSeries = series[s];
+                        
+                        tempSeries.data = tempHighchartsSeries.data;
+                    }
+                }
+            }
+            
+            return series;
         };
         
         /**
@@ -647,6 +744,20 @@ define(['app', 'bootstrap', 'highcharts', 'highcharts-ng', 'jquery'], function(a
                         }
                     }
                 }
+            }
+        };
+        
+        this.setRegressionLine = function(series, regressionType, xMin, xMax, numberOfRegressionPoints) {
+            if (series != null) {
+                series.regression = true;
+                series.regressionSettings = {
+                    type: regressionType,
+                    color: 'rgba(223, 83, 83, .9)',
+                    xMin: xMin,
+                    xMax: xMax,
+                    numberOfPoints: numberOfRegressionPoints
+                };
+                series.rendered = false;
             }
         };
         

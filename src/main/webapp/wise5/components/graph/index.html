@@ -1,5 +1,6 @@
 <div ng-controller='GraphController as graphController'>
 <div>{{graphController.getPrompt()}}</div>
+<button ng-click='graphController.resetGraph()'>Reset Graph</button>
 <highchart id="chart1" config="graphController.chartConfig" class="span10"></highchart>
 <button id='saveButton' 
     ng-click='graphController.saveButtonClicked()' 

@@ -1,0 +1,33 @@
+{
+    "prompt": "Review the work from previous steps and write a reflection on them.",
+    "parts": [
+        {
+            "id": "3g62ae944v",
+            "partType": "OpenResponse",
+            "showPreviousWorkNodeId": "node1",
+            "showPreviousWorkPartId": "2mb2892l6q"
+        },
+        {
+            "id": "vg12a7a04b",
+            "partType": "Table",
+            "showPreviousWorkNodeId": "node15",
+            "showPreviousWorkPartId": "2b9db2q0am"
+        },
+        {
+            "id": "69ed41d9v3",
+            "partType": "Graph",
+            "showPreviousWorkNodeId": "node15",
+            "showPreviousWorkPartId": "adb3a92fak"
+        },
+        {
+            "id": "5m32b9yl22",
+            "partType": "OpenResponse",
+            "prompt": "Reflect on your previous work.",
+            "numRows": 5,
+            "showSaveButton": true,
+            "showSubmitButton": true
+        }
+    ],
+    "lockAfterSubmit": false,
+    "showSubmitButton": false
+}
