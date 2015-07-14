@@ -23,6 +23,21 @@
  */
 package org.wise.vle.domain.work;
 
+import java.sql.Timestamp;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.run.Run;
@@ -31,9 +46,6 @@ import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
 import org.wise.vle.domain.PersistableDomain;
-
-import javax.persistence.*;
-import java.sql.Timestamp;
 
 /**
  * Domain object representing work for a component (used in WISE5)
@@ -150,4 +162,57 @@ public class ComponentState extends PersistableDomain {
 		this.studentData = studentData;
 	}
 
+    /**
+     * Get the JSON representation of the ComponentState
+     * @return a JSONObject with the values from the ComponentState
+     */
+    public JSONObject toJSON() {
+        JSONObject componentStateJSONObject = new JSONObject();
+        
+        try {
+            
+            // set the id
+            componentStateJSONObject.put("id", getId());
+            
+            // set the run id
+            Run run = getRun();
+            Long runId = run.getId();
+            componentStateJSONObject.put("runId", runId);
+            
+            // set the period id
+            Group period = getPeriod();
+            Long periodId = period.getId();
+            componentStateJSONObject.put("periodId", periodId);
+            
+            // set the workgroup id
+            Workgroup workgroup = getWorkgroup();
+            Long workgroupId = workgroup.getId();
+            componentStateJSONObject.put("workgroupId", workgroupId);
+            
+            // set the node id
+            String nodeId = getNodeId();
+            componentStateJSONObject.put("nodeId", nodeId);
+            
+            // set the component id
+            String componentId = getComponentId();
+            componentStateJSONObject.put("componentId", componentId);
+            
+            // set the component type
+            String componentType = getComponentType();
+            componentStateJSONObject.put("componentType", componentType);
+            
+            // set the post time
+            Timestamp postTime = getPostTime();
+            componentStateJSONObject.put("postTime", postTime.getTime());
+            
+            // set the student data
+            String studentData = getStudentData();
+            componentStateJSONObject.put("studentData", new JSONObject(studentData));
+            
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        
+        return componentStateJSONObject;
+    }
 }
