@@ -42,7 +42,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
@@ -481,10 +480,10 @@ public class InformationController {
 
 			// url to get/post component state (WISE5 only)
 			// TODO: hiroki remove .html from end of get/post request
-			String componentStateURL = wiseBaseURL + "/wise5/studentData/componentState.html";
+			String componentStateURL = wiseBaseURL + "/student/componentState.html";
 
 			// url to get/post action log (WISE5 only)
-			String actionLogURL = wiseBaseURL + "/wise5/studentData/actionLog.html";
+			String actionLogURL = wiseBaseURL + "/student/actionLog.html";
 
 			// URL to get/post annotations
 	    	String annotationsURL = wiseBaseURL + "/annotation.html?type=annotation&runId=" + runId;

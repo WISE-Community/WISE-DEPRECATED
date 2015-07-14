@@ -23,6 +23,15 @@
  */
 package org.wise.vle.web.wise5;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +40,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.vle.domain.work.ComponentState;
-
-import java.util.List;
 
 /**
  * Controller for handling GET and POST requests of WISE5 student data
@@ -46,8 +53,7 @@ public class StudentDataController {
     private VLEService vleService;
 
     @RequestMapping(method = RequestMethod.GET,
-            value = {"/student/wise5StudentDataControllerTest.html",
-                    "/wise5/studentData/componentState.html"})
+            value = {"/student/wise5StudentDataControllerTest.html"})
     public ModelAndView handleGETWISE5StudentDataControllerTest(
             @RequestParam(value = "id", required = false) Integer id,
             @RequestParam(value = "runId", required = false) Integer runId,
@@ -65,10 +71,52 @@ public class StudentDataController {
         mav.addObject("componentStates", componentStates);
         return mav;
     }
+    
+    @RequestMapping(method = RequestMethod.GET,
+            value = {"/student/componentState.html"})
+    public ModelAndView handleGETWISE5StudentDataController(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestParam(value = "id", required = false) Integer id,
+            @RequestParam(value = "runId", required = false) Integer runId,
+            @RequestParam(value = "periodId", required = false) Integer periodId,
+            @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
+            @RequestParam(value = "nodeId", required = false) String nodeId,
+            @RequestParam(value = "componentId", required = false) String componentId,
+            @RequestParam(value = "componentType", required = false) String componentType
+            ) {
+        System.out.println("handleGETWISE5StudentDataController");
+        List<ComponentState> componentStates = vleService.getComponentStates(id, runId, periodId, workgroupId,
+                nodeId, componentId, componentType);
+
+        if (componentStates != null) {
+            
+            try {
+                PrintWriter writer = response.getWriter();
+                JSONArray componentStatesJSONArray = new JSONArray();
+                
+                // loop through all the component states
+                for (int c = 0; c < componentStates.size(); c++) {
+                    ComponentState componentState = componentStates.get(c);
+                    
+                    // get the JSON representation of the component state
+                    JSONObject componentStateJSONObject = componentState.toJSON();
+                    
+                    componentStatesJSONArray.put(componentStateJSONObject);
+                }
+                
+                // write the array of component states to the response
+                writer.write(componentStatesJSONArray.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return null;
+    }
 
     @RequestMapping(method = RequestMethod.POST,
-            value = {"/student/wise5StudentDataControllerTest.html",
-                    "/wise5/studentData/componentState.html"})
+            value = {"/student/wise5StudentDataControllerTest.html"})
     public ModelAndView handlePOSTWISE5StudentDataControllerTest(
             @RequestParam(value = "id", required = false) Integer id,
             @RequestParam(value = "runId", required = false) Integer runId,
@@ -87,5 +135,25 @@ public class StudentDataController {
         ModelAndView mav = new ModelAndView();
         mav.addObject("componentState", componentState);
         return mav;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST,
+            value = {"/student/componentState.html"})
+    public ModelAndView handlePOSTWISE5StudentDataController(
+            @RequestParam(value = "id", required = false) Integer id,
+            @RequestParam(value = "runId", required = false) Integer runId,
+            @RequestParam(value = "periodId", required = false) Integer periodId,
+            @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
+            @RequestParam(value = "nodeId", required = false) String nodeId,
+            @RequestParam(value = "componentId", required = false) String componentId,
+            @RequestParam(value = "componentType", required = false) String componentType,
+            @RequestParam(value = "studentData", required = false) String studentData
+    ) {
+        System.out.println("handlePOSTWISE5StudentDataController");
+
+        ComponentState componentState = vleService.saveComponentState(id, runId, periodId, workgroupId,
+                nodeId, componentId, componentType, studentData);
+
+        return null;
     }
 }
