@@ -139,22 +139,14 @@ public class ContactWiseController {
 		 */
 		if (runId != null) {
 			Run run = runService.retrieveById(runId);
-			Set<User> runOwners = run.getOwners();
-
-			Iterator<User> runOwnersIterator = runOwners.iterator();
 			Vector<String> runOwnerEmailAddresses = new Vector<String>();
+			User runOwner = run.getOwner();
+			MutableUserDetails userDetails = runOwner.getUserDetails();
+			//get the run owner email address
+			String emailAddress = userDetails.getEmailAddress();
 
-			//loop through the run owners
-			while (runOwnersIterator.hasNext()) {
-				User runOwner = runOwnersIterator.next();
-				MutableUserDetails userDetails = runOwner.getUserDetails();
-
-				//get the run owner email address
-				String emailAddress = userDetails.getEmailAddress();
-
-				if (emailAddress != null) {
-					runOwnerEmailAddresses.add(emailAddress);				
-				}
+			if (emailAddress != null) {
+				runOwnerEmailAddresses.add(emailAddress);
 			}
 
 			if (!runOwnerEmailAddresses.isEmpty()) {
@@ -242,20 +234,13 @@ public class ContactWiseController {
 			//get the run
 			Run run = runService.retrieveById(new Long(runId));
 
-			//get the owners of the run
-			Set<User> owners = run.getOwners();
-			Iterator<User> ownersIterator = owners.iterator();
+			//get the owner of the run
+			User owner = run.getOwner();
+			//get the teacher name
+			String teacherName = owner.getUserDetails().getFirstname() + " "+ owner.getUserDetails().getLastname();
 
-			if (ownersIterator.hasNext()) {
-				//get the first owner of the run
-				User owner = ownersIterator.next();
-
-				//get the teacher name
-				String teacherName = owner.getUserDetails().getFirstname() + " "+ owner.getUserDetails().getLastname();
-
-				//set the teacher id
-				contactWISEForm.setTeacherName(teacherName);				
-			}
+			//set the teacher id
+			contactWISEForm.setTeacherName(teacherName);
 		}
 
 		// these are necessary so that the enums can retrieve the values from the properties file
@@ -355,21 +340,13 @@ public class ContactWiseController {
                     //get a run
                     Run tempRun = runListIterator.next();
 
-                    //get the owners of the run
-                    Set<User> owners = tempRun.getOwners();
-                    Iterator<User> ownersIterator = owners.iterator();
-
-                    //loop through all the owners of the run
-                    while (ownersIterator.hasNext()) {
-                        //get an owner
-                        User owner = ownersIterator.next();
-
-                        //add the teacher to the list if they are not already in it
-                        if (!teachers.contains(owner)) {
-                            //the teacher is not in the list so we will add them
-                            teachers.add(owner);
-                        }
-                    }
+                    //get the owner of the run
+					User owner = tempRun.getOwner();
+					//add the teacher to the list if they are not already in it
+					if (!teachers.contains(owner)) {
+						//the teacher is not in the list so we will add them
+						teachers.add(owner);
+					}
                 }
             }
         }

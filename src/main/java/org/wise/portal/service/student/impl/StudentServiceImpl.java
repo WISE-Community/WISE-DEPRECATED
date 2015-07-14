@@ -99,7 +99,7 @@ public class StudentServiceImpl implements StudentService {
 		List<User> teachers = new ArrayList<User>();
 		for (Run run : runList) {
 			// add all of the owners of the run to the list.
-			teachers.addAll(run.getOwners());
+			teachers.add(run.getOwner());
 			teachers.addAll(run.getSharedowners());
 		}
 		return teachers;

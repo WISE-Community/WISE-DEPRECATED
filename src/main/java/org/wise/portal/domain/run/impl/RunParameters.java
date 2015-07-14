@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -21,7 +21,6 @@
 package org.wise.portal.domain.run.impl;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
@@ -29,11 +28,8 @@ import java.util.TreeSet;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
 
-
 /**
  * @author Laurel Williams
- *
- * @version $Id$
  */
 public class RunParameters extends OfferingParameters implements Serializable {
 
@@ -43,7 +39,7 @@ public class RunParameters extends OfferingParameters implements Serializable {
 	
 	private Set<String> runIdsToArchive = new TreeSet<String>();
 	
-	private Set<User> owners = new HashSet<User>();
+	private User owner;
 	
 	private Project project;
 	
@@ -88,17 +84,17 @@ public class RunParameters extends OfferingParameters implements Serializable {
 	}
 
 	/**
-	 * @return the owners
+	 * @return the owner
 	 */
-	public Set<User> getOwners() {
-		return owners;
+	public User getOwner() {
+		return owner;
 	}
 
 	/**
-	 * @param owners the owners to set
+	 * @param owner the owner to set
 	 */
-	public void setOwners(Set<User> owners) {
-		this.owners = owners;
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 	
 	/**
@@ -166,7 +162,7 @@ public class RunParameters extends OfferingParameters implements Serializable {
 				* result
 				+ ((manuallyEnteredPeriods == null) ? 0
 						: manuallyEnteredPeriods.hashCode());
-		result = prime * result + ((owners == null) ? 0 : owners.hashCode());
+		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
 		result = prime * result
 				+ ((periodNames == null) ? 0 : periodNames.hashCode());
 		result = prime * result + ((project == null) ? 0 : project.hashCode());
@@ -192,10 +188,10 @@ public class RunParameters extends OfferingParameters implements Serializable {
 				return false;
 		} else if (!manuallyEnteredPeriods.equals(other.manuallyEnteredPeriods))
 			return false;
-		if (owners == null) {
-			if (other.owners != null)
+		if (owner == null) {
+			if (other.owner != null)
 				return false;
-		} else if (!owners.equals(other.owners))
+		} else if (!owner.equals(other.owner))
 			return false;
 		if (periodNames == null) {
 			if (other.periodNames != null)

@@ -340,10 +340,8 @@ $(document).ready(function() {
 									<td class="rowLabel"><spring:message code="teacher_cap"/></td>
 									<td>
 										<c:choose>
-										<c:when test="${fn:length(studentRunInfo.run.owners) > 0}" >
-											<c:forEach var="member" items="${studentRunInfo.run.owners}">
-												${member.userDetails.displayname}
-											</c:forEach>
+										<c:when test="${studentRunInfo.run.owner != null}" >
+											${studentRunInfo.run.owner.userDetails.displayname}
 										</c:when>
 										<c:otherwise>
 											<spring:message code="student.index.teamNotEstablishedYet"/>
@@ -406,10 +404,8 @@ $(document).ready(function() {
 									<td class="rowLabel"><spring:message code="teacher_cap"/></td>
 									<td>
 										<c:choose>
-										<c:when test="${fn:length(studentRunInfo.run.owners) > 0}" >
-											<c:forEach var="member" items="${studentRunInfo.run.owners}">	
-												${member.userDetails.displayname}
-											</c:forEach>
+										<c:when test="${studentRunInfo.run.owner != null}" >
+											${studentRunInfo.run.owner.userDetails.displayname}
 										</c:when>
 										<c:otherwise>
 											<spring:message code="student.index.teamNotEstablishedYet"/>			    

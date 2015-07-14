@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -81,7 +81,7 @@ public class UpdateRunController {
 		Run run = null;
 		if (runId != null) {
 			run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
-			if (!run.getOwners().contains(user) && !user.isAdmin()) {
+			if (!run.getOwner().equals(user) && !user.isAdmin()) {
 				String contextPath = request.getContextPath();
 				return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
 			}
@@ -99,7 +99,7 @@ public class UpdateRunController {
 		Run run = null;
 		if (runId != null) {
 			run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
-			if (!run.getOwners().contains(user) && !user.isAdmin()) {
+			if (!run.getOwner().equals(user) && !user.isAdmin()) {
 				return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
 			}
 		}
@@ -134,7 +134,7 @@ public class UpdateRunController {
 			this.runService.updateNotes(Long.parseLong(runId), privateNotes);
 			response.getWriter().write("success");
 		} else if ("saveSurvey".equals(command)) {
-			if (run.getOwners().contains(user)) {
+			if (run.getOwner().equals(user)) {
 				String survey = request.getParameter("survey");
 				this.runService.updateSurvey(Long.parseLong(runId), survey);
 
@@ -149,7 +149,7 @@ public class UpdateRunController {
 				response.getWriter().write("success");
 			}
 		} else if ("archiveRun".equals(command)) {
-			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwners().contains(user)) {
+			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwner().equals(user)) {
 				runService.endRun(run);
 				// also archive project
 				try {
@@ -168,7 +168,7 @@ public class UpdateRunController {
 				return endRunSuccessMAV;
 			} 			
 		} else if ("unArchiveRun".equals(command)) {
-			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwners().contains(user)) {
+			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwner().equals(user)) {
 				runService.startRun(run);
 				// also un-archive project
 				try {
@@ -186,7 +186,7 @@ public class UpdateRunController {
 				return startRunSuccessMAV;
 			}
 		} else if ("extendReminderTime".equals(command)) {
-			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwners().contains(user)) {
+			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwner().equals(user)) {
 				this.runService.extendArchiveReminderTime(Long.parseLong(request.getParameter("runId")));
 			}			
 		}

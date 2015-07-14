@@ -149,7 +149,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 		}
 		workgroup.setOffering(run);
 		workgroup.setPeriod(period);
-		if ((run.getOwners() != null && run.getOwners().containsAll(members)) ||
+		if ((run.getOwner() != null && members.size() == 1 && run.getOwner().equals(members.iterator().next())) ||
 				(run.getSharedowners() != null && run.getSharedowners().containsAll(members))) {
 			workgroup.setTeacherWorkgroup(true);
 		}

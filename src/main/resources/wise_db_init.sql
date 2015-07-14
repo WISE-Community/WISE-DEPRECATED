@@ -349,6 +349,7 @@
         timesRun integer,
         versionId varchar(255),
         id bigint not null,
+        owner_fk bigint not null,
         project_fk bigint not null,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -363,12 +364,6 @@
         runs_fk bigint not null,
         groups_fk bigint not null,
         primary key (runs_fk, groups_fk)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table runs_related_to_owners (
-        runs_fk bigint not null,
-        owners_fk bigint not null,
-        primary key (runs_fk, owners_fk)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table runs_related_to_shared_owners (
@@ -775,6 +770,11 @@
         references projects (id);
 
     alter table runs 
+        add constraint FK_rtby4u6ckas8uabbsphui5c3g 
+        foreign key (owner_fk) 
+        references users (id);
+
+    alter table runs 
         add constraint FK_fipl4dw621w08oghwrx2b23qx 
         foreign key (project_fk) 
         references projects (id);
@@ -801,16 +801,6 @@
 
     alter table runs_related_to_groups 
         add constraint FK_6ejb2o01s8ck8tanryen4hpbl 
-        foreign key (runs_fk) 
-        references runs (id);
-
-    alter table runs_related_to_owners 
-        add constraint FK_ibmfba1u70nnqj03cf3drna 
-        foreign key (owners_fk) 
-        references users (id);
-
-    alter table runs_related_to_owners 
-        add constraint FK_fhhrmc845kwhwhx8greceovhm 
         foreign key (runs_fk) 
         references runs (id);
 

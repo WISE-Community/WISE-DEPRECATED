@@ -97,17 +97,11 @@ public class RunImpl extends OfferingImpl implements Run {
     public static final String RUNS_JOIN_COLUMN_NAME = "runs_fk";
 
     @Transient
-    public static final String OWNERS_JOIN_TABLE_NAME = "runs_related_to_owners";
-    
-    @Transient
-    public static final String OWNERS_JOIN_COLUMN_NAME = "owners_fk";
-    
-    @Transient
 	private static final String PROJECTS_JOIN_COLUMN_NAME = "project_fk";
-    
-    @Transient
-    public static final String SHARED_OWNERS = "shared_owners";
-    
+
+	@Transient
+	private static final String OWNER_COLUMN_NAME = "owner_fk";
+
     @Transient
     public static final String SHARED_OWNERS_JOIN_TABLE_NAME = "runs_related_to_shared_owners";
     
@@ -178,11 +172,11 @@ public class RunImpl extends OfferingImpl implements Run {
     @JoinTable(name = PERIODS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = PERIODS_JOIN_COLUMN_NAME, nullable = false))
     @Sort(type = SortType.NATURAL)
     private Set<Group> periods = new TreeSet<Group>();
-    
-    @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
-    @JoinTable(name = OWNERS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name =  RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = OWNERS_JOIN_COLUMN_NAME, nullable = false))
-    private Set<User> owners = new TreeSet<User>();
-    
+
+	@ManyToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = OWNER_COLUMN_NAME, nullable = false, unique = false)
+	private User owner;
+
     @ManyToOne(targetEntity = ProjectImpl.class, fetch = FetchType.LAZY)
     @JoinColumn(name = PROJECTS_JOIN_COLUMN_NAME, nullable = false, unique = false)
     private Project project;
@@ -284,37 +278,37 @@ public class RunImpl extends OfferingImpl implements Run {
 	public void setPeriods(Set<Group> periods) {
 		this.periods = periods;
 	}
-	
+
 	/**
-	 * @return a <code>Set</code> of Users who own this run
+	 * @return User who owns this run
 	 */
-	public Set<User> getOwners() {
-		return owners;
+	public User getOwner() {
+		return owner;
 	}
 
 	/**
-	 * @param owners <code>Set</code> of Users who own this run
+	 * @param owner User who owns this run
 	 */
-	public void setOwners(Set<User> owners) {
-		this.owners = owners;
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
-	
+
 	/**
-	 * @see org.wise.portal.domain.Run#getProject()
+	 * @see org.wise.portal.domain.run.Run#getProject()
 	 */
 	public Project getProject() {
 		return project;
 	}
 
 	/**
-	 * @see org.wise.portal.domain.Run#setProject(org.wise.portal.domain.project.Project)
+	 * @see org.wise.portal.domain.run.Run#setProject(org.wise.portal.domain.project.Project)
 	 */
 	public void setProject(Project project) {
 		this.project = project;
 	}
 	
 	/**
-	 * @see org.wise.portal.domain.Run#getPeriodByName(java.lang.String)
+	 * @see org.wise.portal.domain.run.Run#getPeriodByName(java.lang.String)
 	 */
 	public Group getPeriodByName(String periodName) throws PeriodNotFoundException {
 		Set<Group> periods = getPeriods();

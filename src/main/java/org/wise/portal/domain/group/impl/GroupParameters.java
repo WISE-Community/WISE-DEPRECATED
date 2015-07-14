@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -22,11 +22,8 @@ package org.wise.portal.domain.group.impl;
 
 import java.io.Serializable;
 
-
 /**
  * @author Laurel Williams
- * 
- * @version $Id$
  * 
  * A class to represent parameters required to create or update a group from the
  * UI.

@@ -145,11 +145,8 @@ public class CreateRunController {
 		}
 		modelMap.put("project", project);
 
-		// add the current user as an owner of the run
-		Set<User> owners = new HashSet<User>();
-		owners.add(user);
 		RunParameters runParameters = new RunParameters();
-		runParameters.setOwners(owners);
+		runParameters.setOwner(user);	// add the current user as an owner of the run
 		runParameters.setProject(project);
 		runParameters.setName(project.getProjectInfo().getName());
 
@@ -222,7 +219,7 @@ public class CreateRunController {
 		// start temporary code
 		List<Run> currentRuns = new ArrayList<Run>();
 		for (Run run : allRuns) {
-			if (run.getOwners().contains(user) &&
+			if (run.getOwner().equals(user) &&
 					!run.isEnded()) {
 				currentRuns.add(run);
 			}
@@ -391,12 +388,11 @@ public class CreateRunController {
 	protected ModelAndView processFinish(
 			final @ModelAttribute("runParameters") RunParameters runParameters,
 			final BindingResult result,
-			final ModelMap modelMap,
 			final HttpServletRequest request,
 			final SessionStatus status)
 					throws Exception {
 
-		Run run = null;
+		Run run;
 		try {
 			// get newProjectId from request and use that to set up the run
 			String newProjectId = request.getParameter("newProjectId");
@@ -406,14 +402,17 @@ public class CreateRunController {
 			runParameters.setLocale(userLocale);
 			run = this.runService.createRun(runParameters);
 
+			User owner = runParameters.getOwner();
+			HashSet<User> members = new HashSet<>();
+			members.add(owner);
+
 			// create a workgroup for the owners of the run (teacher)
-			workgroupService.createWISEWorkgroup("teacher", runParameters.getOwners(), run, null);
+			workgroupService.createWISEWorkgroup("teacher", members, run, null);
 
 		} catch (ObjectNotFoundException e) {
 			result.rejectValue("curnitId", "error.curnit-not_found",
 					new Object[] { runParameters.getCurnitId() }, 
-					"Curnit Not Found.");
-			//return showForm(request, response, errors);
+					"Project Not Found.");
 			return null;
 		}
 		ModelAndView modelAndView = new ModelAndView(COMPLETE_VIEW_NAME);

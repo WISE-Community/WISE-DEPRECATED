@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -41,7 +41,6 @@ import org.wise.portal.domain.workgroup.Workgroup;
  *     run. Must not be null
  *
  * @author Hiroki Terashima
- * @version $Id$
  */
 public class StudentRunInfo implements Comparable<StudentRunInfo>{
 
@@ -54,13 +53,6 @@ public class StudentRunInfo implements Comparable<StudentRunInfo>{
 	private Group group;
 	
 	private String startProjectUrl;
-
-	/**
-	 * @return the studentUser
-	 */
-	public User getStudentUser() {
-		return studentUser;
-	}
 
 	/**
 	 * @param studentUser the studentUser to set
@@ -111,23 +103,9 @@ public class StudentRunInfo implements Comparable<StudentRunInfo>{
 		this.group = group;
 	}
 
-	/**
-	 * @return the startProjectUrl
-	 */
-	public String getStartProjectUrl() {
-		return startProjectUrl;
-	}
-
-	/**
-	 * @param startProjectUrl the startProjectUrl to set
-	 */
-	public void setStartProjectUrl(String startProjectUrl) {
-		this.startProjectUrl = startProjectUrl;
-	}
-	
 	public int compareTo(StudentRunInfo o){
-		TeacherUserDetails bestDetails = (TeacherUserDetails) this.run.getOwners().iterator().next().getUserDetails();
-		TeacherUserDetails incomingDetails = (TeacherUserDetails) o.run.getOwners().iterator().next().getUserDetails();
+		TeacherUserDetails bestDetails = (TeacherUserDetails) this.run.getOwner().getUserDetails();
+		TeacherUserDetails incomingDetails = (TeacherUserDetails) o.run.getOwner().getUserDetails();
 		
 		if(!bestDetails.getLastname().equals(incomingDetails.getLastname())){
 			return bestDetails.getLastname().compareTo(incomingDetails.getLastname());

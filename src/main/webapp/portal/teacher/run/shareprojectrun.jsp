@@ -102,18 +102,16 @@ function removeSharedUserClicked() {
 			<th><spring:message code="teacher.run.shareprojectrun.permissionLevel"/></th> 
 			<th><spring:message code="teacher.run.shareprojectrun.options"/></th>
 		</tr>
-		<!--  display owners of the run -->
+		<!--  display owner of the run -->
 		<c:choose>
-			<c:when test="${fn:length(run.owners) == 0}">
+			<c:when test="${run.owner == null}">
 			</c:when>
 			<c:otherwise>
-				<c:forEach var="owner" items="${run.owners}">
 					<tr>
-					    <td class="emph">${owner.userDetails.username}</td>
+					    <td class="emph">${run.owner.userDetails.username}</td>
 						<td><spring:message code="teacher.run.shareprojectrun.ownerOfProjectRun"/></td>
 						<td></td>
 				    </tr>
-				</c:forEach>
 			</c:otherwise>
 		</c:choose>
 		

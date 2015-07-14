@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -69,7 +69,6 @@ import org.wise.portal.service.module.impl.ModuleServiceImpl;
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
  */
 @Entity
 @Table(name = ProjectImpl.DATA_STORE_NAME)
@@ -78,9 +77,6 @@ public class ProjectImpl implements Project {
 	
     @Transient
     public static final String SHARED_OWNERS_JOIN_COLUMN_NAME = "shared_owners_fk";
-    
-	@Transient
-    public static final String SHARED_OWNERS = "shared_owners";
     
     @Transient
     public static final String SHARED_OWNERS_JOIN_TABLE_NAME = "projects_related_to_shared_owners";
@@ -92,9 +88,6 @@ public class ProjectImpl implements Project {
 	public static final String COLUMN_NAME_FAMILYTAG = "familytag";
 	
 	@Transient
-	public static final String COLUMN_NAME_PROJECTINFOTAG = "projectinfotag";
-	
-	@Transient
 	public static final String COLUMN_NAME_ISCURRENT = "iscurrent";
 	
 	@Transient
@@ -102,9 +95,6 @@ public class ProjectImpl implements Project {
 	
 	@Transient
 	public static final String COLUMN_NAME_CURNIT_FK = "curnit_fk";
-
-	@Transient
-	public static final String COLUMN_NAME_JNLP_FK = "jnlp_fk";
 
 	@Transient
 	public static final String COLUMN_NAME_PARENT_PROJECT_ID = "parentprojectid";

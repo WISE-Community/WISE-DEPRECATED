@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -47,8 +47,6 @@ import org.wise.portal.domain.user.impl.UserImpl;
  * This implementation of group
  * 
  * @author Cynick Young
- * 
- * @version $Id$
  */
 @Entity
 @Table(name = PersistentGroup.DATA_STORE_NAME)
@@ -83,6 +81,7 @@ public class PersistentGroup implements Group {
     @Column(name = "OPTLOCK")
     private Integer version = null;
 
+    // TODO: why is the EAGER fetched?
     @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.EAGER)
     @JoinTable(name = USERS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = GROUPS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = USERS_JOIN_COLUMN_NAME, nullable = false))
     private Set<User> members = new HashSet<User>();
@@ -96,7 +95,7 @@ public class PersistentGroup implements Group {
     private Group parent;
 
     /**
-     * @see net.sf.sail.webapp.domain.group.Group#addMember(net.sf.sail.webapp.domain.User)
+     * @see org.wise.portal.domain.group.Group#addMember(org.wise.portal.domain.user.User)
      */
     public void addMember(User member) {
         // TODO: LW & HT DISCUSS: WHY IS THIS IF CASE NEEDED? IT'S USING A SET
@@ -107,28 +106,28 @@ public class PersistentGroup implements Group {
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.group.Group#removeMember(net.sf.sail.webapp.domain.User)
+     * @see org.wise.portal.domain.group.Group#removeMember(org.wise.portal.domain.user.User)
      */
 	public void removeMember(User member) {
 		this.members.remove(member);
 	}
 
     /**
-     * @see net.sf.sail.webapp.domain.group.Group#getMembers()
+     * @see org.wise.portal.domain.group.Group#getMembers()
      */
     public Set<User> getMembers() {
         return this.members;
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.group.Group#setMembers(java.util.List)
+     * @see org.wise.portal.domain.group.Group#setMembers(java.util.Set)
      */
     public void setMembers(Set<User> members) {
         this.members = members;
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.group.Group#getId()
+     * @see org.wise.portal.domain.group.Group#getId()
      */
     public Long getId() {
         return id;
@@ -161,28 +160,28 @@ public class PersistentGroup implements Group {
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.group.Group#getName()
+     * @see org.wise.portal.domain.group.Group#getName()
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.group.Group#setName(java.lang.String)
+     * @see org.wise.portal.domain.group.Group#setName(java.lang.String)
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.group.Group#getParent()
+     * @see org.wise.portal.domain.group.Group#getParent()
      */
     public Group getParent() {
         return parent;
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.group.Group#setParent(net.sf.sail.webapp.domain.group.Group)
+     * @see org.wise.portal.domain.group.Group#setParent(org.wise.portal.domain.group.Group)
      */
     public void setParent(Group parent) {
         this.parent = parent;

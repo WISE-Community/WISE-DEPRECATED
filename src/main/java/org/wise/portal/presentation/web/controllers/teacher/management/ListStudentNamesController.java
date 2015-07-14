@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -74,26 +74,18 @@ public class ListStudentNamesController {
 		
 		String teacherUserName = "";
 		
-		//get all the owners of the project
-		Iterator<User> ownersIterator = run.getOwners().iterator();
-		
-		//loop through the owners (there should only be one)
-		while(ownersIterator.hasNext()) {
-			//get an owner
-			User owner = ownersIterator.next();
-			
-			//get the workgroups
-			List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, owner);
-			
-			//there should only be one workgroup for the owner
-			Workgroup teacherWorkgroup = teacherWorkgroups.get(0);
-			
-			//get the teacher user name
-			teacherUserName = teacherWorkgroup.generateWorkgroupName();
-			
-			break;
-		}
-		
+		// get the owner of the project
+		User owner = run.getOwner();
+
+		//get the workgroups
+		List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, owner);
+
+		//there should only be one workgroup for the owner
+		Workgroup teacherWorkgroup = teacherWorkgroups.get(0);
+
+		//get the teacher user name
+		teacherUserName = teacherWorkgroup.generateWorkgroupName();
+
 		//get the meta data for the project
 		Long projectId = (Long) project.getId();
 		Long parentProjectId = project.getParentProjectId();

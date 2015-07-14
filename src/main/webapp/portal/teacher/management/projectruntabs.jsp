@@ -40,9 +40,7 @@
 								    	    	<c:set var="ownership" value="shared" />
 								    	    	<div class="sharedIcon">
 									    	    	<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" /> <spring:message code="teacher.management.projectruntabs.ownedBy"/>
-									    	    	<c:forEach var="owner" items="${run.owners}">
-									    	    		${owner.userDetails.firstname} ${owner.userDetails.lastname}
-									    	    	</c:forEach>
+									    	    	${run.owner.userDetails.firstname} ${run.owner.userDetails.lastname}
 								    	    	</div>
 								    	    	<!-- let the user unshare self from the run. -->
 								    	    	<a class="unshare" onClick="unshareFromRun('${run.id}','<spring:escapeBody javaScriptEscape="true">${run.name}</spring:escapeBody>');"><spring:message code="teacher.management.projectruntabs.unshare"/></a>

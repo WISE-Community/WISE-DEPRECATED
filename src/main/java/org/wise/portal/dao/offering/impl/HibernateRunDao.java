@@ -31,6 +31,7 @@ import java.util.TreeSet;
 
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
@@ -147,8 +148,14 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 		if (owner == null) {
 			return new ArrayList<Run>();
 		}
-    	String q = "select run from RunImpl run inner join run.owners owner where owner.id='" + owner.getId() + "' order by run.id desc";
-    	return (List<Run>) this.getHibernateTemplate().find(q);
+
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+		List<Run> result = session.createCriteria(RunImpl.class)
+				.add(Restrictions.eq("owner", owner))
+				.addOrder(Order.desc("id"))
+				.list();
+
+		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
