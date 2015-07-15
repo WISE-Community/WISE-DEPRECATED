@@ -18,8 +18,8 @@ define(['app'], function(app) {
         // the node id of the current node
         this.nodeId = null;
         
-        // field that will hold the node content
-        this.nodeContent = null;
+        // field that will hold the component content
+        this.componentContent = null;
         
         // holds the text that the student has typed
         this.studentResponse = null;
@@ -44,27 +44,17 @@ define(['app'], function(app) {
                 this.nodeId = currentNode.id;
             }
             
-            // set the content
-            this.nodeContent = $scope.part;
+            // get the component from the scope
+            var component = $scope.component;
             
-            var componentState = null;
+            // get the component state from the scope
+            var componentState = $scope.componentState;
             
-            if ($scope.partStudentData != null) {
-                // set the part student data as the component state
-                componentState = $scope.partStudentData;
-            }
-            
-            // populate the student work into this node
+            // populate the student work into this component
             this.setStudentWork(componentState);
             
-            // get the part
-            var part = $scope.part;
-            
-            /*
-             * register this node with the parent node which will most  
-             * likely be a Questionnaire node
-             */
-            $scope.$parent.registerPartController($scope, part);
+            // register this component with the parent node
+            $scope.$parent.registerPartController($scope, component);
             
             //http://coderthoughts.blogspot.co.uk/2013/03/html5-video-fun.html - thanks :)
             navigator.myGetMedia = (navigator.getUserMedia ||
@@ -173,8 +163,8 @@ define(['app'], function(app) {
         this.getPrompt = function() {
             var prompt = null;
             
-            if (this.nodeContent != null) {
-                prompt = this.nodeContent.prompt;
+            if (this.componentContent != null) {
+                prompt = this.componentContent.prompt;
             }
             
             return prompt;
@@ -264,7 +254,7 @@ define(['app'], function(app) {
          * @return the component id
          */
         this.getComponentId = function() {
-            var componentId = this.nodeContent.id;
+            var componentId = this.componentContent.id;
             
             return componentId;
         };

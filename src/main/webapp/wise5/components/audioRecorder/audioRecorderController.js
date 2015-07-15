@@ -17,8 +17,8 @@ define(['app'], function(app) {
         // the node id of the current node
         this.nodeId = null;
         
-        // field that will hold the node content
-        this.nodeContent = null;
+        // field that will hold the component content
+        this.componentContent = null;
         
         // holds the text that the student has typed
         this.studentResponse = null;
@@ -116,27 +116,20 @@ define(['app'], function(app) {
                 this.nodeId = currentNode.id;
             }
             
-            // set the content
-            this.nodeContent = $scope.part;
+            // get the component content from the scope
+            this.componentContent = $scope.component;
             
-            var componentState = null;
+            // get the component from the scope
+            var component = $scope.component;
             
-            if ($scope.partStudentData != null) {
-                // set the part student data as the component state
-                componentState = $scope.partStudentData;
-            }
+            // get the component state from the scope
+            var componentState = $scope.componentState;
             
-            // populate the student work into this node
+            // populate the student work into this component
             this.setStudentWork(componentState);
             
-            // get the part
-            var part = $scope.part;
-            
-            /*
-             * register this node with the parent node which will most  
-             * likely be a Questionnaire node
-             */
-            $scope.$parent.registerPartController($scope, part);
+            // register this component with the parent node
+            $scope.$parent.registerPartController($scope, component);
             
             try {
                 // webkit shim
@@ -265,10 +258,10 @@ define(['app'], function(app) {
         this.showSaveButton = function() {
             var show = false;
             
-            if (this.nodeContent != null) {
+            if (this.componentContent != null) {
                 
                 // check the showSaveButton field in the node content
-                if (this.nodeContent.showSaveButton) {
+                if (this.componentContent.showSaveButton) {
                     show = true;
                 }
             }
@@ -283,10 +276,10 @@ define(['app'], function(app) {
         this.showSubmitButton = function() {
             var show = false;
             
-            if (this.nodeContent != null) {
+            if (this.componentContent != null) {
                 
                 // check the showSubmitButton field in the node content
-                if (this.nodeContent.showSubmitButton) {
+                if (this.componentContent.showSubmitButton) {
                     show = true;
                 }
             }
@@ -300,8 +293,8 @@ define(['app'], function(app) {
         this.getPrompt = function() {
             var prompt = null;
             
-            if (this.nodeContent != null) {
-                prompt = this.nodeContent.prompt;
+            if (this.componentContent != null) {
+                prompt = this.componentContent.prompt;
             }
             
             return prompt;
@@ -313,11 +306,11 @@ define(['app'], function(app) {
         this.importWork = function() {
             
             // get the node content
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent != null) {
+            if (componentContent != null) {
                 
-                var importWork = nodeContent.importWork;
+                var importWork = componentContent.importWork;
                 
                 if (importWork != null) {
                     
@@ -368,7 +361,7 @@ define(['app'], function(app) {
          * @return the component id
          */
         this.getComponentId = function() {
-            var componentId = this.nodeContent.id;
+            var componentId = this.componentContent.id;
             
             return componentId;
         };

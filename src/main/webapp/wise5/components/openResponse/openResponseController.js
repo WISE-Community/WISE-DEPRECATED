@@ -22,7 +22,7 @@ define(['app'], function(app) {
         this.componentId = null;
         
         // field that will hold the node content
-        this.nodeContent = null;
+        this.componentContent = null;
         
         // holds the text that the student has typed
         this.studentResponse = '';
@@ -53,91 +53,62 @@ define(['app'], function(app) {
                 this.nodeId = currentNode.id;
             }
             
-            if ($scope.part != null) {
-                
-                // set the content
-                this.nodeContent = $scope.part;
+            // get the component content from the scope
+            this.componentContent = $scope.component;
+            
+            if (this.componentContent != null) {
                 
                 // get the show previous work node id if it is provided
-                var showPreviousWorkNodeId = this.nodeContent.showPreviousWorkNodeId;
+                var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
                 
                 if (showPreviousWorkNodeId != null) {
-                    // this part is showing previous work
+                    // this component is showing previous work
                     this.isShowPreviousWork = true;
                     
                     // get the node src for the node we want previous work from
                     var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
                     
-                    // get the show previous work part id if it is provided
-                    var showPreviousWorkPartId = this.nodeContent.showPreviousWorkPartId;
+                    // get the show previous work component id if it is provided
+                    var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
                     
                     // get the node content for the show previous work node
                     NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                         
-                        var nodeState = StudentDataService.getLatestNodeStateByNodeId(showPreviousWorkNodeId);
+                        // get the node content for the component we are showing previous work for
+                        this.componentContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
                         
-                        // check if the part student data has been passed into the scope
-                        if ($scope.partStudentData != null) {
-                            // set the part student data as the node state
-                            nodeState = $scope.partStudentData;
-                        }
+                        // get the component state for the show previous work
+                        var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
                         
-                        // check if we are show previous work from a part
-                        if (showPreviousWorkPartId != null) {
-                            // we are showing previous work from a part
-                            
-                            // get the part from the node content
-                            this.nodeContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkPartId);
-                            
-                            // get the part from the node state
-                            nodeState = NodeService.getNodeStateByPartId(nodeState, showPreviousWorkPartId);
-                        } else {
-                            // set the show previous work node content
-                            this.nodeContent = showPreviousWorkNodeContent;
-                        }
+                        // populate the student work into this component
+                        this.setStudentWork(componentState);
                         
-                        // populate the student work into this node
-                        this.setStudentWork(nodeState);
-                        
-                        // disable the node since we are just showing previous work
+                        // disable the component since we are just showing previous work
                         this.isDisabled = true;
                         
-                        // get the part
-                        var part = $scope.part;
+                        // get the component
+                        var component = $scope.component;
                         
-                        /*
-                         * register this node with the parent node which will most  
-                         * likely be a Questionnaire node
-                         */
-                        $scope.$parent.registerPartController($scope, part);
+                        // register this component with the parent node
+                        $scope.$parent.registerPartController($scope, component);
                     }));
                 } else {
-                    // this is a regular node part
+                    // this is a regular component
                     
-                    // get the latest node state
-                    //var componentState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
-                    var componentState = null;
+                    // get the component from the scope
+                    var component = $scope.component;
                     
-                    // check if the part student data has been passed into the scope
-                    if ($scope.partStudentData != null) {
-                        // set the part student data as the node state
-                        componentState = $scope.partStudentData;
-                    }
+                    // get the component state from the scope
+                    var componentState = $scope.componentState;
                     
-                    // populate the student work into this node
+                    // populate the student work into this component
                     this.setStudentWork(componentState);
                     
                     // check if we need to lock this node
                     this.calculateDisabled();
                     
-                    // get the part
-                    var part = $scope.part;
-                    
-                    /*
-                     * register this node with the parent node which will most  
-                     * likely be a Questionnaire node
-                     */
-                    $scope.$parent.registerPartController($scope, part);
+                    // register this component with the parent node
+                    $scope.$parent.registerPartController($scope, component);
                 }
             }
             
@@ -239,7 +210,13 @@ define(['app'], function(app) {
             // set the student data into the component state
             componentState.studentData = studentData;
             
-            if(this.saveTriggeredBy != null) {
+            if (this.saveTriggeredBy == null) {
+                /*
+                 * the controller has not specified how this save was triggered
+                 * which means it was triggered by an auto save from the parent
+                 */
+                componentState.saveTriggeredBy = 'autoSave';
+            } else if (this.saveTriggeredBy != null) {
                 // set the saveTriggeredBy value
                 componentState.saveTriggeredBy = this.saveTriggeredBy;
             }
@@ -260,10 +237,10 @@ define(['app'], function(app) {
             var nodeId = this.nodeId;
             
             // get the node content
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent) {
-                var lockAfterSubmit = nodeContent.lockAfterSubmit;
+            if (componentContent) {
+                var lockAfterSubmit = componentContent.lockAfterSubmit;
                 
                 if (lockAfterSubmit) {
                     // we need to lock the step after the student has submitted
@@ -289,10 +266,10 @@ define(['app'], function(app) {
         this.showSaveButton = function() {
             var show = false;
             
-            if (this.nodeContent != null) {
+            if (this.componentContent != null) {
                 
                 // check the showSaveButton field in the node content
-                if (this.nodeContent.showSaveButton) {
+                if (this.componentContent.showSaveButton) {
                     show = true;
                 }
             }
@@ -307,10 +284,10 @@ define(['app'], function(app) {
         this.showSubmitButton = function() {
             var show = false;
             
-            if (this.nodeContent != null) {
+            if (this.componentContent != null) {
                 
                 // check the showSubmitButton field in the node content
-                if (this.nodeContent.showSubmitButton) {
+                if (this.componentContent.showSubmitButton) {
                     show = true;
                 }
             }
@@ -319,10 +296,10 @@ define(['app'], function(app) {
         };
         
         this.makeCRaterRequest = function(nodeState, nodeVisit) {
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent != null && nodeContent.cRater != null) {
-                var cRaterSettings = nodeContent.cRater;
+            if (componentContent != null && componentContent.cRater != null) {
+                var cRaterSettings = componentContent.cRater;
                 var cRaterItemType = cRaterSettings.cRaterItemType;
                 var cRaterItemId = cRaterSettings.cRaterItemId;
                 var cRaterRequestType = 'scoring';
@@ -353,7 +330,7 @@ define(['app'], function(app) {
             var concepts = cRaterResponse.concepts;
 
             // now find the feedback that the student should see
-            var cRaterStepContent = this.nodeContent.cRater;
+            var cRaterStepContent = this.componentContent.cRater;
             var scoringRules = cRaterStepContent.cRaterScoringRules;
             var maxScore = cRaterStepContent.cRaterMaxScore;
 
@@ -578,8 +555,8 @@ define(['app'], function(app) {
         this.getPrompt = function() {
             var prompt = null;
             
-            if (this.nodeContent != null) {
-                prompt = this.nodeContent.prompt;
+            if (this.componentContent != null) {
+                prompt = this.componentContent.prompt;
             }
             
             return prompt;
@@ -591,8 +568,8 @@ define(['app'], function(app) {
         this.getNumRows = function() {
             var numRows = null;
             
-            if (this.nodeContent != null) {
-                numRows = this.nodeContent.numRows;
+            if (this.componentContent != null) {
+                numRows = this.componentContent.numRows;
             }
             
             return numRows;
@@ -604,8 +581,8 @@ define(['app'], function(app) {
         this.getNumColumns = function() {
             var numColumns = null;
             
-            if (this.nodeContent != null) {
-                numColumns = this.nodeContent.numColumns;
+            if (this.componentContent != null) {
+                numColumns = this.componentContent.numColumns;
             }
             
             return numColumns;
@@ -630,11 +607,11 @@ define(['app'], function(app) {
         this.importWork = function() {
             
             // get the node content
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent != null) {
+            if (componentContent != null) {
                 
-                var importWork = nodeContent.importWork;
+                var importWork = componentContent.importWork;
                 
                 if (importWork != null) {
                     
@@ -685,7 +662,7 @@ define(['app'], function(app) {
          * @return the component id
          */
         this.getComponentId = function() {
-            var componentId = this.nodeContent.id;
+            var componentId = this.componentContent.id;
             
             return componentId;
         };

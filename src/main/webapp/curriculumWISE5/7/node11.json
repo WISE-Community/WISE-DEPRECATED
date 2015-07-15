@@ -1,9 +1,9 @@
 {
     "prompt": "",
-    "parts": [
+    "components": [
         {
             "id": "4j72bdiy3b",
-            "partType": "AudioRecorder",
+            "componentType": "AudioRecorder",
             "prompt": "Work on this audio recorder step."
         }
     ],

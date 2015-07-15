@@ -1,9 +1,9 @@
 {
     "prompt": "",
-    "parts": [
+    "components": [
         {
             "id": "63h390h98s",
-            "partType": "Match",
+            "componentType": "Match",
             "prompt": "Work on this match step.",
             "choices": [
                 {

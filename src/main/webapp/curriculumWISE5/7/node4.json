@@ -1,9 +1,9 @@
 {
     "prompt": "",
-    "parts": [
+    "components": [
         {
             "id": "85vygf6abh2",
-            "partType": "Graph",
+            "componentType": "Graph",
             "prompt": "Work on this graph step.",
             "title": "Scatter Plot",
             "graphType": "scatter",

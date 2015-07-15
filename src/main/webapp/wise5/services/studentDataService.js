@@ -103,10 +103,77 @@ define(['configService', 'projectService'], function(configService, projectServi
             return this.getNodeVisitAtIndex(-1);
         };
         
+        serviceObject.retrieveStudentData = function() {
+            
+            // get the mode
+            var mode = ConfigService.getConfigParam('mode');
+            
+            if (mode === 'preview') {
+                // we are previewing the project
+                
+                // initialize dummy student data
+                this.studentData = {};
+                this.studentData.componentStates = [];
+                this.studentData.userName = 'Preview Student';
+                this.studentData.userId = '0';
+                
+                // TODO
+                // populate the student history
+                this.populateHistories(this.studentData.componentStates);
+                
+                // TODO
+                // update the node statuses
+                //this.updateNodeStatuses();
+            } else {
+                // we are in a run
+                
+                // get the url to get the student data
+                var componentStateURL = ConfigService.getConfigParam('componentStateURL');
+                
+                var httpParams = {};
+                httpParams.method = 'GET';
+                httpParams.url = componentStateURL;
+                
+                // set the workgroup id and run id
+                var params = {};
+                params.workgroupId = ConfigService.getWorkgroupId();
+                params.runId = ConfigService.getRunId();
+                httpParams.params = params;
+                
+                // make the request for the student data
+                return $http(httpParams).then(angular.bind(this, function(result) {
+                    var componentStates = result.data;
+                    if (componentStates != null) {
+                        
+                        this.studentData = {};
+                        
+                        // obtain the student data
+                        this.studentData.componentStates = componentStates;
+                        
+                        // get the node visits
+                        //var nodeVisits = this.getNodeVisits();
+                        //var latestNodeVisit = this.getLatestNodeVisit();
+                        
+                        // load the student planning nodes
+                        //this.loadStudentNodes();
+                        
+                        // TODO
+                        // populate the student history
+                        this.populateHistories(componentStates);
+                        
+                        // TODO
+                        // update the node statuses
+                        //this.updateNodeStatuses();
+                    }
+                    return this.studentData;
+                }));
+            }
+        };
+        
         /**
          * Retrieve the student data from the server
          */
-        serviceObject.retrieveStudentData = function() {
+        serviceObject.retrieveStudentData0 = function() {
             
             // get the mode
             var mode = ConfigService.getConfigParam('mode');
@@ -464,7 +531,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             }));
         };
 
-        serviceObject.populateHistories = function(nodeVisits) {
+        serviceObject.populateHistories0 = function(nodeVisits) {
             if (nodeVisits != null) {
                 this.stackHistory = [];
                 this.visitedNodesHistory = [];
@@ -474,6 +541,21 @@ define(['configService', 'projectService'], function(configService, projectServi
                     var nodeVisitNodeId = nodeVisit.nodeId;
                     this.updateStackHistory(nodeVisitNodeId);
                     this.updateVisitedNodesHistory(nodeVisitNodeId);
+                }
+            }
+        };
+        
+        serviceObject.populateHistories = function(componentStates) {
+            if (componentStates != null) {
+                this.stackHistory = [];
+                this.visitedNodesHistory = [];
+                
+                for (var i = 0; i < componentStates.length; i++) {
+                    var componentState = componentStates[i];
+                    
+                    var componentStateNodeId = componentState.nodeId;
+                    this.updateStackHistory(componentStateNodeId);
+                    this.updateVisitedNodesHistory(componentStateNodeId);
                 }
             }
         };
@@ -741,11 +823,12 @@ define(['configService', 'projectService'], function(configService, projectServi
         };
         
         /**
+         * TODO: rewrite this
          * Get the latest component state for the given node id and component id
          * @param nodeId the node id to look for
          * @param componentId the component id to look for
          */
-        serviceObject.getLatestComponentState = function(nodeId, componentId) {
+        serviceObject.getLatestComponentState0 = function(nodeId, componentId) {
             
             if (nodeId != null && componentId != null) {
                 
@@ -808,6 +891,121 @@ define(['configService', 'projectService'], function(configService, projectServi
             }
             
             return null;
+        };
+        
+        serviceObject.addComponentState = function(componentState) {
+            if (this.studentData != null && this.studentData.componentStates != null) {
+                this.studentData.componentStates.push(componentState);
+            }
+        };
+        
+        serviceObject.saveComponentStateToServer = function(componentState) {
+            
+            // get the url to get the student data
+            var componentStateURL = ConfigService.getConfigParam('componentStateURL');
+            
+            var httpParams = {};
+            httpParams.method = 'POST';
+            httpParams.url = componentStateURL;
+            
+            // set the workgroup id and run id
+            var params = {};
+            params.runId = ConfigService.getRunId();
+            params.periodId = ConfigService.getPeriodId();
+            params.workgroupId = ConfigService.getWorkgroupId();
+            params.nodeId = componentState.nodeId;
+            params.componentId = componentState.componentId;
+            params.componentType = componentState.componentType;
+            params.studentData = componentState;
+            httpParams.params = params;
+            
+            // make the request to post the student data
+            return $http(httpParams).then(angular.bind(this, function(result) {
+                var componentStateResponse = result.data;
+                if (componentStateResponse != null) {
+                    componentState.id = componentStateResponse.id;
+                }
+                return componentStateResponse;
+            }));
+            
+        };
+        
+        serviceObject.saveComponentStatesToServer = function(componentStates) {
+            
+            if (componentStates != null) {
+                for (var c = 0; c < componentStates.length; c++) {
+                    var componentState = componentStates[c];
+                    
+                    if (componentState != null) {
+                        this.addComponentState(componentState);
+                        this.saveComponentStateToServer(componentState);
+                    }
+                }
+            }
+        };
+        
+        serviceObject.retrieveComponentStates = function(runId, periodId, workgroupId) {
+            
+        };
+        
+        serviceObject.getLatestComponentState = function() {
+            var latestComponentState = null;
+            
+            var studentData = this.studentData;
+            
+            if (studentData != null) {
+                var componentStates = studentData.componentStates;
+                
+                if (componentStates != null) {
+                    latestComponentState = componentStates[componentStates.length - 1];
+                }
+            }
+            
+            return latestComponentState;
+        };
+        
+        /**
+         * Get the latest component state for the given node id and component
+         * id.
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @return the latest component state with the matching node id and
+         * component id or null if none are found
+         */
+        serviceObject.getLatestComponentStateByNodeIdAndComponentId = function(nodeId, componentId) {
+            var latestComponentState = null;
+            
+            if (nodeId != null && componentId != null) {
+                var studentData = this.studentData;
+                
+                if (studentData != null) {
+                    
+                    // get the component states
+                    var componentStates = studentData.componentStates;
+                    
+                    if (componentStates != null) {
+                        
+                        // loop through all the component states from newest to oldest
+                        for (var c = componentStates.length - 1; c > 0; c--) {
+                            var componentState = componentStates[c];
+                            
+                            if (componentState != null) {
+                                var componentStateNodeId = componentState.nodeId;
+                                var componentStateComponentId = componentState.componentId;
+                                
+                                // compare the node id and component id
+                                if (nodeId == componentStateNodeId &&
+                                        componentId == componentStateComponentId) {
+                                    latestComponentState = componentState;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return latestComponentState;
         };
         
         return serviceObject;

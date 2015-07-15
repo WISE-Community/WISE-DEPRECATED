@@ -31,8 +31,8 @@ define(['app',
         // the node id of the current node
         this.nodeId = null;
         
-        // field that will hold the node content
-        this.nodeContent = null;
+        // field that will hold the component content
+        this.componentContent = null;
         
         // whether the step should be disabled
         this.isDisabled = false;
@@ -60,95 +60,69 @@ define(['app',
                 this.nodeId = currentNode.id;
             }
             
-            // the node is part of another node
-            this.isNodePart = true;
+            // get the component content from the scope
+            this.componentContent = $scope.component;
             
-            // set the content
-            this.nodeContent = $scope.part;
-            
-            // get the show previous work node id if it is provided
-            var showPreviousWorkNodeId = this.nodeContent.showPreviousWorkNodeId;
-            
-            if (showPreviousWorkNodeId != null) {
-                // this part is showing previous work
-                this.isShowPreviousWork = true;
+            if (this.componentContent != null) {
                 
-                // get the node src for the node we want previous work from
-                var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
+                // get the show previous work node id if it is provided
+                var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
                 
-                // get the show previous work part id if it is provided
-                var showPreviousWorkPartId = this.nodeContent.showPreviousWorkPartId;
-                
-                // get the node content for the show previous work node
-                NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
+                if (showPreviousWorkNodeId != null) {
+                    // this component is showing previous work
+                    this.isShowPreviousWork = true;
                     
-                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(showPreviousWorkNodeId);
+                    // get the node src for the node we want previous work from
+                    var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
                     
-                    if ($scope.partStudentData != null) {
-                        // set the part student data as the node state
-                        nodeState = $scope.partStudentData;
-                    }
+                    // get the show previous work component id if it is provided
+                    var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
                     
-                    // check if we are show previous work from a part
-                    if (showPreviousWorkPartId != null) {
-                        // we are showing previous work from a part
+                    // get the node content for the show previous work node
+                    NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                         
-                        // get the part from the node content
-                        this.nodeContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkPartId);
+                        // get the node content for the component we are showing previous work for
+                        this.componentContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
                         
-                        // get the part from the node state
-                        nodeState = NodeService.getNodeStateByPartId(nodeState, showPreviousWorkPartId);
-                    } else {
-                        // set the show previous work node content
-                        this.nodeContent = showPreviousWorkNodeContent;
-                    }
+                        // get the component state for the show previous work
+                        var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                        
+                        // populate the student work into this component
+                        this.setStudentWork(componentState);
+                        
+                        // setup the graph
+                        this.setupGraph();
+                        
+                        // disable the component since we are just showing previous work
+                        this.isDisabled = true;
+                        
+                        // get the component
+                        var component = $scope.component;
+                        
+                        // register this component with the parent node
+                        $scope.$parent.registerPartController($scope, component);
+                    }));
+                } else {
+                    // this is a regular component
                     
-                    // populate the student work into this node
-                    this.setStudentWork(nodeState);
+                    // get the component from the scope
+                    var component = $scope.component;
                     
-                    // disable the node since we are just showing previous work
-                    this.isDisabled = true;
+                    // get the component state from the scope
+                    var componentState = $scope.componentState;
+                    
+                    // populate the student work into this component
+                    this.setStudentWork(componentState);
                     
                     // setup the graph
                     this.setupGraph();
                     
-                    // get the part
-                    var part = $scope.part;
+                    // check if we need to lock this node
+                    this.calculateDisabled();
                     
-                    /*
-                     * register this node with the parent node which will most  
-                     * likely be a Questionnaire node
-                     */
-                    $scope.$parent.registerPartController($scope, part);
-                }));
-            } else {
-                // this is a node part
-                
-                // get the latest node state
-                var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
-                
-                if ($scope.partStudentData != null) {
-                    // set the part student data as the node state
-                    nodeState = $scope.partStudentData;
+                    // register this component with the parent node
+                    $scope.$parent.registerPartController($scope, component);
                 }
-                
-                // populate the student work into this node
-                this.setStudentWork(nodeState);
-                
-                // setup the graph
-                this.setupGraph();
-                
-                // check if we need to lock this node
-                this.calculateDisabled();
-                
-                // get the part
-                var part = $scope.part;
-                
-                /*
-                 * register this node with the parent node which will most  
-                 * likely be a Questionnaire node
-                 */
-                $scope.$parent.registerPartController($scope, part);
             }
         };
         
@@ -158,29 +132,29 @@ define(['app',
         this.setupGraph = function() {
             
             // get the title
-            var title = this.nodeContent.title;
+            var title = this.componentContent.title;
             
             // get the graph type
-            var graphType = this.nodeContent.graphType;
+            var graphType = this.componentContent.graphType;
             
             // get the x and y axis attributes from the student data
             var xAxis = this.xAxis;
             var yAxis = this.yAxis;
             
-            if (this.xAxis == null && this.nodeContent.xAxis != null) {
+            if (this.xAxis == null && this.componentContent.xAxis != null) {
                 /*
                  * the student does not have x axis data so we will use the
                  * x axis from the node content
                  */
-                xAxis = this.nodeContent.xAxis;
+                xAxis = this.componentContent.xAxis;
             }
             
-            if (this.yAxis == null && this.nodeContent.yAxis != null) {
+            if (this.yAxis == null && this.componentContent.yAxis != null) {
                 /*
                  * the student does not have y axis data so we will use the
                  * y axis from the node content
                  */
-                yAxis = this.nodeContent.yAxis;
+                yAxis = this.componentContent.yAxis;
             }
             
             /*
@@ -192,12 +166,12 @@ define(['app',
             // get all the series from the student data
             var series = this.series;
             
-            if (this.series == null && this.nodeContent.series != null) {
+            if (this.series == null && this.componentContent.series != null) {
                 /*
                  * use the series from the step content if the student does not
                  * have any series data
                  */
-                series = this.nodeContent.series;
+                series = this.componentContent.series;
             }
             
             if (this.canClickToAddData() && !this.isDisabled) {
@@ -293,8 +267,8 @@ define(['app',
         this.canClickToAddData = function() {
             var result = false;
             
-            if (this.nodeContent.canClickToAddData) {
-                result = this.nodeContent.canClickToAddData;
+            if (this.componentContent.canClickToAddData) {
+                result = this.componentContent.canClickToAddData;
             }
             
             return result;
@@ -463,7 +437,7 @@ define(['app',
          */
         this.resetGraph = function() {
             // get the original series from the step content
-            this.series = this.nodeContent.series;
+            this.series = this.componentContent.series;
             
             // redraw the graph
             //this.setupGraph();
@@ -620,10 +594,10 @@ define(['app',
             var nodeId = this.nodeId;
             
             // get the node content
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent) {
-                var lockAfterSubmit = nodeContent.lockAfterSubmit;
+            if (componentContent) {
+                var lockAfterSubmit = componentContent.lockAfterSubmit;
                 
                 if (lockAfterSubmit) {
                     // we need to lock the step after the student has submitted
@@ -649,10 +623,10 @@ define(['app',
         this.showSaveButton = function() {
             var show = false;
             
-            if (this.nodeContent != null) {
+            if (this.componentContent != null) {
                 
                 // check the showSaveButton field in the node content
-                if (this.nodeContent.showSaveButton) {
+                if (this.componentContent.showSaveButton) {
                     show = true;
                 }
             }
@@ -667,10 +641,10 @@ define(['app',
         this.showSubmitButton = function() {
             var show = false;
             
-            if (this.nodeContent != null) {
+            if (this.componentContent != null) {
                 
                 // check the showSubmitButton field in the node content
-                if (this.nodeContent.showSubmitButton) {
+                if (this.componentContent.showSubmitButton) {
                     show = true;
                 }
             }
@@ -684,8 +658,8 @@ define(['app',
         this.getPrompt = function() {
             var prompt = null;
             
-            if (this.nodeContent != null) {
-                prompt = this.nodeContent.prompt;
+            if (this.componentContent != null) {
+                prompt = this.componentContent.prompt;
             }
             
             return prompt;
@@ -697,11 +671,11 @@ define(['app',
         this.importWork = function() {
             
             // get the node content
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent != null) {
+            if (componentContent != null) {
                 
-                var importWork = nodeContent.importWork;
+                var importWork = componentContent.importWork;
                 
                 if (importWork != null) {
                     
@@ -762,23 +736,24 @@ define(['app',
         };
         
         /**
-         * A connected part has changed its student data so we will
-         * perform any necessary changes to this part
-         * @param connectedPart the connected part parameters
-         * @param nodeState the student data from the connected part 
-         * that has changed
+         * A connected component has changed its student data so we will
+         * perform any necessary changes to this component
+         * @param connectedComponent the connected component
+         * @param connectedComponentParams the connected component params
+         * @param componentState the student data from the connected 
+         * component that has changed
          */
-        $scope.handleConnectedPartStudentDataChanged = function(connectedPart, nodeState) {
+        $scope.handleConnectedComponentStudentDataChanged = function(connectedComponent, connectedComponentParams, componentState) {
             
-            if (connectedPart != null && nodeState != null) {
+            if (connectedComponent != null && componentState != null) {
                 
-                // get the part type that has changed
-                var partType = connectedPart.partType;
+                // get the component type that has changed
+                var componentType = connectedComponent.componentType;
                 
-                if (partType === 'Table') {
+                if (componentType === 'Table') {
                     
                     // convert the table data to series data
-                    var data = $scope.graphController.convertTableDataToSeriesData(nodeState, connectedPart);
+                    var data = $scope.graphController.convertTableDataToSeriesData(componentState, connectedComponentParams);
                     
                     // create a new series object
                     var series = {};
@@ -929,7 +904,7 @@ define(['app',
          * @return the component id
          */
         this.getComponentId = function() {
-            var componentId = this.nodeContent.id;
+            var componentId = this.componentContent.id;
             
             return componentId;
         };

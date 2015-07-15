@@ -1,9 +1,9 @@
 {
     "prompt": "",
-    "parts": [
+    "components": [
         {
             "id": "0t36r52uvg",
-            "partType": "Table",
+            "componentType": "Table",
             "prompt": "Work on this table step.",
             "tableData": [
                 [

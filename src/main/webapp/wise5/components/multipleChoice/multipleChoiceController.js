@@ -14,8 +14,8 @@ define(['app'], function(app) {
         // the node id of the current node
         this.nodeId = null;
         
-        // field that will hold the node content
-        this.nodeContent = null;
+        // field that will hold the component content
+        this.componentContent = null;
         
         // whether the student work is dirty and needs saving
         this.isDirty = false;
@@ -45,85 +45,63 @@ define(['app'], function(app) {
                 this.nodeId = currentNode.id;
             }
             
-            // set the content
-            this.nodeContent = $scope.part;
+            // get the component content from the scope
+            this.componentContent = $scope.component;
             
-            // get the show previous work node id if it is provided
-            var showPreviousWorkNodeId = this.nodeContent.showPreviousWorkNodeId;
-            
-            if (showPreviousWorkNodeId != null) {
-                // this part is showing previous work
-                this.isShowPreviousWork = true;
+            if (this.componentContent != null) {
                 
-                // get the node src for the node we want previous work from
-                var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
+                // get the show previous work node id if it is provided
+                var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
                 
-                // get the show previous work part id if it is provided
-                var showPreviousWorkPartId = this.nodeContent.showPreviousWorkPartId;
-                
-                // get the node content for the show previous work node
-                NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
+                if (showPreviousWorkNodeId != null) {
+                    // this component is showing previous work
+                    this.isShowPreviousWork = true;
                     
-                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(showPreviousWorkNodeId);
+                    // get the node src for the node we want previous work from
+                    var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
                     
-                    // check if we are show previous work from a part
-                    if (showPreviousWorkPartId != null) {
-                        // we are showing previous work from a part
+                    // get the show previous work component id if it is provided
+                    var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+                    
+                    // get the node content for the show previous work node
+                    NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                         
-                        // get the part from the node content
-                        this.nodeContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkPartId);
+                        // get the node content for the component we are showing previous work for
+                        this.componentContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
                         
-                        // get the part from the node state
-                        nodeState = NodeService.getNodeStateByPartId(nodeState, showPreviousWorkPartId);
-                    } else {
-                        // set the show previous work node content
-                        this.nodeContent = showPreviousWorkNodeContent;
-                    }
+                        // get the component state for the show previous work
+                        var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                        
+                        // populate the student work into this component
+                        this.setStudentWork(componentState);
+                        
+                        // disable the component since we are just showing previous work
+                        this.isDisabled = true;
+                        
+                        // get the component
+                        var component = $scope.component;
+                        
+                        // register this component with the parent node
+                        $scope.$parent.registerPartController($scope, component);
+                    }));
+                } else {
+                    // this is a regular component
                     
-                    // populate the student work into this node
-                    this.setStudentWork(nodeState);
+                    // get the component from the scope
+                    var component = $scope.component;
                     
-                    // disable the node since we are just showing previous work
-                    this.isDisabled = true;
+                    // get the component state from the scope
+                    var componentState = $scope.componentState;
                     
-                    // get the part
-                    var part = $scope.part;
+                    // populate the student work into this component
+                    this.setStudentWork(componentState);
                     
-                    /*
-                     * register this node with the parent node which will most  
-                     * likely be a Questionnaire node
-                     */
-                    $scope.$parent.registerPartController($scope, part);
-                }));
-            } else {
-                // this is a regular node part
-                
-                // get the latest node state
-                var componentState = null;
-                
-                /*
-                 * check if the part student data has been passed. this will be
-                 * used when the node is part of a Questionnaire node
-                 */
-                if ($scope.partStudentData != null) {
-                    // set the part student data as the node state
-                    componentState = $scope.partStudentData;
+                    // check if we need to lock this node
+                    this.calculateDisabled();
+                    
+                    // register this component with the parent node
+                    $scope.$parent.registerPartController($scope, component);
                 }
-                
-                // populate the student work into this node
-                this.setStudentWork(componentState);
-                
-                // check if we need to lock this node
-                this.calculateDisabled();
-                
-                // get the part
-                var part = $scope.part;
-                
-                /*
-                 * register this node with the parent node which will most  
-                 * likely be a Questionnaire node
-                 */
-                $scope.$parent.registerPartController($scope, part);
             }
         };
         
@@ -313,13 +291,13 @@ define(['app'], function(app) {
             var result = false;
             
             // get the node content
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent != null) {
+            if (componentContent != null) {
                 // get the choice type from the node content
-                var nodeContentChoiceType = nodeContent.choiceType;
+                var componentContentChoiceType = componentContent.choiceType;
                 
-                if (choiceType === nodeContentChoiceType) {
+                if (choiceType === componentContentChoiceType) {
                     // the choice type matches
                     result = true;
                 }
@@ -480,8 +458,8 @@ define(['app'], function(app) {
         this.getCorrectChoice = function() {
             var correctChoice = null;
             
-            if (this.nodeContent != null) {
-                correctChoice = this.nodeContent.correctChoice;
+            if (this.componentContent != null) {
+                correctChoice = this.componentContent.correctChoice;
             }
             
             return correctChoice;
@@ -494,8 +472,8 @@ define(['app'], function(app) {
         this.getCorrectChoices = function() {
             var correctChoices = null;
             
-            if (this.nodeContent != null) {
-                correctChoices = this.nodeContent.correctChoices;
+            if (this.componentContent != null) {
+                correctChoices = this.componentContent.correctChoices;
             }
             
             return correctChoices;
@@ -594,10 +572,10 @@ define(['app'], function(app) {
             var nodeId = this.nodeId;
             
             // get the node content
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent) {
-                var lockAfterSubmit = nodeContent.lockAfterSubmit;
+            if (componentContent) {
+                var lockAfterSubmit = componentContent.lockAfterSubmit;
                 
                 if (lockAfterSubmit) {
                     // we need to lock the step after the student has submitted
@@ -682,17 +660,17 @@ define(['app'], function(app) {
             var result = false;
             
             // get the node content
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent != null) {
+            if (componentContent != null) {
                 
                 // get the choice type
-                var choiceType = nodeContent.choiceType;
+                var choiceType = componentContent.choiceType;
                 
                 if (choiceType === 'radio') {
                     
                     // get the correct choice id
-                    var correctChoice = nodeContent.correctChoice;
+                    var correctChoice = componentContent.correctChoice;
                     
                     if (correctChoice != null) {
                         result = true;
@@ -700,7 +678,7 @@ define(['app'], function(app) {
                 } else if (choiceType === 'checkbox') {
                     
                     // get the correct choice ids
-                    var correctChoices = nodeContent.correctChoices;
+                    var correctChoices = componentContent.correctChoices;
                     
                     if (correctChoices != null && correctChoices.length > 0) {
                         result = true;
@@ -721,12 +699,12 @@ define(['app'], function(app) {
             
             if (choiceId != null) {
                 // get the node content
-                var nodeContent = this.nodeContent;
+                var componentContent = this.componentContent;
                 
-                if (nodeContent != null) {
+                if (componentContent != null) {
                     
                     // get the choices
-                    var choices = nodeContent.choices;
+                    var choices = componentContent.choices;
                     
                     // loop through all the choices
                     for (var c = 0; c < choices.length; c++) {
@@ -762,11 +740,11 @@ define(['app'], function(app) {
             var choiceType = null;
             
             // get the node content
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent != null) {
+            if (componentContent != null) {
                 // get the choice type
-                choiceType = nodeContent.choiceType;
+                choiceType = componentContent.choiceType;
             }
             
             return choiceType;
@@ -780,12 +758,12 @@ define(['app'], function(app) {
             var choices = null;
             
             // get the node content
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent != null) {
+            if (componentContent != null) {
                 
                 // get the choices
-                choices = nodeContent.choices;
+                choices = componentContent.choices;
             }
             
             return choices;
@@ -799,7 +777,7 @@ define(['app'], function(app) {
             var show = false;
             
             // check the showSaveButton field in the node content
-            if (this.nodeContent.showSaveButton) {
+            if (this.componentContent.showSaveButton) {
                 show = true;
             }
             
@@ -813,10 +791,10 @@ define(['app'], function(app) {
         this.showSubmitButton = function() {
             var show = false;
             
-            if (this.nodeContent != null) {
+            if (this.componentContent != null) {
                 
                 // check the showSubmitButton field in the node content
-                if (this.nodeContent.showSubmitButton) {
+                if (this.componentContent.showSubmitButton) {
                     show = true;
                 }
             }
@@ -829,7 +807,7 @@ define(['app'], function(app) {
          * @return the component id
          */
         this.getComponentId = function() {
-            var componentId = this.nodeContent.id;
+            var componentId = this.componentContent.id;
             
             return componentId;
         };

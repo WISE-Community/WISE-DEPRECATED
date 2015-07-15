@@ -2,9 +2,9 @@
 <input type='button' value='X' ng-click='nodeController.closeNode()'></input>
 <input type='button' value='+Portfolio' ng-click='nodeController.addNodeVisitItemToPortfolio()'></input>
 <div compile='nodeController.getPrompt()'></div>
-<div ng-repeat='part in nodeController.getParts()' 
-    ng-include='nodeController.getPartTypeHTML(part.partType)' 
-    ng-init='partStudentData = nodeController.getPartStudentData(part)'></div>
+<div ng-repeat='component in nodeController.getComponents()' 
+    ng-include='nodeController.getComponentTypeHTML(component.componentType)' 
+    ng-init='componentState = nodeController.getComponentStateByPart(component)'></div>
 <button id='saveButton' 
     ng-click='nodeController.saveButtonClicked()' 
     ng-disabled='nodeController.isDisabled' 

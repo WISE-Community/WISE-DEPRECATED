@@ -16,12 +16,12 @@ define(['app'], function(app) {
             var currentNode = args.currentNode;
             if (previousNode != null && previousNode.type === 'group') {
                 var nodeId = previousNode.id;
-                StudentDataService.endNodeVisitByNodeId(nodeId);
+                //StudentDataService.endNodeVisitByNodeId(nodeId);
             }
             
             if (currentNode != null && currentNode.type === 'group') {
                 var nodeId = currentNode.id;
-                var newNodeVisit = StudentDataService.createNodeVisit(nodeId);
+                //var newNodeVisit = StudentDataService.createNodeVisit(nodeId);
                 this.updateNavigation();
             }
             

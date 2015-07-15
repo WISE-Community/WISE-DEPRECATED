@@ -52,14 +52,16 @@ define(['configService'], function(configService) {
                 var nodeStatuses = StudentDataService.getNodeStatuses();
                 
                 // get the latest node visit
-                var latestCompletedNodeVisit = StudentDataService.getLatestCompletedNodeVisit();
+                //var latestCompletedNodeVisit = StudentDataService.getLatestCompletedNodeVisit();
+                var latestComponentState = StudentDataService.getLatestComponentState();
                 
                 // make the websocket message
                 var messageJSON = {};
                 messageJSON.messageType = 'studentStatus';
                 messageJSON.messageParticipants = 'studentToTeachers';
                 messageJSON.currentNodeId = currentNodeId;
-                messageJSON.previousNodeVisit = latestCompletedNodeVisit;
+                //messageJSON.previousNodeVisit = latestCompletedNodeVisit;
+                messageJSON.previousComponentState = latestComponentState;
                 messageJSON.nodeStatuses = nodeStatuses;
                 
                 // send the websocket message

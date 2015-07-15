@@ -161,7 +161,23 @@ public class ComponentState extends PersistableDomain {
 	public void setStudentData(String studentData) {
 		this.studentData = studentData;
 	}
-
+    
+    public JSONObject getStudentDataJSON() {
+        JSONObject studentDataJSON = null;
+        
+        String studentData = getStudentData();
+        
+        if (studentData != null) {
+            try {
+                studentDataJSON = new JSONObject(studentData);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return studentDataJSON;
+    }
+    
     /**
      * Get the JSON representation of the ComponentState
      * @return a JSONObject with the values from the ComponentState

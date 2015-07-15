@@ -1,28 +1,28 @@
 {
     "prompt": "Work on this multi part step.",
-    "parts": [
+    "components": [
         {
             "id": "3mb2492l6q",
-            "partType": "OpenResponse",
+            "componentType": "OpenResponse",
             "prompt": "Work on this open response step.",
             "numRows": 5,
             "showSubmitButton": true
         },
         {
             "id": "3b0of288h0",
-            "partType": "Discussion",
+            "componentType": "Discussion",
             "prompt": "Work on this discussion step.",
             "numRows": 5,
             "showSubmitButton": true
         },
         {
             "id": "0h4wxy7x7r",
-            "partType": "Draw",
+            "componentType": "Draw",
             "prompt": "Work on this draw step."
         },
         {
             "id": "95vyuf6abh2",
-            "partType": "Graph",
+            "componentType": "Graph",
             "prompt": "Work on this graph step.",
             "title": "Scatter Plot",
             "graphType": "scatter",
@@ -52,7 +52,7 @@
         },
         {
             "id": "73h3c0h98s",
-            "partType": "Match",
+            "componentType": "Match",
             "prompt": "Work on this match step.",
             "choices": [
                 {
@@ -277,12 +277,12 @@
         },
         {
             "id": "m48hhgufo9",
-            "partType": "HTML",
+            "componentType": "HTML",
             "html": "<p>This is an HTML step.</p>"
         },
         {
             "id": "9aff80as23",
-            "partType": "MultipleChoice",
+            "componentType": "MultipleChoice",
             "prompt": "Who lives in a pineapple under the sea?",
             "choiceType": "radio",
             "correctChoice": "78de39me19",
@@ -308,7 +308,7 @@
         },
         {
             "id": "l92uy23boi2",
-            "partType": "MultipleChoice",
+            "componentType": "MultipleChoice",
             "prompt": "Who works at the Krusty Krab?",
             "choices": [
                 {
@@ -338,12 +338,12 @@
         },
         {
             "id": "82da3923gy",
-            "partType": "OutsideURL",
+            "componentType": "OutsideURL",
             "url": "http://www.berkeley.edu/"
         },
         {
             "id": "1t36rx2uvg",
-            "partType": "Table",
+            "componentType": "Table",
             "prompt": "Work on this table step.",
             "tableData": [
                 [

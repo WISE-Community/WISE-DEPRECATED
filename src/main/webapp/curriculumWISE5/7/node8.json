@@ -1,9 +1,9 @@
 {
     "prompt": "Work on this multiple choice checkbox step.",
-    "parts": [
+    "components": [
         {
             "id": "9a21pbab2x",
-            "partType": "MultipleChoice",
+            "componentType": "MultipleChoice",
             "prompt": "Who works at the Krusty Krab?",
             "choices": [
                 {

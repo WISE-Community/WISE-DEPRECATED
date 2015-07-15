@@ -25,14 +25,11 @@ define(['app'], function(app) {
         // whether the student work is dirty and needs saving
         this.isDirty = false;
         
-        // the current node state
-        this.nodeState = null;
-        
         /*
-         * an object that holds the mappings with the key being the part
+         * an object that holds the mappings with the key being the component
          * and the value being the scope object from the child controller
          */
-        $scope.partToScope = {};
+        $scope.componentToScope = {};
         
         /**
          * Perform setup of the node
@@ -104,11 +101,7 @@ define(['app'], function(app) {
         this.saveButtonClicked = function() {
             var saveTriggeredBy = 'saveButton';
             
-            // create and add the node state to the node visit
-            this.createAndAddNodeState(saveTriggeredBy);
-            
-            // save the node visit to the server
-            this.saveNodeVisitToServer();
+            this.createAndSaveComponentStates(saveTriggeredBy);
         };
         
         /**
@@ -117,70 +110,7 @@ define(['app'], function(app) {
         this.submitButtonClicked = function() {
             var saveTriggeredBy = 'submitButton';
             
-            // create add the node state to the node visit
-            this.createAndAddNodeState(saveTriggeredBy);
-            
-            // save the node visit to the server
-            this.saveNodeVisitToServer();
-        };
-        
-        /**
-         * Create a node state and add it to the latest node visit
-         * @param saveTriggeredBy the reason why we are saving a new node state
-         * e.g.
-         * 'autoSave'
-         * 'saveButton'
-         * 'submitButton'
-         * 'nodeOnExit'
-         * 'logOut'
-         */
-        this.createAndAddNodeState = function(saveTriggeredBy) {
-            if (saveTriggeredBy != null) {
-                /*
-                 * check if the save was triggered by the submit button
-                 * or if the student data is dirty
-                 */
-                if (saveTriggeredBy === 'submitButton' || this.isDirty) {
-                    
-                    // create the node state
-                    var nodeState = this.createNodeState(saveTriggeredBy);
-                    
-                    if (saveTriggeredBy === 'submitButton') {
-                        nodeState.isSubmit = true;
-                    }
-                    
-                    // add the node state to the latest node visit
-                    this.addNodeStateToLatestNodeVisit(this.nodeId, nodeState);
-                }
-            }
-        };
-        
-        /**
-         * Save the node visit to the server
-         */
-        this.saveNodeVisitToServer = function() {
-            
-            if (this.nodeId != null) {
-                var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(this.nodeId);
-                
-                if (nodeVisit != null) {
-                    return StudentDataService.saveNodeVisitToServer(nodeVisit).then(angular.bind(this, function() {
-                        
-                        // check if we need to lock this node
-                        this.calculateDisabled();
-                        
-                        /*
-                         * set the isDirty flag to false because the student work has 
-                         * been saved to the server
-                         */
-                        this.isDirty = false;
-                    }));
-                }
-            }
-            
-            var deferred = $q.defer();
-            deferred.resolve();
-            return deferred.promise;
+            this.createAndSaveComponentStates(saveTriggeredBy);
         };
         
         /**
@@ -214,17 +144,17 @@ define(['app'], function(app) {
         };
         
         /**
-         * Get the parts for this node. Each part is another node.
-         * @return an array that contains node content for the node parts
+         * Get the components for this node.
+         * @return an array that contains the content for the components
          */
-        this.getParts = function() {
-            var parts = null;
+        this.getComponents = function() {
+            var components = null;
             
             if (this.nodeContent != null) {
-                parts = this.nodeContent.parts;
+                components = this.nodeContent.components;
             }
             
-            return parts;
+            return components;
         };
         
         /**
@@ -239,7 +169,7 @@ define(['app'], function(app) {
             if (partId != null) {
                 
                 // get all the parts
-                var parts = this.getParts();
+                var parts = this.getComponents();
                 
                 // loop through all the parts
                 for (var p = 0; p < parts.length; p ++) {
@@ -264,28 +194,64 @@ define(['app'], function(app) {
         };
         
         /**
-         * Get the html template for the node part
-         * @param partType the node type
-         * @return the path to the html template for the node part
+         * Get the component given the component id
+         * @param componentId the component id we want
+         * @return the component object with the given component id
          */
-        this.getPartTypeHTML = function(partType) {
+        this.getComponentById = function(componentId) {
             
-            if (partType == null) {
-                // error
-            } else if (NodeService.isStringUpperCase(partType)) {
-                /*
-                 * the part type is all uppercase so we will convert it to all
-                 * lowercase
-                 */
-                partType = partType.toLowerCase();
-            } else {
-                // get the part type in camel case
-                partType = NodeService.toCamelCase(partType);
+            var component = null;
+            
+            if (componentId != null) {
+                
+                // get all the components
+                var components = this.getComponents();
+                
+                // loop through all the components
+                for (var c = 0; c < components.length; c++) {
+                    
+                    // get a component
+                    var tempComponent = components[c];
+                    
+                    if (tempComponent != null) {
+                        var tempComponentId = tempComponent.id;
+                        
+                        // check if the component id matches the one we want
+                        if (tempComponentId === componentId) {
+                            // the component id matches
+                            component = tempComponent;
+                            break;
+                        }
+                    }
+                }
             }
             
-            var partTypeHTML = 'wise5/components/' + partType + '/index.html';
+            return component;
+        };
+        
+        /**
+         * Get the html template for the component
+         * @param componentType the component type
+         * @return the path to the html template for the component
+         */
+        this.getComponentTypeHTML = function(componentType) {
             
-            return partTypeHTML;
+            if (componentType == null) {
+                // error
+            } else if (NodeService.isStringUpperCase(componentType)) {
+                /*
+                 * the component type is all uppercase so we will convert it to all
+                 * lowercase
+                 */
+                componentType = componentType.toLowerCase();
+            } else {
+                // get the component type in camel case
+                componentType = NodeService.toCamelCase(componentType);
+            }
+            
+            var componentTypeHTML = 'wise5/components/' + componentType + '/index.html';
+            
+            return componentTypeHTML;
         };
         
         /**
@@ -327,11 +293,7 @@ define(['app'], function(app) {
                     
                     var saveTriggeredBy = 'autoSave';
                     
-                    // create and add a node state to the node visit
-                    this.createAndAddNodeState(saveTriggeredBy);
-                    
-                    // save the node visit to the server
-                    this.saveNodeVisitToServer();
+                    this.createAndSaveComponentStates(saveTriggeredBy);
                 }
             }), this.autoSaveInterval);
         };
@@ -343,38 +305,40 @@ define(['app'], function(app) {
             clearInterval(this.autoSaveIntervalId);
         };
         
-        /**
-         * Create a new node state and populate with the student data
-         * @param saveTriggeredBy what triggered the save
-         * @return a node state that contains the student data
-         */
-        this.createNodeState = function(saveTriggeredBy) {
+        this.createAndSaveComponentStates = function(saveTriggeredBy) {
+            var componentStates = this.createComponentStates(saveTriggeredBy);
             
-            // create a new empty node state
-            var nodeState = StudentDataService.createNodeState();
+            if (componentStates != null) {
+                StudentDataService.saveComponentStatesToServer(componentStates);
+            }
+        };
+        
+        this.createComponentStates = function(saveTriggeredBy) {
+            var componentStates = [];
             
-            // add the parts array
-            nodeState.parts = [];
+            // get the components for this node
+            var components = this.getComponents();
             
-            // get the parts for this node
-            var parts = this.getParts();
-            
-            if (parts != null) {
+            if (components != null) {
                 
-                // loop through all the parts
-                for (var p = 0; p < parts.length; p++) {
+                var runId = ConfigService.getRunId();
+                var periodId = ConfigService.getPeriodId();
+                var workgroupId = ConfigService.getWorkgroupId();
+                
+                // loop through all the components
+                for (var c = 0; c < components.length; c++) {
                     
-                    // get a part
-                    var part = parts[p];
+                    // get a component
+                    var component = components[c];
                     
                     var studentWorkObject = null;
                     
-                    if (part != null) {
-                        // get the part id
-                        var partId = part.id;
+                    if (component != null) {
+                        // get the component id
+                        var componentId = component.id;
                         
-                        // get the scope for the part
-                        var childScope = $scope.partToScope[partId];
+                        // get the scope for the component
+                        var childScope = $scope.componentToScope[componentId];
                         
                         var studentWorkObject = null;
                         
@@ -384,19 +348,31 @@ define(['app'], function(app) {
                         }
                         
                         if (studentWorkObject != null) {
-                            // set the part id into the student work object
-                            studentWorkObject.id = partId;
                             
+                            studentWorkObject.runId = runId;
+                            studentWorkObject.periodId = periodId;
+                            studentWorkObject.workgroupId = workgroupId;
+                            
+                            // set the node id
+                            studentWorkObject.nodeId = this.nodeId;
+                            
+                            // set the component id into the student work object
+                            studentWorkObject.componentId = componentId;
+                            
+                            // set the component type
+                            studentWorkObject.componentType = component.componentType;
+                            
+                            // set the save triggered by value
                             studentWorkObject.saveTriggeredBy = saveTriggeredBy;
                             
-                            // add the student work object to our parts array
-                            nodeState.parts.push(studentWorkObject);
+                            // add the student work object to our components array
+                            componentStates.push(studentWorkObject);
                         }
                     }
                 }
             }
             
-            return nodeState;
+            return componentStates;
         };
         
         /**
@@ -412,7 +388,7 @@ define(['app'], function(app) {
                 var partId = part.id;
                 
                 // add the part id to child scope mapping
-                $scope.partToScope[partId] = childScope;
+                $scope.componentToScope[partId] = childScope;
             }
         }
         
@@ -457,76 +433,67 @@ define(['app'], function(app) {
         }));
         
         /**
-         * Notify any connected parts that the student data has changed
-         * @param partId the part id that has changed
-         * @param nodeState the new student data
+         * Notify any connected components that the student data has changed
+         * @param componentId the component id that has changed
+         * @param componentState the new component state
          */
-        this.notifyConnectedParts = function(changedPartId, nodeState) {
+        this.notifyConnectedParts = function(changedComponentId, componentState) {
             
-            if (changedPartId != null && nodeState != null) {
+            if (changedComponentId != null && componentState != null) {
                 
-                // get all the parts
-                var parts = this.getParts();
+                // get all the components
+                var components = this.getComponents();
                 
-                if (parts != null) {
+                if (components != null) {
                     
                     /*
-                     * loop through all the parts and look for parts that
-                     * are listening for the given part id to change.
-                     * only notify parts that are listening for changes
-                     * from the specific part id.
+                     * loop through all the components and look for components
+                     * that are listening for the given component id to change.
+                     * only notify components that are listening for changes
+                     * from the specific component id.
                      */
-                    for (var p = 0; p < parts.length; p ++) {
+                    for (var c = 0; c < components.length; c++) {
                         
-                        // get a part
-                        var part = parts[p];
+                        // get a component
+                        var tempComponent = components[c];
                         
-                        if (part != null) {
+                        if (tempComponent != null) {
                             
-                            // get this part id
-                            var partId = part.id;
+                            // get this component id
+                            var tempComponentId = tempComponent.id;
                             
                             /*
-                             * get the connected parts that this part is 
+                             * get the connected components that this component is 
                              * listening for
                              */
-                            var connectedParts = part.connectedParts;
+                            var connectedComponents = tempComponent.connectedComponents;
                             
-                            if (connectedParts != null) {
+                            if (connectedComponents != null) {
                                 
-                                // loop through all the connected parts
-                                for (var c = 0; c < connectedParts.length; c++) {
+                                // loop through all the connected components
+                                for (var cc = 0; cc < connectedComponents.length; cc++) {
                                     
-                                    // get a connected part
-                                    var connectedPart = connectedParts[c];
+                                    // get a connected component
+                                    var connectedComponentParams = connectedComponents[cc];
                                     
-                                    if (connectedPart != null) {
+                                    if (connectedComponentParams != null) {
                                         
-                                        // get the connected part id
-                                        var connectedPartId = connectedPart.id;
+                                        // get the connected component id
+                                        var connectedComponentId = connectedComponentParams.id;
                                         
-                                        // check if the part id matches the one that has changed
-                                        if (connectedPartId === changedPartId) {
+                                        // check if the component id matches the one that has changed
+                                        if (connectedComponentId === changedComponentId) {
                                             
-                                            // get the scope for the listening part
-                                            var partScope = $scope.partToScope[partId];
+                                            var connectedComponent = this.getComponentById(connectedComponentId);
                                             
-                                            // check if the listening part has a handler function
-                                            if (partScope.handleConnectedPartStudentDataChanged != null) {
-                                                
-                                                // get the part object that has changed
-                                                var partObject = this.getPartByPartId(changedPartId);
-                                                
-                                                if (partObject != null) {
-                                                    /*
-                                                     * inject the part type so we will know what type of
-                                                     * node the student data is coming from
-                                                     */
-                                                    connectedPart.partType = partObject.partType;
-                                                }
+                                            // get the scope for the listening component
+                                            var componentScope = $scope.componentToScope[tempComponentId];
+                                            
+                                            // check if the listening component has a handler function
+                                            if (componentScope.handleConnectedComponentStudentDataChanged != null) {
                                                 
                                                 // tell the listening part to handle the student data changing
-                                                partScope.handleConnectedPartStudentDataChanged(connectedPart, nodeState);
+                                                componentScope.handleConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState);
                                             }
                                         }
                                     }
@@ -543,7 +510,7 @@ define(['app'], function(app) {
          * @param the node content for the part
          * @return the student data for the given part
          */
-        this.getPartStudentData = function(part) {
+        this.getComponentStateByPart = function(part) {
             
             var partStudentData = null;
             
@@ -554,62 +521,21 @@ define(['app'], function(app) {
                 if (partId != null) {
                     
                     // get the latest component state for the part
-                    partStudentData = StudentDataService.getLatestComponentState(this.nodeId, partId);
+                    partStudentData = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, partId);
                 }
             }
             
             return partStudentData;
         };
         
-        /**
-         * Get the part from the node state
-         * @param nodeState the node state
-         * @param partId the part id to get
-         * @return an object containing the student data for the part
-         */
-        this.getPartFromNodeState = function(nodeState, partId) {
-            var partFromNodeState = null;
-            
-            if (nodeState != null && partId != null) {
-                
-                // get the parts from the node state
-                var parts = nodeState.parts;
-                
-                if (parts != null) {
-                    
-                    // loop through all the parts
-                    for (var p = 0; p < parts.length; p++) {
-                        
-                        // get a part
-                        var part = parts[p];
-                        
-                        if (part != null) {
-                            var tempPartId = part.id;
-                            
-                            // check if the part id matches the one we want
-                            if (partId === tempPartId) {
-
-                                //we have found the part we want
-                                partFromNodeState = part;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            
-            return partFromNodeState;
-        };
-        
         this.nodeLoaded = function(nodeId) {
-            var newNodeVisit = StudentDataService.createNodeVisit(nodeId);
+            //var newNodeVisit = StudentDataService.createNodeVisit(nodeId);
         };
         
         this.nodeUnloaded = function(nodeId) {
-            StudentDataService.endNodeVisitByNodeId(nodeId);
+            var saveTriggeredBy = 'exitNode';
             
-            // TODO: check if we need to save node visit
-            this.saveNodeVisitToServer();
+            this.createAndSaveComponentStates(saveTriggeredBy);
         };
         
         this.setCurrentNodeByNodeId = function(nodeId) {
@@ -642,45 +568,6 @@ define(['app'], function(app) {
             }
         };
         
-        this.buttonClicked = function(nodeNumber) {
-            
-            var nodeId = null;
-            
-            if (nodeNumber === '1.1') {
-                nodeId = 'node1';
-            } else if (nodeNumber === '1.4') {
-                nodeId = 'node4';
-            }
-            
-            if (nodeId != null) {
-                CurrentNodeService.setCurrentNodeByNodeId(nodeId);
-            }
-        };
-        
-        this.save = function(nodeId) {
-            var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(nodeId);
-            return StudentDataService.saveNodeVisitToServer(nodeVisit);
-        };
-        
-        this.addNodeStateToLatestNodeVisit = function(nodeId, nodeState) {
-            StudentDataService.addNodeStateToLatestNodeVisit(nodeId, nodeState);
-        };
-        
-        this.saveLatestNodeVisitToServer0 = function(nodeId) {
-            
-            if (nodeId != null) {
-                var nodeVisit = StudentDataService.getLatestNodeVisitByNodeId(nodeId);
-                
-                if (nodeVisit != null) {
-                    return StudentDataService.saveNodeVisitToServer(nodeVisit);
-                }
-            }
-            
-            var deferred = $q.defer();
-            deferred.resolve();
-            return deferred.promise;
-        };
-        
         /**
          * Listen for the 'nodeOnExit' event which is fired when the student
          * exits the node. This will perform saving when the student exits
@@ -697,9 +584,6 @@ define(['app'], function(app) {
              */
             if (nodeToExit.id === this.nodeId) {
                 var saveTriggeredBy = 'nodeOnExit';
-                
-                // create and add a node state to the latest node visit
-                this.createAndAddNodeState(saveTriggeredBy);
                 
                 // stop the auto save interval for this node
                 this.stopAutoSaveInterval();
@@ -724,9 +608,6 @@ define(['app'], function(app) {
             this.logOutListener = $scope.$on('exit', angular.bind(this, function(event, args) {
                 
                 var saveTriggeredBy = 'exit';
-                
-                // create and add a node state to the latest node visit
-                this.createAndAddNodeState(saveTriggeredBy);
                 
                 // stop the auto save interval for this node
                 this.stopAutoSaveInterval();

@@ -1,9 +1,9 @@
 {
     "prompt": "",
-    "parts": [
+    "components": [
         {
             "id": "2mb2892l6q",
-            "partType": "OpenResponse",
+            "componentType": "OpenResponse",
             "prompt": "Work on this open response step.",
             "numRows": 5,
             "showSaveButton": true,

@@ -1,9 +1,9 @@
 {
     "prompt": "Work on this multiple choice radio button step.",
-    "parts": [
+    "components": [
         {
             "id": "8aff8bas23",
-            "partType": "MultipleChoice",
+            "componentType": "MultipleChoice",
             "prompt": "Who lives in a pineapple under the sea?",
             "choiceType": "radio",
             "correctChoice": "78de39me19",

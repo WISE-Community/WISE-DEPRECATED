@@ -1,9 +1,9 @@
 {
     "prompt": "Work on this outside url step.",
-    "parts": [
+    "components": [
         {
             "id": "72dav923gy",
-            "partType": "OutsideURL",
+            "componentType": "OutsideURL",
             "url": "http://www.berkeley.edu/"
         }
     ],

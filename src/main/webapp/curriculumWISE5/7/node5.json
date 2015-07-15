@@ -1,9 +1,9 @@
 {
     "prompt": "",
-    "parts": [
+    "components": [
         {
             "id": "3inj20aglh",
-            "partType": "HTML",
+            "componentType": "HTML",
             "html": "<p>This is an HTML step.</p>"
         }
     ],

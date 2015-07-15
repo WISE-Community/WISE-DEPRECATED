@@ -1,9 +1,9 @@
 {
     "prompt": "Work on this linked table and graph step.",
-    "parts": [
+    "components": [
         {
             "id": "2b9db2q0am",
-            "partType": "Table",
+            "componentType": "Table",
             "prompt": "Fill out the table.",
             "tableData": [
                 [
@@ -122,7 +122,7 @@
             "showSubmitButton": false,
             "showSaveButton": true,
             "showSubmitButton": true,
-            "connectedParts": [
+            "connectedComponents": [
                 {
                     "id": "adb3a92fak",
                     "skipFirstRow": true,
@@ -133,7 +133,7 @@
         },
         {
             "id": "adb3a92fak",
-            "partType": "Graph",
+            "componentType": "Graph",
             "prompt": "Your table data points will automatically show up in the graph. You may also change the points on the graph to automatically change the table.",
             "title": "Scatter Plot",
             "graphType": "scatter",
@@ -153,7 +153,7 @@
             },
             "series": [],
             "canClickToAddData": true,
-            "connectedParts": [
+            "connectedComponents": [
                 {
                     "id": "2b9db2q0am",
                     "skipFirstRow": true,

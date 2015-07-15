@@ -125,8 +125,9 @@ public class InformationController {
             NumberFormatException {
         JSONObject userInfo = new JSONObject();
 
-		String runId = request.getParameter("runId");
-		Run run = this.runService.retrieveById(Long.parseLong(runId));
+		String runIdString = request.getParameter("runId");
+		Long runId = Long.parseLong(runIdString);
+		Run run = this.runService.retrieveById(runId);
 		
 		Workgroup workgroup = getWorkgroup(request, run);
 		String workgroupIdStr = request.getParameter("workgroupId");
@@ -250,7 +251,7 @@ public class InformationController {
 		try {
 			myUserInfo.put("workgroupId", workgroupId);
 			myUserInfo.put("userName", userNames);
-			myUserInfo.put("periodId", periodId);
+			myUserInfo.put("periodId", Long.parseLong(periodId));
 			myUserInfo.put("periodName", periodName);
 			myUserInfo.put("userIds", userIds);
 		} catch (JSONException e) {
@@ -397,16 +398,21 @@ public class InformationController {
 	private void handleGetConfig(HttpServletRequest request, HttpServletResponse response)
 	        throws ObjectNotFoundException, IOException {
         String contextPath = request.getContextPath(); //get the context path e.g. /wise
-		String projectId = request.getParameter("projectId");
+		String projectIdString = request.getParameter("projectId");
+		Long projectId = null;
 		String runId = request.getParameter("runId");
 		String mode = request.getParameter("mode");
 		String step = request.getParameter("step");
 		String userSpecifiedLang = request.getParameter("lang");
-		String parentProjectId = "";
+		Long parentProjectId = null;
 		String runName = "";
 
         if (mode == null) {
             mode = "preview";
+        }
+        
+        if (projectIdString != null) {
+            projectId = Long.parseLong(projectIdString);
         }
 
         String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
@@ -421,7 +427,7 @@ public class InformationController {
 		if (projectId != null) {
 			Project project = projectService.getById(projectId);
 
-			parentProjectId = project.getParentProjectId() + ""; // get the parent project id as a string
+			parentProjectId = project.getParentProjectId(); // get the parent project id as a string
 
 			rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 			try {
@@ -442,9 +448,9 @@ public class InformationController {
 			Project project = run.getProject();
 			if (project != null) {
 				// get the project id as a string
-				projectId = project.getId() + "";
+				projectId = (Long) project.getId();
 
-				parentProjectId = project.getParentProjectId() + ""; // get the parent project id as a string
+				parentProjectId = project.getParentProjectId(); // get the parent project id as a string
 			}
 
 			Long periodId = null;
@@ -544,7 +550,7 @@ public class InformationController {
 
             // put all the config params into the json object
 			try {
-				config.put("runId", runId);
+				config.put("runId", Long.parseLong(runId));
 				config.put("isRunActive", !run.isEnded());
 				config.put("contextPath", contextPath);
 				config.put("flagsURL", flagsURL);

@@ -1,9 +1,9 @@
 {
     "prompt": "",
-    "parts": [
+    "components": [
         {
             "id": "2b0of2g8hw",
-            "partType": "Discussion",
+            "componentType": "Discussion",
             "prompt": "Work on this discussion step.",
             "numRows": 5,
             "showSaveButton": true,

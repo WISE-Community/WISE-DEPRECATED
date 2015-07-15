@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -99,10 +100,18 @@ public class StudentDataController {
                 for (int c = 0; c < componentStates.size(); c++) {
                     ComponentState componentState = componentStates.get(c);
                     
-                    // get the JSON representation of the component state
-                    JSONObject componentStateJSONObject = componentState.toJSON();
+                    JSONObject studentDataJSON = componentState.getStudentDataJSON();
                     
-                    componentStatesJSONArray.put(componentStateJSONObject);
+                    try {
+                        studentDataJSON.put("id", componentState.getId());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    
+                    // get the JSON representation of the component state
+                    //JSONObject componentStateJSONObject = componentState.toJSON();
+                    
+                    componentStatesJSONArray.put(studentDataJSON);
                 }
                 
                 // write the array of component states to the response
@@ -140,6 +149,8 @@ public class StudentDataController {
     @RequestMapping(method = RequestMethod.POST,
             value = {"/student/componentState.html"})
     public ModelAndView handlePOSTWISE5StudentDataController(
+            HttpServletRequest request,
+            HttpServletResponse response,
             @RequestParam(value = "id", required = false) Integer id,
             @RequestParam(value = "runId", required = false) Integer runId,
             @RequestParam(value = "periodId", required = false) Integer periodId,
@@ -154,6 +165,23 @@ public class StudentDataController {
         ComponentState componentState = vleService.saveComponentState(id, runId, periodId, workgroupId,
                 nodeId, componentId, componentType, studentData);
 
+        if (componentState != null) {
+            try {
+                PrintWriter writer = response.getWriter();
+                
+                JSONObject responseObject = new JSONObject();
+                try {
+                    responseObject.put("id", componentState.getId());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                
+                writer.write(responseObject.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
         return null;
     }
 }

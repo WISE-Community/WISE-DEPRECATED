@@ -18,11 +18,8 @@ define(['app'], function(app) {
         // the node id of the current node
         this.nodeId = null;
         
-        // field that will hold the node content
-        this.nodeContent = null;
-        
-        // whether this is part of another node such as a Questionnaire node
-        this.isNodePart = false;
+        // field that will hold the component content
+        this.componentContent = null;
         
         // the url to the web page to display
         this.url = null;
@@ -38,72 +35,58 @@ define(['app'], function(app) {
                 this.nodeId = currentNode.id;
             }
             
-            // check if the node is part of another node
-            if ($scope.part != null) {
-                // the node is part of another node
-                this.isNodePart = true;
+            // get the component content from the scope
+            this.componentContent = $scope.component;
+            
+            if (this.componentContent != null) {
                 
-                // set the content
-                this.nodeContent = $scope.part;
+                // get the show previous work node id if it is provided
+                var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
                 
-                if (this.nodeContent != null) {
-                    this.setURL(this.nodeContent.url);
-                }
-                
-                // get the latest node state
-                //var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
-                
-                // populate the student work into this node
-                //this.setStudentWork(nodeState);
-                
-                // check if we need to lock this node
-                //this.calculateDisabled();
-                
-                // check if we need to lock this node
-                //this.calculateDisabled();
-                
-                // get the part
-                var part = $scope.part;
-                
-                /*
-                 * register this node with the parent node which will most  
-                 * likely be a Questionnaire node
-                 */
-                $scope.$parent.registerPartController($scope, part);
-            } else {
-                // this is a regular standalone node
-                var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
-                
-                // get the node content for this node
-                NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
+                if (showPreviousWorkNodeId != null) {
+                    // this component is showing previous work
+                    this.isShowPreviousWork = true;
                     
-                    this.nodeContent = nodeContent;
+                    // get the node src for the node we want previous work from
+                    var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
                     
-                    if (this.nodeContent != null) {
-                        this.setURL(this.nodeContent.url);
+                    // get the show previous work component id if it is provided
+                    var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+                    
+                    // get the node content for the show previous work node
+                    NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
+                        
+                        // get the node content for the component we are showing previous work for
+                        this.componentContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+                        
+                        if (this.componentContent != null) {
+                            // set the url
+                            this.setURL(this.componentContent.url);
+                        }
+                        
+                        // disable the component since we are just showing previous work
+                        this.isDisabled = true;
+                        
+                        // get the component
+                        var component = $scope.component;
+                        
+                        // register this component with the parent node
+                        $scope.$parent.registerPartController($scope, component);
+                    }));
+                } else {
+                    // this is a regular component
+                    
+                    if (this.componentContent != null) {
+                        // set the url
+                        this.setURL(this.componentContent.url);
                     }
                     
-                    // get the latest node state
-                    //var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                    // get the component from the scope
+                    var component = $scope.component;
                     
-                    // popualte the student work into this node
-                    //this.setStudentWork(nodeState);
-                    
-                    // check if we need to lock this node
-                    //this.calculateDisabled();
-                    
-                    // import any work if necessary
-                    //this.importWork();
-                    
-                    // tell the parent controller that this node has loaded
-                    $scope.$parent.nodeController.nodeLoaded(this.nodeId);
-                    
-                    // start the auto save interval
-                    //this.startAutoSaveInterval();
-                    
-                    // register this controller to listen for the exit event
-                    this.registerExitListener();
-                }));
+                    // register this component with the parent node
+                    $scope.$parent.registerPartController($scope, component);
+                }
             }
         };
         
@@ -144,38 +127,6 @@ define(['app'], function(app) {
              */
             this.exitListener = $scope.$on('exit', angular.bind(this, function(event, args) {
                 
-                /*
-                 * Check if this node is part of another node such as a
-                 * Questionnaire node. If this is part of another node we do
-                 * not need to perform any saving because the parent will
-                 * handle the saving.
-                 */
-                if (!this.isNodePart) {
-                    // this is a standalone node so we will save
-                    
-                    //var saveTriggeredBy = 'exit';
-                    
-                    // create and add a node state to the latest node visit
-                    //this.createAndAddNodeState(saveTriggeredBy);
-                    
-                    // stop the auto save interval for this node
-                    //this.stopAutoSaveInterval();
-                    
-                    /*
-                     * tell the parent that this node is done performing
-                     * everything it needs to do before exiting
-                     */
-                    $scope.$parent.nodeController.nodeUnloaded(this.nodeId);
-                    
-                    // call this function to remove the listener
-                    this.exitListener();
-                    
-                    /*
-                     * tell the session service that this listener is done
-                     * performing everything it needs to do before exiting
-                     */
-                    $rootScope.$broadcast('doneExiting');
-                }
             }));
         };
         

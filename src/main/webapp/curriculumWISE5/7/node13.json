@@ -1,7 +1,9 @@
 {
     "prompt": "",
-    "parts": [
+    "components": [
         {
+            "id": "9b0e2jadg0",
+            "componentType": "Planning",
             "style": "body { background-color: blue }",
             "prompt": "Work on this planning step.",
             "planningNodes": [

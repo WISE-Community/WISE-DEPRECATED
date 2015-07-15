@@ -10,7 +10,7 @@ define(['app'], function(app) {
                     OpenResponseService,
                     ProjectService, 
                     StudentDataService) {
-        this.nodeContent = null;
+        this.componentContent = null;
         this.nodeId = null;
         this.studentNodes = [];
         
@@ -27,7 +27,7 @@ define(['app'], function(app) {
             this.nodeId = currentNode.id;
         }
         
-        //this.nodeContent = $scope.$parent.nodeController.nodeContent;
+        //this.componentContent = $scope.$parent.nodeController.componentContent;
         //$scope.$parent.nodeController.nodeLoaded(this.nodeId);
 
         this.submit = function() {
@@ -53,7 +53,7 @@ define(['app'], function(app) {
         this.makeTransitions = function(studentNodes) {
             var result = [];
             if (studentNodes != null && studentNodes.length > 0) {
-                var transitionIdToReplace = this.nodeContent.transitionToReplace;
+                var transitionIdToReplace = this.componentContent.transitionToReplace;
                 var transitionToReplace = ProjectService.getTransitionById(transitionIdToReplace);
                 var replacedTransition = {};
                 replacedTransition.id = transitionToReplace.id;
@@ -120,14 +120,14 @@ define(['app'], function(app) {
 
             if (nodeToCopy != null) {
                 var nextStudentNodeId = this.getNextStudentNodeId();
-                var nodeContent = this.nodeContent;
+                var componentContent = this.componentContent;
                 var studentNode = {};
                 studentNode.id = nextStudentNodeId;
                 studentNode.type = nodeToCopy.type;
                 studentNode.title = nodeToCopy.title;
                 studentNode.src = nodeToCopy.src;
                 studentNode.copyOf = nodeToCopy.id;
-                studentNode.groupId = nodeContent.groupToPlace;
+                studentNode.groupId = componentContent.groupToPlace;
 
                 var latestState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
                 var latestStateStudentNodes = [];
@@ -252,8 +252,8 @@ define(['app'], function(app) {
 
         var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
 
-        NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(nodeContent) {
-            this.nodeContent = nodeContent;
+        NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(componentContent) {
+            this.componentContent = componentContent;
             this.populateStudentData();
             $scope.$parent.nodeController.nodeLoaded(this.nodeId);
         }));

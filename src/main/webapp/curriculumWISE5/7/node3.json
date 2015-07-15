@@ -1,9 +1,9 @@
 {
     "prompt": "",
-    "parts": [
+    "components": [
         {
             "id": "9h4wxy737r",
-            "partType": "Draw",
+            "componentType": "Draw",
             "prompt": "Work on this draw step.",
             "showSaveButton": true,
             "showSubmitButton": true

@@ -17,8 +17,8 @@ define(['app', 'angular'], function(app, angular) {
         // the node id of the current node
         this.nodeId = null;
         
-        // field that will hold the node content
-        this.nodeContent = null;
+        // field that will hold the component content
+        this.componentContent = null;
         
         // holds the text that the student has typed
         this.studentResponse = '';
@@ -58,78 +58,71 @@ define(['app', 'angular'], function(app, angular) {
                 this.nodeId = currentNode.id;
             }
             
-            // set the content
-            this.nodeContent = $scope.part;
+            // get the component content from the scope
+            this.componentContent = $scope.component;
             
-            // get the show previous work node id if it is provided
-            var showPreviousWorkNodeId = this.nodeContent.showPreviousWorkNodeId;
-            
-            if (showPreviousWorkNodeId != null) {
-                // this part is showing previous work
-                this.isShowPreviousWork = true;
+            if (this.componentContent != null) {
                 
-                // get the node src for the node we want previous work from
-                var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
+                // get the show previous work node id if it is provided
+                var showPreviousWorkNodeId = this.componentContent.showPreviousWorkNodeId;
                 
-                // get the show previous work part id if it is provided
-                var showPreviousWorkPartId = this.nodeContent.showPreviousWorkPartId;
-                
-                // get the node content for the show previous work node
-                NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
+                if (showPreviousWorkNodeId != null) {
+                    // this component is showing previous work
+                    this.isShowPreviousWork = true;
                     
-                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(showPreviousWorkNodeId);
+                    // get the node src for the node we want previous work from
+                    var nodeSrc = ProjectService.getNodeSrcByNodeId(showPreviousWorkNodeId);
                     
-                    // check if we are show previous work from a part
-                    if (showPreviousWorkPartId != null) {
-                        // we are showing previous work from a part
+                    // get the show previous work component id if it is provided
+                    var showPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+                    
+                    // get the node content for the show previous work node
+                    NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                         
-                        // get the part from the node content
-                        this.nodeContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkPartId);
+                        // get the node content for the component we are showing previous work for
+                        this.componentContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
                         
-                        // get the part from the node state
-                        nodeState = NodeService.getNodeStateByPartId(nodeState, showPreviousWorkPartId);
+                        // get the component state for the show previous work
+                        var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
+                        
+                        // populate the student work into this component
+                        this.setStudentWork(componentState);
+                        
+                        // disable the component since we are just showing previous work
+                        this.isDisabled = true;
+                        
+                        // get the component
+                        var component = $scope.component;
+                        
+                        // register this component with the parent node
+                        $scope.$parent.registerPartController($scope, component);
+                    }));
+                } else {
+                    // this is a regular component
+                    
+                    // get the component from the scope
+                    var component = $scope.component;
+                    
+                    // get the component state from the scope
+                    //var componentState = $scope.componentState;
+                    
+                    // populate the student work into this component
+                    //this.setStudentWork(componentState);
+                    
+                    if(ConfigService.isPreview()) {
+                        // we are in preview mode
                     } else {
-                        // set the show previous work node content
-                        this.nodeContent = showPreviousWorkNodeContent;
+                        // we are in regular student run mode
+                        
+                        this.getClassmateResponses();
                     }
                     
-                    // populate the student work into this node
-                    this.setStudentWork(nodeState);
+                    // check if we need to lock this node
+                    this.calculateDisabled();
                     
-                    // disable the node since we are just showing previous work
-                    this.isDisabled = true;
-                    
-                    // get the part
-                    var part = $scope.part;
-                    
-                    /*
-                     * register this node with the parent node which will most  
-                     * likely be a Questionnaire node
-                     */
-                    $scope.$parent.registerPartController($scope, part);
-                }));
-            } else {
-                // this part is loading the node part for the student to work on
-                
-                if(ConfigService.isPreview()) {
-                    // preview
-                } else {
-                    // run
-                    
-                    this.getClassmateResponses();
+                    // register this component with the parent node
+                    $scope.$parent.registerPartController($scope, component);
                 }
-                
-                // check if we need to lock this node
-                this.calculateDisabled();
-                
-                // get the part
-                var part = $scope.part;
-                
-                /*
-                 * register this node with the parent node which will most  
-                 * likely be a Questionnaire node
-                 */
-                $scope.$parent.registerPartController($scope, part);
             }
         };
         
@@ -291,10 +284,10 @@ define(['app', 'angular'], function(app, angular) {
             var nodeId = this.nodeId;
             
             // get the node content
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent) {
-                var lockAfterSubmit = nodeContent.lockAfterSubmit;
+            if (componentContent) {
+                var lockAfterSubmit = componentContent.lockAfterSubmit;
                 
                 if (lockAfterSubmit) {
                     // we need to lock the step after the student has submitted
@@ -320,10 +313,10 @@ define(['app', 'angular'], function(app, angular) {
         this.showSaveButton = function() {
             var show = false;
             
-            if (this.nodeContent != null) {
+            if (this.componentContent != null) {
                 
                 // check the showSaveButton field in the node content
-                if (this.nodeContent.showSaveButton) {
+                if (this.componentContent.showSaveButton) {
                     show = true;
                 }
             }
@@ -338,10 +331,10 @@ define(['app', 'angular'], function(app, angular) {
         this.showSubmitButton = function() {
             var show = false;
             
-            if (this.nodeContent != null) {
+            if (this.componentContent != null) {
                 
                 // check the showSubmitButton field in the node content
-                if (this.nodeContent.showSubmitButton) {
+                if (this.componentContent.showSubmitButton) {
                     show = true;
                 }
             }
@@ -355,8 +348,8 @@ define(['app', 'angular'], function(app, angular) {
         this.getPrompt = function() {
             var prompt = null;
             
-            if (this.nodeContent != null) {
-                prompt = this.nodeContent.prompt;
+            if (this.componentContent != null) {
+                prompt = this.componentContent.prompt;
             }
             
             return prompt;
@@ -368,8 +361,8 @@ define(['app', 'angular'], function(app, angular) {
         this.getNumRows = function() {
             var numRows = null;
             
-            if (this.nodeContent != null) {
-                numRows = this.nodeContent.numRows;
+            if (this.componentContent != null) {
+                numRows = this.componentContent.numRows;
             }
             
             return numRows;
@@ -381,8 +374,8 @@ define(['app', 'angular'], function(app, angular) {
         this.getNumColumns = function() {
             var numColumns = null;
             
-            if (this.nodeContent != null) {
-                numColumns = this.nodeContent.numColumns;
+            if (this.componentContent != null) {
+                numColumns = this.componentContent.numColumns;
             }
             
             return numColumns;
@@ -407,11 +400,11 @@ define(['app', 'angular'], function(app, angular) {
         this.importWork = function() {
             
             // get the node content
-            var nodeContent = this.nodeContent;
+            var componentContent = this.componentContent;
             
-            if (nodeContent != null) {
+            if (componentContent != null) {
                 
-                var importWork = nodeContent.importWork;
+                var importWork = componentContent.importWork;
                 
                 if (importWork != null) {
                     
@@ -462,7 +455,7 @@ define(['app', 'angular'], function(app, angular) {
          * @return the component id
          */
         this.getComponentId = function() {
-            var componentId = this.nodeContent.id;
+            var componentId = this.componentContent.id;
             
             return componentId;
         };

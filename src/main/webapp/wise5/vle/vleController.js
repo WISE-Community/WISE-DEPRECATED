@@ -195,9 +195,10 @@ define(['app'],
         if (stateParamNodeId != null && stateParamNodeId !== '') {
             nodeId = stateParamNodeId;
         } else {
-            var latestNodeVisit = StudentDataService.getLatestNodeVisit();
-            if (latestNodeVisit != null) {
-                nodeId = latestNodeVisit.nodeId;
+            var latestComponentState = StudentDataService.getLatestComponentState();
+            
+            if (latestComponentState != null) {
+                nodeId = latestComponentState.nodeId;
             }
         }
         
