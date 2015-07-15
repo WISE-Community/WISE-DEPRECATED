@@ -144,12 +144,6 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table modules_related_to_owners (
-        module_fk bigint not null,
-        owners_fk bigint not null,
-        primary key (module_fk, owners_fk)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
     create table newsitem (
         id bigint not null auto_increment,
         date datetime not null,
@@ -643,16 +637,6 @@
         add constraint FK_9qido677ahgt2n9yiftoj65r3 
         foreign key (id) 
         references curnits (id);
-
-    alter table modules_related_to_owners 
-        add constraint FK_45dhqvcy0qor0oqsw3hn9a8hu 
-        foreign key (owners_fk) 
-        references users (id);
-
-    alter table modules_related_to_owners 
-        add constraint FK_67a8tba33ktcejpf0usbk4jfy 
-        foreign key (module_fk) 
-        references modules (id);
 
     alter table newsitem 
         add constraint FK_iekdwpu7jkpuwafy4uvocjg3s 

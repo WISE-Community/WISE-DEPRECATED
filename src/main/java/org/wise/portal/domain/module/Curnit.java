@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -26,16 +26,13 @@ import org.wise.portal.domain.Persistable;
  * Curnit domain object interface
  * 
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
 public interface Curnit extends Persistable {
 
 	/**
 	 * @return The id of the curnit in the persistent data store
 	 */
-	public Long getId();
+	Long getId();
 	
 	/**
 	 * Visitor pattern, accepts CurnitVisitors

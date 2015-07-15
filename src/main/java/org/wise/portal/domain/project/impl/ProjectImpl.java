@@ -108,12 +108,6 @@ public class ProjectImpl implements Project {
 	@Transient
 	private static final String COLUMN_NAME_PROJECT_NAME = "name";
 
-	@Transient
-	private static final String OWNERS_JOIN_TABLE_NAME = "projects_related_to_owners";
-	
-    @Transient
-    public static final String OWNERS_JOIN_COLUMN_NAME = "owners_fk";
-
     @Transient
 	private static final String PROJECTS_JOIN_COLUMN_NAME = "projects_fk";
     

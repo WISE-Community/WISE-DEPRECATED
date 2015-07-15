@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -22,14 +22,11 @@ package org.wise.portal.domain.module.impl;
 
 /**
  * @author Laurel Williams
- * 
- * @version $Id$ 
- * 
+ *
  * Represents the parameters required to create a curnit.
  */
 public class CurnitParameters {
-	public static String FIELD_NAME = "name";
-	public static String FIELD_URL = "url";
+
 	private String name;
 
 	private String url;
@@ -42,8 +39,7 @@ public class CurnitParameters {
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
+	 * @param name the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -57,8 +53,7 @@ public class CurnitParameters {
 	}
 
 	/**
-	 * @param url
-	 *            the url to set
+	 * @param url the url to set
 	 */
 	public void setUrl(String url) {
 		this.url = url;
