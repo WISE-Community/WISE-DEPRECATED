@@ -76,22 +76,20 @@ public class DeleteProjectController {
 		if(projectIdStr != null && !projectIdStr.equals("")) {
 			Long projectId = Long.parseLong(projectIdStr);
 			
-			if(projectId != null) {
+			if (projectId != null) {
 				
 				try {
 					//get the project
 					Project project = projectService.getById(projectId);
 					
-					if(project != null) {
+					if (project != null) {
 						//get the currently signed in user
 						User signedInUser = ControllerUtil.getSignedInUser();
 						
-						//get the owner of the project
-						Set<User> owners = project.getOwners();
-						Iterator<User> ownersIterator = owners.iterator();
-						User owner = ownersIterator.next();
+						// get the owner of the project
+						User owner = project.getOwner();
 						
-						//get the id of the signed in user and the id of the owner of the project
+						// get the id of the signed in user and the id of the owner of the project
 						Long signedInUserId = signedInUser.getId();
 						Long ownerId = owner.getId();
 						

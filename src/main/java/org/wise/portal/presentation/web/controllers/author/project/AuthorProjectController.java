@@ -815,8 +815,6 @@ public class AuthorProjectController {
 			String name = request.getParameter("projectName");
 
 			String parentProjectId = request.getParameter("parentProjectId");
-			Set<User> owners = new HashSet<User>();
-			owners.add(user);
 
 			CreateUrlModuleParameters cParams = new CreateUrlModuleParameters();
 			cParams.setUrl(path);
@@ -825,7 +823,7 @@ public class AuthorProjectController {
 			ProjectParameters pParams = new ProjectParameters();
 
 			pParams.setCurnitId(curnit.getId());
-			pParams.setOwners(owners);
+			pParams.setOwner(user);
 			pParams.setProjectname(name);
 			pParams.setProjectType(ProjectType.LD);
 			if (parentProjectId != null && !parentProjectId.equals("undefined")) {

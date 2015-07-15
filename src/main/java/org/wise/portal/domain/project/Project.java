@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -46,10 +46,8 @@ import org.wise.portal.domain.user.User;
  * -- to have set up a run (a teacher would do this)
  * -- to have registered to that run (using projectcode)
  * -- to be in a workgroup for the run
- * - to preview, you need
- * 
+ *
  * @author Hiroki Terashima
- * @version $Id$
  */
 public interface Project extends Persistable {
 	
@@ -118,9 +116,9 @@ public interface Project extends Persistable {
 
 	public void setSharedowners(Set<User> sharedowners);
 	
-	public Set<User> getOwners();
+	public User getOwner();
 
-	public void setOwners(Set<User> owners);
+	public void setOwner(User owner);
 	
 	public Set<User> getBookmarkers();
 	

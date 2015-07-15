@@ -32,7 +32,7 @@ import org.wise.portal.domain.user.User;
 /**
  * Parameters required to author a project
  * @author Hiroki Terashima
- * @version $Id$
+ * TODO HIROKI: is this class still being used?
  */
 public class AuthorProjectParameters {
 

@@ -96,14 +96,12 @@ function removeSharedUserClicked() {
 		</tr>
 		<tr>
 			<c:choose>
-				<c:when test="${fn:length(project.owners) == 0 }">
+				<c:when test="${project.owner == null }">
 				</c:when>
 				<c:otherwise>
-					<c:forEach var="owner" items="${project.owners }">
-						<td class="emph">${owner.userDetails.username}</td>
-						<td><spring:message code="teacher.projects.customized.shareproject.owner"/></td>
-						<td></td>
-					</c:forEach>
+					<td class="emph">${project.owner.userDetails.username}</td>
+					<td><spring:message code="teacher.projects.customized.shareproject.owner"/></td>
+					<td></td>
 				</c:otherwise>
 			</c:choose>
 		</tr>

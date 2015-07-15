@@ -150,12 +150,13 @@ public class CreateRunController {
 		runParameters.setProject(project);
 		runParameters.setName(project.getProjectInfo().getName());
 
-		/* get the owners and add their usernames to the model */
+		// get the owners and add their usernames to the model
 		String ownerUsernames = "";
-		Set<User> allOwners = project.getOwners();
+		Set<User> allOwners = new HashSet<>();
+		allOwners.add(project.getOwner());
 		allOwners.addAll(project.getSharedowners());
 
-		for(User currentOwner : allOwners){
+		for (User currentOwner : allOwners){
 			ownerUsernames += currentOwner.getUserDetails().getUsername() + ",";
 		}
 
@@ -165,7 +166,7 @@ public class CreateRunController {
 		 * and that the results indicate that all critical problems
 		 * have been resolved. Add relevant data to the model. */
 		boolean forceCleaning = false;
-		boolean isAllowedToClean = (project.getOwners().contains(user) || project.getSharedowners().contains(user));
+		boolean isAllowedToClean = (project.getOwner().equals(user) || project.getSharedowners().contains(user));
 		ProjectMetadata metadata = project.getMetadata();
 
 		if(metadata != null){

@@ -180,7 +180,7 @@ public class ProjectServiceImpl implements ProjectService {
 		Project project = this.projectDao.createEmptyProject();
 		project.setCurnit(curnit);
 		project.setName(projectParameters.getProjectname());
-		project.setOwners(projectParameters.getOwners());
+		project.setOwner(projectParameters.getOwner());
 		project.setProjectType(projectParameters.getProjectType());
 		ProjectMetadata metadata = projectParameters.getMetadata();
 
@@ -188,7 +188,7 @@ public class ProjectServiceImpl implements ProjectService {
 		Long parentProjectId = projectParameters.getParentProjectId();
 		Project parentProject = null;
 
-		if(parentProjectId != null) {
+		if (parentProjectId != null) {
 			//get the parent project
 			parentProject = getById(parentProjectId);
 			project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
@@ -196,15 +196,15 @@ public class ProjectServiceImpl implements ProjectService {
 
 		// set original author (if not sent in as a parameter)
 		JSONObject metaJSON = new JSONObject(metadata);
-		if(metaJSON.has("author")){
+		if (metaJSON.has("author")) {
 			try {
 				String author = metaJSON.getString("author");
-				if(author == null || author.equals("null") || author.equals("")){
+				if (author == null || author.equals("null") || author.equals("")) {
 					JSONObject authorJSON = new JSONObject();
 
 					// set root id for project (if not already set)
 					Long rootId = project.getRootProjectId();
-					if(rootId == null){
+					if (rootId == null) {
 						try {
 							rootId = this.identifyRootProjectId(parentProject);
 							project.setRootProjectId(rootId);
@@ -214,18 +214,16 @@ public class ProjectServiceImpl implements ProjectService {
 						}
 					}
 					try {
-						if(rootId != null) {
+						if (rootId != null) {
 							Project rootP = this.getById(rootId);
-							Set<User> owners = rootP.getOwners();
-							for(User owner : owners){
-								MutableUserDetails ownerDetails = (MutableUserDetails)owner.getUserDetails();
-								try {
-									authorJSON.put("username", ownerDetails.getUsername());
-									authorJSON.put("fullname", ownerDetails.getFirstname() + " " + ownerDetails.getLastname());
-								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
+							User owner = rootP.getOwner();
+							MutableUserDetails ownerDetails = (MutableUserDetails) owner.getUserDetails();
+							try {
+								authorJSON.put("username", ownerDetails.getUsername());
+								authorJSON.put("fullname", ownerDetails.getFirstname() + " " + ownerDetails.getLastname());
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
 							metadata.setAuthor(authorJSON.toString());
 						}
@@ -249,7 +247,7 @@ public class ProjectServiceImpl implements ProjectService {
 		this.projectDao.save(project);
 		this.aclService.addPermission(project, BasePermission.ADMINISTRATION);	
 
-		if(parentProjectId != null) {
+		if (parentProjectId != null) {
 			Long newProjectId = (Long) project.getId();
 			User signedInUser = ControllerUtil.getSignedInUser();
 
@@ -284,7 +282,7 @@ public class ProjectServiceImpl implements ProjectService {
 	 */
 	@Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
 	public List<Project> getProjectList(User user) {
-		return this.projectDao.getProjectListByUAR(user, "owner");
+		return this.projectDao.getProjectListByOwner(user);
 	}
 
 	/**

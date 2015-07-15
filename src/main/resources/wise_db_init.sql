@@ -304,6 +304,7 @@
         wiseVersion integer,
         curnit_fk bigint,
         metadata_fk bigint,
+        owner_fk bigint not null,
         run_fk bigint,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -312,12 +313,6 @@
         projects_fk bigint not null,
         bookmarkers bigint not null,
         primary key (projects_fk, bookmarkers)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table projects_related_to_owners (
-        projects_fk bigint not null,
-        owners_fk bigint not null,
-        primary key (projects_fk, owners_fk)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table projects_related_to_shared_owners (
@@ -725,6 +720,11 @@
         references project_metadata (id);
 
     alter table projects 
+        add constraint FK_lglinci94nt1chg4acxpds1nh 
+        foreign key (owner_fk) 
+        references users (id);
+
+    alter table projects 
         add constraint FK_104cg4gaepu7x3hw1meqakld1 
         foreign key (run_fk) 
         references runs (id);
@@ -736,16 +736,6 @@
 
     alter table projects_related_to_bookmarkers 
         add constraint FK_7hx2irt01trvr794torxcwqsg 
-        foreign key (projects_fk) 
-        references projects (id);
-
-    alter table projects_related_to_owners 
-        add constraint FK_490w2nd4wem5ac5g162sxl087 
-        foreign key (owners_fk) 
-        references users (id);
-
-    alter table projects_related_to_owners 
-        add constraint FK_cnt7txehg0tnkjy55rxqgw3v1 
         foreign key (projects_fk) 
         references projects (id);
 

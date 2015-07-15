@@ -172,12 +172,12 @@ public class ProjectImpl implements Project {
 	@OneToOne(targetEntity = RunImpl.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = COLUMN_NAME_PREVIEWOFFERING_FK, unique = true)
 	protected Run previewRun;
-	
+
+	@ManyToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "owner_fk", nullable = false, unique = false)
+	private User owner;
+
 	@ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
-    @JoinTable(name = OWNERS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name =  PROJECTS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = OWNERS_JOIN_COLUMN_NAME, nullable = false))
-    private Set<User> owners = new TreeSet<User>();
-	
-    @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
     @JoinTable(name = SHARED_OWNERS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name =  PROJECTS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = SHARED_OWNERS_JOIN_COLUMN_NAME, nullable = false))
     private Set<User> sharedowners = new TreeSet<User>();
     
@@ -388,12 +388,12 @@ public class ProjectImpl implements Project {
 		this.sharedowners = sharedowners;
 	}
 
-	public Set<User> getOwners() {
-		return owners;
+	public User getOwner() {
+		return owner;
 	}
 
-	public void setOwners(Set<User> owners) {
-		this.owners = owners;
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 
 	/**

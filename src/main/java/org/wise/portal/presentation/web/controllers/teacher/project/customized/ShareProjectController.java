@@ -253,7 +253,7 @@ public class ShareProjectController {
     		//check if the signed in user is giving sharing permissions to the other user
     		if (params.getPermission().equals(UserDetailsService.PROJECT_SHARE_ROLE)) {
     			
-    			if (!project.getOwners().contains(signedInUser) && !signedInUser.isAdmin()) {
+    			if (!project.getOwner().equals(signedInUser) && !signedInUser.isAdmin()) {
     				/*
     				 * the signed in user is not the owner of the project and is not an admin
     				 * so we will not let them give sharing permissions to the other user 
