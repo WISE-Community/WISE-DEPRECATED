@@ -192,32 +192,26 @@ public class RunUtil {
 	 * and name
 	 */
 	public static JSONObject getTeacherUserInfo(Run run, WorkgroupService workgroupService) {
-		//the JSONObject that will hold the owner teacher user info
+		// the JSONObject that will hold the owner teacher user info
 		JSONObject teacherUserInfo = new JSONObject();
 		
 		if(run != null) {
-			//get the owners of the run (there should only be one)
-			Iterator<User> ownersIterator = run.getOwners().iterator();
-			
-			//loop through the owners (there should only be one)
-			while(ownersIterator.hasNext()) {
-				//get an owner
-				User owner = ownersIterator.next();
-				
-				//get the workgroups
-				List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, owner);
-				
-				//there should only be one workgroup for the owner
-				Workgroup teacherWorkgroup = teacherWorkgroups.get(0);
-				
-				try {
-					//set the values into the owner JSONObject
-					teacherUserInfo.put("workgroupId", teacherWorkgroup.getId());
-					teacherUserInfo.put("userName", teacherWorkgroup.generateWorkgroupName());
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}			
+			// get the owners of the run (there should only be one)
+			User owner = run.getOwner();
+
+			// get the workgroups of the owner
+			List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, owner);
+
+			// there should only be one workgroup for the owner
+			Workgroup teacherWorkgroup = teacherWorkgroups.get(0);
+
+			try {
+				//set the values into the owner JSONObject
+				teacherUserInfo.put("workgroupId", teacherWorkgroup.getId());
+				teacherUserInfo.put("userName", teacherWorkgroup.generateWorkgroupName());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return teacherUserInfo;

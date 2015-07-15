@@ -87,20 +87,17 @@
 						<td><c:out value="${run.starttime}"></c:out></td>
 					</tr>
 
-					<c:forEach var="owner" items="${run.owners}">
-						<tr>
-							<th><spring:message
-									code="student.studentinfo.runTeacherUsername" /></th>
-							<td><c:out value="${owner.userDetails.username}"></c:out></td>
-						</tr>
+					<tr>
+						<th><spring:message
+								code="student.studentinfo.runTeacherUsername" /></th>
+						<td><c:out value="${run.owner.userDetails.username}"></c:out></td>
+					</tr>
 
-						<tr>
-							<th><spring:message
-									code="student.studentinfo.runTeacherEmail" /></th>
-							<td><c:out value="${owner.userDetails.emailAddress}"></c:out></td>
-						</tr>
-
-					</c:forEach>
+					<tr>
+						<th><spring:message
+								code="student.studentinfo.runTeacherEmail" /></th>
+						<td><c:out value="${run.owner.userDetails.emailAddress}"></c:out></td>
+					</tr>
 
 					<tr>
 						<th colspan="2"><hr></hr></th>

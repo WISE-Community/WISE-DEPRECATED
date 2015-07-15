@@ -48,10 +48,8 @@ th {
 				<td>${run.id} (${run.runcode})</td>
 				<td>${run.name}</td>
 				<td>
-					<c:forEach var="owner" items="${run.owners}">
-						<a href="${contextPath}/login/impersonate?username=${owner.userDetails.username}">${owner.userDetails.username}</a><br/>
-						(${owner.userDetails.schoolname}, ${owner.userDetails.city}, ${owner.userDetails.state},${owner.userDetails.country})
-					</c:forEach>
+						<a href="${contextPath}/login/impersonate?username=${run.owner.userDetails.username}">${run.owner.userDetails.username}</a><br/>
+						(${run.owner.userDetails.schoolname}, ${run.owner.userDetails.city}, ${run.owner.userDetails.state},${run.owner.userDetails.country})
 				</td>
 				<c:if test="${period!=null}">
 					<td>${fn:length(run.studentAttendance)}</td>

@@ -287,17 +287,17 @@ public final class SecurityUtils {
 	public static boolean isUserOwnerOfRun(User user, Long runId) {
 		boolean result = false;
 		
-		if(user != null && runId != null) {
+		if (user != null && runId != null) {
 			try {
 				//get the run
 				Run run = SecurityUtils.runService.retrieveById(runId);
 				
-				if(run != null) {
+				if (run != null) {
 					//get the owners and shared owners
-					Set<User> owners = run.getOwners();
+					User owner = run.getOwner();
 					Set<User> sharedowners = run.getSharedowners();
 					
-					if(owners.contains(user) || sharedowners.contains(user)) {
+					if (owner.equals(user) || sharedowners.contains(user)) {
 						//the user is the owner or a shared owner
 						result = true;
 					}

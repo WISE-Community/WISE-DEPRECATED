@@ -299,10 +299,7 @@ public class InformationController {
 		JSONObject teacherUserInfo = new JSONObject();
 		
 		//get the owners of the run (there should only be one owner)
-		Set<User> owners = run.getOwners();
-		
-		//get the first element in the set since there should only be one owner
-		User runOwner = owners.iterator().next();
+		User runOwner = run.getOwner();
 		
 		try {
 			//get the workgroup for the owner in the run

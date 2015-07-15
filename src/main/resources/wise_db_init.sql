@@ -144,12 +144,6 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    create table modules_related_to_owners (
-        module_fk bigint not null,
-        owners_fk bigint not null,
-        primary key (module_fk, owners_fk)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
     create table newsitem (
         id bigint not null auto_increment,
         date datetime not null,
@@ -304,6 +298,7 @@
         wiseVersion integer,
         curnit_fk bigint,
         metadata_fk bigint,
+        owner_fk bigint not null,
         run_fk bigint,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -312,12 +307,6 @@
         projects_fk bigint not null,
         bookmarkers bigint not null,
         primary key (projects_fk, bookmarkers)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table projects_related_to_owners (
-        projects_fk bigint not null,
-        owners_fk bigint not null,
-        primary key (projects_fk, owners_fk)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table projects_related_to_shared_owners (
@@ -349,6 +338,7 @@
         timesRun integer,
         versionId varchar(255),
         id bigint not null,
+        owner_fk bigint not null,
         project_fk bigint not null,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -363,12 +353,6 @@
         runs_fk bigint not null,
         groups_fk bigint not null,
         primary key (runs_fk, groups_fk)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-    create table runs_related_to_owners (
-        runs_fk bigint not null,
-        owners_fk bigint not null,
-        primary key (runs_fk, owners_fk)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
     create table runs_related_to_shared_owners (
@@ -654,16 +638,6 @@
         foreign key (id) 
         references curnits (id);
 
-    alter table modules_related_to_owners 
-        add constraint FK_45dhqvcy0qor0oqsw3hn9a8hu 
-        foreign key (owners_fk) 
-        references users (id);
-
-    alter table modules_related_to_owners 
-        add constraint FK_67a8tba33ktcejpf0usbk4jfy 
-        foreign key (module_fk) 
-        references modules (id);
-
     alter table newsitem 
         add constraint FK_iekdwpu7jkpuwafy4uvocjg3s 
         foreign key (owner) 
@@ -730,6 +704,11 @@
         references project_metadata (id);
 
     alter table projects 
+        add constraint FK_lglinci94nt1chg4acxpds1nh 
+        foreign key (owner_fk) 
+        references users (id);
+
+    alter table projects 
         add constraint FK_104cg4gaepu7x3hw1meqakld1 
         foreign key (run_fk) 
         references runs (id);
@@ -741,16 +720,6 @@
 
     alter table projects_related_to_bookmarkers 
         add constraint FK_7hx2irt01trvr794torxcwqsg 
-        foreign key (projects_fk) 
-        references projects (id);
-
-    alter table projects_related_to_owners 
-        add constraint FK_490w2nd4wem5ac5g162sxl087 
-        foreign key (owners_fk) 
-        references users (id);
-
-    alter table projects_related_to_owners 
-        add constraint FK_cnt7txehg0tnkjy55rxqgw3v1 
         foreign key (projects_fk) 
         references projects (id);
 
@@ -773,6 +742,11 @@
         add constraint FK_hfttryi4o1jquauowc5csxxf3 
         foreign key (project_fk) 
         references projects (id);
+
+    alter table runs 
+        add constraint FK_rtby4u6ckas8uabbsphui5c3g 
+        foreign key (owner_fk) 
+        references users (id);
 
     alter table runs 
         add constraint FK_fipl4dw621w08oghwrx2b23qx 
@@ -801,16 +775,6 @@
 
     alter table runs_related_to_groups 
         add constraint FK_6ejb2o01s8ck8tanryen4hpbl 
-        foreign key (runs_fk) 
-        references runs (id);
-
-    alter table runs_related_to_owners 
-        add constraint FK_ibmfba1u70nnqj03cf3drna 
-        foreign key (owners_fk) 
-        references users (id);
-
-    alter table runs_related_to_owners 
-        add constraint FK_fhhrmc845kwhwhx8greceovhm 
         foreign key (runs_fk) 
         references runs (id);
 

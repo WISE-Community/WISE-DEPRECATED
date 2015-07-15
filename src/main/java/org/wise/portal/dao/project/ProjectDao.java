@@ -100,7 +100,14 @@ public interface ProjectDao<T extends Project> extends SimpleDao<T> {
 	 * @return <code>List<Project></code>
 	 */
 	public List<T> getProjectList(String query);
-	
+
+	/**
+	 * Returns a list of Projects that is owned by the specified user
+	 * @param owner <code>User</code>
+	 * @return List<Project> - list of projects owned by the specified user
+	 */
+	public List<Project> getProjectListByOwner(User owner);
+
 	/**
 	 * Given a <code>Set<String></code> set of tag names, returns a <code>List<Project></code>
 	 * list of projects from the data store that contain all of those tags.

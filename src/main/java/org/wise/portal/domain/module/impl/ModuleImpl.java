@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -23,31 +23,21 @@
  */
 package org.wise.portal.domain.module.impl;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.wise.portal.domain.module.Module;
-import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.user.impl.UserImpl;
 
 /**
  * WISE "Project" domain object. A WISE Project is a Curnit with more
  * information.
  *
  * @author Hiroki Terashima
- * @author Sally
- * 
- * @version $Id$
+ * @author Sally Ahn
  */
 @Entity
 @Table(name = ModuleImpl.DATA_STORE_NAME)
@@ -74,15 +64,6 @@ public class ModuleImpl extends CurnitImpl implements Module {
     
     @Transient
     public static final String COLUMN_NAME_TECHREQS = "tech_reqs";
-    
-    @Transient
-    public static final String PROJECTS_JOIN_COLUMN_NAME = "module_fk";
-
-    @Transient
-    public static final String OWNERS_JOIN_TABLE_NAME = "modules_related_to_owners";
-    
-    @Transient
-    public static final String OWNERS_JOIN_COLUMN_NAME = "owners_fk";
 
     @Transient
 	private static final String COLUMN_NAME_AUTHORS = "authors";
@@ -110,11 +91,7 @@ public class ModuleImpl extends CurnitImpl implements Module {
     
     @Column(name = ModuleImpl.COLUMN_NAME_AUTHORS)
     private String authors;
-	
-    @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
-    @JoinTable(name = OWNERS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = PROJECTS_JOIN_COLUMN_NAME) }, inverseJoinColumns = @JoinColumn(name = OWNERS_JOIN_COLUMN_NAME))
-	private Set<User> owners;
-		
+
 	public String getGrades() {
 		return grades;
 	}
@@ -156,16 +133,8 @@ public class ModuleImpl extends CurnitImpl implements Module {
 		this.totalTime = totalTime;
 	}
 
-	public Set<User> getOwners() {
-		return owners;
-	}
-
 	public String getTechReqs() {
 		return techReqs;
-	}
-
-	public void setOwners(Set<User> owners) {
-		this.owners = owners;
 	}
 
 	public void setTechReqs(String techReqs) {

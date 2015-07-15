@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -23,49 +23,38 @@
  */
 package org.wise.portal.domain.module;
 
-import java.util.Set;
-
-import org.wise.portal.domain.user.User;
-
 /**
  * A Module is a WISE implemention of a Curnit.
  *
  * @author Hiroki Terashima
- * @version $Id$
  */
 public interface Module extends Curnit {
 
-	public void setGrades(String grades);
+	void setGrades(String grades);
 
-	public String getGrades();
+	String getGrades();
 	
-	public String getTopicKeywords();
+	String getTopicKeywords();
 	
-	public void setTopicKeywords(String topicKeywords);
+	void setTopicKeywords(String topicKeywords);
 	
-	public void setDescription(String description);
+	void setDescription(String description);
 	
-	public String getDescription();
+	String getDescription();
 	
-	public Long getTotalTime();
+	Long getTotalTime();
 	
-	public void setTotalTime(Long totalTime);
+	void setTotalTime(Long totalTime);
 	
-	public Long getComputerTime();
+	Long getComputerTime();
 	
-	public void setComputerTime(Long computerTime);
+	void setComputerTime(Long computerTime);
 	
-	public String getTechReqs();
+	String getTechReqs();
 	
-	public void setTechReqs(String techReqs);
+	void setTechReqs(String techReqs);
 	
-	public String getAuthors();
+	String getAuthors();
 	
-	public void setAuthors(String authors);
-	
-	public Set<User> getOwners();
-	
-	public void setOwners(Set<User> owners);
-	
-
+	void setAuthors(String authors);
 }

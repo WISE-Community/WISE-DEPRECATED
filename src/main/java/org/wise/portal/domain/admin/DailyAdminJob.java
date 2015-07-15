@@ -579,8 +579,7 @@ public class DailyAdminJob {
 		// show info about the run
 		for (Run run : runsCreatedSinceYesterday) {
 			messageBody += "\tProject:" + run.getProject().getName();
-			Set<User> owners = run.getOwners();
-			User owner = owners.iterator().next();
+			User owner = run.getOwner();
 			TeacherUserDetails teacherUserDetails = (TeacherUserDetails) owner.getUserDetails();
 			String schoolName = teacherUserDetails.getSchoolname();
 			String schoolCity = teacherUserDetails.getCity();

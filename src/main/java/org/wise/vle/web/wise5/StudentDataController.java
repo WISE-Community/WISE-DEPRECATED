@@ -76,7 +76,6 @@ public class StudentDataController {
     @RequestMapping(method = RequestMethod.GET,
             value = {"/student/componentState.html"})
     public ModelAndView handleGETWISE5StudentDataController(
-            HttpServletRequest request,
             HttpServletResponse response,
             @RequestParam(value = "id", required = false) Integer id,
             @RequestParam(value = "runId", required = false) Integer runId,

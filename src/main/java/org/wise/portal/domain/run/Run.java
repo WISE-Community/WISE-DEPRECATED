@@ -84,17 +84,17 @@ public interface Run extends Offering {
 	 * @param periods the periods to set
 	 */
 	public void setPeriods(Set<Group> periods);
-   
-	/**
-	 * @return a <code>Set</code> of Users who own this run
-	 */
-	public Set<User> getOwners();
 
 	/**
-	 * @param owners <code>Set</code> of Users who own this run
+	 * @return User who owns this run
 	 */
-	public void setOwners(Set<User> owners);
-	
+	public User getOwner();
+
+	/**
+	 * @param owner User who owns this run
+	 */
+	public void setOwner(User owner);
+
 	/**
 	 * Gets the project that this run uses
 	 * 

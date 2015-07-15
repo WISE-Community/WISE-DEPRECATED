@@ -127,11 +127,9 @@
 																<!-- <li><a style="color:#666;">Archive</a>
 																<input type='checkbox' id='public_${project.id}' onclick='changePublic("${project.id}")'/> Is Public</li>-->
 																<c:set var="isOwner" value="false" />
-																<c:forEach var="owner" items="${project.owners}">
-																	<c:if test="${owner.id == user.id}">
-																		<c:set var="isOwner" value="true" />
-																	</c:if>
-																</c:forEach>
+																<c:if test="${project.owner.id == user.id}">
+																	<c:set var="isOwner" value="true"/>
+																</c:if>
 																<c:if test="${isOwner == 'true'}">
 																	<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.archive_tip" />" onclick="archiveProject('<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>', ${project.id})"><img class="icon" alt="archive" src="${contextPath}/<spring:theme code="lock"/>" />
 																	<span><spring:message code="teacher.management.projectlibrarydisplay.archive" /></span></a>&nbsp;|</li>												
@@ -377,11 +375,9 @@
 															<div class="sharedIcon">
 															<c:if test="${fn:length(project.sharedowners) > 0}">
 																<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" />
-																<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" /> 
-																<c:forEach var="projectowner" items="${project.owners}" varStatus="status">
-																	<c:out value="${projectowner.userDetails.firstname}" />
-										  							<c:out value="${projectowner.userDetails.lastname}" />
-																</c:forEach>
+																<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" />
+																<c:out value="${project.owner.userDetails.firstname}"/>
+																<c:out value="${project.owner.userDetails.lastname}"/>
 																<a class="unshare" onclick="unshareFromProject('${project.id}','<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>')"><spring:message code="teacher.management.projectlibrarydisplay.unshare" /></a>
 															</c:if>
 															</div>
@@ -590,10 +586,8 @@
 																<div class="sharedIcon" style="float:right;">
 																	<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" />
 																	<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" /> 
-																	<c:forEach var="projectowner" items="${project.owners}" varStatus="status">
-																		<c:out value="${projectowner.userDetails.firstname}" />
-											  							<c:out value="${projectowner.userDetails.lastname}" />
-																	</c:forEach>
+																	<c:out value="${project.owner.userDetails.firstname}" />
+											  						<c:out value="${project.owner.userDetails.lastname}" />
 																</div>
 															</c:if>
 															<c:if test="${fn:contains(projectClass,'wise')}">
@@ -804,11 +798,9 @@
 																		</li>
 																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
 																		<c:set var="isOwner" value="false" />
-																		<c:forEach var="owner" items="${project.owners}">
-																			<c:if test="${owner.id == user.id}">
-																				<c:set var="isOwner" value="true" />
-																			</c:if>
-																		</c:forEach>
+																		<c:if test="${project.owner.id == user.id}">
+																			<c:set var="isOwner" value="true"/>
+																		</c:if>
 																		<c:if test="${isOwner == 'true'}">
 																			<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.restore_tip" />" onclick="archiveProject('<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>', ${project.id}, true)"><img class="icon" alt="restore" src="${contextPath}/<spring:theme code="unlock"/>" />
 																			<span><spring:message code="teacher.management.projectlibrarydisplay.restore" /></span></a></li>												
@@ -1043,10 +1035,8 @@
 																	<c:if test="${fn:length(project.sharedowners) > 0}">
 																		<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" />
 																		<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" /> 
-																		<c:forEach var="projectowner" items="${project.owners}" varStatus="status">
-																			<c:out value="${projectowner.userDetails.firstname}" />
-												  							<c:out value="${projectowner.userDetails.lastname}" />
-																		</c:forEach>
+																		<c:out value="${project.owner.userDetails.firstname}" />
+												  						<c:out value="${project.owner.userDetails.lastname}" />
 																		<a class="unshare" onclick="unshareFromProject('${project.id}','<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>')"><spring:message code="teacher.management.projectlibrarydisplay.unshare" /></a>
 																	</c:if>
 																	</div>
@@ -1231,11 +1221,9 @@
 																		</li>
 																		<li><a class="tooltip" title="<spring:message code="teacher.management.projectlibrarydisplay.copy_tip" />" onclick="copy('${project.id}','${project.projectType}','${projectNameEscaped}','${filenameMap[project.id]}','${urlMap[project.id]}')" ><img class="icon" alt="copy" src="${contextPath}/<spring:theme code="copy"/>" /><span><spring:message code="copy" /></span></a>&nbsp;|</li>
 																		<c:set var="isOwner" value="false" />
-																		<c:forEach var="owner" items="${project.owners}">
-																			<c:if test="${owner.id == user.id}">
-																				<c:set var="isOwner" value="true" />
-																			</c:if>
-																		</c:forEach>
+																		<c:if test="${project.owner.id == user.id}">
+																			<c:set var="isOwner" value="true"/>
+																		</c:if>
 																		<c:if test="${isOwner == 'true'}">
 																			<li><a onclick="archiveProject('<spring:escapeBody javaScriptEscape="true">${project.name}</spring:escapeBody>', ${project.id}, true)"><span><spring:message code="teacher.management.projectlibrarydisplay.restore" /></span></a></li>												
 																		</c:if>
@@ -1250,10 +1238,8 @@
 																		<div class="sharedIcon" style="float:right;">
 																			<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" />
 																			<spring:message code="teacher.management.projectlibrarydisplay.ownedBy" /> 
-																			<c:forEach var="projectowner" items="${project.owners}" varStatus="status">
-																				<c:out value="${projectowner.userDetails.firstname}" />
-													  							<c:out value="${projectowner.userDetails.lastname}" />
-																			</c:forEach>
+																			<c:out value="${project.owner.userDetails.firstname}" />
+													  						<c:out value="${project.owner.userDetails.lastname}" />
 																		</div>
 																	</c:if>
 																	<div class="libraryIcon"><img src="${contextPath}/<spring:theme code="open_book"/>" alt="library project" /> <spring:message code="teacher.management.projectlibrarydisplay.libraryProject" /></div>

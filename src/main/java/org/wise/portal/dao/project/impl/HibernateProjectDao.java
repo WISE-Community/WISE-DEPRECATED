@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -42,8 +45,6 @@ import org.wise.portal.domain.user.User;
 
 /**
  * @author Hiroki Terashima
- *
- * @version $Id$
  */
 @Repository
 public class HibernateProjectDao extends AbstractHibernateDao<Project> implements
@@ -151,7 +152,21 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 			throw new ObjectNotFoundException((Long) id, this.getDataObjectClass());
 		
 		return object;
-		//return this.metadataDao.addMetadataToProject(object);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Project> getProjectListByOwner(User owner) {
+		if (owner == null) {
+			return new ArrayList<Project>();
+		}
+
+		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+		List<Project> result = session.createCriteria(ProjectImpl.class)
+				.add(Restrictions.eq("owner", owner))
+				.addOrder(Order.desc("id"))
+				.list();
+
+		return result;
 	}
 
 	/**

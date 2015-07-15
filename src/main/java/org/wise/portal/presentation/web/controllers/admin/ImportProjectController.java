@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -31,9 +31,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Properties;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -63,11 +61,10 @@ import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
 
 /**
- * Admin tool for uploading a zipped LD project.
+ * Admin tool for uploading a zipped WISE project.
  * Unzips to curriculum_base_dir and registers the project (ie creates project in DB).
  * 
- * @author hirokiterashima
- * @version $Id$
+ * @author Hiroki Terashima
  */
 @Controller
 @RequestMapping("/admin/project/importproject.html")
@@ -189,16 +186,14 @@ public class ImportProjectController {
 		
 		
 		User signedInUser = ControllerUtil.getSignedInUser();
-		Set<User> owners = new HashSet<User>();
-		owners.add(signedInUser);
-		
+
 		CreateUrlModuleParameters cParams = new CreateUrlModuleParameters();
 		cParams.setUrl(path);
 		Curnit curnit = curnitService.createCurnit(cParams);
 		
 		ProjectParameters pParams = new ProjectParameters();
 		pParams.setCurnitId(curnit.getId());
-		pParams.setOwners(owners);
+		pParams.setOwner(signedInUser);
 		pParams.setProjectname(name);
 		pParams.setProjectType(ProjectType.LD);
 

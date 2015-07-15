@@ -1184,10 +1184,10 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 				
 				if(run != null) {
 					//get the owners and shared owners
-					Set<User> owners = run.getOwners();
+					User owner = run.getOwner();
 					Set<User> sharedowners = run.getSharedowners();
 					
-					if(owners.contains(user) || sharedowners.contains(user) || user.isAdmin()) {
+					if (owner.equals(user) || sharedowners.contains(user) || user.isAdmin()) {
 						//the user is the owner or a shared owner
 						validated = true;
 					}

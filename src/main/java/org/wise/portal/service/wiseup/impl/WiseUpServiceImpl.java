@@ -188,8 +188,6 @@ public class WiseUpServiceImpl implements WiseUpService {
 		// now create a project in the db with the new path
 		String path = sep +  newFilename + sep + "wise4.project.json";
 		String name = "hiroki's project 4.zip";
-		Set<User> owners = new HashSet<User>();
-		owners.add(newProjectOwner);
 
 		CreateUrlModuleParameters cParams = new CreateUrlModuleParameters();
 		cParams.setUrl(path);
@@ -197,7 +195,7 @@ public class WiseUpServiceImpl implements WiseUpService {
 
 		ProjectParameters pParams = new ProjectParameters();
 		pParams.setCurnitId(curnit.getId());
-		pParams.setOwners(owners);
+		pParams.setOwner(newProjectOwner);
 		pParams.setProjectname(name);
 		pParams.setProjectType(ProjectType.LD);
 

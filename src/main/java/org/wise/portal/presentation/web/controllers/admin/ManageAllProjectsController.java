@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -42,7 +42,6 @@ import org.wise.portal.service.project.ProjectService;
 
 /**
  * @author Sally Ahn
- * @version $Id: $
  */
 @Controller
 @RequestMapping("/admin/project/manageallprojects.html")
@@ -57,8 +56,7 @@ public class ManageAllProjectsController {
 
 	@RequestMapping(method=RequestMethod.GET)
 	protected ModelAndView handleGET(
-			HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+			HttpServletRequest request) throws Exception {
 		// separate calls to project services to get internal and external projects
 		List<Project> internalProjectList = new ArrayList<Project>();
 		// check if projectLookupType was passed in, can be ["id","author","title"]
@@ -83,8 +81,7 @@ public class ManageAllProjectsController {
 
 	@RequestMapping(method=RequestMethod.POST)
 	protected ModelAndView handleRequestInternal(
-			HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+			HttpServletRequest request) throws Exception {
 		// posting changes to project
 		ModelAndView mav = new ModelAndView();
 		try {
