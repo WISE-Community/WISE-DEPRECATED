@@ -573,6 +573,7 @@ public class InformationController {
 	                config.put("userInfo", getUserInfo(request));
 					config.put("componentStateURL", componentStateURL);
 					config.put("actionLogURL", actionLogURL);
+					config.put("studentDataURL", wiseBaseURL + "/student/data.html");
 				}
 				
 				// add the config fields specific to the teacher grading

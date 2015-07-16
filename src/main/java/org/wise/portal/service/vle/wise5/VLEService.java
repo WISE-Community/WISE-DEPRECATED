@@ -23,6 +23,7 @@
  */
 package org.wise.portal.service.vle.wise5;
 
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.vle.domain.work.ComponentState;
 
 import java.util.List;
@@ -36,8 +37,9 @@ public interface VLEService {
 	// ComponentState methods
 
 	/**
-	 * Returns ComponentState with the specified fields
-	 * @return ComponentState object with the specified fields
+	 * Returns List of ComponentState with the specified fields
+	 * @return List of ComponentState object with the specified fields. If none matches,
+	 * will return an empty list.
 	 */
 	List<ComponentState> getComponentStates(Integer id, Integer runId, Integer periodId, Integer workgroupId,
 												   String nodeId, String componentId, String componentType);
@@ -46,7 +48,7 @@ public interface VLEService {
 	 * Saves ComponentState in the data store
 	 */
 	ComponentState saveComponentState(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-											 String nodeId, String componentId, String componentType, String studentData);
+											 String nodeId, String componentId, String componentType, String studentData) throws ObjectNotFoundException;
 
 
 	// ActionLog methods

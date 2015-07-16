@@ -35,28 +35,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             
             return currentNodeId;
         };
-        /*
-        serviceObject.setCurrentNodeByNodeId = function(nodeId) {
-            if (nodeId != null) {
-                var node = ProjectService.getNodeById(nodeId);
-                
-                this.setCurrentNode(node);
-            }
-        };
-        
-        serviceObject.setCurrentNode = function(node) {
-            var previousCurrentNode = this.currentNode;
-            
-            if (previousCurrentNode !== node) {
-                // the current node is about to change
-                $rootScope.$broadcast('nodeOnExit', {nodeToExit: previousCurrentNode});
-                
-                this.currentNode = node;
-                
-                $rootScope.$broadcast('currentNodeChanged', {previousNode: previousCurrentNode, currentNode: this.currentNode});
-            }
-        };
-        */
+
         serviceObject.getCurrentParentNode = function() {
             var currentNode = this.getCurrentNode();
             
@@ -128,27 +107,31 @@ define(['configService', 'projectService'], function(configService, projectServi
                 // we are in a run
                 
                 // get the url to get the student data
-                var componentStateURL = ConfigService.getConfigParam('componentStateURL');
+                var studentDataURL = ConfigService.getConfigParam('studentDataURL');
                 
                 var httpParams = {};
                 httpParams.method = 'GET';
-                httpParams.url = componentStateURL;
+                httpParams.url = studentDataURL;
                 
                 // set the workgroup id and run id
                 var params = {};
                 params.workgroupId = ConfigService.getWorkgroupId();
                 params.runId = ConfigService.getRunId();
+                params.getComponentStates = true;
                 httpParams.params = params;
                 
                 // make the request for the student data
                 return $http(httpParams).then(angular.bind(this, function(result) {
-                    var componentStates = result.data;
-                    if (componentStates != null) {
+                    var resultData = result.data;
+                    if (resultData != null) {
                         
                         this.studentData = {};
                         
                         // obtain the student data
-                        this.studentData.componentStates = componentStates;
+                        this.studentData.componentStates = resultData.componentStates;
+
+                        // uncomment me when actionLog is implemented
+                        //this.studentData.actionLogs = resultData.actionLogs;
                         
                         // get the node visits
                         //var nodeVisits = this.getNodeVisits();
@@ -159,7 +142,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                         
                         // TODO
                         // populate the student history
-                        this.populateHistories(componentStates);
+                        this.populateHistories(this.studentData.componentStates);
                         
                         // TODO
                         // update the node statuses
@@ -204,8 +187,11 @@ define(['configService', 'projectService'], function(configService, projectServi
                 
                 // set the workgroup id and run id
                 var params = {};
-                params.userId = ConfigService.getWorkgroupId();
                 params.runId = ConfigService.getRunId();
+                params.workgroupId = ConfigService.getWorkgroupId();
+                params.getComponentStates = true;
+                //params.getActionLog = true;
+                //params.getAnnotations = true;
                 httpParams.params = params;
                 
                 // make the request for the student data
@@ -549,7 +535,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             if (componentStates != null) {
                 this.stackHistory = [];
                 this.visitedNodesHistory = [];
-                
+
                 for (var i = 0; i < componentStates.length; i++) {
                     var componentState = componentStates[i];
                     
@@ -902,11 +888,11 @@ define(['configService', 'projectService'], function(configService, projectServi
         serviceObject.saveComponentStateToServer = function(componentState) {
             
             // get the url to get the student data
-            var componentStateURL = ConfigService.getConfigParam('componentStateURL');
+            var studentDataURL = ConfigService.getConfigParam('studentDataURL');
             
             var httpParams = {};
             httpParams.method = 'POST';
-            httpParams.url = componentStateURL;
+            httpParams.url = studentDataURL;
             
             // set the workgroup id and run id
             var params = {};
@@ -929,18 +915,80 @@ define(['configService', 'projectService'], function(configService, projectServi
             }));
             
         };
-        
+
+       /**
+        * Generates and returns a random key of the given length if
+        * specified. If length is not specified, returns a key 10
+        * characters in length.
+        */
+        serviceObject.generateKey = function(length) {
+            this.CHARS = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r", "s","t",
+                          "u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O",
+                          "P","Q","R","S","T", "U","V","W","X","Y","Z","0","1","2","3","4","5","6","7","8","9"];
+
+            /* set default length if not specified */
+            if (!length) {
+                length = 10;
+            }
+
+            /* generate the key */
+            var key = '';
+            for (var a = 0; a < length; a++) {
+                key += this.CHARS[Math.floor(Math.random() * (this.CHARS.length - 1))];
+            };
+
+            /* return the generated key */
+            return key;
+        };
+
+
         serviceObject.saveComponentStatesToServer = function(componentStates) {
             
             if (componentStates != null) {
                 for (var c = 0; c < componentStates.length; c++) {
                     var componentState = componentStates[c];
-                    
+
                     if (componentState != null) {
+                        componentState.requestToken = this.generateKey() // use this to keep track of unsaved componentStates.
                         this.addComponentState(componentState);
-                        this.saveComponentStateToServer(componentState);
                     }
                 }
+
+                // get the url to get the student data
+                var httpParams = {};
+                httpParams.method = 'POST';
+                httpParams.url = ConfigService.getConfigParam('studentDataURL');
+
+                // set the workgroup id and run id
+                var params = {};
+                params.runId = ConfigService.getRunId();
+                params.workgroupId = ConfigService.getWorkgroupId();
+                params.data = {};
+                params.data.componentStates = componentStates;
+                httpParams.params = params;
+
+                // make the request to post the student data
+                return $http(httpParams).then(angular.bind(this, function(result) {
+                    var saveStudentDataResponse = result.data;
+                    var savedComponentStates = saveStudentDataResponse.componentStates;
+
+                    // set the id and postTime in the local componentState
+                    for (var i = 0; i < savedComponentStates.length; i++) {
+                        var savedComponentState = savedComponentStates[i];
+                        for (var l = 0; l < this.studentData.componentStates.length; l++) {
+                            var localComponentState = this.studentData.componentStates[l];
+                            if (localComponentState.requestToken != null &&
+                                localComponentState.requestToken === savedComponentState.requestToken) {
+                                localComponentState.id = savedComponentState.id;
+                                localComponentState.postTime = savedComponentState.postTime;
+                                localComponentState.requestToken = null; // requestToken is no longer needed.
+                            }
+                        }
+                    }
+
+                    return saveStudentDataResponse;
+                }));
+
             }
         };
         
