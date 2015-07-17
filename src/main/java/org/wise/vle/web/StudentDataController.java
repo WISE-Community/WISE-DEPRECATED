@@ -88,12 +88,13 @@ public class StudentDataController {
 
 	private static boolean DEBUG = false;
 
-	// max size for all student work size, in bytes. Default:  500K=512000 bytes 
+	// max size for all student work size, in bytes. Default:  500K = 512000 bytes
     private int studentMaxWorkSize = 512000;
 
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView doGet(HttpServletRequest request, HttpServletResponse response)
 					throws ServletException, IOException {
+
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
 		

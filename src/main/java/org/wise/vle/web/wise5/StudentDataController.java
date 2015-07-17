@@ -144,6 +144,15 @@ public class StudentDataController {
                                     componentStateJSONObject.isNull("componentId") ? null : componentStateJSONObject.getString("componentId"),
                                     componentStateJSONObject.isNull("componentType") ? null : componentStateJSONObject.getString("componentType"),
                                     componentStateJSONObject.isNull("studentData") ? null : componentStateJSONObject.getString("studentData"));
+
+                            // before returning saved ComponentState, strip all fields except id, token, and responseToken to minimize response size
+                            componentState.setRun(null);
+                            componentState.setPeriod(null);
+                            componentState.setWorkgroup(null);
+                            componentState.setNodeId(null);
+                            componentState.setComponentId(null);
+                            componentState.setComponentType(null);
+                            componentState.setStudentData(null);
                             JSONObject savedComponentStateJSONObject = componentState.toJSON();
                             savedComponentStateJSONObject.put("requestToken", requestToken);
                             componentStatesResultJSONArray.put(savedComponentStateJSONObject);
