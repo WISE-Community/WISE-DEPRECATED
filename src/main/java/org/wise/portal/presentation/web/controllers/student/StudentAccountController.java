@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -95,7 +95,7 @@ public class StudentAccountController {
 			DuplicateUsernameException.class, ObjectNotFoundException.class, 
 			PeriodNotFoundException.class, HibernateOptimisticLockingFailureException.class,
 			StaleObjectStateException.class})
-	@RequestMapping(value={"/student/registerstudent.html","/student/updatestudentaccount.html"}, method=RequestMethod.POST)
+	@RequestMapping(value = {"/student/join", "/student/updatestudentaccount.html"}, method = RequestMethod.POST)
 	public synchronized String onSubmit(@ModelAttribute("studentAccountForm") StudentAccountForm accountForm, 
 			BindingResult result,
 			HttpServletRequest request,
@@ -116,7 +116,7 @@ public class StudentAccountController {
 		
 		studentAccountFormValidator.validate(accountForm, result);
 		if (result.hasErrors()) {
-			return "student/registerstudent";
+			return "student/join";
 		}
 
 		
@@ -127,7 +127,7 @@ public class StudentAccountController {
 		//get the context path e.g. /wise
 		String contextPath = request.getContextPath();
 		
-		String registerUrl = contextPath + "/student/registerstudent.html";
+		String registerUrl = contextPath + "/student/join";
 		String updateAccountInfoUrl = contextPath + "/student/updatestudentaccount.html";
 		
 		if(referrer != null && 
@@ -150,13 +150,13 @@ public class StudentAccountController {
 					if(!firstNameMatcher.matches()) {
 						//first name contains non letter characters
 						result.rejectValue("userDetails.firstname", "error.firstname-illegal-characters");
-			    		return "student/registerstudent";
+			    		return "student/join";
 					}
 					
 					if(!lastNameMatcher.matches()) {
 						//last name contains non letter characters
 						result.rejectValue("userDetails.lastname", "error.lastname-illegal-characters");
-			    		return "student/registerstudent";
+			    		return "student/join";
 					}
 					
 					User user = userService.createUser(userDetails);
@@ -182,13 +182,13 @@ public class StudentAccountController {
 				} catch (DuplicateUsernameException e) {
 					result.rejectValue("userDetails.username", "error.duplicate-username",
 							new Object[] { userDetails.getUsername() }, "Duplicate Username.");
-		    		return "student/registerstudent";
+		    		return "student/join";
 				} catch (ObjectNotFoundException e) {
 					result.rejectValue("projectCode", "error.illegal-projectcode");
-		    		return "student/registerstudent";
+		    		return "student/join";
 		    	} catch (PeriodNotFoundException e) {
 		    		result.rejectValue("projectCode", "error.illegal-projectcode");
-		    		return "student/registerstudent";
+		    		return "student/join";
 		    	}
 			} else {
 				User user = userService.retrieveUserByUsername(userDetails.getUsername());
@@ -220,7 +220,7 @@ public class StudentAccountController {
 			status.setComplete(); 
 	
 			modelMap.put(USERNAME_KEY, userDetails.getUsername());
-			return "student/registerstudentsuccess";
+			return "student/joinsuccess";
 		} else {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
@@ -240,7 +240,7 @@ public class StudentAccountController {
 		//get the context path e.g. /wise
 		String contextPath = request.getContextPath();
 		
-		String registerUrl = contextPath + "/student/registerstudent.html";
+		String registerUrl = contextPath + "/student/join";
 		String updateAccountInfoUrl = contextPath + "/student/updatestudentaccount.html";
 		
 		if(referrer != null && 
@@ -260,16 +260,16 @@ public class StudentAccountController {
 		return mav;
 	}
 
-    @RequestMapping(value={"/student/registerstudent.html"},method=RequestMethod.GET) 
+    @RequestMapping(value = "/student/join", method = RequestMethod.GET)
     public String initializeFormNewStudent(ModelMap model) { 
 		model.put("genders", Gender.values());
 		model.put("accountQuestions",AccountQuestion.values());
 		model.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es"});
 		model.addAttribute("studentAccountForm", new StudentAccountForm());
-        return "student/registerstudent"; 
+        return "student/join";
     } 
     
-    @RequestMapping(value={"/student/updatestudentaccount.html"},method=RequestMethod.GET) 
+    @RequestMapping(value = "/student/updatestudentaccount.html", method = RequestMethod.GET)
     public String initializeFormExistingStudent(ModelMap model) { 
 		User user = ControllerUtil.getSignedInUser();
 		model.put("genders", Gender.values());
@@ -280,7 +280,7 @@ public class StudentAccountController {
     } 
     
 	@InitBinder
-	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception
+	protected void initBinder(ServletRequestDataBinder binder) throws Exception
 	{
 	  binder.registerCustomEditor(Date.class,
 	    new CustomDateEditor(new SimpleDateFormat("MM/dd"), false)

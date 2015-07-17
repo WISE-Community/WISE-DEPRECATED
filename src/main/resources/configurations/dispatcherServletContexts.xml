@@ -135,11 +135,13 @@
 
 	<!-- these are resources that do not need to be backed by controllers and 
 		should be handled before looking through the SimpleUrlHandlerMapping mappings -->
+	<mvc:resources mapping="/portal/javascript/**" location="/portal/javascript/" order="1" />
+	<mvc:resources mapping="/portal/themes/**" location="/portal/themes/" order="1" />
 	<mvc:resources mapping="/vle/**" location="/vle/" order="1" />
 	<mvc:resources mapping="/wise5/**" location="/wise5/" order="1" />
-		<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
-        <mvc:resources mapping="/curriculumWISE5/**" location="/curriculumWISE5/" order="1" />
-		<mvc:resources mapping="/nodes/**" location="/nodes/" order="1" />
+	<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
+	<mvc:resources mapping="/curriculumWISE5/**" location="/curriculumWISE5/" order="1" />
+	<mvc:resources mapping="/nodes/**" location="/nodes/" order="1" />
 	<mvc:resources mapping="/navigation/**" location="/navigation/" order="1" />
 		
 	<mvc:interceptors>
@@ -154,7 +156,7 @@
 		<property name="order" value="2"></property>
 		<property name="mappings">
 			<value>
-				/**/*.html=urlFilenameViewController
+				/**/*=urlFilenameViewController
 			</value>
 		</property>
 		<property name="interceptors">

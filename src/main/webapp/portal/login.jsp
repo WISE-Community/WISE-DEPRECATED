@@ -17,7 +17,7 @@ function validateLoginForm() {
 	var username=document.getElementById("username").value;
 	var password=document.getElementById("password").value;
 	if (username==null || username=="" || password==null || password=="") {
-	  	window.location="login.html?failed=true";
+	  	window.location="login?failed=true";
 	  	return false;
 	}
 	return true;
@@ -80,8 +80,8 @@ function validateLoginForm() {
 			    	<div id="forgotLogin">   
 				        <ul id="signInLinkPosition"> <!-- TODO: make these open in top window -->
 				       		<li><a href="forgotaccount/selectaccounttype.html" class="forgotlink"><spring:message code="login.forgot"/></a>  </li>
-				       		<li><a href="signup.html" class="joinlink"><spring:message code="login.createAccount"/></a></li>
-				       		<li><a href="${contextPath}/index.html" class="joinlink"><spring:message code="returnHome"/></a></li>
+				       		<li><a href="join" class="joinlink"><spring:message code="login.createAccount"/></a></li>
+				       		<li><a href="${contextPath}" class="joinlink"><spring:message code="returnHome"/></a></li>
 				        </ul>
 			 		</div>
 				</div>

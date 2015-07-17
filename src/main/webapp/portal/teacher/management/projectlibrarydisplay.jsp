@@ -1425,7 +1425,7 @@
 	 */
 	function copy(pID, type, name, fileName, relativeProjectFilePathUrl){
 		if (typeof(isTeacher) == "undefined") {
-			window.location.href = "${contextPath}/login.html";
+			window.location.href = "${contextPath}/login";
 			return;
 		}
 		var $copyDialog = '<div id="copyDialog" class="dialog"><p><spring:message code="teacher.management.projectlibrarydisplay.copy_info" /></p>' +

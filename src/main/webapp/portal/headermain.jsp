@@ -1,7 +1,7 @@
 <div id="header">
 	<div class="banner">
 		
-		<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"></a>
+		<a id="name" href="${contextPath}" title="<spring:message code="wiseHomepage" />"></a>
 
 		<sec:authorize access="!hasAnyRole('ROLE_USER')">
 			<script type="text/javascript">
@@ -9,7 +9,7 @@
 					var username = document.getElementById("username").value;
 					var password = document.getElementById("password").value;
 					if (username == null || username == "" || password == null || password == "") {
-						window.location = "login.html?failed=true";
+						window.location = "login?failed=true";
 						return false;
 					}
 					return true;
@@ -42,7 +42,7 @@
 				<ul class="welcome-menu">
 					<li><spring:message code="accountmenu.welcomeNewToWise" /></li>
 				</ul>
-				<a id="createAccountButton" href="${contextPath}/signup.html" class="wisebutton signup" title="<spring:message code="accountmenu.createAccountTitle"/>">
+				<a id="createAccountButton" href="${contextPath}/join" class="wisebutton signup" title="<spring:message code="accountmenu.createAccountTitle"/>">
 					<spring:message code="accountmenu.createAccount" />
 				</a>
 			</div>
@@ -50,7 +50,7 @@
 
 		<sec:authorize access="hasRole('ROLE_USER')">
 			<div id="userInfoBlock" class="userInfo">
-                <a id="signOut" class="wisebutton minibutton" href="<c:url value="/logout"/>" title="<spring:message code="signOutTitle"/>"><spring:message code="signOut" /></a>
+                <a id="signOut" class="wisebutton minibutton" href="${contextPath}/logout" title="<spring:message code="signOutTitle"/>"><spring:message code="signOut" /></a>
 				<div id="userName">
 					<c:set var="firstName">
 						<sec:authentication property="principal.firstname" htmlEscape="false" />
@@ -66,15 +66,15 @@
 					</div>
 				</sec:authorize>
 				<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
-					<a id="adminTools" class="wisebutton smallbutton-wide" href="${contextPath}/admin/index.html"><spring:message code="accountmenu.admin" /></a>
+					<a id="adminTools" class="wisebutton smallbutton-wide" href="${contextPath}/admin"><spring:message code="accountmenu.admin" /></a>
 				</sec:authorize>
 				<sec:authorize access="hasRole('ROLE_RESEARCHER')">
-					<a id="researchTools" class="wisebutton smallbutton-wide" href="${contextPath}/admin/index.html">
+					<a id="researchTools" class="wisebutton smallbutton-wide" href="${contextPath}/admin">
 						<spring:message code="accountmenu.research" />
 					</a>
 				</sec:authorize>
 				<sec:authorize access="hasRole('ROLE_STUDENT')">
-					<a id="researchTools" class="wisebutton smallbutton-wide" href="${contextPath}/student/index.html">
+					<a id="researchTools" class="wisebutton smallbutton-wide" href="${contextPath}/student">
 						<spring:message code="accountmenu.student" />
 					</a>
 				</sec:authorize>
@@ -100,7 +100,7 @@
 									<li><a href="${contextPath}/author/authorproject.html"><spring:message code="accountmenu.authoring" /></a></li>
 								</ul>
 							</li>
-							<li class="level1 menu3"><a href="${contextPath}/teacher/index.html"><spring:message code="accountmenu.teacherHome" /></a></li>
+							<li class="level1 menu3"><a href="${contextPath}/teacher"><spring:message code="accountmenu.teacherHome" /></a></li>
 					</ul>
 				</div>
 			</sec:authorize>
@@ -109,7 +109,9 @@
 					<ul class="welcome-menu">
 						<li><spring:message code="accountmenu.welcomeNewToWise" /></li>
 					</ul>
-					<a id="createAccountButton" href="${contextPath}/signup.html" class="wisebutton signup" title="<spring:message code="accountmenu.createAccountTitle"/>"><spring:message code="accountmenu.createAccount" /></a>
+					<a id="createAccountButton" href="${contextPath}/join" class="wisebutton signup" title="<spring:message code="accountmenu.createAccountTitle"/>">
+						<spring:message code="accountmenu.createAccount" />
+					</a>
 				</div>
 			</sec:authorize>
 		</sec:authorize>

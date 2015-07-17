@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,10 +49,9 @@ import com.ibm.icu.util.Calendar;
  * Controller for Student's index page
  *
  * @author Hiroki Terashima
- * @version $Id$
  */
 @Controller
-@RequestMapping("/student/index.html")
+@RequestMapping("/student")
 public class StudentIndexController {
 
 	@Autowired
@@ -70,8 +68,6 @@ public class StudentIndexController {
 	
 	private final static String CURRENT_DATE = "current_date";
 
-	static final String DEFAULT_PREVIEW_WORKGROUP_NAME = "Your test workgroup";
-
 	private static final String VIEW_ANNOUNCEMENTS_RUNID = "announcementRunIds";
 
 	private static final String SHOW_NEW_ANNOUNCEMENTS = "showNewAnnouncements";
@@ -84,8 +80,7 @@ public class StudentIndexController {
 
 	@RequestMapping(method=RequestMethod.GET)
 	protected ModelAndView handleGET(
-			HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+			HttpServletRequest request) throws Exception {
 
     	ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
     	ControllerUtil.addUserToModelAndView(modelAndView);
@@ -139,7 +134,7 @@ public class StudentIndexController {
 		}
 		
 		String showNewAnnouncements = request.getParameter(SHOW_NEW_ANNOUNCEMENTS);
-		boolean isShowNewAnnouncements = false;
+		boolean isShowNewAnnouncements;
 		if (showNewAnnouncements == null) {
 			isShowNewAnnouncements = true;
 		} else {

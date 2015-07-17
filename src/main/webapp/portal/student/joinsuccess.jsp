@@ -35,9 +35,9 @@
 					    <div class="instructions"><spring:message code="student.registerstudentsuccess.usernameExample"/></div>
 					</div>
 					<div><spring:message code="student.registerstudentsuccess.registerMoreTeammates"/></div>
-					<div><a href="registerstudent.html" class="wisebutton"><spring:message code="student.registerstudentsuccess.createNewAccount"/></a></div>
+					<div><a href="join" class="wisebutton"><spring:message code="student.registerstudentsuccess.createNewAccount"/></a></div>
 					<div><spring:message code="student.registerstudentsuccess.startUsingWISE"/></div>
-					<div><a href="${contextPath}/login.html" class="wisebutton"><spring:message code="student.registerstudentsuccess.signIn"/></a></div>
+					<div><a href="${contextPath}/login" class="wisebutton"><spring:message code="student.registerstudentsuccess.signIn"/></a></div>
 				</div>
 			</div>
 		</div>

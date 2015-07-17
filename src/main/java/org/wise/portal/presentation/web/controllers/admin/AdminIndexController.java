@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -25,7 +25,6 @@ package org.wise.portal.presentation.web.controllers.admin;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -47,7 +45,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.admin.DailyAdminJob;
-import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.portal.PortalService;
@@ -55,10 +52,9 @@ import org.wise.portal.service.portal.PortalService;
 /**
  * Controller for Admin Index page
  * @author Hiroki Terashima
- * @version $Id:$
  */
 @Controller
-@RequestMapping("/admin/index.html")
+@RequestMapping("/admin")
 public class AdminIndexController {
 
 	private static final String MASTER_GET_WISE_INFO_URL = "http://wise4.org/getWISEInfo.php";
@@ -78,9 +74,8 @@ public class AdminIndexController {
 	private DailyAdminJob adminJob;
 
 	@RequestMapping(method = RequestMethod.GET)
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		ModelAndView modelAndView = new ModelAndView();
+	protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
+		ModelAndView modelAndView = new ModelAndView("admin/index");
 		
 		String thisWISEVersion = null;  // local WISE version  e.g. "4.8", "4.9.1", etc
 		String globalWISEVersion = null;  // master WISE version    e.g. "4.8", "4.9.1", etc

@@ -221,7 +221,7 @@ $(document).ready(function() {
 									<a id="changePasswordLink" class="wisebutton altbutton-small"><spring:message code="changePassword" /></a>
 								</li>
 								<li>
-									<a class="wisebutton altbutton-small" href="<c:url value="/logout"/>" id="studentsignout"><spring:message code="signOut" /></a>
+									<a class="wisebutton altbutton-small" href="/logout" id="studentsignout"><spring:message code="signOut" /></a>
 								</li>
 							</ul>
 						</div>
@@ -312,16 +312,16 @@ $(document).ready(function() {
 												
 											<c:choose>
 												<c:when test="${studentRunInfo.workgroup == null}">
-													<li class="startProject"><a href='startproject.html?runId=${studentRunInfo.run.id}' class="wisebutton" id='${studentRunInfo.run.id}' ><spring:message code="student.index.runProject"/></a></li>
+													<li class="startProject"><a href='${contextPath}/student/startproject?runId=${studentRunInfo.run.id}' class="wisebutton" id='${studentRunInfo.run.id}' ><spring:message code="student.index.runProject"/></a></li>
 												</c:when>
 												<c:otherwise>
 													<c:choose>
 														<c:when test="${fn:length(studentRunInfo.workgroup.members) == 1}">
-															<li class="startProject"><a href="startproject.html?runId=${studentRunInfo.run.id}"
+															<li class="startProject"><a href="${contextPath}/student/startproject?runId=${studentRunInfo.run.id}"
 																id='${studentRunInfo.run.id}' class="wisebutton"><spring:message code="student.index.runProject"/></a></li>
 														</c:when>
 														<c:otherwise>
-															<li class="startProject"><a href='teamsignin.html?runId=${studentRunInfo.run.id}' 
+															<li class="startProject"><a href='${contextPath}/student/teamsignin.html?runId=${studentRunInfo.run.id}'
 																id='${studentRunInfo.run.id}' class="wisebutton"><spring:message code="student.index.runProject"/></a></li>
 														</c:otherwise>														
 													</c:choose>
@@ -395,7 +395,7 @@ $(document).ready(function() {
 									<td rowspan="5" style="width:27%; padding:2px;">
 									  	<ul class="studentActionList">
 											<li class="startProject">
-												<a href="startproject.html?runId=${studentRunInfo.run.id}" class="wisebutton"><spring:message code="review"/></a>
+												<a href="${contextPath}/student/startproject?runId=${studentRunInfo.run.id}" class="wisebutton"><spring:message code="review"/></a>
 											</li>
 										</ul>
 								 	</td>
