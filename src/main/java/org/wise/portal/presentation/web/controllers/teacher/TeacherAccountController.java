@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -88,7 +88,7 @@ public class TeacherAccountController {
 	 * @param modelMap the model object that contains values for the page to use when rendering the view
 	 * @return the path of the view to display
 	 */
-	@RequestMapping(value={"/teacher/registerteacher.html"},method=RequestMethod.GET)
+	@RequestMapping(value={"/teacher/join"},method=RequestMethod.GET)
 	public String initializeFormNewTeacher(ModelMap modelMap) throws Exception {
 		//create the teacher account form object
 		TeacherAccountForm teacherAccountForm = new TeacherAccountForm();
@@ -99,7 +99,7 @@ public class TeacherAccountController {
 		//populate the model with other objects the form requires
 		populateModelMap(modelMap);
 
-		return "teacher/registerteacher";
+		return "teacher/join";
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class TeacherAccountController {
 	/**
 	 * Shows page where teacher selects between changing password or changing other account information
 	 */
-	@RequestMapping(value={"/teacher/management/updatemyaccount.html"},method=RequestMethod.GET)
+	@RequestMapping(value={"/teacher/management/updatemyaccount.html"}, method=RequestMethod.GET)
 	public String updateMyAccountIntialPage() {
 		return "teacher/management/updatemyaccount";
 	}
@@ -164,7 +164,7 @@ public class TeacherAccountController {
 	 * @param model the object that contains values to be displayed on the page
 	 * @return the path of the view to display
 	 */
-	@RequestMapping(value={"/teacher/registerteacher.html","/teacher/management/updatemyaccountinfo.html"}, method=RequestMethod.POST)
+	@RequestMapping(value={"/teacher/join", "/teacher/management/updatemyaccountinfo.html"}, method=RequestMethod.POST)
 	protected String onSubmit(
 			@ModelAttribute("teacherAccountForm") TeacherAccountForm accountForm, 
 			BindingResult bindingResult, 
@@ -178,7 +178,7 @@ public class TeacherAccountController {
 		//get the context path e.g. /wise
 		String contextPath = request.getContextPath();
 
-		String registerUrl = contextPath + "/teacher/registerteacher.html";
+		String registerUrl = contextPath + "/teacher/join";
 		String updateAccountInfoUrl = contextPath + "/teacher/management/updatemyaccountinfo.html";
 
 		if(referrer.contains(domain + registerUrl) || 
@@ -194,10 +194,10 @@ public class TeacherAccountController {
 				userDetails.setSignupdate(Calendar.getInstance().getTime());
 				//validate the form
 				teacherAccountFormValidator.validate(accountForm, bindingResult);
-				if(bindingResult.hasErrors()) {
+				if (bindingResult.hasErrors()) {
 					//there were errors
 					populateModelMap(modelMap);
-					return "teacher/registerteacher";
+					return "teacher/join";
 				}
 
 				try {
@@ -211,12 +211,12 @@ public class TeacherAccountController {
 					thread.start();
 					modelMap.addAttribute(USERNAME_KEY, userDetails.getUsername());
 					modelMap.addAttribute(DISPLAYNAME_KEY, userDetails.getDisplayname());
-					return "teacher/registerTeacherConfirm";
+					return "teacher/joinsuccess";
 				}
 				catch (DuplicateUsernameException e) {
 					bindingResult.rejectValue("username", "error.duplicate-username", new Object[] { userDetails.getUsername() }, "Duplicate Username.");
 					populateModelMap(modelMap);
-					return "teacher/registerteacher";
+					return "teacher/join";
 				}
 			} else {
 				// we're updating an existing teacher's account
@@ -273,7 +273,7 @@ public class TeacherAccountController {
 			//the request is not coming from a valid domain address so we will not allow it
 			bindingResult.reject("Forbidden");
 			populateModelMap(modelMap);
-			return "teacher/registerteacher";
+			return "teacher/join";
 		}
 	}
 

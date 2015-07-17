@@ -98,7 +98,7 @@ public class InformationController {
 			throws IOException, NumberFormatException, ObjectNotFoundException{
 		// make sure that the user is logged in
 		if (ControllerUtil.getSignedInUser() == null) {
-			response.sendRedirect("/login.html");
+			response.sendRedirect("/login");
 			return;
 		}
 		
@@ -484,13 +484,6 @@ public class InformationController {
 			// the url to get/post student data
 			String studentDataURL = wiseBaseURL + "/studentData.html";
 
-			// url to get/post component state (WISE5 only)
-			// TODO: hiroki remove .html from end of get/post request
-			String componentStateURL = wiseBaseURL + "/student/componentState.html";
-
-			// url to get/post action log (WISE5 only)
-			String actionLogURL = wiseBaseURL + "/student/actionLog.html";
-
 			// URL to get/post annotations
 	    	String annotationsURL = wiseBaseURL + "/annotation.html?type=annotation&runId=" + runId;
 
@@ -571,9 +564,7 @@ public class InformationController {
 				Integer wiseVersion = project.getWiseVersion();
 				if (wiseVersion != null && wiseVersion == 5) {
 	                config.put("userInfo", getUserInfo(request));
-					config.put("componentStateURL", componentStateURL);
-					config.put("actionLogURL", actionLogURL);
-					config.put("studentDataURL", wiseBaseURL + "/student/data.html");
+					config.put("studentDataURL", wiseBaseURL + "/student/data");
 				}
 				
 				// add the config fields specific to the teacher grading
@@ -625,7 +616,7 @@ public class InformationController {
             config.put("studentUploadsBaseURL", studentUploadsBaseWWW);
 			config.put("theme", "WISE");
             config.put("cRaterRequestURL", cRaterRequestURL);
-			config.put("mainHomePageURL", contextPath + "/index.html");
+			config.put("mainHomePageURL", contextPath);
             config.put("sessionLogOutURL", contextPath + "/logout");
 
             if ("preview".equals(mode)) {

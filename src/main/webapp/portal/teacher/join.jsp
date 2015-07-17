@@ -19,11 +19,11 @@
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
 
 <script type="text/javascript">
-$(document).ready(function(){
+$(document).ready(function() {
 
-	//focus cursor into the First Name field on page ready iff there are no errors
+	// focus cursor into the First Name field on page ready iff there are no errors
 	if ($(".errorMsgNoBg").children().length == 0) {
-		if($('#teacherFirstName').length){
+		if ($('#teacherFirstName').length) {
 			$('#teacherFirstName').focus();
 		}
 	}
@@ -39,21 +39,21 @@ $(document).ready(function(){
  */
 function checkForExistingAccountsAndCreateAccount() {
 	
-	 if (checkIfLegalAcknowledged()){
+	 if (checkIfLegalAcknowledged()) {
 		//get the first name and last name from the form
 		var firstName = $('#teacherFirstName').val();
 		var lastName = $('#teacherLastName').val();
 
 		 //check to make sure first name and last name are latin-based characters
-		 if( /[^a-zA-Z0-9]/.test( firstName ) ) {
+		 if ( /[^a-zA-Z0-9]/.test( firstName ) ) {
 			alert("<spring:message code='error.firstname-illegal-characters'/>");
 			return;
-		 } else if( /[^a-zA-Z0-9]/.test( lastName ) ) {
+		 } else if ( /[^a-zA-Z0-9]/.test( lastName ) ) {
 			alert("<spring:message code='error.lastname-illegal-characters'/>");
 			return;
 	     }
 
-		 if(checkForExistingAccounts(firstName,lastName)) {
+		 if (checkForExistingAccounts(firstName,lastName)) {
 			//accounts exist, ask teacher if these accounts are theirs
 
 			//get the JSON array of existing accounts
@@ -67,7 +67,7 @@ function checkForExistingAccountsAndCreateAccount() {
 		
 			existingAccountsHtml += "<h1 style='color:red;text-align:center'><spring:message code='teacher.registerteacher.warning'/></h1>";
 			
-			if(existingAccountsArray.length > 1) {
+			if (existingAccountsArray.length > 1) {
 				//message to display if we found multiple accounts
 				existingAccountsHtml += "<p style='color:red'><spring:message code='teacher.registerteacher.accountsAlreadyExistIfYoursPleaseUse'/></p>";
 			} else {
@@ -83,7 +83,7 @@ function checkForExistingAccountsAndCreateAccount() {
 				var userName = existingAccountsArray[x];
 				
 				//make the user name a link to the login page that will pre-populate the user name field
-				existingAccountsHtml += "<a href='../login.html?userName=" + userName + "'>";
+				existingAccountsHtml += "<a href='../login?userName=" + userName + "'>";
 				existingAccountsHtml += userName;
 				existingAccountsHtml += "</a>";
 				
@@ -131,7 +131,7 @@ function checkForExistingAccounts(firstName, lastName) {
 		data:data,
 		dataType:'html',
 		success:function(response) {
-			if(response != null) {
+			if (response != null) {
 				//set the response into a hidden div so we can access it later
 				$('#existingAccounts').html(response);
 			}
@@ -141,7 +141,7 @@ function checkForExistingAccounts(firstName, lastName) {
 
 	var existingAccounts = false;
 	
-	if($('#existingAccounts').html() != '' && $('#existingAccounts').html() != '[]') {
+	if ($('#existingAccounts').html() != '' && $('#existingAccounts').html() != '[]') {
 		//there are existing accounts that match
 		existingAccounts = true;
 	}
@@ -154,7 +154,7 @@ function checkForExistingAccounts(firstName, lastName) {
  * Otherwise, return false
  */
 function checkIfLegalAcknowledged () {
-	if($('#legalAcknowledged').is(":checked")){
+	if ($('#legalAcknowledged').is(":checked")) {
 		return true;
 	}else{
 		return false;
@@ -169,11 +169,11 @@ function checkIfReallyWantToCreateAccount() {
 	//ask the student again 
 	var answer = confirm("<spring:message code='teacher.registerteacher.pleaseDoNotCreateDuplicateAccounts'/>");
 	
-	if(answer) {
+	if (answer) {
 		//create the account if they answered 'OK'
 		createAccount();
 	}
-}
+};
 
 /**
  * Submit the form to create the account
@@ -182,13 +182,13 @@ function createAccount() {
 	$('#teacherRegForm').submit();
 };
 
-$(document).ready(function(){
+$(document).ready(function() {
 	/*
 	 * Set up terms of use dialog
 	 */
-	$('#terms').click(function(){
+	$('#terms').click(function() {
 		var termsdiv = $('<div id="termsDialog"></div>');
-		termsdiv.load('${contextPath}/pages/termsofuse.html').dialog({
+		termsdiv.load('${contextPath}/pages/termsofuse').dialog({
 			modal:true,
 			resizeable:false,
 			title:'<spring:message code="teacher.registerteacher.termsOfUse" />',
@@ -202,7 +202,6 @@ $(document).ready(function(){
 			buttons: { "Ok": function() { $(this).dialog("close"); }}
 		});
 	});
-
 });
 </script>
 
@@ -214,7 +213,7 @@ $(document).ready(function(){
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage"/>"></a>
+				<a id="name" href="${contextPath}" title="<spring:message code="wiseHomepage"/>"></a>
 			</div>
 			
 			<div class="infoContent">
@@ -231,7 +230,7 @@ $(document).ready(function(){
 						</spring:bind>
 					</div>
 					
-					<form:form method="post" action="registerteacher.html" commandName="teacherAccountForm" id="teacherRegForm" autocomplete='off'>  
+					<form:form method="post" action="join" commandName="teacherAccountForm" id="teacherRegForm" autocomplete='off'>
 					  <table class="regTable">
 					  	<tr>
 					  		<td><label for="firstname" id="firstname1"><spring:message code="teacher.registerteacher.firstName" /></label></td>
@@ -357,7 +356,7 @@ $(document).ready(function(){
                
 				 	 <div id="regButtons">
 				 	  	<a style="margin-bottom:1em;" id="createAccountLink" class="wisebutton" onclick="checkForExistingAccountsAndCreateAccount()"><spring:message code="teacher.registerteacher.createAccount"/></a>
-				 	  	<a href="${contextPath}/index.html"><spring:message code="teacher.registerteacher.cancel"/></a>
+				 	  	<a href="${contextPath}"><spring:message code="teacher.registerteacher.cancel"/></a>
 					 </div>
 					</form:form>
 					<div id="existingAccounts" style="display:none"></div>

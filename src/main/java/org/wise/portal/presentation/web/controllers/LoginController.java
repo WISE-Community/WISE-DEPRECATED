@@ -32,19 +32,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Controller that backs /login.html, for when user fails to log in.
+ * Controller that backs the Log-In form, for when user fails to log in.
  * 
  * @author Cynick Young
  * @author Geoffrey Kwan
  */
 @Controller
-@RequestMapping("/login.html")
+@RequestMapping("/login")
 public class LoginController {
 
 	@Autowired
 	private Properties wiseProperties;
 	
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public String handleGET(
 			HttpServletRequest request,
 			ModelMap modelMap) throws Exception {
@@ -54,10 +54,10 @@ public class LoginController {
 		String reCaptchaEmpty = request.getParameter("reCaptchaEmpty");
 		String reCaptchaFailed = request.getParameter("reCaptchaFailed");
 
-		//get the user name that we will use to pre-populate the Username field
+		// get the user name that we will use to pre-populate the Username field
 		String userName = request.getParameter("userName");
 		
-		//get the public and private keys from the wise.properties
+		// get the public and private keys from the wise.properties
 		String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
 		String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
 
@@ -65,31 +65,31 @@ public class LoginController {
 			modelMap.put("failed", Boolean.TRUE);
 		}
 
-		if(StringUtils.hasText(redirectUrl)){
+		if (StringUtils.hasText(redirectUrl)) {
 			modelMap.put("redirect",redirectUrl);
 		}
 
-		if(userName != null) {
-			//make the userName available to the jsp page
+		if (userName != null) {
+			// make the userName available to the jsp page
 			modelMap.put("userName", userName);
 		}
 		
 		/*
 		 * all three variables must be available in order for captcha to work
 		 */
-		if(requireCaptcha != null && reCaptchaPublicKey != null && reCaptchaPrivateKey != null) {
+		if (requireCaptcha != null && reCaptchaPublicKey != null && reCaptchaPrivateKey != null) {
 			if (StringUtils.hasText(requireCaptcha)) {
-				//make the page require captcha
+				// make the page require captcha
 				modelMap.put("requireCaptcha", Boolean.TRUE);
 				modelMap.put("reCaptchaPublicKey", reCaptchaPublicKey);
 				modelMap.put("reCaptchaPrivateKey", reCaptchaPrivateKey);
 				
-		        if(StringUtils.hasText(reCaptchaFailed)) {
-		          //the user has entered the ReCaptcha text incorrectly
+		        if (StringUtils.hasText(reCaptchaFailed)) {
+		          // the user has entered the ReCaptcha text incorrectly
 		            modelMap.put("reCaptchaFailed", Boolean.TRUE);
 		        }
 		        
-		        if(StringUtils.hasText(reCaptchaEmpty)) {
+		        if (StringUtils.hasText(reCaptchaEmpty)) {
 		            /*
 		             * the user is required to enter the ReCaptcha text
 		             * but they have left the field empty

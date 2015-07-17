@@ -4,8 +4,8 @@
 	 		<div id="footerLinks">
 	 			<div id="wiseLinks">
 	 				<ul>
-						<li class="first"><a href="${contextPath}/index.html"><spring:message code="footer.home" /></a></li>
-						<li><a href="${contextPath}/signup.html"><spring:message code="footer.createAccount" /></a></li>
+						<li class="first"><a href="${contextPath}"><spring:message code="footer.home" /></a></li>
+						<li><a href="${contextPath}/join"><spring:message code="footer.createAccount" /></a></li>
 						<li><a href="${contextPath}/pages/wise-advantage.html"><spring:message code="footer.wiseAdvantage" /></a></li>
 						<li><a href="${contextPath}/pages/features.html"><spring:message code="footer.wiseFeatures" /></a></li>
 						<li><a href="${contextPath}/pages/teacher-tools.html"><spring:message code="footer.teacherTools" /></a></li>

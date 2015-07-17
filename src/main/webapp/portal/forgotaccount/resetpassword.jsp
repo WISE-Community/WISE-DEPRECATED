@@ -70,7 +70,7 @@
 					<c:if test="${displayLoginLink == true}">
 						<div><spring:message code="forgotaccount.resetpassword.clickButtonToSignIn" /></div>
 						<br>
-						<a href="${contextPath}/login.html" class="wisebutton" style="margin-top:.25em;"><spring:message code="forgotaccount.resetpassword.signIn"/></a>
+						<a href="${contextPath}/login" class="wisebutton" style="margin-top:.25em;"><spring:message code="forgotaccount.resetpassword.signIn"/></a>
 						<br>
 						<br>
 						<br>

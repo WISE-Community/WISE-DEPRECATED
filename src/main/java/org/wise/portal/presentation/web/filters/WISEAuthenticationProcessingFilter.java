@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2014 Regents of the University of California (Regents). 
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -12,7 +12,7 @@
  * 
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE. THE SOFTWAREAND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  * 
@@ -64,7 +64,7 @@ import org.wise.portal.service.user.UserService;
  * put it into the http session.
  *
  * @author Hiroki Terashima
- * @version $Id$
+ * @author Geoffrey Kwan
  */
 public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -74,11 +74,10 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
     @Autowired
     private Properties wiseProperties;
 
-    public static final String STUDENT_DEFAULT_TARGET_PATH = "/student/index.html";
-    public static final String TEACHER_DEFAULT_TARGET_PATH = "/teacher/index.html";
-    public static final String ADMIN_DEFAULT_TARGET_PATH = "/admin/index.html";
-    public static final String RESEARCHER_DEFAULT_TARGET_PATH = "/teacher/index.html";
-    public static final String LOGOUT_PATH = "/logout";
+    public static final String STUDENT_DEFAULT_TARGET_PATH = "/student";
+    public static final String TEACHER_DEFAULT_TARGET_PATH = "/teacher";
+    public static final String ADMIN_DEFAULT_TARGET_PATH = "/admin";
+    public static final String RESEARCHER_DEFAULT_TARGET_PATH = "/teacher";  // TODO eventually researcher will have their own page...
     public static final String LOGIN_DISABLED_MESSGE_PAGE = "/pages/maintenance.html";
 
     public static final Integer recentFailedLoginTimeLimit = 15;
@@ -102,20 +101,20 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
                     throws AuthenticationException {
         
         // check if the user is required to enter ReCaptcha text
-        if(isReCaptchaRequired(request, response)) {
+        if (isReCaptchaRequired(request, response)) {
             // the user is required to enter ReCaptcha text
             
             String errorMessage = null;
             
-            if(isReCaptchaResponseEmpty(request, response)) {
+            if (isReCaptchaResponseEmpty(request, response)) {
                 //the user has left the ReCaptcha field empty
                 errorMessage = "Empty ReCaptcha Text";
-            } else if(!isReCaptchaResponseValid(request, response)) {
+            } else if (!isReCaptchaResponseValid(request, response)) {
                 //the user has entered text into the ReCaptcha field but it is incorrect
                 errorMessage = "Incorrect ReCaptcha Text";
             }
             
-            if(errorMessage != null) {
+            if (errorMessage != null) {
                 try {
                     /*
                      * the user has not been authenticated because they did not
@@ -153,7 +152,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
         //check if the public and private ReCaptcha keys are valid
         boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
         
-        if(reCaptchaKeyValid) {
+        if (reCaptchaKeyValid) {
             //the ReCaptcha keys are valid
             
             //get the user name that was entered into the user name field
@@ -170,28 +169,28 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
              * will also check to make sure the captcha keys are valid otherwise
              * we won't use the captcha at all either.
              */
-            if(user != null) {
+            if (user != null) {
                 //get the user details
                 MutableUserDetails mutableUserDetails = (MutableUserDetails) user.getUserDetails();
 
-                if(mutableUserDetails != null) {
+                if (mutableUserDetails != null) {
                     //get the current time
                     Date currentTime = new Date();
 
                     //get the recent time they failed to log in
                     Date recentFailedLoginTime = mutableUserDetails.getRecentFailedLoginTime();
 
-                    if(recentFailedLoginTime != null) {
+                    if (recentFailedLoginTime != null) {
                         //get the time difference
                         long timeDifference = currentTime.getTime() - recentFailedLoginTime.getTime();
 
                         //check if the time difference is less than 15 minutes
-                        if(timeDifference < (WISEAuthenticationProcessingFilter.recentFailedLoginTimeLimit * 60 * 1000)) {
+                        if (timeDifference < (WISEAuthenticationProcessingFilter.recentFailedLoginTimeLimit * 60 * 1000)) {
                             //get the number of failed login attempts since recentFailedLoginTime
                             Integer numberOfRecentFailedLoginAttempts = mutableUserDetails.getNumberOfRecentFailedLoginAttempts();
 
                             //check if the user failed to log in 5 or more times
-                            if(numberOfRecentFailedLoginAttempts != null &&
+                            if (numberOfRecentFailedLoginAttempts != null &&
                                     numberOfRecentFailedLoginAttempts >= WISEAuthenticationProcessingFilter.recentFailedLoginAttemptsLimit) {
                                 result = true;
                             }
@@ -216,7 +215,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
         //get the value of the ReCaptcha field
         String reCaptchaResponseField = request.getParameter("recaptcha_response_field");
         
-        if(reCaptchaResponseField != null && !reCaptchaResponseField.equals("")) {
+        if (reCaptchaResponseField != null && !reCaptchaResponseField.equals("")) {
             //the user has entered something into the ReCaptcha field
             result = false;
         }
@@ -245,7 +244,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
             String reCaptchaResponseField = request.getParameter("recaptcha_response_field");
             String remoteAddr = request.getRemoteAddr();
             
-            if(reCaptchaChallengeField != null && reCaptchaResponseField != null && remoteAddr != null) {
+            if (reCaptchaChallengeField != null && reCaptchaResponseField != null && remoteAddr != null) {
                 //the user filled in the ReCaptcha
 
                 ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
@@ -275,7 +274,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
     public static boolean isReCaptchaKeyValid(String reCaptchaPublicKey, String recaptchaPrivateKey) {
         boolean isValid = false;
 
-        if(reCaptchaPublicKey != null && recaptchaPrivateKey != null) {
+        if (reCaptchaPublicKey != null && recaptchaPrivateKey != null) {
 
             //make a new instace of the captcha so we can make sure th key is valid
             ReCaptcha c = ReCaptchaFactory.newSecureReCaptcha(reCaptchaPublicKey, recaptchaPrivateKey, false);
@@ -324,7 +323,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
                  * 
                  * document.write('Input error: k: Format of site key was invalid\n');
                  */
-                if(!responseText.contains("Input error")) {
+                if (!responseText.contains("Input error")) {
                     //the text from the server does not contain the error so the key is valid
                     isValid = true;
                 }

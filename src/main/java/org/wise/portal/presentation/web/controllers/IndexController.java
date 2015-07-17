@@ -46,10 +46,9 @@ import org.wise.portal.service.project.ProjectService;
  * Controller for index pages in TELS
  *
  * @author Hiroki Terashima
- * @version $Id$
  */
 @Controller
-@RequestMapping("/index.html")
+@RequestMapping("/")
 public class IndexController {
 
 	@Autowired

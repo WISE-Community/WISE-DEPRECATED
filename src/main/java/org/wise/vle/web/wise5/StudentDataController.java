@@ -37,7 +37,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -61,7 +60,7 @@ public class StudentDataController {
     private RunService runService;
 
     @RequestMapping(method = RequestMethod.GET,
-            value = {"/student/componentState.html", "/student/data.html"})
+            value = "/student/data")
     public void handleGETWISE5StudentDataController(
             HttpServletResponse response,
             @RequestParam(value = "getComponentStates", defaultValue = "false") boolean getComponentStates,
@@ -115,7 +114,7 @@ public class StudentDataController {
      *                 }
      */
     @RequestMapping(method = RequestMethod.POST,
-            value = {"/student/data.html"})
+            value = "/student/data")
     public void handlePOSTWISE5StudentDataController(
             HttpServletResponse response,
             @RequestParam(value = "runId", required = true) Integer runId,
@@ -168,6 +167,5 @@ public class StudentDataController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

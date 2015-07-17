@@ -138,7 +138,7 @@ function checkForExistingAccountsAndCreateAccount() {
 			var userName = existingAccountsArray[x];
 
 			//make the user name a link to the login page that will pre-populate the user name field
-			existingAccountsHtml += "<a href='../login.html?userName=" + userName + "'>";
+			existingAccountsHtml += "<a href='../login?userName=" + userName + "'>";
 			existingAccountsHtml += userName;
 			existingAccountsHtml += "</a>";
 			
@@ -366,7 +366,7 @@ function checkRunCode() {
 		
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}/index.html" title="WISE Homepage"></a>
+				<a id="name" href="${contextPath}" title="WISE Homepage"></a>
 			</div>
 			
 			<div class="infoContent">
@@ -383,7 +383,7 @@ function checkRunCode() {
 						</spring:bind>
 					</div>
 
-					<form:form id="studentRegForm" commandName="studentAccountForm" method="post" action="registerstudent.html" autocomplete='off'>
+					<form:form id="studentRegForm" commandName="studentAccountForm" method="post" action="join" autocomplete='off'>
 					  
 					  <table class="regTable">
 					  	<tr>
@@ -502,7 +502,7 @@ function checkRunCode() {
 					      
 				  	<div style="margin-top:1em;">
 				 	  	<a style="margin-bottom:1em;" class="wisebutton" onclick="checkForExistingAccountsAndCreateAccount()"><spring:message code="student.registerstudent.createAccount"/></a>
-				 	  	<a href="${contextPath}/index.html"><spring:message code="cancel"/></a>
+				 	  	<a href="${contextPath}"><spring:message code="cancel"/></a>
 					 </div> 
 					 
 					 </form:form>

@@ -61,7 +61,7 @@
 	  				</div>
 					<div>
 						<c:forEach var="user" items="${users}">
-				    		<p><a href="${contextPath}/login.html?userName=${user.userDetails.username}">${user.userDetails.username}</a></p>
+				    		<p><a href="${contextPath}/login?userName=${user.userDetails.username}">${user.userDetails.username}</a></p>
 				  		</c:forEach>
 					</div>
 				</div>
