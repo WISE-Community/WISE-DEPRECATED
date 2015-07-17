@@ -923,8 +923,7 @@ define(['configService', 'projectService'], function(configService, projectServi
         */
         serviceObject.generateKey = function(length) {
             this.CHARS = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r", "s","t",
-                          "u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O",
-                          "P","Q","R","S","T", "U","V","W","X","Y","Z","0","1","2","3","4","5","6","7","8","9"];
+                          "u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9"];
 
             /* set default length if not specified */
             if (!length) {
@@ -944,7 +943,7 @@ define(['configService', 'projectService'], function(configService, projectServi
 
         serviceObject.saveComponentStatesToServer = function(componentStates) {
             
-            if (componentStates != null) {
+            if (componentStates != null && componentStates.length > 0) {
                 for (var c = 0; c < componentStates.length; c++) {
                     var componentState = componentStates[c];
 
@@ -969,19 +968,37 @@ define(['configService', 'projectService'], function(configService, projectServi
 
                 // make the request to post the student data
                 return $http(httpParams).then(angular.bind(this, function(result) {
+                    
+                    var componentStates = [];
+                    
+                    // get the local references to the component states that were posted
+                    if (result != null &&
+                            result.config != null &&
+                            result.config.params != null &&
+                            result.config.params.data != null &&
+                            result.config.params.data.componentStates != null) {
+                        componentStates = result.config.params.data.componentStates;
+                    }
+                    
                     var saveStudentDataResponse = result.data;
                     var savedComponentStates = saveStudentDataResponse.componentStates;
 
                     // set the id and postTime in the local componentState
                     for (var i = 0; i < savedComponentStates.length; i++) {
                         var savedComponentState = savedComponentStates[i];
-                        for (var l = 0; l < this.studentData.componentStates.length; l++) {
-                            var localComponentState = this.studentData.componentStates[l];
+                        
+                        /*
+                         * loop through all the component states that were posted
+                         * to find the one with the matching request token
+                         */
+                        for (var l = 0; l < componentStates.length; l++) {
+                            var localComponentState = componentStates[l];
                             if (localComponentState.requestToken != null &&
                                 localComponentState.requestToken === savedComponentState.requestToken) {
                                 localComponentState.id = savedComponentState.id;
                                 localComponentState.postTime = savedComponentState.postTime;
                                 localComponentState.requestToken = null; // requestToken is no longer needed.
+                                break;
                             }
                         }
                     }
