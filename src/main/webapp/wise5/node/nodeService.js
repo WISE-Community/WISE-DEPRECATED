@@ -300,7 +300,7 @@ define(['configService', 'studentDataService'], function(configService, studentD
          * @param partId the part id
          * @return the node content part
          */
-        serviceObject.getNodeContentPartById = function(nodeContent, partId) {
+        serviceObject.getComponentContentById = function(nodeContent, partId) {
             var nodeContentPart = null;
             
             if (nodeContent != null && partId != null) {

@@ -58,7 +58,7 @@ define(['app'], function(app) {
                 //this.importWork();
                 
                 // tell the parent controller that this node has loaded
-                this.nodeLoaded(this.nodeId);
+                //this.nodeLoaded(this.nodeId);
                 
                 // start the auto save interval
                 this.startAutoSaveInterval();
@@ -99,8 +99,16 @@ define(['app'], function(app) {
          * Called when the student clicks the save button
          */
         this.saveButtonClicked = function() {
+            
+            // notify the child components that the save button was clicked
+            $rootScope.$broadcast('nodeSaveClicked', {nodeId: this.nodeId});
+            
             var saveTriggeredBy = 'saveButton';
             
+            /*
+             * obtain the component states from the children and save them
+             * to the server
+             */
             this.createAndSaveComponentStates(saveTriggeredBy);
         };
         
@@ -108,8 +116,16 @@ define(['app'], function(app) {
          * Called when the student clicks the submit button
          */
         this.submitButtonClicked = function() {
+            
+            // notify the child components that the submit button was clicked
+            $rootScope.$broadcast('nodeSubmitClicked', {nodeId: this.nodeId});
+            
             var saveTriggeredBy = 'submitButton';
             
+            /*
+             * obtain the component states from the children and save them
+             * to the server
+             */
             this.createAndSaveComponentStates(saveTriggeredBy);
         };
         
@@ -129,11 +145,11 @@ define(['app'], function(app) {
                 if (lockAfterSubmit) {
                     // we need to lock the step after the student has submitted
                     
-                    // get the node visits for the node
-                    var nodeVisits = StudentDataService.getNodeVisitsByNodeId(nodeId);
+                    // get the component states for the node
+                    var componentStates = StudentDataService.getComponentStatesByNodeId(nodeId);
                     
-                    // check if the student has ever submitted work for this node
-                    var isSubmitted = NodeService.isWorkSubmitted(nodeVisits);
+                    // check if any of the component states were submitted
+                    var isSubmitted = NodeService.isWorkSubmitted(componentStates);
                     
                     if (isSubmitted) {
                         // the student has submitted work for this node
@@ -152,6 +168,22 @@ define(['app'], function(app) {
             
             if (this.nodeContent != null) {
                 components = this.nodeContent.components;
+            }
+            
+            if (components != null && this.isDisabled) {
+                for (var c = 0; c < components.length; c++) {
+                    var component = components[c];
+                    
+                    component.isDisabled = true;
+                }
+            }
+            
+            if (components != null && this.nodeContent.lockAfterSubmit) {
+                for (var c = 0; c < components.length; c++) {
+                    var component = components[c];
+                    
+                    component.lockAfterSubmit = true;
+                }
             }
             
             return components;
@@ -283,6 +315,24 @@ define(['app'], function(app) {
         };
         
         /**
+         * Check whether we need to lock the component after the student
+         * submits an answer.
+         */
+        this.isLockAfterSubmit = function() {
+            var result = false;
+            
+            if (this.componentContent != null) {
+                
+                // check the lockAfterSubmit field in the component content
+                if (this.componentContent.lockAfterSubmit) {
+                    result = true;
+                }
+            }
+            
+            return result;
+        };
+        
+        /**
          * Start the auto save interval for this node
          */
         this.startAutoSaveInterval = function() {
@@ -293,6 +343,10 @@ define(['app'], function(app) {
                     
                     var saveTriggeredBy = 'autoSave';
                     
+                    /*
+                     * obtain the component states from the children and save them
+                     * to the server
+                     */
                     this.createAndSaveComponentStates(saveTriggeredBy);
                 }
             }), this.autoSaveInterval);
@@ -305,10 +359,18 @@ define(['app'], function(app) {
             clearInterval(this.autoSaveIntervalId);
         };
         
+        /**
+         * Obtain the component states from the children and save them
+         * to the server
+         * @param saveTriggeredBy the reason why the save was triggered
+         */
         this.createAndSaveComponentStates = function(saveTriggeredBy) {
+            
+            // obtain the component states from the children
             var componentStates = this.createComponentStates(saveTriggeredBy);
             
             if (componentStates != null) {
+                // save the component states to the server
                 StudentDataService.saveComponentStatesToServer(componentStates);
             }
         };
@@ -340,33 +402,37 @@ define(['app'], function(app) {
                         // get the scope for the component
                         var childScope = $scope.componentToScope[componentId];
                         
-                        var studentWorkObject = null;
+                        var componentState = null;
                         
-                        if (childScope.getStudentWorkObject != null) {
+                        if (childScope.getComponentState != null) {
                             // get the student work object from the child scope
-                            studentWorkObject = childScope.getStudentWorkObject();
+                            componentState = childScope.getComponentState();
                         }
                         
-                        if (studentWorkObject != null) {
+                        if (componentState != null) {
                             
-                            studentWorkObject.runId = runId;
-                            studentWorkObject.periodId = periodId;
-                            studentWorkObject.workgroupId = workgroupId;
+                            componentState.runId = runId;
+                            componentState.periodId = periodId;
+                            componentState.workgroupId = workgroupId;
                             
                             // set the node id
-                            studentWorkObject.nodeId = this.nodeId;
+                            componentState.nodeId = this.nodeId;
                             
                             // set the component id into the student work object
-                            studentWorkObject.componentId = componentId;
+                            componentState.componentId = componentId;
                             
                             // set the component type
-                            studentWorkObject.componentType = component.componentType;
+                            componentState.componentType = component.componentType;
                             
                             // set the save triggered by value
-                            studentWorkObject.saveTriggeredBy = saveTriggeredBy;
+                            componentState.saveTriggeredBy = saveTriggeredBy;
+                            
+                            if (saveTriggeredBy === 'submitButton') {
+                                componentState.isSubmit = true;
+                            }
                             
                             // add the student work object to our components array
-                            componentStates.push(studentWorkObject);
+                            componentStates.push(componentState);
                         }
                     }
                 }
@@ -376,37 +442,57 @@ define(['app'], function(app) {
         };
         
         /**
-         * The function that child part controllers will call to register
-         * themselves with this Questionnaire node
+         * The function that child component controllers will call to register
+         * themselves with this node
          * @param childScope the child scope object
-         * @param part the node content for the part
+         * @param component the component content for the component
          */
-        $scope.registerPartController = function(childScope, part) {
+        $scope.registerComponentController = function(childScope, component) {
             
-            if ($scope != null && part != null) {
-                // get the part id
-                var partId = part.id;
+            if ($scope != null && component != null) {
+                // get the component id
+                var componentId = component.id;
                 
-                // add the part id to child scope mapping
-                $scope.componentToScope[partId] = childScope;
+                // add the component id to child scope mapping
+                $scope.componentToScope[componentId] = childScope;
             }
         }
         
+        /**
+         * Listen for the componentSaveClicked event which occurs when a 
+         * component has had its save button clicked
+         */
         $scope.$on('componentSaveClicked', angular.bind(this, function(event, args) {
-            this.saveButtonClicked();
-        }));
-        
-        $scope.$on('componentSubmitClicked', angular.bind(this, function(event, args) {
-            this.submitButtonClicked();
+            var saveTriggeredBy = 'saveButton';
+            
+            /*
+             * obtain the component states from the children and save them
+             * to the server
+             */
+            this.createAndSaveComponentStates(saveTriggeredBy);
         }));
         
         /**
-         * Listen for the partStudentDataChanged event that will come from 
-         * child part scopes
+         * Listen for the componentSubmitClicked event which occurs when a
+         * component has had its submit button clicked
+         */
+        $scope.$on('componentSubmitClicked', angular.bind(this, function(event, args) {
+            var saveTriggeredBy = 'submitButton';
+            
+            /*
+             * obtain the component states from the children and save them
+             * to the server
+             */
+            this.createAndSaveComponentStates(saveTriggeredBy);
+        }));
+        
+        /**
+         * Listen for the componentStudentDataChanged event that will come from 
+         * child component scopes
          * @param event
          * @param args the arguments provided when the event is fired
          */
-        $scope.$on('partStudentDataChanged', angular.bind(this, function(event, args) {
+        $scope.$on('componentStudentDataChanged', angular.bind(this, function(event, args) {
             /*
              * the student data in one of our child scopes has changed so
              * we will need to save
@@ -510,22 +596,22 @@ define(['app'], function(app) {
          * @param the node content for the part
          * @return the student data for the given part
          */
-        this.getComponentStateByPart = function(part) {
+        this.getComponentStateByComponent = function(component) {
             
-            var partStudentData = null;
+            var componentState = null;
             
-            if (part != null) {
-                // get the part id
-                var partId = part.id;
+            if (component != null) {
+                // get the component id
+                var componentId = component.id;
                 
-                if (partId != null) {
+                if (componentId != null) {
                     
-                    // get the latest component state for the part
-                    partStudentData = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, partId);
+                    // get the latest component state for the component
+                    componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, componentId);
                 }
             }
             
-            return partStudentData;
+            return componentState;
         };
         
         this.nodeLoaded = function(nodeId) {
@@ -569,11 +655,11 @@ define(['app'], function(app) {
         };
         
         /**
-         * Listen for the 'nodeOnExit' event which is fired when the student
+         * Listen for the 'exitNode' event which is fired when the student
          * exits the node. This will perform saving when the student exits
          * the node.
          */
-        $scope.$on('nodeOnExit', angular.bind(this, function(event, args) {
+        $scope.$on('exitNode', angular.bind(this, function(event, args) {
             
             // get the node that is exiting
             var nodeToExit = args.nodeToExit;
@@ -583,7 +669,7 @@ define(['app'], function(app) {
              * this node
              */
             if (nodeToExit.id === this.nodeId) {
-                var saveTriggeredBy = 'nodeOnExit';
+                var saveTriggeredBy = 'exitNode';
                 
                 // stop the auto save interval for this node
                 this.stopAutoSaveInterval();

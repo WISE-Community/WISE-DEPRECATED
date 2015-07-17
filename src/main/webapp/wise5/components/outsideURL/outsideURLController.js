@@ -25,7 +25,7 @@ define(['app'], function(app) {
         this.url = null;
         
         /**
-         * Perform setup of the node
+         * Perform setup of the component
          */
         this.setup = function() {
             
@@ -57,7 +57,7 @@ define(['app'], function(app) {
                     NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                         
                         // get the node content for the component we are showing previous work for
-                        this.componentContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+                        this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
                         
                         if (this.componentContent != null) {
                             // set the url
@@ -71,7 +71,7 @@ define(['app'], function(app) {
                         var component = $scope.component;
                         
                         // register this component with the parent node
-                        $scope.$parent.registerPartController($scope, component);
+                        $scope.$parent.registerComponentController($scope, component);
                     }));
                 } else {
                     // this is a regular component
@@ -85,7 +85,7 @@ define(['app'], function(app) {
                     var component = $scope.component;
                     
                     // register this component with the parent node
-                    $scope.$parent.registerPartController($scope, component);
+                    $scope.$parent.registerComponentController($scope, component);
                 }
             }
         };

@@ -4,7 +4,7 @@
 <div compile='nodeController.getPrompt()'></div>
 <div ng-repeat='component in nodeController.getComponents()' 
     ng-include='nodeController.getComponentTypeHTML(component.componentType)' 
-    ng-init='componentState = nodeController.getComponentStateByPart(component)'></div>
+    ng-init='componentState = nodeController.getComponentStateByComponent(component)'></div>
 <button id='saveButton' 
     ng-click='nodeController.saveButtonClicked()' 
     ng-disabled='nodeController.isDisabled' 

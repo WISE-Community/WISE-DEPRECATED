@@ -1,0 +1,80 @@
+{
+    "prompt": "",
+    "components": [
+        {
+            "id": "7t3cg52kv3",
+            "componentType": "Table",
+            "prompt": "Work on this table step.",
+            "tableData": [
+                [
+                    {
+                        "text": "",
+                        "editable": false
+                    },
+                    {
+                        "text": "time",
+                        "editable": false,
+                        "size": 10
+                    },
+                    {
+                        "text": "distance",
+                        "editable": false,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "House",
+                        "editable": true
+                    },
+                    {
+                        "text": "1",
+                        "editable": true,
+                        "size": 10
+                    },
+                    {
+                        "text": "7",
+                        "editable": true,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "Supermarket",
+                        "editable": true
+                    },
+                    {
+                        "text": "2",
+                        "editable": true,
+                        "size": 10
+                    },
+                    {
+                        "text": "3",
+                        "editable": true,
+                        "size": 10
+                    }
+                ],
+                [
+                    {
+                        "text": "Gas Station",
+                        "editable": true
+                    },
+                    {
+                        "text": "3",
+                        "editable": true,
+                        "size": 10
+                    },
+                    {
+                        "text": "9",
+                        "editable": true,
+                        "size": 10
+                    }
+                ]
+            ],
+            "showSaveButton": true,
+            "showSubmitButton": true
+        }
+    ],
+    "lockAfterSubmit": true,
+    "showSubmitButton": true
+}

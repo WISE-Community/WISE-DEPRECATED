@@ -162,7 +162,7 @@ define(['configService', 'studentDataService'], function(configService, studentD
             return content;
         };
         
-        serviceObject.isWorkSubmitted = function(nodeVisits) {
+        serviceObject.isWorkSubmitted0 = function(nodeVisits) {
             var result = false;
             
             if (nodeVisits != null) {
@@ -308,31 +308,31 @@ define(['configService', 'studentDataService'], function(configService, studentD
         };
         
         /**
-         * Get the node content part
-         * @param nodeContent the node content
-         * @param partId the part id
-         * @return the node content part
+         * Get the component content
+         * @param componentContent the component content
+         * @param componentId the component id
+         * @return the component content
          */
-        serviceObject.getNodeContentPartById = function(nodeContent, partId) {
-            var nodeContentPart = null;
+        serviceObject.getComponentContentById = function(nodeContent, componentId) {
+            var componentContent = null;
             
-            if (nodeContent != null && partId != null) {
+            if (nodeContent != null && componentId != null) {
                 
-                // get the parts
-                var parts = nodeContent.parts;
+                // get the components
+                var components = nodeContent.components;
                 
-                if (parts != null) {
+                if (components != null) {
                     
-                    // loop through the parts
-                    for (var p = 0; p < parts.length; p++) {
-                        var tempPart = parts[p];
+                    // loop through the components
+                    for (var c = 0; c < components.length; c++) {
+                        var tempComponent = components[c];
                         
-                        if (tempPart != null) {
-                            var tempPartId = tempPart.id;
+                        if (tempComponent != null) {
+                            var tempComponentId = tempComponent.id;
                             
-                            if (tempPartId === partId) {
-                                // we have found the part with the part id we want
-                                nodeContentPart = tempPart;
+                            if (tempComponentId === componentId) {
+                                // we have found the component with the component id we want
+                                componentContent = tempComponent;
                                 break;
                             }
                         }
@@ -340,44 +340,37 @@ define(['configService', 'studentDataService'], function(configService, studentD
                 }
             }
             
-            return nodeContentPart;
+            return componentContent;
         };
         
         /**
-         * Get the node state part
-         * @param nodeState the node state
-         * @param partId the part id
-         * @return the node state part
+         * Check if any of the component states were submitted
+         * @param componentStates an array of component states
+         * @return whether any of the component states were submitted
          */
-        serviceObject.getNodeStateByPartId = function(nodeState, partId) {
+        serviceObject.isWorkSubmitted = function(componentStates) {
+            var result = false;
             
-            var nodeStatePart = null;
-            
-            if (nodeState != null && partId != null) {
+            if (componentStates != null) {
                 
-                // get the parts
-                var parts = nodeState.parts;
-                
-                if (parts != null) {
+                // loop through all the component states
+                for (var c = 0; c < componentStates.length; c++) {
+                    var componentState = componentStates[c];
                     
-                    // loop through the parts
-                    for (var p = 0; p < parts.length; p++) {
-                        var tempPart = parts[p];
+                    if (componentState != null) {
                         
-                        if (tempPart != null) {
-                            var tempPartId = tempPart.id;
-                            
-                            if (tempPartId === partId) {
-                                // we have found the part with the part id we want
-                                nodeStatePart = tempPart;
-                                break;
-                            }
+                        var isSubmit = componentState.isSubmit;
+                        
+                        // check if the isSubmit flag is true
+                        if (isSubmit) {
+                            result = true;
+                            break;
                         }
                     }
                 }
             }
             
-            return nodeStatePart;
+            return result;
         };
         
         return serviceObject;

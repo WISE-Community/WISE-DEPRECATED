@@ -2,13 +2,13 @@
     "prompt": "",
     "components": [
         {
-            "id": "42a31a2g6j1m",
-            "componentType": "PhotoBooth",
-            "prompt": "Work on this photo booth step.",
+            "id": "9h4wxy737r",
+            "componentType": "Draw",
+            "prompt": "Work on this draw step.",
             "showSaveButton": true,
             "showSubmitButton": true
         }
     ],
-    "lockAfterSubmit": false,
+    "lockAfterSubmit": true,
     "showSubmitButton": false
 }

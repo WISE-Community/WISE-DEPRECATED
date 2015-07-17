@@ -7,13 +7,12 @@ define(['app'], function(app) {
             AnnotationService,
             ConfigService,
             CurrentNodeService,
-            CRaterService,
             NodeService,
-            OpenResponseService,
             ProjectService,
             SessionService,
             StudentAssetService,
-            StudentDataService) {
+            StudentDataService,
+            TableService) {
         
         // the node id of the current node
         this.nodeId = null;
@@ -34,7 +33,7 @@ define(['app'], function(app) {
         this.isShowPreviousWork = false;
         
         /**
-         * Perform setup of the node
+         * Perform setup of the component
          */
         this.setup = function() {
             
@@ -66,7 +65,7 @@ define(['app'], function(app) {
                     NodeService.getNodeContentByNodeSrc(nodeSrc).then(angular.bind(this, function(showPreviousWorkNodeContent) {
                         
                         // get the node content for the component we are showing previous work for
-                        this.componentContent = NodeService.getNodeContentPartById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
+                        this.componentContent = NodeService.getComponentContentById(showPreviousWorkNodeContent, showPreviousWorkComponentId);
                         
                         // get the component state for the show previous work
                         var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(showPreviousWorkNodeId, showPreviousWorkComponentId);
@@ -84,7 +83,7 @@ define(['app'], function(app) {
                         var component = $scope.component;
                         
                         // register this component with the parent node
-                        $scope.$parent.registerPartController($scope, component);
+                        $scope.$parent.registerComponentController($scope, component);
                     }));
                 } else {
                     // this is a regular component
@@ -95,17 +94,33 @@ define(['app'], function(app) {
                     // get the component state from the scope
                     var componentState = $scope.componentState;
                     
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
+                    if (componentState == null) {
+                        /*
+                         * only import work if the student does not already have
+                         * work for this component
+                         */
+                        
+                        // check if we need to import work
+                        var importWorkNodeId = this.componentContent.importWorkNodeId;
+                        var importWorkComponentId = this.componentContent.importWorkComponentId;
+                        
+                        if (importWorkNodeId != null && importWorkComponentId != null) {
+                            // import the work from the other component
+                            this.importWork();
+                        }
+                    } else {
+                        // populate the student work into this component
+                        this.setStudentWork(componentState);
+                    }
                     
                     // set up the table
                     this.setupTable();
                     
-                    // check if we need to lock this node
+                    // check if we need to lock this component
                     this.calculateDisabled();
                     
                     // register this component with the parent node
-                    $scope.$parent.registerPartController($scope, component);
+                    $scope.$parent.registerComponentController($scope, component);
                 }
             }
         };
@@ -164,16 +179,18 @@ define(['app'], function(app) {
         };
         
         /**
-         * Populate the student work into the node
-         * @param nodeState the node state to populate into the node
+         * Populate the student work into the component
+         * @param nodeState the component state to populate into the component
          */
-        this.setStudentWork = function(nodeState) {
+        this.setStudentWork = function(componentState) {
             
-            if (nodeState != null) {
-                var studentData = nodeState.studentData;
+            if (componentState != null) {
+                
+                // get the student data from the component state
+                var studentData = componentState.studentData;
                 
                 if (studentData != null) {
-                    // populate the text the student previously typed
+                    // set the table into the controller
                     this.tableData = studentData.tableData;
                 }
             }
@@ -193,6 +210,12 @@ define(['app'], function(app) {
          */
         this.submitButtonClicked = function() {
             this.saveTriggeredBy = 'submitButton';
+            this.isSubmit = true;
+            
+            // check if we need to lock the component after the student submits
+            if (this.isLockAfterSubmit()) {
+                this.isDisabled = true;
+            }
             
             $scope.$emit('componentSubmitClicked');
         };
@@ -210,16 +233,16 @@ define(['app'], function(app) {
             // get this part id
             var componentId = this.getComponentId();
             
-            // create a node state populated with the student data
+            // create a component state populated with the student data
             var componentState = this.createComponentState();
             
             /*
-             * this step is a node part so we will tell its parent that
-             * the student work has changed and will need to be saved.
-             * this will also notify connected parts that this part's
-             * student data has changed.
+             * the student work in this component has changed so we will tell
+             * the parent node that the student data will need to be saved. 
+             * this will also notify connected parts that this component's student 
+             * data has changed.
              */
-            $scope.$emit('partStudentDataChanged', {componentId: componentId, componentState: componentState});
+            $scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
         };
         
         /**
@@ -228,7 +251,7 @@ define(['app'], function(app) {
          */
         this.createComponentState = function() {
             
-            // create a new node state
+            // create a new component state
             var componentState = NodeService.createNewComponentState();
             
             if (componentState != null) {
@@ -254,20 +277,22 @@ define(['app'], function(app) {
             // get the node content
             var componentContent = this.componentContent;
             
-            if (componentContent) {
-                var lockAfterSubmit = componentContent.lockAfterSubmit;
+            if (componentContent != null) {
                 
-                if (lockAfterSubmit) {
+                // check if the parent has set this component to disabled
+                if (componentContent.isDisabled) {
+                    this.isDisabled = true;
+                } else if (componentContent.lockAfterSubmit) {
                     // we need to lock the step after the student has submitted
                     
-                    // get the node visits for the node
-                    var nodeVisits = StudentDataService.getNodeVisitsByNodeId(nodeId);
+                    // get the component states for this component
+                    var componentStates = StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
                     
-                    // check if the student has ever submitted work for this node
-                    var isSubmitted = NodeService.isWorkSubmitted(nodeVisits);
+                    // check if any of the component states were submitted
+                    var isSubmitted = NodeService.isWorkSubmitted(componentStates);
                     
                     if (isSubmitted) {
-                        // the student has submitted work for this node
+                        // the student has submitted work for this component
                         this.isDisabled = true;
                     }
                 }
@@ -283,7 +308,7 @@ define(['app'], function(app) {
             
             if (this.componentContent != null) {
                 
-                // check the showSaveButton field in the node content
+                // check the showSaveButton field in the component content
                 if (this.componentContent.showSaveButton) {
                     show = true;
                 }
@@ -301,13 +326,31 @@ define(['app'], function(app) {
             
             if (this.componentContent != null) {
                 
-                // check the showSubmitButton field in the node content
+                // check the showSubmitButton field in the component content
                 if (this.componentContent.showSubmitButton) {
                     show = true;
                 }
             }
             
             return show;
+        };
+        
+        /**
+         * Check whether we need to lock the component after the student
+         * submits an answer.
+         */
+        this.isLockAfterSubmit = function() {
+            var result = false;
+            
+            if (this.componentContent != null) {
+                
+                // check the lockAfterSubmit field in the component content
+                if (this.componentContent.lockAfterSubmit) {
+                    result = true;
+                }
+            }
+            
+            return result;
         };
         
         /**
@@ -324,55 +367,42 @@ define(['app'], function(app) {
         };
         
         /**
-         * Import work from another node
+         * Import work from another component
          */
         this.importWork = function() {
             
-            // get the node content
+            // get the component content
             var componentContent = this.componentContent;
             
             if (componentContent != null) {
                 
-                var importWork = componentContent.importWork;
+                var importWorkNodeId = componentContent.importWorkNodeId;
+                var importWorkComponentId = componentContent.importWorkComponentId;
                 
-                if (importWork != null) {
+                if (importWorkNodeId != null && importWorkComponentId != null) {
                     
-                    // get the latest node state for this node
-                    var nodeState = StudentDataService.getLatestNodeStateByNodeId(this.nodeId);
+                    // get the latest component state for this component
+                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
                     
                     /*
-                     * we will only import work into this node if the student
-                     * has not done any work for this node
+                     * we will only import work into this component if the student
+                     * has not done any work for this component
                      */
-                    if(nodeState == null) {
-                        // the student has not done any work for this node
+                    if(componentState == null) {
+                        // the student has not done any work for this component
                         
-                        var importWorkNodeId = importWork.nodeId;
+                        // get the latest component state from the component we are importing from
+                        var importWorkComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
                         
-                        if (importWorkNodeId != null) {
+                        if (importWorkComponentState != null) {
+                            /*
+                             * populate a new component state with the work from the 
+                             * imported component state
+                             */
+                            var populatedComponentState = TableService.populateComponentState(importWorkComponentState);
                             
-                            // get the node that we want to import work from
-                            var importWorkNode = ProjectService.getNodeById(importWorkNodeId);
-                            
-                            if (importWorkNode != null) {
-                                
-                                // get the node type of the node we are importing from
-                                var importWorkNodeType = importWorkNode.type;
-                                
-                                // get the latest node state from the node we are importing from
-                                var importWorkNodeState = StudentDataService.getLatestNodeStateByNodeId(importWorkNodeId);
-                                
-                                if (importWorkNodeState != null) {
-                                    /*
-                                     * populate a new node state with the work from the 
-                                     * imported node state
-                                     */
-                                    var populatedNodeState = TableService.populateNodeState(importWorkNodeState, importWorkNodeType);
-                                    
-                                    // populate the node state into this node
-                                    this.setStudentWork(populatedNodeState);
-                                }
-                            }
+                            // populate the component state into this component
+                            this.setStudentWork(populatedComponentState);
                         }
                     }
                 }
@@ -546,14 +576,12 @@ define(['app'], function(app) {
         
         
         /**
-         * Get the student work object that will contain the student
-         * work for the node. This is only used when this node is
-         * part of another node such as a Questionnaire node.
-         * The Questionnaire node will call this function to obtain
-         * the student work.
-         * @return an object containing the student work
+         * Get the component state from this component. The parent node will 
+         * call this function to obtain the component state when it needs to
+         * save student data.
+         * @return a component state containing the student data
          */
-        $scope.getStudentWorkObject = function() {
+        $scope.getComponentState = function() {
             
             var componentState = null;
             
@@ -569,11 +597,29 @@ define(['app'], function(app) {
         };
         
         /**
-         * Listen for the 'nodeOnExit' event which is fired when the student
-         * exits the node. This will perform saving when the student exits
-         * the node.
+         * The parent node submit button was clicked
          */
-        $scope.$on('nodeOnExit', angular.bind(this, function(event, args) {
+        $scope.$on('nodeSubmitClicked', angular.bind(this, function(event, args) {
+            
+            // get the node id of the node
+            var nodeId = args.nodeId;
+            
+            // make sure the node id matches our parent node
+            if (this.nodeId === nodeId) {
+                
+                if (this.isLockAfterSubmit()) {
+                    // disable the component if it was authored to lock after submit
+                    this.isDisabled = true;
+                }
+            }
+        }));
+        
+        /**
+         * Listen for the 'exitNode' event which is fired when the student
+         * exits the parent node. This will perform any necessary cleanup
+         * when the student exits the parent node.
+         */
+        $scope.$on('exitNode', angular.bind(this, function(event, args) {
             
         }));
         

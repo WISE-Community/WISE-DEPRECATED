@@ -32,7 +32,7 @@ define(['projectService'], function(projectService) {
             
             if (previousCurrentNode !== node) {
                 // the current node is about to change
-                $rootScope.$broadcast('nodeOnExit', {nodeToExit: previousCurrentNode});
+                $rootScope.$broadcast('exitNode', {nodeToExit: previousCurrentNode});
                 
                 this.currentNode = node;
                 

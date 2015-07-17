@@ -1,0 +1,25 @@
+{
+    "prompt": "",
+    "components": [
+        {
+            "id": "8fy33tho3u",
+            "componentType": "OpenResponse",
+            "prompt": "You can submit this once.",
+            "numRows": 5,
+            "showSaveButton": true,
+            "showSubmitButton": true,
+            "lockAfterSubmit": true
+        },
+        {
+            "id": "3b9bna1avr",
+            "componentType": "OpenResponse",
+            "prompt": "You can submit this once.",
+            "numRows": 5,
+            "showSaveButton": true,
+            "showSubmitButton": true,
+            "lockAfterSubmit": true
+        }
+    ],
+    "lockAfterSubmit": false,
+    "showSubmitButton": false
+}

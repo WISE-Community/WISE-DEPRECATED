@@ -1,0 +1,15 @@
+{
+    "prompt": "",
+    "components": [
+        {
+            "id": "bad8f20az3",
+            "componentType": "Discussion",
+            "prompt": "Work on this discussion step.",
+            "numRows": 5,
+            "showSaveButton": true,
+            "showSubmitButton": true
+        }
+    ],
+    "lockAfterSubmit": true,
+    "showSubmitButton": false
+}

@@ -249,6 +249,24 @@ define(['app'], function(app) {
             }
             return studentNodePrefix + (maxStudentNodeIdNumberSoFar+1);
         };
+        
+        /**
+         * Check whether we need to lock the component after the student
+         * submits an answer.
+         */
+        this.isLockAfterSubmit = function() {
+            var result = false;
+            
+            if (this.componentContent != null) {
+                
+                // check the lockAfterSubmit field in the component content
+                if (this.componentContent.lockAfterSubmit) {
+                    result = true;
+                }
+            }
+            
+            return result;
+        };
 
         var nodeSrc = ProjectService.getNodeSrcByNodeId(this.nodeId);
 

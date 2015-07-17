@@ -1,6 +1,6 @@
-define(['nodeService'], function(nodeService) {
+define(['nodeService', 'studentDataService'], function(nodeService, studentDataService) {
     
-    var service = ['$http', 'NodeService', function($http, NodeService) {
+    var service = ['$http', 'NodeService', 'StudentDataService', function($http, NodeService, StudentDataService) {
         var serviceObject = Object.create(NodeService);
         
         serviceObject.config = null;
@@ -74,20 +74,40 @@ define(['nodeService'], function(nodeService) {
             return studentWorkAsHTML;
         };
         
-        serviceObject.populateNodeState = function(nodeStateFromOtherNode, otherNodeType) {
-            var nodeState = null;
+        /**
+         * Populate a component state with the data from another component state
+         * @param componentStateFromOtherComponent the component state to obtain the data from
+         * @return a new component state that contains the student data from the other
+         * component state
+         */
+        serviceObject.populateComponentState = function(componentStateFromOtherComponent) {
+            var componentState = null;
             
-            if (nodeStateFromOtherNode != null && otherNodeType != null) {
-                nodeState = StudentDataService.createNodeState();
+            if (componentStateFromOtherComponent != null) {
                 
-                if (otherNodeType === 'OpenResponse') {
-                    nodeState.studentData = nodeStateFromOtherNode.studentData;
-                } else if (otherNodeType === 'Planning') {
-                    nodeState.studentData = JSON.stringify(nodeStateFromOtherNode.studentNodes);
+                // create an empty component state
+                componentState = StudentDataService.createComponentState();
+                
+                // get the component type of the other component state
+                var otherComponentType = componentStateFromOtherComponent.componentType;
+                
+                if (otherComponentType === 'OpenResponse') {
+                    // the other component is an OpenResponse component
+                    
+                    // get the student data from the other component state
+                    var studentData = componentStateFromOtherComponent.studentData;
+                    
+                    // create a copy of the student data
+                    var studentDataCopy = StudentDataService.getCopyOfJSONObject(studentData);
+                    
+                    // set the student data into the new component state
+                    componentState.studentData = studentDataCopy;
+                } else if (otherComponentType === 'Planning') {
+                    componentState.studentData = JSON.stringify(componentStateFromOtherComponent.studentNodes);
                 } 
             }
             
-            return nodeState;
+            return componentState;
         };
         
         return serviceObject;

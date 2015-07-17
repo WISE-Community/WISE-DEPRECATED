@@ -59,7 +59,7 @@
             </div>
             <ol ui-tree-nodes data-type='choice' ng-model='bucket.items'>
                 <li ui-tree-node ng-repeat='item in bucket.items'>
-                    <div class='category-title angular-ui-tree-handle'>
+                    <div class='category-title angular-ui-tree-handle' data-nodrag='{{matchController.isDisabled}}'>
                         <div compile='item.value'></div>
                         <div ng-class='{"correct": item.isCorrect, "incorrectPosition": item.isIncorrectPosition, "incorrect": !item.isCorrect}'>{{item.feedback}}</div>
                     </div>

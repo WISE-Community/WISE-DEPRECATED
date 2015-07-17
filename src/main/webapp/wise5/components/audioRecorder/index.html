@@ -17,4 +17,12 @@
     <h2>Log</h2>
     <pre id="log"></pre>
     -->
+    <button id='saveButton' 
+        ng-click='audioRecorderController.saveButtonClicked()' 
+        ng-disabled='audioRecorderController.isDisabled' 
+        ng-show='audioRecorderController.showSaveButton()'>Save</button>
+    <button id='submitButton' 
+        ng-click='audioRecorderController.submitButtonClicked()' 
+        ng-disabled='audioRecorderController.isDisabled' 
+        ng-show='audioRecorderController.showSubmitButton()'>Submit</button>
 </div>

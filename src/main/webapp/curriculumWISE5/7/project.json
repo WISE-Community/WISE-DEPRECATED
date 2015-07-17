@@ -150,6 +150,96 @@
             "r": 20
         },
         {
+            "id": "node17",
+            "type": "Node",
+            "title": "Import Open Response Work",
+            "src": "node17.json",
+            "x": 650,
+            "y": 240,
+            "r": 20
+        },
+        {
+            "id": "node18",
+            "type": "Node",
+            "title": "Open Response Submit",
+            "src": "node18.json",
+            "x": 750,
+            "y": 240,
+            "r": 20
+        },
+        {
+            "id": "node19",
+            "type": "Node",
+            "title": "Open Response Submit",
+            "src": "node19.json",
+            "x": 850,
+            "y": 240,
+            "r": 20
+        },
+        {
+            "id": "node22",
+            "type": "Node",
+            "title": "Discussion Submit",
+            "src": "node22.json",
+            "x": 150,
+            "y": 340,
+            "r": 20
+        },
+        {
+            "id": "node23",
+            "type": "Node",
+            "title": "Draw Submit",
+            "src": "node23.json",
+            "x": 250,
+            "y": 340,
+            "r": 20
+        },
+        {
+            "id": "node24",
+            "type": "Node",
+            "title": "Graph Submit",
+            "src": "node24.json",
+            "x": 350,
+            "y": 340,
+            "r": 20
+        },
+        {
+            "id": "node26",
+            "type": "Node",
+            "title": "Match Submit",
+            "src": "node26.json",
+            "x": 550,
+            "y": 340,
+            "r": 20
+        },
+        {
+            "id": "node27",
+            "type": "Node",
+            "title": "Multiple Choice Radio Submit",
+            "src": "node27.json",
+            "x": 650,
+            "y": 340,
+            "r": 20
+        },
+        {
+            "id": "node28",
+            "type": "Node",
+            "title": "Multiple Choice Checkbox Submit",
+            "src": "node28.json",
+            "x": 750,
+            "y": 340,
+            "r": 20
+        },
+        {
+            "id": "node30",
+            "type": "Node",
+            "title": "Table Submit",
+            "src": "node30.json",
+            "x": 950,
+            "y": 340,
+            "r": 20
+        },
+        {
             "id": "group0",
             "type": "group",
             "title": "My First WISE5 Project",
@@ -182,7 +272,17 @@
                 "node13",
                 "node14",
                 "node15",
-                "node16"
+                "node16",
+                "node17",
+                "node18",
+                "node19",
+                "node22",
+                "node23",
+                "node24",
+                "node26",
+                "node27",
+                "node28",
+                "node30"
             ],
             "x": 50,
             "y": 140,
@@ -264,6 +364,56 @@
             "id": "transition15",
             "from": "node15",
             "to": "node16"
+        },
+        {
+            "id": "transition16",
+            "from": "node16",
+            "to": "node17"
+        },
+        {
+            "id": "transition17",
+            "from": "node17",
+            "to": "node18"
+        },
+        {
+            "id": "transition18",
+            "from": "node18",
+            "to": "node19"
+        },
+        {
+            "id": "transition19",
+            "from": "node19",
+            "to": "node22"
+        },
+        {
+            "id": "transition22",
+            "from": "node22",
+            "to": "node23"
+        },
+        {
+            "id": "transition23",
+            "from": "node23",
+            "to": "node24"
+        },
+        {
+            "id": "transition24",
+            "from": "node24",
+            "to": "node26"
+        },
+        {
+            "id": "transition26",
+            "from": "node26",
+            "to": "node27"
+        },
+        {
+            "id": "transition27",
+            "from": "node27",
+            "to": "node28"
+        },
+        {
+            "id": "transition28",
+            "from": "node28",
+            "to": "node30"
         }
     ],
     "startGroupId": "group0",

@@ -8,7 +8,6 @@ define(['app'], function(app) {
             ConfigService,
             CurrentNodeService,
             NodeService,
-            OpenResponseService,
             PhotoBoothService,
             ProjectService,
             SessionService,
@@ -34,7 +33,7 @@ define(['app'], function(app) {
         this.isCameraReady = false;
         
         /**
-         * Perform setup of the node
+         * Perform setup of the component
          */
         this.setup = function() {
             
@@ -46,15 +45,32 @@ define(['app'], function(app) {
             
             // get the component from the scope
             var component = $scope.component;
+            this.componentContent = $scope.component;
             
             // get the component state from the scope
             var componentState = $scope.componentState;
             
-            // populate the student work into this component
-            this.setStudentWork(componentState);
+            if (componentState == null) {
+                /*
+                 * only import work if the student does not already have
+                 * work for this component
+                 */
+                
+                // check if we need to import work
+                var importWorkNodeId = this.componentContent.importWorkNodeId;
+                var importWorkComponentId = this.componentContent.importWorkComponentId;
+                
+                if (importWorkNodeId != null && importWorkComponentId != null) {
+                    // import the work from the other component
+                    this.importWork();
+                }
+            } else {
+                // populate the student work into this component
+                this.setStudentWork(componentState);
+            }
             
             // register this component with the parent node
-            $scope.$parent.registerPartController($scope, component);
+            $scope.$parent.registerComponentController($scope, component);
             
             //http://coderthoughts.blogspot.co.uk/2013/03/html5-video-fun.html - thanks :)
             navigator.myGetMedia = (navigator.getUserMedia ||
@@ -171,7 +187,31 @@ define(['app'], function(app) {
         };
         
         /**
-         * Called when the student changes their text response
+         * Called when the student clicks the save button
+         */
+        this.saveButtonClicked = function() {
+            this.saveTriggeredBy = 'saveButton';
+            
+            $scope.$emit('componentSaveClicked');
+        };
+        
+        /**
+         * Called when the student clicks the submit button
+         */
+        this.submitButtonClicked = function() {
+            this.saveTriggeredBy = 'submitButton';
+            this.isSubmit = true;
+            
+            // check if we need to lock the component after the student submits
+            if (this.isLockAfterSubmit()) {
+                this.isDisabled = true;
+            }
+            
+            $scope.$emit('componentSubmitClicked');
+        };
+        
+        /**
+         * Called when the student changes their work
          */
         this.studentDataChanged = function() {
             /*
@@ -180,11 +220,6 @@ define(['app'], function(app) {
              */
             this.isDirty = true;
             
-            /*
-             * this step is a node part so we will tell its parent that
-             * the student work has changed and will need to be saved
-             */
-            
             // get this part id
             var componentId = this.getComponentId();
             
@@ -192,24 +227,28 @@ define(['app'], function(app) {
             var componentState = this.createComponentState();
             
             /*
-             * this step is a node part so we will tell its parent that
-             * the student work has changed and will need to be saved.
-             * this will also notify connected parts that this part's
-             * student data has changed.
+             * the student work in this component has changed so we will tell
+             * the parent node that the student data will need to be saved. 
+             * this will also notify connected parts that this component's student 
+             * data has changed.
              */
-            $scope.$emit('partStudentDataChanged', {componentId: componentId, componentState: componentState});
+            $scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
         };
         
         /**
-         * Populate the student work into the node
-         * @param componentState the node state to populate into the node
+         * Populate the student work into the component
+         * @param componentState the component state to populate into the component
          */
         this.setStudentWork = function(componentState) {
             
             if (componentState != null) {
+                
+                // get the student data from the component state
                 var studentData = componentState.studentData;
                 
                 if (studentData != null) {
+                    
+                    // set the student response
                     this.studentResponse = studentData.response;
                 }
             }
@@ -228,13 +267,13 @@ define(['app'], function(app) {
          */
         this.createComponentState = function() {
             
-            // create a new node state
+            // create a new component state
             var componentState = NodeService.createNewComponentState();
             
-            // get the text the student typed
+            // get the student response
             var response = this.getStudentResponse();
             
-            // set the response into the node state
+            // set the response into the component state
             var studentData = {}
             studentData.response = response;
             
@@ -250,6 +289,133 @@ define(['app'], function(app) {
         };
         
         /**
+         * Check if we need to lock the component
+         */
+        this.calculateDisabled = function() {
+            
+            // get the component content
+            var componentContent = this.componentContent;
+            
+            if (componentContent != null) {
+                
+                // check if the parent has set this component to disabled
+                if (componentContent.isDisabled) {
+                    this.isDisabled = true;
+                } else if (componentContent.lockAfterSubmit) {
+                    // we need to lock the component after the student has submitted
+                    
+                    // get the component states for this component
+                    var componentStates = StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    
+                    // check if any of the component states were submitted
+                    var isSubmitted = NodeService.isWorkSubmitted(componentStates);
+                    
+                    if (isSubmitted) {
+                        // the student has submitted work for this component
+                        this.isDisabled = true;
+                    }
+                }
+            }
+        };
+        
+        /**
+         * Check whether we need to show the save button
+         * @return whether to show the save button
+         */
+        this.showSaveButton = function() {
+            var show = false;
+            
+            if (this.componentContent != null) {
+                
+                // check the showSaveButton field in the component content
+                if (this.componentContent.showSaveButton) {
+                    show = true;
+                }
+            }
+            
+            return show;
+        };
+        
+        /**
+         * Check whether we need to show the submit button
+         * @return whether to show the submit button
+         */
+        this.showSubmitButton = function() {
+            var show = false;
+            
+            if (this.componentContent != null) {
+                
+                // check the showSubmitButton field in the component content
+                if (this.componentContent.showSubmitButton) {
+                    show = true;
+                }
+            }
+            
+            return show;
+        };
+        
+        /**
+         * Check whether we need to lock the component after the student
+         * submits an answer.
+         */
+        this.isLockAfterSubmit = function() {
+            var result = false;
+            
+            if (this.componentContent != null) {
+                
+                // check the lockAfterSubmit field in the component content
+                if (this.componentContent.lockAfterSubmit) {
+                    result = true;
+                }
+            }
+            
+            return result;
+        };
+        
+        /**
+         * Import work from another component
+         */
+        this.importWork = function() {
+            
+            // get the component content
+            var componentContent = this.componentContent;
+            
+            if (componentContent != null) {
+                
+                var importWorkNodeId = componentContent.importWorkNodeId;
+                var importWorkComponentId = componentContent.importWorkComponentId;
+                
+                if (importWorkNodeId != null && importWorkComponentId != null) {
+                    
+                    // get the latest component state for this component
+                    var componentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    
+                    /*
+                     * we will only import work into this component if the student
+                     * has not done any work for this component
+                     */
+                    if(componentState == null) {
+                        // the student has not done any work for this component
+                        
+                        // get the latest component state from the component we are importing from
+                        var importWorkComponentState = StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
+                        
+                        if (importWorkComponentState != null) {
+                            /*
+                             * populate a new component state with the work from the 
+                             * imported component state
+                             */
+                            var populatedComponentState = PhotoBoothService.populateComponentState(importWorkComponentState);
+                            
+                            // populate the component state into this component
+                            this.setStudentWork(populatedComponentState);
+                        }
+                    }
+                }
+            }
+        };
+        
+        /**
          * Get the component id
          * @return the component id
          */
@@ -260,14 +426,12 @@ define(['app'], function(app) {
         };
         
         /**
-         * Get the student work object that will contain the student
-         * work for the node. This is only used when this node is
-         * part of another node such as a Questionnaire node.
-         * The Questionnaire node will call this function to obtain
-         * the student work.
-         * @return an object containing the student work
+         * Get the component state from this component. The parent node will 
+         * call this function to obtain the component state when it needs to
+         * save student data.
+         * @return a component state containing the student data
          */
-        $scope.getStudentWorkObject = function() {
+        $scope.getComponentState = function() {
             var componentState = null;
             
             if ($scope.photoBoothController.isDirty) {
@@ -282,11 +446,29 @@ define(['app'], function(app) {
         };
         
         /**
-         * Listen for the 'nodeOnExit' event which is fired when the student
-         * exits the node. This will perform saving when the student exits
-         * the node.
+         * The parent node submit button was clicked
          */
-        $scope.$on('nodeOnExit', angular.bind(this, function(event, args) {
+        $scope.$on('nodeSubmitClicked', angular.bind(this, function(event, args) {
+            
+            // get the node id of the node
+            var nodeId = args.nodeId;
+            
+            // make sure the node id matches our parent node
+            if (this.nodeId === nodeId) {
+                
+                if (this.isLockAfterSubmit()) {
+                    // disable the component if it was authored to lock after submit
+                    this.isDisabled = true;
+                }
+            }
+        }));
+        
+        /**
+         * Listen for the 'exitNode' event which is fired when the student
+         * exits the parent node. This will perform any necessary cleanup
+         * when the student exits the parent node.
+         */
+        $scope.$on('exitNode', angular.bind(this, function(event, args) {
             
         }));
         

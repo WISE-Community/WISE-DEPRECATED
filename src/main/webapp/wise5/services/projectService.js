@@ -1737,6 +1737,18 @@ define(['configService'], function(configService) {
             return branchPathsIn;
         }
         
+        serviceObject.getComponentByNodeIdAndComponentId = function(nodeId, componentId) {
+            var component = null;
+            
+            if (nodeId != null && componentId != null) {
+                var node = this.getNodeById(nodeId);
+                
+                
+            }
+            
+            return component;
+        };
+        
         return serviceObject;
     }];
     

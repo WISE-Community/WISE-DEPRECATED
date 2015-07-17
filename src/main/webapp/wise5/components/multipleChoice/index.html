@@ -8,7 +8,7 @@
 </head>
 <body>
 <div ng-controller='MultipleChoiceController as multipleChoiceController'>
-<div id="prompt">{{multipleChoiceController.nodeContent.prompt}}</div>
+<div id="prompt">{{multipleChoiceController.getPrompt()}}</div>
 
 <div ng-repeat='choice in multipleChoiceController.getChoices()'>
     <label>

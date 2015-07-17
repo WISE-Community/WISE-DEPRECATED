@@ -81,20 +81,20 @@ define(['nodeService'], function(nodeService) {
             return studentWorkAsHTML;
         };
         
-        serviceObject.populateNodeState = function(nodeStateFromOtherNode, otherNodeType) {
-            var nodeState = null;
+        serviceObject.populateComponentState = function(componentStateFromOtherComponent, otherComponentType) {
+            var componentState = null;
             
-            if (nodeStateFromOtherNode != null && otherNodeType != null) {
-                nodeState = StudentDataService.createNodeState();
+            if (componentStateFromOtherComponent != null && otherComponentType != null) {
+                componentState = StudentDataService.createComponentState();
                 
-                if (otherNodeType === 'OpenResponse') {
-                    nodeState.studentData = nodeStateFromOtherNode.studentData;
-                } else if (otherNodeType === 'Planning') {
-                    nodeState.studentData = JSON.stringify(nodeStateFromOtherNode.studentNodes);
+                if (otherComponentType === 'OpenResponse') {
+                    componentState.studentData = componentStateFromOtherComponent.studentData;
+                } else if (otherComponentType === 'Planning') {
+                    componentState.studentData = JSON.stringify(componentStateFromOtherComponent.studentNodes);
                 } 
             }
             
-            return nodeState;
+            return componentState;
         };
         
         serviceObject.getClassmateResponses = function(runId, periodId, nodeId, workgroupIds) {

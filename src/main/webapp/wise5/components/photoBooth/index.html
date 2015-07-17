@@ -18,7 +18,7 @@
 
 <div ng-controller='PhotoBoothController as photoBoothController'>
 <div id='prompt'>prompt: {{photoBoothController.nodeContent.prompt}}</div>
-<div id="main">
+    <div id="main">
         <div style='text-align:center'>
             <video id="video"></video>
             <a style='margin-top:5px' ng-show='photoBoothController.isCameraReady' id="button" ng-click='photoBoothController.takePicture()'>Take Picture!</a>
@@ -40,4 +40,12 @@
         var video;
         var dataURL;
     </script>
+    <button id='saveButton' 
+        ng-click='photoBoothController.saveButtonClicked()' 
+        ng-disabled='photoBoothController.isDisabled' 
+        ng-show='photoBoothController.showSaveButton()'>Save</button>
+    <button id='submitButton' 
+        ng-click='photoBoothController.submitButtonClicked()' 
+        ng-disabled='photoBoothController.isDisabled' 
+        ng-show='photoBoothController.showSubmitButton()'>Submit</button>
 </div>

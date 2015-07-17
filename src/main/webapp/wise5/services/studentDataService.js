@@ -49,7 +49,7 @@ define(['configService', 'projectService'], function(configService, projectServi
             
             if (previousCurrentNode !== node) {
                 // the current node is about to change
-                $rootScope.$broadcast('nodeOnExit', {nodeToExit: previousCurrentNode});
+                $rootScope.$broadcast('exitNode', {nodeToExit: previousCurrentNode});
                 
                 this.currentNode = node;
                 
@@ -814,12 +814,12 @@ define(['configService', 'projectService'], function(configService, projectServi
             return studentWorkAsHTML;
         };
         
-        serviceObject.createNodeState = function() {
-            var nodeState = {};
+        serviceObject.createComponentState = function() {
+            var componentState = {};
             
-            nodeState.timestamp = Date.parse(new Date());
+            componentState.timestamp = Date.parse(new Date());
             
-            return nodeState;
+            return componentState;
         };
         
         /**
@@ -986,7 +986,7 @@ define(['configService', 'projectService'], function(configService, projectServi
                     if (componentStates != null) {
                         
                         // loop through all the component states from newest to oldest
-                        for (var c = componentStates.length - 1; c > 0; c--) {
+                        for (var c = componentStates.length - 1; c >= 0; c--) {
                             var componentState = componentStates[c];
                             
                             if (componentState != null) {
@@ -1006,6 +1006,108 @@ define(['configService', 'projectService'], function(configService, projectServi
             }
             
             return latestComponentState;
+        };
+        
+        /**
+         * Get the component states for the given node id
+         * @param nodeId the node id
+         * @return an array of component states for the given node id
+         */
+        serviceObject.getComponentStatesByNodeId = function(nodeId) {
+            console.log('getComponentStatesByNodeId');
+            var componentStatesByNodeId = [];
+            
+            if (nodeId != null) {
+                var studentData = this.studentData;
+                
+                if (studentData != null) {
+                    
+                    // get the component states
+                    var componentStates = studentData.componentStates;
+                    
+                    if (componentStates != null) {
+                        
+                        // loop through all the component states
+                        for (var c = 0; c < componentStates.length; c++) {
+                            var componentState = componentStates[c];
+                            
+                            if (componentState != null) {
+                                var componentStateNodeId = componentState.nodeId;
+                                
+                                // compare the node id
+                                if (nodeId == componentStateNodeId) {
+                                    
+                                    componentStatesByNodeId.push(componentState);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return componentStatesByNodeId;
+        };
+        
+        /**
+         * Get the component states for the given node id and component id
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @return an array of component states for the given node id and 
+         * component id
+         */
+        serviceObject.getComponentStatesByNodeIdAndComponentId = function(nodeId, componentId) {
+            var componentStatesByNodeIdAndComponentId = [];
+            
+            if (nodeId != null && componentId != null) {
+                var studentData = this.studentData;
+                
+                if (studentData != null) {
+                    
+                    // get the component states
+                    var componentStates = studentData.componentStates;
+                    
+                    if (componentStates != null) {
+                        
+                        // loop through all the component states
+                        for (var c = 0; c < componentStates.length; c++) {
+                            var componentState = componentStates[c];
+                            
+                            if (componentState != null) {
+                                var componentStateNodeId = componentState.nodeId;
+                                var componentStateComponentId = componentState.componentId;
+                                
+                                // compare the node id and component id
+                                if (nodeId == componentStateNodeId &&
+                                        componentId == componentStateComponentId) {
+                                    
+                                    componentStatesByNodeIdAndComponentId.push(componentState);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return componentStatesByNodeIdAndComponentId;
+        }
+        
+        /**
+         * Create a copy of a JSON object
+         * @param jsonObject the JSON object to get a copy of
+         * @return a copy of the JSON object that was passed in
+         */
+        serviceObject.getCopyOfJSONObject = function(jsonObject) {
+            var copyOfJSONObject = null;
+            
+            if (jsonObject != null) {
+                // create a JSON string from the JSON object
+                var jsonObjectString = JSON.stringify(jsonObject);
+                
+                // create a JSON object from the JSON string
+                copyOfJSONObject = JSON.parse(jsonObjectString);
+            }
+            
+            return copyOfJSONObject;
         };
         
         return serviceObject;
