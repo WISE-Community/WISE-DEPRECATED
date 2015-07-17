@@ -14,7 +14,7 @@ define(['app'], function(app) {
                     StudentDataService) {
         
         // the auto save interval in milliseconds
-        this.autoSaveInterval = 10000;
+        this.autoSaveInterval = 30000;
         
         // the node id of the current node
         this.nodeId = null;
